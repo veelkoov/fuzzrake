@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
  * @ORM\Table(name="artisans")
  */
-class Artisan
+class Artisan implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -50,7 +50,7 @@ class Artisan
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $devianArtUrl;
+    private $deviantArtUrl;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -154,14 +154,14 @@ class Artisan
         return $this;
     }
 
-    public function getDevianArtUrl(): ?string
+    public function getDeviantArtUrl(): ?string
     {
-        return $this->devianArtUrl;
+        return $this->deviantArtUrl;
     }
 
-    public function setDevianArtUrl(?string $devianArtUrl): self
+    public function setDeviantArtUrl(?string $deviantArtUrl): self
     {
-        $this->devianArtUrl = $devianArtUrl;
+        $this->deviantArtUrl = $deviantArtUrl;
 
         return $this;
     }
@@ -224,5 +224,21 @@ class Artisan
         $this->commisionsQuotesCheckUrl = $commisionsQuotesCheckUrl;
 
         return $this;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        $f = ['name', 'country', 'furAffinityUrl', 'deviantArtUrl', 'websiteUrl', 'facebookUrl', 'twitterUrl', 'tumblrUrl'];
+
+        return array_map(function ($item) {
+            return $this->$item;
+        }, array_combine($f, $f));
     }
 }
