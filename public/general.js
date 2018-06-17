@@ -1,5 +1,7 @@
 var $dataTable;
 var $countryCheckboxes;
+var selectedCountries = [];
+var COUNTRY_COL_IDX = 1;
 
 $(document).ready(function () {
     initDataTable();
@@ -19,13 +21,12 @@ function initDataTable() {
 }
 
 function applyFilters() {
-    var countryRegexp = $countryCheckboxes
+    selectedCountries = $countryCheckboxes
         .filter(':checked')
         .map(function (idx, el) { return getCountryId(el.value); })
-        .get()
-        .join('|');
+        .get();
 
-    $dataTable.search(countryRegexp, true, false).draw();
+    $dataTable.draw();
 }
 
 function initSearchForm(artisansData) {
@@ -41,13 +42,19 @@ function initSearchForm(artisansData) {
         );
     });
 
+    $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            return selectedCountries.length === 0 || selectedCountries.indexOf(data[COUNTRY_COL_IDX]) !== -1;
+        }
+    );
+
     $countryCheckboxes = $countriesFilter.find('input');
 
     $countryCheckboxes.checkboxradio({
         icon: false
     }).change(function () {
         applyFilters();
-    })
+    });
 }
 
 function getCountryCodes(artisansData) {
@@ -82,6 +89,7 @@ function getDataTableRow(artisan) {
         (artisan.country ? ' <span class="flag-icon flag-icon-' + artisan.country.toLowerCase() + '"></span>' : '') +
         '</td>' +
         '<td class="hidden_data">' + getCountryId(artisan.country) + '</td>' +
+        '<td class="text-left">' + artisan.types + '</td>' +
         '<td>' + getLinkCode(artisan.websiteUrl, '<i class="fas fa-link"></i>') + '</td>' +
         '<td>' + getLinkCode(artisan.furAffinityUrl, '<img src="FurAffinity.svg"/>') + '</td>' +
         '<td>' + getLinkCode(artisan.deviantArtUrl, '<i class="fab fa-deviantart"></i>') + '</td>' +
