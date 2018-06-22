@@ -12,5 +12,56 @@
         <th></th>
     </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+    {% for artisan in artisans %}
+        <tr>
+            {%- spaceless %}
+                <td class="text-left">
+                    {{- artisan.name -}}
+                    {%- if artisan.country -%}
+                        {{ ' ' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
+                    {%- endif -%}
+                </td>
+                <td class="hidden_data country">
+                    {%- if artisan.country -%}
+                        {{ artisan.country|lower }}
+                    {%- endif -%}
+                </td>
+                <td class="text-left">
+                    {{- artisan.types -}}
+                </td>
+                <td>
+                    {%- if artisan.websiteUrl -%}
+                        <a href="{{ artisan.websiteUrl }}"><i class="fas fa-link"></i></a>
+                    {%- endif -%}
+                </td>
+                <td>
+                    {%- if artisan.furAffinityUrl -%}
+                        <a href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt="FurAffinity" /></a>
+                    {%- endif -%}
+                </td>
+                <td>
+                    {%- if artisan.deviantArtUrl -%}
+                        <a href="{{ artisan.deviantArtUrl }}"><i class="fab fa-deviantart"></i></a>
+                    {%- endif -%}
+                </td>
+                <td>
+                    {%- if artisan.twitterUrl -%}
+                        <a href="{{ artisan.twitterUrl }}"><i class="fab fa-twitter"></i></a>
+                    {%- endif -%}
+                </td>
+                <td>
+                    {%- if artisan.facebookUrl -%}
+                        <a href="{{ artisan.facebookUrl }}"><i class="fab fa-facebook"></i></a>
+                    {%- endif -%}
+                </td>
+                <td>
+                    {%- if artisan.tumblrUrl -%}
+                        <a href="{{ artisan.tumblrUrl }}"><i class="fab fa-tumblr"></i></a>
+                    {%- endif -%}
+                </td>
+            {% endspaceless -%}
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
