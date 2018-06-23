@@ -3,13 +3,14 @@
     <tr>
         <th class="text-left">Name</th>
         <th class="hidden_data">Country</th>
-        <th>Types</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th class="toggleable">Types</th>
+        <th class="toggleable">Features</th>
+        <th class="link"></th>
+        <th class="link"></th>
+        <th class="link"></th>
+        <th class="link"></th>
+        <th class="link"></th>
+        <th class="link"></th>
     </tr>
     </thead>
     <tbody>
@@ -29,6 +30,9 @@
                 </td>
                 <td class="text-left">
                     {{- artisan.types -}}
+                </td>
+                <td class="text-left">
+                    {{- artisan.features -}}
                 </td>
                 <td>
                     {%- if artisan.websiteUrl -%}

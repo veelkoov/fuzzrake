@@ -1,10 +1,30 @@
 var $dataTable;
 var COUNTRY_COL_IDX = 1;
 var TYPES_COL_IDX = 2;
+var FEATURES_COL_IDX = 3;
 var multiselectFilters = {};
 
 $(document).ready(function () {
-    $dataTable = $('#artisans').DataTable({"paging": false});
+    $dataTable = $('#artisans').DataTable({
+        dom: "<'row'<'col-sm-12 col-md-6'lB><'col-sm-12 col-md-6'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        paging: false,
+        buttons: [
+            {
+                className: 'btn-sm btn-dark',
+                columns: '.toggleable',
+                extend: 'colvis',
+                text: 'Show/hide columns'
+            },
+            {
+                className: 'btn-sm btn-dark',
+                columns: '.link',
+                extend: 'columnToggle',
+                text: 'Show/hide links'
+            }
+        ]
+    });
     initSearchForm();
     initWhatsThis();
 });
@@ -23,7 +43,7 @@ function addFieldsetCheckbox($fieldset, itemId, itemValue, itemLabel, title='') 
     );
 }
 
-function addMultiselectFilter(fieldsetSelector, dataColIdx, choice2labelFunc) {
+function addMultiselectFilter(fieldsetSelector, dataColIdx, choice2labelFunc, isAnd = false) {
     var $fieldset = $(fieldsetSelector);
     var idPrefix = 'filter-' + safeId(fieldsetSelector) + '-';
 
@@ -47,7 +67,7 @@ function addMultiselectFilter(fieldsetSelector, dataColIdx, choice2labelFunc) {
         icon: false
     }).change(getOnFilterChangeFunction(filter));
 
-    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filter));
+    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filter, isAnd));
 }
 
 function getOnFilterChangeFunction(filter) {
@@ -61,25 +81,30 @@ function getOnFilterChangeFunction(filter) {
     }
 }
 
-function getDataTableFilterFunction(filter) {
+function getDataTableFilterFunction(filter, isAnd) {
     return function (_, data, _) {
-        if (filter['selectedValues'].length === 0) {
+        var selectedCount = filter['selectedValues'].length;
+
+        if (selectedCount === 0) {
             return true;
         }
 
-        if (data[filter['dataColIdx']].trim() === '' && filter['selectedValues'].indexOf('') !== -1) {
+        var showUnknown = filter['selectedValues'].indexOf('') !== -1;
+
+        if (showUnknown && data[filter['dataColIdx']].trim() === '') {
             return true;
         }
 
-        var result = false;
+        var selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
+        var count = 0;
 
         data[filter['dataColIdx']].split(',').forEach(function(value, _, _) {
             if (filter['selectedValues'].indexOf(value.trim()) !== -1) {
-                result = true;
+                count++;
             }
         });
 
-        return result;
+        return isAnd && count === selectedNoUnknownCount || !isAnd && count > 0;
     }
 }
 
@@ -91,6 +116,10 @@ function initSearchForm() {
     addMultiselectFilter('#typesFilter', TYPES_COL_IDX, function (type) {
         return type;
     });
+
+    addMultiselectFilter('#featuresFilter', FEATURES_COL_IDX, function (feature) {
+        return feature;
+    }, true);
 }
 
 function getColValues(columnIndex) {
