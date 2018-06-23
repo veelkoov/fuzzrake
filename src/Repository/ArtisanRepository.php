@@ -27,32 +27,12 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-//    /**
-//     * @return Artisan[] Returns an array of Artisan objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function getDistinctCountriesCount(): int
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('COUNT (DISTINCT a.country)')
+            ->where('a.country != \'\'')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getSingleScalarResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Artisan
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -21,9 +21,9 @@ class MainController extends AbstractController
     public function index(ArtisanRepository $artisanRepository): Response
     {
         $artisans = $artisanRepository->getAll();
+        $countryCount = $artisanRepository->getDistinctCountriesCount();
 
-        return $this->render('frontend/main.html.twig', ['artisans' => $artisans]);
-
+        return $this->render('frontend/main.html.twig', ['artisans' => $artisans, 'countryCount' => $countryCount]);
     }
 
     /**
