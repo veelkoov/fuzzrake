@@ -9,18 +9,29 @@ $(document).ready(function () {
     initWhatsThis();
 });
 
-function addMultiselectFilter(fieldsetSelector, choices, choice2idFunc, choice2labelFunc, dataColIdx) {
-    var $fieldset = $(fieldsetSelector);
-
-    $.each(choices, function (idx, choice) {
-        var choiceId = choice2idFunc(choice);
-        var choiceLabel = choice2labelFunc(choice);
-
-        $fieldset.append(
-            '<label for="filter-' + choiceId + '">' + choiceLabel + '</label>' +
-            '<input type="checkbox" name="filter-' + choiceId + '" id="filter-' + choiceId + '" value="' + choice + '">'
-        );
+function initWhatsThis() {
+    $('.what_link').click(function (ev) {
+        $('#what').toggle(500);
+        ev.preventDefault();
     });
+}
+
+function addFieldsetCheckbox($fieldset, itemId, itemValue, itemLabel, title='') {
+    $fieldset.append(
+        '<label for="' + itemId + '"' + (title ? ' title="' + title + '"' : '') + '>' + itemLabel + '</label>' +
+        '<input type="checkbox" name="' + itemId + '" id="' + itemId + '" value="' + itemValue + '">'
+    );
+}
+
+function addMultiselectFilter(fieldsetSelector, dataColIdx, choice2labelFunc) {
+    var $fieldset = $(fieldsetSelector);
+    var idPrefix = 'filter-' + safeId(fieldsetSelector) + '-';
+
+    $.each(getColValues(dataColIdx), function (_, choice) {
+        addFieldsetCheckbox($fieldset, idPrefix + safeId(choice), choice, choice2labelFunc(choice));
+    });
+
+    addFieldsetCheckbox($fieldset, idPrefix + 'unknown', '', '<i class="fas fa-question-circle"></i>', 'Include unknown');
 
     var $checkboxes = $fieldset.find('input');
 
@@ -34,75 +45,65 @@ function addMultiselectFilter(fieldsetSelector, choices, choice2idFunc, choice2l
 
     $checkboxes.checkboxradio({
         icon: false
-    }).change(function () {
+    }).change(getOnFilterChangeFunction(filter));
+
+    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filter));
+}
+
+function getOnFilterChangeFunction(filter) {
+    return function() {
         filter['selectedValues'] = filter['checkboxes']
             .filter(':checked')
             .map(function (_, node) { return node.value; })
             .get();
 
         $dataTable.draw();
-    });
+    }
+}
 
-    $.fn.dataTable.ext.search.push(function (_, data, _) {
+function getDataTableFilterFunction(filter) {
+    return function (_, data, _) {
         if (filter['selectedValues'].length === 0) {
+            return true;
+        }
+
+        if (data[filter['dataColIdx']].trim() === '' && filter['selectedValues'].indexOf('') !== -1) {
             return true;
         }
 
         var result = false;
 
-        data[filter['dataColIdx']].split(',').forEach(function(value, index, theArray) {
+        data[filter['dataColIdx']].split(',').forEach(function(value, _, _) {
             if (filter['selectedValues'].indexOf(value.trim()) !== -1) {
                 result = true;
             }
         });
 
         return result;
-    });
+    }
 }
 
 function initSearchForm() {
-    addMultiselectFilter('#countriesFilter', getCountryCodes(), function (countryCode) {
-        return 'country-' + countryCode;
-    }, function (countryCode) {
+    addMultiselectFilter('#countriesFilter', COUNTRY_COL_IDX, function (countryCode) {
         return '<span class="flag-icon flag-icon-' + countryCode + '"></span>';
-    }, COUNTRY_COL_IDX);
+    });
 
-    addMultiselectFilter('#typesFilter', getTypes(), function (type) {
-        return 'type-' + type.toLowerCase().replace(' ', '-');
-    }, function (type) {
+    addMultiselectFilter('#typesFilter', TYPES_COL_IDX, function (type) {
         return type;
-    }, TYPES_COL_IDX);
+    });
 }
 
-function getCountryCodes() {
+function getColValues(columnIndex) {
     return $dataTable
-        .column(COUNTRY_COL_IDX)
-        .data()
-        .sort()
-        .unique()
-        .filter((value, _) => value);
-}
-
-function getTypes() {
-    return $dataTable
-        .column(TYPES_COL_IDX)
+        .column(columnIndex)
         .data()
         .join(',')
         .split(',')
         .map(function (type, _, _) { return type.trim(); })
         .sort()
-        .filter(function (value, index, theArray) {
-            return value && index === theArray.indexOf(value);
-        });
+        .filter((value, index, theArray) => value && index === theArray.indexOf(value));
 }
 
-function initWhatsThis() {
-    $('.what_link').click(function (ev) {
-        $('#what').toggle(500);
-        ev.preventDefault();
-    });
-}
-
-function getCountryId(countryCode) {
-    return countryCode ? 'country-' + countryCode.toLowerCase() : '';
+function safeId(input) {
+    return input.replace(/[^a-zA-Z0-9]+/, '_')
 }
