@@ -82,6 +82,21 @@ class Artisan implements \JsonSerializable
      */
     private $commisionsQuotesCheckUrl;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $queueUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $features;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $notes;
+
     public function getId()
     {
         return $this->id;
@@ -240,7 +255,8 @@ class Artisan implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $f = ['name', 'types', 'country', 'furAffinityUrl', 'deviantArtUrl', 'websiteUrl', 'facebookUrl', 'twitterUrl', 'tumblrUrl'];
+        $f = ['name', 'types', 'country', 'furAffinityUrl', 'deviantArtUrl', 'websiteUrl', 'facebookUrl', 'twitterUrl',
+            'tumblrUrl', 'commisionsQuotesCheckUrl', 'queueUrl', 'features', 'notes'];
 
         return array_map(function ($item) {
             return $this->$item;
@@ -255,6 +271,42 @@ class Artisan implements \JsonSerializable
     public function setTypes(string $types): self
     {
         $this->types = $types;
+
+        return $this;
+    }
+
+    public function getQueueUrl(): ?string
+    {
+        return $this->queueUrl;
+    }
+
+    public function setQueueUrl(string $queueUrl): self
+    {
+        $this->queueUrl = $queueUrl;
+
+        return $this;
+    }
+
+    public function getFeatures(): ?string
+    {
+        return $this->features;
+    }
+
+    public function setFeatures(string $features): self
+    {
+        $this->features = $features;
+
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(string $notes): self
+    {
+        $this->notes = $notes;
 
         return $this;
     }
