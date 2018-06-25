@@ -1,0 +1,30 @@
+- hosts: aws
+
+  vars:
+    upload_list:
+      - /index.html
+#      - /general.js
+#      - /Choices-master/assets/styles/css/choices.min.css
+#      - /Choices-master/assets/scripts/dist/choices.min.js
+#      - /Choices-master/assets/icons/cross.svg
+
+  tasks:
+    - shell: curl -s http://fuzzrake/ | grep -v 'class="sf-toolbar' > ../public/index.html
+      args:
+        warn: no
+
+    - aws_s3:
+        bucket: fursuit
+        mode: put
+        permission: public-read
+        src: "../public/{{ item }}"
+        object: "{{ item }}"
+      with_items: "{{ upload_list }}"
+
+    - file:
+        state: absent
+        path: ../public/index.html
+
+    - cloudfront_invalidation:
+        distribution_id: E33VE7XDZBLOTM
+        target_paths: "{{ upload_list }}"
