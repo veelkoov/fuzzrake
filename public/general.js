@@ -1,10 +1,20 @@
 var $dataTable;
-var COUNTRY_COL_IDX = 1;
-var TYPES_COL_IDX = 2;
-var FEATURES_COL_IDX = 3;
-var multiselectFilters = {};
+var filters = {};
 
 $(document).ready(function () {
+    initWhatsThis();
+    initDataTable();
+    initSearchForm();
+});
+
+function initWhatsThis() {
+    $('.what_link').click(function (ev) {
+        $('#what').toggle(500);
+        ev.preventDefault();
+    });
+}
+
+function initDataTable() {
     $dataTable = $('#artisans').DataTable({
         dom: "<'row'<'col-sm-12 col-md-6'lB><'col-sm-12 col-md-6'f>>" +
         "<'row'<'col-sm-12'tr>>" +
@@ -25,60 +35,38 @@ $(document).ready(function () {
             }
         ]
     });
-    initSearchForm();
-    initWhatsThis();
-});
-
-function initWhatsThis() {
-    $('.what_link').click(function (ev) {
-        $('#what').toggle(500);
-        ev.preventDefault();
-    });
 }
 
-function addFieldsetCheckbox($fieldset, itemId, itemValue, itemLabel, title='') {
-    $fieldset.append(
-        '<label for="' + itemId + '"' + (title ? ' title="' + title + '"' : '') + '>' + itemLabel + '</label>' +
-        '<input type="checkbox" name="' + itemId + '" id="' + itemId + '" value="' + itemValue + '">'
-    );
+function initSearchForm() {
+    addChoiceWidget('#countriesFilter', 1, false, countriesOnCreateTemplatesCallback);
+    addChoiceWidget('#typesFilter', 2, false);
+    addChoiceWidget('#featuresFilter', 3, true);
 }
 
-function addMultiselectFilter(fieldsetSelector, dataColIdx, choice2labelFunc, isAnd = false) {
-    var $fieldset = $(fieldsetSelector);
-    var idPrefix = 'filter-' + safeId(fieldsetSelector) + '-';
-
-    $.each(getColValues(dataColIdx), function (_, choice) {
-        addFieldsetCheckbox($fieldset, idPrefix + safeId(choice), choice, choice2labelFunc(choice));
-    });
-
-    addFieldsetCheckbox($fieldset, idPrefix + 'unknown', '', '<i class="fas fa-question-circle"></i>', 'Include unknown');
-
-    var $checkboxes = $fieldset.find('input');
-
-    multiselectFilters[fieldsetSelector] = {
-        'checkboxes': $checkboxes,
-        'dataColIdx': dataColIdx,
-        'selectedValues': []
+function addChoiceWidget(selector, dataColumnIndex, isAnd, onCreateTemplatesCallback = null) {
+    filters[selector] = {
+        selectObj: new Choices(selector, {
+            shouldSort: false,
+            removeItemButton: true,
+            callbackOnCreateTemplates: onCreateTemplatesCallback
+        }),
+        dataColumnIndex: dataColumnIndex,
+        $select: $(selector),
+        selectedValues: []
     };
 
-    var filter = multiselectFilters[fieldsetSelector];
+    filters[selector]['selectObj'].passedElement.addEventListener('addItem', refresh);
+    filters[selector]['selectObj'].passedElement.addEventListener('removeItem', refresh);
 
-    $checkboxes.checkboxradio({
-        icon: false
-    }).change(getOnFilterChangeFunction(filter));
-
-    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filter, isAnd));
+    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
 }
 
-function getOnFilterChangeFunction(filter) {
-    return function() {
-        filter['selectedValues'] = filter['checkboxes']
-            .filter(':checked')
-            .map(function (_, node) { return node.value; })
-            .get();
+function refresh(_) {
+    $.each(filters, function(_, filter) {
+        filter['selectedValues'] = filter['$select'].val();
+    });
 
-        $dataTable.draw();
-    }
+    $dataTable.draw();
 }
 
 function getDataTableFilterFunction(filter, isAnd) {
@@ -91,48 +79,36 @@ function getDataTableFilterFunction(filter, isAnd) {
 
         var showUnknown = filter['selectedValues'].indexOf('') !== -1;
 
-        if (showUnknown && data[filter['dataColIdx']].trim() === '') {
+        if (showUnknown && data[filter['dataColumnIndex']].trim() === '') {
             return true;
         }
 
         var selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
         var count = 0;
 
-        data[filter['dataColIdx']].split(',').forEach(function(value, _, _) {
+        data[filter['dataColumnIndex']].split(',').forEach(function (value, _, _) {
             if (filter['selectedValues'].indexOf(value.trim()) !== -1) {
                 count++;
             }
         });
 
-        return isAnd && count === selectedNoUnknownCount || !isAnd && count > 0;
+        return count > 0 && (!isAnd || count === selectedNoUnknownCount)
     }
 }
 
-function initSearchForm() {
-    addMultiselectFilter('#countriesFilter', COUNTRY_COL_IDX, function (countryCode) {
-        return '<span class="flag-icon flag-icon-' + countryCode + '"></span>';
-    });
+function countriesOnCreateTemplatesCallback(template) {
+    var classNames = this.config.classNames;
 
-    addMultiselectFilter('#typesFilter', TYPES_COL_IDX, function (type) {
-        return type;
-    });
-
-    addMultiselectFilter('#featuresFilter', FEATURES_COL_IDX, function (feature) {
-        return feature;
-    }, true);
-}
-
-function getColValues(columnIndex) {
-    return $dataTable
-        .column(columnIndex)
-        .data()
-        .join(',')
-        .split(',')
-        .map(function (type, _, _) { return type.trim(); })
-        .sort()
-        .filter((value, index, theArray) => value && index === theArray.indexOf(value));
-}
-
-function safeId(input) {
-    return input.replace(/[^a-zA-Z0-9]+/, '_')
+    return {
+        item: (data) => {
+            return template(`
+                <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : ''} ${!data.disabled ? classNames.itemSelectable : ''}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''} data-deletable>${data.label ? '<span class="flag-icon flag-icon-' + data.label + '"></span>' : 'Show unknown'}<button class="${classNames.button}" data-button>Remove item</button></div>
+            `);
+        },
+        choice: (data) => {
+            return template(`
+                <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}>${data.label ? '<span class="flag-icon flag-icon-' + data.label + '"></span>' : 'Show unknown'}</div>
+            `);
+        },
+    };
 }

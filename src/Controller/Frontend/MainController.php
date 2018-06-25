@@ -22,8 +22,17 @@ class MainController extends AbstractController
     {
         $artisans = $artisanRepository->getAll();
         $countryCount = $artisanRepository->getDistinctCountriesCount();
+        $types = $artisanRepository->getDistinctTypes();
+        $features = $artisanRepository->getDistinctFeatures();
+        $countries = $artisanRepository->getDistinctCountries();
 
-        return $this->render('frontend/main.html.twig', ['artisans' => $artisans, 'countryCount' => $countryCount]);
+        return $this->render('frontend/main.html.twig', [
+            'artisans' => $artisans,
+            'countryCount' => $countryCount,
+            'types' => $types,
+            'features' => $features,
+            'countries' => $countries
+        ]);
     }
 
     /**

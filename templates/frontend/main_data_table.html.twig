@@ -1,7 +1,7 @@
 <table id="artisans" class="table table-striped table-sm table-hover text-center">
     <thead class="thead-dark">
     <tr>
-        <th class="text-left">Name</th>
+        <th class="text-left">Fursuit maker/studio name</th>
         <th class="hidden_data">Country</th>
         <th class="toggleable">Types</th>
         <th class="toggleable">Features</th>
@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     {% for artisan in artisans %}
-        <tr>
+        <tr class="fursuit_maker">
             {%- spaceless %}
                 <td class="text-left">
                     {{- artisan.name -}}

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Artisan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -34,5 +35,42 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.country != \'\'')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getDistinctCountries(): array
+    {
+        return $this->getDistinctItemFromJoined('country');
+    }
+
+    public function getDistinctTypes(): array
+    {
+        return $this->getDistinctItemFromJoined('types');
+    }
+
+    public function getDistinctFeatures(): array
+    {
+        return $this->getDistinctItemFromJoined('features');
+    }
+
+    private function getDistinctItemFromJoined(string $columnName): array
+    {
+        $dbResult = $this->createQueryBuilder('a')
+            ->select("DISTINCT a.$columnName AS items")
+            ->where("a.$columnName != :empty")
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [];
+
+        foreach ($dbResult as $items) {
+            foreach (explode(',', $items['items']) as $item) {
+                $result[trim($item)] = true;
+            }
+        }
+
+        ksort($result);
+
+        return array_keys($result);
     }
 }

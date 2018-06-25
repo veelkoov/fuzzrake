@@ -1,3 +1,31 @@
-<fieldset id="countriesFilter"></fieldset>
-<fieldset id="typesFilter"></fieldset>
-<fieldset id="featuresFilter"></fieldset>
+<div class="row pb-3">
+    <div class="col col-sm-4">
+        <label for="_countriesFilter">Choose fursuit makers' countries:</label>
+        <select multiple="multiple" id="countriesFilter">
+            <option></option>
+            {% for country in countries %}
+                <option>{{ country|lower }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col col-sm-4">
+        <label for="_typesFilter">Choose fursuit types offered by makers:</label>
+        <select multiple="multiple" id="typesFilter">
+            <option value="">Show unknown</option>
+            {% for type in types %}
+                <option>{{ type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col col-sm-4">
+        <label for="_featuresFilter">Choose fursuit features offered by makers:</label>
+        <select multiple="multiple" id="featuresFilter">
+            <option value="">Show unknown</option>
+            {% for feature in features %}
+                <option>{{ feature }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
