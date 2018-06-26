@@ -2,7 +2,7 @@
     <div class="col col-sm-4">
         <label for="countriesFilter">Choose fursuit makers' countries:</label>
         <select multiple="multiple" id="countriesFilter">
-            <option></option>
+            <option value="">Show unknown</option>
             {% for country in countries %}
                 <option>{{ country|lower }}</option>
             {% endfor %}

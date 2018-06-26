@@ -1,5 +1,6 @@
 var $dataTable;
 var filters = {};
+var FIRST_LINK_COLUMN_IDX = 4; // TODO: fetch automatically
 
 $(document).ready(function () {
     initWhatsThis();
@@ -10,6 +11,7 @@ $(document).ready(function () {
 function initWhatsThis() {
     $('.what_link').click(function (ev) {
         $('#what').toggle(500);
+        $('.what_link.show_link').toggle();
         ev.preventDefault();
     });
 }
@@ -20,20 +22,27 @@ function initDataTable() {
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         paging: false,
+        autoWidth: false,
         buttons: [
             {
                 className: 'btn-sm btn-dark',
                 columns: '.toggleable',
                 extend: 'colvis',
-                text: 'Show/hide columns'
-            },
-            {
-                className: 'btn-sm btn-dark',
-                columns: '.link',
-                extend: 'columnToggle',
-                text: 'Show/hide links'
+                text: 'Show/hide columns',
+                columnText: function (_, columnIndex, defaultText) {
+                    return columnIndex === FIRST_LINK_COLUMN_IDX ? 'Links' : defaultText;
+                }
             }
-        ]
+        ],
+        infoCallback: function( settings, start, end, max, total, pre ) {
+            return 'Displaying ' + total + ' out of ' + max + ' fursuit makers in the database';
+        }
+    });
+
+    $dataTable.on('column-visibility.dt', function (_1, _2, columnIndex, state, _4) {
+        if (columnIndex == FIRST_LINK_COLUMN_IDX) {
+            $dataTable.columns('.toggleableLink').visible(state);
+        }
     });
 }
 
@@ -102,12 +111,12 @@ function countriesOnCreateTemplatesCallback(template) {
     return {
         item: (data) => {
             return template(`
-                <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : ''} ${!data.disabled ? classNames.itemSelectable : ''}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''} data-deletable>${data.label ? '<span class="flag-icon flag-icon-' + data.label + '"></span>' : 'Show unknown'}<button class="${classNames.button}" data-button>Remove item</button></div>
+                <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : ''} ${!data.disabled ? classNames.itemSelectable : ''}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''} data-deletable>${data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.label + '"></span>' : data.label}<button class="${classNames.button}" data-button>Remove item</button></div>
             `);
         },
         choice: (data) => {
             return template(`
-                <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}>${data.label ? '<span class="flag-icon flag-icon-' + data.label + '"></span>' : 'Show unknown'}</div>
+                <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}>${data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.label + '"></span>' : data.label}</div>
             `);
         },
     };
