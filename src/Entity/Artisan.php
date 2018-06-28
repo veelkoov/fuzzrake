@@ -102,6 +102,11 @@ class Artisan implements \JsonSerializable
      */
     private $notes;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $areCommissionsOpen;
+
     public function getId()
     {
         return $this->id;
@@ -324,6 +329,18 @@ class Artisan implements \JsonSerializable
     public function setInstagramUrl(string $instagramUrl): self
     {
         $this->instagramUrl = $instagramUrl;
+
+        return $this;
+    }
+
+    public function getAreCommissionsOpen(): ?bool
+    {
+        return $this->areCommissionsOpen;
+    }
+
+    public function setAreCommissionsOpen(bool $areCommissionsOpen): self
+    {
+        $this->areCommissionsOpen = $areCommissionsOpen;
 
         return $this;
     }

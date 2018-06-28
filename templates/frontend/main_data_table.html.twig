@@ -5,6 +5,7 @@
         <th class="hidden-data">Country</th>
         <th class="toggleable">Types</th>
         <th class="toggleable">Features</th>
+        <th class="toggleable">Commissions</th>
         <th class="toggleable no-sorting">FR</th>
         <th class="toggleable first-link"></th>
         <th class="toggleable-link"></th>
@@ -37,6 +38,14 @@
                     {{- artisan.features -}}
                 </td>
                 <td>
+                    {%- if artisan.areCommissionsOpen is null -%}
+                    {%- elseif artisan.areCommissionsOpen == true -%}
+                        <i class="fas fa-check-circle"></i> Open
+                    {%- else -%}
+                        <i class="fas fa-times-circle"></i> Closed
+                    {%- endif -%}
+                </td>
+                <td>
                     {%- if artisan.fursuitReviewUrl -%}
                         <a href="{{ artisan.fursuitReviewUrl }}"><i class="fas fa-balance-scale"></i></a>
                     {%- endif -%}
@@ -48,7 +57,7 @@
                 </td>
                 <td>
                     {%- if artisan.furAffinityUrl -%}
-                        <a href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt="FurAffinity" /></a>
+                        <a href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt="FurAffinity"/></a>
                     {%- endif -%}
                 </td>
                 <td>
