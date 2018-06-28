@@ -4,8 +4,8 @@ body {
 table#artisans {
   border-collapse: collapse !important;
 }
-table#artisans td.hidden_data,
-table#artisans th.hidden_data {
+table#artisans td.hidden-data,
+table#artisans th.hidden-data {
   display: none;
 }
 table#artisans tbody tr td + td * {

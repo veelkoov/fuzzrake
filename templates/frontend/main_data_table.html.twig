@@ -2,20 +2,22 @@
     <thead class="thead-dark">
     <tr>
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
-        <th class="hidden_data">Country</th>
+        <th class="hidden-data">Country</th>
         <th class="toggleable">Types</th>
         <th class="toggleable">Features</th>
-        <th class="toggleable firstLink"></th>
-        <th class="toggleableLink"></th>
-        <th class="toggleableLink"></th>
-        <th class="toggleableLink"></th>
-        <th class="toggleableLink"></th>
-        <th class="toggleableLink"></th>
+        <th class="toggleable no-sorting">FR</th>
+        <th class="toggleable first-link"></th>
+        <th class="toggleable-link"></th>
+        <th class="toggleable-link"></th>
+        <th class="toggleable-link"></th>
+        <th class="toggleable-link"></th>
+        <th class="toggleable-link"></th>
+        <th class="toggleable-link"></th>
     </tr>
     </thead>
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit_maker">
+        <tr class="fursuit-maker">
             {%- spaceless %}
                 <td class="text-left">
                     {{- artisan.name -}}
@@ -23,7 +25,7 @@
                         {{ ' ' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
                     {%- endif -%}
                 </td>
-                <td class="hidden_data country">
+                <td class="hidden-data">
                     {%- if artisan.country -%}
                         {{ artisan.country|lower }}
                     {%- endif -%}
@@ -33,6 +35,11 @@
                 </td>
                 <td class="text-left">
                     {{- artisan.features -}}
+                </td>
+                <td>
+                    {%- if artisan.fursuitReviewUrl -%}
+                        <a href="{{ artisan.fursuitReviewUrl }}"><i class="fas fa-balance-scale"></i></a>
+                    {%- endif -%}
                 </td>
                 <td>
                     {%- if artisan.websiteUrl -%}
@@ -62,6 +69,11 @@
                 <td>
                     {%- if artisan.tumblrUrl -%}
                         <a href="{{ artisan.tumblrUrl }}"><i class="fab fa-tumblr"></i></a>
+                    {%- endif -%}
+                </td>
+                <td>
+                    {%- if artisan.instagramUrl -%}
+                        <a href="{{ artisan.instagramUrl }}"><i class="fab fa-instagram"></i></a>
                     {%- endif -%}
                 </td>
             {% endspaceless -%}

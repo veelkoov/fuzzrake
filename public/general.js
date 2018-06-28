@@ -1,6 +1,7 @@
 var $dataTable;
 var filters = {};
-var FIRST_LINK_COLUMN_IDX = 4; // TODO: fetch automatically
+var FURSUITREVIEW_COLUMN_INDEX = 4; // TODO: fetch automatically
+var FIRST_LINK_COLUMN_INDEX = 5; // TODO: fetch automatically
 
 $(document).ready(function () {
     initWhatsThis();
@@ -23,6 +24,9 @@ function initDataTable() {
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         paging: false,
         autoWidth: false,
+        columnDefs: [
+            {targets: 'no-sorting', orderable: false}
+        ],
         buttons: [
             {
                 className: 'btn-sm btn-dark',
@@ -30,7 +34,14 @@ function initDataTable() {
                 extend: 'colvis',
                 text: 'Show/hide columns',
                 columnText: function (_, columnIndex, defaultText) {
-                    return columnIndex === FIRST_LINK_COLUMN_IDX ? 'Links' : defaultText;
+                    switch (columnIndex) {
+                        case FURSUITREVIEW_COLUMN_INDEX:
+                            return 'FursuitReview link';
+                        case FIRST_LINK_COLUMN_INDEX:
+                            return 'Websites links';
+                        default:
+                            return defaultText;
+                    }
                 }
             }
         ],
@@ -40,8 +51,8 @@ function initDataTable() {
     });
 
     $dataTable.on('column-visibility.dt', function (_1, _2, columnIndex, state, _4) {
-        if (columnIndex == FIRST_LINK_COLUMN_IDX) {
-            $dataTable.columns('.toggleableLink').visible(state);
+        if (columnIndex == FIRST_LINK_COLUMN_INDEX) {
+            $dataTable.columns('.toggleable-link').visible(state);
         }
     });
 }

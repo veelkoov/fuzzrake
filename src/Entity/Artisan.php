@@ -80,6 +80,11 @@ class Artisan implements \JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $instagramUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $commisionsQuotesCheckUrl;
 
     /**
@@ -307,6 +312,18 @@ class Artisan implements \JsonSerializable
     public function setNotes(string $notes): self
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getInstagramUrl(): ?string
+    {
+        return $this->instagramUrl;
+    }
+
+    public function setInstagramUrl(string $instagramUrl): self
+    {
+        $this->instagramUrl = $instagramUrl;
 
         return $this;
     }
