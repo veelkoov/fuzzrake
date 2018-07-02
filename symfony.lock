@@ -1,1 +1,23 @@
-[]
+{
+    "symfony/browser-kit": {
+        "version": "v4.1.1"
+    },
+    "symfony/css-selector": {
+        "version": "v4.1.1"
+    },
+    "symfony/dom-crawler": {
+        "version": "v4.1.1"
+    },
+    "symfony/phpunit-bridge": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "01a6e80dad40a4ef42dad65877f744a53a121c38"
+        }
+    },
+    "symfony/test-pack": {
+        "version": "v1.0.2"
+    }
+}
