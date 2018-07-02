@@ -13,21 +13,23 @@ class CommissionsOpenParser
         'commissions open ?\.',
         '!+ ?commissions open ?!+',
         'we are currently open for (the )?commissions',
-        'commissions? (status|are)? ?(:|now) ?open',
+        'commissions? (quotes )?(status|are)? ?(:|now) ?open',
         'commissions and quotes ?: ?open',
         'quotes have now opened', // TODO: verify if makes sense
         'open for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are open!',
+        'commissions? info open ?!',
     ];
     const CLOSED_REGEXES = [
         'commissions closed? ?\.',
         '!+ ?commissions closed? ?!+',
         'we are currently closed? for (the )?commissions',
-        'commissions? (status|are)? ?(:|now) ?closed?',
+        'commissions? (quotes )?(status|are)? ?(:|now) ?closed?',
         'commissions and quotes ?: ?closed?',
         'quotes have now closed', // TODO: verify if makes sense
         'closed for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are closed!',
+        'commissions? info closed? ?!',
     ];
 
     public static function areCommissionsOpen(string $inputText): ?bool
