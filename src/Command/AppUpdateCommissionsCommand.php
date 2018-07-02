@@ -27,13 +27,14 @@ class AppUpdateCommissionsCommand extends Command
 
     protected function configure()
     {
+        $this->addOption('cached', 'c', null, 'Use already cached webpages (retry parsing)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->commissionStatusUpdateService->updateAll($io);
+        $this->commissionStatusUpdateService->updateAll($io, $input->getOption('cached'));
 
         $io->success('Finished');
     }

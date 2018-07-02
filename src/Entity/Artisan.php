@@ -338,7 +338,7 @@ class Artisan implements \JsonSerializable
         return $this->areCommissionsOpen;
     }
 
-    public function setAreCommissionsOpen(bool $areCommissionsOpen): self
+    public function setAreCommissionsOpen(?bool $areCommissionsOpen): self
     {
         $this->areCommissionsOpen = $areCommissionsOpen;
 

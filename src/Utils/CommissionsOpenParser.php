@@ -13,7 +13,7 @@ class CommissionsOpenParser
         'commissions open ?\.',
         '!+ ?commissions open ?!+',
         'we are currently open for (the )?commissions',
-        'commissions? (status|are) ?: ?open',
+        'commissions? (status|are)? ?(:|now) ?open',
         'commissions and quotes ?: ?open',
         'quotes have now opened', // TODO: verify if makes sense
         'open for (new )?(quotes and )?commissions ?[.!]',
@@ -23,7 +23,7 @@ class CommissionsOpenParser
         'commissions closed? ?\.',
         '!+ ?commissions closed? ?!+',
         'we are currently closed? for (the )?commissions',
-        'commissions? (status|are) ?: ?closed?',
+        'commissions? (status|are)? ?(:|now) ?closed?',
         'commissions and quotes ?: ?closed?',
         'quotes have now closed', // TODO: verify if makes sense
         'closed for (new )?(quotes and )?commissions ?[.!]',
