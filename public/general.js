@@ -1,7 +1,7 @@
 var $dataTable;
 var filters = {};
-var FURSUITREVIEW_COLUMN_INDEX = 4; // TODO: fetch automatically
-var FIRST_LINK_COLUMN_INDEX = 5; // TODO: fetch automatically
+var FURSUITREVIEW_COLUMN_INDEX = 5; // TODO: fetch automatically
+var FIRST_LINK_COLUMN_INDEX = 6; // TODO: fetch automatically
 
 $(document).ready(function () {
     initWhatsThis();

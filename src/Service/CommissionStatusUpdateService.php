@@ -66,19 +66,31 @@ class CommissionStatusUpdateService
         $webpageContents = $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl(), $useCached);
         $status = CommissionsOpenParser::areCommissionsOpen($webpageContents);
 
-        if ($status === true) {
-            $this->style->note($artisan->getName() . ' commissions OPEN');
-        } elseif ($status === false) {
-            $this->style->note($artisan->getName() . ' commissions CLOSED');
-        } else {
-            $this->style->caution($artisan->getName() . ' commissions UNKNOWN');
-        }
-
+        $this->reportStatusChange($artisan, $status);
         $artisan->setAreCommissionsOpen($status);
     }
 
     private function canAutoUpdate(Artisan $artisan): bool
     {
         return !empty($artisan->getCommisionsQuotesCheckUrl());
+    }
+
+    private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
+    {
+        if ($artisan->getAreCommissionsOpen() !== true && $newStatus === true) {
+            $this->style->note($artisan->getName() . ' commissions are now OPEN');
+        }
+
+        if ($artisan->getAreCommissionsOpen() !== false && $newStatus === false) {
+            $this->style->note($artisan->getName() . ' commissions are now CLOSED');
+        }
+
+        if ($newStatus === null) {
+            if ($artisan->getAreCommissionsOpen() === null) {
+                $this->style->note($artisan->getName() . ' commissions are UNKNOWN');
+            } else {
+                $this->style->caution($artisan->getName() . ' commissions are now UNKNOWN');
+            }
+        }
     }
 }
