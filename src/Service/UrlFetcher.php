@@ -101,6 +101,6 @@ class UrlFetcher
 
     private function urlToId(string $url): string
     {
-        return preg_replace('#[^a-z0-9_.-]+#', '_', $url);
+        return preg_replace('#[^a-z0-9_.-]+#i', '_', $url);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Utils;
 
 
+use Symfony\Component\DomCrawler\Crawler;
+
 class CommissionsOpenParser
 {
     const HTML_CLEANER_REGEXPS = [
@@ -10,22 +12,16 @@ class CommissionsOpenParser
         '(\s|&nbsp;|<br\s*/?>)+' => ' ',
     ];
     const OPEN_REGEXES = [
-        'commissions open ?\.',
-        '!+ ?commissions open ?!+',
         'we are currently open for (the )?commissions',
-        'commissions? (quotes )?(status|are)? ?(:|now) ?open',
-        'commissions and quotes ?: ?open',
+        'commissions?(( and)? quotes)?( status| are)?( ?:| now| currently)? ?open',
         'quotes have now opened', // TODO: verify if makes sense
         'open for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are open!',
         'commissions? info open ?!',
     ];
     const CLOSED_REGEXES = [
-        'commissions closed? ?\.',
-        '!+ ?commissions closed? ?!+',
         'we are currently closed? for (the )?commissions',
-        'commissions? (quotes )?(status|are)? ?(:|now) ?closed?',
-        'commissions and quotes ?: ?closed?',
+        'commissions?(( and)? quotes)?( status| are)?( ?:| now| currently)? ?closed?',
         'quotes have now closed', // TODO: verify if makes sense
         'closed for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are closed!',
@@ -35,6 +31,7 @@ class CommissionsOpenParser
     public static function areCommissionsOpen(string $inputText): ?bool
     {
         $inputText = self::cleanHtml($inputText);
+        $inputText = self::applyFilters($inputText);
 
         $open = self::matchesOpen($inputText);
         $closed = self::matchesClosed($inputText);
@@ -89,5 +86,15 @@ class CommissionsOpenParser
         }
 
         return strtolower($webpage);
+    }
+
+    private static function applyFilters(string $inputText): string
+    {
+        if (strpos($inputText, 'fur affinity [dot] net</title>') !== false) {
+            $crawler = new Crawler($inputText);
+            return $crawler->filter('#page-userpage tr:first-child table.maintable')->html();
+        }
+
+        return $inputText;
     }
 }

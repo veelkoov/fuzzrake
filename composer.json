@@ -14,6 +14,7 @@
         "symfony/asset": "^4.0",
         "symfony/console": "^4.0",
         "symfony/doctrine-bridge": "^4.0",
+        "symfony/dom-crawler": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
         "symfony/lts": "^4@dev",

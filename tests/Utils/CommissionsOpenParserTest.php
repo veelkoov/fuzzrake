@@ -13,7 +13,7 @@ class CommissionsOpenParserTest extends TestCase
      */
     public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult)
     {
-        $this->assertEquals($expectedResult, CommissionsOpenParser::areCommissionsOpen($webpageText),
+        $this->assertTrue($expectedResult === CommissionsOpenParser::areCommissionsOpen($webpageText),
             "Wrong result for '$webpageTextFileName'");
     }
 
@@ -24,6 +24,8 @@ class CommissionsOpenParserTest extends TestCase
                 $expectedResult = true;
             } elseif (substr_compare($filepath, '_closed.html', -12) === 0) {
                 $expectedResult = false;
+            } elseif (substr_compare($filepath, '_unknown.html', -13) === 0) {
+                $expectedResult = null;
             } else {
                 throw new \LogicException("Invalid filename: $filepath");
             }
