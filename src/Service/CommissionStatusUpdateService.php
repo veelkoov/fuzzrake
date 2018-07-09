@@ -49,7 +49,8 @@ class CommissionStatusUpdateService
                 try {
                     $this->updateArtisan($artisan, $useCached);
                 } catch (\Exception $exception) {
-                    $style->error($exception);
+                    $style->error("Failed updating: {$artisan->getName()} with {$artisan->getCommisionsQuotesCheckUrl()}");
+                    $style->text($exception);
                 }
 
                 $this->style->progressAdvance();
