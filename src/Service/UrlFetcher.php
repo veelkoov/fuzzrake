@@ -34,11 +34,11 @@ class UrlFetcher
         $this->lastRequests = [];
     }
 
-    public function fetchWebPage(string $url, bool $useCached): string
+    public function fetchWebPage(string $url): string
     {
         $snapshotPath = $this->snapshotPathForUrl($url);
 
-        if ($useCached && file_exists($snapshotPath)) {
+        if (file_exists($snapshotPath)) {
             return file_get_contents($snapshotPath);
         } else {
             $webpageContents = $this->curlFetchUrl($url);
@@ -46,6 +46,12 @@ class UrlFetcher
 
             return $webpageContents;
         }
+    }
+
+    public function clearCache(): void
+    {
+        $this->fs->remove($this->snapshotsDirPath);
+        $this->fs->mkdir($this->snapshotsDirPath);
     }
 
     private function curlFetchUrl(string $url): string

@@ -27,14 +27,15 @@ class AppUpdateCommissionsCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('cached', 'c', null, 'Use already cached webpages (retry parsing)');
+        $this->addOption('refresh', 'r', null, 'Refresh pages cache (re-fetch)');
+        $this->addOption('dry-run', 'd', null, 'Dry run (don\'t update the DB)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->commissionStatusUpdateService->updateAll($io, $input->getOption('cached'));
+        $this->commissionStatusUpdateService->updateAll($io, $input->getOption('refresh'), $input->getOption('dry-run'));
 
         $io->success('Finished');
     }

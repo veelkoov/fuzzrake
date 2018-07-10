@@ -37,34 +37,45 @@ class CommissionStatusUpdateService
         $this->urlFetcher = $urlFetcher;
     }
 
-    public function updateAll(StyleInterface $style, bool $useCached)
+    public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
     {
         $this->style = $style;
 
+        if ($refresh) {
+            $this->urlFetcher->clearCache();
+        }
+
+        $this->updateArtisans();
+
+        if (!$dryRun) {
+            $this->objectManager->flush();
+        }
+    }
+
+    private function updateArtisans(): void
+    {
         $artisans = $this->artisanRepository->findAll();
         $this->style->progressStart(count($artisans));
 
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
                 try {
-                    $this->updateArtisan($artisan, $useCached);
+                    $this->updateArtisan($artisan);
                 } catch (\Exception $exception) {
-                    $style->error("Failed updating: {$artisan->getName()} with {$artisan->getCommisionsQuotesCheckUrl()}");
-                    $style->text($exception);
+                    $this->style->error("Failed updating: {$artisan->getName()} with {$artisan->getCommisionsQuotesCheckUrl()}");
+                    $this->style->text($exception);
                 }
 
                 $this->style->progressAdvance();
             }
         }
 
-        $this->objectManager->flush();
         $this->style->progressFinish();
     }
 
-
-    private function updateArtisan(Artisan $artisan, bool $useCached)
+    private function updateArtisan(Artisan $artisan): void
     {
-        $webpageContents = $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl(), $useCached);
+        $webpageContents = $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl());
         $status = CommissionsOpenParser::areCommissionsOpen($webpageContents);
 
         $this->reportStatusChange($artisan, $status);
