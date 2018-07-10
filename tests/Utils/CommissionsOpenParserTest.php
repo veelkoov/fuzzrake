@@ -13,7 +13,7 @@ class CommissionsOpenParserTest extends TestCase
      */
     public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult)
     {
-        $this->assertTrue($expectedResult === CommissionsOpenParser::areCommissionsOpen($webpageText),
+        $this->assertSame($expectedResult, CommissionsOpenParser::areCommissionsOpen($webpageText),
             "Wrong result for '$webpageTextFileName'");
     }
 
