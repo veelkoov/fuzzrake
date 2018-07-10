@@ -3,8 +3,8 @@
   vars:
     upload_list:
       - /index.html
-      - /general.js
-      - /general.css
+#      - /general.js
+#      - /general.css
 #      - /Choices-master/assets/styles/css/choices.min.css
 #      - /Choices-master/assets/scripts/dist/choices.min.js
 #      - /Choices-master/assets/icons/cross.svg
