@@ -1,8 +1,11 @@
 - hosts: aws
 
   vars:
+    pages: [ index, info ]
     upload_list:
       - /index.html
+#      - /info.html
+#      - /sitemap.txt
 #      - /general.js
 #      - /general.css
 #      - /Choices-master/assets/styles/css/choices.min.css
@@ -10,21 +13,28 @@
 #      - /Choices-master/assets/icons/cross.svg
 
   tasks:
-    - shell: curl -s http://fuzzrake/ | grep -v 'class="sf-toolbar' > ../public/index.html
+    - file:
+        state: absent
+        path: ../public/{{ item }}.html
+      with_items: "{{ pages }}"
+
+    - shell: curl -s http://fuzzrake/{{ item }}.html | grep -v 'class="sf-toolbar' > ../public/tmpfile && mv ../public/{tmpfile,{{ item }}.html}
       args:
         warn: no
+      with_items: "{{ pages }}"
 
     - aws_s3:
         bucket: fursuit
         mode: put
-        permission: public-read
+        permission: private
         src: "../public/{{ item }}"
         object: "{{ item }}"
       with_items: "{{ upload_list }}"
 
     - file:
         state: absent
-        path: ../public/index.html
+        path: ../public/{{ item }}.html
+      with_items: "{{ pages }}"
 
     - cloudfront_invalidation:
         distribution_id: E33VE7XDZBLOTM

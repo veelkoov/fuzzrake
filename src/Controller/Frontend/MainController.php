@@ -15,7 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="main")
+     * @Route("/info.html", name="info")
+     * @return Response
+     */
+    public function info(): Response
+    {
+        return $this->render('frontend/info.html.twig', []);
+    }
+
+    /**
+     * @Route("/{anything}", name="main", defaults={"anything": ""})
      * @return Response
      */
     public function main(ArtisanRepository $artisanRepository): Response
@@ -33,14 +42,5 @@ class MainController extends AbstractController
             'features' => $features,
             'countries' => $countries
         ]);
-    }
-
-    /**
-     * @Route("/info.html", name="info")
-     * @return Response
-     */
-    public function info(): Response
-    {
-        return $this->render('frontend/info.html.twig', []);
     }
 }
