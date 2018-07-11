@@ -1,5 +1,5 @@
 body {
-  padding: 1em;
+  padding: 5em 1em 1em;
 }
 table#artisans {
   border-collapse: collapse !important;
@@ -14,9 +14,6 @@ table#artisans tbody tr td + td * {
 }
 div.dataTables_wrapper.container-fluid {
   padding: 0;
-}
-div#what {
-  display: none;
 }
 div.dataTables_info {
   white-space: normal !important;

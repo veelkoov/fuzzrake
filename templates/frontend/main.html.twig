@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block javascript %}
+    <script src="general.js?ver={{ "now"|date("ymdHis") }}"></script>
+{% endblock %}
+
 {% block body %}
     {% include 'frontend/main_intro.html.twig' %}
     {% include 'frontend/main_whats_this.html.twig' %}

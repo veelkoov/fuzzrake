@@ -15,10 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="main")
      * @return Response
      */
-    public function index(ArtisanRepository $artisanRepository): Response
+    public function main(ArtisanRepository $artisanRepository): Response
     {
         $artisans = $artisanRepository->getAll();
         $countryCount = $artisanRepository->getDistinctCountriesCount();
@@ -36,15 +36,11 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/data.json", name="data")
+     * @Route("/info.html", name="info")
      * @return Response
      */
-    public function data(ArtisanRepository $artisanRepository): JsonResponse
+    public function info(): Response
     {
-        $artisans = $artisanRepository->getAll();
-
-        $response = new JsonResponse($artisans);
-
-        return $response;
+        return $this->render('frontend/info.html.twig', []);
     }
 }

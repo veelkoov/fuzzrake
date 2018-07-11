@@ -4,18 +4,9 @@ var FURSUITREVIEW_COLUMN_INDEX = 5; // TODO: fetch automatically
 var FIRST_LINK_COLUMN_INDEX = 6; // TODO: fetch automatically
 
 $(document).ready(function () {
-    initWhatsThis();
     initDataTable();
     initSearchForm();
 });
-
-function initWhatsThis() {
-    $('.what_link').click(function (ev) {
-        $('#what').toggle(500);
-        $('.what_link.show_link').toggle();
-        ev.preventDefault();
-    });
-}
 
 function initDataTable() {
     $dataTable = $('#artisans').DataTable({
