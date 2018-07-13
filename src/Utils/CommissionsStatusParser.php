@@ -5,7 +5,7 @@ namespace App\Utils;
 
 use Symfony\Component\DomCrawler\Crawler;
 
-class CommissionsOpenParser
+class CommissionsStatusParser
 {
     const HTML_CLEANER_REGEXPS = [
         '</?(strong|b|i|span|center|a|em)[^>]*>' => '',
@@ -28,7 +28,7 @@ class CommissionsOpenParser
         'commissions? info closed? ?!',
     ];
 
-    public static function areCommissionsOpen(string $inputText): ?bool
+    public static function areCommissionsOpen(string $inputText): bool
     {
         $inputText = self::cleanHtml($inputText);
         $inputText = self::applyFilters($inputText);
@@ -44,7 +44,11 @@ class CommissionsOpenParser
             return false;
         }
 
-        return null;
+        if ($open) { // && $closed
+            throw new CommissionsStatusParserException('BOTH matches');
+        } else {
+            throw new CommissionsStatusParserException('NONE matches');
+        }
     }
 
     private static function matchesOpen(string $inputText): bool
@@ -90,7 +94,11 @@ class CommissionsOpenParser
 
     private static function applyFilters(string $inputText): string
     {
-        if (strpos($inputText, 'fur affinity [dot] net</title>') !== false) {
+        if (stripos($inputText, 'fur affinity [dot] net</title>') !== false) {
+            if (stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.') !== false) {
+                throw new CommissionsStatusParserException("FurAffinity login required");
+            }
+
             $crawler = new Crawler($inputText);
             return $crawler->filter('#page-userpage tr:first-child table.maintable')->html();
         }

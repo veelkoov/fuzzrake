@@ -2,10 +2,11 @@
 
 namespace App\Tests\Utils;
 
-use App\Utils\CommissionsOpenParser;
+use App\Utils\CommissionsStatusParser;
+use App\Utils\CommissionsStatusParserException;
 use PHPUnit\Framework\TestCase;
 
-class CommissionsOpenParserTest extends TestCase
+class CommissionsStatusParserTest extends TestCase
 {
 
     /**
@@ -13,8 +14,12 @@ class CommissionsOpenParserTest extends TestCase
      */
     public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult)
     {
-        $this->assertSame($expectedResult, CommissionsOpenParser::areCommissionsOpen($webpageText),
-            "Wrong result for '$webpageTextFileName'");
+        try {
+            $result = CommissionsStatusParser::areCommissionsOpen($webpageText);
+        } catch (CommissionsStatusParserException $exception) {
+            $result = null;
+        }
+        $this->assertSame($expectedResult, $result, "Wrong result for '$webpageTextFileName'");
     }
 
     public function areCommissionsOpenDataProvider()

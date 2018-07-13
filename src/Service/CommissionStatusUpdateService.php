@@ -4,8 +4,10 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\CommissionsOpenParser;
+use App\Utils\CommissionsStatusParser;
+use App\Utils\CommissionsStatusParserException;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 use Symfony\Component\Console\Style\StyleInterface;
 
 class CommissionStatusUpdateService
@@ -41,42 +43,39 @@ class CommissionStatusUpdateService
     {
         $this->style = $style;
 
-        if ($refresh) {
-            $this->urlFetcher->clearCache();
-        }
-
-        $this->updateArtisans();
+        $artisans = $this->getArtisans();
+        $this->prefetchStatusWebpages($artisans, $refresh);
+        $this->updateArtisans($artisans);
 
         if (!$dryRun) {
             $this->objectManager->flush();
         }
     }
 
-    private function updateArtisans(): void
+    private function updateArtisans(array $artisans): void
     {
-        $artisans = $this->artisanRepository->findAll();
-        $this->style->progressStart(count($artisans));
-
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
                 try {
                     $this->updateArtisan($artisan);
-                } catch (\Exception $exception) {
-                    $this->style->error("Failed updating: {$artisan->getName()} with {$artisan->getCommisionsQuotesCheckUrl()}");
+                } catch (Exception $exception) {
+                    $this->style->error("Failed: {$artisan->getName()} ({$artisan->getCommisionsQuotesCheckUrl()})");
                     $this->style->text($exception);
                 }
-
-                $this->style->progressAdvance();
             }
         }
-
-        $this->style->progressFinish();
     }
 
     private function updateArtisan(Artisan $artisan): void
     {
         $webpageContents = $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl());
-        $status = CommissionsOpenParser::areCommissionsOpen($webpageContents);
+
+        try {
+            $status = CommissionsStatusParser::areCommissionsOpen($webpageContents);
+        } catch (CommissionsStatusParserException $exception) {
+            $this->style->note("Failed: {$artisan->getName()} ({$artisan->getCommisionsQuotesCheckUrl()}): {$exception->getMessage()}");
+            $status = null;
+        }
 
         $this->reportStatusChange($artisan, $status);
         $artisan->setAreCommissionsOpen($status);
@@ -90,19 +89,42 @@ class CommissionStatusUpdateService
     private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
     {
         if ($artisan->getAreCommissionsOpen() !== true && $newStatus === true) {
-            $this->style->note($artisan->getName() . ' commissions are now OPEN');
+            $this->style->caution($artisan->getName() . ' commissions are now OPEN');
         }
 
         if ($artisan->getAreCommissionsOpen() !== false && $newStatus === false) {
-            $this->style->note($artisan->getName() . ' commissions are now CLOSED');
+            $this->style->caution($artisan->getName() . ' commissions are now CLOSED');
         }
 
-        if ($newStatus === null) {
-            if ($artisan->getAreCommissionsOpen() === null) {
-                $this->style->note($artisan->getName() . ' commissions are UNKNOWN');
-            } else {
-                $this->style->caution($artisan->getName() . ' commissions are now UNKNOWN');
-            }
+        if ($artisan->getAreCommissionsOpen() !== null && $newStatus === null) {
+            $this->style->caution($artisan->getName() . ' commissions are now UNKNOWN');
         }
+    }
+
+    private function prefetchStatusWebpages(array $artisans, bool $refresh): void
+    {
+        if ($refresh) {
+            $this->urlFetcher->clearCache();
+        }
+
+        $this->style->progressStart(count($artisans));
+
+        foreach ($artisans as $artisan) {
+            if ($this->canAutoUpdate($artisan)) {
+                $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl());
+            }
+
+            $this->style->progressAdvance();
+        }
+
+        $this->style->progressFinish();
+    }
+
+    /**
+     * @return Artisan[]
+     */
+    private function getArtisans(): array
+    {
+        return $this->artisanRepository->findAll();
     }
 }
