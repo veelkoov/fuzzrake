@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 
+use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
 
 class CommissionsStatusParser
@@ -13,42 +14,37 @@ class CommissionsStatusParser
     ];
     const OPEN_REGEXES = [
         'we are currently open for (the )?commissions',
-        'commissions?(( and)? quotes)?( status| are)?( ?:| now| currently)? ?open',
+        'commissions(( and)? quotes)?( status| are)?( ?:| now| currently)? ?open',
         'quotes have now opened', // TODO: verify if makes sense
-        'open for (new )?(quotes and )?commissions ?[.!]',
+        '(?!will not be )open for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are open!',
-        'commissions? info open ?!',
+        'commissions info open ?!',
+        '(^|\.) ?open for commissions ?($|\.)',
     ];
     const CLOSED_REGEXES = [
         'we are currently closed? for (the )?commissions',
-        'commissions?(( and)? quotes)?( status| are)?( ?:| now| currently)? ?closed?',
+        'commissions(( and)? quotes)?( status| are)?( ?:| now| currently)? ?closed?',
         'quotes have now closed', // TODO: verify if makes sense
         'closed for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are closed!',
-        'commissions? info closed? ?!',
+        'commissions info closed? ?!',
+        '(^|\.) ?closed? for commissions ?($|\.)',
     ];
 
     public static function areCommissionsOpen(string $inputText): bool
     {
         $inputText = self::cleanHtml($inputText);
-        $inputText = self::applyFilters($inputText);
+
+        try {
+            $inputText = self::applyFilters($inputText);
+        } catch (InvalidArgumentException $ex) {
+            throw new CommissionsStatusParserException("Filtering failed ({$ex->getMessage()})");
+        }
 
         $open = self::matchesOpen($inputText);
         $closed = self::matchesClosed($inputText);
 
-        if ($open && !$closed) {
-            return true;
-        }
-
-        if ($closed && !$open) {
-            return false;
-        }
-
-        if ($open) { // && $closed
-            throw new CommissionsStatusParserException('BOTH matches');
-        } else {
-            throw new CommissionsStatusParserException('NONE matches');
-        }
+        return self::analyseResult($open, $closed);
     }
 
     private static function matchesOpen(string $inputText): bool
@@ -75,6 +71,8 @@ class CommissionsStatusParser
 
     private static function matches(string $regex, string $testedString): bool
     {
+        $regex = str_replace('commissions', 'comm?iss?ions?', $regex);
+
         $result = preg_match("#$regex#", $testedString);
         if ($result === null) {
             throw new \LogicException("Regex matching failed: $regex", preg_last_error());
@@ -85,11 +83,13 @@ class CommissionsStatusParser
 
     private static function cleanHtml(string $webpage): string
     {
+        $webpage = strtolower($webpage);
+
         foreach (self::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
-            $webpage = preg_replace("#$regexp#si", $replacement, $webpage);
+            $webpage = preg_replace("#$regexp#s", $replacement, $webpage);
         }
 
-        return strtolower($webpage);
+        return $webpage;
     }
 
     private static function applyFilters(string $inputText): string
@@ -103,6 +103,28 @@ class CommissionsStatusParser
             return $crawler->filter('#page-userpage tr:first-child table.maintable')->html();
         }
 
+        if (stripos($inputText, '| Twitter</title>') !== false) {
+            $crawler = new Crawler($inputText);
+            return $crawler->filter('div.profileheadercard p.profileheadercard-bio.u-dir')->html();
+        }
+
         return $inputText;
+    }
+
+    private static function analyseResult(bool $open, bool $closed): bool
+    {
+        if ($open && !$closed) {
+            return true;
+        }
+
+        if ($closed && !$open) {
+            return false;
+        }
+
+        if ($open) { // && $closed
+            throw new CommissionsStatusParserException('BOTH matches');
+        } else {
+            throw new CommissionsStatusParserException('NONE matches');
+        }
     }
 }
