@@ -18,8 +18,8 @@ class CommissionsStatusParser
         'quotes have now opened', // TODO: verify if makes sense
         '(?!will not be )open for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are open!',
-        'commissions info open ?!',
-        '(^|\.) ?open for commissions ?($|\.)',
+        'commissions(: are| info) open',
+        '(^|\.) ?open for commissions ?($|[.(])',
     ];
     const CLOSED_REGEXES = [
         'we are currently closed? for (the )?commissions',
@@ -27,8 +27,8 @@ class CommissionsStatusParser
         'quotes have now closed', // TODO: verify if makes sense
         'closed for (new )?(quotes and )?commissions ?[.!]',
         'quote reviews are closed!',
-        'commissions info closed? ?!',
-        '(^|\.) ?closed? for commissions ?($|\.)',
+        'commissions(: are| info) closed?',
+        '(^|\.) ?closed? for commissions ?($|[.(])',
     ];
 
     public static function areCommissionsOpen(string $inputText): bool
