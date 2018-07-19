@@ -16,19 +16,24 @@ class CommissionsStatusParser
         'we are currently open for (the )?commissions',
         'commissions(( and)? quotes)?( status| are)?( ?:| now| currently)? ?open',
         'quotes have now opened', // TODO: verify if makes sense
-        '(?!will not be )open for (new )?(quotes and )?commissions ?[.!]',
+        '(?!will not be )open for (new )?(quotes and )?commissions ?([.!]|</)',
         'quote reviews are open!',
         'commissions(: are| info) open',
         '(^|\.) ?open for commissions ?($|[.(])',
     ];
     const CLOSED_REGEXES = [
-        'we are currently closed? for (the )?commissions',
-        'commissions(( and)? quotes)?( status| are)?( ?:| now| currently)? ?closed?',
+        'we are currently closed for (the )?commissions',
+        'commissions(( and)? quotes)?( status| are)?( ?:| now| currently)? ?closed',
         'quotes have now closed', // TODO: verify if makes sense
-        'closed for (new )?(quotes and )?commissions ?[.!]',
+        'closed for (new )?(quotes and )?commissions ?([.!]|</)',
         'quote reviews are closed!',
-        'commissions(: are| info) closed?',
-        '(^|\.) ?closed? for commissions ?($|[.(])',
+        'commissions(: are| info) closed',
+        '(^|\.) ?closed for commissions ?($|[.(])',
+    ];
+    const COMMON_REPLACEMENTS = [
+        'commissions' => 'comm?iss?ions?',
+        'open' => 'open(?!ing)',
+        'closed' => 'closed?',
     ];
 
     public static function areCommissionsOpen(string $inputText): bool
@@ -71,7 +76,9 @@ class CommissionsStatusParser
 
     private static function matches(string $regex, string $testedString): bool
     {
-        $regex = str_replace('commissions', 'comm?iss?ions?', $regex);
+        foreach (self::COMMON_REPLACEMENTS as $needle => $replacement) {
+            $regex = str_replace($needle, $replacement, $regex);
+        }
 
         $result = preg_match("#$regex#", $testedString);
         if ($result === null) {
