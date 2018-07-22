@@ -39,38 +39,46 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctCountries(): array
     {
-        return $this->getDistinctItemFromJoined('country');
+        return $this->getDistinctItemsWithCountFromJoined('country');
     }
 
     public function getDistinctTypes(): array
     {
-        return $this->getDistinctItemFromJoined('types');
+        return $this->getDistinctItemsWithCountFromJoined('types');
     }
 
     public function getDistinctFeatures(): array
     {
-        return $this->getDistinctItemFromJoined('features');
+        return $this->getDistinctItemsWithCountFromJoined('features');
     }
 
-    private function getDistinctItemFromJoined(string $columnName): array
+    private function getDistinctItemsWithCountFromJoined(string $columnName): array
     {
         $dbResult = $this->createQueryBuilder('a')
-            ->select("DISTINCT a.$columnName AS items")
+            ->select("a.$columnName AS items")
             ->where("a.$columnName != :empty")
             ->setParameter('empty', '')
             ->getQuery()
             ->getArrayResult();
 
+        $allJoined = implode(',', array_map(function ($item) {
+            return $item['items'];
+        }, $dbResult));
+
         $result = [];
 
-        foreach ($dbResult as $items) {
-            foreach (explode(',', $items['items']) as $item) {
-                $result[trim($item)] = true;
+        foreach (explode(',', $allJoined) as $item) {
+            $item = trim($item);
+
+            if (!array_key_exists($item, $result)) {
+                $result[$item] = 0;
             }
+
+            $result[$item]++;
         }
 
         ksort($result);
 
-        return array_keys($result);
+        return $result;
     }
 }

@@ -3,8 +3,8 @@
         <label for="countriesFilter">Choose fursuit makers' countries:</label>
         <select multiple="multiple" id="countriesFilter">
             <option value="">Show unknown</option>
-            {% for country in countries %}
-                <option>{{ country|lower }}</option>
+            {% for country, count in countries %}
+                <option value="{{ country|lower }}">{{ country }} ({{ count }})</option>
             {% endfor %}
         </select>
     </div>
@@ -13,8 +13,8 @@
         <label for="typesFilter">Choose fursuit types offered by makers:</label>
         <select multiple="multiple" id="typesFilter">
             <option value="">Show unknown</option>
-            {% for type in types %}
-                <option>{{ type }}</option>
+            {% for type, count in types %}
+                <option value="{{ type }}">{{ type }} ({{ count }})</option>
             {% endfor %}
         </select>
     </div>
@@ -23,8 +23,8 @@
         <label for="featuresFilter">Choose fursuit features offered by makers:</label>
         <select multiple="multiple" id="featuresFilter">
             <option value="">Show unknown</option>
-            {% for feature in features %}
-                <option>{{ feature }}</option>
+            {% for feature, count in features %}
+                <option value="{{ feature }}">{{ feature }} ({{  count }})</option>
             {% endfor %}
         </select>
     </div>
