@@ -22,7 +22,7 @@ class UrlFetcher
 
     const DELAY_FOR_HOST = 5;
 
-    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.1; +http://getfursu.it/)';
+    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.2; +http://getfursu.it/)';
 
     public function __construct(string $projectDir)
     {
@@ -39,11 +39,15 @@ class UrlFetcher
         $snapshotPath = $this->snapshotPathForUrl($url);
 
         if (file_exists($snapshotPath)) {
-            return file_get_contents($snapshotPath);
+            $webpageContents = file_get_contents($snapshotPath);
         } else {
             $webpageContents = $this->curlFetchUrl($url);
             $this->fs->dumpFile($snapshotPath, $webpageContents);
+        }
 
+        if ($this->isWixsite($url, $webpageContents)) {
+            return $this->retrieveWixsiteContents($webpageContents);
+        } else {
             return $webpageContents;
         }
     }
@@ -67,6 +71,7 @@ class UrlFetcher
         $result = curl_exec($ch);
         $this->updateLastHostCall($url);
 
+        // TODO: Detect 301/302
         if ($result === false) {
             throw new \LogicException("Failed to fetch URL: $url, " . curl_error($ch));
         }
@@ -108,5 +113,30 @@ class UrlFetcher
     private function urlToId(string $url): string
     {
         return preg_replace('#[^a-z0-9_.-]+#i', '_', $url);
+    }
+
+    private function retrieveWixsiteContents(string $webpageContents): string
+    {
+        preg_match('#"masterPageJsonFileName"\s*:\s*"(?<hash>[a-z0-9_]+).json"#s', $webpageContents, $matches);
+
+        $hash = $matches['hash'];
+
+        preg_match("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/(?!$hash)[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
+            $webpageContents, $matches);
+
+        return $this->fetchWebPage($matches['data_url']);
+    }
+
+    private function isWixsite(string $url, string $contents): bool
+    {
+        if (stripos($url, '.wixsite.com') !== false) {
+            return true;
+        }
+
+        if (preg_match('#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si', $contents) === 1) {
+            return true;
+        }
+
+        return false;
     }
 }
