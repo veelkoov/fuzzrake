@@ -13,18 +13,10 @@
     <tr>
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
         <th class="hidden-data">Country</th>
-        <th class="toggleable">Types</th>
-        <th class="toggleable">Features</th>
+        <th class="toggleable no-sorting">Types</th>
+        <th class="toggleable no-sorting">Features</th>
         <th class="toggleable">Commissions</th>
-        <th class="toggleable no-sorting">FR</th>
-        <th class="toggleable first-link"></th>
-        <th class="toggleable-link"></th>
-        <th class="toggleable-link"></th>
-        <th class="toggleable-link"></th>
-        <th class="toggleable-link"></th>
-        <th class="toggleable-link"></th>
-        <th class="toggleable-link"></th>
-        <th class="toggleable no-sorting">Updates</th>
+        <th class="no-sorting">Links</th>
     </tr>
     </thead>
     <tbody>
@@ -42,10 +34,10 @@
                         {{ artisan.country|lower }}
                     {%- endif -%}
                 </td>
-                <td class="text-left">
+                <td class="text-left small">
                     {{- artisan.types -}}
                 </td>
-                <td class="text-left">
+                <td class="text-left small">
                     {{- artisan.features -}}
                 </td>
                 <td>
@@ -56,50 +48,44 @@
                         <i class="fas fa-times-circle"></i> Closed
                     {%- endif -%}
                 </td>
-                <td>
-                    {%- if artisan.fursuitReviewUrl -%}
-                        <a href="{{ artisan.fursuitReviewUrl }}"><i class="fas fa-balance-scale"></i></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.websiteUrl -%}
-                        <a href="{{ artisan.websiteUrl }}"><i class="fas fa-link"></i></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.furAffinityUrl -%}
-                        <a href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt="FurAffinity"/></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.deviantArtUrl -%}
-                        <a href="{{ artisan.deviantArtUrl }}"><i class="fab fa-deviantart"></i></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.twitterUrl -%}
-                        <a href="{{ artisan.twitterUrl }}"><i class="fab fa-twitter"></i></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.facebookUrl -%}
-                        <a href="{{ artisan.facebookUrl }}"><i class="fab fa-facebook"></i></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.tumblrUrl -%}
-                        <a href="{{ artisan.tumblrUrl }}"><i class="fab fa-tumblr"></i></a>
-                    {%- endif -%}
-                </td>
-                <td>
-                    {%- if artisan.instagramUrl -%}
-                        <a href="{{ artisan.instagramUrl }}"><i class="fab fa-instagram"></i></a>
-                    {%- endif -%}
-                </td>
-                <td class="small">
-                    <a href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20{{ artisan.name|url_encode }}%20(please%20describe%20details)&tw_p=tweetbutton">
-                        Request update
-                    </a>
+                <td class="text-right">
+                    <div class="btn-group" role="group" aria-label="Dropdown with links to websites">
+                        {%- if artisan.fursuitReviewUrl -%}
+                            <a class="btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}"><i class="fas fa-balance-scale"></i></a>
+                        {%- endif -%}
+                        {%- if artisan.websiteUrl -%}
+                            <a class="btn btn-secondary" href="{{ artisan.websiteUrl }}"><i class="fas fa-link"></i></a>
+                        {%- endif -%}
+                        {% set btnGroupDropLinksId = 'btnGroupDropLinks' ~ loop.index0 %}
+                        <div class="btn-group" role="group">
+                            <button id="{{ btnGroupDropLinksId }}" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ btnGroupDropLinksId }}">
+                                {%- if artisan.furAffinityUrl -%}
+                                    <a class="dropdown-item" href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
+                                {%- endif -%}
+                                {%- if artisan.deviantArtUrl -%}
+                                    <a class="dropdown-item" href="{{ artisan.deviantArtUrl }}"><i class="fab fa-deviantart"></i> DeviantArt</a>
+                                {%- endif -%}
+                                {%- if artisan.twitterUrl -%}
+                                    <a class="dropdown-item" href="{{ artisan.twitterUrl }}"><i class="fab fa-twitter"></i> Twitter</a>
+                                {%- endif -%}
+                                {%- if artisan.facebookUrl -%}
+                                    <a class="dropdown-item" href="{{ artisan.facebookUrl }}"><i class="fab fa-facebook"></i> Facebook</a>
+                                {%- endif -%}
+                                {%- if artisan.tumblrUrl -%}
+                                    <a class="dropdown-item" href="{{ artisan.tumblrUrl }}"><i class="fab fa-tumblr"></i> Tumblr</a>
+                                {%- endif -%}
+                                {%- if artisan.instagramUrl -%}
+                                    <a class="dropdown-item" href="{{ artisan.instagramUrl }}"><i class="fab fa-instagram"></i> Instagram</a>
+                                {%- endif -%}
+                                <a class="dropdown-item" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20{{ artisan.name|url_encode }}%20(please%20describe%20details)&tw_p=tweetbutton">
+                                    Request update
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             {% endspaceless -%}
         </tr>

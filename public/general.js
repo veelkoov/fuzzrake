@@ -1,7 +1,5 @@
 var $dataTable;
 var filters = {};
-var FURSUITREVIEW_COLUMN_INDEX = 5; // TODO: fetch automatically
-var FIRST_LINK_COLUMN_INDEX = 6; // TODO: fetch automatically
 
 $(document).ready(function () {
     initDataTable();
@@ -24,20 +22,10 @@ function initDataTable() {
                 columns: '.toggleable',
                 extend: 'colvis',
                 text: 'Show/hide columns',
-                columnText: function (_, columnIndex, defaultText) {
-                    switch (columnIndex) {
-                        case FURSUITREVIEW_COLUMN_INDEX:
-                            return 'FursuitReview link';
-                        case FIRST_LINK_COLUMN_INDEX:
-                            return 'Websites links';
-                        default:
-                            return defaultText;
-                    }
-                }
             }
         ],
         infoCallback: function( settings, start, end, max, total, pre ) {
-            return 'Displaying ' + total + ' out of ' + max + ' fursuit makers in the database';
+            return '<p class="small">Displaying ' + total + ' out of ' + max + ' fursuit makers in the database</p>';
         }
     });
 
