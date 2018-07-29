@@ -11,6 +11,8 @@
 #      - /Choices-master/assets/styles/css/choices.min.css
 #      - /Choices-master/assets/scripts/dist/choices.min.js
 #      - /Choices-master/assets/icons/cross.svg
+#      - /images/website-banner-bottom.png
+#      - /images/website-banner-top.png
 
   tasks:
     - file:
