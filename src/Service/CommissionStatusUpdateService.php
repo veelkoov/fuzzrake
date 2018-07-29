@@ -6,6 +6,7 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\CommissionsStatusParser;
 use App\Utils\CommissionsStatusParserException;
+use App\Utils\WebsiteInfo;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -39,6 +40,12 @@ class CommissionStatusUpdateService
         $this->urlFetcher = $urlFetcher;
     }
 
+    /**
+     * @param StyleInterface $style
+     * @param bool $refresh
+     * @param bool $dryRun
+     * @throws UrlFetcherException
+     */
     public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
     {
         $this->style = $style;
@@ -68,11 +75,10 @@ class CommissionStatusUpdateService
 
     private function updateArtisan(Artisan $artisan): void
     {
-        $webpageContents = $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl());
-
         try {
+            $webpageContents = $this->fetchWebpageContents($artisan->getCommisionsQuotesCheckUrl());
             $status = CommissionsStatusParser::areCommissionsOpen($webpageContents);
-        } catch (CommissionsStatusParserException $exception) {
+        } catch (UrlFetcherException|CommissionsStatusParserException $exception) {
             $this->style->note("Failed: {$artisan->getName()} ({$artisan->getCommisionsQuotesCheckUrl()}): {$exception->getMessage()}");
             $status = null;
         }
@@ -101,6 +107,11 @@ class CommissionStatusUpdateService
         }
     }
 
+    /**
+     * @param array $artisans
+     * @param bool $refresh
+     * @throws UrlFetcherException
+     */
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
     {
         if ($refresh) {
@@ -126,5 +137,38 @@ class CommissionStatusUpdateService
     private function getArtisans(): array
     {
         return $this->artisanRepository->findAll();
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     * @throws UrlFetcherException
+     */
+    private function fetchWebpageContents(string $url): string
+    {
+        $webpageContents = $this->urlFetcher->fetchWebPage($url);
+
+        if (WebsiteInfo::isWixsite($url, $webpageContents)) {
+            $webpageContents =  $this->fetchWixsiteContents($webpageContents);
+        }
+
+        return $webpageContents;
+    }
+
+    /**
+     * @param string $webpageContents
+     * @return string
+     * @throws UrlFetcherException
+     */
+    private function fetchWixsiteContents(string $webpageContents): string
+    {
+        preg_match('#"masterPageJsonFileName"\s*:\s*"(?<hash>[a-z0-9_]+).json"#s', $webpageContents, $matches);
+
+        $hash = $matches['hash'];
+
+        preg_match("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/(?!$hash)[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
+            $webpageContents, $matches);
+
+        return $this->urlFetcher->fetchWebPage($matches['data_url']);
     }
 }

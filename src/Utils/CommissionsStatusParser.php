@@ -42,16 +42,19 @@ class CommissionsStatusParser
         'closed' => 'closed?',
         'fursuits' => 'fursuits?',
         '</div>' => ' ?</div> ?',
-        '<div>' => ' ?<div> ?',
-        '<p>' => ' ?<p> ?',
+        '<div>' => ' ?<div( class="[^"]*")?> ?',
+        '<p>' => ' ?<p( class="[^"]*")?> ?',
         '</p>' => ' ?</p> ?',
-        '<p>' => '<p( class="[^"]*")?>',
-        '<div>' => '<div( class="[^"]*")?>',
     ];
     const FALSE_POSITIVES = [
         'once commissions are open',
     ];
 
+    /**
+     * @param string $inputText
+     * @return bool
+     * @throws CommissionsStatusParserException
+     */
     public static function areCommissionsOpen(string $inputText): bool
     {
         $inputText = self::cleanHtml($inputText);
@@ -117,9 +120,14 @@ class CommissionsStatusParser
         return $webpage;
     }
 
+    /**
+     * @param string $inputText
+     * @return string
+     * @throws CommissionsStatusParserException
+     */
     private static function applyFilters(string $inputText): string
     {
-        if (stripos($inputText, 'fur affinity [dot] net</title>') !== false) {
+        if (WebsiteInfo::isFurAffinity(null, $inputText)) {
             if (stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.') !== false) {
                 throw new CommissionsStatusParserException("FurAffinity login required");
             }
@@ -128,7 +136,7 @@ class CommissionsStatusParser
             return $crawler->filter('#page-userpage tr:first-child table.maintable')->html();
         }
 
-        if (stripos($inputText, '| Twitter</title>') !== false) {
+        if (WebsiteInfo::isTwitter($inputText)) {
             $crawler = new Crawler($inputText);
             return $crawler->filter('div.profileheadercard p.profileheadercard-bio.u-dir')->html();
         }
@@ -136,6 +144,12 @@ class CommissionsStatusParser
         return $inputText;
     }
 
+    /**
+     * @param bool $open
+     * @param bool $closed
+     * @return bool
+     * @throws CommissionsStatusParserException
+     */
     private static function analyseResult(bool $open, bool $closed): bool
     {
         if ($open && !$closed) {
@@ -181,6 +195,8 @@ class CommissionsStatusParser
 
     /**
      * https://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array#comment7768057_1320156
+     * @param array $array
+     * @return string
      */
     private static function flattenArray(array $array)
     {

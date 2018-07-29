@@ -17,8 +17,13 @@ class CommissionsStatusParserTest extends TestCase
         try {
             $result = CommissionsStatusParser::areCommissionsOpen($webpageText);
         } catch (CommissionsStatusParserException $exception) {
-            $result = null;
+            if ($exception->getMessage() === 'NONE matches') {
+                $result = null;
+            } else {
+                throw $exception;
+            }
         }
+
         $this->assertSame($expectedResult, $result, "Wrong result for '$webpageTextFileName'");
     }
 

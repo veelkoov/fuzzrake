@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Utils\WebsiteInfo;
 use Symfony\Component\Filesystem\Filesystem;
 
 class UrlFetcher
@@ -22,7 +24,7 @@ class UrlFetcher
 
     const DELAY_FOR_HOST = 5;
 
-    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.2; +http://getfursu.it/)';
+    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.3; +http://getfursu.it/)';
 
     public function __construct(string $projectDir)
     {
@@ -34,6 +36,11 @@ class UrlFetcher
         $this->lastRequests = [];
     }
 
+    /**
+     * @param string $url
+     * @return string
+     * @throws UrlFetcherException
+     */
     public function fetchWebPage(string $url): string
     {
         $snapshotPath = $this->snapshotPathForUrl($url);
@@ -45,11 +52,7 @@ class UrlFetcher
             $this->fs->dumpFile($snapshotPath, $webpageContents);
         }
 
-        if ($this->isWixsite($url, $webpageContents)) {
-            return $this->retrieveWixsiteContents($webpageContents);
-        } else {
-            return $webpageContents;
-        }
+        return $webpageContents;
     }
 
     public function clearCache(): void
@@ -58,25 +61,29 @@ class UrlFetcher
         $this->fs->mkdir($this->snapshotsDirPath);
     }
 
+    /**
+     * @param string $url
+     * @return string
+     * @throws UrlFetcherException
+     */
     private function curlFetchUrl(string $url): string
     {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
+        $ch = $this->getCurlSessionHandle($url);
 
         $this->delayForHost($url);
         $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->updateLastHostCall($url);
 
-        // TODO: Detect 301/302
+        curl_close($ch);
+
         if ($result === false) {
-            throw new \LogicException("Failed to fetch URL: $url, " . curl_error($ch));
+            throw new UrlFetcherException("Failed to fetch URL: $url, " . curl_error($ch));
         }
 
-        curl_close($ch);
+        if ($httpCode !== 200) {
+            throw new UrlFetcherException("Got HTTP code $httpCode for URL: $url");
+        }
 
         return $result;
     }
@@ -115,28 +122,23 @@ class UrlFetcher
         return preg_replace('#[^a-z0-9_.-]+#i', '_', $url);
     }
 
-    private function retrieveWixsiteContents(string $webpageContents): string
+    /**
+     * @param string $url
+     * @return resource
+     */
+    private function getCurlSessionHandle(string $url)
     {
-        preg_match('#"masterPageJsonFileName"\s*:\s*"(?<hash>[a-z0-9_]+).json"#s', $webpageContents, $matches);
+        $ch = curl_init();
 
-        $hash = $matches['hash'];
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
 
-        preg_match("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/(?!$hash)[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
-            $webpageContents, $matches);
-
-        return $this->fetchWebPage($matches['data_url']);
-    }
-
-    private function isWixsite(string $url, string $contents): bool
-    {
-        if (stripos($url, '.wixsite.com') !== false) {
-            return true;
+        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
+            curl_setopt($ch, CURLOPT_COOKIE, $_ENV['FA_COOKIE']);
         }
 
-        if (preg_match('#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si', $contents) === 1) {
-            return true;
-        }
-
-        return false;
+        return $ch;
     }
 }
