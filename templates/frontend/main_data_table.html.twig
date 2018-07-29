@@ -23,7 +23,7 @@
     {% for artisan in artisans %}
         <tr class="fursuit-maker">
             {%- spaceless %}
-                <td class="text-left">
+                <td class="text-left align-middle">
                     {{- artisan.name -}}
                     {%- if artisan.country -%}
                         {{ ' ' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
@@ -34,13 +34,13 @@
                         {{ artisan.country|lower }}
                     {%- endif -%}
                 </td>
-                <td class="text-left small">
+                <td class="text-left small align-middle">
                     {{- artisan.types -}}
                 </td>
-                <td class="text-left small">
+                <td class="text-left small align-middle">
                     {{- artisan.features -}}
                 </td>
-                <td>
+                <td class="align-middle">
                     {%- if artisan.areCommissionsOpen is null -%}
                     {%- elseif artisan.areCommissionsOpen == true -%}
                         <i class="fas fa-check-circle"></i> Open
