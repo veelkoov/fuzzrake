@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -33,11 +34,17 @@ class CommissionStatusUpdateService
      */
     private $style;
 
+    /**
+     * @var CommissionsStatusParser
+     */
+    private $commissionsStatusParser;
+
     public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager, UrlFetcher $urlFetcher)
     {
         $this->objectManager = $objectManager;
         $this->artisanRepository = $artisanRepository;
         $this->urlFetcher = $urlFetcher;
+        $this->commissionsStatusParser = new CommissionsStatusParser();
     }
 
     /**
@@ -77,7 +84,7 @@ class CommissionStatusUpdateService
     {
         try {
             $webpageContents = $this->fetchWebpageContents($artisan->getCommisionsQuotesCheckUrl());
-            $status = CommissionsStatusParser::areCommissionsOpen($webpageContents);
+            $status = $this->commissionsStatusParser->areCommissionsOpen($webpageContents);
         } catch (UrlFetcherException|CommissionsStatusParserException $exception) {
             $this->style->note("Failed: {$artisan->getName()} ({$artisan->getCommisionsQuotesCheckUrl()}): {$exception->getMessage()}");
             $status = null;

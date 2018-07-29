@@ -8,6 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase
 {
+    /**
+     * @var CommissionsStatusParser
+     */
+    private static $csp;
+
+    public static function setUpBeforeClass() {
+        self::$csp = new CommissionsStatusParser();
+    }
 
     /**
      * @dataProvider areCommissionsOpenDataProvider
@@ -15,7 +23,7 @@ class CommissionsStatusParserTest extends TestCase
     public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult)
     {
         try {
-            $result = CommissionsStatusParser::areCommissionsOpen($webpageText);
+            $result = self::$csp->areCommissionsOpen($webpageText);
         } catch (CommissionsStatusParserException $exception) {
             if ($exception->getMessage() === 'NONE matches') {
                 $result = null;
