@@ -14,12 +14,13 @@ class CommissionsStatusParser
         '#(\s|&nbsp;|<br\s*/?>)+#s' => ' ',
         '#<style[^>]*>.*?</style>#s' => '',
         '# style="[^"]*"( (?=\>))?#s' => '',
+        '#’#' => '\'',
     ];
     const FALSE_POSITIVES = [
         '#once commissions are open#s',
     ];
     const GENERIC_REGEXES = [
-        '(we are|we\'re|i am) currently STATUS for ((the )?commissions|new projects|new orders)',
+        'WE_ARE currently (STATUS|\*\*\*STATUS\*\*\*) for ((the )?commissions|new projects|new orders)',
         'commissions(( and)? quotes)?( status| are)?( ?:| now| currently ?:?| at this time are)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
@@ -29,6 +30,14 @@ class CommissionsStatusParser
         '(^|\.) ?STATUS for commissions ?($|[.(])',
         '<div>currently</div><div>STATUS</div><div>for commissions</div>',
         '<p>commissions are</p><p>STATUS</p>',
+        '\[ commissions[. ]+STATUS \]',
+    ];
+    const EXTRA_OPEN_REGEXES = [
+        'right now WE_CAN take some fursuit commissions',
+    ];
+    const EXTRA_CLOSED_REGEXES = [
+        'WE_ARE currently closed for everything except heads, partials are on an occasional basis\. not accepting fullsuits until all on my queue are done\.',
+        'WE_ARE not seeking any more commissions until further notice',
     ];
     const COMMON_REPLACEMENTS = [
         'commissions' => 'comm?iss?ions?',
@@ -39,6 +48,8 @@ class CommissionsStatusParser
         '<div>' => ' ?<div( class="[^"]*")?> ?',
         '<p>' => ' ?<p( class="[^"]*")?> ?',
         '</p>' => ' ?</p> ?',
+        'WE_CAN' => '(i|we) can',
+        'WE_ARE' => '(we are|we\'re|i am)',
     ];
 
     private $statusOpenRegexps;
@@ -46,8 +57,10 @@ class CommissionsStatusParser
 
     public function __construct()
     {
-        $this->statusOpenRegexps = self::getStatusRegexes('open');
-        $this->statusClosedRegexps = self::getStatusRegexes('closed');
+        $this->statusOpenRegexps = self::getStatusRegexes('open', self::EXTRA_OPEN_REGEXES);
+        $this->statusClosedRegexps = self::getStatusRegexes('closed', self::EXTRA_CLOSED_REGEXES);
+
+//        $this->debugDumpRegexpes();
     }
 
     /**
@@ -156,7 +169,7 @@ class CommissionsStatusParser
         }
     }
 
-    private static function getStatusRegexes(string $status): array
+    private static function getStatusRegexes(string $status, array $extraRegexes): array
     {
         return array_map(function ($regex) use ($status) {
             $regex = str_replace('STATUS', $status, $regex);
@@ -166,7 +179,7 @@ class CommissionsStatusParser
             }
 
             return "#$regex#s";
-        }, self::GENERIC_REGEXES);
+        }, array_merge(self::GENERIC_REGEXES, $extraRegexes));
     }
 
     private static function extractFromJson(string $webpage)
@@ -198,5 +211,17 @@ class CommissionsStatusParser
         });
 
         return $result;
+    }
+
+    private function debugDumpRegexpes(): void
+    {
+        echo "OPEN ====================================================\n";
+        foreach ($this->statusOpenRegexps as $regex) {
+            echo "$regex\n";
+        }
+        echo "CLOSED ==================================================\n";
+        foreach ($this->statusClosedRegexps as $regex) {
+            echo "$regex\n";
+        }
     }
 }
