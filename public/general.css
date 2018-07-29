@@ -1,6 +1,9 @@
 body {
   padding: 5em 1em 1em;
 }
+img[src="FurAffinity.svg"] {
+  height: 1em;
+}
 table#artisans {
   border-collapse: collapse !important;
 }
@@ -8,15 +11,19 @@ table#artisans td.hidden-data,
 table#artisans th.hidden-data {
   display: none;
 }
-div.dataTables_wrapper.container-fluid {
-  padding: 0;
-}
 div.dataTables_info {
   white-space: normal !important;
 }
+#artisans_wrapper > div.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+#artisans_wrapper > div.row > div {
+  padding: 0;
+}
+#artisans_wrapper > div.row:nth-child(2) > div.col-sm-12 {
+  overflow-x: auto;
+}
 div.footer {
   font-size: 75%;
-}
-img[src="FurAffinity.svg"] {
-  height: 1em;
 }
