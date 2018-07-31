@@ -32,6 +32,7 @@ class MainController extends AbstractController
         $artisans = $artisanRepository->getAll();
         $countryCount = $artisanRepository->getDistinctCountriesCount();
         $types = $artisanRepository->getDistinctTypes();
+        $styles = $artisanRepository->getDistinctStyles();
         $features = $artisanRepository->getDistinctFeatures();
         $countries = $artisanRepository->getDistinctCountries();
 
@@ -39,6 +40,7 @@ class MainController extends AbstractController
             'artisans' => $artisans,
             'countryCount' => $countryCount,
             'types' => $types,
+            'styles' => $styles,
             'features' => $features,
             'countries' => $countries
         ]);

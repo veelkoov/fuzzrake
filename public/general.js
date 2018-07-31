@@ -29,16 +29,11 @@ function initDataTable() {
         }
     });
 
-    $dataTable.on('column-visibility.dt', function (_1, _2, columnIndex, state, _4) {
-        if (columnIndex == FIRST_LINK_COLUMN_INDEX) {
-            $dataTable.columns('.toggleable-link').visible(state);
-        }
-    });
 }
 
 function initSearchForm() {
     addChoiceWidget('#countriesFilter', 1, false, countriesOnCreateTemplatesCallback);
-    addChoiceWidget('#typesFilter', 2, false);
+    addChoiceWidget('#stylesFilter', 2, false);
     addChoiceWidget('#featuresFilter', 3, true);
 }
 

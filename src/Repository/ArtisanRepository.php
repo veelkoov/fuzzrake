@@ -47,6 +47,11 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('types');
     }
 
+    public function getDistinctStyles(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('styles');
+    }
+
     public function getDistinctFeatures(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('features');

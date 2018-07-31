@@ -10,11 +10,11 @@
     </div>
 
     <div class="col col-sm-4">
-        <label for="typesFilter">Choose fursuit types offered by makers:</label>
-        <select multiple="multiple" id="typesFilter">
+        <label for="stylesFilter">Choose fursuit styles offered by makers:</label>
+        <select multiple="multiple" id="stylesFilter">
             <option value="">Show unknown</option>
-            {% for type, count in types %}
-                <option value="{{ type }}">{{ type }} ({{ count }})</option>
+            {% for style, count in styles %}
+                <option value="{{ style }}">{{ style }} ({{ count }})</option>
             {% endfor %}
         </select>
     </div>

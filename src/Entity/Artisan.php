@@ -23,7 +23,17 @@ class Artisan implements \JsonSerializable
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=7)
+     */
+    private $since;
+
+    /**
+     * @ORM\Column(type="string", length=1023)
+     */
+    private $styles;
+
+    /**
+     * @ORM\Column(type="string", length=1023)
      */
     private $types;
 
@@ -85,6 +95,11 @@ class Artisan implements \JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $youtubeUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $commisionsQuotesCheckUrl;
 
     /**
@@ -93,12 +108,12 @@ class Artisan implements \JsonSerializable
     private $queueUrl;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=1023)
      */
     private $features;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      */
     private $notes;
 
@@ -341,6 +356,54 @@ class Artisan implements \JsonSerializable
     public function setAreCommissionsOpen(?bool $areCommissionsOpen): self
     {
         $this->areCommissionsOpen = $areCommissionsOpen;
+
+        return $this;
+    }
+
+    public function getOrders(): ?string
+    {
+        return $this->orders;
+    }
+
+    public function setOrders(string $orders): self
+    {
+        $this->orders = $orders;
+
+        return $this;
+    }
+
+    public function getSince(): ?string
+    {
+        return $this->since;
+    }
+
+    public function setSince(string $since): self
+    {
+        $this->since = $since;
+
+        return $this;
+    }
+
+    public function getYoutubeUrl(): ?string
+    {
+        return $this->youtubeUrl;
+    }
+
+    public function setYoutubeUrl(string $youtubeUrl): self
+    {
+        $this->youtubeUrl = $youtubeUrl;
+
+        return $this;
+    }
+
+    public function getStyles(): ?string
+    {
+        return $this->styles;
+    }
+
+    public function setStyles(string $styles): self
+    {
+        $this->styles = $styles;
 
         return $this;
     }
