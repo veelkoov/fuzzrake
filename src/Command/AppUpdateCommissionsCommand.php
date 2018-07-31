@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Artisan;
 use App\Service\CommissionStatusUpdateService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
