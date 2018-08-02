@@ -69,6 +69,7 @@ class AppTidyData extends Command
         $artisan->setTwitterUrl($this->fixTwitterUrl($artisan->getTwitterUrl()));
         $artisan->setInstagramUrl($this->fixInstagramUrl($artisan->getInstagramUrl()));
         $artisan->setTumblrUrl($this->fixTumblrUrl($artisan->getTumblrUrl()));
+        $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
     }
 
@@ -163,9 +164,19 @@ class AppTidyData extends Command
 
     private function fixTumblrUrl(string $input): string
     {
-        $result = $input;
+        $result = trim($input);
 
         $this->showDiff($input, $result, 'https?://[^.]+\.tumblr\.com/');
+
+        return $result;
+    }
+
+    private function fixFacebookUrl(string $input): string
+    {
+        $result = preg_replace('#^(?:https?://)?(?:www\.|m\.)?facebook\.com/([^/?]+)/?(\?ref=[a-z_]+)?$#i',
+            'https://www.facebook.com/$1/', trim($input));
+
+        $this->showDiff($input, $result, 'https://www.facebook.com/[^/]+/');
 
         return $result;
     }
