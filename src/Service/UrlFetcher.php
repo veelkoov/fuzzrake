@@ -78,7 +78,7 @@ class UrlFetcher
         curl_close($ch);
 
         if ($result === false) {
-            throw new UrlFetcherException("Failed to fetch URL: $url, " . curl_error($ch));
+            throw new UrlFetcherException("Failed to fetch URL: $url, " . (is_resource($ch) ? curl_error($ch) : 'CURL failed'));
         }
 
         if ($httpCode !== 200) {
