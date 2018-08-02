@@ -64,9 +64,9 @@ class AppTidyData extends Command
         $artisan->setStyles($this->fixList($artisan->getStyles()));
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
 
-        if (!empty($artisan->getFurAffinityUrl())) {
-            $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
-        }
+        $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
+        $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
+        $artisan->setTwitterUrl($this->fixTwitterUrl($artisan->getTwitterUrl()));
     }
 
     private function showDiff(string $input, string $result, $validRegexp = '.*'): void
@@ -78,7 +78,7 @@ class AppTidyData extends Command
             $out = true;
         }
 
-        if (trim($input) !== '' && $result !== '' && !preg_match("#^$validRegexp$#m", $result)) {
+        if (trim($input) !== '' && $result !== '' && !preg_match("#^($validRegexp)$#", $result)) {
             $this->io->text("!!! ' $result '");
             $out = true;
         }
@@ -131,9 +131,32 @@ class AppTidyData extends Command
     private function fixFurAffinityUrl(string $input): string
     {
         $result = preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/)?([^/]+)/?$#i',
-            'http://www.furaffinity.net/user/$1/', trim($input));
+            'http://www.furaffinity.net/user/$1', trim($input));
 
-        $this->showDiff($input, $result, 'http://www\.furaffinity\.net/user/[^/]+/');
+        $this->showDiff($input, $result, 'http://www\.furaffinity\.net/user/[^/]+');
+
+        return $result;
+    }
+
+    private function fixTwitterUrl(string $input): string
+    {
+        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?lang=[a-z]{2,3})?$#i',
+            'https://twitter.com/$1', trim($input));
+
+        $this->showDiff($input, $result, 'https://twitter\.com/[^/]+');
+
+        return $result;
+    }
+
+    private function fixDeviantArtUrl(string $input): string
+    {
+        $result = trim($input);
+        $result = preg_replace('#^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)/?$#i',
+            'https://www.deviantart.com/$1', $result);
+        $result = preg_replace('#^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$#i',
+            'https://$1.deviantart.com/', $result);
+
+        $this->showDiff($input, $result, 'https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/');
 
         return $result;
     }
