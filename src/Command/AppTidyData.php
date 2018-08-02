@@ -69,6 +69,7 @@ class AppTidyData extends Command
         $artisan->setTwitterUrl($this->fixTwitterUrl($artisan->getTwitterUrl()));
         $artisan->setInstagramUrl($this->fixInstagramUrl($artisan->getInstagramUrl()));
         $artisan->setTumblrUrl($this->fixTumblrUrl($artisan->getTumblrUrl()));
+        $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
     }
 
     private function showDiff(string $input, string $result, $validRegexp = '.*'): void
@@ -165,6 +166,16 @@ class AppTidyData extends Command
         $result = $input;
 
         $this->showDiff($input, $result, 'https?://[^.]+\.tumblr\.com/');
+
+        return $result;
+    }
+
+    private function fixYoutubeUrl(string $input): string
+    {
+        $result = preg_replace('#^https://(?:www|m)\.youtube\.com/((?:channel|user)/[^/?]+)(/|\?view_as=subscriber)?$#',
+            'https://www.youtube.com/$1', trim($input));
+
+        $this->showDiff($input, $result, 'https://www\.youtube\.com/(channel|user)/[^/?]+');
 
         return $result;
     }
