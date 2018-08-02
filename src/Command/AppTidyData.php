@@ -68,6 +68,7 @@ class AppTidyData extends Command
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
         $artisan->setTwitterUrl($this->fixTwitterUrl($artisan->getTwitterUrl()));
         $artisan->setInstagramUrl($this->fixInstagramUrl($artisan->getInstagramUrl()));
+        $artisan->setTumblrUrl($this->fixTumblrUrl($artisan->getTumblrUrl()));
     }
 
     private function showDiff(string $input, string $result, $validRegexp = '.*'): void
@@ -155,6 +156,15 @@ class AppTidyData extends Command
             'https://www.instagram.com/$1/', trim($input));
 
         $this->showDiff($input, $result, 'https://www\.instagram\.com/[^/]+/');
+
+        return $result;
+    }
+
+    private function fixTumblrUrl(string $input): string
+    {
+        $result = $input;
+
+        $this->showDiff($input, $result, 'https?://[^.]+\.tumblr\.com/');
 
         return $result;
     }
