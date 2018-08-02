@@ -24,6 +24,11 @@ class AppTidyData extends Command
      */
     private $objectManager;
 
+    /**
+     * @var SymfonyStyle
+     */
+    private $io;
+
     public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
     {
         $this->artisanRepository = $artisanRepository;
@@ -39,28 +44,51 @@ class AppTidyData extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
+        $this->io = new SymfonyStyle($input, $output);
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
-            $this->fixArtisanData($artisan, $io);
+            $this->fixArtisanData($artisan);
         }
 
         if (!$input->getOption('dry-run')) {
             $this->objectManager->flush();
-            $io->success('Finished and saved');
+            $this->io->success('Finished and saved');
         } else {
-            $io->success('Finished without saving');
+            $this->io->success('Finished without saving');
         }
     }
 
-    private function fixArtisanData(Artisan $artisan, SymfonyStyle $io): void
+    private function fixArtisanData(Artisan $artisan): void
     {
-        $artisan->setFeatures($this->fixList($artisan->getFeatures(), $io));
-        $artisan->setStyles($this->fixList($artisan->getStyles(), $io));
-//        $artisan->setTypes($this->fixList($artisan->getTypes(), $io));
+        $artisan->setFeatures($this->fixList($artisan->getFeatures()));
+        $artisan->setStyles($this->fixList($artisan->getStyles()));
+        $artisan->setCountry($this->fixCountry($artisan->getCountry()));
+
+        if (!empty($artisan->getFurAffinityUrl())) {
+            $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
+        }
     }
 
-    private function fixList(string $input, SymfonyStyle $io): string
+    private function showDiff(string $input, string $result, $validRegexp = '.*'): void
+    {
+        $out = false;
+
+        if ($result !== $input) {
+            $this->io->text("--- ' $input '\n +++ ' $result '");
+            $out = true;
+        }
+
+        if (trim($input) !== '' && $result !== '' && !preg_match("#^$validRegexp$#m", $result)) {
+            $this->io->text("!!! ' $result '");
+            $out = true;
+        }
+
+        if ($out) {
+            $this->io->text('');
+        }
+    }
+
+    private function fixList(string $input): string
     {
         $list = preg_split('#[;,\n]#', $input);
         $list = array_map('trim', $list);
@@ -69,9 +97,43 @@ class AppTidyData extends Command
         $result = implode(', ', $list);
         $result = str_replace(['Follow me eyes', 'Adjustable ears / wiggle ears'], ['Follow-me eyes', 'Adjustable/wiggle ears'], $result);
 
-        if ($result != $input) {
-            $io->text("\t---\n$input\n\t=>\n$result\n");
+        $this->showDiff($input, $result);
+
+        return $result;
+    }
+
+    private function fixCountry(string $input): string
+    {
+        $replacements = [
+            'united states|USA' => 'US',
+            'argentina' => 'AR',
+            'belgium' => 'BE',
+            'canada' => 'CA',
+            'denmark' => 'DK',
+            'uk|england' => 'GB',
+            'germany' => 'DE',
+            'ireland' => 'IE',
+            '(the )?netherlands' => 'NL',
+            'russia' => 'RU',
+        ];
+
+        $result = trim($input);
+
+        foreach ($replacements as $regexp => $replacement) {
+            $result = preg_replace("#^$regexp$#i", $replacement, $result);
         }
+
+        $this->showDiff($input, $result, '[A-Z]{2}');
+
+        return $result;
+    }
+
+    private function fixFurAffinityUrl(string $input): string
+    {
+        $result = preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/)?([^/]+)/?$#i',
+            'http://www.furaffinity.net/user/$1/', trim($input));
+
+        $this->showDiff($input, $result, 'http://www\.furaffinity\.net/user/[^/]+/');
 
         return $result;
     }
