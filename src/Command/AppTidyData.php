@@ -67,6 +67,7 @@ class AppTidyData extends Command
         $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
         $artisan->setTwitterUrl($this->fixTwitterUrl($artisan->getTwitterUrl()));
+        $artisan->setInstagramUrl($this->fixInstagramUrl($artisan->getInstagramUrl()));
     }
 
     private function showDiff(string $input, string $result, $validRegexp = '.*'): void
@@ -144,6 +145,16 @@ class AppTidyData extends Command
             'https://twitter.com/$1', trim($input));
 
         $this->showDiff($input, $result, 'https://twitter\.com/[^/]+');
+
+        return $result;
+    }
+
+    private function fixInstagramUrl(string $input): string
+    {
+        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3})?$#i',
+            'https://www.instagram.com/$1/', trim($input));
+
+        $this->showDiff($input, $result, 'https://www\.instagram\.com/[^/]+/');
 
         return $result;
     }
