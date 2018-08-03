@@ -117,6 +117,7 @@ class AppTidyData extends Command
             'uk|england' => 'GB',
             'germany' => 'DE',
             'ireland' => 'IE',
+            'italia|italy' => 'IT',
             '(the )?netherlands' => 'NL',
             'russia' => 'RU',
         ];
@@ -154,7 +155,7 @@ class AppTidyData extends Command
 
     private function fixInstagramUrl(string $input): string
     {
-        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3})?$#i',
+        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3}))?$#i',
             'https://www.instagram.com/$1/', trim($input));
 
         $this->showDiff($input, $result, 'https://www\.instagram\.com/[^/]+/');
@@ -194,7 +195,7 @@ class AppTidyData extends Command
     private function fixDeviantArtUrl(string $input): string
     {
         $result = trim($input);
-        $result = preg_replace('#^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)/?$#i',
+        $result = preg_replace('#^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?$#i',
             'https://www.deviantart.com/$1', $result);
         $result = preg_replace('#^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$#i',
             'https://$1.deviantart.com/', $result);
