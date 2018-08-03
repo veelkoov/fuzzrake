@@ -20,6 +20,7 @@
 #      - /flag-icon-css-master/flags/4x3/ar.svg
 #      - /flag-icon-css-master/flags/4x3/be.svg
 #      - /flag-icon-css-master/flags/4x3/ie.svg
+#      - /flag-icon-css-master/flags/4x3/it.svg
 
   tasks:
     - file:
