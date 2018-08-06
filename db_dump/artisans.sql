@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 04, 2018 at 01:21 AM
+-- Generation Time: Aug 06, 2018 at 11:51 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.8
 
@@ -87,7 +87,7 @@ INSERT INTO `artisans` (`id`, `name`, `since`, `country`, `state`, `city`, `styl
 (24, 'Curious Creatures', '', 'GB', '', '', '', '', '', '', '', '', '', 'http://thoughtdemons.wixsite.com/curiouscreatures', '', '', '', '', '', '', '', '', '', '', NULL),
 (25, 'Made By Mercury', '', 'GB', '', '', 'Kigurumi, Toony', '', '', '', '', '', 'http://fursuitreview.com/maker/made-by-mercury/', 'http://www.madebymercury.co.uk/', 'http://www.furaffinity.net/user/madebymercury', '', 'https://twitter.com/MadeByMercury', 'https://www.facebook.com/MadeByMercury/', 'http://madebymercury.tumblr.com/', '', '', 'http://www.madebymercury.co.uk/', '', '', 0),
 (26, 'TheKareliaFursuits', '', 'DK', '', '', 'Semi Toony, Toony', '', '', '', 'Follow-me eyes, LED eyes', '', 'http://fursuitreview.com/maker/thekareliafursuits/', '', 'http://www.furaffinity.net/user/thekareliafursuits', '', 'https://twitter.com/TheKarelia', 'https://www.facebook.com/thekareliafursuits/', '', '', '', 'http://www.furaffinity.net/user/thekareliafursuits/', '', '', 0),
-(27, 'Streifensuits', '', 'DE', '', 'Wang', 'Semi Realistic', '', '', '', '', '', '', 'https://www.streifensuits.de/', 'http://www.furaffinity.net/user/streifenschnauzer', '', 'https://twitter.com/StreifenSuits', '', '', '', '', 'http://www.furaffinity.net/user/streifenschnauzer/', '', '', 0),
+(27, 'Streifensuits', '', 'DE', '', 'Wang', 'Semi Realistic', '', '', '', '', '', '', 'https://www.streifensuits.de/', 'http://www.furaffinity.net/user/streifenschnauzer', '', 'https://twitter.com/StreifenSuits', '', '', '', '', 'https://twitter.com/StreifenSuits', '', '', 0),
 (28, 'Blue Fox Fursuits', '', 'GB', '', '', '', '', '', '', 'Follow-me eyes', '', 'http://fursuitreview.com/maker/blue-fox-fursuits/', 'https://www.bf-fursuits.com/', '', '', 'https://twitter.com/BlueFoxFursuits', '', '', '', '', '', '', '', NULL),
 (29, 'Fix It Fursuits', '', 'GB', '', '', '', '', '', '', '', '', '', 'https://www.fixitfursuits.com/', '', '', 'https://twitter.com/FixItFursuits', '', '', '', '', 'https://www.fixitfursuits.com/get-a-quote', '', '', 0),
 (30, 'BrekWolf', '', 'FR', '', '', '', '', '', '', '', '', '', '', 'http://www.furaffinity.net/user/brekwolf', '', 'https://twitter.com/BrekWoof', '', '', '', '', 'http://www.furaffinity.net/user/brekwolf/', '', '', 0),
@@ -279,7 +279,8 @@ INSERT INTO `artisans` (`id`, `name`, `since`, `country`, `state`, `city`, `styl
 (225, 'Creatury', '2015-01-01', 'NL', 'Nederland', 'Deventer', 'Realistic, Semi Realistic, Semi Toony, Toony', '', 'Full plantigrade;Full digitigrade;Partial (Head, handpaws, tail, feetpaws);Head (as parts/separate);Handpaws (as parts/separate);Tails (as parts/separate);Bodysuits (as parts/separate)', '', 'Exchangeable tongues, Follow-me eyes, LED eyes, Movable jaw, Outdoor feet', '', '', '', 'http://www.furaffinity.net/user/creatury', '', '', 'https://www.facebook.com/Creatury/', '', 'https://www.instagram.com/creaturycostumes/', '', 'http://www.furaffinity.net/user/creatury', '', '', 0),
 (226, 'Greyfox Workshop', '2015-06-13', 'US', 'Florida', 'Naples', 'Toony', '', 'Full plantigrade;Full digitigrade;Three-fourth (Head, handpaws, tail, legs/pants, feetpaws);Partial (Head, handpaws, tail, feetpaws);Mini partial (Head, handpaws, tail);Head (as parts/separate)', '', 'Adjustable/wiggle ears, Attached handpaws and feetpaws, Attached tail, Exchangeable hairs, Exchangeable tongues, Follow-me eyes, Indoor feet, Outdoor feet, Removable eyelids', '', '', '', '', '', '', '', '', 'https://www.instagram.com/greyfoxworkshop/', '', '', '', '', NULL),
 (227, 'Taybee Fursuits', '2015-02-01', 'US', 'CA', '', 'Other, Semi Toony', 'Kemono', 'Partial (Head, handpaws, tail, feetpaws);Mini partial (Head, handpaws, tail);Head (as parts/separate);Handpaws (as parts/separate);Feetpaws (as parts/separate);Tails (as parts/separate)', '', 'Attached tail, Exchangeable tongues, Follow-me eyes, Indoor feet, Outdoor feet, Removable eyelids, Washable heads', '', '', '', 'http://www.furaffinity.net/user/taybee', '', 'https://twitter.com/tay__bee', '', '', '', '', '', '', '', NULL),
-(228, 'Halfblood creatures', '2014-01-01', 'IT', '', 'Livorno', 'Semi Realistic, Toony', '', 'Full plantigrade;Full digitigrade;Three-fourth (Head, handpaws, tail, legs/pants, feetpaws);Partial (Head, handpaws, tail, feetpaws);Mini partial (Head, handpaws, tail);Head (as parts/separate);Handpaws (as parts/separate);Feetpaws (as parts/separate);Tails (as parts/separate);Bodysuits (as parts/separate)', '', 'Attached tail, Follow-me eyes, Indoor feet, Movable jaw, Outdoor feet', '', '', '', '', '', '', 'https://www.facebook.com/alteredcreatures/', '', '', '', '', '', '', NULL);
+(228, 'Halfblood creatures', '2014-01-01', 'IT', '', 'Livorno', 'Semi Realistic, Toony', '', 'Full plantigrade;Full digitigrade;Three-fourth (Head, handpaws, tail, legs/pants, feetpaws);Partial (Head, handpaws, tail, feetpaws);Mini partial (Head, handpaws, tail);Head (as parts/separate);Handpaws (as parts/separate);Feetpaws (as parts/separate);Tails (as parts/separate);Bodysuits (as parts/separate)', '', 'Attached tail, Follow-me eyes, Indoor feet, Movable jaw, Outdoor feet', '', '', '', '', '', '', 'https://www.facebook.com/alteredcreatures/', '', '', '', '', '', '', NULL),
+(229, 'Onix Angel Creations', '2012-08', 'CA', 'Manitoba', 'Brandon', 'Semi Toony, Toony', '', 'Full plantigrade\r\nFull digitigrade\r\nThree-fourth (Head, handpaws, tail, legs/pants, feetpaws)\r\nPartial (Head, handpaws, tail, feetpaws)\r\nMini partial (Head, handpaws, tail)\r\nHead (as parts/separate)\r\nHandpaws (as parts/separate)\r\nFeetpaws (as parts/separate)\r\nTails (as parts/separate)\r\nBodysuits (as parts/separate)', 'Fursuit electonics, (LED, fans, ect) parts such as resin eye blanks and mesh', 'Attached tail, Electronics/animatronics, Exchangeable tongues, Follow-me eyes, In-head fans, Indoor feet, LED eyes, LED/EL lights, Movable jaw, Outdoor feet, Removable eyelids, Removable horns/antlers', '', 'http://fursuitreview.com/maker/onix-angel-creations/', 'https://www.onixangelcreations.com/', 'http://www.furaffinity.net/user/xemoemox', '', 'https://twitter.com/oa_creations', 'https://www.facebook.com/onixangelcreations/', '', 'https://www.instagram.com/oa_creations/', 'https://www.youtube.com/user/taytaym2', 'https://www.onixangelcreations.com/', '', '', 0);
 
 --
 -- Indexes for dumped tables
@@ -299,7 +300,7 @@ ALTER TABLE `artisans`
 -- AUTO_INCREMENT for table `artisans`
 --
 ALTER TABLE `artisans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
