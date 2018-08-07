@@ -73,7 +73,7 @@ class CommissionStatusUpdateService
                 try {
                     $this->updateArtisan($artisan);
                 } catch (Exception $exception) {
-                    $this->style->error("Failed: {$artisan->getName()} ({$artisan->getCommisionsQuotesCheckUrl()})");
+                    $this->style->error("Failed: {$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} )");
                     $this->style->text($exception);
                 }
             }
@@ -82,11 +82,13 @@ class CommissionStatusUpdateService
 
     private function updateArtisan(Artisan $artisan): void
     {
+        $url = $artisan->getCommisionsQuotesCheckUrl();
+
         try {
-            $webpageContents = $this->fetchWebpageContents($artisan->getCommisionsQuotesCheckUrl());
-            $status = $this->commissionsStatusParser->areCommissionsOpen($webpageContents);
+            $webpageContents = $this->fetchWebpageContents($url);
+            $status = $this->commissionsStatusParser->areCommissionsOpen($webpageContents, $this->guessFilterFromUrl($url));
         } catch (UrlFetcherException|CommissionsStatusParserException $exception) {
-            $this->style->note("Failed: {$artisan->getName()} ({$artisan->getCommisionsQuotesCheckUrl()}): {$exception->getMessage()}");
+            $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
             $status = null;
         }
 
@@ -101,16 +103,18 @@ class CommissionStatusUpdateService
 
     private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
     {
+        $prefix = "{$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} ) commissions are now";
+
         if ($artisan->getAreCommissionsOpen() !== true && $newStatus === true) {
-            $this->style->caution($artisan->getName() . ' commissions are now OPEN');
+            $this->style->caution("$prefix OPEN");
         }
 
         if ($artisan->getAreCommissionsOpen() !== false && $newStatus === false) {
-            $this->style->caution($artisan->getName() . ' commissions are now CLOSED');
+            $this->style->caution("$prefix CLOSED");
         }
 
         if ($artisan->getAreCommissionsOpen() !== null && $newStatus === null) {
-            $this->style->caution($artisan->getName() . ' commissions are now UNKNOWN');
+            $this->style->caution("$prefix UNKNOWN");
         }
     }
 
@@ -126,6 +130,8 @@ class CommissionStatusUpdateService
         }
 
         $this->style->progressStart(count($artisans));
+
+        // TODO: catch failures
 
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
@@ -177,5 +183,14 @@ class CommissionStatusUpdateService
             $webpageContents, $matches);
 
         return $this->urlFetcher->fetchWebPage($matches['data_url']);
+    }
+
+    private function guessFilterFromUrl(string $url): string
+    {
+        if (preg_match('/#(?<profile>.+)$/', $url,$zapałki)) {
+            return $zapałki['profile'];
+        } else {
+            return '';
+        }
     }
 }

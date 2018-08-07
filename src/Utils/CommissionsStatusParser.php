@@ -34,6 +34,7 @@ class CommissionsStatusParser
     ];
     const EXTRA_OPEN_REGEXES = [
         'right now WE_CAN take some fursuit commissions',
+        '(?!(aren\'t)|(not?)) accepting commissions',
     ];
     const EXTRA_CLOSED_REGEXES = [
         'WE_ARE currently closed for everything except heads, partials are on an occasional basis\. not accepting fullsuits until all on my queue are done\.',
@@ -65,15 +66,16 @@ class CommissionsStatusParser
 
     /**
      * @param string $inputText
+     * @param string $additionalFilter
      * @return bool
      * @throws CommissionsStatusParserException
      */
-    public function areCommissionsOpen(string $inputText): bool
+    public function areCommissionsOpen(string $inputText, string $additionalFilter = ''): bool
     {
         $inputText = self::cleanHtml($inputText);
 
         try {
-            $inputText = self::applyFilters($inputText);
+            $inputText = self::applyFilters($inputText, $additionalFilter);
         } catch (InvalidArgumentException $ex) {
             throw new CommissionsStatusParserException("Filtering failed ({$ex->getMessage()})");
         }
@@ -124,18 +126,21 @@ class CommissionsStatusParser
 
     /**
      * @param string $inputText
+     * @param string $additionalFilter
      * @return string
      * @throws CommissionsStatusParserException
      */
-    private static function applyFilters(string $inputText): string
+    private static function applyFilters(string $inputText, string $additionalFilter): string
     {
         if (WebsiteInfo::isFurAffinity(null, $inputText)) {
             if (stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.') !== false) {
                 throw new CommissionsStatusParserException("FurAffinity login required");
             }
 
+            $additionalFilter = $additionalFilter === 'profile' ? 'td[width="80%"][align="left"]' : '';
+
             $crawler = new Crawler($inputText);
-            return $crawler->filter('#page-userpage tr:first-child table.maintable')->html();
+            return $crawler->filter("#page-userpage tr:first-child table.maintable $additionalFilter")->html();
         }
 
         if (WebsiteInfo::isTwitter($inputText)) {

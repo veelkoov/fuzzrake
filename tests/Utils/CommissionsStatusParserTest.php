@@ -37,18 +37,19 @@ class CommissionsStatusParserTest extends TestCase
 
     public function areCommissionsOpenDataProvider()
     {
-        return array_map(function ($filepath) {
+        return array_filter(array_map(function ($filepath) {
             if (substr_compare($filepath, '_open.', -10, 6) === 0) {
                 $expectedResult = true;
             } elseif (substr_compare($filepath, '_closed.', -12, 8) === 0) {
                 $expectedResult = false;
             } elseif (substr_compare($filepath, '_unknown.', -13, 9) === 0) {
                 $expectedResult = null;
-            } else {
-                throw new \LogicException("Invalid filename: $filepath");
+            } else { # TODO: Make prettier, make filters work
+                echo "Invalid filename: $filepath\n";
+                return false;
             }
 
             return [basename($filepath), file_get_contents($filepath), $expectedResult];
-        }, glob(__DIR__ . '/../snapshots/*.{html,json}', GLOB_BRACE));
+        }, glob(__DIR__ . '/../snapshots/*.{html,json}', GLOB_BRACE)));
     }
 }
