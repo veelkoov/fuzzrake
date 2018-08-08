@@ -12,6 +12,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AppTidyData extends Command
 {
+    const REPLACEMENTS = [
+        'Follow me eyes' => 'Follow-me eyes',
+        'Adjustable ears / wiggle ears' => 'Adjustable/wiggle ears',
+        'Three-fourth (Head, handpaws, tail, legs/pants, feetpaws)' => 'Three-fourth (Head+handpaws+tail+legs/pants+feetpaws)',
+        'Partial (Head, handpaws, tail, feetpaws)' => 'Partial (Head+handpaws+tail+feetpaws)',
+        'Mini partial (Head, handpaws, tail)' => 'Mini partial (Head+handpaws+tail)',
+    ];
+
     protected static $defaultName = 'app:tidy-data';
 
     /**
@@ -62,6 +70,7 @@ class AppTidyData extends Command
     {
         $artisan->setFeatures($this->fixList($artisan->getFeatures()));
         $artisan->setStyles($this->fixList($artisan->getStyles()));
+        $artisan->setTypes($this->fixList($artisan->getTypes()));
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
 
         $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
@@ -71,6 +80,8 @@ class AppTidyData extends Command
         $artisan->setTumblrUrl($this->fixTumblrUrl($artisan->getTumblrUrl()));
         $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
+
+        $artisan->setNotes($this->fixNotes($artisan->getNotes()));
     }
 
     private function showDiff(string $input, string $result, $validRegexp = '.*'): void
@@ -94,12 +105,12 @@ class AppTidyData extends Command
 
     private function fixList(string $input): string
     {
-        $list = preg_split('#[;,\n]#', $input);
+        $cslist = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
+        $list = preg_split('#[;,\n]#', $cslist);
         $list = array_map('trim', $list);
         $list = array_filter($list);
         sort($list);
         $result = implode(', ', $list);
-        $result = str_replace(['Follow me eyes', 'Adjustable ears / wiggle ears'], ['Follow-me eyes', 'Adjustable/wiggle ears'], $result);
 
         $this->showDiff($input, $result);
 
@@ -201,6 +212,17 @@ class AppTidyData extends Command
             'https://$1.deviantart.com/', $result);
 
         $this->showDiff($input, $result, 'https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/');
+
+        return $result;
+    }
+
+    private function fixNotes(string $input): string
+    {
+        $result = preg_replace('#([,;])([,; ]*[,;])#s', '$1', trim($input));
+        $result = str_replace('@', '(e)', $result);
+        $result = preg_replace('#(e-?)?mail#i', 'eeeee', $result);
+
+        $this->showDiff($input, $result, '(.|\n)*');
 
         return $result;
     }
