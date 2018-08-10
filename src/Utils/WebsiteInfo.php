@@ -32,6 +32,15 @@ class WebsiteInfo
         return false;
     }
 
+    public static function isFurAffinityUserProfile(?string $url, ?string $webpageContents): bool
+    {
+        if (!self::isFurAffinity($url, $webpageContents)) {
+            return false;
+        }
+
+        return stripos($webpageContents, 'journal -- fur affinity [dot] net</title>') === false;
+    }
+
     public static function isTwitter(string $websiteContents): bool
     {
         return stripos($websiteContents, '| Twitter</title>') !== false;

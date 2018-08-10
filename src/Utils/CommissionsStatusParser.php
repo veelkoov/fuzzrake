@@ -10,7 +10,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class CommissionsStatusParser
 {
     const HTML_CLEANER_REGEXPS = [
-        '#</?(strong|b|i|span|center|a|em)[^>]*>#s' => '',
+        '#</?(strong|b|i|span|center|a|em|font)[^>]*>#s' => '',
         '#(\s|&nbsp;|<br\s*/?>)+#s' => ' ',
         '#<style[^>]*>.*?</style>#s' => '',
         '# style="[^"]*"( (?=\>))?#s' => '',
@@ -20,7 +20,7 @@ class CommissionsStatusParser
         '#once commissions are open#s',
     ];
     const GENERIC_REGEXES = [
-        'WE_ARE currently (STATUS|\*\*\*STATUS\*\*\*) for ((the )?commissions|new projects|new orders)',
+        '(WE_ARE )?currently (STATUS|\*\*\*STATUS\*\*\*) for ((the |new )?commissions|new projects|new orders)',
         'commissions(( and)? quotes)?( status| are)?( ?:| now| currently ?:?| at this time are)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
@@ -31,6 +31,8 @@ class CommissionsStatusParser
         '<div>currently</div><div>STATUS</div><div>for commissions</div>',
         '<p>commissions are</p><p>STATUS</p>',
         '\[ commissions[. ]+STATUS \]',
+        '<div class="([^"]*[^a-z])?commissions-STATUS"></div>',
+        '<h2[^>]*>STATUS</h2>',
     ];
     const EXTRA_OPEN_REGEXES = [
         'right now WE_CAN take some fursuit commissions',
@@ -39,6 +41,7 @@ class CommissionsStatusParser
     const EXTRA_CLOSED_REGEXES = [
         'WE_ARE currently closed for everything except heads, partials are on an occasional basis\. not accepting fullsuits until all on my queue are done\.',
         'WE_ARE not seeking any more commissions until further notice',
+        'currently not accepting new projects',
     ];
     const COMMON_REPLACEMENTS = [
         'commissions' => 'comm?iss?ions?',
@@ -137,10 +140,14 @@ class CommissionsStatusParser
                 throw new CommissionsStatusParserException("FurAffinity login required");
             }
 
-            $additionalFilter = $additionalFilter === 'profile' ? 'td[width="80%"][align="left"]' : '';
+            if (WebsiteInfo::isFurAffinityUserProfile(null, $inputText)) {
+                $additionalFilter = $additionalFilter === 'profile' ? 'td[width="80%"][align="left"]' : '';
 
-            $crawler = new Crawler($inputText);
-            return $crawler->filter("#page-userpage tr:first-child table.maintable $additionalFilter")->html();
+                $crawler = new Crawler($inputText);
+                return $crawler->filter("#page-userpage tr:first-child table.maintable $additionalFilter")->html();
+            }
+
+            return $inputText;
         }
 
         if (WebsiteInfo::isTwitter($inputText)) {
