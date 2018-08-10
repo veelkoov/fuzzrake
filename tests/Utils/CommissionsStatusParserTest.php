@@ -20,10 +20,10 @@ class CommissionsStatusParserTest extends TestCase
     /**
      * @dataProvider areCommissionsOpenDataProvider
      */
-    public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult)
+    public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult, $additionalFilter)
     {
         try {
-            $result = self::$csp->areCommissionsOpen($webpageText);
+            $result = self::$csp->areCommissionsOpen($webpageText, $additionalFilter);
         } catch (CommissionsStatusParserException $exception) {
             if ($exception->getMessage() === 'NONE matches') {
                 $result = null;
@@ -38,18 +38,25 @@ class CommissionsStatusParserTest extends TestCase
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (substr_compare($filepath, '_open.', -10, 6) === 0) {
-                $expectedResult = true;
-            } elseif (substr_compare($filepath, '_closed.', -12, 8) === 0) {
-                $expectedResult = false;
-            } elseif (substr_compare($filepath, '_unknown.', -13, 9) === 0) {
-                $expectedResult = null;
-            } else { # TODO: Make prettier, make filters work
+            if (!preg_match('#^\d+_(?<status>open|closed|unknown)(?:_filter_(?<filter>[a-z]+))?\.(html|json)$#',
+                basename($filepath), $zapałki)) {
                 echo "Invalid filename: $filepath\n";
                 return false;
             }
 
-            return [basename($filepath), file_get_contents($filepath), $expectedResult];
+            $additionalFilter = $zapałki['filter'];
+            switch ($zapałki['status']) {
+                case 'open':
+                    $expectedResult = true;
+                    break;
+                case 'closed':
+                    $expectedResult = false;
+                    break;
+                default:
+                    $expectedResult = null;
+            }
+
+            return [basename($filepath), file_get_contents($filepath), $expectedResult, $additionalFilter];
         }, glob(__DIR__ . '/../snapshots/*.{html,json}', GLOB_BRACE)));
     }
 }
