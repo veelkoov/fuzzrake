@@ -119,7 +119,10 @@ class UrlFetcher
 
     private function urlToId(string $url): string
     {
-        return preg_replace('#[^a-z0-9_.-]+#i', '_', $url);
+        return trim(
+            preg_replace('#[^a-z0-9_.-]+#i', '_',
+                preg_replace('#^(https?://(www\.)?)?#', '', $url)),
+            '_');
     }
 
     /**
