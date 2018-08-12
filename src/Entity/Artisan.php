@@ -23,22 +23,12 @@ class Artisan implements \JsonSerializable
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=7)
+     * @ORM\Column(type="string", length=256)
      */
     private $since;
 
     /**
-     * @ORM\Column(type="string", length=1023)
-     */
-    private $styles;
-
-    /**
-     * @ORM\Column(type="string", length=1023)
-     */
-    private $types;
-
-    /**
-     * @ORM\Column(type="string", length=2)
+     * @ORM\Column(type="string", length=256)
      */
     private $country;
 
@@ -53,9 +43,44 @@ class Artisan implements \JsonSerializable
     private $city;
 
     /**
+     * @ORM\Column(type="string", length=1023)
+     */
+    private $styles;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $otherStyles;
+
+    /**
+     * @ORM\Column(type="string", length=1023)
+     */
+    private $types;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $otherTypes;
+
+    /**
+     * @ORM\Column(type="string", length=1023)
+     */
+    private $features;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $otherFeatures;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $fursuitReviewUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $websiteUrl;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -70,17 +95,12 @@ class Artisan implements \JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $websiteUrl;
+    private $twitterUrl;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $facebookUrl;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $twitterUrl;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -106,11 +126,6 @@ class Artisan implements \JsonSerializable
      * @ORM\Column(type="string", length=255)
      */
     private $queueUrl;
-
-    /**
-     * @ORM\Column(type="string", length=1023)
-     */
-    private $features;
 
     /**
      * @ORM\Column(type="text")
@@ -360,18 +375,6 @@ class Artisan implements \JsonSerializable
         return $this;
     }
 
-    public function getOrders(): ?string
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(string $orders): self
-    {
-        $this->orders = $orders;
-
-        return $this;
-    }
-
     public function getSince(): ?string
     {
         return $this->since;
@@ -404,6 +407,42 @@ class Artisan implements \JsonSerializable
     public function setStyles(string $styles): self
     {
         $this->styles = $styles;
+
+        return $this;
+    }
+
+    public function getOtherStyles(): ?string
+    {
+        return $this->otherStyles;
+    }
+
+    public function setOtherStyles(string $otherStyles): self
+    {
+        $this->otherStyles = $otherStyles;
+
+        return $this;
+    }
+
+    public function getOtherTypes(): ?string
+    {
+        return $this->otherTypes;
+    }
+
+    public function setOtherTypes(string $otherTypes): self
+    {
+        $this->otherTypes = $otherTypes;
+
+        return $this;
+    }
+
+    public function getOtherFeatures(): ?string
+    {
+        return $this->otherFeatures;
+    }
+
+    public function setOtherFeatures(string $otherFeatures): self
+    {
+        $this->otherFeatures = $otherFeatures;
 
         return $this;
     }
