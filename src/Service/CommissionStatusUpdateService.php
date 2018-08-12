@@ -131,11 +131,15 @@ class CommissionStatusUpdateService
 
         $this->style->progressStart(count($artisans));
 
-        // TODO: catch failures
-
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
-                $this->urlFetcher->fetchWebPage($artisan->getCommisionsQuotesCheckUrl());
+                $url = $artisan->getCommisionsQuotesCheckUrl();
+
+                try {
+                    $this->urlFetcher->fetchWebPage($url);
+                } catch (UrlFetcherException $exception) {
+                    $this->style->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
+                }
             }
 
             $this->style->progressAdvance();

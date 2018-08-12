@@ -33,6 +33,7 @@ class CommissionsStatusParser
         '\[ commissions[. ]+STATUS \]',
         '<div class="([^"]*[^a-z])?commissions-STATUS"></div>',
         '<h2[^>]*>STATUS</h2>',
+        'slots currently STATUS',
     ];
     const EXTRA_OPEN_REGEXES = [
         'right now WE_CAN take some fursuit commissions',
