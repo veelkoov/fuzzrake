@@ -4,6 +4,18 @@ var filters = {};
 $(document).ready(function () {
     initDataTable();
     initSearchForm();
+
+    $('#artisans a').click(function (evt) {
+        evt.preventDefault();
+        window.open(this.href);
+    });
+
+    $('div.artisan-links').attr('title','If you\'re going to contact the studio/maker, <u>please let them know you found them here!</u> This will help us all a lot. Thank you!')
+        .data('placement', 'top')
+        .data('boundary', 'window')
+        .data('html', true)
+        .data('fallbackPlacement', [])
+        .tooltip();
 });
 
 function initDataTable() {
@@ -28,7 +40,6 @@ function initDataTable() {
             return '<p class="small">Displaying ' + total + ' out of ' + max + ' fursuit makers in the database</p>';
         }
     });
-
 }
 
 function initSearchForm() {
