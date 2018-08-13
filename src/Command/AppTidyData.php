@@ -15,9 +15,12 @@ class AppTidyData extends Command
     const REPLACEMENTS = [
         'Follow me eyes' => 'Follow-me eyes',
         'Adjustable ears / wiggle ears' => 'Adjustable/wiggle ears',
-        'Three-fourth (Head, handpaws, tail, legs/pants, feetpaws)' => 'Three-fourth (Head+handpaws+tail+legs/pants+feetpaws)',
-        'Partial (Head, handpaws, tail, feetpaws)' => 'Partial (Head+handpaws+tail+feetpaws)',
-        'Mini partial (Head, handpaws, tail)' => 'Mini partial (Head+handpaws+tail)',
+        'Three-fourth (Head, handpaws, tail, legs/pants, feetpaws)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
+        'Partial (Head, handpaws, tail, feetpaws)' => 'Partial (head + handpaws + tail + feetpaws)',
+        'Mini partial (Head, handpaws, tail)' => 'Mini partial (head + handpaws + tail)',
+        'Three-fourth (Head+handpaws+tail+legs/pants+feetpaws)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
+        'Partial (Head+handpaws+tail+feetpaws)' => 'Partial (head + handpaws + tail + feetpaws)',
+        'Mini partial (Head+handpaws+tail)' => 'Mini partial (head + handpaws + tail)',
     ];
 
     protected static $defaultName = 'app:tidy-data';
@@ -68,10 +71,14 @@ class AppTidyData extends Command
 
     private function fixArtisanData(Artisan $artisan): void
     {
+        $artisan->setSince($this->fixSince($artisan->getSince()));
+
         $artisan->setFeatures($this->fixList($artisan->getFeatures()));
         $artisan->setStyles($this->fixList($artisan->getStyles()));
         $artisan->setTypes($this->fixList($artisan->getTypes()));
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
+        $artisan->setState($this->trim($artisan->getState()));
+        $artisan->setCity($this->trim($artisan->getCity()));
 
         $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
@@ -223,6 +230,24 @@ class AppTidyData extends Command
         $result = preg_replace('#(e-?)?mail#i', 'eeeee', $result);
 
         $this->showDiff($input, $result, '(.|\n)*');
+
+        return $result;
+    }
+
+    private function fixSince(string $input)
+    {
+        $result = preg_replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
+
+        $this->showDiff($input, $result, '\d{4}-\d{2}');
+
+        return $result;
+    }
+
+    private function trim(string $input)
+    {
+        $result = trim($input);
+
+        $this->showDiff($input, $result);
 
         return $result;
     }
