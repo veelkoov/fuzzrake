@@ -1,6 +1,11 @@
 var $dataTable;
 var filters = {};
 
+const NAME_COLUMN_IDX = 0;
+const COUNTRIES_COLUMN_IDX = 1;
+const STYLES_COLUMN_IDX = 2;
+const FEATURES_COLUMN_IDX = 3;
+
 $(document).ready(function () {
     initDataTable();
     initSearchForm();
@@ -40,12 +45,27 @@ function initDataTable() {
             return '<p class="small">Displaying ' + total + ' out of ' + max + ' fursuit makers in the database</p>';
         }
     });
+
+    $('#artisanDetailsModal').on('show.bs.modal', function (event) {
+        var $row = $(event.relatedTarget).closest('tr');
+
+        $('#artisanName').html($row.children().eq(NAME_COLUMN_IDX).html());
+        $('#artisanLocation').html([$row.data('state'), $row.data('city')].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>');
+        $('#artisanFeatures').html(htmlListFromCommaSeparated($row.children().eq(FEATURES_COLUMN_IDX).text()));
+        $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types')));
+        $('#artisanStyles').html(htmlListFromCommaSeparated($row.children().eq(STYLES_COLUMN_IDX).text()));
+        $('#artisanSince').html($row.data('since') || '<i class="fas fa-question-circle" title="How long?"></i>');
+    });
+}
+
+function htmlListFromCommaSeparated(input) {
+    return input ? '<ul><li>' + input.split(', ').join('</li><li>') + '</li></ul>' : '<i class="fas fa-question-circle"></i>';
 }
 
 function initSearchForm() {
-    addChoiceWidget('#countriesFilter', 1, false, countriesOnCreateTemplatesCallback);
-    addChoiceWidget('#stylesFilter', 2, false);
-    addChoiceWidget('#featuresFilter', 3, true);
+    addChoiceWidget('#countriesFilter', COUNTRIES_COLUMN_IDX, false, countriesOnCreateTemplatesCallback);
+    addChoiceWidget('#stylesFilter', STYLES_COLUMN_IDX, false);
+    addChoiceWidget('#featuresFilter', FEATURES_COLUMN_IDX, true);
 }
 
 function addChoiceWidget(selector, dataColumnIndex, isAnd, onCreateTemplatesCallback = null) {

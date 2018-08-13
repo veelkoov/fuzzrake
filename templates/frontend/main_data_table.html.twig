@@ -21,9 +21,15 @@
     </thead>
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit-maker">
+        <tr class="fursuit-maker"
+            data-name="{{ artisan.name }}"
+            data-since="{{ artisan.since|since }}"
+            data-country="{{ artisan.country }}"
+            data-state="{{ artisan.state }}"
+            data-city="{{ artisan.city }}"
+            data-types="{{ artisan.types }}">
             {%- spaceless %}
-                <td class="text-left align-middle">
+                <td class="text-left align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
                     {%- if artisan.country -%}
                         {{ '&nbsp;' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
@@ -34,13 +40,13 @@
                         {{ artisan.country|lower }}
                     {%- endif -%}
                 </td>
-                <td class="text-left small align-middle">
+                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.styles -}}
                 </td>
-                <td class="text-left small align-middle">
+                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.features -}}
                 </td>
-                <td class="align-middle">
+                <td class="align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {%- if artisan.areCommissionsOpen is null -%}
                     {%- elseif artisan.areCommissionsOpen == true -%}
                         <i class="fas fa-check-circle"></i> Open

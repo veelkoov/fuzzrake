@@ -1,0 +1,40 @@
+<div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="artisanName"></span>
+                    <small>
+                        Based in <span id="artisanLocation"></span>,
+                        crafting since <span id="artisanSince"></span>
+                    </small>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p></p>
+            </div>
+            <div class="modal-body row px-4 py-2">
+                {#<div class="col-sm-12 p-1">#}
+                    {#<p class="lead" id="artisanIntro">Blah blah blah? Blah!</p>#}
+                {#</div>#}
+                <div class="col-sm-4 p-1">
+                    <h5>Offered styles</h5>
+                    <div class="small" id="artisanStyles"></div>
+                </div>
+                <div class="col-sm-4 p-1">
+                    <h5>Offered types</h5>
+                    <div class="small" id="artisanTypes"></div>
+                </div>
+                <div class="col-sm-4 p-1">
+                    <h5>Offered features</h5>
+                    <div class="small" id="artisanFeatures"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
