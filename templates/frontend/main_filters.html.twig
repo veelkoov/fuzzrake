@@ -13,6 +13,7 @@
         <label for="stylesFilter">Choose fursuit styles offered by makers:</label>
         <select multiple="multiple" id="stylesFilter">
             <option value="">Show unknown</option>
+            <option value="Other">Other</option>
             {% for style, count in styles %}
                 <option value="{{ style }}">{{ style }} ({{ count }})</option>
             {% endfor %}
@@ -23,6 +24,7 @@
         <label for="featuresFilter">Choose fursuit features offered by makers:</label>
         <select multiple="multiple" id="featuresFilter">
             <option value="">Show unknown</option>
+            <option value="Other">Other</option>
             {% for feature, count in features %}
                 <option value="{{ feature }}">{{ feature }} ({{  count }})</option>
             {% endfor %}

@@ -35,10 +35,10 @@
                     {%- endif -%}
                 </td>
                 <td class="text-left small align-middle">
-                    {{- artisan.styles -}}
+                    {{- artisan.styles|other(artisan.otherStyles) -}}
                 </td>
                 <td class="text-left small align-middle">
-                    {{- artisan.features -}}
+                    {{- artisan.features|other(artisan.otherFeatures) -}}
                 </td>
                 <td class="align-middle">
                     {%- if artisan.areCommissionsOpen is null -%}
