@@ -13,7 +13,21 @@ class AppExtensions extends AbstractExtension
     {
         return array(
             new TwigFilter('since', array($this, 'sinceFilter')),
+            new TwigFilter('other', array($this, 'otherFilter')),
         );
+    }
+
+    public function otherFilter($primaryList, $otherList)
+    {
+        if ($otherList !== '') {
+            if ($primaryList !== '') {
+                return "$primaryList, Other";
+            } else {
+                return 'Other';
+            }
+        } else {
+            return $primaryList;
+        }
     }
 
     public function sinceFilter($input)

@@ -73,7 +73,8 @@ function addChoiceWidget(selector, dataColumnIndex, isAnd, onCreateTemplatesCall
         selectObj: new Choices(selector, {
             shouldSort: false,
             removeItemButton: true,
-            callbackOnCreateTemplates: onCreateTemplatesCallback
+            callbackOnCreateTemplates: onCreateTemplatesCallback,
+            itemSelectText: ''
         }),
         dataColumnIndex: dataColumnIndex,
         $select: $(selector),
