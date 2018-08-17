@@ -202,7 +202,7 @@ class AppTidyData extends Command
 
     private function fixYoutubeUrl(string $input): string
     {
-        $result = preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user)/[^/?]+)(/|\?view_as=subscriber)?$#',
+        $result = preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
             'https://www.youtube.com/$1', trim($input));
 
         $this->showDiff($input, $result, 'https://www\.youtube\.com/(channel|user)/[^/?]+');

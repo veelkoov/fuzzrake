@@ -7,7 +7,10 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\CommissionsStatusParser;
 use App\Utils\CommissionsStatusParserException;
+use App\Utils\WebpageSnapshot;
 use App\Utils\WebsiteInfo;
+use DateTime;
+use DateTimeZone;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -82,18 +85,11 @@ class CommissionStatusUpdateService
 
     private function updateArtisan(Artisan $artisan): void
     {
-        $url = $artisan->getCommisionsQuotesCheckUrl();
-
-        try {
-            $webpageContents = $this->fetchWebpageContents($url);
-            $status = $this->commissionsStatusParser->areCommissionsOpen($webpageContents, $this->guessFilterFromUrl($url));
-        } catch (UrlFetcherException|CommissionsStatusParserException $exception) {
-            $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
-            $status = null;
-        }
+        list($status, $datetimeRetrieved) = $this->getCommissionsStatusAndDateTimeChecked($artisan);
 
         $this->reportStatusChange($artisan, $status);
         $artisan->setAreCommissionsOpen($status);
+        $artisan->setCommissionsQuotesLastCheck($datetimeRetrieved);
     }
 
     private function canAutoUpdate(Artisan $artisan): bool
@@ -136,7 +132,7 @@ class CommissionStatusUpdateService
                 $url = $artisan->getCommisionsQuotesCheckUrl();
 
                 try {
-                    $this->urlFetcher->fetchWebPage($url);
+                    $this->urlFetcher->fetchWebpage($url);
                 } catch (UrlFetcherException $exception) {
                     $this->style->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
                 }
@@ -161,32 +157,33 @@ class CommissionStatusUpdateService
      * @return string
      * @throws UrlFetcherException
      */
-    private function fetchWebpageContents(string $url): string
+    private function fetchWebpageContents(string $url): WebpageSnapshot
     {
-        $webpageContents = $this->urlFetcher->fetchWebPage($url);
+        $webpageSnapshot = $this->urlFetcher->fetchWebpage($url);
 
-        if (WebsiteInfo::isWixsite($url, $webpageContents)) {
-            $webpageContents =  $this->fetchWixsiteContents($webpageContents);
+        if (WebsiteInfo::isWixsite($webpageSnapshot)) {
+            $webpageSnapshot =  $this->fetchWixsiteContents($webpageSnapshot);
         }
 
-        return $webpageContents;
+        return $webpageSnapshot;
     }
 
     /**
-     * @param string $webpageContents
-     * @return string
+     * @param WebpageSnapshot $webpageSnapshot
+     * @return WebpageSnapshot
      * @throws UrlFetcherException
      */
-    private function fetchWixsiteContents(string $webpageContents): string
+    private function fetchWixsiteContents(WebpageSnapshot $webpageSnapshot): WebpageSnapshot
     {
-        preg_match('#"masterPageJsonFileName"\s*:\s*"(?<hash>[a-z0-9_]+).json"#s', $webpageContents, $matches);
+        preg_match('#"masterPageJsonFileName"\s*:\s*"(?<hash>[a-z0-9_]+).json"#s',
+            $webpageSnapshot->getContents(), $matches);
 
         $hash = $matches['hash'];
 
         preg_match("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/(?!$hash)[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
-            $webpageContents, $matches);
+            $webpageSnapshot->getContents(), $matches);
 
-        return $this->urlFetcher->fetchWebPage($matches['data_url']);
+        return $this->urlFetcher->fetchWebpage($matches['data_url']);
     }
 
     private function guessFilterFromUrl(string $url): string
@@ -196,5 +193,35 @@ class CommissionStatusUpdateService
         } else {
             return '';
         }
+    }
+
+    /**
+     * @param Artisan $artisan
+     * @return array
+     */
+    private function getCommissionsStatusAndDateTimeChecked(Artisan $artisan): array
+    {
+        $url = $artisan->getCommisionsQuotesCheckUrl();
+        $datetimeRetrieved = null;
+
+        try {
+            $webpageSnapshot = $this->fetchWebpageContents($url);
+            $datetimeRetrieved = $webpageSnapshot->getDatetimeRetrieved();
+            $status = $this->commissionsStatusParser->areCommissionsOpen($webpageSnapshot->getContents(),
+                $this->guessFilterFromUrl($url));
+        } catch (UrlFetcherException|CommissionsStatusParserException $exception) {
+            $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
+            $status = null;
+        }
+
+        return [$status, $datetimeRetrieved ?: $this->getNowUtc()];
+    }
+
+    /**
+     * @return DateTime
+     */
+    private function getNowUtc(): DateTime
+    {
+        return new DateTime('now', new DateTimeZone('UTC'));
     }
 }

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Utils\WebpageSnapshot;
 use App\Utils\WebsiteInfo;
+use DateTime;
 use Symfony\Component\Filesystem\Filesystem;
 
 class UrlFetcher
@@ -38,21 +40,16 @@ class UrlFetcher
 
     /**
      * @param string $url
-     * @return string
+     * @return WebpageSnapshot
      * @throws UrlFetcherException
      */
-    public function fetchWebPage(string $url): string
+    public function fetchWebpage(string $url): WebpageSnapshot
     {
         $snapshotPath = $this->snapshotPathForUrl($url);
 
-        if (file_exists($snapshotPath)) {
-            $webpageContents = file_get_contents($snapshotPath);
-        } else {
-            $webpageContents = $this->curlFetchUrl($url);
-            $this->fs->dumpFile($snapshotPath, $webpageContents);
-        }
+        $this->downloadIfNotCached($url, $snapshotPath);
 
-        return $webpageContents;
+        return new WebpageSnapshot($url, file_get_contents($snapshotPath), $this->getFileMTimeUtc($snapshotPath));
     }
 
     public function clearCache(): void
@@ -143,5 +140,28 @@ class UrlFetcher
         }
 
         return $ch;
+    }
+
+    /**
+     * @param string $url
+     * @param string $snapshotPath
+     * @return void
+     * @throws UrlFetcherException
+     */
+    private function downloadIfNotCached(string $url, string $snapshotPath): void
+    {
+        if (!file_exists($snapshotPath)) {
+            $webpageContents = $this->curlFetchUrl($url);
+            $this->fs->dumpFile($snapshotPath, $webpageContents);
+        }
+    }
+
+    /**
+     * @param $filepath
+     * @return DateTime
+     */
+    private function getFileMTimeUtc($filepath): DateTime
+    {
+        return new DateTime('@' . (string)filemtime($filepath));
     }
 }
