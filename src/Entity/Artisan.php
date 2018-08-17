@@ -137,6 +137,11 @@ class Artisan implements \JsonSerializable
      */
     private $areCommissionsOpen;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $commissionsQuotesLastCheck;
+
     public function getId()
     {
         return $this->id;
@@ -443,6 +448,18 @@ class Artisan implements \JsonSerializable
     public function setOtherFeatures(string $otherFeatures): self
     {
         $this->otherFeatures = $otherFeatures;
+
+        return $this;
+    }
+
+    public function getCommissionsQuotesLastCheck(): ?\DateTimeInterface
+    {
+        return $this->commissionsQuotesLastCheck;
+    }
+
+    public function setCommissionsQuotesLastCheck(?\DateTimeInterface $commissionsQuotesLastCheck): self
+    {
+        $this->commissionsQuotesLastCheck = $commissionsQuotesLastCheck;
 
         return $this;
     }
