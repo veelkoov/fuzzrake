@@ -23,6 +23,16 @@ class Artisan implements \JsonSerializable
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $formerly;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $intro;
+
+    /**
      * @ORM\Column(type="string", length=256)
      */
     private $since;
@@ -460,6 +470,30 @@ class Artisan implements \JsonSerializable
     public function setCommissionsQuotesLastCheck(?\DateTimeInterface $commissionsQuotesLastCheck): self
     {
         $this->commissionsQuotesLastCheck = $commissionsQuotesLastCheck;
+
+        return $this;
+    }
+
+    public function getFormerly(): ?string
+    {
+        return $this->formerly;
+    }
+
+    public function setFormerly(string $formerly): self
+    {
+        $this->formerly = $formerly;
+
+        return $this;
+    }
+
+    public function getIntro(): ?string
+    {
+        return $this->intro;
+    }
+
+    public function setIntro(string $intro): self
+    {
+        $this->intro = $intro;
 
         return $this;
     }
