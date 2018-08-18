@@ -21,13 +21,7 @@
     </thead>
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit-maker"
-            data-name="{{ artisan.name }}"
-            data-since="{{ artisan.since|since }}"
-            data-country="{{ artisan.country }}"
-            data-state="{{ artisan.state }}"
-            data-city="{{ artisan.city }}"
-            data-types="{{ artisan.types }}">
+        <tr class="fursuit-maker" data-name="{{ artisan.name }}" data-since="{{ artisan.since|since }}" data-country="{{ artisan.country }}" data-state="{{ artisan.state }}" data-city="{{ artisan.city }}" data-types="{{ artisan.types }}" data-other-types="{{ artisan.otherTypes }}" data-other-features="{{ artisan.otherFeatures }}" data-other-styles="{{ artisan.otherStyles }}" data-commissions-status="{{ artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format }}" data-cst-url="{{ artisan.commisionsQuotesCheckUrl }}" data-cst-last-check="{{ artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') }}">
             {%- spaceless %}
                 <td class="text-left align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}

@@ -8,19 +8,9 @@ const FEATURES_COLUMN_IDX = 3;
 
 $(document).ready(function () {
     initDataTable();
+    initDetailsModal();
     initSearchForm();
-
-    $('#artisans a').click(function (evt) {
-        evt.preventDefault();
-        window.open(this.href);
-    });
-
-    $('div.artisan-links').attr('title','If you\'re going to contact the studio/maker, <u>please let them know you found them here!</u> This will help us all a lot. Thank you!')
-        .data('placement', 'top')
-        .data('boundary', 'window')
-        .data('html', true)
-        .data('fallbackPlacement', [])
-        .tooltip();
+    addReferrerRequestTooltip();
 });
 
 function initDataTable() {
@@ -46,26 +36,47 @@ function initDataTable() {
         }
     });
 
+    $('#artisans a').click(function (evt) {
+        evt.preventDefault();
+        window.open(this.href);
+    });
+}
+
+function initDetailsModal() {
     $('#artisanDetailsModal').on('show.bs.modal', function (event) {
         var $row = $(event.relatedTarget).closest('tr');
 
         $('#artisanName').html($row.children().eq(NAME_COLUMN_IDX).html());
-        $('#artisanLocation').html([$row.data('state'), $row.data('city')].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>');
-        $('#artisanFeatures').html(htmlListFromCommaSeparated($row.children().eq(FEATURES_COLUMN_IDX).text()));
-        $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types')));
-        $('#artisanStyles').html(htmlListFromCommaSeparated($row.children().eq(STYLES_COLUMN_IDX).text()));
-        $('#artisanSince').html($row.data('since') || '<i class="fas fa-question-circle" title="How long?"></i>');
+        $('#artisanLocation').html(formatLocation($row.data('state'), $row.data('city')));
+        $('#artisanFeatures').html(htmlListFromCommaSeparated($row.children().eq(FEATURES_COLUMN_IDX).text(), $row.data('other-features')));
+        $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types'), $row.data('other-types')));
+        $('#artisanStyles').html(htmlListFromCommaSeparated($row.children().eq(STYLES_COLUMN_IDX).text(), $row.data('other-styles')));
+        $('#artisanSince').html(formatSince($row.data('since')));
+        // $('#artisanLinks').html($row.data('since') || '<i class="fas fa-question-circle" title="How long?"></i>');
+        $('#artisanCommissionsStatus').html(commissionsStatusFromArtisanRowData($row.data('commissions-status'), $row.data('cst-last-check'), $row.data('cst-url')));
     });
-}
-
-function htmlListFromCommaSeparated(input) {
-    return input ? '<ul><li>' + input.split(', ').join('</li><li>') + '</li></ul>' : '<i class="fas fa-question-circle"></i>';
 }
 
 function initSearchForm() {
     addChoiceWidget('#countriesFilter', COUNTRIES_COLUMN_IDX, false, countriesOnCreateTemplatesCallback);
     addChoiceWidget('#stylesFilter', STYLES_COLUMN_IDX, false);
     addChoiceWidget('#featuresFilter', FEATURES_COLUMN_IDX, true);
+}
+
+function addReferrerRequestTooltip() {
+    $('div.artisan-links').attr('title', 'If you\'re going to contact the studio/maker, <u>please let them know you found them here!</u> This will help us all a lot. Thank you!')
+        .data('placement', 'top')
+        .data('boundary', 'window')
+        .data('html', true)
+        .data('fallbackPlacement', [])
+        .tooltip();
+}
+
+function htmlListFromCommaSeparated(list, other) {
+    var listLis = list !== '' ? '<li>' + list.split(', ').join('</li><li>') + '</li>' : '';
+    var otherLis = other !== '' ? '<li>Other: ' + other + '</li>' : '';
+
+    return listLis + otherLis ? '<ul>' + listLis + otherLis + '</ul>' : '<i class="fas fa-question-circle"></i>';
 }
 
 function addChoiceWidget(selector, dataColumnIndex, isAnd, onCreateTemplatesCallback = null) {
@@ -137,4 +148,34 @@ function countriesOnCreateTemplatesCallback(template) {
             `);
         },
     };
+}
+
+function commissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck, cstUrl) {
+    var commissionsStatus = commissionsStatusData === '' ? 'unknown' : (commissionsStatusData ? 'open' : 'closed');
+
+    if (cstUrl === '') {
+        return 'Commissions are <strong>' + commissionsStatus + '</strong>.' +
+            ' Status is not automatically tracked and updated.' +
+            ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
+    }
+
+    if (commissionsStatusData === '') {
+        return 'Commissions status is unknown. It should be tracked and updated automatically from this web page:' +
+            ' <a href="' + cstUrl + '">' + cstUrl + '</a>, however our software failed to "understand"' +
+            ' the status based on the page contents. Last time it tried on ' + cstLastCheck +
+            ' UTC. <a href="./info.html#commissions-status-tracking">Learn more</a>';
+    }
+
+    return 'Commissions are <strong>' + commissionsStatus + '</strong>. Status is tracked and updated' +
+        ' automatically from this web page: <a href="' + cstUrl + '">' + cstUrl + '</a>.'
+        + ' Last time checked on ' + cstLastCheck + ' UTC.' +
+        ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
+}
+
+function formatLocation(state, city) {
+    return [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
+}
+
+function formatSince(since) {
+    return since || '<i class="fas fa-question-circle" title="How long?"></i>';
 }
