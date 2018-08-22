@@ -16,8 +16,9 @@ class CommissionsStatusParser
         '# style="[^"]*"( (?=\>))?#s' => '',
         '#’#' => '\'',
     ];
-    const FALSE_POSITIVES = [
-        '#once commissions are open#s',
+    const FALSE_POSITIVES_REGEXES = [
+        'once commissions are STATUS',
+        'art commissions: STATUS',
     ];
     const GENERIC_REGEXES = [
         '(WE_ARE )?currently (STATUS|\*\*\*STATUS\*\*\*) for ((the |new )?commissions|new projects|new orders)',
@@ -57,13 +58,16 @@ class CommissionsStatusParser
         'WE_ARE' => '(we are|we\'re|i am)',
     ];
 
+    private $falsePositivesRegexps;
     private $statusOpenRegexps;
     private $statusClosedRegexps;
 
     public function __construct()
     {
-        $this->statusOpenRegexps = self::getStatusRegexes('open', self::EXTRA_OPEN_REGEXES);
-        $this->statusClosedRegexps = self::getStatusRegexes('closed', self::EXTRA_CLOSED_REGEXES);
+        $this->falsePositivesRegexps = array_merge(self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'open'),
+            self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'closed'));
+        $this->statusOpenRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'open', self::EXTRA_OPEN_REGEXES);
+        $this->statusClosedRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'closed', self::EXTRA_CLOSED_REGEXES);
 
 //        $this->debugDumpRegexpes();
     }
@@ -121,7 +125,7 @@ class CommissionsStatusParser
             $webpage = preg_replace($regexp, $replacement, $webpage);
         }
 
-        foreach (self::FALSE_POSITIVES as $regexp) {
+        foreach ($this->falsePositivesRegexps as $regexp) {
             $webpage = preg_replace($regexp, '', $webpage);
         }
 
@@ -182,7 +186,7 @@ class CommissionsStatusParser
         }
     }
 
-    private static function getStatusRegexes(string $status, array $extraRegexes): array
+    private static function getCompiledRegexes(array $rawRegexes, string $status, array $extraRegexes = []): array
     {
         return array_map(function ($regex) use ($status) {
             $regex = str_replace('STATUS', $status, $regex);
@@ -192,7 +196,7 @@ class CommissionsStatusParser
             }
 
             return "#$regex#s";
-        }, array_merge(self::GENERIC_REGEXES, $extraRegexes));
+        }, array_merge($rawRegexes, $extraRegexes));
     }
 
     private static function extractFromJson(string $webpage)
@@ -228,6 +232,10 @@ class CommissionsStatusParser
 
     private function debugDumpRegexpes(): void
     {
+        echo "FALSE-POSITIVES =========================================\n";
+        foreach ($this->falsePositivesRegexps as $regex) {
+            echo "$regex\n";
+        }
         echo "OPEN ====================================================\n";
         foreach ($this->statusOpenRegexps as $regex) {
             echo "$regex\n";
