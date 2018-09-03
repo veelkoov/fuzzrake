@@ -131,8 +131,9 @@ class AppTidyData extends Command
             'argentina' => 'AR',
             'belgium' => 'BE',
             'canada' => 'CA',
+            'czech republic' => 'CZ',
             'denmark' => 'DK',
-            'uk|england' => 'GB',
+            'uk|england|united kingdom' => 'GB',
             'germany' => 'DE',
             'ireland' => 'IE',
             'italia|italy' => 'IT',
@@ -192,7 +193,7 @@ class AppTidyData extends Command
 
     private function fixFacebookUrl(string $input): string
     {
-        $result = preg_replace('#^(?:https?://)?(?:www\.|m\.)?facebook\.com/([^/?]+)/?(\?ref=[a-z_]+)?$#i',
+        $result = preg_replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/([^/?]+)/?(\?ref=[a-z_]+)?$#i',
             'https://www.facebook.com/$1/', trim($input));
 
         $this->showDiff($input, $result, 'https://www.facebook.com/[^/]+/');
