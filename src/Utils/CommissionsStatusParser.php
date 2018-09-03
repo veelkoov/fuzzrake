@@ -21,7 +21,7 @@ class CommissionsStatusParser
         'art commissions: STATUS',
     ];
     const GENERIC_REGEXES = [
-        '(WE_ARE )?currently (STATUS|\*\*\*STATUS\*\*\*) for ((the |new )?commissions|new projects|new orders)',
+        '((WE_ARE )?currently|currently WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new)? (commissions|projects|orders|quotes)',
         'commissions(( and)? quotes)?( status| are)?( ?:| now| currently ?:?| at this time are)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
@@ -47,15 +47,15 @@ class CommissionsStatusParser
     ];
     const COMMON_REPLACEMENTS = [
         'commissions' => 'comm?iss?ions?',
-        'open' => 'open(?!ing)',
-        'closed' => 'closed?',
+        'open' => '(open(?!ing)|(?!not? )accepting)',
+        'closed' => '(closed?|not? accepting)',
         'fursuits' => 'fursuits?',
         '</div>' => ' ?</div> ?',
         '<div>' => ' ?<div( class="[^"]*")?> ?',
         '<p>' => ' ?<p( class="[^"]*")?> ?',
         '</p>' => ' ?</p> ?',
         'WE_CAN' => '(i|we) can',
-        'WE_ARE' => '(we are|we\'re|i am)',
+        'WE_ARE' => '(we are|we\'re|i am|i\'m)',
     ];
 
     private $falsePositivesRegexps;
@@ -157,7 +157,7 @@ class CommissionsStatusParser
 
         if (WebsiteInfo::isTwitter($inputText)) {
             $crawler = new Crawler($inputText);
-            return $crawler->filter('div.profileheadercard p.profileheadercard-bio.u-dir')->html();
+            return $crawler->filter('div.profileheadercard')->html();
         }
 
         return $inputText;
