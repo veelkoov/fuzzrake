@@ -5,19 +5,16 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <span id="artisanName"></span>
-                    <small>
-                        Based in <span id="artisanLocation"></span>,
-                        crafting since <span id="artisanSince"></span>
-                    </small>
+                    <small id="artisanShortInfo"></small>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body row px-4 py-2">
-                {#<div class="col-sm-12 p-1">#}
-                    {#<p class="lead" id="artisanIntro">Blah blah blah? Blah!</p>#}
-                {#</div>#}
+                <div class="col-sm-12 p-1">
+                    <p class="lead" id="artisanIntro"></p>
+                </div>
                 <div class="col-sm-4 p-1">
                     <h5>Offered styles</h5>
                     <div class="small" id="artisanStyles"></div>

@@ -44,16 +44,7 @@ function initDataTable() {
 
 function initDetailsModal() {
     $('#artisanDetailsModal').on('show.bs.modal', function (event) {
-        var $row = $(event.relatedTarget).closest('tr');
-
-        $('#artisanName').html($row.children().eq(NAME_COLUMN_IDX).html());
-        $('#artisanLocation').html(formatLocation($row.data('state'), $row.data('city')));
-        $('#artisanFeatures').html(htmlListFromCommaSeparated($row.children().eq(FEATURES_COLUMN_IDX).text(), $row.data('other-features')));
-        $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types'), $row.data('other-types')));
-        $('#artisanStyles').html(htmlListFromCommaSeparated($row.children().eq(STYLES_COLUMN_IDX).text(), $row.data('other-styles')));
-        $('#artisanSince').html(formatSince($row.data('since')));
-        // $('#artisanLinks').html($row.data('since') || '<i class="fas fa-question-circle" title="How long?"></i>');
-        $('#artisanCommissionsStatus').html(commissionsStatusFromArtisanRowData($row.data('commissions-status'), $row.data('cst-last-check'), $row.data('cst-url')));
+        updateDetailsModalWithRowData($(event.relatedTarget).closest('tr'));
     });
 }
 
@@ -70,6 +61,18 @@ function addReferrerRequestTooltip() {
         .data('html', true)
         .data('fallbackPlacement', [])
         .tooltip();
+}
+
+function updateDetailsModalWithRowData($row) {
+    $('#artisanName').html($row.children().eq(NAME_COLUMN_IDX).html());
+    $('#artisanShortInfo').html(formatShortInfo($row.data('state'), $row.data('city'),
+        $row.data('since'), $row.data('formerly')));
+    $('#artisanFeatures').html(htmlListFromCommaSeparated($row.data('features'), $row.data('other-features')));
+    $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types'), $row.data('other-types')));
+    $('#artisanStyles').html(htmlListFromCommaSeparated($row.data('styles'), $row.data('other-styles')));
+    $('#artisanCommissionsStatus').html(commissionsStatusFromArtisanRowData($row.data('commissions-status'),
+        $row.data('cst-last-check'), $row.data('cst-url')));
+    $('#artisanIntro').html($row.data('intro')).toggle($row.data('intro') !== '');
 }
 
 function htmlListFromCommaSeparated(list, other) {
@@ -172,10 +175,10 @@ function commissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck
         ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
 }
 
-function formatLocation(state, city) {
-    return [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
-}
+function formatShortInfo(state, city, since, formerly) {
+    var since = since || '<i class="fas fa-question-circle" title="How long?"></i>';
+    var location = [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
+    var formerly = formerly ? '<br />Formerly ' + formerly : '';
 
-function formatSince(since) {
-    return since || '<i class="fas fa-question-circle" title="How long?"></i>';
+    return 'Based in ' + location + ', crafting since ' + since + formerly;
 }
