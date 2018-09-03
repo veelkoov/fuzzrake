@@ -16,11 +16,12 @@ class CommissionsStatusParser
         '# style="[^"]*"( (?=\>))?#s' => '',
         '#’#' => '\'',
     ];
-    const FALSE_POSITIVES = [
-        '#once commissions are open#s',
+    const FALSE_POSITIVES_REGEXES = [
+        'once commissions are STATUS',
+        'art commissions: STATUS',
     ];
     const GENERIC_REGEXES = [
-        '(WE_ARE )?currently (STATUS|\*\*\*STATUS\*\*\*) for ((the |new )?commissions|new projects|new orders)',
+        '((WE_ARE )?currently|currently WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new)? (commissions|projects|orders|quotes)',
         'commissions(( and)? quotes)?( status| are)?( ?:| now| currently ?:?| at this time are)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
@@ -46,24 +47,27 @@ class CommissionsStatusParser
     ];
     const COMMON_REPLACEMENTS = [
         'commissions' => 'comm?iss?ions?',
-        'open' => 'open(?!ing)',
-        'closed' => 'closed?',
+        'open' => '(open(?!ing)|(?!not? )accepting)',
+        'closed' => '(closed?|not? accepting)',
         'fursuits' => 'fursuits?',
         '</div>' => ' ?</div> ?',
         '<div>' => ' ?<div( class="[^"]*")?> ?',
         '<p>' => ' ?<p( class="[^"]*")?> ?',
         '</p>' => ' ?</p> ?',
         'WE_CAN' => '(i|we) can',
-        'WE_ARE' => '(we are|we\'re|i am)',
+        'WE_ARE' => '(we are|we\'re|i am|i\'m)',
     ];
 
+    private $falsePositivesRegexps;
     private $statusOpenRegexps;
     private $statusClosedRegexps;
 
     public function __construct()
     {
-        $this->statusOpenRegexps = self::getStatusRegexes('open', self::EXTRA_OPEN_REGEXES);
-        $this->statusClosedRegexps = self::getStatusRegexes('closed', self::EXTRA_CLOSED_REGEXES);
+        $this->falsePositivesRegexps = array_merge(self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'open'),
+            self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'closed'));
+        $this->statusOpenRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'open', self::EXTRA_OPEN_REGEXES);
+        $this->statusClosedRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'closed', self::EXTRA_CLOSED_REGEXES);
 
 //        $this->debugDumpRegexpes();
     }
@@ -121,7 +125,7 @@ class CommissionsStatusParser
             $webpage = preg_replace($regexp, $replacement, $webpage);
         }
 
-        foreach (self::FALSE_POSITIVES as $regexp) {
+        foreach ($this->falsePositivesRegexps as $regexp) {
             $webpage = preg_replace($regexp, '', $webpage);
         }
 
@@ -153,7 +157,7 @@ class CommissionsStatusParser
 
         if (WebsiteInfo::isTwitter($inputText)) {
             $crawler = new Crawler($inputText);
-            return $crawler->filter('div.profileheadercard p.profileheadercard-bio.u-dir')->html();
+            return $crawler->filter('div.profileheadercard')->html();
         }
 
         return $inputText;
@@ -182,7 +186,7 @@ class CommissionsStatusParser
         }
     }
 
-    private static function getStatusRegexes(string $status, array $extraRegexes): array
+    private static function getCompiledRegexes(array $rawRegexes, string $status, array $extraRegexes = []): array
     {
         return array_map(function ($regex) use ($status) {
             $regex = str_replace('STATUS', $status, $regex);
@@ -192,7 +196,7 @@ class CommissionsStatusParser
             }
 
             return "#$regex#s";
-        }, array_merge(self::GENERIC_REGEXES, $extraRegexes));
+        }, array_merge($rawRegexes, $extraRegexes));
     }
 
     private static function extractFromJson(string $webpage)
@@ -228,6 +232,10 @@ class CommissionsStatusParser
 
     private function debugDumpRegexpes(): void
     {
+        echo "FALSE-POSITIVES =========================================\n";
+        foreach ($this->falsePositivesRegexps as $regex) {
+            echo "$regex\n";
+        }
         echo "OPEN ====================================================\n";
         foreach ($this->statusOpenRegexps as $regex) {
             echo "$regex\n";
