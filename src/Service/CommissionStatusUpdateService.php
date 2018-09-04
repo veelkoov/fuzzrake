@@ -54,7 +54,6 @@ class CommissionStatusUpdateService
      * @param StyleInterface $style
      * @param bool $refresh
      * @param bool $dryRun
-     * @throws UrlFetcherException
      */
     public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
     {
@@ -117,7 +116,6 @@ class CommissionStatusUpdateService
     /**
      * @param array $artisans
      * @param bool $refresh
-     * @throws UrlFetcherException
      */
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
     {
@@ -154,7 +152,7 @@ class CommissionStatusUpdateService
 
     /**
      * @param string $url
-     * @return string
+     * @return WebpageSnapshot
      * @throws UrlFetcherException
      */
     private function fetchWebpageContents(string $url): WebpageSnapshot
@@ -162,7 +160,9 @@ class CommissionStatusUpdateService
         $webpageSnapshot = $this->urlFetcher->fetchWebpage($url);
 
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
-            $webpageSnapshot =  $this->fetchWixsiteContents($webpageSnapshot);
+            $webpageSnapshot = $this->fetchWixsiteContents($webpageSnapshot);
+        } else if (WebsiteInfo::isTrello($webpageSnapshot)) {
+            $webpageSnapshot = $this->fetchTrelloContents($webpageSnapshot);
         }
 
         return $webpageSnapshot;
@@ -184,6 +184,20 @@ class CommissionStatusUpdateService
             $webpageSnapshot->getContents(), $matches);
 
         return $this->urlFetcher->fetchWebpage($matches['data_url']);
+    }
+
+    /**
+     * @param WebpageSnapshot $webpageSnapshot
+     * @return WebpageSnapshot
+     * @throws UrlFetcherException
+     */
+    private function fetchTrelloContents(WebpageSnapshot $webpageSnapshot): WebpageSnapshot
+    {
+        preg_match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $webpageSnapshot->getUrl(), $matches);
+
+        $boardId = $matches['boardId'];
+
+        return $this->urlFetcher->fetchWebpage("https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData");
     }
 
     private function guessFilterFromUrl(string $url): string
