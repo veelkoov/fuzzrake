@@ -22,7 +22,7 @@ class CommissionsStatusParser
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?currently|currently WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new)? (commissions|projects|orders|quotes)',
-        'commissions(( and)? quotes)?( status| are)?( ?:| now| currently ?:?| at this time are)? ?STATUS',
+        'commissions((/| and | )quotes)?( status| are)?( ?:| now| currently ?:?| at this time are)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
         'STATUS for (new )?(quotes and )?commissions ?([.!]|</)',

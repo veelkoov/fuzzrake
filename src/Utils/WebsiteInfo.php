@@ -16,7 +16,7 @@ class WebsiteInfo
 
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
-        if (stripos($webpageSnapshot->getUrl(), '.wixsite.com') !== false) {
+        if (stripos($webpageSnapshot->getUrl(), '.wixsite.com/') !== false) {
             return true;
         }
 
@@ -25,6 +25,11 @@ class WebsiteInfo
         }
 
         return false;
+    }
+
+    public static function isTrello(WebpageSnapshot $webpageSnapshot): bool
+    {
+        return stripos($webpageSnapshot->getUrl(), '//trello.com/') !== false;
     }
 
     public static function isFurAffinity(?string $url, ?string $webpageContents): bool

@@ -118,8 +118,10 @@ class UrlFetcher
     {
         return trim(
             preg_replace('#[^a-z0-9_.-]+#i', '_',
-                preg_replace('#^(https?://(www\.)?)?#', '', $url)),
-            '_');
+                preg_replace('#^(https?://(www\.)?)?#', '',
+                    preg_replace('#\?.*$#', '', $url)
+                )
+            ),'_') . '-' . hash('sha512', $url);
     }
 
     /**
