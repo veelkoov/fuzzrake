@@ -86,8 +86,8 @@ function updateDetailsModalWithRowData($row) {
 }
 
 function htmlListFromCommaSeparated(list, other) {
-    var listLis = list !== '' ? '<li>' + list.split(', ').join('</li><li>') + '</li>' : '';
-    var otherLis = other !== '' ? '<li>Other: ' + other + '</li>' : '';
+    let listLis = list !== '' ? '<li>' + list.split(', ').join('</li><li>') + '</li>' : '';
+    let otherLis = other !== '' ? '<li>Other: ' + other + '</li>' : '';
 
     return listLis + otherLis ? '<ul>' + listLis + otherLis + '</ul>' : '<i class="fas fa-question-circle"></i>';
 }
@@ -121,20 +121,20 @@ function refresh(_) {
 
 function getDataTableFilterFunction(filter, isAnd) {
     return function (_, data, _) {
-        var selectedCount = filter['selectedValues'].length;
+        let selectedCount = filter['selectedValues'].length;
 
         if (selectedCount === 0) {
             return true;
         }
 
-        var showUnknown = filter['selectedValues'].indexOf('') !== -1;
+        let showUnknown = filter['selectedValues'].indexOf('') !== -1;
 
         if (showUnknown && data[filter['dataColumnIndex']].trim() === '') {
             return true;
         }
 
-        var selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
-        var count = 0;
+        let selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
+        let count = 0;
 
         data[filter['dataColumnIndex']].split(',').forEach(function (value, _, _) {
             if (filter['selectedValues'].indexOf(value.trim()) !== -1) {
@@ -147,7 +147,7 @@ function getDataTableFilterFunction(filter, isAnd) {
 }
 
 function countriesOnCreateTemplatesCallback(template) {
-    var classNames = this.config.classNames;
+    let classNames = this.config.classNames;
 
     return {
         item: (data) => {
@@ -164,7 +164,7 @@ function countriesOnCreateTemplatesCallback(template) {
 }
 
 function commissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck, cstUrl) {
-    var commissionsStatus = commissionsStatusData === '' ? 'unknown' : (commissionsStatusData ? 'open' : 'closed');
+    let commissionsStatus = commissionsStatusData === '' ? 'unknown' : (commissionsStatusData ? 'open' : 'closed');
 
     if (cstUrl === '') {
         return 'Commissions are <strong>' + commissionsStatus + '</strong>.' +
@@ -186,9 +186,10 @@ function commissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck
 }
 
 function formatShortInfo(state, city, since, formerly) {
-    var since = since || '<i class="fas fa-question-circle" title="How long?"></i>';
-    var location = [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
-    var formerly = formerly ? '<br />Formerly ' + formerly : '';
+    since = since || '<i class="fas fa-question-circle" title="How long?"></i>';
+    formerly = formerly ? '<br />Formerly ' + formerly : '';
+
+    let location = [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
 
     return 'Based in ' + location + ', crafting since ' + since + formerly;
 }
