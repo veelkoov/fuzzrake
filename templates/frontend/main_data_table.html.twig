@@ -14,7 +14,8 @@
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
         <th class="hidden-data">Country</th>
         <th class="toggleable no-sorting">Styles</th>
-        <th class="toggleable no-sorting">Features</th>
+        <th class="toggleable no-sorting default-hidden">Types</th>
+        <th class="toggleable no-sorting default-hidden">Features</th>
         <th class="toggleable">Commissions</th>
         <th class="no-sorting">Links</th>
     </tr>
@@ -52,6 +53,9 @@
                 </td>
                 <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.styles|other(artisan.otherStyles) -}}
+                </td>
+                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.types|other(artisan.otherTypes) -}}
                 </td>
                 <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.features|other(artisan.otherFeatures) -}}

@@ -4,7 +4,7 @@ var filters = {};
 const NAME_COLUMN_IDX = 0;
 const COUNTRIES_COLUMN_IDX = 1;
 const STYLES_COLUMN_IDX = 2;
-const FEATURES_COLUMN_IDX = 3;
+const FEATURES_COLUMN_IDX = 4;
 
 const REFERRER_HTML = 'If you\'re going to contact the studio/maker, <u>please let them know you found them here!</u> This will help us all a lot. Thank you!';
 
@@ -30,7 +30,8 @@ function initDataTable() {
         paging: false,
         autoWidth: false,
         columnDefs: [
-            {targets: 'no-sorting', orderable: false}
+            {targets: 'no-sorting', orderable: false},
+            {targets: 'default-hidden', visible: false}
         ],
         buttons: [
             {
