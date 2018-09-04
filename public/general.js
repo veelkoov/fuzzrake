@@ -6,12 +6,21 @@ const COUNTRIES_COLUMN_IDX = 1;
 const STYLES_COLUMN_IDX = 2;
 const FEATURES_COLUMN_IDX = 3;
 
+const REFERRER_HTML = 'If you\'re going to contact the studio/maker, <u>please let them know you found them here!</u> This will help us all a lot. Thank you!';
+
 $(document).ready(function () {
     initDataTable();
     initDetailsModal();
     initSearchForm();
     addReferrerRequestTooltip();
 });
+
+function makeLinksOpenNewTab(linkSelector) {
+    $(linkSelector).click(function (evt) {
+        evt.preventDefault();
+        window.open(this.href);
+    });
+}
 
 function initDataTable() {
     $dataTable = $('#artisans').DataTable({
@@ -36,10 +45,7 @@ function initDataTable() {
         }
     });
 
-    $('#artisans a').click(function (evt) {
-        evt.preventDefault();
-        window.open(this.href);
-    });
+    makeLinksOpenNewTab('#artisans a');
 }
 
 function initDetailsModal() {
@@ -55,7 +61,7 @@ function initSearchForm() {
 }
 
 function addReferrerRequestTooltip() {
-    $('div.artisan-links').attr('title', 'If you\'re going to contact the studio/maker, <u>please let them know you found them here!</u> This will help us all a lot. Thank you!')
+    $('div.artisan-links').attr('title', REFERRER_HTML)
         .data('placement', 'top')
         .data('boundary', 'window')
         .data('html', true)
@@ -70,9 +76,13 @@ function updateDetailsModalWithRowData($row) {
     $('#artisanFeatures').html(htmlListFromCommaSeparated($row.data('features'), $row.data('other-features')));
     $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types'), $row.data('other-types')));
     $('#artisanStyles').html(htmlListFromCommaSeparated($row.data('styles'), $row.data('other-styles')));
+    $('#artisanLinks').html(formatLinks($row.find('div.artisan-links div.dropdown-menu a:not(.request-update)')));
+    $('#artisanRequestUpdate').attr('href', $row.find('div.artisan-links div.dropdown-menu a.request-update').attr('href'));
     $('#artisanCommissionsStatus').html(commissionsStatusFromArtisanRowData($row.data('commissions-status'),
         $row.data('cst-last-check'), $row.data('cst-url')));
     $('#artisanIntro').html($row.data('intro')).toggle($row.data('intro') !== '');
+
+    makeLinksOpenNewTab('#artisanDetailsModal a');
 }
 
 function htmlListFromCommaSeparated(list, other) {
@@ -181,4 +191,21 @@ function formatShortInfo(state, city, since, formerly) {
     var formerly = formerly ? '<br />Formerly ' + formerly : '';
 
     return 'Based in ' + location + ', crafting since ' + since + formerly;
+}
+
+function formatLinks(links) {
+    let linksHtml = '';
+
+    links.each (function (_, link) {
+        var $link = $(link).clone();
+        $link.removeClass('dropdown-item')
+            .addClass('btn btn-light m-1')
+            .html(
+                $link.html() + '<span class="d-none d-md-inline">: <span class="url">'
+                + $link.attr('href').replace(/^https?:\/\/|\/$/g, '') + '</span></span>'
+            );
+        linksHtml += $link[0].outerHTML;
+    });
+
+    return linksHtml ? '<p class="small px-1">' + REFERRER_HTML + '</p>' + linksHtml: '<i class="fas fa-question-circle" title="None provided"></i>';
 }

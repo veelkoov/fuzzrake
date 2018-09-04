@@ -36,3 +36,6 @@ div.footer {
 ul {
   padding-left: 3ex;
 }
+#artisanLinks .url {
+  color: #007bff;
+}
