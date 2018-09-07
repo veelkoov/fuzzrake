@@ -11,6 +11,12 @@ table#artisans td.hidden-data,
 table#artisans th.hidden-data {
   display: none;
 }
+table#artisans tbody td {
+  cursor: pointer;
+}
+table#artisans tbody td.links {
+  cursor: default;
+}
 div.dataTables_info {
   white-space: normal !important;
 }
@@ -26,4 +32,10 @@ div.dataTables_info {
 }
 div.footer {
   font-size: 75%;
+}
+ul {
+  padding-left: 3ex;
+}
+#artisanLinks .url {
+  color: #007bff;
 }

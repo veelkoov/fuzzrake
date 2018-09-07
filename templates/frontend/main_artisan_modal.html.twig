@@ -1,0 +1,53 @@
+<div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span id="artisanName"></span>
+                    <small id="artisanShortInfo"></small>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row px-4 py-2">
+                <div class="col-sm-12 p-1">
+                    <p class="lead" id="artisanIntro"></p>
+                </div>
+                <div class="col-sm-4 p-1">
+                    <h5>Styles</h5>
+                    <div class="small" id="artisanStyles"></div>
+                </div>
+                <div class="col-sm-4 p-1">
+                    <h5>Types</h5>
+                    <div class="small" id="artisanTypes"></div>
+                </div>
+                <div class="col-sm-4 p-1">
+                    <h5>Features</h5>
+                    <div class="small" id="artisanFeatures"></div>
+                </div>
+                <div class="col-sm-12 p-1">
+                    <h5>Links</h5>
+                    <div id="artisanLinks"></div>
+                </div>
+                <div class="col-sm-12 p-1">
+                    <h5>Commissions status</h5>
+                    <div class="small" id="artisanCommissionsStatus"></div>
+                </div>
+                <div class="col-sm-12 p-1">
+                    <h5>Data inaccurate/outdated?</h5>
+                    <p>
+                        You can <a href="" id="artisanRequestUpdate">request update via Twitter</a>,
+                        <a href="{{ path('info') }}#keep-in-touch">contact the website's maintainer</a>,
+                        or <strong>if you are the maker - please</strong>
+                        <a href="https://goo.gl/forms/6qoHxk8i2WsTKhjO2"{# TODO: reuse href #}>fill this form</a>.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

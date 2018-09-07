@@ -14,16 +14,33 @@
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
         <th class="hidden-data">Country</th>
         <th class="toggleable no-sorting">Styles</th>
-        <th class="toggleable no-sorting">Features</th>
+        <th class="toggleable no-sorting default-hidden">Types</th>
+        <th class="toggleable no-sorting default-hidden">Features</th>
         <th class="toggleable">Commissions</th>
         <th class="no-sorting">Links</th>
     </tr>
     </thead>
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit-maker">
+        <tr class="fursuit-maker"
+            data-name="{{ artisan.name }}"
+            data-formerly="{{ artisan.formerly }}"
+            data-since="{{ artisan.since|since }}"
+            data-country="{{ artisan.country }}"
+            data-state="{{ artisan.state }}"
+            data-city="{{ artisan.city }}"
+            data-intro="{{ artisan.intro }}"
+            data-types="{{ artisan.types }}"
+            data-other-types="{{ artisan.otherTypes }}"
+            data-features="{{ artisan.features }}"
+            data-other-features="{{ artisan.otherFeatures }}"
+            data-styles="{{ artisan.styles }}"
+            data-other-styles="{{ artisan.otherStyles }}"
+            data-commissions-status="{{ artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format }}"
+            data-cst-url="{{ artisan.commisionsQuotesCheckUrl }}"
+            data-cst-last-check="{{ artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') }}">
             {%- spaceless %}
-                <td class="text-left align-middle">
+                <td class="text-left align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
                     {%- if artisan.country -%}
                         {{ '&nbsp;' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
@@ -34,13 +51,16 @@
                         {{ artisan.country|lower }}
                     {%- endif -%}
                 </td>
-                <td class="text-left small align-middle">
+                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.styles|other(artisan.otherStyles) -}}
                 </td>
-                <td class="text-left small align-middle">
+                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.types|other(artisan.otherTypes) -}}
+                </td>
+                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.features|other(artisan.otherFeatures) -}}
                 </td>
-                <td class="align-middle">
+                <td class="align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {%- if artisan.areCommissionsOpen is null -%}
                     {%- elseif artisan.areCommissionsOpen == true -%}
                         <i class="fas fa-check-circle"></i> Open
@@ -86,7 +106,7 @@
                                 {%- if artisan.instagramUrl -%}
                                     <a class="dropdown-item" href="{{ artisan.instagramUrl }}"><i class="fab fa-instagram"></i> Instagram</a>
                                 {%- endif -%}
-                                <a class="dropdown-item" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20{{ artisan.name|url_encode }}%20(please%20describe%20details)&tw_p=tweetbutton">
+                                <a class="dropdown-item request-update" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20{{ artisan.name|url_encode }}%20(please%20describe%20details)&tw_p=tweetbutton">
                                     <i class="fas fa-exclamation-triangle"></i> Request update
                                 </a>
                             </div>
