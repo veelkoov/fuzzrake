@@ -1,16 +1,27 @@
-<div class="alert alert-primary alert-dismissible fade show" role="alert">
-    <h4>Fursuit makers database</h4>
-
+<div class="alert alert-primary alert-dismissible fade show row" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 
-    <p>
-        Welcome to the list of fursuit makers! Currently {{ artisans|length }} makers from {{ countryCount }}
-        countries are listed here, and we're not done yet.
-    </p>
+    <div class="col-sm-8 px-0">
+        <h4>Fursuit makers database</h4>
 
-    <p>
-        Last update: {{ "now"|date('Y-m-d H:i', 'UTC') }} UTC.
-    </p>
+
+        <p>
+            Welcome to the list of fursuit makers! Currently {{ artisans|length }}&nbsp;makers from
+            {{ countryCount }}&nbsp;countries are listed here, and&nbsp;we're not done yet.
+        </p>
+
+        <p>
+            Last update: {{ "now"|date('Y-m-d H:i', 'UTC') }} UTC.
+        </p>
+    </div>
+
+    <div class="col-sm-4 px-0">
+        <div class="container text-center">
+            <a href="https://www.furaffinity.net/view/28153774/" aria-hidden="true">
+                <img src="{{ asset('images/website-banner-top.png') }}" class="img-fluid" alt="">
+            </a>
+        </div>
+    </div>
 </div>
