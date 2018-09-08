@@ -6,13 +6,12 @@ namespace App\Controller\Frontend;
 use App\Repository\ArtisanRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/")
  */
-class MainController extends AbstractController
+class DefaultController extends AbstractController
 {
     /**
      * @Route("/info.html", name="info")
@@ -24,7 +23,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/{anything}", name="main", defaults={"anything": ""})
+     * @Route("/", name="main")
      * @return Response
      */
     public function main(ArtisanRepository $artisanRepository): Response
