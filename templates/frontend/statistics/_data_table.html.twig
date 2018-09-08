@@ -1,0 +1,18 @@
+<div class="container">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>{{ name }}</th>
+            <th># of makers</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for a, b in data %}
+            <tr>
+                <td>{{ a }}</td>
+                <td>{{ b }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

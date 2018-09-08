@@ -41,21 +41,9 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item {% if page == 'main' %}active{% endif %}">
-                    <a class="nav-link" href="{{ path('main') }}">
-                        Home {% if page == 'main' %} <span class="sr-only">(current)</span>{% endif %}
-                    </a>
-                </li>
-                <li class="nav-item {% if page == 'info' %}active{% endif %}">
-                    <a class="nav-link" href="{{ path('info') }}">
-                        Info {% if page == 'info' %} <span class="sr-only">(current)</span>{% endif %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('info') }}#data-updates">
-                        Include/update my studio <span class="badge badge-warning">(click me!)</span>
-                    </a>
-                </li>
+                {% include 'menu_item.html.twig' with {'name': 'main', 'pretty_name': 'Home' } %}
+                {% include 'menu_item.html.twig' with {'name': 'info', 'pretty_name': 'Info' } %}
+                {% include 'menu_item.html.twig' with {'name': 'statistics', 'pretty_name': 'Stats' } %}
             </ul>
         </div>
     </nav>

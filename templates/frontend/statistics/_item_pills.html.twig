@@ -1,0 +1,13 @@
+<p class="item-pills">
+    {% for item, count in items %}
+        <span class="badge badge-secondary p-2 my-1">
+            {%- if count matches '/^\\d+$/' -%}
+                {{- item -}}
+            {%- else -%}
+                {{- count -}}
+            {%- endif -%}
+
+            {%- if count > 1 %} ({{ count }}x){% endif -%}
+        </span>
+    {% endfor %}
+</p>

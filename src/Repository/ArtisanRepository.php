@@ -37,6 +37,20 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getIntros(): array
+    {
+        $intros = $this->createQueryBuilder('a')
+            ->select("a.intro")
+            ->where("a.intro != :empty")
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_map(function ($item) {
+            return $item['intro'];
+        }, $intros);
+    }
+
     public function getDistinctCountries(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
@@ -47,14 +61,29 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('types');
     }
 
+    public function getDistinctOtherTypes(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('otherTypes');
+    }
+
     public function getDistinctStyles(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('styles');
     }
 
+    public function getDistinctOtherStyles(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('otherStyles');
+    }
+
     public function getDistinctFeatures(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('features');
+    }
+
+    public function getDistinctOtherFeatures(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
     }
 
     private function getDistinctItemsWithCountFromJoined(string $columnName): array
