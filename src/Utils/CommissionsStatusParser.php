@@ -19,6 +19,7 @@ class CommissionsStatusParser
     const FALSE_POSITIVES_REGEXES = [
         'once commissions are STATUS',
         'art commissions: STATUS',
+        'commissions STATUS MONTHS',
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?currently|currently WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new)? (commissions|projects|orders|quotes)',
@@ -56,6 +57,7 @@ class CommissionsStatusParser
         '</p>' => ' ?</p> ?',
         'WE_CAN' => '(i|we) can',
         'WE_ARE' => '(we are|we\'re|i am|i\'m)',
+        'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
     ];
 
     private $falsePositivesRegexps;
