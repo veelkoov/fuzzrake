@@ -47,9 +47,19 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('types');
     }
 
+    public function getDistinctOtherTypes(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('otherTypes', ';');
+    }
+
     public function getDistinctStyles(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('styles');
+    }
+
+    public function getDistinctOtherStyles(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('otherStyles', ';');
     }
 
     public function getDistinctFeatures(): array
@@ -57,7 +67,12 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('features');
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName): array
+    public function getDistinctOtherFeatures(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('otherFeatures', ';');
+    }
+
+    private function getDistinctItemsWithCountFromJoined(string $columnName, string $separator = ','): array
     {
         $dbResult = $this->createQueryBuilder('a')
             ->select("a.$columnName AS items")
@@ -66,13 +81,13 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        $allJoined = implode(',', array_map(function ($item) {
+        $allJoined = implode($separator, array_map(function ($item) {
             return $item['items'];
         }, $dbResult));
 
         $result = [];
 
-        foreach (explode(',', $allJoined) as $item) {
+        foreach (explode($separator, $allJoined) as $item) {
             $item = trim($item);
 
             if (!array_key_exists($item, $result)) {
