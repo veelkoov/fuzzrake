@@ -26,17 +26,15 @@ class StatisticsController extends AbstractController
         $features = $artisanRepository->getDistinctFeatures();
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountries();
-        $intros = $artisanRepository->getIntros();
 
         return $this->render('frontend/statistics/statistics.html.twig', [
             'countries' => $this->prepareTableData($countries),
             'types' => $this->prepareTableData($types),
-            'otherTypes' => $otherTypes,
+            'otherTypes' => $this->prepareListData($otherTypes),
             'styles' => $this->prepareTableData($styles),
-            'otherStyles' => $otherStyles,
+            'otherStyles' => $this->prepareListData($otherStyles),
             'features' => $this->prepareTableData($features),
-            'otherFeatures' => $otherFeatures,
-            'intros' => $intros,
+            'otherFeatures' => $this->prepareListData($otherFeatures),
         ]);
     }
 
@@ -60,5 +58,18 @@ class StatisticsController extends AbstractController
         arsort($result);
 
         return $result;
+    }
+
+    private function prepareListData(array $otherTypes)
+    {
+        uksort($otherTypes, function ($a, $b) use ($otherTypes) {
+            if ($otherTypes[$a] !== $otherTypes[$b]) {
+                return $otherTypes[$b] - $otherTypes[$a];
+            }
+
+            return strcmp($a, $b);
+        });
+
+        return $otherTypes;
     }
 }

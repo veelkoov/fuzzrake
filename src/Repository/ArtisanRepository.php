@@ -37,20 +37,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getIntros(): array
-    {
-        $intros = $this->createQueryBuilder('a')
-            ->select("a.intro")
-            ->where("a.intro != :empty")
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->getArrayResult();
-
-        return array_map(function ($item) {
-            return $item['intro'];
-        }, $intros);
-    }
-
     public function getDistinctCountries(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
@@ -63,7 +49,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOtherTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherTypes');
+        return $this->getDistinctItemsWithCountFromJoined('otherTypes', ';');
     }
 
     public function getDistinctStyles(): array
@@ -73,7 +59,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOtherStyles(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherStyles');
+        return $this->getDistinctItemsWithCountFromJoined('otherStyles', ';');
     }
 
     public function getDistinctFeatures(): array
@@ -83,10 +69,10 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOtherFeatures(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
+        return $this->getDistinctItemsWithCountFromJoined('otherFeatures', ';');
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName): array
+    private function getDistinctItemsWithCountFromJoined(string $columnName, string $separator = ','): array
     {
         $dbResult = $this->createQueryBuilder('a')
             ->select("a.$columnName AS items")
@@ -95,13 +81,13 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        $allJoined = implode(',', array_map(function ($item) {
+        $allJoined = implode($separator, array_map(function ($item) {
             return $item['items'];
         }, $dbResult));
 
         $result = [];
 
-        foreach (explode(',', $allJoined) as $item) {
+        foreach (explode($separator, $allJoined) as $item) {
             $item = trim($item);
 
             if (!array_key_exists($item, $result)) {
