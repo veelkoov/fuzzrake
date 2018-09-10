@@ -1,10 +1,11 @@
 - hosts: aws
 
   vars:
-    pages: [ index, info ]
+    pages: [ index, info, statistics ]
     upload_list:
       - /index.html
-#      - /info.html
+      - /info.html
+      - /statistics.html
 #      - /robots.txt
 #      - /sitemap.txt
 #      - /general.js
