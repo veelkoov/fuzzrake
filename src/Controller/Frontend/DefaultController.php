@@ -24,6 +24,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/", name="main")
+     * @Route("/index.html")
      * @return Response
      */
     public function main(ArtisanRepository $artisanRepository): Response

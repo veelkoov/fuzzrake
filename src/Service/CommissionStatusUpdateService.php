@@ -130,7 +130,7 @@ class CommissionStatusUpdateService
                 $url = $artisan->getCommisionsQuotesCheckUrl();
 
                 try {
-                    $this->urlFetcher->fetchWebpage($url);
+                    $this->fetchWebpageContents($url);
                 } catch (UrlFetcherException $exception) {
                     $this->style->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
                 }
