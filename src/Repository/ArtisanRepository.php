@@ -4,7 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Artisan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\NativeQuery;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -35,6 +36,28 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.country != \'\'')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getCommissionsStats(): array
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('open', 'open', 'integer');
+        $rsm->addScalarResult('closed', 'closed', 'integer');
+        $rsm->addScalarResult('tracked', 'tracked', 'integer');
+        $rsm->addScalarResult('successfully_tracked', 'successfully_tracked', 'integer');
+        $rsm->addScalarResult('total', 'total', 'integer');
+
+        return $this
+            ->getEntityManager()
+            ->createNativeQuery('
+                SELECT SUM(are_commissions_open = 1) AS open
+                  , SUM(are_commissions_open = 0) AS closed
+                  , SUM(are_commissions_open IS NOT NULL AND commisions_quotes_check_url <> "") AS successfully_tracked
+                  , SUM(commisions_quotes_check_url <> "") AS tracked
+                  , SUM(1) AS total
+                FROM artisans
+            ', $rsm)
+            ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
     public function getDistinctCountries(): array

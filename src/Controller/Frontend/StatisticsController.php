@@ -1,7 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Controller\Frontend;
-
 
 use App\Repository\ArtisanRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,6 +25,7 @@ class StatisticsController extends AbstractController
         $features = $artisanRepository->getDistinctFeatures();
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountries();
+        $commissionsStats = $artisanRepository->getCommissionsStats();
 
         return $this->render('frontend/statistics/statistics.html.twig', [
             'countries' => $this->prepareTableData($countries),
@@ -35,6 +35,7 @@ class StatisticsController extends AbstractController
             'otherStyles' => $this->prepareListData($otherStyles),
             'features' => $this->prepareTableData($features),
             'otherFeatures' => $this->prepareListData($otherFeatures),
+            'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
         ]);
     }
 
@@ -60,7 +61,7 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
-    private function prepareListData(array $otherTypes)
+    private function prepareListData(array $otherTypes): array
     {
         uksort($otherTypes, function ($a, $b) use ($otherTypes) {
             if ($otherTypes[$a] !== $otherTypes[$b]) {
@@ -71,5 +72,16 @@ class StatisticsController extends AbstractController
         });
 
         return $otherTypes;
+    }
+
+    private function prepareCommissionsStatsTableData(array $commissionsStats): array
+    {
+        return [
+            'Open' => $commissionsStats['open'],
+            'Closed' => $commissionsStats['closed'],
+            'Status tracked' => $commissionsStats['tracked'],
+            'Status successfully tracked' => $commissionsStats['successfully_tracked'],
+            'Total' => $commissionsStats['total'],
+        ];
     }
 }

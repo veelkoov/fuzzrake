@@ -1,18 +1,64 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <h1>Commission status</h1>
+    {% include 'frontend/statistics/_data_table.html.twig' with { 'data': commissionsStats, 'name': '' } %}
+
+    <p>
+        <a data-toggle="collapse" href="#cstExplain" role="button" aria-expanded="false" aria-controls="cstExplain">
+            Explain above
+        </a>
+    </p>
+    <div class="collapse pb-4" id="cstExplain">
+        <div class="card card-body pb-0">
+            <dl class="row">
+                <dt class="col-sm-2">Open</dt>
+                <dd class="col-sm-10">Number of fursuit makers not closed for commissions</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-2">Closed</dt>
+                <dd class="col-sm-10">Number of fursuit makers not open for commissions</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-2">Tracked</dt>
+                <dd class="col-sm-10">
+                    Number of fursuit makers which commissions status is tracked automatically (the database contains
+                    link to a page, which the getfursu.it software checks periodically to determine if the maker
+                    is open for commissions or not). See <a href="{{ path('info') }}">here</a> for more info
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-2">Successfully tracked</dt>
+                <dd class="col-sm-10">
+                    Number of fursuit makers which commissions status is tracked automatically, and the software
+                    is actually able to determine the status. See <a href="{{ path('info') }}">here</a> for more info
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-2">Total</dt>
+                <dd class="col-sm-10">Ain't the weather lovely today?</dd>
+            </dl>
+        </div>
+    </div>
+
     <h1>Countries</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { 'data': countries, 'name': 'Country' } %}
+
     <h1>Styles</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { 'data': styles, 'name': 'Style' } %}
+
     <h2>Other styles</h2>
     {% include 'frontend/statistics/_item_pills.html.twig' with { 'items': otherStyles } %}
+
     <h1>Order types</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { 'data': types, 'name': 'Order type' } %}
+
     <h2>Other order types</h2>
     {% include 'frontend/statistics/_item_pills.html.twig' with { 'items': otherTypes } %}
+
     <h1>Features</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { 'data': features, 'name': 'Feature' } %}
+
     <h2>Other features</h2>
     {% include 'frontend/statistics/_item_pills.html.twig' with { 'items': otherFeatures } %}
 {% endblock %}
