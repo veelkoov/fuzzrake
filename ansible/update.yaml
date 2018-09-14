@@ -15,13 +15,14 @@
 #      - /Choices-master/assets/icons/cross.svg
 #      - /images/website-banner-bottom.png
 #      - /images/website-banner-top.png
-#      - /flag-icon-css-master/flags/4x3/at.svg
-#      - /flag-icon-css-master/flags/4x3/mx.svg
-#      - /flag-icon-css-master/flags/4x3/sk.svg
 #      - /flag-icon-css-master/flags/4x3/ar.svg
+#      - /flag-icon-css-master/flags/4x3/at.svg
 #      - /flag-icon-css-master/flags/4x3/be.svg
 #      - /flag-icon-css-master/flags/4x3/ie.svg
 #      - /flag-icon-css-master/flags/4x3/it.svg
+#      - /flag-icon-css-master/flags/4x3/mx.svg
+#      - /flag-icon-css-master/flags/4x3/sk.svg
+#      - /flag-icon-css-master/flags/4x3/ua.svg
 
   tasks:
     - file:

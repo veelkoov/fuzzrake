@@ -127,6 +127,7 @@ class AppTidyData extends Command
     private function fixCountry(string $input): string
     {
         $replacements = [
+            'ukraine' => 'UA',
             'united states|USA' => 'US',
             'argentina' => 'AR',
             'belgium' => 'BE',
@@ -174,7 +175,7 @@ class AppTidyData extends Command
 
     private function fixInstagramUrl(string $input): string
     {
-        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3}))?$#i',
+        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
             'https://www.instagram.com/$1/', trim($input));
 
         $this->showDiff($input, $result, 'https://www\.instagram\.com/[^/]+/');
@@ -203,10 +204,10 @@ class AppTidyData extends Command
 
     private function fixYoutubeUrl(string $input): string
     {
-        $result = preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
+        $result = preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
             'https://www.youtube.com/$1', trim($input));
 
-        $this->showDiff($input, $result, 'https://www\.youtube\.com/(channel|user)/[^/?]+');
+        $this->showDiff($input, $result, 'https://www\.youtube\.com/(channel|user|c)/[^/?]+');
 
         return $result;
     }
