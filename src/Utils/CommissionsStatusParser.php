@@ -17,12 +17,12 @@ class CommissionsStatusParser
         '#’#' => '\'',
     ];
     const FALSE_POSITIVES_REGEXES = [
-        'once commissions are STATUS',
+        '(once|when) (WE_ARE STATUS for commissions|commissions are STATUS)',
         'art commissions: STATUS',
         'commissions STATUS MONTHS',
     ];
     const GENERIC_REGEXES = [
-        '((WE_ARE )?currently|currently WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new)? (commissions|projects|orders|quotes)',
+        '((WE_ARE )?CURRENTLY|(CURRENTLY )?WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new| some| any more)?( fursuits?)? (commissions|projects|orders|quotes)',
         'commissions((/| and | )quotes)?( status| are)?( ?:| now| currently ?:?| at this time are| permanently)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
@@ -35,29 +35,23 @@ class CommissionsStatusParser
         '\[ commissions[. ]+STATUS \]',
         '<div class="([^"]*[^a-z])?commissions-STATUS"></div>',
         '<h2[^>]*>STATUS</h2>',
-        'slots currently STATUS',
-    ];
-    const EXTRA_OPEN_REGEXES = [
-        'right now WE_CAN take some fursuit commissions',
-        '(?!(aren\'t)|(not?)) accepting commissions',
-    ];
-    const EXTRA_CLOSED_REGEXES = [
-        'WE_ARE currently closed for everything except heads, partials are on an occasional basis\. not accepting fullsuits until all on my queue are done\.',
-        'WE_ARE not seeking any more commissions until further notice',
-        'currently not accepting new projects',
+        'slots CURRENTLY STATUS',
+        'STATUS commissions',
+        'WE_ARE CURRENTLY STATUS for everything',
     ];
     const COMMON_REPLACEMENTS = [
         'commissions' => 'comm?iss?ions?',
-        'open' => '(open(?!ing)|(?!not? )accepting)',
-        'closed' => '(closed?|not? accepting)',
+        'open' => '(open(?!ing)|(?!not? |aren\'t |are not? )accepting|WE_CAN take)',
+        'closed' => '(closed?|(not?|aren\'t|are not?) (accepting|seeking))',
         'fursuits' => 'fursuits?',
         '</div>' => ' ?</div> ?',
         '<div>' => ' ?<div( class="[^"]*")?> ?',
         '<p>' => ' ?<p( class="[^"]*")?> ?',
         '</p>' => ' ?</p> ?',
-        'WE_CAN' => '(i|we) can',
+        'WE_CAN' => '(i|we) can(?! not? )',
         'WE_ARE' => '(we are|we\'re|i am|i\'m)',
         'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
+        'CURRENTLY' => '(currently|(right )?now|at (this|the) time)',
     ];
 
     private $falsePositivesRegexps;
@@ -68,8 +62,8 @@ class CommissionsStatusParser
     {
         $this->falsePositivesRegexps = array_merge(self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'open'),
             self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'closed'));
-        $this->statusOpenRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'open', self::EXTRA_OPEN_REGEXES);
-        $this->statusClosedRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'closed', self::EXTRA_CLOSED_REGEXES);
+        $this->statusOpenRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'open');
+        $this->statusClosedRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'closed');
 
 //        $this->debugDumpRegexpes();
     }
@@ -188,7 +182,7 @@ class CommissionsStatusParser
         }
     }
 
-    private static function getCompiledRegexes(array $rawRegexes, string $status, array $extraRegexes = []): array
+    private static function getCompiledRegexes(array $rawRegexes, string $status): array
     {
         return array_map(function ($regex) use ($status) {
             $regex = str_replace('STATUS', $status, $regex);
@@ -198,7 +192,7 @@ class CommissionsStatusParser
             }
 
             return "#$regex#s";
-        }, array_merge($rawRegexes, $extraRegexes));
+        }, $rawRegexes);
     }
 
     private static function extractFromJson(string $webpage)
