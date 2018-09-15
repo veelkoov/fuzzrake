@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use DateTime;
+use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -125,5 +127,14 @@ class ArtisanRepository extends ServiceEntityRepository
         ksort($result);
 
         return $result;
+    }
+
+    public function getLastCstUpdateTime(): DateTime
+    {
+        return new DateTime($this
+            ->createQueryBuilder('a')
+            ->select('MAX(a.commissionsQuotesLastCheck)')
+            ->getQuery()
+            ->getSingleScalarResult(), new DateTimeZone('UTC'));
     }
 }

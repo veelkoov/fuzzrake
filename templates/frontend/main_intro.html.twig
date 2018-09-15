@@ -13,7 +13,8 @@
         </p>
 
         <p>
-            Last update: {{ "now"|date('Y-m-d H:i', 'UTC') }} UTC.
+            Last system update: {{ getLastSystemUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC.<br>
+            Last data update: {{ getLastDataUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC.
         </p>
     </div>
 
