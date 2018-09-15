@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\Frontend;
+declare(strict_types=1);
 
+namespace App\Controller\Frontend;
 
 use App\Repository\ArtisanRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,6 +16,7 @@ class DefaultController extends AbstractController
 {
     /**
      * @Route("/info.html", name="info")
+     *
      * @return Response
      */
     public function info(): Response
@@ -25,6 +27,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="main")
      * @Route("/index.html")
+     *
      * @return Response
      */
     public function main(ArtisanRepository $artisanRepository): Response
@@ -42,7 +45,7 @@ class DefaultController extends AbstractController
             'types' => $types,
             'styles' => $styles,
             'features' => $features,
-            'countries' => $countries
+            'countries' => $countries,
         ]);
     }
 }

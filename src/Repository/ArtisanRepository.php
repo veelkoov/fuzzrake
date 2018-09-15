@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Artisan;
@@ -31,7 +33,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctCountriesCount(): int
     {
-        return $this->createQueryBuilder('a')
+        return (int) $this->createQueryBuilder('a')
             ->select('COUNT (DISTINCT a.country)')
             ->where('a.country != \'\'')
             ->getQuery()
@@ -117,7 +119,7 @@ class ArtisanRepository extends ServiceEntityRepository
                 $result[$item] = 0;
             }
 
-            $result[$item]++;
+            ++$result[$item];
         }
 
         ksort($result);

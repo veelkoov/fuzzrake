@@ -11,16 +11,16 @@ class AppExtensions extends AbstractExtension
 
     public function getFilters()
     {
-        return array(
-            new TwigFilter('since', array($this, 'sinceFilter')),
-            new TwigFilter('other', array($this, 'otherFilter')),
-        );
+        return [
+            new TwigFilter('since', [$this, 'sinceFilter']),
+            new TwigFilter('other', [$this, 'otherFilter']),
+        ];
     }
 
     public function otherFilter($primaryList, $otherList)
     {
-        if ($otherList !== '') {
-            if ($primaryList !== '') {
+        if ('' !== $otherList) {
+            if ('' !== $primaryList) {
                 return "$primaryList, Other";
             } else {
                 return 'Other';
@@ -32,7 +32,7 @@ class AppExtensions extends AbstractExtension
 
     public function sinceFilter($input)
     {
-        if ($input === '') {
+        if ('' === $input) {
             return '';
         }
 
@@ -40,6 +40,6 @@ class AppExtensions extends AbstractExtension
             throw new TplDataException("Invalid 'since' data: '$input''");
         }
 
-        return self::MONTHS[(int)$zapałki['month']] . ' ' . $zapałki['year'];
+        return self::MONTHS[(int) $zapałki['month']].' '.$zapałki['year'];
     }
 }

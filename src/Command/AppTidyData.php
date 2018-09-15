@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\Artisan;
@@ -100,7 +102,7 @@ class AppTidyData extends Command
             $out = true;
         }
 
-        if (trim($input) !== '' && $result !== '' && !preg_match("#^($validRegexp)$#", $result)) {
+        if ('' !== trim($input) && '' !== $result && !preg_match("#^($validRegexp)$#", $result)) {
             $this->io->text("!!! ' $result '");
             $out = true;
         }

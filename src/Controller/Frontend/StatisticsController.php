@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\Frontend;
 
@@ -14,6 +16,7 @@ class StatisticsController extends AbstractController
 {
     /**
      * @Route("/statistics.html", name="statistics")
+     *
      * @return Response
      */
     public function statistics(ArtisanRepository $artisanRepository): Response

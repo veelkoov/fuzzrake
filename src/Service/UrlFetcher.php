@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Service;
@@ -40,7 +41,9 @@ class UrlFetcher
 
     /**
      * @param string $url
+     *
      * @return WebpageSnapshot
+     *
      * @throws UrlFetcherException
      */
     public function fetchWebpage(string $url): WebpageSnapshot
@@ -60,7 +63,9 @@ class UrlFetcher
 
     /**
      * @param string $url
+     *
      * @return string
+     *
      * @throws UrlFetcherException
      */
     private function curlFetchUrl(string $url): string
@@ -74,11 +79,11 @@ class UrlFetcher
 
         curl_close($ch);
 
-        if ($result === false) {
-            throw new UrlFetcherException("Failed to fetch URL: $url, " . (is_resource($ch) ? curl_error($ch) : 'CURL failed'));
+        if (false === $result) {
+            throw new UrlFetcherException("Failed to fetch URL: $url, ".(is_resource($ch) ? curl_error($ch) : 'CURL failed'));
         }
 
-        if ($httpCode !== 200) {
+        if (200 !== $httpCode) {
             throw new UrlFetcherException("Got HTTP code $httpCode for URL: $url");
         }
 
@@ -111,7 +116,7 @@ class UrlFetcher
 
     private function snapshotPathForUrl(string $url): string
     {
-        return $this->snapshotsDirPath . $this->urlToId($url) . '.html';
+        return $this->snapshotsDirPath.$this->urlToId($url).'.html';
     }
 
     private function urlToId(string $url): string
@@ -121,11 +126,12 @@ class UrlFetcher
                 preg_replace('#^(https?://(www\.)?)?#', '',
                     preg_replace('#\?.*$#', '', $url)
                 )
-            ),'_') . '-' . hash('sha512', $url);
+            ), '_').'-'.hash('sha512', $url);
     }
 
     /**
      * @param string $url
+     *
      * @return resource
      */
     private function getCurlSessionHandle(string $url)
@@ -148,7 +154,7 @@ class UrlFetcher
     /**
      * @param string $url
      * @param string $snapshotPath
-     * @return void
+     *
      * @throws UrlFetcherException
      */
     private function downloadIfNotCached(string $url, string $snapshotPath): void
@@ -161,10 +167,11 @@ class UrlFetcher
 
     /**
      * @param $filepath
+     *
      * @return DateTime
      */
     private function getFileMTimeUtc($filepath): DateTime
     {
-        return new DateTime('@' . (string)filemtime($filepath));
+        return new DateTime('@'.(string) filemtime($filepath));
     }
 }

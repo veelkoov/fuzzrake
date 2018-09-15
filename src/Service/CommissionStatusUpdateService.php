@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Service;
@@ -52,8 +53,8 @@ class CommissionStatusUpdateService
 
     /**
      * @param StyleInterface $style
-     * @param bool $refresh
-     * @param bool $dryRun
+     * @param bool           $refresh
+     * @param bool           $dryRun
      */
     public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
     {
@@ -100,22 +101,22 @@ class CommissionStatusUpdateService
     {
         $prefix = "{$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} ) commissions are now";
 
-        if ($artisan->getAreCommissionsOpen() !== true && $newStatus === true) {
+        if (true !== $artisan->getAreCommissionsOpen() && true === $newStatus) {
             $this->style->caution("$prefix OPEN");
         }
 
-        if ($artisan->getAreCommissionsOpen() !== false && $newStatus === false) {
+        if (false !== $artisan->getAreCommissionsOpen() && false === $newStatus) {
             $this->style->caution("$prefix CLOSED");
         }
 
-        if ($artisan->getAreCommissionsOpen() !== null && $newStatus === null) {
+        if (null !== $artisan->getAreCommissionsOpen() && null === $newStatus) {
             $this->style->caution("$prefix UNKNOWN");
         }
     }
 
     /**
      * @param array $artisans
-     * @param bool $refresh
+     * @param bool  $refresh
      */
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
     {
@@ -152,7 +153,9 @@ class CommissionStatusUpdateService
 
     /**
      * @param string $url
+     *
      * @return WebpageSnapshot
+     *
      * @throws UrlFetcherException
      */
     private function fetchWebpageContents(string $url): WebpageSnapshot
@@ -161,7 +164,7 @@ class CommissionStatusUpdateService
 
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
             $webpageSnapshot = $this->fetchWixsiteContents($webpageSnapshot);
-        } else if (WebsiteInfo::isTrello($webpageSnapshot)) {
+        } elseif (WebsiteInfo::isTrello($webpageSnapshot)) {
             $webpageSnapshot = $this->fetchTrelloContents($webpageSnapshot);
         }
 
@@ -170,7 +173,9 @@ class CommissionStatusUpdateService
 
     /**
      * @param WebpageSnapshot $webpageSnapshot
+     *
      * @return WebpageSnapshot
+     *
      * @throws UrlFetcherException
      */
     private function fetchWixsiteContents(WebpageSnapshot $webpageSnapshot): WebpageSnapshot
@@ -188,7 +193,9 @@ class CommissionStatusUpdateService
 
     /**
      * @param WebpageSnapshot $webpageSnapshot
+     *
      * @return WebpageSnapshot
+     *
      * @throws UrlFetcherException
      */
     private function fetchTrelloContents(WebpageSnapshot $webpageSnapshot): WebpageSnapshot
@@ -202,7 +209,7 @@ class CommissionStatusUpdateService
 
     private function guessFilterFromUrl(string $url): string
     {
-        if (preg_match('/#(?<profile>.+)$/', $url,$zapałki)) {
+        if (preg_match('/#(?<profile>.+)$/', $url, $zapałki)) {
             return $zapałki['profile'];
         } else {
             return '';
@@ -211,6 +218,7 @@ class CommissionStatusUpdateService
 
     /**
      * @param Artisan $artisan
+     *
      * @return array
      */
     private function getCommissionsStatusAndDateTimeChecked(Artisan $artisan): array
@@ -224,7 +232,7 @@ class CommissionStatusUpdateService
             $datetimeRetrieved = $webpageSnapshot->getDatetimeRetrieved();
             $status = $this->commissionsStatusParser->areCommissionsOpen($webpageSnapshot->getContents(),
                 $this->guessFilterFromUrl($url));
-        } catch (UrlFetcherException|CommissionsStatusParserException $exception) {
+        } catch (UrlFetcherException | CommissionsStatusParserException $exception) {
             $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
             $status = null;
         }
