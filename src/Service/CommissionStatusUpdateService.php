@@ -215,6 +215,7 @@ class CommissionStatusUpdateService
      */
     private function getCommissionsStatusAndDateTimeChecked(Artisan $artisan): array
     {
+        // FIXME: UTC for unknown is CE(S)T instead
         $url = $artisan->getCommisionsQuotesCheckUrl();
         $datetimeRetrieved = null;
 
