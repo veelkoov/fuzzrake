@@ -10,7 +10,7 @@
         {% for a, b in data %}
             <tr>
                 <td>{{ a }}</td>
-                <td>{{ b }}</td>
+                <td>{{ b }} ({{ (b / total * 100)|number_format("2") }}%)</td>
             </tr>
         {% endfor %}
         </tbody>
