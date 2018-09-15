@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
 use DateTime;
@@ -22,8 +24,8 @@ class WebpageSnapshot
     private $datetimeRetrieved;
 
     /**
-     * @param string $url
-     * @param string $contents
+     * @param string   $url
+     * @param string   $contents
      * @param DateTime $datetimeRetrieved
      */
     public function __construct(string $url, string $contents, DateTime $datetimeRetrieved)

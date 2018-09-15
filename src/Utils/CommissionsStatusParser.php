@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Utils;
-
 
 use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -39,31 +39,34 @@ class CommissionsStatusParser
         'STATUS commissions',
         'WE_ARE CURRENTLY STATUS for everything',
     ];
-    const COMMON_REPLACEMENTS = [
-        'commissions' => 'comm?iss?ions?',
-        'open' => '(open(?!ing)|(?!not? |aren\'t |are not? )accepting|WE_CAN take)',
-        'closed' => '(closed?|(not?|aren\'t|are not?) (accepting|seeking))',
-        'fursuits' => 'fursuits?',
-        '</div>' => ' ?</div> ?',
-        '<div>' => ' ?<div( class="[^"]*")?> ?',
-        '<p>' => ' ?<p( class="[^"]*")?> ?',
-        '</p>' => ' ?</p> ?',
-        'WE_CAN' => '(i|we) can(?! not? )',
-        'WE_ARE' => '(we are|we\'re|i am|i\'m)',
-        'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
-        'CURRENTLY' => '(currently|(right )?now|at (this|the) time)',
-    ];
 
+    /**
+     * @var Regexp[]
+     */
     private $falsePositivesRegexps;
-    private $statusOpenRegexps;
-    private $statusClosedRegexps;
+
+    /**
+     * @var Regexp[]
+     */
+    private $statusRegexps;
+
+    /**
+     * @var RegexpVariant
+     */
+    private $open;
+    /**
+     * @var RegexpVariant
+     */
+    private $closed;
 
     public function __construct()
     {
-        $this->falsePositivesRegexps = array_merge(self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'open'),
-            self::getCompiledRegexes(self::FALSE_POSITIVES_REGEXES, 'closed'));
-        $this->statusOpenRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'open');
-        $this->statusClosedRegexps = self::getCompiledRegexes(self::GENERIC_REGEXES, 'closed');
+        $this->open = new RegexpVariant(['STATUS' => 'open']);
+        $this->closed = new RegexpVariant(['STATUS' => 'closed']);
+        $this->any = new RegexpVariant(['STATUS' => '(open|closed)']);
+
+        $this->falsePositivesRegexps = RegexpFactory::createSet(self::FALSE_POSITIVES_REGEXES, [$this->any]);
+        $this->statusRegexps = RegexpFactory::createSet(self::GENERIC_REGEXES, [$this->open, $this->closed]);
 
 //        $this->debugDumpRegexpes();
     }
@@ -71,7 +74,9 @@ class CommissionsStatusParser
     /**
      * @param string $inputText
      * @param string $additionalFilter
+     *
      * @return bool
+     *
      * @throws CommissionsStatusParserException
      */
     public function areCommissionsOpen(string $inputText, string $additionalFilter = ''): bool
@@ -84,32 +89,21 @@ class CommissionsStatusParser
             throw new CommissionsStatusParserException("Filtering failed ({$ex->getMessage()})");
         }
 
-        $open = $this->matchesGivenRegexpSet($inputText, $this->statusOpenRegexps);
-        $closed = $this->matchesGivenRegexpSet($inputText, $this->statusClosedRegexps);
+        $open = $this->matchesGivenRegexpSet($inputText, $this->statusRegexps, $this->open);
+        $closed = $this->matchesGivenRegexpSet($inputText, $this->statusRegexps, $this->closed);
 
         return self::analyseResult($open, $closed);
     }
 
-    private function matchesGivenRegexpSet(string $testedString, array $regexpSet): bool
+    private function matchesGivenRegexpSet(string $testedString, array $regexpSet, RegexpVariant $variant): bool
     {
-        foreach ($regexpSet as $regex) {
-            if (self::matchesGivenRegexp($regex, $testedString)) {
+        foreach ($regexpSet as $regexp) {
+            if ($regexp->matches($testedString, $variant)) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    private static function matchesGivenRegexp(string $regex, string $testedString): bool
-    {
-        $result = preg_match($regex, $testedString);
-
-        if ($result === null) {
-            throw new \LogicException("Regex matching failed: $regex", preg_last_error());
-        }
-
-        return $result === 1;
     }
 
     private function cleanHtml(string $webpage): string
@@ -122,7 +116,7 @@ class CommissionsStatusParser
         }
 
         foreach ($this->falsePositivesRegexps as $regexp) {
-            $webpage = preg_replace($regexp, '', $webpage);
+            $webpage = $regexp->removeFrom($webpage);
         }
 
         return $webpage;
@@ -131,20 +125,23 @@ class CommissionsStatusParser
     /**
      * @param string $inputText
      * @param string $additionalFilter
+     *
      * @return string
+     *
      * @throws CommissionsStatusParserException
      */
     private static function applyFilters(string $inputText, string $additionalFilter): string
     {
         if (WebsiteInfo::isFurAffinity(null, $inputText)) {
-            if (stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.') !== false) {
-                throw new CommissionsStatusParserException("FurAffinity login required");
+            if (false !== stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.')) {
+                throw new CommissionsStatusParserException('FurAffinity login required');
             }
 
             if (WebsiteInfo::isFurAffinityUserProfile(null, $inputText)) {
-                $additionalFilter = $additionalFilter === 'profile' ? 'td[width="80%"][align="left"]' : '';
+                $additionalFilter = 'profile' === $additionalFilter ? 'td[width="80%"][align="left"]' : '';
 
                 $crawler = new Crawler($inputText);
+
                 return $crawler->filter("#page-userpage tr:first-child table.maintable $additionalFilter")->html();
             }
 
@@ -153,6 +150,7 @@ class CommissionsStatusParser
 
         if (WebsiteInfo::isTwitter($inputText)) {
             $crawler = new Crawler($inputText);
+
             return $crawler->filter('div.profileheadercard')->html();
         }
 
@@ -162,7 +160,9 @@ class CommissionsStatusParser
     /**
      * @param bool $open
      * @param bool $closed
+     *
      * @return bool
+     *
      * @throws CommissionsStatusParserException
      */
     private static function analyseResult(bool $open, bool $closed): bool
@@ -182,28 +182,15 @@ class CommissionsStatusParser
         }
     }
 
-    private static function getCompiledRegexes(array $rawRegexes, string $status): array
-    {
-        return array_map(function ($regex) use ($status) {
-            $regex = str_replace('STATUS', $status, $regex);
-
-            foreach (self::COMMON_REPLACEMENTS as $needle => $replacement) {
-                $regex = str_replace($needle, $replacement, $regex);
-            }
-
-            return "#$regex#s";
-        }, $rawRegexes);
-    }
-
     private static function extractFromJson(string $webpage)
     {
-        if (empty($webpage) || $webpage[0] !== '{') {
+        if (empty($webpage) || '{' !== $webpage[0]) {
             return $webpage;
         }
 
         $result = json_decode($webpage, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (JSON_ERROR_NONE !== json_last_error()) {
             return $webpage;
         }
 
@@ -211,8 +198,10 @@ class CommissionsStatusParser
     }
 
     /**
-     * https://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array#comment7768057_1320156
+     * https://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array#comment7768057_1320156.
+     *
      * @param array $array
+     *
      * @return string
      */
     private static function flattenArray(array $array)

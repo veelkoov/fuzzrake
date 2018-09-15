@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Utils;
-
 
 class WebsiteInfo
 {
@@ -16,11 +16,11 @@ class WebsiteInfo
 
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
-        if (stripos($webpageSnapshot->getUrl(), '.wixsite.com/') !== false) {
+        if (false !== stripos($webpageSnapshot->getUrl(), '.wixsite.com/')) {
             return true;
         }
 
-        if (preg_match(self::WIXSITE_CONTENTS_REGEXP, $webpageSnapshot->getContents()) === 1) {
+        if (1 === preg_match(self::WIXSITE_CONTENTS_REGEXP, $webpageSnapshot->getContents())) {
             return true;
         }
 
@@ -29,17 +29,17 @@ class WebsiteInfo
 
     public static function isTrello(WebpageSnapshot $webpageSnapshot): bool
     {
-        return stripos($webpageSnapshot->getUrl(), '//trello.com/') !== false;
+        return false !== stripos($webpageSnapshot->getUrl(), '//trello.com/');
     }
 
     public static function isFurAffinity(?string $url, ?string $webpageContents): bool
     {
-        if ($url !== null) {
-            return stripos($url, self::FA_URL_SEARCH_STRING) !== false;
+        if (null !== $url) {
+            return false !== stripos($url, self::FA_URL_SEARCH_STRING);
         }
 
-        if ($webpageContents !== null) {
-            return stripos($webpageContents, self::FA_CONTENTS_SEARCH_STRING) !== false;
+        if (null !== $webpageContents) {
+            return false !== stripos($webpageContents, self::FA_CONTENTS_SEARCH_STRING);
         }
 
         return false;
@@ -51,11 +51,11 @@ class WebsiteInfo
             return false;
         }
 
-        return stripos($webpageContents, self::FA_JOUNRAL_CONTENTS_SEARCH_STRING) === false;
+        return false === stripos($webpageContents, self::FA_JOUNRAL_CONTENTS_SEARCH_STRING);
     }
 
     public static function isTwitter(string $websiteContents): bool
     {
-        return stripos($websiteContents, self::TWITTER_CONTENTS_SEARCH_STRING) !== false;
+        return false !== stripos($websiteContents, self::TWITTER_CONTENTS_SEARCH_STRING);
     }
 }
