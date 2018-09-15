@@ -1,5 +1,1 @@
 User-agent: * 
-Disallow: /Choices-master/
-Disallow: /flag-icon-css-master/
-Disallow: /images/
-Disallow: /FurAffinity.svg
