@@ -45,6 +45,8 @@ function initDataTable() {
         }
     });
 
+    $('#artisans_wrapper .dt-buttons')
+        .append('<a class="btn btn-success btn-sm" href="info.html#data-updates">Studio missing?</a>'); // FIXME: Make router-generated
     makeLinksOpenNewTab('#artisans a');
 }
 

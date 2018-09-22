@@ -12,9 +12,9 @@
             {{ countryCount }}&nbsp;countries are listed here, and&nbsp;we're not done yet.
         </p>
 
-        <p>
-            Last system update: {{ getLastSystemUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC.<br>
-            Last data update: {{ getLastDataUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC.
+        <p class="small">
+            Last update: {{ getLastDataUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (data)
+            / {{ getLastSystemUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (system).
         </p>
 
         <p>
