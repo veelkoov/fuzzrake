@@ -15,6 +15,7 @@ var DATA_UPDATES_INFO_URL = "{{ path('info') }}#data-updates";
 $(document).ready(function () {
     initDataTable();
     initDetailsModal();
+    initRequestUpdateModal();
     initSearchForm();
     addReferrerRequestTooltip();
 });
@@ -48,13 +49,23 @@ function initDataTable() {
 
     $('#artisans_wrapper .dt-buttons')
         .append('<a class="btn btn-success btn-sm" href="' + DATA_UPDATES_INFO_URL + '">Studio missing?</a>');
-    makeLinksOpenNewTab('#artisans a');
+    makeLinksOpenNewTab('#artisans a:not(.request-update)');
 }
 
 function initDetailsModal() {
     $('#artisanDetailsModal').on('show.bs.modal', function (event) {
         updateDetailsModalWithRowData($(event.relatedTarget).closest('tr'));
     });
+
+    makeLinksOpenNewTab('#updateRequestFull a');
+}
+
+function initRequestUpdateModal() {
+    $('#updateRequestModal').on('show.bs.modal', function (event) {
+        updateRequestUpdateModalWithRowData($(event.relatedTarget).closest('tr'));
+    });
+
+    makeLinksOpenNewTab('#updateRequestModal a');
 }
 
 function initSearchForm() {
@@ -73,6 +84,12 @@ function addReferrerRequestTooltip() {
         .tooltip();
 }
 
+function updateRequestUpdateModalWithRowData($row) {
+    $('#artisanNameUR').html($row.data('name'));
+
+    updateUpdateRequestData('updateRequestSingle', $row);
+}
+
 function updateDetailsModalWithRowData($row) {
     $('#artisanName').html($row.children().eq(NAME_COLUMN_IDX).html());
     $('#artisanShortInfo').html(formatShortInfo($row.data('state'), $row.data('city'), $row.data('since'), $row.data('formerly')));
@@ -84,7 +101,16 @@ function updateDetailsModalWithRowData($row) {
     $('#artisanCommissionsStatus').html(commissionsStatusFromArtisanRowData($row.data('commissions-status'), $row.data('cst-last-check'), $row.data('cst-url')));
     $('#artisanIntro').html($row.data('intro')).toggle($row.data('intro') !== '');
 
-    makeLinksOpenNewTab('#artisanDetailsModal a');
+    updateUpdateRequestData('updateRequestFull', $row);
+
+    makeLinksOpenNewTab('#artisanLinks a');
+    makeLinksOpenNewTab('#artisanCommissionsStatus a');
+}
+
+function updateUpdateRequestData(divId, $row) {
+    $('#' + divId + ' .twitterUrl').attr('href', 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent($row.data('name')) + '%20(please%20describe%20details)&tw_p=tweetbutton');
+
+    $('#' + divId + ' .googleFromUrl').attr('href', 'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform?usp=pp_url&entry.1289735951=' + encodeURIComponent($row.data('name')));
 }
 
 function htmlListFromCommaSeparated(list, other) {
