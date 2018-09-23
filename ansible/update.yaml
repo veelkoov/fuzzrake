@@ -5,14 +5,14 @@
     s3_bucket_name: fursuit
     cf_distribution_id: E33VE7XDZBLOTM
 
-    rendered: [ index.html, info.html, statistics.html ]
+    rendered: [ index.html, info.html, statistics.html, main.js ]
     upload_list:
       - /index.html
       - /info.html
       - /statistics.html
 #      - /robots.txt
 #      - /sitemap.txt
-#      - /general.js
+#      - /main.js
 #      - /general.css
 #      - /Choices/assets/styles/css/choices.min.css
 #      - /Choices/assets/scripts/dist/choices.min.js

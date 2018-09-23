@@ -2,3 +2,6 @@ twig:
     paths: ['%kernel.project_dir%/templates']
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        data_form_url:     https://goo.gl/forms/6qoHxk8i2WsTKhjO2
+        feedback_form_url: https://goo.gl/forms/2mc03Ymr5YdPX7k02

@@ -39,7 +39,7 @@ class DefaultController extends AbstractController
         $features = $artisanRepository->getDistinctFeatures();
         $countries = $artisanRepository->getDistinctCountries();
 
-        return $this->render('frontend/main.html.twig', [
+        return $this->render('frontend/main/main.html.twig', [
             'artisans' => $artisans,
             'countryCount' => $countryCount,
             'types' => $types,

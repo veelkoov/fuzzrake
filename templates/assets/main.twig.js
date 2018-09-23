@@ -10,6 +10,7 @@ var FEATURES_COLUMN_IDX = 4;
 
 var REFERRER_HTML = "If you're going to contact the studio/maker, <u>please let them know you found them here!</u>" +
     " This will help us all a lot. Thank you!";
+var DATA_UPDATES_INFO_URL = "{{ path('info') }}#data-updates";
 
 $(document).ready(function () {
     initDataTable();
@@ -46,7 +47,7 @@ function initDataTable() {
     });
 
     $('#artisans_wrapper .dt-buttons')
-        .append('<a class="btn btn-success btn-sm" href="info.html#data-updates">Studio missing?</a>'); // FIXME: Make router-generated
+        .append('<a class="btn btn-success btn-sm" href="' + DATA_UPDATES_INFO_URL + '">Studio missing?</a>');
     makeLinksOpenNewTab('#artisans a');
 }
 
@@ -172,7 +173,7 @@ function commissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck
 
     if (commissionsStatusData === '') {
         return 'Commissions status is unknown. It should be tracked and updated automatically from this web page:'
-            + ' <a href="' + cstUrl + '">' + cstUrl + '</a>, however our software failed to "understand"'
+            + ' <a href="' + cstUrl + '">' + cstUrl + '</a>, however the software failed to "understand"'
             + ' the status based on the page contents. Last time it tried on ' + cstLastCheck
             + ' UTC. <a href="./info.html#commissions-status-tracking">Learn more</a>';
     }
