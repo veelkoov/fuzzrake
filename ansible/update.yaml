@@ -10,19 +10,19 @@
 #      - /sitemap.txt
 #      - /general.js
 #      - /general.css
-#      - /Choices-master/assets/styles/css/choices.min.css
-#      - /Choices-master/assets/scripts/dist/choices.min.js
-#      - /Choices-master/assets/icons/cross.svg
+#      - /Choices/assets/styles/css/choices.min.css
+#      - /Choices/assets/scripts/dist/choices.min.js
+#      - /Choices/assets/icons/cross.svg
 #      - /images/website-banner-bottom.png
 #      - /images/website-banner-top.png
-#      - /flag-icon-css-master/flags/4x3/ar.svg
-#      - /flag-icon-css-master/flags/4x3/at.svg
-#      - /flag-icon-css-master/flags/4x3/be.svg
-#      - /flag-icon-css-master/flags/4x3/ie.svg
-#      - /flag-icon-css-master/flags/4x3/it.svg
-#      - /flag-icon-css-master/flags/4x3/mx.svg
-#      - /flag-icon-css-master/flags/4x3/sk.svg
-#      - /flag-icon-css-master/flags/4x3/ua.svg
+#      - /flag-icon-css/flags/4x3/ar.svg
+#      - /flag-icon-css/flags/4x3/at.svg
+#      - /flag-icon-css/flags/4x3/be.svg
+#      - /flag-icon-css/flags/4x3/ie.svg
+#      - /flag-icon-css/flags/4x3/it.svg
+#      - /flag-icon-css/flags/4x3/mx.svg
+#      - /flag-icon-css/flags/4x3/sk.svg
+#      - /flag-icon-css/flags/4x3/ua.svg
 
   tasks:
     - file:

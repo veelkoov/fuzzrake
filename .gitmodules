@@ -1,0 +1,6 @@
+[submodule "public/Choices"]
+	path = public/Choices
+	url = https://github.com/jshjohnson/Choices.git
+[submodule "public/flag-icon-css"]
+	path = public/flag-icon-css
+	url = https://github.com/lipis/flag-icon-css.git
