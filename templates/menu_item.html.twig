@@ -1,5 +1,5 @@
 <li class="nav-item {% if page == name %}active{% endif %}">
     <a class="nav-link" href="{{ path(name) }}">
-        {{ pretty_name }} {% if page == name %} <span class="sr-only">(current)</span>{% endif %}
+        {{ pretty_name|raw }} {% if page == name %} <span class="sr-only">(current)</span>{% endif %}
     </a>
 </li>
