@@ -1,7 +1,11 @@
 - hosts: aws
 
   vars:
-    pages: [ index, info, statistics ]
+    render_domain: fuzzrake
+    s3_bucket_name: fursuit
+    cf_distribution_id: E33VE7XDZBLOTM
+
+    rendered: [ index.html, info.html, statistics.html ]
     upload_list:
       - /index.html
       - /info.html
@@ -15,39 +19,57 @@
 #      - /Choices/assets/icons/cross.svg
 #      - /images/website-banner-bottom.png
 #      - /images/website-banner-top.png
+#      - /flag-icon-css/css/flag-icon.min.css
 #      - /flag-icon-css/flags/4x3/ar.svg
 #      - /flag-icon-css/flags/4x3/at.svg
+#      - /flag-icon-css/flags/4x3/au.svg
 #      - /flag-icon-css/flags/4x3/be.svg
+#      - /flag-icon-css/flags/4x3/br.svg
+#      - /flag-icon-css/flags/4x3/ca.svg
+#      - /flag-icon-css/flags/4x3/cn.svg
+#      - /flag-icon-css/flags/4x3/cz.svg
+#      - /flag-icon-css/flags/4x3/de.svg
+#      - /flag-icon-css/flags/4x3/dk.svg
+#      - /flag-icon-css/flags/4x3/eu.svg
+#      - /flag-icon-css/flags/4x3/fi.svg
+#      - /flag-icon-css/flags/4x3/fr.svg
+#      - /flag-icon-css/flags/4x3/gb.svg
 #      - /flag-icon-css/flags/4x3/ie.svg
 #      - /flag-icon-css/flags/4x3/it.svg
 #      - /flag-icon-css/flags/4x3/mx.svg
+#      - /flag-icon-css/flags/4x3/nl.svg
+#      - /flag-icon-css/flags/4x3/no.svg
+#      - /flag-icon-css/flags/4x3/nz.svg
+#      - /flag-icon-css/flags/4x3/pl.svg
+#      - /flag-icon-css/flags/4x3/ru.svg
 #      - /flag-icon-css/flags/4x3/sk.svg
+#      - /flag-icon-css/flags/4x3/tw.svg
 #      - /flag-icon-css/flags/4x3/ua.svg
+#      - /flag-icon-css/flags/4x3/us.svg
 
   tasks:
-    - file:
-        state: absent
-        path: ../public/{{ item }}.html
-      with_items: "{{ pages }}"
+    - block:
+      - shell: curl -s http://{{ render_domain }}/{{ item }} | grep -v 'class="sf-toolbar' > ../public/tmpfile && mv ../public/{tmpfile,{{ item }}}
+        args:
+          warn: no
+        with_items: "{{ rendered }}"
+        check_mode: no
 
-    - shell: curl -s http://fuzzrake/{{ item }}.html | grep -v 'class="sf-toolbar' > ../public/tmpfile && mv ../public/{tmpfile,{{ item }}.html}
-      args:
-        warn: no
-      with_items: "{{ pages }}"
+      - aws_s3:
+          bucket: "{{ s3_bucket_name }}"
+          mode: put
+          permission: private
+          src: "../public/{{ item }}"
+          object: "{{ item }}"
+        with_items: "{{ upload_list }}"
 
-    - aws_s3:
-        bucket: fursuit
-        mode: put
-        permission: private
-        src: "../public/{{ item }}"
-        object: "{{ item }}"
-      with_items: "{{ upload_list }}"
+      - cloudfront_invalidation:
+          distribution_id: "{{ cf_distribution_id }}"
+          target_paths: "{{ upload_list }}"
 
-    - file:
-        state: absent
-        path: ../public/{{ item }}.html
-      with_items: "{{ pages }}"
-
-    - cloudfront_invalidation:
-        distribution_id: E33VE7XDZBLOTM
-        target_paths: "{{ upload_list }}"
+      always:
+      - file:
+          state: absent
+          path: "../public/{{ item }}"
+        with_items: "{{ rendered }}"
+        check_mode: no
