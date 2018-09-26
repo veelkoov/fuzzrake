@@ -1,12 +1,12 @@
-- hosts: aws
+- hosts: localhost
 
   vars:
-    render_domain: fuzzrake
-    s3_bucket_name: fursuit
     cf_distribution_id: E33VE7XDZBLOTM
+    ec2_ip: 34.230.64.3
+    sed_mysql_args_regexp: s/DATABASE_URL=mysql:\/\/([^:]+):([^@]+)@([^:]+):([^\/]+)\/(.+)/-u \1 -p\2 -h \3 -P \4 \5/
+    remote_path: /var/www
 
-    rendered: [ index.html, info.html, statistics.html, main.js ]
-    upload_list:
+    invalidate_list:
       - /index.html
       - /info.html
       - /statistics.html
@@ -49,27 +49,44 @@
 
   tasks:
     - block:
-      - shell: curl -s http://{{ render_domain }}/{{ item }} | grep -v 'class="sf-toolbar' > ../public/tmpfile && mv ../public/{tmpfile,{{ item }}}
-        args:
-          warn: no
-        with_items: "{{ rendered }}"
-        check_mode: no
+      - tempfile:
+        register: sql_file
 
-      - aws_s3:
-          bucket: "{{ s3_bucket_name }}"
-          mode: put
-          permission: private
-          src: "../public/{{ item }}"
-          object: "{{ item }}"
-        with_items: "{{ upload_list }}"
+      - set_fact: db_params={{ lookup('ini', 'DATABASE_URL type=properties file=../.env')|urlsplit }}
+
+      - expect:
+          command: mysqldump
+                     --add-drop-table
+                     --create-options
+                     --default-character-set=utf8mb4
+                     --skip-disable-keys
+                     --skip-extended-insert
+                     --skip-dump-date
+                     --skip-comments
+                     --skip-lock-tables
+                     --skip-add-locks
+                     --order-by-primary
+                     --quote-names
+                     --tz-utc
+
+                     --host={{ db_params.hostname }}
+                     --port={{ db_params.port }}
+                     --user={{ db_params.username }}
+                     --password
+
+                     --result-file={{ sql_file.path }}
+
+            {{ db_params.path|replace('/', '') }}
+          responses:
+            password: "{{ db_params.password }}"
+
+      - shell: ssh {{ ec2_ip }} -C 'mysql $(grep DATABASE_URL= {{ remote_path }}/.env | sed -r "{{ sed_mysql_args_regexp }}")' < {{ sql_file.path }}
 
       - cloudfront_invalidation:
           distribution_id: "{{ cf_distribution_id }}"
-          target_paths: "{{ upload_list }}"
+          target_paths: "{{ invalidate_list }}"
 
       always:
       - file:
           state: absent
-          path: "../public/{{ item }}"
-        with_items: "{{ rendered }}"
-        check_mode: no
+          path: "{{ sql_file.path }}"
