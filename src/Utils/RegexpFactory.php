@@ -10,8 +10,8 @@ class RegexpFactory
 {
     const COMMON_REPLACEMENTS = [
         'commissions' => 'comm?iss?ions?',
-        'open' => '(open(?!ing)|(?!not? |aren\'t |are not? )accepting|WE_CAN take)',
-        'closed' => '(closed?|(not?|aren\'t|are not?) (accepting|seeking))',
+        'OPEN' => '(open(?!ing)|(?!not? |aren\'t |are not? )accepting|WE_CAN take)',
+        'CLOSED' => '(closed?|(not?|aren\'t|are not?) (accepting|seeking)|can(\'| ?no)t open)',
         'fursuits' => 'fursuits?',
         '</div>' => ' ?</div> ?',
         '<div>' => ' ?<div( class="[^"]*")?> ?',

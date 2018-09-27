@@ -61,9 +61,9 @@ class CommissionsStatusParser
 
     public function __construct()
     {
-        $this->open = new RegexpVariant(['STATUS' => 'open']);
-        $this->closed = new RegexpVariant(['STATUS' => 'closed']);
-        $this->any = new RegexpVariant(['STATUS' => '(open|closed)']);
+        $this->open = new RegexpVariant(['STATUS' => 'OPEN']);
+        $this->closed = new RegexpVariant(['STATUS' => 'CLOSED']);
+        $this->any = new RegexpVariant(['STATUS' => '(OPEN|CLOSED)']);
 
         $this->falsePositivesRegexps = RegexpFactory::createSet(self::FALSE_POSITIVES_REGEXES, [$this->any]);
         $this->statusRegexps = RegexpFactory::createSet(self::GENERIC_REGEXES, [$this->open, $this->closed]);
