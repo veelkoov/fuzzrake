@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block javascript %}
-    <script src="{{ path('main.js') }}?ver={{ "now"|date("ymdHis") }}"></script>
+    <script src="{{ path('main.js') }}?ver={{ getAssetsVersion() }}"></script>
 {% endblock %}
 
 {% block body %}
