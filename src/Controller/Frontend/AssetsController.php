@@ -14,4 +14,12 @@ class AssetsController extends AbstractController
     {
         return $this->render('assets/main.twig.js', []);
     }
+
+    /**
+     * @Route("/general.js", name="general.js")
+     */
+    public function general_js()
+    {
+        return $this->render('assets/general.twig.js', []);
+    }
 }

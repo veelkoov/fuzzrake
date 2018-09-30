@@ -98,9 +98,9 @@ function updateDetailsModalWithRowData($row) {
     $('#artisanStyles').html(htmlListFromCommaSeparated($row.data('styles'), $row.data('other-styles')));
     $('#artisanLinks').html(formatLinks($row.find('div.artisan-links div.dropdown-menu a:not(.request-update)')));
     $('#artisanRequestUpdate').attr('href', $row.find('div.artisan-links div.dropdown-menu a.request-update').attr('href'));
-    $('#artisanCommissionsStatus').html(commissionsStatusFromArtisanRowData($row.data('commissions-status'), $row.data('cst-last-check'), $row.data('cst-url')));
     $('#artisanIntro').html($row.data('intro')).toggle($row.data('intro') !== '');
 
+    updateCommissionsStatusFromArtisanRowData($row.data('commissions-status'), $row.data('cst-last-check'), $row.data('cst-url'))
     updateUpdateRequestData('updateRequestFull', $row);
 
     makeLinksOpenNewTab('#artisanLinks a');
@@ -188,26 +188,31 @@ function countriesOnCreateTemplatesCallback(template) {
     };
 }
 
-function commissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck, cstUrl) {
+function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck, cstUrl) {
     var commissionsStatus = commissionsStatusData === '' ? 'unknown' : commissionsStatusData ? 'open' : 'closed';
+    var description;
+    var parsingFailed = false;
 
     if (cstUrl === '') {
-        return 'Commissions are <strong>' + commissionsStatus + '</strong>.'
+        description = 'Commissions are <strong>' + commissionsStatus + '</strong>.'
             + ' Status is not automatically tracked and updated.'
             + ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
-    }
-
-    if (commissionsStatusData === '') {
-        return 'Commissions status is unknown. It should be tracked and updated automatically from this web page:'
+    } else if (commissionsStatusData === '') {
+        description= 'Commissions status is unknown. It should be tracked and updated automatically from this web page:'
             + ' <a href="' + cstUrl + '">' + cstUrl + '</a>, however the software failed to "understand"'
             + ' the status based on the page contents. Last time it tried on ' + cstLastCheck
             + ' UTC. <a href="./info.html#commissions-status-tracking">Learn more</a>';
+
+        parsingFailed = true;
+    } else {
+        description = 'Commissions are <strong>' + commissionsStatus + '</strong>. Status is tracked and updated'
+            + ' automatically from this web page: <a href="' + cstUrl + '">' + cstUrl + '</a>.'
+            + ' Last time checked on ' + cstLastCheck + ' UTC.'
+            + ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
     }
 
-    return 'Commissions are <strong>' + commissionsStatus + '</strong>. Status is tracked and updated'
-        + ' automatically from this web page: <a href="' + cstUrl + '">' + cstUrl + '</a>.'
-        + ' Last time checked on ' + cstLastCheck + ' UTC.'
-        + ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
+    $('#artisanCommissionsStatus').html(description);
+    $('#statusParsingFailed').toggle(parsingFailed);
 }
 
 function formatShortInfo(state, city, since, formerly) {

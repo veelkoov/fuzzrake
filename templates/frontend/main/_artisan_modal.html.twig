@@ -31,9 +31,16 @@
                     <h5>Links</h5>
                     <div id="artisanLinks"></div>
                 </div>
-                <div class="col-sm-12 p-1">
-                    <h5>Commissions status</h5>
-                    <div class="small" id="artisanCommissionsStatus"></div>
+                <div class="row p-1">
+                    <div class="col-sm">
+                        <h5>Commissions status</h5>
+                        <div class="small" id="artisanCommissionsStatus"></div>
+                    </div>
+                    <div class="col-sm-4" id="statusParsingFailed">
+                        <a href="https://www.furaffinity.net/view/28682113/" aria-hidden="true" class="art-link">
+                            <img src="{{ asset('images/parsing_failed.png') }}" class="img-fluid" alt="">
+                        </a>
+                    </div>
                 </div>
                 <div class="col-sm-12 p-1 pt-3">
                     <h5>Data inaccurate/outdated?</h5>
