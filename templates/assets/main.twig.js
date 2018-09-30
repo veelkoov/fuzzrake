@@ -35,7 +35,12 @@ function initDataTable() {
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         paging: false,
         autoWidth: false,
-        columnDefs: [{ targets: 'no-sorting', orderable: false }, { targets: 'default-hidden', visible: false }],
+        columnDefs: [
+            { targets: 'no-sorting', orderable: false },
+            { targets: 'default-hidden', visible: false },
+            { targets: NAME_COLUMN_IDX, searchable: true },
+            { targets: '_all', searchable: false }
+        ],
         buttons: [{
             className: 'btn-sm btn-dark',
             columns: '.toggleable',
