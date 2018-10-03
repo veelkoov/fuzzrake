@@ -38,8 +38,8 @@ function initDataTable() {
         columnDefs: [
             { targets: 'no-sorting', orderable: false },
             { targets: 'default-hidden', visible: false },
-            { targets: NAME_COLUMN_IDX, searchable: true },
-            { targets: '_all', searchable: false }
+            // { targets: NAME_COLUMN_IDX, searchable: true }, // FIXME
+            // { targets: '_all', searchable: false } // FIXME
         ],
         buttons: [{
             className: 'btn-sm btn-dark',
