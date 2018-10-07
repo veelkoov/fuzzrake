@@ -37,7 +37,7 @@ function initDataTable() {
         autoWidth: false,
         columnDefs: [
             { targets: 'no-sorting', orderable: false },
-            { targets: 'default-hidden', visible: false },
+            { targets: 'default-hidden', visible: false } // , // FIXME
             // { targets: NAME_COLUMN_IDX, searchable: true }, // FIXME
             // { targets: '_all', searchable: false } // FIXME
         ],
