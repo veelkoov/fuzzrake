@@ -50,6 +50,13 @@ class Regexp
         return $result;
     }
 
+    public function getCompiled(RegexpVariant $variant = null): string
+    {
+        $variant = $this->useDefaultVariantWhenNull($variant);
+
+        return (string) $this->compiled[$variant];
+    }
+
     private function useDefaultVariantWhenNull(RegexpVariant $variant = null): RegexpVariant
     {
         if (null !== $variant) {

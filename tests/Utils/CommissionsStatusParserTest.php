@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Utils;
 
 use App\Utils\CommissionsStatusParser;
@@ -8,24 +10,28 @@ use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase
 {
+    const FILENAME_PATTERN = '#^\d+_(?<status>open|closed|unknown)(?:_filter_(?<filter>[a-z]+))?(?:_name_(?<name>[a-zA-Z+]+))?\.(html|json)$#';
+
     /**
      * @var CommissionsStatusParser
      */
     private static $csp;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         self::$csp = new CommissionsStatusParser();
     }
 
     /**
      * @dataProvider areCommissionsOpenDataProvider
      */
-    public function testAreCommissionsOpen($webpageTextFileName, $webpageText, $expectedResult, $additionalFilter)
+    public function testAreCommissionsOpen(string $webpageTextFileName, string $webpageText, ?bool $expectedResult,
+                                           string $additionalFilter, string $studioName)
     {
         try {
-            $result = self::$csp->areCommissionsOpen($webpageText, $additionalFilter);
+            $result = self::$csp->areCommissionsOpen($webpageText, $studioName, $additionalFilter);
         } catch (CommissionsStatusParserException $exception) {
-            if ($exception->getMessage() === 'NONE matches') {
+            if ('NONE matches' === $exception->getMessage()) {
                 $result = null;
             } else {
                 throw $exception;
@@ -38,13 +44,15 @@ class CommissionsStatusParserTest extends TestCase
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (!preg_match('#^\d+_(?<status>open|closed|unknown)(?:_filter_(?<filter>[a-z]+))?\.(html|json)$#',
+            if (!preg_match(self::FILENAME_PATTERN,
                 basename($filepath), $zapałki)) {
                 echo "Invalid filename: $filepath\n";
+
                 return false;
             }
 
             $additionalFilter = $zapałki['filter'];
+            $studioName = urldecode($zapałki['name']);
             switch ($zapałki['status']) {
                 case 'open':
                     $expectedResult = true;
@@ -56,7 +64,7 @@ class CommissionsStatusParserTest extends TestCase
                     $expectedResult = null;
             }
 
-            return [basename($filepath), file_get_contents($filepath), $expectedResult, $additionalFilter];
-        }, glob(__DIR__ . '/../snapshots/*.{html,json}', GLOB_BRACE)));
+            return [basename($filepath), file_get_contents($filepath), $expectedResult, $additionalFilter, $studioName];
+        }, glob(__DIR__.'/../snapshots/*.{html,json}', GLOB_BRACE)));
     }
 }
