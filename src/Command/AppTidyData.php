@@ -73,6 +73,7 @@ class AppTidyData extends Command
 
     private function fixArtisanData(Artisan $artisan): void
     {
+        $artisan->setName($this->trim($artisan->getName()));
         $artisan->setSince($this->fixSince($artisan->getSince()));
 
         $artisan->setFeatures($this->fixList($artisan->getFeatures()));
