@@ -30,7 +30,7 @@ class CommissionsStatusRegexps
         '(once|when) (WE_ARE STATUS for commissions|commissions are STATUS)',
         'art commissions: STATUS',
         'commissions STATUS MONTHS',
-    ]; // we&#39;re not currently taking on new projects
+    ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?CURRENTLY|(CURRENTLY )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (commissions|projects|orders|quotes)( requests)?',
         'commissions((/| and | )quotes)?( status| are)?( ?:| now| currently ?:?| at this time are| permanently)? ?STATUS',
