@@ -33,7 +33,7 @@ class CommissionsStatusRegexps
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?CURRENTLY|(CURRENTLY )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (commissions|projects|orders|quotes)( requests)?',
-        'commissions((/| and | )quotes)?( status| are)?( ?:| now| currently ?:?| at this time are| permanently)? ?STATUS',
+        'commissions((/| and | )quotes)?( status| are)?( ?:| now| currently ?:?| at this time are| permanently| (now )?indefinitely)? ?STATUS',
         'quotes have now STATUS',
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
         'STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
