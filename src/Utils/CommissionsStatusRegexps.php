@@ -24,7 +24,7 @@ class CommissionsStatusRegexps
         'WE_ARE' => '(we are|we\'re|i am|i\'?m|STUDIO_NAME (is|are))',
         'WE' => '(i|we)',
         'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
-        'CURRENTLY' => '(current(ly)?|(right )?now|at (this|the) time|for the time being)',
+        'CURRENTLY' => '(current(ly)?|(right )?now|at (this|the) time|for the time being|always)',
     ];
     const FALSE_POSITIVES_REGEXES = [
         '(once|when) (WE_ARE STATUS for commissions|commissions are STATUS)',
@@ -38,7 +38,7 @@ class CommissionsStatusRegexps
         '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
         'STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
         'quote reviews are STATUS!',
-        '(fursuits )?commissions(:? are( always)?| info)? STATUS',
+        '(fursuits )?commissions(:? are( CURRENTLY)?| info)? (&gt;)*STATUS(&lt;)*',
         '(^|\.) ?STATUS for commissions ?($|[.(])',
         '<div>currently</div><div>STATUS</div><div>for commissions</div>',
         '<p>commissions are</p><p>STATUS</p>',
