@@ -138,8 +138,8 @@ function addChoiceWidget(selector, dataColumnIndex, isAnd, onCreateTemplatesCall
         selectedValues: []
     };
 
-    filters[selector]['selectObj'].passedElement.addEventListener('addItem', refresh);
-    filters[selector]['selectObj'].passedElement.addEventListener('removeItem', refresh);
+    filters[selector].$select[0].addEventListener('addItem', refresh);
+    filters[selector].$select[0].addEventListener('removeItem', refresh);
 
     $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
 }
@@ -184,11 +184,11 @@ function countriesOnCreateTemplatesCallback(template) {
     var classNames = this.config.classNames;
 
     return {
-        item: function item(data) {
-            return template('<div class="' + classNames.item + ' ' + (data.highlighted ? classNames.highlightedState : '') + ' ' + (!data.disabled ? classNames.itemSelectable : '') + '" data-item data-id="' + data.id + '" data-value="' + data.value + '" ' + (data.active ? 'aria-selected="true"' : '') + ' ' + (data.disabled ? 'aria-disabled="true"' : '') + ' data-deletable>' + (data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value + '"></span> ' + data.label.replace(/^[A-Z]+ /, '') : data.label) + '<button class="' + classNames.button + '" data-button>Remove item</button></div>');
+        item: function item(classNames, data) {
+            return template('<div class="' + classNames.item + ' ' + (data.highlighted ? classNames.highlightedState : classNames.itemSelectable) + '" data-item data-id="' + data.id + '" data-value="' + data.value + '" ' + (data.active ? 'aria-selected="true"' : '') + ' ' + (data.disabled ? 'aria-disabled="true"' : '') + '> ' + (data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value + '"></span> ' + data.label.replace(/^[A-Z]+ /, '') : data.label) + '</div>');
         },
-        choice: function choice(data) {
-            return template('<div class="' + classNames.item + ' ' + classNames.itemChoice + ' ' + (data.disabled ? classNames.itemDisabled : classNames.itemSelectable) + '" data-select-text="' + _this.config.itemSelectText + '" data-choice ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + ' data-id="' + data.id + '" data-value="' + data.value + '" ' + (data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '>' + (data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value + '"></span> ' + data.label : data.label) + '</div>');
+        choice: function choice(classNames, data) {
+            return template('<div class="' + classNames.item + ' ' + classNames.itemChoice + ' ' + (data.disabled ? classNames.itemDisabled : classNames.itemSelectable) + '" data-select-text="' + _this.config.itemSelectText + '" data-choice ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + ' data-id="' + data.id + '" data-value="' + data.value + '" ' + (data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '> ' + (data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value + '"></span> ' + data.label : data.label) + '</div>');
         }
     };
 }
