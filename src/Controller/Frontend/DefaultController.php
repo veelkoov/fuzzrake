@@ -25,6 +25,16 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/tracking.html", name="tracking")
+     *
+     * @return Response
+     */
+    public function tracking(): Response
+    {
+        return $this->render('frontend/tracking.html.twig', []);
+    }
+
+    /**
      * @Route("/", name="main")
      * @Route("/index.html")
      *
