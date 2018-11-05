@@ -119,29 +119,58 @@
             to draw and instead focused on getfursu.it development.
         </p>
 
+        <h1>Details</h1>
+
+        <p>
+            To be successfully tracked, you should put a clear statement if the commissions are open or not on one
+            of the websites listed below. This needs to be one, simple "we're open/closed" or similar. You can check,
+            what other makers put and where (all makers with visible status are tracked, pick one and you'll find out
+            how do they do it).
+        </p>
+        <p>
+            At the moment, getfursu.it cannot track if you are, for example, open for parts but not fullsuits/partials.
+            Only one, "overall" status is supported.
+        </p>
+
+        <h2>What can be tracked</h2>
+
+        <p>
+            More websites might become supported in the future. At the moment getfursu.it can handle these:
+        </p>
+
         <ul>
-            <li>You need to actually keep at least <strong>one other</strong> website with up-to-date status</li>
-            <li>
-                This website needs to contain single and clear information if the commissions are open or not.
-                getfursu.it can't track if you are open for parts, but closed for fullsuits, etc. This needs
-                to be one, simple "we're open/closed"
-            </li>
-            <li>
-                Not all kinds of websites are supported (yet) - sorry!
-                <ul>
-                    <li>Generic websites (including Wix.com) - should work</li>
-                    <li>FurAffinity <strong>user profile and "pinned" journal entries</strong>
-                        - yes, and recommended! <strong>anything else</strong> - nope</li>
-                    <li>Twitter - yes, but <strong>only profile info</strong>; tweets - nope</li>
-                    <li>Facebook - yes, but <strong>only pinned posts</strong>; overall discouraged</li>
-                    <li>Trello - should work</li>
-                </ul>
-            </li>
-            <li>
-                Approximate delay between update on your website and status getting updated here is between
-                6-24 hours, but this is <strong>not guaranteed</strong> everyday
-            </li>
-            <li>Contact me for "inclusion" and guidance in case of any doubts/problems</li>
+            <li>Most of generic websites (including Wix.com)</li>
+            <li>FurAffinity <strong>user profile or "pinned" journal entries</strong> - yes, and recommended!</li>
+            <li>Twitter <strong>profile info</strong></li>
+            <li>Facebook <strong>pinned posts</strong> (discouraged!)</li>
+            <li>Trello card text</li>
         </ul>
+
+        <h2>What can NOT be tracked</h2>
+
+        <ul>
+            <li>
+                Images - if you post your status as an image, then unless the image file is properly named, this
+                won't work
+            </li>
+            <li>
+                Any kind of posts/journals that are not "pinned". You should also not change those posts (unpin one,
+                pin another) - but edit the already "pinned" post/journal, unless you fill the inclusion/update form
+                again each time.
+            </li>
+            <li>
+                Twitter tweets. Only profile info is supported.
+            </li>
+            <li>Unsure? <a href="{{ path('info') }}">Contact me</a> to clarify!</li>
+        </ul>
+
+        <h2>Final blah-blahs</h2>
+
+        <p>
+            Approximate delay between update on your website and status getting updated here is between
+            6-24 hours, but this is <strong>not guaranteed</strong> everyday.
+        </p>
+
+        <p><a href="{{ path('info') }}">Contact me</a> in case of any doubts/problems!</p>
     </div>
 {% endblock %}
