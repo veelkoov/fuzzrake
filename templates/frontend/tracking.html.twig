@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container" id="tracking_content">
+        <h1>Automatic tracking and status updates</h1>
+
+        <p>
+            Imagine you need to put information about your commissions status (open/closed) in one place only.
+            getfursu.it is able to automatically track and reflect your commissions status. How does it work? It's
+            easy.
+        </p>
+
+        <div class="container">
+            <div class="row py-4">
+                <div class="col-sm-6">
+                    <h2>1. Fill inclusion/update form</h2>
+                    <p>
+                        You (the fursuit maker) fill in the <a href="{{ data_form_url }}">on-line form</a>. In the form
+                        you specify on which website/social media account do you keep your commissions status. You need
+                        to fill this form only once, and after that you can forget about all of this.
+                    </p>
+                </div>
+                <div class="col-sm-6 text-center img">
+                    <img src="{{ asset('images/tracking/1_form.png') }}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-sm-6">
+                    <h2>2. Filled form gets processed</h2>
+                    <p>
+                        I receive all form submissions and put all the information into the getfursu.it database. This
+                        includes the information, where getfursu.it should look for your commissions status. This
+                        happens only once, and you do not need to worry about this.
+                    </p>
+                    <p>
+                        In some cases I will reach out to you, when getfursu.it won't be able to "understand" the
+                        information on the page you selected. I'll explain more later.
+                    </p>
+                </div>
+                <div class="col-sm-6 text-center img">
+                    <img src="{{ asset('images/tracking/2_into_the_db.png') }}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-sm-12">
+                    <h2>3. Periodic updates</h2>
+                    <p>
+                        Your website is now tracked, and getfursu.it will periodically check for status changes. No
+                        effort on your side!
+                    </p>
+                </div>
+            </div>
+            <div class="row py-4">
+                <div class="col-sm-6">
+                    <h3>3.1. Getting links list</h3>
+                    <p>
+                        The process of status updates begins with getfursu.it reaching to the database to get
+                        all the links to the webpages which it was supposed to track, for all the fursuit makers -
+                        including yours!
+                    </p>
+                </div>
+                <div class="col-sm-6 text-center img">
+                    <img src="{{ asset('images/tracking/3_pariodical_read.png') }}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-sm-6">
+                    <h3>3.2. Fetching webpages</h3>
+                    <p>
+                        Having the list of links, getfursu.it downloads all the tracked webpages. There are websites
+                        getfursu.it supports, and those which it does not - I'll get into details
+                        later. There are also some limitations on what the software "understands" (e.g. only the english
+                        language). Details later!
+                    </p>
+                </div>
+                <div class="col-sm-6 text-center img">
+                    <img src="{{ asset('images/tracking/4_fetch_webpages.png') }}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-sm-6">
+                    <h3>3.3. Updating the database</h3>
+                    <p>
+                        After getfursu.it fetched all the tracked webpages, it tries to figure out statuses of the
+                        commissions. When done, it pushes all the updates into it's database.
+                    </p>
+                    <p>
+                        The software is not perfect, but I supervise the process and fix all the mistakes it makes.
+                        In rare cases getfursu.it will no longer be able to track your status. I will reach out to
+                        makers, when that happens.
+                    </p>
+                </div>
+                <div class="col-sm-6 text-center img">
+                    <img src="{{ asset('images/tracking/5_update_db.png') }}" alt="" class="img-fluid">
+                </div>
+            </div>
+
+            <div class="row py-4">
+                <div class="col-sm-6">
+                    <h3>3.4. Updates are on-line!</h3>
+                    <p>
+                        When statuses are in the database, all getfursu.it visitors will see your status reflected
+                        (copied) from the webpage you selected in the inclusion/update form in the first step. No effort
+                        on your side!
+                    </p>
+                </div>
+                <div class="col-sm-6 text-center img">
+                    <img src="{{ asset('images/tracking/6_online.png') }}" alt="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+        <p>
+            Now that you've read this you should understand how this works and why I decided to give up on learning how
+            to draw and instead focused on getfursu.it development.
+        </p>
+
+        <h1>Details</h1>
+
+        <p>
+            To be successfully tracked, you should put a clear statement if the commissions are open or not on one
+            of the websites listed below. This needs to be one, simple "we're open/closed" or similar. You can check,
+            what other makers put and where (all makers with visible status are tracked, pick one and you'll find out
+            how do they do it).
+        </p>
+        <p>
+            At the moment, getfursu.it cannot track if you are, for example, open for parts but not fullsuits/partials.
+            Only one, "overall" status is supported.
+        </p>
+
+        <h2>What can be tracked</h2>
+
+        <p>
+            More websites might become supported in the future. At the moment getfursu.it can handle these:
+        </p>
+
+        <ul>
+            <li>Most of generic websites (including Wix.com)</li>
+            <li>FurAffinity <strong>user profile or "pinned" journal entries</strong> - yes, and recommended!</li>
+            <li>Twitter <strong>profile info</strong></li>
+            <li>Facebook <strong>pinned posts</strong> (discouraged!)</li>
+            <li>Trello card text</li>
+        </ul>
+
+        <h2>What can NOT be tracked</h2>
+
+        <ul>
+            <li>
+                Images - if you post your status as an image, then unless the image file is properly named, this
+                won't work
+            </li>
+            <li>
+                Any kind of posts/journals that are not "pinned". You should also not change those posts (unpin one,
+                pin another) - but edit the already "pinned" post/journal, unless you fill the inclusion/update form
+                again each time.
+            </li>
+            <li>
+                Twitter tweets. Only profile info is supported.
+            </li>
+            <li>Unsure? <a href="{{ path('info') }}">Contact me</a> to clarify!</li>
+        </ul>
+
+        <h2>Final blah-blahs</h2>
+
+        <p>
+            Approximate delay between update on your website and status getting updated here is between
+            6-24 hours, but this is <strong>not guaranteed</strong> everyday.
+        </p>
+
+        <p><a href="{{ path('info') }}">Contact me</a> in case of any doubts/problems!</p>
+    </div>
+{% endblock %}

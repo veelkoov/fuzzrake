@@ -12,22 +12,24 @@
     <link rel="stylesheet" type="text/css"
           href="//cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/cr-1.5.0/fc-3.2.5/fh-3.1.4/sc-1.5.0/datatables.min.css"/>
     <link rel="stylesheet" href="flag-icon-css/css/flag-icon.min.css?ver={{ getAssetsVersion() }}">
-    <link rel="stylesheet" href="Choices/assets/styles/css/choices.min.css?ver={{ getAssetsVersion() }}">
+    <link rel="stylesheet" href="Choices/public/assets/styles/choices.min.css?ver={{ getAssetsVersion() }}">
 
     <link rel="stylesheet" href="{{ asset('assets/app.css') }}?ver={{ getAssetsVersion() }}">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120950547-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+    {% if app.environment == 'prod' %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120950547-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+            function gtag() {
+                dataLayer.push(arguments);
+            }
 
-        gtag('js', new Date());
-        gtag('config', 'UA-120950547-1');
-    </script>
+            gtag('js', new Date());
+            gtag('config', 'UA-120950547-1');
+        </script>
+    {% endif %}
 </head>
 <body>
 <div class="container">
@@ -43,9 +45,14 @@
             <ul class="navbar-nav mr-auto">
                 {% include 'menu_item.html.twig' with {'name': 'main', 'pretty_name': '<i class="fas fa-home"></i> Home' } %}
                 {% include 'menu_item.html.twig' with {'name': 'info', 'pretty_name': '<i class="fas fa-question-circle"></i> Info' } %}
+                {% include 'menu_item.html.twig' with {'name': 'tracking', 'pretty_name': '<i class="far fa-eye"></i> Tracking' } %}
                 {% include 'menu_item.html.twig' with {'name': 'statistics', 'pretty_name': '<i class="fas fa-chart-pie"></i> Stats' } %}
             </ul>
         </div>
+
+        <span class="navbar-text">
+            <a href="https://twitter.com/intent/tweet?button_hashtag=FurryFandom&ref_src=twsrc%5Etfw" class="twitter-hashtag-button" data-text="Check out this getfursu.it #fursuitmakers database," data-lang="en" data-show-count="false">Tweet #FurryFandom</a><script async src="https://platform.twitter.com/widgets.js"></script>
+        </span>
     </nav>
 
     {% block body %}{% endblock %}
@@ -63,7 +70,7 @@
         integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
 <script src="//cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/cr-1.5.0/fc-3.2.5/fh-3.1.4/sc-1.5.0/datatables.min.js"></script>
-<script src="Choices/assets/scripts/dist/choices.min.js"></script>
+<script src="Choices/public/assets/scripts/choices.min.js"></script>
 <script src="{{ asset('assets/app.js') }}?ver={{ getAssetsVersion() }}"></script>
 {% block javascript %}{% endblock %}
 </body>

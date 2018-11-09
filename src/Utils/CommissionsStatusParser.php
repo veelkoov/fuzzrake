@@ -9,37 +9,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class CommissionsStatusParser
 {
-    const HTML_CLEANER_REGEXPS = [
-        '#</?(strong|b|i|span|center|a|em|font)[^>]*>#s' => '',
-        '#(\s|&nbsp;|<br\s*/?>)+#s' => ' ',
-        '#<style[^>]*>.*?</style>#s' => '',
-        '# style="[^"]*"( (?=\>))?#s' => '',
-        '#’#' => '\'',
-    ];
-    const FALSE_POSITIVES_REGEXES = [
-        '(once|when) (WE_ARE STATUS for commissions|commissions are STATUS)',
-        'art commissions: STATUS',
-        'commissions STATUS MONTHS',
-    ];
-    const GENERIC_REGEXES = [
-        '((WE_ARE )?CURRENTLY|(CURRENTLY )?WE_ARE) (STATUS|\*\*\*STATUS\*\*\*)( for)?( the| new| some| any more)?( fursuits?)? (commissions|projects|orders|quotes)',
-        'commissions((/| and | )quotes)?( status| are)?( ?:| now| currently ?:?| at this time are| permanently)? ?STATUS',
-        'quotes have now STATUS',
-        '(?!will not be )STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
-        'STATUS for (new )?(quotes and )?commissions ?([.!]|</)',
-        'quote reviews are STATUS!',
-        '(fursuits )?commissions(:? are| info)? STATUS',
-        '(^|\.) ?STATUS for commissions ?($|[.(])',
-        '<div>currently</div><div>STATUS</div><div>for commissions</div>',
-        '<p>commissions are</p><p>STATUS</p>',
-        '\[ commissions[. ]+STATUS \]',
-        '<div class="([^"]*[^a-z])?commissions-STATUS"></div>',
-        '<h2[^>]*>STATUS</h2>',
-        'slots CURRENTLY STATUS',
-        'STATUS commissions',
-        'WE_ARE CURRENTLY STATUS for everything',
-    ];
-
     /**
      * @var Regexp[]
      */
@@ -65,8 +34,9 @@ class CommissionsStatusParser
         $this->closed = new RegexpVariant(['STATUS' => 'CLOSED']);
         $this->any = new RegexpVariant(['STATUS' => '(OPEN|CLOSED)']);
 
-        $this->falsePositivesRegexps = RegexpFactory::createSet(self::FALSE_POSITIVES_REGEXES, [$this->any]);
-        $this->statusRegexps = RegexpFactory::createSet(self::GENERIC_REGEXES, [$this->open, $this->closed]);
+        $rf = new RegexpFactory(CommissionsStatusRegexps::COMMON_REPLACEMENTS);
+        $this->falsePositivesRegexps = $rf->createSet(CommissionsStatusRegexps::FALSE_POSITIVES_REGEXES, [$this->any]);
+        $this->statusRegexps = $rf->createSet(CommissionsStatusRegexps::GENERIC_REGEXES, [$this->open, $this->closed]);
 
 //        $this->debugDumpRegexpes();
     }
@@ -79,9 +49,10 @@ class CommissionsStatusParser
      *
      * @throws CommissionsStatusParserException
      */
-    public function areCommissionsOpen(string $inputText, string $additionalFilter = ''): bool
+    public function areCommissionsOpen(string $inputText, string $studioName, string $additionalFilter = ''): bool
     {
         $inputText = self::cleanHtml($inputText);
+        $inputText = str_ireplace($studioName, 'STUDIO_NAME', $inputText);
 
         try {
             $inputText = self::applyFilters($inputText, $additionalFilter);
@@ -111,7 +82,7 @@ class CommissionsStatusParser
         $webpage = strtolower($webpage);
         $webpage = self::extractFromJson($webpage);
 
-        foreach (self::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
+        foreach (CommissionsStatusRegexps::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
             $webpage = preg_replace($regexp, $replacement, $webpage);
         }
 
@@ -219,15 +190,15 @@ class CommissionsStatusParser
     {
         echo "FALSE-POSITIVES =========================================\n";
         foreach ($this->falsePositivesRegexps as $regex) {
-            echo "$regex\n";
+            echo "{$regex->getCompiled()}\n";
         }
         echo "OPEN ====================================================\n";
-        foreach ($this->statusOpenRegexps as $regex) {
-            echo "$regex\n";
+        foreach ($this->statusRegexps as $regex) {
+            echo "{$regex->getCompiled($this->open)}\n";
         }
         echo "CLOSED ==================================================\n";
-        foreach ($this->statusClosedRegexps as $regex) {
-            echo "$regex\n";
+        foreach ($this->statusRegexps as $regex) {
+            echo "{$regex->getCompiled($this->closed)}\n";
         }
     }
 }

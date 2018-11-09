@@ -52,7 +52,7 @@ class AppExtensions extends AbstractExtension
 
     public function getAssetsVersionFunction()
     {
-        return `git log -n1 --format=%h`;
+        return trim(`git log -n1 --format=%h`);
     }
 
     public function otherFilter($primaryList, $otherList)
