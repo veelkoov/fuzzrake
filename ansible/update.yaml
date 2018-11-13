@@ -14,6 +14,7 @@
       - /info.html
       - /statistics.html
       - /tracking.html
+#      - /assets/*
 #      - /robots.txt
 #      - /sitemap.txt
 #      - /general.js

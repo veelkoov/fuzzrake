@@ -1,16 +1,17 @@
 'use strict';
 
+import $ from 'jquery';
+
 var $dataTable;
 var filters = {};
 
-var NAME_COLUMN_IDX = 0;
-var COUNTRIES_COLUMN_IDX = 1;
-var STYLES_COLUMN_IDX = 2;
-var FEATURES_COLUMN_IDX = 4;
+const NAME_COLUMN_IDX = 0;
+const COUNTRIES_COLUMN_IDX = 1;
+const STYLES_COLUMN_IDX = 2;
+const FEATURES_COLUMN_IDX = 4;
 
-var REFERRER_HTML = "If you're going to contact the studio/maker, <u>please let them know you found them here!</u>" +
+const REFERRER_HTML = "If you're going to contact the studio/maker, <u>please let them know you found them here!</u>" +
     " This will help us all a lot. Thank you!";
-var DATA_UPDATES_INFO_URL = "{{ path('info') }}#data-updates";
 
 $(document).ready(function () {
     initDataTable();
@@ -53,7 +54,7 @@ function initDataTable() {
     });
 
     $('#artisans_wrapper .dt-buttons')
-        .append('<a class="btn btn-success btn-sm" href="' + DATA_UPDATES_INFO_URL + '">Studio missing?</a>');
+        .append('<a class="btn btn-success btn-sm" href="./info.html#data-updates">Studio missing?</a>'); // FIXME: Use router
     makeLinksOpenNewTab('#artisans a:not(.request-update)');
 }
 
@@ -204,19 +205,19 @@ function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLas
     if (cstUrl === '') {
         description = 'Commissions are <strong>' + commissionsStatus + '</strong>.'
             + ' Status is not automatically tracked and updated.'
-            + ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
+            + ' <a href="./tracking.html">Learn more</a>'; // FIXME: Use router
     } else if (commissionsStatusData === '') {
         description = 'Commissions status is unknown. It should be tracked and updated automatically from this web page:'
             + ' <a href="' + cstUrl + '">' + cstUrl + '</a>, however the software failed to "understand"'
             + ' the status based on the page contents. Last time it tried on ' + cstLastCheck
-            + ' UTC. <a href="./info.html#commissions-status-tracking">Learn more</a>';
+            + ' UTC. <a href="./tracking.html">Learn more</a>'; // FIXME: Use router
 
         parsingFailed = true;
     } else {
         description = 'Commissions are <strong>' + commissionsStatus + '</strong>. Status is tracked and updated'
             + ' automatically from this web page: <a href="' + cstUrl + '">' + cstUrl + '</a>.'
             + ' Last time checked on ' + cstLastCheck + ' UTC.'
-            + ' <a href="./info.html#commissions-status-tracking">Learn more</a>';
+            + ' <a href="./tracking.html">Learn more</a>'; // FIXME: Use router
     }
 
     $('#artisanCommissionsStatus').html(description);
