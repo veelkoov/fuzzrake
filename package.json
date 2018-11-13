@@ -13,5 +13,7 @@
         "watch": "encore dev --watch",
         "build": "encore production"
     },
-    "dependencies": {}
+    "dependencies": {
+        "jquery": "^3.3.1"
+    }
 }

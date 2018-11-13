@@ -1,16 +1,18 @@
 'use strict';
 
+import $ from 'jquery';
+
 var $dataTable;
 var filters = {};
 
-var NAME_COLUMN_IDX = 0;
-var COUNTRIES_COLUMN_IDX = 1;
-var STYLES_COLUMN_IDX = 2;
-var FEATURES_COLUMN_IDX = 4;
+const NAME_COLUMN_IDX = 0;
+const COUNTRIES_COLUMN_IDX = 1;
+const STYLES_COLUMN_IDX = 2;
+const FEATURES_COLUMN_IDX = 4;
 
-var REFERRER_HTML = "If you're going to contact the studio/maker, <u>please let them know you found them here!</u>" +
+const REFERRER_HTML = "If you're going to contact the studio/maker, <u>please let them know you found them here!</u>" +
     " This will help us all a lot. Thank you!";
-var DATA_UPDATES_INFO_URL = "{{ path('info') }}#data-updates";
+const DATA_UPDATES_INFO_URL = "{{ path('info') }}#data-updates"; // FIXME
 
 $(document).ready(function () {
     initDataTable();

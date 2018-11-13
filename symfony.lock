@@ -59,13 +59,13 @@
     "symfony/test-pack": {
         "version": "v1.0.2"
     },
-    "symfony/webpack-encore-pack": {
+    "symfony/webpack-encore-bundle": {
         "version": "1.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "1.0",
-            "ref": "8e81b0743207474b384548d9bc73fb03b218a9bf"
+            "ref": "4c97a884bc54a4e66bb2d0785ca855141880b6a8"
         }
     }
 }
