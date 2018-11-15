@@ -58,7 +58,7 @@ function initDataTable() {
     });
 
     $('#artisans_wrapper .dt-buttons')
-        .append('<a class="btn btn-success btn-sm" href="./info.html#data-updates">Studio missing?</a>'); // FIXME: Use router
+        .append('<a class="btn btn-success btn-sm" href="' + DATA_UPDATES_URL + '">Studio missing?</a>');
     makeLinksOpenNewTab('#artisans a:not(.request-update)');
 }
 
@@ -209,19 +209,19 @@ function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLas
     if (cstUrl === '') {
         description = 'Commissions are <strong>' + commissionsStatus + '</strong>.'
             + ' Status is not automatically tracked and updated.'
-            + ' <a href="./tracking.html">Learn more</a>'; // FIXME: Use router
+            + ' <a href="' + TRACKING_URL + '">Learn more</a>';
     } else if (commissionsStatusData === '') {
         description = 'Commissions status is unknown. It should be tracked and updated automatically from this web page:'
             + ' <a href="' + cstUrl + '">' + cstUrl + '</a>, however the software failed to "understand"'
             + ' the status based on the page contents. Last time it tried on ' + cstLastCheck
-            + ' UTC. <a href="./tracking.html">Learn more</a>'; // FIXME: Use router
+            + ' UTC. <a href="' + TRACKING_URL + '">Learn more</a>';
 
         parsingFailed = true;
     } else {
         description = 'Commissions are <strong>' + commissionsStatus + '</strong>. Status is tracked and updated'
             + ' automatically from this web page: <a href="' + cstUrl + '">' + cstUrl + '</a>.'
             + ' Last time checked on ' + cstLastCheck + ' UTC.'
-            + ' <a href="./tracking.html">Learn more</a>'; // FIXME: Use router
+            + ' <a href="' + TRACKING_URL + '">Learn more</a>';
     }
 
     $('#artisanCommissionsStatus').html(description);

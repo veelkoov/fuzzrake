@@ -12,6 +12,11 @@
     <link rel="stylesheet" type="text/css"
           href="//cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/cr-1.5.0/fc-3.2.5/fh-3.1.4/sc-1.5.0/datatables.min.css"/>
 
+    <script>
+        var DATA_UPDATES_URL = '{{ path('info', { _fragment: 'data-updates' }) }}';
+        var TRACKING_URL = '{{ path('tracking') }}';
+    </script>
+
     {% block stylesheets %}
         {{ encore_entry_link_tags('general') }}
     {% endblock %}
