@@ -1,6 +1,10 @@
 'use strict';
 
 import $ from 'jquery';
+import Choices from "../3rd-party/Choices/public/assets/scripts/choices";
+
+require('../3rd-party/flag-icon-css/css/flag-icon.css');
+require('../3rd-party/Choices/public/assets/styles/choices.css');
 
 var $dataTable;
 var filters = {};

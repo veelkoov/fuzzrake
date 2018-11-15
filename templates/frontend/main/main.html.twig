@@ -5,6 +5,11 @@
     {{ encore_entry_script_tags('main') }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('main') }}
+{% endblock %}
+
 {% block body %}
     {% include 'frontend/main/_intro.html.twig' %}
     {% include 'frontend/main/_filters.html.twig' %}

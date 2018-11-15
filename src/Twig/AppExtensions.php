@@ -36,7 +36,6 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFunction('getLastSystemUpdateTime', [$this, 'getLastSystemUpdateTimeFunction']),
             new TwigFunction('getLastDataUpdateTime', [$this, 'getLastDataUpdateTimeFunction']),
-            new TwigFunction('getAssetsVersion', [$this, 'getAssetsVersionFunction']),
         ];
     }
 
@@ -48,11 +47,6 @@ class AppExtensions extends AbstractExtension
     public function getLastSystemUpdateTimeFunction()
     {
         return new DateTime(`TZ=UTC git log -n1 --format=%cd --date=local`, new DateTimeZone('UTC'));
-    }
-
-    public function getAssetsVersionFunction()
-    {
-        return trim(`git log -n1 --format=%h`);
     }
 
     public function otherFilter($primaryList, $otherList)
