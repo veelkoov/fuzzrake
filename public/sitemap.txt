@@ -1,3 +1,4 @@
 http://getfursu.it/
 http://getfursu.it/info.html
 http://getfursu.it/statistics.html
+http://getfursu.it/tracking.html
