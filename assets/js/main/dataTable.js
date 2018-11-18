@@ -3,7 +3,7 @@
 import $ from 'jquery';
 import Choices from "../../3rd-party/Choices/public/assets/scripts/choices";
 import isMobile from './isMobile'
-import * as consts from './consts';
+import * as Consts from './consts';
 
 require('../../3rd-party/Choices/public/assets/styles/choices.css');
 
@@ -81,7 +81,7 @@ function initSelectFilter(selector, dataColumnIndex, forceOnMobile, isAnd, onCre
     $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
 }
 
-export default function initDataTable() {
+export function init() {
     $dataTable = $('#artisans').DataTable({
         dom:
             "<'row'<'col-sm-12 col-md-6'lB><'col-sm-12 col-md-6'f>>" +
@@ -109,7 +109,7 @@ export default function initDataTable() {
     $('#artisans_wrapper .dt-buttons')
         .append('<a class="btn btn-success btn-sm" href="' + DATA_UPDATES_URL + '">Studio missing?</a>');
 
-    initSelectFilter('#countriesFilter', consts.COUNTRIES_COLUMN_IDX, true, false, countriesOnCreateTemplatesCallback);
-    initSelectFilter('#stylesFilter', consts.STYLES_COLUMN_IDX, false, false);
-    initSelectFilter('#featuresFilter', consts.FEATURES_COLUMN_IDX, false, true);
+    initSelectFilter('#countriesFilter', Consts.COUNTRIES_COLUMN_IDX, true, false, countriesOnCreateTemplatesCallback);
+    initSelectFilter('#stylesFilter', Consts.STYLES_COLUMN_IDX, false, false);
+    initSelectFilter('#featuresFilter', Consts.FEATURES_COLUMN_IDX, false, true);
 }
