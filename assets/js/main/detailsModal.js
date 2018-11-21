@@ -68,7 +68,7 @@ function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLas
 }
 
 function updateDetailsModalWithRowData($row) {
-    $('#artisanName').html($row.children().eq(Consts.NAME_COLUMN_IDX).html());
+    $('#artisanName').html($row.children().eq(Consts.NAME_COL_IDX).html());
     $('#artisanShortInfo').html(formatShortInfo($row.data('state'), $row.data('city'), $row.data('since'), $row.data('formerly')));
     $('#artisanFeatures').html(htmlListFromCommaSeparated($row.data('features'), $row.data('other-features')));
     $('#artisanTypes').html(htmlListFromCommaSeparated($row.data('types'), $row.data('other-types')));

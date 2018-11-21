@@ -2,61 +2,118 @@
     <thead class="thead-dark">
     <tr>
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
+        <th class="hidden-data">Formerly</th>
+        <th class="hidden-data">Intro</th>
+        <th class="hidden-data">Since</th>
         <th class="hidden-data">Country</th>
+        <th class="hidden-data">State</th>
+        <th class="hidden-data">City</th>
         <th class="toggleable no-sorting">Styles</th>
+        <th class="hidden-data">Other styles</th>
         <th class="toggleable no-sorting default-hidden">Types</th>
+        <th class="hidden-data">Other types</th>
         <th class="toggleable no-sorting default-hidden">Features</th>
+        <th class="hidden-data">Other features</th>
+        <th class="hidden-data">FursuitReview URL</th>
+        <th class="hidden-data">Website URL</th>
+        <th class="hidden-data">FurAffinity URL</th>
+        <th class="hidden-data">DeviantArt URL</th>
+        <th class="hidden-data">Twitter URL</th>
+        <th class="hidden-data">Facebook URL</th>
+        <th class="hidden-data">Tumblr URL</th>
+        <th class="hidden-data">Instagram URL</th>
+        <th class="hidden-data">YouTube URL</th>
+        <th class="hidden-data">CST URL</th>
+        <th class="hidden-data">Queue URL</th>
+        <th class="hidden-data">Notes</th>
         <th class="toggleable">Commissions</th>
         <th class="no-sorting">Links</th>
     </tr>
     </thead>
+    {#{%- if artisan.country -%}#}
+        {#{{ '&nbsp;' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>#}
+    {#{%- endif -%}#}
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit-maker"
-            data-name="{{ artisan.name }}"
-            data-formerly="{{ artisan.formerly }}"
-            data-since="{{ artisan.since|since }}"
-            data-country="{{ artisan.country }}"
-            data-state="{{ artisan.state }}"
-            data-city="{{ artisan.city }}"
-            data-intro="{{ artisan.intro }}"
-            data-types="{{ artisan.types }}"
-            data-other-types="{{ artisan.otherTypes }}"
-            data-features="{{ artisan.features }}"
-            data-other-features="{{ artisan.otherFeatures }}"
-            data-styles="{{ artisan.styles }}"
-            data-other-styles="{{ artisan.otherStyles }}"
-            data-commissions-status="{{ artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format }}"
-            data-cst-url="{{ artisan.commisionsQuotesCheckUrl }}"
-            data-cst-last-check="{{ artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') }}">
+        <tr class="fursuit-maker">
             {%- spaceless %}
                 <td class="text-left align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
-                    {%- if artisan.country -%}
-                        {{ '&nbsp;' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
-                    {%- endif -%}
                 </td>
                 <td class="hidden-data">
-                    {%- if artisan.country -%}
-                        {{ artisan.country|lower }}
-                    {%- endif -%}
+                    {{- artisan.formerly -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.intro -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.since -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.country -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.state -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.city -}}
                 </td>
                 <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.styles|other(artisan.otherStyles) -}}
+                    {{- artisan.styles -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.otherStyles -}}
                 </td>
                 <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.types|other(artisan.otherTypes) -}}
+                    {{- artisan.types -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.otherTypes -}}
                 </td>
                 <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.features|other(artisan.otherFeatures) -}}
+                    {{- artisan.features -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.otherFeatures -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.fursuitReviewUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.websiteUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.furAffinityUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.deviantArtUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.twitterUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.facebookUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.tumblrUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.instagramUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.youtubeUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.commisionsQuotesCheckUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.queueUrl -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.notes -}}
                 </td>
                 <td class="align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {%- if artisan.areCommissionsOpen is null -%}
-                    {%- elseif artisan.areCommissionsOpen == true -%}
-                        <i class="fas fa-check-circle"></i> Open
-                    {%- else -%}
-                        <i class="fas fa-times-circle"></i> Closed
-                    {%- endif -%}
+                    {{- artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format -}}
                 </td>
                 <td class="text-right align-middle">
                     {% include 'frontend/main/_artisan_links_dropdown.html.twig' %}
