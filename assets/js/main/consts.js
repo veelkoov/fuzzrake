@@ -28,6 +28,7 @@ export const COMMISIONSQUOTESCHECK_URL_COL_IDX = idx++;
 export const QUEUE_URL_COL_IDX = idx++;
 export const NOTES_COL_IDX = idx++;
 export const COMMISSIONS_COL_IDX = idx++;
+export const COMMISSIONS_LAST_CHECK_COL_IDX = idx++;
 
 export const REFERRER_HTML = "If you're going to contact the studio/maker," +
     " <u>please let them know you found them here!</u>" +

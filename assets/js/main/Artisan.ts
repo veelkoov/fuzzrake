@@ -26,7 +26,8 @@ export default class Artisan {
                 readonly commisionsQuotesCheckUrl: string,
                 readonly queueUrl: string,
                 readonly notes: string,
-                readonly areCommissionsOpen?: boolean) {
+                readonly areCommissionsOpen?: boolean,
+                readonly commissionsQuotesLastCheck?: string) {
     }
 
     static fromArray(cells: string[]): Artisan {
@@ -38,12 +39,12 @@ export default class Artisan {
             cells[Consts.COUNTRY_COL_IDX],
             cells[Consts.STATE_COL_IDX],
             cells[Consts.CITY_COL_IDX],
-            cells[Consts.STYLES_COL_IDX].split(', '),
-            cells[Consts.OTHER_STYLES_COL_IDX].split('; '),
-            cells[Consts.TYPES_COL_IDX].split(', '),
-            cells[Consts.OTHER_TYPES_COL_IDX].split('; '),
-            cells[Consts.FEATURES_COL_IDX].split(', '),
-            cells[Consts.OTHER_FEATURES_COL_IDX].split('; '),
+            Artisan.toArray(cells[Consts.STYLES_COL_IDX], ', '),
+            Artisan.toArray(cells[Consts.OTHER_STYLES_COL_IDX], '; '),
+            Artisan.toArray(cells[Consts.TYPES_COL_IDX], ', '),
+            Artisan.toArray(cells[Consts.OTHER_TYPES_COL_IDX], '; '),
+            Artisan.toArray(cells[Consts.FEATURES_COL_IDX], ', '),
+            Artisan.toArray(cells[Consts.OTHER_FEATURES_COL_IDX], '; '),
             cells[Consts.FURSUITREVIEW_URL_COL_IDX],
             cells[Consts.WEBSITE_URL_COL_IDX],
             cells[Consts.FURAFFINITY_URL_COL_IDX],
@@ -56,13 +57,18 @@ export default class Artisan {
             cells[Consts.COMMISIONSQUOTESCHECK_URL_COL_IDX],
             cells[Consts.QUEUE_URL_COL_IDX],
             cells[Consts.NOTES_COL_IDX],
-            Artisan.toBoolean(cells[Consts.COMMISSIONS_COL_IDX])
+            Artisan.toBoolean(cells[Consts.COMMISSIONS_COL_IDX]),
+            cells[Consts.COMMISSIONS_LAST_CHECK_COL_IDX]
         );
+    }
+
+    private static toArray(input: string, separator: string) {
+        return input.split(separator).filter(value => value !== '');
     }
 
     private static toBoolean(input?: string) {
         switch (input) {
-            case'1':
+            case '1':
                 return true;
             case '0':
                 return false;

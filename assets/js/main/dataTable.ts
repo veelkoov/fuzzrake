@@ -3,6 +3,7 @@
 import * as Choices from "../../3rd-party/Choices/public/assets/scripts/choices";
 import * as $ from 'jquery';
 import * as Consts from './consts';
+import * as Utils from './utils';
 import isMobile from './isMobile';
 import Artisan from './Artisan';
 
@@ -85,18 +86,7 @@ function initSelectFilter(selector: string, dataColumnIndex: number, forceOnMobi
     $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
 }
 
-export function init() {
-    artisans = [];
-    filters = {};
-
-    $('#artisans tr.fursuit-maker').each((_: number, item: object) => {
-        let $row = $(item);
-        let artisan = Artisan.fromArray($row.children().toArray().map((value: any) => value.innerHTML));
-
-        $row.data('artisan', artisan);
-        artisans.push(artisan);
-    });
-
+function initDataTable() {
     $dataTable = $('#artisans').DataTable({
         dom:
             "<'row'<'col-sm-12 col-md-6'lB><'col-sm-12 col-md-6'f>>" +
@@ -116,13 +106,36 @@ export function init() {
             extend: 'colvis',
             text: 'Show/hide columns'
         }],
-        infoCallback: function infoCallback(settings, start, end, max, total, pre) {
-            return `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database</p>`;
-        }
+        infoCallback: (settings, start, end, max, total, pre) =>
+            `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database</p>`
     });
 
     $('#artisans_wrapper .dt-buttons')
         .append(`<a class="btn btn-success btn-sm" href="${DATA_UPDATES_URL}">Studio missing?</a>`);
+}
+
+export function init() {
+    artisans = [];
+    filters = {};
+
+    $('#artisans tr.fursuit-maker').each((_: number, item: object) => {
+        let $row = $(item);
+        let artisan = Artisan.fromArray($row.children().toArray().map((value: any) => value.innerHTML));
+
+        $row.data('artisan', artisan);
+        artisans.push(artisan);
+
+        $row.children().eq(Consts.NAME_COL_IDX).html(artisan.name + Utils.countryFlagHtml(artisan.country));
+
+        if (artisan.areCommissionsOpen !== null) {
+            $row.children().eq(Consts.COMMISSIONS_COL_IDX).html(
+                artisan.areCommissionsOpen
+                    ? '<i class="fas fa-check-circle"></i> Open'
+                    : '<i class="fas fa-times-circle"></i> Closed');
+        }
+    });
+
+    initDataTable();
 
     initSelectFilter('#countriesFilter', Consts.COUNTRY_COL_IDX, true, false, countriesOnCreateTemplatesCallback);
     initSelectFilter('#stylesFilter', Consts.STYLES_COL_IDX, false, false);

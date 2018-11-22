@@ -32,7 +32,7 @@ function updateRequestUpdateModalWithRowData($row) {
     Utils.updateUpdateRequestData('updateRequestSingle', $row);
 }
 
-$(document).ready(function () {
+$(() => {
     DataTable.init();
     DetailsModal.init();
 

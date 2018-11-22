@@ -27,12 +27,11 @@
         <th class="hidden-data">Queue URL</th>
         <th class="hidden-data">Notes</th>
         <th class="toggleable">Commissions</th>
+        <th class="hidden-data">Commissions last check</th>
         <th class="no-sorting">Links</th>
     </tr>
     </thead>
-    {#{%- if artisan.country -%}#}
-        {#{{ '&nbsp;' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>#}
-    {#{%- endif -%}#}
+
     <tbody>
     {% for artisan in artisans %}
         <tr class="fursuit-maker">
@@ -114,6 +113,9 @@
                 </td>
                 <td class="align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format -}}
+                </td>
+                <td class="hidden-data">
+                    {{- artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') -}}
                 </td>
                 <td class="text-right align-middle">
                     {% include 'frontend/main/_artisan_links_dropdown.html.twig' %}
