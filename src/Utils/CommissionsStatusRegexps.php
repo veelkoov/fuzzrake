@@ -24,7 +24,7 @@ class CommissionsStatusRegexps
         'WE_ARE' => '(we are|we\'re|i am|i\'?m|STUDIO_NAME (is|are))',
         'WE' => '(i|we)',
         'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
-        'TIMESPAN' => '(current(ly)?|(right )?now|at (this|the) time|for the time being|(now )?(always|permanently|indefinitely))',
+        'TIMESPAN' => '(current(ly)?|(right )?now|at (this|the) time|for the time being|already|(now )?(always|permanently|indefinitely))',
     ];
     const FALSE_POSITIVES_REGEXES = [
         '(once|when) (WE_ARE STATUS for COMMISSIONS|COMMISSIONS are STATUS)',
