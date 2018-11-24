@@ -137,10 +137,10 @@ function processRowHtml($row: any, artisan: Artisan): void {
     $row.children().eq(Consts.LINKS_COL_IDX).html(`
         <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
             <div class="btn-group" role="group">
-                <button id="{{ btnGroupDropLinksId }}" type="button" class="btn btn-secondary dropdown-toggle"
+                <button id="drpdwnmn${$row.index()}" type="button" class="btn btn-secondary dropdown-toggle"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-boundary="viewport"
                     data-flip="false"></button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ btnGroupDropLinksId }}"> <!-- TODO: ID -->
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="drpdwnmn${$row.index()}">
                     <a class="dropdown-item request-update" href="#" data-toggle="modal" data-target="#updateRequestModal">
                         <i class="fas fa-exclamation-triangle"></i> Request update
                     </a>
