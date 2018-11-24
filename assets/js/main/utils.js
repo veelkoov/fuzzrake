@@ -29,8 +29,11 @@ function getGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(355015034, artisan.state));
     dataItems.push(toDataItem(944749751, artisan.city));
     dataItems.push(toDataItem(129031545, artisan.styles));
+    dataItems.push(toDataItem(1324232796, artisan.otherStyles.join('; ')));
     dataItems.push(toDataItem(1319815626, artisan.types));
+    dataItems.push(toDataItem(67316802, artisan.otherTypes.join('; ')));
     dataItems.push(toDataItem(1197078153, artisan.features));
+    dataItems.push(toDataItem(175794467, artisan.otherFeatures.join('; ')));
     dataItems.push(toDataItem(1291118884, artisan.fursuitReviewUrl));
     dataItems.push(toDataItem(1753739667, artisan.websiteUrl));
     dataItems.push(toDataItem(1781081038, artisan.furAffinityUrl));
