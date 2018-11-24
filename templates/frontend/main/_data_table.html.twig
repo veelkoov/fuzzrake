@@ -1,66 +1,123 @@
-<table id="artisans" class="table table-striped table-sm table-hover text-center">
+<table id="artisans" class="table table-striped table-sm table-hover">
     <thead class="thead-dark">
     <tr>
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
-        <th class="hidden-data">Country</th>
-        <th class="toggleable no-sorting">Styles</th>
-        <th class="toggleable no-sorting default-hidden">Types</th>
-        <th class="toggleable no-sorting default-hidden">Features</th>
-        <th class="toggleable">Commissions</th>
-        <th class="no-sorting">Links</th>
+        <th class="hidden">Formerly</th>
+        <th class="hidden">Intro</th>
+        <th class="hidden">Since</th>
+        <th class="hidden">Country</th>
+        <th class="hidden">State</th>
+        <th class="hidden">City</th>
+        <th class="text-center toggleable no-sorting">Styles</th>
+        <th class="hidden">Other styles</th>
+        <th class="text-center toggleable no-sorting default-hidden">Types</th>
+        <th class="hidden">Other types</th>
+        <th class="text-center toggleable no-sorting default-hidden">Features</th>
+        <th class="hidden">Other features</th>
+        <th class="hidden">FursuitReview URL</th>
+        <th class="hidden">Website URL</th>
+        <th class="hidden">FurAffinity URL</th>
+        <th class="hidden">DeviantArt URL</th>
+        <th class="hidden">Twitter URL</th>
+        <th class="hidden">Facebook URL</th>
+        <th class="hidden">Tumblr URL</th>
+        <th class="hidden">Instagram URL</th>
+        <th class="hidden">YouTube URL</th>
+        <th class="hidden">CST URL</th>
+        <th class="hidden">Queue URL</th>
+        <th class="hidden">Notes</th>
+        <th class="text-center toggleable">Commissions</th>
+        <th class="hidden">Commissions last check</th>
+        <th class="text-right no-sorting">Links</th>
     </tr>
     </thead>
+
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit-maker"
-            data-name="{{ artisan.name }}"
-            data-formerly="{{ artisan.formerly }}"
-            data-since="{{ artisan.since|since }}"
-            data-country="{{ artisan.country }}"
-            data-state="{{ artisan.state }}"
-            data-city="{{ artisan.city }}"
-            data-intro="{{ artisan.intro }}"
-            data-types="{{ artisan.types }}"
-            data-other-types="{{ artisan.otherTypes }}"
-            data-features="{{ artisan.features }}"
-            data-other-features="{{ artisan.otherFeatures }}"
-            data-styles="{{ artisan.styles }}"
-            data-other-styles="{{ artisan.otherStyles }}"
-            data-commissions-status="{{ artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format }}"
-            data-cst-url="{{ artisan.commisionsQuotesCheckUrl }}"
-            data-cst-last-check="{{ artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') }}">
+        <tr class="fursuit-maker">
             {%- spaceless %}
-                <td class="text-left align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
+                <td class="name" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
-                    {%- if artisan.country -%}
-                        {{ '&nbsp;' }}<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
-                    {%- endif -%}
                 </td>
-                <td class="hidden-data">
-                    {%- if artisan.country -%}
-                        {{ artisan.country|lower }}
-                    {%- endif -%}
+                <td class="hidden">
+                    {{- artisan.formerly -}}
                 </td>
-                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.styles|other(artisan.otherStyles) -}}
+                <td class="hidden">
+                    {{- artisan.intro -}}
                 </td>
-                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.types|other(artisan.otherTypes) -}}
+                <td class="hidden">
+                    {{- artisan.since -}}
                 </td>
-                <td class="text-left small align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.features|other(artisan.otherFeatures) -}}
+                <td class="hidden">
+                    {{- artisan.country -}}
                 </td>
-                <td class="align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {%- if artisan.areCommissionsOpen is null -%}
-                    {%- elseif artisan.areCommissionsOpen == true -%}
-                        <i class="fas fa-check-circle"></i> Open
-                    {%- else -%}
-                        <i class="fas fa-times-circle"></i> Closed
-                    {%- endif -%}
+                <td class="hidden">
+                    {{- artisan.state -}}
                 </td>
-                <td class="text-right align-middle">
-                    {% include 'frontend/main/_artisan_links_dropdown.html.twig' %}
+                <td class="hidden">
+                    {{- artisan.city -}}
                 </td>
+                <td class="styles" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.styles -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.otherStyles -}}
+                </td>
+                <td class="types" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.types -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.otherTypes -}}
+                </td>
+                <td class="features" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.features -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.otherFeatures -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.fursuitReviewUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.websiteUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.furAffinityUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.deviantArtUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.twitterUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.facebookUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.tumblrUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.instagramUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.youtubeUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.commisionsQuotesCheckUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.queueUrl -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.notes -}}
+                </td>
+                <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.areCommissionsOpen is null ? '' : (artisan.areCommissionsOpen ? 'open' : 'closed') -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') -}}
+                </td>
+                <td class="links"></td>
             {% endspaceless -%}
         </tr>
     {% endfor %}

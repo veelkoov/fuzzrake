@@ -9,6 +9,7 @@ Encore
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
+    .enableTypeScriptLoader()
     .enableLessLoader()
 ;
 

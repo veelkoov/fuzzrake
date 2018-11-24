@@ -10,7 +10,7 @@ require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
 function initRequestUpdateModal() {
     $('#updateRequestModal').on('show.bs.modal', function (event) {
-        updateRequestUpdateModalWithRowData($(event.relatedTarget).closest('tr'));
+        updateRequestUpdateModalWithRowData($(event.relatedTarget).closest('tr').data('artisan'));
     });
 
     Utils.makeLinksOpenNewTab('#updateRequestModal a');
@@ -26,13 +26,13 @@ function addReferrerRequestTooltip() {
         .tooltip();
 }
 
-function updateRequestUpdateModalWithRowData($row) {
-    $('#artisanNameUR').html($row.data('name'));
+function updateRequestUpdateModalWithRowData(artisan) {
+    $('#artisanNameUR').html(artisan.name);
 
-    Utils.updateUpdateRequestData('updateRequestSingle', $row);
+    Utils.updateUpdateRequestData('updateRequestSingle', artisan);
 }
 
-$(document).ready(function () {
+$(() => {
     DataTable.init();
     DetailsModal.init();
 
