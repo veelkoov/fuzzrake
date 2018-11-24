@@ -9,10 +9,48 @@ export function makeLinksOpenNewTab(linkSelector) {
     });
 }
 
+function toDataItem(id, data) {
+    if (typeof data === 'string') {
+        return `entry.${id}=${encodeURIComponent(data)}`;
+    } else {
+        return data.map(item => {
+            return `entry.${id}=${encodeURIComponent(item)}`
+        }).join('&');
+    }
+}
+
+function getGoogleFormPrefilledUrl(artisan) {
+    let dataItems = [];
+
+    dataItems.push(toDataItem(646315912, artisan.name));
+    dataItems.push(toDataItem(6087327, artisan.formerly));
+    dataItems.push(toDataItem(764970912, artisan.since + '-01'));
+    dataItems.push(toDataItem(1452524703, artisan.country));
+    dataItems.push(toDataItem(355015034, artisan.state));
+    dataItems.push(toDataItem(944749751, artisan.city));
+    dataItems.push(toDataItem(129031545, artisan.styles));
+    dataItems.push(toDataItem(1319815626, artisan.types));
+    dataItems.push(toDataItem(1197078153, artisan.features));
+    dataItems.push(toDataItem(1291118884, artisan.fursuitReviewUrl));
+    dataItems.push(toDataItem(1753739667, artisan.websiteUrl));
+    dataItems.push(toDataItem(1781081038, artisan.furAffinityUrl));
+    dataItems.push(toDataItem(591054015, artisan.deviantArtUrl));
+    dataItems.push(toDataItem(151172280, artisan.twitterUrl));
+    dataItems.push(toDataItem(1965677490, artisan.facebookUrl));
+    dataItems.push(toDataItem(1209445762, artisan.tumblrUrl));
+    dataItems.push(toDataItem(696741203, artisan.instagramUrl));
+    dataItems.push(toDataItem(618562986, artisan.youtubeUrl));
+    dataItems.push(toDataItem(1355429885, artisan.commisionsQuotesCheckUrl));
+    dataItems.push(toDataItem(1671817601, artisan.notes));
+
+    // TODO: get form link form czpcz
+    return 'https://docs.google.com/forms/d/e/1FAIpQLScjKIP1B2zrLi1TkA0QLDGuPaPM5GkYFbd6jw8etd4h0zDHPg/viewform?usp=pp_url&' + dataItems.join('&');
+}
+
 export function updateUpdateRequestData(divId, artisan) {
     $(`#${divId} .twitterUrl`).attr('href', 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent(artisan.name) + '%20(please%20describe%20details)&tw_p=tweetbutton');
 
-    $(`#${divId} .googleFromUrl`).attr('href', 'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform?usp=pp_url&entry.1289735951=' + encodeURIComponent(artisan.name));
+    $(`#${divId} .googleFromUrl`).attr('href', getGoogleFormPrefilledUrl(artisan));
 }
 
 export function countryFlagHtml(country) {
