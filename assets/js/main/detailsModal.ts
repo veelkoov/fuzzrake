@@ -18,17 +18,9 @@ function linksHrefNoProto($link) {
     return $link.attr('href').replace(/^https?:\/\/|\/$/g, '');
 }
 
-function formatLinks(links) {
-    let $links = $(links);
-
-    $links.children().each((_, link) => {
-        let $link = $(link);
-        $link
-            .addClass('btn btn-light m-1')
-            .html(`${$link.html()}
-                                    <span class="d-none d-md-inline">: <span class="url">
-                                    ${linksHrefNoProto($link)}
-                                    </span></span>`);
+function formatLinks($links) {
+    $links.addClass('btn btn-light m-1').html(function (_, oldHtml) {
+        return `${oldHtml} <span class="d-none d-md-inline">: <span class="url">${linksHrefNoProto($(this))}</span></span>`;
     });
 
     $links.before($links.length
@@ -77,13 +69,12 @@ function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanStyles').html(htmlListFromArrays(artisan.styles, artisan.otherStyles));
     $('#artisanTypes').html(htmlListFromArrays(artisan.types, artisan.otherTypes));
     $('#artisanFeatures').html(htmlListFromArrays(artisan.features, artisan.otherFeatures));
-    $('#artisanLinks').empty().append(formatLinks(Utils.getLinksArray(artisan)));
-    // $('#artisanRequestUpdate').attr('href', $row.find('div.artisan-links div.dropdown-menu a.request-update').attr('href'));
+    $('#artisanLinks').empty().append(formatLinks(Utils.getLinks$(artisan)));
     $('#artisanIntro').html(artisan.intro).toggle(artisan.intro !== '');
 
     updateCommissionsStatusFromArtisanRowData(artisan.areCommissionsOpen, artisan.commissionsQuotesLastCheck,
         artisan.commisionsQuotesCheckUrl);
-    // Utils.updateUpdateRequestData('updateRequestFull', artisan);
+    Utils.updateUpdateRequestData('updateRequestFull', artisan);
 
     Utils.makeLinksOpenNewTab('#artisanLinks a');
     Utils.makeLinksOpenNewTab('#artisanCommissionsStatus a');
