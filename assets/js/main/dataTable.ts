@@ -114,6 +114,16 @@ function initDataTable(): void {
         .append(`<a class="btn btn-success btn-sm" href="${DATA_UPDATES_URL}">Studio missing?</a>`);
 }
 
+function clonePrimaryLinksForDropdown($links) {
+    let result = $links.filter('.primary').clone().addClass('btn btn-secondary');
+
+    result.contents().filter(function () {
+        return this.nodeType === 3; // text node
+    }).remove();
+
+    return result;
+}
+
 function processRowHtml($row: any, artisan: Artisan): void {
     $row.children().eq(Consts.NAME_COL_IDX).html(artisan.name + Utils.countryFlagHtml(artisan.country));
 
@@ -123,6 +133,22 @@ function processRowHtml($row: any, artisan: Artisan): void {
                 ? '<i class="fas fa-check-circle"></i> Open'
                 : '<i class="fas fa-times-circle"></i> Closed');
     }
+
+    $row.children().eq(Consts.LINKS_COL_IDX).html(`
+        <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
+            <div class="btn-group" role="group">
+                <button id="{{ btnGroupDropLinksId }}" type="button" class="btn btn-secondary dropdown-toggle"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-boundary="viewport"
+                    data-flip="false"></button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ btnGroupDropLinksId }}"> <!-- TODO: ID -->
+                    <a class="dropdown-item request-update" href="#" data-toggle="modal" data-target="#updateRequestModal">
+                        <i class="fas fa-exclamation-triangle"></i> Request update
+                    </a>
+    `);
+
+    let $links = Utils.getLinks$(artisan);
+    $row.find('.artisan-links .btn-group').prepend(clonePrimaryLinksForDropdown($links));
+    $row.find('.artisan-links .dropdown-menu').prepend($links.addClass('dropdown-item'));
 }
 
 export function init() {

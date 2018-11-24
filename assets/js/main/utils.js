@@ -23,10 +23,10 @@ export function getLinks$(artisan) {
     let links = [];
 
     if (artisan.fursuitReviewUrl) {
-        links.push(`<a href="${artisan.fursuitReviewUrl}"><i class="fas fa-balance-scale"></i> FursuitReview</a>`);
+        links.push(`<a href="${artisan.fursuitReviewUrl}" class="primary"><i class="fas fa-balance-scale"></i> FursuitReview</a>`);
     }
     if (artisan.websiteUrl) {
-        links.push(`<a href="${artisan.websiteUrl}"><i class="fas fa-link"></i> Official website</a>`);
+        links.push(`<a href="${artisan.websiteUrl}" class="primary"><i class="fas fa-link"></i> Official website</a>`);
     }
     if (artisan.furAffinityUrl) {
         links.push(`<a href="${artisan.furAffinityUrl}"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>`);
