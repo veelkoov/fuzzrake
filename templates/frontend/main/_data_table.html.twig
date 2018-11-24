@@ -112,13 +112,13 @@
                     {{- artisan.notes -}}
                 </td>
                 <td class="align-middle" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.areCommissionsOpen is null ? '' : artisan.areCommissionsOpen|number_format -}}
+                    {{- artisan.areCommissionsOpen is null ? '' : (artisan.areCommissionsOpen ? 'open' : 'closed') -}}
                 </td>
                 <td class="hidden-data">
                     {{- artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') -}}
                 </td>
                 <td class="text-right align-middle">
-                    {% include 'frontend/main/_artisan_links_dropdown.html.twig' %}
+                    {#{% include 'frontend/main/_artisan_links_dropdown.html.twig' %}#}
                 </td>
             {% endspaceless -%}
         </tr>

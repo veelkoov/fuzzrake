@@ -14,24 +14,29 @@ function formatShortInfo(state, city, since, formerly) {
     return `Based in ${location}, crafting since ${since}${formerly}`;
 }
 
-function formatLinks(links) {
-    let linksHtml = '';
+function linksHrefNoProto($link) {
+    return $link.attr('href').replace(/^https?:\/\/|\/$/g, '');
+}
 
-    links.each(function (_, link) {
-        let $link = $(link).clone();
+function formatLinks(links) {
+    let $links = $(links);
+
+    $links.children().each((_, link) => {
+        let $link = $(link);
         $link
-            .removeClass('dropdown-item')
             .addClass('btn btn-light m-1')
-            .html(
-                $link.html() + '<span class="d-none d-md-inline">: <span class="url">' +
-                $link.attr('href').replace(/^https?:\/\/|\/$/g, '') + '</span></span>'
-            );
-        linksHtml += $link[0].outerHTML;
+            .html(`${$link.html()}
+                                    <span class="d-none d-md-inline">: <span class="url">
+                                    ${linksHrefNoProto($link)}
+                                    </span></span>`);
     });
 
-    return linksHtml
-        ? `<p class="small px-1">${Consts.REFERRER_HTML}</p>${linksHtml}`
-        : '<i class="fas fa-question-circle" title="None provided"></i>';
+    $links.before($links.length
+        ? `<p class="small px-1">${Consts.REFERRER_HTML}</p>`
+        : '<i class="fas fa-question-circle" title="None provided"></i>'
+    );
+
+    return $links;
 }
 
 function htmlListFromArrays(list: String[], other: String[]) {
@@ -66,19 +71,19 @@ function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLas
     $('#statusParsingFailed').toggle(parsingFailed);
 }
 
-function updateDetailsModalWithRowData(artisan: Artisan) {
+function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanName').html(artisan.name + Utils.countryFlagHtml(artisan.country));
     $('#artisanShortInfo').html(formatShortInfo(artisan.state, artisan.city, artisan.since, artisan.formerly));
     $('#artisanStyles').html(htmlListFromArrays(artisan.styles, artisan.otherStyles));
     $('#artisanTypes').html(htmlListFromArrays(artisan.types, artisan.otherTypes));
     $('#artisanFeatures').html(htmlListFromArrays(artisan.features, artisan.otherFeatures));
-    // $('#artisanLinks').html(formatLinks($row.find('div.artisan-links div.dropdown-menu a:not(.request-update)')));
+    $('#artisanLinks').empty().append(formatLinks(Utils.getLinksArray(artisan)));
     // $('#artisanRequestUpdate').attr('href', $row.find('div.artisan-links div.dropdown-menu a.request-update').attr('href'));
     $('#artisanIntro').html(artisan.intro).toggle(artisan.intro !== '');
 
     updateCommissionsStatusFromArtisanRowData(artisan.areCommissionsOpen, artisan.commissionsQuotesLastCheck,
         artisan.commisionsQuotesCheckUrl);
-    // Utils.updateUpdateRequestData('updateRequestFull', $row);
+    // Utils.updateUpdateRequestData('updateRequestFull', artisan);
 
     Utils.makeLinksOpenNewTab('#artisanLinks a');
     Utils.makeLinksOpenNewTab('#artisanCommissionsStatus a');
@@ -86,7 +91,7 @@ function updateDetailsModalWithRowData(artisan: Artisan) {
 
 export function init() {
     $('#artisanDetailsModal').on('show.bs.modal', event => {
-        updateDetailsModalWithRowData($(event.relatedTarget).closest('tr').data('artisan'));
+        updateDetailsModalWithArtisanData($(event.relatedTarget).closest('tr').data('artisan'));
     });
 
     Utils.makeLinksOpenNewTab('#updateRequestFull a');

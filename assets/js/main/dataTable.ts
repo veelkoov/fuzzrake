@@ -86,7 +86,7 @@ function initSelectFilter(selector: string, dataColumnIndex: number, forceOnMobi
     $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
 }
 
-function initDataTable() {
+function initDataTable(): void {
     $dataTable = $('#artisans').DataTable({
         dom:
             "<'row'<'col-sm-12 col-md-6'lB><'col-sm-12 col-md-6'f>>" +
@@ -114,6 +114,17 @@ function initDataTable() {
         .append(`<a class="btn btn-success btn-sm" href="${DATA_UPDATES_URL}">Studio missing?</a>`);
 }
 
+function processRowHtml($row: any, artisan: Artisan): void {
+    $row.children().eq(Consts.NAME_COL_IDX).html(artisan.name + Utils.countryFlagHtml(artisan.country));
+
+    if (artisan.areCommissionsOpen !== null) {
+        $row.children().eq(Consts.COMMISSIONS_COL_IDX).html(
+            artisan.areCommissionsOpen
+                ? '<i class="fas fa-check-circle"></i> Open'
+                : '<i class="fas fa-times-circle"></i> Closed');
+    }
+}
+
 export function init() {
     artisans = [];
     filters = {};
@@ -125,14 +136,7 @@ export function init() {
         $row.data('artisan', artisan);
         artisans.push(artisan);
 
-        $row.children().eq(Consts.NAME_COL_IDX).html(artisan.name + Utils.countryFlagHtml(artisan.country));
-
-        if (artisan.areCommissionsOpen !== null) {
-            $row.children().eq(Consts.COMMISSIONS_COL_IDX).html(
-                artisan.areCommissionsOpen
-                    ? '<i class="fas fa-check-circle"></i> Open'
-                    : '<i class="fas fa-times-circle"></i> Closed');
-        }
+        processRowHtml($row, artisan);
     });
 
     initDataTable();

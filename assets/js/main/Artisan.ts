@@ -68,9 +68,9 @@ export default class Artisan {
 
     private static toBoolean(input?: string) {
         switch (input) {
-            case '1':
+            case 'open':
                 return true;
-            case '0':
+            case 'closed':
                 return false;
             default:
                 return null;
