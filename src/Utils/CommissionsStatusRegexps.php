@@ -29,7 +29,7 @@ class CommissionsStatusRegexps
     const FALSE_POSITIVES_REGEXES = [
         '(once|when) (WE_ARE STATUS for COMMISSIONS|COMMISSIONS are STATUS)',
         'will not be STATUS for COMMISSIONS',
-        'art COMMISSIONS: STATUS',
+        '(art|painted glass) COMMISSIONS: STATUS',
         'COMMISSIONS STATUS MONTHS',
     ];
     const GENERIC_REGEXES = [
