@@ -45,6 +45,7 @@ function getGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(618562986, artisan.youtubeUrl));
     dataItems.push(toDataItem(1355429885, artisan.commisionsQuotesCheckUrl));
     dataItems.push(toDataItem(1671817601, artisan.notes));
+    dataItems.push('entry.1898509469=Yes, I\'m not on the list yet, or I used the update link');
 
     // TODO: get form link form czpcz
     return 'https://docs.google.com/forms/d/e/1FAIpQLScjKIP1B2zrLi1TkA0QLDGuPaPM5GkYFbd6jw8etd4h0zDHPg/viewform?usp=pp_url&' + dataItems.join('&');
@@ -53,7 +54,7 @@ function getGoogleFormPrefilledUrl(artisan) {
 export function updateUpdateRequestData(divId, artisan) {
     $(`#${divId} .twitterUrl`).attr('href', 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent(artisan.name) + '%20(please%20describe%20details)&tw_p=tweetbutton');
 
-    $(`#${divId} .googleFromUrl`).attr('href', getGoogleFormPrefilledUrl(artisan));
+    $(`#${divId} .googleFormUrl`).attr('href', getGoogleFormPrefilledUrl(artisan));
 }
 
 export function countryFlagHtml(country) {
