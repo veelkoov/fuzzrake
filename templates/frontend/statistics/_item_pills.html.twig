@@ -1,13 +1,21 @@
 <p class="item-pills">
     {% for item, count in items %}
-        <span class="badge badge-secondary p-2 my-1">
-            {%- if count matches '/^\\d+$/' -%}
-                {{- item -}}
-            {%- else -%}
-                {{- count -}}
-            {%- endif -%}
+        {% include 'frontend/statistics/_item_pill.html.twig' %}
+    {% endfor %}
 
-            {%- if count > 1 %} ({{ count }}x){% endif -%}
-        </span>
+    {% for matchWord in matchWords %}
+        {% set itemsFiltered = items|filterKeysMatching(matchWord) %}
+
+        {% if itemsFiltered|length > 1 %}
+            <br />
+
+            <span class="badge badge-primary p-2 my-1">
+                {{ matchWord|humanFriendlyRegexp }} ({{ itemsFiltered|length }}&times;):
+            </span>
+
+            {% for item, count in itemsFiltered %}
+                {% include 'frontend/statistics/_item_pill.html.twig' %}
+            {% endfor %}
+        {% endif %}
     {% endfor %}
 </p>

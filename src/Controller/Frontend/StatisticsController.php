@@ -14,6 +14,34 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class StatisticsController extends AbstractController
 {
+    const MATCH_WORDS = [
+        'part(?!ial)s?|elements?',
+        'props?',
+        'remove?able',
+        'pose?able',
+        'bendable',
+        'change?able',
+        'brush',
+        'details?',
+        'pads?',
+        'sleeves?',
+        'claws?',
+        'eyes?',
+        'noses?',
+        'ears?',
+        'paws?',
+        'jaw|muzzle',
+        '(?<!de)tail',
+        'wings?',
+        'sneakers|sandals|feet',
+        '(?<![a-z])(LCD|LED|EL)(?![a-z])',
+        'plush',
+        'pocket',
+        'accessor',
+        'blanks?',
+        'bases?',
+    ];
+
     /**
      * @Route("/statistics.html", name="statistics")
      *
@@ -39,6 +67,7 @@ class StatisticsController extends AbstractController
             'features' => $this->prepareTableData($features),
             'otherFeatures' => $this->prepareListData($otherFeatures),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
+            'matchWords' => self::MATCH_WORDS,
         ]);
     }
 

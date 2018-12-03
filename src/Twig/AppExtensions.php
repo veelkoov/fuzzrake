@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Twig;
 
 use App\Repository\ArtisanRepository;
@@ -28,6 +30,8 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
+            new TwigFilter('filterKeysMatching', [$this, 'filterKeysMatchingFilter']),
+            new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
         ];
     }
 
@@ -62,7 +66,7 @@ class AppExtensions extends AbstractExtension
         }
     }
 
-    public function sinceFilter($input)
+    public function sinceFilter(string $input): string
     {
         if ('' === $input) {
             return '';
@@ -73,5 +77,27 @@ class AppExtensions extends AbstractExtension
         }
 
         return self::MONTHS[(int) $zapałki['month']].' '.$zapałki['year'];
+    }
+
+    public function filterKeysMatchingFilter(array $input, string $matchWord): array
+    {
+        array_walk($input, function (string &$count, string $item) use ($matchWord) {
+            if (0 === preg_match("#$matchWord#i", $item)) {
+                $count = 0;
+            }
+        });
+
+        return array_filter($input);
+    }
+
+    public function filterHumanFriendlyRegexp(string $input): string
+    {
+        $input = preg_replace('#\(\?<!.+?\)#', '', $input);
+        $input = preg_replace('#\(\?!.+?\)#', '', $input);
+        $input = preg_replace('#\([^a-z]+?\)#i', '', $input);
+        $input = preg_replace('#[()?]#', '', $input);
+        $input = preg_replace('#\[.+?\]#', '', $input);
+
+        return strtoupper($input);
     }
 }

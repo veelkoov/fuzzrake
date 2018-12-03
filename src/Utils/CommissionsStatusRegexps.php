@@ -14,7 +14,7 @@ class CommissionsStatusRegexps
     const COMMON_REPLACEMENTS = [
         'COMMISSIONS' => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?)',
         'OPEN' => '(open(?!ing)|(?!not? |aren\'t |are not? )(accepting|considering)|WE_CAN take)',
-        'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open)',
+        'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
         'fursuits' => 'fursuits?',
         '</div>' => ' ?</div> ?',
         '<div>' => ' ?<div( class="[^"]*")?> ?',
@@ -29,7 +29,7 @@ class CommissionsStatusRegexps
     const FALSE_POSITIVES_REGEXES = [
         '(once|when) (WE_ARE STATUS for COMMISSIONS|COMMISSIONS are STATUS)',
         'will not be STATUS for COMMISSIONS',
-        'art COMMISSIONS: STATUS',
+        '(art|painted glass) COMMISSIONS: STATUS',
         'COMMISSIONS STATUS MONTHS',
     ];
     const GENERIC_REGEXES = [
