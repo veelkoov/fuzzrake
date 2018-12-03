@@ -1,0 +1,5 @@
+<span class="badge badge-{{ count > 1 ? 'success' : 'secondary' }} p-2 my-1">
+    {{- item -}}
+
+    {%- if count > 1 %} ({{ count }}&times;){% endif -%}
+</span>
