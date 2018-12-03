@@ -45,6 +45,7 @@ function getGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(618562986, artisan.youtubeUrl));
     dataItems.push(toDataItem(1355429885, artisan.commisionsQuotesCheckUrl));
     dataItems.push(toDataItem(1671817601, artisan.notes));
+    dataItems.push(toDataItem(725071599, artisan.intro));
     dataItems.push('entry.1898509469=Yes, I\'m not on the list yet, or I used the update link');
 
     // TODO: get form link form czpcz
