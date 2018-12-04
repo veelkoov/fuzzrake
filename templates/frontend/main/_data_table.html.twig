@@ -2,6 +2,7 @@
     <thead class="thead-dark">
     <tr>
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
+        <th class="hidden">Completeness</th>
         <th class="hidden">Formerly</th>
         <th class="hidden">Intro</th>
         <th class="hidden">Since</th>
@@ -38,6 +39,9 @@
             {%- spaceless %}
                 <td class="name" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
+                </td>
+                <td class="hidden">
+                    {{- artisan.completeness -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.formerly -}}

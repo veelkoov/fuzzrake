@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utils\CompletenessCalc;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -499,5 +500,30 @@ class Artisan implements \JsonSerializable
         $this->intro = $intro;
 
         return $this;
+    }
+
+    public function completeness(): ?int
+    {
+        return (new CompletenessCalc())
+            // Name not counted - makes no sense
+            // Formerly not counted - small minority has changed their names
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
+            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
+            ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
+                ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
+            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->types, $this->otherTypes)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
+            // FursuitReview not checked, because we can force makers to force their customers to write reviews
+            // ... shame...
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->websiteUrl, $this->deviantArtUrl, $this->furAffinityUrl,
+                $this->twitterUrl, $this->facebookUrl, $this->tumblrUrl, $this->instagramUrl, $this->youtubeUrl)
+            // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
+            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
+            // FIXME: Queue not yet checked; planned feature
+            // Notes are not supposed to be displayed, thus not counted
+            ->result();
     }
 }

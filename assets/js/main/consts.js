@@ -3,6 +3,7 @@
 let idx = 0;
 
 export const NAME_COL_IDX = idx++;
+export const COMPLETENESS_COL_IDX = idx++;
 export const FORMERLY_COL_IDX = idx++;
 export const INTRO_COL_IDX = idx++;
 export const SINCE_COL_IDX = idx++;

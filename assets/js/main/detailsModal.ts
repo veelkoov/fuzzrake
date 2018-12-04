@@ -63,6 +63,20 @@ function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLas
     $('#statusParsingFailed').toggle(parsingFailed);
 }
 
+function getCompletenessComment(completeness: number): string {
+    if (completeness === 100) {
+        return 'Awesome! <i class="fas fa-heart"></i>';
+    } else if (completeness >= 90) {
+        return 'Great!'
+    } else if (completeness >= 75) {
+        return 'Good job!'
+    } else if (completeness >= 50) {
+        return 'Some updates might be helpful...';
+    } else {
+        return 'Yikes! :( Updates needed!'
+    }
+}
+
 function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanName').html(artisan.name + Utils.countryFlagHtml(artisan.country));
     $('#artisanShortInfo').html(formatShortInfo(artisan.state, artisan.city, artisan.since, artisan.formerly));
@@ -71,6 +85,8 @@ function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanFeatures').html(htmlListFromArrays(artisan.features, artisan.otherFeatures));
     $('#artisanLinks').empty().append(formatLinks(Utils.getLinks$(artisan)));
     $('#artisanIntro').html(artisan.intro).toggle(artisan.intro !== '');
+    $('#artisanCompleteness').html(artisan.completeness.toString());
+    $('#artisanCompletenessComment').html(getCompletenessComment(artisan.completeness));
 
     updateCommissionsStatusFromArtisanRowData(artisan.areCommissionsOpen, artisan.commissionsQuotesLastCheck,
         artisan.commisionsQuotesCheckUrl);

@@ -2,6 +2,7 @@ import * as Consts from './consts';
 
 export default class Artisan {
     constructor(readonly name: string,
+                readonly completeness: number,
                 readonly formerly: string,
                 readonly intro: string,
                 readonly since: string,
@@ -33,6 +34,7 @@ export default class Artisan {
     static fromArray(cells: string[]): Artisan {
         return new Artisan(
             cells[Consts.NAME_COL_IDX],
+            parseInt(cells[Consts.COMPLETENESS_COL_IDX]),
             cells[Consts.FORMERLY_COL_IDX],
             cells[Consts.INTRO_COL_IDX],
             cells[Consts.SINCE_COL_IDX],
