@@ -39,14 +39,14 @@ function htmlListFromArrays(list: String[], other: String[]) {
 }
 
 function updateCommissionsStatusFromArtisanRowData(commissionsStatusData, cstLastCheck, cstUrl) {
-    let commissionsStatus = commissionsStatusData === '' ? 'unknown' : commissionsStatusData ? 'open' : 'closed';
+    let commissionsStatus = commissionsStatusData === null ? 'unknown' : commissionsStatusData ? 'open' : 'closed';
     let description;
     let parsingFailed = false;
 
     if (cstUrl === '') {
         description = `Commissions are <strong>${commissionsStatus}</strong>. Status is not automatically
                         tracked and updated. <a href="${TRACKING_URL}">Learn more</a>`;
-    } else if (commissionsStatusData === '') {
+    } else if (commissionsStatusData === null) {
         description = `Commissions status is unknown. It should be tracked and updated automatically from
                         this web page: <a href="${cstUrl}">${cstUrl}</a>, however the software failed to
                         "understand" the status based on the page contents. Last time it tried
