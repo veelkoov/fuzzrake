@@ -41,7 +41,7 @@ class RegexpFactory
         $result = $regexp;
 
         foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $needle => $replacement) {
-            $result = str_replace($needle, $replacement, $result);
+            $result = preg_replace("#$needle#", $replacement, $result);
         }
 
         return "#$result#s";
