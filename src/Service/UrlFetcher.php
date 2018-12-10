@@ -28,7 +28,7 @@ class UrlFetcher
     const DELAY_FOR_HOST_SEC = 5;
     const CONNECTION_TIMEOUT_SEC = 10;
 
-    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.4; +http://getfursu.it/)';
+    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.5; +http://getfursu.it/)';
 
     public function __construct(string $projectDir)
     {
@@ -145,6 +145,7 @@ class UrlFetcher
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTION_TIMEOUT_SEC);
+        curl_setopt($ch, CURLOPT_ACCEPT_ENCODING, 'identity');
 
         if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
             curl_setopt($ch, CURLOPT_COOKIE, $_ENV['FA_COOKIE']);
