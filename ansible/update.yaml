@@ -31,7 +31,7 @@
         to_port: 22
         cidr_ip: "{{ ip_output.stdout_lines[0] }}/32"
 
-  - set_fact: db_params={{ lookup('ini', 'DATABASE_URL type=properties file=../.env')|urlsplit }}
+  - set_fact: db_params={{ lookup('ini', 'DATABASE_URL type=properties file=../.env.local')|urlsplit }}
 
   - block:
     - tempfile:

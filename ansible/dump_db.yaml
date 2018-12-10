@@ -4,7 +4,7 @@
     db_dump_file_path: ../db_dump/artisans.sql
 
   tasks:
-    - set_fact: db_params={{ lookup('ini', 'DATABASE_URL type=properties file=../.env')|urlsplit }}
+    - set_fact: db_params={{ lookup('ini', 'DATABASE_URL type=properties file=../.env.local')|urlsplit }}
 
     - expect:
         command: mysqldump
