@@ -2,7 +2,7 @@
 
   vars:
     sed_mysql_args_regexp: s/DATABASE_URL=mysql:\/\/([^:]+):([^@]+)@([^:]+):([^\/]+)\/(.+)/-u \1 -p\2 -h \3 -P \4 \5/
-    remote_path: /var/www
+    remote_path: /var/www/prod
 
     sg_name: getfursu.it-backend
     vpc_id: vpc-6d051916
