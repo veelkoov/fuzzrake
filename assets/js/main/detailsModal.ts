@@ -97,7 +97,7 @@ function updateDetailsModalWithArtisanData(artisan: Artisan) {
 }
 
 export function init() {
-    $('#artisanDetailsModal').on('show.bs.modal', event => {
+    $('#artisanDetailsModal').on('show.bs.modal', function (event: any) {
         updateDetailsModalWithArtisanData($(event.relatedTarget).closest('tr').data('artisan'));
     });
 
