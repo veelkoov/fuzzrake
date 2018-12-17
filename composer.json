@@ -28,7 +28,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.13",
         "symfony/debug-pack": "*",
-        "symfony/maker-bundle": "^1.5",
+        "symfony/maker-bundle": "1.*",
         "symfony/phpunit-bridge": "4.2.*",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
