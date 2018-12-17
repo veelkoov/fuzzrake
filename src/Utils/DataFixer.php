@@ -20,6 +20,22 @@ class DataFixer
         'Mini partial (Head+handpaws+tail)' => 'Mini partial (head + handpaws + tail)',
     ];
 
+    const COUNTRIES_REPLACAMENTS = [
+        'argentina' => 'AR',
+        'belgium' => 'BE',
+        'canada' => 'CA',
+        'czech republic' => 'CZ',
+        'denmark' => 'DK',
+        'germany' => 'DE',
+        'uk|england|united kingdom' => 'GB',
+        'ireland' => 'IE',
+        'italia|italy' => 'IT',
+        '(the )?netherlands' => 'NL',
+        'russia' => 'RU',
+        'ukraine' => 'UA',
+        'united states|USA' => 'US',
+    ];
+
     /**
      * @var SymfonyStyle
      */
@@ -91,25 +107,9 @@ class DataFixer
 
     private function fixCountry(string $input): string
     {
-        $replacements = [
-            'ukraine' => 'UA',
-            'united states|USA' => 'US',
-            'argentina' => 'AR',
-            'belgium' => 'BE',
-            'canada' => 'CA',
-            'czech republic' => 'CZ',
-            'denmark' => 'DK',
-            'uk|england|united kingdom' => 'GB',
-            'germany' => 'DE',
-            'ireland' => 'IE',
-            'italia|italy' => 'IT',
-            '(the )?netherlands' => 'NL',
-            'russia' => 'RU',
-        ];
-
         $result = trim($input);
 
-        foreach ($replacements as $regexp => $replacement) {
+        foreach (self::COUNTRIES_REPLACAMENTS as $regexp => $replacement) {
             $result = preg_replace("#^$regexp$#i", $replacement, $result);
         }
 
@@ -162,7 +162,7 @@ class DataFixer
         $result = preg_replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/([^/?]+)/?(\?ref=[a-z_]+)?$#i',
             'https://www.facebook.com/$1/', trim($input));
 
-        $this->showDiff($input, $result, 'https://www.facebook.com/[^/]+/');
+        $this->showDiff($input, $result, 'https://www.facebook.com/([^/]+/|profile\.php\?id=\d+)');
 
         return $result;
     }
@@ -201,7 +201,7 @@ class DataFixer
         return $result;
     }
 
-    private function fixSince(string $input)
+    private function fixSince(string $input): string
     {
         $result = preg_replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
 
@@ -210,7 +210,7 @@ class DataFixer
         return $result;
     }
 
-    private function trim(string $input)
+    private function trim(string $input): string
     {
         $result = trim($input);
 
