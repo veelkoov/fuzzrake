@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AppTidyData extends Command
 {
-    protected static $defaultName = 'app:tidy-data';
+    protected static $defaultName = 'app:data:tidy';
 
     /**
      * @var ArtisanRepository
