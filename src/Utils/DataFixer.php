@@ -18,6 +18,7 @@ class DataFixer
         'Three-fourth (Head+handpaws+tail+legs/pants+feetpaws)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
         'Partial (Head+handpaws+tail+feetpaws)' => 'Partial (head + handpaws + tail + feetpaws)',
         'Mini partial (Head+handpaws+tail)' => 'Mini partial (head + handpaws + tail)',
+        '’' => "'",
     ];
 
     const COUNTRIES_REPLACAMENTS = [
@@ -51,7 +52,7 @@ class DataFixer
 
     public function fixArtisanData(Artisan $artisan): void
     {
-        $artisan->setName($this->trim($artisan->getName()));
+        $artisan->setName($this->fixString($artisan->getName()));
         $artisan->setSince($this->fixSince($artisan->getSince()));
 
         $artisan->setFeatures($this->fixList($artisan->getFeatures()));
@@ -213,6 +214,16 @@ class DataFixer
     private function trim(string $input): string
     {
         $result = trim($input);
+
+        $this->showDiff($input, $result);
+
+        return $result;
+    }
+
+    private function fixString(string $input): string
+    {
+        $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
+        $result = trim($result);
 
         $this->showDiff($input, $result);
 

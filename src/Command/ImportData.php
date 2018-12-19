@@ -55,7 +55,7 @@ class ImportData extends Command
         $this->dataImporter->import($this->arrayFromCsvFile($filePath));
 
         if (!$input->getOption('dry-run')) {
-//            $this->objectManager->flush();
+//            $this->objectManager->flush(); // FIXME
             $this->io->success('Finished and saved');
         } else {
             $this->io->success('Finished without saving');

@@ -8,69 +8,108 @@ class ArtisanMetadata
 {
     const IGNORED_IU_FORM_FIELD = ':ignore!';
 
-    const FIELDS = [
-        'TIMESTAMP' => self::IGNORED_IU_FORM_FIELD,
-        'CHECKBOX' => self::IGNORED_IU_FORM_FIELD,
-        'NAME' => 'name',
-        'FORMERLY' => 'formerly',
-        'SINCE' => 'since',
-        'COUNTRY' => 'country',
-        'STATE' => 'state',
-        'CITY' => 'city',
-        'PAYMENT_PLANS' => self::IGNORED_IU_FORM_FIELD,
-        'URL_PRICES' => self::IGNORED_IU_FORM_FIELD,
-        'PRODUCTION_MODEL' => self::IGNORED_IU_FORM_FIELD,
-        'STYLES' => 'styles',
-        'OTHER_STYLES' => 'otherStyles',
-        'ORDER_TYPES' => 'types',
-        'OTHER_ORDER_TYPES' => 'otherTypes',
-        'FEATURES' => 'features',
-        'OTHER_FEATURES' => 'otherFeatures',
-        'SPECIES_DOES' => self::IGNORED_IU_FORM_FIELD,
-        'SPECIES_DOESNT' => self::IGNORED_IU_FORM_FIELD,
-        'URL_FSR' => 'fursuitReviewUrl',
-        'URL_WEBSITE' => 'websiteUrl',
-        'URL_FAQ' => self::IGNORED_IU_FORM_FIELD,
-        'URL_QUEUE' => 'queueUrl',
-        'URL_FA' => 'furAffinityUrl',
-        'URL_DA' => 'deviantArtUrl',
-        'URL_TWITTER' => 'twitterUrl',
-        'URL_FACEBOOK' => 'facebookUrl',
-        'URL_TUMBLR' => 'tumblrUrl',
-        'URL_INSTAGRAM' => 'instagramUrl',
-        'URL_YOUTUBE' => 'youtubeUrl',
-        'URL_OTHER' => self::IGNORED_IU_FORM_FIELD,
-        'URL_CST' => 'commisionsQuotesCheckUrl',
-        'LANGUAGES' => self::IGNORED_IU_FORM_FIELD,
-        'MAKER_ID' => self::IGNORED_IU_FORM_FIELD,
-        'INTRO' => 'intro',
-        'NOTES' => 'notes',
-        'CONTACT_PERMIT' => self::IGNORED_IU_FORM_FIELD,
-        'CONTACT_METHOD' => self::IGNORED_IU_FORM_FIELD,
+    const TIMESTAMP = 'TIMESTAMP';
+    const CHECKBOX = 'CHECKBOX';
+    const NAME = 'NAME';
+    const FORMERLY = 'FORMERLY';
+    const SINCE = 'SINCE';
+    const COUNTRY = 'COUNTRY';
+    const STATE = 'STATE';
+    const CITY = 'CITY';
+    const PAYMENT_PLANS = 'PAYMENT_PLANS';
+    const URL_PRICES = 'URL_PRICES';
+    const PRODUCTION_MODEL = 'PRODUCTION_MODEL';
+    const STYLES = 'STYLES';
+    const OTHER_STYLES = 'OTHER_STYLES';
+    const ORDER_TYPES = 'ORDER_TYPES';
+    const OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
+    const FEATURES = 'FEATURES';
+    const OTHER_FEATURES = 'OTHER_FEATURES';
+    const SPECIES_DOES = 'SPECIES_DOES';
+    const SPECIES_DOESNT = 'SPECIES_DOESNT';
+    const URL_FSR = 'URL_FSR';
+    const URL_WEBSITE = 'URL_WEBSITE';
+    const URL_FAQ = 'URL_FAQ';
+    const URL_QUEUE = 'URL_QUEUE';
+    const URL_FA = 'URL_FA';
+    const URL_DA = 'URL_DA';
+    const URL_TWITTER = 'URL_TWITTER';
+    const URL_FACEBOOK = 'URL_FACEBOOK';
+    const URL_TUMBLR = 'URL_TUMBLR';
+    const URL_INSTAGRAM = 'URL_INSTAGRAM';
+    const URL_YOUTUBE = 'URL_YOUTUBE';
+    const URL_OTHER = 'URL_OTHER';
+    const URL_CST = 'URL_CST';
+    const LANGUAGES = 'LANGUAGES';
+    const MAKER_ID = 'MAKER_ID';
+    const INTRO = 'INTRO';
+    const NOTES = 'NOTES';
+    const CONTACT_PERMIT = 'CONTACT_PERMIT';
+    const CONTACT_METHOD = 'CONTACT_METHOD';
+
+    const IU_FORM_TO_MODEL_FIELDS_MAP = [
+        self::TIMESTAMP => self::IGNORED_IU_FORM_FIELD,
+        self::CHECKBOX => self::IGNORED_IU_FORM_FIELD,
+        self::NAME => 'name',
+        self::FORMERLY => 'formerly',
+        self::SINCE => 'since',
+        self::COUNTRY => 'country',
+        self::STATE => 'state',
+        self::CITY => 'city',
+        self::PAYMENT_PLANS => self::IGNORED_IU_FORM_FIELD,
+        self::URL_PRICES => self::IGNORED_IU_FORM_FIELD,
+        self::PRODUCTION_MODEL => self::IGNORED_IU_FORM_FIELD,
+        self::STYLES => 'styles',
+        self::OTHER_STYLES => 'otherStyles',
+        self::ORDER_TYPES => 'types',
+        self::OTHER_ORDER_TYPES => 'otherTypes',
+        self::FEATURES => 'features',
+        self::OTHER_FEATURES => 'otherFeatures',
+        self::SPECIES_DOES => self::IGNORED_IU_FORM_FIELD,
+        self::SPECIES_DOESNT => self::IGNORED_IU_FORM_FIELD,
+        self::URL_FSR => 'fursuitReviewUrl',
+        self::URL_WEBSITE => 'websiteUrl',
+        self::URL_FAQ => self::IGNORED_IU_FORM_FIELD,
+        self::URL_QUEUE => 'queueUrl',
+        self::URL_FA => 'furAffinityUrl',
+        self::URL_DA => 'deviantArtUrl',
+        self::URL_TWITTER => 'twitterUrl',
+        self::URL_FACEBOOK => 'facebookUrl',
+        self::URL_TUMBLR => 'tumblrUrl',
+        self::URL_INSTAGRAM => 'instagramUrl',
+        self::URL_YOUTUBE => 'youtubeUrl',
+        self::URL_OTHER => self::IGNORED_IU_FORM_FIELD,
+        self::URL_CST => 'commisionsQuotesCheckUrl',
+        self::LANGUAGES => self::IGNORED_IU_FORM_FIELD,
+        self::MAKER_ID => self::IGNORED_IU_FORM_FIELD,
+        self::INTRO => 'intro',
+        self::NOTES => 'notes',
+        self::CONTACT_PERMIT => self::IGNORED_IU_FORM_FIELD,
+        self::CONTACT_METHOD => self::IGNORED_IU_FORM_FIELD,
     ];
 
-    private static $uiFormIndexes = [];
+    private static $uiFormFieldIndexes = [];
 
-    public static function uiFormIdx(string $fieldName): int
+    public static function uiFormFieldIndexByName(string $fieldName): int
     {
         return self::getUiFormIndexes()[$fieldName];
     }
 
     private static function getUiFormIndexes()
     {
-        if (empty(self::$uiFormIndexes)) {
-            self::initUiFormIndexesArray();
+        if (empty(self::$uiFormFieldIndexes)) {
+            self::initUiFormFieldIndexesArray();
         }
 
-        return self::$uiFormIndexes;
+        return self::$uiFormFieldIndexes;
     }
 
-    private static function initUiFormIndexesArray()
+    private static function initUiFormFieldIndexesArray()
     {
         $i = 0;
 
-        foreach (self::FIELDS as $fieldName => $_) {
-            self::$uiFormIndexes[$fieldName] = $i++;
+        foreach (self::IU_FORM_TO_MODEL_FIELDS_MAP as $fieldName => $_) {
+            self::$uiFormFieldIndexes[$fieldName] = $i++;
         }
     }
 }
