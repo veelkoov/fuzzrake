@@ -73,11 +73,25 @@ class ImportData extends Command
         return $this->arrayFromCsvString($fileContents);
     }
 
-    private function arrayFromCsvString(string $input): array
+    private function arrayFromCsvString(string $csvString): array
     {
-        return array_map(function ($item) {
-            return str_getcsv($item, ',', '"', '\'');
-        }, array_filter(explode("\n", $input)));
+        $fileHandle = $this->getTmpFileWithContents($csvString);
+
+        $result = $this->arrayFromCsvFileHandle($fileHandle);
+        array_shift($result); // Drop header
+
+        fclose($fileHandle);
+
+        return $result;
+    }
+
+    private function arrayFromCsvFileHandle($fileHandle): array
+    {
+        $result = [];
+        while (false !== ($cols = fgetcsv($fileHandle, 0, ',', '"', '"'))) {
+            $result[] = $cols;
+        }
+        return $result;
     }
 
     private function readOnlyFileInZip(string $filePath): string
@@ -100,5 +114,14 @@ class ImportData extends Command
         }
 
         return $result;
+    }
+
+    private function getTmpFileWithContents(string $contents)
+    {
+        $handle = fopen('php://temp', 'r+');
+        fwrite($handle, $contents);
+        rewind($handle);
+
+        return $handle;
     }
 }
