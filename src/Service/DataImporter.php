@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
+use App\Utils\ArtisanMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class DataImporter
@@ -25,15 +27,26 @@ class DataImporter
         $this->objectManager = $objectManager;
     }
 
-    public function import(array $arrayFromCsvFile): void
+    public function import(array $artisansData): void
     {
-        foreach ($arrayFromCsvFile as $arrayRow) {
-            $this->importSingle($arrayRow);
+        foreach ($artisansData as $artisanData) {
+            $this->importSingle($artisanData);
         }
     }
 
-    private function importSingle(array $arrayRow): void
+    private function importSingle(array $artisanData): void
     {
-        var_dump($arrayRow);
+        $artisan = new Artisan();
+        $this->updateArtisanWithData($artisan, $artisanData);
+        var_dump($artisan);
+    }
+
+    private function updateArtisanWithData(Artisan $artisan, array $newData): void
+    {
+        foreach (ArtisanMetadata::FIELDS as $fieldName => $modelFieldName) {
+            if ($modelFieldName !== ArtisanMetadata::IGNORED_IU_FORM_FIELD) {
+                $artisan->set($modelFieldName, $newData[ArtisanMetadata::uiFormIdx($fieldName)]);
+            }
+        }
     }
 }

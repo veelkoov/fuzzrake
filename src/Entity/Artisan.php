@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Utils\CompletenessCalc;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
@@ -505,5 +506,18 @@ class Artisan
             // FIXME: Queue not yet checked; planned feature
             // Notes are not supposed to be displayed, thus not counted
             ->result();
+    }
+
+    public function set(string $fieldName, $newValue): self
+    {
+        if (!property_exists(self::class, $fieldName)) {
+            throw new InvalidArgumentException("Field $fieldName does not exist");
+        }
+
+        $setter = 'set' . ucfirst($fieldName);
+
+        call_user_func([$this, $setter], $newValue);
+
+        return $this;
     }
 }
