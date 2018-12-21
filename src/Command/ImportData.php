@@ -52,7 +52,7 @@ class ImportData extends Command
             return 1;
         }
 
-        $this->dataImporter->import($this->arrayFromCsvFile($filePath));
+        $this->dataImporter->import($this->arrayFromCsvFile($filePath), $this->io);
 
         if (!$input->getOption('dry-run')) {
 //            $this->objectManager->flush(); // FIXME

@@ -520,4 +520,15 @@ class Artisan
 
         return $this;
     }
+
+    public function get(string $fieldName)
+    {
+        if (!property_exists(self::class, $fieldName)) {
+            throw new InvalidArgumentException("Field $fieldName does not exist");
+        }
+
+        $getter = 'get' . ucfirst($fieldName);
+
+        return call_user_func([$this, $getter]);
+    }
 }

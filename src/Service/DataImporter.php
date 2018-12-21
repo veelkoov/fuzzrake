@@ -6,8 +6,11 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
+use App\Utils\ArtisanImport;
 use App\Utils\ArtisanMetadata;
+use App\Utils\DataFixer;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImporter
 {
@@ -21,35 +24,68 @@ class DataImporter
      */
     private $objectManager;
 
+    /**
+     * @var DataFixer
+     */
+    private $dataFixer;
+
+    /**
+     * @var DataDiffer
+     */
+    private $dataDiffer;
+
     public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
     {
         $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
     }
 
-    public function import(array $artisansData): void
+    public function import(array $artisansData, SymfonyStyle $io): void
     {
-        foreach ($artisansData as $artisanData) {
-            $this->importSingle($artisanData);
-        }
+        $this->dataFixer = new DataFixer($io);
+        $this->dataDiffer = new DataDiffer($io);
+
+        $imports = $this->performImports($artisansData);
+
+        $io->title('Showing import data before/after fixing');
+        $this->showFixedImportedData($imports);
+        $io->title('Showing artisans data before/after fixing');
+        $this->showUpdatedArtisans($imports);
     }
 
-    private function importSingle(array $artisanData): void
+    private function performImports(array $artisansData)
     {
-        $artisan = $this->findBestMatchArtisan($artisanData) ?: new Artisan();
-
-        $this->updateArtisanWithData($artisan, $artisanData);
-
-        $this->objectManager->persist($artisan);
+        return array_map(function(array $artisanData) {
+            return $this->performImport($artisanData);
+        }, $artisansData);
     }
 
-    private function updateArtisanWithData(Artisan $artisan, array $newData): void
+    private function performImport(array $artisanData): ArtisanImport
+    {
+        $artisanImport = new ArtisanImport();
+
+        $artisanImport->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
+        $artisanImport->setOriginalArtisan(clone $artisanImport->getUpsertedArtisan());
+        $this->dataFixer->fixArtisanData($artisanImport->getUpsertedArtisan());
+
+        $artisanImport->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $artisanData));
+        $artisanImport->setNewFixedData(clone $artisanImport->getNewOriginalData());
+        $this->dataFixer->fixArtisanData($artisanImport->getNewFixedData());
+
+        $this->objectManager->persist($artisanImport->getUpsertedArtisan());
+
+        return $artisanImport;
+    }
+
+    private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
     {
         foreach (ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP as $fieldName => $modelFieldName) {
             if ($modelFieldName !== ArtisanMetadata::IGNORED_IU_FORM_FIELD) {
                 $artisan->set($modelFieldName, $newData[ArtisanMetadata::uiFormFieldIndexByName($fieldName)]);
             }
         }
+
+        return $artisan;
     }
 
     private function findBestMatchArtisan(array $artisanData): ?Artisan
@@ -64,5 +100,25 @@ class DataImporter
         }
 
         return array_pop($results);
+    }
+
+    /**
+     * @param ArtisanImport[] $imports
+     */
+    private function showFixedImportedData(array $imports): void
+    {
+        foreach ($imports as $import) {
+            $this->dataDiffer->showDiff($import->getNewOriginalData(), $import->getNewFixedData());
+        }
+    }
+
+    /**
+     * @param ArtisanImport[] $imports
+     */
+    private function showUpdatedArtisans(array $imports): void
+    {
+        foreach ($imports as $import) {
+            $this->dataDiffer->showDiff($import->getOriginalArtisan(), $import->getNewFixedData());
+        }
     }
 }

@@ -89,13 +89,23 @@ class ArtisanMetadata
     ];
 
     private static $uiFormFieldIndexes = [];
+    private static $modelFieldNames = [];
 
     public static function uiFormFieldIndexByName(string $fieldName): int
     {
         return self::getUiFormIndexes()[$fieldName];
     }
 
-    private static function getUiFormIndexes()
+    public static function getModelFieldNames(): array
+    {
+        if (empty(self::$modelFieldNames)) {
+            self::initModelFieldNamesArray();
+        }
+
+        return self::$modelFieldNames;
+    }
+
+    private static function getUiFormIndexes(): array
     {
         if (empty(self::$uiFormFieldIndexes)) {
             self::initUiFormFieldIndexesArray();
@@ -104,12 +114,21 @@ class ArtisanMetadata
         return self::$uiFormFieldIndexes;
     }
 
-    private static function initUiFormFieldIndexesArray()
+    private static function initUiFormFieldIndexesArray(): void
     {
         $i = 0;
 
         foreach (self::IU_FORM_TO_MODEL_FIELDS_MAP as $fieldName => $_) {
             self::$uiFormFieldIndexes[$fieldName] = $i++;
+        }
+    }
+
+    private static function initModelFieldNamesArray(): void
+    {
+        foreach (self::IU_FORM_TO_MODEL_FIELDS_MAP as $_ => $modelFieldName) {
+            if ($modelFieldName !== ArtisanMetadata::IGNORED_IU_FORM_FIELD) {
+                self::$modelFieldNames[] = $modelFieldName;
+            }
         }
     }
 }
