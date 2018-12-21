@@ -61,7 +61,7 @@ class DataDiffer
                 $new->getFormerly(),
             ]));
 
-            $this->io->section(implode('/', $names));
+            $this->io->section(implode(' / ', $names));
 
             $nameShown = true;
         }
