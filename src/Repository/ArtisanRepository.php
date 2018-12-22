@@ -76,7 +76,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOtherTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherTypes', ';');
+        return $this->getDistinctItemsWithCountFromJoined('otherTypes');
     }
 
     public function getDistinctStyles(): array
@@ -86,7 +86,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOtherStyles(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherStyles', ';');
+        return $this->getDistinctItemsWithCountFromJoined('otherStyles');
     }
 
     public function getDistinctFeatures(): array
@@ -96,10 +96,10 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOtherFeatures(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherFeatures', ';');
+        return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, string $separator = ','): array
+    private function getDistinctItemsWithCountFromJoined(string $columnName, string $separator = "\n"): array
     {
         $dbResult = $this->createQueryBuilder('a')
             ->select("a.$columnName AS items")
