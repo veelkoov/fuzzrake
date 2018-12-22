@@ -58,6 +58,9 @@ class DataFixer
         $artisan->setFeatures($this->fixList($artisan->getFeatures()));
         $artisan->setStyles($this->fixList($artisan->getStyles()));
         $artisan->setTypes($this->fixList($artisan->getTypes()));
+        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures()));
+        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles()));
+        $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes()));
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
         $artisan->setState($this->trim($artisan->getState()));
         $artisan->setCity($this->trim($artisan->getCity()));
@@ -95,13 +98,13 @@ class DataFixer
     private function fixList(string $input): string
     {
         $cslist = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
-        $list = preg_split('#[;,\n]#', $cslist);
+        $list = preg_split('#[;\n]#', $cslist);
         $list = array_map('trim', $list);
         $list = array_filter($list);
         sort($list);
-        $result = implode(', ', $list);
+        $result = implode("\n", $list);
 
-        $this->showDiff($input, $result);
+        $this->showDiff($input, $result, '[-,&!.A-Za-z0-9+()/\n %:"\']*');
 
         return $result;
     }
