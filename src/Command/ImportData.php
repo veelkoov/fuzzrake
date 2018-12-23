@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Service\DataImporter;
 use App\Utils\ImportCorrector;
+use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,9 +30,15 @@ class ImportData extends Command
      */
     private $dataImporter;
 
-    public function __construct(DataImporter $dataImporter)
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
+    public function __construct(DataImporter $dataImporter, ObjectManager $objectManager)
     {
         $this->dataImporter = $dataImporter;
+        $this->objectManager = $objectManager;
 
         parent::__construct();
     }
@@ -51,7 +58,7 @@ class ImportData extends Command
             $this->getImportCorrector($input->getArgument('corrections-file')), $this->io);
 
         if ($input->getOption('commit')) {
-//            $this->objectManager->flush(); // FIXME
+            $this->objectManager->flush();
             $this->io->success('Finished and saved');
         } else {
             $this->io->success('Finished without saving');

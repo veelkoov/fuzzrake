@@ -24,6 +24,7 @@ class DataFixer
 
     const COUNTRIES_REPLACAMENTS = [
         'argentina' => 'AR',
+        'australia' => 'AU',
         'belgium' => 'BE',
         'canada' => 'CA',
         'czech republic' => 'CZ',
@@ -89,7 +90,7 @@ class DataFixer
             $fieldValue = $artisan->get(ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP[$fieldName]);
 
             if (!preg_match($validationRegexp, $fieldValue)) {
-                $this->io->writeln("{$fieldName}:::<wrong>{$fieldValue}</>:ABCDEFGHIJ:");
+                $this->io->writeln("{$fieldName}:|:<wrong>{$fieldValue}</>|ABCDEFGHIJ|");
             }
         }
     }
@@ -119,7 +120,7 @@ class DataFixer
 
     private function fixFurAffinityUrl(string $input): string
     {
-        return preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/)?([^/]+)/?$#i',
+        return preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$#i',
             'http://www.furaffinity.net/user/$1', trim($input));
     }
 

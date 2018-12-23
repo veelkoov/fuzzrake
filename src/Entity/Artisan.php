@@ -35,7 +35,7 @@ class Artisan
     private $formerly;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=511)
      */
     private $intro;
 
@@ -90,7 +90,7 @@ class Artisan
     private $features;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=1023)
      */
     private $otherFeatures;
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use UnexpectedValueException;
+
 class StringBuffer
 {
     private $buffer;

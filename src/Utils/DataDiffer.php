@@ -34,8 +34,8 @@ class DataDiffer
 
     private function showSingleFieldDiff(bool &$nameShown, string $fieldName, Artisan $old, Artisan $new): void
     {
-        $newVal = $new->get($fieldName);
-        $oldVal = $old->get($fieldName);
+        $newVal = $new->get($fieldName) ?: '';
+        $oldVal = $old->get($fieldName) ?: '';
 
         if ($oldVal !== $newVal) {
             $this->showNameFirstTime($nameShown, $old, $new);
