@@ -124,8 +124,10 @@ function clonePrimaryLinksForDropdown($links) {
     return result;
 }
 
-function appendOther($row: any, otherStyles: string[], columnIndex: number) {
-    if (otherStyles.length > 0) {
+function processList($row: any, otherItems: string[], columnIndex: number) {
+    $row.children().eq(columnIndex).html((index, oldHtml) => oldHtml.toString().replace(/\n/g, ', '));
+
+    if (otherItems.length > 0) {
         $row.children().eq(columnIndex).html((index, oldHtml) => `${oldHtml}${oldHtml ? ', ' : ''}Other`);
     }
 }
@@ -140,9 +142,9 @@ function processRowHtml($row: any, artisan: Artisan): void {
                 : '<i class="fas fa-times-circle"></i> Closed');
     }
 
-    appendOther($row, artisan.otherStyles, Consts.STYLES_COL_IDX);
-    appendOther($row, artisan.otherTypes, Consts.TYPES_COL_IDX);
-    appendOther($row, artisan.otherFeatures, Consts.FEATURES_COL_IDX);
+    processList($row, artisan.otherStyles, Consts.STYLES_COL_IDX);
+    processList($row, artisan.otherTypes, Consts.TYPES_COL_IDX);
+    processList($row, artisan.otherFeatures, Consts.FEATURES_COL_IDX);
 
     $row.children().eq(Consts.LINKS_COL_IDX).html(`
         <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
