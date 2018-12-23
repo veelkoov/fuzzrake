@@ -89,12 +89,13 @@ class ArtisanMetadata
     ];
 
     const LIST_VALIDATION_REGEXP = '#^[-,&!.A-Za-z0-9+()/\n %:"\']*$#';
+    const GENERIC_URL_REGEXP = '#^(https?://[^/]+/.*)?$#'; // TODO: improve
 
     const MODEL_FIELDS_VALIDATION_REGEXPS = [
         self::NAME => '#^.+$#',
         self::FORMERLY => '#^.*$#',
         self::SINCE => '#^(\d{4}-\d{2})?$#',
-        self::COUNTRY => '#^[A-Z]{2}$#',
+        self::COUNTRY => '#^([A-Z]{2})?$#',
         self::STATE => '#^.*$#',
         self::CITY => '#^.*$#',
         self::STYLES => self::LIST_VALIDATION_REGEXP,
@@ -103,9 +104,9 @@ class ArtisanMetadata
         self::OTHER_ORDER_TYPES => self::LIST_VALIDATION_REGEXP,
         self::FEATURES => self::LIST_VALIDATION_REGEXP,
         self::OTHER_FEATURES => self::LIST_VALIDATION_REGEXP,
-//        self::URL_FSR => 'fursuitReviewUrl', // TODO: define
-//        self::URL_WEBSITE => 'websiteUrl', // TODO: define
-//        self::URL_QUEUE => 'queueUrl', // TODO: define
+        self::URL_FSR => '#^(http://fursuitreview.com/maker/[^/]+/)?$#',
+        self::URL_WEBSITE => self::GENERIC_URL_REGEXP,
+        self::URL_QUEUE => self::GENERIC_URL_REGEXP,
         self::URL_FA => '#^(http://www\.furaffinity\.net/user/[^/]+)?$#',
         self::URL_DA => '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#',
         self::URL_TWITTER => '#(^https://twitter\.com/[^/]+$)?#',
@@ -113,7 +114,7 @@ class ArtisanMetadata
         self::URL_TUMBLR => '#(^https?://[^.]+\.tumblr\.com/$)?#',
         self::URL_INSTAGRAM => '#(^https://www\.instagram\.com/[^/]+/$)?#',
         self::URL_YOUTUBE => '#(^https://www\.youtube\.com/(channel|user|c)/[^/?]+$)?#',
-//        self::URL_CST => 'commisionsQuotesCheckUrl', // TODO: define
+        self::URL_CST => self::GENERIC_URL_REGEXP,
         self::INTRO => '#^.*$#',
         self::NOTES => '#.*#',
     ];

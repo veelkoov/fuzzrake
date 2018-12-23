@@ -50,7 +50,7 @@ class DataFixer
         $this->io = $io;
     }
 
-    public function fixArtisanData(Artisan $artisan): void
+    public function fixArtisanData(Artisan $artisan): Artisan
     {
         $artisan->setName($this->fixString($artisan->getName()));
         $artisan->setSince($this->fixSince($artisan->getSince()));
@@ -74,7 +74,10 @@ class DataFixer
         $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
 
+        $artisan->setIntro($this->fixString($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
+
+        return $artisan;
     }
 
     public function validateArtisanData(Artisan $artisan): void
@@ -173,6 +176,9 @@ class DataFixer
 
     private function fixString(string $input): string
     {
-        return trim(str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input));
+        $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
+        $result = preg_replace('#[ \t]{2,}#', ' ', $result);
+
+        return trim($result);
     }
 }

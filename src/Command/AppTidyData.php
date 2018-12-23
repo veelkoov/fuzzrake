@@ -46,6 +46,7 @@ class AppTidyData extends Command
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
             $fixer->fixArtisanData($artisan);
+            $fixer->validateArtisanData($artisan);
         }
 
         if (!$input->getOption('dry-run')) {

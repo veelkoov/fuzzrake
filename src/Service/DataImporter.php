@@ -28,12 +28,12 @@ class DataImporter
     /**
      * @var DataFixer
      */
-    private $dataFixer;
+    private $fixer;
 
     /**
      * @var DataDiffer
      */
-    private $dataDiffer;
+    private $differ;
 
     public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
     {
@@ -43,8 +43,8 @@ class DataImporter
 
     public function import(array $artisansData, SymfonyStyle $io): void
     {
-        $this->dataFixer = new DataFixer($io);
-        $this->dataDiffer = new DataDiffer($io);
+        $this->fixer = new DataFixer($io);
+        $this->differ = new DataDiffer($io);
 
         $imports = $this->performImports($artisansData);
 
@@ -68,12 +68,13 @@ class DataImporter
         $artisanImport = new ArtisanImport();
 
         $artisanImport->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
-        $artisanImport->setOriginalArtisan(clone $artisanImport->getUpsertedArtisan());
-        $this->dataFixer->fixArtisanData($artisanImport->getUpsertedArtisan());
+        $artisanImport->setOriginalArtisan(clone $artisanImport->getUpsertedArtisan()); // Clone unmodified
+
+        $this->updateArtisanWithData($artisanImport->getUpsertedArtisan(), $artisanData); // Now update the DB entity
+        $this->fixer->fixArtisanData($artisanImport->getUpsertedArtisan()); // And fix the DB entity
 
         $artisanImport->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $artisanData));
-        $artisanImport->setNewFixedData(clone $artisanImport->getNewOriginalData());
-        $this->dataFixer->fixArtisanData($artisanImport->getNewFixedData());
+        $artisanImport->setNewFixedData($this->fixer->fixArtisanData(clone $artisanImport->getNewOriginalData()));
 
         $this->objectManager->persist($artisanImport->getUpsertedArtisan());
 
@@ -111,7 +112,7 @@ class DataImporter
     private function showFixedImportedData(array $imports): void
     {
         foreach ($imports as $import) {
-            $this->dataDiffer->showDiff($import->getNewOriginalData(), $import->getNewFixedData());
+            $this->differ->showDiff($import->getNewOriginalData(), $import->getNewFixedData());
         }
     }
 
@@ -121,7 +122,7 @@ class DataImporter
     private function showUpdatedArtisans(array $imports): void
     {
         foreach ($imports as $import) {
-            $this->dataDiffer->showDiff($import->getOriginalArtisan(), $import->getNewFixedData());
+            $this->differ->showDiff($import->getOriginalArtisan(), $import->getNewFixedData());
         }
     }
 
@@ -131,7 +132,7 @@ class DataImporter
     private function showValidationResults(array $imports)
     {
         foreach ($imports as $import) {
-            $this->dataFixer->validateArtisanData($import->getUpsertedArtisan());
+            $this->fixer->validateArtisanData($import->getUpsertedArtisan());
         }
     }
 }
