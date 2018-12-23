@@ -137,4 +137,21 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult(), new DateTimeZone('UTC'));
     }
+
+    public function findBestMatches(string $name, string $formerly)
+    {
+        return $this->createQueryBuilder('a')
+            ->setParameters([
+                'name' => $name,
+                'formerly' => $formerly,
+                'empty' => '',
+            ])
+            ->where('
+                a.name = :name
+                OR a.name = :formerly
+                OR (a.formerly = :formerly AND a.formerly <> :empty)
+            ')
+            ->getQuery()
+            ->getResult();
+    }
 }

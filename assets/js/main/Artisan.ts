@@ -26,7 +26,16 @@ export default class Artisan {
                 readonly youtubeUrl: string,
                 readonly commisionsQuotesCheckUrl: string,
                 readonly queueUrl: string,
+                readonly pricesUrl: string,
+                readonly faqUrl: string,
+                readonly otherUrls: string,
                 readonly notes: string,
+                readonly paymentPlans: string,
+                readonly productionModel: string,
+                readonly speciesDoes: string,
+                readonly speciesDoesnt: string,
+                readonly languages: string,
+                readonly makerId: string,
                 readonly areCommissionsOpen?: boolean,
                 readonly commissionsQuotesLastCheck?: string) {
     }
@@ -58,7 +67,16 @@ export default class Artisan {
             cells[Consts.YOUTUBE_URL_COL_IDX],
             cells[Consts.COMMISIONSQUOTESCHECK_URL_COL_IDX],
             cells[Consts.QUEUE_URL_COL_IDX],
+            cells[Consts.PRICES_URL_COL_IDX],
+            cells[Consts.FAQ_URL_COL_IDX],
+            cells[Consts.OTHER_URLS_COL_IDX],
             cells[Consts.NOTES_COL_IDX],
+            cells[Consts.PAYMENT_PLANS_COL_IDX],
+            cells[Consts.PRODUCTION_MODEL_COL_IDX],
+            cells[Consts.SPECIES_DOES_COL_IDX],
+            cells[Consts.SPECIES_DOESNT_COL_IDX],
+            cells[Consts.LANGUAGES_COL_IDX],
+            cells[Consts.MAKER_ID_COL_IDX],
             Artisan.toBoolean(cells[Consts.COMMISSIONS_COL_IDX]),
             cells[Consts.COMMISSIONS_LAST_CHECK_COL_IDX]
         );

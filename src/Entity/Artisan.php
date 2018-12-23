@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Utils\CompletenessCalc;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
@@ -19,6 +20,11 @@ class Artisan
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=31)
+     */
+    private $makerId;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -29,7 +35,7 @@ class Artisan
     private $formerly;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=511)
      */
     private $intro;
 
@@ -52,6 +58,11 @@ class Artisan
      * @ORM\Column(type="string", length=255)
      */
     private $city;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $productionModel;
 
     /**
      * @ORM\Column(type="string", length=1023)
@@ -79,9 +90,24 @@ class Artisan
     private $features;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=1023)
      */
     private $otherFeatures;
+
+    /**
+     * @ORM\Column(type="string", length=1023)
+     */
+    private $paymentPlans;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $speciesDoes;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $speciesDoesnt;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -92,6 +118,16 @@ class Artisan
      * @ORM\Column(type="string", length=255)
      */
     private $websiteUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pricesUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $faqUrl;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -137,6 +173,16 @@ class Artisan
      * @ORM\Column(type="string", length=255)
      */
     private $queueUrl;
+
+    /**
+     * @ORM\Column(type="string", length=1023)
+     */
+    private $otherUrls;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $languages;
 
     /**
      * @ORM\Column(type="text")
@@ -482,6 +528,150 @@ class Artisan
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMakerId()
+    {
+        return $this->makerId;
+    }
+
+    /**
+     * @param mixed $makerId
+     */
+    public function setMakerId($makerId): void
+    {
+        $this->makerId = $makerId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductionModel()
+    {
+        return $this->productionModel;
+    }
+
+    /**
+     * @param mixed $productionModel
+     */
+    public function setProductionModel($productionModel): void
+    {
+        $this->productionModel = $productionModel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentPlans()
+    {
+        return $this->paymentPlans;
+    }
+
+    /**
+     * @param mixed $paymentPlans
+     */
+    public function setPaymentPlans($paymentPlans): void
+    {
+        $this->paymentPlans = $paymentPlans;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpeciesDoes()
+    {
+        return $this->speciesDoes;
+    }
+
+    /**
+     * @param mixed $speciesDoes
+     */
+    public function setSpeciesDoes($speciesDoes): void
+    {
+        $this->speciesDoes = $speciesDoes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpeciesDoesnt()
+    {
+        return $this->speciesDoesnt;
+    }
+
+    /**
+     * @param mixed $speciesDoesnt
+     */
+    public function setSpeciesDoesnt($speciesDoesnt): void
+    {
+        $this->speciesDoesnt = $speciesDoesnt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPricesUrl()
+    {
+        return $this->pricesUrl;
+    }
+
+    /**
+     * @param mixed $pricesUrl
+     */
+    public function setPricesUrl($pricesUrl): void
+    {
+        $this->pricesUrl = $pricesUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFaqUrl()
+    {
+        return $this->faqUrl;
+    }
+
+    /**
+     * @param mixed $faqUrl
+     */
+    public function setFaqUrl($faqUrl): void
+    {
+        $this->faqUrl = $faqUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOtherUrls()
+    {
+        return $this->otherUrls;
+    }
+
+    /**
+     * @param mixed $otherUrls
+     */
+    public function setOtherUrls($otherUrls): void
+    {
+        $this->otherUrls = $otherUrls;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
+
+    /**
+     * @param mixed $languages
+     */
+    public function setLanguages($languages): void
+    {
+        $this->languages = $languages;
+    }
+
     public function completeness(): ?int
     {
         return (new CompletenessCalc())
@@ -505,5 +695,29 @@ class Artisan
             // FIXME: Queue not yet checked; planned feature
             // Notes are not supposed to be displayed, thus not counted
             ->result();
+    }
+
+    public function set(string $fieldName, $newValue): self
+    {
+        if (!property_exists(self::class, $fieldName)) {
+            throw new InvalidArgumentException("Field $fieldName does not exist");
+        }
+
+        $setter = 'set'.ucfirst($fieldName);
+
+        call_user_func([$this, $setter], $newValue);
+
+        return $this;
+    }
+
+    public function get(string $fieldName)
+    {
+        if (!property_exists(self::class, $fieldName)) {
+            throw new InvalidArgumentException("Field $fieldName does not exist");
+        }
+
+        $getter = 'get'.ucfirst($fieldName);
+
+        return call_user_func([$this, $getter]);
     }
 }

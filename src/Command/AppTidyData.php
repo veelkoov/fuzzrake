@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AppTidyData extends Command
 {
-    protected static $defaultName = 'app:tidy-data';
+    protected static $defaultName = 'app:data:tidy';
 
     /**
      * @var ArtisanRepository
@@ -46,6 +46,7 @@ class AppTidyData extends Command
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
             $fixer->fixArtisanData($artisan);
+            $fixer->validateArtisanData($artisan);
         }
 
         if (!$input->getOption('dry-run')) {
