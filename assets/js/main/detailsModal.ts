@@ -23,12 +23,12 @@ function formatLinks($links) {
         return `${oldHtml} <span class="d-none d-md-inline">: <span class="url">${linksHrefNoProto($(this))}</span></span>`;
     });
 
-    $links.before($links.length
+    let $result = $('<div/>').append($links.length
         ? `<p class="small px-1">${Consts.REFERRER_HTML}</p>`
         : '<i class="fas fa-question-circle" title="None provided"></i>'
-    );
+    ).append($links);
 
-    return $links;
+    return $result.html();
 }
 
 function htmlListFromArrays(list: String[], other: String[]) {
@@ -83,7 +83,7 @@ function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanStyles').html(htmlListFromArrays(artisan.styles, artisan.otherStyles));
     $('#artisanTypes').html(htmlListFromArrays(artisan.types, artisan.otherTypes));
     $('#artisanFeatures').html(htmlListFromArrays(artisan.features, artisan.otherFeatures));
-    $('#artisanLinks').empty().append(formatLinks(Utils.getLinks$(artisan)));
+    $('#artisanLinks').html(formatLinks(Utils.getLinks$(artisan)));
     $('#artisanIntro').html(artisan.intro).toggle(artisan.intro !== '');
     $('#artisanCompleteness').html(artisan.completeness.toString());
     $('#artisanCompletenessComment').html(getCompletenessComment(artisan.completeness));
