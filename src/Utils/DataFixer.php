@@ -57,6 +57,7 @@ class DataFixer
         $artisan->setName($this->fixString($artisan->getName()));
         $artisan->setSince($this->fixSince($artisan->getSince()));
 
+        $artisan->setProductionModel($this->fixList($artisan->getProductionModel()));
         $artisan->setFeatures($this->fixList($artisan->getFeatures()));
         $artisan->setStyles($this->fixList($artisan->getStyles()));
         $artisan->setTypes($this->fixList($artisan->getTypes()));
