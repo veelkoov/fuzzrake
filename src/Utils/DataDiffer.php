@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Utils;
 
 use App\Entity\Artisan;
-use App\Utils\ArtisanMetadata;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -41,12 +40,12 @@ class DataDiffer
         if ($oldVal !== $newVal) {
             $this->showNameFirstTime($nameShown, $old, $new);
 
-            if ($oldVal) {
-                $this->io->writeln("$fieldName: <d>{$oldVal}</>");
+            if (strpos($oldVal, "\n") !== false || strpos($newVal, "\n") !== false) {
+                $this->showListDiff($fieldName, $oldVal, $newVal);
+            } else {
+                $this->showSingleValueDiff($fieldName, $oldVal, $newVal);
             }
-            if ($newVal) {
-                $this->io->writeln("$fieldName: <a>{$newVal}</>");
-            }
+
             $this->io->writeln('');
         }
     }
@@ -64,6 +63,37 @@ class DataDiffer
             $this->io->section(implode(' / ', $names));
 
             $nameShown = true;
+        }
+    }
+
+    private function showListDiff(string $fieldName, $oldVal, $newVal): void
+    {
+        $oldValItems = explode("\n", $oldVal);
+        $newValItems = explode("\n", $newVal);
+        $allItems = array_unique(array_filter(array_merge($oldValItems, $newValItems)));
+        sort($allItems);
+
+        foreach ($allItems as &$item) {
+            if (in_array($item, $oldValItems)) {
+                if (!in_array($item, $newValItems)) {
+                    $item = "<d>$item</>";
+                }
+            } else {
+                $item = "<a>$item</>";
+            }
+        }
+
+        $this->io->writeln("$fieldName: " . join('|', $allItems));
+    }
+
+    private function showSingleValueDiff(string $fieldName, $oldVal, $newVal): void
+    {
+        if ($oldVal) {
+            $this->io->writeln("$fieldName: <d>{$oldVal}</>");
+        }
+
+        if ($newVal) {
+            $this->io->writeln("$fieldName: <a>{$newVal}</>");
         }
     }
 }

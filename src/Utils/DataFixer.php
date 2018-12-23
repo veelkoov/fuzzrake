@@ -61,9 +61,10 @@ class DataFixer
         $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures()));
         $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles()));
         $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes()));
+
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
-        $artisan->setState($this->trim($artisan->getState()));
-        $artisan->setCity($this->trim($artisan->getCity()));
+        $artisan->setState($this->fixString($artisan->getState()));
+        $artisan->setCity($this->fixString($artisan->getCity()));
 
         $artisan->setFurAffinityUrl($this->fixFurAffinityUrl($artisan->getFurAffinityUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
@@ -76,22 +77,14 @@ class DataFixer
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
     }
 
-    private function showDiff(string $input, string $result, $validRegexp = '.*'): void
+    public function validateArtisanData(Artisan $artisan): void
     {
-        $out = false;
+        foreach (ArtisanMetadata::MODEL_FIELDS_VALIDATION_REGEXPS as $fieldName => $validationRegexp) {
+            $fieldValue = $artisan->get(ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP[$fieldName]);
 
-        if ($result !== $input) {
-            $this->io->text("--- ' $input '\n +++ ' $result '");
-            $out = true;
-        }
-
-        if ('' !== trim($input) && '' !== $result && !preg_match("#^($validRegexp)$#", $result)) {
-            $this->io->text("!!! ' $result '");
-            $out = true;
-        }
-
-        if ($out) {
-            $this->io->text('');
+            if (!preg_match($validationRegexp, $fieldValue)) {
+                $this->io->text("!!! {$fieldName}: {$fieldValue}");
+            }
         }
     }
 
@@ -104,8 +97,6 @@ class DataFixer
         sort($list);
         $result = implode("\n", $list);
 
-        $this->showDiff($input, $result, '[-,&!.A-Za-z0-9+()/\n %:"\']*');
-
         return $result;
     }
 
@@ -117,68 +108,42 @@ class DataFixer
             $result = preg_replace("#^$regexp$#i", $replacement, $result);
         }
 
-        $this->showDiff($input, $result, '[A-Z]{2}');
-
         return $result;
     }
 
     private function fixFurAffinityUrl(string $input): string
     {
-        $result = preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/)?([^/]+)/?$#i',
+        return preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/)?([^/]+)/?$#i',
             'http://www.furaffinity.net/user/$1', trim($input));
-
-        $this->showDiff($input, $result, 'http://www\.furaffinity\.net/user/[^/]+');
-
-        return $result;
     }
 
     private function fixTwitterUrl(string $input): string
     {
-        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?lang=[a-z]{2,3})?$#i',
+        return preg_replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?lang=[a-z]{2,3})?$#i',
             'https://twitter.com/$1', trim($input));
-
-        $this->showDiff($input, $result, 'https://twitter\.com/[^/]+');
-
-        return $result;
     }
 
     private function fixInstagramUrl(string $input): string
     {
-        $result = preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
+        return preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
             'https://www.instagram.com/$1/', trim($input));
-
-        $this->showDiff($input, $result, 'https://www\.instagram\.com/[^/]+/');
-
-        return $result;
     }
 
     private function fixTumblrUrl(string $input): string
     {
-        $result = trim($input);
-
-        $this->showDiff($input, $result, 'https?://[^.]+\.tumblr\.com/');
-
-        return $result;
+        return trim($input); // TODO: Implement fix
     }
 
     private function fixFacebookUrl(string $input): string
     {
-        $result = preg_replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/([^/?]+)/?(\?ref=[a-z_]+)?$#i',
+        return preg_replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/([^/?]+)/?(\?ref=[a-z_]+)?$#i',
             'https://www.facebook.com/$1/', trim($input));
-
-        $this->showDiff($input, $result, 'https://www.facebook.com/([^/]+/|profile\.php\?id=\d+)');
-
-        return $result;
     }
 
     private function fixYoutubeUrl(string $input): string
     {
-        $result = preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
+        return preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
             'https://www.youtube.com/$1', trim($input));
-
-        $this->showDiff($input, $result, 'https://www\.youtube\.com/(channel|user|c)/[^/?]+');
-
-        return $result;
     }
 
     private function fixDeviantArtUrl(string $input): string
@@ -189,8 +154,6 @@ class DataFixer
         $result = preg_replace('#^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$#i',
             'https://$1.deviantart.com/', $result);
 
-        $this->showDiff($input, $result, 'https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/');
-
         return $result;
     }
 
@@ -200,36 +163,16 @@ class DataFixer
         $result = str_replace('@', '(e)', $result);
         $result = preg_replace('#(e-?)?mail#i', 'eeeee', $result);
 
-        $this->showDiff($input, $result, '(.|\n)*');
-
         return $result;
     }
 
     private function fixSince(string $input): string
     {
-        $result = preg_replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
-
-        $this->showDiff($input, $result, '\d{4}-\d{2}');
-
-        return $result;
-    }
-
-    private function trim(string $input): string
-    {
-        $result = trim($input);
-
-        $this->showDiff($input, $result);
-
-        return $result;
+        return preg_replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
     }
 
     private function fixString(string $input): string
     {
-        $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
-        $result = trim($result);
-
-        $this->showDiff($input, $result);
-
-        return $result;
+        return trim(str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input));
     }
 }

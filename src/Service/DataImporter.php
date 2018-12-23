@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanImport;
 use App\Utils\ArtisanMetadata;
+use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -49,8 +50,10 @@ class DataImporter
 
         $io->title('Showing import data before/after fixing');
         $this->showFixedImportedData($imports);
-        $io->title('Showing artisans data before/after fixing');
+        $io->title('Showing artisans\' data before/after fixing');
         $this->showUpdatedArtisans($imports);
+        $io->title('Validating updated artisans\' data');
+        $this->showValidationResults($imports);
     }
 
     private function performImports(array $artisansData)
@@ -119,6 +122,16 @@ class DataImporter
     {
         foreach ($imports as $import) {
             $this->dataDiffer->showDiff($import->getOriginalArtisan(), $import->getNewFixedData());
+        }
+    }
+
+    /**
+     * @param ArtisanImport[] $imports
+     */
+    private function showValidationResults(array $imports)
+    {
+        foreach ($imports as $import) {
+            $this->dataFixer->validateArtisanData($import->getUpsertedArtisan());
         }
     }
 }
