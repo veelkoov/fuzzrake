@@ -156,7 +156,7 @@ class ArtisanMetadata
     private static function initModelFieldNamesArray(): void
     {
         foreach (self::IU_FORM_TO_MODEL_FIELDS_MAP as $_ => $modelFieldName) {
-            if ($modelFieldName !== ArtisanMetadata::IGNORED_IU_FORM_FIELD) {
+            if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelFieldName) {
                 self::$modelFieldNames[] = $modelFieldName;
             }
         }

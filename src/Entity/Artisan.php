@@ -514,7 +514,7 @@ class Artisan
             throw new InvalidArgumentException("Field $fieldName does not exist");
         }
 
-        $setter = 'set' . ucfirst($fieldName);
+        $setter = 'set'.ucfirst($fieldName);
 
         call_user_func([$this, $setter], $newValue);
 
@@ -527,7 +527,7 @@ class Artisan
             throw new InvalidArgumentException("Field $fieldName does not exist");
         }
 
-        $getter = 'get' . ucfirst($fieldName);
+        $getter = 'get'.ucfirst($fieldName);
 
         return call_user_func([$this, $getter]);
     }

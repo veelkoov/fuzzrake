@@ -40,7 +40,7 @@ class DataDiffer
         if ($oldVal !== $newVal) {
             $this->showNameFirstTime($nameShown, $old, $new);
 
-            if (strpos($oldVal, "\n") !== false || strpos($newVal, "\n") !== false) {
+            if (false !== strpos($oldVal, "\n") || false !== strpos($newVal, "\n")) {
                 $this->showListDiff($fieldName, $oldVal, $newVal);
             } else {
                 $this->showSingleValueDiff($fieldName, $oldVal, $newVal);
@@ -83,7 +83,7 @@ class DataDiffer
             }
         }
 
-        $this->io->writeln("$fieldName: " . join('|', $allItems));
+        $this->io->writeln("$fieldName: ".join('|', $allItems));
     }
 
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal): void

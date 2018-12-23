@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03e00d12099cad62e5ced4a83fa8bbaa",
+    "content-hash": "8c91dd13c328c11f1a53c80f3ecbaaf4",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1564,16 +1564,16 @@
         },
         {
             "name": "sensiolabs/security-checker",
-            "version": "v5.0.2",
+            "version": "v5.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/security-checker.git",
-                "reference": "728f9fb0fe815003b3bcfd331d33106c0d8a6b1e"
+                "reference": "46be3f58adac13084497961e10eed9a7fb4d44d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/728f9fb0fe815003b3bcfd331d33106c0d8a6b1e",
-                "reference": "728f9fb0fe815003b3bcfd331d33106c0d8a6b1e",
+                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/46be3f58adac13084497961e10eed9a7fb4d44d1",
+                "reference": "46be3f58adac13084497961e10eed9a7fb4d44d1",
                 "shasum": ""
             },
             "require": {
@@ -1606,7 +1606,7 @@
                 }
             ],
             "description": "A security checker for your composer.lock",
-            "time": "2018-12-10T06:08:43+00:00"
+            "time": "2018-12-19T17:14:59+00:00"
         },
         {
             "name": "symfony/apache-pack",
@@ -4409,16 +4409,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.10.0",
+            "version": "v1.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "aa37ea1323ac888913bdd3e5f83d846798729449"
+                "reference": "2ba2b563a6ca17cd7723b451b9ed4702ece9d8ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/aa37ea1323ac888913bdd3e5f83d846798729449",
-                "reference": "aa37ea1323ac888913bdd3e5f83d846798729449",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/2ba2b563a6ca17cd7723b451b9ed4702ece9d8ae",
+                "reference": "2ba2b563a6ca17cd7723b451b9ed4702ece9d8ae",
                 "shasum": ""
             },
             "require": {
@@ -4471,7 +4471,7 @@
                 "scaffold",
                 "scaffolding"
             ],
-            "time": "2018-12-13T18:54:47+00:00"
+            "time": "2018-12-20T19:51:03+00:00"
         },
         {
             "name": "symfony/monolog-bridge",

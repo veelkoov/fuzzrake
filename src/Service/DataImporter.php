@@ -58,7 +58,7 @@ class DataImporter
 
     private function performImports(array $artisansData)
     {
-        return array_map(function(array $artisanData) {
+        return array_map(function (array $artisanData) {
             return $this->performImport($artisanData);
         }, $artisansData);
     }
@@ -83,7 +83,7 @@ class DataImporter
     private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
     {
         foreach (ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP as $fieldName => $modelFieldName) {
-            if ($modelFieldName !== ArtisanMetadata::IGNORED_IU_FORM_FIELD) {
+            if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelFieldName) {
                 $artisan->set($modelFieldName, $newData[ArtisanMetadata::uiFormFieldIndexByName($fieldName)]);
             }
         }
@@ -99,7 +99,7 @@ class DataImporter
         );
 
         if (count($results) > 1) {
-            throw new DataImporterException("Expected no more than 1 artisan to be matched. Found: " . implode(', ', array_map(function (Artisan $artisan) { return "{$artisan->getName()} (ID {$artisan->getId()})"; }, $results)));
+            throw new DataImporterException('Expected no more than 1 artisan to be matched. Found: '.implode(', ', array_map(function (Artisan $artisan) { return "{$artisan->getName()} (ID {$artisan->getId()})"; }, $results)));
         }
 
         return array_pop($results);

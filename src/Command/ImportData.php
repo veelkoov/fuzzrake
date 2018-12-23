@@ -49,6 +49,7 @@ class ImportData extends Command
 
         if (!file_exists($filePath)) {
             $this->io->error("File '$filePath' does not exist");
+
             return 1;
         }
 
@@ -91,6 +92,7 @@ class ImportData extends Command
         while (false !== ($cols = fgetcsv($fileHandle, 0, ',', '"', '"'))) {
             $result[] = $cols;
         }
+
         return $result;
     }
 
@@ -101,7 +103,7 @@ class ImportData extends Command
             throw new InvalidArgumentException("File '$filePath' is a corrupted ZIP archive");
         }
 
-        if ($zip->numFiles !== 1) {
+        if (1 !== $zip->numFiles) {
             $zip->close();
             throw new InvalidArgumentException("Unexpected number of files in the '$filePath' ZIP archive: {$zip->numFiles}");
         }
@@ -109,7 +111,7 @@ class ImportData extends Command
         $result = $zip->getFromIndex(0);
         $zip->close();
 
-        if ($result === false) {
+        if (false === $result) {
             throw new InvalidArgumentException("Failed reading file from the '$filePath' ZIP archive");
         }
 
