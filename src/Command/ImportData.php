@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\DataImporter;
+use App\Utils\ImportCorrector;
 use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,25 +38,19 @@ class ImportData extends Command
 
     protected function configure()
     {
-        $this->addOption('dry-run', 'd', null, 'Dry run (don\'t update the DB)');
-        $this->addArgument('input-file', InputArgument::REQUIRED, 'Input file');
+        $this->addOption('commit', null, null, 'Save changes in the database');
+        $this->addArgument('import-file', InputArgument::REQUIRED, 'Import file path');
+        $this->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        $filePath = $input->getArgument('input-file');
+        $this->dataImporter->import($this->arrayFromCsvFile($input->getArgument('import-file')),
+            $this->getImportCorrector($input->getArgument('corrections-file')), $this->io);
 
-        if (!file_exists($filePath)) {
-            $this->io->error("File '$filePath' does not exist");
-
-            return 1;
-        }
-
-        $this->dataImporter->import($this->arrayFromCsvFile($filePath), $this->io);
-
-        if (!$input->getOption('dry-run')) {
+        if ($input->getOption('commit')) {
 //            $this->objectManager->flush(); // FIXME
             $this->io->success('Finished and saved');
         } else {
@@ -65,6 +60,10 @@ class ImportData extends Command
 
     private function arrayFromCsvFile(string $filePath): array
     {
+        if (!file_exists($filePath)) {
+            throw new InvalidArgumentException("File '$filePath' does not exist");
+        }
+
         if ('application/zip' == MimeTypeGuesser::getInstance()->guess($filePath)) {
             $fileContents = $this->readOnlyFileInZip($filePath);
         } else {
@@ -125,5 +124,14 @@ class ImportData extends Command
         rewind($handle);
 
         return $handle;
+    }
+
+    private function getImportCorrector(string $correctionsFilePath): ImportCorrector
+    {
+        if (!file_exists($correctionsFilePath)) {
+            throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
+        }
+
+        return new ImportCorrector($correctionsFilePath);
     }
 }

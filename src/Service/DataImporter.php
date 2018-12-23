@@ -10,6 +10,7 @@ use App\Utils\ArtisanImport;
 use App\Utils\ArtisanMetadata;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
+use App\Utils\ImportCorrector;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -35,16 +36,22 @@ class DataImporter
      */
     private $differ;
 
+    /**
+     * @var ImportCorrector
+     */
+    private $corrector;
+
     public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
     {
         $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
     }
 
-    public function import(array $artisansData, SymfonyStyle $io): void
+    public function import(array $artisansData, ImportCorrector $importCorrector, SymfonyStyle $io): void
     {
         $this->fixer = new DataFixer($io);
         $this->differ = new DataDiffer($io);
+        $this->corrector = $importCorrector;
 
         $imports = $this->performImports($artisansData);
 
@@ -71,10 +78,10 @@ class DataImporter
         $artisanImport->setOriginalArtisan(clone $artisanImport->getUpsertedArtisan()); // Clone unmodified
 
         $this->updateArtisanWithData($artisanImport->getUpsertedArtisan(), $artisanData); // Now update the DB entity
-        $this->fixer->fixArtisanData($artisanImport->getUpsertedArtisan()); // And fix the DB entity
+        $this->fix($artisanImport->getUpsertedArtisan()); // And fix the DB entity
 
         $artisanImport->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $artisanData));
-        $artisanImport->setNewFixedData($this->fixer->fixArtisanData(clone $artisanImport->getNewOriginalData()));
+        $artisanImport->setNewFixedData($this->fix(clone $artisanImport->getNewOriginalData()));
 
         $this->objectManager->persist($artisanImport->getUpsertedArtisan());
 
@@ -134,5 +141,13 @@ class DataImporter
         foreach ($imports as $import) {
             $this->fixer->validateArtisanData($import->getUpsertedArtisan());
         }
+    }
+
+    private function fix(Artisan $artisan): Artisan
+    {
+        $this->fixer->fixArtisanData($artisan);
+        $this->corrector->correctArtisan($artisan);
+
+        return $artisan;
     }
 }

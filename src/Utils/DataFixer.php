@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataFixer
@@ -48,6 +49,7 @@ class DataFixer
     public function __construct(SymfonyStyle $io)
     {
         $this->io = $io;
+        $this->io->getFormatter()->setStyle('wrong', new OutputFormatterStyle('red'));
     }
 
     public function fixArtisanData(Artisan $artisan): Artisan
@@ -86,7 +88,7 @@ class DataFixer
             $fieldValue = $artisan->get(ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP[$fieldName]);
 
             if (!preg_match($validationRegexp, $fieldValue)) {
-                $this->io->text("!!! {$fieldName}: {$fieldValue}");
+                $this->io->writeln("{$fieldName}:::<wrong>{$fieldValue}</>:ABCDEFGHIJ:");
             }
         }
     }
