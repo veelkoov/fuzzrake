@@ -700,7 +700,6 @@ class Artisan
             // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
             ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
-            // FIXME: Queue not yet checked; planned feature
             // Notes are not supposed to be displayed, thus not counted
             ->result();
     }

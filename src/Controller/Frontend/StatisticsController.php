@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Frontend;
 
+use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,7 +45,7 @@ class StatisticsController extends AbstractController
 
     /**
      * @Route("/statistics.html", name="statistics")
-     *
+     * @param ArtisanRepository $artisanRepository
      * @return Response
      */
     public function statistics(ArtisanRepository $artisanRepository): Response
@@ -67,6 +68,7 @@ class StatisticsController extends AbstractController
             'features' => $this->prepareTableData($features),
             'otherFeatures' => $this->prepareListData($otherFeatures),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
+            'completeness' => $this->prepareCompletenessData($artisanRepository->findAll()),
             'matchWords' => self::MATCH_WORDS,
         ]);
     }
@@ -115,5 +117,33 @@ class StatisticsController extends AbstractController
             'Status successfully tracked' => $commissionsStats['successfully_tracked'],
             'Total' => $commissionsStats['total'],
         ];
+    }
+
+    /**
+     * @param Artisan[] $artisans
+     * @return array
+     */
+    private function prepareCompletenessData(array $artisans): array
+    {
+        $completeness = array_filter(array_map(function (Artisan $artisan) {
+            return $artisan->completeness();
+        }, $artisans));
+
+        $result = [];
+
+        $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
+            '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0];
+
+        foreach ($levels as $description => $level) {
+            $result[$description] = count(array_filter($completeness, function (int $percent) use ($level) {
+                return $percent >= $level;
+            }));
+
+            $completeness = array_filter($completeness, function (int $percent) use ($level) {
+                return $percent < $level;
+            });
+        }
+
+        return $result;
     }
 }
