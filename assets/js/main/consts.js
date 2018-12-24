@@ -3,6 +3,7 @@
 let idx = 0;
 
 export const NAME_COL_IDX = idx++;
+export const MAKER_ID_COL_IDX = idx++;
 export const COMPLETENESS_COL_IDX = idx++;
 export const FORMERLY_COL_IDX = idx++;
 export const INTRO_COL_IDX = idx++;
@@ -35,7 +36,6 @@ export const PRODUCTION_MODEL_COL_IDX = idx++;
 export const SPECIES_DOES_COL_IDX = idx++;
 export const SPECIES_DOESNT_COL_IDX = idx++;
 export const LANGUAGES_COL_IDX = idx++;
-export const MAKER_ID_COL_IDX = idx++;
 export const NOTES_COL_IDX = idx++;
 export const COMMISSIONS_COL_IDX = idx++;
 export const COMMISSIONS_LAST_CHECK_COL_IDX = idx++;

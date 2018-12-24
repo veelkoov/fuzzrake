@@ -32,6 +32,12 @@ function updateRequestUpdateModalWithRowData(artisan) {
     Utils.updateUpdateRequestData('updateRequestSingle', artisan);
 }
 
+function openArtisanByFragment(hash) {
+    if (hash) {
+        $(hash).children().eq(0).click();
+    }
+}
+
 $(() => {
     DataTable.init();
     DetailsModal.init();
@@ -39,4 +45,6 @@ $(() => {
     initRequestUpdateModal();
     addReferrerRequestTooltip();
     Utils.makeLinksOpenNewTab('#artisans a:not(.request-update)');
+
+    openArtisanByFragment(window.location.hash);
 });

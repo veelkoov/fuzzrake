@@ -2,6 +2,7 @@
     <thead class="thead-dark">
     <tr>
         <th class="text-left">Fursuit maker /&nbsp;studio name</th>
+        <th class="text-center toggleable default-hidden">Maker ID</th>
         <th class="hidden">Completeness</th>
         <th class="hidden">Formerly</th>
         <th class="hidden">Intro</th>
@@ -35,7 +36,6 @@
         <th class="hidden">Species does</th>
         <th class="hidden">Species doesn't</th>
         <th class="hidden">Languages</th>
-        <th class="hidden">Maker ID</th>
         <th class="text-center toggleable">Commissions</th>
         <th class="hidden">Commissions last check</th>
         <th class="text-right no-sorting">Links</th>
@@ -44,10 +44,13 @@
 
     <tbody>
     {% for artisan in artisans %}
-        <tr class="fursuit-maker">
+        <tr class="fursuit-maker" {% if artisan.makerId %}id="{{ artisan.makerId }}{% endif %}">
             {%- spaceless %}
                 <td class="name" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
+                </td>
+                <td class="maker-id" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.makerId -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.completeness -}}
@@ -147,9 +150,6 @@
                 </td>
                 <td class="hidden">
                     {{- artisan.languages -}}
-                </td>
-                <td class="hidden">
-                    {{- artisan.makerId -}}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.areCommissionsOpen is null ? '' : (artisan.areCommissionsOpen ? 'open' : 'closed') -}}

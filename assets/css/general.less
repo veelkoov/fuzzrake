@@ -43,6 +43,11 @@ table#artisans {
       text-align: center;
     }
 
+    td.maker-id {
+      display: table-cell;
+      font-family: monospace;
+    }
+
     td.links {
       display: table-cell;
       text-align: right;
@@ -80,6 +85,17 @@ ul {
 
 #artisanLinks .url {
   color: #007bff;
+}
+
+#makerId {
+  font-size: 80%;
+  font-family: monospace;
+  font-style: italic;
+  color: #aaa;
+}
+
+#makerId:empty {
+  display: none;
 }
 
 p.item-pills {

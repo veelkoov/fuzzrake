@@ -79,6 +79,8 @@ function getCompletenessComment(completeness: number): string {
 
 function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanName').html(artisan.name + Utils.countryFlagHtml(artisan.country));
+    $('#makerId').html(artisan.makerId);
+    $('#makerId').attr('href', `#${artisan.makerId}`);
     $('#artisanShortInfo').html(formatShortInfo(artisan.state, artisan.city, artisan.since, artisan.formerly));
     $('#artisanStyles').html(htmlListFromArrays(artisan.styles, artisan.otherStyles));
     $('#artisanTypes').html(htmlListFromArrays(artisan.types, artisan.otherTypes));
