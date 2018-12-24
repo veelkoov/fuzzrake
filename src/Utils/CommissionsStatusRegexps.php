@@ -31,7 +31,7 @@ class CommissionsStatusRegexps
         'COMMISSIONS STATUS MONTHS',
     ];
     const GENERIC_REGEXES = [
-        '((WE_ARE )?TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes)( requests)?',
+        '((WE_ARE )?TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',
         'COMMISSIONS( status|:? are| have| info)?( TIMESPAN)?[-: ]+(&gt;)*STATUS(&lt;)*',
         'quotes? have TIMESPAN STATUS',
         'STATUS (for (new )?)?COMMISSIONS',
