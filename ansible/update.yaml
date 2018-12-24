@@ -63,7 +63,7 @@
         responses:
           password: "{{ db_params.password }}"
 
-    - shell: ssh {{ backend_server_ip }} -C 'mysql $(grep DATABASE_URL= {{ remote_path }}/.env | sed -r "{{ sed_mysql_args_regexp }}")' < {{ sql_file.path }}
+    - shell: ssh {{ backend_server_ip }} -C 'mysql $(grep DATABASE_URL= {{ remote_path }}/.env.local | sed -r "{{ sed_mysql_args_regexp }}")' < {{ sql_file.path }}
 
     always:
     - file:
