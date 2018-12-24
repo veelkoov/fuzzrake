@@ -677,20 +677,28 @@ class Artisan
         return (new CompletenessCalc())
             // Name not counted - makes no sense
             // Formerly not counted - small minority has changed their names
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
             ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
             ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
             ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
                 ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
             ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
+            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModel)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->types, $this->otherTypes)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
+            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->pricesUrl)
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->faqUrl) // it's optional, but nice to have
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->queueUrl) // it's optional, but nice to have
             // FursuitReview not checked, because we can force makers to force their customers to write reviews
             // ... shame...
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->websiteUrl, $this->deviantArtUrl, $this->furAffinityUrl,
                 $this->twitterUrl, $this->facebookUrl, $this->tumblrUrl, $this->instagramUrl, $this->youtubeUrl)
             // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
             ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
             // FIXME: Queue not yet checked; planned feature
             // Notes are not supposed to be displayed, thus not counted
