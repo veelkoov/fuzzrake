@@ -86,11 +86,11 @@ class DataFixer
 
     public function validateArtisanData(Artisan $artisan): void
     {
-        foreach (ArtisanMetadata::MODEL_FIELDS_VALIDATION_REGEXPS as $fieldName => $validationRegexp) {
-            $fieldValue = $artisan->get(ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP[$fieldName]);
+        foreach (ArtisanMetadata::MODEL_FIELDS_VALIDATION_REGEXPS as $prettyFieldName => $validationRegexp) {
+            $fieldValue = $artisan->get(ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$prettyFieldName]);
 
             if (!preg_match($validationRegexp, $fieldValue)) {
-                $this->io->writeln("{$fieldName}:|:<wrong>{$fieldValue}</>|ABCDEFGHIJ|");
+                $this->io->writeln("{$artisan->getMakerId()}:{$prettyFieldName}:|:<wrong>{$fieldValue}</>|ABCDEFGHIJ|");
             }
         }
     }

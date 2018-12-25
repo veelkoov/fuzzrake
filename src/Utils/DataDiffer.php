@@ -32,18 +32,19 @@ class DataDiffer
         }
     }
 
-    private function showSingleFieldDiff(bool &$nameShown, string $fieldName, Artisan $old, Artisan $new): void
+    private function showSingleFieldDiff(bool &$nameShown, string $modelFieldName, Artisan $old, Artisan $new): void
     {
-        $newVal = $new->get($fieldName) ?: '';
-        $oldVal = $old->get($fieldName) ?: '';
+        $newVal = $new->get($modelFieldName) ?: '';
+        $oldVal = $old->get($modelFieldName) ?: '';
+        $prettyFieldName = ArtisanMetadata::getPrettyByModelFieldName($modelFieldName);
 
         if ($oldVal !== $newVal) {
             $this->showNameFirstTime($nameShown, $old, $new);
 
-            if (false !== strpos($oldVal, "\n") || false !== strpos($newVal, "\n")) {
-                $this->showListDiff($fieldName, $oldVal, $newVal);
+            if (false !== strpos($oldVal, "\n") && false !== strpos($newVal, "\n")) {
+                $this->showListDiff($prettyFieldName, $oldVal, $newVal);
             } else {
-                $this->showSingleValueDiff($fieldName, $oldVal, $newVal);
+                $this->showSingleValueDiff($prettyFieldName, $oldVal, $newVal);
             }
 
             $this->io->writeln('');
@@ -54,6 +55,7 @@ class DataDiffer
     {
         if (!$nameShown) {
             $names = array_unique(array_filter([
+                $new->getMakerId(),
                 $old->getName(),
                 $old->getFormerly(),
                 $new->getName(),
@@ -81,6 +83,8 @@ class DataDiffer
             } else {
                 $item = "<a>$item</>";
             }
+
+            $item = $this->printSafe($item);
         }
 
         $this->io->writeln("$fieldName: ".join('|', $allItems));
@@ -89,11 +93,16 @@ class DataDiffer
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal): void
     {
         if ($oldVal) {
-            $this->io->writeln("$fieldName: <d>{$oldVal}</>");
+            $this->io->writeln("$fieldName: <d>{$this->printSafe($oldVal)}</>");
         }
 
         if ($newVal) {
-            $this->io->writeln("$fieldName: <a>{$newVal}</>");
+            $this->io->writeln("$fieldName: <a>{$this->printSafe($newVal)}</>");
         }
+    }
+
+    private function printSafe(string $raw): string
+    {
+        return str_replace('\\/', '/', substr(json_encode($raw), 1, -1));
     }
 }

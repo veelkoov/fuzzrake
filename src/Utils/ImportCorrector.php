@@ -8,7 +8,7 @@ use App\Entity\Artisan;
 
 class ImportCorrector
 {
-    private $corrections = [];
+    private $corrections = ['*' => []];
 
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -17,14 +17,7 @@ class ImportCorrector
 
     public function correctArtisan(Artisan $artisan)
     {
-        foreach ($this->corrections as $fieldName => $fieldCorrections) {
-            $modelFieldName = ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP[$fieldName];
-            $value = $artisan->get($modelFieldName);
-
-            if (array_key_exists($value, $fieldCorrections)) {
-                $artisan->set($modelFieldName, $fieldCorrections[$value]);
-            }
-        }
+        $this->applyCorrections($artisan, $this->getCorrectionsFor($artisan));
     }
 
     private function readDirectivesFromFile(string $filePath)
@@ -34,28 +27,56 @@ class ImportCorrector
         $buffer->skipWhitespace();
 
         while (!$buffer->isEmpty()) {
-            $this->addCorrection(...$this->readCorrection($buffer));
+            $this->addCorrection($this->readCorrection($buffer));
 
             $buffer->skipWhitespace();
         }
     }
 
-    private function addCorrection(string $fieldName, string $wrongValue, string $correctedValue): void
+    private function addCorrection(ValueCorrection $correction): void
     {
-        if (!array_key_exists($fieldName, $this->corrections)) {
-            $this->corrections[$fieldName] = [];
+        $makerId = $correction->getMakerId();
+
+        if (!array_key_exists($makerId, $this->corrections)) {
+            $this->corrections[$makerId] = [];
         }
 
-        $this->corrections[$fieldName][$wrongValue] = $correctedValue;
+        $this->corrections[$makerId][] = $correction;
     }
 
-    private function readCorrection(StringBuffer $buffer): array
+    private function readCorrection(StringBuffer $buffer): ValueCorrection
     {
+        $makerId = $buffer->readUntil(':');
         $fieldName = $buffer->readUntil(':');
         $delimiter = $buffer->readUntil(':');
+        $options = $buffer->readUntil(':');
         $wrongValue = $buffer->readUntil($delimiter);
         $correctedValue = $buffer->readUntil($delimiter);
 
-        return [$fieldName, $wrongValue, $correctedValue];
+        return new ValueCorrection($makerId, ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$fieldName], $options, $wrongValue, $correctedValue);
+    }
+
+    /**
+     * @param Artisan $artisan
+     * @param $corrections ValueCorrection[]
+     */
+    private function applyCorrections(Artisan $artisan, array $corrections): void
+    {
+        foreach ($corrections as $correction) {
+            $fieldName = $correction->getModelFieldName();
+
+            $value = $artisan->get($fieldName);
+            $correctedValue = $correction->apply($value);
+            $artisan->set($fieldName, $correctedValue);
+        }
+    }
+
+    private function getCorrectionsFor(Artisan $artisan): array
+    {
+        if (array_key_exists($artisan->getMakerId(), $this->corrections)) {
+            return array_merge($this->corrections['*'], $this->corrections[$artisan->getMakerId()]);
+        } else {
+            return $this->corrections['*'];
+        }
     }
 }

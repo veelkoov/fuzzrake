@@ -8,6 +8,7 @@ class ArtisanMetadata
 {
     const IGNORED_IU_FORM_FIELD = ':ignore!';
 
+    /***** "PRETTY" NAMES START *****/
     const TIMESTAMP = 'TIMESTAMP';
     const CHECKBOX = 'CHECKBOX';
     const NAME = 'NAME';
@@ -46,8 +47,9 @@ class ArtisanMetadata
     const NOTES = 'NOTES';
     const CONTACT_PERMIT = 'CONTACT_PERMIT';
     const CONTACT_METHOD = 'CONTACT_METHOD';
+    /***** "PRETTY" NAMES END *****/
 
-    const IU_FORM_TO_MODEL_FIELDS_MAP = [
+    const PRETTY_TO_MODEL_FIELD_NAMES_MAP = [
         self::TIMESTAMP => self::IGNORED_IU_FORM_FIELD,
         self::CHECKBOX => self::IGNORED_IU_FORM_FIELD,
         self::NAME => 'name',
@@ -93,6 +95,7 @@ class ArtisanMetadata
 
     const MODEL_FIELDS_VALIDATION_REGEXPS = [
         self::NAME => '#^.+$#',
+        self::MAKER_ID => '#^([A-Z0-9]{7})?$#',
         self::FORMERLY => '#^.*$#',
         self::SINCE => '#^(\d{4}-\d{2})?$#',
         self::COUNTRY => '#^([A-Z]{2})?$#',
@@ -121,20 +124,30 @@ class ArtisanMetadata
     ];
 
     private static $uiFormFieldIndexes = [];
-    private static $modelFieldNames = [];
+    private static $pretty2modelFieldNameMap = [];
 
-    public static function uiFormFieldIndexByName(string $fieldName): int
+    public static function getUiFormFieldIndexByPrettyName(string $prettyFieldName): int
     {
-        return self::getUiFormIndexes()[$fieldName];
+        return self::getUiFormIndexes()[$prettyFieldName];
+    }
+
+    public static function getPrettyByModelFieldName(string $modelFieldName): string
+    {
+        return array_flip(self::getPretty2ModelFieldNameMap())[$modelFieldName];
     }
 
     public static function getModelFieldNames(): array
     {
-        if (empty(self::$modelFieldNames)) {
-            self::initModelFieldNamesArray();
+        return array_values(self::getPretty2ModelFieldNameMap());
+    }
+
+    public static function getPretty2ModelFieldNameMap(): array
+    {
+        if (empty(self::$pretty2modelFieldNameMap)) {
+            self::initPretty2modelFieldNameMap();
         }
 
-        return self::$modelFieldNames;
+        return self::$pretty2modelFieldNameMap;
     }
 
     private static function getUiFormIndexes(): array
@@ -150,16 +163,16 @@ class ArtisanMetadata
     {
         $i = 0;
 
-        foreach (self::IU_FORM_TO_MODEL_FIELDS_MAP as $fieldName => $_) {
+        foreach (self::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $fieldName => $_) {
             self::$uiFormFieldIndexes[$fieldName] = $i++;
         }
     }
 
-    private static function initModelFieldNamesArray(): void
+    private static function initPretty2modelFieldNameMap(): void
     {
-        foreach (self::IU_FORM_TO_MODEL_FIELDS_MAP as $_ => $modelFieldName) {
+        foreach (self::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $prettyFieldName => $modelFieldName) {
             if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelFieldName) {
-                self::$modelFieldNames[] = $modelFieldName;
+                self::$pretty2modelFieldNameMap[$prettyFieldName] = $modelFieldName;
             }
         }
     }

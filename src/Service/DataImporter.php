@@ -90,9 +90,9 @@ class DataImporter
 
     private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
     {
-        foreach (ArtisanMetadata::IU_FORM_TO_MODEL_FIELDS_MAP as $fieldName => $modelFieldName) {
+        foreach (ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $fieldName => $modelFieldName) {
             if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelFieldName) {
-                $artisan->set($modelFieldName, $newData[ArtisanMetadata::uiFormFieldIndexByName($fieldName)]);
+                $artisan->set($modelFieldName, $newData[ArtisanMetadata::getUiFormFieldIndexByPrettyName($fieldName)]);
             }
         }
 
@@ -102,8 +102,8 @@ class DataImporter
     private function findBestMatchArtisan(array $artisanData): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
-            $artisanData[ArtisanMetadata::uiFormFieldIndexByName(ArtisanMetadata::NAME)],
-            $artisanData[ArtisanMetadata::uiFormFieldIndexByName(ArtisanMetadata::FORMERLY)]
+            $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::NAME)],
+            $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::FORMERLY)]
         );
 
         if (count($results) > 1) {
