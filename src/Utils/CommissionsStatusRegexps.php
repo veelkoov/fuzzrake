@@ -41,7 +41,7 @@ class CommissionsStatusRegexps
         '<p>status: STATUS</p>',
         '<div class="([^"]*[^a-z])?COMMISSIONS-STATUS"></div>',
         '<h2>STATUS</h2>',
-        'slots TIMESPAN STATUS',
+        '(?<=[0-9>]) ?slots( TIMESPAN)? STATUS',
         'WE_ARE (TIMESPAN|also) STATUS for COMMISSIONS',
         'WE_ARE STATUS for all costume, mascot and fursuit work TIMESPAN',
         'WE STATUS\.',
