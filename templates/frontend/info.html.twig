@@ -1,31 +1,49 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
-        <ul>
-            <li><a href="#introduction">Introduction</a></li>
-            <li><a href="#data-updates">How to get your studio data updated or added</a></li>
-            <li><a href="#commissions-status-tracking">Automatic updates of commissions status</a></li>
-            <li><a href="#keep-in-touch">Keep in touch, see what's going on, join the party</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-
-        <h1 id="introduction">Awoo!</h1>
-
-        <div class="container py-4">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 id="introduction">OwO what's this?</h3>
             <p>
-                Welcome to a <strong>starting project</strong>. The ultimate goal is to make furries rule
-                the world, but first things first, we need more fursuits, and this is what this website is
-                about. The project is still considered in development and many features are planned to be
-                implemented. Expect more in the future.
+                No one cares about introductions. Long story short: enjoy!
             </p>
+
+            <h3 id="commissions-status-tracking">
+                Commission Status Tracker
+            </h3>
+
+            <p>
+                This website can track and update the status of commissions for your studio - if they're open or closed.
+                You don't need to remember to update this information here at all! Explanation and all the information
+                is now available <a href="{{ path('tracking') }}">here</a>.
+            </p>
+
+            <h3>Friends</h3>
+
+            <p>
+                <a href="http://fursuitmaterials.com/">fursuitmaterials.com</a> - great resource for fursuit makers
+            </p>
+            <p>
+                <a href="http://fursuitreview.com/">fursuitreview.com</a> - a place to look for reviews of fursuit
+                makers' creations. Don't forget to submit yours!
+            </p>
+
+            <h3>Help needed!</h3>
+            <ul>
+                <li>Know a maker, who's missing on this list? - Let them know about this website!</li>
+                <li>See outdated information? - Report it! (you can do this from the main page)</li>
+                <li>Encountered a bug? - <a href="{{ feedback_form_url }}">Report it</a>!</li>
+                <li>Want a feature added/improved? - <a href="{{ feedback_form_url }}">Let me know</a>!</li>
+                <li>Post a link to this website on Facebook/Twitter/forums/your blog/your webpage</li>
+                <li>Own a fursuit already? - <a href="http://forms.fursuitreview.com/">Submit a review</a>!</li>
+            </ul>
         </div>
 
-        <h1 id="data-updates">
-            Include/update studio's data <small><span class="badge badge-warning">(makers love this!)</span></small>
-        </h1>
+        <div class="col-sm-6">
+            <h3 id="data-updates">
+                Include/update studio's data <small><span class="badge badge-warning">(makers love this!)</span></small>
+            </h3>
 
-        <div class="container py-4">
             <p>
                 If you want your studio to be included in this list or some data to be updated (spelling of
                 the name, links, types, anything), feel free to click this button:
@@ -34,40 +52,24 @@
                 <a href="{{ data_form_url }}" class="btn btn-primary btn-lg my-1">
                     <i class="fas fa-plus-circle"></i> Add my studio</a>
             </p>
-        </div>
 
-        <h2 id="commissions-status-tracking">
-            Automatic tracking and updates of commissions status
-        </h2>
+            <h3 id="keep-in-touch">Keep in touch</h3>
 
-        <div class="container py-4">
-            <p>
-                This website can track and update the status of commissions for your studio - if they're open or closed.
-                You don't need to remember to update this information here at all! Explanation and all the information
-                is now available <a href="{{ path('tracking') }}">here</a>.
-            </p>
-        </div>
-
-        <h1 id="keep-in-touch">Keep in touch, see what's going on, join the party</h1>
-
-        <div class="container py-4">
             <p class="text-center overflow-x-auto">
-                <a href="https://t.me/getfursuit_chat" class="btn btn-primary btn-lg my-1">
+                <a href="https://t.me/getfursuit_chat" class="btn btn-primary my-1 btn-sm">
                     <i class="fab fa-telegram"></i> Telegram discussion group</a>
-                <a href="https://t.me/getfursuit" class="btn btn-primary btn-lg my-1">
+                <a href="https://t.me/getfursuit" class="btn btn-primary my-1 btn-sm">
                     <i class="fab fa-telegram"></i> Telegram announcements channel</a>
             </p>
-        </div>
 
-        <h1 id="contact">Contact maintainer</h1>
+            <h3 id="contact">Contact maintainer directly</h3>
 
-        <div class="container py-4">
             <p class="text-center">
-                <a href="https://www.facebook.com/veelkoov/" class="btn btn-primary btn-lg my-1">
+                <a href="https://www.facebook.com/veelkoov/" class="btn btn-primary my-1 btn-sm">
                     <i class="fab fa-facebook"></i> Facebook</a>
-                <a href="https://twitter.com/veelkoov" class="btn btn-primary btn-lg my-1">
+                <a href="https://twitter.com/veelkoov" class="btn btn-primary my-1 btn-sm">
                     <i class="fab fa-twitter"></i> Twitter</a>
-                <a href="https://t.me/veelkoov" class="btn btn-primary btn-lg my-1">
+                <a href="https://t.me/veelkoov" class="btn btn-primary my-1 btn-sm">
                     <i class="fab fa-telegram"></i> Telegram</a>
             </p>
         </div>
