@@ -3,5 +3,5 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        data_form_url:     https://goo.gl/forms/bmiJFs5QFenKML352
+        data_form_url:     https://goo.gl/forms/95dAAq6Sa9ySUcXJ3
         feedback_form_url: https://goo.gl/forms/2mc03Ymr5YdPX7k02
