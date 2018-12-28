@@ -3,7 +3,6 @@
 import $ from 'jquery';
 import * as DataTable from './dataTable';
 import * as DetailsModal from './detailsModal';
-import * as Consts from './consts';
 import * as Utils from './utils'
 
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
@@ -18,7 +17,8 @@ function initRequestUpdateModal() {
 
 function addReferrerRequestTooltip() {
     $('div.artisan-links')
-        .attr('title', Consts.REFERRER_HTML)
+        .attr('title', 'If you\'re going to contact the studio/maker, <u>please let them' +
+            ' know you found them here</u>! This will help us all a lot. Thank you!')
         .data('placement', 'top')
         .data('boundary', 'window')
         .data('html', true)

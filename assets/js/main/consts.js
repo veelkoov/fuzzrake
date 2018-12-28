@@ -40,7 +40,3 @@ export const LANGUAGES_COL_IDX = idx++;
 export const COMMISSIONS_COL_IDX = idx++;
 export const COMMISSIONS_LAST_CHECK_COL_IDX = idx++;
 export const LINKS_COL_IDX = idx++;
-
-export const REFERRER_HTML = "If you're going to contact the studio/maker," +
-    " <u>please let them know you found them here!</u>" +
-    " This will help us all a lot. Thank you!";
