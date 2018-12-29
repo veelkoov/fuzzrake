@@ -132,37 +132,39 @@
             Only one, "overall" status is supported.
         </p>
 
-        <h2>What can be tracked</h2>
+        <h2>Which websites can be tracked</h2>
 
         <p>
             More websites might become supported in the future. At the moment getfursu.it can handle these:
         </p>
 
         <ul>
-            <li>Most of generic websites (including Wix.com)</li>
-            <li>FurAffinity <strong>user profile or "pinned" journal entries</strong> - yes, and recommended!</li>
-            <li>Twitter <strong>profile info</strong></li>
-            <li>Facebook <strong>pinned posts</strong> (discouraged!)</li>
+            <li>Most of generic websites (<strong>recommended</strong>)</li>
+            <li>FurAffinity user profile info (<strong>recommended</strong>) or "pinned" journal entries</li>
+            <li>Twitter profile info (<strong>recommended</strong>)</li>
             <li>Trello card text</li>
+            <li>DeviantArt profile info should work (untested)</li>
         </ul>
 
-        <h2>What can NOT be tracked</h2>
+        <p>Unsure? <a href="{{ path('info') }}">Contact me</a> to clarify!</p>
+
+        <h2>Which websites are NOT supported and probably (or for sure) won't work</h2>
 
         <ul>
             <li>
-                Images - if you post your status as an image, then unless the image file is properly named, this
-                won't work
+                Images - if you post your status as an image on your website, then unless the image file is properly
+                named, this won't work.
             </li>
             <li>
-                Any kind of posts/journals that are not "pinned". You should also not change those posts (unpin one,
-                pin another) - but edit the already "pinned" post/journal, unless you fill the inclusion/update form
-                again each time.
+                Blog entries, posts and journals which are not "pinned". You should also not change those posts
+                (unpin one, pin another) - but edit the already "pinned" post/journal, unless you fill the
+                inclusion/update form again each time.
             </li>
-            <li>
-                Twitter tweets. Only profile info is supported.
-            </li>
-            <li>Unsure? <a href="{{ path('info') }}">Contact me</a> to clarify!</li>
+            <li>Twitter tweets. Only profile info is supported.</li>
+            <li>Facebook posts. Profile info untested.</li>
         </ul>
+
+        <p>Unsure? <a href="{{ path('info') }}">Contact me</a> to clarify!</p>
 
         <h2>Final blah-blahs</h2>
 
