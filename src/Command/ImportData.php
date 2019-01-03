@@ -48,6 +48,7 @@ class ImportData extends Command
         $this->addOption('commit', null, null, 'Save changes in the database');
         $this->addArgument('import-file', InputArgument::REQUIRED, 'Import file path');
         $this->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path');
+        $this->addArgument('passcodes-file', InputArgument::REQUIRED, 'Passcodes file path');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,7 +56,8 @@ class ImportData extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         $this->dataImporter->import($this->arrayFromCsvFile($input->getArgument('import-file')),
-            $this->getImportCorrector($input->getArgument('corrections-file')), $this->io);
+            $this->getImportCorrector($input->getArgument('corrections-file')),
+            $this->readPasscodes($input->getArgument('passcodes-file')), $this->io);
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();
@@ -140,5 +142,28 @@ class ImportData extends Command
         }
 
         return new ImportCorrector($correctionsFilePath);
+    }
+
+    private function readPasscodes(string $filePath): array
+    {
+        $fileContents = file_get_contents($filePath);
+
+        if (false === $fileContents) {
+            throw new InvalidArgumentException("Failed reading passcodes from '$filePath'");
+        }
+
+        $result = [];
+
+        foreach (array_filter(explode("\n", $fileContents)) as $line) {
+            $parts = explode(' ', $line, 2);
+
+            if (2 !== count($parts)) {
+                throw new InvalidArgumentException("Passcode file contains invalid line '$line'");
+            }
+
+            $result[$parts[0]] = $parts[1];
+        }
+
+        return $result;
     }
 }

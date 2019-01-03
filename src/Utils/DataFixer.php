@@ -78,7 +78,7 @@ class DataFixer
         $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
 
-        $artisan->setIntro($this->fixString($artisan->getIntro()));
+        $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
 
         return $artisan;
@@ -90,7 +90,8 @@ class DataFixer
             $fieldValue = $artisan->get(ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$prettyFieldName]);
 
             if (!preg_match($validationRegexp, $fieldValue)) {
-                $this->io->writeln("{$artisan->getMakerId()}:{$prettyFieldName}:|:<wrong>{$fieldValue}</>|ABCDEFGHIJ|");
+                $fieldValue = Utils::safeStr($fieldValue);
+                $this->io->writeln("wr:{$artisan->getMakerId()}:$prettyFieldName:|:<wrong>$fieldValue</>|ABCDEFGHIJ|");
             }
         }
     }
@@ -184,5 +185,10 @@ class DataFixer
         $result = preg_replace('#[ \t]{2,}#', ' ', $result);
 
         return trim($result);
+    }
+
+    private function fixIntro(string $input): string
+    {
+        return $this->fixString(str_replace("\n", ' ', $input));
     }
 }

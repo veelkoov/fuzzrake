@@ -8,18 +8,21 @@ use InvalidArgumentException;
 
 class ValueCorrection
 {
-    const USE_REGEXP = 'R';
+    const MODE_REGEXP = 'rr';
+    const MODE_WHOLE = 'wr';
+    const MODE_ALL = 'ar';
+
     private $makerId;
     private $modelFieldName;
     private $wrongValue;
     private $correctedValue;
-    private $options;
+    private $mode;
 
-    public function __construct(string $makerId, string $modelFieldName, string $options, string $wrongValue, string $correctedValue)
+    public function __construct(string $makerId, string $modelFieldName, string $mode, string $wrongValue, string $correctedValue)
     {
         $this->validateAndSetMakerId($makerId);
         $this->validateAndSetModelFieldName($modelFieldName);
-        $this->validateAndSetOptions($options);
+        $this->mode = $mode;
         $this->wrongValue = $wrongValue;
         $this->correctedValue = $correctedValue;
     }
@@ -58,31 +61,42 @@ class ValueCorrection
 
     public function apply($value)
     {
-        if (self::USE_REGEXP === $this->options) {
-            $result = preg_replace($this->wrongValue, $this->correctedValue, $value);
+        switch ($this->mode) {
+            case self::MODE_REGEXP:
+                $result = preg_replace($this->wrongValue, $this->correctedValue, $value);
 
-            if (null === $result) {
-                throw new InvalidArgumentException("Regexp failed: '$this->wrongValue'");
-            }
+                if (null === $result) {
+                    throw new InvalidArgumentException("Regexp failed: '$this->wrongValue'");
+                }
 
-            return $result;
-        } elseif ($value !== $this->wrongValue && '*' !== $this->wrongValue) {
-            return $value;
-        } else {
-            return $this->correctedValue;
+                return $result;
+                break;
+
+            case self::MODE_ALL:
+                return str_replace($this->wrongValue, $this->correctedValue, $value);
+                break;
+
+            case self::MODE_WHOLE:
+                if ($value === $this->wrongValue || '*' === $this->wrongValue) {
+                    return $this->correctedValue;
+                } else {
+                    return $value;
+                }
+                break;
+
+            default:
+                throw new InvalidArgumentException("Invalid mode: '$this->mode'");
+                break;
         }
     }
 
     /**
-     * @param string $options
+     * @param string $mode
      */
-    private function validateAndSetOptions(string $options): void
+    private function validateAndSetMode(string $mode): void
     {
-        if ('' !== $options && self::USE_REGEXP !== $options) {
-            throw new InvalidArgumentException("Invalid options: '$options'");
+        if (!in_array($mode, [self::MODE_REGEXP, self::MODE_WHOLE, self::MODE_ALL])) {
         }
-
-        $this->options = $options;
     }
 
     /**

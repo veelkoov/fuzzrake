@@ -11,6 +11,7 @@ use App\Utils\ArtisanMetadata;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\ImportCorrector;
+use App\Utils\Utils;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -47,7 +48,7 @@ class DataImporter
         $this->objectManager = $objectManager;
     }
 
-    public function import(array $artisansData, ImportCorrector $importCorrector, SymfonyStyle $io): void
+    public function import(array $artisansData, ImportCorrector $importCorrector, array $passcodes, SymfonyStyle $io): void
     {
         $this->fixer = new DataFixer($io);
         $this->differ = new DataDiffer($io);
@@ -59,8 +60,8 @@ class DataImporter
         $this->showFixedImportedData($imports);
         $io->title('Showing artisans\' data before/after fixing');
         $this->showUpdatedArtisans($imports);
-        $io->title('Validating updated artisans\' data');
-        $this->showValidationResults($imports);
+        $io->title('Validating updated artisans\' data and passcodes');
+        $this->showValidationResults($imports, $passcodes, $io);
     }
 
     private function performImports(array $artisansData)
@@ -72,7 +73,7 @@ class DataImporter
 
     private function performImport(array $artisanData): ArtisanImport
     {
-        $artisanImport = new ArtisanImport();
+        $artisanImport = $this->createArtisanImport($artisanData);
 
         $artisanImport->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
         $artisanImport->setOriginalArtisan(clone $artisanImport->getUpsertedArtisan()); // Clone unmodified
@@ -102,8 +103,9 @@ class DataImporter
     private function findBestMatchArtisan(array $artisanData): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
-            $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::NAME)],
-            $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::FORMERLY)]
+            $this->getDataColumn($artisanData, ArtisanMetadata::NAME),
+            $this->getDataColumn($artisanData, ArtisanMetadata::FORMERLY),
+            $this->corrector->getMatchedName($this->getDataColumn($artisanData, ArtisanMetadata::MAKER_ID))
         );
 
         if (count($results) > 1) {
@@ -135,11 +137,36 @@ class DataImporter
 
     /**
      * @param ArtisanImport[] $imports
+     * @param array           $passcodes
      */
-    private function showValidationResults(array $imports)
+    private function showValidationResults(array $imports, array $passcodes, SymfonyStyle $io)
     {
         foreach ($imports as $import) {
-            $this->fixer->validateArtisanData($import->getUpsertedArtisan());
+            $new = $import->getUpsertedArtisan();
+            $old = $import->getOriginalArtisan();
+            $names = Utils::artisanNames($old, $new);
+            $providedPasscode = $import->getPasscode();
+
+            $this->fixer->validateArtisanData($new);
+
+            if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
+                $io->warning("New maker: $names");
+                $io->writeln(["match name:{$new->getMakerId()}:ABCDEFGHIJ:", "ack new:{$new->getMakerId()}:"]);
+            }
+
+            if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
+                $io->warning("$names changed their maker ID");
+            }
+
+            if (!array_key_exists($new->getMakerId(), $passcodes)) {
+                $io->warning("$names set new passcode: $providedPasscode");
+            } else {
+                $expectedPasscode = $passcodes[$new->getMakerId()];
+
+                if ($providedPasscode !== $expectedPasscode) {
+                    $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
+                }
+            }
         }
     }
 
@@ -149,5 +176,15 @@ class DataImporter
         $this->corrector->correctArtisan($artisan);
 
         return $artisan;
+    }
+
+    private function createArtisanImport(array $artisanData): ArtisanImport
+    {
+        return new ArtisanImport($this->getDataColumn($artisanData, ArtisanMetadata::PASSCODE));
+    }
+
+    private function getDataColumn(array $artisanData, string $prettyFieldName)
+    {
+        return $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName($prettyFieldName)];
     }
 }

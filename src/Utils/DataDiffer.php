@@ -54,15 +54,7 @@ class DataDiffer
     private function showNameFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
     {
         if (!$nameShown) {
-            $names = array_unique(array_filter([
-                $new->getMakerId(),
-                $old->getName(),
-                $old->getFormerly(),
-                $new->getName(),
-                $new->getFormerly(),
-            ]));
-
-            $this->io->section(implode(' / ', $names));
+            $this->io->section(Utils::artisanNames($old, $new));
 
             $nameShown = true;
         }
@@ -84,7 +76,7 @@ class DataDiffer
                 $item = "<a>$item</>";
             }
 
-            $item = $this->printSafe($item);
+            $item = Utils::safeStr($item);
         }
 
         $this->io->writeln("$fieldName: ".join('|', $allItems));
@@ -93,16 +85,13 @@ class DataDiffer
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal): void
     {
         if ($oldVal) {
-            $this->io->writeln("$fieldName: <d>{$this->printSafe($oldVal)}</>");
+            $oldVal = Utils::safeStr($oldVal);
+            $this->io->writeln("$fieldName: <d>$oldVal</>");
         }
 
         if ($newVal) {
-            $this->io->writeln("$fieldName: <a>{$this->printSafe($newVal)}</>");
+            $newVal = Utils::safeStr($newVal);
+            $this->io->writeln("$fieldName: <a>$newVal</>");
         }
-    }
-
-    private function printSafe(string $raw): string
-    {
-        return str_replace('\\/', '/', substr(json_encode($raw), 1, -1));
     }
 }

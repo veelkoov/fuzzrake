@@ -9,6 +9,8 @@ use App\Entity\Artisan;
 class ImportCorrector
 {
     private $corrections = ['*' => []];
+    private $acknowledgedNew = [];
+    private $matchedNames = [];
 
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -27,8 +29,7 @@ class ImportCorrector
         $buffer->skipWhitespace();
 
         while (!$buffer->isEmpty()) {
-            $this->addCorrection($this->readCorrection($buffer));
-
+            $this->readCommand($buffer);
             $buffer->skipWhitespace();
         }
     }
@@ -44,16 +45,30 @@ class ImportCorrector
         $this->corrections[$makerId][] = $correction;
     }
 
-    private function readCorrection(StringBuffer $buffer): ValueCorrection
+    private function readCommand(StringBuffer $buffer): void
     {
+        $command = $buffer->readUntil(':');
         $makerId = $buffer->readUntil(':');
-        $fieldName = $buffer->readUntil(':');
-        $delimiter = $buffer->readUntil(':');
-        $options = $buffer->readUntil(':');
-        $wrongValue = $buffer->readUntil($delimiter);
-        $correctedValue = $buffer->readUntil($delimiter);
 
-        return new ValueCorrection($makerId, ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$fieldName], $options, $wrongValue, $correctedValue);
+        switch ($command) {
+            case 'ack new':
+                $this->acknowledgedNew[] = $makerId;
+            break;
+
+            case 'match name':
+                $this->matchedNames[$makerId] = $buffer->readUntil(':');
+            break;
+
+            default:
+                $matchedName = $buffer->readUntil(':');
+                $delimiter = $buffer->readUntil(':');
+                $wrongValue = Utils::unsafeStr($buffer->readUntil($delimiter));
+                $correctedValue = Utils::unsafeStr($buffer->readUntil($delimiter));
+
+                $this->addCorrection(new ValueCorrection($makerId, ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$matchedName],
+                    $command, $wrongValue, $correctedValue));
+            break;
+        }
     }
 
     /**
@@ -78,5 +93,19 @@ class ImportCorrector
         } else {
             return $this->corrections['*'];
         }
+    }
+
+    public function getMatchedName($makerId): ?string
+    {
+        if (!array_key_exists($makerId, $this->matchedNames)) {
+            return null;
+        } else {
+            return $this->matchedNames[$makerId];
+        }
+    }
+
+    public function isAcknowledged($makerId): bool
+    {
+        return in_array($makerId, $this->acknowledgedNew);
     }
 }

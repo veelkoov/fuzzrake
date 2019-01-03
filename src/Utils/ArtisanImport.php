@@ -29,6 +29,16 @@ class ArtisanImport
     private $originalArtisan;
 
     /**
+     * @var string
+     */
+    private $passcode;
+
+    public function __construct(string $passcode)
+    {
+        $this->passcode = $passcode;
+    }
+
+    /**
      * @return Artisan
      */
     public function getNewOriginalData(): Artisan
@@ -90,5 +100,13 @@ class ArtisanImport
     public function setOriginalArtisan(Artisan $originalArtisan): void
     {
         $this->originalArtisan = $originalArtisan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasscode(): string
+    {
+        return $this->passcode;
     }
 }
