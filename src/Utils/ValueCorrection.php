@@ -91,15 +91,6 @@ class ValueCorrection
     }
 
     /**
-     * @param string $mode
-     */
-    private function validateAndSetMode(string $mode): void
-    {
-        if (!in_array($mode, [self::MODE_REGEXP, self::MODE_WHOLE, self::MODE_ALL])) {
-        }
-    }
-
-    /**
      * @param string $modelFieldName
      */
     private function validateAndSetModelFieldName(string $modelFieldName): void
