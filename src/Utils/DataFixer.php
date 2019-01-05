@@ -30,6 +30,7 @@ class DataFixer
         'czech republic' => 'CZ',
         'denmark' => 'DK',
         'germany' => 'DE',
+        'finland' => 'FI',
         'uk|england|united kingdom' => 'GB',
         'ireland' => 'IE',
         'italia|italy' => 'IT',

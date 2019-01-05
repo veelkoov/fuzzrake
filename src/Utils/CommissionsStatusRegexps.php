@@ -13,7 +13,7 @@ class CommissionsStatusRegexps
     ];
     const COMMON_REPLACEMENTS = [
         'COMMISSIONS' => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?)',
-        'OPEN' => '(open(?!ing)|(?!not? |aren\'t |are not? )(accepting|considering)|WE_CAN take)',
+        'OPEN' => '(open(?!ing)|(?!not? |aren\'t |are not? )(accepting|considering)|WE_CAN take|live)',
         'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
         'fursuits' => 'fursuits?',
         '</(div|p|h[1-6])>' => ' ?</$1> ?',
@@ -28,12 +28,13 @@ class CommissionsStatusRegexps
         '(once|when) (WE_ARE STATUS for COMMISSIONS|COMMISSIONS are STATUS)',
         'will not be STATUS for COMMISSIONS',
         '(art|painted glass) COMMISSIONS: STATUS',
-        'COMMISSIONS STATUS MONTHS',
+        'COMMISSIONS STATUS( in)? MONTHS',
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',
         'COMMISSIONS( status|:? are| have| info)?( TIMESPAN)?[-: ]+(&gt;)*STATUS(&lt;)*',
         'quotes? have TIMESPAN STATUS',
+        'order quotes are STATUS',
         'STATUS (for (new )?)?COMMISSIONS',
         '<div>TIMESPAN</div><div>STATUS</div><div>for COMMISSIONS</div>',
         '<p>COMMISSIONS are</p><p>STATUS</p>',
