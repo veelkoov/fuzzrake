@@ -58,7 +58,7 @@ class StatisticsController extends AbstractController
         $otherStyles = $artisanRepository->getDistinctOtherStyles();
         $features = $artisanRepository->getDistinctFeatures();
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
-        $countries = $artisanRepository->getDistinctCountries();
+        $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $artisanRepository->getCommissionsStats();
 
         return $this->render('frontend/statistics/statistics.html.twig', [

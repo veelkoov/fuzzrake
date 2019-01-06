@@ -1,15 +1,42 @@
-<div class="row pb-3">
-    <div class="col col-sm-4">
-        <label for="countriesFilter">Choose fursuit makers' countries:</label>
-        <select multiple="multiple" id="countriesFilter" class="form-control">
-            <option value="">Show unknown</option>
-            {% for country, count in countries %}
-                <option value="{{ country }}">{{ country }} ({{ count }})</option>
-            {% endfor %}
-        </select>
-    </div>
+<div class="row">
+    <div class="col" id="countriesFilters">
+        <fieldset>
+            <legend>Choose fursuit makers' countries:</legend>
 
-    <div class="col col-sm-4">
+            <fieldset>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="" />
+                    <label class="form-check-label" for="countryCheckBoxUnknown"><i class="fas fa-question-circle"></i> Unknown</label>
+                </div>
+            </fieldset>
+
+            {% for region, regionCountries in countries %}
+                <fieldset class="region">
+                    <legend>
+                        {{ region }}
+                        <span class="allNoneInvert" aria-hidden="true">
+                            selection: <a data-action="all" href="">all</a> &bull; <a data-action="none" href="">none</a> &bull; <a data-action="invert" href="">invert</a>
+                        </span>
+                    </legend>
+
+                    {% for country in regionCountries %}
+                        {%  set checkboxId = 'countryCheckBox' ~ country.code %}
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.code }}" />
+                            <label class="form-check-label" for="{{ checkboxId }}">
+                                <span class="flag-icon flag-icon-{{ country.code|lower }}"></span> {{ country.name }} ({{ country.count }})
+                            </label>
+                        </div>
+                    {% endfor %}
+                </fieldset>
+            {% endfor %}
+        </fieldset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
         <label for="stylesFilter">Choose fursuit styles offered by makers:</label>
         <select multiple="multiple" id="stylesFilter" class="form-control">
             <option value="">Show unknown</option>
@@ -20,13 +47,13 @@
         </select>
     </div>
 
-    <div class="col col-sm-4">
+    <div class="col">
         <label for="featuresFilter">Choose fursuit features offered by makers:</label>
         <select multiple="multiple" id="featuresFilter" class="form-control">
             <option value="">Show unknown</option>
             <option value="Other">Other</option>
             {% for feature, count in features %}
-                <option value="{{ feature }}">{{ feature }} ({{  count }})</option>
+                <option value="{{ feature }}">{{ feature }} ({{ count }})</option>
             {% endfor %}
         </select>
     </div>

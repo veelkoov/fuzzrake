@@ -50,20 +50,6 @@ function getDataTableFilterFunction(filter, isAnd) {
     };
 }
 
-function countriesOnCreateTemplatesCallback(template) {
-    let _this = this;
-    let classNames = this.config.classNames;
-
-    return {
-        item: function item(classNames, data) {
-            return template(`<div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}> ${data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value.toLowerCase() + '"></span> ' + data.label.replace(/^[A-Z]+ /, '') : data.label}</div>`);
-        },
-        choice: function choice(classNames, data) {
-            return template(`<div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${_this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}> ${data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value.toLowerCase() + '"></span> ' + data.label : data.label}</div>`);
-        }
-    };
-}
-
 function initSelectFilter(selector: string, dataColumnIndex: number, forceOnMobile: boolean, isAnd: boolean, onCreateTemplatesCallback?: (any) => object) {
     let useChoices = !isMobile() || forceOnMobile;
 
@@ -179,7 +165,27 @@ export function init() {
 
     initDataTable();
 
-    initSelectFilter('#countriesFilter', Consts.COUNTRY_COL_IDX, true, false, countriesOnCreateTemplatesCallback);
     initSelectFilter('#stylesFilter', Consts.STYLES_COL_IDX, false, false);
     initSelectFilter('#featuresFilter', Consts.FEATURES_COL_IDX, false, true);
+
+    // TODO: refactor
+    $('#countriesFilters .allNoneInvert a').click(function (event, sth) {
+        let $checkboxes = $(event.target).parents('fieldset.region').find('input:checkbox');
+
+        switch ($(this).data('action')) {
+            case 'none':
+                $checkboxes.prop('checked', false);
+                break;
+            case 'all':
+                $checkboxes.prop('checked', true);
+                break;
+            case 'invert':
+                $checkboxes.prop("checked", function (_, checked) {
+                    return !checked;
+                });
+                break;
+        }
+
+        event.preventDefault();
+    });
 }

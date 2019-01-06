@@ -64,7 +64,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
-    public function getDistinctCountries(): array
+    public function getDistinctCountriesToCountAssoc(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
     }
