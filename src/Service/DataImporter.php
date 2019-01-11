@@ -48,10 +48,11 @@ class DataImporter
         $this->objectManager = $objectManager;
     }
 
-    public function import(array $artisansData, ImportCorrector $importCorrector, array $passcodes, SymfonyStyle $io): void
+    public function import(array $artisansData, ImportCorrector $importCorrector, array $passcodes, SymfonyStyle $io,
+                           bool $showFixCommands): void
     {
         $this->fixer = new DataFixer($io);
-        $this->differ = new DataDiffer($io);
+        $this->differ = new DataDiffer($io, $showFixCommands);
         $this->corrector = $importCorrector;
 
         $imports = $this->performImports($artisansData);
