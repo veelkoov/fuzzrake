@@ -71,42 +71,17 @@ class DefaultController extends AbstractController
 
     private function getCountriesData(array $countriesToCount, string $projectDir): array
     {
-        $countriesData = $this->getRawCountriesDataFilteredAssoc($projectDir, array_keys($countriesToCount));
+        $countriesData = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
         $result = array_fill_keys(array_map(function (array $country) { return $country['region']; }, $countriesData), []);
 
         foreach ($countriesData as $countryData) {
-            $result[$countryData['region']][] = $this->getCountryData($countryData, $countriesToCount);
+            $result[$countryData['region']][] = array_merge($countryData, [
+                'count' => $countriesToCount[$countryData['code']],
+            ]);
         }
 
         ksort($result);
 
         return $result;
-    }
-
-    private function getRawCountriesDataFilteredAssoc(string $projectDir, array $countriesCodes)
-    {
-        $countriesData = json_decode(file_get_contents($projectDir.'/assets/3rd-party/ISO-3166-Countries-with-Regional-Codes/all/all.json'), true);
-        $countriesData = array_filter($countriesData, function (array $item) use ($countriesCodes) {
-            return in_array($item['alpha-2'], $countriesCodes);
-        });
-
-        $result = [];
-
-        foreach ($countriesData as $countryData) {
-            $result[$countryData['alpha-2']] = $countryData;
-        }
-
-        return $result;
-    }
-
-    private function getCountryData(array $countryData, array $countriesToCount): array
-    {
-        return [
-            'originalData' => $countryData, // TODO: drop
-            'code' => $countryData['alpha-2'],
-            'count' => $countriesToCount[$countryData['alpha-2']],
-            'name' => $countryData['name'],
-            'region' => in_array($countryData['region'], ['Americas', 'Europe']) || empty($countryData['intermediate-region']) ? $countryData['region'] : $countryData['intermediate-region'],
-        ];
     }
 }
