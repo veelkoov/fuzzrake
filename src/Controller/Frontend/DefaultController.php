@@ -35,6 +35,16 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/whoopsies.html", name="whoopsies")
+     *
+     * @return Response
+     */
+    public function whoopsies(): Response
+    {
+        return $this->render('frontend/whoopsies.html.twig', []);
+    }
+
+    /**
      * @Route("/", name="main")
      * @Route("/index.html")
      *

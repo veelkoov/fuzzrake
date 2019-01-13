@@ -15,9 +15,15 @@ class DataDiffer
      */
     private $io;
 
-    public function __construct(SymfonyStyle $io)
+    /**
+     * @var bool
+     */
+    private $showFixCommands;
+
+    public function __construct(SymfonyStyle $io, bool $showFixCommands = false)
     {
         $this->io = $io;
+        $this->showFixCommands = $showFixCommands;
 
         $this->io->getFormatter()->setStyle('a', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('d', new OutputFormatterStyle('red'));
@@ -46,6 +52,8 @@ class DataDiffer
             } else {
                 $this->showSingleValueDiff($prettyFieldName, $oldVal, $newVal);
             }
+
+            $this->showFixCommandOptionally($new->getMakerId(), $prettyFieldName, $newVal);
 
             $this->io->writeln('');
         }
@@ -92,6 +100,14 @@ class DataDiffer
         if ($newVal) {
             $newVal = Utils::safeStr($newVal);
             $this->io->writeln("$fieldName: <a>$newVal</>");
+        }
+    }
+
+    private function showFixCommandOptionally(string $makerId, string $prettyFieldName, string $value)
+    {
+        if ($this->showFixCommands) {
+            $value = Utils::safeStr($value);
+            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$value|ABCDEFGHIJ|");
         }
     }
 }
