@@ -28,7 +28,7 @@ class CommissionsStatusRegexps
         '(once|when) (WE_ARE STATUS for COMMISSIONS|COMMISSIONS are STATUS)',
         'will not be STATUS for COMMISSIONS',
         '(art|painted glass) COMMISSIONS: STATUS',
-        'COMMISSIONS STATUS( in)? MONTHS',
+        'COMMISSIONS STATUS( in)?( late| early)? (MONTHS|20\d\d)',
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',

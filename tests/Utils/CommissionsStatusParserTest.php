@@ -65,6 +65,6 @@ class CommissionsStatusParserTest extends TestCase
             }
 
             return [basename($filepath), file_get_contents($filepath), $expectedResult, $additionalFilter, $studioName];
-        }, glob(__DIR__.'/../snapshots/*.{html,json}', GLOB_BRACE)));
+        }, glob(__DIR__.'/../snapshots/**/*.{html,json}', GLOB_BRACE)));
     }
 }
