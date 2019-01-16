@@ -1,0 +1,42 @@
+<fieldset>
+    <div class="row pl-4">
+        <div class="col-sm-12 custom-control custom-checkbox form-check-inline">
+            <span class="allNoneInvertSingle" aria-hidden="true">
+                selection: <a data-action="all" href="">all</a>
+                &bull; <a data-action="none" href="">none</a>
+                &bull; <a data-action="invert" href="">invert</a>
+            </span>
+
+            <span>
+                <input class="custom-control-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value=""/>
+                <label class="custom-control-label" for="{{ itemName ~ 'CheckBoxUnknown' }}">
+                    <i class="fas fa-question-circle"></i> Unknown
+                </label>
+            </span>
+
+            {% if hideOther is not defined or not hideOther %}
+                <span class="pl-5">
+                    <input class="custom-control-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxOther' }}" value="Other"/>
+                    <label class="custom-control-label" for="{{ itemName ~ 'CheckBoxOther' }}">
+                        <i class="fas fa-asterisk"></i> Other
+                    </label>
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row pl-4 pt-2">
+        {% for item, count in items %}
+            {% set checkboxId = itemName ~ 'CheckBox' ~ loop.index %}
+
+            <div class="col-sm-3 custom-control custom-checkbox py-1">
+                <input class="custom-control-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}"
+                       value="{{ item }}"/>
+                <label class="custom-control-label" for="{{ checkboxId }}">
+                    {{ item }}
+                    <span class="count">({{ count }})</span>
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+</fieldset>

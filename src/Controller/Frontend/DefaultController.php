@@ -52,19 +52,15 @@ class DefaultController extends AbstractController
      */
     public function main(ArtisanRepository $artisanRepository, string $projectDir): Response
     {
-        $artisans = $artisanRepository->getAll();
-        $countryCount = $artisanRepository->getDistinctCountriesCount();
-        $types = $artisanRepository->getDistinctTypes();
-        $styles = $artisanRepository->getDistinctStyles();
-        $features = $artisanRepository->getDistinctFeatures();
         $countriesToCount = $artisanRepository->getDistinctCountriesToCountAssoc();
 
         return $this->render('frontend/main/main.html.twig', [
-            'artisans' => $artisans,
-            'countryCount' => $countryCount,
-            'types' => $types,
-            'styles' => $styles,
-            'features' => $features,
+            'artisans' => $artisanRepository->getAll(),
+            'countryCount' => $artisanRepository->getDistinctCountriesCount(),
+            'orderTypes' => $artisanRepository->getDistinctOrderTypes(),
+            'styles' => $artisanRepository->getDistinctStyles(),
+            'features' => $artisanRepository->getDistinctFeatures(),
+            'productionModels' => $artisanRepository->getDistinctProductionModels(),
             'countries' => $this->getCountriesData($countriesToCount, $projectDir),
         ]);
     }

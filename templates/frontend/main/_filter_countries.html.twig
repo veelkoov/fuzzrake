@@ -1,0 +1,41 @@
+<fieldset class="region">
+    <div class="row pl-4">
+        <div class="col-sm-12 custom-control custom-checkbox">
+            <input class="custom-control-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown"
+                   value=""/>
+            <label class="custom-control-label" for="countryCheckBoxUnknown">
+                <i class="fas fa-question-circle"></i> Unknown
+            </label>
+        </div>
+    </div>
+</fieldset>
+
+{% for region, regionCountries in countries %}
+    <fieldset class="region">
+        <legend>
+            {{ region }}
+
+            <span class="allNoneInvert" aria-hidden="true">
+                selection: <a data-action="all" href="">all</a>
+                &bull; <a data-action="none" href="">none</a>
+                &bull; <a data-action="invert" href="">invert</a>
+            </span>
+        </legend>
+
+        <div class="row pl-4">
+            {% for country in regionCountries %}
+                {% set checkboxId = 'countryCheckBox' ~ country.code %}
+
+                <div class="col-sm-3 custom-control custom-checkbox py-1">
+                    <input class="custom-control-input" name="countries[]" type="checkbox" id="{{ checkboxId }}"
+                           value="{{ country.code }}"/>
+                    <label class="custom-control-label" for="{{ checkboxId }}">
+                        <span class="flag-icon flag-icon-{{ country.code|lower }}"></span>
+                        {{ country.name }}
+                        <span class="count">({{ country.count }})</span>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </fieldset>
+{% endfor %}

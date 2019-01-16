@@ -1,65 +1,62 @@
-<div class="row">
-    <div class="col" id="countriesFilters">
-        <fieldset>
-            <legend>Choose fursuit makers' countries:</legend>
+<div class="accordion" id="filtersAccordion">
+    <div class="card">
+        <div class="card-header collapsed" id="headingOne" data-toggle="collapse" data-target="#countriesFilter"
+             aria-expanded="false" aria-controls="countriesFilter">
+            Countries
+        </div>
 
-            <fieldset class="region">
-                <div class="row pl-4">
-                    <div class="col-sm-12 custom-control custom-checkbox">
-                        <input class="custom-control-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="" />
-                        <label class="custom-control-label" for="countryCheckBoxUnknown">
-                            <i class="fas fa-question-circle"></i> Unknown
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
-
-            {% for region, regionCountries in countries %}
-                <fieldset class="region">
-                    <legend>
-                        {{ region }}
-                        <span class="allNoneInvert" aria-hidden="true">
-                            selection: <a data-action="all" href="">all</a> &bull; <a data-action="none" href="">none</a> &bull; <a data-action="invert" href="">invert</a>
-                        </span>
-                    </legend>
-                    <div class="row pl-4">
-                        {% for country in regionCountries %}
-                            {%  set checkboxId = 'countryCheckBox' ~ country.code %}
-
-                            <div class="col-sm-3 custom-control custom-checkbox py-1">
-                                <input class="custom-control-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.code }}" />
-                                <label class="custom-control-label" for="{{ checkboxId }}">
-                                    <span class="flag-icon flag-icon-{{ country.code|lower }}"></span> {{ country.name }} <span class="count">({{ country.count }})</span>
-                                </label>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </fieldset>
-            {% endfor %}
-        </fieldset>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col">
-        <label for="stylesFilter">Choose fursuit styles offered by makers:</label>
-        <select multiple="multiple" id="stylesFilter" class="form-control">
-            <option value="">Show unknown</option>
-            <option value="Other">Other</option>
-            {% for style, count in styles %}
-                <option value="{{ style }}">{{ style }} ({{ count }})</option>
-            {% endfor %}
-        </select>
+        <div id="countriesFilter" class="collapse" aria-labelledby="headingOne" data-parent="#filtersAccordion">
+            <div class="card-body">
+                {% include 'frontend/main/_filter_countries.html.twig' %}
+            </div>
+        </div>
     </div>
 
-    <div class="col">
-        <label for="featuresFilter">Choose fursuit features offered by makers:</label>
-        <select multiple="multiple" id="featuresFilter" class="form-control">
-            <option value="">Show unknown</option>
-            <option value="Other">Other</option>
-            {% for feature, count in features %}
-                <option value="{{ feature }}">{{ feature }} ({{ count }})</option>
-            {% endfor %}
-        </select>
+    <div class="card">
+        <div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#stylesFilter"
+             aria-expanded="false" aria-controls="stylesFilter">
+            Styles
+        </div>
+        <div id="stylesFilter" class="collapse" aria-labelledby="headingTwo" data-parent="#filtersAccordion">
+            <div class="card-body">
+                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'style', items: styles } %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#featuresFilter"
+             aria-expanded="false" aria-controls="featuresFilter">
+            Features
+        </div>
+        <div id="featuresFilter" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
+            <div class="card-body">
+                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'feature', items: features } %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#orderTypesFilter"
+             aria-expanded="false" aria-controls="orderTypesFilter">
+            Order types
+        </div>
+        <div id="orderTypesFilter" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
+            <div class="card-body">
+                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'orderType', items: orderTypes } %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#productionModelsFilter"
+             aria-expanded="false" aria-controls="productionModelsFilter">
+            Production models
+        </div>
+        <div id="productionModelsFilter" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
+            <div class="card-body">
+                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'productionModel', items: productionModels, hideOther: true } %}
+            </div>
+        </div>
     </div>
 </div>

@@ -52,8 +52,8 @@ class StatisticsController extends AbstractController
      */
     public function statistics(ArtisanRepository $artisanRepository): Response
     {
-        $types = $artisanRepository->getDistinctTypes();
-        $otherTypes = $artisanRepository->getDistinctOtherTypes();
+        $types = $artisanRepository->getDistinctOrderTypes();
+        $otherTypes = $artisanRepository->getDistinctOtherOrderTypes();
         $styles = $artisanRepository->getDistinctStyles();
         $otherStyles = $artisanRepository->getDistinctOtherStyles();
         $features = $artisanRepository->getDistinctFeatures();

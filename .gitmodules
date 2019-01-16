@@ -1,6 +1,3 @@
-[submodule "assets/3rd-party/Choices"]
-	path = assets/3rd-party/Choices
-	url = https://github.com/jshjohnson/Choices.git
 [submodule "assets/3rd-party/flag-icon-css"]
 	path = assets/3rd-party/flag-icon-css
 	url = https://github.com/lipis/flag-icon-css.git
