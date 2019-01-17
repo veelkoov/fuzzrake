@@ -36,7 +36,7 @@ class AppTidyData extends Command
 
     protected function configure()
     {
-        $this->addOption('dry-run', 'd', null, 'Dry run (don\'t update the DB)');
+        $this->addOption('commit', null, null, 'Save changes in the database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -46,10 +46,13 @@ class AppTidyData extends Command
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
             $fixer->fixArtisanData($artisan);
+        }
+
+        foreach ($this->artisanRepository->findAll() as $artisan) {
             $fixer->validateArtisanData($artisan);
         }
 
-        if (!$input->getOption('dry-run')) {
+        if ($input->getOption('commit')) {
             $this->objectManager->flush();
             $io->success('Finished and saved');
         } else {

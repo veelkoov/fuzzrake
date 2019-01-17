@@ -47,7 +47,7 @@ class DataDiffer
         if ($oldVal !== $newVal) {
             $this->showNameFirstTime($nameShown, $old, $new);
 
-            if (false !== strpos($oldVal, "\n") && false !== strpos($newVal, "\n")) {
+            if (ArtisanMetadata::isListField($prettyFieldName)) {
                 $this->showListDiff($prettyFieldName, $oldVal, $newVal);
             } else {
                 $this->showSingleValueDiff($prettyFieldName, $oldVal, $newVal);
@@ -87,6 +87,9 @@ class DataDiffer
             $item = Utils::safeStr($item);
         }
 
+        if ($oldVal) { // In case order changed or duplicates got removed, etc.
+            $this->io->writeln("$fieldName: ".str_replace("\n", '|', $oldVal));
+        }
         $this->io->writeln("$fieldName: ".join('|', $allItems));
     }
 

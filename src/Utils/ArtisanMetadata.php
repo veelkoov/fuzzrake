@@ -125,6 +125,16 @@ class ArtisanMetadata
         self::NOTES => '#.*#',
     ];
 
+    const LIST_FIELDS_PRETTY_NAMES = [
+        self::PRODUCTION_MODEL,
+        self::STYLES,
+        self::OTHER_STYLES,
+        self::ORDER_TYPES,
+        self::OTHER_ORDER_TYPES,
+        self::FEATURES,
+        self::OTHER_FEATURES,
+    ];
+
     private static $uiFormFieldIndexes = [];
     private static $pretty2modelFieldNameMap = [];
 
@@ -150,6 +160,11 @@ class ArtisanMetadata
         }
 
         return self::$pretty2modelFieldNameMap;
+    }
+
+    public static function isListField(string $prettyFieldName): bool
+    {
+        return in_array($prettyFieldName, self::LIST_FIELDS_PRETTY_NAMES);
     }
 
     private static function getUiFormIndexes(): array

@@ -46,16 +46,24 @@ class DataFixer
     private $io;
 
     /**
+     * @var DataDiffer
+     */
+    private $differ;
+
+    /**
      * @param SymfonyStyle $io
      */
     public function __construct(SymfonyStyle $io)
     {
         $this->io = $io;
         $this->io->getFormatter()->setStyle('wrong', new OutputFormatterStyle('red'));
+        $this->differ = new DataDiffer($io);
     }
 
     public function fixArtisanData(Artisan $artisan): Artisan
     {
+        $originalArtisan = clone $artisan;
+
         $artisan->setName($this->fixString($artisan->getName()));
         $artisan->setSince($this->fixSince($artisan->getSince()));
 
@@ -82,6 +90,8 @@ class DataFixer
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
 
+        $this->differ->showDiff($originalArtisan, $artisan);
+
         return $artisan;
     }
 
@@ -104,6 +114,7 @@ class DataFixer
         $list = array_map('trim', $list);
         $list = array_filter($list);
         sort($list);
+        $list = array_unique($list);
         $result = implode("\n", $list);
 
         return $result;
