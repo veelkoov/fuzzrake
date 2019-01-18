@@ -10,6 +10,7 @@ class CommissionsStatusRegexps
         '#<style[^>]*>.*?</style>#s' => '',
         '# style="[^"]*"( (?=\>))?#s' => '',
         '#’|&\#39;#' => '\'',
+        '<!--.*?-->' => '',
     ];
     const COMMON_REPLACEMENTS = [
         'COMMISSIONS' => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?)',
