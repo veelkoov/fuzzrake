@@ -1,11 +1,13 @@
 <fieldset class="region">
-    <div class="row pl-4">
-        <div class="col-sm-12 custom-control custom-checkbox">
-            <input class="custom-control-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown"
-                   value=""/>
-            <label class="custom-control-label" for="countryCheckBoxUnknown">
-                <i class="fas fa-question-circle"></i> Unknown
-            </label>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown"
+                       value=""/>
+                <label class="form-check-label" for="countryCheckBoxUnknown">
+                    <i class="fas fa-question-circle"></i> Unknown
+                </label>
+            </div>
         </div>
     </div>
 </fieldset>
@@ -22,18 +24,20 @@
             </span>
         </legend>
 
-        <div class="row pl-4">
+        <div class="row">
             {% for country in regionCountries %}
                 {% set checkboxId = 'countryCheckBox' ~ country.code %}
 
-                <div class="col-sm-3 custom-control custom-checkbox py-1">
-                    <input class="custom-control-input" name="countries[]" type="checkbox" id="{{ checkboxId }}"
-                           value="{{ country.code }}"/>
-                    <label class="custom-control-label" for="{{ checkboxId }}">
-                        <span class="flag-icon flag-icon-{{ country.code|lower }}"></span>
-                        {{ country.name }}
-                        <span class="count">({{ country.count }})</span>
-                    </label>
+                <div class="col-sm-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}"
+                               value="{{ country.code }}"/>
+                        <label class="form-check-label" for="{{ checkboxId }}">
+                            <span class="flag-icon flag-icon-{{ country.code|lower }}"></span>
+                            {{ country.name }}
+                            <span class="count">({{ country.count }})</span>
+                        </label>
+                    </div>
                 </div>
             {% endfor %}
         </div>
