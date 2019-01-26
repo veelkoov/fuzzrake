@@ -159,6 +159,7 @@ function initSelectionLinksAllNoneInvert() {
                 break;
         }
 
+        refresh(null);
         event.preventDefault();
     });
 }

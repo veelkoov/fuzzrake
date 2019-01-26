@@ -45,6 +45,11 @@
     "region": "Europe"
   },
   {
+    "name": "EU (unspecified)",
+    "code": "EU",
+    "region": "Europe"
+  },
+  {
     "name": "Finland",
     "code": "FI",
     "region": "Europe"
