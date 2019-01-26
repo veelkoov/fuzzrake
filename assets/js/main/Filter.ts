@@ -74,7 +74,10 @@ export default class Filter {
             return 'any';
         }
 
-        return vals.join(', ').replace(/^, /, 'Other, ')
-            .replace(/ \(.+?\)/g, ''); // TODO: Drop parenthesis stuff earlier
+        if (vals[0] === '') {
+            vals[0] = 'Unknown';
+        }
+
+        return vals.join(', ').replace(/ \(.+?\)/g, ''); // TODO: Drop parenthesis stuff earlier
     }
 }
