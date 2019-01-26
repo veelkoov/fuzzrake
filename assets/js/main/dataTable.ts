@@ -6,9 +6,8 @@ import * as Utils from './utils';
 import Artisan from './Artisan';
 import Filter from './Filter';
 
-let artisans: Artisan[];
 let $dataTable;
-let filters: object;
+let filters: object = {};
 
 declare var DATA_UPDATES_URL: string;
 
@@ -127,25 +126,24 @@ function processRowHtml($row: any, artisan: Artisan): void {
     $row.find('.artisan-links .dropdown-menu').prepend($links.addClass('dropdown-item'));
 }
 
-export function init() {
-    artisans = [];
-    filters = {};
-
-    $('#artisans tr.fursuit-maker').each((_: number, item: object) => {
+function processArtisansTable() {
+    $('#artisans tr.fursuit-maker').each((index: number, item: object) => {
         let $row = $(item);
         let artisan = Artisan.fromArray($row.children().toArray().map((value: any) => value.innerHTML));
 
         $row.data('artisan', artisan);
-        artisans.push(artisan);
-
         processRowHtml($row, artisan);
     });
+}
 
+export function init() {
+    processArtisansTable();
     initDataTable();
-
     initCheckBoxesFilter('#countriesFilter', Consts.COUNTRY_COL_IDX, false);
     initCheckBoxesFilter('#stylesFilter', Consts.STYLES_COL_IDX, false);
     initCheckBoxesFilter('#featuresFilter', Consts.FEATURES_COL_IDX, true);
     initCheckBoxesFilter('#orderTypesFilter', Consts.TYPES_COL_IDX, false);
     initCheckBoxesFilter('#productionModelsFilter', Consts.PRODUCTION_MODEL_COL_IDX, false);
+
+    $('#processingData, #dataProcessed').toggle();
 }
