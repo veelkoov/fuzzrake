@@ -78,6 +78,8 @@ export default class Filter {
             vals[0] = 'Unknown';
         }
 
-        return vals.join(', ').replace(/ \(.+?\)/g, ''); // TODO: Drop parenthesis stuff earlier
+        const anyOrAll = vals.length > 1 ? (this.isAnd ? 'all of: ' : 'any of: ') : '';
+
+        return anyOrAll + vals.join(', ').replace(/ \(.+?\)/g, ''); // TODO: Drop parenthesis stuff earlier
     }
 }
