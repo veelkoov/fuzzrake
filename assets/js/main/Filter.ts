@@ -1,21 +1,17 @@
 import * as $ from "jquery";
 
 export default class Filter {
-    private readonly dataColumnIndex: number;
-    private readonly selector: string;
-    private readonly isAnd: boolean;
-    private readonly refreshCallback: () => void;
-    private readonly $checkboxes: JQuery;
-    private selectedValues: string[];
+    private readonly $checkboxes: JQuery<HTMLElement>;
+    private selectedValues: string[] = [];
+    private $status: JQuery<HTMLElement>;
 
-    constructor(dataColumnIndex: number, selector: string, isAnd: boolean, refreshCallback: () => void) {
-        this.dataColumnIndex = dataColumnIndex;
-        this.selector = selector;
-        this.isAnd = isAnd;
-        this.refreshCallback = refreshCallback;
-
+    constructor(private readonly dataColumnIndex: number,
+                private readonly selector: string,
+                private readonly isAnd: boolean,
+                private readonly refreshCallback: () => void) {
         this.$checkboxes = $(`${selector} input[type=checkbox]`);
-        this.selectedValues = [];
+        this.$status = $(`${selector} .status`);
+        this.updateStatus();
 
         let _this = this;
 
@@ -32,6 +28,7 @@ export default class Filter {
             .get();
 
         if (oldSelection != this.selectedValues) {
+            this.updateStatus();
             this.refreshCallback();
         }
     }
@@ -64,5 +61,20 @@ export default class Filter {
 
             return count > 0 && (!_this.isAnd || count === selectedNoUnknownCount);
         };
+    }
+
+    private updateStatus(): void {
+        this.$status.text(this.getStatusText());
+    }
+
+    private getStatusText(): string {
+        const vals = this.selectedValues;
+
+        if (vals.length === 0) {
+            return 'any';
+        }
+
+        return vals.join(', ').replace(/^, /, 'Other, ')
+            .replace(/ \(.+?\)/g, ''); // TODO: Drop parenthesis stuff earlier
     }
 }

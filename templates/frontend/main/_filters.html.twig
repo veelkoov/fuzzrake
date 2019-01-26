@@ -1,59 +1,59 @@
 <div class="accordion" id="filtersAccordion">
-    <div class="card">
-        <div class="card-header collapsed" id="headingOne" data-toggle="collapse" data-target="#countriesFilter"
-             aria-expanded="false" aria-controls="countriesFilter">
-            Countries
+    <div class="card" id="countriesFilter">
+        <div class="card-header collapsed" id="headingOne" data-toggle="collapse" data-target="#countriesFilterBody"
+             aria-expanded="false" aria-controls="countriesFilterBody">
+            Countries: <span class="status"></span>
         </div>
 
-        <div id="countriesFilter" class="collapse" aria-labelledby="headingOne" data-parent="#filtersAccordion">
+        <div id="countriesFilterBody" class="collapse" aria-labelledby="headingOne" data-parent="#filtersAccordion">
             <div class="card-body">
                 {% include 'frontend/main/_filter_countries.html.twig' %}
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#stylesFilter"
-             aria-expanded="false" aria-controls="stylesFilter">
-            Styles
+    <div class="card" id="stylesFilter">
+        <div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#stylesFilterBody"
+             aria-expanded="false" aria-controls="stylesFilterBody">
+            Styles: <span class="status"></span>
         </div>
-        <div id="stylesFilter" class="collapse" aria-labelledby="headingTwo" data-parent="#filtersAccordion">
+        <div id="stylesFilterBody" class="collapse" aria-labelledby="headingTwo" data-parent="#filtersAccordion">
             <div class="card-body">
                 {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'style', items: styles } %}
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#featuresFilter"
-             aria-expanded="false" aria-controls="featuresFilter">
-            Features
+    <div class="card" id="featuresFilter">
+        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#featuresFilterBody"
+             aria-expanded="false" aria-controls="featuresFilterBody">
+            Features: <span class="status"></span>
         </div>
-        <div id="featuresFilter" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
+        <div id="featuresFilterBody" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
             <div class="card-body">
                 {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'feature', items: features } %}
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#orderTypesFilter"
-             aria-expanded="false" aria-controls="orderTypesFilter">
-            Order types
+    <div class="card" id="orderTypesFilter">
+        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#orderTypesFilterBody"
+             aria-expanded="false" aria-controls="orderTypesFilterBody">
+            Order types: <span class="status"></span>
         </div>
-        <div id="orderTypesFilter" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
+        <div id="orderTypesFilterBody" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
             <div class="card-body">
                 {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'orderType', items: orderTypes } %}
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#productionModelsFilter"
-             aria-expanded="false" aria-controls="productionModelsFilter">
-            Production models
+    <div class="card" id="productionModelsFilter">
+        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#productionModelsFilterBody"
+             aria-expanded="false" aria-controls="productionModelsFilterBody">
+            Production models: <span class="status"></span>
         </div>
-        <div id="productionModelsFilter" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
+        <div id="productionModelsFilterBody" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
             <div class="card-body">
                 {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'productionModel', items: productionModels, hideOther: true } %}
             </div>
