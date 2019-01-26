@@ -4,6 +4,7 @@ import * as $ from 'jquery';
 import * as Consts from './consts';
 import * as Utils from './utils';
 import Artisan from './Artisan';
+import Filter from './Filter';
 
 let artisans: Artisan[];
 let $dataTable;
@@ -11,56 +12,41 @@ let filters: object;
 
 declare var DATA_UPDATES_URL: string;
 
-function refresh(_) {
-    $.each(filters, function (_, filter: object) {
-        filter['selectedValues'] = filter['$checkboxes']
-            .filter(':checked')
-            .map(function () {
-                return $(this).val();
-            })
-            .get();
-    });
-
+function refreshResults() {
     $dataTable.draw();
 }
 
-function getDataTableFilterFunction(filter, isAnd) {
-    return function (_, data, __) {
-        let selectedCount = filter['selectedValues'].length;
-
-        if (selectedCount === 0) {
+function getNewValObj(action: string): any {
+    switch (action) {
+        case 'none':
+            return false;
+        case 'all':
             return true;
-        }
-
-        let showUnknown = filter['selectedValues'].indexOf('') !== -1;
-
-        if (showUnknown && data[filter['dataColumnIndex']].trim() === '') {
-            return true;
-        }
-
-        let selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
-        let count = 0;
-
-        data[filter['dataColumnIndex']].split(',').forEach(function (value, _, __) {
-            if (filter['selectedValues'].indexOf(value.trim()) !== -1) {
-                count++;
-            }
-        });
-
-        return count > 0 && (!isAnd || count === selectedNoUnknownCount);
-    };
+        case 'invert':
+            return (_, checked) => !checked;
+        default:
+            throw new Error();
+    }
 }
 
 function initCheckBoxesFilter(selector: string, dataColumnIndex: number, isAnd: boolean) {
-    filters[selector] = {
-        dataColumnIndex: dataColumnIndex,
-        $checkboxes: $(`${selector} input[type=checkbox]`),
-        selectedValues: []
-    };
+    filters[selector] = new Filter(dataColumnIndex, selector, isAnd, refreshResults);
 
-    filters[selector].$checkboxes.on('change', refresh);
+    $.fn.dataTable.ext.search.push(filters[selector].getDataTableFilterCallback());
 
-    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
+    $(`${selector} a`).each((_, element) => {
+        let $a = $(element);
+        let $checkboxes = $a.parents('fieldset').find('input:checkbox');
+        let newValObj: any = getNewValObj($a.data('action'));
+        let filter: Filter = filters[selector];
+
+        $a.on('click', function (event, __) {
+            event.preventDefault();
+
+            $checkboxes.prop('checked', newValObj);
+            filter.updateSelection();
+        });
+    });
 }
 
 function initDataTable(): void {
@@ -141,29 +127,6 @@ function processRowHtml($row: any, artisan: Artisan): void {
     $row.find('.artisan-links .dropdown-menu').prepend($links.addClass('dropdown-item'));
 }
 
-function initSelectionLinksAllNoneInvert() {
-    $('#filtersAccordion a').on('click', function (event, sth) {
-        let $checkboxes = $(event.target).parents('fieldset').find('input:checkbox');
-
-        switch ($(this).data('action')) {
-            case 'none':
-                $checkboxes.prop('checked', false);
-                break;
-            case 'all':
-                $checkboxes.prop('checked', true);
-                break;
-            case 'invert':
-                $checkboxes.prop("checked", function (_, checked) {
-                    return !checked;
-                });
-                break;
-        }
-
-        refresh(null);
-        event.preventDefault();
-    });
-}
-
 export function init() {
     artisans = [];
     filters = {};
@@ -185,6 +148,4 @@ export function init() {
     initCheckBoxesFilter('#featuresFilter', Consts.FEATURES_COL_IDX, true);
     initCheckBoxesFilter('#orderTypesFilter', Consts.TYPES_COL_IDX, false);
     initCheckBoxesFilter('#productionModelsFilter', Consts.PRODUCTION_MODEL_COL_IDX, false);
-
-    initSelectionLinksAllNoneInvert();
 }
