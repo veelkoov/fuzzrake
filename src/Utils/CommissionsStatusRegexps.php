@@ -10,6 +10,7 @@ class CommissionsStatusRegexps
         '#<style[^>]*>.*?</style>#s' => '',
         '# style="[^"]*"( (?=\>))?#s' => '',
         '#’|&\#39;#' => '\'',
+        '<!--.*?-->' => '',
     ];
     const COMMON_REPLACEMENTS = [
         'COMMISSIONS' => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?)',
@@ -28,7 +29,7 @@ class CommissionsStatusRegexps
         '(once|when) (WE_ARE STATUS for COMMISSIONS|COMMISSIONS are STATUS)',
         'will not be STATUS for COMMISSIONS',
         '(art|painted glass) COMMISSIONS: STATUS',
-        'COMMISSIONS STATUS( in)?( late| early)? (MONTHS|20\d\d)',
+        'COMMISSIONS (status:)?STATUS( in)?( late| early)? (MONTHS|20\d\d)',
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',
