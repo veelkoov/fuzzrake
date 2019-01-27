@@ -45,7 +45,6 @@ export default class Filter {
 
             let showUnknown = _this.selectedValues.indexOf('') !== -1;
 
-
             if (showUnknown && data[_this.dataColumnIndex].trim() === '') {
                 return true;
             }
@@ -74,12 +73,11 @@ export default class Filter {
             return 'any';
         }
 
-        if (vals[0] === '') {
-            vals[0] = 'Unknown';
-        }
-
         const anyOrAll = vals.length > 1 ? (this.isAnd ? 'all of: ' : 'any of: ') : '';
 
-        return anyOrAll + vals.join(', ').replace(/ \(.+?\)/g, ''); // TODO: Drop parenthesis stuff earlier
+        // TODO: Drop parenthesis stuff earlier
+        return anyOrAll + vals.join(', ')
+            .replace(/^(?=, |$)/, 'Unknown')
+            .replace(/ \(.+?\)/g, '');
     }
 }
