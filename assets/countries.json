@@ -1,0 +1,132 @@
+[
+  {
+    "name": "Argentina",
+    "code": "AR",
+    "region": "America"
+  },
+  {
+    "name": "Australia",
+    "code": "AU",
+    "region": "Oceania"
+  },
+  {
+    "name": "Austria",
+    "code": "AT",
+    "region": "Europe"
+  },
+  {
+    "name": "Belgium",
+    "code": "BE",
+    "region": "Europe"
+  },
+  {
+    "name": "Brazil",
+    "code": "BR",
+    "region": "America"
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "region": "America"
+  },
+  {
+    "name": "China",
+    "code": "CN",
+    "region": "Asia"
+  },
+  {
+    "name": "Czechia",
+    "code": "CZ",
+    "region": "Europe"
+  },
+  {
+    "name": "Denmark",
+    "code": "DK",
+    "region": "Europe"
+  },
+  {
+    "name": "EU (unspecified)",
+    "code": "EU",
+    "region": "Europe"
+  },
+  {
+    "name": "Finland",
+    "code": "FI",
+    "region": "Europe"
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "region": "Europe"
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "region": "Europe"
+  },
+  {
+    "name": "Ireland",
+    "code": "IE",
+    "region": "Europe"
+  },
+  {
+    "name": "Italy",
+    "code": "IT",
+    "region": "Europe"
+  },
+  {
+    "name": "Mexico",
+    "code": "MX",
+    "region": "America"
+  },
+  {
+    "name": "Netherlands",
+    "code": "NL",
+    "region": "Europe"
+  },
+  {
+    "name": "New Zealand",
+    "code": "NZ",
+    "region": "Oceania"
+  },
+  {
+    "name": "Norway",
+    "code": "NO",
+    "region": "Europe"
+  },
+  {
+    "name": "Poland",
+    "code": "PL",
+    "region": "Europe"
+  },
+  {
+    "name": "Russia",
+    "code": "RU",
+    "region": "Europe"
+  },
+  {
+    "name": "Slovakia",
+    "code": "SK",
+    "region": "Europe"
+  },
+  {
+    "name": "Taiwan",
+    "code": "TW",
+    "region": "Asia"
+  },
+  {
+    "name": "Ukraine",
+    "code": "UA",
+    "region": "Europe"
+  },
+  {
+    "name": "United Kingdom",
+    "code": "GB",
+    "region": "Europe"
+  },
+  {
+    "name": "United States",
+    "code": "US",
+    "region": "America"
+  }
+]

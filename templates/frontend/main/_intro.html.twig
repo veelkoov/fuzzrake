@@ -1,30 +1,31 @@
-<div class="alert alert-primary alert-dismissible fade show row" role="alert">
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
 
-    <div class="col-sm-8 px-0">
-        <h4>Fursuit makers database</h4>
+    <div class="row">
+        <div class="col-sm-8">
+            <h4>Fursuit makers database</h4>
 
+            <p>
+                Welcome to the list of fursuit makers! Currently {{ artisans|length }}&nbsp;makers from
+                {{ countryCount }}&nbsp;countries are listed here, and&nbsp;we're not done yet.
+            </p>
 
-        <p>
-            Welcome to the list of fursuit makers! Currently {{ artisans|length }}&nbsp;makers from
-            {{ countryCount }}&nbsp;countries are listed here, and&nbsp;we're not done yet.
-        </p>
+            <p class="small">
+                Last update: {{ getLastDataUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (data)
+                / {{ getLastSystemUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (system).
+            </p>
 
-        <p class="small">
-            Last update: {{ getLastDataUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (data)
-            / {{ getLastSystemUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (system).
-        </p>
+            <p>
+                <span class="badge badge-danger">Your feedback is needed!</span> Want a feature? Want more information?
+                Encountered a bug?
+                <a href="{{ feedback_form_url }}" onclick="window.open(this.href); return false;">Click here!</a>
+            </p>
+        </div>
 
-        <p>
-            <span class="badge badge-danger">Your feedback is needed!</span> Want a feature? Want more information?
-            Encountered a bug?
-            <a href="{{ feedback_form_url }}" onclick="window.open(this.href); return false;">Click here!</a>
-        </p>
-    </div>
-
-    <div class="col-sm-4 px-0 text-center">
-        <img src="{{ asset('images/website-banner-top-transparent.png') }}" class="img-fluid" alt="">
+        <div class="col-sm-4 px-0 text-center">
+            <img src="{{ asset('images/website-banner-top-transparent.png') }}" class="img-fluid" alt="">
+        </div>
     </div>
 </div>

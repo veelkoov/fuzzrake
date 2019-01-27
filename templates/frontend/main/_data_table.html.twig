@@ -10,6 +10,7 @@
         <th class="hidden">Country</th>
         <th class="hidden">State</th>
         <th class="hidden">City</th>
+        <th class="text-center toggleable no-sorting default-hidden">Production model</th>
         <th class="text-center toggleable no-sorting">Styles</th>
         <th class="hidden">Other styles</th>
         <th class="text-center toggleable no-sorting default-hidden">Types</th>
@@ -32,7 +33,6 @@
         <th class="hidden">Other URLs</th>
         <th class="hidden">Notes</th>
         <th class="hidden">Payment plans</th>
-        <th class="hidden">Production model</th>
         <th class="hidden">Species does</th>
         <th class="hidden">Species doesn't</th>
         <th class="hidden">Languages</th>
@@ -72,6 +72,9 @@
                 </td>
                 <td class="hidden">
                     {{- artisan.city -}}
+                </td>
+                <td class="production-model" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.productionModel -}}
                 </td>
                 <td class="styles" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.styles -}}
@@ -138,9 +141,6 @@
                 </td>
                 <td class="hidden">
                     {{- artisan.paymentPlans -}}
-                </td>
-                <td class="hidden">
-                    {{- artisan.productionModel -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.speciesDoes -}}

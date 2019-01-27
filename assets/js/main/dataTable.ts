@@ -1,89 +1,51 @@
 'use strict';
 
-import * as Choices from "../../3rd-party/Choices/public/assets/scripts/choices";
 import * as $ from 'jquery';
 import * as Consts from './consts';
 import * as Utils from './utils';
-import isMobile from './isMobile';
 import Artisan from './Artisan';
+import Filter from './Filter';
 
-require('../../3rd-party/Choices/public/assets/styles/choices.css');
-
-let artisans: Artisan[];
 let $dataTable;
-let filters: object;
+let filters: object = {};
 
 declare var DATA_UPDATES_URL: string;
 
-function refresh(_) {
-    $.each(filters, function (_, filter: object) {
-        filter['selectedValues'] = filter['$select'].val();
-    });
-
+function refreshResults() {
     $dataTable.draw();
 }
 
-function getDataTableFilterFunction(filter, isAnd) {
-    return function (_, data, __) {
-        let selectedCount = filter['selectedValues'].length;
-
-        if (selectedCount === 0) {
+function getNewValObj(action: string): any {
+    switch (action) {
+        case 'none':
+            return false;
+        case 'all':
             return true;
-        }
+        case 'invert':
+            return (_, checked) => !checked;
+        default:
+            throw new Error();
+    }
+}
 
-        let showUnknown = filter['selectedValues'].indexOf('') !== -1;
+function initCheckBoxesFilter(selector: string, dataColumnIndex: number, isAnd: boolean) {
+    filters[selector] = new Filter(dataColumnIndex, selector, isAnd, refreshResults);
 
-        if (showUnknown && data[filter['dataColumnIndex']].trim() === '') {
-            return true;
-        }
+    $.fn.dataTable.ext.search.push(filters[selector].getDataTableFilterCallback());
 
-        let selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
-        let count = 0;
+    $(`${selector} a`).each((_, element) => {
+        let $a = $(element);
+        let $checkboxes = $a.parents('fieldset').find('input:checkbox');
+        let newValObj: any = getNewValObj($a.data('action'));
+        let filter: Filter = filters[selector];
 
-        data[filter['dataColumnIndex']].split(',').forEach(function (value, _, __) {
-            if (filter['selectedValues'].indexOf(value.trim()) !== -1) {
-                count++;
-            }
+        $a.on('click', function (event, __) {
+            event.preventDefault();
+
+            $checkboxes.prop('checked', newValObj);
+            filter.updateSelection();
         });
-
-        return count > 0 && (!isAnd || count === selectedNoUnknownCount);
-    };
-}
-
-function countriesOnCreateTemplatesCallback(template) {
-    let _this = this;
-    let classNames = this.config.classNames;
-
-    return {
-        item: function item(classNames, data) {
-            return template(`<div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}> ${data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value.toLowerCase() + '"></span> ' + data.label.replace(/^[A-Z]+ /, '') : data.label}</div>`);
-        },
-        choice: function choice(classNames, data) {
-            return template(`<div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${_this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}> ${data.label !== 'Show unknown' ? '<span class="flag-icon flag-icon-' + data.value.toLowerCase() + '"></span> ' + data.label : data.label}</div>`);
-        }
-    };
-}
-
-function initSelectFilter(selector: string, dataColumnIndex: number, forceOnMobile: boolean, isAnd: boolean, onCreateTemplatesCallback?: (any) => object) {
-    let useChoices = !isMobile() || forceOnMobile;
-
-    let selectObj = useChoices ? new Choices(selector, {
-        shouldSort: false,
-        removeItemButton: true,
-        callbackOnCreateTemplates: onCreateTemplatesCallback,
-        itemSelectText: ''
-    }) : null;
-
-    filters[selector] = {
-        selectObj: selectObj,
-        dataColumnIndex: dataColumnIndex,
-        $select: $(selector),
-        selectedValues: []
-    };
-
-    filters[selector].$select[0].addEventListener('change', refresh);
-
-    $.fn.dataTable.ext.search.push(getDataTableFilterFunction(filters[selector], isAnd));
+    });
 }
 
 function initDataTable(): void {
@@ -142,6 +104,7 @@ function processRowHtml($row: any, artisan: Artisan): void {
                 : '<i class="fas fa-times-circle"></i> Closed');
     }
 
+    processList($row, [], Consts.PRODUCTION_MODEL_COL_IDX);
     processList($row, artisan.otherStyles, Consts.STYLES_COL_IDX);
     processList($row, artisan.otherTypes, Consts.TYPES_COL_IDX);
     processList($row, artisan.otherFeatures, Consts.FEATURES_COL_IDX);
@@ -163,23 +126,24 @@ function processRowHtml($row: any, artisan: Artisan): void {
     $row.find('.artisan-links .dropdown-menu').prepend($links.addClass('dropdown-item'));
 }
 
-export function init() {
-    artisans = [];
-    filters = {};
-
-    $('#artisans tr.fursuit-maker').each((_: number, item: object) => {
+function processArtisansTable() {
+    $('#artisans tr.fursuit-maker').each((index: number, item: object) => {
         let $row = $(item);
         let artisan = Artisan.fromArray($row.children().toArray().map((value: any) => value.innerHTML));
 
         $row.data('artisan', artisan);
-        artisans.push(artisan);
-
         processRowHtml($row, artisan);
     });
+}
 
+export function init() {
+    processArtisansTable();
     initDataTable();
+    initCheckBoxesFilter('#countriesFilter', Consts.COUNTRY_COL_IDX, false);
+    initCheckBoxesFilter('#stylesFilter', Consts.STYLES_COL_IDX, false);
+    initCheckBoxesFilter('#featuresFilter', Consts.FEATURES_COL_IDX, true);
+    initCheckBoxesFilter('#orderTypesFilter', Consts.TYPES_COL_IDX, false);
+    initCheckBoxesFilter('#productionModelsFilter', Consts.PRODUCTION_MODEL_COL_IDX, false);
 
-    initSelectFilter('#countriesFilter', Consts.COUNTRY_COL_IDX, true, false, countriesOnCreateTemplatesCallback);
-    initSelectFilter('#stylesFilter', Consts.STYLES_COL_IDX, false, false);
-    initSelectFilter('#featuresFilter', Consts.FEATURES_COL_IDX, false, true);
+    $('#processingData, #dataProcessed').toggle();
 }

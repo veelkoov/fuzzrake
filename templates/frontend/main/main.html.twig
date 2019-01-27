@@ -12,10 +12,15 @@
 
 {% block body %}
     {% include 'frontend/main/_intro.html.twig' %}
-    {% include 'frontend/main/_filters.html.twig' %}
     {% include 'frontend/main/_artisan_modal.html.twig' %}
     {% include 'frontend/main/_update_request_modal.html.twig' %}
-    {% include 'frontend/main/_data_table.html.twig' %}
+    <div id="processingData" class="alert alert-primary" role="alert">
+        Data is being processed. This may take several seconds...
+    </div>
+    <div id="dataProcessed" style="display: none;">
+        {% include 'frontend/main/_filters.html.twig' %}
+        {% include 'frontend/main/_data_table.html.twig' %}
+    </div>
     <div class="container text-center">
         <img src="{{ asset('images/website-banner-bottom.png') }}" class="img-fluid" alt="">
     </div>

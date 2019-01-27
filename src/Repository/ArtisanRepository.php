@@ -64,17 +64,17 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
-    public function getDistinctCountries(): array
+    public function getDistinctCountriesToCountAssoc(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
     }
 
-    public function getDistinctTypes(): array
+    public function getDistinctOrderTypes(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('types');
     }
 
-    public function getDistinctOtherTypes(): array
+    public function getDistinctOtherOrderTypes(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('otherTypes');
     }
@@ -97,6 +97,11 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getDistinctOtherFeatures(): array
     {
         return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
+    }
+
+    public function getDistinctProductionModels(): array
+    {
+        return $this->getDistinctItemsWithCountFromJoined('productionModel');
     }
 
     private function getDistinctItemsWithCountFromJoined(string $columnName, string $separator = "\n"): array

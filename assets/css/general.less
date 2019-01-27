@@ -1,77 +1,115 @@
 body {
-  padding: 5em 1em 1em;
+  padding: 5em 0 0;
 }
 
 img[src="FurAffinity.svg"] {
   height: 1em;
 }
 
-table#artisans {
-  border-collapse: collapse !important;
-  text-align: left;
-
-  .hidden {
-    display: none;
+#filtersAccordion {
+  fieldset {
+    font-size: 110%;
   }
 
-  thead {
-    th {
-      vertical-align: middle;
-    }
+  .card-header {
+    cursor: pointer;
+    padding: .5rem;
   }
 
-  tbody {
-    td {
-      cursor: pointer;
-      display: none;
-      vertical-align: middle;
-    }
-
-    td.name {
-      display: table-cell;
-      text-align: left;
-    }
-
-    td.features, td.types, td.styles {
-      text-align: left;
-      display: table-cell;
-      font-size: 75%;
-    }
-
-    td.commissions {
-      display: table-cell;
-      text-align: center;
-    }
-
-    td.maker-id {
-      display: table-cell;
-      font-family: monospace;
-    }
-
-    td.links {
-      display: table-cell;
-      text-align: right;
-      cursor: default;
-    }
+  .card-body {
+    padding: .5rem;
   }
-}
 
-div.dataTables_info {
-  white-space: normal !important;
+  .allNoneInvert {
+    padding-left: 1em;
+    font-size: 90%;
+    font-weight: normal;
+    color: #aaa;
+  }
+
+  .allNoneInvertSingle {
+    font-size: 90%;
+    font-weight: normal;
+    color: #aaa;
+    float: right;
+  }
+
+  fieldset legend {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0;
+    padding-top: .5rem;
+  }
+
+  .form-check {
+    padding: .5ex 0;
+  }
+
+  .count {
+    font-size: 90%;
+    color: #aaa;
+  }
 }
 
 #artisans_wrapper {
-  > div.row {
-    margin-left: 0;
-    margin-right: 0;
-
-    > div {
-      padding: 0;
-    }
-  }
+  padding-top: 1em;
 
   > div.row:nth-child(2) > div.col-sm-12 {
     overflow-x: auto;
+  }
+
+  table#artisans {
+    border-collapse: collapse !important;
+    text-align: left;
+
+    .hidden {
+      display: none;
+    }
+
+    thead {
+      th {
+        vertical-align: middle;
+      }
+    }
+
+    tbody {
+      td {
+        cursor: pointer;
+        display: none;
+        vertical-align: middle;
+      }
+
+      td.name {
+        display: table-cell;
+        text-align: left;
+      }
+
+      td.features, td.types, td.styles, td.production-model {
+        text-align: left;
+        display: table-cell;
+        font-size: 75%;
+      }
+
+      td.commissions {
+        display: table-cell;
+        text-align: center;
+      }
+
+      td.maker-id {
+        display: table-cell;
+        font-family: monospace;
+      }
+
+      td.links {
+        display: table-cell;
+        text-align: right;
+        cursor: default;
+      }
+    }
+  }
+
+  div.dataTables_info {
+    white-space: normal !important;
   }
 }
 
