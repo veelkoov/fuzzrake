@@ -38,7 +38,7 @@ class CommissionsStatusRegexps
         'order quotes are STATUS',
         'STATUS (for (new )?)?COMMISSIONS',
         '<div>TIMESPAN</div><div>STATUS</div><div>for COMMISSIONS</div>',
-        '<p>COMMISSIONS are</p><p>STATUS</p>',
+        '<p>COMMISSIONS (are|status:)</p><p>(TIMESPAN )?STATUS</p>',
         '<h2>"cawmission" status</h2><div>STATUS',
         '<p>status: STATUS</p>',
         '<div class="([^"]*[^a-z])?COMMISSIONS-STATUS"></div>',
