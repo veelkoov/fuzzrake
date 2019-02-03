@@ -5,7 +5,8 @@
         Take me to:
         <a href="#styles">styles</a> (<a href="#other_styles">other</a>) &bull;
         <a href="#types">order types</a> (<a href="#other_types">other</a>) &bull;
-        <a href="#features">features</a> (<a href="#other_features">other</a>)
+        <a href="#features">features</a> (<a href="#other_features">other</a>) &bull;
+        <a href="#data-statistics">data statistics</a>
     </p>
 
     <h1>Commission status</h1>
@@ -69,7 +70,8 @@
     <h2 id="other_features">Other features</h2>
     {% include 'frontend/statistics/_item_pills.html.twig' with { items: otherFeatures } %}
 
-    <h1>Data completeness</h1>
-
+    <h1 id="data-statistics">Data statistics</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { data: completeness, name: 'Data completeness', total: commissionsStats.Total } %}
+
+    {% include 'frontend/statistics/_data_table.html.twig' with { data: providedInfo, name: 'Information provided', total: commissionsStats.Total } %}
 {% endblock %}

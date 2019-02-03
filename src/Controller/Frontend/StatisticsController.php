@@ -6,6 +6,7 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
+use App\Utils\ArtisanMetadata;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,6 +72,7 @@ class StatisticsController extends AbstractController
             'otherFeatures' => $this->prepareListData($otherFeatures),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness' => $this->prepareCompletenessData($artisanRepository->findAll()),
+            'providedInfo' => $this->prepareProvidedInfoData($artisanRepository->findAll()),
             'matchWords' => self::MATCH_WORDS,
         ]);
     }
@@ -146,6 +148,23 @@ class StatisticsController extends AbstractController
                 return $percent < $level;
             });
         }
+
+        return $result;
+    }
+
+    private function prepareProvidedInfoData(array $artisans): array
+    {
+        $result = [];
+
+        foreach (ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $prettyName => $modelName) {
+            if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelName) {
+                $result[$prettyName] = array_reduce($artisans, function (int $carry, Artisan $item) use ($modelName) {
+                    return $carry + ('' !== $item->get($modelName) ? 1 : 0);
+                }, 0);
+            }
+        }
+
+        arsort($result);
 
         return $result;
     }
