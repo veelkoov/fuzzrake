@@ -71,33 +71,25 @@ export function countryFlagHtml(country) {
     return country === '' ? '' : `&nbsp;<span class="flag-icon flag-icon-${country.toLowerCase()}"></span>`;
 }
 
+function pushLink(targetArray, url, text, isPrimary) {
+    if (url) {
+        targetArray.push(`<a href="${url}"${isPrimary ? 'class="primary"' : ''}>${text}</a>`);
+    }
+}
+
 export function getLinks$(artisan) {
     let links = [];
 
-    if (artisan.fursuitReviewUrl) {
-        links.push(`<a href="${artisan.fursuitReviewUrl}" class="primary"><i class="fas fa-balance-scale"></i> FursuitReview</a>`);
-    }
-    if (artisan.websiteUrl) {
-        links.push(`<a href="${artisan.websiteUrl}" class="primary"><i class="fas fa-link"></i> Official website</a>`);
-    }
-    if (artisan.furAffinityUrl) {
-        links.push(`<a href="${artisan.furAffinityUrl}"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>`);
-    }
-    if (artisan.deviantArtUrl) {
-        links.push(`<a href="${artisan.deviantArtUrl}"><i class="fab fa-deviantart"></i> DeviantArt</a>`);
-    }
-    if (artisan.twitterUrl) {
-        links.push(`<a href="${artisan.twitterUrl}"><i class="fab fa-twitter"></i> Twitter</a>`);
-    }
-    if (artisan.facebookUrl) {
-        links.push(`<a href="${artisan.facebookUrl}"><i class="fab fa-facebook"></i> Facebook</a>`);
-    }
-    if (artisan.tumblrUrl) {
-        links.push(`<a href="${artisan.tumblrUrl}"><i class="fab fa-tumblr"></i> Tumblr</a>`);
-    }
-    if (artisan.instagramUrl) {
-        links.push(`<a href="${artisan.instagramUrl}"><i class="fab fa-instagram"></i> Instagram</a>`);
-    }
+    pushLink(links, artisan.fursuitReviewUrl, '<i class="fas fa-balance-scale"></i> FursuitReview', true);
+    pushLink(links, artisan.websiteUrl, '<i class="fas fa-link"></i> Official website', true);
+    pushLink(links, artisan.pricesUrl, '<i class="fas fa-dollar-sign"></i> Prices');
+    pushLink(links, artisan.faqUrl, '<i class="fas fa-comments"></i> FAQ');
+    pushLink(links, artisan.furAffinityUrl, '<img src="FurAffinity.svg" alt=""/> FurAffinity');
+    pushLink(links, artisan.deviantArtUrl, '<i class="fab fa-deviantart"></i> DeviantArt');
+    pushLink(links, artisan.twitterUrl, '<i class="fab fa-twitter"></i> Twitter');
+    pushLink(links, artisan.facebookUrl, '<i class="fab fa-facebook"></i> Facebook');
+    pushLink(links, artisan.tumblrUrl, '<i class="fab fa-tumblr"></i> Tumblr');
+    pushLink(links, artisan.instagramUrl, '<i class="fab fa-instagram"></i> Instagram');
 
     return $(links.join(''));
 }
