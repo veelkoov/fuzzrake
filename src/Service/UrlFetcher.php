@@ -73,19 +73,20 @@ class UrlFetcher
     {
         $ch = $this->getCurlSessionHandle($url);
 
-        $this->delayForHost($url);
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $this->updateLastHostCall($url);
-
-        curl_close($ch);
-
-        if (false === $result) {
-            throw new UrlFetcherException("Failed to fetch URL: $url, ".(is_resource($ch) ? curl_error($ch) : 'CURL failed'));
+        if (false === $ch) {
+            throw new UrlFetcherException('Failed to initialize CURL');
         }
 
-        if (200 !== $httpCode) {
-            throw new UrlFetcherException("Got HTTP code $httpCode for URL: $url");
+        $this->delayForHost($url);
+        $result = curl_exec($ch);
+        $this->updateLastHostCall($url);
+
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $errorMsg = curl_error($ch);
+        curl_close($ch);
+
+        if (false === $result || !in_array($httpCode, [200, 401])) {
+            throw new UrlFetcherException("Failed to fetch URL ($httpCode): $url, ".($errorMsg ?: 'CURL failed'));
         }
 
         return $result;
@@ -141,7 +142,6 @@ class UrlFetcher
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTION_TIMEOUT_SEC);
