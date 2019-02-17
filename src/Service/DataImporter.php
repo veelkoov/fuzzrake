@@ -152,7 +152,10 @@ class DataImporter
 
             if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
                 $io->warning("New maker: $names");
-                $io->writeln(["match name:{$new->getMakerId()}:ABCDEFGHIJ:", "ack new:{$new->getMakerId()}:"]);
+                $io->writeln([
+                    ImportCorrector::CMD_MATCH_NAME.":{$new->getMakerId()}:ABCDEFGHIJ:",
+                    ImportCorrector::CMD_ACK_NEW.":{$new->getMakerId()}:"
+                ]);
             }
 
             if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
@@ -161,11 +164,13 @@ class DataImporter
 
             if (!array_key_exists($new->getMakerId(), $passcodes)) {
                 $io->warning("$names set new passcode: $providedPasscode");
+                $io->writeln("{$new->getMakerId()} $providedPasscode");
             } else {
                 $expectedPasscode = $passcodes[$new->getMakerId()];
 
-                if ($providedPasscode !== $expectedPasscode) {
+                if ($providedPasscode !== $expectedPasscode && !$this->corrector->doPasscodeExceptionOnce($new->getMakerId(), $providedPasscode)) {
                     $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
+                    $io->writeln(ImportCorrector::CMD_PASS_ONCE.":{$new->getMakerId()}:|:$providedPasscode|");
                 }
             }
         }

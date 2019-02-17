@@ -8,9 +8,14 @@ use App\Entity\Artisan;
 
 class ImportCorrector
 {
+    const CMD_ACK_NEW = 'ack new';
+    const CMD_MATCH_NAME = 'match name';
+    const CMD_PASS_ONCE = 'pass once';
+
     private $corrections = ['*' => []];
     private $acknowledgedNew = [];
     private $matchedNames = [];
+    private $passcodeExceptions = [];
 
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -20,6 +25,32 @@ class ImportCorrector
     public function correctArtisan(Artisan $artisan)
     {
         $this->applyCorrections($artisan, $this->getCorrectionsFor($artisan));
+    }
+
+    public function getMatchedName($makerId): ?string
+    {
+        if (!array_key_exists($makerId, $this->matchedNames)) {
+            return null;
+        } else {
+            return $this->matchedNames[$makerId];
+        }
+    }
+
+    public function isAcknowledged(string $makerId): bool
+    {
+        return in_array($makerId, $this->acknowledgedNew);
+    }
+
+    public function doPasscodeExceptionOnce(string $makerId, string $providedInvalidPasscode)
+    {
+        if (!array_key_exists($makerId, $this->passcodeExceptions)
+            || !array_key_exists($providedInvalidPasscode, $this->passcodeExceptions[$makerId])
+            || $this->passcodeExceptions[$makerId][$providedInvalidPasscode] < 1) {
+            return false;
+        }
+
+        $this->passcodeExceptions[$makerId][$providedInvalidPasscode]--;
+        return true;
     }
 
     private function readDirectivesFromFile(string $filePath)
@@ -51,12 +82,20 @@ class ImportCorrector
         $makerId = $buffer->readUntil(':');
 
         switch ($command) {
-            case 'ack new':
+            case self::CMD_ACK_NEW:
                 $this->acknowledgedNew[] = $makerId;
             break;
 
-            case 'match name':
+            case self::CMD_MATCH_NAME:
                 $this->matchedNames[$makerId] = $buffer->readUntil(':');
+            break;
+
+            case self::CMD_PASS_ONCE:
+                $delimiter = $buffer->readUntil(':');
+                $invalidPasscode = $buffer->readUntil($delimiter);
+
+                $this->initArrKey(0, $this->passcodeExceptions, $makerId, $invalidPasscode);
+                $this->passcodeExceptions[$makerId][$invalidPasscode]++;
             break;
 
             default:
@@ -95,17 +134,16 @@ class ImportCorrector
         }
     }
 
-    public function getMatchedName($makerId): ?string
+    private function initArrKey($initVal, array &$array, ...$keys): void
     {
-        if (!array_key_exists($makerId, $this->matchedNames)) {
-            return null;
-        } else {
-            return $this->matchedNames[$makerId];
-        }
-    }
+        $key = array_shift($keys);
 
-    public function isAcknowledged($makerId): bool
-    {
-        return in_array($makerId, $this->acknowledgedNew);
+        if (!array_key_exists($key, $array)) {
+            $array[$key] = empty($keys) ? $initVal : [];
+        }
+
+        if (!empty($keys)) {
+            $this->initArrKey($initVal, $array[$key], ...$keys);
+        }
     }
 }
