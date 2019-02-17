@@ -62,7 +62,7 @@ class DataImporter
         $io->title('Showing artisans\' data before/after fixing');
         $this->showUpdatedArtisans($imports);
         $io->title('Validating updated artisans\' data and passcodes');
-        $this->showValidationResults($imports, $passcodes, $io);
+        $this->persistValid($imports, $passcodes, $io);
     }
 
     private function performImports(array $artisansData)
@@ -84,8 +84,6 @@ class DataImporter
 
         $artisanImport->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $artisanData));
         $artisanImport->setNewFixedData($this->fix(clone $artisanImport->getNewOriginalData()));
-
-        $this->objectManager->persist($artisanImport->getUpsertedArtisan());
 
         return $artisanImport;
     }
@@ -140,7 +138,7 @@ class DataImporter
      * @param ArtisanImport[] $imports
      * @param array           $passcodes
      */
-    private function showValidationResults(array $imports, array $passcodes, SymfonyStyle $io)
+    private function persistValid(array $imports, array $passcodes, SymfonyStyle $io)
     {
         foreach ($imports as $import) {
             $new = $import->getUpsertedArtisan();
@@ -149,6 +147,7 @@ class DataImporter
             $providedPasscode = $import->getPasscode();
 
             $this->fixer->validateArtisanData($new);
+            $ok = true;
 
             if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
                 $io->warning("New maker: $names");
@@ -156,6 +155,8 @@ class DataImporter
                     ImportCorrector::CMD_MATCH_NAME.":{$new->getMakerId()}:ABCDEFGHIJ:",
                     ImportCorrector::CMD_ACK_NEW.":{$new->getMakerId()}:"
                 ]);
+
+                $ok = false;
             }
 
             if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
@@ -165,13 +166,23 @@ class DataImporter
             if (!array_key_exists($new->getMakerId(), $passcodes)) {
                 $io->warning("$names set new passcode: $providedPasscode");
                 $io->writeln("{$new->getMakerId()} $providedPasscode");
+
+                $ok = false;
             } else {
                 $expectedPasscode = $passcodes[$new->getMakerId()];
 
                 if ($providedPasscode !== $expectedPasscode && !$this->corrector->doPasscodeExceptionOnce($new->getMakerId(), $providedPasscode)) {
                     $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
                     $io->writeln(ImportCorrector::CMD_PASS_ONCE.":{$new->getMakerId()}:|:$providedPasscode|");
+
+                    $ok = false;
                 }
+            }
+
+            if ($ok) {
+                $this->objectManager->persist($new);
+            } else if ($new->getId()) {
+                $this->objectManager->refresh($new);
             }
         }
     }
