@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <p class="small">All times are UTC</p>
+
+    <ul class="list-unstyled">
+        {% for event in events %}
+            <li><span class="small">{{ event.timestamp|date('Y-m-d H:i') }}</span> {{ event.description }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

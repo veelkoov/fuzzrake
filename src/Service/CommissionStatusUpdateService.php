@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Artisan;
+use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\CommissionsStatusParser;
 use App\Utils\CommissionsStatusParserException;
@@ -18,6 +19,9 @@ use Symfony\Component\Console\Style\StyleInterface;
 
 class CommissionStatusUpdateService
 {
+    const STATUS_UNKNOWN = 'UNKNOWN';
+    const STATUS_OPEN = 'OPEN';
+    const STATUS_CLOSED = 'CLOSED';
     /**
      * @var ArtisanRepository
      */
@@ -43,10 +47,10 @@ class CommissionStatusUpdateService
      */
     private $commissionsStatusParser;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager, UrlFetcher $urlFetcher)
+    public function __construct(ObjectManager $objectManager, UrlFetcher $urlFetcher)
     {
         $this->objectManager = $objectManager;
-        $this->artisanRepository = $artisanRepository;
+        $this->artisanRepository = $objectManager->getRepository(Artisan::class);
         $this->urlFetcher = $urlFetcher;
         $this->commissionsStatusParser = new CommissionsStatusParser();
     }
@@ -99,19 +103,23 @@ class CommissionStatusUpdateService
 
     private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
     {
-        $prefix = "{$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} ) commissions are now";
+        if ($artisan->getAreCommissionsOpen() !== $newStatus) {
+            $newStatusText = $this->textStatus($newStatus);
+            $oldStatusText = $this->textStatus($artisan->getAreCommissionsOpen());
 
-        if (true !== $artisan->getAreCommissionsOpen() && true === $newStatus) {
-            $this->style->caution("$prefix OPEN");
+            $this->style->caution("{$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} ) $oldStatusText ---> $newStatusText");
+
+            $this->objectManager->persist($this->getStatusChangeEvent($artisan->getName(), $artisan->getCommisionsQuotesCheckUrl(), $oldStatusText, $newStatusText));
+        }
+    }
+
+    private function textStatus(?bool $status): string
+    {
+        if (null === $status) {
+            return self::STATUS_UNKNOWN;
         }
 
-        if (false !== $artisan->getAreCommissionsOpen() && false === $newStatus) {
-            $this->style->caution("$prefix CLOSED");
-        }
-
-        if (null !== $artisan->getAreCommissionsOpen() && null === $newStatus) {
-            $this->style->caution("$prefix UNKNOWN");
-        }
+        return $status ? self::STATUS_OPEN : self::STATUS_CLOSED;
     }
 
     /**
@@ -220,6 +228,8 @@ class CommissionStatusUpdateService
      * @param Artisan $artisan
      *
      * @return array
+     *
+     * @throws Exception
      */
     private function getCommissionsStatusAndDateTimeChecked(Artisan $artisan): array
     {
@@ -242,9 +252,20 @@ class CommissionStatusUpdateService
 
     /**
      * @return DateTime
+     *
+     * @throws Exception
      */
     private function getNowUtc(): DateTime
     {
         return new DateTime('now', new DateTimeZone('UTC'));
+    }
+
+    private function getStatusChangeEvent(string $name, string $url, string $oldStatus, string $newStatus): Event
+    {
+        if (self::STATUS_UNKNOWN === $newStatus) {
+            return new Event("The software failed to interpret new commission status based on the contents of: $url . $name commission status is now $newStatus (was $oldStatus).");
+        }
+
+        return new Event("Based on the contents of: $url , $name commission status changed to $newStatus (was $oldStatus).");
     }
 }
