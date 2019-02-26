@@ -33,8 +33,8 @@
           password: "{{ db_params.password }}"
 
     - replace:
-        regexp: ",[^,]+,[^,]+\\);$"
-        replace: ", NULL, NULL);"
+        regexp: "^(INSERT INTO `artisans` VALUES .+),[^,]+,[^,]+\\);$"
+        replace: "\\1,NULL,NULL);"
         path: "{{ db_dump_file_path }}"
 
     - command: git commit -m "Updated DB dump" ../db_dump/artisans.sql
