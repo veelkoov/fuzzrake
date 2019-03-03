@@ -41,7 +41,7 @@ class CommissionsStatusRegexps
         '<p>COMMISSIONS (are|status:)</p><p>(TIMESPAN )?STATUS</p>',
         '<h2>"cawmission" status</h2><div>STATUS',
         '<p>status: STATUS</p>',
-        'TIMESPAN: STATUS',
+        'TIMESPAN( mode)?: STATUS',
         '<div class="([^"]*[^a-z])?COMMISSIONS-STATUS"></div>',
         '<h2>STATUS</h2>',
         '(>|[1-9]\d*/\d+ )slots?( TIMESPAN( -)?)? STATUS',
