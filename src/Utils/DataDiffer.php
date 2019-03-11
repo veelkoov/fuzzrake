@@ -72,15 +72,17 @@ class DataDiffer
     {
         $oldValItems = explode("\n", $oldVal);
         $newValItems = explode("\n", $newVal);
-        $allItems = array_unique(array_filter(array_merge($oldValItems, $newValItems)));
-        sort($allItems);
 
-        foreach ($allItems as &$item) {
-            if (in_array($item, $oldValItems)) {
-                if (!in_array($item, $newValItems)) {
-                    $item = "<d>$item</>";
-                }
-            } else {
+        foreach ($oldValItems as &$item) {
+            if (!in_array($item, $newValItems)) {
+                $item = "<d>$item</>";
+            }
+
+            $item = Utils::safeStr($item);
+        }
+
+        foreach ($newValItems as &$item) {
+            if (!in_array($item, $oldValItems)) {
                 $item = "<a>$item</>";
             }
 
@@ -88,21 +90,21 @@ class DataDiffer
         }
 
         if ($oldVal) { // In case order changed or duplicates got removed, etc.
-            $this->io->writeln("$fieldName: ".str_replace("\n", '|', $oldVal));
+            $this->io->writeln("OLD $fieldName: ".implode('|', $oldValItems));
         }
-        $this->io->writeln("$fieldName: ".join('|', $allItems));
+        $this->io->writeln("NEW $fieldName: ".implode('|', $newValItems));
     }
 
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal): void
     {
         if ($oldVal) {
             $oldVal = Utils::safeStr($oldVal);
-            $this->io->writeln("$fieldName: <d>$oldVal</>");
+            $this->io->writeln("OLD $fieldName: <d>$oldVal</>");
         }
 
         if ($newVal) {
             $newVal = Utils::safeStr($newVal);
-            $this->io->writeln("$fieldName: <a>$newVal</>");
+            $this->io->writeln("NEW $fieldName: <a>$newVal</>");
         }
     }
 
@@ -110,7 +112,7 @@ class DataDiffer
     {
         if ($this->showFixCommands) {
             $value = Utils::safeStr($value);
-            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$value|ABCDEFGHIJ|");
+            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$value|$value|");
         }
     }
 }

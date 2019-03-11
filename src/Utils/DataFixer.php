@@ -114,7 +114,7 @@ class DataFixer
 
             if (!preg_match($validationRegexp, $fieldValue)) {
                 $fieldValue = Utils::safeStr($fieldValue);
-                $this->io->writeln("wr:{$artisan->getMakerId()}:$prettyFieldName:|:<wrong>$fieldValue</>|ABCDEFGHIJ|");
+                $this->io->writeln("wr:{$artisan->getMakerId()}:$prettyFieldName:|:<wrong>$fieldValue</>|$fieldValue|");
             }
         }
     }
