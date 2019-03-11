@@ -325,7 +325,7 @@ CREATE TABLE `events` (
   `timestamp` datetime NOT NULL,
   `description` varchar(4095) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00','From now on, the software will record all changes in commissions statuses.');
@@ -356,6 +356,7 @@ INSERT INTO `events` VALUES (29,'2019-03-10 06:05:42','Based on the contents of:
 INSERT INTO `events` VALUES (30,'2019-03-10 18:05:33','Based on the contents of: https://twitter.com/StreifenSuits , Streifensuits commission status changed to CLOSED (was OPEN).');
 INSERT INTO `events` VALUES (31,'2019-03-10 18:05:33','Based on the contents of: http://www.furaffinity.net/user/samthemoose101/ , Sammy\'s Fur Shoppe commission status changed to CLOSED (was OPEN).');
 INSERT INTO `events` VALUES (32,'2019-03-11 06:05:34','Based on the contents of: http://www.kilcodocostumes.com/ , Kilcodo Costumes commission status changed to CLOSED (was UNKNOWN).');
+INSERT INTO `events` VALUES (33,'2019-03-11 18:05:32','Based on the contents of: http://www.furaffinity.net/user/thekareliafursuits/ , TheKareliaFursuits commission status changed to OPEN (was UNKNOWN).');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
