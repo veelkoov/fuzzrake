@@ -2,4 +2,4 @@
 
 pushd "$(dirname "$0")/../ansible"
 
-ansible-playbook dump_db.yaml "${@:1}"
+ansible-playbook update-db.yaml "${@:1}"
