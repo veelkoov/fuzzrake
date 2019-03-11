@@ -324,7 +324,7 @@ CREATE TABLE `events` (
   `timestamp` datetime NOT NULL,
   `description` varchar(4095) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00','From now on, the software will record all changes in commissions statuses.');
@@ -338,6 +338,23 @@ INSERT INTO `events` VALUES (12,'2019-02-23 18:05:21','Based on the contents of:
 INSERT INTO `events` VALUES (13,'2019-02-26 06:05:21','Based on the contents of: https://www.curlworks.net/ , Curlworks commission status changed to CLOSED (was UNKNOWN).');
 INSERT INTO `events` VALUES (14,'2019-02-28 19:10:17','Based on the contents of: http://furoclockcreations.wixsite.com/furoclockcreations , Fur O\'Clock Creations commission status changed to CLOSED (was UNKNOWN).');
 INSERT INTO `events` VALUES (15,'2019-02-28 19:10:17','Based on the contents of: http://www.furaffinity.net/user/starlithorizonstudios , Starlit Horizon Studios commission status changed to OPEN (was UNKNOWN).');
+INSERT INTO `events` VALUES (16,'2019-03-02 06:05:32','Based on the contents of: http://bycats4cats.com/quote/ , ByCats4Cats commission status changed to OPEN (was CLOSED).');
+INSERT INTO `events` VALUES (17,'2019-03-02 06:05:33','Based on the contents of: http://www.furaffinity.net/user/r5suits , R5 commission status changed to OPEN (was CLOSED).');
+INSERT INTO `events` VALUES (18,'2019-03-02 06:05:33','Based on the contents of: https://www.instagram.com/sassy.suits/ , Sweet and Salty Suits commission status changed to CLOSED (was OPEN).');
+INSERT INTO `events` VALUES (19,'2019-03-03 22:24:29','Based on the contents of: https://www.furaffinity.net/user/furrymachine/ , Furry Machine Workshop commission status changed to CLOSED (was UNKNOWN).');
+INSERT INTO `events` VALUES (20,'2019-03-03 22:24:29','Based on the contents of: https://slateslothsuits.weebly.com/ , Slate Sloth Suits commission status changed to OPEN (was UNKNOWN).');
+INSERT INTO `events` VALUES (21,'2019-03-04 06:06:32','The software failed to interpret new commission status based on the contents of: http://www.roofur.com/commission/?status . Roofur commission status is now UNKNOWN (was CLOSED).');
+INSERT INTO `events` VALUES (22,'2019-03-04 06:06:32','The software failed to interpret new commission status based on the contents of: http://bycats4cats.com/quote/ . ByCats4Cats commission status is now UNKNOWN (was OPEN).');
+INSERT INTO `events` VALUES (23,'2019-03-04 18:05:38','Based on the contents of: http://www.roofur.com/commission/?status , Roofur commission status changed to CLOSED (was UNKNOWN).');
+INSERT INTO `events` VALUES (24,'2019-03-04 18:05:38','Based on the contents of: http://bycats4cats.com/quote/ , ByCats4Cats commission status changed to OPEN (was UNKNOWN).');
+INSERT INTO `events` VALUES (25,'2019-03-04 18:05:40','Based on the contents of: https://dragonsgrinstudios.weebly.com/ , Dragon\'s Grin Studios commission status changed to CLOSED (was OPEN).');
+INSERT INTO `events` VALUES (26,'2019-03-05 06:05:37','Based on the contents of: https://www.facebook.com/228395997528728/posts/488407388194253/ , Mei Fursuits commission status changed to CLOSED (was OPEN).');
+INSERT INTO `events` VALUES (27,'2019-03-08 06:05:43','The software failed to interpret new commission status based on the contents of: http://www.kilcodocostumes.com/ . Kilcodo Costumes commission status is now UNKNOWN (was CLOSED).');
+INSERT INTO `events` VALUES (28,'2019-03-10 06:05:40','Based on the contents of: https://www.facebook.com/pg/HieroCraftCreations/posts/ , Hiero Craft Creations commission status changed to CLOSED (was UNKNOWN).');
+INSERT INTO `events` VALUES (29,'2019-03-10 06:05:42','Based on the contents of: https://twitter.com/AstroAntlers , AstroAntlers commission status changed to CLOSED (was OPEN).');
+INSERT INTO `events` VALUES (30,'2019-03-10 18:05:33','Based on the contents of: https://twitter.com/StreifenSuits , Streifensuits commission status changed to CLOSED (was OPEN).');
+INSERT INTO `events` VALUES (31,'2019-03-10 18:05:33','Based on the contents of: http://www.furaffinity.net/user/samthemoose101/ , Sammy\'s Fur Shoppe commission status changed to CLOSED (was OPEN).');
+INSERT INTO `events` VALUES (32,'2019-03-11 06:05:34','Based on the contents of: http://www.kilcodocostumes.com/ , Kilcodo Costumes commission status changed to CLOSED (was UNKNOWN).');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
