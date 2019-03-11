@@ -111,6 +111,8 @@ class ArtisanMetadata
         self::FEATURES => self::LIST_VALIDATION_REGEXP,
         self::OTHER_FEATURES => self::LIST_VALIDATION_REGEXP,
         self::URL_FSR => '#^(http://fursuitreview.com/maker/[^/]+/)?$#',
+        self::URL_FAQ => self::GENERIC_URL_REGEXP,
+        self::URL_PRICES => self::GENERIC_URL_REGEXP,
         self::URL_WEBSITE => self::GENERIC_URL_REGEXP,
         self::URL_QUEUE => self::GENERIC_URL_REGEXP,
         self::URL_FA => '#^(http://www\.furaffinity\.net/user/[^/]+)?$#',
