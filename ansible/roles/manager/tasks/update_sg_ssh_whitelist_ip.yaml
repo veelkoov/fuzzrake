@@ -1,0 +1,26 @@
+---
+- shell: curl -4 http://ifconfig.co/ip
+  register: ip_output
+  args:
+    warn: false
+  changed_when: false
+  delegate_to: localhost
+
+- ec2_group:
+    name: "{{ sg_name }}"
+    description: "{{ sg_description }}"
+    vpc_id: "{{ vpc_id }}"
+    rules:
+    - proto: tcp
+      from_port: 80
+      to_port: 80
+      cidr_ip: 0.0.0.0/0
+    - proto: tcp
+      from_port: 80
+      to_port: 80
+      cidr_ipv6: ::/0
+    - proto: tcp
+      from_port: 22
+      to_port: 22
+      cidr_ip: "{{ ip_output.stdout_lines[0] }}/32"
+  delegate_to: localhost

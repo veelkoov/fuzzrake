@@ -1,0 +1,11 @@
+---
+- expect:
+    command: /bin/bash -c 'mysql
+               --host={{ db_params.host }}
+               --port={{ db_params.port }}
+               --user={{ db_params.user }}
+               --password
+      {{ db_params.name }} < {{ db_dump_file_path }}'
+    responses:
+      password: "{{ db_params.password }}"
+  no_log: yes

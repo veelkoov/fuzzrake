@@ -1,0 +1,14 @@
+---
+- replace:
+    regexp: "^(INSERT INTO `artisans` VALUES .+),[^,]+,[^,]+\\);$"
+    replace: "\\1,NULL,NULL);"
+    path: "{{ db_dump_file_path }}"
+  check_mode: no
+  no_log: yes
+
+- copy:
+    src: "{{ db_dump_file_path }}"
+    dest: "{{ committed_db_dump_path }}"
+    remote_src: no # FIXME: Wouldn't show diff if yes; works because remote host = localhost
+
+- command: "git commit -m 'Updated DB dump' {{ committed_db_dump_path }}"

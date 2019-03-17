@@ -1,0 +1,13 @@
+---
+- hosts: localhost, getfursu.it
+  roles:
+    - { name: "db", action: "read_params" }
+
+    - { name: "db", action: "dump",
+        when: 'inventory_hostname == "localhost"' }
+
+    - { name: "db", action: "copy_dump", local_db_dump_file_path: "{{ hostvars['localhost']['db_dump_file_path'] }}",
+        when: 'inventory_hostname == "getfursu.it"' }
+
+    - { name: "db", action: "replace",
+        when: 'inventory_hostname == "getfursu.it"' }

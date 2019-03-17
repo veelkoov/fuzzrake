@@ -1,0 +1,5 @@
+---
+- fetch:
+    flat: yes
+    dest: "{{ local_db_dump_file_path }}"
+    src: "{{ db_dump_file_path }}"

@@ -1,3 +1,5 @@
+*.nocommit.*
+*.nocommit
 
 ###> symfony/framework-bundle ###
 /.env.local

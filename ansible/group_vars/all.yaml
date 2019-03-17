@@ -1,0 +1,2 @@
+---
+db_dump_file_path: "{{ deployment_path }}/db_dump/db_dump_{{ ansible_date_time.iso8601 }}.nocommit.sql"

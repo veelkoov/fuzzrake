@@ -1,0 +1,5 @@
+---
+- hosts: getfursu.it
+  gather_facts: no
+  roles:
+    - { name: "manager", action: "update_sg_ssh_whitelist_ip" }

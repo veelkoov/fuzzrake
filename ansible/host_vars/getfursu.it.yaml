@@ -1,0 +1,6 @@
+---
+deployment_path: /var/www/prod
+
+sg_name: getfursu.it-backend
+sg_description: getfursu.it backend
+vpc_id: vpc-6d051916

@@ -1,0 +1,20 @@
+---
+- shell: sed -rn 's/^DATABASE_URL=mysql:\/\/([^:]+):([^@]+)@([^:]+):([^\/]+)\/(.+)/\1\t\2\t\3\t\4\t\5/p' {{ deployment_path }}/.env.local
+  register: db_params_out
+  check_mode: no
+  changed_when: false
+  args:
+    warn: no
+  no_log: yes
+
+- set_fact: db_params_split={{ db_params_out.stdout.split('\t') }}
+  no_log: yes
+
+- set_fact:
+    db_params:
+      user: "{{ db_params_split[0] }}"
+      password: "{{ db_params_split[1] }}"
+      host: "{{ db_params_split[2] }}"
+      port: "{{ db_params_split[3] }}"
+      name: "{{ db_params_split[4] }}"
+  no_log: yes

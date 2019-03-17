@@ -1,0 +1,28 @@
+---
+- expect:
+    command: mysqldump
+      --add-drop-table
+      --create-options
+      --default-character-set=utf8mb4
+      --skip-disable-keys
+      --skip-extended-insert
+      --skip-dump-date
+      --skip-comments
+      --skip-lock-tables
+      --skip-add-locks
+      --order-by-primary
+      --quote-names
+      --tz-utc
+
+      --host={{ db_params.host }}
+      --port={{ db_params.port }}
+      --user={{ db_params.user }}
+      --password
+
+      --result-file={{ db_dump_file_path }}
+
+      {{ db_params.name }}
+    responses:
+      password: "{{ db_params.password }}"
+  check_mode: no # We assume the result file is non-committed temporary
+  no_log: yes
