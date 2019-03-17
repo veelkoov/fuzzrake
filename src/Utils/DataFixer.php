@@ -53,13 +53,22 @@ class DataFixer
     private $differ;
 
     /**
-     * @param SymfonyStyle $io
+     * @var bool
      */
-    public function __construct(SymfonyStyle $io)
+    private $showDiff;
+
+    /**
+     * @param SymfonyStyle $io
+     * @param bool $showDiff
+     */
+    public function __construct(SymfonyStyle $io, bool $showDiff)
     {
         $this->io = $io;
         $this->io->getFormatter()->setStyle('wrong', new OutputFormatterStyle('red'));
+
         $this->differ = new DataDiffer($io);
+
+        $this->showDiff = $showDiff;
     }
 
     public function fixArtisanData(Artisan $artisan): Artisan
@@ -101,8 +110,11 @@ class DataFixer
 
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
+        $artisan->setLanguages($this->fixString($artisan->getLanguages()));
 
-        $this->differ->showDiff($originalArtisan, $artisan);
+        if ($this->showDiff) {
+            $this->differ->showDiff($originalArtisan, $artisan);
+        }
 
         return $artisan;
     }

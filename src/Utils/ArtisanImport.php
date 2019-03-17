@@ -31,11 +31,23 @@ class ArtisanImport
     /**
      * @var string
      */
-    private $passcode;
+    private $providedPasscode;
 
-    public function __construct(string $passcode)
+    /**
+     * @var string
+     */
+    private $rawDataHash;
+
+    /**
+     * @var array
+     */
+    private $rawData;
+
+    public function __construct(array $rawData)
     {
-        $this->passcode = $passcode;
+        $this->rawData = $rawData;
+        $this->providedPasscode = $rawData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::PASSCODE)];;
+        $this->rawDataHash = sha1(json_encode($rawData));
     }
 
     /**
@@ -105,8 +117,24 @@ class ArtisanImport
     /**
      * @return string
      */
-    public function getPasscode(): string
+    public function getProvidedPasscode(): string
     {
-        return $this->passcode;
+        return $this->providedPasscode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRawDataHash(): string
+    {
+        return $this->rawDataHash;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawData(): array
+    {
+        return $this->rawData;
     }
 }

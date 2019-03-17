@@ -51,41 +51,65 @@ class DataImporter
     public function import(array $artisansData, ImportCorrector $importCorrector, array $passcodes, SymfonyStyle $io,
                            bool $showFixCommands): void
     {
-        $this->fixer = new DataFixer($io);
+        $this->fixer = new DataFixer($io, false);
         $this->differ = new DataDiffer($io, $showFixCommands);
         $this->corrector = $importCorrector;
 
-        $imports = $this->performImports($artisansData);
+        $imports = $this->createImports($artisansData);
+        $this->performImports($imports);
 
         $io->title('Showing import data before/after fixing');
         $this->showFixedImportedData($imports);
         $io->title('Showing artisans\' data before/after fixing');
         $this->showUpdatedArtisans($imports);
         $io->title('Validating updated artisans\' data and passcodes');
-        $this->persistValid($imports, $passcodes, $io);
+        $this->persistValidImports($imports, $passcodes, $io);
     }
 
-    private function performImports(array $artisansData)
+    /**
+     * @param array $artisansData
+     * @return ArtisanImport[]
+     */
+    private function createImports(array $artisansData): array
     {
-        return array_map(function (array $artisanData) {
-            return $this->performImport($artisanData);
-        }, $artisansData);
+        $result = [];
+
+        foreach ($artisansData as $artisanData) {
+            $import = $this->createImport($artisanData);
+            $result[$import->getUpsertedArtisan()->getMakerId() ?: $import->getNewFixedData()->getMakerId()] = $import; // Removes past duplicates
+        }
+
+        return $result;
     }
 
-    private function performImport(array $artisanData): ArtisanImport
+    private function createImport(array $artisanData): ArtisanImport
     {
-        $artisanImport = $this->createArtisanImport($artisanData);
+        $result = new ArtisanImport($artisanData);
+        $result->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
+        $result->setOriginalArtisan(clone $result->getUpsertedArtisan()); // Clone unmodified
 
-        $artisanImport->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
-        $artisanImport->setOriginalArtisan(clone $artisanImport->getUpsertedArtisan()); // Clone unmodified
+        $result->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $result->getRawData()));
+        $result->setNewFixedData($this->fix(clone $result->getNewOriginalData()));
 
-        $this->updateArtisanWithData($artisanImport->getUpsertedArtisan(), $artisanData); // Now update the DB entity
-        $this->fix($artisanImport->getUpsertedArtisan()); // And fix the DB entity
+        return $result;
+    }
 
-        $artisanImport->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $artisanData));
-        $artisanImport->setNewFixedData($this->fix(clone $artisanImport->getNewOriginalData()));
+    /**
+     * @param ArtisanImport[] $imports
+     */
+    private function performImports(array $imports): void
+    {
+        foreach ($imports as $import) {
+            $this->performImport($import);
+        }
+    }
 
-        return $artisanImport;
+    private function performImport(ArtisanImport $import): ArtisanImport
+    {
+        $this->updateArtisanWithData($import->getUpsertedArtisan(), $import->getRawData()); // Update the DB entity
+        $this->fix($import->getUpsertedArtisan()); // And fix the DB entity
+
+        return $import;
     }
 
     private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
@@ -138,52 +162,10 @@ class DataImporter
      * @param ArtisanImport[] $imports
      * @param array           $passcodes
      */
-    private function persistValid(array $imports, array $passcodes, SymfonyStyle $io)
+    private function persistValidImports(array $imports, array $passcodes, SymfonyStyle $io)
     {
         foreach ($imports as $import) {
-            $new = $import->getUpsertedArtisan();
-            $old = $import->getOriginalArtisan();
-            $names = Utils::artisanNames($old, $new);
-            $providedPasscode = $import->getPasscode();
-
-            $this->fixer->validateArtisanData($new);
-            $ok = true;
-
-            if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
-                $io->warning("New maker: $names");
-                $io->writeln([
-                    ImportCorrector::CMD_MATCH_NAME.":{$new->getMakerId()}:ABCDEFGHIJ:",
-                    ImportCorrector::CMD_ACK_NEW.":{$new->getMakerId()}:"
-                ]);
-
-                $ok = false;
-            }
-
-            if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
-                $io->warning("$names changed their maker ID");
-            }
-
-            if (!array_key_exists($new->getMakerId(), $passcodes)) {
-                $io->warning("$names set new passcode: $providedPasscode");
-                $io->writeln("{$new->getMakerId()} $providedPasscode");
-
-                $ok = false;
-            } else {
-                $expectedPasscode = $passcodes[$new->getMakerId()];
-
-                if ($providedPasscode !== $expectedPasscode && !$this->corrector->doPasscodeExceptionOnce($new->getMakerId(), $providedPasscode)) {
-                    $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
-                    $io->writeln(ImportCorrector::CMD_PASS_ONCE.":{$new->getMakerId()}:|:$providedPasscode|");
-
-                    $ok = false;
-                }
-            }
-
-            if ($ok) {
-                $this->objectManager->persist($new);
-            } else if ($new->getId()) {
-                $this->objectManager->refresh($new);
-            }
+            $this->persistImportIfValid($passcodes, $io, $import);
         }
     }
 
@@ -195,13 +177,55 @@ class DataImporter
         return $artisan;
     }
 
-    private function createArtisanImport(array $artisanData): ArtisanImport
-    {
-        return new ArtisanImport($this->getDataColumn($artisanData, ArtisanMetadata::PASSCODE));
-    }
-
     private function getDataColumn(array $artisanData, string $prettyFieldName)
     {
         return $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName($prettyFieldName)];
+    }
+
+    private function persistImportIfValid(array $passcodes, SymfonyStyle $io, ArtisanImport $import): void
+    {
+        $new = $import->getUpsertedArtisan();
+        $old = $import->getOriginalArtisan();
+        $names = Utils::artisanNames($old, $new);
+        $providedPasscode = $import->getProvidedPasscode();
+
+        $this->fixer->validateArtisanData($new);
+        $ok = true;
+
+        if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
+            $io->warning("New maker: $names");
+            $io->writeln([
+                ImportCorrector::CMD_MATCH_NAME . ":{$new->getMakerId()}:ABCDEFGHIJ:",
+                ImportCorrector::CMD_ACK_NEW . ":{$new->getMakerId()}:"
+            ]);
+
+            $ok = false;
+        }
+
+        if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
+            $io->warning("$names changed their maker ID");
+        }
+
+        if (!array_key_exists($new->getMakerId(), $passcodes)) {
+            $io->warning("$names set new passcode: $providedPasscode");
+            $io->writeln("{$new->getMakerId()} $providedPasscode");
+
+            $ok = false;
+        } else {
+            $expectedPasscode = $passcodes[$new->getMakerId()];
+
+            if ($providedPasscode !== $expectedPasscode && !$this->corrector->ignoreInvalidPasscodeForData($import->getRawDataHash())) {
+                $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
+                $io->writeln(ImportCorrector::CMD_IGNORE_PIN . ":{$new->getMakerId()}:{$import->getRawDataHash()}:");
+
+                $ok = false;
+            }
+        }
+
+        if ($ok) {
+            $this->objectManager->persist($new);
+        } else if ($new->getId()) {
+            $this->objectManager->refresh($new);
+        }
     }
 }

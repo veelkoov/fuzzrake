@@ -42,7 +42,7 @@ class AppTidyData extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $fixer = new DataFixer($io);
+        $fixer = new DataFixer($io, true);
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
             $fixer->fixArtisanData($artisan);
