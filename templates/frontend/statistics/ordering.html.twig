@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Other items, combined</h1>
+    {% include 'frontend/statistics/_item_pills.html.twig' with { items: otherItems } %}
+{% endblock %}

@@ -161,4 +161,25 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getOtherItemsData()
+    {
+        $ot = $this->getDistinctOtherOrderTypes();
+        $fe = $this->getDistinctOtherFeatures();
+        $st = $this->getDistinctOtherStyles();
+
+        foreach (['OT' => &$ot, 'FE' => &$fe, 'ST' => &$st] as $suffix => &$items) {
+            $items = array_combine(
+                array_map(function ($key) use ($suffix) {
+                    return "$key ($suffix)";
+                }, array_keys($items)),
+                array_values($items)
+            );
+        }
+
+        $result = array_merge($ot, $fe, $st);
+        ksort($result);
+
+        return $result;
+    }
 }
