@@ -11,20 +11,42 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataFixer
 {
     const REPLACEMENTS = [
-        'Follow me eyes' => 'Follow-me eyes',
-        'Adjustable ears / wiggle ears' => 'Adjustable/wiggle ears',
-        'Three-fourth (Head, handpaws, tail, legs/pants, feetpaws)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
-        'Partial (Head, handpaws, tail, feetpaws)' => 'Partial (head + handpaws + tail + feetpaws)',
-        'Mini partial (Head, handpaws, tail)' => 'Mini partial (head + handpaws + tail)',
-        'Three-fourth (Head+handpaws+tail+legs/pants+feetpaws)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
-        'Partial (Head+handpaws+tail+feetpaws)' => 'Partial (head + handpaws + tail + feetpaws)',
-        'Mini partial (Head+handpaws+tail)' => 'Mini partial (head + handpaws + tail)',
         '’' => "'",
         'Rather not say' => '',
         'N/a' => '',
     ];
 
-    const COUNTRIES_REPLACAMENTS = [
+    const LIST_REPLACEMENTS = [
+        'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
+        'Partial \(Head, handpaws, tail, feetpaws\)' => 'Partial (head + handpaws + tail + feetpaws)',
+        'Mini partial \(Head, handpaws, tail\)' => 'Mini partial (head + handpaws + tail)',
+        'Three-fourth \(Head+handpaws+tail+legs/pants+feetpaws\)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
+        'Partial \(Head+handpaws+tail+feetpaws\)' => 'Partial (head + handpaws + tail + feetpaws)',
+        'Mini partial \(Head+handpaws+tail\)' => 'Mini partial (head + handpaws + tail)',
+
+        'Follow me eyes' => 'Follow-me eyes',
+        'Adjustable ears / wiggle ears' => 'Adjustable/wiggle ears',
+        'Bases, jawsets, silicone noses/tongues' => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
+        'Silicone and resin parts' => "Silicone parts\nResin parts",
+        'accessories and cleaning' => 'Accessories and cleaning', // TODO
+        'backpacks' => 'Backpacks',
+        'claws' => 'Claws',
+        'Armsleeves' => 'Arm sleeves',
+        'Head Bases' => 'Head bases',
+        'Plushes' => 'Plushies',
+        'Plushie, backpacks, bandanas, collars, general accessories' => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
+        'Eyes, noses, claws' => "Eyes\nNoses\nClaws",
+        'Resin and silicone parts' => "Resin parts\nSilicone parts",
+        'Sleeves \(legs and arms\)' => "Arm sleeves\nLeg sleeves",
+        'Fursuit Props' => 'Fursuit props',
+        'Fursuit Props and Accessories, Fursuit supplies' => "Fursuit props\nFursuit accessories\nFursuit supplies",
+        'Fleece Props, Other accessories' => "Fleece props\nOther accessories",
+        'Sock paws' => 'Sockpaws',
+        'Removable magnetic parts, secret pockets' => "Removable magnetic parts\nHidden pockets",
+        'QQQQQ' => 'QQQQQ',
+    ];
+
+    const COUNTRIES_REPLACEMENTS = [
         'argentina' => 'AR',
         'australia' => 'AU',
         'belgium' => 'BE',
@@ -59,7 +81,7 @@ class DataFixer
 
     /**
      * @param SymfonyStyle $io
-     * @param bool $showDiff
+     * @param bool         $showDiff
      */
     public function __construct(SymfonyStyle $io, bool $showDiff)
     {
@@ -80,13 +102,13 @@ class DataFixer
         $artisan->setSpeciesDoes($this->fixString($artisan->getSpeciesDoes()));
         $artisan->setSpeciesDoesnt($this->fixString($artisan->getSpeciesDoesnt()));
 
-        $artisan->setProductionModel($this->fixList($artisan->getProductionModel()));
-        $artisan->setFeatures($this->fixList($artisan->getFeatures()));
-        $artisan->setStyles($this->fixList($artisan->getStyles()));
-        $artisan->setTypes($this->fixList($artisan->getTypes()));
-        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures()));
-        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles()));
-        $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes()));
+        $artisan->setProductionModel($this->fixList($artisan->getProductionModel(), true));
+        $artisan->setFeatures($this->fixList($artisan->getFeatures(), true));
+        $artisan->setStyles($this->fixList($artisan->getStyles(), true));
+        $artisan->setTypes($this->fixList($artisan->getTypes(), true));
+        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false));
+        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false));
+        $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes(), false));
 
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
         $artisan->setState($this->fixString($artisan->getState()));
@@ -131,24 +153,32 @@ class DataFixer
         }
     }
 
-    private function fixList(string $input): string
+    private function fixList(string $input, bool $sort): string
     {
-        $cslist = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
-        $list = preg_split('#[;\n]#', $cslist);
-        $list = array_map('trim', $list);
-        $list = array_filter($list);
-        sort($list);
-        $list = array_unique($list);
-        $result = implode("\n", $list);
+        $list = array_filter(array_map(function ($item) {
+            $item = trim($item);
 
-        return $result;
+            foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
+                $item = preg_replace("#(?:^|\n)$pattern(?:\n|$)#i", $replacement, $item);
+            }
+
+            return $item;
+        }, explode("\n", $input)));
+
+        $list = ($list);
+
+        if ($sort) {
+            sort($list);
+        }
+
+        return implode("\n", array_unique($list));
     }
 
     private function fixCountry(string $input): string
     {
         $result = trim($input);
 
-        foreach (self::COUNTRIES_REPLACAMENTS as $regexp => $replacement) {
+        foreach (self::COUNTRIES_REPLACEMENTS as $regexp => $replacement) {
             $result = preg_replace("#^$regexp$#i", $replacement, $result);
         }
 

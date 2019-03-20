@@ -29,7 +29,7 @@ class StatisticsController extends AbstractController
         'sleeves?',
         'claws?',
         'eyes?',
-        'noses?',
+        'noses?|nostril',
         'ears?',
         'paws?',
         'jaw|muzzle',

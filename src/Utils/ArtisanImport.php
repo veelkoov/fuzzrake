@@ -46,7 +46,7 @@ class ArtisanImport
     public function __construct(array $rawData)
     {
         $this->rawData = $rawData;
-        $this->providedPasscode = $rawData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::PASSCODE)];;
+        $this->providedPasscode = $rawData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::PASSCODE)];
         $this->rawDataHash = sha1(json_encode($rawData));
     }
 

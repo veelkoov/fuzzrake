@@ -68,6 +68,7 @@ class DataImporter
 
     /**
      * @param array $artisansData
+     *
      * @return ArtisanImport[]
      */
     private function createImports(array $artisansData): array
@@ -195,8 +196,8 @@ class DataImporter
         if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
             $io->warning("New maker: $names");
             $io->writeln([
-                ImportCorrector::CMD_MATCH_NAME . ":{$new->getMakerId()}:ABCDEFGHIJ:",
-                ImportCorrector::CMD_ACK_NEW . ":{$new->getMakerId()}:"
+                ImportCorrector::CMD_MATCH_NAME.":{$new->getMakerId()}:ABCDEFGHIJ:",
+                ImportCorrector::CMD_ACK_NEW.":{$new->getMakerId()}:",
             ]);
 
             $ok = false;
@@ -216,7 +217,7 @@ class DataImporter
 
             if ($providedPasscode !== $expectedPasscode && !$this->corrector->ignoreInvalidPasscodeForData($import->getRawDataHash())) {
                 $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
-                $io->writeln(ImportCorrector::CMD_IGNORE_PIN . ":{$new->getMakerId()}:{$import->getRawDataHash()}:");
+                $io->writeln(ImportCorrector::CMD_IGNORE_PIN.":{$new->getMakerId()}:{$import->getRawDataHash()}:");
 
                 $ok = false;
             }
@@ -224,7 +225,7 @@ class DataImporter
 
         if ($ok) {
             $this->objectManager->persist($new);
-        } else if ($new->getId()) {
+        } elseif ($new->getId()) {
             $this->objectManager->refresh($new);
         }
     }
