@@ -163,7 +163,7 @@ class DataFixer
             }
 
             return $item;
-        }, explode("\n", $input)));
+        }, preg_split('#[;\n]#', $input)));
 
         $list = ($list);
 

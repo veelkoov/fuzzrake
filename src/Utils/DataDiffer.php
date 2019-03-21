@@ -27,33 +27,35 @@ class DataDiffer
 
         $this->io->getFormatter()->setStyle('a', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('d', new OutputFormatterStyle('red'));
+        $this->io->getFormatter()->setStyle('i', new OutputFormatterStyle('black', 'cyan'));
     }
 
-    public function showDiff(Artisan $old, Artisan $new): void
+    public function showDiff(Artisan $old, Artisan $new, Artisan $imported = null): void
     {
         $nameShown = false;
 
         foreach (ArtisanMetadata::getModelFieldNames() as $fieldName) {
-            $this->showSingleFieldDiff($nameShown, $fieldName, $old, $new);
+            $this->showSingleFieldDiff($nameShown, $fieldName, $old, $new, $imported);
         }
     }
 
-    private function showSingleFieldDiff(bool &$nameShown, string $modelFieldName, Artisan $old, Artisan $new): void
+    private function showSingleFieldDiff(bool &$nameShown, string $modelFieldName, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
         $newVal = $new->get($modelFieldName) ?: '';
         $oldVal = $old->get($modelFieldName) ?: '';
+        $impVal = $imported ? $imported->get($modelFieldName) : null;
         $prettyFieldName = ArtisanMetadata::getPrettyByModelFieldName($modelFieldName);
 
         if ($oldVal !== $newVal) {
             $this->showNameFirstTime($nameShown, $old, $new);
 
             if (ArtisanMetadata::isListField($prettyFieldName)) {
-                $this->showListDiff($prettyFieldName, $oldVal, $newVal);
+                $this->showListDiff($prettyFieldName, $oldVal, $newVal, $impVal);
             } else {
-                $this->showSingleValueDiff($prettyFieldName, $oldVal, $newVal);
+                $this->showSingleValueDiff($prettyFieldName, $oldVal, $newVal, $impVal);
             }
 
-            $this->showFixCommandOptionally($new->getMakerId(), $prettyFieldName, $newVal);
+            $this->showFixCommandOptionally($new->getMakerId(), $prettyFieldName, $impVal ?? $oldVal, $newVal);
 
             $this->io->writeln('');
         }
@@ -68,7 +70,7 @@ class DataDiffer
         }
     }
 
-    private function showListDiff(string $fieldName, $oldVal, $newVal): void
+    private function showListDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
         $oldValItems = explode("\n", $oldVal);
         $newValItems = explode("\n", $newVal);
@@ -89,14 +91,25 @@ class DataDiffer
             $item = Utils::safeStr($item);
         }
 
+        if ($impVal && $impVal !== $newVal) {
+            $impVal = Utils::safeStr($impVal ?: '');
+            $this->io->writeln("IMP $fieldName: <i>$impVal</>");
+        }
+
         if ($oldVal) { // In case order changed or duplicates got removed, etc.
             $this->io->writeln("OLD $fieldName: ".implode('|', $oldValItems));
         }
+
         $this->io->writeln("NEW $fieldName: ".implode('|', $newValItems));
     }
 
-    private function showSingleValueDiff(string $fieldName, $oldVal, $newVal): void
+    private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
+        if ($impVal && $impVal !== $newVal) {
+            $impVal = Utils::safeStr($impVal ?: '');
+            $this->io->writeln("IMP $fieldName: <i>$impVal</>");
+        }
+
         if ($oldVal) {
             $oldVal = Utils::safeStr($oldVal);
             $this->io->writeln("OLD $fieldName: <d>$oldVal</>");
@@ -108,11 +121,12 @@ class DataDiffer
         }
     }
 
-    private function showFixCommandOptionally(string $makerId, string $prettyFieldName, string $value)
+    private function showFixCommandOptionally(string $makerId, string $prettyFieldName, string $replaced, string $best)
     {
         if ($this->showFixCommands) {
-            $value = Utils::safeStr($value);
-            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$value|$value|");
+            $replaced = Utils::safeStr($replaced);
+            $best = Utils::safeStr($best);
+            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$replaced|$best|");
         }
     }
 }

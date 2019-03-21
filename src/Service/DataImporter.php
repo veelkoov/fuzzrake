@@ -58,8 +58,6 @@ class DataImporter
         $imports = $this->createImports($artisansData);
         $this->performImports($imports);
 
-        $io->title('Showing import data before/after fixing');
-        $this->showFixedImportedData($imports);
         $io->title('Showing artisans\' data before/after fixing');
         $this->showUpdatedArtisans($imports);
         $io->title('Validating updated artisans\' data and passcodes');
@@ -77,7 +75,7 @@ class DataImporter
 
         foreach ($artisansData as $artisanData) {
             $import = $this->createImport($artisanData);
-            $result[$import->getUpsertedArtisan()->getMakerId() ?: $import->getNewFixedData()->getMakerId()] = $import; // Removes past duplicates
+            $result[$import->getUpsertedArtisan()->getMakerId()] = $import; // Removes past duplicates
         }
 
         return $result;
@@ -86,11 +84,10 @@ class DataImporter
     private function createImport(array $artisanData): ArtisanImport
     {
         $result = new ArtisanImport($artisanData);
+        $result->setNewData($this->updateArtisanWithData(new Artisan(), $artisanData));
+
         $result->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
         $result->setOriginalArtisan(clone $result->getUpsertedArtisan()); // Clone unmodified
-
-        $result->setNewOriginalData($this->updateArtisanWithData(new Artisan(), $result->getRawData()));
-        $result->setNewFixedData($this->fix(clone $result->getNewOriginalData()));
 
         return $result;
     }
@@ -107,7 +104,7 @@ class DataImporter
 
     private function performImport(ArtisanImport $import): ArtisanImport
     {
-        $this->updateArtisanWithData($import->getUpsertedArtisan(), $import->getRawData()); // Update the DB entity
+        $this->updateArtisanWithData($import->getUpsertedArtisan(), $import->getRawNewData()); // Update the DB entity
         $this->fix($import->getUpsertedArtisan()); // And fix the DB entity
 
         return $import;
@@ -142,20 +139,10 @@ class DataImporter
     /**
      * @param ArtisanImport[] $imports
      */
-    private function showFixedImportedData(array $imports): void
-    {
-        foreach ($imports as $import) {
-            $this->differ->showDiff($import->getNewOriginalData(), $import->getNewFixedData());
-        }
-    }
-
-    /**
-     * @param ArtisanImport[] $imports
-     */
     private function showUpdatedArtisans(array $imports): void
     {
         foreach ($imports as $import) {
-            $this->differ->showDiff($import->getOriginalArtisan(), $import->getNewFixedData());
+            $this->differ->showDiff($import->getOriginalArtisan(), $import->getUpsertedArtisan(), $import->getNewData());
         }
     }
 
@@ -172,8 +159,8 @@ class DataImporter
 
     private function fix(Artisan $artisan): Artisan
     {
-        $this->fixer->fixArtisanData($artisan);
         $this->corrector->correctArtisan($artisan);
+        $this->fixer->fixArtisanData($artisan);
 
         return $artisan;
     }
@@ -215,9 +202,9 @@ class DataImporter
         } else {
             $expectedPasscode = $passcodes[$new->getMakerId()];
 
-            if ($providedPasscode !== $expectedPasscode && !$this->corrector->ignoreInvalidPasscodeForData($import->getRawDataHash())) {
+            if ($providedPasscode !== $expectedPasscode && !$this->corrector->ignoreInvalidPasscodeForData($import->getNewRawDataHash())) {
                 $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
-                $io->writeln(ImportCorrector::CMD_IGNORE_PIN.":{$new->getMakerId()}:{$import->getRawDataHash()}:");
+                $io->writeln(ImportCorrector::CMD_IGNORE_PIN.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:");
 
                 $ok = false;
             }
