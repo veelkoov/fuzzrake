@@ -51,7 +51,7 @@ CREATE TABLE `artisans` (
   `are_commissions_open` tinyint(1) DEFAULT NULL,
   `commissions_quotes_last_check` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=281 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `artisans` VALUES (1,'Silvena Handmade','','','','PL','','','Toony','','','','','','','http://silvenahandmade.com/','http://www.furaffinity.net/user/silvena','','','https://www.facebook.com/silvenahandmade/','','','','http://silvenahandmade.com/','','','','','','','','','','','',NULL,NULL);
@@ -320,6 +320,7 @@ INSERT INTO `artisans` VALUES (277,'CoffeeKittyStudio','','Welcome to CoffeeKitt
 INSERT INTO `artisans` VALUES (278,'Oble Studios','','Welcome, we are a low waste, 3d printing fursuit and accessories maker','2015-11','US','Ohio','Columbus','Kemono\nKigurumi\nToony','','Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)','Kigus\nPremade props\nPremade bandanas','Adjustable eyebrows\nAttached handpaws and feetpaws\nAttached tail\nElectronics/animatronics\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers\nWashable heads','3d printed fursuit parts','','http://oblestudios.com/','','','https://twitter.com/obletop','','','https://www.instagram.com/oble_studios/','https://www.youtube.com/channel/UCY-7zJXaUv9xsgtAGXLXR8g','','http://aminoapps.com/p/80z4u4','','OBLESTS','Artistic liberty commissions\nPremades\nStandard commissions','1/3 upfront and the rest split evenly for estimated completion time. But can pay off faster if you would like. ','Any','','http://oblestudios.com/prices.html','','http://aminoapps.com/p/xiwyam','English, some spanish',NULL,NULL);
 INSERT INTO `artisans` VALUES (279,'Noodleteeth','','I\'m a kemono maker based in the USA','2017-10','US','Washington','Everett','Kemono','','Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)','','Attached tail\nExchangeable tongues\nFollow-me eyes\nIndoor feet','Ventilated kemono eyes\nShoes come with the indoor feet','','https://noodleteeth.weebly.com/','http://www.furaffinity.net/user/noodleteeth','https://www.deviantart.com/noodleteeth','','','https://noodleteeth.tumblr.com/','https://www.instagram.com/noodleteeth/','','https://noodleteeth.weebly.com/','https://trello.com/b/537jOZRz/noodleteeths-fursuits','','NOODLET','Artistic liberty commissions\nPremades\nStandard commissions','100% upfront\n50% upfront, 50% asap before starting','Everything and anything. Mostly a fan of things with horns and claws','','https://noodleteeth.weebly.com/fursuits.html','','','English\nSome Japanese',NULL,NULL);
 INSERT INTO `artisans` VALUES (280,'Goldenpaw Studio','','Friendly Canadian studio ready to try anything','2019-01','CA','Ontario','Leamington','Kigurumi\nSemi Toony\nToony','','Feetpaws (as parts/separate)\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)','Custom bandana and other custom prop/accessories','Exchangeable tongues\nFollow-me eyes\nMovable jaw','','','https://www.goldenpawstudio.ca/#/','','','https://twitter.com/goldenpawstudio','','','','','https://twitter.com/GoldenpawStudio','https://t.me/GoldenpawStudio','','GOLDPAW','Artistic liberty commissions\nPremades\nStandard commissions','35% non refundable slot reservation, 65% remaining negotiated payments until fully paid','Any animal and most mysticals (dragons*, serials, gryphons)','Crux, *extremely intricate dragons, extremely intricate anything','https://www.goldenpawstudio.ca/fursuit-quotes.html#/','','https://t.me/GoldenpawStudio','English',NULL,NULL);
+INSERT INTO `artisans` VALUES (281,'Coyote Mountain Studio','Wildpup11','','2012-03','US','Georgia','','Kemono\nToony','','Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)','','Exchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nLED eyes\nLED/EL lights\nOutdoor feet','','http://fursuitreview.com/maker/northshore-mascots/','','http://www.furaffinity.net/user/Wildpup11','','','','','','','','','','CMS2019','Artistic liberty commissions\nPremades','None/100% upfront','All Creatures','','','','','English',NULL,NULL);
 DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -328,7 +329,7 @@ CREATE TABLE `events` (
   `timestamp` datetime NOT NULL,
   `description` varchar(4095) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00','From now on, the software will record all changes in commissions statuses.');
@@ -375,6 +376,8 @@ INSERT INTO `events` VALUES (45,'2019-03-21 18:05:41','Based on the contents of:
 INSERT INTO `events` VALUES (46,'2019-03-21 18:05:41','Based on the contents of: https://twitter.com/fancyfishfurs , fancyfishfursuits commission status changed to OPEN (was CLOSED).');
 INSERT INTO `events` VALUES (47,'2019-03-21 22:06:17','Based on the contents of: https://twitter.com/GoldenpawStudio , Goldenpaw Studio commission status changed to OPEN (was UNKNOWN).');
 INSERT INTO `events` VALUES (48,'2019-03-21 22:08:00','Based on the contents of: http://www.furaffinity.net/user/kalorian/#profile , Monster Cult Makers commission status changed to CLOSED (was UNKNOWN).');
+INSERT INTO `events` VALUES (49,'2019-03-22 06:06:03','The software failed to interpret new commission status based on the contents of: https://www.instagram.com/_bahamut19/ . _Bahamut19 commission status is now UNKNOWN (was CLOSED).');
+INSERT INTO `events` VALUES (50,'2019-03-22 18:05:36','Based on the contents of: https://twitter.com/fancyfishfurs , fancyfishfursuits commission status changed to CLOSED (was OPEN).');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
