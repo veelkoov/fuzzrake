@@ -13,6 +13,7 @@ class WebsiteInfo
     const WIXSITE_CONTENTS_REGEXP = '#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si';
 
     const TWITTER_CONTENTS_SEARCH_STRING = '| Twitter</title>';
+    const INSTAGRAM_CONTENTS_REGEXP = '#Instagram photos and videos\s*</title>#si';
 
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
@@ -57,5 +58,10 @@ class WebsiteInfo
     public static function isTwitter(string $websiteContents): bool
     {
         return false !== stripos($websiteContents, self::TWITTER_CONTENTS_SEARCH_STRING);
+    }
+
+    public static function isInstagram(string $webpageContents): bool
+    {
+        return 1 === preg_match(self::INSTAGRAM_CONTENTS_REGEXP, $webpageContents);
     }
 }

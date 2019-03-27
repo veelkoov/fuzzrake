@@ -125,6 +125,12 @@ class CommissionsStatusParser
             return $crawler->filter('div.profileheadercard')->html();
         }
 
+        if (WebsiteInfo::isInstagram($inputText)) {
+            $crawler = new Crawler($inputText);
+
+            return $crawler->filter('script[type="application/ld+json"]')->html();
+        }
+
         return $inputText;
     }
 
