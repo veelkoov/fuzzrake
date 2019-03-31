@@ -1,3 +1,3 @@
-# fuzzrake
+# Fuzzrake
 
-See http://getfursu.it/
+See http://getfursu.it/info.html
