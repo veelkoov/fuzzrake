@@ -75,7 +75,7 @@ class DataImporter
 
         foreach ($artisansData as $artisanData) {
             $import = $this->createImport($artisanData);
-            $result[$import->getUpsertedArtisan()->getMakerId()] = $import; // Removes past duplicates
+            $result[$import->getUpsertedArtisan()->getMakerId() ?? $import->getNewData()->getMakerId()] = $import; // Removes past duplicates
         }
 
         return $result;
@@ -102,12 +102,10 @@ class DataImporter
         }
     }
 
-    private function performImport(ArtisanImport $import): ArtisanImport
+    private function performImport(ArtisanImport $import): void
     {
         $this->updateArtisanWithData($import->getUpsertedArtisan(), $import->getRawNewData()); // Update the DB entity
         $this->fix($import->getUpsertedArtisan()); // And fix the DB entity
-
-        return $import;
     }
 
     private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan

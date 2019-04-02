@@ -40,6 +40,8 @@ class ArtisanImport
 
     public function __construct(array $rawNewData)
     {
+        $this->removeTimestampFromRawData($rawNewData);
+
         $this->rawNewData = $rawNewData;
         $this->newRawDataHash = sha1(json_encode($rawNewData));
 
@@ -116,5 +118,15 @@ class ArtisanImport
     public function getRawNewData(): array
     {
         return $this->rawNewData;
+    }
+
+    /**
+     * It looks like Google Forms changes timestamp's timezone, so let's get rid of it for the sake of hash calculation
+     *
+     * @param array $rawNewData
+     */
+    private function removeTimestampFromRawData(array &$rawNewData): void
+    {
+        $rawNewData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::TIMESTAMP)] = null;
     }
 }

@@ -24,6 +24,8 @@ class DataFixer
         'Partial \(Head+handpaws+tail+feetpaws\)' => 'Partial (head + handpaws + tail + feetpaws)',
         'Mini partial \(Head+handpaws+tail\)' => 'Mini partial (head + handpaws + tail)',
 
+        'Excellent vision &amp; breathability' => 'Excellent vision & breathability',
+
         'Follow me eyes' => 'Follow-me eyes',
         'Adjustable ears / wiggle ears' => 'Adjustable/wiggle ears',
         'Bases, jawsets, silicone noses/tongues' => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
@@ -102,13 +104,13 @@ class DataFixer
         $artisan->setSpeciesDoes($this->fixString($artisan->getSpeciesDoes()));
         $artisan->setSpeciesDoesnt($this->fixString($artisan->getSpeciesDoesnt()));
 
-        $artisan->setProductionModel($this->fixList($artisan->getProductionModel(), true));
-        $artisan->setFeatures($this->fixList($artisan->getFeatures(), true));
-        $artisan->setStyles($this->fixList($artisan->getStyles(), true));
-        $artisan->setTypes($this->fixList($artisan->getTypes(), true));
-        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false));
-        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false));
-        $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes(), false));
+        $artisan->setProductionModel($this->fixList($artisan->getProductionModel(), true, '#[;\n]#'));
+        $artisan->setFeatures($this->fixList($artisan->getFeatures(), true, '#[;\n]#'));
+        $artisan->setStyles($this->fixList($artisan->getStyles(), true, '#[;\n]#'));
+        $artisan->setTypes($this->fixList($artisan->getTypes(), true, '#[;\n]#'));
+        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false, '#\n#'));
+        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false, '#\n#'));
+        $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes(), false, '#\n#'));
 
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
         $artisan->setState($this->fixString($artisan->getState()));
@@ -153,7 +155,7 @@ class DataFixer
         }
     }
 
-    private function fixList(string $input, bool $sort): string
+    private function fixList(string $input, bool $sort, string $separatorRegexp): string
     {
         $list = array_filter(array_map(function ($item) {
             $item = trim($item);
@@ -163,7 +165,7 @@ class DataFixer
             }
 
             return $item;
-        }, preg_split('#[;\n]#', $input)));
+        }, preg_split($separatorRegexp, $input)));
 
         $list = ($list);
 
