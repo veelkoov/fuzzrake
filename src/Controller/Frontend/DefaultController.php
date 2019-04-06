@@ -68,24 +68,22 @@ class DefaultController extends AbstractController
 
     private function getCountriesFilterData(array $countriesToCount, string $projectDir): array
     {
-        $countriesData = json_decode(file_get_contents($projectDir . '/assets/countries.json'), true);
+        $countriesData = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
         $regions = $this->getRegionsFromCountries($countriesData);
 
         foreach ($countriesData as $countryData) {
             $regions[$countryData['region']]['countries'][] = array_merge($countryData, [
-                'count' => $countriesToCount[$countryData['code']],
+                'count' => $countriesToCount['items'][$countryData['code']],
             ]);
 
-            $regions[$countryData['region']]['total_count'] += $countriesToCount[$countryData['code']];
+            $regions[$countryData['region']]['total_count'] += $countriesToCount['items'][$countryData['code']];
         }
 
         ksort($regions);
 
         return [
             'regions' => $regions,
-            'unknown' => [
-                'total_count' => $countriesToCount[''],
-            ],
+            'unknown_count' => $countriesToCount['unknown_count'],
         ];
     }
 

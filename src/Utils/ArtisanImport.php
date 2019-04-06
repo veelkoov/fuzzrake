@@ -121,7 +121,7 @@ class ArtisanImport
     }
 
     /**
-     * It looks like Google Forms changes timestamp's timezone, so let's get rid of it for the sake of hash calculation
+     * It looks like Google Forms changes timestamp's timezone, so let's get rid of it for the sake of hash calculation.
      *
      * @param array $rawNewData
      */
