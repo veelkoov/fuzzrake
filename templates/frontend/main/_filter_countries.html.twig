@@ -6,16 +6,17 @@
                        value=""/>
                 <label class="form-check-label" for="countryCheckBoxUnknown">
                     <i class="fas fa-question-circle"></i> Unknown
+                    <span class="count">({{ countries.unknown.total_count }})</span>
                 </label>
             </div>
         </div>
     </div>
 </fieldset>
 
-{% for region, regionCountries in countries %}
+{% for region, regionData in countries.regions %}
     <fieldset class="region">
         <legend>
-            {{ region }}
+            {{ region }} <span class="count">({{ regionData.total_count }})</span>
 
             <span class="allNoneInvert" aria-hidden="true">
                 selection: <a data-action="all" href="">all</a>
@@ -25,7 +26,7 @@
         </legend>
 
         <div class="row">
-            {% for country in regionCountries %}
+            {% for country in regionData.countries %}
                 {% set checkboxId = 'countryCheckBox' ~ country.code %}
 
                 <div class="col-sm-3">

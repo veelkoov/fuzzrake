@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Controller\Frontend;
 
 use App\Repository\ArtisanRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/")
@@ -61,22 +62,41 @@ class DefaultController extends AbstractController
             'styles' => $artisanRepository->getDistinctStyles(),
             'features' => $artisanRepository->getDistinctFeatures(),
             'productionModels' => $artisanRepository->getDistinctProductionModels(),
-            'countries' => $this->getCountriesData($countriesToCount, $projectDir),
+            'countries' => $this->getCountriesFilterData($countriesToCount, $projectDir),
         ]);
     }
 
-    private function getCountriesData(array $countriesToCount, string $projectDir): array
+    private function getCountriesFilterData(array $countriesToCount, string $projectDir): array
     {
-        $countriesData = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
-        $result = array_fill_keys(array_map(function (array $country) { return $country['region']; }, $countriesData), []);
+        $countriesData = json_decode(file_get_contents($projectDir . '/assets/countries.json'), true);
+        $regions = $this->getRegionsFromCountries($countriesData);
 
         foreach ($countriesData as $countryData) {
-            $result[$countryData['region']][] = array_merge($countryData, [
+            $regions[$countryData['region']]['countries'][] = array_merge($countryData, [
                 'count' => $countriesToCount[$countryData['code']],
             ]);
+
+            $regions[$countryData['region']]['total_count'] += $countriesToCount[$countryData['code']];
         }
 
-        ksort($result);
+        ksort($regions);
+
+        return [
+            'regions' => $regions,
+            'unknown' => [
+                'total_count' => $countriesToCount[''],
+            ],
+        ];
+    }
+
+    private function getRegionsFromCountries($countriesData): array
+    {
+        $result = array_fill_keys(array_map(function (array $country) {
+            return $country['region'];
+        }, $countriesData), [
+            'countries' => [],
+            'total_count' => 0,
+        ]);
 
         return $result;
     }

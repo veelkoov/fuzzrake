@@ -108,8 +108,6 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         $dbResult = $this->createQueryBuilder('a')
             ->select("a.$columnName AS items")
-            ->where("a.$columnName != :empty")
-            ->setParameter('empty', '')
             ->getQuery()
             ->getArrayResult();
 

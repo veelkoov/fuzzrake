@@ -26,7 +26,7 @@
     </div>
 
     <div class="row">
-        {% for item, count in items %}
+        {% for item, count in items if item != '' %}
             {% set checkboxId = itemName ~ 'CheckBox' ~ loop.index %}
 
             <div class="col-sm-3">
