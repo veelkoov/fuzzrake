@@ -132,6 +132,7 @@ class DataFixer
 
         $artisan->setOtherUrls($this->fixString($artisan->getOtherUrls()));
 
+        $artisan->setPaymentPlans($this->fixString($artisan->getPaymentPlans()));
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
         $artisan->setLanguages($this->fixString($artisan->getLanguages()));
