@@ -63,13 +63,13 @@ class StatisticsController extends AbstractController
         $commissionsStats = $artisanRepository->getCommissionsStats();
 
         return $this->render('frontend/statistics/statistics.html.twig', [
-            'countries' => $this->prepareTableData($countries),
-            'types' => $this->prepareTableData($types),
-            'otherTypes' => $this->prepareListData($otherTypes),
-            'styles' => $this->prepareTableData($styles),
-            'otherStyles' => $this->prepareListData($otherStyles),
-            'features' => $this->prepareTableData($features),
-            'otherFeatures' => $this->prepareListData($otherFeatures),
+            'countries' => $this->prepareTableData($countries['items']),
+            'types' => $this->prepareTableData($types['items']),
+            'otherTypes' => $this->prepareListData($otherTypes['items']),
+            'styles' => $this->prepareTableData($styles['items']),
+            'otherStyles' => $this->prepareListData($otherStyles['items']),
+            'features' => $this->prepareTableData($features['items']),
+            'otherFeatures' => $this->prepareListData($otherFeatures['items']),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness' => $this->prepareCompletenessData($artisanRepository->findAll()),
             'providedInfo' => $this->prepareProvidedInfoData($artisanRepository->findAll()),
