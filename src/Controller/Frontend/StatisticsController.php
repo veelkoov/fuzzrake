@@ -63,12 +63,12 @@ class StatisticsController extends AbstractController
         $commissionsStats = $artisanRepository->getCommissionsStats();
 
         return $this->render('frontend/statistics/statistics.html.twig', [
-            'countries' => $this->prepareTableData($countries['items']),
-            'types' => $this->prepareTableData($types['items']),
+            'countries' => $this->prepareTableData($countries),
+            'types' => $this->prepareTableData($types),
             'otherTypes' => $this->prepareListData($otherTypes['items']),
-            'styles' => $this->prepareTableData($styles['items']),
+            'styles' => $this->prepareTableData($styles),
             'otherStyles' => $this->prepareListData($otherStyles['items']),
-            'features' => $this->prepareTableData($features['items']),
+            'features' => $this->prepareTableData($features),
             'otherFeatures' => $this->prepareListData($otherFeatures['items']),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness' => $this->prepareCompletenessData($artisanRepository->findAll()),
@@ -98,7 +98,7 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach ($input as $item => $count) {
+        foreach ($input['items'] as $item => $count) {
             if (!array_key_exists($count, $result)) {
                 $result[$count] = [];
             }
@@ -112,6 +112,11 @@ class StatisticsController extends AbstractController
 
         $result = array_flip($result);
         arsort($result);
+
+        if (array_key_exists('other_count', $input)) {
+            $result['Other'] = $input['other_count'];
+        }
+        $result['Unknown'] = $input['unknown_count'];
 
         return $result;
     }
