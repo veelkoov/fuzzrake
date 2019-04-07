@@ -57,7 +57,7 @@ function getGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(725071599, artisan.intro));
     dataItems.push('entry.1898509469=Yes, I\'m not on the list yet, or I used the update link');
 
-    // TODO: get form link form czpcz
+    // TODO: Update below simultaneously with #marker-20190407-01
     return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.join('&');
 }
 

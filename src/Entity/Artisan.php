@@ -674,6 +674,7 @@ class Artisan
 
     public function completeness(): ?int
     {
+        // TODO: Make sure is up to date
         return (new CompletenessCalc())
             // Name not counted - makes no sense
             // Formerly not counted - small minority has changed their names
