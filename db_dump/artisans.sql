@@ -331,7 +331,7 @@ CREATE TABLE `events` (
   `timestamp` datetime NOT NULL,
   `description` varchar(4095) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00','From now on, the software will record all changes in commissions statuses.');
@@ -400,6 +400,7 @@ INSERT INTO `events` VALUES (67,'2019-04-06 06:05:40','Based on the contents of:
 INSERT INTO `events` VALUES (68,'2019-04-06 06:05:41','The software failed to interpret new commission status based on the contents of: http://www.furaffinity.net/user/barkingmadsuits . Barking Mad! Suits commission status is now UNKNOWN (was CLOSED).');
 INSERT INTO `events` VALUES (69,'2019-04-06 14:08:49','Based on the contents of: http://www.fursuiting.com/ , Fursuits by Lacy and Nick commission status changed to OPEN (was CLOSED).');
 INSERT INTO `events` VALUES (70,'2019-04-06 14:08:50','Based on the contents of: https://twitter.com/BarkingMadsuits , Barking Mad! Suits commission status changed to OPEN (was UNKNOWN).');
+INSERT INTO `events` VALUES (71,'2019-04-07 06:05:28','Based on the contents of: http://www.furaffinity.net/user/kutekittykatt , Fun-Fur-All commission status changed to OPEN (was CLOSED).');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
