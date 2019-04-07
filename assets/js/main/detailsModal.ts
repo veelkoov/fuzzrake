@@ -1,3 +1,5 @@
+'use strict';
+
 import * as $ from "jquery";
 import * as Utils from "./utils";
 import Artisan from "./Artisan";

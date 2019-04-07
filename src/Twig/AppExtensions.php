@@ -55,6 +55,8 @@ class AppExtensions extends AbstractExtension
 
     public function otherFilter($primaryList, $otherList)
     {
+        $primaryList = str_replace("\n", ', ', $primaryList);
+
         if ('' !== $otherList) {
             if ('' !== $primaryList) {
                 return "$primaryList, Other";

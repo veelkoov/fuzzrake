@@ -17,3 +17,6 @@ module.exports = Encore.getWebpackConfig();
 module.exports['externals'] = {
     jquery: 'jQuery'
 };
+
+module.exports.output.library = 'fuzzrake';
+module.exports.output.libraryTarget = 'window';

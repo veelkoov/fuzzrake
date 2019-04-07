@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
+use App\Utils\ArtisanMetadata;
 use App\Utils\CompletenessCalc;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
  * @ORM\Table(name="artisans")
  */
-class Artisan
+class Artisan implements JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -727,5 +729,22 @@ class Artisan
         $getter = 'get'.ucfirst($fieldName);
 
         return call_user_func([$this, $getter]);
+    }
+
+    public function jsonSerialize()
+    {
+        $data = get_object_vars($this);
+        unset($data['id']);
+
+        foreach (ArtisanMetadata::LIST_FIELDS_PRETTY_NAMES as $prettyName) {
+            $fieldName = ArtisanMetadata::getModelByPrettyFieldName($prettyName);
+            $data[$fieldName] = array_filter(explode("\n", $data[$fieldName]));
+        }
+
+        $data['completeness'] = $this->completeness();
+        $data['commissionsQuotesLastCheck'] = null === $this->getCommissionsQuotesLastCheck()
+            ? 'unknown' : date('Y-m-d H:i:s', $this->getCommissionsQuotesLastCheck()->getTimestamp());
+
+        return array_values($data);
     }
 }

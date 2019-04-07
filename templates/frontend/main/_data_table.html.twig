@@ -48,6 +48,8 @@
             {%- spaceless %}
                 <td class="name" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
+                    {%- if artisan.country %}&nbsp;<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
+                    {%- endif -%}
                 </td>
                 <td class="maker-id" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.makerId -}}
@@ -62,7 +64,7 @@
                     {{- artisan.intro -}}
                 </td>
                 <td class="hidden">
-                    {{- artisan.since -}}
+                    {{- artisan.since|since -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.country -}}
@@ -74,22 +76,22 @@
                     {{- artisan.city -}}
                 </td>
                 <td class="production-model" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.productionModel -}}
+                    {{- artisan.productionModel|other('') -}}
                 </td>
                 <td class="styles" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.styles -}}
+                    {{- artisan.styles|other(artisan.otherStyles) -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.otherStyles -}}
                 </td>
                 <td class="types" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.types -}}
+                    {{- artisan.types|other(artisan.otherTypes) -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.otherTypes -}}
                 </td>
                 <td class="features" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.features -}}
+                    {{- artisan.features|other(artisan.otherFeatures) -}}
                 </td>
                 <td class="hidden">
                     {{- artisan.otherFeatures -}}
@@ -152,12 +154,20 @@
                     {{- artisan.languages -}}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.areCommissionsOpen is null ? '' : (artisan.areCommissionsOpen ? 'open' : 'closed') -}}
+                    {%- if artisan.areCommissionsOpen is not null -%}
+                        {%- if artisan.areCommissionsOpen -%}
+                            <i class="fas fa-check-circle"></i> Open
+                        {%- else -%}
+                            <i class="fas fa-times-circle"></i> Closed
+                        {%- endif -%}
+                    {%- endif -%}
                 </td>
                 <td class="hidden">
                     {{- artisan.commissionsQuotesLastCheck|date('Y-m-d H:i') -}}
                 </td>
-                <td class="links"></td>
+                <td class="links">
+                    {% include 'frontend/main/_artisan_links_dropdown.html.twig' %}
+                </td>
             {% endspaceless -%}
         </tr>
     {% endfor %}

@@ -4,6 +4,7 @@ import $ from 'jquery';
 import * as DataTable from './dataTable';
 import * as DetailsModal from './detailsModal';
 import * as Utils from './utils'
+import Artisan from './Artisan';
 
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
@@ -34,11 +35,11 @@ function updateRequestUpdateModalWithRowData(artisan) {
 
 function openArtisanByFragment(hash) {
     if (hash) {
-        $(hash).children().eq(0).click();
+        $(hash).children().eq(0).trigger('click');
     }
 }
 
-$(() => {
+export function init() {
     DataTable.init();
     DetailsModal.init();
 
@@ -47,4 +48,6 @@ $(() => {
     Utils.makeLinksOpenNewTab('#artisans a:not(.request-update)');
 
     openArtisanByFragment(window.location.hash);
-});
+}
+
+export {Artisan};
