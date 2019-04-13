@@ -1,10 +1,11 @@
 'use strict';
 
 import * as $ from 'jquery';
-import * as Consts from './consts';
-import * as Utils from './utils';
 import Artisan from './Artisan';
 import Filter from './Filter';
+import FilterString from "./FilterString";
+import FilterSetSingle from "./FilterSetSingle";
+import FilterSetWithOthers from "./FilterSetWithOthers";
 
 let $dataTable;
 let filters: object = {};
@@ -12,16 +13,12 @@ let filters: object = {};
 declare var DATA_UPDATES_URL: string;
 declare var ARTISANS: Artisan[];
 
-function refreshResults() {
-    $dataTable.draw();
-}
-
-function getNewValObj(action: string): any {
+function getCheckedValueFunction(action: string): any {
     switch (action) {
         case 'none':
-            return false;
+            return false; // "function"
         case 'all':
-            return true;
+            return true; // "function"
         case 'invert':
             return (_, checked) => !checked;
         default:
@@ -29,24 +26,29 @@ function getNewValObj(action: string): any {
     }
 }
 
-function initCheckBoxesFilter(selector: string, dataColumnIndex: number, isAnd: boolean) {
-    filters[selector] = new Filter(dataColumnIndex, selector, isAnd, refreshResults);
-
-    $.fn.dataTable.ext.search.push(filters[selector].getDataTableFilterCallback());
-
-    $(`${selector} a`).each((_, element) => {
+function initCheckBoxesMultiswitches(containerSelector: string) {
+    $(`${containerSelector} a`).each((_, element) => {
         let $a = $(element);
         let $checkboxes = $a.parents('fieldset').find('input:checkbox');
-        let newValObj: any = getNewValObj($a.data('action'));
-        let filter: Filter = filters[selector];
+        let checkedValueFunction: any = getCheckedValueFunction($a.data('action'));
+        let filter: Filter = filters[containerSelector];
 
         $a.on('click', function (event, __) {
             event.preventDefault();
 
-            $checkboxes.prop('checked', newValObj);
+            $checkboxes.prop('checked', checkedValueFunction);
             filter.updateSelection();
         });
     });
+}
+
+function addFilter(filter: Filter) {
+    filters[filter.containerSelector] = filter;
+
+    $.fn.dataTable.ext.search.push(filters[filter.containerSelector]
+        .getDataTableFilterCallback(ARTISANS));
+
+    initCheckBoxesMultiswitches(filter.containerSelector);
 }
 
 function initDataTable(): void {
@@ -69,7 +71,7 @@ function initDataTable(): void {
             extend: 'colvis',
             text: 'Show/hide columns'
         }],
-        infoCallback: (settings, start, end, max, total, pre) =>
+        infoCallback: (settings, start, end, max, total, _) =>
             `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database</p>`
     });
 
@@ -87,11 +89,9 @@ export function init() {
     processArtisansTable();
     initDataTable();
 
-    initCheckBoxesFilter('#countriesFilter', Consts.COUNTRY_COL_IDX, false);
-    initCheckBoxesFilter('#stylesFilter', Consts.STYLES_COL_IDX, false);
-    initCheckBoxesFilter('#featuresFilter', Consts.FEATURES_COL_IDX, true);
-    initCheckBoxesFilter('#orderTypesFilter', Consts.TYPES_COL_IDX, false);
-    initCheckBoxesFilter('#productionModelsFilter', Consts.PRODUCTION_MODEL_COL_IDX, false);
-
-    $('#processingData, #dataProcessed').toggle();
+    addFilter(new FilterString       ('country',          '#countriesFilter',        $dataTable.draw));
+    addFilter(new FilterSetWithOthers('styles',           '#stylesFilter',           $dataTable.draw, false));
+    addFilter(new FilterSetWithOthers('features',         '#featuresFilter',         $dataTable.draw, true));
+    addFilter(new FilterSetWithOthers('orderTypes',       '#orderTypesFilter',       $dataTable.draw, false));
+    addFilter(new FilterSetSingle    ('productionModels', '#productionModelsFilter', $dataTable.draw, false));
 }

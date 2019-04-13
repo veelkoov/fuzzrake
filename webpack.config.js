@@ -4,7 +4,7 @@ Encore
     .setOutputPath('public/assets/')
     .setPublicPath('/assets')
     .addEntry('general', './assets/js/general.js')
-    .addEntry('main', './assets/js/main/main.js')
+    .addEntry('main', './assets/js/main/main.ts')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())

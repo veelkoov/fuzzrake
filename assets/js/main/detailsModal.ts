@@ -106,9 +106,9 @@ function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanName').html(artisan.name + Utils.countryFlagHtml(artisan.country));
     $('#makerId').html(artisan.makerId).attr('href', `#${artisan.makerId}`);
     $('#artisanShortInfo').html(formatShortInfo(artisan.state, artisan.city, artisan.since, artisan.formerly));
-    $('#artisanProductionModel').html(htmlListFromArrays(artisan.productionModel));
+    $('#artisanProductionModel').html(htmlListFromArrays(artisan.productionModels));
     $('#artisanStyles').html(htmlListFromArrays(artisan.styles, artisan.otherStyles));
-    $('#artisanTypes').html(htmlListFromArrays(artisan.types, artisan.otherTypes));
+    $('#artisanTypes').html(htmlListFromArrays(artisan.orderTypes, artisan.otherOrderTypes));
     $('#artisanFeatures').html(htmlListFromArrays(artisan.features, artisan.otherFeatures));
     $('#artisanSpecies').html(formatSpecies(artisan.speciesDoes, artisan.speciesDoesnt));
     $('#artisanPaymentPlans').html(formatPaymentPlans(artisan.paymentPlans));
@@ -118,7 +118,7 @@ function updateDetailsModalWithArtisanData(artisan: Artisan) {
     $('#artisanCompletenessComment').html(getCompletenessComment(artisan.completeness));
 
     updateCommissionsStatusFromArtisanRowData(artisan.areCommissionsOpen, artisan.commissionsQuotesLastCheck,
-        artisan.commisionsQuotesCheckUrl);
+        artisan.commissionsQuotesCheckUrl);
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
 
     Utils.makeLinksOpenNewTab('#artisanLinks a');

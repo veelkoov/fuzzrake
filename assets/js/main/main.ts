@@ -1,6 +1,6 @@
 'use strict';
 
-import $ from 'jquery';
+import * as $ from 'jquery';
 import * as DataTable from './dataTable';
 import * as DetailsModal from './detailsModal';
 import * as Utils from './utils'
@@ -48,6 +48,8 @@ export function init() {
     Utils.makeLinksOpenNewTab('#artisans a:not(.request-update)');
 
     openArtisanByFragment(window.location.hash);
+
+    $('#processingData, #dataProcessed').toggle();
 }
 
 export {Artisan};
