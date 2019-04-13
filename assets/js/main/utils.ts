@@ -19,7 +19,7 @@ function toDataItem(id, data) {
     }
 }
 
-function getGoogleFormPrefilledUrl(artisan) {
+function getArtisanGoogleFormPrefilledUrl(artisan) {
     let dataItems = [];
 
     dataItems.push(toDataItem(646315912, artisan.name));
@@ -61,10 +61,16 @@ function getGoogleFormPrefilledUrl(artisan) {
     return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.join('&');
 }
 
+function getGuestGoogleFormPrefilledUrl(artisan) {
+    // TODO: get form link form czpcz
+    return 'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform?usp=pp_url&' + toDataItem(1289735951, artisan.name);
+}
+
 export function updateUpdateRequestData(divId, artisan) {
     $(`#${divId} .twitterUrl`).attr('href', 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent(artisan.name) + '%20(please%20describe%20details)&tw_p=tweetbutton');
 
-    $(`#${divId} .googleFormUrl`).attr('href', getGoogleFormPrefilledUrl(artisan));
+    $(`#${divId} .artisanGoogleFormUrl`).attr('href', getArtisanGoogleFormPrefilledUrl(artisan));
+    $(`#${divId} .guestGoogleFormUrl`).attr('href', getGuestGoogleFormPrefilledUrl(artisan));
 }
 
 export function countryFlagHtml(country) {
