@@ -1,9 +1,9 @@
 'use strict';
 
-import $ from "jquery";
+import * as $ from "jquery";
 
 export function makeLinksOpenNewTab(linkSelector) {
-    $(linkSelector).click(function (evt) {
+    $(linkSelector).on('click', function (evt) {
         evt.preventDefault();
         window.open(this.href);
     });
@@ -30,11 +30,11 @@ function getArtisanGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(944749751, artisan.city));
     dataItems.push(toDataItem(743737005, artisan.paymentPlans));
     dataItems.push(toDataItem(2034494235, artisan.pricesUrl));
-    dataItems.push(toDataItem(838362497, artisan.productionModel));
+    dataItems.push(toDataItem(838362497, artisan.productionModels));
     dataItems.push(toDataItem(129031545, artisan.styles));
     dataItems.push(toDataItem(1324232796, artisan.otherStyles.join('\n')));
-    dataItems.push(toDataItem(1319815626, artisan.types));
-    dataItems.push(toDataItem(67316802, artisan.otherTypes.join('\n')));
+    dataItems.push(toDataItem(1319815626, artisan.orderTypes));
+    dataItems.push(toDataItem(67316802, artisan.otherOrderTypes.join('\n')));
     dataItems.push(toDataItem(1197078153, artisan.features));
     dataItems.push(toDataItem(175794467, artisan.otherFeatures.join('\n')));
     dataItems.push(toDataItem(416913125, artisan.speciesDoes));
@@ -49,7 +49,7 @@ function getArtisanGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(1209445762, artisan.tumblrUrl));
     dataItems.push(toDataItem(696741203, artisan.instagramUrl));
     dataItems.push(toDataItem(618562986, artisan.youtubeUrl));
-    dataItems.push(toDataItem(1355429885, artisan.commisionsQuotesCheckUrl));
+    dataItems.push(toDataItem(1355429885, artisan.commissionsQuotesCheckUrl));
     dataItems.push(toDataItem(1507707399, artisan.otherUrls));
     dataItems.push(toDataItem(528156817, artisan.languages));
     dataItems.push(toDataItem(927668258, artisan.makerId));
@@ -57,7 +57,7 @@ function getArtisanGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(725071599, artisan.intro));
     dataItems.push('entry.1898509469=Yes, I\'m not on the list yet, or I used the update link');
 
-    // TODO: get form link form czpcz
+    // TODO: Update below simultaneously with #marker-20190407-01
     return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.join('&');
 }
 
@@ -77,7 +77,7 @@ export function countryFlagHtml(country) {
     return country === '' ? '' : `&nbsp;<span class="flag-icon flag-icon-${country.toLowerCase()}"></span>`;
 }
 
-function pushLink(targetArray, url, text, isPrimary) {
+function pushLink(targetArray, url, text, isPrimary = false) {
     if (url) {
         targetArray.push(`<a href="${url}"${isPrimary ? 'class="primary"' : ''}>${text}</a>`);
     }

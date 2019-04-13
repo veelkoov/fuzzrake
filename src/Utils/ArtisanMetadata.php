@@ -150,6 +150,11 @@ class ArtisanMetadata
         return array_flip(self::getPretty2ModelFieldNameMap())[$modelFieldName];
     }
 
+    public static function getModelByPrettyFieldName(string $prettyFieldName): string
+    {
+        return self::getPretty2ModelFieldNameMap()[$prettyFieldName];
+    }
+
     public static function getModelFieldNames(): array
     {
         return array_values(self::getPretty2ModelFieldNameMap());

@@ -1,0 +1,5 @@
+var ARTISANS = [
+    {% for artisan in artisans %}
+        new fuzzrake.Artisan({{ artisan|json_encode|trim('[]')|raw }}),
+    {% endfor %}
+];

@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
+use App\Utils\ArtisanMetadata;
 use App\Utils\CompletenessCalc;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
  * @ORM\Table(name="artisans")
  */
-class Artisan
+class Artisan implements JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -675,9 +677,9 @@ class Artisan
     public function completeness(): ?int
     {
         return (new CompletenessCalc())
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
             // Name not counted - makes no sense
             // Formerly not counted - small minority has changed their names
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
             ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
             ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
@@ -690,17 +692,19 @@ class Artisan
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
             ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->pricesUrl)
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->faqUrl) // it's optional, but nice to have
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->queueUrl) // it's optional, but nice to have
             // FursuitReview not checked, because we can force makers to force their customers to write reviews
             // ... shame...
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->pricesUrl)
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->faqUrl) // it's optional, but nice to have
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->websiteUrl, $this->deviantArtUrl, $this->furAffinityUrl,
                 $this->twitterUrl, $this->facebookUrl, $this->tumblrUrl, $this->instagramUrl, $this->youtubeUrl)
             // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->queueUrl) // it's optional, but nice to have
+            // Other URLs not checked - we're not requiring unknown
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
             // Notes are not supposed to be displayed, thus not counted
+            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
+            // CST last check does not depend on artisan input
             ->result();
     }
 
@@ -726,5 +730,22 @@ class Artisan
         $getter = 'get'.ucfirst($fieldName);
 
         return call_user_func([$this, $getter]);
+    }
+
+    public function jsonSerialize()
+    {
+        $data = get_object_vars($this);
+        unset($data['id']);
+
+        foreach (ArtisanMetadata::LIST_FIELDS_PRETTY_NAMES as $prettyName) {
+            $fieldName = ArtisanMetadata::getModelByPrettyFieldName($prettyName);
+            $data[$fieldName] = array_filter(explode("\n", $data[$fieldName]));
+        }
+
+        $data['completeness'] = $this->completeness();
+        $data['commissionsQuotesLastCheck'] = null === $this->getCommissionsQuotesLastCheck()
+            ? 'unknown' : date('Y-m-d H:i:s', $this->getCommissionsQuotesLastCheck()->getTimestamp());
+
+        return array_values($data);
     }
 }

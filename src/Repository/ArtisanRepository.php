@@ -71,7 +71,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOrderTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('types');
+        return $this->getDistinctItemsWithCountFromJoined('types', true);
     }
 
     public function getDistinctOtherOrderTypes(): array
@@ -81,7 +81,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctStyles(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('styles');
+        return $this->getDistinctItemsWithCountFromJoined('styles', true);
     }
 
     public function getDistinctOtherStyles(): array
@@ -91,7 +91,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctFeatures(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('features');
+        return $this->getDistinctItemsWithCountFromJoined('features', true);
     }
 
     public function getDistinctOtherFeatures(): array
@@ -104,32 +104,42 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('productionModel');
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, string $separator = "\n"): array
+    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): array
     {
-        $dbResult = $this->createQueryBuilder('a')
-            ->select("a.$columnName AS items")
-            ->where("a.$columnName != :empty")
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->getArrayResult();
+        $rows = $this->fetchColumnsAsArray($columnName, $countOther);
 
-        $allJoined = implode($separator, array_map(function ($item) {
-            return $item['items'];
-        }, $dbResult));
+        $result = [
+            'items' => [],
+            'unknown_count' => 0,
+        ];
 
-        $result = [];
-
-        foreach (explode($separator, $allJoined) as $item) {
-            $item = trim($item);
-
-            if (!array_key_exists($item, $result)) {
-                $result[$item] = 0;
-            }
-
-            ++$result[$item];
+        if ($countOther) {
+            $result['other_count'] = 0;
         }
 
-        ksort($result);
+        foreach ($rows as $row) {
+            $items = explode("\n", $row['items']);
+
+            foreach ($items as $item) {
+                if ($item = trim($item)) {
+                    if (!array_key_exists($item, $result['items'])) {
+                        $result['items'][$item] = 0;
+                    }
+
+                    ++$result['items'][$item];
+                }
+            }
+
+            if ($countOther && !empty($row['otherItems'])) {
+                ++$result['other_count'];
+            }
+
+            if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {
+                ++$result['unknown_count'];
+            }
+        }
+
+        ksort($result['items']);
 
         return $result;
     }
@@ -181,5 +191,24 @@ class ArtisanRepository extends ServiceEntityRepository
         ksort($result);
 
         return $result;
+    }
+
+    /**
+     * @param string $columnName
+     * @param bool   $includeOther
+     *
+     * @return array
+     */
+    private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->select("a.$columnName AS items");
+
+        if ($includeOther) {
+            $otherColumnName = 'other'.ucfirst($columnName);
+            $queryBuilder->addSelect("a.$otherColumnName AS otherItems");
+        }
+
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 }

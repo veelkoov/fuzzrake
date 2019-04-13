@@ -1,23 +1,25 @@
+'use strict';
+
 import * as $ from "jquery";
+import Artisan from "./Artisan";
 
-export default class Filter {
-    private readonly $checkboxes: JQuery<HTMLElement>;
-    private selectedValues: string[] = [];
-    private $status: JQuery<HTMLElement>;
+export default abstract class Filter {
+    protected readonly UNKNOWN_VALUE: string = '?';
 
-    constructor(private readonly dataColumnIndex: number,
-                private readonly selector: string,
-                private readonly isAnd: boolean,
-                private readonly refreshCallback: () => void) {
-        this.$checkboxes = $(`${selector} input[type=checkbox]`);
-        this.$status = $(`${selector} .status`);
-        this.updateStatus();
+    protected readonly $checkboxes: JQuery<HTMLElement>;
+    protected selectedValues: string[] = [];
+    protected $statusDisplay: JQuery<HTMLElement>;
+
+    protected constructor(protected readonly fieldName: string,
+                          public readonly containerSelector: string,
+                          protected readonly refreshCallback: () => void) {
+
+        this.$statusDisplay = $(`${containerSelector} .status`);
+        this.updateStatusDisplay();
 
         let _this = this;
-
-        this.$checkboxes.on('change', function () {
-            _this.updateSelection();
-        });
+        this.$checkboxes = $(`${containerSelector} input[type=checkbox]`);
+        this.$checkboxes.on('change', () => { _this.updateSelection(); });
     }
 
     public updateSelection(): void {
@@ -28,56 +30,40 @@ export default class Filter {
             .get();
 
         if (oldSelection != this.selectedValues) {
-            this.updateStatus();
+            this.updateStatusDisplay();
             this.refreshCallback();
         }
     }
 
-    public getDataTableFilterCallback(): (_, data: object, __) => boolean {
+    public getDataTableFilterCallback(artisans: Artisan[]): (_, __, index: number) => boolean {
         let _this: Filter = this;
+        let _artisans: Artisan[] = artisans;
 
-        return function (_, data: object, __) {
-            let selectedCount = _this.selectedValues.length;
-
-            if (selectedCount === 0) {
-                return true;
-            }
-
-            let showUnknown = _this.selectedValues.indexOf('') !== -1;
-
-            if (showUnknown && data[_this.dataColumnIndex].trim() === '') {
-                return true;
-            }
-
-            let selectedNoUnknownCount = showUnknown ? selectedCount - 1 : selectedCount;
-            let count = 0;
-
-            data[_this.dataColumnIndex].split(',').forEach(function (value, _, __) {
-                if (_this.selectedValues.indexOf(value.trim()) !== -1) {
-                    count++;
-                }
-            });
-
-            return count > 0 && (!_this.isAnd || count === selectedNoUnknownCount);
+        return function (_, __, index: number): boolean {
+            return _this.matches(_artisans[index]);
         };
     }
 
-    private updateStatus(): void {
-        this.$status.text(this.getStatusText());
+    protected abstract matches(artisan: Artisan): boolean;
+    protected abstract getStatusText(): string;
+
+    protected noneSelected(): boolean {
+        return this.selectedValues.length === 0;
     }
 
-    private getStatusText(): string {
-        const vals = this.selectedValues;
+    protected isSelected(value: string): boolean {
+        return this.selectedValues.indexOf(value) !== -1;
+    }
 
-        if (vals.length === 0) {
-            return 'any';
-        }
+    protected includeUnknown(): boolean {
+        return this.selectedValues.indexOf(this.UNKNOWN_VALUE) !== -1;
+    }
 
-        const anyOrAll = vals.length > 1 ? (this.isAnd ? 'all of: ' : 'any of: ') : '';
+    protected isUnknown(artisan: Artisan): boolean {
+        return artisan[this.fieldName].length === 0;
+    }
 
-        // TODO: Drop parenthesis stuff earlier
-        return anyOrAll + vals.join(', ')
-            .replace(/^(?=, |$)/, 'Unknown')
-            .replace(/ \(.+?\)/g, '');
+    private updateStatusDisplay(): void {
+        this.$statusDisplay.text(this.getStatusText());
     }
 }
