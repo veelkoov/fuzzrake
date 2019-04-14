@@ -9,6 +9,10 @@ use App\Entity\Artisan;
 class ImportCorrector
 {
     const CMD_ACK_NEW = 'ack new';
+    const CMD_REJECT = 'reject'; // I'm sorry, but if you provided a request with zero contact info and I can't find
+                                 // you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
+                                 // then I can't include your bare studio name on the list. No one else will be able
+                                 // to find you anyway.
     const CMD_MATCH_NAME = 'match name';
     const CMD_IGNORE_PIN = 'ignore pin';
 
@@ -20,6 +24,11 @@ class ImportCorrector
      * @var array List of raw data hashes which contain invalid passcodes, to be approved & imported
      */
     private $passcodeExceptions = [];
+
+    /**
+     * @var array List of raw data hashes which were rejected
+     */
+    private $rejectedRecords = [];
 
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -48,6 +57,11 @@ class ImportCorrector
     public function ignoreInvalidPasscodeForData(string $rawDataHash)
     {
         return in_array($rawDataHash, $this->passcodeExceptions);
+    }
+
+    public function isRejected(string $rawDataHash)
+    {
+        return in_array($rawDataHash, $this->rejectedRecords);
     }
 
     private function readDirectivesFromFile(string $filePath)
@@ -90,6 +104,11 @@ class ImportCorrector
             case self::CMD_IGNORE_PIN:
                 // Maker ID kept only informative
                 $this->passcodeExceptions[] = $buffer->readUntil(':');
+            break;
+
+            case self::CMD_REJECT:
+                // Maker ID kept only informative
+                $this->rejectedRecords[] = $buffer->readUntil(':');
             break;
 
             default:

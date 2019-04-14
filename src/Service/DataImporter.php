@@ -75,6 +75,11 @@ class DataImporter
 
         foreach ($artisansData as $artisanData) {
             $import = $this->createImport($artisanData);
+
+            if ($this->corrector->isRejected($import->getNewRawDataHash())) {
+                continue;
+            }
+
             $result[$import->getUpsertedArtisan()->getMakerId() ?? $import->getNewData()->getMakerId()] = $import; // Removes past duplicates
         }
 
@@ -183,6 +188,7 @@ class DataImporter
             $io->writeln([
                 ImportCorrector::CMD_MATCH_NAME.":{$new->getMakerId()}:ABCDEFGHIJ:",
                 ImportCorrector::CMD_ACK_NEW.":{$new->getMakerId()}:",
+                ImportCorrector::CMD_REJECT.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:",
             ]);
 
             $ok = false;
@@ -203,6 +209,7 @@ class DataImporter
             if ($providedPasscode !== $expectedPasscode && !$this->corrector->ignoreInvalidPasscodeForData($import->getNewRawDataHash())) {
                 $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
                 $io->writeln(ImportCorrector::CMD_IGNORE_PIN.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:");
+                $io->writeln(ImportCorrector::CMD_REJECT.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:");
 
                 $ok = false;
             }
