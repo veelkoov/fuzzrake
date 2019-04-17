@@ -14,6 +14,7 @@ class DataFixer
         '’' => "'",
         'Rather not say' => '',
         'N/a' => '',
+        'N/A Yet' => '',
     ];
 
     const LIST_REPLACEMENTS = [
@@ -57,6 +58,7 @@ class DataFixer
         'denmark' => 'DK',
         'germany' => 'DE',
         'finland' => 'FI',
+        'france' => 'FR',
         'uk|england|united kingdom' => 'GB',
         'ireland' => 'IE',
         'italia|italy' => 'IT',
