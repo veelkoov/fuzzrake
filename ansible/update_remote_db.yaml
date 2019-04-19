@@ -1,3 +1,4 @@
+#!ansible/run.sh
 ---
 - hosts: localhost, getfursu.it
   roles:

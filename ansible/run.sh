@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-ansible-playbook "${@:1}"
+pushd "$(dirname "$0")"
+
+ansible-playbook "$(basename "${@:1:1}")" "${@:2}"
