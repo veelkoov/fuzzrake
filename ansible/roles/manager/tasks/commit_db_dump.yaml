@@ -1,9 +1,12 @@
 ---
 - replace:
-    regexp: "^(INSERT INTO `artisans` VALUES .+),[^,]+,[^,]+\\);$"
-    replace: "\\1,NULL,NULL);"
+    regexp: "{{ item.regexp }}"
+    replace:  "{{ item.replace }}"
     path: "{{ db_dump_file_path }}"
   check_mode: no
+  with_items:
+    - { regexp: "^(INSERT INTO `artisans` VALUES .+),[^,]+,[^,]+\\);$", replace: "\\1, NULL, NULL);" }
+    - { regexp: "(?<!\\\\)','", replace: "', '" }
   no_log: yes
 
 - copy:
