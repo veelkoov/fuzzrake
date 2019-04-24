@@ -40,8 +40,7 @@ class StatisticsController extends AbstractController
         'plush',
         'pocket',
         'accessor',
-        'blanks?',
-        'bases?',
+        'bases?|blanks?',
     ];
 
     /**

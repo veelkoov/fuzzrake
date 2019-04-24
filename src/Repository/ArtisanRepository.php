@@ -182,8 +182,8 @@ class ArtisanRepository extends ServiceEntityRepository
             $items = array_combine(
                 array_map(function ($key) use ($suffix) {
                     return "$key ($suffix)";
-                }, array_keys($items)),
-                array_values($items)
+                }, array_keys($items['items'])),
+                array_values($items['items'])
             );
         }
 

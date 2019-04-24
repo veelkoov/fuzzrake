@@ -46,6 +46,14 @@ class DataFixer
         'Fleece Props, Other accessories' => "Fleece props\nOther accessories",
         'Sock paws' => 'Sockpaws',
         'Removable magnetic parts, secret pockets' => "Removable magnetic parts\nHidden pockets",
+        'Plush Suits' => 'Plush suits',
+        'Femme Suits' => 'Femme suits',
+        'Just Ask' => 'Just ask',
+        'props and can do plushies' => "Props\nCan do plushies",
+        'Removable Eyes' => 'Removable eyes',
+        'Removable/interchangeable eyes' => "Removable eyes\nInterchangeable eyes",
+        'Pickable Nose' => 'Pickable nose',
+        '(.+)changable(.+)' => '$1changeable$2',
         'QQQQQ' => 'QQQQQ',
     ];
 
