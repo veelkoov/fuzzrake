@@ -24,14 +24,14 @@
                 <td class="maker-id" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.makerId -}}
                 </td>
-                <td class="production-model" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.productionModel|other('') -}}
+                <td class="production-models" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.productionModels|other('') -}}
                 </td>
                 <td class="styles" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.styles|other(artisan.otherStyles) -}}
                 </td>
                 <td class="types" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {{- artisan.types|other(artisan.otherTypes) -}}
+                    {{- artisan.orderTypes|other(artisan.otherOrderTypes) -}}
                 </td>
                 <td class="features" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.features|other(artisan.otherFeatures) -}}

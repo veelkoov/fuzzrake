@@ -64,7 +64,7 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $productionModel;
+    private $productionModels;
 
     /**
      * @ORM\Column(type="string", length=1023)
@@ -79,12 +79,12 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $types;
+    private $orderTypes;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherTypes;
+    private $otherOrderTypes;
 
     /**
      * @ORM\Column(type="string", length=1023)
@@ -169,11 +169,6 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $commisionsQuotesCheckUrl;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $queueUrl;
 
     /**
@@ -190,6 +185,11 @@ class Artisan implements JsonSerializable
      * @ORM\Column(type="text")
      */
     private $notes;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $commissionsQuotesCheckUrl;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -338,26 +338,26 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getCommisionsQuotesCheckUrl(): ?string
+    public function getCommissionsQuotesCheckUrl(): ?string
     {
-        return $this->commisionsQuotesCheckUrl;
+        return $this->commissionsQuotesCheckUrl;
     }
 
-    public function setCommisionsQuotesCheckUrl(?string $commisionsQuotesCheckUrl): self
+    public function setCommissionsQuotesCheckUrl(?string $commissionsQuotesCheckUrl): self
     {
-        $this->commisionsQuotesCheckUrl = $commisionsQuotesCheckUrl;
+        $this->commissionsQuotesCheckUrl = $commissionsQuotesCheckUrl;
 
         return $this;
     }
 
-    public function getTypes(): ?string
+    public function getOrderTypes(): ?string
     {
-        return $this->types;
+        return $this->orderTypes;
     }
 
-    public function setTypes(string $types): self
+    public function setOrderTypes(string $orderTypes): self
     {
-        $this->types = $types;
+        $this->orderTypes = $orderTypes;
 
         return $this;
     }
@@ -470,14 +470,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getOtherTypes(): ?string
+    public function getOtherOrderTypes(): ?string
     {
-        return $this->otherTypes;
+        return $this->otherOrderTypes;
     }
 
-    public function setOtherTypes(string $otherTypes): self
+    public function setOtherOrderTypes(string $otherOrderTypes): self
     {
-        $this->otherTypes = $otherTypes;
+        $this->otherOrderTypes = $otherOrderTypes;
 
         return $this;
     }
@@ -549,17 +549,17 @@ class Artisan implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getProductionModel()
+    public function getProductionModels()
     {
-        return $this->productionModel;
+        return $this->productionModels;
     }
 
     /**
-     * @param mixed $productionModel
+     * @param mixed $productionModels
      */
-    public function setProductionModel($productionModel): void
+    public function setProductionModels($productionModels): void
     {
-        $this->productionModel = $productionModel;
+        $this->productionModels = $productionModels;
     }
 
     /**
@@ -686,9 +686,9 @@ class Artisan implements JsonSerializable
             ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
                 ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
             ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModel)
+            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModels)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->types, $this->otherTypes)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->orderTypes, $this->otherOrderTypes)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
             ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)

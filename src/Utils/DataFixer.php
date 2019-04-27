@@ -114,19 +114,19 @@ class DataFixer
         $artisan->setSpeciesDoes($this->fixString($artisan->getSpeciesDoes()));
         $artisan->setSpeciesDoesnt($this->fixString($artisan->getSpeciesDoesnt()));
 
-        $artisan->setProductionModel($this->fixList($artisan->getProductionModel(), true, '#[;\n]#'));
+        $artisan->setProductionModels($this->fixList($artisan->getProductionModels(), true, '#[;\n]#'));
         $artisan->setFeatures($this->fixList($artisan->getFeatures(), true, '#[;\n]#'));
         $artisan->setStyles($this->fixList($artisan->getStyles(), true, '#[;\n]#'));
-        $artisan->setTypes($this->fixList($artisan->getTypes(), true, '#[;\n]#'));
+        $artisan->setOrderTypes($this->fixList($artisan->getOrderTypes(), true, '#[;\n]#'));
         $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false, '#\n#'));
         $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false, '#\n#'));
-        $artisan->setOtherTypes($this->fixList($artisan->getOtherTypes(), false, '#\n#'));
+        $artisan->setOtherOrderTypes($this->fixList($artisan->getOtherOrderTypes(), false, '#\n#'));
 
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
         $artisan->setState($this->fixString($artisan->getState()));
         $artisan->setCity($this->fixString($artisan->getCity()));
 
-        $artisan->setCommisionsQuotesCheckUrl($this->fixGenericUrl($artisan->getCommisionsQuotesCheckUrl()));
+        $artisan->setCommissionsQuotesCheckUrl($this->fixGenericUrl($artisan->getCommissionsQuotesCheckUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
         $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setFaqUrl($this->fixGenericUrl($artisan->getFaqUrl()));

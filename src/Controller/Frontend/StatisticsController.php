@@ -52,8 +52,8 @@ class StatisticsController extends AbstractController
      */
     public function statistics(ArtisanRepository $artisanRepository): Response
     {
-        $types = $artisanRepository->getDistinctOrderTypes();
-        $otherTypes = $artisanRepository->getDistinctOtherOrderTypes();
+        $orderTypes = $artisanRepository->getDistinctOrderTypes();
+        $otherOrderTypes = $artisanRepository->getDistinctOtherOrderTypes();
         $styles = $artisanRepository->getDistinctStyles();
         $otherStyles = $artisanRepository->getDistinctOtherStyles();
         $features = $artisanRepository->getDistinctFeatures();
@@ -63,8 +63,8 @@ class StatisticsController extends AbstractController
 
         return $this->render('frontend/statistics/statistics.html.twig', [
             'countries' => $this->prepareTableData($countries),
-            'types' => $this->prepareTableData($types),
-            'otherTypes' => $this->prepareListData($otherTypes['items']),
+            'orderTypes' => $this->prepareTableData($orderTypes),
+            'otherOrderTypes' => $this->prepareListData($otherOrderTypes['items']),
             'styles' => $this->prepareTableData($styles),
             'otherStyles' => $this->prepareListData($otherStyles['items']),
             'features' => $this->prepareTableData($features),
@@ -120,17 +120,17 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
-    private function prepareListData(array $otherTypes): array
+    private function prepareListData(array $otherItems): array
     {
-        uksort($otherTypes, function ($a, $b) use ($otherTypes) {
-            if ($otherTypes[$a] !== $otherTypes[$b]) {
-                return $otherTypes[$b] - $otherTypes[$a];
+        uksort($otherItems, function ($a, $b) use ($otherItems) {
+            if ($otherItems[$a] !== $otherItems[$b]) {
+                return $otherItems[$b] - $otherItems[$a];
             }
 
             return strcmp($a, $b);
         });
 
-        return $otherTypes;
+        return $otherItems;
     }
 
     private function prepareCommissionsStatsTableData(array $commissionsStats): array

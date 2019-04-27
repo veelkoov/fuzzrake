@@ -56,8 +56,8 @@ class ArtisanRepository extends ServiceEntityRepository
             ->createNativeQuery('
                 SELECT SUM(are_commissions_open = 1) AS open
                   , SUM(are_commissions_open = 0) AS closed
-                  , SUM(are_commissions_open IS NOT NULL AND commisions_quotes_check_url <> "") AS successfully_tracked
-                  , SUM(commisions_quotes_check_url <> "") AS tracked
+                  , SUM(are_commissions_open IS NOT NULL AND commissions_quotes_check_url <> "") AS successfully_tracked
+                  , SUM(commissions_quotes_check_url <> "") AS tracked
                   , SUM(1) AS total
                 FROM artisans
             ', $rsm)
@@ -71,12 +71,12 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOrderTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('types', true);
+        return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
     }
 
     public function getDistinctOtherOrderTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherTypes');
+        return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
     }
 
     public function getDistinctStyles(): array
@@ -101,7 +101,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctProductionModels(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('productionModel');
+        return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
     private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): array

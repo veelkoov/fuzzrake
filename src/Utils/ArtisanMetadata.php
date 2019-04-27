@@ -19,7 +19,7 @@ class ArtisanMetadata
     const CITY = 'CITY';
     const PAYMENT_PLANS = 'PAYMENT_PLANS';
     const URL_PRICES = 'URL_PRICES';
-    const PRODUCTION_MODEL = 'PRODUCTION_MODEL';
+    const PRODUCTION_MODELS = 'PRODUCTION_MODELS';
     const STYLES = 'STYLES';
     const OTHER_STYLES = 'OTHER_STYLES';
     const ORDER_TYPES = 'ORDER_TYPES';
@@ -61,11 +61,11 @@ class ArtisanMetadata
         self::CITY => 'city',
         self::PAYMENT_PLANS => 'paymentPlans',
         self::URL_PRICES => 'pricesUrl',
-        self::PRODUCTION_MODEL => 'productionModel',
+        self::PRODUCTION_MODELS => 'productionModels',
         self::STYLES => 'styles',
         self::OTHER_STYLES => 'otherStyles',
-        self::ORDER_TYPES => 'types',
-        self::OTHER_ORDER_TYPES => 'otherTypes',
+        self::ORDER_TYPES => 'orderTypes',
+        self::OTHER_ORDER_TYPES => 'otherOrderTypes',
         self::FEATURES => 'features',
         self::OTHER_FEATURES => 'otherFeatures',
         self::SPECIES_DOES => 'speciesDoes',
@@ -82,7 +82,7 @@ class ArtisanMetadata
         self::URL_INSTAGRAM => 'instagramUrl',
         self::URL_YOUTUBE => 'youtubeUrl',
         self::URL_OTHER => 'otherUrls',
-        self::URL_CST => 'commisionsQuotesCheckUrl',
+        self::URL_CST => 'commissionsQuotesCheckUrl',
         self::LANGUAGES => 'languages',
         self::MAKER_ID => 'makerId',
         self::INTRO => 'intro',
@@ -103,7 +103,7 @@ class ArtisanMetadata
         self::COUNTRY => '#^([A-Z]{2})?$#',
         self::STATE => '#^.*$#',
         self::CITY => '#^.*$#',
-        self::PRODUCTION_MODEL => self::LIST_VALIDATION_REGEXP,
+        self::PRODUCTION_MODELS => self::LIST_VALIDATION_REGEXP,
         self::STYLES => self::LIST_VALIDATION_REGEXP,
         self::OTHER_STYLES => self::LIST_VALIDATION_REGEXP,
         self::ORDER_TYPES => self::LIST_VALIDATION_REGEXP,
@@ -128,7 +128,7 @@ class ArtisanMetadata
     ];
 
     const LIST_FIELDS_PRETTY_NAMES = [
-        self::PRODUCTION_MODEL,
+        self::PRODUCTION_MODELS,
         self::STYLES,
         self::OTHER_STYLES,
         self::ORDER_TYPES,
