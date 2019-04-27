@@ -51,7 +51,7 @@ CREATE TABLE `artisans` (
   `are_commissions_open` tinyint(1) DEFAULT NULL,
   `commissions_quotes_last_check` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=291 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=292 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `artisans` VALUES (1,'Silvena Handmade', '', '', '', 'PL', '', '', 'Toony', '', '', '', '', '', '', 'http://silvenahandmade.com/', 'http://www.furaffinity.net/user/silvena', '', '', 'https://www.facebook.com/silvenahandmade/', '', '', '', 'http://silvenahandmade.com/', '', '', '', '', '', '', '', '', '', '', '', NULL, NULL);
@@ -329,6 +329,7 @@ INSERT INTO `artisans` VALUES (287,'JacKat', '', 'Hiya! I\'m Jackie and I like m
 INSERT INTO `artisans` VALUES (288,'Dragons Den Fursuits', '', 'Hi! I am Eelowyn AKA, Dragons Den Fursuits! Making suits is my passion and I am happy to answer any questions anyone may have so feel free to reach out!', '2017-01', 'CA', 'Alberta', 'Edmonton/Calgary', 'Kigurumi\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Props\nCan do plushies', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable eyelids', '', '', '', 'http://www.furaffinity.net/user/eelowyn', '', 'https://twitter.com/Eelowyn', 'https://www.facebook.com/EelowynsDenOfSuits/', '', 'https://www.instagram.com/dragons_den_fursuits_/', '', '', '', '', 'EELOWYN', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Flexible payments, first 40% is non refundable to cover materials and hold slot, that amount can be made in payments. Commission added to queue once paid off', 'Happy to do any species!', '', 'https://www.furaffinity.net/view/31216991/', '', '', 'English', NULL, NULL);
 INSERT INTO `artisans` VALUES (289,'Cheesekake Creations', '', 'Cute suits for a low price!', '2016-07', 'CA', 'Ontario', 'St. Thomas', 'Semi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Wings (separate)\nExtra limbs (separate)', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nMovable jaw\nOutdoor feet', '', '', 'https://cheesekakecreations.weebly.com/', '', '', '', '', '', '', '', '', '', '', 'CKCRATE', 'Artistic liberty commissions\nStandard commissions', '50% up front for partials 30% for fullsuits, negotiable payment plans', 'canines, mustelids, vulpines, equines, avians, reptilian, aquatic, original species', '', '', '', '', 'English, French', NULL, NULL);
 INSERT INTO `artisans` VALUES (290,'Koshka Fursuits', '', '', '2014-01', 'AR', '', '', 'Semi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable eyebrows\nAdjustable/wiggle ears\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet\nWashable heads', '', '', 'https://www.koshkafursuits.com/', '', '', 'https://twitter.com/koshkafursuits', 'https://www.facebook.com/KoshkaFursuits/', '', 'https://www.instagram.com/koshkafursuits/', '', '', '', '', 'KOSHKAF', 'Artistic liberty commissions\nStandard commissions', '60% Upfront, 40% Once Finished + Shipping Costs', '', '', 'https://www.koshkafursuits.com/shop', 'https://www.koshkafursuits.com/faq', '', 'English, Spanish', NULL, NULL);
+INSERT INTO `artisans` VALUES (291,'Schneepardi Creations', '', '', '', 'DE', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'https://www.schneepardicreations.com/?lang=en', '', '', '', '', '', '', '', 'https://www.schneepardicreations.com/orderprocess/prices/?lang=en', '', '', '', NULL, NULL);
 DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -337,7 +338,7 @@ CREATE TABLE `events` (
   `timestamp` datetime NOT NULL,
   `description` varchar(4095) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.');
@@ -426,6 +427,7 @@ INSERT INTO `events` VALUES (87,'2019-04-23 20:42:12', 'Based on the contents of
 INSERT INTO `events` VALUES (88,'2019-04-24 20:24:40', 'Based on the contents of: http://www.furaffinity.net/user/fionkafursuits#profile , Fionka Fursuits commission status changed to CLOSED (was UNKNOWN).');
 INSERT INTO `events` VALUES (89,'2019-04-25 18:05:42', 'Based on the contents of: https://www.instagram.com/_bahamut19/ , _Bahamut19 commission status changed to CLOSED (was OPEN).');
 INSERT INTO `events` VALUES (90,'2019-04-26 06:05:53', 'Based on the contents of: http://www.furaffinity.net/user/lazylupe/ , Lupe Suits commission status changed to OPEN (was CLOSED).');
+INSERT INTO `events` VALUES (91,'2019-04-27 14:07:38', 'Based on the contents of: https://www.schneepardicreations.com/?lang=en , Schneepardi Creations commission status changed to CLOSED (was UNKNOWN).');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
