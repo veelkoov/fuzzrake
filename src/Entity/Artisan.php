@@ -29,6 +29,11 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $formerMakerIds;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $name;
 
     /**
@@ -667,6 +672,22 @@ class Artisan implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getFormerMakerIds(): string
+    {
+        return $this->formerMakerIds;
+    }
+
+    /**
+     * @param string $formerMakerIds
+     */
+    public function setFormerMakerIds(string $formerMakerIds): void
+    {
+        $this->formerMakerIds = $formerMakerIds;
+    }
+
+    /**
      * @param mixed $languages
      */
     public function setLanguages($languages): void
@@ -732,7 +753,7 @@ class Artisan implements JsonSerializable
         return call_user_func([$this, $getter]);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $data = get_object_vars($this);
         unset($data['id']);

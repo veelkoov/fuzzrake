@@ -43,6 +43,7 @@ class ArtisanMetadata
     const URL_CST = 'URL_CST';
     const LANGUAGES = 'LANGUAGES';
     const MAKER_ID = 'MAKER_ID';
+    const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
     const INTRO = 'INTRO';
     const NOTES = 'NOTES';
     const PASSCODE = 'PASSCODE';
@@ -85,6 +86,7 @@ class ArtisanMetadata
         self::URL_CST => 'commissionsQuotesCheckUrl',
         self::LANGUAGES => 'languages',
         self::MAKER_ID => 'makerId',
+        self::FORMER_MAKER_IDS => 'formerMakerIds',
         self::INTRO => 'intro',
         self::NOTES => 'notes',
         self::PASSCODE => self::IGNORED_IU_FORM_FIELD,
@@ -98,6 +100,7 @@ class ArtisanMetadata
     const MODEL_FIELDS_VALIDATION_REGEXPS = [
         self::NAME => '#^.+$#',
         self::MAKER_ID => '#^([A-Z0-9]{7})?$#',
+        self::FORMER_MAKER_IDS => '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#',
         self::FORMERLY => '#^.*$#',
         self::SINCE => '#^(\d{4}-\d{2})?$#',
         self::COUNTRY => '#^([A-Z]{2})?$#',
@@ -128,6 +131,7 @@ class ArtisanMetadata
     ];
 
     const LIST_FIELDS_PRETTY_NAMES = [
+        self::FORMER_MAKER_IDS,
         self::PRODUCTION_MODELS,
         self::STYLES,
         self::OTHER_STYLES,
