@@ -46,6 +46,16 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/maker_ids.html", name="maker_ids")
+     *
+     * @return Response
+     */
+    public function makerIds(): Response
+    {
+        return $this->render('frontend/maker_ids.html.twig', []);
+    }
+
+    /**
      * @Route("/", name="main")
      * @Route("/index.html")
      *
