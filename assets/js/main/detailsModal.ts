@@ -11,13 +11,12 @@ const DATA_COMPLETE_GREAT = 90;
 const DATA_COMPLETE_GOOD = 80;
 const DATA_COMPLETE_OK = 60;
 
-function formatShortInfo(state, city, since, formerly) {
-    since = since || '<i class="fas fa-question-circle" title="How long?"></i>';
-    formerly = formerly ? `<br />Formerly ${formerly}` : '';
-
+function formatShortInfo(state: string, city: string, since: string, formerly: string[]) {
+    let sinceTxt = since || '<i class="fas fa-question-circle" title="How long?"></i>';
+    let formerlyTxt = formerly ? `<br />Formerly ${formerly.join(', ')}` : '';
     let location = [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
 
-    return `Based in ${location}, crafting since ${since}${formerly}`;
+    return `Based in ${location}, crafting since ${sinceTxt}${formerlyTxt}`;
 }
 
 function formatSpecies(speciesDoes: string, speciesDoesnt: string): string {

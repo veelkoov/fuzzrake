@@ -7,6 +7,7 @@ namespace App\Utils;
 use App\Entity\Artisan;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Utils\ArtisanFields as Fields;
 
 class DataDiffer
 {
@@ -34,37 +35,36 @@ class DataDiffer
     {
         $nameShown = false;
 
-        foreach (ArtisanMetadata::getModelFieldNames() as $fieldName) {
-            $this->showSingleFieldDiff($nameShown, $fieldName, $old, $new, $imported);
+        foreach (Fields::persisted() as $field) {
+            $this->showSingleFieldDiff($nameShown, $field, $old, $new, $imported);
         }
     }
 
-    private function showSingleFieldDiff(bool &$nameShown, string $modelFieldName, Artisan $old, Artisan $new, ?Artisan $imported): void
+    private function showSingleFieldDiff(bool &$nameShown, ArtisanField $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
-        $newVal = $new->get($modelFieldName) ?: '';
-        $oldVal = $old->get($modelFieldName) ?: '';
-        $impVal = $imported ? $imported->get($modelFieldName) : null;
-        $prettyFieldName = ArtisanMetadata::getPrettyByModelFieldName($modelFieldName);
+        $newVal = $new->get($field->modelName()) ?: '';
+        $oldVal = $old->get($field->modelName()) ?: '';
+        $impVal = $imported ? $imported->get($field->modelName()) : null;
 
         if ($oldVal !== $newVal) {
-            $this->showNameFirstTime($nameShown, $old, $new);
+            $this->showArtisanNameIfFirstTime($nameShown, $old, $new);
 
-            if (ArtisanMetadata::isListField($prettyFieldName)) {
-                $this->showListDiff($prettyFieldName, $oldVal, $newVal, $impVal);
+            if ($field->isList()) {
+                $this->showListDiff($field->name(), $oldVal, $newVal, $impVal);
             } else {
-                $this->showSingleValueDiff($prettyFieldName, $oldVal, $newVal, $impVal);
+                $this->showSingleValueDiff($field->name(), $oldVal, $newVal, $impVal);
             }
 
-            $this->showFixCommandOptionally($new->getMakerId(), $prettyFieldName, $impVal ?? $oldVal, $newVal);
+            $this->showFixCommandOptionally($new->getMakerId(), $field->name(), $impVal ?? $oldVal, $newVal);
 
             $this->io->writeln('');
         }
     }
 
-    private function showNameFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
+    private function showArtisanNameIfFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
     {
         if (!$nameShown) {
-            $this->io->section(Utils::artisanNames($old, $new));
+            $this->io->section(Utils::artisanNamesSafe($old, $new));
 
             $nameShown = true;
         }

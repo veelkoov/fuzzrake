@@ -56,8 +56,8 @@ class ArtisanRepository extends ServiceEntityRepository
             ->createNativeQuery('
                 SELECT SUM(are_commissions_open = 1) AS open
                   , SUM(are_commissions_open = 0) AS closed
-                  , SUM(are_commissions_open IS NOT NULL AND commisions_quotes_check_url <> "") AS successfully_tracked
-                  , SUM(commisions_quotes_check_url <> "") AS tracked
+                  , SUM(are_commissions_open IS NOT NULL AND commissions_quotes_check_url <> "") AS successfully_tracked
+                  , SUM(commissions_quotes_check_url <> "") AS tracked
                   , SUM(1) AS total
                 FROM artisans
             ', $rsm)
@@ -71,12 +71,12 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctOrderTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('types', true);
+        return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
     }
 
     public function getDistinctOtherOrderTypes(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('otherTypes');
+        return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
     }
 
     public function getDistinctStyles(): array
@@ -101,7 +101,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     public function getDistinctProductionModels(): array
     {
-        return $this->getDistinctItemsWithCountFromJoined('productionModel');
+        return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
     private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): array
@@ -153,23 +153,30 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult(), new DateTimeZone('UTC'));
     }
 
-    public function findBestMatches(string $name, string $formerly, ?string $matchedName)
+    public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
     {
-        return $this->createQueryBuilder('a')
-            ->setParameters([
-                'name' => $name,
-                'formerly' => $formerly,
-                'matchedName' => $matchedName,
-                'empty' => '',
-            ])
-            ->where('
-                a.name = :name
-                OR a.name = :formerly
-                OR a.name = :matchedName
-                OR (a.formerly = :formerly AND a.formerly <> :empty)
-            ')
-            ->getQuery()
-            ->getResult();
+        $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
+        $i = 0;
+
+        if ($matchedName !== null) {
+            array_push($names, $matchedName);
+        }
+
+        foreach ($names as $name) {
+            $builder->orWhere("a.name = :eq$i OR (a.formerly <> :empty AND a.formerly LIKE :like$i)");
+            $builder->setParameter("eq$i", $name);
+            $builder->setParameter("like$i", "%$name%");
+            $i++;
+        }
+
+        foreach ($makerIds as $makerId) {
+            $builder->orWhere("a.makerId = :eq$i OR (a.formerMakerIds <> :empty AND a.formerMakerIds LIKE :like$i)");
+            $builder->setParameter("eq$i", $makerId);
+            $builder->setParameter("like$i", "%$makerId%");
+            $i++;
+        }
+
+        return $builder->getQuery()->getResult();
     }
 
     public function getOtherItemsData()

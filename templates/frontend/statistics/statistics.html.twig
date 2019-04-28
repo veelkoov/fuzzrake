@@ -4,9 +4,9 @@
     <p>
         Take me to:
         <a href="#styles">styles</a> (<a href="#other_styles">other</a>) &bull;
-        <a href="#types">order types</a> (<a href="#other_types">other</a>) &bull;
+        <a href="#order_types">order types</a> (<a href="#other_order_types">other</a>) &bull;
         <a href="#features">features</a> (<a href="#other_features">other</a>) &bull;
-        <a href="#data-statistics">data statistics</a>
+        <a href="#data_statistics">data statistics</a>
     </p>
 
     <h1>Commission status</h1>
@@ -58,11 +58,11 @@
     <h2 id="other_styles">Other styles</h2>
     {% include 'frontend/statistics/_item_pills.html.twig' with { items: otherStyles } %}
 
-    <h1 id="types">Order types</h1>
-    {% include 'frontend/statistics/_data_table.html.twig' with { data: types, name: 'Order type', total: commissionsStats.Total } %}
+    <h1 id="order_types">Order types</h1>
+    {% include 'frontend/statistics/_data_table.html.twig' with { data: orderTypes, name: 'Order type', total: commissionsStats.Total } %}
 
-    <h2 id="other_types">Other order types</h2>
-    {% include 'frontend/statistics/_item_pills.html.twig' with { items: otherTypes } %}
+    <h2 id="other_order_types">Other order types</h2>
+    {% include 'frontend/statistics/_item_pills.html.twig' with { items: otherOrderTypes } %}
 
     <h1 id="features">Features</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { data: features, name: 'Feature', total: commissionsStats.Total } %}
@@ -70,7 +70,7 @@
     <h2 id="other_features">Other features</h2>
     {% include 'frontend/statistics/_item_pills.html.twig' with { items: otherFeatures } %}
 
-    <h1 id="data-statistics">Data statistics</h1>
+    <h1 id="data_statistics">Data statistics</h1>
     {% include 'frontend/statistics/_data_table.html.twig' with { data: completeness, name: 'Data completeness', total: commissionsStats.Total } %}
 
     {% include 'frontend/statistics/_data_table.html.twig' with { data: providedInfo, name: 'Information provided', total: commissionsStats.Total } %}

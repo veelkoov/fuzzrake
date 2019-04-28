@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanImport;
-use App\Utils\ArtisanMetadata;
+use App\Utils\ArtisanFields as Fields;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\ImportCorrector;
@@ -55,7 +55,7 @@ class DataImporter
         $this->differ = new DataDiffer($io, $showFixCommands);
         $this->corrector = $importCorrector;
 
-        $imports = $this->createImports($artisansData);
+        $imports = $this->createImports($artisansData, $io);
         $this->performImports($imports);
 
         $io->title('Showing artisans\' data before/after fixing');
@@ -67,9 +67,10 @@ class DataImporter
     /**
      * @param array $artisansData
      *
+     * @param SymfonyStyle $io
      * @return ArtisanImport[]
      */
-    private function createImports(array $artisansData): array
+    private function createImports(array $artisansData, SymfonyStyle $io): array
     {
         $result = [];
 
@@ -80,7 +81,13 @@ class DataImporter
                 continue;
             }
 
-            $result[$import->getUpsertedArtisan()->getMakerId() ?? $import->getNewData()->getMakerId()] = $import; // Removes past duplicates
+            $makerId = $import->getUpsertedArtisan()->getMakerId() ?? $import->getNewData()->getMakerId();
+
+            if (array_key_exists($makerId, $result)) {
+                $io->note($import->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
+            }
+
+            $result[$makerId] = $import;
         }
 
         return $result;
@@ -91,7 +98,7 @@ class DataImporter
         $result = new ArtisanImport($artisanData);
         $result->setNewData($this->updateArtisanWithData(new Artisan(), $artisanData));
 
-        $result->setUpsertedArtisan($this->findBestMatchArtisan($artisanData) ?: new Artisan());
+        $result->setUpsertedArtisan($this->findBestMatchArtisan($result->getNewData()) ?: new Artisan());
         $result->setOriginalArtisan(clone $result->getUpsertedArtisan()); // Clone unmodified
 
         return $result;
@@ -115,25 +122,33 @@ class DataImporter
 
     private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
     {
-        foreach (ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $fieldName => $modelFieldName) {
-            if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelFieldName) {
-                $artisan->set($modelFieldName, $newData[ArtisanMetadata::getUiFormFieldIndexByPrettyName($fieldName)]);
+        foreach (Fields::persisted() as $field) {
+            if ($field->isIncludedInUiForm()) {
+                $newValue = $newData[$field->uiFormIndex()];
+
+                if ($field->name() === Fields::MAKER_ID && $newValue !== $artisan->getMakerId()) {
+                    $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
+                }
+
+                $artisan->set($field->modelName(), $newValue);
             }
         }
 
         return $artisan;
     }
 
-    private function findBestMatchArtisan(array $artisanData): ?Artisan
+    private function findBestMatchArtisan(Artisan $artisan): ?Artisan
     {
+        $artisan = $this->fix(clone $artisan); // Apply names & maker IDs fixes
+
         $results = $this->artisanRepository->findBestMatches(
-            $this->getDataColumn($artisanData, ArtisanMetadata::NAME),
-            $this->getDataColumn($artisanData, ArtisanMetadata::FORMERLY),
-            $this->corrector->getMatchedName($this->getDataColumn($artisanData, ArtisanMetadata::MAKER_ID))
+            $artisan->getAllNamesArr(),
+            $artisan->getAllMakerIdsArr(),
+            $this->corrector->getMatchedName($artisan->getMakerId())
         );
 
         if (count($results) > 1) {
-            throw new DataImporterException('Expected no more than 1 artisan to be matched. Found: '.implode(', ', array_map(function (Artisan $artisan) { return "{$artisan->getName()} (ID {$artisan->getId()})"; }, $results)));
+            throw new DataImporterException($this->getMoreThanOneArtisansMatchedMessage($artisan, $results));
         }
 
         return array_pop($results);
@@ -170,14 +185,14 @@ class DataImporter
 
     private function getDataColumn(array $artisanData, string $prettyFieldName)
     {
-        return $artisanData[ArtisanMetadata::getUiFormFieldIndexByPrettyName($prettyFieldName)];
+        return $artisanData[ArtisanFields::getUiFormFieldIndexByPrettyName($prettyFieldName)];
     }
 
     private function persistImportIfValid(array $passcodes, SymfonyStyle $io, ArtisanImport $import): void
     {
         $new = $import->getUpsertedArtisan();
         $old = $import->getOriginalArtisan();
-        $names = Utils::artisanNames($old, $new);
+        $names = Utils::artisanNamesSafe($old, $new);
         $providedPasscode = $import->getProvidedPasscode();
 
         $this->fixer->validateArtisanData($new);
@@ -220,5 +235,13 @@ class DataImporter
         } elseif ($new->getId()) {
             $this->objectManager->refresh($new);
         }
+    }
+
+    private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
+    {
+        return 'Was looking for: ' . Utils::artisanNamesSafe($artisan) . '. Found more than one: '
+            . implode(', ', array_map(function (Artisan $artisan) {
+                return Utils::artisanNamesSafe($artisan);
+            }, $results));
     }
 }

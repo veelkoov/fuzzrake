@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Utils\ArtisanMetadata;
+use App\Utils\ArtisanFields;
 use App\Utils\CompletenessCalc;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -24,17 +25,22 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=31)
      */
-    private $makerId;
+    private $makerId = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $formerMakerIds = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $formerly;
+    private $name = '';
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $formerly = '';
 
     /**
      * @ORM\Column(type="string", length=511)
@@ -64,7 +70,7 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $productionModel;
+    private $productionModels;
 
     /**
      * @ORM\Column(type="string", length=1023)
@@ -79,12 +85,12 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $types;
+    private $orderTypes;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherTypes;
+    private $otherOrderTypes;
 
     /**
      * @ORM\Column(type="string", length=1023)
@@ -169,11 +175,6 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $commisionsQuotesCheckUrl;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $queueUrl;
 
     /**
@@ -192,6 +193,11 @@ class Artisan implements JsonSerializable
     private $notes;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $commissionsQuotesCheckUrl;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $areCommissionsOpen;
@@ -206,7 +212,7 @@ class Artisan implements JsonSerializable
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -216,6 +222,28 @@ class Artisan implements JsonSerializable
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getFormerly(): string
+    {
+        return $this->formerly;
+    }
+
+    public function setFormerly(string $formerly): self
+    {
+        $this->formerly = $formerly;
+
+        return $this;
+    }
+
+    public function getFormerlyArr(): array
+    {
+        return explode("\n", $this->formerly);
+    }
+
+    public function getAllNamesArr(): array
+    {
+        return array_filter(array_merge([$this->getName()], $this->getFormerlyArr()));
     }
 
     public function getCountry(): ?string
@@ -338,26 +366,26 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getCommisionsQuotesCheckUrl(): ?string
+    public function getCommissionsQuotesCheckUrl(): ?string
     {
-        return $this->commisionsQuotesCheckUrl;
+        return $this->commissionsQuotesCheckUrl;
     }
 
-    public function setCommisionsQuotesCheckUrl(?string $commisionsQuotesCheckUrl): self
+    public function setCommissionsQuotesCheckUrl(?string $commissionsQuotesCheckUrl): self
     {
-        $this->commisionsQuotesCheckUrl = $commisionsQuotesCheckUrl;
+        $this->commissionsQuotesCheckUrl = $commissionsQuotesCheckUrl;
 
         return $this;
     }
 
-    public function getTypes(): ?string
+    public function getOrderTypes(): ?string
     {
-        return $this->types;
+        return $this->orderTypes;
     }
 
-    public function setTypes(string $types): self
+    public function setOrderTypes(string $orderTypes): self
     {
-        $this->types = $types;
+        $this->orderTypes = $orderTypes;
 
         return $this;
     }
@@ -470,14 +498,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getOtherTypes(): ?string
+    public function getOtherOrderTypes(): ?string
     {
-        return $this->otherTypes;
+        return $this->otherOrderTypes;
     }
 
-    public function setOtherTypes(string $otherTypes): self
+    public function setOtherOrderTypes(string $otherOrderTypes): self
     {
-        $this->otherTypes = $otherTypes;
+        $this->otherOrderTypes = $otherOrderTypes;
 
         return $this;
     }
@@ -494,26 +522,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getCommissionsQuotesLastCheck(): ?\DateTimeInterface
+    public function getCommissionsQuotesLastCheck(): ?DateTimeInterface
     {
         return $this->commissionsQuotesLastCheck;
     }
 
-    public function setCommissionsQuotesLastCheck(?\DateTimeInterface $commissionsQuotesLastCheck): self
+    public function setCommissionsQuotesLastCheck(?DateTimeInterface $commissionsQuotesLastCheck): self
     {
         $this->commissionsQuotesLastCheck = $commissionsQuotesLastCheck;
-
-        return $this;
-    }
-
-    public function getFormerly(): ?string
-    {
-        return $this->formerly;
-    }
-
-    public function setFormerly(string $formerly): self
-    {
-        $this->formerly = $formerly;
 
         return $this;
     }
@@ -549,17 +565,17 @@ class Artisan implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getProductionModel()
+    public function getProductionModels()
     {
-        return $this->productionModel;
+        return $this->productionModels;
     }
 
     /**
-     * @param mixed $productionModel
+     * @param mixed $productionModels
      */
-    public function setProductionModel($productionModel): void
+    public function setProductionModels($productionModels): void
     {
-        $this->productionModel = $productionModel;
+        $this->productionModels = $productionModels;
     }
 
     /**
@@ -667,6 +683,38 @@ class Artisan implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getFormerMakerIds(): string
+    {
+        return $this->formerMakerIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormerMakerIdsArr(): array
+    {
+        return explode("\n", $this->formerMakerIds);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllMakerIdsArr(): array
+    {
+        return array_filter(array_merge([$this->getMakerId()], $this->getFormerMakerIdsArr()));
+    }
+
+    /**
+     * @param string $formerMakerIds
+     */
+    public function setFormerMakerIds(string $formerMakerIds): void
+    {
+        $this->formerMakerIds = $formerMakerIds;
+    }
+
+    /**
      * @param mixed $languages
      */
     public function setLanguages($languages): void
@@ -686,9 +734,9 @@ class Artisan implements JsonSerializable
             ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
                 ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
             ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModel)
+            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModels)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->types, $this->otherTypes)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->orderTypes, $this->otherOrderTypes)
             ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
             ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
@@ -732,14 +780,13 @@ class Artisan implements JsonSerializable
         return call_user_func([$this, $getter]);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $data = get_object_vars($this);
         unset($data['id']);
 
-        foreach (ArtisanMetadata::LIST_FIELDS_PRETTY_NAMES as $prettyName) {
-            $fieldName = ArtisanMetadata::getModelByPrettyFieldName($prettyName);
-            $data[$fieldName] = array_filter(explode("\n", $data[$fieldName]));
+        foreach (ArtisanFields::lists() as $field) {
+            $data[$field->modelName()] = array_filter(explode("\n", $data[$field->modelName()]));
         }
 
         $data['completeness'] = $this->completeness();

@@ -13,47 +13,35 @@ class ValueCorrection
     const MODE_ALL = 'ar';
 
     private $makerId;
-    private $modelFieldName;
+    private $field;
     private $wrongValue;
     private $correctedValue;
     private $mode;
 
-    public function __construct(string $makerId, string $modelFieldName, string $mode, string $wrongValue, string $correctedValue)
+    public function __construct(string $makerId, ArtisanField $field, string $mode, string $wrongValue, string $correctedValue)
     {
         $this->validateAndSetMakerId($makerId);
-        $this->validateAndSetModelFieldName($modelFieldName);
+        $this->field = $field;
         $this->mode = $mode;
         $this->wrongValue = $wrongValue;
         $this->correctedValue = $correctedValue;
     }
 
-    /**
-     * @return string
-     */
     public function getMakerId(): string
     {
         return $this->makerId;
     }
 
-    /**
-     * @return string
-     */
-    public function getModelFieldName(): string
+    public function getField(): ArtisanField
     {
-        return $this->modelFieldName;
+        return $this->field;
     }
 
-    /**
-     * @return string
-     */
     public function getWrongValue(): string
     {
         return $this->wrongValue;
     }
 
-    /**
-     * @return string
-     */
     public function getCorrectedValue(): string
     {
         return $this->correctedValue;
@@ -88,18 +76,6 @@ class ValueCorrection
                 throw new InvalidArgumentException("Invalid mode: '$this->mode'");
                 break;
         }
-    }
-
-    /**
-     * @param string $modelFieldName
-     */
-    private function validateAndSetModelFieldName(string $modelFieldName): void
-    {
-        if (!in_array($modelFieldName, ArtisanMetadata::getPretty2ModelFieldNameMap())) {
-            throw new InvalidArgumentException("Invalid field name: '$modelFieldName'");
-        }
-
-        $this->modelFieldName = $modelFieldName;
     }
 
     /**

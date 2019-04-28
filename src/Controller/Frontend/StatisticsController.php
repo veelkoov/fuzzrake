@@ -6,7 +6,7 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanMetadata;
+use App\Utils\ArtisanFields;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,8 +52,8 @@ class StatisticsController extends AbstractController
      */
     public function statistics(ArtisanRepository $artisanRepository): Response
     {
-        $types = $artisanRepository->getDistinctOrderTypes();
-        $otherTypes = $artisanRepository->getDistinctOtherOrderTypes();
+        $orderTypes = $artisanRepository->getDistinctOrderTypes();
+        $otherOrderTypes = $artisanRepository->getDistinctOtherOrderTypes();
         $styles = $artisanRepository->getDistinctStyles();
         $otherStyles = $artisanRepository->getDistinctOtherStyles();
         $features = $artisanRepository->getDistinctFeatures();
@@ -63,8 +63,8 @@ class StatisticsController extends AbstractController
 
         return $this->render('frontend/statistics/statistics.html.twig', [
             'countries' => $this->prepareTableData($countries),
-            'types' => $this->prepareTableData($types),
-            'otherTypes' => $this->prepareListData($otherTypes['items']),
+            'orderTypes' => $this->prepareTableData($orderTypes),
+            'otherOrderTypes' => $this->prepareListData($otherOrderTypes['items']),
             'styles' => $this->prepareTableData($styles),
             'otherStyles' => $this->prepareListData($otherStyles['items']),
             'features' => $this->prepareTableData($features),
@@ -120,17 +120,17 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
-    private function prepareListData(array $otherTypes): array
+    private function prepareListData(array $otherItems): array
     {
-        uksort($otherTypes, function ($a, $b) use ($otherTypes) {
-            if ($otherTypes[$a] !== $otherTypes[$b]) {
-                return $otherTypes[$b] - $otherTypes[$a];
+        uksort($otherItems, function ($a, $b) use ($otherItems) {
+            if ($otherItems[$a] !== $otherItems[$b]) {
+                return $otherItems[$b] - $otherItems[$a];
             }
 
             return strcmp($a, $b);
         });
 
-        return $otherTypes;
+        return $otherItems;
     }
 
     private function prepareCommissionsStatsTableData(array $commissionsStats): array
@@ -177,12 +177,10 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach (ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $prettyName => $modelName) {
-            if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelName) {
-                $result[$prettyName] = array_reduce($artisans, function (int $carry, Artisan $item) use ($modelName) {
-                    return $carry + ('' !== $item->get($modelName) ? 1 : 0);
-                }, 0);
-            }
+        foreach (ArtisanFields::persisted() as $field) {
+            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
+                return $carry + ('' !== $artisan->get($field->modelName()) ? 1 : 0);
+            }, 0);
         }
 
         arsort($result);

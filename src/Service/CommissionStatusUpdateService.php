@@ -80,7 +80,7 @@ class CommissionStatusUpdateService
                 try {
                     $this->updateArtisan($artisan);
                 } catch (Exception $exception) {
-                    $this->style->error("Failed: {$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} )");
+                    $this->style->error("Failed: {$artisan->getName()} ( {$artisan->getCommissionsQuotesCheckUrl()} )");
                     $this->style->text($exception);
                 }
             }
@@ -98,7 +98,7 @@ class CommissionStatusUpdateService
 
     private function canAutoUpdate(Artisan $artisan): bool
     {
-        return !empty($artisan->getCommisionsQuotesCheckUrl());
+        return !empty($artisan->getCommissionsQuotesCheckUrl());
     }
 
     private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
@@ -107,9 +107,9 @@ class CommissionStatusUpdateService
             $newStatusText = $this->textStatus($newStatus);
             $oldStatusText = $this->textStatus($artisan->getAreCommissionsOpen());
 
-            $this->style->caution("{$artisan->getName()} ( {$artisan->getCommisionsQuotesCheckUrl()} ) $oldStatusText ---> $newStatusText");
+            $this->style->caution("{$artisan->getName()} ( {$artisan->getCommissionsQuotesCheckUrl()} ) $oldStatusText ---> $newStatusText");
 
-            $this->objectManager->persist($this->getStatusChangeEvent($artisan->getName(), $artisan->getCommisionsQuotesCheckUrl(), $oldStatusText, $newStatusText));
+            $this->objectManager->persist($this->getStatusChangeEvent($artisan->getName(), $artisan->getCommissionsQuotesCheckUrl(), $oldStatusText, $newStatusText));
         }
     }
 
@@ -136,7 +136,7 @@ class CommissionStatusUpdateService
 
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
-                $url = $artisan->getCommisionsQuotesCheckUrl();
+                $url = $artisan->getCommissionsQuotesCheckUrl();
 
                 try {
                     $this->fetchWebpageContents($url);
@@ -234,7 +234,7 @@ class CommissionStatusUpdateService
     private function getCommissionsStatusAndDateTimeChecked(Artisan $artisan): array
     {
         // FIXME: UTC for unknown is CE(S)T instead
-        $url = $artisan->getCommisionsQuotesCheckUrl();
+        $url = $artisan->getCommissionsQuotesCheckUrl();
         $datetimeRetrieved = null;
 
         try {

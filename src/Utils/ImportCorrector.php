@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\ArtisanFields as Fields;
 
 class ImportCorrector
 {
@@ -112,12 +113,12 @@ class ImportCorrector
             break;
 
             default:
-                $matchedName = $buffer->readUntil(':');
+                $fieldName = $buffer->readUntil(':');
                 $delimiter = $buffer->readUntil(':');
                 $wrongValue = Utils::unsafeStr($buffer->readUntil($delimiter));
                 $correctedValue = Utils::unsafeStr($buffer->readUntil($delimiter));
 
-                $this->addCorrection(new ValueCorrection($makerId, ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$matchedName],
+                $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
                     $command, $wrongValue, $correctedValue));
             break;
         }
@@ -130,11 +131,11 @@ class ImportCorrector
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
-            $fieldName = $correction->getModelFieldName();
+            $modelName = $correction->getField()->modelName();
 
-            $value = $artisan->get($fieldName);
+            $value = $artisan->get($modelName);
             $correctedValue = $correction->apply($value);
-            $artisan->set($fieldName, $correctedValue);
+            $artisan->set($modelName, $correctedValue);
         }
     }
 

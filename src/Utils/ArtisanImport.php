@@ -5,9 +5,19 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\ArtisanFields as Fields;
+use DateTime;
+use DateTimeZone;
+use Exception;
+use Monolog\Handler\Curl\Util;
 
 class ArtisanImport
 {
+    /**
+     * @var DateTime
+     */
+    private $timestamp;
+
     /**
      * @var array
      */
@@ -40,93 +50,78 @@ class ArtisanImport
 
     public function __construct(array $rawNewData)
     {
-        $this->removeTimestampFromRawData($rawNewData);
-
         $this->rawNewData = $rawNewData;
-        $this->newRawDataHash = sha1(json_encode($rawNewData));
+        $this->setTimestamp($rawNewData);
+        $this->setNewRawDataHash($rawNewData);
 
-        $this->providedPasscode = $rawNewData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::PASSCODE)];
+        $this->providedPasscode = $rawNewData[Fields::uiFormIndex(Fields::PASSCODE)];
     }
 
-    /**
-     * @return Artisan
-     */
     public function getNewData(): Artisan
     {
         return $this->newData;
     }
 
-    /**
-     * @param Artisan $newData
-     */
     public function setNewData(Artisan $newData): void
     {
         $this->newData = $newData;
     }
 
-    /**
-     * @return Artisan
-     */
     public function getUpsertedArtisan(): Artisan
     {
         return $this->upsertedArtisan;
     }
 
-    /**
-     * @param Artisan $upsertedArtisan
-     */
     public function setUpsertedArtisan(Artisan $upsertedArtisan): void
     {
         $this->upsertedArtisan = $upsertedArtisan;
     }
 
-    /**
-     * @return Artisan
-     */
     public function getOriginalArtisan(): Artisan
     {
         return $this->originalArtisan;
     }
 
-    /**
-     * @param Artisan $originalArtisan
-     */
     public function setOriginalArtisan(Artisan $originalArtisan): void
     {
         $this->originalArtisan = $originalArtisan;
     }
 
-    /**
-     * @return string
-     */
     public function getProvidedPasscode(): string
     {
         return $this->providedPasscode;
     }
 
-    /**
-     * @return string
-     */
     public function getNewRawDataHash(): string
     {
         return $this->newRawDataHash;
     }
 
-    /**
-     * @return array
-     */
     public function getRawNewData(): array
     {
         return $this->rawNewData;
+    }
+
+    public function getIdStringSafe(): string
+    {
+        return Utils::artisanNamesSafe($this->getNewData(), $this->getUpsertedArtisan(), $this->getOriginalArtisan())
+            .' ['.$this->timestamp->format(DATE_ISO8601).']';
     }
 
     /**
      * It looks like Google Forms changes timestamp's timezone, so let's get rid of it for the sake of hash calculation.
      *
      * @param array $rawNewData
+     * @throws Exception
      */
-    private function removeTimestampFromRawData(array &$rawNewData): void
+    private function setTimestamp(array $rawNewData): void
     {
-        $rawNewData[ArtisanMetadata::getUiFormFieldIndexByPrettyName(ArtisanMetadata::TIMESTAMP)] = null;
+        $this->timestamp = new DateTime($rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)], new DateTimeZone('UTC'));
+    }
+
+    private function setNewRawDataHash(array $rawNewData)
+    {
+        $rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)] = null;
+        $this->newRawDataHash = sha1(json_encode($rawNewData));
     }
 }
