@@ -339,7 +339,7 @@ CREATE TABLE `events` (
   `timestamp` datetime NOT NULL,
   `description` varchar(4095) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.');
@@ -429,6 +429,7 @@ INSERT INTO `events` VALUES (88,'2019-04-24 20:24:40', 'Based on the contents of
 INSERT INTO `events` VALUES (89,'2019-04-25 18:05:42', 'Based on the contents of: https://www.instagram.com/_bahamut19/ , _Bahamut19 commission status changed to CLOSED (was OPEN).');
 INSERT INTO `events` VALUES (90,'2019-04-26 06:05:53', 'Based on the contents of: http://www.furaffinity.net/user/lazylupe/ , Lupe Suits commission status changed to OPEN (was CLOSED).');
 INSERT INTO `events` VALUES (91,'2019-04-27 14:07:38', 'Based on the contents of: https://www.schneepardicreations.com/?lang=en , Schneepardi Creations commission status changed to CLOSED (was UNKNOWN).');
+INSERT INTO `events` VALUES (92,'2019-04-28 06:05:54', 'Based on the contents of: http://www.furaffinity.net/user/lazylupe/ , Lupe Suits commission status changed to CLOSED (was OPEN).');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
