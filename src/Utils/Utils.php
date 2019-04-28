@@ -6,18 +6,19 @@ use App\Entity\Artisan;
 
 class Utils
 {
-    public static function artisanNames(Artisan $artisan1, Artisan $artisan2)
+    public static function artisanNamesSafe(Artisan ...$artisans)
     {
-        $names = array_unique(array_filter([
-            $artisan1->getMakerId(),
-            $artisan1->getName(),
-            $artisan1->getFormerly(),
-            $artisan2->getMakerId(),
-            $artisan2->getName(),
-            $artisan2->getFormerly(),
-        ]));
+        $names = $makerIds = [];
 
-        return implode(' / ', $names);
+        foreach (array_filter($artisans) as $artisan) {
+            $names = array_merge($names, $artisan->getAllNamesArr());
+            $makerIds = array_merge($makerIds, $artisan->getAllMakerIdsArr());
+        }
+
+        return self::safeStr(implode(' / ', array_merge(
+            array_filter(array_unique($names)),
+            array_filter(array_unique($makerIds))
+        )));
     }
 
     public static function safeStr(string $input): string

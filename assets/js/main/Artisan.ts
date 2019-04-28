@@ -4,7 +4,7 @@ export default class Artisan {
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
                 readonly name: string,
-                readonly formerly: string,
+                readonly formerly: string[],
                 readonly intro: string,
                 readonly since: string,
                 readonly country: string,

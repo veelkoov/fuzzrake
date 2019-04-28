@@ -153,23 +153,30 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult(), new DateTimeZone('UTC'));
     }
 
-    public function findBestMatches(string $name, string $formerly, ?string $matchedName)
+    public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
     {
-        return $this->createQueryBuilder('a')
-            ->setParameters([
-                'name' => $name,
-                'formerly' => $formerly,
-                'matchedName' => $matchedName,
-                'empty' => '',
-            ])
-            ->where('
-                a.name = :name
-                OR a.name = :formerly
-                OR a.name = :matchedName
-                OR (a.formerly = :formerly AND a.formerly <> :empty)
-            ')
-            ->getQuery()
-            ->getResult();
+        $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
+        $i = 0;
+
+        if ($matchedName !== null) {
+            array_push($names, $matchedName);
+        }
+
+        foreach ($names as $name) {
+            $builder->orWhere("a.name = :eq$i OR (a.formerly <> :empty AND a.formerly LIKE :like$i)");
+            $builder->setParameter("eq$i", $name);
+            $builder->setParameter("like$i", "%$name%");
+            $i++;
+        }
+
+        foreach ($makerIds as $makerId) {
+            $builder->orWhere("a.makerId = :eq$i OR (a.formerMakerIds <> :empty AND a.formerMakerIds LIKE :like$i)");
+            $builder->setParameter("eq$i", $makerId);
+            $builder->setParameter("like$i", "%$makerId%");
+            $i++;
+        }
+
+        return $builder->getQuery()->getResult();
     }
 
     public function getOtherItemsData()

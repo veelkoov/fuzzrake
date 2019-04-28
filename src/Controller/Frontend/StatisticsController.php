@@ -6,7 +6,7 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanMetadata;
+use App\Utils\ArtisanFields;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -177,12 +177,10 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach (ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP as $prettyName => $modelName) {
-            if (ArtisanMetadata::IGNORED_IU_FORM_FIELD !== $modelName) {
-                $result[$prettyName] = array_reduce($artisans, function (int $carry, Artisan $item) use ($modelName) {
-                    return $carry + ('' !== $item->get($modelName) ? 1 : 0);
-                }, 0);
-            }
+        foreach (ArtisanFields::persisted() as $field) {
+            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
+                return $carry + ('' !== $artisan->get($field->modelName()) ? 1 : 0);
+            }, 0);
         }
 
         arsort($result);

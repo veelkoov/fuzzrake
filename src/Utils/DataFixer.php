@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\ArtisanFields as Fields;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -156,12 +157,12 @@ class DataFixer
 
     public function validateArtisanData(Artisan $artisan): void
     {
-        foreach (ArtisanMetadata::MODEL_FIELDS_VALIDATION_REGEXPS as $prettyFieldName => $validationRegexp) {
-            $fieldValue = $artisan->get(ArtisanMetadata::PRETTY_TO_MODEL_FIELD_NAMES_MAP[$prettyFieldName]);
+        foreach (Fields::persisted() as $field) {
+            $value = $artisan->get($field->modelName());
 
-            if (!preg_match($validationRegexp, $fieldValue)) {
-                $fieldValue = Utils::safeStr($fieldValue);
-                $this->io->writeln("wr:{$artisan->getMakerId()}:$prettyFieldName:|:<wrong>$fieldValue</>|$fieldValue|");
+            if (!preg_match($field->validationRegexp(), $value)) {
+                $safeValue = Utils::safeStr($value);
+                $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }
     }
