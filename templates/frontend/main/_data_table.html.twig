@@ -9,6 +9,7 @@
         <th class="text-center toggleable no-sorting default-hidden">Features</th>
         <th class="text-center toggleable">Commissions</th>
         <th class="text-right no-sorting">Links</th>
+        <th class="hidden">Data for searching</th>
     </tr>
     </thead>
 
@@ -47,6 +48,10 @@
                 </td>
                 <td class="links">
                     {% include 'frontend/main/_artisan_links_dropdown.html.twig' %}
+                </td>
+                <td>
+                    {{ artisan.formerly }}
+                    {{ artisan.formerMakerIds }}
                 </td>
             {% endspaceless -%}
         </tr>
