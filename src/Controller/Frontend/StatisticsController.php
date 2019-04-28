@@ -52,6 +52,7 @@ class StatisticsController extends AbstractController
      */
     public function statistics(ArtisanRepository $artisanRepository): Response
     {
+        $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
         $otherOrderTypes = $artisanRepository->getDistinctOtherOrderTypes();
         $styles = $artisanRepository->getDistinctStyles();
@@ -63,6 +64,7 @@ class StatisticsController extends AbstractController
 
         return $this->render('frontend/statistics/statistics.html.twig', [
             'countries' => $this->prepareTableData($countries),
+            'productionModels' => $this->prepareTableData($productionModels),
             'orderTypes' => $this->prepareTableData($orderTypes),
             'otherOrderTypes' => $this->prepareListData($otherOrderTypes['items']),
             'styles' => $this->prepareTableData($styles),
