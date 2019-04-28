@@ -1,4 +1,7 @@
 http://getfursu.it/
 http://getfursu.it/info.html
-http://getfursu.it/statistics.html
 http://getfursu.it/tracking.html
+http://getfursu.it/maker_ids.html
+http://getfursu.it/statistics.html
+http://getfursu.it/events.html
+http://getfursu.it/whoopsies.html
