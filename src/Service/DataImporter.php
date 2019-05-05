@@ -81,7 +81,7 @@ class DataImporter
                 continue;
             }
 
-            $makerId = $import->getUpsertedArtisan()->getMakerId() ?? $import->getNewData()->getMakerId();
+            $makerId = $import->getUpsertedArtisan()->getMakerId() ?: $import->getNewData()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
                 $io->note($import->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
