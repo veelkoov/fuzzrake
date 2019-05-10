@@ -31,11 +31,11 @@ export default class Artisan {
                 readonly tumblrUrl: string,
                 readonly instagramUrl: string,
                 readonly youtubeUrl: string,
-                readonly commissionsQuotesCheckUrl: string,
                 readonly queueUrl: string,
                 readonly otherUrls: string,
                 readonly languages: string,
                 readonly notes: string,
+                readonly commissionsQuotesCheckUrl: string,
                 readonly areCommissionsOpen: boolean,
                 readonly commissionsQuotesLastCheck: string,
                 readonly completeness: number) {
