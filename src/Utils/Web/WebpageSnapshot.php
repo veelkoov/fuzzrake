@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use DateTime;
+use DateTimeInterface;
+use JsonSerializable;
 
-class WebpageSnapshot
+class WebpageSnapshot implements JsonSerializable
 {
     /**
      * @var string
@@ -21,18 +23,25 @@ class WebpageSnapshot
     /**
      * @var DateTime
      */
-    private $datetimeRetrieved;
+    private $retrievedAt;
 
     /**
      * @param string   $url
      * @param string   $contents
-     * @param DateTime $datetimeRetrieved
+     * @param DateTime $retrievedAt
      */
-    public function __construct(string $url, string $contents, DateTime $datetimeRetrieved)
+    public function __construct(string $url, string $contents, DateTime $retrievedAt)
     {
         $this->url = $url;
         $this->contents = $contents;
-        $this->datetimeRetrieved = $datetimeRetrieved;
+        $this->retrievedAt = $retrievedAt;
+    }
+
+    public static function fromFile(string $snapshotPath): WebpageSnapshot
+    {
+        $input = json_decode(file_get_contents($snapshotPath), true, 512, JSON_THROW_ON_ERROR);
+
+        return new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601, $input['retrievedAt']));
     }
 
     /**
@@ -54,8 +63,17 @@ class WebpageSnapshot
     /**
      * @return DateTime
      */
-    public function getDatetimeRetrieved(): DateTime
+    public function getRetrievedAt(): DateTime
     {
-        return $this->datetimeRetrieved;
+        return $this->retrievedAt;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'url' => $this->url,
+            'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
+            'contents' => $this->contents,
+        ];
     }
 }

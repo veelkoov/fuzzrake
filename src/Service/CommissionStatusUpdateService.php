@@ -242,7 +242,7 @@ class CommissionStatusUpdateService
 
         try {
             $webpageSnapshot = $this->fetchWebpageContents($url);
-            $datetimeRetrieved = $webpageSnapshot->getDatetimeRetrieved();
+            $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $status = $this->commissionsStatusParser->areCommissionsOpen($webpageSnapshot->getContents(),
                 $artisan->getName(), $this->guessFilterFromUrl($url));
         } catch (UrlFetcherException | CommissionsStatusParserException $exception) {

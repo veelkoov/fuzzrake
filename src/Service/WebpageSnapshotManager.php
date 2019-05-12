@@ -8,10 +8,15 @@ use App\Utils\Web\UrlFetcher;
 use App\Utils\Web\UrlFetcherException;
 use App\Utils\Web\WebpageSnapshot;
 use DateTime;
+use DateTimeZone;
+use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebpageSnapshotManager
 {
+    private const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+                    | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR;
+
     /**
      * @var string
      */
@@ -29,7 +34,7 @@ class WebpageSnapshotManager
 
     public function __construct(string $projectDir)
     {
-        $this->cacheDirPath = "$projectDir/var/snapshots/";
+        $this->cacheDirPath = "$projectDir/var/snapshots";
 
         $this->fs = new Filesystem();
         $this->fs->mkdir($this->cacheDirPath);
@@ -54,36 +59,57 @@ class WebpageSnapshotManager
     {
         $snapshotPath = $this->snapshotPathForUrl($url);
 
-        $this->downloadIfNotCached($url, $snapshotPath);
+        if ($this->isCached($snapshotPath)) {
+            return $this->getCached($snapshotPath);
+        } else {
+            $this->putCache($snapshotPath, $result = $this->download($url));
 
-        return new WebpageSnapshot($url, file_get_contents($snapshotPath), $this->getFileMTimeUtc($snapshotPath));
+            return $result;
+        }
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return WebpageSnapshot
+     *
+     * @throws UrlFetcherException
+     * @throws Exception
+     */
+    private function download(string $url): WebpageSnapshot
+    {
+        return new WebpageSnapshot($url, $this->fetcher->get($url), new DateTime('now', new DateTimeZone('UTC')));
     }
 
     private function snapshotPathForUrl(string $url): string
     {
-        return $this->cacheDirPath.$this->urlToId($url).'.html';
+        $host = preg_replace('#^www\.#', '', parse_url($url, PHP_URL_HOST)) ?: 'unknown_host';
+        $hash = sha1($url);
+
+        return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url)}-$hash.json";
     }
 
-    private function urlToId(string $url): string
+    private function urlToFilename(string $url): string
     {
         return trim(
-                preg_replace('#[^a-z0-9_.-]+#i', '_',
-                    preg_replace('#^(https?://(www\.)?)?#', '',
-                        preg_replace('#\?.*$#', '', $url)
-                    )
-                ), '_').'-'.hash('sha512', $url);
+            preg_replace('#[^a-z0-9_.-]+#i', '_',
+                preg_replace('#^(https?://(www\.)?)?#', '', $url)
+            ), '_');
     }
 
-    private function downloadIfNotCached(string $url, string $snapshotPath): void
+    private function isCached(string $snapshotPath): bool
     {
-        if (!file_exists($snapshotPath)) {
-            $webpageContents = $this->fetcher->get($url);
-            $this->fs->dumpFile($snapshotPath, $webpageContents);
-        }
+        return file_exists($snapshotPath);
     }
 
-    private function getFileMTimeUtc($filepath): DateTime
+    private function getCached(string $snapshotPath): WebpageSnapshot
     {
-        return new DateTime('@'.(string) filemtime($filepath));
+        return WebpageSnapshot::fromFile($snapshotPath);
+    }
+
+    private function putCache(string $snapshotPath, WebpageSnapshot $snapshot): void
+    {
+        $this->fs->mkdir(dirname($snapshotPath));
+        $this->fs->dumpFile($snapshotPath, json_encode($snapshot, self::JSON_SERIALIZATION_OPTIONS));
     }
 }
