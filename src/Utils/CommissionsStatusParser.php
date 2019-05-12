@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebsiteInfo;
 use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -43,35 +44,54 @@ class CommissionsStatusParser
     }
 
     /**
-     * @param string $inputText
-     * @param string $additionalFilter
+     * @param WebpageSnapshot $snapshot
+     * @param string          $studioName
+     * @param string          $additionalFilter
      *
      * @return bool
      *
      * @throws CommissionsStatusParserException
      */
-    public function areCommissionsOpen(string $inputText, string $studioName, string $additionalFilter = ''): bool
+    public function areCommissionsOpen(WebpageSnapshot $snapshot, string $studioName, string $additionalFilter = ''): bool
+    {
+        $inputTexts = array_map(function (string $input) use ($studioName, $additionalFilter) {
+            return $this->processInputText($studioName, $additionalFilter, $input);
+        }, $snapshot->getAllContents());
+
+        $open = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->open);
+        $closed = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->closed);
+
+        return self::analyseResult($open, $closed);
+    }
+
+    /**
+     * @param string $studioName
+     * @param string $additionalFilter
+     * @param string $inputText
+     *
+     * @return string
+     *
+     * @throws CommissionsStatusParserException
+     */
+    private function processInputText(string $studioName, string $additionalFilter, string $inputText): string
     {
         $inputText = self::cleanHtml($inputText);
         $inputText = str_ireplace($studioName, 'STUDIO_NAME', $inputText);
 
         try {
-            $inputText = self::applyFilters($inputText, $additionalFilter);
+            return $inputText = self::applyFilters($inputText, $additionalFilter);
         } catch (InvalidArgumentException $ex) {
             throw new CommissionsStatusParserException("Filtering failed ({$ex->getMessage()})");
         }
-
-        $open = $this->matchesGivenRegexpSet($inputText, $this->statusRegexps, $this->open);
-        $closed = $this->matchesGivenRegexpSet($inputText, $this->statusRegexps, $this->closed);
-
-        return self::analyseResult($open, $closed);
     }
 
-    private function matchesGivenRegexpSet(string $testedString, array $regexpSet, RegexpVariant $variant): bool
+    private function matchesGivenRegexpSet(array $testedStrings, array $regexpSet, RegexpVariant $variant): bool
     {
-        foreach ($regexpSet as $regexp) {
-            if ($regexp->matches($testedString, $variant)) {
-                return true;
+        foreach ($testedStrings as $testedString) {
+            foreach ($regexpSet as $regexp) {
+                if ($regexp->matches($testedString, $variant)) {
+                    return true;
+                }
             }
         }
 

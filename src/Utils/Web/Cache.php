@@ -55,7 +55,9 @@ class Cache
 
     private function get(string $snapshotPath): WebpageSnapshot
     {
-        return WebpageSnapshot::fromFile($snapshotPath);
+        $dataArray = json_decode(file_get_contents($snapshotPath), true, 512, self::JSON_SERIALIZATION_OPTIONS);
+
+        return WebpageSnapshot::fromArray($dataArray);
     }
 
     private function put(string $snapshotPath, WebpageSnapshot $snapshot): WebpageSnapshot
@@ -78,7 +80,7 @@ class Cache
     {
         return trim(
             preg_replace('#[^a-z0-9_.-]+#i', '_',
-                preg_replace('#^(https?://(www\.)?)?#', '', $url)
+                preg_replace('~^https?://(www\.)?|(\?|#).+$~', '', $url)
             ), '_');
     }
 }

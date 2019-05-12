@@ -26,6 +26,11 @@ class WebpageSnapshot implements JsonSerializable
     private $retrievedAt;
 
     /**
+     * @var WebpageSnapshot[]
+     */
+    private $children = [];
+
+    /**
      * @param string   $url
      * @param string   $contents
      * @param DateTime $retrievedAt
@@ -37,35 +42,56 @@ class WebpageSnapshot implements JsonSerializable
         $this->retrievedAt = $retrievedAt;
     }
 
-    public static function fromFile(string $snapshotPath): WebpageSnapshot
+    public static function fromArray(array $input): WebpageSnapshot
     {
-        $input = json_decode(file_get_contents($snapshotPath), true, 512, JSON_THROW_ON_ERROR);
+        $result = new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601, $input['retrievedAt']));
+        $result->setChildren(array_map([WebpageSnapshot::class, 'fromArray'], $input['children']));
 
-        return new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601, $input['retrievedAt']));
+        return $result;
+    }
+
+    public function addChildren(WebpageSnapshot $children): void
+    {
+        $this->children[] = $children;
     }
 
     /**
-     * @return string
+     * @param WebpageSnapshot[] $children
      */
+    public function setChildren(array $children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * @return WebpageSnapshot[]
+     */
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
     public function getUrl(): string
     {
         return $this->url;
     }
 
-    /**
-     * @return string
-     */
     public function getContents(): string
     {
         return $this->contents;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getRetrievedAt(): DateTime
     {
         return $this->retrievedAt;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllContents(): array
+    {
+        return array_merge([$this->contents], ...array_map(function (WebpageSnapshot $snapshot) { return $snapshot->getAllContents(); }, $this->getChildren()));
     }
 
     public function jsonSerialize(): array
@@ -74,6 +100,7 @@ class WebpageSnapshot implements JsonSerializable
             'url' => $this->url,
             'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
             'contents' => $this->contents,
+            'children' => $this->children,
         ];
     }
 }
