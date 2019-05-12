@@ -9,9 +9,8 @@ use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\CommissionsStatusParser;
 use App\Utils\CommissionsStatusParserException;
+use App\Utils\DateTimeUtils;
 use App\Utils\Web\UrlFetcherException;
-use DateTime;
-use DateTimeZone;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -21,6 +20,7 @@ class CommissionStatusUpdateService
     const STATUS_UNKNOWN = 'UNKNOWN';
     const STATUS_OPEN = 'OPEN';
     const STATUS_CLOSED = 'CLOSED';
+
     /**
      * @var ArtisanRepository
      */
@@ -44,14 +44,14 @@ class CommissionStatusUpdateService
     /**
      * @var CommissionsStatusParser
      */
-    private $commissionsStatusParser;
+    private $parser;
 
     public function __construct(ObjectManager $objectManager, WebpageSnapshotManager $snapshots)
     {
         $this->objectManager = $objectManager;
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
         $this->snapshots = $snapshots;
-        $this->commissionsStatusParser = new CommissionsStatusParser();
+        $this->parser = new CommissionsStatusParser();
     }
 
     /**
@@ -86,6 +86,11 @@ class CommissionStatusUpdateService
         }
     }
 
+    /**
+     * @param Artisan $artisan
+     *
+     * @throws Exception
+     */
     private function updateArtisan(Artisan $artisan): void
     {
         list($status, $datetimeRetrieved) = $this->getCommissionsStatusAndDateTimeChecked($artisan);
@@ -138,7 +143,7 @@ class CommissionStatusUpdateService
                 $url = $artisan->getCommissionsQuotesCheckUrl();
 
                 try {
-                    $this->snapshots->get($url);
+                    $this->snapshots->get($url, $artisan->getName());
                 } catch (UrlFetcherException $exception) {
                     $this->style->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
                 }
@@ -158,15 +163,6 @@ class CommissionStatusUpdateService
         return $this->artisanRepository->findAll();
     }
 
-    private function guessFilterFromUrl(string $url): string
-    {
-        if (preg_match('/#(?<profile>.+)$/', $url, $zapałki)) {
-            return $zapałki['profile'];
-        } else {
-            return '';
-        }
-    }
-
     /**
      * @param Artisan $artisan
      *
@@ -181,26 +177,15 @@ class CommissionStatusUpdateService
         $datetimeRetrieved = null;
 
         try {
-            $webpageSnapshot = $this->snapshots->get($url);
+            $webpageSnapshot = $this->snapshots->get($url, $artisan->getName());
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
-            $status = $this->commissionsStatusParser->areCommissionsOpen($webpageSnapshot,
-                $artisan->getName(), $this->guessFilterFromUrl($url));
+            $status = $this->parser->areCommissionsOpen($webpageSnapshot);
         } catch (UrlFetcherException | CommissionsStatusParserException $exception) {
             $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
             $status = null;
         }
 
-        return [$status, $datetimeRetrieved ?: $this->getNowUtc()];
-    }
-
-    /**
-     * @return DateTime
-     *
-     * @throws Exception
-     */
-    private function getNowUtc(): DateTime
-    {
-        return new DateTime('now', new DateTimeZone('UTC'));
+        return [$status, $datetimeRetrieved ?: DateTimeUtils::getNowUtc()];
     }
 
     private function getStatusChangeEvent(string $name, string $url, string $oldStatus, string $newStatus): Event

@@ -45,17 +45,18 @@ class CommissionsStatusParser
 
     /**
      * @param WebpageSnapshot $snapshot
-     * @param string          $studioName
-     * @param string          $additionalFilter
      *
      * @return bool
      *
      * @throws CommissionsStatusParserException
      */
-    public function areCommissionsOpen(WebpageSnapshot $snapshot, string $studioName, string $additionalFilter = ''): bool
+    public function areCommissionsOpen(WebpageSnapshot $snapshot): bool
     {
-        $inputTexts = array_map(function (string $input) use ($studioName, $additionalFilter) {
-            return $this->processInputText($studioName, $additionalFilter, $input);
+        $additionalFilter = $this->guessFilterFromUrl($snapshot->getUrl());
+        $artisanName = $snapshot->getOwnerName();
+
+        $inputTexts = array_map(function (string $input) use ($artisanName, $additionalFilter) {
+            return $this->processInputText($artisanName, $additionalFilter, $input);
         }, $snapshot->getAllContents());
 
         $open = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->open);
@@ -65,7 +66,7 @@ class CommissionsStatusParser
     }
 
     /**
-     * @param string $studioName
+     * @param string $artisanName
      * @param string $additionalFilter
      * @param string $inputText
      *
@@ -73,10 +74,10 @@ class CommissionsStatusParser
      *
      * @throws CommissionsStatusParserException
      */
-    private function processInputText(string $studioName, string $additionalFilter, string $inputText): string
+    private function processInputText(string $artisanName, string $additionalFilter, string $inputText): string
     {
         $inputText = self::cleanHtml($inputText);
-        $inputText = str_ireplace($studioName, 'STUDIO_NAME', $inputText);
+        $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
 
         try {
             return $inputText = self::applyFilters($inputText, $additionalFilter);
@@ -153,6 +154,15 @@ class CommissionsStatusParser
         }
 
         return $inputText;
+    }
+
+    private function guessFilterFromUrl(string $url): string
+    {
+        if (preg_match('/#(?<profile>.+)$/', $url, $matches)) {
+            return $matches['profile'];
+        } else {
+            return '';
+        }
     }
 
     /**

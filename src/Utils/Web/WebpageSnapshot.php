@@ -26,25 +26,33 @@ class WebpageSnapshot implements JsonSerializable
     private $retrievedAt;
 
     /**
+     * @var string
+     */
+    private $ownerName;
+
+    /**
      * @var WebpageSnapshot[]
      */
     private $children = [];
 
     /**
-     * @param string   $url
-     * @param string   $contents
+     * @param string $url
+     * @param string $contents
      * @param DateTime $retrievedAt
+     * @param string $ownerName
      */
-    public function __construct(string $url, string $contents, DateTime $retrievedAt)
+    public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName)
     {
         $this->url = $url;
         $this->contents = $contents;
         $this->retrievedAt = $retrievedAt;
+        $this->ownerName = $ownerName;
     }
 
     public static function fromArray(array $input): WebpageSnapshot
     {
-        $result = new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601, $input['retrievedAt']));
+        $result = new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601,
+            $input['retrievedAt']), $input['ownerName']);
         $result->setChildren(array_map([WebpageSnapshot::class, 'fromArray'], $input['children']));
 
         return $result;
@@ -76,6 +84,11 @@ class WebpageSnapshot implements JsonSerializable
         return $this->url;
     }
 
+    public function getOwnerName(): string
+    {
+        return $this->ownerName;
+    }
+
     public function getContents(): string
     {
         return $this->contents;
@@ -98,6 +111,7 @@ class WebpageSnapshot implements JsonSerializable
     {
         return [
             'url' => $this->url,
+            'ownerName' => $this->ownerName,
             'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
             'contents' => $this->contents,
             'children' => $this->children,

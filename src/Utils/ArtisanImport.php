@@ -47,6 +47,11 @@ class ArtisanImport
      */
     private $newRawDataHash;
 
+    /**
+     * @param array $rawNewData
+     *
+     * @throws Exception
+     */
     public function __construct(array $rawNewData)
     {
         $this->rawNewData = $rawNewData;
