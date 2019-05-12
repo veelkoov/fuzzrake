@@ -65,9 +65,9 @@ class DataImporter
     }
 
     /**
-     * @param array $artisansData
-     *
+     * @param array        $artisansData
      * @param SymfonyStyle $io
+     *
      * @return ArtisanImport[]
      */
     private function createImports(array $artisansData, SymfonyStyle $io): array
@@ -126,7 +126,7 @@ class DataImporter
             if ($field->isIncludedInUiForm()) {
                 $newValue = $newData[$field->uiFormIndex()];
 
-                if ($field->name() === Fields::MAKER_ID && $newValue !== $artisan->getMakerId()) {
+                if (Fields::MAKER_ID === $field->name() && $newValue !== $artisan->getMakerId()) {
                     $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
                 }
 
@@ -239,8 +239,8 @@ class DataImporter
 
     private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
     {
-        return 'Was looking for: ' . Utils::artisanNamesSafe($artisan) . '. Found more than one: '
-            . implode(', ', array_map(function (Artisan $artisan) {
+        return 'Was looking for: '.Utils::artisanNamesSafe($artisan).'. Found more than one: '
+            .implode(', ', array_map(function (Artisan $artisan) {
                 return Utils::artisanNamesSafe($artisan);
             }, $results));
     }

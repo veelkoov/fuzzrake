@@ -158,7 +158,7 @@ class ArtisanRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
         $i = 0;
 
-        if ($matchedName !== null) {
+        if (null !== $matchedName) {
             array_push($names, $matchedName);
         }
 
@@ -166,14 +166,14 @@ class ArtisanRepository extends ServiceEntityRepository
             $builder->orWhere("a.name = :eq$i OR (a.formerly <> :empty AND a.formerly LIKE :like$i)");
             $builder->setParameter("eq$i", $name);
             $builder->setParameter("like$i", "%$name%");
-            $i++;
+            ++$i;
         }
 
         foreach ($makerIds as $makerId) {
             $builder->orWhere("a.makerId = :eq$i OR (a.formerMakerIds <> :empty AND a.formerMakerIds LIKE :like$i)");
             $builder->setParameter("eq$i", $makerId);
             $builder->setParameter("like$i", "%$makerId%");
-            $i++;
+            ++$i;
         }
 
         return $builder->getQuery()->getResult();

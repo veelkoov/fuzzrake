@@ -9,7 +9,6 @@ use App\Utils\ArtisanFields as Fields;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use Monolog\Handler\Curl\Util;
 
 class ArtisanImport
 {
@@ -112,6 +111,7 @@ class ArtisanImport
      * It looks like Google Forms changes timestamp's timezone, so let's get rid of it for the sake of hash calculation.
      *
      * @param array $rawNewData
+     *
      * @throws Exception
      */
     private function setTimestamp(array $rawNewData): void

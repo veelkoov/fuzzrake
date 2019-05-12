@@ -204,7 +204,7 @@ class ArtisanFields
     {
         $result = array_search($fieldName, self::IU_FORM_FIELDS_ORDER, true);
 
-        return $result === false ? null : $result;
+        return false === $result ? null : $result;
     }
 }
 

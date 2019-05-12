@@ -48,11 +48,11 @@ class ArtisanField
 
     public function isIncludedInUiForm(): bool
     {
-        return $this->uiFormIndex !== null;
+        return null !== $this->uiFormIndex;
     }
 
     public function isPersisted(): bool
     {
-        return $this->modelName !== null;
+        return null !== $this->modelName;
     }
 }

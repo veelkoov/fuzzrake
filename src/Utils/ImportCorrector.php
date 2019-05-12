@@ -10,10 +10,10 @@ use App\Utils\ArtisanFields as Fields;
 class ImportCorrector
 {
     const CMD_ACK_NEW = 'ack new';
-    const CMD_REJECT = 'reject'; // I'm sorry, but if you provided a request with zero contact info and I can't find
-                                 // you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
-                                 // then I can't include your bare studio name on the list. No one else will be able
-                                 // to find you anyway.
+    const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
+                                  * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
+                                  * then I can't include your bare studio name on the list. No one else will be able
+                                  * to find you anyway. */
     const CMD_MATCH_NAME = 'match name';
     const CMD_IGNORE_PIN = 'ignore pin';
 
