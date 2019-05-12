@@ -6,11 +6,12 @@ namespace App\Tests\Utils;
 
 use App\Utils\CommissionsStatusParser;
 use App\Utils\CommissionsStatusParserException;
+use App\Utils\Web\WebpageSnapshot;
 use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase
 {
-    const FILENAME_PATTERN = '#^\d+_(?<status>open|closed|unknown)(?:_filter_(?<filter>[a-z]+))?(?:_name_(?<name>[a-zA-Z+]+))?\.(html|json)$#';
+    const FILENAME_PATTERN = '#^\d+_(?<status>open|closed|unknown)\.(snapshot)$#';
 
     /**
      * @var CommissionsStatusParser
@@ -24,12 +25,17 @@ class CommissionsStatusParserTest extends TestCase
 
     /**
      * @dataProvider areCommissionsOpenDataProvider
+     *
+     * @param string          $webpageTextFileName
+     * @param WebpageSnapshot $snapshot
+     * @param bool|null       $expectedResult
+     *
+     * @throws CommissionsStatusParserException
      */
-    public function testAreCommissionsOpen(string $webpageTextFileName, string $webpageText, ?bool $expectedResult,
-                                           string $additionalFilter, string $studioName)
+    public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
         try {
-            $result = self::$csp->areCommissionsOpen($webpageText, $studioName, $additionalFilter);
+            $result = self::$csp->areCommissionsOpen($snapshot);
         } catch (CommissionsStatusParserException $exception) {
             if ('NONE matches' === $exception->getMessage()) {
                 $result = null;
@@ -44,16 +50,13 @@ class CommissionsStatusParserTest extends TestCase
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (!preg_match(self::FILENAME_PATTERN,
-                basename($filepath), $zapałki)) {
+            if (!preg_match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
                 echo "Invalid filename: $filepath\n";
 
                 return false;
             }
 
-            $additionalFilter = $zapałki['filter'];
-            $studioName = urldecode($zapałki['name']);
-            switch ($zapałki['status']) {
+            switch ($matches['status']) {
                 case 'open':
                     $expectedResult = true;
                     break;
@@ -64,7 +67,9 @@ class CommissionsStatusParserTest extends TestCase
                     $expectedResult = null;
             }
 
-            return [basename($filepath), file_get_contents($filepath), $expectedResult, $additionalFilter, $studioName];
-        }, glob(__DIR__.'/../snapshots/**/*.{html,json}', GLOB_BRACE)));
+            $snapshot = WebpageSnapshot::fromJson(file_get_contents($filepath));
+
+            return [basename($filepath), $snapshot, $expectedResult];
+        }, glob(__DIR__.'/../snapshots/**/*.snapshot', GLOB_BRACE)));
     }
 }

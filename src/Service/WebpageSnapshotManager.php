@@ -68,46 +68,48 @@ class WebpageSnapshotManager
         return $webpageSnapshot;
     }
 
+    /**
+     * @param WebpageSnapshot $webpageSnapshot
+     *
+     * @throws UrlFetcherException
+     */
     private function downloadChildren(WebpageSnapshot $webpageSnapshot): void
     {
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
-            $child = $this->fetchWixsiteContents($webpageSnapshot);
+            $this->fetchWixsiteContents($webpageSnapshot);
         } elseif (WebsiteInfo::isTrello($webpageSnapshot)) {
-            $child = $this->fetchTrelloContents($webpageSnapshot);
-        } else {
-            $child = null;
-        }
-
-        if ($child) {
-            $webpageSnapshot->addChildren($child);
+            $this->fetchTrelloContents($webpageSnapshot);
         }
     }
 
-    private function fetchWixsiteContents(WebpageSnapshot $snapshot): ?WebpageSnapshot // TODO: refactor
+    /**
+     * @param WebpageSnapshot $snapshot
+     *
+     * @throws UrlFetcherException
+     */
+    private function fetchWixsiteContents(WebpageSnapshot $snapshot): void // TODO: refactor
     {
-        if (0 === preg_match('#"masterPageJsonFileName"\s*:\s*"(?<hash>[a-z0-9_]+).json"#s',
+        if (0 === preg_match_all("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
                 $snapshot->getContents(), $matches)) {
-            return null;
+            return;
         }
 
-        $hash = $matches['hash'];
-
-        if (0 === preg_match("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/(?!$hash)[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
-                $snapshot->getContents(), $matches)) {
-            return null;
+        foreach ($matches['data_url'] as $dataUrl) {
+            $snapshot->addChildren($this->get($dataUrl, $snapshot->getOwnerName()));
         }
-
-        return $this->get($matches['data_url'], $snapshot->getOwnerName());
     }
 
-    private function fetchTrelloContents(WebpageSnapshot $snapshot): ?WebpageSnapshot // TODO: refactor
+    /**
+     * @param WebpageSnapshot $snapshot
+     *
+     * @throws UrlFetcherException
+     */
+    private function fetchTrelloContents(WebpageSnapshot $snapshot): void // TODO: refactor
     {
         if (0 === preg_match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $snapshot->getUrl(), $matches)) {
-            return null;
+            return;
         }
 
-        $boardId = $matches['boardId'];
-
-        return $this->get("https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData", $snapshot->getOwnerName());
+        $snapshot->addChildren($this->get("https://trello.com/1/Boards/{$matches['boardId']}?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData", $snapshot->getOwnerName()));
     }
 }

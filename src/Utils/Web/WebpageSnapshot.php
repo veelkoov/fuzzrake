@@ -10,6 +10,10 @@ use JsonSerializable;
 
 class WebpageSnapshot implements JsonSerializable
 {
+    const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+                                     | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT
+                                     | JSON_THROW_ON_ERROR;
+
     /**
      * @var string
      */
@@ -36,10 +40,10 @@ class WebpageSnapshot implements JsonSerializable
     private $children = [];
 
     /**
-     * @param string $url
-     * @param string $contents
+     * @param string   $url
+     * @param string   $contents
      * @param DateTime $retrievedAt
-     * @param string $ownerName
+     * @param string   $ownerName
      */
     public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName)
     {
@@ -49,13 +53,14 @@ class WebpageSnapshot implements JsonSerializable
         $this->ownerName = $ownerName;
     }
 
-    public static function fromArray(array $input): WebpageSnapshot
+    public static function fromJson(string $json)
     {
-        $result = new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601,
-            $input['retrievedAt']), $input['ownerName']);
-        $result->setChildren(array_map([WebpageSnapshot::class, 'fromArray'], $input['children']));
+        return self::fromArray(json_decode($json, true, 512, self::JSON_SERIALIZATION_OPTIONS));
+    }
 
-        return $result;
+    public function toJson(): string
+    {
+        return json_encode($this, self::JSON_SERIALIZATION_OPTIONS);
     }
 
     public function addChildren(WebpageSnapshot $children): void
@@ -116,5 +121,14 @@ class WebpageSnapshot implements JsonSerializable
             'contents' => $this->contents,
             'children' => $this->children,
         ];
+    }
+
+    private static function fromArray(array $input): WebpageSnapshot
+    {
+        $result = new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601,
+            $input['retrievedAt']), $input['ownerName']);
+        $result->setChildren(array_map([WebpageSnapshot::class, 'fromArray'], $input['children']));
+
+        return $result;
     }
 }

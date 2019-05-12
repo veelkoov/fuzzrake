@@ -9,10 +9,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class Cache
 {
-    private const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-                                             | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT
-                                             | JSON_THROW_ON_ERROR;
-
     /**
      * @var string
      */
@@ -55,15 +51,13 @@ class Cache
 
     private function get(string $snapshotPath): WebpageSnapshot
     {
-        $dataArray = json_decode(file_get_contents($snapshotPath), true, 512, self::JSON_SERIALIZATION_OPTIONS);
-
-        return WebpageSnapshot::fromArray($dataArray);
+        return WebpageSnapshot::fromJson(file_get_contents($snapshotPath));
     }
 
     private function put(string $snapshotPath, WebpageSnapshot $snapshot): WebpageSnapshot
     {
         $this->fs->mkdir(dirname($snapshotPath));
-        $this->fs->dumpFile($snapshotPath, json_encode($snapshot, self::JSON_SERIALIZATION_OPTIONS));
+        $this->fs->dumpFile($snapshotPath, $snapshot->toJson());
 
         return $snapshot;
     }
