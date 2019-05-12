@@ -9,8 +9,9 @@ use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\CommissionsStatusParser;
 use App\Utils\CommissionsStatusParserException;
-use App\Utils\WebpageSnapshot;
-use App\Utils\WebsiteInfo;
+use App\Utils\Web\UrlFetcherException;
+use App\Utils\Web\WebpageSnapshot;
+use App\Utils\Web\WebsiteInfo;
 use DateTime;
 use DateTimeZone;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -33,9 +34,9 @@ class CommissionStatusUpdateService
     private $objectManager;
 
     /**
-     * @var UrlFetcher
+     * @var WebpageSnapshotManager
      */
-    private $urlFetcher;
+    private $snapshots;
 
     /**
      * @var StyleInterface
@@ -47,11 +48,11 @@ class CommissionStatusUpdateService
      */
     private $commissionsStatusParser;
 
-    public function __construct(ObjectManager $objectManager, UrlFetcher $urlFetcher)
+    public function __construct(ObjectManager $objectManager, WebpageSnapshotManager $snapshots)
     {
         $this->objectManager = $objectManager;
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
-        $this->urlFetcher = $urlFetcher;
+        $this->snapshots = $snapshots;
         $this->commissionsStatusParser = new CommissionsStatusParser();
     }
 
@@ -129,7 +130,7 @@ class CommissionStatusUpdateService
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
     {
         if ($refresh) {
-            $this->urlFetcher->clearCache();
+            $this->snapshots->clearCache();
         }
 
         $this->style->progressStart(count($artisans));
@@ -168,7 +169,7 @@ class CommissionStatusUpdateService
      */
     private function fetchWebpageContents(string $url): WebpageSnapshot
     {
-        $webpageSnapshot = $this->urlFetcher->fetchWebpage($url);
+        $webpageSnapshot = $this->snapshots->get($url);
 
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
             $webpageSnapshot = $this->fetchWixsiteContents($webpageSnapshot);
@@ -196,7 +197,7 @@ class CommissionStatusUpdateService
         preg_match("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/(?!$hash)[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
             $webpageSnapshot->getContents(), $matches);
 
-        return $this->urlFetcher->fetchWebpage($matches['data_url']);
+        return $this->snapshots->get($matches['data_url']);
     }
 
     /**
@@ -208,11 +209,13 @@ class CommissionStatusUpdateService
      */
     private function fetchTrelloContents(WebpageSnapshot $webpageSnapshot): WebpageSnapshot
     {
-        preg_match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $webpageSnapshot->getUrl(), $matches);
+        if (0 === preg_match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $webpageSnapshot->getUrl(), $matches)) {
+            return $webpageSnapshot; // Fallback
+        }
 
         $boardId = $matches['boardId'];
 
-        return $this->urlFetcher->fetchWebpage("https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData");
+        return $this->snapshots->get("https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData");
     }
 
     private function guessFilterFromUrl(string $url): string

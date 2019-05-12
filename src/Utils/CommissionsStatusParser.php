@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Web\WebsiteInfo;
 use InvalidArgumentException;
 use Symfony\Component\DomCrawler\Crawler;
 
