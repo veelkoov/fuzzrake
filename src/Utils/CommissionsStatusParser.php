@@ -81,10 +81,12 @@ class CommissionsStatusParser
         $inputText = $this->removeFalsePositives($inputText);
 
         try {
-            return $inputText = $this->applyFilters($inputText, $additionalFilter);
+            $inputText = $this->applyFilters($inputText, $additionalFilter);
         } catch (InvalidArgumentException $ex) {
             throw new CommissionsStatusParserException("Filtering failed ({$ex->getMessage()})");
         }
+
+        return $inputText;
     }
 
     private function processArtisansName(string $artisanName, string $inputText)
@@ -120,16 +122,16 @@ class CommissionsStatusParser
         return false;
     }
 
-    private function cleanHtml(string $webpage): string
+    private function cleanHtml(string $inputText): string
     {
-        $webpage = strtolower($webpage);
-        $webpage = $this->extractFromJson($webpage);
+        $inputText = strtolower($inputText);
+        $inputText = $this->extractFromJson($inputText);
 
         foreach (CommissionsStatusRegexps::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
-            $webpage = preg_replace($regexp, $replacement, $webpage);
+            $inputText = preg_replace($regexp, $replacement, $inputText);
         }
 
-        return $webpage;
+        return $inputText;
     }
 
     /**
