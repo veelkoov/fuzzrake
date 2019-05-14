@@ -62,7 +62,7 @@ class CommissionsStatusParser
         $open = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->open);
         $closed = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->closed);
 
-        return self::analyseResult($open, $closed);
+        return $this->analyseResult($open, $closed);
     }
 
     /**
@@ -76,14 +76,35 @@ class CommissionsStatusParser
      */
     private function processInputText(string $artisanName, string $additionalFilter, string $inputText): string
     {
-        $inputText = self::cleanHtml($inputText);
-        $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
+        $inputText = $this->cleanHtml($inputText);
+        $inputText = $this->processArtisansName($artisanName, $inputText);
+        $inputText = $this->removeFalsePositives($inputText);
 
         try {
-            return $inputText = self::applyFilters($inputText, $additionalFilter);
+            return $inputText = $this->applyFilters($inputText, $additionalFilter);
         } catch (InvalidArgumentException $ex) {
             throw new CommissionsStatusParserException("Filtering failed ({$ex->getMessage()})");
         }
+    }
+
+    private function processArtisansName(string $artisanName, string $inputText)
+    {
+        $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
+        if (strlen($artisanName) > 2 && 's' === strtolower(substr($artisanName, -1))) {
+            /* Thank you, English language, I am enjoying this */
+            $inputText = str_ireplace(substr($artisanName, 0, -1)."'s", 'STUDIO_NAME', $inputText);
+        }
+
+        return $inputText;
+    }
+
+    private function removeFalsePositives(string $inputText): string
+    {
+        foreach ($this->falsePositivesRegexps as $regexp) {
+            $inputText = $regexp->removeFrom($inputText);
+        }
+
+        return $inputText;
     }
 
     private function matchesGivenRegexpSet(array $testedStrings, array $regexpSet, RegexpVariant $variant): bool
@@ -102,14 +123,10 @@ class CommissionsStatusParser
     private function cleanHtml(string $webpage): string
     {
         $webpage = strtolower($webpage);
-        $webpage = self::extractFromJson($webpage);
+        $webpage = $this->extractFromJson($webpage);
 
         foreach (CommissionsStatusRegexps::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
             $webpage = preg_replace($regexp, $replacement, $webpage);
-        }
-
-        foreach ($this->falsePositivesRegexps as $regexp) {
-            $webpage = $regexp->removeFrom($webpage);
         }
 
         return $webpage;
@@ -123,7 +140,7 @@ class CommissionsStatusParser
      *
      * @throws CommissionsStatusParserException
      */
-    private static function applyFilters(string $inputText, string $additionalFilter): string
+    private function applyFilters(string $inputText, string $additionalFilter): string
     {
         if (WebsiteInfo::isFurAffinity(null, $inputText)) {
             if (false !== stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.')) {
@@ -173,7 +190,7 @@ class CommissionsStatusParser
      *
      * @throws CommissionsStatusParserException
      */
-    private static function analyseResult(bool $open, bool $closed): bool
+    private function analyseResult(bool $open, bool $closed): bool
     {
         if ($open && !$closed) {
             return true;
@@ -190,7 +207,7 @@ class CommissionsStatusParser
         }
     }
 
-    private static function extractFromJson(string $webpage)
+    private function extractFromJson(string $webpage)
     {
         if (empty($webpage) || '{' !== $webpage[0]) {
             return $webpage;
@@ -202,7 +219,7 @@ class CommissionsStatusParser
             return $webpage;
         }
 
-        return self::flattenArray($result);
+        return $this->flattenArray($result);
     }
 
     /**
@@ -212,7 +229,7 @@ class CommissionsStatusParser
      *
      * @return string
      */
-    private static function flattenArray(array $array)
+    private function flattenArray(array $array)
     {
         $result = '';
 
@@ -226,16 +243,16 @@ class CommissionsStatusParser
     private function debugDumpRegexpes(): void
     {
         echo "FALSE-POSITIVES =========================================\n";
-        foreach ($this->falsePositivesRegexps as $regex) {
-            echo "{$regex->getCompiled()}\n";
+        foreach ($this->falsePositivesRegexps as $regexp) {
+            echo "{$regexp->getCompiled()}\n";
         }
         echo "OPEN ====================================================\n";
-        foreach ($this->statusRegexps as $regex) {
-            echo "{$regex->getCompiled($this->open)}\n";
+        foreach ($this->statusRegexps as $regexp) {
+            echo "{$regexp->getCompiled($this->open)}\n";
         }
         echo "CLOSED ==================================================\n";
-        foreach ($this->statusRegexps as $regex) {
-            echo "{$regex->getCompiled($this->closed)}\n";
+        foreach ($this->statusRegexps as $regexp) {
+            echo "{$regexp->getCompiled($this->closed)}\n";
         }
     }
 }

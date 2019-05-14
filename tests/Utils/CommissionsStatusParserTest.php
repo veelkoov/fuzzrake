@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase
 {
-    const FILENAME_PATTERN = '#^\d+_(?<status>open|closed|unknown)\.(snapshot)$#';
+    const FILENAME_PATTERN = '#^\d+_(?<status>open|closed|unknown)\.json$#';
 
     /**
      * @var CommissionsStatusParser
@@ -70,6 +70,6 @@ class CommissionsStatusParserTest extends TestCase
             $snapshot = WebpageSnapshot::fromJson(file_get_contents($filepath));
 
             return [basename($filepath), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../snapshots/**/*.snapshot', GLOB_BRACE)));
+        }, glob(__DIR__.'/../snapshots/**/*.json', GLOB_BRACE)));
     }
 }

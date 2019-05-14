@@ -9,7 +9,7 @@ class CommissionsStatusRegexps
         '#(\s|&nbsp;|<br\s*/?>)+#s' => ' ',
         '#<style[^>]*>.*?</style>#s' => '',
         '# style="[^"]*"( (?=\>))?#s' => '',
-        '#’|&\#39;#' => '\'',
+        '#’|&\#39;|&\#8217;#' => '\'',
         '<!--.*?-->' => '',
     ];
     const COMMON_REPLACEMENTS = [
@@ -24,6 +24,7 @@ class CommissionsStatusRegexps
         'WE' => '(i|we)',
         'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
         'TIMESPAN' => '(current(ly)?|(right )?now|at (this|the) time|for the time being|already|(now )?(always|permanently|indefinitely))',
+        '<HTML_TAG>' => '( ?<[^>]+> ?)+',
     ];
     const FALSE_POSITIVES_REGEXES = [
         '(once|when) ((WE_ARE|WE) STATUS( for)? COMMISSIONS|COMMISSIONS are STATUS)',
@@ -31,7 +32,7 @@ class CommissionsStatusRegexps
         '(art|painted glass|illustrations?) COMMISSIONS( status)?: STATUS',
         'COMMISSIONS (status:)?STATUS( in| for)?( late| early)? (MONTHS|20\d\d)',
         'STATUS for COMMISSIONS\?</h[1-6]>',
-        'if WE_ARE STATUS for COMMISSIONS\.',
+        'if WE_ARE STATUS for COMMISSIONS',
     ];
     const GENERIC_REGEXES = [
         '((WE_ARE )?TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',
@@ -40,7 +41,7 @@ class CommissionsStatusRegexps
         'order quotes are STATUS',
         'STATUS (for (new )?)?COMMISSIONS',
         '<div>TIMESPAN</div><div>STATUS</div><div>for COMMISSIONS</div>',
-        '<p>COMMISSIONS (are|status:)</p><p>(TIMESPAN )?STATUS</p>',
+        'COMMISSIONS (are|status)( TIMESPAN)?[: ]*<HTML_TAG>+(TIMESPAN )?STATUS',
         '<h2>"cawmission" status</h2><div>STATUS',
         '<p>status: STATUS</p>',
         '(TIMESPAN|fursuits)( mode)?: STATUS',
