@@ -56,7 +56,7 @@ function initDataTable(): void {
         dom:
             "<'row'<'col-sm-12 col-md-6'lB><'col-sm-12 col-md-6'f>>" +
             "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            "<'row'<'col'ip>>",
         paging: false,
         autoWidth: false,
         columnDefs: [
@@ -66,17 +66,19 @@ function initDataTable(): void {
             // { targets: '_all', searchable: false } // FIXME
         ],
         buttons: [{
-            className: 'btn-sm btn-dark',
+            className: 'btn btn-dark',
             columns: '.toggleable',
             extend: 'colvis',
-            text: 'Show/hide columns'
+            text: 'Choose columns'
         }],
         infoCallback: (settings, start, end, max, total, _) =>
-            `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database</p>`
+            `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database. &nbsp;
+                <a href="${DATA_UPDATES_URL}"><span class="badge badge-warning">Studio missing?</span></a>
+            </p>`
     });
 
     $('#artisans_wrapper .dt-buttons')
-        .append(`<a class="btn btn-success btn-sm" href="${DATA_UPDATES_URL}">Studio missing?</a>`);
+        .append(`<button type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`);
 }
 
 function processArtisansTable() {
