@@ -9,7 +9,10 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Exception;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -33,6 +36,11 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return int
+     *
+     * @throws NonUniqueResultException
+     */
     public function getDistinctCountriesCount(): int
     {
         return (int) $this->createQueryBuilder('a')
@@ -42,6 +50,12 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * @return array
+     *
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function getCommissionsStats(): array
     {
         $rsm = new ResultSetMapping();
@@ -104,6 +118,33 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
+    public function getDistinctCommissionStatuses(): array
+    {
+        $rows = $this->createQueryBuilder('a')
+            ->select("a.areCommissionsOpen AS status, COUNT(COALESCE(a.areCommissionsOpen, 'null')) AS count")
+            ->groupBy('a.areCommissionsOpen')
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [
+            'items' => [
+                0 => 0,
+                1 => 0,
+            ],
+            'unknown_count' => 0,
+        ];
+
+        foreach ($rows as $row) {
+            if (null === $row['status']) {
+                $result['unknown_count'] = $row['count'];
+            } else {
+                $result['items'][(int) $row['status']] = $row['count'];
+            }
+        }
+
+        return $result;
+    }
+
     private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): array
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);
@@ -144,6 +185,12 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return DateTime
+     *
+     * @throws NonUniqueResultException
+     * @throws Exception
+     */
     public function getLastCstUpdateTime(): DateTime
     {
         return new DateTime($this

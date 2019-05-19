@@ -27,13 +27,19 @@
 
     <div class="row">
         {% spaceless %}
-            {% for item, count in items.items %}
+            {% for value, count in items.items %}
+                {% if names is defined and value in names|keys %}
+                    {% set label = names[value] %}
+                {% else %}
+                    {% set label = value %}
+                {% endif %}
+
                 {% set checkboxId = itemName ~ 'CheckBox' ~ loop.index %}
 
                 <div class="col-sm-6 col-lg-3">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ item }}" />
-                        <label class="form-check-label" for="{{ checkboxId }}">{{ item }} <span class="count">({{ count }})</span></label>
+                        <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ value }}" />
+                        <label class="form-check-label" for="{{ checkboxId }}">{{ label }} <span class="count">({{ count }})</span></label>
                     </div>
                 </div>
             {% endfor %}

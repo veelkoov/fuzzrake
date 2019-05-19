@@ -60,7 +60,7 @@ export default abstract class Filter {
     }
 
     protected isUnknown(artisan: Artisan): boolean {
-        return artisan[this.fieldName].length === 0;
+        return artisan[this.fieldName] === null || artisan[this.fieldName].length === 0;
     }
 
     private updateStatusDisplay(): void {

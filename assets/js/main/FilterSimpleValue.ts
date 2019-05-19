@@ -3,7 +3,7 @@
 import Filter from "./Filter";
 import Artisan from "./Artisan";
 
-export default class FilterString extends Filter {
+export default class FilterSimpleValue extends Filter {
     constructor(protected readonly fieldName: string,
                 public readonly containerSelector: string,
                 protected readonly refreshCallback: () => void) {
@@ -19,7 +19,11 @@ export default class FilterString extends Filter {
             return true;
         }
 
-        return this.isSelected(artisan[this.fieldName]);
+        if (typeof artisan[this.fieldName] === 'boolean') {
+            return this.isSelected(artisan[this.fieldName] ? '1' : '0');
+        } else {
+            return this.isSelected(artisan[this.fieldName]);
+        }
     }
 
     protected getStatusText(): string {
