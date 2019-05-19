@@ -61,9 +61,11 @@ function initDataTable(): void {
         autoWidth: false,
         columnDefs: [
             { targets: 'no-sorting', orderable: false },
-            { targets: 'default-hidden', visible: false } // , // FIXME
-            // { targets: NAME_COLUMN_IDX, searchable: true }, // FIXME
-            // { targets: '_all', searchable: false } // FIXME
+            { targets: 'default-hidden', visible: false },
+            { targets: 'maker-id', searchable: true },
+            { targets: 'name', searchable: true },
+            { targets: 'searchable', searchable: true },
+            { targets: '_all', searchable: false },
         ],
         buttons: [{
             className: 'btn btn-dark',
