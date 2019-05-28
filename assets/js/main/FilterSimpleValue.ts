@@ -31,9 +31,9 @@ export default class FilterSimpleValue extends Filter {
             return 'any';
         }
 
-        const anyOrAll = this.selectedValues.length > 1 ? 'any of: ' : '';
+        const anyOrAll = this.selectedLabels.length > 1 ? 'any of: ' : '';
 
-        return anyOrAll + this.selectedValues.join(', ')
+        return anyOrAll + this.selectedLabels.join(', ')
             .replace(this.UNKNOWN_VALUE, 'Unknown')
             .replace(/ \(.+?\)/g, ''); // TODO: Drop () earlier
     }

@@ -45,7 +45,7 @@ export default class FilterSetSingle extends Filter {
         }
 
         return this.getAnyOrAllStatusTextPart()
-            + this.selectedValues.join(', ')
+            + this.selectedLabels.join(', ')
                 .replace(this.UNKNOWN_VALUE, 'Unknown')
                 .replace(/ \(.+?\)/g, ''); // TODO: Drop () earlier
     }

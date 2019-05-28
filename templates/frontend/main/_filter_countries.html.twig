@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="?"/>
+                <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="?" data-label="Unknown" />
                 <label class="form-check-label" for="countryCheckBoxUnknown">
                     <i class="fas fa-question-circle"></i> Unknown
                     <span class="count">({{ countries.unknownCount }})</span>
@@ -31,7 +31,7 @@
 
                     <div class="col-sm-6 col-lg-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.value }}"/>
+                            <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.value }}" data-label="{{ country.label }}" />
                             <label class="form-check-label" for="{{ checkboxId }}"><span class="flag-icon flag-icon-{{ country.value|lower }}"></span> {{ country.label }} <span class="count">({{ country.count }})</span></label>
                         </div>
                     </div>

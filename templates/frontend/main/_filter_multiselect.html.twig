@@ -8,7 +8,7 @@
             </span>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value="?" />
+                <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value="?" data-label="Unknown" />
                 <label class="form-check-label" for="{{ itemName ~ 'CheckBoxUnknown' }}">
                     <i class="fas fa-question-circle"></i> Unknown <span class="count">({{ items.unknownCount }})</span>
                 </label>
@@ -16,7 +16,7 @@
 
             {% if items.isHasOther %}
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxOther' }}" value="*" />
+                    <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxOther' }}" value="*" data-label="Other" />
                     <label class="form-check-label" for="{{ itemName ~ 'CheckBoxOther' }}">
                         <i class="fas fa-asterisk"></i> Other <span class="count">({{ items.otherCount }})</span>
                     </label>
@@ -32,7 +32,7 @@
 
                 <div class="col-sm-6 col-lg-3">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="{{ item.value ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ item.value }}" />
+                        <input class="form-check-input" name="{{ item.value ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ item.value }}" data-label="{{ item.label }}" />
                         <label class="form-check-label" for="{{ checkboxId }}">{{ item.label }} <span class="count">({{ item.count }})</span></label>
                     </div>
                 </div>

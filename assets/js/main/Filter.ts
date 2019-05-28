@@ -8,6 +8,7 @@ export default abstract class Filter {
 
     protected readonly $checkboxes: JQuery<HTMLElement>;
     protected selectedValues: string[] = [];
+    protected selectedLabels: string[] = [];
     protected $statusDisplay: JQuery<HTMLElement>;
 
     protected constructor(protected readonly fieldName: string,
@@ -25,9 +26,13 @@ export default abstract class Filter {
     public updateSelection(): void {
         let oldSelection = this.selectedValues;
 
-        this.selectedValues = this.$checkboxes.filter(':checked')
-            .map((_, checkbox) => checkbox.getAttribute('value'))
-            .get();
+        this.selectedValues = [];
+        this.selectedLabels = [];
+
+        this.$checkboxes.filter(':checked').each((_: number, checkbox: HTMLElement) => {
+            this.selectedValues.push(checkbox.getAttribute('value'));
+            this.selectedLabels.push(checkbox.getAttribute('data-label'));
+        });
 
         if (oldSelection != this.selectedValues) {
             this.updateStatusDisplay();
