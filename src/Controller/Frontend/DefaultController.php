@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Frontend;
 
 use App\Repository\ArtisanRepository;
+use App\Utils\FilterItems;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,6 +60,9 @@ class DefaultController extends AbstractController
      * @Route("/", name="main")
      * @Route("/index.html")
      *
+     * @param ArtisanRepository $artisanRepository
+     * @param string            $projectDir
+     *
      * @return Response
      *
      * @throws NonUniqueResultException
@@ -79,36 +83,48 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    private function getCountriesFilterData(array $countriesToCount, string $projectDir): array
+    private function getCountriesFilterData(FilterItems $countries, string $projectDir): FilterItems
     {
-        $countriesData = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
-        $regions = $this->getRegionsFromCountries($countriesData);
+        $countriesData = $this->loadCountriesData($projectDir);
+
+        $result = $this->getRegionsFromCountries($countriesData);
+        $result->incUnknownCount($countries->getUnknownCount());
 
         foreach ($countriesData as $countryData) {
-            $regions[$countryData['region']]['countries'][] = array_merge($countryData, [
-                'count' => $countriesToCount['items'][$countryData['code']],
-            ]);
+            $code = $countryData['code'];
+            $region = $countryData['region'];
 
-            $regions[$countryData['region']]['total_count'] += $countriesToCount['items'][$countryData['code']];
+            $countryCount = $countries[$code]->getCount();
+
+            $result[$region]->incCount($countryCount);
+            $result[$region]->getValue()->addComplexItem($code, $code, $countryData['name'], $countryCount);
         }
 
-        ksort($regions);
-
-        return [
-            'regions' => $regions,
-            'unknown_count' => $countriesToCount['unknown_count'],
-        ];
+        return $result;
     }
 
-    private function getRegionsFromCountries($countriesData): array
+    private function getRegionsFromCountries(array $countriesData): FilterItems
     {
-        $result = array_fill_keys(array_map(function (array $country) {
+        $regionNames = array_unique(array_map(function (array $country): string {
             return $country['region'];
-        }, $countriesData), [
-            'countries' => [],
-            'total_count' => 0,
-        ]);
+        }, $countriesData));
+
+        $result = new FilterItems(false);
+
+        foreach ($regionNames as $regionName) {
+            $result->addComplexItem($regionName, new FilterItems(false), $regionName, 0);
+        }
 
         return $result;
+    }
+
+    /**
+     * @param string $projectDir
+     *
+     * @return array [ [ "name" => "...", "code" => "...", "region" => "..."], ... ]
+     */
+    private function loadCountriesData(string $projectDir): array
+    {
+        return json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
     }
 }

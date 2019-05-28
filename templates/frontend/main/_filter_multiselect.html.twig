@@ -10,15 +10,15 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value="?" />
                 <label class="form-check-label" for="{{ itemName ~ 'CheckBoxUnknown' }}">
-                    <i class="fas fa-question-circle"></i> Unknown <span class="count">({{ items.unknown_count }})</span>
+                    <i class="fas fa-question-circle"></i> Unknown <span class="count">({{ items.unknownCount }})</span>
                 </label>
             </div>
 
-            {% if hideOther is not defined or not hideOther %}
+            {% if items.isHasOther %}
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxOther' }}" value="*" />
                     <label class="form-check-label" for="{{ itemName ~ 'CheckBoxOther' }}">
-                        <i class="fas fa-asterisk"></i> Other <span class="count">({{ items.other_count }})</span>
+                        <i class="fas fa-asterisk"></i> Other <span class="count">({{ items.otherCount }})</span>
                     </label>
                 </div>
             {% endif %}
@@ -27,19 +27,13 @@
 
     <div class="row">
         {% spaceless %}
-            {% for value, count in items.items %}
-                {% if names is defined and value in names|keys %}
-                    {% set label = names[value] %}
-                {% else %}
-                    {% set label = value %}
-                {% endif %}
-
-                {% set checkboxId = itemName ~ 'CheckBox' ~ loop.index %}
+            {% for item in items.items %}
+                {% set checkboxId = item.value ~ 'CheckBox' ~ loop.index %}
 
                 <div class="col-sm-6 col-lg-3">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ value }}" />
-                        <label class="form-check-label" for="{{ checkboxId }}">{{ label }} <span class="count">({{ count }})</span></label>
+                        <input class="form-check-input" name="{{ item.value ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ item.value }}" />
+                        <label class="form-check-label" for="{{ checkboxId }}">{{ item.label }} <span class="count">({{ item.count }})</span></label>
                     </div>
                 </div>
             {% endfor %}

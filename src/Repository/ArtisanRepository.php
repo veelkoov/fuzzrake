@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use App\Utils\FilterItems;
 use DateTime;
 use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -78,47 +79,47 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
-    public function getDistinctCountriesToCountAssoc(): array
+    public function getDistinctCountriesToCountAssoc(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
     }
 
-    public function getDistinctOrderTypes(): array
+    public function getDistinctOrderTypes(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
     }
 
-    public function getDistinctOtherOrderTypes(): array
+    public function getDistinctOtherOrderTypes(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
     }
 
-    public function getDistinctStyles(): array
+    public function getDistinctStyles(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('styles', true);
     }
 
-    public function getDistinctOtherStyles(): array
+    public function getDistinctOtherStyles(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('otherStyles');
     }
 
-    public function getDistinctFeatures(): array
+    public function getDistinctFeatures(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('features', true);
     }
 
-    public function getDistinctOtherFeatures(): array
+    public function getDistinctOtherFeatures(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
     }
 
-    public function getDistinctProductionModels(): array
+    public function getDistinctProductionModels(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
-    public function getDistinctCommissionStatuses(): array
+    public function getDistinctCommissionStatuses(): FilterItems
     {
         $rows = $this->createQueryBuilder('a')
             ->select("a.areCommissionsOpen AS status, COUNT(COALESCE(a.areCommissionsOpen, 'null')) AS count")
@@ -126,61 +127,46 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        $result = [
-            'items' => [
-                0 => 0,
-                1 => 0,
-            ],
-            'unknown_count' => 0,
-        ];
+        $result = new FilterItems(false);
+        $result->addComplexItem('1', '1', 'Open', 0);
+        $result->addComplexItem('0', '0', 'Closed', 0);
 
         foreach ($rows as $row) {
             if (null === $row['status']) {
-                $result['unknown_count'] = $row['count'];
+                $result->incUnknownCount((int) $row['count']);
             } else {
-                $result['items'][(int) $row['status']] = $row['count'];
+                $result[(int) $row['status']]->incCount((int) $row['count']);
             }
         }
 
         return $result;
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): array
+    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterItems
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);
 
-        $result = [
-            'items' => [],
-            'unknown_count' => 0,
-        ];
-
-        if ($countOther) {
-            $result['other_count'] = 0;
-        }
+        $result = new FilterItems($countOther);
 
         foreach ($rows as $row) {
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
                 if ($item = trim($item)) {
-                    if (!array_key_exists($item, $result['items'])) {
-                        $result['items'][$item] = 0;
-                    }
-
-                    ++$result['items'][$item];
+                    $result->addOrIncItem($item);
                 }
             }
 
             if ($countOther && !empty($row['otherItems'])) {
-                ++$result['other_count'];
+                $result->incOtherCount();
             }
 
             if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {
-                ++$result['unknown_count'];
+                $result->incUnknownCount();
             }
         }
 
-        ksort($result['items']);
+        $result->sort();
 
         return $result;
     }

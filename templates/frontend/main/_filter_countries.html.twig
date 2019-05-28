@@ -5,18 +5,18 @@
                 <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="?"/>
                 <label class="form-check-label" for="countryCheckBoxUnknown">
                     <i class="fas fa-question-circle"></i> Unknown
-                    <span class="count">({{ countries.unknown_count }})</span>
+                    <span class="count">({{ countries.unknownCount }})</span>
                 </label>
             </div>
         </div>
     </div>
 </fieldset>
 
-{% for region, regionData in countries.regions %}
+{% for region in countries.items %}
     {% spaceless %}
         <fieldset class="region">
             <legend>
-                {{ region }} <span class="count">({{ regionData.total_count }})</span>
+                {{ region.label }} <span class="count">({{ region.count }})</span>
 
                 <span class="allNoneInvert" aria-hidden="true">
                     selection: <a data-action="all" href="">all</a>
@@ -26,13 +26,13 @@
             </legend>
 
             <div class="row">
-                {% for country in regionData.countries %}
-                    {% set checkboxId = 'countryCheckBox' ~ country.code %}
+                {% for country in region.value.items %}
+                    {% set checkboxId = 'countryCheckBox' ~ country.value %}
 
                     <div class="col-sm-6 col-lg-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.code }}"/>
-                            <label class="form-check-label" for="{{ checkboxId }}"><span class="flag-icon flag-icon-{{ country.code|lower }}"></span> {{ country.name }} <span class="count">({{ country.count }})</span></label>
+                            <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.value }}"/>
+                            <label class="form-check-label" for="{{ checkboxId }}"><span class="flag-icon flag-icon-{{ country.value|lower }}"></span> {{ country.label }} <span class="count">({{ country.count }})</span></label>
                         </div>
                     </div>
                 {% endfor %}

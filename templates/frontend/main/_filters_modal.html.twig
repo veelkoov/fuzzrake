@@ -62,7 +62,7 @@
                         </div>
                         <div id="productionModelsFilterBody" class="collapse" aria-labelledby="headingFive" data-parent="#filtersAccordion">
                             <div class="card-body">
-                                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'productionModel', items: productionModels, hideOther: true } %}
+                                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'productionModel', items: productionModels } %}
                             </div>
                         </div>
                     </div>
@@ -73,15 +73,7 @@
                         </div>
                         <div id="commissionsStatusesFilterBody" class="collapse" aria-labelledby="headingSix" data-parent="#filtersAccordion">
                             <div class="card-body">
-                                {% include 'frontend/main/_filter_multiselect.html.twig' with {
-                                    itemName: 'commissionsStatuses',
-                                    items: commissionsStatuses,
-                                    hideOther: true,
-                                    names: {
-                                        "0": "Closed",
-                                        "1": "Open"
-                                    }
-                                } %}
+                                {% include 'frontend/main/_filter_multiselect.html.twig' with { itemName: 'commissionsStatuses', items: commissionsStatuses } %}
                             </div>
                         </div>
                     </div>
