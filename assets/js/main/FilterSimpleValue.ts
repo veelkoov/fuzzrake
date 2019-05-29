@@ -3,7 +3,7 @@
 import Filter from "./Filter";
 import Artisan from "./Artisan";
 
-export default class FilterString extends Filter {
+export default class FilterSimpleValue extends Filter {
     constructor(protected readonly fieldName: string,
                 public readonly containerSelector: string,
                 protected readonly refreshCallback: () => void) {
@@ -19,7 +19,11 @@ export default class FilterString extends Filter {
             return true;
         }
 
-        return this.isSelected(artisan[this.fieldName]);
+        if (typeof artisan[this.fieldName] === 'boolean') {
+            return this.isSelected(artisan[this.fieldName] ? '1' : '0');
+        } else {
+            return this.isSelected(artisan[this.fieldName]);
+        }
     }
 
     protected getStatusText(): string {
@@ -27,9 +31,9 @@ export default class FilterString extends Filter {
             return 'any';
         }
 
-        const anyOrAll = this.selectedValues.length > 1 ? 'any of: ' : '';
+        const anyOrAll = this.selectedLabels.length > 1 ? 'any of: ' : '';
 
-        return anyOrAll + this.selectedValues.join(', ')
+        return anyOrAll + this.selectedLabels.join(', ')
             .replace(this.UNKNOWN_VALUE, 'Unknown')
             .replace(/ \(.+?\)/g, ''); // TODO: Drop () earlier
     }

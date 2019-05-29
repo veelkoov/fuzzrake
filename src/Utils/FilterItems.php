@@ -1,0 +1,122 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Utils;
+
+use ArrayAccess;
+
+class FilterItems implements ArrayAccess
+{
+    /**
+     * @var int
+     */
+    private $unknownCount = 0;
+    /**
+     * @var int
+     */
+    private $otherCount = 0;
+    /**
+     * @var bool
+     */
+    private $hasOther;
+
+    /**
+     * @var FilterItem[]
+     */
+    private $items = [];
+
+    /**
+     * @param bool $hasOther
+     */
+    public function __construct(bool $hasOther)
+    {
+        $this->hasOther = $hasOther;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function addOrIncItem(string $key): void
+    {
+        if (!array_key_exists($key, $this->items)) {
+            $this->items[$key] = new FilterItem($key);
+        }
+
+        $this->items[$key]->incCount();
+    }
+
+    /**
+     * @param string                 $key
+     * @param int|string|FilterItems $value
+     * @param string                 $label
+     * @param int                    $count
+     */
+    public function addComplexItem(string $key, $value, string $label, int $count): void
+    {
+        $this->items[$key] = new FilterItem($value, $label, $count);
+    }
+
+    public function incUnknownCount(int $number = 1): void
+    {
+        $this->unknownCount += $number;
+    }
+
+    public function incOtherCount(): void
+    {
+        ++$this->otherCount;
+    }
+
+    public function getUnknownCount(): int
+    {
+        return $this->unknownCount;
+    }
+
+    public function getOtherCount(): int
+    {
+        return $this->otherCount;
+    }
+
+    public function isHasOther(): bool
+    {
+        return $this->hasOther;
+    }
+
+    /**
+     * @return FilterItem[]
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    public function sort(): void
+    {
+        ksort($this->items);
+    }
+
+    public function __get(string $key): FilterItem
+    {
+        return $this->items[$key];
+    }
+
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->items);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->items[$offset];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->items[$offset] = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->items[$offset]);
+    }
+}

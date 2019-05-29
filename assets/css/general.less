@@ -1,5 +1,5 @@
 body {
-  padding: 5em 0 0;
+  padding: 4.5em 0 0;
 }
 
 img[src="FurAffinity.svg"] {
@@ -51,15 +51,17 @@ img[src="FurAffinity.svg"] {
   }
 }
 
-#artisans_wrapper {
-  padding-top: 1em;
-
+#artisans_wrapper { /* Override anything DataTables */
   > div.row:nth-child(2) > div.col-sm-12 {
     overflow-x: auto;
   }
 
   div.dataTables_info {
     white-space: normal !important;
+  }
+
+  #artisans_filter {
+    text-align: right;
   }
 }
 
@@ -148,6 +150,8 @@ p.item-pills {
   max-height: 15em;
 }
 
-.choices__list--dropdown .choices__item--selectable {
-  padding-right: 0 !important;
+@media (min-width: 1200px) {
+  .modal-lg-fzr {
+    max-width: 1080px; /* Bootstrap override */
+  }
 }
