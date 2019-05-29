@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Tracking;
 
+use App\Utils\Regexp;
+use App\Utils\RegexpFactory;
+use App\Utils\RegexpVariant;
 use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebsiteInfo;
 use InvalidArgumentException;

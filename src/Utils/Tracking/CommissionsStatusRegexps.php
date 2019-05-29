@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Utils\Tracking;
 
 class CommissionsStatusRegexps
 {
@@ -17,7 +17,7 @@ class CommissionsStatusRegexps
     const COMMON_REPLACEMENTS = [
         'COMMISSIONS' => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?|comms)',
         'OPEN' => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',
-        'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
+        'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
         'fursuits' => 'fursuits?',
         '</(div|p|h[1-6])>' => ' ?</$1> ?',
         '<(div|p|h[1-6])>' => ' ?<$1( class="[^"]*")?> ?',
@@ -36,6 +36,7 @@ class CommissionsStatusRegexps
         'COMMISSIONS (status:)?STATUS( in| for)?( late| early)? (MONTHS|20\d\d)',
         'STATUS for COMMISSIONS\?</h[1-6]>',
         'if WE_ARE STATUS (for )?(new )?COMMISSIONS',
+        'COMMISSIONS: opens 20[0-9]{2}',
     ];
 
     const GENERIC_REGEXES = [

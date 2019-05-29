@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\CommissionsStatusParser;
-use App\Utils\CommissionsStatusParserException;
+use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\CommissionsStatusParserException;
 use App\Utils\Web\WebpageSnapshot;
 use PHPUnit\Framework\TestCase;
 
