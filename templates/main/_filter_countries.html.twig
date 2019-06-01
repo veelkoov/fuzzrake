@@ -13,7 +13,7 @@
 </fieldset>
 
 {% for region in countries.items %}
-    {% spaceless %}
+    {% filter spaceless %}
         <fieldset class="region">
             <legend>
                 {{ region.label }} <span class="count">({{ region.count }})</span>
@@ -38,5 +38,5 @@
                 {% endfor %}
             </div>
         </fieldset>
-    {% endspaceless %}
+    {% endfilter %}
 {% endfor %}
