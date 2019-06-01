@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Controller\Frontend;
+namespace App\Controller;
 
 use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventsController extends AbstractController
@@ -13,11 +14,11 @@ class EventsController extends AbstractController
      *
      * @param EventRepository $eventRepository
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function index(EventRepository $eventRepository)
     {
-        return $this->render('frontend/events/events.html.twig', [
+        return $this->render('events/events.html.twig', [
             'events' => $eventRepository->findBy([], ['timestamp' => 'DESC']),
             // TODO: git log --format='%aI %s'
         ]);

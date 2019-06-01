@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Repository\ArtisanRepository;
+use App\Utils\FilterItem;
 use DateTime;
 use DateTimeZone;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -30,7 +33,7 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
-            new TwigFilter('filterKeysMatching', [$this, 'filterKeysMatchingFilter']),
+            new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
         ];
     }
@@ -43,11 +46,21 @@ class AppExtensions extends AbstractExtension
         ];
     }
 
+    /**
+     * @return DateTime
+     *
+     * @throws NonUniqueResultException
+     */
     public function getLastDataUpdateTimeFunction()
     {
         return $this->artisanRepository->getLastCstUpdateTime();
     }
 
+    /**
+     * @return DateTime
+     *
+     * @throws Exception
+     */
     public function getLastSystemUpdateTimeFunction()
     {
         return new DateTime(`TZ=UTC git log -n1 --format=%cd --date=local`, new DateTimeZone('UTC'));
@@ -68,28 +81,37 @@ class AppExtensions extends AbstractExtension
         }
     }
 
+    /**
+     * @param string $input
+     *
+     * @return string
+     *
+     * @throws TplDataException
+     */
     public function sinceFilter(string $input): string
     {
         if ('' === $input) {
             return '';
         }
 
-        if (!preg_match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $zapałki)) {
+        if (!preg_match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
             throw new TplDataException("Invalid 'since' data: '$input''");
         }
 
-        return self::MONTHS[(int) $zapałki['month']].' '.$zapałki['year'];
+        return self::MONTHS[(int) $matches['month']].' '.$matches['year'];
     }
 
-    public function filterKeysMatchingFilter(array $input, string $matchWord): array
+    /**
+     * @param FilterItem[] $items
+     * @param string       $matchWord
+     *
+     * @return FilterItem[]
+     */
+    public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
-        array_walk($input, function (string &$count, string $item) use ($matchWord) {
-            if (0 === preg_match("#$matchWord#i", $item)) {
-                $count = 0;
-            }
+        return array_filter($items, function (FilterItem $item) use ($matchWord) {
+            return 1 === preg_match("#$matchWord#i", $item->getLabel());
         });
-
-        return array_filter($input);
     }
 
     public function filterHumanFriendlyRegexp(string $input): string

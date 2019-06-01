@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends '_base.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('main') }}
     <script>
-        {% include 'frontend/main/_data_array.js.twig' %}
+        {% include 'main/_data_array.js.twig' %}
     </script>
 {% endblock %}
 
@@ -14,10 +14,10 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'frontend/main/_intro.html.twig' %}
-    {% include 'frontend/main/_filters_modal.html.twig' %}
-    {% include 'frontend/main/_artisan_modal.html.twig' %}
-    {% include 'frontend/main/_update_request_modal.html.twig' %}
+    {% include 'main/_intro.html.twig' %}
+    {% include 'main/_filters_modal.html.twig' %}
+    {% include 'main/_artisan_modal.html.twig' %}
+    {% include 'main/_update_request_modal.html.twig' %}
     <div id="processingData" class="alert alert-primary" role="alert">
         Data is being processed. This may take several seconds... If it's stuck for
         <strong>more than half a minute</strong>, please hard-refresh your browser.
@@ -25,7 +25,7 @@
         I am sorry some of you encounter this problem, I'll try to reproduce and solve it.
     </div>
     <div id="dataProcessed" style="display: none;">
-        {% include 'frontend/main/_data_table.html.twig' %}
+        {% include 'main/_data_table.html.twig' %}
     </div>
     <div class="container text-center">
         <img src="{{ asset('images/website-banner-bottom.png') }}" class="img-fluid" alt="">

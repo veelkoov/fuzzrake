@@ -2,14 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Frontend;
+namespace App\Controller;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanFields;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Utils\FilterItem;
+use App\Utils\FilterItems;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/")
@@ -49,6 +53,9 @@ class StatisticsController extends AbstractController
      * @param ArtisanRepository $artisanRepository
      *
      * @return Response
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function statistics(ArtisanRepository $artisanRepository): Response
     {
@@ -62,15 +69,15 @@ class StatisticsController extends AbstractController
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $artisanRepository->getCommissionsStats();
 
-        return $this->render('frontend/statistics/statistics.html.twig', [
+        return $this->render('statistics/statistics.html.twig', [
             'countries' => $this->prepareTableData($countries),
             'productionModels' => $this->prepareTableData($productionModels),
             'orderTypes' => $this->prepareTableData($orderTypes),
-            'otherOrderTypes' => $this->prepareListData($otherOrderTypes['items']),
+            'otherOrderTypes' => $this->prepareListData($otherOrderTypes->getItems()),
             'styles' => $this->prepareTableData($styles),
-            'otherStyles' => $this->prepareListData($otherStyles['items']),
+            'otherStyles' => $this->prepareListData($otherStyles->getItems()),
             'features' => $this->prepareTableData($features),
-            'otherFeatures' => $this->prepareListData($otherFeatures['items']),
+            'otherFeatures' => $this->prepareListData($otherFeatures->getItems()),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness' => $this->prepareCompletenessData($artisanRepository->findAll()),
             'providedInfo' => $this->prepareProvidedInfoData($artisanRepository->findAll()),
@@ -89,50 +96,55 @@ class StatisticsController extends AbstractController
     {
         $otherItems = $artisanRepository->getOtherItemsData();
 
-        return $this->render('frontend/statistics/ordering.html.twig', [
+        return $this->render('statistics/ordering.html.twig', [
             'otherItems' => $this->prepareListData($otherItems),
             'matchWords' => self::MATCH_WORDS,
         ]);
     }
 
-    private function prepareTableData(array $input): array
+    private function prepareTableData(FilterItems $input): array
     {
         $result = [];
 
-        foreach ($input['items'] as $item => $count) {
-            if (!array_key_exists($count, $result)) {
-                $result[$count] = [];
+        foreach ($input->getItems() as $item) {
+            if (!array_key_exists($item->getCount(), $result)) {
+                $result[$item->getCount()] = [];
             }
 
-            $result[$count][] = $item;
+            $result[$item->getCount()][] = $item->getLabel();
         }
 
-        foreach ($result as $count => $items) {
-            $result[$count] = implode(', ', $items);
+        foreach ($result as $item => $items) {
+            $result[$item] = implode(', ', $items);
         }
 
         $result = array_flip($result);
         arsort($result);
 
-        if (array_key_exists('other_count', $input)) {
-            $result['Other'] = $input['other_count'];
+        if ($input->isHasOther()) {
+            $result['Other'] = $input->getOtherCount();
         }
-        $result['Unknown'] = $input['unknown_count'];
+        $result['Unknown'] = $input->getUnknownCount();
 
         return $result;
     }
 
-    private function prepareListData(array $otherItems): array
+    /**
+     * @param FilterItem[] $items
+     *
+     * @return FilterItem[]
+     */
+    private function prepareListData(array $items): array
     {
-        uksort($otherItems, function ($a, $b) use ($otherItems) {
-            if ($otherItems[$a] !== $otherItems[$b]) {
-                return $otherItems[$b] - $otherItems[$a];
+        uksort($items, function ($keyA, $keyB) use ($items) {
+            if ($items[$keyA]->getCount() !== $items[$keyB]->getCount()) {
+                return $items[$keyB]->getCount() - $items[$keyA]->getCount();
             }
 
-            return strcmp($a, $b);
+            return strcmp($items[$keyA]->getLabel(), $items[$keyB]->getLabel());
         });
 
-        return $otherItems;
+        return $items;
     }
 
     private function prepareCommissionsStatsTableData(array $commissionsStats): array

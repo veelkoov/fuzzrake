@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Frontend;
+namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\FilterItems;
@@ -23,7 +23,7 @@ class DefaultController extends AbstractController
      */
     public function info(): Response
     {
-        return $this->render('frontend/info.html.twig', []);
+        return $this->render('info.html.twig', []);
     }
 
     /**
@@ -33,7 +33,7 @@ class DefaultController extends AbstractController
      */
     public function tracking(): Response
     {
-        return $this->render('frontend/tracking.html.twig', []);
+        return $this->render('tracking.html.twig', []);
     }
 
     /**
@@ -43,7 +43,7 @@ class DefaultController extends AbstractController
      */
     public function whoopsies(): Response
     {
-        return $this->render('frontend/whoopsies.html.twig', []);
+        return $this->render('whoopsies.html.twig', []);
     }
 
     /**
@@ -53,7 +53,7 @@ class DefaultController extends AbstractController
      */
     public function makerIds(): Response
     {
-        return $this->render('frontend/maker_ids.html.twig', []);
+        return $this->render('maker_ids.html.twig', []);
     }
 
     /**
@@ -71,7 +71,7 @@ class DefaultController extends AbstractController
     {
         $countriesToCount = $artisanRepository->getDistinctCountriesToCountAssoc();
 
-        return $this->render('frontend/main/main.html.twig', [
+        return $this->render('main/main.html.twig', [
             'artisans' => $artisanRepository->getAll(),
             'countryCount' => $artisanRepository->getDistinctCountriesCount(),
             'orderTypes' => $artisanRepository->getDistinctOrderTypes(),

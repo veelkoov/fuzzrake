@@ -1,10 +1,10 @@
 <p class="item-pills">
-    {% for item, count in items %}
-        {% include 'frontend/statistics/_item_pill.html.twig' %}
+    {% for item in items %}
+        {% include 'statistics/_item_pill.html.twig' %}
     {% endfor %}
 
     {% for matchWord in matchWords %}
-        {% set itemsFiltered = items|filterKeysMatching(matchWord) %}
+        {% set itemsFiltered = items|filterItemsMatching(matchWord) %}
 
         {% if itemsFiltered|length > 1 %}
             <br />
@@ -13,8 +13,8 @@
                 {{ matchWord|humanFriendlyRegexp }} ({{ itemsFiltered|length }}&times;):
             </span>
 
-            {% for item, count in itemsFiltered %}
-                {% include 'frontend/statistics/_item_pill.html.twig' %}
+            {% for item in itemsFiltered %}
+                {% include 'statistics/_item_pill.html.twig' %}
             {% endfor %}
         {% endif %}
     {% endfor %}

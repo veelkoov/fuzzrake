@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use App\Utils\FilterItem;
 use App\Utils\FilterItems;
 use DateTime;
 use DateTimeZone;
@@ -218,16 +219,15 @@ class ArtisanRepository extends ServiceEntityRepository
         $fe = $this->getDistinctOtherFeatures();
         $st = $this->getDistinctOtherStyles();
 
-        foreach (['OT' => &$ot, 'FE' => &$fe, 'ST' => &$st] as $suffix => &$items) {
-            $items = array_combine(
-                array_map(function ($key) use ($suffix) {
-                    return "$key ($suffix)";
-                }, array_keys($items['items'])),
-                array_values($items['items'])
-            );
+        $result = [];
+
+        foreach (['OT' => $ot, 'FE' => $fe, 'ST' => $st] as $suffix => $items) {
+            foreach ($items->getItems() as $item) {
+                $newLabel = "{$item->getLabel()} ($suffix)";
+                $result[$newLabel] = new FilterItem($newLabel, $newLabel, $item->getCount());
+            }
         }
 
-        $result = array_merge($ot, $fe, $st);
         ksort($result);
 
         return $result;
