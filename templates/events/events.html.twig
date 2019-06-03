@@ -5,7 +5,29 @@
 
     <ul class="list-unstyled">
         {% for event in events %}
-            <li><span class="small">{{ event.timestamp|date('Y-m-d H:i') }}</span> {{ event.description }}</li>
+            <li>
+                <span class="small">{{ event.timestamp|date('Y-m-d H:i') }}</span>
+
+                {% if event.type == constant('App\\Entity\\Event::TYPE_CS_UPDATED') %}
+
+                    Based on the contents of
+                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
+                    <b>{{ event.artisanName }}</b> commission status is now
+                    <b>{{ event.newStatus }}</b> (was {{ event.oldStatus }}).
+
+                {% elseif event.type == constant('App\\Entity\\Event::TYPE_LOST_CST') %}
+
+                    Failed to interpret commission status based on the contents of:
+                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                    <b>{{ event.artisanName }}</b> commission status is now
+                    <b>{{ event.newStatus }}</b> (was {{ event.oldStatus }}).
+
+                {% else %}
+
+                    {{ event.description|raw }}
+
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

@@ -33,6 +33,7 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
+            new TwigFilter('event_url', [$this, 'eventUrlFilter']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
         ];
@@ -79,6 +80,20 @@ class AppExtensions extends AbstractExtension
         } else {
             return $primaryList;
         }
+    }
+
+    public function eventUrlFilter(string $originalUrl): string
+    {
+        $url = preg_replace('#^https?://(www\.)?#', '', $originalUrl);
+        $url = preg_replace('/#profile/', '', $url);
+        $url = str_replace('/user/', '/u/', $url);
+        $url = str_replace('/journal/', '/j/', $url);
+
+        if (strlen($url) > 50) {
+            $url = substr($url, 0, 40).'...';
+        }
+
+        return $url;
     }
 
     /**
