@@ -16,7 +16,7 @@
     <tbody>
     {% for artisan in artisans %}
         <tr class="fursuit-maker" {% if artisan.makerId %}id="{{ artisan.makerId }}{% endif %}">
-            {%- spaceless %}
+            {%- apply spaceless %}
                 <td class="name" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.name -}}
                     {%- if artisan.country %}&nbsp;<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
@@ -53,7 +53,7 @@
                     {{ artisan.formerly }}
                     {{ artisan.formerMakerIds }}
                 </td>
-            {% endspaceless -%}
+            {% endapply -%}
         </tr>
     {% endfor %}
     </tbody>
