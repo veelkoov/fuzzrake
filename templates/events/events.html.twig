@@ -8,19 +8,19 @@
             <li>
                 <span class="small">{{ event.timestamp|date('Y-m-d H:i') }}</span>
 
-                {% if event.type == constant('App\\Entity\\Event::TYPE_CS_UPDATED') %}
-
-                    Based on the contents of
-                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
-                    <b>{{ event.artisanName }}</b> commission status is now
-                    <b>{{ event.newStatus }}</b> (was {{ event.oldStatus }}).
-
-                {% elseif event.type == constant('App\\Entity\\Event::TYPE_LOST_CST') %}
+                {% if event.lostTrack %}
 
                     Failed to interpret commission status based on the contents of:
                     <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
-                    <b>{{ event.artisanName }}</b> commission status is now
-                    <b>{{ event.newStatus }}</b> (was {{ event.oldStatus }}).
+                    <b>{{ event.artisanName }}</b> commissions status is now
+                    <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+
+                {% elseif event.changedStatus %}
+
+                    Based on the contents of
+                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
+                    <b>{{ event.artisanName }}</b> commissions status is now
+                    <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
                 {% else %}
 

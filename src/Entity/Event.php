@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -13,11 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
-    const TYPE_LOST_CST = 'CST_LOST';
     const TYPE_CS_UPDATED = 'CS_UPDATED';
     const TYPE_GENERIC = 'GENERIC';
 
     /**
+     * @var int
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -25,36 +27,50 @@ class Event
     private $id;
 
     /**
+     * @var DateTimeInterface
+     *
      * @ORM\Column(type="datetime")
      */
     private $timestamp;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=4095)
      */
-    private $description;
+    private $description = '';
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=16)
      */
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=16)
+     * @var bool|null
+     *
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $oldStatus;
 
     /**
-     * @ORM\Column(type="string", length=16)
+     * @var bool|null
+     *
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $newStatus;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=256)
      */
     private $artisanName;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=1024)
      */
     private $checkedUrl;
@@ -62,122 +78,159 @@ class Event
     /**
      * Event constructor.
      *
-     * @param $description
+     * @param string    $checkedUrl
+     * @param string    $artisanName
+     * @param bool|null $oldStatus
+     * @param bool|null $newStatus
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function __construct(?string $description = null)
+    public function __construct(string $checkedUrl, string $artisanName, ?bool $oldStatus, ?bool $newStatus)
     {
         $this->timestamp = new DateTime('now', new DateTimeZone('UTC'));
-        $this->description = $description;
+        $this->checkedUrl = $checkedUrl;
+        $this->artisanName = $artisanName;
+        $this->oldStatus = $oldStatus;
+        $this->newStatus = $newStatus;
+
+        $this->type = self::TYPE_CS_UPDATED;
     }
 
-    public function getId(): ?int
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTimestamp(): ?DateTimeInterface
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getTimestamp(): DateTimeInterface
     {
         return $this->timestamp;
     }
 
-    public function setTimestamp(DateTimeInterface $timestamp): self
+    /**
+     * @param DateTimeInterface $timestamp
+     */
+    public function setTimestamp(DateTimeInterface $timestamp): void
     {
         $this->timestamp = $timestamp;
-
-        return $this;
     }
 
-    public function getDescription(): ?string
+    /**
+     * @return string
+     */
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param mixed $type
+     * @param string $type
      */
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getOldStatus()
+    public function getOldStatus(): ?bool
     {
         return $this->oldStatus;
     }
 
     /**
-     * @param mixed $oldStatus
+     * @param bool|null $oldStatus
      */
-    public function setOldStatus($oldStatus): void
+    public function setOldStatus(?bool $oldStatus): void
     {
         $this->oldStatus = $oldStatus;
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getNewStatus()
+    public function getNewStatus(): ?bool
     {
         return $this->newStatus;
     }
 
     /**
-     * @param mixed $newStatus
+     * @param bool|null $newStatus
      */
-    public function setNewStatus($newStatus): void
+    public function setNewStatus(?bool $newStatus): void
     {
         $this->newStatus = $newStatus;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getArtisanName()
+    public function getArtisanName(): string
     {
         return $this->artisanName;
     }
 
     /**
-     * @param mixed $artisanName
+     * @param string $artisanName
      */
-    public function setArtisanName($artisanName): void
+    public function setArtisanName(string $artisanName): void
     {
         $this->artisanName = $artisanName;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCheckedUrl()
+    public function getCheckedUrl(): string
     {
         return $this->checkedUrl;
     }
 
     /**
-     * @param mixed $checkedUrl
+     * @param string $checkedUrl
      */
-    public function setCheckedUrl($checkedUrl): void
+    public function setCheckedUrl(string $checkedUrl): void
     {
         $this->checkedUrl = $checkedUrl;
+    }
+
+    public function isLostTrack(): bool
+    {
+        return self::TYPE_CS_UPDATED === $this->type && null === $this->newStatus;
+    }
+
+    public function isChangedStatus(): bool
+    {
+        return self::TYPE_CS_UPDATED === $this->type;
     }
 }

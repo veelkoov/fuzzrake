@@ -10,6 +10,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\CommissionsStatusParserException;
 use App\Utils\DateTimeUtils;
+use App\Utils\Tracking\Status;
 use App\Utils\Web\UrlFetcherException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
@@ -17,10 +18,6 @@ use Symfony\Component\Console\Style\StyleInterface;
 
 class CommissionStatusUpdateService
 {
-    const STATUS_UNKNOWN = 'UNKNOWN';
-    const STATUS_OPEN = 'OPEN';
-    const STATUS_CLOSED = 'CLOSED';
-
     /**
      * @var ArtisanRepository
      */
@@ -105,25 +102,24 @@ class CommissionStatusUpdateService
         return !empty($artisan->getCommissionsQuotesCheckUrl());
     }
 
+    /**
+     * @param Artisan   $artisan
+     * @param bool|null $newStatus
+     *
+     * @throws Exception
+     */
     private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
     {
         if ($artisan->getAreCommissionsOpen() !== $newStatus) {
-            $newStatusText = $this->textStatus($newStatus);
-            $oldStatusText = $this->textStatus($artisan->getAreCommissionsOpen());
+            $oldStatusText = Status::text($artisan->getAreCommissionsOpen());
+            $newStatusText = Status::text($newStatus);
+            $checkedUrl = $artisan->getCommissionsQuotesCheckUrl();
 
-            $this->style->caution("{$artisan->getName()} ( {$artisan->getCommissionsQuotesCheckUrl()} ) $oldStatusText ---> $newStatusText");
+            $this->style->caution("{$artisan->getName()} ( {$checkedUrl} ) $oldStatusText ---> $newStatusText");
 
-            $this->objectManager->persist($this->getStatusChangeEvent($artisan->getName(), $artisan->getCommissionsQuotesCheckUrl(), $oldStatusText, $newStatusText));
+            $this->objectManager->persist(new Event($checkedUrl, $artisan->getName(),
+                $artisan->getAreCommissionsOpen(), $newStatus));
         }
-    }
-
-    private function textStatus(?bool $status): string
-    {
-        if (null === $status) {
-            return self::STATUS_UNKNOWN;
-        }
-
-        return $status ? self::STATUS_OPEN : self::STATUS_CLOSED;
     }
 
     /**
@@ -186,14 +182,5 @@ class CommissionStatusUpdateService
         }
 
         return [$status, $datetimeRetrieved ?: DateTimeUtils::getNowUtc()];
-    }
-
-    private function getStatusChangeEvent(string $name, string $url, string $oldStatus, string $newStatus): Event
-    {
-        if (self::STATUS_UNKNOWN === $newStatus) {
-            return new Event("The software failed to interpret new commission status based on the contents of: $url . $name commission status is now $newStatus (was $oldStatus).");
-        }
-
-        return new Event("Based on the contents of: $url , $name commission status changed to $newStatus (was $oldStatus).");
     }
 }

@@ -15,6 +15,10 @@ use JsonSerializable;
  */
 class Artisan implements JsonSerializable
 {
+    const OPEN = true;
+    const CLOSED = false;
+    const UNKNOWN = null;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
