@@ -4,29 +4,42 @@
     <p class="small">All times are UTC</p>
 
     <ul class="list-unstyled">
+        {% set last_timestamp = null %}
+
         {% for event in events %}
-            <li>
-                <span class="small">{{ event.timestamp|date('Y-m-d H:i') }}</span>
+            {% set day_changed = last_timestamp is null or last_timestamp|date('Y-m-d') != event.timestamp|date('Y-m-d') %}
+            {% set time_changed = last_timestamp is null or last_timestamp|date('Y-m-d H:i') != event.timestamp|date('Y-m-d H:i') %}
+            {% set last_timestamp = event.timestamp %}
 
-                {% if event.lostTrack %}
+            <li class="anchor row {% if day_changed %}separator-day{% endif %} {% if time_changed %}separator-time{% endif %}" id="event{{ event.id }}">
+                <div class="col-sm-2 text-right small">
+                    <a href="#event{{ event.id }}">
+                        {% if day_changed %} {{ event.timestamp|date('jS M Y') }}, {% endif %}
+                        {% if time_changed %} {{ event.timestamp|date('H:i') }} {% endif %}
+                    </a>
+                </div>
 
-                    Failed to interpret commission status based on the contents of:
-                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
-                    <b>{{ event.artisanName }}</b> commissions status is now
-                    <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                <div class="col-sm-10">
+                    {% if event.lostTrack %}
 
-                {% elseif event.changedStatus %}
+                        Failed to interpret commission status based on the contents of:
+                        <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                        <b>{{ event.artisanName }}</b> commissions status is now
+                        <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
-                    Based on the contents of
-                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
-                    <b>{{ event.artisanName }}</b> commissions status is now
-                    <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                    {% elseif event.changedStatus %}
 
-                {% else %}
+                        Based on the contents of
+                        <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
+                        <b>{{ event.artisanName }}</b> commissions status is now
+                        <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
-                    {{ event.description|raw }}
+                    {% else %}
 
-                {% endif %}
+                        {{ event.description|raw }}
+
+                    {% endif %}
+                </div>
             </li>
         {% endfor %}
     </ul>
