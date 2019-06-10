@@ -6,6 +6,8 @@ namespace App\Twig;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\FilterItem;
+use App\Utils\Tracking\Status;
+use App\Utils\Utils;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\NonUniqueResultException;
@@ -33,6 +35,8 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
+            new TwigFilter('event_url', [Utils::class, 'shortPrintUrl']),
+            new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
         ];

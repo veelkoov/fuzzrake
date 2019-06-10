@@ -26,7 +26,7 @@
     </div>
 
     <div class="row">
-        {% spaceless %}
+        {% apply spaceless %}
             {% for item in items.items %}
                 {% set checkboxId = item.value ~ 'CheckBox' ~ loop.index %}
 
@@ -37,6 +37,6 @@
                     </div>
                 </div>
             {% endfor %}
-        {% endspaceless %}
+        {% endapply %}
     </div>
 </fieldset>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\EventRepository;
@@ -20,7 +22,6 @@ class EventsController extends AbstractController
     {
         return $this->render('events/events.html.twig', [
             'events' => $eventRepository->findBy([], ['timestamp' => 'DESC']),
-            // TODO: git log --format='%aI %s'
         ]);
     }
 }

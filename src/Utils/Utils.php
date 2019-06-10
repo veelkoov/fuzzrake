@@ -30,4 +30,18 @@ class Utils
     {
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
+
+    public static function shortPrintUrl(string $originalUrl): string
+    {
+        $url = preg_replace('#^https?://(www\.)?#', '', $originalUrl);
+        $url = preg_replace('/\/?(#profile)?$/', '', $url);
+        $url = str_replace('/user/', '/u/', $url);
+        $url = str_replace('/journal/', '/j/', $url);
+
+        if (strlen($url) > 50) {
+            $url = substr($url, 0, 40).'...';
+        }
+
+        return $url;
+    }
 }
