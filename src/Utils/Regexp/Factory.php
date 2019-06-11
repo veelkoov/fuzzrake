@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Regexp;
 
 use SplObjectStorage;
 
-class RegexpFactory
+class Factory
 {
     /**
      * @var array
@@ -36,7 +36,7 @@ class RegexpFactory
         return new Regexp($original, $compiled);
     }
 
-    private function compileVariant(string $regexp, RegexpVariant $variant): string
+    private function compileVariant(string $regexp, Variant $variant): string
     {
         $result = $regexp;
 

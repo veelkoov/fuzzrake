@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp;
-use App\Utils\RegexpFactory;
-use App\Utils\RegexpVariant;
+use App\Utils\Regexp\Regexp;
+use App\Utils\Regexp\Factory;
+use App\Utils\Regexp\Variant;
 use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebsiteInfo;
 use InvalidArgumentException;
@@ -25,21 +25,21 @@ class CommissionsStatusParser
     private $statusRegexps;
 
     /**
-     * @var RegexpVariant
+     * @var Variant
      */
     private $open;
     /**
-     * @var RegexpVariant
+     * @var Variant
      */
     private $closed;
 
     public function __construct()
     {
-        $this->open = new RegexpVariant(['STATUS' => 'OPEN']);
-        $this->closed = new RegexpVariant(['STATUS' => 'CLOSED']);
-        $this->any = new RegexpVariant(['STATUS' => '(OPEN|CLOSED)']);
+        $this->open = new Variant(['STATUS' => 'OPEN']);
+        $this->closed = new Variant(['STATUS' => 'CLOSED']);
+        $this->any = new Variant(['STATUS' => '(OPEN|CLOSED)']);
 
-        $rf = new RegexpFactory(CommissionsStatusRegexps::COMMON_REPLACEMENTS);
+        $rf = new Factory(CommissionsStatusRegexps::COMMON_REPLACEMENTS);
         $this->falsePositivesRegexps = $rf->createSet(CommissionsStatusRegexps::FALSE_POSITIVES_REGEXES, [$this->any]);
         $this->statusRegexps = $rf->createSet(CommissionsStatusRegexps::GENERIC_REGEXES, [$this->open, $this->closed]);
 
@@ -112,7 +112,7 @@ class CommissionsStatusParser
         return $inputText;
     }
 
-    private function matchesGivenRegexpSet(array $testedStrings, array $regexpSet, RegexpVariant $variant): bool
+    private function matchesGivenRegexpSet(array $testedStrings, array $regexpSet, Variant $variant): bool
     {
         foreach ($testedStrings as $testedString) {
             foreach ($regexpSet as $regexp) {
