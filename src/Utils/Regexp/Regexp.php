@@ -13,6 +13,11 @@ class Regexp
     /**
      * @var string
      */
+    private $id;
+
+    /**
+     * @var string
+     */
     private $original;
 
     /**
@@ -21,11 +26,13 @@ class Regexp
     private $compiled;
 
     /**
-     * @param $original
-     * @param $compiled
+     * @param string           $id
+     * @param string           $original
+     * @param SplObjectStorage $compiled
      */
-    public function __construct(string $original, SplObjectStorage $compiled)
+    public function __construct(string $id, string $original, SplObjectStorage $compiled)
     {
+        $this->id = $id;
         $this->original = $original;
         $this->compiled = $compiled;
         $this->compiled->rewind();
@@ -37,7 +44,7 @@ class Regexp
      *
      * @return Match|null
      *
-     * @throws Failure
+     * @throws RegexpFailure
      */
     public function matches(string $testedString, Variant $variant): ?Match
     {
@@ -59,7 +66,7 @@ class Regexp
      *
      * @return string
      *
-     * @throws Failure
+     * @throws RegexpFailure
      */
     public function removeFrom(string $input, Variant $variant = null): string
     {
@@ -76,7 +83,7 @@ class Regexp
      *
      * @return string
      *
-     * @throws Failure
+     * @throws RegexpFailure
      */
     public function getCompiled(Variant $variant = null): string
     {
@@ -85,12 +92,17 @@ class Regexp
         return (string) $this->compiled[$variant];
     }
 
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
     /**
      * @param Variant|null $variant
      *
      * @return Variant
      *
-     * @throws Failure
+     * @throws RegexpFailure
      */
     private function useDefaultVariantWhenNull(Variant $variant = null): Variant
     {
@@ -99,7 +111,7 @@ class Regexp
         }
 
         if (count($this->compiled) > 1) {
-            throw new Failure('Regexp variant selection required');
+            throw new RegexpFailure('Regexp variant selection required');
         }
 
         return $this->compiled->current();
@@ -109,12 +121,12 @@ class Regexp
      * @param Variant $variant
      * @param mixed   $result
      *
-     * @throws Failure
+     * @throws RegexpFailure
      */
     private function throwIfRegexpFailed(Variant $variant, $result): void
     {
         if (null === $result || false === $result) {
-            throw new Failure('Regexp failed: '.$this->compiled[$variant], preg_last_error());
+            throw new RegexpFailure('Regexp '.$this->id.' failed: '.$this->compiled[$variant], preg_last_error());
         }
     }
 

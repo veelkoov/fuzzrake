@@ -8,7 +8,7 @@ use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\CommissionsStatusParserException;
+use App\Utils\Tracking\TrackerException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Tracking\Status;
 use App\Utils\Web\UrlFetcherException;
@@ -176,7 +176,7 @@ class CommissionStatusUpdateService
             $webpageSnapshot = $this->snapshots->get($url, $artisan->getName());
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $status = $this->parser->areCommissionsOpen($webpageSnapshot);
-        } catch (UrlFetcherException | CommissionsStatusParserException $exception) {
+        } catch (UrlFetcherException | TrackerException $exception) {
             $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
             $status = null;
         }

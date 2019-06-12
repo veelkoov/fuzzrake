@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\CommissionsStatusParserException;
+use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\WebpageSnapshot;
 use PHPUnit\Framework\TestCase;
 
@@ -30,13 +30,13 @@ class CommissionsStatusParserTest extends TestCase
      * @param WebpageSnapshot $snapshot
      * @param bool|null       $expectedResult
      *
-     * @throws CommissionsStatusParserException
+     * @throws TrackerException
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
         try {
             $result = self::$csp->areCommissionsOpen($snapshot);
-        } catch (CommissionsStatusParserException $exception) {
+        } catch (TrackerException $exception) {
             if ('NONE matches' === $exception->getMessage()) {
                 $result = null;
             } else {

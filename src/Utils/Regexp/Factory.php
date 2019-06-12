@@ -20,12 +20,12 @@ class Factory
 
     public function createSet(array $originals, array $variants = []): array
     {
-        return array_map(function (string $original) use ($variants) {
-            return $this->create($original, $variants);
-        }, $originals);
+        return array_map(function (string $key) use ($originals, $variants) {
+            return $this->create($key, $originals[$key], $variants);
+        }, array_keys($originals));
     }
 
-    public function create(string $original, array $variants = []): Regexp
+    private function create(string $key, string $original, array $variants = []): Regexp
     {
         $compiled = new SplObjectStorage();
 
@@ -33,7 +33,7 @@ class Factory
             $compiled[$variant] = $this->compileVariant($original, $variant);
         }
 
-        return new Regexp($original, $compiled);
+        return new Regexp($key, $original, $compiled);
     }
 
     private function compileVariant(string $regexp, Variant $variant): string
