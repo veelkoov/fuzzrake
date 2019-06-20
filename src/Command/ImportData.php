@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\DataImporter;
-use App\Utils\ImportCorrector;
+use App\Utils\Import\Corrector;
 use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
@@ -136,13 +136,13 @@ class ImportData extends Command
         return $handle;
     }
 
-    private function getImportCorrector(string $correctionsFilePath): ImportCorrector
+    private function getImportCorrector(string $correctionsFilePath): Corrector
     {
         if (!file_exists($correctionsFilePath)) {
             throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
         }
 
-        return new ImportCorrector($correctionsFilePath);
+        return new Corrector($correctionsFilePath);
     }
 
     private function readPasscodes(string $filePath): array
