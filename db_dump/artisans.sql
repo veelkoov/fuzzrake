@@ -361,7 +361,7 @@ CREATE TABLE `events` (
   `artisan_name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `checked_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=384 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=391 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '');
@@ -497,6 +497,13 @@ INSERT INTO `events` VALUES (378,'2019-06-15 18:07:08', '', 'CS_UPDATED',0,1,'Th
 INSERT INTO `events` VALUES (380,'2019-06-15 19:30:11', '', 'CS_UPDATED',NULL,0,'MothSicleSuits', 'https://mothsicles.wixsite.com/mothsiclesuits');
 INSERT INTO `events` VALUES (381,'2019-06-15 19:30:13', '', 'CS_UPDATED',NULL,0,'Alligators Always', 'https://twitter.com/AlligatorsAlway');
 INSERT INTO `events` VALUES (382,'2019-06-15 19:30:13', '', 'CS_UPDATED',NULL,1,'FFC Fursuits', 'http://www.furaffinity.net/user/ffc');
+INSERT INTO `events` VALUES (384,'2019-06-15 19:55:17', '- Updated partial information for 5 makers<br />\r\n- Added 8 new makers (<a href=\"https://github.com/veelkoov/fuzzrake/commit/efd3c42aa6538750d861a1f181e3b78072fcbc4d\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '');
+INSERT INTO `events` VALUES (385,'2019-06-17 06:07:11', '', 'CS_UPDATED',NULL,1,'Deadly Creations Fursuits', 'https://deadlycreationsfursuits.weebly.com/commissions.html');
+INSERT INTO `events` VALUES (386,'2019-06-17 06:07:12', '', 'CS_UPDATED',NULL,0,'Thunderhowl Studios', 'https://thunderhowlstudios.weebly.com/');
+INSERT INTO `events` VALUES (387,'2019-06-17 18:07:09', '', 'CS_UPDATED',0,1,'Made By Mercury', 'http://www.madebymercury.co.uk/');
+INSERT INTO `events` VALUES (388,'2019-06-19 06:07:03', '', 'CS_UPDATED',0,1,'Lupe Suits', 'http://www.furaffinity.net/user/lazylupe/');
+INSERT INTO `events` VALUES (389,'2019-06-20 06:07:04', '', 'CS_UPDATED',0,NULL,'Mixed Monsters', 'https://twitter.com/MixedMonsters');
+INSERT INTO `events` VALUES (390,'2019-06-20 18:07:16', '', 'CS_UPDATED',0,1,'Rossykitti Kreations', 'https://rossykittikreations.weebly.com/');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
