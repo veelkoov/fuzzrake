@@ -52,7 +52,7 @@ CREATE TABLE `artisans` (
   `are_commissions_open` tinyint(1) DEFAULT NULL,
   `commissions_quotes_last_check` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=313 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `artisans` VALUES (1,'', '', 'Silvena Handmade', '', '', '', 'PL', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'http://silvenahandmade.com/', '', '', 'http://www.furaffinity.net/user/silvena', '', '', 'https://www.facebook.com/silvenahandmade/', '', '', '', '', '', '', '', 'http://silvenahandmade.com/', NULL, NULL);
@@ -348,6 +348,8 @@ INSERT INTO `artisans` VALUES (306,'', '', 'BeastLabs', '', '', '', 'DE', '', ''
 INSERT INTO `artisans` VALUES (307,'', '', 'Rum Wolf Studios', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'https://www.rumwolf.net/', '', 'https://www.rumwolf.net/faq/', '', '', 'https://twitter.com/rumwuff', '', '', '', '', '', '', '', '', 'https://www.rumwolf.net/', NULL, NULL);
 INSERT INTO `artisans` VALUES (308,'', '', 'Nevfurmore', '', '', '', 'US', 'Pennsylvania', 'Sharpsburg', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'https://twitter.com/NevfurmoreSuits', '', '', '', '', 'https://trello.com/b/oUJYLict/current-queue', '', '', '', '', NULL, NULL);
 INSERT INTO `artisans` VALUES (309,'', '', 'FurtasticStudios', '', '', '', 'US', 'North Carolina', '', '', '', '', '', '', '', '', '', '', '', 'http://fursuitreview.com/maker/furtastic-studios/', '', '', '', 'http://www.furaffinity.net/user/furtasticstudios', '', 'https://twitter.com/FurtasticStudio', '', '', '', '', '', '', '', '', 'http://www.furaffinity.net/user/furtasticstudios', NULL, NULL);
+INSERT INTO `artisans` VALUES (311,'STCLYNX', '', 'Stitch Lynx', '', 'Currently one-person run fursuit business', '2018-11', 'US', 'Pennsylvania', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Semi Realistic\nSemi Toony', '', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)', '', 'Attached tail\nFollow-me eyes\nIndoor feet\nMovable jaw', '', 'Premade designs will have payment plans listed with design, commissions yet to be determined (will be updated with site)', 'Most/Any', '', '', 'https://stitchlynx.weebly.com/', 'https://stitchlynx.weebly.com/pricing.html', 'https://stitchlynx.weebly.com/aboutcontact.html', '', '', 'https://twitter.com/StitchLynx', '', '', '', '', '', 'https://t.me/stitchlynx', 'English', 'My site\'s currently under construction, and I only have one finished head under my belt. As such, I marked us with availability for things I\'ve yet to try/don\'t have examples of - BUT am willing to try', 'https://twitter.com/StitchLynx', NULL, NULL);
+INSERT INTO `artisans` VALUES (312,'SMALLFR', '', 'Smallfur Studios', '', 'Smallfur Studios - fursuit heads and mini partials', '2018-02', 'US', 'Missouri', 'Lamar', 'Premades\nStandard commissions', 'Toony', '', 'Head (as parts/separate)\nMini partial (head + handpaws + tail)', '', 'Follow-me eyes\nMovable jaw', 'Pickable nose', 'None/100% upfront', 'Mammals in general, dutchies, manokit', 'Scalies in general, fish', '', '', 'https://www.etsy.com/shop/SmallfurStudios', '', '', '', '', '', '', 'https://www.instagram.com/russophiile/', '', 'https://scratch.mit.edu/users/post--anesthetic/', '', 'English, Russian', '', '', NULL, NULL);
 DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -361,7 +363,7 @@ CREATE TABLE `events` (
   `artisan_name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `checked_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=391 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=392 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '');
@@ -504,6 +506,7 @@ INSERT INTO `events` VALUES (387,'2019-06-17 18:07:09', '', 'CS_UPDATED',0,1,'Ma
 INSERT INTO `events` VALUES (388,'2019-06-19 06:07:03', '', 'CS_UPDATED',0,1,'Lupe Suits', 'http://www.furaffinity.net/user/lazylupe/');
 INSERT INTO `events` VALUES (389,'2019-06-20 06:07:04', '', 'CS_UPDATED',0,NULL,'Mixed Monsters', 'https://twitter.com/MixedMonsters');
 INSERT INTO `events` VALUES (390,'2019-06-20 18:07:16', '', 'CS_UPDATED',0,1,'Rossykitti Kreations', 'https://rossykittikreations.weebly.com/');
+INSERT INTO `events` VALUES (391,'2019-06-20 20:03:04', '', 'CS_UPDATED',NULL,1,'Stitch Lynx', 'https://twitter.com/StitchLynx');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
