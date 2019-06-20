@@ -6,13 +6,16 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanImport;
 use App\Utils\ArtisanFields as Fields;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
-use App\Utils\ImportCorrector;
+use App\Utils\DateTimeUtils;
+use App\Utils\Import\Corrector;
+use App\Utils\Import\ImportException;
+use App\Utils\Import\Row;
 use App\Utils\Utils;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImporter
@@ -38,7 +41,7 @@ class DataImporter
     private $differ;
 
     /**
-     * @var ImportCorrector
+     * @var Corrector
      */
     private $corrector;
 
@@ -48,7 +51,16 @@ class DataImporter
         $this->objectManager = $objectManager;
     }
 
-    public function import(array $artisansData, ImportCorrector $importCorrector, array $passcodes, SymfonyStyle $io,
+    /**
+     * @param array        $artisansData
+     * @param Corrector    $importCorrector
+     * @param array        $passcodes
+     * @param SymfonyStyle $io
+     * @param bool         $showFixCommands
+     *
+     * @throws ImportException
+     */
+    public function import(array $artisansData, Corrector $importCorrector, array $passcodes, SymfonyStyle $io,
                            bool $showFixCommands): void
     {
         $this->fixer = new DataFixer($io, false);
@@ -68,44 +80,60 @@ class DataImporter
      * @param array        $artisansData
      * @param SymfonyStyle $io
      *
-     * @return ArtisanImport[]
+     * @return Row[]
+     *
+     * @throws ImportException
+     * @throws Exception
      */
     private function createImports(array $artisansData, SymfonyStyle $io): array
     {
         $result = [];
 
         foreach ($artisansData as $artisanData) {
-            $import = $this->createImport($artisanData);
+            $row = $this->createImportRow($artisanData);
 
-            if ($this->corrector->isRejected($import->getNewRawDataHash())) {
+            if ($this->corrector->isRejected($row)) {
                 continue;
             }
 
-            $makerId = $import->getUpsertedArtisan()->getMakerId() ?: $import->getNewData()->getMakerId();
-
-            if (array_key_exists($makerId, $result)) {
-                $io->note($import->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
+            if ($this->corrector->isDelayed($row)) {
+                $io->note("Ignoring {$row->getIdStringSafe()} until {$this->corrector->getIgnoredUntilDate($row)->format('Y-m-d')}");
+                continue;
             }
 
-            $result[$makerId] = $import;
+            $makerId = $row->getArtisan()->getMakerId() ?: $row->getInput()->getMakerId();
+
+            if (array_key_exists($makerId, $result)) {
+                $io->note($row->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
+            }
+
+            $result[$makerId] = $row;
         }
 
         return $result;
     }
 
-    private function createImport(array $artisanData): ArtisanImport
+    /**
+     * @param array $artisanData
+     *
+     * @return Row
+     *
+     * @throws ImportException
+     * @throws Exception
+     */
+    private function createImportRow(array $artisanData): Row
     {
-        $result = new ArtisanImport($artisanData);
-        $result->setNewData($this->updateArtisanWithData(new Artisan(), $artisanData));
+        $result = new Row($artisanData);
+        $result->setInput($this->updateArtisanWithData(new Artisan(), $artisanData));
 
-        $result->setUpsertedArtisan($this->findBestMatchArtisan($result->getNewData()) ?: new Artisan());
-        $result->setOriginalArtisan(clone $result->getUpsertedArtisan()); // Clone unmodified
+        $result->setArtisan($this->findBestMatchArtisan($result->getInput()) ?: new Artisan());
+        $result->setOriginalArtisan(clone $result->getArtisan()); // Clone unmodified
 
         return $result;
     }
 
     /**
-     * @param ArtisanImport[] $imports
+     * @param Row[] $imports
      */
     private function performImports(array $imports): void
     {
@@ -114,10 +142,10 @@ class DataImporter
         }
     }
 
-    private function performImport(ArtisanImport $import): void
+    private function performImport(Row $import): void
     {
-        $this->updateArtisanWithData($import->getUpsertedArtisan(), $import->getRawNewData()); // Update the DB entity
-        $this->fix($import->getUpsertedArtisan()); // And fix the DB entity
+        $this->updateArtisanWithData($import->getArtisan(), $import->getRawInput()); // Update the DB entity
+        $this->fix($import->getArtisan()); // And fix the DB entity
     }
 
     private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
@@ -137,6 +165,13 @@ class DataImporter
         return $artisan;
     }
 
+    /**
+     * @param Artisan $artisan
+     *
+     * @return Artisan|null
+     *
+     * @throws ImportException
+     */
     private function findBestMatchArtisan(Artisan $artisan): ?Artisan
     {
         $artisan = $this->fix(clone $artisan); // Apply names & maker IDs fixes
@@ -148,25 +183,26 @@ class DataImporter
         );
 
         if (count($results) > 1) {
-            throw new DataImporterException($this->getMoreThanOneArtisansMatchedMessage($artisan, $results));
+            throw new ImportException($this->getMoreThanOneArtisansMatchedMessage($artisan, $results));
         }
 
         return array_pop($results);
     }
 
     /**
-     * @param ArtisanImport[] $imports
+     * @param Row[] $imports
      */
     private function showUpdatedArtisans(array $imports): void
     {
         foreach ($imports as $import) {
-            $this->differ->showDiff($import->getOriginalArtisan(), $import->getUpsertedArtisan(), $import->getNewData());
+            $this->differ->showDiff($import->getOriginalArtisan(), $import->getArtisan(), $import->getInput());
         }
     }
 
     /**
-     * @param ArtisanImport[] $imports
-     * @param array           $passcodes
+     * @param Row[]        $imports
+     * @param array        $passcodes
+     * @param SymfonyStyle $io
      */
     private function persistValidImports(array $imports, array $passcodes, SymfonyStyle $io)
     {
@@ -183,48 +219,33 @@ class DataImporter
         return $artisan;
     }
 
-    private function getDataColumn(array $artisanData, string $prettyFieldName)
+    private function persistImportIfValid(array $passcodes, SymfonyStyle $io, Row $row): void
     {
-        return $artisanData[ArtisanFields::getUiFormFieldIndexByPrettyName($prettyFieldName)];
-    }
-
-    private function persistImportIfValid(array $passcodes, SymfonyStyle $io, ArtisanImport $import): void
-    {
-        $new = $import->getUpsertedArtisan();
-        $old = $import->getOriginalArtisan();
-        $names = Utils::artisanNamesSafe($old, $new);
-        $providedPasscode = $import->getProvidedPasscode();
+        $new = $row->getArtisan();
+        $old = $row->getOriginalArtisan();
+        $providedPasscode = $row->getProvidedPasscode();
 
         $this->fixer->validateArtisanData($new);
         $ok = true;
 
-        if (null === $old->getId() && !$this->corrector->isAcknowledged($new->getMakerId())) {
-            $io->warning("New maker: $names");
-            $io->writeln([
-                ImportCorrector::CMD_MATCH_NAME.":{$new->getMakerId()}:ABCDEFGHIJ:",
-                ImportCorrector::CMD_ACK_NEW.":{$new->getMakerId()}:",
-                ImportCorrector::CMD_REJECT.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:",
-            ]);
-
+        if (null === $old->getId() && !$this->corrector->isAcknowledged($row->getMakerId())) {
+            $this->reportNewMaker($io, $row);
             $ok = false;
         }
 
-        if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
-            $io->warning("$names changed their maker ID");
+        if (!empty($old->getMakerId()) && $old->getMakerId() !== $row->getMakerId()) {
+            $this->reportChangedMakerId($io, $row);
         }
 
-        if (!array_key_exists($new->getMakerId(), $passcodes)) {
-            $io->warning("$names set new passcode: $providedPasscode");
-            $io->writeln("{$new->getMakerId()} $providedPasscode");
+        if (!array_key_exists($row->getMakerId(), $passcodes)) {
+            $this->reportNewPasscode($io, $row);
 
             $ok = false;
         } else {
-            $expectedPasscode = $passcodes[$new->getMakerId()];
+            $expectedPasscode = $passcodes[$row->getMakerId()];
 
-            if ($providedPasscode !== $expectedPasscode && !$this->corrector->ignoreInvalidPasscodeForData($import->getNewRawDataHash())) {
-                $io->warning("$names provided invalid passcode '$providedPasscode' (expected: '$expectedPasscode')");
-                $io->writeln(ImportCorrector::CMD_IGNORE_PIN.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:");
-                $io->writeln(ImportCorrector::CMD_REJECT.":{$new->getMakerId()}:{$import->getNewRawDataHash()}:");
+            if ($providedPasscode !== $expectedPasscode && !$this->corrector->shouldIgnorePasscode($row)) {
+                $this->reportInvalidPasscode($io, $row, $expectedPasscode);
 
                 $ok = false;
             }
@@ -243,5 +264,37 @@ class DataImporter
             .implode(', ', array_map(function (Artisan $artisan) {
                 return Utils::artisanNamesSafe($artisan);
             }, $results));
+    }
+
+    private function reportNewMaker(SymfonyStyle $io, Row $row): void
+    {
+        $monthLater = DateTimeUtils::getMonthLaterYmd();
+        $makerId = $row->getArtisan()->getMakerId();
+
+        $io->warning("New maker: {$row->getNames()}");
+        $io->writeln([
+            Corrector::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:",
+            Corrector::CMD_ACK_NEW.":$makerId:",
+            Corrector::CMD_REJECT.":$makerId:{$row->getHash()}:",
+            Corrector::CMD_IGNORE_UNTIL.":$makerId:{$row->getHash()}:$monthLater:",
+        ]);
+    }
+
+    private function reportNewPasscode(SymfonyStyle $io, Row $row): void
+    {
+        $io->warning("{$row->getNames()} set new passcode: {$row->getProvidedPasscode()}");
+        $io->writeln("{$row->getMakerId()} {$row->getProvidedPasscode()}");
+    }
+
+    private function reportChangedMakerId(SymfonyStyle $io, Row $row): void
+    {
+        $io->warning("{$row->getNames()} changed their maker ID");
+    }
+
+    private function reportInvalidPasscode(SymfonyStyle $io, Row $row, $expectedPasscode): void
+    {
+        $io->warning("{$row->getNames()} provided invalid passcode '{$row->getProvidedPasscode()}' (expected: '$expectedPasscode')");
+        $io->writeln(Corrector::CMD_IGNORE_PIN.":{$row->getMakerId()}:{$row->getHash()}:");
+        $io->writeln(Corrector::CMD_REJECT.":{$row->getMakerId()}:{$row->getHash()}:");
     }
 }

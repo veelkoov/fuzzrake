@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\DateTimeUtils;
+use App\Utils\Utils;
+use DateTime;
+use Exception;
 
-class ImportCorrector
+class Corrector
 {
     const CMD_ACK_NEW = 'ack new';
     const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
@@ -16,21 +20,32 @@ class ImportCorrector
                                   * to find you anyway. */
     const CMD_MATCH_NAME = 'match name';
     const CMD_IGNORE_PIN = 'ignore pin';
+    const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
 
     private $corrections = ['*' => []];
     private $acknowledgedNew = [];
     private $matchedNames = [];
 
     /**
-     * @var array List of raw data hashes which contain invalid passcodes, to be approved & imported
+     * @var array List of hashes of rows which contain invalid passcodes, to be approved & imported
      */
     private $passcodeExceptions = [];
 
     /**
-     * @var array List of raw data hashes which were rejected
+     * @var array List of hashes of rows which got rejected
      */
     private $rejectedRecords = [];
 
+    /**
+     * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
+     */
+    private $ignoredUntil;
+
+    /**
+     * @param string $correctionDirectivesFilePath
+     *
+     * @throws Exception
+     */
     public function __construct(string $correctionDirectivesFilePath)
     {
         $this->readDirectivesFromFile($correctionDirectivesFilePath);
@@ -55,16 +70,21 @@ class ImportCorrector
         return in_array($makerId, $this->acknowledgedNew);
     }
 
-    public function ignoreInvalidPasscodeForData(string $rawDataHash)
+    public function shouldIgnorePasscode(Row $row)
     {
-        return in_array($rawDataHash, $this->passcodeExceptions);
+        return in_array($row->getHash(), $this->passcodeExceptions);
     }
 
-    public function isRejected(string $rawDataHash)
+    public function isRejected(Row $row)
     {
-        return in_array($rawDataHash, $this->rejectedRecords);
+        return in_array($row->getHash(), $this->rejectedRecords);
     }
 
+    /**
+     * @param string $filePath
+     *
+     * @throws Exception
+     */
     private function readDirectivesFromFile(string $filePath)
     {
         $buffer = new StringBuffer(file_get_contents($filePath));
@@ -88,6 +108,11 @@ class ImportCorrector
         $this->corrections[$makerId][] = $correction;
     }
 
+    /**
+     * @param StringBuffer $buffer
+     *
+     * @throws Exception
+     */
     private function readCommand(StringBuffer $buffer): void
     {
         $command = $buffer->readUntil(':');
@@ -96,21 +121,27 @@ class ImportCorrector
         switch ($command) {
             case self::CMD_ACK_NEW:
                 $this->acknowledgedNew[] = $makerId;
-            break;
+                break;
 
             case self::CMD_MATCH_NAME:
                 $this->matchedNames[$makerId] = $buffer->readUntil(':');
-            break;
+                break;
 
             case self::CMD_IGNORE_PIN:
                 // Maker ID kept only informative
                 $this->passcodeExceptions[] = $buffer->readUntil(':');
-            break;
+                break;
 
             case self::CMD_REJECT:
                 // Maker ID kept only informative
                 $this->rejectedRecords[] = $buffer->readUntil(':');
-            break;
+                break;
+
+            case self::CMD_IGNORE_UNTIL:
+                // Maker ID kept only informative
+                $rawDataHash = $buffer->readUntil(':');
+                $this->ignoredUntil[$rawDataHash] = DateTimeUtils::getUtcAt($buffer->readUntil(':'));
+                break;
 
             default:
                 $fieldName = $buffer->readUntil(':');
@@ -120,7 +151,7 @@ class ImportCorrector
 
                 $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
                     $command, $wrongValue, $correctedValue));
-            break;
+                break;
         }
     }
 
@@ -146,5 +177,22 @@ class ImportCorrector
         } else {
             return $this->corrections['*'];
         }
+    }
+
+    public function getIgnoredUntilDate(Row $row): DateTime
+    {
+        return $this->ignoredUntil[$row->getHash()];
+    }
+
+    /**
+     * @param Row $row
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function isDelayed(Row $row)
+    {
+        return array_key_exists($row->getHash(), $this->ignoredUntil) && !DateTimeUtils::passed($this->ignoredUntil[$row->getHash()]);
     }
 }
