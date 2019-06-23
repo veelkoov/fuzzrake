@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Utils\DateTimeUtils;
+use App\Utils\Regexp\RegexpFailure;
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\Cache;
 use App\Utils\Web\UrlFetcher;
 use App\Utils\Web\UrlFetcherException;
@@ -14,6 +16,8 @@ use Exception;
 
 class WebpageSnapshotManager
 {
+    const WIXSITE_CHILDREN_REGEXP = "#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si";
+
     /**
      * @var Cache
      */
@@ -42,6 +46,7 @@ class WebpageSnapshotManager
      * @return WebpageSnapshot
      *
      * @throws UrlFetcherException
+     * @throws RegexpFailure
      */
     public function get(string $url, string $ownerName): WebpageSnapshot
     {
@@ -72,6 +77,7 @@ class WebpageSnapshotManager
      * @param WebpageSnapshot $webpageSnapshot
      *
      * @throws UrlFetcherException
+     * @throws RegexpFailure
      */
     private function downloadChildren(WebpageSnapshot $webpageSnapshot): void
     {
@@ -86,16 +92,14 @@ class WebpageSnapshotManager
      * @param WebpageSnapshot $snapshot
      *
      * @throws UrlFetcherException
+     * @throws RegexpFailure
      */
-    private function fetchWixsiteContents(WebpageSnapshot $snapshot): void // TODO: refactor
+    private function fetchWixsiteContents(WebpageSnapshot $snapshot): void
     {
-        if (0 === preg_match_all("#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si",
-                $snapshot->getContents(), $matches)) {
-            return;
-        }
-
-        foreach ($matches['data_url'] as $dataUrl) {
-            $snapshot->addChildren($this->get($dataUrl, $snapshot->getOwnerName()));
+        if (Regexp::matchAll(self::WIXSITE_CHILDREN_REGEXP, $snapshot->getContents(), $matches)) {
+            foreach ($matches['data_url'] as $dataUrl) {
+                $snapshot->addChildren($this->get($dataUrl, $snapshot->getOwnerName()));
+            }
         }
     }
 
@@ -103,10 +107,11 @@ class WebpageSnapshotManager
      * @param WebpageSnapshot $snapshot
      *
      * @throws UrlFetcherException
+     * @throws RegexpFailure
      */
     private function fetchTrelloContents(WebpageSnapshot $snapshot): void // TODO: refactor
     {
-        if (0 === preg_match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $snapshot->getUrl(), $matches)) {
+        if (!Regexp::match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $snapshot->getUrl(), $matches)) {
             return;
         }
 

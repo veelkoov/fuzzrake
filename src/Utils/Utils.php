@@ -3,6 +3,8 @@
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\Regexp\RegexpFailure;
+use App\Utils\Regexp\Utils as Regexp;
 
 class Utils
 {
@@ -31,10 +33,17 @@ class Utils
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
 
+    /**
+     * @param string $originalUrl
+     *
+     * @return string
+     *
+     * @throws RegexpFailure
+     */
     public static function shortPrintUrl(string $originalUrl): string
     {
-        $url = preg_replace('#^https?://(www\.)?#', '', $originalUrl);
-        $url = preg_replace('/\/?(#profile)?$/', '', $url);
+        $url = Regexp::replace('#^https?://(www\.)?#', '', $originalUrl);
+        $url = Regexp::replace('/\/?(#profile)?$/', '', $url);
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 

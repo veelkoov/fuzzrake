@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\WebpageSnapshot;
@@ -50,7 +51,7 @@ class CommissionsStatusParserTest extends TestCase
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (!preg_match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
+            if (!Regexp::match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
                 echo "Invalid filename: $filepath\n";
 
                 return false;

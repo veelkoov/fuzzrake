@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use App\Utils\ArtisanField;
+use App\Utils\Regexp\RegexpFailure;
+use App\Utils\Regexp\Utils as Regexp;
 use InvalidArgumentException;
 
 class ValueCorrection
@@ -19,6 +21,17 @@ class ValueCorrection
     private $correctedValue;
     private $mode;
 
+    /**
+     * ValueCorrection constructor.
+     *
+     * @param string       $makerId
+     * @param ArtisanField $field
+     * @param string       $mode
+     * @param string       $wrongValue
+     * @param string       $correctedValue
+     *
+     * @throws RegexpFailure
+     */
     public function __construct(string $makerId, ArtisanField $field, string $mode, string $wrongValue, string $correctedValue)
     {
         $this->validateAndSetMakerId($makerId);
@@ -48,11 +61,18 @@ class ValueCorrection
         return $this->correctedValue;
     }
 
+    /**
+     * @param $value
+     *
+     * @return mixed
+     *
+     * @throws RegexpFailure
+     */
     public function apply($value)
     {
         switch ($this->mode) {
             case self::MODE_REGEXP:
-                $result = preg_replace($this->wrongValue, $this->correctedValue, $value);
+                $result = Regexp::replace($this->wrongValue, $this->correctedValue, $value);
 
                 if (null === $result) {
                     throw new InvalidArgumentException("Regexp failed: '$this->wrongValue'");
@@ -81,10 +101,12 @@ class ValueCorrection
 
     /**
      * @param string $makerId
+     *
+     * @throws RegexpFailure
      */
     private function validateAndSetMakerId(string $makerId): void
     {
-        if (!preg_match('#^([A-Z0-9]{7}|\*)$#', $makerId)) {
+        if (!Regexp::match('#^([A-Z0-9]{7}|\*)$#', $makerId)) {
             throw new InvalidArgumentException("Invalid maker ID: '$makerId'");
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
+use App\Utils\Regexp\Utils as RegexpUtils;
 use SplObjectStorage;
 
 class Factory
@@ -25,6 +26,15 @@ class Factory
         }, array_keys($originals));
     }
 
+    /**
+     * @param string $key
+     * @param string $original
+     * @param array  $variants
+     *
+     * @return Regexp
+     *
+     * @throws RegexpFailure
+     */
     private function create(string $key, string $original, array $variants = []): Regexp
     {
         $compiled = new SplObjectStorage();
@@ -36,12 +46,20 @@ class Factory
         return new Regexp($key, $original, $compiled);
     }
 
+    /**
+     * @param string  $regexp
+     * @param Variant $variant
+     *
+     * @return string
+     *
+     * @throws RegexpFailure
+     */
     private function compileVariant(string $regexp, Variant $variant): string
     {
         $result = $regexp;
 
         foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $needle => $replacement) {
-            $result = preg_replace("#$needle#", $replacement, $result);
+            $result = RegexpUtils::replace("#$needle#", $replacement, $result);
         }
 
         return "#$result#s";

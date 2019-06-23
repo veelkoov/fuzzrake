@@ -6,6 +6,8 @@ namespace App\Twig;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\FilterItem;
+use App\Utils\Regexp\RegexpFailure;
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\Status;
 use App\Utils\Utils;
 use DateTime;
@@ -91,6 +93,7 @@ class AppExtensions extends AbstractExtension
      * @return string
      *
      * @throws TplDataException
+     * @throws RegexpFailure
      */
     public function sinceFilter(string $input): string
     {
@@ -98,7 +101,7 @@ class AppExtensions extends AbstractExtension
             return '';
         }
 
-        if (!preg_match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
+        if (!Regexp::match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
             throw new TplDataException("Invalid 'since' data: '$input''");
         }
 
@@ -114,17 +117,24 @@ class AppExtensions extends AbstractExtension
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         return array_filter($items, function (FilterItem $item) use ($matchWord) {
-            return 1 === preg_match("#$matchWord#i", $item->getLabel());
+            return Regexp::match("#$matchWord#i", $item->getLabel());
         });
     }
 
+    /**
+     * @param string $input
+     *
+     * @return string
+     *
+     * @throws RegexpFailure
+     */
     public function filterHumanFriendlyRegexp(string $input): string
     {
-        $input = preg_replace('#\(\?<!.+?\)#', '', $input);
-        $input = preg_replace('#\(\?!.+?\)#', '', $input);
-        $input = preg_replace('#\([^a-z]+?\)#i', '', $input);
-        $input = preg_replace('#[()?]#', '', $input);
-        $input = preg_replace('#\[.+?\]#', '', $input);
+        $input = Regexp::replace('#\(\?<!.+?\)#', '', $input);
+        $input = Regexp::replace('#\(\?!.+?\)#', '', $input);
+        $input = Regexp::replace('#\([^a-z]+?\)#i', '', $input);
+        $input = Regexp::replace('#[()?]#', '', $input);
+        $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
     }

@@ -21,7 +21,7 @@ class Regexp
     private $original;
 
     /**
-     * @var SplObjectStorage
+     * @var string[] SplObjectStorage of strings
      */
     private $compiled;
 
@@ -39,25 +39,22 @@ class Regexp
     }
 
     /**
-     * @param string  $testedString
+     * @param string  $subject
      * @param Variant $variant
      *
      * @return Match|null
      *
      * @throws RegexpFailure
      */
-    public function matches(string $testedString, Variant $variant): ?Match
+    public function matches(string $subject, Variant $variant): ?Match
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        $result = preg_match($this->compiled[$variant], $testedString, $matches);
-        $this->throwIfRegexpFailed($variant, $result);
-
-        if (0 === $result) {
+        if (!Utils::match($this->compiled[$variant], $subject, $matches, 'ID='.$this->id)) {
             return null;
         }
 
-        return new Match($this, $variant, $matches[0], $this->getContext($testedString, $matches[0]));
+        return new Match($this, $variant, $matches[0], $this->getContext($subject, $matches[0]));
     }
 
     /**
@@ -72,10 +69,7 @@ class Regexp
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        $result = preg_replace($this->compiled[$variant], '', $input);
-        $this->throwIfRegexpFailed($variant, $result);
-
-        return $result;
+        return Utils::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
     }
 
     /**
@@ -115,19 +109,6 @@ class Regexp
         }
 
         return $this->compiled->current();
-    }
-
-    /**
-     * @param Variant $variant
-     * @param mixed   $result
-     *
-     * @throws RegexpFailure
-     */
-    private function throwIfRegexpFailed(Variant $variant, $result): void
-    {
-        if (null === $result || false === $result) {
-            throw new RegexpFailure('Regexp '.$this->id.' failed: '.$this->compiled[$variant], preg_last_error());
-        }
     }
 
     private function getContext(string $wholeInput, string $match): string
