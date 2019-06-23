@@ -363,7 +363,7 @@ CREATE TABLE `events` (
   `artisan_name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `checked_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=393 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '');
@@ -508,6 +508,7 @@ INSERT INTO `events` VALUES (389,'2019-06-20 06:07:04', '', 'CS_UPDATED',0,NULL,
 INSERT INTO `events` VALUES (390,'2019-06-20 18:07:16', '', 'CS_UPDATED',0,1,'Rossykitti Kreations', 'https://rossykittikreations.weebly.com/');
 INSERT INTO `events` VALUES (391,'2019-06-20 20:03:04', '', 'CS_UPDATED',NULL,1,'Stitch Lynx', 'https://twitter.com/StitchLynx');
 INSERT INTO `events` VALUES (392,'2019-06-20 20:04:37', '- Two new makers on board (<a href=\"https://github.com/veelkoov/fuzzrake/commit/3d48cdbf12455d7bd532fc2ca9fd0bc6843f2f02\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '');
+INSERT INTO `events` VALUES (393,'2019-06-23 06:07:16', '', 'CS_UPDATED',1,0,'Noodleteeth', 'https://noodleteeth.weebly.com/');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
