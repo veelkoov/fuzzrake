@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
+use App\Utils\StrContext;
+
 class Match
 {
     private $regexp;
     private $variant;
     private $match;
-    private $matchInContext;
 
-    public function __construct(Regexp $regexp, Variant $variant, string $match, string $matchInContext)
+    public function __construct(Regexp $regexp, Variant $variant, StrContext $match)
     {
         $this->regexp = $regexp;
         $this->variant = $variant;
         $this->match = $match;
-        $this->matchInContext = $matchInContext;
     }
 
     public function getRegexp(): Regexp
@@ -29,13 +29,8 @@ class Match
         return $this->variant;
     }
 
-    public function getMatch(): string
+    public function getMatch(): StrContext
     {
         return $this->match;
-    }
-
-    public function getMatchInContext(): string
-    {
-        return $this->matchInContext;
     }
 }

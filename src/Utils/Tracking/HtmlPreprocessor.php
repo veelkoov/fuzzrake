@@ -97,6 +97,7 @@ class HtmlPreprocessor
      * @return string
      *
      * @throws TrackerException
+     * @throws RegexpFailure
      */
     public static function applyFilters(string $inputText, string $additionalFilter): string
     {

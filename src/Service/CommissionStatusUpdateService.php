@@ -7,6 +7,8 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
+use App\Utils\Regexp\RegexpFailure;
+use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\DateTimeUtils;
@@ -55,6 +57,8 @@ class CommissionStatusUpdateService
      * @param StyleInterface $style
      * @param bool           $refresh
      * @param bool           $dryRun
+     *
+     * @throws RegexpFailure
      */
     public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
     {
@@ -90,10 +94,17 @@ class CommissionStatusUpdateService
      */
     private function updateArtisan(Artisan $artisan): void
     {
-        list($status, $datetimeRetrieved) = $this->getCommissionsStatusAndDateTimeChecked($artisan);
+        try {
+            $webpageSnapshot = $this->snapshots->get($artisan->getCommissionsQuotesCheckUrl(), $artisan->getName());
+            $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
+            $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
+        } catch (TrackerException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
+            $datetimeRetrieved = DateTimeUtils::getNowUtc(); // Fallback value
+            $analysisResult = new AnalysisResult(null, null);
+        }
 
-        $this->reportStatusChange($artisan, $status);
-        $artisan->setAreCommissionsOpen($status);
+        $this->reportStatusChange($artisan, $analysisResult);
+        $artisan->setAreCommissionsOpen($analysisResult->getStatus());
         $artisan->setCommissionsQuotesLastCheck($datetimeRetrieved);
     }
 
@@ -103,28 +114,32 @@ class CommissionStatusUpdateService
     }
 
     /**
-     * @param Artisan   $artisan
-     * @param bool|null $newStatus
+     * @param Artisan        $artisan
+     * @param AnalysisResult $analysisResult
      *
      * @throws Exception
      */
-    private function reportStatusChange(Artisan $artisan, ?bool $newStatus)
+    private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult) // FIXME
     {
-        if ($artisan->getAreCommissionsOpen() !== $newStatus) {
+        if ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
+            $this->style->note("Failed: {$artisan->getName()} ( {$artisan->getCommissionsQuotesCheckUrl()} ): {$exception->getMessage()}");
+
             $oldStatusText = Status::text($artisan->getAreCommissionsOpen());
-            $newStatusText = Status::text($newStatus);
+            $newStatusText = Status::text($analysisResult->getStatus());
             $checkedUrl = $artisan->getCommissionsQuotesCheckUrl();
 
             $this->style->caution("{$artisan->getName()} ( {$checkedUrl} ) $oldStatusText ---> $newStatusText");
 
             $this->objectManager->persist(new Event($checkedUrl, $artisan->getName(),
-                $artisan->getAreCommissionsOpen(), $newStatus));
+                $artisan->getAreCommissionsOpen(), $analysisResult->getStatus()));
         }
     }
 
     /**
      * @param array $artisans
      * @param bool  $refresh
+     *
+     * @throws RegexpFailure
      */
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
     {
@@ -157,30 +172,5 @@ class CommissionStatusUpdateService
     private function getArtisans(): array
     {
         return $this->artisanRepository->findAll();
-    }
-
-    /**
-     * @param Artisan $artisan
-     *
-     * @return array
-     *
-     * @throws Exception
-     */
-    private function getCommissionsStatusAndDateTimeChecked(Artisan $artisan): array
-    {
-        // FIXME: UTC for unknown is CE(S)T instead
-        $url = $artisan->getCommissionsQuotesCheckUrl();
-        $datetimeRetrieved = null;
-
-        try {
-            $webpageSnapshot = $this->snapshots->get($url, $artisan->getName());
-            $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
-            $status = $this->parser->areCommissionsOpen($webpageSnapshot);
-        } catch (UrlFetcherException | TrackerException $exception) {
-            $this->style->note("Failed: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
-            $status = null;
-        }
-
-        return [$status, $datetimeRetrieved ?: DateTimeUtils::getNowUtc()];
     }
 }

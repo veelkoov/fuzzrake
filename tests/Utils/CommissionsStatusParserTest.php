@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
+use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
@@ -32,20 +33,13 @@ class CommissionsStatusParserTest extends TestCase
      * @param bool|null       $expectedResult
      *
      * @throws TrackerException
+     * @throws RegexpFailure
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
-        try {
-            $result = self::$csp->areCommissionsOpen($snapshot);
-        } catch (TrackerException $exception) {
-            if ('NONE matches' === $exception->getMessage()) {
-                $result = null;
-            } else {
-                throw $exception;
-            }
-        }
+        $result = self::$csp->analyseStatus($snapshot);
 
-        $this->assertSame($expectedResult, $result, "Wrong result for '$webpageTextFileName'");
+        $this->assertSame($expectedResult, $result->getStatus(), "Wrong result for '$webpageTextFileName'");
     }
 
     public function areCommissionsOpenDataProvider()

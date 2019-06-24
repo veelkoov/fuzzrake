@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Utils\Tracking;
 
 use App\Utils\Regexp\Factory;
+use App\Utils\Regexp\Match;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Variant;
 use App\Utils\Web\WebpageSnapshot;
-use InvalidArgumentException;
 
 class CommissionsStatusParser
 {
@@ -48,17 +48,18 @@ class CommissionsStatusParser
         $this->falsePositivesRegexps = $rf->createSet(CommissionsStatusRegexps::FALSE_POSITIVES_REGEXES, [$this->any]);
         $this->statusRegexps = $rf->createSet(CommissionsStatusRegexps::GENERIC_REGEXES, [$this->open, $this->closed]);
 
-//        $this->debugDumpRegexpes();
+//        $this->debugDumpRegexps();
     }
 
     /**
      * @param WebpageSnapshot $snapshot
      *
-     * @return bool
+     * @return AnalysisResult
      *
-     * @throws TrackerException
+     * @throws TrackerException From inside array_map
+     * @throws RegexpFailure
      */
-    public function areCommissionsOpen(WebpageSnapshot $snapshot): bool
+    public function analyseStatus(WebpageSnapshot $snapshot): AnalysisResult
     {
         $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
@@ -67,10 +68,10 @@ class CommissionsStatusParser
             return $this->processInputText($artisanName, $additionalFilter, $input);
         }, $snapshot->getAllContents());
 
-        $open = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->open);
-        $closed = $this->matchesGivenRegexpSet($inputTexts, $this->statusRegexps, $this->closed);
+        $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
+        $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);
 
-        return $this->analyseResult($open, $closed);
+        return new AnalysisResult($open, $closed);
     }
 
     /**
@@ -90,12 +91,7 @@ class CommissionsStatusParser
         $inputText = HtmlPreprocessor::cleanHtml($inputText);
         $inputText = HtmlPreprocessor::processArtisansName($artisanName, $inputText);
         $inputText = $this->removeFalsePositives($inputText);
-
-        try {
-            $inputText = HtmlPreprocessor::applyFilters($inputText, $additionalFilter);
-        } catch (InvalidArgumentException $ex) {
-            throw new TrackerException("Filtering failed ({$ex->getMessage()})");
-        }
+        $inputText = HtmlPreprocessor::applyFilters($inputText, $additionalFilter);
 
         return $inputText;
     }
@@ -116,48 +112,32 @@ class CommissionsStatusParser
         return $inputText;
     }
 
-    private function matchesGivenRegexpSet(array $testedStrings, array $regexpSet, Variant $variant): bool
+    /**
+     * @param string[] $testedStrings
+     * @param Regexp[] $regexpSet
+     * @param Variant  $variant
+     *
+     * @return Match|null
+     *
+     * @throws RegexpFailure
+     */
+    private function findMatch(array $testedStrings, array $regexpSet, Variant $variant): ?Match
     {
         foreach ($testedStrings as $testedString) {
             foreach ($regexpSet as $regexp) {
-                if ($regexp->matches($testedString, $variant)) {
-                    return true;
+                if ($result = $regexp->matches($testedString, $variant)) {
+                    return $result;
                 }
             }
         }
 
-        return false;
-    }
-
-    /**
-     * @param bool $open
-     * @param bool $closed
-     *
-     * @return bool
-     *
-     * @throws TrackerException
-     */
-    private function analyseResult(bool $open, bool $closed): bool
-    {
-        if ($open && !$closed) {
-            return true;
-        }
-
-        if ($closed && !$open) {
-            return false;
-        }
-
-        if ($open) { // && $closed
-            throw new TrackerException('BOTH matches');
-        } else {
-            throw new TrackerException('NONE matches');
-        }
+        return null;
     }
 
     /**
      * @throws RegexpFailure
      */
-    private function debugDumpRegexpes(): void
+    private function debugDumpRegexps(): void
     {
         echo "FALSE-POSITIVES =========================================\n";
         foreach ($this->falsePositivesRegexps as $regexp) {

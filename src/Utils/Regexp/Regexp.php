@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
+use App\Utils\StrContext;
 use SplObjectStorage;
 
 class Regexp
@@ -54,7 +55,7 @@ class Regexp
             return null;
         }
 
-        return new Match($this, $variant, $matches[0], $this->getContext($subject, $matches[0]));
+        return new Match($this, $variant, StrContext::createFrom($subject, $matches[0], self::CONTEXT_LENGTH));
     }
 
     /**
@@ -109,12 +110,5 @@ class Regexp
         }
 
         return $this->compiled->current();
-    }
-
-    private function getContext(string $wholeInput, string $match): string
-    {
-        $start = max(0, strpos($wholeInput, $match) - self::CONTEXT_LENGTH);
-
-        return substr($wholeInput, $start, strlen($match) + self::CONTEXT_LENGTH);
     }
 }
