@@ -6,10 +6,10 @@ namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Utils;
 use DateTime;
-use Exception;
 
 class Row
 {
@@ -51,7 +51,7 @@ class Row
     /**
      * @param array $rawInput
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     public function __construct(array $rawInput)
     {
@@ -128,7 +128,7 @@ class Row
      *
      * @param array $rawNewData
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     private function setTimestamp(array $rawNewData): void
     {

@@ -26,15 +26,6 @@ class Factory
         }, array_keys($originals));
     }
 
-    /**
-     * @param string $key
-     * @param string $original
-     * @param array  $variants
-     *
-     * @return Regexp
-     *
-     * @throws RegexpFailure
-     */
     private function create(string $key, string $original, array $variants = []): Regexp
     {
         $compiled = new SplObjectStorage();
@@ -46,14 +37,6 @@ class Factory
         return new Regexp($key, $original, $compiled);
     }
 
-    /**
-     * @param string  $regexp
-     * @param Variant $variant
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function compileVariant(string $regexp, Variant $variant): string
     {
         $result = $regexp;

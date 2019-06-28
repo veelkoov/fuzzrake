@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\DomCrawler\Crawler;
@@ -22,13 +21,6 @@ class HtmlPreprocessor
         return $inputText;
     }
 
-    /**
-     * @param string $inputText
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     public static function cleanHtml(string $inputText): string
     {
         $inputText = strtolower($inputText);
@@ -74,13 +66,6 @@ class HtmlPreprocessor
         return $result;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     public static function guessFilterFromUrl(string $url): string
     {
         if (Regexp::match('/#(?<profile>.+)$/', $url, $matches)) {
@@ -97,7 +82,6 @@ class HtmlPreprocessor
      * @return string
      *
      * @throws TrackerException
-     * @throws RegexpFailure
      */
     public static function applyFilters(string $inputText, string $additionalFilter): string
     {

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Utils\DateTimeUtils;
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\Cache;
 use App\Utils\Web\UrlFetcher;
 use App\Utils\Web\UrlFetcherException;
 use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebsiteInfo;
-use Exception;
 
 class WebpageSnapshotManager
 {
@@ -45,8 +43,7 @@ class WebpageSnapshotManager
      *
      * @return WebpageSnapshot
      *
-     * @throws UrlFetcherException
-     * @throws RegexpFailure
+     * @throws UrlFetcherException from inside download()
      */
     public function get(string $url, string $ownerName): WebpageSnapshot
     {
@@ -62,7 +59,6 @@ class WebpageSnapshotManager
      * @return WebpageSnapshot
      *
      * @throws UrlFetcherException
-     * @throws Exception
      */
     private function download(string $url, string $ownerName): WebpageSnapshot
     {
@@ -77,7 +73,6 @@ class WebpageSnapshotManager
      * @param WebpageSnapshot $webpageSnapshot
      *
      * @throws UrlFetcherException
-     * @throws RegexpFailure
      */
     private function downloadChildren(WebpageSnapshot $webpageSnapshot): void
     {
@@ -92,7 +87,6 @@ class WebpageSnapshotManager
      * @param WebpageSnapshot $snapshot
      *
      * @throws UrlFetcherException
-     * @throws RegexpFailure
      */
     private function fetchWixsiteContents(WebpageSnapshot $snapshot): void
     {
@@ -107,7 +101,6 @@ class WebpageSnapshotManager
      * @param WebpageSnapshot $snapshot
      *
      * @throws UrlFetcherException
-     * @throws RegexpFailure
      */
     private function fetchTrelloContents(WebpageSnapshot $snapshot): void // TODO: refactor
     {

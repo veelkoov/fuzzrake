@@ -7,7 +7,6 @@ namespace App\Utils\Tracking;
 use App\Utils\Regexp\Factory;
 use App\Utils\Regexp\Match;
 use App\Utils\Regexp\Regexp;
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Variant;
 use App\Utils\Web\WebpageSnapshot;
 
@@ -57,7 +56,6 @@ class CommissionsStatusParser
      * @return AnalysisResult
      *
      * @throws TrackerException From inside array_map
-     * @throws RegexpFailure
      */
     public function analyseStatus(WebpageSnapshot $snapshot): AnalysisResult
     {
@@ -84,7 +82,6 @@ class CommissionsStatusParser
      * @return string
      *
      * @throws TrackerException
-     * @throws RegexpFailure
      */
     private function processInputText(string $artisanName, string $additionalFilter, string $inputText): string
     {
@@ -96,13 +93,6 @@ class CommissionsStatusParser
         return $inputText;
     }
 
-    /**
-     * @param string $inputText
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function removeFalsePositives(string $inputText): string
     {
         foreach ($this->falsePositivesRegexps as $regexp) {
@@ -112,15 +102,6 @@ class CommissionsStatusParser
         return $inputText;
     }
 
-    /**
-     * @param string[] $testedStrings
-     * @param Regexp[] $regexpSet
-     * @param Variant  $variant
-     *
-     * @return Match|null
-     *
-     * @throws RegexpFailure
-     */
     private function findMatch(array $testedStrings, array $regexpSet, Variant $variant): ?Match
     {
         foreach ($testedStrings as $testedString) {
@@ -134,9 +115,6 @@ class CommissionsStatusParser
         return null;
     }
 
-    /**
-     * @throws RegexpFailure
-     */
     private function debugDumpRegexps(): void
     {
         echo "FALSE-POSITIVES =========================================\n";

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 
 class WebsiteInfo
@@ -18,13 +17,6 @@ class WebsiteInfo
     const TWITTER_CONTENTS_SEARCH_STRING = '| Twitter</title>';
     const INSTAGRAM_CONTENTS_REGEXP = '#Instagram photos and videos\s*</title>#si';
 
-    /**
-     * @param WebpageSnapshot $webpageSnapshot
-     *
-     * @return bool
-     *
-     * @throws RegexpFailure
-     */
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
         if (false !== stripos($webpageSnapshot->getUrl(), '.wixsite.com/')) {
@@ -70,13 +62,6 @@ class WebsiteInfo
         return false !== stripos($websiteContents, self::TWITTER_CONTENTS_SEARCH_STRING);
     }
 
-    /**
-     * @param string $webpageContents
-     *
-     * @return bool
-     *
-     * @throws RegexpFailure
-     */
     public static function isInstagram(string $webpageContents): bool
     {
         return Regexp::match(self::INSTAGRAM_CONTENTS_REGEXP, $webpageContents);

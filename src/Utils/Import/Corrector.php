@@ -6,10 +6,10 @@ namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Utils;
 use DateTime;
-use Exception;
 
 class Corrector
 {
@@ -44,7 +44,7 @@ class Corrector
     /**
      * @param string $correctionDirectivesFilePath
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -83,7 +83,7 @@ class Corrector
     /**
      * @param string $filePath
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     private function readDirectivesFromFile(string $filePath)
     {
@@ -111,7 +111,7 @@ class Corrector
     /**
      * @param StringBuffer $buffer
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     private function readCommand(StringBuffer $buffer): void
     {
@@ -155,10 +155,6 @@ class Corrector
         }
     }
 
-    /**
-     * @param Artisan $artisan
-     * @param $corrections ValueCorrection[]
-     */
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
@@ -188,8 +184,6 @@ class Corrector
      * @param Row $row
      *
      * @return bool
-     *
-     * @throws Exception
      */
     public function isDelayed(Row $row)
     {

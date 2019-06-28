@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 use Closure;
 use Symfony\Component\Filesystem\Filesystem;
@@ -35,14 +34,6 @@ class Cache
         $this->fs->mkdir($this->cacheDirPath);
     }
 
-    /**
-     * @param string  $url
-     * @param Closure $getUrl
-     *
-     * @return WebpageSnapshot
-     *
-     * @throws RegexpFailure
-     */
     public function getOrSet(string $url, Closure $getUrl)
     {
         $snapshotPath = $this->snapshotPathForUrl($url);
@@ -72,13 +63,6 @@ class Cache
         return $snapshot;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function snapshotPathForUrl(string $url): string
     {
         $host = Regexp::replace('#^www\.#', '', parse_url($url, PHP_URL_HOST)) ?: 'unknown_host';
@@ -87,13 +71,6 @@ class Cache
         return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url)}-$hash.json";
     }
 
-    /**
-     * @param string $url
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function urlToFilename(string $url): string
     {
         return trim(

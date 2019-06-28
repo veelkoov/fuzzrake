@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use App\Utils\DateTimeException;
+use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
 use DateTime;
-use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Exception;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -72,8 +72,8 @@ class ArtisanRepository extends ServiceEntityRepository
             ->createNativeQuery('
                 SELECT SUM(are_commissions_open = 1) AS open
                   , SUM(are_commissions_open = 0) AS closed
-                  , SUM(are_commissions_open IS NOT NULL AND commissions_quotes_check_url <> "") AS successfully_tracked
-                  , SUM(commissions_quotes_check_url <> "") AS tracked
+                  , SUM(are_commissions_open IS NOT NULL AND commissions_quotes_check_url <> \'\') AS successfully_tracked
+                  , SUM(commissions_quotes_check_url <> \'\') AS tracked
                   , SUM(1) AS total
                 FROM artisans
             ', $rsm)
@@ -176,15 +176,15 @@ class ArtisanRepository extends ServiceEntityRepository
      * @return DateTime
      *
      * @throws NonUniqueResultException
-     * @throws Exception
+     * @throws DateTimeException
      */
     public function getLastCstUpdateTime(): DateTime
     {
-        return new DateTime($this
+        return DateTimeUtils::getUtcAt($this
             ->createQueryBuilder('a')
             ->select('MAX(a.commissionsQuotesLastCheck)')
             ->getQuery()
-            ->getSingleScalarResult(), new DateTimeZone('UTC'));
+            ->getSingleScalarResult());
     }
 
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array

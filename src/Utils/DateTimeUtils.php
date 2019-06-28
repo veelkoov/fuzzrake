@@ -12,12 +12,14 @@ class DateTimeUtils
 {
     /**
      * @return DateTime
-     *
-     * @throws Exception
      */
     public static function getNowUtc(): DateTime
     {
-        return new DateTime('now', self::getUtc());
+        try {
+            return new DateTime('now', self::getUtc());
+        } catch (Exception $e) {
+            throw new RuntimeDateTimeException($e);
+        }
     }
 
     public static function getUtc(): DateTimeZone
@@ -30,11 +32,15 @@ class DateTimeUtils
      *
      * @return DateTime
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     public static function getUtcAt(string $time): DateTime
     {
-        return new DateTime($time, self::getUtc());
+        try {
+            return new DateTime($time, self::getUtc());
+        } catch (Exception $e) {
+            throw new DateTimeException($e);
+        }
     }
 
     public static function getMonthLaterYmd(): string
@@ -46,8 +52,6 @@ class DateTimeUtils
      * @param DateTime $dateTime
      *
      * @return bool
-     *
-     * @throws Exception
      */
     public static function passed(DateTime $dateTime): bool
     {

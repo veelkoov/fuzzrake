@@ -7,15 +7,13 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
-use App\Utils\Regexp\RegexpFailure;
+use App\Utils\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\TrackerException;
-use App\Utils\DateTimeUtils;
 use App\Utils\Tracking\Status;
+use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\UrlFetcherException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Exception;
 use Symfony\Component\Console\Style\StyleInterface;
 
 class CommissionStatusUpdateService
@@ -53,13 +51,6 @@ class CommissionStatusUpdateService
         $this->parser = new CommissionsStatusParser();
     }
 
-    /**
-     * @param StyleInterface $style
-     * @param bool           $refresh
-     * @param bool           $dryRun
-     *
-     * @throws RegexpFailure
-     */
     public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
     {
         $this->style = $style;
@@ -77,20 +68,13 @@ class CommissionStatusUpdateService
     {
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
-                try {
-                    $this->updateArtisan($artisan);
-                } catch (Exception $exception) {
-                    $this->style->error("Failed: {$artisan->getName()} ( {$artisan->getCommissionsQuotesCheckUrl()} )");
-                    $this->style->text($exception);
-                }
+                $this->updateArtisan($artisan);
             }
         }
     }
 
     /**
      * @param Artisan $artisan
-     *
-     * @throws Exception
      */
     private function updateArtisan(Artisan $artisan): void
     {
@@ -98,8 +82,8 @@ class CommissionStatusUpdateService
             $webpageSnapshot = $this->snapshots->get($artisan->getCommissionsQuotesCheckUrl(), $artisan->getName());
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
-            $datetimeRetrieved = DateTimeUtils::getNowUtc(); // Fallback value
+        } catch (TrackerException | UrlFetcherException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
+            $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(null, null);
         }
 
@@ -116,8 +100,6 @@ class CommissionStatusUpdateService
     /**
      * @param Artisan        $artisan
      * @param AnalysisResult $analysisResult
-     *
-     * @throws Exception
      */
     private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult) // FIXME
     {
@@ -135,12 +117,6 @@ class CommissionStatusUpdateService
         }
     }
 
-    /**
-     * @param array $artisans
-     * @param bool  $refresh
-     *
-     * @throws RegexpFailure
-     */
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
     {
         if ($refresh) {

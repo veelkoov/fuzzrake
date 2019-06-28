@@ -3,7 +3,6 @@
 namespace App\Utils;
 
 use App\Entity\Artisan;
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 
 class Utils
@@ -37,8 +36,6 @@ class Utils
      * @param string $originalUrl
      *
      * @return string
-     *
-     * @throws RegexpFailure
      */
     public static function shortPrintUrl(string $originalUrl): string
     {

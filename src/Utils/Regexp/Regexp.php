@@ -26,11 +26,6 @@ class Regexp
      */
     private $compiled;
 
-    /**
-     * @param string           $id
-     * @param string           $original
-     * @param SplObjectStorage $compiled
-     */
     public function __construct(string $id, string $original, SplObjectStorage $compiled)
     {
         $this->id = $id;
@@ -39,14 +34,6 @@ class Regexp
         $this->compiled->rewind();
     }
 
-    /**
-     * @param string  $subject
-     * @param Variant $variant
-     *
-     * @return Match|null
-     *
-     * @throws RegexpFailure
-     */
     public function matches(string $subject, Variant $variant): ?Match
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
@@ -58,14 +45,6 @@ class Regexp
         return new Match($this, $variant, StrContext::createFrom($subject, $matches[0], self::CONTEXT_LENGTH));
     }
 
-    /**
-     * @param string       $input
-     * @param Variant|null $variant
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     public function removeFrom(string $input, Variant $variant = null): string
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
@@ -73,13 +52,6 @@ class Regexp
         return Utils::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
     }
 
-    /**
-     * @param Variant|null $variant
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     public function getCompiled(Variant $variant = null): string
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
@@ -92,13 +64,6 @@ class Regexp
         return $this->id;
     }
 
-    /**
-     * @param Variant|null $variant
-     *
-     * @return Variant
-     *
-     * @throws RegexpFailure
-     */
     private function useDefaultVariantWhenNull(Variant $variant = null): Variant
     {
         if (null !== $variant) {
@@ -106,7 +71,7 @@ class Regexp
         }
 
         if (count($this->compiled) > 1) {
-            throw new RegexpFailure('Regexp variant selection required');
+            throw new RuntimeRegexpException('Regexp variant selection required');
         }
 
         return $this->compiled->current();

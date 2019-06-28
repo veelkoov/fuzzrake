@@ -6,7 +6,6 @@ namespace App\Utils;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
-use App\Utils\Regexp\RegexpFailure;
 use App\Utils\Regexp\Utils as Regexp;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -94,10 +93,6 @@ class DataFixer
      */
     private $showDiff;
 
-    /**
-     * @param SymfonyStyle $io
-     * @param bool         $showDiff
-     */
     public function __construct(SymfonyStyle $io, bool $showDiff)
     {
         $this->io = $io;
@@ -108,13 +103,6 @@ class DataFixer
         $this->showDiff = $showDiff;
     }
 
-    /**
-     * @param Artisan $artisan
-     *
-     * @return Artisan
-     *
-     * @throws RegexpFailure
-     */
     public function fixArtisanData(Artisan $artisan): Artisan
     {
         $originalArtisan = clone $artisan;
@@ -164,11 +152,6 @@ class DataFixer
         return $artisan;
     }
 
-    /**
-     * @param Artisan $artisan
-     *
-     * @throws RegexpFailure
-     */
     public function validateArtisanData(Artisan $artisan): void
     {
         foreach (Fields::persisted() as $field) {
@@ -202,13 +185,6 @@ class DataFixer
         return implode("\n", array_unique($list));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixCountry(string $input): string
     {
         $result = trim($input);
@@ -220,90 +196,41 @@ class DataFixer
         return $result;
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixFurAffinityUrl(string $input): string
     {
         return Regexp::replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$#i',
             'http://www.furaffinity.net/user/$1', $this->fixGenericUrl($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixTwitterUrl(string $input): string
     {
         return Regexp::replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?$#i',
             'https://twitter.com/$1', $this->fixGenericUrl($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixInstagramUrl(string $input): string
     {
         return Regexp::replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
             'https://www.instagram.com/$1/', $this->fixGenericUrl($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixTumblrUrl(string $input): string
     {
         return $this->fixGenericUrl($input); // TODO: Implement fix
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixFacebookUrl(string $input): string
     {
         return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts)?/?(\?ref=[a-z_]+)?$#i',
             'https://www.facebook.com/$1/', $this->fixGenericUrl($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixYoutubeUrl(string $input): string
     {
         return Regexp::replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
             'https://www.youtube.com/$1', $this->fixGenericUrl($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixDeviantArtUrl(string $input): string
     {
         $result = $this->fixGenericUrl($input);
@@ -315,25 +242,11 @@ class DataFixer
         return $result;
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixGenericUrl(string $input): string
     {
         return trim($this->fixString($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixNotes(string $input): string
     {
         $result = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', trim($input));
@@ -343,25 +256,11 @@ class DataFixer
         return $result;
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixSince(string $input): string
     {
         return Regexp::replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixString(string $input): string
     {
         $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
@@ -370,13 +269,6 @@ class DataFixer
         return trim($result);
     }
 
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws RegexpFailure
-     */
     private function fixIntro(string $input): string
     {
         return $this->fixString(str_replace("\n", ' ', $input));
