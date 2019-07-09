@@ -363,7 +363,7 @@ CREATE TABLE `events` (
   `artisan_name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `checked_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=398 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=412 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '');
@@ -509,10 +509,24 @@ INSERT INTO `events` VALUES (390,'2019-06-20 18:07:16', '', 'CS_UPDATED',0,1,'Ro
 INSERT INTO `events` VALUES (391,'2019-06-20 20:03:04', '', 'CS_UPDATED',NULL,1,'Stitch Lynx', 'https://twitter.com/StitchLynx');
 INSERT INTO `events` VALUES (392,'2019-06-20 20:04:37', '- Two new makers on board (<a href=\"https://github.com/veelkoov/fuzzrake/commit/3d48cdbf12455d7bd532fc2ca9fd0bc6843f2f02\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '');
 INSERT INTO `events` VALUES (393,'2019-06-23 06:07:16', '', 'CS_UPDATED',1,0,'Noodleteeth', 'https://noodleteeth.weebly.com/');
-INSERT INTO `events` VALUES (394,'2019-06-23 16:33:32', '- Updated data according to one request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/83c5492c1020ed760351c16a03bf9baa958e16ea\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '');
+INSERT INTO `events` VALUES (394,'2019-06-23 16:33:32', '- Updated data according to one request. Thank you for your input! (<a href=\"https://github.com/veelkoov/fuzzrake/commit/83c5492c1020ed760351c16a03bf9baa958e16ea\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '');
 INSERT INTO `events` VALUES (395,'2019-06-25 06:07:12', '', 'CS_UPDATED',0,1,'Tokai Suiting', 'http://tokaisuiting.com/');
 INSERT INTO `events` VALUES (396,'2019-06-25 06:07:12', '', 'CS_UPDATED',0,NULL,'Dragon Soup', 'https://dragon-soup.squarespace.com/commissions');
 INSERT INTO `events` VALUES (397,'2019-06-25 18:07:03', '', 'CS_UPDATED',1,0,'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html');
+INSERT INTO `events` VALUES (398,'2019-06-25 20:52:16', '- Updated data according to three requests. Thank you for your input! Two makers marked inactive through name change - this solution is temporary. (<a href=\"https://github.com/veelkoov/fuzzrake/commit/adacda74f458463eaf91950c7f263c3bb9b933f5\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '');
+INSERT INTO `events` VALUES (399,'2019-06-26 06:07:03', '', 'CS_UPDATED',1,0,'That One Furry Otaku', 'https://thatonefurryotaku.weebly.com/commission-status.html');
+INSERT INTO `events` VALUES (400,'2019-06-27 06:06:58', '', 'CS_UPDATED',1,0,'Mei Fursuits', 'https://www.facebook.com/228395997528728/posts/488407388194253/');
+INSERT INTO `events` VALUES (401,'2019-06-29 06:09:41', '', 'CS_UPDATED',1,NULL,'FuzzButtFursuits', 'http://www.furaffinity.net/user/fuzzbuttfursuits/');
+INSERT INTO `events` VALUES (402,'2019-06-29 06:09:42', '', 'CS_UPDATED',0,NULL,'Fursnickety Costumes', 'http://www.fursnickety.com/');
+INSERT INTO `events` VALUES (403,'2019-07-01 06:07:14', '', 'CS_UPDATED',1,0,'Tokai Suiting', 'http://tokaisuiting.com/');
+INSERT INTO `events` VALUES (404,'2019-07-01 18:07:02', '', 'CS_UPDATED',0,NULL,'Don\'t Hug Cacti', 'https://donthugcacti.com/');
+INSERT INTO `events` VALUES (405,'2019-07-05 06:07:01', '', 'CS_UPDATED',NULL,1,'Don\'t Hug Cacti', 'https://donthugcacti.com/');
+INSERT INTO `events` VALUES (406,'2019-07-06 06:07:05', '', 'CS_UPDATED',1,NULL,'Aetherwears', 'https://www.etsy.com/shop/aetherwears');
+INSERT INTO `events` VALUES (407,'2019-07-08 06:07:18', '', 'CS_UPDATED',0,NULL,'Vegasyote', 'https://vegasyote.weebly.com/');
+INSERT INTO `events` VALUES (408,'2019-07-08 06:07:22', '', 'CS_UPDATED',0,NULL,'Dragon\'s Grin Studios', 'https://dragonsgrinstudios.weebly.com/');
+INSERT INTO `events` VALUES (409,'2019-07-08 18:07:15', '', 'CS_UPDATED',1,0,'Don\'t Hug Cacti', 'https://donthugcacti.com/');
+INSERT INTO `events` VALUES (410,'2019-07-08 18:07:16', '', 'CS_UPDATED',NULL,0,'Vegasyote', 'https://vegasyote.weebly.com/');
+INSERT INTO `events` VALUES (411,'2019-07-08 18:07:16', '', 'CS_UPDATED',NULL,0,'Dragon\'s Grin Studios', 'https://dragonsgrinstudios.weebly.com/');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
