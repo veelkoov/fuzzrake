@@ -364,7 +364,7 @@ CREATE TABLE `events` (
   `artisan_name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `checked_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=412 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=417 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '');
@@ -528,6 +528,11 @@ INSERT INTO `events` VALUES (408,'2019-07-08 06:07:22', '', 'CS_UPDATED',0,NULL,
 INSERT INTO `events` VALUES (409,'2019-07-08 18:07:15', '', 'CS_UPDATED',1,0,'Don\'t Hug Cacti', 'https://donthugcacti.com/');
 INSERT INTO `events` VALUES (410,'2019-07-08 18:07:16', '', 'CS_UPDATED',NULL,0,'Vegasyote', 'https://vegasyote.weebly.com/');
 INSERT INTO `events` VALUES (411,'2019-07-08 18:07:16', '', 'CS_UPDATED',NULL,0,'Dragon\'s Grin Studios', 'https://dragonsgrinstudios.weebly.com/');
+INSERT INTO `events` VALUES (412,'2019-07-09 14:27:36', '- New maker on board (<a href=\"https://github.com/veelkoov/fuzzrake/commit/96ad165cfbbaf8eca0e032c4e16d8493c4131d18\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '');
+INSERT INTO `events` VALUES (413,'2019-07-09 18:07:03', '', 'CS_UPDATED',0,NULL,'Arend Studios', 'https://twitter.com/ArendStudios');
+INSERT INTO `events` VALUES (414,'2019-07-10 18:07:02', '', 'CS_UPDATED',NULL,1,'Aetherwears', 'https://www.etsy.com/shop/aetherwears');
+INSERT INTO `events` VALUES (415,'2019-07-11 06:06:59', '', 'CS_UPDATED',1,0,'Chrysisi', 'https://chrysuits.weebly.com/');
+INSERT INTO `events` VALUES (416,'2019-07-12 06:07:18', '', 'CS_UPDATED',1,0,'Deadly Creations Fursuits', 'https://deadlycreationsfursuits.weebly.com/commissions.html');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
