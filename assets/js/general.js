@@ -2,6 +2,11 @@
 
 require('../css/general.less');
 
-window.addEventListener("hashchange", () => {
-    scrollBy(0, -70);
-});
+function scrollPastMenuBarOnHash() {
+    if (window.location.hash) {
+        scrollBy(0, -70);
+    }
+}
+
+$(window).on('hashchange', scrollPastMenuBarOnHash);
+$(document).ready(scrollPastMenuBarOnHash);
