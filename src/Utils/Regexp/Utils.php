@@ -19,7 +19,7 @@ class Utils
         $result = preg_match($pattern, $subject, $matches);
 
         if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo)", preg_last_error());
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
         }
 
         return 1 === $result;
@@ -38,7 +38,7 @@ class Utils
         $result = preg_replace($pattern, $replacement, $subject);
 
         if (null === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo)", preg_last_error());
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
         }
 
         return $result;
@@ -57,7 +57,7 @@ class Utils
         $result = preg_match_all($pattern, $subject, $matches);
 
         if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo)", preg_last_error());
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
         }
 
         return $result;
@@ -75,7 +75,7 @@ class Utils
         $result = preg_split($pattern, $subject);
 
         if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo)", preg_last_error());
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
         }
 
         return $result;
