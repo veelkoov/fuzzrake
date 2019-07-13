@@ -10,7 +10,7 @@ use SplObjectStorage;
 
 class Regexp
 {
-    const CONTEXT_LENGTH = 25;
+    const CONTEXT_LENGTH = 100;
 
     /**
      * @var string
