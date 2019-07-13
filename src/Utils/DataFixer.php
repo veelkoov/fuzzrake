@@ -124,7 +124,7 @@ class DataFixer
         $artisan->setState($this->fixString($artisan->getState()));
         $artisan->setCity($this->fixString($artisan->getCity()));
 
-        $artisan->setCommissionsQuotesCheckUrl($this->fixGenericUrl($artisan->getCommissionsQuotesCheckUrl()));
+        $artisan->setCstUrl($this->fixGenericUrl($artisan->getCstUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
         $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setFaqUrl($this->fixGenericUrl($artisan->getFaqUrl()));

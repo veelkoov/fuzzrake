@@ -10,11 +10,14 @@ use App\Repository\ArtisanRepository;
 use App\Utils\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\NullMatch;
 use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\UrlFetcherException;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\StyleInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CommissionStatusUpdateService
 {
@@ -36,7 +39,7 @@ class CommissionStatusUpdateService
     /**
      * @var StyleInterface
      */
-    private $style;
+    private $io;
 
     /**
      * @var CommissionsStatusParser
@@ -51,9 +54,12 @@ class CommissionStatusUpdateService
         $this->parser = new CommissionsStatusParser();
     }
 
-    public function updateAll(StyleInterface $style, bool $refresh, bool $dryRun)
+    public function updateAll(SymfonyStyle $style, bool $refresh, bool $dryRun)
     {
-        $this->style = $style;
+        $this->io = $style;
+        $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
+        $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
+        $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
 
         $artisans = $this->getArtisans();
         $this->prefetchStatusWebpages($artisans, $refresh);
@@ -79,42 +85,59 @@ class CommissionStatusUpdateService
     private function updateArtisan(Artisan $artisan): void
     {
         try {
-            $webpageSnapshot = $this->snapshots->get($artisan->getCommissionsQuotesCheckUrl(), $artisan->getName());
+            $webpageSnapshot = $this->snapshots->get($artisan->getCstUrl(), $artisan->getName());
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | UrlFetcherException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
-            $analysisResult = new AnalysisResult(null, null);
+            $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
         }
 
         $this->reportStatusChange($artisan, $analysisResult);
-        $artisan->setAreCommissionsOpen($analysisResult->getStatus());
-        $artisan->setCommissionsQuotesLastCheck($datetimeRetrieved);
+        $artisan
+            ->setAreCommissionsOpen($analysisResult->getStatus())
+            ->setCommissionsQuotesLastCheck($datetimeRetrieved);
     }
 
     private function canAutoUpdate(Artisan $artisan): bool
     {
-        return !empty($artisan->getCommissionsQuotesCheckUrl());
+        return !empty($artisan->getCstUrl());
     }
 
     /**
      * @param Artisan        $artisan
      * @param AnalysisResult $analysisResult
      */
-    private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult) // FIXME
+    private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult): void
     {
-        if ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
-            $this->style->note("Failed: {$artisan->getName()} ( {$artisan->getCommissionsQuotesCheckUrl()} ): {$exception->getMessage()}");
-
+        $reported = false;
+        if ($analysisResult->hasFailed()) {
+            $this->io->note("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}");
+            $reported = true;
+        } elseif ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
             $oldStatusText = Status::text($artisan->getAreCommissionsOpen());
             $newStatusText = Status::text($analysisResult->getStatus());
-            $checkedUrl = $artisan->getCommissionsQuotesCheckUrl();
 
-            $this->style->caution("{$artisan->getName()} ( {$checkedUrl} ) $oldStatusText ---> $newStatusText");
-
-            $this->objectManager->persist(new Event($checkedUrl, $artisan->getName(),
-                $artisan->getAreCommissionsOpen(), $analysisResult->getStatus()));
+            $this->io->caution("{$artisan->getName()} ( {$artisan->getCstUrl()} ): $oldStatusText ---> $newStatusText");
+            $reported = true;
         }
+
+        if ($reported && $analysisResult->openMatched()) {
+            $this->io->text("Matched OPEN ({$analysisResult->getOpenRegexpId()}): ".
+                "<context>{$analysisResult->getOpenStrContext()->getBefore()}</>".
+                "<open>{$analysisResult->getOpenStrContext()->getSubject()}</>".
+                "<context>{$analysisResult->getOpenStrContext()->getAfter()}</>");
+        }
+
+        if ($reported && $analysisResult->closedMatched()) {
+            $this->io->text("Matched CLOSED ({$analysisResult->getClosedRegexpId()}): ".
+                "<context>{$analysisResult->getClosedStrContext()->getBefore()}</>".
+                "<closed>{$analysisResult->getClosedStrContext()->getSubject()}</>".
+                "<context>{$analysisResult->getClosedStrContext()->getAfter()}</>");
+        }
+
+        $this->objectManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
+            $artisan->getAreCommissionsOpen(), $analysisResult));
     }
 
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
@@ -123,23 +146,23 @@ class CommissionStatusUpdateService
             $this->snapshots->clearCache();
         }
 
-        $this->style->progressStart(count($artisans));
+        $this->io->progressStart(count($artisans));
 
         foreach ($artisans as $artisan) {
             if ($this->canAutoUpdate($artisan)) {
-                $url = $artisan->getCommissionsQuotesCheckUrl();
+                $url = $artisan->getCstUrl();
 
                 try {
                     $this->snapshots->get($url, $artisan->getName());
                 } catch (UrlFetcherException $exception) {
-                    $this->style->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
+                    $this->io->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
                 }
             }
 
-            $this->style->progressAdvance();
+            $this->io->progressAdvance();
         }
 
-        $this->style->progressFinish();
+        $this->io->progressFinish();
     }
 
     /**

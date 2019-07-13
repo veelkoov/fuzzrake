@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Utils\Tracking;
 
 use App\Utils\Regexp\Factory;
-use App\Utils\Regexp\Match;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\Variant;
 use App\Utils\Web\WebpageSnapshot;
@@ -102,7 +101,7 @@ class CommissionsStatusParser
         return $inputText;
     }
 
-    private function findMatch(array $testedStrings, array $regexpSet, Variant $variant): ?Match
+    private function findMatch(array $testedStrings, array $regexpSet, Variant $variant): MatchInterface
     {
         foreach ($testedStrings as $testedString) {
             foreach ($regexpSet as $regexp) {
@@ -112,7 +111,7 @@ class CommissionsStatusParser
             }
         }
 
-        return null;
+        return NullMatch::get();
     }
 
     private function debugDumpRegexps(): void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Regexp;
 
 use App\Utils\StrContext;
+use App\Utils\Tracking\Match;
 use SplObjectStorage;
 
 class Regexp

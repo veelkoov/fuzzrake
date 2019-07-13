@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-class StrContext
+class StrContext implements StrContextInterface
 {
     private $before;
     private $subject;
@@ -30,6 +30,11 @@ class StrContext
     public function getAfter(): string
     {
         return $this->after;
+    }
+
+    public function asString(): string
+    {
+        return $this->before.self::STR_REPRESENTATION_SEPARATOR.$this->subject.self::STR_REPRESENTATION_SEPARATOR.$this->after;
     }
 
     public static function createFrom(string $input, string $match, int $contextLength): StrContext
