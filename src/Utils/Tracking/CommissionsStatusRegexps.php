@@ -20,13 +20,13 @@ class CommissionsStatusRegexps
         'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
         'fursuits' => 'fursuits?',
         '</(div|p|h[1-6])>' => ' ?</$1> ?',
-        '<(div|p|h[1-6])>' => ' ?<$1( class="[^"]*")?> ?',
+        '<(div|p|h[1-6])>' => ' ?<$1( class="[^"]{1,200}")?> ?',
         'WE_CAN' => '(i|we) can(?! not? )',
         'WE_ARE' => '(we are|we\'re|i am|i\'?m|STUDIO_NAME (is|are))',
         'WE' => '(i|we)',
         'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
         'TIMESPAN' => '(current(ly)?|(right )?now|at (this|the) time|for the time being|already|(now )?(always|permanently|indefinitely))',
-        '<HTML_TAG>' => '( ?<[^>]+> ?)+',
+        '<HTML_TAG>' => '( ?<[^>]{1,200}> ?)',
     ];
 
     const FALSE_POSITIVES_REGEXES = [
@@ -44,10 +44,10 @@ class CommissionsStatusRegexps
         'G02' => 'COMMISSIONS( status|:? are| have| info)?( TIMESPAN)?[-: ]+(&gt;)*STATUS(&lt;)*',
         'G03' => 'quotes? have TIMESPAN STATUS',
         'G04' => 'order quotes are STATUS',
-        'G05' => '(WE )?STATUS (for (new )?)?COMMISSIONS( \(limited\))? ?([.!*]|<HTML_TAG>)',
-        'G06' => 'journals: \d+ favorites: \d+ STATUS commissions </td>', // FurAffinity right-top status
+        'G05' => 'journals: \d+ favorites: \d+ STATUS commissions(?= </td>)', // FurAffinity right-top status
+        'G06' => '(WE )?STATUS (for (new )?)?COMMISSIONS( \(limited\))? ?([.!*]|<HTML_TAG>)',
         'G07' => '<div>TIMESPAN</div><div>STATUS</div><div>for COMMISSIONS</div>',
-        'G08' => 'COMMISSIONS (are|status)( TIMESPAN)?[: ]*<HTML_TAG>+(TIMESPAN )?STATUS',
+        'G08' => 'COMMISSIONS (are|status)( TIMESPAN)?[: ]*<HTML_TAG>{1,5}(TIMESPAN )?STATUS',
         'G09' => '<h2>"cawmission" status</h2><div>STATUS',
         'G10' => '<p>status: STATUS</p>',
         'G11' => '(TIMESPAN|fursuits)( mode)?: STATUS',
