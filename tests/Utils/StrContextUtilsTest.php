@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\StrContext;
+use App\Utils\StrContextUtils;
 use PHPUnit\Framework\TestCase;
 
-class StrContextTest extends TestCase
+class StrContextUtilsTest extends TestCase
 {
     /**
      * @dataProvider createFromDataProvider
@@ -19,9 +19,9 @@ class StrContextTest extends TestCase
      * @param string $subject
      * @param string $after
      */
-    public function testCreateFrom(string $input, string $match, int $contextLength, string $before, string $subject, string $after): void
+    public function testExtractFrom(string $input, string $match, int $contextLength, string $before, string $subject, string $after): void
     {
-        $strContext = StrContext::createFrom($input, $match, $contextLength);
+        $strContext = StrContextUtils::extractFrom($input, $match, $contextLength);
 
         $this->assertEquals($before, $strContext->getBefore());
         $this->assertEquals($subject, $strContext->getSubject());

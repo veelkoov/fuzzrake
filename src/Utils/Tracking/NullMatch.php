@@ -16,12 +16,12 @@ class NullMatch implements MatchInterface
 
     public function getRegexp(): Regexp
     {
-        self::throwIncomplete();
+        throw self::incomplete();
     }
 
     public function getVariant(): Variant
     {
-        self::throwIncomplete();
+        throw self::incomplete();
     }
 
     public function getStrContext(): StrContextInterface

@@ -23,8 +23,8 @@ class NullStrContext implements StrContextInterface
         return '';
     }
 
-    public function asString(): string
+    public function empty(): bool
     {
-        return self::STR_REPRESENTATION_SEPARATOR.self::STR_REPRESENTATION_SEPARATOR;
+        return true;
     }
 }

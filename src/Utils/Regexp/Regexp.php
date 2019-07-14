@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use App\Utils\StrContext;
+use App\Utils\StrContextUtils;
 use App\Utils\Tracking\Match;
 use SplObjectStorage;
 
@@ -43,7 +43,7 @@ class Regexp
             return null;
         }
 
-        return new Match($this, $variant, StrContext::createFrom($subject, $matches[0], self::CONTEXT_LENGTH));
+        return new Match($this, $variant, StrContextUtils::extractFrom($subject, $matches[0], self::CONTEXT_LENGTH));
     }
 
     public function removeFrom(string $input, Variant $variant = null): string

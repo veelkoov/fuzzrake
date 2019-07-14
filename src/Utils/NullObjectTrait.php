@@ -15,7 +15,7 @@ trait NullObjectTrait
         return self::$me ?? self::$me = new self();
     }
 
-    protected static function throwIncomplete(): void
+    protected static function incomplete(): RuntimeException
     {
         throw new RuntimeException('Null object incomplete');
     }

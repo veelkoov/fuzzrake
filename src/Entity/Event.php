@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Utils\DateTimeUtils;
+use App\Utils\StrContextInterface;
+use App\Utils\StrContextUtils;
 use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -77,16 +79,26 @@ class Event
     /**
      * @var string
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", name="open_match")
      */
-    private $openMatch = '';
+    private $openMatchRepr = '';
+
+    /**
+     * @var StrContextInterface
+     */
+    private $openMatch = null;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", name="closed_match")
      */
-    private $closedMatch = '';
+    private $closedMatchRepr = '';
+
+    /**
+     * @var StrContextInterface
+     */
+    private $closedMatch = null;
 
     /**
      * @param string         $checkedUrl
@@ -104,8 +116,8 @@ class Event
         if (null !== $analysisResult) {
             $this->type = self::TYPE_CS_UPDATED;
             $this->newStatus = $analysisResult->getStatus();
-            $this->openMatch = $analysisResult->getOpenStrContext()->asString();
-            $this->closedMatch = $analysisResult->getClosedStrContext()->asString();
+            $this->setClosedMatch($analysisResult->getClosedStrContext());
+            $this->setOpenMatch($analysisResult->getOpenStrContext());
         }
     }
 
@@ -199,23 +211,25 @@ class Event
         return self::TYPE_CS_UPDATED === $this->type;
     }
 
-    public function getOpenMatch(): string
+    public function getOpenMatch(): StrContextInterface
     {
-        return $this->openMatch;
+        return $this->openMatch = $this->openMatch ?? StrContextUtils::fromString($this->openMatchRepr);
     }
 
-    public function setOpenMatch(string $openMatch): void
+    public function setOpenMatch(StrContextInterface $openMatch): void
     {
         $this->openMatch = $openMatch;
+        $this->openMatchRepr = StrContextUtils::toStr($openMatch);
     }
 
-    public function getClosedMatch(): string
+    public function getClosedMatch(): StrContextInterface
     {
-        return $this->closedMatch;
+        return $this->closedMatch = $this->closedMatch ?? StrContextUtils::fromString($this->closedMatchRepr);
     }
 
-    public function setClosedMatch(string $closedMatch): void
+    public function setClosedMatch(StrContextInterface $closedMatch): void
     {
         $this->closedMatch = $closedMatch;
+        $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
     }
 }
