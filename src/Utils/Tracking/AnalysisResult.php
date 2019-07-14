@@ -53,7 +53,7 @@ class AnalysisResult
         } elseif ($this->noneMatched()) {
             return 'none matches';
         } else {
-            return '';
+            return 'OK';
         }
     }
 

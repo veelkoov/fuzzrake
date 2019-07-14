@@ -39,12 +39,12 @@ class StrContext implements StrContextInterface
 
     public static function createFrom(string $input, string $match, int $contextLength): StrContext
     {
-        $index = strpos($input, $match);
+        $index = mb_strpos($input, $match);
         $beforeIndex = max(0, $index - $contextLength);
 
         return new self(
-            substr($input, $beforeIndex, 0 === $beforeIndex ? $index : $contextLength),
+            mb_substr($input, $beforeIndex, 0 === $beforeIndex ? $index : $contextLength),
             $match,
-            substr($input, $index + strlen($match), $contextLength));
+            mb_substr($input, $index + strlen($match), $contextLength));
     }
 }

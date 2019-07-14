@@ -110,34 +110,35 @@ class CommissionStatusUpdateService
      */
     private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult): void
     {
-        $reported = false;
-        if ($analysisResult->hasFailed()) {
-            $this->io->note("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}");
-            $reported = true;
-        } elseif ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
+        if ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
             $oldStatusText = Status::text($artisan->getAreCommissionsOpen());
             $newStatusText = Status::text($analysisResult->getStatus());
 
-            $this->io->caution("{$artisan->getName()} ( {$artisan->getCstUrl()} ): $oldStatusText ---> $newStatusText");
-            $reported = true;
+            $this->io->caution("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}, $oldStatusText ---> $newStatusText");
+        } elseif ($analysisResult->hasFailed()) {
+            $this->io->note("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}");
+        } else {
+            return;
         }
 
-        if ($reported && $analysisResult->openMatched()) {
+        if ($analysisResult->openMatched()) {
             $this->io->text("Matched OPEN ({$analysisResult->getOpenRegexpId()}): ".
                 "<context>{$analysisResult->getOpenStrContext()->getBefore()}</>".
                 "<open>{$analysisResult->getOpenStrContext()->getSubject()}</>".
                 "<context>{$analysisResult->getOpenStrContext()->getAfter()}</>");
         }
 
-        if ($reported && $analysisResult->closedMatched()) {
+        if ($analysisResult->closedMatched()) {
             $this->io->text("Matched CLOSED ({$analysisResult->getClosedRegexpId()}): ".
                 "<context>{$analysisResult->getClosedStrContext()->getBefore()}</>".
                 "<closed>{$analysisResult->getClosedStrContext()->getSubject()}</>".
                 "<context>{$analysisResult->getClosedStrContext()->getAfter()}</>");
         }
 
-        $this->objectManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
-            $artisan->getAreCommissionsOpen(), $analysisResult));
+        if ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
+            $this->objectManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
+                $artisan->getAreCommissionsOpen(), $analysisResult));
+        }
     }
 
     private function prefetchStatusWebpages(array $artisans, bool $refresh): void
