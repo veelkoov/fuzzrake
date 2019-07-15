@@ -27,7 +27,7 @@ class StrContextUtils
         return new StrContext(
             mb_substr($input, $beforeIndex, 0 === $beforeIndex ? $index : $contextLength),
             $match,
-            mb_substr($input, $index + strlen($match), $contextLength));
+            mb_substr($input, $index + mb_strlen($match), $contextLength));
     }
 
     public static function fromString(?string $input): StrContextInterface
