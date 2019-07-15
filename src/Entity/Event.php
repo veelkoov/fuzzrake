@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Event
 {
     const TYPE_CS_UPDATED = 'CS_UPDATED';
+    const TYPE_CS_UPDATED_WITH_DETAILS = 'CS_UPDTD_DETLS';
     const TYPE_GENERIC = 'GENERIC';
 
     /**
@@ -114,7 +115,7 @@ class Event
         $this->oldStatus = $oldStatus;
 
         if (null !== $analysisResult) {
-            $this->type = self::TYPE_CS_UPDATED;
+            $this->type = self::TYPE_CS_UPDATED_WITH_DETAILS;
             $this->newStatus = $analysisResult->getStatus();
             $this->setClosedMatch($analysisResult->getClosedStrContext());
             $this->setOpenMatch($analysisResult->getOpenStrContext());
@@ -208,7 +209,12 @@ class Event
 
     public function isChangedStatus(): bool
     {
-        return self::TYPE_CS_UPDATED === $this->type;
+        return in_array($this->type, [self::TYPE_CS_UPDATED, self::TYPE_CS_UPDATED_WITH_DETAILS]);
+    }
+
+    public function hasDetails(): bool
+    {
+        return self::TYPE_CS_UPDATED_WITH_DETAILS === $this->type;
     }
 
     public function getOpenMatch(): StrContextInterface

@@ -10,3 +10,7 @@ function scrollPastMenuBarOnHash() {
 
 $(window).on('hashchange', scrollPastMenuBarOnHash);
 $(document).ready(scrollPastMenuBarOnHash);
+
+export function toggleEventDetails(element) {
+    $(element).parents('li').find('.details').toggleClass('d-none');
+}

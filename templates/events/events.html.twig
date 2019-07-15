@@ -22,24 +22,60 @@
                 </div>
 
                 <div class="col-sm-10">
-                    {% if event.lostTrack %}
+                    <p class="m-0">
+                        {% if event.lostTrack %}
 
-                        Failed to interpret commission status based on the contents of:
-                        <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
-                        <b>{{ event.artisanName }}</b> commissions status is now
-                        <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                            Failed to interpret commission status based on the contents of:
+                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                            <b>{{ event.artisanName }}</b> commissions status is now
+                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
-                    {% elseif event.changedStatus %}
+                        {% elseif event.changedStatus %}
 
-                        Based on the contents of
-                        <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
-                        <b>{{ event.artisanName }}</b> commissions status is now
-                        <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                            Based on the contents of
+                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
+                            <b>{{ event.artisanName }}</b> commissions status is now
+                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
-                    {% else %}
+                        {% else %}
 
-                        {{ event.description|raw }}
+                            {{ event.description|raw }}
 
+                        {% endif %}
+
+                        {% if event.details %}
+                            <a href="#event{{ event.id }}" onclick="fuzzrake.toggleEventDetails(this);">Toggle details</a>
+                        {% endif %}
+                    </p>
+
+                    {% if event.details %}
+                        <div class="details pl-4 d-none">
+                            {% if not event.closedMatch.empty %}
+                                <p class="m-1">
+                                    <strong>Closed match:</strong>
+                                    {% apply spaceless %}
+                                        <span class="bg-secondary">{{ event.closedMatch.before }}</span>
+                                        <span class="bg-danger">{{ event.closedMatch.subject }}</span>
+                                        <span class="bg-secondary">{{ event.closedMatch.after }}</span>
+                                    {% endapply %}
+                                </p>
+                            {% endif %}
+
+                            {% if not event.openMatch.empty %}
+                                <p class="m-1">
+                                    <strong>Open match:</strong>
+                                    {% apply spaceless %}
+                                        <span class="bg-secondary">{{ event.openMatch.before }}</span>
+                                        <span class="bg-success">{{ event.openMatch.subject }}</span>
+                                        <span class="bg-secondary">{{ event.openMatch.after }}</span>
+                                    {% endapply %}
+                                </p>
+                            {% endif %}
+
+                            {% if event.closedMatch.empty and event.openMatch.empty %}
+                                <p>Couldn't match neither open nor closed status message</p>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 </div>
             </li>
