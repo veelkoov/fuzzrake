@@ -364,7 +364,7 @@ CREATE TABLE `events` (
   `artisan_name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `checked_url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=418 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=472 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '');
@@ -534,6 +534,60 @@ INSERT INTO `events` VALUES (414,'2019-07-10 18:07:02', '', 'CS_UPDATED',NULL,1,
 INSERT INTO `events` VALUES (415,'2019-07-11 06:06:59', '', 'CS_UPDATED',1,0,'Chrysisi', 'https://chrysuits.weebly.com/');
 INSERT INTO `events` VALUES (416,'2019-07-12 06:07:18', '', 'CS_UPDATED',1,0,'Deadly Creations Fursuits', 'https://deadlycreationsfursuits.weebly.com/commissions.html');
 INSERT INTO `events` VALUES (417,'2019-07-12 18:40:51', '', 'CS_UPDATED',1,0,'Fun-Fur-All', 'https://fun-fur-all.com/how-to-order/quote/');
+INSERT INTO `events` VALUES (418,'2019-07-12 19:40:34', '- Data updates based on a) info from one maker and also b) one request by a visitor - thank you for your input! (<a href=\"https://github.com/veelkoov/fuzzrake/commit/5ebe9457f6996d5f233a440cd8227a5f58da4451\" target=\"_blank\">git</a>)<br />\r\n- Fixed scrolling by a link with a hash (<a href=\"https://github.com/veelkoov/fuzzrake/commit/798eca56911b7f361c7b339d4368c9bcbf73b8b3\" target=\"_blank\">git</a>)<br />\r\n- Updated &amp; improved data loading information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/f5aad8c05f0a5a6da25d66f37ab29931ee2d67f0\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '');
+INSERT INTO `events` VALUES (419,'2019-07-13 06:07:01', '', 'CS_UPDATED',1,0,'ByCats4Cats', 'http://bycats4cats.com/quote/');
+INSERT INTO `events` VALUES (420,'2019-07-15 06:07:19', '', 'CS_UPDATED',0,1,'LobitaWorks', 'https://twitter.com/lobitaworks');
+INSERT INTO `events` VALUES (421,'2019-07-15 18:07:06', '', 'CS_UPDATED',NULL,1,'Butteruffin\'s Fuzzy Friendz Works', 'https://buttermuffinsfuzzyfriendzworks.weebly.com/');
+INSERT INTO `events` VALUES (422,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Furry Factory', 'http://www.furaffinity.net/user/furry-factory/#profile');
+INSERT INTO `events` VALUES (423,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/');
+INSERT INTO `events` VALUES (424,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'TunnySaysIDK', 'http://www.furaffinity.net/user/TunnySaysIDK');
+INSERT INTO `events` VALUES (425,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Battitude Studios', 'http://www.furaffinity.net/user/battitudestudios');
+INSERT INTO `events` VALUES (426,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'ClockworkCarousel', 'http://www.furaffinity.net/user/clockworkcarousel/');
+INSERT INTO `events` VALUES (427,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Taffka', 'http://www.furaffinity.net/user/taffka/');
+INSERT INTO `events` VALUES (428,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Sugar rush creations', 'http://www.furaffinity.net/user/sugarrushcreations');
+INSERT INTO `events` VALUES (429,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'TheKareliaFursuits', 'http://www.furaffinity.net/user/thekareliafursuits/');
+INSERT INTO `events` VALUES (430,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'BrekWolf', 'http://www.furaffinity.net/user/brekwolf/');
+INSERT INTO `events` VALUES (431,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'Seriously Badass Costumes | Art Slave', 'http://www.furaffinity.net/user/artslave/');
+INSERT INTO `events` VALUES (432,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'Delicious Disguises', 'http://www.furaffinity.net/user/DeliciousDisguises');
+INSERT INTO `events` VALUES (433,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'FuzzyBat Fursuits | FarisBatwan', 'http://www.furaffinity.net/user/farisbatwan/');
+INSERT INTO `events` VALUES (434,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Furfancy Costumes', 'http://www.furaffinity.net/user/furfancycostumes');
+INSERT INTO `events` VALUES (435,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Fursuit Creations', 'http://www.furaffinity.net/user/fursuitcreations/');
+INSERT INTO `events` VALUES (436,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'Fur The Win Studios', 'http://www.furaffinity.net/user/furthewinstudio');
+INSERT INTO `events` VALUES (437,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'LunoVulpes', 'http://www.furaffinity.net/user/lunovulpes/');
+INSERT INTO `events` VALUES (438,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'One Fur All Studios', 'http://www.furaffinity.net/user/onefurall');
+INSERT INTO `events` VALUES (439,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Sushinom Suits', 'http://www.furaffinity.net/user/sushinomsuits/');
+INSERT INTO `events` VALUES (440,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Paciulo Fursuits', 'http://www.furaffinity.net/user/paciulofursuits');
+INSERT INTO `events` VALUES (441,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'DexterousZombie', 'http://www.furaffinity.net/user/dexterouszombie/');
+INSERT INTO `events` VALUES (442,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'Nevask', 'http://www.furaffinity.net/user/nevask/');
+INSERT INTO `events` VALUES (443,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'iSqueakeyPinky', 'http://www.furaffinity.net/user/isqueakypinky/');
+INSERT INTO `events` VALUES (444,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Toffeee', 'http://www.furaffinity.net/user/toffeee/');
+INSERT INTO `events` VALUES (445,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Shagpoke Studios', 'http://www.furaffinity.net/user/shagpoke/');
+INSERT INTO `events` VALUES (446,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'Lupe Suits', 'http://www.furaffinity.net/user/lazylupe/');
+INSERT INTO `events` VALUES (447,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'dragon-x2', 'http://www.furaffinity.net/user/dragon-x2/');
+INSERT INTO `events` VALUES (448,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Rhee', 'http://www.furaffinity.net/user/rhee/');
+INSERT INTO `events` VALUES (449,'2019-07-16 18:07:05', '', 'CS_UPDATED',0,NULL,'Fursuit Parade', 'http://www.furaffinity.net/user/theroyalbanana/#profile');
+INSERT INTO `events` VALUES (450,'2019-07-16 18:07:05', '', 'CS_UPDATED',1,NULL,'FurDelicious', 'http://www.furaffinity.net/user/FurDelicious');
+INSERT INTO `events` VALUES (451,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Fire-Wolf Studio', 'http://www.furaffinity.net/journal/7337932/');
+INSERT INTO `events` VALUES (452,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Snow Gryphon Suits', 'http://www.furaffinity.net/user/snowgryphonsuits');
+INSERT INTO `events` VALUES (453,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'R5', 'http://www.furaffinity.net/user/r5suits');
+INSERT INTO `events` VALUES (454,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Sammy\'s Fur Shoppe', 'http://www.furaffinity.net/user/samthemoose101/');
+INSERT INTO `events` VALUES (455,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Lizard King Designs', 'http://www.furaffinity.net/user/lizardkingdesigns#profile');
+INSERT INTO `events` VALUES (456,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Norman Patches n\' Furs', 'http://www.furaffinity.net/user/normanpatchesnfurs/#profile');
+INSERT INTO `events` VALUES (457,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'DrakonicKnight', 'http://www.furaffinity.net/journal/695912/');
+INSERT INTO `events` VALUES (458,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Creatury', 'http://www.furaffinity.net/user/creatury');
+INSERT INTO `events` VALUES (459,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'MissRaptor', 'http://www.furaffinity.net/user/missraptor');
+INSERT INTO `events` VALUES (460,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Fionka Fursuits', 'http://www.furaffinity.net/user/fionkafursuits#profile');
+INSERT INTO `events` VALUES (461,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'BeautyoftheBass Creations', 'http://www.furaffinity.net/user/beautyofthebass');
+INSERT INTO `events` VALUES (462,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'Kitty Fluff', 'http://www.furaffinity.net/user/kittyfluff');
+INSERT INTO `events` VALUES (463,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'Windy Suits', 'http://www.furaffinity.net/user/windyfursuits');
+INSERT INTO `events` VALUES (464,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'Queen of Yeen', 'http://www.furaffinity.net/user/hyenaclaw');
+INSERT INTO `events` VALUES (465,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'Feely\'s Den', 'https://www.furaffinity.net/user/feely/');
+INSERT INTO `events` VALUES (466,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'Flowercity Fursuits', 'http://www.furaffinity.net/user/flowercityfursuits');
+INSERT INTO `events` VALUES (467,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'Monster Cult Makers', 'http://www.furaffinity.net/user/kalorian/#profile');
+INSERT INTO `events` VALUES (468,'2019-07-16 18:07:06', '', 'CS_UPDATED',0,NULL,'Furry Machine Workshop', 'https://www.furaffinity.net/user/furrymachine/');
+INSERT INTO `events` VALUES (469,'2019-07-16 18:07:06', '', 'CS_UPDATED',1,NULL,'FFC Fursuits', 'http://www.furaffinity.net/user/ffc');
+INSERT INTO `events` VALUES (470,'2019-07-17 18:09:00', '', 'CS_UPDATED',0,NULL,'WMW66 Costumes', 'http://wmw66-costumes.com/content/pricing');
+INSERT INTO `events` VALUES (471,'2019-07-17 18:09:02', '', 'CS_UPDATED',1,0,'Cawstumes', 'http://www.cawstumes.com/fursuits/');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
