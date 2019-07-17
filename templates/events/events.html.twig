@@ -2,10 +2,15 @@
 
 {% block title %}updates history{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('events') }}
+{% endblock %}
+
 {% block body %}
     <p class="small">All times are UTC</p>
 
-    <ul class="list-unstyled">
+    <ul class="list-unstyled" id="events-list">
         {% set last_timestamp = null %}
 
         {% for event in events %}
@@ -13,7 +18,7 @@
             {% set time_changed = last_timestamp is null or last_timestamp|date('Y-m-d H:i') != event.timestamp|date('Y-m-d H:i') %}
             {% set last_timestamp = event.timestamp %}
 
-            <li class="anchor row {% if day_changed %}separator-day{% endif %} {% if time_changed %}separator-time{% endif %}" id="event{{ event.id }}">
+            <li class="events-item row {% if day_changed %}separator-day{% endif %} {% if time_changed %}separator-time{% endif %}" id="event{{ event.id }}">
                 <div class="col-sm-2 text-right small">
                     <a href="#event{{ event.id }}">
                         {% if day_changed %} {{ event.timestamp|date('jS M Y') }}, {% endif %}
@@ -44,32 +49,32 @@
                         {% endif %}
 
                         {% if event.details %}
-                            <a href="#event{{ event.id }}" onclick="fuzzrake.toggleEventDetails(this);">Toggle details</a>
+                            <a href="#" class="toggle-details">Toggle details</a>
                         {% endif %}
                     </p>
 
                     {% if event.details %}
-                        <div class="details pl-4 d-none">
+                        <div class="event-details pl-4">
                             {% if not event.closedMatch.empty %}
-                                <p class="m-1">
+                                <blockquote class="blockquote m-1">
                                     <strong>Closed match:</strong>
                                     {% apply spaceless %}
-                                        <span class="bg-secondary">{{ event.closedMatch.before }}</span>
+                                        <span class="text-secondary">{{ event.closedMatch.before }}</span>
                                         <span class="bg-danger">{{ event.closedMatch.subject }}</span>
-                                        <span class="bg-secondary">{{ event.closedMatch.after }}</span>
+                                        <span class="text-secondary">{{ event.closedMatch.after }}</span>
                                     {% endapply %}
-                                </p>
+                                </blockquote>
                             {% endif %}
 
                             {% if not event.openMatch.empty %}
-                                <p class="m-1">
+                                <blockquote class="blockquote m-1">
                                     <strong>Open match:</strong>
                                     {% apply spaceless %}
-                                        <span class="bg-secondary">{{ event.openMatch.before }}</span>
+                                        <span class="text-secondary">{{ event.openMatch.before }}</span>
                                         <span class="bg-success">{{ event.openMatch.subject }}</span>
-                                        <span class="bg-secondary">{{ event.openMatch.after }}</span>
+                                        <span class="text-secondary">{{ event.openMatch.after }}</span>
                                     {% endapply %}
-                                </p>
+                                </blockquote>
                             {% endif %}
 
                             {% if event.closedMatch.empty and event.openMatch.empty %}
