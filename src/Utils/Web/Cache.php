@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
+use App\Utils\JsonException;
 use App\Utils\Regexp\Utils as Regexp;
 use Closure;
 use Symfony\Component\Filesystem\Filesystem;
@@ -39,10 +40,15 @@ class Cache
         $snapshotPath = $this->snapshotPathForUrl($url);
 
         if ($this->has($snapshotPath)) {
-            return $this->get($snapshotPath);
-        } else {
-            return $this->put($snapshotPath, $getUrl());
+            try {
+                return $this->get($snapshotPath);
+            } catch (JsonException $e) {
+                // TODO: Log exception; snapshot was corrupted
+                // Fallback below
+            }
         }
+
+        return $this->put($snapshotPath, $getUrl());
     }
 
     private function has(string $snapshotPath)
@@ -50,6 +56,13 @@ class Cache
         return file_exists($snapshotPath);
     }
 
+    /**
+     * @param string $snapshotPath
+     *
+     * @return WebpageSnapshot
+     *
+     * @throws JsonException
+     */
     private function get(string $snapshotPath): WebpageSnapshot
     {
         return WebpageSnapshot::fromJson(file_get_contents($snapshotPath));
@@ -58,7 +71,12 @@ class Cache
     private function put(string $snapshotPath, WebpageSnapshot $snapshot): WebpageSnapshot
     {
         $this->fs->mkdir(dirname($snapshotPath));
-        $this->fs->dumpFile($snapshotPath, $snapshot->toJson());
+
+        try {
+            $this->fs->dumpFile($snapshotPath, $snapshot->toJson());
+        } catch (JsonException $e) {
+            // TODO: Add logging/notifying
+        }
 
         return $snapshot;
     }

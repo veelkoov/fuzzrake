@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
+use App\Utils\JsonException;
+use App\Utils\Utils;
 use DateTime;
 use DateTimeInterface;
 use JsonSerializable;
@@ -11,8 +13,7 @@ use JsonSerializable;
 class WebpageSnapshot implements JsonSerializable
 {
     const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-                                     | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT
-                                     | JSON_THROW_ON_ERROR;
+                                     | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
 
     /**
      * @var string
@@ -53,14 +54,26 @@ class WebpageSnapshot implements JsonSerializable
         $this->ownerName = $ownerName;
     }
 
+    /**
+     * @param string $json
+     *
+     * @return WebpageSnapshot
+     *
+     * @throws JsonException
+     */
     public static function fromJson(string $json)
     {
-        return self::fromArray(json_decode($json, true, 512, self::JSON_SERIALIZATION_OPTIONS));
+        return self::fromArray(Utils::fromJson($json));
     }
 
+    /**
+     * @return string
+     *
+     * @throws JsonException
+     */
     public function toJson(): string
     {
-        return json_encode($this, self::JSON_SERIALIZATION_OPTIONS);
+        return Utils::toJson($this, self::JSON_SERIALIZATION_OPTIONS);
     }
 
     public function addChildren(WebpageSnapshot $children): void

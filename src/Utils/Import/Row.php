@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
+use App\Utils\JsonException;
 use App\Utils\Utils;
 use DateTime;
 
@@ -138,6 +139,10 @@ class Row
     private function setHash(array $rawNewData)
     {
         $rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)] = null;
-        $this->hash = sha1(json_encode($rawNewData));
+        try {
+            $this->hash = sha1(Utils::toJson($rawNewData));
+        } catch (JsonException $e) {
+            throw new RuntimeImportException('Failed to calculate hash of the data row due to a JSON encoding error', 0, $e);
+        }
     }
 }
