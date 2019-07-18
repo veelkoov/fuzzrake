@@ -7,7 +7,7 @@ use App\Utils\Regexp\Utils as Regexp;
 
 class Utils
 {
-    public static function artisanNamesSafe(Artisan ...$artisans)
+    public static function artisanNamesSafeForCli(Artisan ...$artisans)
     {
         $names = $makerIds = [];
 
@@ -16,18 +16,18 @@ class Utils
             $makerIds = array_merge($makerIds, $artisan->getAllMakerIdsArr());
         }
 
-        return self::safeStr(implode(' / ', array_merge(
+        return self::strSafeForCli(implode(' / ', array_merge(
             array_filter(array_unique($names)),
             array_filter(array_unique($makerIds))
         )));
     }
 
-    public static function safeStr(string $input): string
+    public static function strSafeForCli(string $input): string
     {
         return str_replace(["\r", "\n", '\\'], ['\r', '\n', '\\'], $input);
     }
 
-    public static function unsafeStr(string $input): string
+    public static function undoStrSafeForCli(string $input): string
     {
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }

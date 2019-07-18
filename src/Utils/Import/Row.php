@@ -109,13 +109,13 @@ class Row
 
     public function getIdStringSafe(): string
     {
-        return Utils::artisanNamesSafe($this->getInput(), $this->getArtisan(), $this->getOriginalArtisan())
+        return Utils::artisanNamesSafeForCli($this->getInput(), $this->getArtisan(), $this->getOriginalArtisan())
             .' ['.$this->timestamp->format(DATE_ISO8601).']';
     }
 
     public function getNames(): string
     {
-        return Utils::artisanNamesSafe($this->getOriginalArtisan(), $this->getArtisan());
+        return Utils::artisanNamesSafeForCli($this->getOriginalArtisan(), $this->getArtisan());
     }
 
     public function getMakerId(): string

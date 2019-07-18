@@ -252,9 +252,9 @@ class DataImporter
 
     private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
     {
-        return 'Was looking for: '.Utils::artisanNamesSafe($artisan).'. Found more than one: '
+        return 'Was looking for: '.Utils::artisanNamesSafeForCli($artisan).'. Found more than one: '
             .implode(', ', array_map(function (Artisan $artisan) {
-                return Utils::artisanNamesSafe($artisan);
+                return Utils::artisanNamesSafeForCli($artisan);
             }, $results));
     }
 

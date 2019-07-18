@@ -39,7 +39,7 @@ class StrContextUtils
         $parts = explode(self::STR_REPRESENTATION_SEPARATOR, $input);
 
         if (3 !== count($parts)) {
-            throw new StrContextRuntimeException('Invalid input: '.Utils::safeStr($input));
+            throw new StrContextRuntimeException('Invalid input: '.Utils::strSafeForCli($input));
         }
 
         return new StrContext(...$parts);

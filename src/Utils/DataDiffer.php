@@ -64,7 +64,7 @@ class DataDiffer
     private function showArtisanNameIfFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
     {
         if (!$nameShown) {
-            $this->io->section(Utils::artisanNamesSafe($old, $new));
+            $this->io->section(Utils::artisanNamesSafeForCli($old, $new));
 
             $nameShown = true;
         }
@@ -80,7 +80,7 @@ class DataDiffer
                 $item = "<d>$item</>";
             }
 
-            $item = Utils::safeStr($item);
+            $item = Utils::strSafeForCli($item);
         }
 
         foreach ($newValItems as &$item) {
@@ -88,11 +88,11 @@ class DataDiffer
                 $item = "<a>$item</>";
             }
 
-            $item = Utils::safeStr($item);
+            $item = Utils::strSafeForCli($item);
         }
 
         if ($impVal && $impVal !== $newVal) {
-            $impVal = Utils::safeStr($impVal ?: '');
+            $impVal = Utils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
 
@@ -106,17 +106,17 @@ class DataDiffer
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
         if ($impVal && $impVal !== $newVal) {
-            $impVal = Utils::safeStr($impVal ?: '');
+            $impVal = Utils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
 
         if ($oldVal) {
-            $oldVal = Utils::safeStr($oldVal);
+            $oldVal = Utils::strSafeForCli($oldVal);
             $this->io->writeln("OLD $fieldName: <d>$oldVal</>");
         }
 
         if ($newVal) {
-            $newVal = Utils::safeStr($newVal);
+            $newVal = Utils::strSafeForCli($newVal);
             $this->io->writeln("NEW $fieldName: <a>$newVal</>");
         }
     }
@@ -124,8 +124,8 @@ class DataDiffer
     private function showFixCommandOptionally(string $makerId, string $prettyFieldName, string $replaced, string $best)
     {
         if ($this->showFixCommands) {
-            $replaced = Utils::safeStr($replaced);
-            $best = Utils::safeStr($best);
+            $replaced = Utils::strSafeForCli($replaced);
+            $best = Utils::strSafeForCli($best);
             $this->io->writeln("wr:$makerId:$prettyFieldName:|:$replaced|$best|");
         }
     }

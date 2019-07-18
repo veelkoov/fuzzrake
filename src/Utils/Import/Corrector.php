@@ -146,8 +146,8 @@ class Corrector
             default:
                 $fieldName = $buffer->readUntil(':');
                 $delimiter = $buffer->readUntil(':');
-                $wrongValue = Utils::unsafeStr($buffer->readUntil($delimiter));
-                $correctedValue = Utils::unsafeStr($buffer->readUntil($delimiter));
+                $wrongValue = Utils::undoStrSafeForCli($buffer->readUntil($delimiter));
+                $correctedValue = Utils::undoStrSafeForCli($buffer->readUntil($delimiter));
 
                 $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
                     $command, $wrongValue, $correctedValue));
