@@ -88,7 +88,7 @@ class ArtisanFields
         self::URL_INSTAGRAM => ['instagramUrl', '#^(https://www\.instagram\.com/[^/]+/)?$#', false],
         self::URL_YOUTUBE => ['youtubeUrl', '#^(https://www\.youtube\.com/(channel|user|c)/[^/?]+)?$#', false],
         self::URL_OTHER => ['otherUrls', self::ANYTHING_REGEXP, false],
-        self::URL_CST => ['commissionsQuotesCheckUrl', self::GENERIC_URL_REGEXP, false],
+        self::URL_CST => ['cstUrl', self::GENERIC_URL_REGEXP, false],
         self::LANGUAGES => ['languages', self::ANYTHING_REGEXP, false],
         self::MAKER_ID => ['makerId', '#^([A-Z0-9]{7})?$#', false],
         self::FORMER_MAKER_IDS => ['formerMakerIds', '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#', true],

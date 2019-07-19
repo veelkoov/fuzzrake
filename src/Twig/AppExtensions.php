@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Repository\ArtisanRepository;
+use App\Utils\DateTimeException;
+use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\Status;
 use App\Utils\Utils;
-use DateTime;
-use DateTimeZone;
 use Doctrine\ORM\NonUniqueResultException;
-use Exception;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -45,29 +45,27 @@ class AppExtensions extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('getLastSystemUpdateTime', [$this, 'getLastSystemUpdateTimeFunction']),
-            new TwigFunction('getLastDataUpdateTime', [$this, 'getLastDataUpdateTimeFunction']),
+            new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
+            new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
         ];
     }
 
-    /**
-     * @return DateTime
-     *
-     * @throws NonUniqueResultException
-     */
-    public function getLastDataUpdateTimeFunction()
+    public function getLastDataUpdateTimeUtcStrFunction(): string
     {
-        return $this->artisanRepository->getLastCstUpdateTime();
+        try {
+            return $this->artisanRepository->getLastCstUpdateTime()->format('Y-m-d H:i');
+        } catch (DateTimeException | NonUniqueResultException $e) {
+            return 'unknown (failure)';
+        }
     }
 
-    /**
-     * @return DateTime
-     *
-     * @throws Exception
-     */
-    public function getLastSystemUpdateTimeFunction()
+    public function getLastSystemUpdateTimeUtcStrFunction(): string
     {
-        return new DateTime(`TZ=UTC git log -n1 --format=%cd --date=local`, new DateTimeZone('UTC'));
+        try {
+            return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
+        } catch (DateTimeException $e) {
+            return 'unknown (failure)';
+        }
     }
 
     public function otherFilter($primaryList, $otherList)
@@ -98,33 +96,27 @@ class AppExtensions extends AbstractExtension
             return '';
         }
 
-        if (!preg_match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
+        if (!Regexp::match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
             throw new TplDataException("Invalid 'since' data: '$input''");
         }
 
         return self::MONTHS[(int) $matches['month']].' '.$matches['year'];
     }
 
-    /**
-     * @param FilterItem[] $items
-     * @param string       $matchWord
-     *
-     * @return FilterItem[]
-     */
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         return array_filter($items, function (FilterItem $item) use ($matchWord) {
-            return 1 === preg_match("#$matchWord#i", $item->getLabel());
+            return Regexp::match("#$matchWord#i", $item->getLabel());
         });
     }
 
     public function filterHumanFriendlyRegexp(string $input): string
     {
-        $input = preg_replace('#\(\?<!.+?\)#', '', $input);
-        $input = preg_replace('#\(\?!.+?\)#', '', $input);
-        $input = preg_replace('#\([^a-z]+?\)#i', '', $input);
-        $input = preg_replace('#[()?]#', '', $input);
-        $input = preg_replace('#\[.+?\]#', '', $input);
+        $input = Regexp::replace('#\(\?<!.+?\)#', '', $input);
+        $input = Regexp::replace('#\(\?!.+?\)#', '', $input);
+        $input = Regexp::replace('#\([^a-z]+?\)#i', '', $input);
+        $input = Regexp::replace('#[()?]#', '', $input);
+        $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
     }

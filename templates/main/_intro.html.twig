@@ -13,8 +13,8 @@
             </p>
 
             <p class="small">
-                Last update: {{ getLastDataUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (data)
-                / {{ getLastSystemUpdateTime()|date('Y-m-d H:i', 'UTC') }} UTC (system).
+                Last update: {{ getLastDataUpdateTimeUtcStr() }} UTC (data)
+                / {{ getLastSystemUpdateTimeUtcStr() }} UTC (system).
             </p>
 
             <p>

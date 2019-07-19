@@ -9,13 +9,13 @@ use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanFields as Fields;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
+use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Import\Corrector;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\Row;
 use App\Utils\Utils;
 use Doctrine\Common\Persistence\ObjectManager;
-use Exception;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImporter
@@ -83,7 +83,6 @@ class DataImporter
      * @return Row[]
      *
      * @throws ImportException
-     * @throws Exception
      */
     private function createImports(array $artisansData, SymfonyStyle $io): array
     {
@@ -119,11 +118,15 @@ class DataImporter
      * @return Row
      *
      * @throws ImportException
-     * @throws Exception
      */
     private function createImportRow(array $artisanData): Row
     {
-        $result = new Row($artisanData);
+        try {
+            $result = new Row($artisanData);
+        } catch (DateTimeException $e) {
+            throw new ImportException("Failed parsing import row's date", 0, $e);
+        }
+
         $result->setInput($this->updateArtisanWithData(new Artisan(), $artisanData));
 
         $result->setArtisan($this->findBestMatchArtisan($result->getInput()) ?: new Artisan());
@@ -132,9 +135,6 @@ class DataImporter
         return $result;
     }
 
-    /**
-     * @param Row[] $imports
-     */
     private function performImports(array $imports): void
     {
         foreach ($imports as $import) {
@@ -189,9 +189,6 @@ class DataImporter
         return array_pop($results);
     }
 
-    /**
-     * @param Row[] $imports
-     */
     private function showUpdatedArtisans(array $imports): void
     {
         foreach ($imports as $import) {
@@ -199,11 +196,6 @@ class DataImporter
         }
     }
 
-    /**
-     * @param Row[]        $imports
-     * @param array        $passcodes
-     * @param SymfonyStyle $io
-     */
     private function persistValidImports(array $imports, array $passcodes, SymfonyStyle $io)
     {
         foreach ($imports as $import) {
@@ -260,9 +252,9 @@ class DataImporter
 
     private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
     {
-        return 'Was looking for: '.Utils::artisanNamesSafe($artisan).'. Found more than one: '
+        return 'Was looking for: '.Utils::artisanNamesSafeForCli($artisan).'. Found more than one: '
             .implode(', ', array_map(function (Artisan $artisan) {
-                return Utils::artisanNamesSafe($artisan);
+                return Utils::artisanNamesSafeForCli($artisan);
             }, $results));
     }
 

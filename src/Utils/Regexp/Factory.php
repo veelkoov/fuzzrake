@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Regexp;
 
+use App\Utils\Regexp\Utils as RegexpUtils;
 use SplObjectStorage;
 
-class RegexpFactory
+class Factory
 {
     /**
      * @var array
@@ -20,12 +21,12 @@ class RegexpFactory
 
     public function createSet(array $originals, array $variants = []): array
     {
-        return array_map(function (string $original) use ($variants) {
-            return $this->create($original, $variants);
-        }, $originals);
+        return array_map(function (string $key) use ($originals, $variants) {
+            return $this->create($key, $originals[$key], $variants);
+        }, array_keys($originals));
     }
 
-    public function create(string $original, array $variants = []): Regexp
+    private function create(string $key, string $original, array $variants = []): Regexp
     {
         $compiled = new SplObjectStorage();
 
@@ -33,15 +34,15 @@ class RegexpFactory
             $compiled[$variant] = $this->compileVariant($original, $variant);
         }
 
-        return new Regexp($original, $compiled);
+        return new Regexp($key, $original, $compiled);
     }
 
-    private function compileVariant(string $regexp, RegexpVariant $variant): string
+    private function compileVariant(string $regexp, Variant $variant): string
     {
         $result = $regexp;
 
         foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $needle => $replacement) {
-            $result = preg_replace("#$needle#", $replacement, $result);
+            $result = RegexpUtils::replace("#$needle#", $replacement, $result);
         }
 
         return "#$result#s";

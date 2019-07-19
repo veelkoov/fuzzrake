@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\Regexp\Utils as Regexp;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -92,10 +93,6 @@ class DataFixer
      */
     private $showDiff;
 
-    /**
-     * @param SymfonyStyle $io
-     * @param bool         $showDiff
-     */
     public function __construct(SymfonyStyle $io, bool $showDiff)
     {
         $this->io = $io;
@@ -127,7 +124,7 @@ class DataFixer
         $artisan->setState($this->fixString($artisan->getState()));
         $artisan->setCity($this->fixString($artisan->getCity()));
 
-        $artisan->setCommissionsQuotesCheckUrl($this->fixGenericUrl($artisan->getCommissionsQuotesCheckUrl()));
+        $artisan->setCstUrl($this->fixGenericUrl($artisan->getCstUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
         $artisan->setFacebookUrl($this->fixFacebookUrl($artisan->getFacebookUrl()));
         $artisan->setFaqUrl($this->fixGenericUrl($artisan->getFaqUrl()));
@@ -160,8 +157,8 @@ class DataFixer
         foreach (Fields::persisted() as $field) {
             $value = $artisan->get($field->modelName());
 
-            if (!preg_match($field->validationRegexp(), $value)) {
-                $safeValue = Utils::safeStr($value);
+            if (!Regexp::match($field->validationRegexp(), $value)) {
+                $safeValue = Utils::strSafeForCli($value);
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }
@@ -173,11 +170,11 @@ class DataFixer
             $item = trim($item);
 
             foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
-                $item = preg_replace("#(?:^|\n)$pattern(?:\n|$)#i", $replacement, $item);
+                $item = Regexp::replace("#(?:^|\n)$pattern(?:\n|$)#i", $replacement, $item);
             }
 
             return $item;
-        }, preg_split($separatorRegexp, $input)));
+        }, Regexp::split($separatorRegexp, $input)));
 
         $list = ($list);
 
@@ -193,7 +190,7 @@ class DataFixer
         $result = trim($input);
 
         foreach (self::COUNTRIES_REPLACEMENTS as $regexp => $replacement) {
-            $result = preg_replace("#^$regexp$#i", $replacement, $result);
+            $result = Regexp::replace("#^$regexp$#i", $replacement, $result);
         }
 
         return $result;
@@ -201,19 +198,19 @@ class DataFixer
 
     private function fixFurAffinityUrl(string $input): string
     {
-        return preg_replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$#i',
+        return Regexp::replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$#i',
             'http://www.furaffinity.net/user/$1', $this->fixGenericUrl($input));
     }
 
     private function fixTwitterUrl(string $input): string
     {
-        return preg_replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?$#i',
+        return Regexp::replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?$#i',
             'https://twitter.com/$1', $this->fixGenericUrl($input));
     }
 
     private function fixInstagramUrl(string $input): string
     {
-        return preg_replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
+        return Regexp::replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
             'https://www.instagram.com/$1/', $this->fixGenericUrl($input));
     }
 
@@ -224,22 +221,22 @@ class DataFixer
 
     private function fixFacebookUrl(string $input): string
     {
-        return preg_replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts)?/?(\?ref=[a-z_]+)?$#i',
+        return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts)?/?(\?ref=[a-z_]+)?$#i',
             'https://www.facebook.com/$1/', $this->fixGenericUrl($input));
     }
 
     private function fixYoutubeUrl(string $input): string
     {
-        return preg_replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
+        return Regexp::replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
             'https://www.youtube.com/$1', $this->fixGenericUrl($input));
     }
 
     private function fixDeviantArtUrl(string $input): string
     {
         $result = $this->fixGenericUrl($input);
-        $result = preg_replace('#^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?$#i',
+        $result = Regexp::replace('#^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?$#i',
             'https://www.deviantart.com/$1', $result);
-        $result = preg_replace('#^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$#i',
+        $result = Regexp::replace('#^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$#i',
             'https://$1.deviantart.com/', $result);
 
         return $result;
@@ -252,22 +249,22 @@ class DataFixer
 
     private function fixNotes(string $input): string
     {
-        $result = preg_replace('#([,;])([,; ]*[,;])#s', '$1', trim($input));
+        $result = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', trim($input));
         $result = str_replace('@', '(e)', $result);
-        $result = preg_replace('#(e-?)?mail#i', 'eeeee', $result);
+        $result = Regexp::replace('#(e-?)?mail#i', 'eeeee', $result);
 
         return $result;
     }
 
     private function fixSince(string $input): string
     {
-        return preg_replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
+        return Regexp::replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
     }
 
     private function fixString(string $input): string
     {
         $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
-        $result = preg_replace('#[ \t]{2,}#', ' ', $result);
+        $result = Regexp::replace('#[ \t]{2,}#', ' ', $result);
 
         return trim($result);
     }

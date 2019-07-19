@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use App\Utils\ArtisanField;
+use App\Utils\Regexp\Utils as Regexp;
 use InvalidArgumentException;
 
 class ValueCorrection
@@ -52,7 +53,7 @@ class ValueCorrection
     {
         switch ($this->mode) {
             case self::MODE_REGEXP:
-                $result = preg_replace($this->wrongValue, $this->correctedValue, $value);
+                $result = Regexp::replace($this->wrongValue, $this->correctedValue, $value);
 
                 if (null === $result) {
                     throw new InvalidArgumentException("Regexp failed: '$this->wrongValue'");
@@ -79,12 +80,9 @@ class ValueCorrection
         }
     }
 
-    /**
-     * @param string $makerId
-     */
     private function validateAndSetMakerId(string $makerId): void
     {
-        if (!preg_match('#^([A-Z0-9]{7}|\*)$#', $makerId)) {
+        if (!Regexp::match('#^([A-Z0-9]{7}|\*)$#', $makerId)) {
             throw new InvalidArgumentException("Invalid maker ID: '$makerId'");
         }
 

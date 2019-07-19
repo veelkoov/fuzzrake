@@ -6,10 +6,11 @@ namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
+use App\Utils\JsonException;
 use App\Utils\Utils;
 use DateTime;
-use Exception;
 
 class Row
 {
@@ -51,7 +52,7 @@ class Row
     /**
      * @param array $rawInput
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     public function __construct(array $rawInput)
     {
@@ -109,13 +110,13 @@ class Row
 
     public function getIdStringSafe(): string
     {
-        return Utils::artisanNamesSafe($this->getInput(), $this->getArtisan(), $this->getOriginalArtisan())
+        return Utils::artisanNamesSafeForCli($this->getInput(), $this->getArtisan(), $this->getOriginalArtisan())
             .' ['.$this->timestamp->format(DATE_ISO8601).']';
     }
 
     public function getNames(): string
     {
-        return Utils::artisanNamesSafe($this->getOriginalArtisan(), $this->getArtisan());
+        return Utils::artisanNamesSafeForCli($this->getOriginalArtisan(), $this->getArtisan());
     }
 
     public function getMakerId(): string
@@ -128,7 +129,7 @@ class Row
      *
      * @param array $rawNewData
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     private function setTimestamp(array $rawNewData): void
     {
@@ -138,6 +139,10 @@ class Row
     private function setHash(array $rawNewData)
     {
         $rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)] = null;
-        $this->hash = sha1(json_encode($rawNewData));
+        try {
+            $this->hash = sha1(Utils::toJson($rawNewData));
+        } catch (JsonException $e) {
+            throw new RuntimeImportException('Failed to calculate hash of the data row due to a JSON encoding error', 0, $e);
+        }
     }
 }

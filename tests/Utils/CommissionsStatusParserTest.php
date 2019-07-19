@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\CommissionsStatusParserException;
+use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\WebpageSnapshot;
 use PHPUnit\Framework\TestCase;
 
@@ -30,27 +31,19 @@ class CommissionsStatusParserTest extends TestCase
      * @param WebpageSnapshot $snapshot
      * @param bool|null       $expectedResult
      *
-     * @throws CommissionsStatusParserException
+     * @throws TrackerException
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
-        try {
-            $result = self::$csp->areCommissionsOpen($snapshot);
-        } catch (CommissionsStatusParserException $exception) {
-            if ('NONE matches' === $exception->getMessage()) {
-                $result = null;
-            } else {
-                throw $exception;
-            }
-        }
+        $result = self::$csp->analyseStatus($snapshot);
 
-        $this->assertSame($expectedResult, $result, "Wrong result for '$webpageTextFileName'");
+        $this->assertSame($expectedResult, $result->getStatus(), "Wrong result for '$webpageTextFileName'");
     }
 
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (!preg_match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
+            if (!Regexp::match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
                 echo "Invalid filename: $filepath\n";
 
                 return false;

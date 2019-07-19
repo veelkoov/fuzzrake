@@ -197,9 +197,9 @@ class Artisan implements JsonSerializable
     private $notes;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="commissions_quotes_check_url", type="string", length=255) // TODO: rename column
      */
-    private $commissionsQuotesCheckUrl;
+    private $cstUrl;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -370,14 +370,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getCommissionsQuotesCheckUrl(): ?string
+    public function getCstUrl(): ?string
     {
-        return $this->commissionsQuotesCheckUrl;
+        return $this->cstUrl;
     }
 
-    public function setCommissionsQuotesCheckUrl(?string $commissionsQuotesCheckUrl): self
+    public function setCstUrl(?string $cstUrl): self
     {
-        $this->commissionsQuotesCheckUrl = $commissionsQuotesCheckUrl;
+        $this->cstUrl = $cstUrl;
 
         return $this;
     }

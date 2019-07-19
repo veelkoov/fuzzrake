@@ -26,7 +26,7 @@ class UrlFetcher
         $ch = $this->getCurlSessionHandle($url);
 
         if (false === $ch) {
-            throw new UrlFetcherException('Failed to initialize CURL');
+            throw new RuntimeUrlFetcherException('Failed to initialize CURL');
         }
 
         $this->delayForHost($url);
