@@ -32,11 +32,6 @@ class Utils
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
 
-    /**
-     * @param string $originalUrl
-     *
-     * @return string
-     */
     public static function shortPrintUrl(string $originalUrl): string
     {
         $url = Regexp::replace('#^https?://(www\.)?#', '', $originalUrl);
