@@ -23,6 +23,10 @@ class StrContextUtils
 
     public static function toStr(StrContextInterface $strContext): string
     {
+        if ($strContext->empty()) {
+            return '';
+        }
+
         try {
             return Utils::toJson([
                 $strContext->getBefore(),
