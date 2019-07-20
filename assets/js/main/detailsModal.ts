@@ -36,17 +36,11 @@ function formatPaymentPlans(paymentPlans: string): string {
     return paymentPlans || '<i class="fas fa-question-circle"></i>';
 }
 
-function linksHrefNoProto($link) {
-    return $link.attr('href').replace(/^https?:\/\/|\/$/g, '');
-}
-
 function formatLinks($links: any, completeness: number): string {
-    $links.addClass('btn btn-light m-1').html(function (_, oldHtml) {
-        return `${oldHtml} <span class="d-none d-md-inline">: <span class="url">${linksHrefNoProto($(this))}</span></span>`;
-    });
+    $links.addClass('btn btn-light m-1');
 
     let $result = $('<div/>').append($links.length
-        ? `<p class="small px-1">If you're going to contact the studio/maker, <u>please let them know you found them`
+        ? `<p class="small">If you're going to contact the studio/maker, <u>please let them know you found them`
             + ` here</u>${completeness < DATA_COMPLETE_GOOD ? ' and that their data could use some updates' : ''}!`
             + ` This will help us all a lot. Thank you!</p>`
         : '<i class="fas fa-question-circle" title="None provided"></i>'
