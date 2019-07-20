@@ -369,7 +369,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=652 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=653 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -498,7 +498,7 @@ INSERT INTO `events` VALUES (370,'2019-06-03 18:06:59', '', 'CS_UPDATED',NULL,0,
 INSERT INTO `events` VALUES (371,'2019-06-05 06:06:55', '', 'CS_UPDATED',0,1,'Monster Cult Makers', 'http://www.furaffinity.net/user/kalorian/#profile', '', '');
 INSERT INTO `events` VALUES (372,'2019-06-10 06:06:55', '', 'CS_UPDATED',0,1,'Color Carnage', 'https://www.colorcarnage.com/', '', '');
 INSERT INTO `events` VALUES (373,'2019-06-10 18:07:01', '', 'CS_UPDATED',0,NULL,'Thunderhowl Studios', 'https://thunderhowlstudios.weebly.com/', '', '');
-INSERT INTO `events` VALUES (374,'2019-06-11 18:24:31', '- Improved <i>Changes</i> page</br>\r\n- Framework updates<br />\r\n- Cleaned up events after recent FA inaccessibility on 30th of May', 'GENERIC',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (374,'2019-06-11 18:24:31', '- Improved <i>Changes</i> page<br />\r\n- Framework updates<br />\r\n- Cleaned up events after recent FA inaccessibility on 30th of May', 'GENERIC',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (375,'2019-06-13 06:07:08', '', 'CS_UPDATED',1,0,'Maria\'s Creative Corner', 'http://mcreativecorner.com/', '', '');
 INSERT INTO `events` VALUES (376,'2019-06-15 15:26:40', '- Made pages\' titles differ and added \"canonical URL\" information to help search engines provide better search results (<a href=\"https://github.com/veelkoov/fuzzrake/commit/ec43ca2d469f2bfdca88cd79884908bbed7e810d\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (378,'2019-06-15 18:07:08', '', 'CS_UPDATED',0,1,'That One Furry Otaku', 'https://thatonefurryotaku.weebly.com/commission-status.html', '', '');
@@ -546,6 +546,7 @@ INSERT INTO `events` VALUES (421,'2019-07-15 18:07:06', '', 'CS_UPDATED',NULL,1,
 INSERT INTO `events` VALUES (471,'2019-07-17 18:09:02', '', 'CS_UPDATED',1,0,'Cawstumes', 'http://www.cawstumes.com/fursuits/', '', '');
 INSERT INTO `events` VALUES (601,'2019-07-18 06:07:29', '', 'CS_UPDATED',0,NULL,'Dragon Soup', 'https://dragon-soup.squarespace.com/commissions', '', '');
 INSERT INTO `events` VALUES (651,'2019-07-20 18:07:10', '', 'CS_UPDTD_DETLS',0,NULL,'Fix It Fursuits', 'https://www.fixitfursuits.com/get-a-quote', '', '');
+INSERT INTO `events` VALUES (652,'2019-07-20 21:56:32', '- Implemented a CST feature which allows to check what precise text/phrase was found on maker website to claim they\'re open or closed for commissions. Currently displayed only on \"Changes\" page - see \"Toggle details\" links (<a href=\"https://github.com/veelkoov/fuzzrake/commit/d5baffd2dfd79dec04fee4b64124262ee11cbe0b\" target=\"_blank\">git</a>)<br />\r\n- Cleaned up \"Changes\" page after recent failure during feature deployment &amp; FA inavailability<br />\r\n- Updated 2 makers data &amp; added 3 new, in accordance with received requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/ac3bcaea458a674b522e969c7b461ba7b0af935a\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
