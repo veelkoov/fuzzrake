@@ -35,3 +35,11 @@
     backup: yes
   notify:
     - restart apache
+
+- name: "update 00-brotli.conf"
+  template:
+    src: 00-brotli.j2.conf
+    dest: /etc/httpd/conf.modules.d/00-brotli.conf
+    backup: yes
+  notify:
+    - restart apache
