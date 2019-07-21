@@ -71,9 +71,6 @@
             "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
         }
     },
-    "facebook/webdriver": {
-        "version": "1.6.0"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -163,9 +160,6 @@
             "version": "3.3",
             "ref": "f3a28efb32f20b8740fd763651cabd780bce43da"
         }
-    },
-    "symfony/contracts": {
-        "version": "v1.0.2"
     },
     "symfony/css-selector": {
         "version": "v4.1.1"
@@ -266,9 +260,6 @@
     "symfony/options-resolver": {
         "version": "v4.2.1"
     },
-    "symfony/panther": {
-        "version": "v0.1.0"
-    },
     "symfony/phpunit-bridge": {
         "version": "4.1",
         "recipe": {
@@ -325,6 +316,9 @@
     },
     "symfony/test-pack": {
         "version": "v1.0.2"
+    },
+    "symfony/translation-contracts": {
+        "version": "v1.1.5"
     },
     "symfony/twig-bridge": {
         "version": "v4.2.1"
