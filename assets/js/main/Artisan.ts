@@ -35,9 +35,9 @@ export default class Artisan {
                 readonly otherUrls: string,
                 readonly languages: string,
                 readonly notes: string,
-                readonly commissionsQuotesCheckUrl: string,
-                readonly areCommissionsOpen: boolean,
-                readonly commissionsQuotesLastCheck: string,
+                readonly cstUrl: string,
+                readonly commissionsStatus: boolean,
+                readonly commissionsStatusLastCheck: string,
                 readonly completeness: number) {
     }
 }
