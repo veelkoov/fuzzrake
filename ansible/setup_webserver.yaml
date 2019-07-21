@@ -1,0 +1,6 @@
+#!ansible/run.sh
+---
+- hosts: getfursu.it
+  become: yes
+  roles:
+    - { name: "webserver", action: "setup" }

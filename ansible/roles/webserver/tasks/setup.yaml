@@ -1,0 +1,16 @@
+---
+- name: "update httpd.conf"
+  template:
+    src: httpd.j2.conf
+    dest: /etc/httpd/conf/httpd.conf
+    backup: yes
+  notify:
+    - restart apache
+
+- name: "update httpd-le-ssl.conf"
+  template:
+    src: httpd-le-ssl.j2.conf
+    dest: /etc/httpd/conf/httpd-le-ssl.conf
+    backup: yes
+  notify:
+    - restart apache
