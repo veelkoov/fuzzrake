@@ -22,6 +22,8 @@
       --result-file={{ db_dump_file_path }}
 
       {{ db_params.name }}
+
+      artisans events
     responses:
       password: "{{ db_params.password }}"
   check_mode: no # We assume the result file is non-committed temporary
