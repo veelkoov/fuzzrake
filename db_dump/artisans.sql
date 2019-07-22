@@ -369,7 +369,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=655 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=656 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -549,6 +549,7 @@ INSERT INTO `events` VALUES (651,'2019-07-20 18:07:10', '', 'CS_UPDTD_DETLS',0,N
 INSERT INTO `events` VALUES (652,'2019-07-20 21:56:32', '- Implemented a CST feature which allows to check what precise text/phrase was found on maker website to claim they\'re open or closed for commissions. Currently displayed only on \"Changes\" page - see \"Toggle details\" links (<a href=\"https://github.com/veelkoov/fuzzrake/commit/d5baffd2dfd79dec04fee4b64124262ee11cbe0b\" target=\"_blank\">git</a>)<br />\r\n- Cleaned up \"Changes\" page after recent failure during feature deployment &amp; FA inavailability<br />\r\n- Updated 2 makers data &amp; added 3 new, in accordance with received requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/ac3bcaea458a674b522e969c7b461ba7b0af935a\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (653,'2019-07-21 12:28:59', '- Updated 3 makers data based on their own requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/0478746432f0bc5e9664381db177aaa6f39d2c38\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (654,'2019-07-21 15:34:40', '- Reconfigured the server to use HTTP/2, Brotli compression and to force secure connections all the time', '',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (655,'2019-07-21 18:07:07', '', 'CS_UPDTD_DETLS',NULL,0,'SereStudios', 'https://serestudios.wixsite.com/serestudios', '', '[\"ype: styledtext id: c1gp4 ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">\",\"commissions are closed\",\"</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">next opening: august, 2019!</h1> stylesmapid: ck_editor_paragraph\"]');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
