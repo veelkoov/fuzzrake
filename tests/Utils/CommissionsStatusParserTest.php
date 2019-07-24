@@ -36,8 +36,17 @@ class CommissionsStatusParserTest extends TestCase
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
         $result = self::$csp->analyseStatus($snapshot);
+        $errorMsg = "Wrong result for '$webpageTextFileName'";
 
-        $this->assertSame($expectedResult, $result->getStatus(), "Wrong result for '$webpageTextFileName'");
+        if (!($cc = $result->getClosedStrContext())->empty()) {
+            $errorMsg .= "\nCLOSED: \e[0;30;47m{$cc->getBefore()}\e[0;30;41m{$cc->getSubject()}\e[0;30;47m{$cc->getAfter()}\e[0m";
+        }
+
+        if (!($oc = $result->getOpenStrContext())->empty()) {
+            $errorMsg .= "\nOPEN: \e[0;30;47m{$oc->getBefore()}\e[0;30;42m{$oc->getSubject()}\e[0;30;47m{$oc->getAfter()}\e[0m";
+        }
+
+        $this->assertSame($expectedResult, $result->getStatus(), $errorMsg);
     }
 
     public function areCommissionsOpenDataProvider()

@@ -65,7 +65,7 @@ class DataFixer
         'belgium' => 'BE',
         'canada' => 'CA',
         'czech republic' => 'CZ',
-        'denmark' => 'DK',
+        'd[ea]nmark' => 'DK',
         'germany' => 'DE',
         'finland' => 'FI',
         'france' => 'FR',
@@ -222,7 +222,7 @@ class DataFixer
 
     private function fixFacebookUrl(string $input): string
     {
-        return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts|/about)?/?(\?ref=[a-z_]+)?$#i',
+        return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts|/about)?/?(\?[a-z_]+=[a-z_0-9]+)?$#i',
             'https://www.facebook.com/$1/', $this->fixGenericUrl($input));
     }
 
