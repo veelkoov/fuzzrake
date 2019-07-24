@@ -370,7 +370,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=658 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=660 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -553,6 +553,8 @@ INSERT INTO `events` VALUES (654,'2019-07-21 15:34:40', '- Reconfigured the serv
 INSERT INTO `events` VALUES (655,'2019-07-21 18:07:07', '', 'CS_UPDTD_DETLS',NULL,0,'SereStudios', 'https://serestudios.wixsite.com/serestudios', '', '[\"ype: styledtext id: c1gp4 ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">\",\"commissions are closed\",\"</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">next opening: august, 2019!</h1> stylesmapid: ck_editor_paragraph\"]');
 INSERT INTO `events` VALUES (656,'2019-07-22 18:39:22', '- New maker on board (<a href=\"https://github.com/veelkoov/fuzzrake/commit/83348360e54f9826d0bb06e7836be5bdbe21eb42\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (657,'2019-07-22 18:46:31', '', 'CS_UPDTD_DETLS',NULL,0,'FurtasticStudios', 'http://www.furaffinity.net/user/furtasticstudios#profile', '', '[\"individually! bringing cute furry critters to life since 2010! quotes: closed trades: not right now \",\"commissions: closed\",\"! (open late 2019) we handsew everything right now, so your suit may take a while! links ▪ ▪ ▪ ━━━━━\"]');
+INSERT INTO `events` VALUES (658,'2019-07-24 06:07:15', '', 'CS_UPDTD_DETLS',0,NULL,'Dragon\'s Grin Studios', 'https://dragonsgrinstudios.weebly.com/', '[\"content-title\\\">fursuit and cosplay commissions are closed!</h2> <h2 class=\\\"wsite-content-title\\\">art \",\"commissions are open\",\". quote form for fursuits can be found here!</h2> <div><div></div> fursuit quote form <div></div></d\"]', '[\"ion-elements\\\"> <div class=\\\"wsite-spacer\\\"></div> <h2 class=\\\"wsite-content-title\\\">fursuit and cosplay \",\"commissions are closed\",\"!</h2> <h2 class=\\\"wsite-content-title\\\">art commissions are open. quote form for fursuits can be foun\"]');
+INSERT INTO `events` VALUES (659,'2019-07-24 06:07:15', '', 'CS_UPDTD_DETLS',1,0,'Mochi Dog Studios', 'https://www.instagram.com/mochidogstudios/', '', '[\"/schema.org\\\",\\\"@type\\\":\\\"store\\\",\\\"name\\\":\\\"STUDIO_NAME\\\",\\\"alternatename\\\":\\\"@mochidogstudios\\\",\\\"description\\\":\\\"\",\"commissions and quotes: closed\",\" until further notice\\\\nmaker: mochi | lvl 19 | \\\\ud83c\\\\udff3\\\\ufe0f\\\\u200d\\\\ud83c\\\\udf08\\\\npersonal accoun\"]');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
