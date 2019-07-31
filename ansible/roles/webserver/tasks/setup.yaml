@@ -43,3 +43,9 @@
     backup: yes
   notify:
     - restart apache
+
+- name: "update logrotate.d/httpd"
+  template:
+    src: logrotate.d/httpd.j2
+    dest: /etc/logrotate.d/httpd
+    backup: yes
