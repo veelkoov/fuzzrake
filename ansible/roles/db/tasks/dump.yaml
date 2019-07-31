@@ -23,7 +23,7 @@
 
       {{ db_params.name }}
 
-      artisans events
+      artisans events artisans_commissions_statues
     responses:
       password: "{{ db_params.password }}"
   check_mode: no # We assume the result file is non-committed temporary

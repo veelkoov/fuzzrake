@@ -30,12 +30,12 @@ class ArtisanCommissionsStatus
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $status;
+    private $status = null;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $lastChecked;
+    private $lastChecked = null;
 
     public function getId(): ?int
     {

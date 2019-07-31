@@ -805,9 +805,9 @@ class Artisan implements JsonSerializable
         return array_values($data);
     }
 
-    public function getCommissionsStatus(): ?ArtisanCommissionsStatus
+    public function getCommissionsStatus(): ArtisanCommissionsStatus
     {
-        return $this->commissionsStatus;
+        return $this->commissionsStatus ?? $this->commissionsStatus = (new ArtisanCommissionsStatus())->setArtisan($this);
     }
 
     public function setCommissionsStatus(ArtisanCommissionsStatus $commissionsStatus): self
