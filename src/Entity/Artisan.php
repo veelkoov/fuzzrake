@@ -447,14 +447,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getAreCommissionsOpen(): ?bool
+    public function getAreCommissionsOpen(): ?bool // TODO: remove
     {
-        return $this->areCommissionsOpen;
+        return $this->getCommissionsStatus()->getStatus();
     }
 
-    public function setAreCommissionsOpen(?bool $areCommissionsOpen): self
+    public function setAreCommissionsOpen(?bool $areCommissionsOpen): self // TODO: remove
     {
-        $this->areCommissionsOpen = $areCommissionsOpen;
+        $this->getCommissionsStatus()->setStatus($areCommissionsOpen);
 
         return $this;
     }
@@ -531,14 +531,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getCommissionsQuotesLastCheck(): ?DateTimeInterface
+    public function getCommissionsQuotesLastCheck(): ?DateTimeInterface // TODO: remove
     {
-        return $this->commissionsQuotesLastCheck;
+        return $this->getCommissionsStatus()->getLastChecked();
     }
 
-    public function setCommissionsQuotesLastCheck(?DateTimeInterface $commissionsQuotesLastCheck): self
+    public function setCommissionsQuotesLastCheck(?DateTimeInterface $commissionsQuotesLastCheck): self // TODO: remove
     {
-        $this->commissionsQuotesLastCheck = $commissionsQuotesLastCheck;
+        $this->getCommissionsStatus()->setLastChecked($commissionsQuotesLastCheck);
 
         return $this;
     }

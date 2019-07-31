@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
@@ -170,21 +167,6 @@ class ArtisanRepository extends ServiceEntityRepository
         $result->sort();
 
         return $result;
-    }
-
-    /**
-     * @return DateTime
-     *
-     * @throws NonUniqueResultException
-     * @throws DateTimeException
-     */
-    public function getLastCstUpdateTime(): DateTime
-    {
-        return DateTimeUtils::getUtcAt($this
-            ->createQueryBuilder('a')
-            ->select('MAX(a.commissionsQuotesLastCheck)')
-            ->getQuery()
-            ->getSingleScalarResult());
     }
 
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
