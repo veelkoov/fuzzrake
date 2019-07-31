@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class AppTidyData extends Command
+class DataTidyCommand extends Command
 {
     protected static $defaultName = 'app:data:tidy';
 
