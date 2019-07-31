@@ -27,14 +27,19 @@ class ArtisanPrivateData
     private $artisan;
 
     /**
-     * @ORM\Column(type="string", length=512, nullable=true)
+     * @ORM\Column(type="string", length=512)
      */
-    private $contactAddress;
+    private $contactAddress = '';
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $passcode;
+    private $passcode = '';
+
+    /**
+     * @ORM\Column(type="string", length=512)
+     */
+    private $originalContactInfo = '';
 
     public function getId(): ?int
     {
@@ -53,26 +58,38 @@ class ArtisanPrivateData
         return $this;
     }
 
-    public function getContactAddress(): ?string
+    public function getContactAddress(): string
     {
         return $this->contactAddress;
     }
 
-    public function setContactAddress(?string $contactAddress): self
+    public function setContactAddress(string $contactAddress): self
     {
         $this->contactAddress = $contactAddress;
 
         return $this;
     }
 
-    public function getPasscode(): ?string
+    public function getPasscode(): string
     {
         return $this->passcode;
     }
 
-    public function setPasscode(?string $passcode): self
+    public function setPasscode(string $passcode): self
     {
         $this->passcode = $passcode;
+
+        return $this;
+    }
+
+    public function getOriginalContactInfo(): string
+    {
+        return $this->originalContactInfo;
+    }
+
+    public function setOriginalContactInfo(string $originalContactInfo): self
+    {
+        $this->originalContactInfo = $originalContactInfo;
 
         return $this;
     }

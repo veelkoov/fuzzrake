@@ -214,17 +214,17 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $contactAllowed;
+    private $contactAllowed = '';
 
     /**
-     * @ORM\Column(type="string", length=32, nullable=true)
+     * @ORM\Column(type="string", length=32)
      */
-    private $contactMethod;
+    private $contactMethod = '';
 
     /**
-     * @ORM\Column(type="string", length=128, nullable=true)
+     * @ORM\Column(type="string", length=128)
      */
-    private $contactAddress;
+    private $contactAddress = '';
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
@@ -825,9 +825,45 @@ class Artisan implements JsonSerializable
         return array_values($data);
     }
 
-    public function getCommissionsStatus(): ?ArtisanCommissionsStatus
+    public function getContactMethod(): string
     {
-        return $this->commissionsStatus;
+        return $this->contactMethod;
+    }
+
+    public function setContactMethod(string $contactMethod): self
+    {
+        $this->contactMethod = $contactMethod;
+
+        return $this;
+    }
+
+    public function getContactAddress(): string
+    {
+        return $this->contactAddress;
+    }
+
+    public function setContactAddress(string $contactAddress): self
+    {
+        $this->contactAddress = $contactAddress;
+
+        return $this;
+    }
+
+    public function getContactAllowed(): string
+    {
+        return $this->contactAllowed;
+    }
+
+    public function setContactAllowed(string $contactAllowed): self
+    {
+        $this->contactAllowed = $contactAllowed;
+
+        return $this;
+    }
+
+    public function getCommissionsStatus(): ArtisanCommissionsStatus
+    {
+        return $this->commissionsStatus ?? $this->commissionsStatus = (new ArtisanCommissionsStatus())->setArtisan($this);
     }
 
     public function setCommissionsStatus(ArtisanCommissionsStatus $commissionsStatus): self
@@ -841,33 +877,9 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getContactMethod(): ?string
+    public function getPrivateData(): ArtisanPrivateData
     {
-        return $this->contactMethod;
-    }
-
-    public function setContactMethod(?string $contactMethod): self
-    {
-        $this->contactMethod = $contactMethod;
-
-        return $this;
-    }
-
-    public function getContactAddress(): ?string
-    {
-        return $this->contactAddress;
-    }
-
-    public function setContactAddress(?string $contactAddress): self
-    {
-        $this->contactAddress = $contactAddress;
-
-        return $this;
-    }
-
-    public function getPrivateData(): ?ArtisanPrivateData
-    {
-        return $this->privateData;
+        return $this->privateData ?? $this->privateData = (new ArtisanPrivateData())->setArtisan($this);
     }
 
     public function setPrivateData(ArtisanPrivateData $privateData): self
@@ -877,18 +889,6 @@ class Artisan implements JsonSerializable
         if ($this !== $privateData->getArtisan()) {
             $privateData->setArtisan($this);
         }
-
-        return $this;
-    }
-
-    public function getContactAllowed(): ?string
-    {
-        return $this->contactAllowed;
-    }
-
-    public function setContactAllowed(string $contactAllowed): self
-    {
-        $this->contactAllowed = $contactAllowed;
 
         return $this;
     }
