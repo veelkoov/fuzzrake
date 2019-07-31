@@ -197,19 +197,24 @@ class Artisan implements JsonSerializable
     private $notes;
 
     /**
-     * @ORM\Column(name="commissions_quotes_check_url", type="string", length=255) // TODO: rename column
+     * @ORM\Column(name="cst_url", type="string", length=255)
      */
     private $cstUrl;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $areCommissionsOpen;
+    private $areCommissionsOpen; // TODO: remove
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $commissionsQuotesLastCheck;
+    private $commissionsQuotesLastCheck; // TODO: remove
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
+     */
+    private $commissionsStatus;
 
     public function getId()
     {
@@ -798,5 +803,21 @@ class Artisan implements JsonSerializable
             ? 'unknown' : date('Y-m-d H:i:s', $this->getCommissionsQuotesLastCheck()->getTimestamp());
 
         return array_values($data);
+    }
+
+    public function getCommissionsStatus(): ?ArtisanCommissionsStatus
+    {
+        return $this->commissionsStatus;
+    }
+
+    public function setCommissionsStatus(ArtisanCommissionsStatus $commissionsStatus): self
+    {
+        $this->commissionsStatus = $commissionsStatus;
+
+        if ($this !== $commissionsStatus->getArtisan()) {
+            $commissionsStatus->setArtisan($this);
+        }
+
+        return $this;
     }
 }
