@@ -5,10 +5,9 @@
     path: "{{ db_dump_file_path }}"
   check_mode: no
   with_items:
-    - { regexp: "^INSERT INTO `artisans_commissions_statues` VALUES .+$", replace: "" }
+    - { regexp: "^INSERT INTO `artisans_commissions_statues` VALUES .+\n", replace: "" }
     - { regexp: "(?<!\\\\)','", replace: "', '" }
-    - { regexp: "NULL,'", replace: "NULL, '" }
-    - { regexp: ", ?NULL, ?", replace: ", NULL, " }
+    - { regexp: ",NULL,NULL\\);$", replace: ", NULL, NULL);" }
   no_log: yes
 
 - copy:
