@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+
+/var/log/httpd/*log {
+    weekly
+    rotate 54
+    missingok
+    notifempty
+    sharedscripts
+    delaycompress
+    postrotate
+        /bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true
+    endscript
+}

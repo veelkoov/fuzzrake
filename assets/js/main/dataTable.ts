@@ -93,10 +93,10 @@ export function init() {
     processArtisansTable();
     initDataTable();
 
-    addFilter(new FilterSimpleValue  ('country',            '#countriesFilter',           $dataTable.draw));
-    addFilter(new FilterSetWithOthers('styles',             '#stylesFilter',              $dataTable.draw, false));
-    addFilter(new FilterSetWithOthers('features',           '#featuresFilter',            $dataTable.draw, true));
-    addFilter(new FilterSetWithOthers('orderTypes',         '#orderTypesFilter',          $dataTable.draw, false));
-    addFilter(new FilterSetSingle    ('productionModels',   '#productionModelsFilter',    $dataTable.draw, false));
-    addFilter(new FilterSimpleValue  ('areCommissionsOpen', '#commissionsStatusesFilter', $dataTable.draw));
+    addFilter(new FilterSimpleValue  ('country',           '#countriesFilter',           $dataTable.draw));
+    addFilter(new FilterSetWithOthers('styles',            '#stylesFilter',              $dataTable.draw, false));
+    addFilter(new FilterSetWithOthers('features',          '#featuresFilter',            $dataTable.draw, true));
+    addFilter(new FilterSetWithOthers('orderTypes',        '#orderTypesFilter',          $dataTable.draw, false));
+    addFilter(new FilterSetSingle    ('productionModels',  '#productionModelsFilter',    $dataTable.draw, false));
+    addFilter(new FilterSimpleValue  ('commissionsStatus', '#commissionsStatusesFilter', $dataTable.draw));
 }
