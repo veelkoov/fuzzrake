@@ -59,44 +59,43 @@ class ArtisanFields
 
     private const FIELDS_ARRAY_DATA = [
         /* PRETTY_NAME => ['model name', 'validation regexp', is_list_field] */
-        self::NAME => ['name', '#^.+$#', false],
-        self::FORMERLY => ['formerly', self::ANYTHING_REGEXP, true],
-        self::SINCE => ['since', '#^(\d{4}-\d{2})?$#', false],
-        self::COUNTRY => ['country', '#^([A-Z]{2})?$#', false],
-        self::STATE => ['state', self::ANYTHING_REGEXP, false],
-        self::CITY => ['city', self::ANYTHING_REGEXP, false],
-        self::PAYMENT_PLANS => ['paymentPlans', self::ANYTHING_REGEXP, false],
-        self::URL_PRICES => ['pricesUrl', self::GENERIC_URL_REGEXP, false],
-        self::PRODUCTION_MODELS => ['productionModels', self::LIST_VALIDATION_REGEXP, true],
-        self::STYLES => ['styles', self::LIST_VALIDATION_REGEXP, true],
-        self::OTHER_STYLES => ['otherStyles', self::LIST_VALIDATION_REGEXP, true],
-        self::ORDER_TYPES => ['orderTypes', self::LIST_VALIDATION_REGEXP, true],
-        self::OTHER_ORDER_TYPES => ['otherOrderTypes', self::LIST_VALIDATION_REGEXP, true],
-        self::FEATURES => ['features', self::LIST_VALIDATION_REGEXP, true],
-        self::OTHER_FEATURES => ['otherFeatures', self::LIST_VALIDATION_REGEXP, true],
-        self::SPECIES_DOES => ['speciesDoes', self::ANYTHING_REGEXP, false],
-        self::SPECIES_DOESNT => ['speciesDoesnt', self::ANYTHING_REGEXP, false],
-        self::URL_FSR => ['fursuitReviewUrl', '#^(http://fursuitreview.com/maker/[^/]+/)?$#', false],
-        self::URL_WEBSITE => ['websiteUrl', self::GENERIC_URL_REGEXP, false],
-        self::URL_FAQ => ['faqUrl', self::GENERIC_URL_REGEXP, false],
-        self::URL_QUEUE => ['queueUrl', self::GENERIC_URL_REGEXP, false],
-        self::URL_FA => ['furAffinityUrl', '#^(http://www\.furaffinity\.net/user/[^/]+)?$#', false],
-        self::URL_DA => ['deviantArtUrl', '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#', false],
-        self::URL_TWITTER => ['twitterUrl', '#^(https://twitter\.com/[^/]+)?$#', false],
-        self::URL_FACEBOOK => ['facebookUrl', '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#', false],
-        self::URL_TUMBLR => ['tumblrUrl', '#^(https?://[^.]+\.tumblr\.com/)?$#', false],
-        self::URL_INSTAGRAM => ['instagramUrl', '#^(https://www\.instagram\.com/[^/]+/)?$#', false],
-        self::URL_YOUTUBE => ['youtubeUrl', '#^(https://www\.youtube\.com/(channel|user|c)/[^/?]+)?$#', false],
-        self::URL_OTHER => ['otherUrls', self::ANYTHING_REGEXP, false],
-        self::URL_CST => ['cstUrl', self::GENERIC_URL_REGEXP, false],
-        self::LANGUAGES => ['languages', self::ANYTHING_REGEXP, false],
-        self::MAKER_ID => ['makerId', '#^([A-Z0-9]{7})?$#', false],
-        self::FORMER_MAKER_IDS => ['formerMakerIds', '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#', true],
-        self::INTRO => ['intro', self::ANYTHING_REGEXP, false],
-        self::NOTES => ['notes', '#.*#', false],
-
-        self::TIMESTAMP => [null, null, null],
-        self::PASSCODE => [null, null, null],
+        self::NAME              => ['name',             '#^.+$#',                      false],
+        self::FORMERLY          => ['formerly',         self::ANYTHING_REGEXP,         true],
+        self::SINCE             => ['since',            '#^(\d{4}-\d{2})?$#',          false],
+        self::COUNTRY           => ['country',          '#^([A-Z]{2})?$#',             false],
+        self::STATE             => ['state',            self::ANYTHING_REGEXP,         false],
+        self::CITY              => ['city',             self::ANYTHING_REGEXP,         false],
+        self::PAYMENT_PLANS     => ['paymentPlans',     self::ANYTHING_REGEXP,         false],
+        self::URL_PRICES        => ['pricesUrl',        self::GENERIC_URL_REGEXP,      false],
+        self::PRODUCTION_MODELS => ['productionModels', self::LIST_VALIDATION_REGEXP,  true],
+        self::STYLES            => ['styles',           self::LIST_VALIDATION_REGEXP,  true],
+        self::OTHER_STYLES      => ['otherStyles',      self::LIST_VALIDATION_REGEXP,  true],
+        self::ORDER_TYPES       => ['orderTypes',       self::LIST_VALIDATION_REGEXP,  true],
+        self::OTHER_ORDER_TYPES => ['otherOrderTypes',  self::LIST_VALIDATION_REGEXP,  true],
+        self::FEATURES          => ['features',         self::LIST_VALIDATION_REGEXP,  true],
+        self::OTHER_FEATURES    => ['otherFeatures',    self::LIST_VALIDATION_REGEXP,  true],
+        self::SPECIES_DOES      => ['speciesDoes',      self::ANYTHING_REGEXP,         false],
+        self::SPECIES_DOESNT    => ['speciesDoesnt',    self::ANYTHING_REGEXP,         false],
+        self::URL_FSR           => ['fursuitReviewUrl', self::FSR_URL_REGEXP,          false],
+        self::URL_WEBSITE       => ['websiteUrl',       self::GENERIC_URL_REGEXP,      false],
+        self::URL_FAQ           => ['faqUrl',           self::GENERIC_URL_REGEXP,      false],
+        self::URL_QUEUE         => ['queueUrl',         self::GENERIC_URL_REGEXP,      false],
+        self::URL_FA            => ['furAffinityUrl',   self::FA_URL_REGEXP,           false],
+        self::URL_DA            => ['deviantArtUrl',    self::DA_URL_REGEXP,           false],
+        self::URL_TWITTER       => ['twitterUrl',       self::TWITTER_URL_REGEXP,      false],
+        self::URL_FACEBOOK      => ['facebookUrl',      self::FACEBOOK_URL_REGEXP,     false],
+        self::URL_TUMBLR        => ['tumblrUrl',        self::TUMBLR_URL_REGEXP,       false],
+        self::URL_INSTAGRAM     => ['instagramUrl',     self::INSTAGRAM_URL_REGEXP,    false],
+        self::URL_YOUTUBE       => ['youtubeUrl',       self::YOUTUBE_URL_REGEXP,      false],
+        self::URL_OTHER         => ['otherUrls',        self::ANYTHING_REGEXP,         false],
+        self::URL_CST           => ['cstUrl',           self::GENERIC_URL_REGEXP,      false],
+        self::LANGUAGES         => ['languages',        self::ANYTHING_REGEXP,         false],
+        self::MAKER_ID          => ['makerId',          '#^([A-Z0-9]{7})?$#',          false],
+        self::FORMER_MAKER_IDS  => ['formerMakerIds',   self::FORMER_MAKER_IDS_REGEXP, true],
+        self::INTRO             => ['intro',            self::ANYTHING_REGEXP,         false],
+        self::NOTES             => ['notes',            '#.*#',                        false],
+        self::TIMESTAMP         => [null,               null,                          null],
+        self::PASSCODE          => [null,               null,                          null],
     ];
 
     private const IU_FORM_FIELDS_ORDER = [
@@ -140,6 +139,15 @@ class ArtisanFields
         self::IGNORED_IU_FORM_FIELD, // Contact permit
         self::IGNORED_IU_FORM_FIELD, // Contact method
     ];
+    const DA_URL_REGEXP = '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#';
+    const FACEBOOK_URL_REGEXP = '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#';
+    const FSR_URL_REGEXP = '#^(http://fursuitreview.com/maker/[^/]+/)?$#';
+    const FA_URL_REGEXP = '#^(http://www\.furaffinity\.net/user/[^/]+)?$#';
+    const YOUTUBE_URL_REGEXP = '#^(https://www\.youtube\.com/(channel|user|c)/[^/?]+)?$#';
+    const INSTAGRAM_URL_REGEXP = '#^(https://www\.instagram\.com/[^/]+/)?$#';
+    const TUMBLR_URL_REGEXP = '#^(https?://[^.]+\.tumblr\.com/)?$#';
+    const TWITTER_URL_REGEXP = '#^(https://twitter\.com/[^/]+)?$#';
+    const FORMER_MAKER_IDS_REGEXP = '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#';
 
     private static $fields;
     private static $fieldsByModelName;
