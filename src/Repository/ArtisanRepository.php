@@ -67,12 +67,14 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this
             ->getEntityManager()
             ->createNativeQuery('
-                SELECT SUM(are_commissions_open = 1) AS open
-                  , SUM(are_commissions_open = 0) AS closed
-                  , SUM(are_commissions_open IS NOT NULL AND commissions_quotes_check_url <> \'\') AS successfully_tracked
-                  , SUM(commissions_quotes_check_url <> \'\') AS tracked
-                  , SUM(1) AS total
-                FROM artisans
+                SELECT SUM(acs.status = 1) AS open
+                    , SUM(acs.status = 0) AS closed
+                    , SUM(acs.status IS NOT NULL AND cst_url <> \'\') AS successfully_tracked
+                    , SUM(a.cst_url <> \'\') AS tracked
+                    , SUM(1) AS total
+                FROM artisans AS a
+                LEFT JOIN artisans_commissions_statues AS acs
+                    ON a.id = acs.artisan_id
             ', $rsm)
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
@@ -120,8 +122,9 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getDistinctCommissionStatuses(): FilterItems
     {
         $rows = $this->createQueryBuilder('a')
-            ->select("a.areCommissionsOpen AS status, COUNT(COALESCE(a.areCommissionsOpen, 'null')) AS count")
-            ->groupBy('a.areCommissionsOpen')
+            ->leftJoin('a.commissionsStatus', 's')
+            ->select("s.status, COUNT(COALESCE(s.status, 'null')) AS count")
+            ->groupBy('s.status')
             ->getQuery()
             ->getArrayResult();
 

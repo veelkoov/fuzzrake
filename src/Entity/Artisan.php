@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utils\ArtisanField;
 use App\Utils\ArtisanFields;
 use App\Utils\CompletenessCalc;
 use DateTimeInterface;
@@ -760,7 +761,7 @@ class Artisan implements JsonSerializable
             // Other URLs not checked - we're not requiring unknown
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
             // Notes are not supposed to be displayed, thus not counted
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
+            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
             // CST last check does not depend on artisan input
             ->result();
     }
@@ -791,18 +792,31 @@ class Artisan implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $data = get_object_vars($this);
-        unset($data['id']);
+        return array_values(array_map(function (ArtisanField $field) {
+            if ($field->isPersisted()) {
+                $value = $this->get($field->modelName());
+            } else {
+                switch ($field->name()) {
+                    case ArtisanFields::CST_LAST_CHECK:
+                        $lc = $this->getCommissionsStatus()->getLastChecked();
+                        $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+                        break;
 
-        foreach (ArtisanFields::lists() as $field) {
-            $data[$field->modelName()] = array_filter(explode("\n", $data[$field->modelName()]));
-        }
+                    case ArtisanFields::COMMISSIONS_STATUS:
+                        $value = $this->getCommissionsStatus()->getStatus();
+                        break;
 
-        $data['completeness'] = $this->completeness();
-        $data['commissionsQuotesLastCheck'] = null === $this->getCommissionsQuotesLastCheck()
-            ? 'unknown' : date('Y-m-d H:i:s', $this->getCommissionsQuotesLastCheck()->getTimestamp());
+                    case ArtisanFields::COMPLETNESS:
+                        $value = $this->completeness();
+                        break;
 
-        return array_values($data);
+                    default:
+                        throw new InvalidArgumentException('Unknown field: '.$field->modelName());
+                }
+            }
+
+            return $field->isList() ? array_filter(explode("\n", $value)) : $value;
+        }, ArtisanFields::inJson()));
     }
 
     public function getCommissionsStatus(): ArtisanCommissionsStatus
