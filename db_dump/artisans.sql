@@ -371,7 +371,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=669 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=676 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -563,6 +563,13 @@ INSERT INTO `events` VALUES (665,'2019-07-25 18:07:07', '', 'CS_UPDTD_DETLS',NUL
 INSERT INTO `events` VALUES (666,'2019-07-26 06:07:10', '', 'CS_UPDTD_DETLS',0,1,'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '[\"fursuits, plushies, paintings, i do it all! want a commission? email me at kaylaskritterz@yahoo.com \",\"commission status: open\",\" (temp)</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"\"]', '');
 INSERT INTO `events` VALUES (667,'2019-07-26 18:07:10', '', 'CS_UPDTD_DETLS',NULL,1,'Fix It Fursuits', 'https://www.fixitfursuits.com/get-a-quote', '[\"pe: styledtext id: dataitem-jht68hzq ispreset: schemaversion: 1.0 ishidden: text: <p class=\\\"font_8\\\">\",\"commissions are open\",\"!</p> <p class=\\\"font_8\\\"> </p> stylesmapid: ck_editor_paragraph_styles type: image id: dataitem-jwc7v\"]', '');
 INSERT INTO `events` VALUES (668,'2019-07-28 06:07:11', '', 'CS_UPDTD_DETLS',1,0,'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '', '[\"fursuits, plushies, paintings, i do it all! want a commission? email me at kaylaskritterz@yahoo.com \",\"commission status: closed\",\"</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"> kayla\"]');
+INSERT INTO `events` VALUES (669,'2019-07-28 16:44:49', '- Fixed a bug reported using the feedback form. The bug affected commissions statuses filter, causing it to not function at all. Thank you, kind soul, for taking your time to report the bug and even include the recording! Many hugs for you! I wish you find the best maker possible.', 'GENERIC',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (670,'2019-07-29 18:07:09', '', 'CS_UPDTD_DETLS',1,NULL,'Stitch Lynx', 'https://twitter.com/StitchLynx', '', '');
+INSERT INTO `events` VALUES (671,'2019-08-01 18:07:15', '', 'CS_UPDTD_DETLS',NULL,1,'Arend Studios', 'https://twitter.com/ArendStudios', '[\"whiteyfawks much love! http://ko-fi.com/whiteyfawks fursuit dryers:http://arendstudios.storenvy.com \",\"open for commissions </p> \",\"<div class=\\\"profileheadercard-location \\\"> denver, co </div> <div class=\\\"profileheadercard-url \\\"> are\"]', '');
+INSERT INTO `events` VALUES (672,'2019-08-01 18:07:15', '', 'CS_UPDTD_DETLS',0,1,'Wanderlust Suits', 'https://www.wanderlustsuits.com/', '[\"dtext id: dataitem-jfjcf1df ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_2\\\">fursuit \",\"commissions open\",\"! august 1st-3rd 2019.</h2> stylesmapid: ck_editor_paragraph_styles type: basicmenuitem id: dataitem\"]', '');
+INSERT INTO `events` VALUES (673,'2019-08-01 18:07:15', '', 'CS_UPDTD_DETLS',0,1,'SereStudios', 'https://serestudios.wixsite.com/serestudios', '[\"ype: styledtext id: c1gp4 ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">\",\"commissions are open\",\"</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">commission form</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">please fill out\"]', '');
+INSERT INTO `events` VALUES (674,'2019-08-01 18:07:16', '', 'CS_UPDTD_DETLS',0,1,'AstroAntlers', 'https://twitter.com/AstroAntlers', '[\" u-dir\\\" dir=\\\"ltr\\\">fursuit making account for <s>@</s>rioichi4 full-time suit-making since july 2014 \",\"currently open for commissions\",\" now moderated by <s>@</s>klovixfox</p> <div class=\\\"profileheadercard-location \\\"> previously wolf\'s \"]', '');
+INSERT INTO `events` VALUES (675,'2019-08-02 06:07:12', '', 'CS_UPDTD_DETLS',0,1,'Ya Boy Luke Suits', 'http://yaboylukesuits.com/index.html', '[\"te-content-title\\\">ya boy luke fursuits</h2> <div class=\\\"wsite-spacer\\\"></div> <div><div></div> toony \",\"commissions are open\",\"! <div></div></div> </div> </div> </div> </div> <div class=\\\"\\\"></div> </div> </div> </div> </div><> <\"]', '');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
