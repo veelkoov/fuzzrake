@@ -19,13 +19,14 @@ class ArtisanFieldsTest extends TestCase
 
         $this->assertTrue(Utils::match('#constructor\((?<parameters>(?:readonly [a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si', $modelSource, $constructorMatch));
 
-        Utils::matchAll('#readonly (?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#si', $constructorMatch['parameters'], $parMatches);
+        $this->assertGreaterThan(0, Utils::matchAll('#readonly (?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#si', $constructorMatch['parameters'], $parMatches));
 
         $fieldsInJson = ArtisanFields::inJson();
 
         foreach ($parMatches[0] as $idx => $_) {
             $field = array_shift($fieldsInJson);
 
+            $this->assertNotNull($field);
             $this->assertEquals($field->modelName(), $parMatches['name'][$idx]);
             $this->assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]));
         }
