@@ -48,7 +48,7 @@ CREATE TABLE `artisans` (
   `other_urls` varchar(1023) COLLATE utf8mb4_unicode_ci NOT NULL,
   `languages` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `notes` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `commissions_quotes_check_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cst_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `are_commissions_open` tinyint(1) DEFAULT NULL,
   `commissions_quotes_last_check` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -372,7 +372,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=676 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=677 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -571,6 +571,21 @@ INSERT INTO `events` VALUES (672,'2019-08-01 18:07:15', '', 'CS_UPDTD_DETLS',0,1
 INSERT INTO `events` VALUES (673,'2019-08-01 18:07:15', '', 'CS_UPDTD_DETLS',0,1,'SereStudios', 'https://serestudios.wixsite.com/serestudios', '[\"ype: styledtext id: c1gp4 ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">\",\"commissions are open\",\"</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">commission form</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">please fill out\"]', '');
 INSERT INTO `events` VALUES (674,'2019-08-01 18:07:16', '', 'CS_UPDTD_DETLS',0,1,'AstroAntlers', 'https://twitter.com/AstroAntlers', '[\" u-dir\\\" dir=\\\"ltr\\\">fursuit making account for <s>@</s>rioichi4 full-time suit-making since july 2014 \",\"currently open for commissions\",\" now moderated by <s>@</s>klovixfox</p> <div class=\\\"profileheadercard-location \\\"> previously wolf\'s \"]', '');
 INSERT INTO `events` VALUES (675,'2019-08-02 06:07:12', '', 'CS_UPDTD_DETLS',0,1,'Ya Boy Luke Suits', 'http://yaboylukesuits.com/index.html', '[\"te-content-title\\\">ya boy luke fursuits</h2> <div class=\\\"wsite-spacer\\\"></div> <div><div></div> toony \",\"commissions are open\",\"! <div></div></div> </div> </div> </div> </div> <div class=\\\"\\\"></div> </div> </div> </div> </div><> <\"]', '');
+INSERT INTO `events` VALUES (676,'2019-08-02 18:42:12', '- 1 new maker on board, 1 updated - as per requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/06142c6cf4ded858ed1d175c7e2efbb57ce4b931\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
+DROP TABLE IF EXISTS `artisans_commissions_statues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `artisans_commissions_statues` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `artisan_id` int(11) NOT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `last_checked` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQ_4148D9A35ED3C7B7` (`artisan_id`),
+  CONSTRAINT `FK_4148D9A35ED3C7B7` FOREIGN KEY (`artisan_id`) REFERENCES `artisans` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=303 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
