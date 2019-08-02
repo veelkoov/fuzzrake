@@ -6,27 +6,27 @@ class CommissionsStatusRegexps
 {
     const HTML_CLEANER_REGEXPS = [
         '#</?(strong|b|i|span|center|a|em|font)[^>]*>#s' => '',
-        '#(\s|&nbsp;|<br\s*/?>)+#s' => ' ',
-        '#<style[^>]*>.*?</style>#s' => '',
-        '# style="[^"]*"( (?=\>))?#s' => '',
-        '#’|&\#39;|&\#8217;#' => '\'',
-        '<!--.*?-->' => '',
-        '# +data-[^>"]+ *= *"[^"]+" *#' => ' ',
+        '#(\s|&nbsp;|<br\s*/?>)+#s'                      => ' ',
+        '#<style[^>]*>.*?</style>#s'                     => '',
+        '# style="[^"]*"( (?=\>))?#s'                    => '',
+        '#’|&\#39;|&\#8217;#'                            => '\'',
+        '<!--.*?-->'                                     => '',
+        '# +data-[^>"]+ *= *"[^"]+" *#'                  => ' ',
     ];
 
     const COMMON_REPLACEMENTS = [
-        'COMMISSIONS' => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?|comms)',
-        'OPEN' => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',
-        'CLOSED' => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
-        'fursuits' => 'fursuits?',
+        'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?ions?((/| and | )quotes)?|comms)',
+        'OPEN'              => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',
+        'CLOSED'            => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
+        'fursuits'          => 'fursuits?',
         '</(div|p|h[1-6])>' => ' ?</$1> ?',
-        '<(div|p|h[1-6])>' => ' ?<$1( class="[^"]{1,200}")?> ?',
-        'WE_CAN' => '(i|we) can(?! not? )',
-        'WE_ARE' => '(we are|we\'re|i am|i\'?m|STUDIO_NAME (is|are))',
-        'WE' => '(i|we)',
-        'MONTHS' => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
-        'TIMESPAN' => '(current(ly)?|(right )?now|at (this|the) time|for the time being|already|(now )?(always|permanently|indefinitely))',
-        '<HTML_TAG>' => '( ?<[^>]{1,200}> ?)',
+        '<(div|p|h[1-6])>'  => ' ?<$1( class="[^"]{1,200}")?> ?',
+        'WE_CAN'            => '(i|we) can(?! not? )',
+        'WE_ARE'            => '(we are|we\'re|i am|i\'?m|STUDIO_NAME (is|are))',
+        'WE'                => '(i|we)',
+        'MONTHS'            => '(january|jan|february|feb|march|mar|april|apr|may|may|june|jun|july|jul|august|aug|september|sep|sept|october|oct|november|nov|december|dec)',
+        'TIMESPAN'          => '(current(ly)?|(right )?now|at (this|the) time|for the time being|already|(now )?(always|permanently|indefinitely))',
+        '<HTML_TAG>'        => '( ?<[^>]{1,200}> ?)',
     ];
 
     const FALSE_POSITIVES_REGEXES = [
