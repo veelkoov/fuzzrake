@@ -12,7 +12,7 @@ class Utils
      * @param array|null $matches
      * @param string     $debugInfo
      *
-     * @return false|int
+     * @return bool
      */
     public static function match(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): bool
     {

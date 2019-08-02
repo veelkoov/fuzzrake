@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use ZipArchive;
 
-class ImportData extends Command
+class DataImportCommand extends Command
 {
     protected static $defaultName = 'app:data:import';
 

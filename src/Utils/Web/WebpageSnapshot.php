@@ -128,11 +128,11 @@ class WebpageSnapshot implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'url' => $this->url,
-            'ownerName' => $this->ownerName,
+            'url'         => $this->url,
+            'ownerName'   => $this->ownerName,
             'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
-            'contents' => $this->contents,
-            'children' => $this->children,
+            'contents'    => $this->contents,
+            'children'    => $this->children,
         ];
     }
 

@@ -94,9 +94,7 @@ class CommissionStatusUpdateService
         }
 
         $this->reportStatusChange($artisan, $analysisResult);
-        $artisan
-            ->setAreCommissionsOpen($analysisResult->getStatus())
-            ->setCommissionsQuotesLastCheck($datetimeRetrieved);
+        $artisan->getCommissionsStatus()->setStatus($analysisResult->getStatus())->setLastChecked($datetimeRetrieved);
     }
 
     private function canAutoUpdate(Artisan $artisan): bool
@@ -110,8 +108,8 @@ class CommissionStatusUpdateService
      */
     private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult): void
     {
-        if ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
-            $oldStatusText = Status::text($artisan->getAreCommissionsOpen());
+        if ($artisan->getCommissionsStatus()->getStatus() !== $analysisResult->getStatus()) {
+            $oldStatusText = Status::text($artisan->getCommissionsStatus()->getStatus());
             $newStatusText = Status::text($analysisResult->getStatus());
 
             $this->io->caution("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}, $oldStatusText ---> $newStatusText");
@@ -135,9 +133,9 @@ class CommissionStatusUpdateService
                 "<context>{$analysisResult->getClosedStrContext()->getAfter()}</>");
         }
 
-        if ($artisan->getAreCommissionsOpen() !== $analysisResult->getStatus()) {
+        if ($artisan->getCommissionsStatus()->getStatus() !== $analysisResult->getStatus()) {
             $this->objectManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
-                $artisan->getAreCommissionsOpen(), $analysisResult));
+                $artisan->getCommissionsStatus()->getStatus(), $analysisResult));
         }
     }
 

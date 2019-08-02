@@ -67,11 +67,11 @@ function updateCommissionsStatus(artisan: Artisan): void {
     if (artisan.cstUrl === '') {
         description = `Commissions are <strong>${commissionsStatus}</strong>. Status is not automatically tracked and updated. <a href="${TRACKING_URL}">Learn more</a>`;
     } else if (artisan.commissionsStatus === null) {
-        description = `Commissions status is unknown. It should be tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>, however the software failed to "understand" the status based on the page contents. Last time it tried on ${artisan.commissionsStatusLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
+        description = `Commissions status is unknown. It should be tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>, however the software failed to "understand" the status based on the page contents. Last time it tried on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
 
         parsingFailed = true;
     } else {
-        description = `Commissions are <strong>${commissionsStatus}</strong>. Status is tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>. Last time checked on ${artisan.commissionsStatusLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
+        description = `Commissions are <strong>${commissionsStatus}</strong>. Status is tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>. Last time checked on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
     }
 
     $('#artisanCommissionsStatus').html(description);
