@@ -203,16 +203,6 @@ class Artisan implements JsonSerializable
     private $cstUrl;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $areCommissionsOpen; // TODO: remove
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $commissionsQuotesLastCheck; // TODO: remove
-
-    /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
      */
     private $commissionsStatus;
@@ -448,18 +438,6 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getAreCommissionsOpen(): ?bool // TODO: remove
-    {
-        return $this->getCommissionsStatus()->getStatus();
-    }
-
-    public function setAreCommissionsOpen(?bool $areCommissionsOpen): self // TODO: remove
-    {
-        $this->getCommissionsStatus()->setStatus($areCommissionsOpen);
-
-        return $this;
-    }
-
     public function getSince(): ?string
     {
         return $this->since;
@@ -528,18 +506,6 @@ class Artisan implements JsonSerializable
     public function setOtherFeatures(string $otherFeatures): self
     {
         $this->otherFeatures = $otherFeatures;
-
-        return $this;
-    }
-
-    public function getCommissionsQuotesLastCheck(): ?DateTimeInterface // TODO: remove
-    {
-        return $this->getCommissionsStatus()->getLastChecked();
-    }
-
-    public function setCommissionsQuotesLastCheck(?DateTimeInterface $commissionsQuotesLastCheck): self // TODO: remove
-    {
-        $this->getCommissionsStatus()->setLastChecked($commissionsQuotesLastCheck);
 
         return $this;
     }
