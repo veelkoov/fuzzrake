@@ -38,8 +38,8 @@
                     {{- artisan.features|other(artisan.otherFeatures) -}}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {%- if artisan.areCommissionsOpen is not null -%}
-                        {%- if artisan.areCommissionsOpen -%}
+                    {%- if artisan.commissionsStatus.status is not null -%}
+                        {%- if artisan.commissionsStatus.status -%}
                             <i class="fas fa-check-circle"></i> Open
                         {%- else -%}
                             <i class="fas fa-times-circle"></i> Closed

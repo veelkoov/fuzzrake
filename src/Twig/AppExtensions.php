@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
@@ -21,13 +21,13 @@ class AppExtensions extends AbstractExtension
     const MONTHS = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     /**
-     * @var ArtisanRepository
+     * @var ArtisanCommissionsStatusRepository
      */
-    private $artisanRepository;
+    private $acsRepository;
 
-    public function __construct(ArtisanRepository $artisanRepository)
+    public function __construct(ArtisanCommissionsStatusRepository $acsRepository)
     {
-        $this->artisanRepository = $artisanRepository;
+        $this->acsRepository = $acsRepository;
     }
 
     public function getFilters()
@@ -53,9 +53,9 @@ class AppExtensions extends AbstractExtension
     public function getLastDataUpdateTimeUtcStrFunction(): string
     {
         try {
-            return $this->artisanRepository->getLastCstUpdateTime()->format('Y-m-d H:i');
+            return $this->acsRepository->getLastCstUpdateTime()->format('Y-m-d H:i');
         } catch (DateTimeException | NonUniqueResultException $e) {
-            return 'unknown (failure)';
+            return 'unknown/error';
         }
     }
 

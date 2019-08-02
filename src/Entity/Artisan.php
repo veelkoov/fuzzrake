@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utils\ArtisanField;
 use App\Utils\ArtisanFields;
 use App\Utils\CompletenessCalc;
 use DateTimeInterface;
@@ -200,16 +201,6 @@ class Artisan implements JsonSerializable
      * @ORM\Column(name="cst_url", type="string", length=255)
      */
     private $cstUrl;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $areCommissionsOpen; // TODO: remove
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $commissionsQuotesLastCheck; // TODO: remove
 
     /**
      * @ORM\Column(type="string", length=16)
@@ -467,18 +458,6 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getAreCommissionsOpen(): ?bool
-    {
-        return $this->areCommissionsOpen;
-    }
-
-    public function setAreCommissionsOpen(?bool $areCommissionsOpen): self
-    {
-        $this->areCommissionsOpen = $areCommissionsOpen;
-
-        return $this;
-    }
-
     public function getSince(): ?string
     {
         return $this->since;
@@ -547,18 +526,6 @@ class Artisan implements JsonSerializable
     public function setOtherFeatures(string $otherFeatures): self
     {
         $this->otherFeatures = $otherFeatures;
-
-        return $this;
-    }
-
-    public function getCommissionsQuotesLastCheck(): ?DateTimeInterface
-    {
-        return $this->commissionsQuotesLastCheck;
-    }
-
-    public function setCommissionsQuotesLastCheck(?DateTimeInterface $commissionsQuotesLastCheck): self
-    {
-        $this->commissionsQuotesLastCheck = $commissionsQuotesLastCheck;
 
         return $this;
     }
@@ -780,7 +747,7 @@ class Artisan implements JsonSerializable
             // Other URLs not checked - we're not requiring unknown
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
             // Notes are not supposed to be displayed, thus not counted
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
+            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
             // CST last check does not depend on artisan input
             ->result();
     }
@@ -811,18 +778,31 @@ class Artisan implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $data = get_object_vars($this);
-        unset($data['id']);
+        return array_values(array_map(function (ArtisanField $field) {
+            if ($field->isPersisted()) {
+                $value = $this->get($field->modelName());
+            } else {
+                switch ($field->name()) {
+                    case ArtisanFields::CST_LAST_CHECK:
+                        $lc = $this->getCommissionsStatus()->getLastChecked();
+                        $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+                        break;
 
-        foreach (ArtisanFields::lists() as $field) {
-            $data[$field->modelName()] = array_filter(explode("\n", $data[$field->modelName()]));
-        }
+                    case ArtisanFields::COMMISSIONS_STATUS:
+                        $value = $this->getCommissionsStatus()->getStatus();
+                        break;
 
-        $data['completeness'] = $this->completeness();
-        $data['commissionsQuotesLastCheck'] = null === $this->getCommissionsQuotesLastCheck()
-            ? 'unknown' : date('Y-m-d H:i:s', $this->getCommissionsQuotesLastCheck()->getTimestamp());
+                    case ArtisanFields::COMPLETNESS:
+                        $value = $this->completeness();
+                        break;
 
-        return array_values($data);
+                    default:
+                        throw new InvalidArgumentException('Unknown field: '.$field->modelName());
+                }
+            }
+
+            return $field->isList() ? array_filter(explode("\n", $value)) : $value;
+        }, ArtisanFields::inJson()));
     }
 
     public function getContactMethod(): string

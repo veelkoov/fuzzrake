@@ -37,7 +37,7 @@ export default class Artisan {
                 readonly notes: string,
                 readonly cstUrl: string,
                 readonly commissionsStatus: boolean,
-                readonly commissionsStatusLastCheck: string,
+                readonly cstLastCheck: string,
                 readonly completeness: number) {
     }
 }

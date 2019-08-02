@@ -3,6 +3,9 @@
 return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
+        'binary_operator_spaces' => [
+            'operators' => ['=>' => 'align_single_space'],
+        ],
         'array_syntax' => ['syntax' => 'short'],
     ])
 ;

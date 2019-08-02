@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\ArtisanCommissionsStatus;
+use App\Utils\DateTimeException;
+use App\Utils\DateTimeUtils;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -21,32 +25,18 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
         parent::__construct($registry, ArtisanCommissionsStatus::class);
     }
 
-    // /**
-    //  * @return ArtisanCommissionsStatus[] Returns an array of ArtisanCommissionsStatus objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return DateTime
+     *
+     * @throws DateTimeException
+     * @throws NonUniqueResultException
+     */
+    public function getLastCstUpdateTime(): DateTime
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+        return DateTimeUtils::getUtcAt($this
+            ->createQueryBuilder('s')
+            ->select('MAX(s.lastChecked)')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getSingleScalarResult());
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ArtisanCommissionsStatus
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
