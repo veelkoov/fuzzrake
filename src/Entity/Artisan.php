@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Utils\ArtisanField;
 use App\Utils\ArtisanFields;
 use App\Utils\CompletenessCalc;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;

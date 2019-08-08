@@ -12,7 +12,7 @@ class UrlFetcher
     const CONNECTION_TIMEOUT_SEC = 10;
     const TIMEOUT_SEC = 30;
 
-    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.6; +https://getfursu.it/)';
+    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.7; +https://getfursu.it/)';
 
     /**
      * @param string $url
@@ -83,7 +83,7 @@ class UrlFetcher
         curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTION_TIMEOUT_SEC);
         curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT_SEC);
-        curl_setopt($ch, CURLOPT_ACCEPT_ENCODING, 'identity');
+        curl_setopt($ch, CURLOPT_ACCEPT_ENCODING, ''); // = all supported
 
         if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
             curl_setopt($ch, CURLOPT_COOKIE, $_ENV['FA_COOKIE']);
