@@ -13,11 +13,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataFixer
 {
     const REPLACEMENTS = [
-        '#’#'                => "'",
+        '#’#'                 => "'",
         '#^Rather not say$#i' => '',
         '#^n/a$#i'            => '',
         '#^n/a yet$#i'        => '',
-        '#[ \t]{2,}#'        => ' ',
+        '#[ \t]{2,}#'         => ' ',
     ];
 
     const LIST_REPLACEMENTS = [
