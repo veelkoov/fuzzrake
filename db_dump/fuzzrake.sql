@@ -381,7 +381,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=687 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=794 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -591,6 +591,9 @@ INSERT INTO `events` VALUES (683,'2019-08-08 18:07:19', '', 'CS_UPDTD_DETLS',1,0
 INSERT INTO `events` VALUES (684,'2019-08-08 18:14:19', '', 'CS_UPDTD_DETLS',NULL,0,'Dynamic Cats Studio | DynamiCatStudio', 'https://dynamicatstudio.com/', '', '[\"content=\\\"&quot;where imagination touches reality&quot;\\\"/> <meta property=\\\"og:description\\\" content=\\\" \",\"commissions: closed\",\". next opening: august/2019 we work: monday to friday 8:00 am - 6:00 pm weekend is for personal proj\"]');
 INSERT INTO `events` VALUES (685,'2019-08-08 19:12:19', '', 'CS_UPDTD_DETLS',NULL,1,'Lightbringer Creations', 'http://www.furaffinity.net/user/-narrow-', '[\" bbcode_center\\\"> ===================================================================== trades maybe \",\"comissions open\",\"* *for partsuits/ fullsuits please send a note first. those are depending on my current workload buy\"]', '');
 INSERT INTO `events` VALUES (686,'2019-08-08 19:12:20', '', 'CS_UPDTD_DETLS',NULL,1,'Schorsuits', 'https://twitter.com/GreggWoods10', '[\"card-bio u-dir\\\" dir=\\\"ltr\\\">heya! i\'m gregg i live in the netherlands and am a starting fursuit maker \",\"i\'m currently open for commisson\",\" visit the link down here v for more info</p> <div class=\\\"profileheadercard-location u-hidden\\\"> </di\"]', '');
+INSERT INTO `events` VALUES (687,'2019-08-08 19:16:52', '- 1 new maker on board as per request, 1 updated based on gathered information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/52d9ef29eed09ebc311739bf98a7906b26123d18\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (688,'2019-08-09 22:33:18', '', 'CS_UPDTD_DETLS',0,NULL,'Norman Patches n\' Furs', 'https://trello.com/b/88vs2gGa/norman-patches-n-furs-comission-queue', '', '');
+INSERT INTO `events` VALUES (689,'2019-08-09 22:40:53', '- Updated 1 maker data based on maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/9d7f2b858475698c21a999df57d6fa7637f2f337\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
