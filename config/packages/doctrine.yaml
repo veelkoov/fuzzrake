@@ -20,3 +20,8 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        hydrators:
+            COLUMN_HYDRATOR: App\Doctrine\Hydrators\ColumnHydrator
+        dql:
+            datetime_functions:
+                DATE: App\Doctrine\Dql\DateFunction
