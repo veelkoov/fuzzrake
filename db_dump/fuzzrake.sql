@@ -382,7 +382,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=794 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=801 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -595,6 +595,13 @@ INSERT INTO `events` VALUES (686,'2019-08-08 19:12:20', '', 'CS_UPDTD_DETLS',NUL
 INSERT INTO `events` VALUES (687,'2019-08-08 19:16:52', '- 1 new maker on board as per request, 1 updated based on gathered information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/52d9ef29eed09ebc311739bf98a7906b26123d18\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (688,'2019-08-09 22:33:18', '', 'CS_UPDTD_DETLS',0,NULL,'Norman Patches n\' Furs', 'https://trello.com/b/88vs2gGa/norman-patches-n-furs-comission-queue', '', '');
 INSERT INTO `events` VALUES (689,'2019-08-09 22:40:53', '- Updated 1 maker data based on maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/9d7f2b858475698c21a999df57d6fa7637f2f337\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (794,'2019-08-11 12:56:10', '- 1 new maker on board based on maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/a71e93c09b0966f76e76de40de057eca77c9364a\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (795,'2019-08-11 12:59:28', '', 'CS_UPDTD_DETLS',NULL,1,'Furgetful Fae Fursuits', 'https://www.instagram.com/furgetful_fae/', '[\"ternatename\\\":\\\"@furgetful_fae\\\",\\\"description\\\":\\\"\\\\ud83d\\\\udc3b fursuit maker! \\\\ud83d\\\\udc3b\\\\n\\\\ud83d\\\\udc36 \",\"commissions open\",\"!!! dm me if interested \\\\ud83d\\\\udc36\\\\n\\\\ud83c\\\\udf44 quotes always open! \\\\ud83c\\\\udf44\\\\n\\\\ud83c\\\\udf31 19\"]', '');
+INSERT INTO `events` VALUES (796,'2019-08-12 18:07:37', '', 'CS_UPDTD_DETLS',0,1,'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '[\"fursuits, plushies, paintings, i do it all! want a commission? email me at kaylaskritterz@yahoo.com \",\"commission status: open\",\"</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"> kayla\"]', '');
+INSERT INTO `events` VALUES (797,'2019-08-13 06:07:29', '', 'CS_UPDTD_DETLS',1,0,'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '', '[\"fursuits, plushies, paintings, i do it all! want a commission? email me at kaylaskritterz@yahoo.com \",\"commission status: closed\",\"</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"> kayla\"]');
+INSERT INTO `events` VALUES (798,'2019-08-13 18:07:28', '', 'CS_UPDTD_DETLS',0,NULL,'Fossa Studio', 'https://www.facebook.com/pg/FossaStudioo/posts/', '', '');
+INSERT INTO `events` VALUES (799,'2019-08-13 18:07:29', '', 'CS_UPDTD_DETLS',1,NULL,'Hiero Craft Creations', 'https://www.facebook.com/pg/HieroCraftCreations/posts/', '', '');
+INSERT INTO `events` VALUES (800,'2019-08-13 18:07:29', '', 'CS_UPDTD_DETLS',0,NULL,'Mei Fursuits', 'https://www.facebook.com/228395997528728/posts/488407388194253/', '', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -606,7 +613,7 @@ CREATE TABLE `artisans_commissions_statues` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_4148D9A35ED3C7B7` (`artisan_id`),
   CONSTRAINT `FK_4148D9A35ED3C7B7` FOREIGN KEY (`artisan_id`) REFERENCES `artisans` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=310 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
