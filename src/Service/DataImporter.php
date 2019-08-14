@@ -54,14 +54,12 @@ class DataImporter
     /**
      * @param array        $artisansData
      * @param Corrector    $importCorrector
-     * @param array        $passcodes
      * @param SymfonyStyle $io
      * @param bool         $showFixCommands
      *
      * @throws ImportException
      */
-    public function import(array $artisansData, Corrector $importCorrector, array $passcodes, SymfonyStyle $io,
-                           bool $showFixCommands): void
+    public function import(array $artisansData, Corrector $importCorrector, SymfonyStyle $io, bool $showFixCommands): void
     {
         $this->fixer = new DataFixer($io, false);
         $this->differ = new DataDiffer($io, $showFixCommands);
@@ -73,7 +71,7 @@ class DataImporter
         $io->title('Showing artisans\' data before/after fixing');
         $this->showUpdatedArtisans($imports);
         $io->title('Validating updated artisans\' data and passcodes');
-        $this->persistValidImports($imports, $passcodes, $io);
+        $this->persistValidImports($imports, $io);
     }
 
     /**
@@ -196,13 +194,6 @@ class DataImporter
         }
     }
 
-    private function persistValidImports(array $imports, array $passcodes, SymfonyStyle $io)
-    {
-        foreach ($imports as $import) {
-            $this->persistImportIfValid($passcodes, $io, $import);
-        }
-    }
-
     private function fix(Artisan $artisan): Artisan
     {
         $this->corrector->correctArtisan($artisan);
@@ -211,12 +202,17 @@ class DataImporter
         return $artisan;
     }
 
-    private function persistImportIfValid(array $passcodes, SymfonyStyle $io, Row $row): void
+    private function persistValidImports(array $imports, SymfonyStyle $io): void
+    {
+        foreach ($imports as $import) {
+            $this->persistImportIfValid($io, $import);
+        }
+    }
+
+    private function persistImportIfValid(SymfonyStyle $io, Row $row): void
     {
         $new = $row->getArtisan();
         $old = $row->getOriginalArtisan();
-        $providedPasscode = $row->getProvidedPasscode();
-
         $this->fixer->validateArtisanData($new);
         $ok = true;
 
@@ -229,18 +225,14 @@ class DataImporter
             $this->reportChangedMakerId($io, $row);
         }
 
-        if (!array_key_exists($row->getMakerId(), $passcodes)) {
+        if ('' === ($expectedPasscode = $row->getArtisan()->getPrivateData()->getPasscode())) {
             $this->reportNewPasscode($io, $row);
 
             $ok = false;
-        } else {
-            $expectedPasscode = $passcodes[$row->getMakerId()];
+        } elseif ($row->getProvidedPasscode() !== $expectedPasscode && !$this->corrector->shouldIgnorePasscode($row)) {
+            $this->reportInvalidPasscode($io, $row, $expectedPasscode);
 
-            if ($providedPasscode !== $expectedPasscode && !$this->corrector->shouldIgnorePasscode($row)) {
-                $this->reportInvalidPasscode($io, $row, $expectedPasscode);
-
-                $ok = false;
-            }
+            $ok = false;
         }
 
         if ($ok) {
