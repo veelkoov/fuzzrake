@@ -13,10 +13,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataFixer
 {
     const REPLACEMENTS = [
-        '’'              => "'",
-        'Rather not say' => '',
-        'N/a'            => '',
-        'N/A Yet'        => '',
+        '#’#'                 => "'",
+        '#^Rather not say$#i' => '',
+        '#^n/a$#i'            => '',
+        '#^n/a yet$#i'        => '',
+        '#[ \t]{2,}#'         => ' ',
     ];
 
     const LIST_REPLACEMENTS = [
@@ -264,12 +265,13 @@ class DataFixer
         return Regexp::replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
     }
 
-    private function fixString(string $input): string
+    private function fixString(string $subject): string
     {
-        $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
-        $result = Regexp::replace('#[ \t]{2,}#', ' ', $result);
+        foreach (self::REPLACEMENTS as $pattern => $replacement) {
+            $subject = Regexp::replace($pattern, $replacement, $subject);
+        }
 
-        return trim($result);
+        return trim($subject);
     }
 
     private function fixIntro(string $input): string
