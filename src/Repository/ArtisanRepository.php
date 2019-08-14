@@ -30,6 +30,8 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getAll(): array
     {
         return $this->createQueryBuilder('a')
+            ->leftJoin('a.commissionsStatus', 'cs')
+            ->addSelect('cs')
             ->orderBy('a.name', 'ASC')
             ->getQuery()
             ->getResult();
