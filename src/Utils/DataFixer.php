@@ -21,6 +21,8 @@ class DataFixer
     ];
 
     const LIST_REPLACEMENTS = [
+        'n/a' => '',
+
         'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
         'Partial \(Head, handpaws, tail, feetpaws\)'                  => 'Partial (head + handpaws + tail + feetpaws)',
         'Mini partial \(Head, handpaws, tail\)'                       => 'Mini partial (head + handpaws + tail)',
@@ -65,6 +67,7 @@ class DataFixer
         'australia'                                     => 'AU',
         'belgium'                                       => 'BE',
         'canada'                                        => 'CA',
+        'costa rica'                                    => 'CR',
         'czech republic'                                => 'CZ',
         'd[ea]nmark'                                    => 'DK',
         'germany'                                       => 'DE',
@@ -248,16 +251,17 @@ class DataFixer
 
     private function fixGenericUrl(string $input): string
     {
-        return trim($this->fixString($input));
+        return $this->fixString($input);
     }
 
-    private function fixNotes(string $input): string
+    private function fixNotes(string $notes): string
     {
-        $result = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', trim($input));
-        $result = str_replace('@', '(e)', $result);
-        $result = Regexp::replace('#(e-?)?mail#i', 'eeeee', $result);
+        $notes = $this->fixString($notes);
+        $notes = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', $notes);
+        $notes = str_replace('@', '(e)', $notes);
+        $notes = Regexp::replace('#(e-?)?mail#i', 'eeeee', $notes);
 
-        return $result;
+        return $notes;
     }
 
     private function fixSince(string $input): string
