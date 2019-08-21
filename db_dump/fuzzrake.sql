@@ -382,7 +382,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=814 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=816 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -605,6 +605,8 @@ INSERT INTO `events` VALUES (809,'2019-08-15 17:45:34', '', 'CS_UPDTD_DETLS',1,0
 INSERT INTO `events` VALUES (811,'2019-08-16 18:07:30', '', 'CS_UPDTD_DETLS',1,0,'Tribal Paw Studios', 'https://www.instagram.com/tribalpawstudios/', '', '[\",\\\"description\\\":\\\"\\\\ud83d\\\\udc3ehobby fursuit maker \\\\ud83d\\\\udc3e\\\\n\\\\ud83d\\\\udc3equotes: open\\\\n\\\\ud83d\\\\udc3e\",\"commission: closed\",\"\\\\n\\\\ud83d\\\\udc3efrom: denmark\\\",\\\"url\\\":\\\"https:\\\\/\\\\/www.facebook.com\\\\/tribalpawstudios\\\\/posts\\\\/\\\",\\\"mainenti\"]');
 INSERT INTO `events` VALUES (812,'2019-08-18 18:07:24', '', 'CS_UPDTD_DETLS',1,0,'Streifensuits', 'https://twitter.com/StreifenSuits', '', '[\"io u-dir\\\" dir=\\\"ltr\\\">fursuit making account of <s>@</s>streifenschnauz german | realistic fursuits | \",\"commission status: closed\",\"</p> <div class=\\\"profileheadercard-location \\\"> questions? ask! :d </div> <div class=\\\"profileheaderca\"]');
 INSERT INTO `events` VALUES (813,'2019-08-18 18:07:24', '', 'CS_UPDTD_DETLS',NULL,1,'CraftyHusky Workshop', 'https://www.etsy.com/uk/shop/CraftyHuskyWorkshop', '[\"\\\"show-xs show-sm show-md pl-xs-0\\\"> <p class=\\\"text-gray-lighter announcement-collapse\\\"> announcement \",\"i am open for commissions\",\" but have limited spaces! :d </p> </div> <div class=\\\"col-md-3 show-lg show-xl show-tv pl-xs-1\\\"> <h2 \"]', '');
+INSERT INTO `events` VALUES (814,'2019-08-19 21:55:15', '- Updated 1 maker data based on the maker\'s request, 1 updated based on gathered information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/9cdb5e066ff24d2ee14956ba06bda7e8c8bf7c86\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (815,'2019-08-21 06:07:31', '', 'CS_UPDTD_DETLS',1,0,'Ya Boy Luke Suits', 'http://yaboylukesuits.com/index.html', '', '[\"s=\\\"wsite-content-title\\\">ya boy luke fursuits</h2> <div class=\\\"wsite-spacer\\\"></div> <div><div></div> \",\"commissions are closed\",\" <div></div></div> </div> </div> </div> </div> <div class=\\\"\\\"></div> </div> </div> </div> </div><> <d\"]');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
