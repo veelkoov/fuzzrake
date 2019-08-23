@@ -384,7 +384,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=817 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=818 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -610,6 +610,7 @@ INSERT INTO `events` VALUES (813,'2019-08-18 18:07:24', '', 'CS_UPDTD_DETLS',NUL
 INSERT INTO `events` VALUES (814,'2019-08-19 21:55:15', '- Updated 1 maker data based on the maker\'s request, 1 updated based on gathered information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/9cdb5e066ff24d2ee14956ba06bda7e8c8bf7c86\" target=\"_blank\">git</a>)', 'GENERIC',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (815,'2019-08-21 06:07:31', '', 'CS_UPDTD_DETLS',1,0,'Ya Boy Luke Suits', 'http://yaboylukesuits.com/index.html', '', '[\"s=\\\"wsite-content-title\\\">ya boy luke fursuits</h2> <div class=\\\"wsite-spacer\\\"></div> <div><div></div> \",\"commissions are closed\",\" <div></div></div> </div> </div> </div> </div> <div class=\\\"\\\"></div> </div> </div> </div> </div><> <d\"]');
 INSERT INTO `events` VALUES (816,'2019-08-21 19:49:20', '', 'CS_UPDTD_DETLS',NULL,0,'Blue Wolf Studio Fursuit', 'https://twitter.com/BWSFursuit', '', '[\"</h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">//fursuit maker from costa rica since 2014// \",\"commissions closed\",\"</p> <div class=\\\"profileheadercard-location \\\"> costa rica </div> <div class=\\\"profileheadercard-url \\\"\"]');
+INSERT INTO `events` VALUES (817,'2019-08-21 19:57:04', '- 2 new makers on board based on makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/ac7b49afa09130ec097c79c6ddb7beafdb8c2766\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
