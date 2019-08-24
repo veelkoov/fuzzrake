@@ -9,6 +9,8 @@
     - { regexp: "(?<!\\\\)','", replace: "', '" }
     - { regexp: "NULL,'", replace: "NULL, '" }
     - { regexp: ", ?NULL, ?", replace: ", NULL, " }
+    - { regexp: ", ?0, ?", replace: ", 0, " }
+    - { regexp: ", ?1, ?", replace: ", 1, " }
   no_log: yes
 
 - copy:
