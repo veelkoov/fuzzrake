@@ -39,7 +39,7 @@ class Corrector
     /**
      * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
      */
-    private $ignoredUntil;
+    private $ignoredUntil = [];
 
     /**
      * @param string $correctionDirectivesFilePath
