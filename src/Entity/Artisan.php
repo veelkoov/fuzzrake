@@ -202,9 +202,29 @@ class Artisan implements JsonSerializable
     private $cstUrl;
 
     /**
+     * @ORM\Column(type="string", length=16)
+     */
+    private $contactAllowed = '';
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $contactMethod = '';
+
+    /**
+     * @ORM\Column(type="string", length=128)
+     */
+    private $contactAddress = '';
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
      */
     private $commissionsStatus;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"})
+     */
+    private $privateData;
 
     public function getId()
     {
@@ -784,6 +804,42 @@ class Artisan implements JsonSerializable
         }, ArtisanFields::inJson()));
     }
 
+    public function getContactMethod(): string
+    {
+        return $this->contactMethod;
+    }
+
+    public function setContactMethod(string $contactMethod): self
+    {
+        $this->contactMethod = $contactMethod;
+
+        return $this;
+    }
+
+    public function getContactAddress(): string
+    {
+        return $this->contactAddress;
+    }
+
+    public function setContactAddress(string $contactAddress): self
+    {
+        $this->contactAddress = $contactAddress;
+
+        return $this;
+    }
+
+    public function getContactAllowed(): string
+    {
+        return $this->contactAllowed;
+    }
+
+    public function setContactAllowed(string $contactAllowed): self
+    {
+        $this->contactAllowed = $contactAllowed;
+
+        return $this;
+    }
+
     public function getCommissionsStatus(): ArtisanCommissionsStatus
     {
         return $this->commissionsStatus ?? $this->commissionsStatus = (new ArtisanCommissionsStatus())->setArtisan($this);
@@ -795,6 +851,22 @@ class Artisan implements JsonSerializable
 
         if ($this !== $commissionsStatus->getArtisan()) {
             $commissionsStatus->setArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function getPrivateData(): ArtisanPrivateData
+    {
+        return $this->privateData ?? $this->privateData = (new ArtisanPrivateData())->setArtisan($this);
+    }
+
+    public function setPrivateData(ArtisanPrivateData $privateData): self
+    {
+        $this->privateData = $privateData;
+
+        if ($this !== $privateData->getArtisan()) {
+            $privateData->setArtisan($this);
         }
 
         return $this;
