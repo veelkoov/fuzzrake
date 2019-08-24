@@ -89,9 +89,10 @@ class Utils
             $len = mb_strlen($input);
 
             if ($len >= 3) {
-                $pLen = max(1, (int)($len / 4));
-                return mb_substr($input, 0, $pLen).str_repeat('*', $len - 2*$pLen).mb_substr($input, -$pLen);
-            } elseif ($len == 2) {
+                $pLen = max(1, (int) ($len / 4));
+
+                return mb_substr($input, 0, $pLen).str_repeat('*', $len - 2 * $pLen).mb_substr($input, -$pLen);
+            } elseif (2 == $len) {
                 return mb_substr($input, 0, 1).'*';
             } else {
                 return $input;
