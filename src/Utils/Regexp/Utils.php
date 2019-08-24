@@ -6,6 +6,10 @@ namespace App\Utils\Regexp;
 
 class Utils
 {
+    private function __construct()
+    {
+    }
+
     /**
      * @param string     $pattern
      * @param string     $subject

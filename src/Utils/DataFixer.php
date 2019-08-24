@@ -13,13 +13,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataFixer
 {
     const REPLACEMENTS = [
-        '’'              => "'",
-        'Rather not say' => '',
-        'N/a'            => '',
-        'N/A Yet'        => '',
+        '#’#'                 => "'",
+        '#^Rather not say$#i' => '',
+        '#^n/a$#i'            => '',
+        '#^n/a yet$#i'        => '',
+        '#[ \t]{2,}#'         => ' ',
     ];
 
     const LIST_REPLACEMENTS = [
+        'n/a' => '',
+
         'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
         'Partial \(Head, handpaws, tail, feetpaws\)'                  => 'Partial (head + handpaws + tail + feetpaws)',
         'Mini partial \(Head, handpaws, tail\)'                       => 'Mini partial (head + handpaws + tail)',
@@ -64,6 +67,7 @@ class DataFixer
         'australia'                                     => 'AU',
         'belgium'                                       => 'BE',
         'canada'                                        => 'CA',
+        'costa rica'                                    => 'CR',
         'czech republic'                                => 'CZ',
         'd[ea]nmark'                                    => 'DK',
         'germany'                                       => 'DE',
@@ -72,7 +76,9 @@ class DataFixer
         'uk|england|united kingdom'                     => 'GB',
         'ireland'                                       => 'IE',
         'italia|italy'                                  => 'IT',
+        'mexico'                                        => 'MX',
         '(the )?netherlands'                            => 'NL',
+        'new zealand'                                   => 'NZ',
         'russia'                                        => 'RU',
         'poland'                                        => 'PL',
         'ukraine'                                       => 'UA',
@@ -222,7 +228,7 @@ class DataFixer
 
     private function fixFacebookUrl(string $input): string
     {
-        return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts|/about)?/?(\?[a-z_]+=[a-z_0-9]+)?$#i',
+        return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts|/about)?/?(\?(?!id=)[a-z_]+=[a-z_0-9]+)?$#i',
             'https://www.facebook.com/$1/', $this->fixGenericUrl($input));
     }
 
@@ -245,16 +251,17 @@ class DataFixer
 
     private function fixGenericUrl(string $input): string
     {
-        return trim($this->fixString($input));
+        return $this->fixString($input);
     }
 
-    private function fixNotes(string $input): string
+    private function fixNotes(string $notes): string
     {
-        $result = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', trim($input));
-        $result = str_replace('@', '(e)', $result);
-        $result = Regexp::replace('#(e-?)?mail#i', 'eeeee', $result);
+        $notes = $this->fixString($notes);
+        $notes = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', $notes);
+        $notes = str_replace('@', '(e)', $notes);
+        $notes = Regexp::replace('#(e-?)?mail#i', 'eeeee', $notes);
 
-        return $result;
+        return $notes;
     }
 
     private function fixSince(string $input): string
@@ -262,12 +269,13 @@ class DataFixer
         return Regexp::replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
     }
 
-    private function fixString(string $input): string
+    private function fixString(string $subject): string
     {
-        $result = str_replace(array_keys(self::REPLACEMENTS), array_values(self::REPLACEMENTS), $input);
-        $result = Regexp::replace('#[ \t]{2,}#', ' ', $result);
+        foreach (self::REPLACEMENTS as $pattern => $replacement) {
+            $subject = Regexp::replace($pattern, $replacement, $subject);
+        }
 
-        return trim($result);
+        return trim($subject);
     }
 
     private function fixIntro(string $input): string

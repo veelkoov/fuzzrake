@@ -20,6 +20,7 @@ class Corrector
                                   * to find you anyway. */
     const CMD_MATCH_NAME = 'match name';
     const CMD_IGNORE_PIN = 'ignore pin';
+    const CMD_SET_PIN = 'set pin';
     const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
 
     private $corrections = ['*' => []];
@@ -32,6 +33,11 @@ class Corrector
     private $passcodeExceptions = [];
 
     /**
+     * @var array List of hashes of rows which contain passcodes supposed to be set / to replace earlier
+     */
+    private $passcodesSet = [];
+
+    /**
      * @var array List of hashes of rows which got rejected
      */
     private $rejectedRecords = [];
@@ -39,7 +45,7 @@ class Corrector
     /**
      * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
      */
-    private $ignoredUntil;
+    private $ignoredUntil = [];
 
     /**
      * @param string $correctionDirectivesFilePath
@@ -73,6 +79,11 @@ class Corrector
     public function shouldIgnorePasscode(Row $row)
     {
         return in_array($row->getHash(), $this->passcodeExceptions);
+    }
+
+    public function isNewPasscode(Row $row)
+    {
+        return in_array($row->getHash(), $this->passcodesSet);
     }
 
     public function isRejected(Row $row)
@@ -130,6 +141,11 @@ class Corrector
             case self::CMD_IGNORE_PIN:
                 // Maker ID kept only informative
                 $this->passcodeExceptions[] = $buffer->readUntil(':');
+                break;
+
+            case self::CMD_SET_PIN:
+                // Maker ID kept only informative
+                $this->passcodesSet[] = $buffer->readUntil(':');
                 break;
 
             case self::CMD_REJECT:

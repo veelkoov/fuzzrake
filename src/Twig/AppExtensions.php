@@ -12,6 +12,8 @@ use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\Status;
 use App\Utils\Utils;
 use Doctrine\ORM\NonUniqueResultException;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -25,9 +27,21 @@ class AppExtensions extends AbstractExtension
      */
     private $acsRepository;
 
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository)
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var array
+     */
+    private $hosts;
+
+    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, RequestStack $requestStack, array $hosts)
     {
         $this->acsRepository = $acsRepository;
+        $this->requestStack = $requestStack;
+        $this->hosts = $hosts;
     }
 
     public function getFilters()
@@ -47,7 +61,19 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
             new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
+            new TwigFunction('isDevMachine', [$this, 'isDevMachineFunction']),
+            new TwigFunction('isProduction', [$this, 'isProductionFunction']),
         ];
+    }
+
+    public function isDevMachineFunction(): bool
+    {
+        return $this->getHostname() === $this->hosts['dev_machine'];
+    }
+
+    public function isProductionFunction(): bool
+    {
+        return $this->getHostname() === $this->hosts['production'];
     }
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
@@ -64,7 +90,7 @@ class AppExtensions extends AbstractExtension
         try {
             return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
         } catch (DateTimeException $e) {
-            return 'unknown (failure)';
+            return 'unknown/error';
         }
     }
 
@@ -119,5 +145,14 @@ class AppExtensions extends AbstractExtension
         $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
+    }
+
+    private function getHostname(): string
+    {
+        try {
+            return $this->requestStack->getCurrentRequest()->getHost();
+        } catch (SuspiciousOperationException $e) {
+            return 'unknown/error';
+        }
     }
 }
