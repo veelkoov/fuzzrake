@@ -385,7 +385,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=820 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=821 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC',NULL,NULL,'', '', '', '');
@@ -614,6 +614,7 @@ INSERT INTO `events` VALUES (816,'2019-08-21 19:49:20', '', 'CS_UPDTD_DETLS',NUL
 INSERT INTO `events` VALUES (817,'2019-08-21 19:57:04', '- 2 new makers on board based on makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/ac7b49afa09130ec097c79c6ddb7beafdb8c2766\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
 INSERT INTO `events` VALUES (818,'2019-08-23 20:57:08', '', 'CS_UPDTD_DETLS',NULL,0,'DarkRainbowDragon', 'https://darkrainbowdragon.weebly.com/commission-status.html', '', '[\"en reference sheet: allways open pixel art: allwys open traditional art: allways open figures: open \",\"fursuit: closed\",\" (please check my telegram and discrod channel for opening...\\\" /> <meta property=\\\"og:image\\\" content=\"]');
 INSERT INTO `events` VALUES (819,'2019-08-23 21:01:50', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/14d77089af17dccc1106bfc9633d9b552b2f8e87\" target=\"_blank\">git</a>)', '',NULL,NULL,'', '', '', '');
+INSERT INTO `events` VALUES (820,'2019-08-24 06:07:40', '', 'CS_UPDTD_DETLS',0,NULL,'Arend Studios', 'https://twitter.com/ArendStudios', '', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
