@@ -125,7 +125,7 @@ class DataImporter
             throw new ImportException("Failed parsing import row's date", 0, $e);
         }
 
-        $result->setInput($this->updateArtisanWithData(new Artisan(), $artisanData));
+        $result->setInput($this->updateArtisanWithData(new Artisan(), $result));
 
         $result->setArtisan($this->findBestMatchArtisan($result->getInput()) ?: new Artisan());
         $result->setOriginalArtisan(clone $result->getArtisan()); // Clone unmodified
@@ -142,15 +142,15 @@ class DataImporter
 
     private function performImport(Row $import): void
     {
-        $this->updateArtisanWithData($import->getArtisan(), $import->getRawInput()); // Update the DB entity
+        $this->updateArtisanWithData($import->getArtisan(), $import); // Update the DB entity
         $this->fix($import->getArtisan()); // And fix the DB entity
     }
 
-    private function updateArtisanWithData(Artisan $artisan, array $newData): Artisan
+    private function updateArtisanWithData(Artisan $artisan, Row $importRow): Artisan
     {
         foreach (Fields::persisted() as $field) {
             if ($field->isIncludedInUiForm()) {
-                $newValue = $newData[$field->uiFormIndex()];
+                $newValue = $importRow->getRawInput()[$field->uiFormIndex()];
 
                 if (Fields::MAKER_ID === $field->name() && $newValue !== $artisan->getMakerId()) {
                     $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
@@ -158,6 +158,10 @@ class DataImporter
 
                 $artisan->set($field->modelName(), $newValue);
             }
+        }
+
+        if ($this->corrector->isNewPasscode($importRow)) {
+            $artisan->getPrivateData()->setPasscode($importRow->getProvidedPasscode());
         }
 
         return $artisan;
@@ -264,21 +268,24 @@ class DataImporter
         ]);
     }
 
-    private function reportNewPasscode(SymfonyStyle $io, Row $row): void
-    {
-        $io->warning("{$row->getNames()} set new passcode: {$row->getProvidedPasscode()}");
-        $io->writeln("{$row->getMakerId()} {$row->getProvidedPasscode()}");
-    }
-
     private function reportChangedMakerId(SymfonyStyle $io, Row $row): void
     {
         $io->warning("{$row->getNames()} changed their maker ID");
     }
 
+    private function reportNewPasscode(SymfonyStyle $io, Row $row): void
+    {
+        $io->warning("{$row->getNames()} set new passcode: {$row->getProvidedPasscode()}");
+        $io->writeln(Corrector::CMD_SET_PIN.":{$row->getMakerId()}:{$row->getHash()}:");
+    }
+
     private function reportInvalidPasscode(SymfonyStyle $io, Row $row, $expectedPasscode): void
     {
         $io->warning("{$row->getNames()} provided invalid passcode '{$row->getProvidedPasscode()}' (expected: '$expectedPasscode')");
-        $io->writeln(Corrector::CMD_IGNORE_PIN.":{$row->getMakerId()}:{$row->getHash()}:");
-        $io->writeln(Corrector::CMD_REJECT.":{$row->getMakerId()}:{$row->getHash()}:");
+        $io->writeln([
+            Corrector::CMD_IGNORE_PIN.":{$row->getMakerId()}:{$row->getHash()}:",
+            Corrector::CMD_REJECT.":{$row->getMakerId()}:{$row->getHash()}:",
+            Corrector::CMD_SET_PIN.":{$row->getMakerId()}:{$row->getHash()}:",
+        ]);
     }
 }
