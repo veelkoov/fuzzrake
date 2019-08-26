@@ -45,7 +45,7 @@ class CommissionsStatusRegexps
         'G03' => 'quotes? have TIMESPAN STATUS',
         'G04' => 'order quotes are STATUS',
         'G05' => 'journals: \d+ favorites: \d+ STATUS commissions(?= </td>)', // FurAffinity right-top status
-        'G06' => '(WE )?STATUS (for (new )?)?COMMISSIONS( \(limited\))? ?([.!*]|<HTML_TAG>)',
+        'G06' => '(WE )?STATUS (for (new )?)?COMMISSIONS( \(limited\))? ?(?=[-.!*]|<HTML_TAG>)',
         'G07' => '<div>TIMESPAN</div><div>STATUS</div><div>for COMMISSIONS</div>',
         'G08' => 'COMMISSIONS (are|status)( TIMESPAN)?[: ]*<HTML_TAG>{1,5}(TIMESPAN )?STATUS',
         'G09' => '<h2>"cawmission" status</h2><div>STATUS',
