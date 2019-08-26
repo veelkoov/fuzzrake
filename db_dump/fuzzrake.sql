@@ -388,7 +388,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=821 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=823 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -618,6 +618,8 @@ INSERT INTO `events` VALUES (817,'2019-08-21 19:57:04', '- 2 new makers on board
 INSERT INTO `events` VALUES (818,'2019-08-23 20:57:08', '', 'CS_UPDTD_DETLS', NULL, 0, 'DarkRainbowDragon', 'https://darkrainbowdragon.weebly.com/commission-status.html', '', '[\"en reference sheet: allways open pixel art: allwys open traditional art: allways open figures: open \",\"fursuit: closed\",\" (please check my telegram and discrod channel for opening...\\\" /> <meta property=\\\"og:image\\\" content=\"]');
 INSERT INTO `events` VALUES (819,'2019-08-23 21:01:50', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/14d77089af17dccc1106bfc9633d9b552b2f8e87\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
 INSERT INTO `events` VALUES (820,'2019-08-24 06:07:40', '', 'CS_UPDTD_DETLS', 0, NULL, 'Arend Studios', 'https://twitter.com/ArendStudios', '', '');
+INSERT INTO `events` VALUES (821,'2019-08-25 06:07:51', '', 'CS_UPDTD_DETLS', 0, 1, 'Blue Wolf Studio Fursuit', 'https://twitter.com/BWSFursuit', '[\"</h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">//fursuit maker from costa rica since 2014// \",\"commissions open\",\"</p> <div class=\\\"profileheadercard-location \\\"> costa rica </div> <div class=\\\"profileheadercard-url \\\"\"]', '');
+INSERT INTO `events` VALUES (822,'2019-08-26 06:07:35', '', 'CS_UPDTD_DETLS', 0, 1, 'Fionka Fursuits', 'http://www.furaffinity.net/user/fionkafursuits#profile', '[\"ed since: mar 31st, 2019 01:02 current mood: cheerful artist profile: i´m fursuit maker from europe \",\"commission: open\",\"! opening: ??? suit styles: full digitigrade half suit (head + handpaws + tail + legs/pants + feetpa\"]', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
