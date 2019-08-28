@@ -13,11 +13,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataFixer
 {
     const REPLACEMENTS = [
-        '#’#'                 => "'",
-        '#^Rather not say$#i' => '',
-        '#^n/a$#i'            => '',
-        '#^n/a yet$#i'        => '',
-        '#[ \t]{2,}#'         => ' ',
+        '#’#'                            => "'",
+        '#^Rather not say$#i'            => '',
+        '#^n/a$#i'                       => '',
+        '#^n/a yet$#i'                   => '',
+        '#[ \t]{2,}#'                    => ' ',
+        '#^ANNOUNCEMENTS \+ FEEDBACK$#'  => 'FEEDBACK',
+        '#^ANNOUNCEMENTS \*ONLY\*$#'     => 'ANNOUNCEMENTS',
+        '#^NO \(I may join Telegram\)$#' => 'NO',
     ];
 
     const LIST_REPLACEMENTS = [
@@ -151,6 +154,8 @@ class DataFixer
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
         $artisan->setLanguages($this->fixString($artisan->getLanguages()));
+
+        $artisan->setContactAllowed($this->fixString($artisan->getContactAllowed()));
 
         if ($this->showDiff) {
             $this->differ->showDiff($originalArtisan, $artisan);

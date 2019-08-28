@@ -150,19 +150,47 @@ class DataImporter
     private function updateArtisanWithData(Artisan $artisan, Row $importRow): Artisan
     {
         foreach (Fields::persisted() as $field) {
-            if ($field->isIncludedInUiForm()) {
-                $newValue = $importRow->getRawInput()[$field->uiFormIndex()];
-
-                if (Fields::MAKER_ID === $field->name() && $newValue !== $artisan->getMakerId()) {
-                    $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
-                }
-
-                $artisan->set($field->modelName(), $newValue);
+            if (!$field->isIncludedInUiForm()) {
+                continue;
             }
-        }
 
-        if ($this->corrector->isNewPasscode($importRow)) {
-            $artisan->getPrivateData()->setPasscode($importRow->getProvidedPasscode());
+            $newValue = $importRow->getRawInput()[$field->uiFormIndex()];
+
+            switch ($field->name()) {
+                case Fields::MAKER_ID:
+                    if ($newValue !== $artisan->getMakerId()) {
+                        $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
+                        $artisan->setMakerId($newValue);
+                    }
+                    break;
+
+                case Fields::PASSCODE:
+                    if ($this->corrector->isNewPasscode($importRow)) {
+                        $artisan->getPrivateData()->setPasscode($importRow->getProvidedPasscode());
+                    }
+                    break;
+
+                case Fields::CONTACT_ADDRESS_OBFUSCATED:
+                    list($method, $address) = ContactParser::parse($newValue);
+                    $artisan->setContactMethod($method);
+                    $artisan->getPrivateData()
+                        ->setOriginalContactInfo($newValue)
+                        ->setContactAddress($address);
+                    $artisan->setContactAddressObfuscated('' === $method || 'UNKNOWN' === $method ? '' : Utils::obscureContact($address));
+                    break;
+
+                case Fields::CONTACT_ADDRESS_PLAIN:
+                case Fields::CONTACT_METHOD:
+                    // Updated with address obfuscated
+                    break;
+
+                case Fields::CONTACT_ALLOWED:
+                    $artisan->setContactAllowed($newValue);
+                    break;
+
+                default:
+                    $artisan->set($field, $newValue);
+            }
         }
 
         return $artisan;

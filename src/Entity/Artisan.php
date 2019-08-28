@@ -226,6 +226,17 @@ class Artisan implements JsonSerializable
      */
     private $privateData;
 
+    public function __clone()
+    {
+        if ($this->privateData) {
+            $this->privateData = clone $this->privateData;
+        }
+
+        if ($this->commissionsStatus) {
+            $this->commissionsStatus = clone $this->commissionsStatus;
+        }
+    }
+
     public function getId()
     {
         return $this->id;

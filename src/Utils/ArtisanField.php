@@ -52,10 +52,10 @@ class ArtisanField
         $this->name = $name;
         $this->modelName = $modelName;
         $this->validationRegexp = $validationRegexp;
-        $this->isList = (bool)$isList;
-        $this->isPersisted = (bool)$isPersisted;
-        $this->inJson = (bool)$inJson;
-        $this->inStats = (bool)$inStats;
+        $this->isList = (bool) $isList;
+        $this->isPersisted = (bool) $isPersisted;
+        $this->inJson = (bool) $inJson;
+        $this->inStats = (bool) $inStats;
         $this->uiFormIndex = $uiFormIndex;
     }
 
