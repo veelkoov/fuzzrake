@@ -174,11 +174,9 @@ class Corrector
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
-            $modelName = $correction->getField()->modelName();
-
-            $value = $artisan->get($modelName);
+            $value = $artisan->get($correction->getField());
             $correctedValue = $correction->apply($value);
-            $artisan->set($modelName, $correctedValue);
+            $artisan->set($correction->getField(), $correctedValue);
         }
     }
 

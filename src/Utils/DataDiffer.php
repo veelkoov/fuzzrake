@@ -42,9 +42,9 @@ class DataDiffer
 
     private function showSingleFieldDiff(bool &$nameShown, ArtisanField $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
-        $newVal = $new->get($field->modelName()) ?: '';
-        $oldVal = $old->get($field->modelName()) ?: '';
-        $impVal = $imported ? $imported->get($field->modelName()) : null;
+        $newVal = $new->get($field) ?: '';
+        $oldVal = $old->get($field) ?: '';
+        $impVal = $imported ? $imported->get($field) : null;
 
         if ($oldVal !== $newVal) {
             $this->showArtisanNameIfFirstTime($nameShown, $old, $new);

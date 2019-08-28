@@ -191,7 +191,7 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach (ArtisanFields::persisted() as $field) {
+        foreach (ArtisanFields::inStats() as $field) {
             $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
                 return $carry + ('' !== $artisan->get($field->modelName()) ? 1 : 0);
             }, 0);

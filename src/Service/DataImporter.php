@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\ContactParser;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\DateTimeException;

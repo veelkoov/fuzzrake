@@ -214,7 +214,7 @@ class Artisan implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=128)
      */
-    private $contactAddress = '';
+    private $contactAddressObfuscated = '';
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
@@ -751,26 +751,26 @@ class Artisan implements JsonSerializable
             ->result();
     }
 
-    public function set(string $fieldName, $newValue): self
+    public function set(ArtisanField $field, $newValue): self
     {
-        if (!property_exists(self::class, $fieldName)) {
-            throw new InvalidArgumentException("Field $fieldName does not exist");
-        }
+        $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
 
-        $setter = 'set'.ucfirst($fieldName);
+        if (!method_exists($this, $setter)) {
+            throw new InvalidArgumentException("Setter for {$field->name()} does not exist");
+        }
 
         call_user_func([$this, $setter], $newValue);
 
         return $this;
     }
 
-    public function get(string $fieldName)
+    public function get(ArtisanField $field)
     {
-        if (!property_exists(self::class, $fieldName)) {
-            throw new InvalidArgumentException("Field $fieldName does not exist");
-        }
+        $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
 
-        $getter = 'get'.ucfirst($fieldName);
+        if (!method_exists($this, $getter)) {
+            throw new InvalidArgumentException("Getter for {$field->name()} does not exist");
+        }
 
         return call_user_func([$this, $getter]);
     }
@@ -778,26 +778,22 @@ class Artisan implements JsonSerializable
     public function jsonSerialize(): array
     {
         return array_values(array_map(function (ArtisanField $field) {
-            if ($field->isPersisted()) {
-                $value = $this->get($field->modelName());
-            } else {
-                switch ($field->name()) {
-                    case ArtisanFields::CST_LAST_CHECK:
-                        $lc = $this->getCommissionsStatus()->getLastChecked();
-                        $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
-                        break;
+            switch ($field->name()) {
+                case ArtisanFields::CST_LAST_CHECK:
+                    $lc = $this->getCommissionsStatus()->getLastChecked();
+                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+                    break;
 
-                    case ArtisanFields::COMMISSIONS_STATUS:
-                        $value = $this->getCommissionsStatus()->getStatus();
-                        break;
+                case ArtisanFields::COMMISSIONS_STATUS:
+                    $value = $this->getCommissionsStatus()->getStatus();
+                    break;
 
-                    case ArtisanFields::COMPLETNESS:
-                        $value = $this->completeness();
-                        break;
+                case ArtisanFields::COMPLETNESS:
+                    $value = $this->completeness();
+                    break;
 
-                    default:
-                        throw new InvalidArgumentException('Unknown field: '.$field->modelName());
-                }
+                default:
+                    $value = $this->get($field);
             }
 
             return $field->isList() ? array_filter(explode("\n", $value)) : $value;
@@ -816,14 +812,24 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getContactAddress(): string
+    public function getContactAddressObfuscated(): string
     {
-        return $this->contactAddress;
+        return $this->contactAddressObfuscated;
     }
 
-    public function setContactAddress(string $contactAddress): self
+    public function getContactAddressPlain(): string
     {
-        $this->contactAddress = $contactAddress;
+        return $this->getPrivateData()->getContactAddress();
+    }
+
+    public function getPasscode(): string
+    {
+        return $this->getPrivateData()->getPasscode();
+    }
+
+    public function setContactAddressObfuscated(string $contactAddressObfuscated): self
+    {
+        $this->contactAddressObfuscated = $contactAddressObfuscated;
 
         return $this;
     }
