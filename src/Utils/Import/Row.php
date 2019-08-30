@@ -125,8 +125,6 @@ class Row
     }
 
     /**
-     * It looks like Google Forms changes timestamp's timezone, so let's get rid of it for the sake of hash calculation.
-     *
      * @param array $rawNewData
      *
      * @throws DateTimeException
@@ -138,7 +136,10 @@ class Row
 
     private function setHash(array $rawNewData)
     {
+        /* It looks like Google Forms changes timestamp's timezone,
+         * so let's get rid of it for the sake of hash calculation */
         $rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)] = null;
+
         try {
             $this->hash = sha1(Utils::toJson($rawNewData));
         } catch (JsonException $e) {
