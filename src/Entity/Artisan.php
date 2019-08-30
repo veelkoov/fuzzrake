@@ -828,16 +828,6 @@ class Artisan implements JsonSerializable
         return $this->contactAddressObfuscated;
     }
 
-    public function getContactAddressPlain(): string
-    {
-        return $this->getPrivateData()->getContactAddress();
-    }
-
-    public function getPasscode(): string
-    {
-        return $this->getPrivateData()->getPasscode();
-    }
-
     public function setContactAddressObfuscated(string $contactAddressObfuscated): self
     {
         $this->contactAddressObfuscated = $contactAddressObfuscated;
@@ -885,6 +875,28 @@ class Artisan implements JsonSerializable
         if ($this !== $privateData->getArtisan()) {
             $privateData->setArtisan($this);
         }
+
+        return $this;
+    }
+
+    public function getContactAddressPlain(): string
+    {
+        return $this->getPrivateData()->getContactAddress();
+    }
+
+    public function getPasscode(): string
+    {
+        return $this->getPrivateData()->getPasscode();
+    }
+
+    public function getOriginalContactInfo(): string
+    {
+        return $this->getPrivateData()->getOriginalContactInfo();
+    }
+
+    public function setOriginalContactInfo(string $originalContactInfo): self
+    {
+        $this->getPrivateData()->setOriginalContactInfo($originalContactInfo);
 
         return $this;
     }

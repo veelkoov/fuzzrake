@@ -69,6 +69,7 @@ class ArtisanFields
     const CONTACT_METHOD = 'CONTACT_METHOD';
     const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
     const CONTACT_ADDRESS_OBFUSCATED = 'CONTACT_ADDRESS_OBFUSCATED';
+    const ORIGINAL_CONTACT_INFO = 'ORIGINAL_CONTACT_INFO';
     /***** "PRETTY" NAMES END *****/
 
     private const FIELDS_ARRAY_DATA = [
@@ -117,6 +118,7 @@ class ArtisanFields
         self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
         self::COMPLETNESS                => ['completeness',             null,                          0, 0, 0, 1],
         self::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
+        self::ORIGINAL_CONTACT_INFO      => ['originalContactInfo',      null,                          0, 1, 0, 0],
         self::CONTACT_METHOD             => ['contactMethod',            null,                          0, 1, 0, 0],
         self::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      null,                          0, 1, 0, 0],
         self::CONTACT_ADDRESS_OBFUSCATED => ['contactAddressObfuscated', null,                          0, 1, 0, 1],
@@ -163,7 +165,7 @@ class ArtisanFields
         self::NOTES,
         self::PASSCODE,
         self::CONTACT_ALLOWED,
-        self::CONTACT_ADDRESS_OBFUSCATED,
+        self::ORIGINAL_CONTACT_INFO,
     ];
 
     private static $fields;
