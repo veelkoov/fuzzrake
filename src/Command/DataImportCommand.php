@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Service\DataImporter;
 use App\Utils\DateTimeException;
-use App\Utils\Import\Corrector;
+use App\Utils\Import\Manager;
 use App\Utils\Import\ImportException;
 use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
@@ -148,18 +148,18 @@ class DataImportCommand extends Command
     /**
      * @param string $correctionsFilePath
      *
-     * @return Corrector
+     * @return Manager
      *
      * @throws ImportException
      */
-    private function getImportCorrector(string $correctionsFilePath): Corrector
+    private function getImportCorrector(string $correctionsFilePath): Manager
     {
         if (!file_exists($correctionsFilePath)) {
             throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
         }
 
         try {
-            return new Corrector($correctionsFilePath);
+            return new Manager($correctionsFilePath);
         } catch (DateTimeException $e) {
             throw new ImportException('Failed initializing import corrector due to incorrect date format', 0, $e);
         }

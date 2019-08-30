@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Utils\ArtisanField;
 use App\Utils\ArtisanFields;
 use App\Utils\CompletenessCalc;
+use App\Utils\FieldReadInterface;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -13,7 +14,7 @@ use JsonSerializable;
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
  * @ORM\Table(name="artisans")
  */
-class Artisan implements JsonSerializable
+class Artisan implements JsonSerializable, FieldReadInterface
 {
     const OPEN = true;
     const CLOSED = false;
@@ -897,6 +898,13 @@ class Artisan implements JsonSerializable
     public function setOriginalContactInfo(string $originalContactInfo): self
     {
         $this->getPrivateData()->setOriginalContactInfo($originalContactInfo);
+
+        return $this;
+    }
+
+    public function setPasscode(string $passcode): self
+    {
+        $this->getPrivateData()->setPasscode($passcode);
 
         return $this;
     }

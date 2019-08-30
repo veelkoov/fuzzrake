@@ -11,7 +11,7 @@ use App\Utils\DateTimeUtils;
 use App\Utils\Utils;
 use DateTime;
 
-class Corrector
+class Manager
 {
     const CMD_ACK_NEW = 'ack new';
     const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
@@ -24,28 +24,28 @@ class Corrector
     const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
 
     private $corrections = ['*' => []];
-    private $acknowledgedNew = [];
+    private $acknowledgedNewItems = [];
     private $matchedNames = [];
 
     /**
      * @var array List of hashes of rows which contain invalid passcodes, to be approved & imported
      */
-    private $passcodeExceptions = [];
+    private $itemsWithPasscodeExceptions = [];
 
     /**
      * @var array List of hashes of rows which contain passcodes supposed to be set / to replace earlier
      */
-    private $passcodesSet = [];
+    private $itemsWithNewPasscodes = [];
 
     /**
      * @var array List of hashes of rows which got rejected
      */
-    private $rejectedRecords = [];
+    private $rejectedItems = [];
 
     /**
      * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
      */
-    private $ignoredUntil = [];
+    private $itemsIgnoreFinalTimes = [];
 
     /**
      * @param string $correctionDirectivesFilePath
@@ -57,7 +57,7 @@ class Corrector
         $this->readDirectivesFromFile($correctionDirectivesFilePath);
     }
 
-    public function correctArtisan(Artisan $artisan)
+    public function correctArtisan(Artisan $artisan): void
     {
         $this->applyCorrections($artisan, $this->getCorrectionsFor($artisan));
     }
@@ -71,24 +71,34 @@ class Corrector
         }
     }
 
-    public function isAcknowledged(string $makerId): bool
+    public function isAcknowledged(ImportItem $item): bool
     {
-        return in_array($makerId, $this->acknowledgedNew);
+        return in_array($item->getMakerId(), $this->acknowledgedNewItems);
     }
 
-    public function shouldIgnorePasscode(Row $row)
+    public function shouldIgnorePasscode(ImportItem $item): bool
     {
-        return in_array($row->getHash(), $this->passcodeExceptions);
+        return in_array($item->getHash(), $this->itemsWithPasscodeExceptions);
     }
 
-    public function isNewPasscode(Row $row)
+    public function isNewPasscode(ImportItem $item): bool
     {
-        return in_array($row->getHash(), $this->passcodesSet);
+        return in_array($item->getHash(), $this->itemsWithNewPasscodes);
     }
 
-    public function isRejected(Row $row)
+    public function isRejected(ImportItem $item): bool
     {
-        return in_array($row->getHash(), $this->rejectedRecords);
+        return in_array($item->getHash(), $this->rejectedItems);
+    }
+
+    public function getIgnoredUntilDate(ImportItem $item): DateTime
+    {
+        return $this->itemsIgnoreFinalTimes[$item->getHash()];
+    }
+
+    public function isDelayed(ImportItem $item): bool
+    {
+        return array_key_exists($item->getHash(), $this->itemsIgnoreFinalTimes) && !DateTimeUtils::passed($this->itemsIgnoreFinalTimes[$item->getHash()]);
     }
 
     /**
@@ -131,7 +141,7 @@ class Corrector
 
         switch ($command) {
             case self::CMD_ACK_NEW:
-                $this->acknowledgedNew[] = $makerId;
+                $this->acknowledgedNewItems[] = $makerId;
                 break;
 
             case self::CMD_MATCH_NAME:
@@ -140,23 +150,23 @@ class Corrector
 
             case self::CMD_IGNORE_PIN:
                 // Maker ID kept only informative
-                $this->passcodeExceptions[] = $buffer->readUntil(':');
+                $this->itemsWithPasscodeExceptions[] = $buffer->readUntil(':');
                 break;
 
             case self::CMD_SET_PIN:
                 // Maker ID kept only informative
-                $this->passcodesSet[] = $buffer->readUntil(':');
+                $this->itemsWithNewPasscodes[] = $buffer->readUntil(':');
                 break;
 
             case self::CMD_REJECT:
                 // Maker ID kept only informative
-                $this->rejectedRecords[] = $buffer->readUntil(':');
+                $this->rejectedItems[] = $buffer->readUntil(':');
                 break;
 
             case self::CMD_IGNORE_UNTIL:
                 // Maker ID kept only informative
                 $rawDataHash = $buffer->readUntil(':');
-                $this->ignoredUntil[$rawDataHash] = DateTimeUtils::getUtcAt($buffer->readUntil(':'));
+                $this->itemsIgnoreFinalTimes[$rawDataHash] = DateTimeUtils::getUtcAt($buffer->readUntil(':'));
                 break;
 
             default:
@@ -187,20 +197,5 @@ class Corrector
         } else {
             return $this->corrections['*'];
         }
-    }
-
-    public function getIgnoredUntilDate(Row $row): DateTime
-    {
-        return $this->ignoredUntil[$row->getHash()];
-    }
-
-    /**
-     * @param Row $row
-     *
-     * @return bool
-     */
-    public function isDelayed(Row $row)
-    {
-        return array_key_exists($row->getHash(), $this->ignoredUntil) && !DateTimeUtils::passed($this->ignoredUntil[$row->getHash()]);
     }
 }
