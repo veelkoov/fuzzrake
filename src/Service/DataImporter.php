@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\ContactParser;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\DateTimeUtils;
@@ -169,20 +170,25 @@ class DataImporter
                     }
                     break;
 
-                case Fields::CONTACT_ALLOWED: // FIXME: temporarily disabled
-                case Fields::ORIGINAL_CONTACT_INFO: // FIXME: temporarily disabled
-//                    list($method, $address) = ContactParser::parse($newValue);
-//                    $artisan->setContactMethod($method);
-//                    $artisan->getPrivateData()
-//                        ->setOriginalContactInfo($newValue)
-//                        ->setContactAddress($address);
-//                    $artisan->setContactAddressObfuscated('' === $method || 'UNKNOWN' === $method ? '' : Utils::obscureContact($address));
-//                    break;
+                case Fields::ORIGINAL_CONTACT_INFO:
+                    if ($newValue === $artisan->getContactAddressObfuscated()) {
+                        continue; // No updates
+                    }
+
+                    list($method, $address) = ContactParser::parse($newValue);
+                    $obfuscated = '' === $method || 'UNKNOWN' === $method ? '' : Utils::obscureContact($address);
+
+                    $artisan->setContactMethod($method)
+                        ->setContactAddressObfuscated("$method $obfuscated")
+                        ->getPrivateData()
+                        ->setOriginalContactInfo($newValue)
+                        ->setContactAddress($address);
+                    break;
 
                 case Fields::CONTACT_ADDRESS_PLAIN:
                 case Fields::CONTACT_ADDRESS_OBFUSCATED:
                 case Fields::CONTACT_METHOD:
-                    // Updated with original contact info
+                    // Updated with original contact info above
                     break;
 
                 default:
