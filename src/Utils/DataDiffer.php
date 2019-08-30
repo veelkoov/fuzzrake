@@ -29,6 +29,7 @@ class DataDiffer
         $this->io->getFormatter()->setStyle('a', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('d', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('i', new OutputFormatterStyle('black', 'cyan'));
+        $this->io->getFormatter()->setStyle('f', new OutputFormatterStyle('blue'));
     }
 
     public function showDiff(Artisan $old, Artisan $new, Artisan $imported = null): void
@@ -126,7 +127,7 @@ class DataDiffer
         if ($this->showFixCommands) {
             $replaced = Utils::strSafeForCli($replaced);
             $best = Utils::strSafeForCli($best);
-            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$replaced|$best|");
+            $this->io->writeln("<f>wr:$makerId:$prettyFieldName:|:$replaced|$best|</f>");
         }
     }
 }
