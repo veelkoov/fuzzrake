@@ -172,7 +172,7 @@ class DataImporter
 
                 case Fields::ORIGINAL_CONTACT_INFO:
                     if ($newValue === $artisan->getContactAddressObfuscated()) {
-                        continue; // No updates
+                        break; // No updates
                     }
 
                     list($method, $address) = ContactParser::parse($newValue);
