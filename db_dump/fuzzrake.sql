@@ -388,7 +388,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=832 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=837 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -629,6 +629,11 @@ INSERT INTO `events` VALUES (828,'2019-08-28 06:08:41', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO `events` VALUES (829,'2019-08-28 18:07:44', '', 'CS_UPDTD_DETLS', NULL, 0, 'FancyBeast', 'http://www.fancybeastsuits.com/status.php', '', '[\"></div> </td> </tr> <tr> <td> <hr> <div> <h2>commission status</h2> </div> <div> <p>we are currenty \",\"closed for commissions\",\".</p> </div> <div> <p>check back frequently or watch us on twitter to receive announcements of when \"]');
 INSERT INTO `events` VALUES (830,'2019-08-29 06:07:42', '', 'CS_UPDTD_DETLS', 1, NULL, 'Goldenpaw Studio', 'https://twitter.com/GoldenpawStudio', '', '');
 INSERT INTO `events` VALUES (831,'2019-08-29 18:07:37', '', 'CS_UPDTD_DETLS', NULL, 1, 'Goldenpaw Studio', 'https://twitter.com/GoldenpawStudio', '[\" dir=\\\"ltr\\\"> @goldenpawstudio </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">quotes and some \",\"commisions are open\",\" for 2020 completion fursuit maker, doodler, creator stay tuned for many updates as i progress! http\"]', '');
+INSERT INTO `events` VALUES (832,'2019-08-29 20:05:12', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/d6c778bc341402d25e4cd56c41036a82ab1f5dd8\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (833,'2019-08-29 20:41:33', '', 'CS_UPDTD_DETLS', NULL, 0, 'Blue Sky Studios', 'https://www.facebook.com/pg/BlueSkys2dio/about/', '', '[\"ntent=\\\"base fursuit maker\\\" /><meta property=\\\"og:description\\\" content=\\\"base fursuit maker. 25 likes. \",\"commissions are currently closed\",\"\\\" /><meta property=\\\"og:image\\\" content=\\\"https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-1/p200x200/658261\"]');
+INSERT INTO `events` VALUES (834,'2019-08-30 18:07:42', '', 'CS_UPDTD_DETLS', 0, 1, 'Nuke Creations', 'https://nukecreations.com/ordering/', '[\"lock sqs-block-html\\\" id=\\\"block-yui_3_17_2_3_1483040695923_63362\\\"><div class=\\\"sqs-block-content\\\"><h2>\",\"we are currently open for the commissions\",\"!</h2></div></div><div class=\\\"sqs-block form-block sqs-block-form\\\" id=\\\"block-yui_3_17_2_39_145168581\"]', '');
+INSERT INTO `events` VALUES (835,'2019-09-01 06:07:35', '', 'CS_UPDTD_DETLS', 0, NULL, 'That One Furry Otaku', 'https://thatonefurryotaku.weebly.com/commission-status.html', '', '');
+INSERT INTO `events` VALUES (836,'2019-09-01 18:07:43', '', 'CS_UPDTD_DETLS', 0, 1, 'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '[\"fursuits, plushies, paintings, i do it all! want a commission? email me at kaylaskritterz@yahoo.com \",\"commission status: open\",\"</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"> kayla\"]', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
