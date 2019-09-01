@@ -6,10 +6,10 @@ namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\ArtisanFields as Fields;
+use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Utils;
 use DateTime;
-use Exception;
 
 class Corrector
 {
@@ -20,6 +20,7 @@ class Corrector
                                   * to find you anyway. */
     const CMD_MATCH_NAME = 'match name';
     const CMD_IGNORE_PIN = 'ignore pin';
+    const CMD_SET_PIN = 'set pin';
     const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
 
     private $corrections = ['*' => []];
@@ -32,6 +33,11 @@ class Corrector
     private $passcodeExceptions = [];
 
     /**
+     * @var array List of hashes of rows which contain passcodes supposed to be set / to replace earlier
+     */
+    private $passcodesSet = [];
+
+    /**
      * @var array List of hashes of rows which got rejected
      */
     private $rejectedRecords = [];
@@ -39,12 +45,12 @@ class Corrector
     /**
      * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
      */
-    private $ignoredUntil;
+    private $ignoredUntil = [];
 
     /**
      * @param string $correctionDirectivesFilePath
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -75,6 +81,11 @@ class Corrector
         return in_array($row->getHash(), $this->passcodeExceptions);
     }
 
+    public function isNewPasscode(Row $row)
+    {
+        return in_array($row->getHash(), $this->passcodesSet);
+    }
+
     public function isRejected(Row $row)
     {
         return in_array($row->getHash(), $this->rejectedRecords);
@@ -83,7 +94,7 @@ class Corrector
     /**
      * @param string $filePath
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     private function readDirectivesFromFile(string $filePath)
     {
@@ -111,7 +122,7 @@ class Corrector
     /**
      * @param StringBuffer $buffer
      *
-     * @throws Exception
+     * @throws DateTimeException
      */
     private function readCommand(StringBuffer $buffer): void
     {
@@ -132,6 +143,11 @@ class Corrector
                 $this->passcodeExceptions[] = $buffer->readUntil(':');
                 break;
 
+            case self::CMD_SET_PIN:
+                // Maker ID kept only informative
+                $this->passcodesSet[] = $buffer->readUntil(':');
+                break;
+
             case self::CMD_REJECT:
                 // Maker ID kept only informative
                 $this->rejectedRecords[] = $buffer->readUntil(':');
@@ -146,8 +162,8 @@ class Corrector
             default:
                 $fieldName = $buffer->readUntil(':');
                 $delimiter = $buffer->readUntil(':');
-                $wrongValue = Utils::unsafeStr($buffer->readUntil($delimiter));
-                $correctedValue = Utils::unsafeStr($buffer->readUntil($delimiter));
+                $wrongValue = Utils::undoStrSafeForCli($buffer->readUntil($delimiter));
+                $correctedValue = Utils::undoStrSafeForCli($buffer->readUntil($delimiter));
 
                 $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
                     $command, $wrongValue, $correctedValue));
@@ -155,10 +171,6 @@ class Corrector
         }
     }
 
-    /**
-     * @param Artisan $artisan
-     * @param $corrections ValueCorrection[]
-     */
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
@@ -188,8 +200,6 @@ class Corrector
      * @param Row $row
      *
      * @return bool
-     *
-     * @throws Exception
      */
     public function isDelayed(Row $row)
     {

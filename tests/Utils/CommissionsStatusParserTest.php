@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\CommissionsStatusParserException;
+use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\WebpageSnapshot;
 use PHPUnit\Framework\TestCase;
 
@@ -30,27 +31,28 @@ class CommissionsStatusParserTest extends TestCase
      * @param WebpageSnapshot $snapshot
      * @param bool|null       $expectedResult
      *
-     * @throws CommissionsStatusParserException
+     * @throws TrackerException
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
-        try {
-            $result = self::$csp->areCommissionsOpen($snapshot);
-        } catch (CommissionsStatusParserException $exception) {
-            if ('NONE matches' === $exception->getMessage()) {
-                $result = null;
-            } else {
-                throw $exception;
-            }
+        $result = self::$csp->analyseStatus($snapshot);
+        $errorMsg = "Wrong result for '$webpageTextFileName'";
+
+        if (!($cc = $result->getClosedStrContext())->empty()) {
+            $errorMsg .= "\nCLOSED: \e[0;30;47m{$cc->getBefore()}\e[0;30;41m{$cc->getSubject()}\e[0;30;47m{$cc->getAfter()}\e[0m";
         }
 
-        $this->assertSame($expectedResult, $result, "Wrong result for '$webpageTextFileName'");
+        if (!($oc = $result->getOpenStrContext())->empty()) {
+            $errorMsg .= "\nOPEN: \e[0;30;47m{$oc->getBefore()}\e[0;30;42m{$oc->getSubject()}\e[0;30;47m{$oc->getAfter()}\e[0m";
+        }
+
+        $this->assertSame($expectedResult, $result->getStatus(), $errorMsg);
     }
 
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (!preg_match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
+            if (!Regexp::match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
                 echo "Invalid filename: $filepath\n";
 
                 return false;

@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use DateTime;
+use App\Utils\DateTimeUtils;
+use App\Utils\StrContextInterface;
+use App\Utils\StrContextUtils;
+use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
-use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -15,6 +16,7 @@ use Exception;
 class Event
 {
     const TYPE_CS_UPDATED = 'CS_UPDATED';
+    const TYPE_CS_UPDATED_WITH_DETAILS = 'CS_UPDTD_DETLS';
     const TYPE_GENERIC = 'GENERIC';
 
     /**
@@ -59,7 +61,7 @@ class Event
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $newStatus;
+    private $newStatus = null;
 
     /**
      * @var string
@@ -73,152 +75,128 @@ class Event
      *
      * @ORM\Column(type="string", length=1024)
      */
-    private $checkedUrl;
+    private $checkedUrl = '';
 
     /**
-     * Event constructor.
+     * @var string
      *
-     * @param string    $checkedUrl
-     * @param string    $artisanName
-     * @param bool|null $oldStatus
-     * @param bool|null $newStatus
-     *
-     * @throws Exception
+     * @ORM\Column(type="text", name="open_match")
      */
-    public function __construct(string $checkedUrl, string $artisanName, ?bool $oldStatus, ?bool $newStatus)
+    private $openMatchRepr = '';
+
+    /**
+     * @var StrContextInterface
+     */
+    private $openMatch = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", name="closed_match")
+     */
+    private $closedMatchRepr = '';
+
+    /**
+     * @var StrContextInterface
+     */
+    private $closedMatch = null;
+
+    /**
+     * @param string         $checkedUrl
+     * @param string         $artisanName
+     * @param bool|null      $oldStatus
+     * @param AnalysisResult $analysisResult
+     */
+    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, AnalysisResult $analysisResult = null)
     {
-        $this->timestamp = new DateTime('now', new DateTimeZone('UTC'));
+        $this->timestamp = DateTimeUtils::getNowUtc();
         $this->checkedUrl = $checkedUrl;
         $this->artisanName = $artisanName;
         $this->oldStatus = $oldStatus;
-        $this->newStatus = $newStatus;
 
-        $this->type = self::TYPE_CS_UPDATED;
+        if (null !== $analysisResult) {
+            $this->type = self::TYPE_CS_UPDATED_WITH_DETAILS;
+            $this->newStatus = $analysisResult->getStatus();
+            $this->setClosedMatch($analysisResult->getClosedStrContext());
+            $this->setOpenMatch($analysisResult->getOpenStrContext());
+        }
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     public function getTimestamp(): DateTimeInterface
     {
         return $this->timestamp;
     }
 
-    /**
-     * @param DateTimeInterface $timestamp
-     */
     public function setTimestamp(DateTimeInterface $timestamp): void
     {
         $this->timestamp = $timestamp;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
     public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
     public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getOldStatus(): ?bool
     {
         return $this->oldStatus;
     }
 
-    /**
-     * @param bool|null $oldStatus
-     */
     public function setOldStatus(?bool $oldStatus): void
     {
         $this->oldStatus = $oldStatus;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getNewStatus(): ?bool
     {
         return $this->newStatus;
     }
 
-    /**
-     * @param bool|null $newStatus
-     */
     public function setNewStatus(?bool $newStatus): void
     {
         $this->newStatus = $newStatus;
     }
 
-    /**
-     * @return string
-     */
     public function getArtisanName(): string
     {
         return $this->artisanName;
     }
 
-    /**
-     * @param string $artisanName
-     */
     public function setArtisanName(string $artisanName): void
     {
         $this->artisanName = $artisanName;
     }
 
-    /**
-     * @return string
-     */
     public function getCheckedUrl(): string
     {
         return $this->checkedUrl;
     }
 
-    /**
-     * @param string $checkedUrl
-     */
     public function setCheckedUrl(string $checkedUrl): void
     {
         $this->checkedUrl = $checkedUrl;
@@ -231,6 +209,33 @@ class Event
 
     public function isChangedStatus(): bool
     {
-        return self::TYPE_CS_UPDATED === $this->type;
+        return in_array($this->type, [self::TYPE_CS_UPDATED, self::TYPE_CS_UPDATED_WITH_DETAILS]);
+    }
+
+    public function hasDetails(): bool
+    {
+        return self::TYPE_CS_UPDATED_WITH_DETAILS === $this->type;
+    }
+
+    public function getOpenMatch(): StrContextInterface
+    {
+        return $this->openMatch = $this->openMatch ?? StrContextUtils::fromString($this->openMatchRepr);
+    }
+
+    public function setOpenMatch(StrContextInterface $openMatch): void
+    {
+        $this->openMatch = $openMatch;
+        $this->openMatchRepr = StrContextUtils::toStr($openMatch);
+    }
+
+    public function getClosedMatch(): StrContextInterface
+    {
+        return $this->closedMatch = $this->closedMatch ?? StrContextUtils::fromString($this->closedMatchRepr);
+    }
+
+    public function setClosedMatch(StrContextInterface $closedMatch): void
+    {
+        $this->closedMatch = $closedMatch;
+        $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
     }
 }

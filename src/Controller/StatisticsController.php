@@ -70,18 +70,18 @@ class StatisticsController extends AbstractController
         $commissionsStats = $artisanRepository->getCommissionsStats();
 
         return $this->render('statistics/statistics.html.twig', [
-            'countries' => $this->prepareTableData($countries),
+            'countries'        => $this->prepareTableData($countries),
             'productionModels' => $this->prepareTableData($productionModels),
-            'orderTypes' => $this->prepareTableData($orderTypes),
-            'otherOrderTypes' => $this->prepareListData($otherOrderTypes->getItems()),
-            'styles' => $this->prepareTableData($styles),
-            'otherStyles' => $this->prepareListData($otherStyles->getItems()),
-            'features' => $this->prepareTableData($features),
-            'otherFeatures' => $this->prepareListData($otherFeatures->getItems()),
+            'orderTypes'       => $this->prepareTableData($orderTypes),
+            'otherOrderTypes'  => $this->prepareListData($otherOrderTypes->getItems()),
+            'styles'           => $this->prepareTableData($styles),
+            'otherStyles'      => $this->prepareListData($otherStyles->getItems()),
+            'features'         => $this->prepareTableData($features),
+            'otherFeatures'    => $this->prepareListData($otherFeatures->getItems()),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
-            'completeness' => $this->prepareCompletenessData($artisanRepository->findAll()),
-            'providedInfo' => $this->prepareProvidedInfoData($artisanRepository->findAll()),
-            'matchWords' => self::MATCH_WORDS,
+            'completeness'     => $this->prepareCompletenessData($artisanRepository->findAll()),
+            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->findAll()),
+            'matchWords'       => self::MATCH_WORDS,
         ]);
     }
 
@@ -150,11 +150,11 @@ class StatisticsController extends AbstractController
     private function prepareCommissionsStatsTableData(array $commissionsStats): array
     {
         return [
-            'Open' => $commissionsStats['open'],
-            'Closed' => $commissionsStats['closed'],
-            'Status tracked' => $commissionsStats['tracked'],
+            'Open'                        => $commissionsStats['open'],
+            'Closed'                      => $commissionsStats['closed'],
+            'Status tracked'              => $commissionsStats['tracked'],
             'Status successfully tracked' => $commissionsStats['successfully_tracked'],
-            'Total' => $commissionsStats['total'],
+            'Total'                       => $commissionsStats['total'],
         ];
     }
 
@@ -172,7 +172,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-            '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
+                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%'   => 0, ];
 
         foreach ($levels as $description => $level) {
             $result[$description] = count(array_filter($completeness, function (int $percent) use ($level) {

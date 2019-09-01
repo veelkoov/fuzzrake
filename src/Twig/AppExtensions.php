@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Utils\DateTimeException;
+use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\Status;
 use App\Utils\Utils;
-use DateTime;
-use DateTimeZone;
 use Doctrine\ORM\NonUniqueResultException;
-use Exception;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -21,13 +23,25 @@ class AppExtensions extends AbstractExtension
     const MONTHS = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     /**
-     * @var ArtisanRepository
+     * @var ArtisanCommissionsStatusRepository
      */
-    private $artisanRepository;
+    private $acsRepository;
 
-    public function __construct(ArtisanRepository $artisanRepository)
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var array
+     */
+    private $hosts;
+
+    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, RequestStack $requestStack, array $hosts)
     {
-        $this->artisanRepository = $artisanRepository;
+        $this->acsRepository = $acsRepository;
+        $this->requestStack = $requestStack;
+        $this->hosts = $hosts;
     }
 
     public function getFilters()
@@ -45,29 +59,39 @@ class AppExtensions extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('getLastSystemUpdateTime', [$this, 'getLastSystemUpdateTimeFunction']),
-            new TwigFunction('getLastDataUpdateTime', [$this, 'getLastDataUpdateTimeFunction']),
+            new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
+            new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
+            new TwigFunction('isDevMachine', [$this, 'isDevMachineFunction']),
+            new TwigFunction('isProduction', [$this, 'isProductionFunction']),
         ];
     }
 
-    /**
-     * @return DateTime
-     *
-     * @throws NonUniqueResultException
-     */
-    public function getLastDataUpdateTimeFunction()
+    public function isDevMachineFunction(): bool
     {
-        return $this->artisanRepository->getLastCstUpdateTime();
+        return $this->getHostname() === $this->hosts['dev_machine'];
     }
 
-    /**
-     * @return DateTime
-     *
-     * @throws Exception
-     */
-    public function getLastSystemUpdateTimeFunction()
+    public function isProductionFunction(): bool
     {
-        return new DateTime(`TZ=UTC git log -n1 --format=%cd --date=local`, new DateTimeZone('UTC'));
+        return $this->getHostname() === $this->hosts['production'];
+    }
+
+    public function getLastDataUpdateTimeUtcStrFunction(): string
+    {
+        try {
+            return $this->acsRepository->getLastCstUpdateTime()->format('Y-m-d H:i');
+        } catch (DateTimeException | NonUniqueResultException $e) {
+            return 'unknown/error';
+        }
+    }
+
+    public function getLastSystemUpdateTimeUtcStrFunction(): string
+    {
+        try {
+            return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
+        } catch (DateTimeException $e) {
+            return 'unknown/error';
+        }
     }
 
     public function otherFilter($primaryList, $otherList)
@@ -98,34 +122,37 @@ class AppExtensions extends AbstractExtension
             return '';
         }
 
-        if (!preg_match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
+        if (!Regexp::match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
             throw new TplDataException("Invalid 'since' data: '$input''");
         }
 
         return self::MONTHS[(int) $matches['month']].' '.$matches['year'];
     }
 
-    /**
-     * @param FilterItem[] $items
-     * @param string       $matchWord
-     *
-     * @return FilterItem[]
-     */
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         return array_filter($items, function (FilterItem $item) use ($matchWord) {
-            return 1 === preg_match("#$matchWord#i", $item->getLabel());
+            return Regexp::match("#$matchWord#i", $item->getLabel());
         });
     }
 
     public function filterHumanFriendlyRegexp(string $input): string
     {
-        $input = preg_replace('#\(\?<!.+?\)#', '', $input);
-        $input = preg_replace('#\(\?!.+?\)#', '', $input);
-        $input = preg_replace('#\([^a-z]+?\)#i', '', $input);
-        $input = preg_replace('#[()?]#', '', $input);
-        $input = preg_replace('#\[.+?\]#', '', $input);
+        $input = Regexp::replace('#\(\?<!.+?\)#', '', $input);
+        $input = Regexp::replace('#\(\?!.+?\)#', '', $input);
+        $input = Regexp::replace('#\([^a-z]+?\)#i', '', $input);
+        $input = Regexp::replace('#[()?]#', '', $input);
+        $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
+    }
+
+    private function getHostname(): string
+    {
+        try {
+            return $this->requestStack->getCurrentRequest()->getHost();
+        } catch (SuspiciousOperationException $e) {
+            return 'unknown/error';
+        }
     }
 }

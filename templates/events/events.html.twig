@@ -2,10 +2,15 @@
 
 {% block title %}updates history{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('events') }}
+{% endblock %}
+
 {% block body %}
     <p class="small">All times are UTC</p>
 
-    <ul class="list-unstyled">
+    <ul class="list-unstyled" id="events-list">
         {% set last_timestamp = null %}
 
         {% for event in events %}
@@ -13,7 +18,7 @@
             {% set time_changed = last_timestamp is null or last_timestamp|date('Y-m-d H:i') != event.timestamp|date('Y-m-d H:i') %}
             {% set last_timestamp = event.timestamp %}
 
-            <li class="anchor row {% if day_changed %}separator-day{% endif %} {% if time_changed %}separator-time{% endif %}" id="event{{ event.id }}">
+            <li class="events-item row {% if day_changed %}separator-day{% endif %} {% if time_changed %}separator-time{% endif %}" id="event{{ event.id }}">
                 <div class="col-sm-2 text-right small">
                     <a href="#event{{ event.id }}">
                         {% if day_changed %} {{ event.timestamp|date('jS M Y') }}, {% endif %}
@@ -22,24 +27,60 @@
                 </div>
 
                 <div class="col-sm-10">
-                    {% if event.lostTrack %}
+                    <p class="m-0">
+                        {% if event.lostTrack %}
 
-                        Failed to interpret commission status based on the contents of:
-                        <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
-                        <b>{{ event.artisanName }}</b> commissions status is now
-                        <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                            Failed to interpret commission status based on the contents of:
+                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                            <b>{{ event.artisanName }}</b> commissions status is now
+                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
-                    {% elseif event.changedStatus %}
+                        {% elseif event.changedStatus %}
 
-                        Based on the contents of
-                        <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
-                        <b>{{ event.artisanName }}</b> commissions status is now
-                        <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                            Based on the contents of
+                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
+                            <b>{{ event.artisanName }}</b> commissions status is now
+                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
-                    {% else %}
+                        {% else %}
 
-                        {{ event.description|raw }}
+                            {{ event.description|raw }}
 
+                        {% endif %}
+
+                        {% if event.details %}
+                            <a href="#" class="toggle-details">Toggle details</a>
+                        {% endif %}
+                    </p>
+
+                    {% if event.details %}
+                        <div class="event-details pl-4">
+                            {% if not event.closedMatch.empty %}
+                                <blockquote class="blockquote m-1">
+                                    <strong>Closed match:</strong>
+                                    {% apply spaceless %}
+                                        <span class="text-secondary">{{ event.closedMatch.before }}</span>
+                                        <span class="bg-danger">{{ event.closedMatch.subject }}</span>
+                                        <span class="text-secondary">{{ event.closedMatch.after }}</span>
+                                    {% endapply %}
+                                </blockquote>
+                            {% endif %}
+
+                            {% if not event.openMatch.empty %}
+                                <blockquote class="blockquote m-1">
+                                    <strong>Open match:</strong>
+                                    {% apply spaceless %}
+                                        <span class="text-secondary">{{ event.openMatch.before }}</span>
+                                        <span class="bg-success">{{ event.openMatch.subject }}</span>
+                                        <span class="text-secondary">{{ event.openMatch.after }}</span>
+                                    {% endapply %}
+                                </blockquote>
+                            {% endif %}
+
+                            {% if event.closedMatch.empty and event.openMatch.empty %}
+                                <p>Couldn't match neither open nor closed status message</p>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 </div>
             </li>

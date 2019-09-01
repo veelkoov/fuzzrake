@@ -1,5 +1,7 @@
 *.nocommit.*
 *.nocommit
+/tests/snapshots/*
+!/tests/snapshots/.gitkeep
 
 ###> symfony/framework-bundle ###
 /.env.local

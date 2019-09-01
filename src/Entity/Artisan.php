@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use App\Utils\ArtisanField;
 use App\Utils\ArtisanFields;
 use App\Utils\CompletenessCalc;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -197,19 +197,34 @@ class Artisan implements JsonSerializable
     private $notes;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="cst_url", type="string", length=255)
      */
-    private $commissionsQuotesCheckUrl;
+    private $cstUrl;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=16)
      */
-    private $areCommissionsOpen;
+    private $contactAllowed = '';
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="string", length=32)
      */
-    private $commissionsQuotesLastCheck;
+    private $contactMethod = '';
+
+    /**
+     * @ORM\Column(type="string", length=128)
+     */
+    private $contactAddress = '';
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
+     */
+    private $commissionsStatus;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"})
+     */
+    private $privateData;
 
     public function getId()
     {
@@ -370,14 +385,14 @@ class Artisan implements JsonSerializable
         return $this;
     }
 
-    public function getCommissionsQuotesCheckUrl(): ?string
+    public function getCstUrl(): ?string
     {
-        return $this->commissionsQuotesCheckUrl;
+        return $this->cstUrl;
     }
 
-    public function setCommissionsQuotesCheckUrl(?string $commissionsQuotesCheckUrl): self
+    public function setCstUrl(?string $cstUrl): self
     {
-        $this->commissionsQuotesCheckUrl = $commissionsQuotesCheckUrl;
+        $this->cstUrl = $cstUrl;
 
         return $this;
     }
@@ -438,18 +453,6 @@ class Artisan implements JsonSerializable
     public function setInstagramUrl(string $instagramUrl): self
     {
         $this->instagramUrl = $instagramUrl;
-
-        return $this;
-    }
-
-    public function getAreCommissionsOpen(): ?bool
-    {
-        return $this->areCommissionsOpen;
-    }
-
-    public function setAreCommissionsOpen(?bool $areCommissionsOpen): self
-    {
-        $this->areCommissionsOpen = $areCommissionsOpen;
 
         return $this;
     }
@@ -522,18 +525,6 @@ class Artisan implements JsonSerializable
     public function setOtherFeatures(string $otherFeatures): self
     {
         $this->otherFeatures = $otherFeatures;
-
-        return $this;
-    }
-
-    public function getCommissionsQuotesLastCheck(): ?DateTimeInterface
-    {
-        return $this->commissionsQuotesLastCheck;
-    }
-
-    public function setCommissionsQuotesLastCheck(?DateTimeInterface $commissionsQuotesLastCheck): self
-    {
-        $this->commissionsQuotesLastCheck = $commissionsQuotesLastCheck;
 
         return $this;
     }
@@ -755,7 +746,7 @@ class Artisan implements JsonSerializable
             // Other URLs not checked - we're not requiring unknown
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
             // Notes are not supposed to be displayed, thus not counted
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->areCommissionsOpen)
+            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
             // CST last check does not depend on artisan input
             ->result();
     }
@@ -786,17 +777,98 @@ class Artisan implements JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $data = get_object_vars($this);
-        unset($data['id']);
+        return array_values(array_map(function (ArtisanField $field) {
+            if ($field->isPersisted()) {
+                $value = $this->get($field->modelName());
+            } else {
+                switch ($field->name()) {
+                    case ArtisanFields::CST_LAST_CHECK:
+                        $lc = $this->getCommissionsStatus()->getLastChecked();
+                        $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+                        break;
 
-        foreach (ArtisanFields::lists() as $field) {
-            $data[$field->modelName()] = array_filter(explode("\n", $data[$field->modelName()]));
+                    case ArtisanFields::COMMISSIONS_STATUS:
+                        $value = $this->getCommissionsStatus()->getStatus();
+                        break;
+
+                    case ArtisanFields::COMPLETNESS:
+                        $value = $this->completeness();
+                        break;
+
+                    default:
+                        throw new InvalidArgumentException('Unknown field: '.$field->modelName());
+                }
+            }
+
+            return $field->isList() ? array_filter(explode("\n", $value)) : $value;
+        }, ArtisanFields::inJson()));
+    }
+
+    public function getContactMethod(): string
+    {
+        return $this->contactMethod;
+    }
+
+    public function setContactMethod(string $contactMethod): self
+    {
+        $this->contactMethod = $contactMethod;
+
+        return $this;
+    }
+
+    public function getContactAddress(): string
+    {
+        return $this->contactAddress;
+    }
+
+    public function setContactAddress(string $contactAddress): self
+    {
+        $this->contactAddress = $contactAddress;
+
+        return $this;
+    }
+
+    public function getContactAllowed(): string
+    {
+        return $this->contactAllowed;
+    }
+
+    public function setContactAllowed(string $contactAllowed): self
+    {
+        $this->contactAllowed = $contactAllowed;
+
+        return $this;
+    }
+
+    public function getCommissionsStatus(): ArtisanCommissionsStatus
+    {
+        return $this->commissionsStatus ?? $this->commissionsStatus = (new ArtisanCommissionsStatus())->setArtisan($this);
+    }
+
+    public function setCommissionsStatus(ArtisanCommissionsStatus $commissionsStatus): self
+    {
+        $this->commissionsStatus = $commissionsStatus;
+
+        if ($this !== $commissionsStatus->getArtisan()) {
+            $commissionsStatus->setArtisan($this);
         }
 
-        $data['completeness'] = $this->completeness();
-        $data['commissionsQuotesLastCheck'] = null === $this->getCommissionsQuotesLastCheck()
-            ? 'unknown' : date('Y-m-d H:i:s', $this->getCommissionsQuotesLastCheck()->getTimestamp());
+        return $this;
+    }
 
-        return array_values($data);
+    public function getPrivateData(): ArtisanPrivateData
+    {
+        return $this->privateData ?? $this->privateData = (new ArtisanPrivateData())->setArtisan($this);
+    }
+
+    public function setPrivateData(ArtisanPrivateData $privateData): self
+    {
+        $this->privateData = $privateData;
+
+        if ($this !== $privateData->getArtisan()) {
+            $privateData->setArtisan($this);
+        }
+
+        return $this;
     }
 }

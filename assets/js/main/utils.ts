@@ -1,15 +1,16 @@
 'use strict';
 
 import * as $ from "jquery";
+import Artisan from "./Artisan";
 
-export function makeLinksOpenNewTab(linkSelector) {
+export function makeLinksOpenNewTab(linkSelector: string): void {
     $(linkSelector).on('click', function (evt) {
         evt.preventDefault();
-        window.open(this.href);
+        window.open(this.getAttribute('href'));
     });
 }
 
-function toDataItem(id, data) {
+function toDataItem(id: number, data: string | string[]): string {
     if (typeof data === 'string') {
         return `entry.${id}=${encodeURIComponent(data)}`;
     } else {
@@ -19,7 +20,7 @@ function toDataItem(id, data) {
     }
 }
 
-function getArtisanGoogleFormPrefilledUrl(artisan) {
+function getArtisanGoogleFormPrefilledUrl(artisan: Artisan): string {
     let dataItems = [];
 
     dataItems.push(toDataItem(646315912, artisan.name));
@@ -49,7 +50,7 @@ function getArtisanGoogleFormPrefilledUrl(artisan) {
     dataItems.push(toDataItem(1209445762, artisan.tumblrUrl));
     dataItems.push(toDataItem(696741203, artisan.instagramUrl));
     dataItems.push(toDataItem(618562986, artisan.youtubeUrl));
-    dataItems.push(toDataItem(1355429885, artisan.commissionsQuotesCheckUrl));
+    dataItems.push(toDataItem(1355429885, artisan.cstUrl));
     dataItems.push(toDataItem(1507707399, artisan.otherUrls));
     dataItems.push(toDataItem(528156817, artisan.languages));
     dataItems.push(toDataItem(927668258, artisan.makerId));
@@ -61,29 +62,29 @@ function getArtisanGoogleFormPrefilledUrl(artisan) {
     return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.join('&');
 }
 
-function getGuestGoogleFormPrefilledUrl(artisan) {
+function getGuestGoogleFormPrefilledUrl(artisan: Artisan): string {
     // TODO: get form link form czpcz
     return 'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform?usp=pp_url&' + toDataItem(1289735951, artisan.name);
 }
 
-export function updateUpdateRequestData(divId, artisan) {
+export function updateUpdateRequestData(divId: string, artisan: Artisan): void {
     $(`#${divId} .twitterUrl`).attr('href', 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent(artisan.name) + '%20(please%20describe%20details)&tw_p=tweetbutton');
 
     $(`#${divId} .artisanGoogleFormUrl`).attr('href', getArtisanGoogleFormPrefilledUrl(artisan));
     $(`#${divId} .guestGoogleFormUrl`).attr('href', getGuestGoogleFormPrefilledUrl(artisan));
 }
 
-export function countryFlagHtml(country) {
+export function countryFlagHtml(country: string): string {
     return country === '' ? '' : `&nbsp;<span class="flag-icon flag-icon-${country.toLowerCase()}"></span>`;
 }
 
-function pushLink(targetArray, url, text, isPrimary = false) {
+function pushLink(targetArray: string[], url: string, text: string, isPrimary: boolean = false): void {
     if (url) {
-        targetArray.push(`<a href="${url}"${isPrimary ? 'class="primary"' : ''}>${text}</a>`);
+        targetArray.push(`<a href="${url}" ${isPrimary ? 'class="primary"' : ''}>${text}</a>`);
     }
 }
 
-export function getLinks$(artisan) {
+export function getLinks$(artisan: Artisan): JQuery<HTMLElement> {
     let links = [];
 
     pushLink(links, artisan.fursuitReviewUrl, '<i class="fas fa-balance-scale"></i> FursuitReview', true);

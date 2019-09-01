@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Regexp;
 
-class RegexpVariant
+class Variant
 {
     /**
      * @var array[]

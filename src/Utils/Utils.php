@@ -3,10 +3,11 @@
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\Regexp\Utils as Regexp;
 
 class Utils
 {
-    public static function artisanNamesSafe(Artisan ...$artisans)
+    public static function artisanNamesSafeForCli(Artisan ...$artisans)
     {
         $names = $makerIds = [];
 
@@ -15,26 +16,26 @@ class Utils
             $makerIds = array_merge($makerIds, $artisan->getAllMakerIdsArr());
         }
 
-        return self::safeStr(implode(' / ', array_merge(
+        return self::strSafeForCli(implode(' / ', array_merge(
             array_filter(array_unique($names)),
             array_filter(array_unique($makerIds))
         )));
     }
 
-    public static function safeStr(string $input): string
+    public static function strSafeForCli(string $input): string
     {
         return str_replace(["\r", "\n", '\\'], ['\r', '\n', '\\'], $input);
     }
 
-    public static function unsafeStr(string $input): string
+    public static function undoStrSafeForCli(string $input): string
     {
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
 
     public static function shortPrintUrl(string $originalUrl): string
     {
-        $url = preg_replace('#^https?://(www\.)?#', '', $originalUrl);
-        $url = preg_replace('/\/?(#profile)?$/', '', $url);
+        $url = Regexp::replace('#^https?://(www\.)?#', '', $originalUrl);
+        $url = Regexp::replace('/\/?(#profile)?$/', '', $url);
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 
@@ -43,5 +44,59 @@ class Utils
         }
 
         return $url;
+    }
+
+    /**
+     * @param $input
+     * @param int $options
+     *
+     * @return string
+     *
+     * @throws JsonException
+     */
+    public static function toJson($input, $options = 0): string
+    {
+        $result = json_encode($input, $options);
+
+        if (JSON_ERROR_NONE !== json_last_error()) { // FIXME: Use 7.3 JSON_THROW_ON_ERROR
+            throw new JsonException('Failed to encode data to JSON: '.json_last_error_msg());
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $input
+     *
+     * @return mixed
+     *
+     * @throws JsonException
+     */
+    public static function fromJson(string $input)
+    {
+        $result = json_decode($input, true);
+
+        if (JSON_ERROR_NONE !== json_last_error()) { // FIXME: Use 7.3 JSON_THROW_ON_ERROR
+            throw new JsonException('Failed to decode data from JSON: '.json_last_error_msg());
+        }
+
+        return $result;
+    }
+
+    public static function obscureContact(string $input): string
+    {
+        return implode('@', array_map(function (string $input): string {
+            $len = mb_strlen($input);
+
+            if ($len >= 3) {
+                $pLen = max(1, (int) ($len / 4));
+
+                return mb_substr($input, 0, $pLen).str_repeat('*', $len - 2 * $pLen).mb_substr($input, -$pLen);
+            } elseif (2 == $len) {
+                return mb_substr($input, 0, 1).'*';
+            } else {
+                return $input;
+            }
+        }, explode('@', $input)));
     }
 }

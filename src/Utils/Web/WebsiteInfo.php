@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
+use App\Utils\Regexp\Utils as Regexp;
+
 class WebsiteInfo
 {
     const FA_URL_SEARCH_STRING = 'furaffinity.net/';
@@ -21,7 +23,7 @@ class WebsiteInfo
             return true;
         }
 
-        if (1 === preg_match(self::WIXSITE_CONTENTS_REGEXP, $webpageSnapshot->getContents())) {
+        if (Regexp::match(self::WIXSITE_CONTENTS_REGEXP, $webpageSnapshot->getContents())) {
             return true;
         }
 
@@ -62,6 +64,6 @@ class WebsiteInfo
 
     public static function isInstagram(string $webpageContents): bool
     {
-        return 1 === preg_match(self::INSTAGRAM_CONTENTS_REGEXP, $webpageContents);
+        return Regexp::match(self::INSTAGRAM_CONTENTS_REGEXP, $webpageContents);
     }
 }

@@ -6,6 +6,6 @@ namespace App\Utils\Tracking;
 
 use Exception;
 
-class CommissionsStatusParserException extends Exception
+class TrackerException extends Exception
 {
 }
