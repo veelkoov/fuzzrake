@@ -41,8 +41,8 @@ class ContactParser
             return ['TWITTER', '@'.$matches[1]];
         }
 
-        if (Utils::match('#^https://twitter.com/[a-z0-9_-]+$#i', $input, $matches)) {
-            return ['TWITTER', $matches[0]];
+        if (Utils::match('#^https://twitter.com/([a-z0-9_-]+)$#i', $input, $matches)) {
+            return ['TWITTER', $matches[1]];
         }
 
         if (Utils::match('#twitter[-:, ]* ?@?([a-z0-9_]+)#i', $input, $matches)) {
