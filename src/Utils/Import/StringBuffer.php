@@ -37,4 +37,9 @@ class StringBuffer
     {
         return 0 === strlen($this->buffer);
     }
+
+    public function flush(): void
+    {
+        $this->buffer = '';
+    }
 }

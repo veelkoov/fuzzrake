@@ -22,6 +22,7 @@ class Manager
     const CMD_IGNORE_PIN = 'ignore pin';
     const CMD_SET_PIN = 'set pin';
     const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
+    const CMD_IGNORE_REST = 'ignore rest';
 
     private $corrections = ['*' => []];
     private $acknowledgedNewItems = [];
@@ -140,6 +141,10 @@ class Manager
         $makerId = $buffer->readUntil(':');
 
         switch ($command) {
+            case self::CMD_IGNORE_REST:
+                $buffer->flush();
+                break;
+
             case self::CMD_ACK_NEW:
                 $this->acknowledgedNewItems[] = $makerId;
                 break;
