@@ -38,6 +38,9 @@ export default class Artisan {
                 readonly cstUrl: string,
                 readonly commissionsStatus: boolean,
                 readonly cstLastCheck: string,
-                readonly completeness: number) {
+                readonly completeness: number,
+                readonly contactAllowed: number,
+                readonly contactAddressObfuscated: number,
+    ) {
     }
 }
