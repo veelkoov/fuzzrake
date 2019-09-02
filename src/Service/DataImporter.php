@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\ArtisanFields as Fields;
-use App\Utils\ContactParser;
+use App\Utils\ArtisanUtils;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\DateTimeUtils;
@@ -175,14 +175,7 @@ class DataImporter
                         break; // No updates
                     }
 
-                    list($method, $address) = ContactParser::parse($newValue);
-                    $obfuscated = '' === $method || 'UNKNOWN' === $method ? '' : Utils::obscureContact($address);
-
-                    $artisan->setContactMethod($method)
-                        ->setContactAddressObfuscated("$method $obfuscated")
-                        ->getPrivateData()
-                        ->setOriginalContactInfo($newValue)
-                        ->setContactAddress($address);
+                    ArtisanUtils::updateContact($artisan, $newValue);
                     break;
 
                 case Fields::CONTACT_ADDRESS_PLAIN:

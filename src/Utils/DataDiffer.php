@@ -56,7 +56,7 @@ class DataDiffer
                 $this->showSingleValueDiff($field->name(), $oldVal, $newVal, $impVal);
             }
 
-            $this->showFixCommandOptionally($new->getMakerId(), $field->name(), $impVal ?? $oldVal, $newVal);
+            $this->showFixCommandOptionally($new->getMakerId(), $field, $impVal ?? $oldVal, $newVal);
 
             $this->io->writeln('');
         }
@@ -106,7 +106,7 @@ class DataDiffer
 
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
-        if ($impVal && $impVal !== $newVal) {
+        if ($impVal && $impVal !== $newVal && !$this->skipImpValue($fieldName)) {
             $impVal = Utils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
@@ -122,12 +122,27 @@ class DataDiffer
         }
     }
 
-    private function showFixCommandOptionally(string $makerId, string $prettyFieldName, string $replaced, string $best)
+    private function showFixCommandOptionally(string $makerId, ArtisanField $field, string $replaced, string $best)
     {
-        if ($this->showFixCommands) {
+        if ($this->showFixCommands && !$this->skipFixCommand($field->name())) {
             $replaced = Utils::strSafeForCli($replaced);
             $best = Utils::strSafeForCli($best);
-            $this->io->writeln("<f>wr:$makerId:$prettyFieldName:|:$replaced|$best|</f>");
+            $this->io->writeln("<f>wr:$makerId:{$field->name()}:|:$replaced|$best|</f>");
         }
+    }
+
+    private function skipImpValue(string $fieldName): bool
+    {
+        return in_array($fieldName, [ArtisanFields::CONTACT_ALLOWED, ArtisanFields::CONTACT_METHOD]);
+    }
+
+    private function skipFixCommand(string $fieldName): bool
+    {
+        return in_array($fieldName, [
+            ArtisanFields::CONTACT_ALLOWED,
+            ArtisanFields::CONTACT_METHOD,
+            ArtisanFields::CONTACT_ADDRESS_OBFUSCATED,
+            ArtisanFields::CONTACT_ADDRESS_PLAIN,
+        ]);
     }
 }
