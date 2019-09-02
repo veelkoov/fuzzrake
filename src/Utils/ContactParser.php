@@ -30,7 +30,7 @@ class ContactParser
     {
         $input = trim($input);
 
-        if ('' === $input) {
+        if ('' === $input || '-' === $input) {
             return ['', ''];
         }
 
@@ -58,6 +58,6 @@ class ContactParser
             return [self::TWITTER, '@'.$matches[1]];
         }
 
-        return [self::INVALID, $input];
+        return [self::INVALID, ''];
     }
 }

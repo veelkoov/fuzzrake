@@ -16,10 +16,22 @@ class ArtisanUtils
     {
         list($method, $address) = ContactParser::parse($newOriginalContactValue);
 
-        $obfuscated = '' === $method || ContactParser::INVALID === $method ? '' : Utils::obscureContact($address);
+        switch ($method) {
+            case ContactParser::INVALID:
+                $obfuscated = 'PLEASE CORRECT';
+                break;
+
+            case '':
+                $obfuscated = '';
+                break;
+
+            default:
+                $obfuscated = $method.': '.Utils::obscureContact($address);
+                break;
+        }
 
         $artisan->setContactMethod($method)
-            ->setContactAddressObfuscated($method && $obfuscated ? "$method: $obfuscated" : '') // FIXME
+            ->setContactAddressObfuscated($obfuscated)
             ->getPrivateData()
             ->setOriginalContactInfo($newOriginalContactValue)
             ->setContactAddress($address);
