@@ -388,7 +388,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=838 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=840 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -635,6 +635,8 @@ INSERT INTO `events` VALUES (834,'2019-08-30 18:07:42', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO `events` VALUES (835,'2019-09-01 06:07:35', '', 'CS_UPDTD_DETLS', 0, NULL, 'That One Furry Otaku', 'https://thatonefurryotaku.weebly.com/commission-status.html', '', '');
 INSERT INTO `events` VALUES (836,'2019-09-01 18:07:43', '', 'CS_UPDTD_DETLS', 0, 1, 'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '[\"fursuits, plushies, paintings, i do it all! want a commission? email me at kaylaskritterz@yahoo.com \",\"commission status: open\",\"</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"> kayla\"]', '');
 INSERT INTO `events` VALUES (837,'2019-09-01 20:25:57', '', 'CS_UPDTD_DETLS', NULL, 0, 'chaoticreations', 'https://chaoticreations.wixsite.com/chaoticreations/commissions', '', '[\"pe: styledtext id: dataitem-jzzox4sx ispreset: schemaversion: 1.0 ishidden: text: <p class=\\\"font_7\\\">\",\"i am currently closed for commissions\",\".</p> <p class=\\\"font_7\\\">however, you can fill in a quote form. i will try to respond to your quote, \"]');
+INSERT INTO `events` VALUES (838,'2019-09-01 20:26:35', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/7ceff3fa7a076443adbed9bce120be33ce62367d\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (839,'2019-09-02 06:07:40', '', 'CS_UPDTD_DETLS', 0, 1, 'Vegasyote', 'https://vegasyote.weebly.com/', '[\" </div></div> </td> <td class=\\\"wsite-multicol-col\\\"> <h2 class=\\\"wsite-content-title\\\">~ physical item \",\"commissions are currently open\",\" ~</h2> </td> <td class=\\\"wsite-multicol-col\\\"> <div class=\\\"paragraph\\\">here, what is offered is the im\"]', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
