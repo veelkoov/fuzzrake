@@ -65,50 +65,65 @@ class ArtisanFields
     const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
     const CST_LAST_CHECK = 'CST_LAST_CHECK';
     const COMPLETNESS = 'COMPLETNESS';
+    const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
+    const CONTACT_METHOD = 'CONTACT_METHOD';
+    const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
+    const CONTACT_ADDRESS_OBFUSCATED = 'CONTACT_ADDRESS_OBFUSCATED';
+    const ORIGINAL_CONTACT_INFO = 'ORIGINAL_CONTACT_INFO';
     /***** "PRETTY" NAMES END *****/
 
     private const FIELDS_ARRAY_DATA = [
-        /* PRETTY_NAME           => ['model name',        'validation regexp',   is_list_field, persisted, in_json, , ] */
-        self::MAKER_ID           => ['makerId',           '#^([A-Z0-9]{7})?$#',          false, true,  true],
-        self::FORMER_MAKER_IDS   => ['formerMakerIds',    self::FORMER_MAKER_IDS_REGEXP, true,  true,  true],
-        self::NAME               => ['name',              '#^.+$#',                      false, true,  true],
-        self::FORMERLY           => ['formerly',          self::ANYTHING_REGEXP,         true,  true,  true],
-        self::INTRO              => ['intro',             self::ANYTHING_REGEXP,         false, true,  true],
-        self::SINCE              => ['since',             '#^(\d{4}-\d{2})?$#',          false, true,  true],
-        self::COUNTRY            => ['country',           '#^([A-Z]{2})?$#',             false, true,  true],
-        self::STATE              => ['state',             self::ANYTHING_REGEXP,         false, true,  true],
-        self::CITY               => ['city',              self::ANYTHING_REGEXP,         false, true,  true],
-        self::PRODUCTION_MODELS  => ['productionModels',  self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::STYLES             => ['styles',            self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::OTHER_STYLES       => ['otherStyles',       self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::ORDER_TYPES        => ['orderTypes',        self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::OTHER_ORDER_TYPES  => ['otherOrderTypes',   self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::FEATURES           => ['features',          self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::OTHER_FEATURES     => ['otherFeatures',     self::LIST_VALIDATION_REGEXP,  true,  true,  true],
-        self::PAYMENT_PLANS      => ['paymentPlans',      self::ANYTHING_REGEXP,         false, true,  true],
-        self::SPECIES_DOES       => ['speciesDoes',       self::ANYTHING_REGEXP,         false, true,  true],
-        self::SPECIES_DOESNT     => ['speciesDoesnt',     self::ANYTHING_REGEXP,         false, true,  true],
-        self::URL_FSR            => ['fursuitReviewUrl',  self::FSR_URL_REGEXP,          false, true,  true],
-        self::URL_WEBSITE        => ['websiteUrl',        self::GENERIC_URL_REGEXP,      false, true,  true],
-        self::URL_PRICES         => ['pricesUrl',         self::GENERIC_URL_REGEXP,      false, true,  true],
-        self::URL_FAQ            => ['faqUrl',            self::GENERIC_URL_REGEXP,      false, true,  true],
-        self::URL_FA             => ['furAffinityUrl',    self::FA_URL_REGEXP,           false, true,  true],
-        self::URL_DA             => ['deviantArtUrl',     self::DA_URL_REGEXP,           false, true,  true],
-        self::URL_TWITTER        => ['twitterUrl',        self::TWITTER_URL_REGEXP,      false, true,  true],
-        self::URL_FACEBOOK       => ['facebookUrl',       self::FACEBOOK_URL_REGEXP,     false, true,  true],
-        self::URL_TUMBLR         => ['tumblrUrl',         self::TUMBLR_URL_REGEXP,       false, true,  true],
-        self::URL_INSTAGRAM      => ['instagramUrl',      self::INSTAGRAM_URL_REGEXP,    false, true,  true],
-        self::URL_YOUTUBE        => ['youtubeUrl',        self::YOUTUBE_URL_REGEXP,      false, true,  true],
-        self::URL_QUEUE          => ['queueUrl',          self::GENERIC_URL_REGEXP,      false, true,  true],
-        self::URL_OTHER          => ['otherUrls',         self::ANYTHING_REGEXP,         false, true,  true],
-        self::LANGUAGES          => ['languages',         self::ANYTHING_REGEXP,         false, true,  true],
-        self::NOTES              => ['notes',             '#.*#',                        false, true,  true],
-        self::URL_CST            => ['cstUrl',            self::GENERIC_URL_REGEXP,      false, true,  true],
-        self::COMMISSIONS_STATUS => ['commissionsStatus', null,                          false, false, true],
-        self::CST_LAST_CHECK     => ['cstLastCheck',      null,                          false, false, true],
-        self::COMPLETNESS        => ['completeness',      null,                          false, false, true],
-        self::TIMESTAMP          => [null,                null,                          false, false, false],
-        self::PASSCODE           => [null,                null,                          false, false, false],
+        /*                                                                           EXPORTED IN JSON? ----------.
+         *                                                                              SHOW IN STATS? -------.  |
+         *                                                                               IS PERSISTED? ----.  |  |
+         *                                                                                    IS LIST? -.  |  |  |
+         * PRETTY_NAME                   => ['model name (artisan)',     'validation regexp',           V  V  V  V
+         */
+        self::MAKER_ID                   => ['makerId',                  '#^([A-Z0-9]{7})?$#',          0, 1, 1, 1],
+        self::FORMER_MAKER_IDS           => ['formerMakerIds',           self::FORMER_MAKER_IDS_REGEXP, 1, 1, 1, 1],
+        self::NAME                       => ['name',                     '#^.+$#',                      0, 1, 1, 1],
+        self::FORMERLY                   => ['formerly',                 self::ANYTHING_REGEXP,         1, 1, 1, 1],
+        self::INTRO                      => ['intro',                    self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::SINCE                      => ['since',                    '#^(\d{4}-\d{2})?$#',          0, 1, 1, 1],
+        self::COUNTRY                    => ['country',                  '#^([A-Z]{2})?$#',             0, 1, 1, 1],
+        self::STATE                      => ['state',                    self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::CITY                       => ['city',                     self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::PRODUCTION_MODELS          => ['productionModels',         self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::STYLES                     => ['styles',                   self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::OTHER_STYLES               => ['otherStyles',              self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::ORDER_TYPES                => ['orderTypes',               self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::OTHER_ORDER_TYPES          => ['otherOrderTypes',          self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::FEATURES                   => ['features',                 self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::OTHER_FEATURES             => ['otherFeatures',            self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
+        self::PAYMENT_PLANS              => ['paymentPlans',             self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::SPECIES_DOES               => ['speciesDoes',              self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::SPECIES_DOESNT             => ['speciesDoesnt',            self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::URL_FSR                    => ['fursuitReviewUrl',         self::FSR_URL_REGEXP,          0, 1, 1, 1],
+        self::URL_WEBSITE                => ['websiteUrl',               self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::URL_PRICES                 => ['pricesUrl',                self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::URL_FAQ                    => ['faqUrl',                   self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::URL_FA                     => ['furAffinityUrl',           self::FA_URL_REGEXP,           0, 1, 1, 1],
+        self::URL_DA                     => ['deviantArtUrl',            self::DA_URL_REGEXP,           0, 1, 1, 1],
+        self::URL_TWITTER                => ['twitterUrl',               self::TWITTER_URL_REGEXP,      0, 1, 1, 1],
+        self::URL_FACEBOOK               => ['facebookUrl',              self::FACEBOOK_URL_REGEXP,     0, 1, 1, 1],
+        self::URL_TUMBLR                 => ['tumblrUrl',                self::TUMBLR_URL_REGEXP,       0, 1, 1, 1],
+        self::URL_INSTAGRAM              => ['instagramUrl',             self::INSTAGRAM_URL_REGEXP,    0, 1, 1, 1],
+        self::URL_YOUTUBE                => ['youtubeUrl',               self::YOUTUBE_URL_REGEXP,      0, 1, 1, 1],
+        self::URL_QUEUE                  => ['queueUrl',                 self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::URL_OTHER                  => ['otherUrls',                self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::LANGUAGES                  => ['languages',                self::ANYTHING_REGEXP,         0, 1, 1, 1],
+        self::NOTES                      => ['notes',                    '#.*#',                        0, 1, 0, 1],
+        self::URL_CST                    => ['cstUrl',                   self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
+        self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
+        self::COMPLETNESS                => ['completeness',             null,                          0, 0, 0, 1],
+        self::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
+        self::ORIGINAL_CONTACT_INFO      => ['originalContactInfo',      null,                          0, 1, 0, 0],
+        self::CONTACT_METHOD             => ['contactMethod',            null,                          0, 1, 0, 0],
+        self::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      null,                          0, 1, 0, 0],
+        self::CONTACT_ADDRESS_OBFUSCATED => ['contactAddressObfuscated', null,                          0, 1, 0, 1],
+        self::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
+        self::TIMESTAMP                  => [null,                       null,                          0, 0, 0, 0],
     ];
 
     private const IU_FORM_FIELDS_ORDER = [
@@ -148,9 +163,9 @@ class ArtisanFields
         self::MAKER_ID,
         self::INTRO,
         self::NOTES,
-        self::PASSCODE, // Passcode
-        self::IGNORED_IU_FORM_FIELD, // Contact permit
-        self::IGNORED_IU_FORM_FIELD, // Contact method
+        self::PASSCODE,
+        self::CONTACT_ALLOWED,
+        self::ORIGINAL_CONTACT_INFO,
     ];
 
     private static $fields;
@@ -162,7 +177,7 @@ class ArtisanFields
 
         foreach (self::FIELDS_ARRAY_DATA as $name => $fieldData) {
             $field = new ArtisanField($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
-                self::getUiFormIndexByFieldName($name));
+                $fieldData[5], self::getUiFormIndexByFieldName($name));
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
@@ -209,6 +224,16 @@ class ArtisanFields
     {
         return array_filter(self::$fields, function (ArtisanField $field) {
             return $field->inJson();
+        });
+    }
+
+    /**
+     * @return ArtisanField[]
+     */
+    public static function inStats(): array
+    {
+        return array_filter(self::$fields, function (ArtisanField $field) {
+            return $field->inStats();
         });
     }
 

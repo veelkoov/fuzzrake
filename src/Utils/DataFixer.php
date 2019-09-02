@@ -13,11 +13,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataFixer
 {
     const REPLACEMENTS = [
-        '#’#'                 => "'",
-        '#^Rather not say$#i' => '',
-        '#^n/a$#i'            => '',
-        '#^n/a yet$#i'        => '',
-        '#[ \t]{2,}#'         => ' ',
+        '#’#'                            => "'",
+        '#^Rather not say$#i'            => '',
+        '#^n/a$#i'                       => '',
+        '#^n/a yet$#i'                   => '',
+        '#[ \t]{2,}#'                    => ' ',
+        '#^ANNOUNCEMENTS \+ FEEDBACK$#'  => 'FEEDBACK',
+        '#^ANNOUNCEMENTS \*ONLY\*$#'     => 'ANNOUNCEMENTS',
+        '#^NO \(I may join Telegram\)$#' => 'NO',
     ];
 
     const LIST_REPLACEMENTS = [
@@ -152,6 +155,8 @@ class DataFixer
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
         $artisan->setLanguages($this->fixString($artisan->getLanguages()));
 
+        $artisan->setContactAllowed($this->fixString($artisan->getContactAllowed()));
+
         if ($this->showDiff) {
             $this->differ->showDiff($originalArtisan, $artisan);
         }
@@ -162,10 +167,8 @@ class DataFixer
     public function validateArtisanData(Artisan $artisan): void
     {
         foreach (Fields::persisted() as $field) {
-            $value = $artisan->get($field->modelName());
-
-            if (!Regexp::match($field->validationRegexp(), $value)) {
-                $safeValue = Utils::strSafeForCli($value);
+            if ($field->validationRegexp() && !Regexp::match($field->validationRegexp(), $artisan->get($field))) {
+                $safeValue = Utils::strSafeForCli($artisan->get($field));
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }
