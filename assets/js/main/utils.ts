@@ -12,11 +12,19 @@ export function makeLinksOpenNewTab(linkSelector: string): void {
 
 function toDataItem(id: number, data: string | string[]): string {
     if (typeof data === 'string') {
-        return `entry.${id}=${encodeURIComponent(data)}`;
+        return data === '' ? '' : `entry.${id}=${encodeURIComponent(data)}`;
     } else {
         return data.map(item => {
             return `entry.${id}=${encodeURIComponent(item)}`
         }).join('&');
+    }
+}
+
+function transformContactAllowed(contactAllowed: string): string {
+    switch (contactAllowed) {
+        case 'FEEDBACK': return 'ANNOUNCEMENTS + FEEDBACK';
+        case 'ANNOUNCEMENTS': return 'ANNOUNCEMENTS *ONLY*';
+        default: return 'NO (I may join Telegram)';
     }
 }
 
@@ -56,10 +64,12 @@ function getArtisanGoogleFormPrefilledUrl(artisan: Artisan): string {
     dataItems.push(toDataItem(927668258, artisan.makerId));
     dataItems.push(toDataItem(1671817601, artisan.notes));
     dataItems.push(toDataItem(725071599, artisan.intro));
+    dataItems.push(toDataItem(1066294270, transformContactAllowed(artisan.contactAllowed)));
+    dataItems.push(toDataItem(1142456974, artisan.contactAddressObfuscated));
     dataItems.push('entry.1898509469=Yes, I\'m not on the list yet, or I used the update link');
 
     // TODO: Update below simultaneously with #marker-20190407-01
-    return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.join('&');
+    return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.filter(value => value !== '').join('&');
 }
 
 function getGuestGoogleFormPrefilledUrl(artisan: Artisan): string {
