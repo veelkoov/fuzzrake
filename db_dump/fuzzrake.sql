@@ -389,7 +389,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=842 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=845 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -640,6 +640,9 @@ INSERT INTO `events` VALUES (838,'2019-09-01 20:26:35', '- Updated 1 maker data 
 INSERT INTO `events` VALUES (839,'2019-09-02 06:07:40', '', 'CS_UPDTD_DETLS', 0, 1, 'Vegasyote', 'https://vegasyote.weebly.com/', '[\" </div></div> </td> <td class=\\\"wsite-multicol-col\\\"> <h2 class=\\\"wsite-content-title\\\">~ physical item \",\"commissions are currently open\",\" ~</h2> </td> <td class=\\\"wsite-multicol-col\\\"> <div class=\\\"paragraph\\\">here, what is offered is the im\"]', '');
 INSERT INTO `events` VALUES (840,'2019-09-02 18:21:33', '', 'CS_UPDTD_DETLS', NULL, 1, 'Tulius Costumes', 'https://twitter.com/Tuliusis', '[\"rcard-bio u-dir\\\" dir=\\\"ltr\\\">an idiot from finland who likes cats. furry, fursuiter and fursuit maker \",\"commission status: open\",\" prices/order sheet: https://forms.gle/ppxnczqn5kbe96kr6 …</p> <div class=\\\"profileheadercard-locatio\"]', '');
 INSERT INTO `events` VALUES (841,'2019-09-02 18:22:46', '- 1 new maker on board based on maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/b270c17fae98cfbb82cafd04b2812c32ed040092\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (842,'2019-09-03 22:28:00', '- Improved functionality around sending updates. From now on, a maker using the update link will have their contact permit and method fields pre-filled based on previous submissions (<a href=\"https://twitter.com/veelkoov/status/1169014242139398144\" target=\"_blank\">Twitter</a>, <a href=\"https://github.com/veelkoov/fuzzrake/commit/6d18574dec4a8bbe12392f8f756062d49d874a48\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (843,'2019-09-05 16:06:12', '- Updated 1 maker data based on a visitor\'s request. Thank you for your contribution! (<a href=\"https://github.com/veelkoov/fuzzrake/commit/d4e4b9a79c184ec3f2d9c5a99c31080795cbc663\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (844,'2019-09-06 18:07:55', '', 'CS_UPDTD_DETLS', NULL, 1, 'Kilcodo Costumes', 'http://www.kilcodocostumes.com/', '[\"me creations since 2008! custom costume tails and paws are always for sale in the etsy shop!fursuit \",\"commission status: open\",\" sep 6th -<wbr> 8th | </p> </div> <div> tweets by @kilcodocostumes <script>!function(d,s,id){var js,\"]', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
