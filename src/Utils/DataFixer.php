@@ -62,6 +62,11 @@ class DataFixer
         'Removable/interchangeable eyes'                             => "Removable eyes\nInterchangeable eyes",
         'Pickable Nose'                                              => 'Pickable nose',
         '(.+)changable(.+)'                                          => '$1changeable$2',
+        'Fursuit Sprays?'                                            => 'Fursuit sprays',
+        'Armsleeves, plush props, fursuit spray'                     => "Arm sleeves\nPlush props\nFursuit sprays",
+        'Body padding/plush suits'                                   => "Body padding\nPlush suits",
+        'Dry brushing'                                               => 'Drybrushing',
+        'Bendable wings and tails'                                   => "Bendable wings\nBendable tails",
         'QQQQQ'                                                      => 'QQQQQ',
     ];
 
@@ -259,12 +264,7 @@ class DataFixer
 
     private function fixNotes(string $notes): string
     {
-        $notes = $this->fixString($notes);
-        $notes = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', $notes);
-        $notes = str_replace('@', '(e)', $notes);
-        $notes = Regexp::replace('#(e-?)?mail#i', 'eeeee', $notes);
-
-        return $notes;
+        return $this->fixString($notes);
     }
 
     private function fixSince(string $input): string
