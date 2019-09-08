@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    iu_form_url:       'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform' # Inclusion/data update form
+    request_form_url:  'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform' # Guest update request form
+    feedback_form_url: 'https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform' # Feature request/bug report/feedback form
 
 services:
     # default configuration for services in *this* file

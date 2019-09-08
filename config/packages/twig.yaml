@@ -3,7 +3,7 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        # TODO: Update below simultaneously with #marker-20190407-01
-        data_form_url:     https://goo.gl/forms/95dAAq6Sa9ySUcXJ3
-        feedback_form_url: https://goo.gl/forms/2mc03Ymr5YdPX7k02
-        pma_edit_url:      http://pma/tbl_change.php?db=fuzzrake&table=artisans&clause_is_unique=1&where_clause=artisans.id%3D
+        iu_form_url:       '%iu_form_url%'
+        request_form_url:  '%request_form_url%'
+        feedback_form_url: '%feedback_form_url%'
+        pma_edit_url:      'http://pma/tbl_change.php?db=fuzzrake&table=artisans&clause_is_unique=1&where_clause=artisans.id%3D'
