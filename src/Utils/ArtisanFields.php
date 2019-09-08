@@ -124,6 +124,7 @@ class ArtisanFields
         self::CONTACT_ADDRESS_OBFUSCATED => ['contactAddressObfuscated', null,                          0, 1, 0, 1],
         self::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
         self::TIMESTAMP                  => [null,                       null,                          0, 0, 0, 0],
+        self::IGNORED_IU_FORM_FIELD      => [null,                       null,                          0, 0, 0, 0],
     ];
 
     private const IU_FORM_FIELDS_ORDER = [
@@ -244,6 +245,16 @@ class ArtisanFields
     {
         return array_filter(self::$fields, function (ArtisanField $field) {
             return $field->isList();
+        });
+    }
+
+    /**
+     * @return ArtisanField[]
+     */
+    public static function inIuForm(): array
+    {
+        return array_filter(self::$fields, function (ArtisanField $field) {
+            return in_array($field->name(), self::IU_FORM_FIELDS_ORDER);
         });
     }
 

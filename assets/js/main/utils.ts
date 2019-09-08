@@ -1,6 +1,7 @@
 'use strict';
 
 import * as $ from "jquery";
+import GoogleFormsHelper from "./GoogleFormsHelper";
 import Artisan from "./Artisan";
 
 export function makeLinksOpenNewTab(linkSelector: string): void {
@@ -10,88 +11,14 @@ export function makeLinksOpenNewTab(linkSelector: string): void {
     });
 }
 
-function toDataItem(id: number, data: string | string[]): string {
-    if (typeof data === 'string') {
-        return data === '' ? '' : `entry.${id}=${encodeURIComponent(data)}`;
-    } else {
-        return data.map(item => {
-            return `entry.${id}=${encodeURIComponent(item)}`
-        }).join('&');
-    }
-}
-
-function transformContactAllowed(contactAllowed: string): string {
-    switch (contactAllowed) {
-        case 'FEEDBACK': return 'ANNOUNCEMENTS + FEEDBACK';
-        case 'ANNOUNCEMENTS': return 'ANNOUNCEMENTS *ONLY*';
-        default: return 'NO (I may join Telegram)';
-    }
-}
-
-function getArtisanGoogleFormPrefilledUrl(artisan: Artisan): string {
-    let dataItems = [];
-
-    dataItems.push(toDataItem(646315912, artisan.name));
-    dataItems.push(toDataItem(6087327, artisan.formerly));
-    dataItems.push(toDataItem(764970912, artisan.since + '-01'));
-    dataItems.push(toDataItem(1452524703, artisan.country));
-    dataItems.push(toDataItem(355015034, artisan.state));
-    dataItems.push(toDataItem(944749751, artisan.city));
-    dataItems.push(toDataItem(743737005, artisan.paymentPlans));
-    dataItems.push(toDataItem(2034494235, artisan.pricesUrl));
-    dataItems.push(toDataItem(838362497, artisan.productionModels));
-    dataItems.push(toDataItem(129031545, artisan.styles));
-    dataItems.push(toDataItem(1324232796, artisan.otherStyles.join('\n')));
-    dataItems.push(toDataItem(1319815626, artisan.orderTypes));
-    dataItems.push(toDataItem(67316802, artisan.otherOrderTypes.join('\n')));
-    dataItems.push(toDataItem(1197078153, artisan.features));
-    dataItems.push(toDataItem(175794467, artisan.otherFeatures.join('\n')));
-    dataItems.push(toDataItem(416913125, artisan.speciesDoes));
-    dataItems.push(toDataItem(1335617718, artisan.speciesDoesnt));
-    dataItems.push(toDataItem(1291118884, artisan.fursuitReviewUrl));
-    dataItems.push(toDataItem(1753739667, artisan.websiteUrl));
-    dataItems.push(toDataItem(110608078, artisan.faqUrl));
-    dataItems.push(toDataItem(1781081038, artisan.furAffinityUrl));
-    dataItems.push(toDataItem(591054015, artisan.deviantArtUrl));
-    dataItems.push(toDataItem(151172280, artisan.twitterUrl));
-    dataItems.push(toDataItem(1965677490, artisan.facebookUrl));
-    dataItems.push(toDataItem(1209445762, artisan.tumblrUrl));
-    dataItems.push(toDataItem(696741203, artisan.instagramUrl));
-    dataItems.push(toDataItem(618562986, artisan.youtubeUrl));
-    dataItems.push(toDataItem(1355429885, artisan.cstUrl));
-    dataItems.push(toDataItem(1507707399, artisan.otherUrls));
-    dataItems.push(toDataItem(528156817, artisan.languages));
-    dataItems.push(toDataItem(927668258, artisan.makerId));
-    dataItems.push(toDataItem(1671817601, artisan.notes));
-    dataItems.push(toDataItem(725071599, artisan.intro));
-    dataItems.push(toDataItem(1066294270, transformContactAllowed(artisan.contactAllowed)));
-    dataItems.push(toDataItem(1142456974, artisan.contactAddressObfuscated));
-    dataItems.push('entry.1898509469=Yes, I\'m not on the list yet, or I used the update link');
-
-    // TODO: Update below simultaneously with #marker-20190407-01
-    return 'https://docs.google.com/forms/d/e/1FAIpQLSd4N7m7Sga67O7jzUGuvTg6ZpFcMxQ0HtsZSkCOTSgiLBRwfQ/viewform?usp=pp_url&' + dataItems.filter(value => value !== '').join('&');
-}
-
-function getGuestGoogleFormPrefilledUrl(artisan: Artisan): string {
-    // TODO: get form link form czpcz
-    return 'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform?usp=pp_url&' + toDataItem(1289735951, artisan.name);
-}
-
 export function updateUpdateRequestData(divId: string, artisan: Artisan): void {
-    $(`#${divId} .twitterUrl`).attr('href', 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent(artisan.name) + '%20(please%20describe%20details)&tw_p=tweetbutton');
-
-    $(`#${divId} .artisanGoogleFormUrl`).attr('href', getArtisanGoogleFormPrefilledUrl(artisan));
-    $(`#${divId} .guestGoogleFormUrl`).attr('href', getGuestGoogleFormPrefilledUrl(artisan));
+    $(`#${divId} .twitterUrl`).attr('href', getTwitterGuestRequestUrl(artisan));
+    $(`#${divId} .artisanGoogleFormUrl`).attr('href', GoogleFormsHelper.getMakerUpdatePrefilledUrl(artisan));
+    $(`#${divId} .guestGoogleFormUrl`).attr('href', GoogleFormsHelper.getGuestRequestPrefilledUrl(artisan));
 }
 
 export function countryFlagHtml(country: string): string {
     return country === '' ? '' : `&nbsp;<span class="flag-icon flag-icon-${country.toLowerCase()}"></span>`;
-}
-
-function pushLink(targetArray: string[], url: string, text: string, isPrimary: boolean = false): void {
-    if (url) {
-        targetArray.push(`<a href="${url}" ${isPrimary ? 'class="primary"' : ''}>${text}</a>`);
-    }
 }
 
 export function getLinks$(artisan: Artisan): JQuery<HTMLElement> {
@@ -109,4 +36,14 @@ export function getLinks$(artisan: Artisan): JQuery<HTMLElement> {
     pushLink(links, artisan.instagramUrl, '<i class="fab fa-instagram"></i> Instagram');
 
     return $(links.join(''));
+}
+
+function getTwitterGuestRequestUrl(artisan: Artisan) {
+    return 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fgetfursu.it%2F&ref_src=twsrc%5Etfw&screen_name=Veelkoov&text=Fursuit%20maker%20update%20request%3A%20' + encodeURIComponent(artisan.name) + '%20(please%20describe%20details)&tw_p=tweetbutton';
+}
+
+function pushLink(targetArray: string[], url: string, text: string, isPrimary: boolean = false): void {
+    if (url) {
+        targetArray.push(`<a href="${url}" ${isPrimary ? 'class="primary"' : ''}>${text}</a>`);
+    }
 }
