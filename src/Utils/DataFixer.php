@@ -42,7 +42,7 @@ class DataFixer
         'accessories and cleaning'                                   => 'Accessories and cleaning', // TODO
         'backpacks'                                                  => 'Backpacks',
         'claws'                                                      => 'Claws',
-        'Armsleeves'                                                 => 'Arm sleeves',
+        'Armsleeves|Arm Sleeves'                                     => 'Arm sleeves',
         'Head Bases'                                                 => 'Head bases',
         'Plushes'                                                    => 'Plushies',
         'Plushie, backpacks, bandanas, collars, general accessories' => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
