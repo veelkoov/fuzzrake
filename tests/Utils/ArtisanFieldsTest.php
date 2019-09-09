@@ -15,7 +15,7 @@ class ArtisanFieldsTest extends TestCase
 {
     const REGEXP_CONSTRUCTOR = '#constructor\((?<parameters>(?:readonly [a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si';
     const REGEXP_CONSTRUCTOR_PARAMETER = '#readonly (?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#i';
-    const REGEXP_DATA_ITEM_PUSH = '#dataItems\.push\(this\.toDataItem\(\d+, (?:this\.transform[a-z]+\()?artisan\.(?<name>[a-z]+)\)\)?\);#i';
+    const REGEXP_DATA_ITEM_PUSH = '#\s\d+: (?:this\.transform[a-z]+\()?artisan\.(?<name>[a-z]+)\)?,#i';
 
     public function testArtisanTsModel(): void
     {
