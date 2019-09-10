@@ -152,7 +152,7 @@ class DataImporter
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $protectedChanges): Artisan
     {
         foreach (Fields::persisted() as $field) {
-            if (!$field->isIncludedInUiForm()) {
+            if (!$field->inIuForm()) {
                 continue;
             }
 

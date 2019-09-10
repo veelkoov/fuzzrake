@@ -127,46 +127,51 @@ class ArtisanFields
         self::IGNORED_IU_FORM_FIELD      => [null,                       null,                          0, 0, 0, 0],
     ];
 
-    private const IU_FORM_FIELDS_ORDER = [
-        self::TIMESTAMP, // Timestamp
-        self::IGNORED_IU_FORM_FIELD, // Checkbox
-        self::NAME,
-        self::FORMERLY,
-        self::SINCE,
-        self::COUNTRY,
-        self::STATE,
-        self::CITY,
-        self::PAYMENT_PLANS,
-        self::URL_PRICES,
-        self::PRODUCTION_MODELS,
-        self::STYLES,
-        self::OTHER_STYLES,
-        self::ORDER_TYPES,
-        self::OTHER_ORDER_TYPES,
-        self::FEATURES,
-        self::OTHER_FEATURES,
-        self::SPECIES_DOES,
-        self::SPECIES_DOESNT,
-        self::URL_FSR,
-        self::URL_WEBSITE,
-        self::URL_FAQ,
-        self::URL_QUEUE,
-        self::URL_FA,
-        self::URL_DA,
-        self::URL_TWITTER,
-        self::URL_FACEBOOK,
-        self::URL_TUMBLR,
-        self::URL_INSTAGRAM,
-        self::URL_YOUTUBE,
-        self::URL_OTHER,
-        self::URL_CST,
-        self::LANGUAGES,
-        self::MAKER_ID,
-        self::INTRO,
-        self::NOTES,
-        self::PASSCODE,
-        self::CONTACT_ALLOWED,
-        self::ORIGINAL_CONTACT_INFO,
+    /* Information kept:
+     * 1. What fields are read from the IU form
+     * 2. In which ORDER are they in the IU form
+     * 3. What regexp can be used to match the field's title in the form
+     */
+    private const IU_FORM_FIELDS_ORDERED = [
+        self::TIMESTAMP             => null, // Timestamp
+        self::IGNORED_IU_FORM_FIELD => '#update#', // Checkbox
+        self::NAME                  => '#Studio/maker\'s name#i',
+        self::FORMERLY              => '#Formerly known as#i',
+        self::SINCE                 => '#Since when are you crafting#i',
+        self::COUNTRY               => '#What country is your studio located in#i',
+        self::STATE                 => '#If your studio is in US or Canada, what state is it in#i',
+        self::CITY                  => '#What city is your studio located in#i',
+        self::PAYMENT_PLANS         => '#What payment plans do you support#i',
+        self::URL_PRICES            => '#Link to a webpage with the prices list#i',
+        self::PRODUCTION_MODELS     => '#What do you do#i',
+        self::STYLES                => '#What styles do you manufacture#i',
+        self::OTHER_STYLES          => '#Any other styles#i',
+        self::ORDER_TYPES           => '#What kind of fursuits/items do you sell#i',
+        self::OTHER_ORDER_TYPES     => '#Any other kinds/items#i',
+        self::FEATURES              => '#What features do you support#i',
+        self::OTHER_FEATURES        => '#Any other features#i',
+        self::SPECIES_DOES          => '#What species do you craft or are you willing to do#i',
+        self::SPECIES_DOESNT        => '#Any species you will NOT do#i',
+        self::URL_FSR               => '#fursuitreview#i',
+        self::URL_WEBSITE           => '#regular website#i',
+        self::URL_FAQ               => '#FAQ#i',
+        self::URL_QUEUE             => '#queue/progress#i',
+        self::URL_FA                => '#FurAffinity#i',
+        self::URL_DA                => '#DeviantArt#i',
+        self::URL_TWITTER           => '#Twitter#i',
+        self::URL_FACEBOOK          => '#Facebook#i',
+        self::URL_TUMBLR            => '#Tumblr#i',
+        self::URL_INSTAGRAM         => '#Instagram#i',
+        self::URL_YOUTUBE           => '#YouTube#i',
+        self::URL_OTHER             => '#other websites/accounts#i',
+        self::URL_CST               => '#commissions status#i',
+        self::LANGUAGES             => '#languages#i',
+        self::MAKER_ID              => '#Maker ID#i',
+        self::INTRO                 => '#intro#i',
+        self::NOTES                 => '#notes#i',
+        self::PASSCODE              => null,
+        self::CONTACT_ALLOWED       => '#Permit to contact#i',
+        self::ORIGINAL_CONTACT_INFO => '#How can I contact you#i', // FIXME: virtual
     ];
 
     private static $fields;
@@ -178,7 +183,7 @@ class ArtisanFields
 
         foreach (self::FIELDS_ARRAY_DATA as $name => $fieldData) {
             $field = new ArtisanField($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
-                $fieldData[5], self::getUiFormIndexByFieldName($name));
+                $fieldData[5], self::getUiFormIndexByFieldName($name), self::IU_FORM_FIELDS_ORDERED[$name] ?? null);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
@@ -254,13 +259,13 @@ class ArtisanFields
     public static function inIuForm(): array
     {
         return array_filter(self::$fields, function (ArtisanField $field) {
-            return in_array($field->name(), self::IU_FORM_FIELDS_ORDER);
+            return array_key_exists($field->name(), self::IU_FORM_FIELDS_ORDERED);
         });
     }
 
     private static function getUiFormIndexByFieldName(string $fieldName): ?int
     {
-        $result = array_search($fieldName, self::IU_FORM_FIELDS_ORDER, true);
+        $result = array_search($fieldName, array_keys(self::IU_FORM_FIELDS_ORDERED), true);
 
         return false === $result ? null : $result;
     }

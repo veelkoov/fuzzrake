@@ -46,8 +46,13 @@ class ArtisanField
      */
     private $inStats;
 
+    /**
+     * @var string|null
+     */
+    private $iuFormRegexp;
+
     public function __construct(string $name, ?string $modelName, ?string $validationRegexp, int $isList,
-        int $isPersisted, int $inStats, int $inJson, ?int $uiFormIndex)
+        int $isPersisted, int $inStats, int $inJson, ?int $uiFormIndex, ?string $iuFormRegexp)
     {
         $this->name = $name;
         $this->modelName = $modelName;
@@ -57,6 +62,7 @@ class ArtisanField
         $this->inJson = (bool) $inJson;
         $this->inStats = (bool) $inStats;
         $this->uiFormIndex = $uiFormIndex;
+        $this->iuFormRegexp = $iuFormRegexp;
     }
 
     public function name(): string
@@ -99,8 +105,13 @@ class ArtisanField
         return $this->uiFormIndex;
     }
 
-    public function isIncludedInUiForm(): bool
+    public function inIuForm(): bool
     {
         return null !== $this->uiFormIndex;
+    }
+
+    public function iuFormRegexp(): ?string
+    {
+        return $this->iuFormRegexp;
     }
 }

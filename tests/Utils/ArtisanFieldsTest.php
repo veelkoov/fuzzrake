@@ -53,7 +53,7 @@ class ArtisanFieldsTest extends TestCase
             $field = ArtisanFields::getByModelName($modelName);
 
             $name = (ArtisanFields::CONTACT_ADDRESS_OBFUSCATED === $field->name()) // TODO: Find a better way
-                ? ArtisanFields::ORIGINAL_CONTACT_INFO : $field->name();
+                ? ArtisanFields::ORIGINAL_CONTACT_INFO : $field->name(); // FIXME: virtual
 
             $this->assertArrayHasKey($name, $fieldsInForm);
 

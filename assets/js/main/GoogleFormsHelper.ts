@@ -43,7 +43,7 @@ export default class GoogleFormsHelper {
             1671817601: artisan.notes,
             725071599: artisan.intro,
             1066294270: this.transformContactAllowed(artisan.contactAllowed),
-            1142456974: artisan.contactAddressObfuscated,
+            1142456974: artisan.contactAddressObfuscated, // FIXME: virtual
             1898509469: 'Yes, I\'m not on the list yet, or I used the update link',
         };
 
