@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\ArtisanFields;
+use App\Utils\ArtisanFields as Fields;
 use App\Utils\Regexp\Utils;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +25,7 @@ class ArtisanFieldsTest extends TestCase
 
         $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
 
-        $fieldsInJson = ArtisanFields::inJson();
+        $fieldsInJson = Fields::inJson();
 
         foreach ($parMatches[0] as $idx => $_) {
             $field = array_shift($fieldsInJson);
@@ -44,15 +44,11 @@ class ArtisanFieldsTest extends TestCase
 
         $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $modelSource, $matches));
 
-        $fieldsInForm = ArtisanFields::inIuForm();
-        unset($fieldsInForm[ArtisanFields::IGNORED_IU_FORM_FIELD]);
-        unset($fieldsInForm[ArtisanFields::PASSCODE]);
-        unset($fieldsInForm[ArtisanFields::TIMESTAMP]);
+        $fieldsInForm = Fields::exportedToIuForm();
 
         foreach ($matches['name'] as $modelName) {
-            $field = ArtisanFields::getByModelName($modelName);
-
-            $name = $field->is(ArtisanFields::CONTACT_ADDRESS_OBFUSCATED) ? ArtisanFields::CONTACT_INPUT_VIRTUAL : $field->name();
+            $field = Fields::getByModelName($modelName);
+            $name = $field->is(Fields::CONTACT_ADDRESS_OBFUSCATED) ? Fields::CONTACT_INPUT_VIRTUAL : $field->name();
 
             $this->assertArrayHasKey($name, $fieldsInForm);
 

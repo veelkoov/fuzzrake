@@ -151,16 +151,12 @@ class DataImporter
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $protectedChanges): Artisan
     {
-        foreach (Fields::inIuForm() as $field) {
+        foreach (Fields::importedFromIuForm() as $field) {
             if ($protectedChanges && $field->is(Fields::PASSCODE)) {
                 continue;
             }
 
             switch ($field->name()) {
-                case Fields::IGNORED_IU_FORM_FIELD:
-                case Fields::TIMESTAMP:
-                    break;
-
                 case Fields::MAKER_ID:
                     $newValue = $source->get($field);
 
@@ -181,7 +177,6 @@ class DataImporter
                     break;
 
                 default:
-
                     $artisan->set($field, $source->get($field));
             }
         }

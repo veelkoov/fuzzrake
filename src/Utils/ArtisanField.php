@@ -51,8 +51,19 @@ class ArtisanField
      */
     private $iuFormRegexp;
 
-    public function __construct(string $name, ?string $modelName, ?string $validationRegexp, int $isList,
-        int $isPersisted, int $inStats, int $inJson, ?int $uiFormIndex, ?string $iuFormRegexp)
+    /**
+     * @var bool
+     */
+    private $importFromIuForm;
+
+    /**
+     * @var bool
+     */
+    private $exportToIuForm;
+
+    public function __construct(string $name, ?string $modelName, ?string $validationRegexp,
+        int $isList, int $isPersisted, int $inStats, int $inJson,
+        ?int $uiFormIndex, ?string $iuFormRegexp, bool $importFromIuForm, bool $exportToIuForm)
     {
         $this->name = $name;
         $this->modelName = $modelName;
@@ -63,6 +74,8 @@ class ArtisanField
         $this->inStats = (bool) $inStats;
         $this->uiFormIndex = $uiFormIndex;
         $this->iuFormRegexp = $iuFormRegexp;
+        $this->importFromIuForm = $importFromIuForm;
+        $this->exportToIuForm = $exportToIuForm;
     }
 
     public function name(): string
@@ -118,5 +131,15 @@ class ArtisanField
     public function is(string $name): bool
     {
         return $this->name === $name;
+    }
+
+    public function importFromIuForm(): bool
+    {
+        return $this->importFromIuForm;
+    }
+
+    public function exportToIuForm(): bool
+    {
+        return $this->exportToIuForm;
     }
 }

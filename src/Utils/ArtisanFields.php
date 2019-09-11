@@ -135,45 +135,49 @@ class ArtisanFields
      * 3. What regexp can be used to match the field's title in the form
      */
     private const IU_FORM_FIELDS_ORDERED = [
-        self::TIMESTAMP             => null, // Timestamp
-        self::IGNORED_IU_FORM_FIELD => '#update#', // Checkbox
-        self::NAME                  => '#Studio/maker\'s name#i',
-        self::FORMERLY              => '#Formerly known as#i',
-        self::SINCE                 => '#Since when are you crafting#i',
-        self::COUNTRY               => '#What country is your studio located in#i',
-        self::STATE                 => '#If your studio is in US or Canada, what state is it in#i',
-        self::CITY                  => '#What city is your studio located in#i',
-        self::PAYMENT_PLANS         => '#What payment plans do you support#i',
-        self::URL_PRICES            => '#Link to a webpage with the prices list#i',
-        self::PRODUCTION_MODELS     => '#What do you do#i',
-        self::STYLES                => '#What styles do you manufacture#i',
-        self::OTHER_STYLES          => '#Any other styles#i',
-        self::ORDER_TYPES           => '#What kind of fursuits/items do you sell#i',
-        self::OTHER_ORDER_TYPES     => '#Any other kinds/items#i',
-        self::FEATURES              => '#What features do you support#i',
-        self::OTHER_FEATURES        => '#Any other features#i',
-        self::SPECIES_DOES          => '#What species do you craft or are you willing to do#i',
-        self::SPECIES_DOESNT        => '#Any species you will NOT do#i',
-        self::URL_FSR               => '#fursuitreview#i',
-        self::URL_WEBSITE           => '#regular website#i',
-        self::URL_FAQ               => '#FAQ#i',
-        self::URL_QUEUE             => '#queue/progress#i',
-        self::URL_FA                => '#FurAffinity#i',
-        self::URL_DA                => '#DeviantArt#i',
-        self::URL_TWITTER           => '#Twitter#i',
-        self::URL_FACEBOOK          => '#Facebook#i',
-        self::URL_TUMBLR            => '#Tumblr#i',
-        self::URL_INSTAGRAM         => '#Instagram#i',
-        self::URL_YOUTUBE           => '#YouTube#i',
-        self::URL_OTHER             => '#other websites/accounts#i',
-        self::URL_CST               => '#commissions status#i',
-        self::LANGUAGES             => '#languages#i',
-        self::MAKER_ID              => '#Maker ID#i',
-        self::INTRO                 => '#intro#i',
-        self::NOTES                 => '#notes#i',
-        self::PASSCODE              => null,
-        self::CONTACT_ALLOWED       => '#Permit to contact#i',
-        self::CONTACT_INPUT_VIRTUAL => '#How can I contact you#i',
+        /*                                                EXPORT TO I/U FORM ----.
+         *                                              IMPORT FROM I/U FORM -.  |
+         * PRETTY_NAME              => ['regexp 4 name in form'               V  V
+         */
+        self::TIMESTAMP             => [null,                                 0, 0],
+        self::IGNORED_IU_FORM_FIELD => ['#update#',                           0, 0],
+        self::NAME                  => ['#studio/maker\'s name#i',            1, 1],
+        self::FORMERLY              => ['#formerly#i',                        1, 1],
+        self::SINCE                 => ['#since when#i',                      1, 1],
+        self::COUNTRY               => ['#country#i',                         1, 1],
+        self::STATE                 => ['#what state is it in#i',             1, 1],
+        self::CITY                  => ['#city#i',                            1, 1],
+        self::PAYMENT_PLANS         => ['#payment plans#i',                   1, 1],
+        self::URL_PRICES            => ['#prices list#i',                     1, 1],
+        self::PRODUCTION_MODELS     => ['#What do you do#i',                  1, 1],
+        self::STYLES                => ['#What styles#i',                     1, 1],
+        self::OTHER_STYLES          => ['#Any other styles#i',                1, 1],
+        self::ORDER_TYPES           => ['#What kind of#i',                    1, 1],
+        self::OTHER_ORDER_TYPES     => ['#Any other kinds/items#i',           1, 1],
+        self::FEATURES              => ['#What features#i',                   1, 1],
+        self::OTHER_FEATURES        => ['#Any other features#i',              1, 1],
+        self::SPECIES_DOES          => ['#What species#i',                    1, 1],
+        self::SPECIES_DOESNT        => ['#species you will NOT#i',            1, 1],
+        self::URL_FSR               => ['#fursuitreview#i',                   1, 1],
+        self::URL_WEBSITE           => ['#regular website#i',                 1, 1],
+        self::URL_FAQ               => ['#FAQ#i',                             1, 1],
+        self::URL_QUEUE             => ['#queue/progress#i',                  1, 1],
+        self::URL_FA                => ['#FurAffinity#i',                     1, 1],
+        self::URL_DA                => ['#DeviantArt#i',                      1, 1],
+        self::URL_TWITTER           => ['#Twitter#i',                         1, 1],
+        self::URL_FACEBOOK          => ['#Facebook#i',                        1, 1],
+        self::URL_TUMBLR            => ['#Tumblr#i',                          1, 1],
+        self::URL_INSTAGRAM         => ['#Instagram#i',                       1, 1],
+        self::URL_YOUTUBE           => ['#YouTube#i',                         1, 1],
+        self::URL_OTHER             => ['#other websites#i',                  1, 1],
+        self::URL_CST               => ['#commissions status#i',              1, 1],
+        self::LANGUAGES             => ['#languages#i',                       1, 1],
+        self::MAKER_ID              => ['#Maker ID#i',                        1, 1],
+        self::INTRO                 => ['#intro#i',                           1, 1],
+        self::NOTES                 => ['#notes#i',                           1, 1],
+        self::PASSCODE              => ['#passcode#i',                        1, 0],
+        self::CONTACT_ALLOWED       => ['#Permit to contact#i',               1, 1],
+        self::CONTACT_INPUT_VIRTUAL => ['#How can I contact#i',               1, 1],
     ];
 
     private static $fields;
@@ -184,8 +188,13 @@ class ArtisanFields
         self::$fields = [];
 
         foreach (self::FIELDS_ARRAY_DATA as $name => $fieldData) {
+            $uiFormIndex = self::getUiFormIndexByFieldName($name);
+            $iuFormRegexp = self::IU_FORM_FIELDS_ORDERED[$name][0] ?? null;
+            $importFromIuForm = (bool) (self::IU_FORM_FIELDS_ORDERED[$name][1] ?? false);
+            $exportFromIuForm = (bool) (self::IU_FORM_FIELDS_ORDERED[$name][2] ?? false);
+
             $field = new ArtisanField($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
-                $fieldData[5], self::getUiFormIndexByFieldName($name), self::IU_FORM_FIELDS_ORDERED[$name] ?? null);
+                $fieldData[5], $uiFormIndex, $iuFormRegexp, $importFromIuForm, $exportFromIuForm);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
@@ -261,7 +270,27 @@ class ArtisanFields
     public static function inIuForm(): array
     {
         return array_filter(self::$fields, function (ArtisanField $field) {
-            return array_key_exists($field->name(), self::IU_FORM_FIELDS_ORDERED);
+            return $field->inIuForm();
+        });
+    }
+
+    /**
+     * @return ArtisanField[]
+     */
+    public static function exportedToIuForm(): array
+    {
+        return array_filter(self::$fields, function (ArtisanField $field) {
+            return $field->exportToIuForm();
+        });
+    }
+
+    /**
+     * @return ArtisanField[]
+     */
+    public static function importedFromIuForm(): array
+    {
+        return array_filter(self::$fields, function (ArtisanField $field) {
+            return $field->importFromIuForm();
         });
     }
 
