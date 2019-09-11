@@ -114,4 +114,9 @@ class ArtisanField
     {
         return $this->iuFormRegexp;
     }
+
+    public function is(string $name): bool
+    {
+        return $this->name === $name;
+    }
 }

@@ -778,6 +778,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function get(ArtisanField $field)
     {
+        if ($field->is(ArtisanFields::CONTACT_INPUT_VIRTUAL)) {
+            return $this->getOriginalContactInfo();
+        }
+
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $getter)) {

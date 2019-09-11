@@ -70,6 +70,7 @@ class ArtisanFields
     const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
     const CONTACT_ADDRESS_OBFUSCATED = 'CONTACT_ADDRESS_OBFUSCATED';
     const ORIGINAL_CONTACT_INFO = 'ORIGINAL_CONTACT_INFO';
+    const CONTACT_INPUT_VIRTUAL = 'CONTACT_INPUT_VIRTUAL';
     /***** "PRETTY" NAMES END *****/
 
     private const FIELDS_ARRAY_DATA = [
@@ -125,6 +126,7 @@ class ArtisanFields
         self::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
         self::TIMESTAMP                  => [null,                       null,                          0, 0, 0, 0],
         self::IGNORED_IU_FORM_FIELD      => [null,                       null,                          0, 0, 0, 0],
+        self::CONTACT_INPUT_VIRTUAL      => [null,                       null,                          0, 0, 0, 0],
     ];
 
     /* Information kept:
@@ -171,7 +173,7 @@ class ArtisanFields
         self::NOTES                 => '#notes#i',
         self::PASSCODE              => null,
         self::CONTACT_ALLOWED       => '#Permit to contact#i',
-        self::ORIGINAL_CONTACT_INFO => '#How can I contact you#i', // FIXME: virtual
+        self::CONTACT_INPUT_VIRTUAL => '#How can I contact you#i',
     ];
 
     private static $fields;
