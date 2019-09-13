@@ -213,9 +213,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $contactMethod = '';
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(name="contact_address_obfuscated", type="string", length=128) // TODO: rename
      */
-    private $contactAddressObfuscated = '';
+    private $contactInfoObfuscated = '';
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
@@ -828,14 +828,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getContactAddressObfuscated(): string
+    public function getContactInfoObfuscated(): string
     {
-        return $this->contactAddressObfuscated;
+        return $this->contactInfoObfuscated;
     }
 
-    public function setContactAddressObfuscated(string $contactAddressObfuscated): self
+    public function setContactInfoObfuscated(string $contactInfoObfuscated): self
     {
-        $this->contactAddressObfuscated = $contactAddressObfuscated;
+        $this->contactInfoObfuscated = $contactInfoObfuscated;
 
         return $this;
     }

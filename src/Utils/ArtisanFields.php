@@ -68,8 +68,8 @@ class ArtisanFields
     const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
     const CONTACT_METHOD = 'CONTACT_METHOD';
     const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
-    const CONTACT_ADDRESS_OBFUSCATED = 'CONTACT_ADDRESS_OBFUSCATED';
-    const ORIGINAL_CONTACT_INFO = 'ORIGINAL_CONTACT_INFO';
+    const CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
+    const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
     const CONTACT_INPUT_VIRTUAL = 'CONTACT_INPUT_VIRTUAL';
     /***** "PRETTY" NAMES END *****/
 
@@ -119,10 +119,10 @@ class ArtisanFields
         self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
         self::COMPLETNESS                => ['completeness',             null,                          0, 0, 0, 1],
         self::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
-        self::ORIGINAL_CONTACT_INFO      => ['originalContactInfo',      null,                          0, 1, 0, 0],
         self::CONTACT_METHOD             => ['contactMethod',            null,                          0, 1, 0, 0],
         self::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      null,                          0, 1, 0, 0],
-        self::CONTACT_ADDRESS_OBFUSCATED => ['contactAddressObfuscated', null,                          0, 1, 0, 1],
+        self::CONTACT_INFO_ORIGINAL      => ['contactInfoOriginal',      null,                          0, 1, 0, 0],
+        self::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    null,                          0, 1, 0, 1],
         self::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
         self::TIMESTAMP                  => [null,                       null,                          0, 0, 0, 0],
         self::IGNORED_IU_FORM_FIELD      => [null,                       null,                          0, 0, 0, 0],

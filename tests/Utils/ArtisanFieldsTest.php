@@ -48,7 +48,7 @@ class ArtisanFieldsTest extends TestCase
 
         foreach ($matches['name'] as $modelName) {
             $field = Fields::getByModelName($modelName);
-            $name = $field->is(Fields::CONTACT_ADDRESS_OBFUSCATED) ? Fields::CONTACT_INPUT_VIRTUAL : $field->name();
+            $name = $field->is(Fields::CONTACT_INFO_OBFUSCATED) ? Fields::CONTACT_INPUT_VIRTUAL : $field->name();
 
             $this->assertArrayHasKey($name, $fieldsInForm);
 

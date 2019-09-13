@@ -169,7 +169,7 @@ class DataImporter
                 case Fields::CONTACT_INPUT_VIRTUAL:
                     $newValue = $source->get($field);
 
-                    if ($newValue === $artisan->getContactAddressObfuscated()) {
+                    if ($newValue === $artisan->getContactInfoObfuscated()) {
                         break; // No updates
                     }
 

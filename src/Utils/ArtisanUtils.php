@@ -31,7 +31,7 @@ class ArtisanUtils
         }
 
         $artisan->setContactMethod($method)
-            ->setContactAddressObfuscated($obfuscated)
+            ->setContactInfoObfuscated($obfuscated)
             ->getPrivateData()
             ->setOriginalContactInfo($newOriginalContactValue)
             ->setContactAddress($address);
