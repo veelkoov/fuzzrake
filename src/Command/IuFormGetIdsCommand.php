@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Service\WebpageSnapshotManager;
+use App\Utils\ArtisanField;
 use App\Utils\ArtisanFields as Fields;
 use App\Utils\GoogleForms\Form;
 use App\Utils\GoogleForms\Item;
@@ -19,11 +22,13 @@ use Symfony\Component\DomCrawler\Crawler;
 class IuFormGetIdsCommand extends Command
 {
     protected static $defaultName = 'app:iu-form:get-ids';
+    private static $gfHelperFilePath = __DIR__.'/../../assets/js/main/GoogleFormsHelper.ts';
 
     /**
      * @var string
      */
     private $iuFormUrl;
+
     /**
      * @var WebpageSnapshotManager
      */
@@ -70,6 +75,7 @@ class IuFormGetIdsCommand extends Command
             return 1;
         }
 
+        $helperFileContents = file_get_contents(self::$gfHelperFilePath);
         $form = new Form($data);
 
         $questionsLeftToMatch = array_filter($form->getItems(), function (Item $item) {
@@ -101,10 +107,16 @@ class IuFormGetIdsCommand extends Command
                     $field = Fields::get(Fields::CONTACT_INFO_OBFUSCATED);
                 }
 
-                $io->writeln(($field->modelName() ?? $question->getOnlyAnswer()->getOnlyOption()->getName()).' '.$question->getOnlyAnswer()->getId());
+                if ($field->modelName()) {
+                    $helperFileContents = $this->updateFieldId($helperFileContents, $field, $question->getOnlyAnswer()->getId());
+                } else {
+                    $io->warning('To be updated manually: '.$question->getOnlyAnswer()->getOnlyOption()->getName().' '.$question->getOnlyAnswer()->getId());
+                }
             }
 
             unset($questionsLeftToMatch[$question->getIndex()]);
+
+            file_put_contents(self::$gfHelperFilePath, $helperFileContents);
         }
 
         if (!empty($questionsLeftToMatch)) {
@@ -114,5 +126,11 @@ class IuFormGetIdsCommand extends Command
         }
 
         return 0;
+    }
+
+    private function updateFieldId(string $helperFileContents, ArtisanField $field, int $newId): string
+    {
+        return Regexp::replace('#(?<=\s)\d+(: (?:this\.transform[a-z]+\(?)?artisan\.'.preg_quote($field->modelName()).'\)?,)#i',
+            $newId.'$1', $helperFileContents);
     }
 }
