@@ -390,7 +390,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1060 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -646,60 +646,17 @@ INSERT INTO `events` VALUES (843,'2019-09-05 16:06:12', '- Updated 1 maker data 
 INSERT INTO `events` VALUES (844,'2019-09-06 18:07:55', '', 'CS_UPDTD_DETLS', NULL, 1, 'Kilcodo Costumes', 'http://www.kilcodocostumes.com/', '[\"me creations since 2008! custom costume tails and paws are always for sale in the etsy shop!fursuit \",\"commission status: open\",\" sep 6th -<wbr> 8th | </p> </div> <div> tweets by @kilcodocostumes <script>!function(d,s,id){var js,\"]', '');
 INSERT INTO `events` VALUES (845,'2019-09-07 18:08:07', '', 'CS_UPDTD_DETLS', 0, NULL, 'Dynamic Cats Studio | DynamiCatStudio', 'https://dynamicatstudio.com/', '', '');
 INSERT INTO `events` VALUES (893,'2019-09-08 06:11:52', '', 'CS_UPDTD_DETLS', NULL, 0, 'Dragon Soup', 'https://dragon-soup.squarespace.com/commissions', '', '[\"sqs-block-html\\\" id=\\\"block-b06e7b2dbc528fda0a00\\\"><div class=\\\"sqs-block-content\\\"><h1>applications for \",\"commissions are closed\",\"</h1><p class=\\\"\\\">STUDIO_NAME is currently closed for project applications. slots for smaller items, \"]');
-INSERT INTO `events` VALUES (949,'2019-09-09 06:07:56', '', 'CS_UPDTD_DETLS', 0, NULL, 'Furry Factory', 'http://www.furaffinity.net/user/furry-factory/#profile', '', '');
-INSERT INTO `events` VALUES (950,'2019-09-09 06:08:01', '', 'CS_UPDTD_DETLS', 0, NULL, 'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/', '', '');
-INSERT INTO `events` VALUES (951,'2019-09-09 06:08:06', '', 'CS_UPDTD_DETLS', 1, NULL, 'TunnySaysIDK', 'http://www.furaffinity.net/user/TunnySaysIDK', '', '');
-INSERT INTO `events` VALUES (952,'2019-09-09 06:08:11', '', 'CS_UPDTD_DETLS', 0, NULL, 'Battitude Studios', 'http://www.furaffinity.net/user/battitudestudios', '', '');
-INSERT INTO `events` VALUES (953,'2019-09-09 06:08:17', '', 'CS_UPDTD_DETLS', 0, NULL, 'ClockworkCarousel', 'http://www.furaffinity.net/user/clockworkcarousel/', '', '');
-INSERT INTO `events` VALUES (954,'2019-09-09 06:08:22', '', 'CS_UPDTD_DETLS', 0, NULL, 'Taffka', 'http://www.furaffinity.net/user/taffka/', '', '');
-INSERT INTO `events` VALUES (955,'2019-09-09 06:08:27', '', 'CS_UPDTD_DETLS', 0, NULL, 'Sugar rush creations', 'http://www.furaffinity.net/user/sugarrushcreations', '', '');
-INSERT INTO `events` VALUES (956,'2019-09-09 06:08:32', '', 'CS_UPDTD_DETLS', 0, NULL, 'TheKareliaFursuits', 'http://www.furaffinity.net/user/thekareliafursuits/', '', '');
-INSERT INTO `events` VALUES (957,'2019-09-09 06:08:38', '', 'CS_UPDTD_DETLS', 0, NULL, 'BrekWolf', 'http://www.furaffinity.net/user/brekwolf/', '', '');
-INSERT INTO `events` VALUES (958,'2019-09-09 06:08:43', '', 'CS_UPDTD_DETLS', 1, NULL, 'Seriously Badass Costumes | Art Slave', 'http://www.furaffinity.net/user/artslave/', '', '');
-INSERT INTO `events` VALUES (959,'2019-09-09 06:08:48', '', 'CS_UPDTD_DETLS', 1, NULL, 'Delicious Disguises', 'http://www.furaffinity.net/user/DeliciousDisguises', '', '');
-INSERT INTO `events` VALUES (960,'2019-09-09 06:08:53', '', 'CS_UPDTD_DETLS', 0, NULL, 'FuzzyBat Fursuits | FarisBatwan', 'http://www.furaffinity.net/user/farisbatwan/', '', '');
-INSERT INTO `events` VALUES (961,'2019-09-09 06:08:58', '', 'CS_UPDTD_DETLS', 0, NULL, 'Furfancy Costumes', 'http://www.furaffinity.net/user/furfancycostumes', '', '');
-INSERT INTO `events` VALUES (962,'2019-09-09 06:09:04', '', 'CS_UPDTD_DETLS', 0, NULL, 'Fursuit Creations', 'http://www.furaffinity.net/user/fursuitcreations/', '', '');
-INSERT INTO `events` VALUES (963,'2019-09-09 06:09:09', '', 'CS_UPDTD_DETLS', 1, NULL, 'Fur The Win Studios', 'http://www.furaffinity.net/user/furthewinstudio', '', '');
 INSERT INTO `events` VALUES (964,'2019-09-09 06:09:09', '', 'CS_UPDTD_DETLS', 1, 0, 'Kilcodo Costumes', 'http://www.kilcodocostumes.com/', '', '[\"me creations since 2008! custom costume tails and paws are always for sale in the etsy shop!fursuit \",\"commission status: closed\",\" | </p> </div> <div> tweets by @kilcodocostumes <script>!function(d,s,id){var js,fjs=d.getelementsby\"]');
-INSERT INTO `events` VALUES (965,'2019-09-09 06:09:14', '', 'CS_UPDTD_DETLS', 0, NULL, 'LunoVulpes', 'http://www.furaffinity.net/user/lunovulpes/', '', '');
-INSERT INTO `events` VALUES (966,'2019-09-09 06:09:19', '', 'CS_UPDTD_DETLS', 1, NULL, 'One Fur All Studios', 'http://www.furaffinity.net/user/onefurall', '', '');
-INSERT INTO `events` VALUES (967,'2019-09-09 06:09:25', '', 'CS_UPDTD_DETLS', 0, NULL, 'Sushinom Suits', 'http://www.furaffinity.net/user/sushinomsuits/', '', '');
-INSERT INTO `events` VALUES (968,'2019-09-09 06:09:30', '', 'CS_UPDTD_DETLS', 0, NULL, 'Paciulo Fursuits', 'http://www.furaffinity.net/user/paciulofursuits', '', '');
-INSERT INTO `events` VALUES (969,'2019-09-09 06:09:35', '', 'CS_UPDTD_DETLS', 0, NULL, 'DexterousZombie', 'http://www.furaffinity.net/user/dexterouszombie/', '', '');
-INSERT INTO `events` VALUES (970,'2019-09-09 06:09:40', '', 'CS_UPDTD_DETLS', 1, NULL, 'Nevask', 'http://www.furaffinity.net/user/nevask/', '', '');
-INSERT INTO `events` VALUES (971,'2019-09-09 06:09:46', '', 'CS_UPDTD_DETLS', 0, NULL, 'iSqueakeyPinky', 'http://www.furaffinity.net/user/isqueakypinky/', '', '');
-INSERT INTO `events` VALUES (972,'2019-09-09 06:09:51', '', 'CS_UPDTD_DETLS', 0, NULL, 'Toffeee', 'http://www.furaffinity.net/user/toffeee/', '', '');
-INSERT INTO `events` VALUES (973,'2019-09-09 06:09:56', '', 'CS_UPDTD_DETLS', 0, NULL, 'Shagpoke Studios', 'http://www.furaffinity.net/user/shagpoke/', '', '');
-INSERT INTO `events` VALUES (974,'2019-09-09 06:10:01', '', 'CS_UPDTD_DETLS', 1, NULL, 'Lupe Suits', 'http://www.furaffinity.net/user/lazylupe/', '', '');
-INSERT INTO `events` VALUES (975,'2019-09-09 06:10:06', '', 'CS_UPDTD_DETLS', 1, NULL, 'dragon-x2', 'http://www.furaffinity.net/user/dragon-x2/', '', '');
-INSERT INTO `events` VALUES (976,'2019-09-09 06:10:12', '', 'CS_UPDTD_DETLS', 0, NULL, 'Rhee', 'http://www.furaffinity.net/user/rhee/', '', '');
-INSERT INTO `events` VALUES (977,'2019-09-09 06:10:17', '', 'CS_UPDTD_DETLS', 0, NULL, 'Fursuit Parade', 'http://www.furaffinity.net/user/theroyalbanana/#profile', '', '');
-INSERT INTO `events` VALUES (978,'2019-09-09 06:10:22', '', 'CS_UPDTD_DETLS', 1, NULL, 'FurDelicious', 'http://www.furaffinity.net/user/FurDelicious', '', '');
-INSERT INTO `events` VALUES (979,'2019-09-09 06:10:28', '', 'CS_UPDTD_DETLS', 1, NULL, 'Lightbringer Creations', 'http://www.furaffinity.net/user/-narrow-', '', '');
-INSERT INTO `events` VALUES (980,'2019-09-09 06:10:33', '', 'CS_UPDTD_DETLS', 0, NULL, 'Fire-Wolf Studio', 'http://www.furaffinity.net/journal/7337932/', '', '');
-INSERT INTO `events` VALUES (981,'2019-09-09 06:10:38', '', 'CS_UPDTD_DETLS', 0, NULL, 'Snow Gryphon Suits', 'http://www.furaffinity.net/user/snowgryphonsuits', '', '');
-INSERT INTO `events` VALUES (982,'2019-09-09 06:10:43', '', 'CS_UPDTD_DETLS', 0, NULL, 'R5', 'http://www.furaffinity.net/user/r5suits', '', '');
-INSERT INTO `events` VALUES (983,'2019-09-09 06:10:49', '', 'CS_UPDTD_DETLS', 0, NULL, 'Sammy\'s Fur Shoppe', 'http://www.furaffinity.net/user/samthemoose101/', '', '');
 INSERT INTO `events` VALUES (984,'2019-09-09 06:10:49', '', 'CS_UPDTD_DETLS', 0, 1, 'DarkRainbowDragon', 'https://darkrainbowdragon.weebly.com/commission-status.html', '[\"en reference sheet: allways open pixel art: allwys open traditional art: allways open figures: open \",\"fursuit: open\",\"   only for one slot now  (please check my telegram and...\\\" /> <meta property=\\\"og:image\\\" content=\\\"ht\"]', '');
-INSERT INTO `events` VALUES (985,'2019-09-09 06:10:54', '', 'CS_UPDTD_DETLS', 0, NULL, 'Lizard King Designs', 'http://www.furaffinity.net/user/lizardkingdesigns#profile', '', '');
-INSERT INTO `events` VALUES (986,'2019-09-09 06:11:05', '', 'CS_UPDTD_DETLS', 0, NULL, 'DrakonicKnight', 'http://www.furaffinity.net/journal/695912/', '', '');
-INSERT INTO `events` VALUES (987,'2019-09-09 06:11:10', '', 'CS_UPDTD_DETLS', 0, NULL, 'Creatury', 'http://www.furaffinity.net/user/creatury', '', '');
-INSERT INTO `events` VALUES (988,'2019-09-09 06:11:15', '', 'CS_UPDTD_DETLS', 1, NULL, 'MissRaptor', 'http://www.furaffinity.net/user/missraptor', '', '');
 INSERT INTO `events` VALUES (989,'2019-09-09 06:11:21', '', 'CS_UPDTD_DETLS', 1, NULL, 'Fionka Fursuits', 'http://www.furaffinity.net/user/fionkafursuits#profile', '', '');
-INSERT INTO `events` VALUES (990,'2019-09-09 06:11:26', '', 'CS_UPDTD_DETLS', 0, NULL, 'BeautyoftheBass Creations', 'http://www.furaffinity.net/user/beautyofthebass', '', '');
-INSERT INTO `events` VALUES (991,'2019-09-09 06:11:36', '', 'CS_UPDTD_DETLS', 1, NULL, 'Kitty Fluff', 'http://www.furaffinity.net/user/kittyfluff', '', '');
-INSERT INTO `events` VALUES (992,'2019-09-09 06:11:42', '', 'CS_UPDTD_DETLS', 1, NULL, 'Windy Suits', 'http://www.furaffinity.net/user/windyfursuits', '', '');
-INSERT INTO `events` VALUES (993,'2019-09-09 06:11:47', '', 'CS_UPDTD_DETLS', 1, NULL, 'Queen of Yeen', 'http://www.furaffinity.net/user/hyenaclaw', '', '');
-INSERT INTO `events` VALUES (994,'2019-09-09 06:11:52', '', 'CS_UPDTD_DETLS', 1, NULL, 'Feely\'s Den', 'https://www.furaffinity.net/user/feely/', '', '');
-INSERT INTO `events` VALUES (995,'2019-09-09 06:11:57', '', 'CS_UPDTD_DETLS', 1, NULL, 'Flowercity Fursuits', 'http://www.furaffinity.net/user/flowercityfursuits', '', '');
-INSERT INTO `events` VALUES (996,'2019-09-09 06:12:02', '', 'CS_UPDTD_DETLS', 1, NULL, 'Monster Cult Makers', 'http://www.furaffinity.net/user/kalorian/#profile', '', '');
-INSERT INTO `events` VALUES (997,'2019-09-09 06:12:08', '', 'CS_UPDTD_DETLS', 0, NULL, 'Furry Machine Workshop', 'https://www.furaffinity.net/user/furrymachine/', '', '');
-INSERT INTO `events` VALUES (998,'2019-09-09 06:12:13', '', 'CS_UPDTD_DETLS', 1, NULL, 'FFC Fursuits', 'http://www.furaffinity.net/user/ffc', '', '');
-INSERT INTO `events` VALUES (999,'2019-09-09 06:12:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'FurtasticStudios', 'http://www.furaffinity.net/user/furtasticstudios#profile', '', '');
-INSERT INTO `events` VALUES (1000,'2019-09-09 06:12:24', '', 'CS_UPDTD_DETLS', 0, NULL, 'Twitchin\' Whiskers', 'http://www.furaffinity.net/user/twitchinwhiskers/', '', '');
 INSERT INTO `events` VALUES (1001,'2019-09-09 06:12:24', '', 'CS_UPDTD_DETLS', 0, 1, 'Kabber Creations', 'https://twitter.com/KabberCreations', '[\"r\\\" dir=\\\"ltr\\\"> @kabbercreations </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">oregon, usa | \",\"commissions open\",\" | quotes always open | personal: <s>@</s>mckabber</p> <div class=\\\"profileheadercard-location u-hidd\"]', '');
-INSERT INTO `events` VALUES (1002,'2019-09-09 06:12:29', '', 'CS_UPDTD_DETLS', 0, NULL, 'ElkCraft', 'http://www.furaffinity.net/user/elkcraft', '', '');
+INSERT INTO `events` VALUES (1003,'2019-09-09 19:28:28', '- 1 new maker on board based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/7d7d051eb9bc66062fe9bd3584cc921ae3d4b3b4\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (1004,'2019-09-09 19:50:01', '', 'CS_UPDTD_DETLS', NULL, 1, 'That One Pink Dog Studios', 'http://cassmutt.weebly.com/fursuit-prices', '[\"/div> <div><div></div> <hr class=\\\"styled-hr\\\"></hr> <div></div></div> <div class=\\\"paragraph\\\">fursuit \",\"commission status: open\",\"go here to fill out a quote form for fursuit work! if you are seeking artwork, go to the art prices \"]', '');
+INSERT INTO `events` VALUES (1005,'2019-09-10 18:07:56', '', 'CS_UPDTD_DETLS', 1, 0, 'Nuke Creations', 'https://nukecreations.com/ordering/', '', '[\"div> <div class=\\\"sqs-slice\\\" data-slice-id=\\\"5c58328d15fcc09e6fd1012a\\\"><h1 id=\\\"sqs-slash-page-header\\\">\",\"commissions are closed\",\"</h1> </div> <div class=\\\"sqs-slice\\\" data-slice-id=\\\"5c58328d15fcc09e6fd1012b\\\"><p>subscribe to get ear\"]');
+INSERT INTO `events` VALUES (1006,'2019-09-11 18:10:50', '', 'CS_UPDTD_DETLS', 1, 0, 'DarkRainbowDragon', 'https://darkrainbowdragon.weebly.com/commission-status.html', '', '[\"en reference sheet: allways open pixel art: allwys open traditional art: allways open figures: open \",\"fursuit: closed\",\"  (please check my telegram and discrod channel for opening...\\\" /> <meta property=\\\"og:image\\\" content\"]');
+INSERT INTO `events` VALUES (1007,'2019-09-12 06:10:32', '', 'CS_UPDTD_DETLS', 0, NULL, 'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '');
+INSERT INTO `events` VALUES (1046,'2019-09-12 18:07:50', '', 'CS_UPDTD_DETLS', NULL, 0, 'Fionka Fursuits', 'http://www.furaffinity.net/user/fionkafursuits#profile', '', '[\"mar 31st, 2019 01:02 current mood: cheerful artist profile: welcome! i´m fursuit maker from europe. \",\"commission: closed\",\"! opening: ??? suit styles: full digitigrade half suit (head + handpaws + tail + legs/pants + feetpa\"]');
+INSERT INTO `events` VALUES (1055,'2019-09-12 18:07:50', '', 'CS_UPDTD_DETLS', 1, 0, 'Goldenpaw Studio', 'https://twitter.com/GoldenpawStudio', '', '[\"lineblock u-dir\\\" dir=\\\"ltr\\\"> @goldenpawstudio </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">\",\"quotes and commissions are closed\",\" until 2020 fursuit maker, doodler, creator stay tuned for many updates as i progress! http://golden\"]');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -711,7 +668,7 @@ CREATE TABLE `artisans_commissions_statues` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_4148D9A35ED3C7B7` (`artisan_id`),
   CONSTRAINT `FK_4148D9A35ED3C7B7` FOREIGN KEY (`artisan_id`) REFERENCES `artisans` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=313 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=314 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
