@@ -140,7 +140,7 @@ class ArtisanFields
          * PRETTY_NAME              => ['regexp 4 name in form'               V  V
          */
         self::TIMESTAMP             => [null,                                 0, 0],
-        self::IGNORED_IU_FORM_FIELD => ['#update#',                           0, 0],
+        self::IGNORED_IU_FORM_FIELD => ['#update#',                           0, 1],
         self::NAME                  => ['#studio/maker\'s name#i',            1, 1],
         self::FORMERLY              => ['#formerly#i',                        1, 1],
         self::SINCE                 => ['#since when#i',                      1, 1],

@@ -95,15 +95,20 @@ class IuFormGetIdsCommand extends Command
             }
 
             $question = array_pop($matches);
-//            if (Fields::PASSCODE !== $field->name()) {
-            echo($field->modelName() ?? $question->getOnlyAnswer()->getOnlyOption()->getName()).' '.$question->getOnlyAnswer()->getId()."\n";
-//            }
+
+            if ($field->exportToIuForm()) {
+                if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
+                    $field = Fields::get(Fields::CONTACT_INFO_OBFUSCATED);
+                }
+
+                $io->writeln(($field->modelName() ?? $question->getOnlyAnswer()->getOnlyOption()->getName()).' '.$question->getOnlyAnswer()->getId());
+            }
 
             unset($questionsLeftToMatch[$question->getIndex()]);
         }
 
         if (!empty($questionsLeftToMatch)) {
-            $io->error('Failed to match the following questions: '.join(', ', $questionsLeftToMatch));
+            $io->error("Didn't match the following questions: ".join(', ', $questionsLeftToMatch));
 
             return 1;
         }

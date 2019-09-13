@@ -49,7 +49,7 @@ class Item
         $this->type = $data[3];
 
         foreach ($data[4] ?? [] as $answerData) {
-            $this->answers[] = new Answer($answerData);
+            $this->answers[] = new Answer($answerData, $this);
         }
     }
 

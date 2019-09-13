@@ -21,7 +21,12 @@ class Answer
      */
     private $required;
 
-    public function __construct(array $data)
+    /**
+     * @var Item
+     */
+    private $parent;
+
+    public function __construct(array $data, Item $parent)
     {
         $this->id = $data[0];
 
@@ -31,6 +36,8 @@ class Answer
 
         $this->required = (bool) $data[2]; // int?
         // 3... - unknown
+
+        $this->parent = $parent;
     }
 
     public function getId(): int
@@ -49,7 +56,8 @@ class Answer
     public function getOnlyOption(): Option
     {
         if (1 !== count($this->options)) {
-            throw new GoogleFormsRuntimeException('This item does not have exactly one option');
+            throw new GoogleFormsRuntimeException('This answer for item "'.$this->parent->getName()
+                .'" does not have exactly one option, but '.count($this->options).': '.implode(', ', $this->options));
         }
 
         return $this->options[0];
