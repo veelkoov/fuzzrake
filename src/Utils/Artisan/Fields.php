@@ -5,23 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\Artisan;
 
 use InvalidArgumentException;
+use App\Utils\Artisan\ValidationRegexps as VR;
 
 class Fields
 {
-    private const GENERIC_URL_REGEXP = '#^(https?://[^/]+/.*)?$#'; // TODO: improve
-    private const DA_URL_REGEXP = '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#';
-    private const FACEBOOK_URL_REGEXP = '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#';
-    private const FSR_URL_REGEXP = '#^(http://fursuitreview.com/maker/[^/]+/)?$#';
-    private const FA_URL_REGEXP = '#^(http://www\.furaffinity\.net/user/[^/]+)?$#';
-    private const YOUTUBE_URL_REGEXP = '#^(https://www\.youtube\.com/(channel|user|c)/[^/?]+)?$#';
-    private const INSTAGRAM_URL_REGEXP = '#^(https://www\.instagram\.com/[^/]+/)?$#';
-    private const TUMBLR_URL_REGEXP = '#^(https?://[^.]+\.tumblr\.com/)?$#';
-    private const TWITTER_URL_REGEXP = '#^(https://twitter\.com/[^/]+)?$#';
-
-    private const LIST_VALIDATION_REGEXP = '#^[-,&!.A-Za-z0-9+()/\n %:"\']*$#';
-    private const FORMER_MAKER_IDS_REGEXP = '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#';
-    private const ANYTHING_REGEXP = '#^.*$#s';
-
     /***** "PRETTY" NAMES START *****/
     const TIMESTAMP = 'TIMESTAMP';
     const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
@@ -53,7 +40,7 @@ class Fields
     const URL_TUMBLR = 'URL_TUMBLR';
     const URL_INSTAGRAM = 'URL_INSTAGRAM';
     const URL_YOUTUBE = 'URL_YOUTUBE';
-    const URL_OTHER = 'URL_OTHER';
+    const URLS_OTHER = 'URLS_OTHER';
     const URL_CST = 'URL_CST';
     const LANGUAGES = 'LANGUAGES';
     const MAKER_ID = 'MAKER_ID';
@@ -79,41 +66,41 @@ class Fields
          *                                                                                    IS LIST? -.  |  |  |
          * PRETTY_NAME                   => ['model name (artisan)',     'validation regexp',           V  V  V  V
          */
-        self::MAKER_ID                   => ['makerId',                  '#^([A-Z0-9]{7})?$#',          0, 1, 1, 1],
-        self::FORMER_MAKER_IDS           => ['formerMakerIds',           self::FORMER_MAKER_IDS_REGEXP, 1, 1, 1, 1],
-        self::NAME                       => ['name',                     '#^.+$#',                      0, 1, 1, 1],
-        self::FORMERLY                   => ['formerly',                 self::ANYTHING_REGEXP,         1, 1, 1, 1],
-        self::INTRO                      => ['intro',                    self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::SINCE                      => ['since',                    '#^(\d{4}-\d{2})?$#',          0, 1, 1, 1],
-        self::COUNTRY                    => ['country',                  '#^([A-Z]{2})?$#',             0, 1, 1, 1],
-        self::STATE                      => ['state',                    self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::CITY                       => ['city',                     self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::PRODUCTION_MODELS          => ['productionModels',         self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::STYLES                     => ['styles',                   self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::OTHER_STYLES               => ['otherStyles',              self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::ORDER_TYPES                => ['orderTypes',               self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::OTHER_ORDER_TYPES          => ['otherOrderTypes',          self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::FEATURES                   => ['features',                 self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::OTHER_FEATURES             => ['otherFeatures',            self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::PAYMENT_PLANS              => ['paymentPlans',             self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::SPECIES_DOES               => ['speciesDoes',              self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::SPECIES_DOESNT             => ['speciesDoesnt',            self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::URL_FSR                    => ['fursuitReviewUrl',         self::FSR_URL_REGEXP,          0, 1, 1, 1],
-        self::URL_WEBSITE                => ['websiteUrl',               self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_PRICES                 => ['pricesUrl',                self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_FAQ                    => ['faqUrl',                   self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_FA                     => ['furAffinityUrl',           self::FA_URL_REGEXP,           0, 1, 1, 1],
-        self::URL_DA                     => ['deviantArtUrl',            self::DA_URL_REGEXP,           0, 1, 1, 1],
-        self::URL_TWITTER                => ['twitterUrl',               self::TWITTER_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_FACEBOOK               => ['facebookUrl',              self::FACEBOOK_URL_REGEXP,     0, 1, 1, 1],
-        self::URL_TUMBLR                 => ['tumblrUrl',                self::TUMBLR_URL_REGEXP,       0, 1, 1, 1],
-        self::URL_INSTAGRAM              => ['instagramUrl',             self::INSTAGRAM_URL_REGEXP,    0, 1, 1, 1],
-        self::URL_YOUTUBE                => ['youtubeUrl',               self::YOUTUBE_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_QUEUE                  => ['queueUrl',                 self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_OTHER                  => ['otherUrls',                self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::LANGUAGES                  => ['languages',                self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::NOTES                      => ['notes',                    '#.*#',                        0, 1, 0, 1],
-        self::URL_CST                    => ['cstUrl',                   self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::MAKER_ID                   => ['makerId',                  VR::MAKER_ID,                  0, 1, 1, 1],
+        self::FORMER_MAKER_IDS           => ['formerMakerIds',           VR::FORMER_MAKER_IDS,          1, 1, 1, 1],
+        self::NAME                       => ['name',                     VR::NON_EMPTY,                 0, 1, 1, 1],
+        self::FORMERLY                   => ['formerly',                 VR::ANYTHING,                  1, 1, 1, 1],
+        self::INTRO                      => ['intro',                    VR::ANYTHING,                  0, 1, 1, 1],
+        self::SINCE                      => ['since',                    VR::SINCE,                     0, 1, 1, 1],
+        self::COUNTRY                    => ['country',                  VR::COUNTRY,                   0, 1, 1, 1],
+        self::STATE                      => ['state',                    VR::ANYTHING,                  0, 1, 1, 1],
+        self::CITY                       => ['city',                     VR::ANYTHING,                  0, 1, 1, 1],
+        self::PRODUCTION_MODELS          => ['productionModels',         VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::STYLES                     => ['styles',                   VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::OTHER_STYLES               => ['otherStyles',              VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::ORDER_TYPES                => ['orderTypes',               VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::OTHER_ORDER_TYPES          => ['otherOrderTypes',          VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::FEATURES                   => ['features',                 VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::OTHER_FEATURES             => ['otherFeatures',            VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::PAYMENT_PLANS              => ['paymentPlans',             VR::ANYTHING,                  0, 1, 1, 1],
+        self::SPECIES_DOES               => ['speciesDoes',              VR::ANYTHING,                  0, 1, 1, 1],
+        self::SPECIES_DOESNT             => ['speciesDoesnt',            VR::ANYTHING,                  0, 1, 1, 1],
+        self::URL_FSR                    => ['fursuitReviewUrl',         VR::FSR_URL,                   0, 1, 1, 1],
+        self::URL_WEBSITE                => ['websiteUrl',               VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_PRICES                 => ['pricesUrl',                VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_FAQ                    => ['faqUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_FA                     => ['furAffinityUrl',           VR::FA_URL,                    0, 1, 1, 1],
+        self::URL_DA                     => ['deviantArtUrl',            VR::DA_URL,                    0, 1, 1, 1],
+        self::URL_TWITTER                => ['twitterUrl',               VR::TWITTER_URL,               0, 1, 1, 1],
+        self::URL_FACEBOOK               => ['facebookUrl',              VR::FACEBOOK_URL,              0, 1, 1, 1],
+        self::URL_TUMBLR                 => ['tumblrUrl',                VR::TUMBLR_URL,                0, 1, 1, 1],
+        self::URL_INSTAGRAM              => ['instagramUrl',             VR::INSTAGRAM_URL,             0, 1, 1, 1],
+        self::URL_YOUTUBE                => ['youtubeUrl',               VR::YOUTUBE_URL,               0, 1, 1, 1],
+        self::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URLS_OTHER                 => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
+        self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  0, 1, 1, 1],
+        self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
+        self::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         self::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
         self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
         self::COMPLETNESS                => ['completeness',             null,                          0, 0, 0, 1],
@@ -163,7 +150,7 @@ class Fields
         self::URL_TUMBLR            => ['#Tumblr#i',                          1, 1],
         self::URL_INSTAGRAM         => ['#Instagram#i',                       1, 1],
         self::URL_YOUTUBE           => ['#YouTube#i',                         1, 1],
-        self::URL_OTHER             => ['#other websites#i',                  1, 1],
+        self::URLS_OTHER            => ['#other websites#i',                  1, 1],
         self::URL_CST               => ['#commissions status#i',              1, 1],
         self::LANGUAGES             => ['#languages#i',                       1, 1],
         self::MAKER_ID              => ['#Maker ID#i',                        1, 1],
