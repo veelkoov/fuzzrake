@@ -799,6 +799,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function set(ArtisanField $field, $newValue): self
     {
+        if ($field->is(ArtisanFields::CONTACT_INPUT_VIRTUAL)) {
+            $this->setContactInfoOriginal($newValue);
+
+            return $this;
+        }
+
         $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $setter)) {
@@ -813,7 +819,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function get(ArtisanField $field)
     {
         if ($field->is(ArtisanFields::CONTACT_INPUT_VIRTUAL)) {
-            return $this->getOriginalContactInfo();
+            return $this->getContactInfoOriginal();
         }
 
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
@@ -928,14 +934,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getPrivateData()->getPasscode();
     }
 
-    public function getOriginalContactInfo(): string
+    public function getContactInfoOriginal(): string
     {
         return $this->getPrivateData()->getOriginalContactInfo();
     }
 
-    public function setOriginalContactInfo(string $originalContactInfo): self
+    public function setContactInfoOriginal(string $contactInfoOriginal): self
     {
-        $this->getPrivateData()->setOriginalContactInfo($originalContactInfo);
+        $this->getPrivateData()->setOriginalContactInfo($contactInfoOriginal);
 
         return $this;
     }
