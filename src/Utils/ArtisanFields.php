@@ -128,11 +128,6 @@ class ArtisanFields
         self::CONTACT_INPUT_VIRTUAL      => [null,                       null,                          0, 0, 0, 0],
     ];
 
-    /* Information kept:
-     * 1. What fields are read from the IU form
-     * 2. In which ORDER are they in the IU form
-     * 3. What regexp can be used to match the field's title in the form
-     */
     private const IU_FORM_FIELDS_ORDERED = [
         /*                                                EXPORT TO I/U FORM ----.
          *                                              IMPORT FROM I/U FORM -.  |
