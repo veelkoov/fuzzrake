@@ -39,7 +39,7 @@ class DateTimeUtils
         try {
             return new DateTime($time, self::getUtc());
         } catch (Exception $e) {
-            throw new DateTimeException($e);
+            throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
 

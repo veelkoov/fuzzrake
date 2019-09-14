@@ -183,6 +183,16 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $queueUrl;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $scritchesUrl;
+
+    /**
+     * @ORM\Column(type="string", length=2048)
+     */
+    private $scritchesPhotosUrls;
+
+    /**
      * @ORM\Column(type="string", length=1023)
      */
     private $otherUrls;
@@ -215,7 +225,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @ORM\Column(type="string", length=128)
      */
-    private $contactAddressObfuscated = '';
+    private $contactInfoObfuscated = '';
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
@@ -681,6 +691,30 @@ class Artisan implements JsonSerializable, FieldReadInterface
         $this->otherUrls = $otherUrls;
     }
 
+    public function getScritchesUrl(): string
+    {
+        return $this->scritchesUrl;
+    }
+
+    public function setScritchesUrl(string $scritchesUrl): self
+    {
+        $this->scritchesUrl = $scritchesUrl;
+
+        return $this;
+    }
+
+    public function getScritchesPhotosUrls(): string
+    {
+        return $this->scritchesPhotosUrls;
+    }
+
+    public function setScritchesPhotosUrls(string $scritchesPhotosUrls): self
+    {
+        $this->scritchesPhotosUrls = $scritchesPhotosUrls;
+
+        return $this;
+    }
+
     /**
      * @return mixed
      */
@@ -778,6 +812,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function get(ArtisanField $field)
     {
+        if ($field->is(ArtisanFields::CONTACT_INPUT_VIRTUAL)) {
+            return $this->getOriginalContactInfo();
+        }
+
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $getter)) {
@@ -824,14 +862,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getContactAddressObfuscated(): string
+    public function getContactInfoObfuscated(): string
     {
-        return $this->contactAddressObfuscated;
+        return $this->contactInfoObfuscated;
     }
 
-    public function setContactAddressObfuscated(string $contactAddressObfuscated): self
+    public function setContactInfoObfuscated(string $contactInfoObfuscated): self
     {
-        $this->contactAddressObfuscated = $contactAddressObfuscated;
+        $this->contactInfoObfuscated = $contactInfoObfuscated;
 
         return $this;
     }

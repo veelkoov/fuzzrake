@@ -151,41 +151,33 @@ class DataImporter
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $protectedChanges): Artisan
     {
-        foreach (Fields::persisted() as $field) {
-            if (!$field->isIncludedInUiForm()) {
+        foreach (Fields::importedFromIuForm() as $field) {
+            if ($protectedChanges && $field->is(Fields::PASSCODE)) {
                 continue;
             }
-
-            if ($protectedChanges && Fields::PASSCODE === $field->name()) {
-                continue;
-            }
-
-            $newValue = $source->get($field);
 
             switch ($field->name()) {
                 case Fields::MAKER_ID:
+                    $newValue = $source->get($field);
+
                     if ($newValue !== $artisan->getMakerId()) {
                         $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
                         $artisan->setMakerId($newValue);
                     }
                     break;
 
-                case Fields::ORIGINAL_CONTACT_INFO:
-                    if ($newValue === $artisan->getContactAddressObfuscated()) {
+                case Fields::CONTACT_INPUT_VIRTUAL:
+                    $newValue = $source->get($field);
+
+                    if ($newValue === $artisan->getContactInfoObfuscated()) {
                         break; // No updates
                     }
 
                     ArtisanUtils::updateContact($artisan, $newValue);
                     break;
 
-                case Fields::CONTACT_ADDRESS_PLAIN:
-                case Fields::CONTACT_ADDRESS_OBFUSCATED:
-                case Fields::CONTACT_METHOD:
-                    // Updated with original contact info above
-                    break;
-
                 default:
-                    $artisan->set($field, $newValue);
+                    $artisan->set($field, $source->get($field));
             }
         }
 

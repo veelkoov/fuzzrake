@@ -40,7 +40,7 @@ export default class Artisan {
                 readonly cstLastCheck: string,
                 readonly completeness: number,
                 readonly contactAllowed: string,
-                readonly contactAddressObfuscated: string,
+                readonly contactInfoObfuscated: string,
     ) {
     }
 }

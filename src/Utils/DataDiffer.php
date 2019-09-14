@@ -133,7 +133,7 @@ class DataDiffer
 
     private function skipImpValue(string $fieldName): bool
     {
-        return in_array($fieldName, [ArtisanFields::CONTACT_ALLOWED, ArtisanFields::CONTACT_METHOD, ArtisanFields::CONTACT_ADDRESS_OBFUSCATED]);
+        return in_array($fieldName, [ArtisanFields::CONTACT_ALLOWED, ArtisanFields::CONTACT_METHOD, ArtisanFields::CONTACT_INFO_OBFUSCATED]);
     }
 
     private function skipFixCommand(string $fieldName): bool
@@ -141,7 +141,7 @@ class DataDiffer
         return in_array($fieldName, [
             ArtisanFields::CONTACT_ALLOWED,
             ArtisanFields::CONTACT_METHOD,
-            ArtisanFields::CONTACT_ADDRESS_OBFUSCATED,
+            ArtisanFields::CONTACT_INFO_OBFUSCATED,
             ArtisanFields::CONTACT_ADDRESS_PLAIN,
         ]);
     }

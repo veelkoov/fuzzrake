@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\ArtisanFields;
+use App\Utils\ArtisanFields as Fields;
 use App\Utils\Regexp\Utils;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class ArtisanFieldsTest extends TestCase
 {
     const REGEXP_CONSTRUCTOR = '#constructor\((?<parameters>(?:readonly [a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si';
     const REGEXP_CONSTRUCTOR_PARAMETER = '#readonly (?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#i';
-    const REGEXP_DATA_ITEM_PUSH = '#dataItems\.push\(this\.toDataItem\(\d+, (?:this\.transform[a-z]+\()?artisan\.(?<name>[a-z]+)\)\)?\);#i';
+    const REGEXP_DATA_ITEM_PUSH = '#\s\d+: (?:this\.transform[a-z]+\()?artisan\.(?<name>[a-z]+)\)?,#i';
 
     public function testArtisanTsModel(): void
     {
@@ -25,7 +25,7 @@ class ArtisanFieldsTest extends TestCase
 
         $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
 
-        $fieldsInJson = ArtisanFields::inJson();
+        $fieldsInJson = Fields::inJson();
 
         foreach ($parMatches[0] as $idx => $_) {
             $field = array_shift($fieldsInJson);
@@ -44,22 +44,18 @@ class ArtisanFieldsTest extends TestCase
 
         $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $modelSource, $matches));
 
-        $fieldsInForm = ArtisanFields::inIuForm();
-        unset($fieldsInForm[ArtisanFields::IGNORED_IU_FORM_FIELD]);
-        unset($fieldsInForm[ArtisanFields::PASSCODE]);
-        unset($fieldsInForm[ArtisanFields::TIMESTAMP]);
+        $fieldsInForm = Fields::exportedToIuForm();
+        unset($fieldsInForm[Fields::VALIDATION_CHECKBOX]);
 
         foreach ($matches['name'] as $modelName) {
-            $field = ArtisanFields::getByModelName($modelName);
-
-            $name = (ArtisanFields::CONTACT_ADDRESS_OBFUSCATED === $field->name()) // TODO: Find a better way
-                ? ArtisanFields::ORIGINAL_CONTACT_INFO : $field->name();
+            $field = Fields::getByModelName($modelName);
+            $name = $field->is(Fields::CONTACT_INFO_OBFUSCATED) ? Fields::CONTACT_INPUT_VIRTUAL : $field->name();
 
             $this->assertArrayHasKey($name, $fieldsInForm);
 
             unset($fieldsInForm[$name]);
         }
 
-        $this->assertEmpty($fieldsInForm);
+        $this->assertEmpty($fieldsInForm, 'Fields left to be matched: '.join($fieldsInForm));
     }
 }
