@@ -183,6 +183,16 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $queueUrl;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $scritchesUrl;
+
+    /**
+     * @ORM\Column(type="string", length=2048)
+     */
+    private $scritchesPhotosUrls;
+
+    /**
      * @ORM\Column(type="string", length=1023)
      */
     private $otherUrls;
@@ -213,7 +223,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $contactMethod = '';
 
     /**
-     * @ORM\Column(name="contact_address_obfuscated", type="string", length=128) // TODO: rename
+     * @ORM\Column(type="string", length=128)
      */
     private $contactInfoObfuscated = '';
 
@@ -679,6 +689,30 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setOtherUrls($otherUrls): void
     {
         $this->otherUrls = $otherUrls;
+    }
+
+    public function getScritchesUrl(): string
+    {
+        return $this->scritchesUrl;
+    }
+
+    public function setScritchesUrl(string $scritchesUrl): self
+    {
+        $this->scritchesUrl = $scritchesUrl;
+
+        return $this;
+    }
+
+    public function getScritchesPhotosUrls(): string
+    {
+        return $this->scritchesPhotosUrls;
+    }
+
+    public function setScritchesPhotosUrls(string $scritchesPhotosUrls): self
+    {
+        $this->scritchesPhotosUrls = $scritchesPhotosUrls;
+
+        return $this;
     }
 
     /**
