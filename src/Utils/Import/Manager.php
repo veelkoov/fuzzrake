@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use App\Entity\Artisan;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Fields;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
-use App\Utils\Utils;
+use App\Utils\StrUtils;
 use DateTime;
 
 class Manager
@@ -177,8 +177,8 @@ class Manager
             default:
                 $fieldName = $buffer->readUntil(':');
                 $delimiter = $buffer->readUntil(':');
-                $wrongValue = Utils::undoStrSafeForCli($buffer->readUntil($delimiter));
-                $correctedValue = Utils::undoStrSafeForCli($buffer->readUntil($delimiter));
+                $wrongValue = StrUtils::undoStrSafeForCli($buffer->readUntil($delimiter));
+                $correctedValue = StrUtils::undoStrSafeForCli($buffer->readUntil($delimiter));
 
                 $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
                     $command, $wrongValue, $correctedValue));

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Fields;
 use App\Utils\Regexp\Utils as Regexp;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -173,7 +173,7 @@ class DataFixer
     {
         foreach (Fields::persisted() as $field) {
             if ($field->validationRegexp() && !Regexp::match($field->validationRegexp(), $artisan->get($field))) {
-                $safeValue = Utils::strSafeForCli($artisan->get($field));
+                $safeValue = StrUtils::strSafeForCli($artisan->get($field));
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }

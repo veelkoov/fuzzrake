@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanFields;
+use App\Utils\Artisan\Fields;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
 use Doctrine\ORM\NonUniqueResultException;
@@ -190,7 +190,7 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach (ArtisanFields::inStats() as $field) {
+        foreach (Fields::inStats() as $field) {
             $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
                 return $carry + ('' !== $artisan->get($field) ? 1 : 0);
             }, 0);

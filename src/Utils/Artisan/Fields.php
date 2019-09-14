@@ -2,26 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Artisan;
 
 use InvalidArgumentException;
+use App\Utils\Artisan\ValidationRegexps as VR;
 
-class ArtisanFields
+class Fields
 {
-    private const GENERIC_URL_REGEXP = '#^(https?://[^/]+/.*)?$#'; // TODO: improve
-    private const DA_URL_REGEXP = '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#';
-    private const FACEBOOK_URL_REGEXP = '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#';
-    private const FSR_URL_REGEXP = '#^(http://fursuitreview.com/maker/[^/]+/)?$#';
-    private const FA_URL_REGEXP = '#^(http://www\.furaffinity\.net/user/[^/]+)?$#';
-    private const YOUTUBE_URL_REGEXP = '#^(https://www\.youtube\.com/(channel|user|c)/[^/?]+)?$#';
-    private const INSTAGRAM_URL_REGEXP = '#^(https://www\.instagram\.com/[^/]+/)?$#';
-    private const TUMBLR_URL_REGEXP = '#^(https?://[^.]+\.tumblr\.com/)?$#';
-    private const TWITTER_URL_REGEXP = '#^(https://twitter\.com/[^/]+)?$#';
-
-    private const LIST_VALIDATION_REGEXP = '#^[-,&!.A-Za-z0-9+()/\n %:"\']*$#';
-    private const FORMER_MAKER_IDS_REGEXP = '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#';
-    private const ANYTHING_REGEXP = '#^.*$#s';
-
     /***** "PRETTY" NAMES START *****/
     const TIMESTAMP = 'TIMESTAMP';
     const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
@@ -53,7 +40,7 @@ class ArtisanFields
     const URL_TUMBLR = 'URL_TUMBLR';
     const URL_INSTAGRAM = 'URL_INSTAGRAM';
     const URL_YOUTUBE = 'URL_YOUTUBE';
-    const URL_OTHER = 'URL_OTHER';
+    const URLS_OTHER = 'URLS_OTHER';
     const URL_CST = 'URL_CST';
     const LANGUAGES = 'LANGUAGES';
     const MAKER_ID = 'MAKER_ID';
@@ -79,41 +66,41 @@ class ArtisanFields
          *                                                                                    IS LIST? -.  |  |  |
          * PRETTY_NAME                   => ['model name (artisan)',     'validation regexp',           V  V  V  V
          */
-        self::MAKER_ID                   => ['makerId',                  '#^([A-Z0-9]{7})?$#',          0, 1, 1, 1],
-        self::FORMER_MAKER_IDS           => ['formerMakerIds',           self::FORMER_MAKER_IDS_REGEXP, 1, 1, 1, 1],
-        self::NAME                       => ['name',                     '#^.+$#',                      0, 1, 1, 1],
-        self::FORMERLY                   => ['formerly',                 self::ANYTHING_REGEXP,         1, 1, 1, 1],
-        self::INTRO                      => ['intro',                    self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::SINCE                      => ['since',                    '#^(\d{4}-\d{2})?$#',          0, 1, 1, 1],
-        self::COUNTRY                    => ['country',                  '#^([A-Z]{2})?$#',             0, 1, 1, 1],
-        self::STATE                      => ['state',                    self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::CITY                       => ['city',                     self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::PRODUCTION_MODELS          => ['productionModels',         self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::STYLES                     => ['styles',                   self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::OTHER_STYLES               => ['otherStyles',              self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::ORDER_TYPES                => ['orderTypes',               self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::OTHER_ORDER_TYPES          => ['otherOrderTypes',          self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::FEATURES                   => ['features',                 self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::OTHER_FEATURES             => ['otherFeatures',            self::LIST_VALIDATION_REGEXP,  1, 1, 1, 1],
-        self::PAYMENT_PLANS              => ['paymentPlans',             self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::SPECIES_DOES               => ['speciesDoes',              self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::SPECIES_DOESNT             => ['speciesDoesnt',            self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::URL_FSR                    => ['fursuitReviewUrl',         self::FSR_URL_REGEXP,          0, 1, 1, 1],
-        self::URL_WEBSITE                => ['websiteUrl',               self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_PRICES                 => ['pricesUrl',                self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_FAQ                    => ['faqUrl',                   self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_FA                     => ['furAffinityUrl',           self::FA_URL_REGEXP,           0, 1, 1, 1],
-        self::URL_DA                     => ['deviantArtUrl',            self::DA_URL_REGEXP,           0, 1, 1, 1],
-        self::URL_TWITTER                => ['twitterUrl',               self::TWITTER_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_FACEBOOK               => ['facebookUrl',              self::FACEBOOK_URL_REGEXP,     0, 1, 1, 1],
-        self::URL_TUMBLR                 => ['tumblrUrl',                self::TUMBLR_URL_REGEXP,       0, 1, 1, 1],
-        self::URL_INSTAGRAM              => ['instagramUrl',             self::INSTAGRAM_URL_REGEXP,    0, 1, 1, 1],
-        self::URL_YOUTUBE                => ['youtubeUrl',               self::YOUTUBE_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_QUEUE                  => ['queueUrl',                 self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
-        self::URL_OTHER                  => ['otherUrls',                self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::LANGUAGES                  => ['languages',                self::ANYTHING_REGEXP,         0, 1, 1, 1],
-        self::NOTES                      => ['notes',                    '#.*#',                        0, 1, 0, 1],
-        self::URL_CST                    => ['cstUrl',                   self::GENERIC_URL_REGEXP,      0, 1, 1, 1],
+        self::MAKER_ID                   => ['makerId',                  VR::MAKER_ID,                  0, 1, 1, 1],
+        self::FORMER_MAKER_IDS           => ['formerMakerIds',           VR::FORMER_MAKER_IDS,          1, 1, 1, 1],
+        self::NAME                       => ['name',                     VR::NON_EMPTY,                 0, 1, 1, 1],
+        self::FORMERLY                   => ['formerly',                 VR::ANYTHING,                  1, 1, 1, 1],
+        self::INTRO                      => ['intro',                    VR::ANYTHING,                  0, 1, 1, 1],
+        self::SINCE                      => ['since',                    VR::SINCE,                     0, 1, 1, 1],
+        self::COUNTRY                    => ['country',                  VR::COUNTRY,                   0, 1, 1, 1],
+        self::STATE                      => ['state',                    VR::ANYTHING,                  0, 1, 1, 1],
+        self::CITY                       => ['city',                     VR::ANYTHING,                  0, 1, 1, 1],
+        self::PRODUCTION_MODELS          => ['productionModels',         VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::STYLES                     => ['styles',                   VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::OTHER_STYLES               => ['otherStyles',              VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::ORDER_TYPES                => ['orderTypes',               VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::OTHER_ORDER_TYPES          => ['otherOrderTypes',          VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::FEATURES                   => ['features',                 VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::OTHER_FEATURES             => ['otherFeatures',            VR::LIST_VALIDATION,           1, 1, 1, 1],
+        self::PAYMENT_PLANS              => ['paymentPlans',             VR::ANYTHING,                  0, 1, 1, 1],
+        self::SPECIES_DOES               => ['speciesDoes',              VR::ANYTHING,                  0, 1, 1, 1],
+        self::SPECIES_DOESNT             => ['speciesDoesnt',            VR::ANYTHING,                  0, 1, 1, 1],
+        self::URL_FSR                    => ['fursuitReviewUrl',         VR::FSR_URL,                   0, 1, 1, 1],
+        self::URL_WEBSITE                => ['websiteUrl',               VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_PRICES                 => ['pricesUrl',                VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_FAQ                    => ['faqUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_FA                     => ['furAffinityUrl',           VR::FA_URL,                    0, 1, 1, 1],
+        self::URL_DA                     => ['deviantArtUrl',            VR::DA_URL,                    0, 1, 1, 1],
+        self::URL_TWITTER                => ['twitterUrl',               VR::TWITTER_URL,               0, 1, 1, 1],
+        self::URL_FACEBOOK               => ['facebookUrl',              VR::FACEBOOK_URL,              0, 1, 1, 1],
+        self::URL_TUMBLR                 => ['tumblrUrl',                VR::TUMBLR_URL,                0, 1, 1, 1],
+        self::URL_INSTAGRAM              => ['instagramUrl',             VR::INSTAGRAM_URL,             0, 1, 1, 1],
+        self::URL_YOUTUBE                => ['youtubeUrl',               VR::YOUTUBE_URL,               0, 1, 1, 1],
+        self::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URLS_OTHER                 => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
+        self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  0, 1, 1, 1],
+        self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
+        self::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         self::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
         self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
         self::COMPLETNESS                => ['completeness',             null,                          0, 0, 0, 1],
@@ -163,7 +150,7 @@ class ArtisanFields
         self::URL_TUMBLR            => ['#Tumblr#i',                          1, 1],
         self::URL_INSTAGRAM         => ['#Instagram#i',                       1, 1],
         self::URL_YOUTUBE           => ['#YouTube#i',                         1, 1],
-        self::URL_OTHER             => ['#other websites#i',                  1, 1],
+        self::URLS_OTHER            => ['#other websites#i',                  1, 1],
         self::URL_CST               => ['#commissions status#i',              1, 1],
         self::LANGUAGES             => ['#languages#i',                       1, 1],
         self::MAKER_ID              => ['#Maker ID#i',                        1, 1],
@@ -187,7 +174,7 @@ class ArtisanFields
             $importFromIuForm = (bool) (self::IU_FORM_FIELDS_ORDERED[$name][1] ?? false);
             $exportFromIuForm = (bool) (self::IU_FORM_FIELDS_ORDERED[$name][2] ?? false);
 
-            $field = new ArtisanField($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
+            $field = new Field($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
                 $fieldData[5], $uiFormIndex, $iuFormRegexp, $importFromIuForm, $exportFromIuForm);
 
             self::$fields[$field->name()] = $field;
@@ -195,7 +182,7 @@ class ArtisanFields
         }
     }
 
-    public static function get(string $name): ArtisanField
+    public static function get(string $name): Field
     {
         if (!array_key_exists($name, self::$fields)) {
             throw new InvalidArgumentException("No such field exists: $name");
@@ -204,7 +191,7 @@ class ArtisanFields
         return self::$fields[$name];
     }
 
-    public static function getByModelName(string $modelName): ArtisanField
+    public static function getByModelName(string $modelName): Field
     {
         if (!array_key_exists($modelName, self::$fieldsByModelName)) {
             throw new InvalidArgumentException("No field with such model name exists: $modelName");
@@ -219,71 +206,71 @@ class ArtisanFields
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function persisted(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->isPersisted();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function inJson(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->inJson();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function inStats(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->inStats();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function lists(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->isList();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function inIuForm(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->inIuForm();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function exportedToIuForm(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->exportToIuForm();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function importedFromIuForm(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->importFromIuForm();
         });
     }
@@ -296,4 +283,4 @@ class ArtisanFields
     }
 }
 
-ArtisanFields::init();
+Fields::init();

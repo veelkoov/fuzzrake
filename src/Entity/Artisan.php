@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Utils\ArtisanField;
-use App\Utils\ArtisanFields;
+use App\Utils\Artisan\Field;
+use App\Utils\Artisan\Fields;
 use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -797,9 +797,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
             ->result();
     }
 
-    public function set(ArtisanField $field, $newValue): self
+    public function set(Field $field, $newValue): self
     {
-        if ($field->is(ArtisanFields::CONTACT_INPUT_VIRTUAL)) {
+        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
             $this->setContactInfoOriginal($newValue);
 
             return $this;
@@ -816,9 +816,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function get(ArtisanField $field)
+    public function get(Field $field)
     {
-        if ($field->is(ArtisanFields::CONTACT_INPUT_VIRTUAL)) {
+        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
             return $this->getContactInfoOriginal();
         }
 
@@ -833,18 +833,18 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function jsonSerialize(): array
     {
-        return array_values(array_map(function (ArtisanField $field) {
+        return array_values(array_map(function (Field $field) {
             switch ($field->name()) {
-                case ArtisanFields::CST_LAST_CHECK:
+                case Fields::CST_LAST_CHECK:
                     $lc = $this->getCommissionsStatus()->getLastChecked();
                     $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
                     break;
 
-                case ArtisanFields::COMMISSIONS_STATUS:
+                case Fields::COMMISSIONS_STATUS:
                     $value = $this->getCommissionsStatus()->getStatus();
                     break;
 
-                case ArtisanFields::COMPLETNESS:
+                case Fields::COMPLETNESS:
                     $value = $this->completeness();
                     break;
 
@@ -853,7 +853,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
             }
 
             return $field->isList() ? array_filter(explode("\n", $value)) : $value;
-        }, ArtisanFields::inJson()));
+        }, Fields::inJson()));
     }
 
     public function getContactMethod(): string
