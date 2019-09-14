@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use App\Entity\Artisan;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Fields;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Utils;

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\Field;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Fields;
 
 class DataDiffer
 {
@@ -41,7 +42,7 @@ class DataDiffer
         }
     }
 
-    private function showSingleFieldDiff(bool &$nameShown, ArtisanField $field, Artisan $old, Artisan $new, ?Artisan $imported): void
+    private function showSingleFieldDiff(bool &$nameShown, Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
         $newVal = $new->get($field) ?: '';
         $oldVal = $old->get($field) ?: '';
@@ -122,7 +123,7 @@ class DataDiffer
         }
     }
 
-    private function showFixCommandOptionally(string $makerId, ArtisanField $field, string $replaced, string $best)
+    private function showFixCommandOptionally(string $makerId, Field $field, string $replaced, string $best)
     {
         if ($this->showFixCommands && !$this->skipFixCommand($field->name())) {
             $replaced = Utils::strSafeForCli($replaced);

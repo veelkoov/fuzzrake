@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Artisan;
 
 use InvalidArgumentException;
 
-class ArtisanFields
+class Fields
 {
     private const GENERIC_URL_REGEXP = '#^(https?://[^/]+/.*)?$#'; // TODO: improve
     private const DA_URL_REGEXP = '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#';
@@ -187,7 +187,7 @@ class ArtisanFields
             $importFromIuForm = (bool) (self::IU_FORM_FIELDS_ORDERED[$name][1] ?? false);
             $exportFromIuForm = (bool) (self::IU_FORM_FIELDS_ORDERED[$name][2] ?? false);
 
-            $field = new ArtisanField($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
+            $field = new Field($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
                 $fieldData[5], $uiFormIndex, $iuFormRegexp, $importFromIuForm, $exportFromIuForm);
 
             self::$fields[$field->name()] = $field;
@@ -195,7 +195,7 @@ class ArtisanFields
         }
     }
 
-    public static function get(string $name): ArtisanField
+    public static function get(string $name): Field
     {
         if (!array_key_exists($name, self::$fields)) {
             throw new InvalidArgumentException("No such field exists: $name");
@@ -204,7 +204,7 @@ class ArtisanFields
         return self::$fields[$name];
     }
 
-    public static function getByModelName(string $modelName): ArtisanField
+    public static function getByModelName(string $modelName): Field
     {
         if (!array_key_exists($modelName, self::$fieldsByModelName)) {
             throw new InvalidArgumentException("No field with such model name exists: $modelName");
@@ -219,71 +219,71 @@ class ArtisanFields
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function persisted(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->isPersisted();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function inJson(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->inJson();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function inStats(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->inStats();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function lists(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->isList();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function inIuForm(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->inIuForm();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function exportedToIuForm(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->exportToIuForm();
         });
     }
 
     /**
-     * @return ArtisanField[]
+     * @return Field[]
      */
     public static function importedFromIuForm(): array
     {
-        return array_filter(self::$fields, function (ArtisanField $field) {
+        return array_filter(self::$fields, function (Field $field) {
             return $field->importFromIuForm();
         });
     }
@@ -296,4 +296,4 @@ class ArtisanFields
     }
 }
 
-ArtisanFields::init();
+Fields::init();

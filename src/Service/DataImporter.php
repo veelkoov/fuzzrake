@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Fields;
 use App\Utils\ArtisanUtils;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Import;
 
-use App\Utils\ArtisanField;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Field;
+use App\Utils\Artisan\Fields;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
@@ -79,7 +79,7 @@ class RawImportItem implements FieldReadInterface
         }
     }
 
-    public function get(ArtisanField $field)
+    public function get(Field $field)
     {
         return $this->rawInput[$field->uiFormIndex()];
     }

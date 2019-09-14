@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\WebpageSnapshotManager;
-use App\Utils\ArtisanField;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Field;
+use App\Utils\Artisan\Fields;
 use App\Utils\GoogleForms\Form;
 use App\Utils\GoogleForms\Item;
 use App\Utils\JsonException;
@@ -128,7 +128,7 @@ class IuFormGetIdsCommand extends Command
         return 0;
     }
 
-    private function updateFieldId(string $helperFileContents, ArtisanField $field, int $newId): string
+    private function updateFieldId(string $helperFileContents, Field $field, int $newId): string
     {
         return Regexp::replace('#(?<=\s)\d+(: (?:this\.transform[a-z]+\(?)?artisan\.'.preg_quote($field->modelName()).'\)?,)#i',
             $newId.'$1', $helperFileContents);
