@@ -50,167 +50,167 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @ORM\Column(type="string", length=511)
      */
-    private $intro;
+    private $intro = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $since;
+    private $since = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $country;
+    private $country = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $state;
+    private $state = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $city;
+    private $city = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $productionModels;
+    private $productionModels = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $styles;
+    private $styles = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherStyles;
+    private $otherStyles = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $orderTypes;
+    private $orderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherOrderTypes;
+    private $otherOrderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $features;
+    private $features = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $otherFeatures;
+    private $otherFeatures = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $paymentPlans;
+    private $paymentPlans = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $speciesDoes;
+    private $speciesDoes = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $speciesDoesnt;
+    private $speciesDoesnt = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fursuitReviewUrl;
+    private $fursuitReviewUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $websiteUrl;
+    private $websiteUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $pricesUrl;
+    private $pricesUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $faqUrl;
+    private $faqUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $furAffinityUrl;
+    private $furAffinityUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $deviantArtUrl;
+    private $deviantArtUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $twitterUrl;
+    private $twitterUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $facebookUrl;
+    private $facebookUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $tumblrUrl;
+    private $tumblrUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $instagramUrl;
+    private $instagramUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $youtubeUrl;
+    private $youtubeUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $queueUrl;
+    private $queueUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $scritchesUrl;
+    private $scritchesUrl = '';
 
     /**
      * @ORM\Column(type="string", length=2048)
      */
-    private $scritchesPhotosUrls;
+    private $scritchesPhotosUrls = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $otherUrls;
+    private $otherUrls = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $languages;
+    private $languages = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    private $notes;
+    private $notes = '';
 
     /**
      * @ORM\Column(name="cst_url", type="string", length=255)
      */
-    private $cstUrl;
+    private $cstUrl = '';
 
     /**
      * @ORM\Column(type="string", length=16)
