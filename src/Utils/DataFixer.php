@@ -181,23 +181,19 @@ class DataFixer
 
     private function fixList(string $input, bool $sort, string $separatorRegexp): string
     {
-        $list = array_filter(array_map(function ($item) {
-            $item = trim($item);
+        $input = implode("\n", array_filter(array_map('trim', Regexp::split($separatorRegexp, $input))));
 
-            foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
-                $item = Regexp::replace("#(?:^|\n)$pattern(?:\n|$)#i", $replacement, $item);
-            }
-
-            return $item;
-        }, Regexp::split($separatorRegexp, $input)));
-
-        $list = ($list);
-
-        if ($sort) {
-            sort($list);
+        foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
+            $input = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $input);
         }
 
-        return implode("\n", array_unique($list));
+        $input = explode("\n", $input);
+
+        if ($sort) {
+            sort($input);
+        }
+
+        return implode("\n", array_unique($input));
     }
 
     private function fixCountry(string $input): string
