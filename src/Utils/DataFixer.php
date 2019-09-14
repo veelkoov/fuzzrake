@@ -173,7 +173,7 @@ class DataFixer
     {
         foreach (Fields::persisted() as $field) {
             if ($field->validationRegexp() && !Regexp::match($field->validationRegexp(), $artisan->get($field))) {
-                $safeValue = Utils::strSafeForCli($artisan->get($field));
+                $safeValue = StrUtils::strSafeForCli($artisan->get($field));
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }

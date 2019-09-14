@@ -9,9 +9,9 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\GoogleForms\Form;
 use App\Utils\GoogleForms\Item;
+use App\Utils\Json;
 use App\Utils\JsonException;
 use App\Utils\Regexp\Utils as Regexp;
-use App\Utils\Utils;
 use App\Utils\Web\UrlFetcherException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,7 +68,7 @@ class IuFormGetIdsCommand extends Command
         }
 
         try {
-            $data = Utils::fromJson(Regexp::replace('#^var FB_PUBLIC_LOAD_DATA_ = #', '', rtrim($crawler->html(), ";\n\t\r ")));
+            $data = Json::decode(Regexp::replace('#^var FB_PUBLIC_LOAD_DATA_ = #', '', rtrim($crawler->html(), ";\n\t\r ")));
         } catch (JsonException $e) {
             $io->error('Failed parsing JSON: '.$e->getMessage());
 

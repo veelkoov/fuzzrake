@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
-use App\Utils\ArtisanUtils;
+use App\Utils\Artisan\Utils;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\DateTimeUtils;
@@ -16,7 +16,6 @@ use App\Utils\Import\ImportException;
 use App\Utils\Import\ImportItem;
 use App\Utils\Import\Manager;
 use App\Utils\Import\RawImportItem;
-use App\Utils\Utils;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -173,7 +172,7 @@ class DataImporter
                         break; // No updates
                     }
 
-                    ArtisanUtils::updateContact($artisan, $newValue);
+                    Utils::updateContact($artisan, $newValue);
                     break;
 
                 default:

@@ -9,8 +9,8 @@ use App\Utils\Artisan\Fields;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
+use App\Utils\Json;
 use App\Utils\JsonException;
-use App\Utils\Utils;
 use DateTimeInterface;
 
 class RawImportItem implements FieldReadInterface
@@ -73,7 +73,7 @@ class RawImportItem implements FieldReadInterface
         $rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)] = null;
 
         try {
-            $this->hash = sha1(Utils::toJson($rawNewData));
+            $this->hash = sha1(Json::encode($rawNewData));
         } catch (JsonException $e) {
             throw new RuntimeImportException('Failed to calculate hash of the data row due to a JSON encoding error', 0, $e);
         }
