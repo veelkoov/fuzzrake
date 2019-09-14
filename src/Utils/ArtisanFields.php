@@ -22,10 +22,9 @@ class ArtisanFields
     private const FORMER_MAKER_IDS_REGEXP = '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#';
     private const ANYTHING_REGEXP = '#^.*$#s';
 
-    const IGNORED_IU_FORM_FIELD = ':ignore!';
-
     /***** "PRETTY" NAMES START *****/
     const TIMESTAMP = 'TIMESTAMP';
+    const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
     const NAME = 'NAME';
     const FORMERLY = 'FORMERLY';
     const SINCE = 'SINCE';
@@ -125,7 +124,7 @@ class ArtisanFields
         self::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    null,                          0, 1, 0, 1],
         self::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
         self::TIMESTAMP                  => [null,                       null,                          0, 0, 0, 0],
-        self::IGNORED_IU_FORM_FIELD      => [null,                       null,                          0, 0, 0, 0],
+        self::VALIDATION_CHECKBOX        => [null,                       null,                          0, 0, 0, 0],
         self::CONTACT_INPUT_VIRTUAL      => [null,                       null,                          0, 0, 0, 0],
     ];
 
@@ -140,7 +139,7 @@ class ArtisanFields
          * PRETTY_NAME              => ['regexp 4 name in form'               V  V
          */
         self::TIMESTAMP             => [null,                                 0, 0],
-        self::IGNORED_IU_FORM_FIELD => ['#update#',                           0, 1],
+        self::VALIDATION_CHECKBOX   => ['#update#',                           0, 1],
         self::NAME                  => ['#studio/maker\'s name#i',            1, 1],
         self::FORMERLY              => ['#formerly#i',                        1, 1],
         self::SINCE                 => ['#since when#i',                      1, 1],

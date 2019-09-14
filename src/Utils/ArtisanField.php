@@ -142,4 +142,9 @@ class ArtisanField
     {
         return $this->exportToIuForm;
     }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 }

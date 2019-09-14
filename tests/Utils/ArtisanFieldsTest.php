@@ -45,6 +45,7 @@ class ArtisanFieldsTest extends TestCase
         $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $modelSource, $matches));
 
         $fieldsInForm = Fields::exportedToIuForm();
+        unset($fieldsInForm[Fields::VALIDATION_CHECKBOX]);
 
         foreach ($matches['name'] as $modelName) {
             $field = Fields::getByModelName($modelName);
@@ -55,6 +56,6 @@ class ArtisanFieldsTest extends TestCase
             unset($fieldsInForm[$name]);
         }
 
-        $this->assertEmpty($fieldsInForm);
+        $this->assertEmpty($fieldsInForm, 'Fields left to be matched: '.join($fieldsInForm));
     }
 }
