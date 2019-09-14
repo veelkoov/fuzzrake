@@ -23,4 +23,7 @@ abstract class ValidationRegexps
     public const NON_EMPTY = '#^.+$#';
     public const SINCE = '#^(\d{4}-\d{2})?$#';
     public const COUNTRY = '#^([A-Z]{2})?$#';
+
+    public const SCRITCHES_PHOTOS_URLS = self::ANYTHING; // FIXME
+    public const SCRITCHES_URL = self::ANYTHING; // FIXME
 }
