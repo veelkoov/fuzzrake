@@ -17,27 +17,16 @@ class MainControllerTest extends DbEnabledWebTestCase
         $this->assertSelectorTextContains('h4', 'Fursuit makers database');
     }
 
-    /**
-     * @dataProvider redirectToIuFormDataProvider
-     *
-     * @param string $makerId
-     * @param int    $responseCode
-     */
-    public function testRedirectToIuForm(string $makerId, int $responseCode): void
+    public function testRedirectToIuForm(): void
     {
         $client = static::createClient();
         self::addSimpleArtisan();
 
-        $client->request('GET', '/redirect_iu_form/'.$makerId);
+        $client->request('GET', '/redirect_iu_form/TEST');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
-    }
-
-    public function redirectToIuFormDataProvider(): array
-    {
-        return [
-            ['TEST',    404],
-            ['TEST002', 404],
-            ['TEST001', 302],
-        ];
+        $client->request('GET', '/redirect_iu_form/TEST002');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $client->request('GET', '/redirect_iu_form/TEST000');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 }

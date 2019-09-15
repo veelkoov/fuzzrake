@@ -46,6 +46,7 @@ abstract class DbEnabledWebTestCase extends WebTestCase
 
         self::$metadata = self::$entityManager->getMetadataFactory()->getAllMetadata();
         self::$schemaTool = new SchemaTool(self::$entityManager);
+        self::$schemaTool->dropSchema(self::$metadata);
         self::$schemaTool->updateSchema(self::$metadata);
     }
 
