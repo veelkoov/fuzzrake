@@ -35,13 +35,18 @@ abstract class DbEnabledWebTestCase extends WebTestCase
     {
         $result = parent::createClient($options, $server);
 
+        self::setUpDb();
+
+        return $result;
+    }
+
+    protected static function setUpDb(): void
+    {
         self::$entityManager = self::$kernel->getContainer()->get('doctrine.orm.default_entity_manager');
 
         self::$metadata = self::$entityManager->getMetadataFactory()->getAllMetadata();
         self::$schemaTool = new SchemaTool(self::$entityManager);
         self::$schemaTool->updateSchema(self::$metadata);
-
-        return $result;
     }
 
     protected static function addSimpleArtisan(): Artisan

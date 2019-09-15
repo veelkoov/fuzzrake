@@ -55,7 +55,7 @@ class MainController extends AbstractController
      * @throws NotFoundHttpException
      */
     public function redirectToIuForm(ArtisanRepository $artisanRepository, IuFormService $iuFormService, string $makerId): Response
-    { // TODO: Test 404s
+    {
         try {
             $artisan = $artisanRepository->findByMakerId($makerId);
         } catch (NonUniqueResultException | NoResultException $e) {
