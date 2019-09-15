@@ -45,4 +45,16 @@ export default class Artisan {
                 readonly contactInfoObfuscated: string,
     ) {
     }
+
+    public getLastMakerId(): string {
+        if (this.makerId !== '') {
+            return this.makerId;
+        }
+
+        if (this.formerMakerIds.length !== 0) {
+            return this.formerMakerIds[0];
+        }
+
+        return '';
+    }
 }

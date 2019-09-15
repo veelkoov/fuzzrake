@@ -238,4 +238,26 @@ class ArtisanRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
+
+    /**
+     * @param string $makerId
+     *
+     * @return Artisan
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function findByMakerId(string $makerId): Artisan
+    {
+        return $this->createQueryBuilder('a')
+            ->where(
+                'a.makerId = :makerId OR a.formerMakerIds LIKE :formerMakerIds'
+            )
+            ->setParameters([
+                'makerId'        => $makerId,
+                'formerMakerIds' => "%$makerId%",
+            ])
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
