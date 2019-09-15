@@ -6,15 +6,15 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class EventsControllerTest extends WebTestCase
+class MainControllerTest extends WebTestCase
 {
-    public function testEvents()
+    public function testMain()
     {
         $client = static::createClient();
 
-        $client->request('GET', '/events.html');
+        $client->request('GET', '/');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('p', 'All times are UTC');
+        $this->assertSelectorTextContains('h4', 'Fursuit makers database');
     }
 }
