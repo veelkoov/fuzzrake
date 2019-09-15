@@ -11,51 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/")
- */
-class DefaultController extends AbstractController
+class MainController extends AbstractController
 {
-    /**
-     * @Route("/info.html", name="info")
-     *
-     * @return Response
-     */
-    public function info(): Response
-    {
-        return $this->render('info.html.twig', []);
-    }
-
-    /**
-     * @Route("/tracking.html", name="tracking")
-     *
-     * @return Response
-     */
-    public function tracking(): Response
-    {
-        return $this->render('tracking.html.twig', []);
-    }
-
-    /**
-     * @Route("/whoopsies.html", name="whoopsies")
-     *
-     * @return Response
-     */
-    public function whoopsies(): Response
-    {
-        return $this->render('whoopsies.html.twig', []);
-    }
-
-    /**
-     * @Route("/maker_ids.html", name="maker_ids")
-     *
-     * @return Response
-     */
-    public function makerIds(): Response
-    {
-        return $this->render('maker_ids.html.twig', []);
-    }
-
     /**
      * @Route("/", name="main")
      * @Route("/index.html")

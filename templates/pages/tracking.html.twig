@@ -7,6 +7,12 @@
         <h1>Automatic tracking and status updates</h1>
 
         <p>
+            <strong>TL;DR version:</strong> keep a page or profile somewhere with a simple "commissions: open/closed"
+            message, submit the address to the page in the inclusion/update form and getfursu.it will check your
+            page twice a day to update the status here.
+        </p>
+
+        <p>
             Imagine you need to put information about your commissions status (open/closed) in one place only.
             getfursu.it is able to automatically track and reflect your commissions status. How does it work? It's
             easy.
@@ -125,9 +131,9 @@
 
         <p>
             To be successfully tracked, you should put a clear statement if the commissions are open or not on one
-            of the websites listed below. This needs to be one, simple "we're open/closed" or similar. You can check,
-            what other makers put and where (all makers with visible status are tracked, pick one and you'll find out
-            how do they do it).
+            of the websites listed below. This needs to be one, simple "we're open/closed for commissions", or
+            "commissions: open/closed" or similar. You can check, what other makers put and where (all makers with
+            visible status are tracked, pick one and you'll find out how do they do it).
         </p>
         <p>
             At the moment, getfursu.it cannot track if you are, for example, open for parts but not fullsuits/partials.
@@ -142,9 +148,13 @@
 
         <ul>
             <li>Most of generic websites (<strong>recommended</strong>)</li>
-            <li>FurAffinity user profile info (<strong>recommended</strong>) or "pinned" journal entries</li>
             <li>Twitter profile info (<strong>recommended</strong>)</li>
-            <li>Trello card text</li>
+            <li>
+                FurAffinity user profile info (warning: every time FA turns on DDoS protection mode,
+                getfursu.it temporarily looses track!)
+            </li>
+            <li>Facebook "about" pages usually work</li>
+            <li>Trello card text should work</li>
             <li>DeviantArt profile info should work (untested)</li>
         </ul>
 
@@ -158,12 +168,10 @@
                 named, this won't work.
             </li>
             <li>
-                Blog entries, posts and journals which are not "pinned". You should also not change those posts
-                (unpin one, pin another) - but edit the already "pinned" post/journal, unless you fill the
-                inclusion/update form again each time.
+                Blog entries, posts, journals, tweets, etc. will NOT work. It might work if you pinned them and edited
+                the already-pinned in case of updates, instead of posting and pinning a new one. Unfortunately there's
+                much which could go wrong. My suggestion is: don't.
             </li>
-            <li>Twitter tweets. Only profile info is supported.</li>
-            <li>Facebook posts. Profile info untested.</li>
         </ul>
 
         <p>Unsure? <a href="{{ path('info') }}">Contact me</a> to clarify!</p>

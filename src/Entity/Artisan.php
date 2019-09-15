@@ -50,167 +50,167 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @ORM\Column(type="string", length=511)
      */
-    private $intro;
+    private $intro = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $since;
+    private $since = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $country;
+    private $country = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $state;
+    private $state = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $city;
+    private $city = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $productionModels;
+    private $productionModels = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $styles;
+    private $styles = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherStyles;
+    private $otherStyles = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $orderTypes;
+    private $orderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherOrderTypes;
+    private $otherOrderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $features;
+    private $features = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $otherFeatures;
+    private $otherFeatures = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $paymentPlans;
+    private $paymentPlans = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $speciesDoes;
+    private $speciesDoes = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $speciesDoesnt;
+    private $speciesDoesnt = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fursuitReviewUrl;
+    private $fursuitReviewUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $websiteUrl;
+    private $websiteUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $pricesUrl;
+    private $pricesUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $faqUrl;
+    private $faqUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $furAffinityUrl;
+    private $furAffinityUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $deviantArtUrl;
+    private $deviantArtUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $twitterUrl;
+    private $twitterUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $facebookUrl;
+    private $facebookUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $tumblrUrl;
+    private $tumblrUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $instagramUrl;
+    private $instagramUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $youtubeUrl;
+    private $youtubeUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $queueUrl;
+    private $queueUrl = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $scritchesUrl;
+    private $scritchesUrl = '';
 
     /**
      * @ORM\Column(type="string", length=2048)
      */
-    private $scritchesPhotosUrls;
+    private $scritchesPhotosUrls = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $otherUrls;
+    private $otherUrls = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $languages;
+    private $languages = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    private $notes;
+    private $notes = '';
 
     /**
      * @ORM\Column(name="cst_url", type="string", length=255)
      */
-    private $cstUrl;
+    private $cstUrl = '';
 
     /**
      * @ORM\Column(type="string", length=16)
@@ -277,149 +277,155 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getFormerlyArr(): array
     {
         return explode("\n", $this->formerly);
     }
 
+    /**
+     * @return string[]
+     */
     public function getAllNamesArr(): array
     {
         return array_filter(array_merge([$this->getName()], $this->getFormerlyArr()));
     }
 
-    public function getCountry(): ?string
+    public function getCountry(): string
     {
         return $this->country;
     }
 
-    public function setCountry(?string $country): self
+    public function setCountry(string $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): string
     {
         return $this->state;
     }
 
-    public function setState(?string $state): self
+    public function setState(string $state): self
     {
         $this->state = $state;
 
         return $this;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string
     {
         return $this->city;
     }
 
-    public function setCity(?string $city): self
+    public function setCity(string $city): self
     {
         $this->city = $city;
 
         return $this;
     }
 
-    public function getFursuitReviewUrl(): ?string
+    public function getFursuitReviewUrl(): string
     {
         return $this->fursuitReviewUrl;
     }
 
-    public function setFursuitReviewUrl(?string $fursuitReviewUrl): self
+    public function setFursuitReviewUrl(string $fursuitReviewUrl): self
     {
         $this->fursuitReviewUrl = $fursuitReviewUrl;
 
         return $this;
     }
 
-    public function getFurAffinityUrl(): ?string
+    public function getFurAffinityUrl(): string
     {
         return $this->furAffinityUrl;
     }
 
-    public function setFurAffinityUrl(?string $furAffinityUrl): self
+    public function setFurAffinityUrl(string $furAffinityUrl): self
     {
         $this->furAffinityUrl = $furAffinityUrl;
 
         return $this;
     }
 
-    public function getDeviantArtUrl(): ?string
+    public function getDeviantArtUrl(): string
     {
         return $this->deviantArtUrl;
     }
 
-    public function setDeviantArtUrl(?string $deviantArtUrl): self
+    public function setDeviantArtUrl(string $deviantArtUrl): self
     {
         $this->deviantArtUrl = $deviantArtUrl;
 
         return $this;
     }
 
-    public function getWebsiteUrl(): ?string
+    public function getWebsiteUrl(): string
     {
         return $this->websiteUrl;
     }
 
-    public function setWebsiteUrl(?string $websiteUrl): self
+    public function setWebsiteUrl(string $websiteUrl): self
     {
         $this->websiteUrl = $websiteUrl;
 
         return $this;
     }
 
-    public function getFacebookUrl(): ?string
+    public function getFacebookUrl(): string
     {
         return $this->facebookUrl;
     }
 
-    public function setFacebookUrl(?string $facebookUrl): self
+    public function setFacebookUrl(string $facebookUrl): self
     {
         $this->facebookUrl = $facebookUrl;
 
         return $this;
     }
 
-    public function getTwitterUrl(): ?string
+    public function getTwitterUrl(): string
     {
         return $this->twitterUrl;
     }
 
-    public function setTwitterUrl(?string $twitterUrl): self
+    public function setTwitterUrl(string $twitterUrl): self
     {
         $this->twitterUrl = $twitterUrl;
 
         return $this;
     }
 
-    public function getTumblrUrl(): ?string
+    public function getTumblrUrl(): string
     {
         return $this->tumblrUrl;
     }
 
-    public function setTumblrUrl(?string $tumblrUrl): self
+    public function setTumblrUrl(string $tumblrUrl): self
     {
         $this->tumblrUrl = $tumblrUrl;
 
         return $this;
     }
 
-    public function getCstUrl(): ?string
+    public function getCstUrl(): string
     {
         return $this->cstUrl;
     }
 
-    public function setCstUrl(?string $cstUrl): self
+    public function setCstUrl(string $cstUrl): self
     {
         $this->cstUrl = $cstUrl;
 
         return $this;
     }
 
-    public function getOrderTypes(): ?string
+    public function getOrderTypes(): string
     {
         return $this->orderTypes;
     }
@@ -431,7 +437,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getQueueUrl(): ?string
+    public function getQueueUrl(): string
     {
         return $this->queueUrl;
     }
@@ -443,7 +449,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getFeatures(): ?string
+    public function getFeatures(): string
     {
         return $this->features;
     }
@@ -455,7 +461,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getNotes(): ?string
+    public function getNotes(): string
     {
         return $this->notes;
     }
@@ -467,7 +473,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getInstagramUrl(): ?string
+    public function getInstagramUrl(): string
     {
         return $this->instagramUrl;
     }
@@ -479,7 +485,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getSince(): ?string
+    public function getSince(): string
     {
         return $this->since;
     }
@@ -491,7 +497,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getYoutubeUrl(): ?string
+    public function getYoutubeUrl(): string
     {
         return $this->youtubeUrl;
     }
@@ -503,7 +509,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getStyles(): ?string
+    public function getStyles(): string
     {
         return $this->styles;
     }
@@ -515,7 +521,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getOtherStyles(): ?string
+    public function getOtherStyles(): string
     {
         return $this->otherStyles;
     }
@@ -527,7 +533,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getOtherOrderTypes(): ?string
+    public function getOtherOrderTypes(): string
     {
         return $this->otherOrderTypes;
     }
@@ -539,7 +545,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getOtherFeatures(): ?string
+    public function getOtherFeatures(): string
     {
         return $this->otherFeatures;
     }
@@ -551,7 +557,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getIntro(): ?string
+    public function getIntro(): string
     {
         return $this->intro;
     }
@@ -563,132 +569,100 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMakerId()
+    public function getMakerId(): string
     {
         return $this->makerId;
     }
 
-    /**
-     * @param mixed $makerId
-     */
-    public function setMakerId($makerId): void
+    public function setMakerId(string $makerId): self
     {
         $this->makerId = $makerId;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProductionModels()
+    public function getProductionModels(): string
     {
         return $this->productionModels;
     }
 
-    /**
-     * @param mixed $productionModels
-     */
-    public function setProductionModels($productionModels): void
+    public function setProductionModels(string $productionModels): self
     {
         $this->productionModels = $productionModels;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentPlans()
+    public function getPaymentPlans(): string
     {
         return $this->paymentPlans;
     }
 
-    /**
-     * @param mixed $paymentPlans
-     */
-    public function setPaymentPlans($paymentPlans): void
+    public function setPaymentPlans(string $paymentPlans): self
     {
         $this->paymentPlans = $paymentPlans;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSpeciesDoes()
+    public function getSpeciesDoes(): string
     {
         return $this->speciesDoes;
     }
 
-    /**
-     * @param mixed $speciesDoes
-     */
-    public function setSpeciesDoes($speciesDoes): void
+    public function setSpeciesDoes(string $speciesDoes): self
     {
         $this->speciesDoes = $speciesDoes;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSpeciesDoesnt()
+    public function getSpeciesDoesnt(): string
     {
         return $this->speciesDoesnt;
     }
 
-    /**
-     * @param mixed $speciesDoesnt
-     */
-    public function setSpeciesDoesnt($speciesDoesnt): void
+    public function setSpeciesDoesnt($speciesDoesnt): self
     {
         $this->speciesDoesnt = $speciesDoesnt;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPricesUrl()
+    public function getPricesUrl(): string
     {
         return $this->pricesUrl;
     }
 
-    /**
-     * @param mixed $pricesUrl
-     */
-    public function setPricesUrl($pricesUrl): void
+    public function setPricesUrl(string $pricesUrl): self
     {
         $this->pricesUrl = $pricesUrl;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFaqUrl()
+    public function getFaqUrl(): string
     {
         return $this->faqUrl;
     }
 
-    /**
-     * @param mixed $faqUrl
-     */
-    public function setFaqUrl($faqUrl): void
+    public function setFaqUrl(string $faqUrl): self
     {
         $this->faqUrl = $faqUrl;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOtherUrls()
+    public function getOtherUrls(): string
     {
         return $this->otherUrls;
     }
 
-    /**
-     * @param mixed $otherUrls
-     */
-    public function setOtherUrls($otherUrls): void
+    public function setOtherUrls($otherUrls): self
     {
         $this->otherUrls = $otherUrls;
+
+        return $this;
     }
 
     public function getScritchesUrl(): string
@@ -715,145 +689,44 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLanguages()
+    public function getLanguages(): string
     {
         return $this->languages;
     }
 
-    /**
-     * @return string
-     */
+    public function setLanguages(string $languages): self
+    {
+        $this->languages = $languages;
+
+        return $this;
+    }
+
     public function getFormerMakerIds(): string
     {
         return $this->formerMakerIds;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getFormerMakerIdsArr(): array
     {
         return explode("\n", $this->formerMakerIds);
     }
 
-    /**
-     * @return array
-     */
-    public function getAllMakerIdsArr(): array
-    {
-        return array_filter(array_merge([$this->getMakerId()], $this->getFormerMakerIdsArr()));
-    }
-
-    /**
-     * @param string $formerMakerIds
-     */
-    public function setFormerMakerIds(string $formerMakerIds): void
+    public function setFormerMakerIds(string $formerMakerIds): self
     {
         $this->formerMakerIds = $formerMakerIds;
-    }
-
-    /**
-     * @param mixed $languages
-     */
-    public function setLanguages($languages): void
-    {
-        $this->languages = $languages;
-    }
-
-    public function completeness(): ?int
-    {
-        return (new CompletenessCalc())
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
-            // Name not counted - makes no sense
-            // Formerly not counted - small minority has changed their names
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
-            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
-            ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
-                ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModels)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->orderTypes, $this->otherOrderTypes)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
-            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
-            // FursuitReview not checked, because we can force makers to force their customers to write reviews
-            // ... shame...
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->pricesUrl)
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->faqUrl) // it's optional, but nice to have
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->websiteUrl, $this->deviantArtUrl, $this->furAffinityUrl,
-                $this->twitterUrl, $this->facebookUrl, $this->tumblrUrl, $this->instagramUrl, $this->youtubeUrl)
-            // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->queueUrl) // it's optional, but nice to have
-            // Other URLs not checked - we're not requiring unknown
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
-            // Notes are not supposed to be displayed, thus not counted
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
-            // CST last check does not depend on artisan input
-            ->result();
-    }
-
-    public function set(Field $field, $newValue): self
-    {
-        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
-            $this->setContactInfoOriginal($newValue);
-
-            return $this;
-        }
-
-        $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
-
-        if (!method_exists($this, $setter)) {
-            throw new InvalidArgumentException("Setter for {$field->name()} does not exist");
-        }
-
-        call_user_func([$this, $setter], $newValue);
 
         return $this;
     }
 
-    public function get(Field $field)
+    /**
+     * @return string[]
+     */
+    public function getAllMakerIdsArr(): array
     {
-        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
-            return $this->getContactInfoOriginal();
-        }
-
-        $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
-
-        if (!method_exists($this, $getter)) {
-            throw new InvalidArgumentException("Getter for {$field->name()} does not exist");
-        }
-
-        return call_user_func([$this, $getter]);
-    }
-
-    public function jsonSerialize(): array
-    {
-        return array_values(array_map(function (Field $field) {
-            switch ($field->name()) {
-                case Fields::CST_LAST_CHECK:
-                    $lc = $this->getCommissionsStatus()->getLastChecked();
-                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
-                    break;
-
-                case Fields::COMMISSIONS_STATUS:
-                    $value = $this->getCommissionsStatus()->getStatus();
-                    break;
-
-                case Fields::COMPLETNESS:
-                    $value = $this->completeness();
-                    break;
-
-                default:
-                    $value = $this->get($field);
-            }
-
-            return $field->isList() ? array_filter(explode("\n", $value)) : $value;
-        }, Fields::inJson()));
+        return array_filter(array_merge([$this->getMakerId()], $this->getFormerMakerIdsArr()));
     }
 
     public function getContactMethod(): string
@@ -890,6 +763,99 @@ class Artisan implements JsonSerializable, FieldReadInterface
         $this->contactAllowed = $contactAllowed;
 
         return $this;
+    }
+
+    public function set(Field $field, $newValue): self
+    {
+        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
+            $this->setContactInfoOriginal($newValue);
+
+            return $this;
+        }
+
+        $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
+
+        if (!method_exists($this, $setter)) {
+            throw new InvalidArgumentException("Setter for {$field->name()} does not exist");
+        }
+
+        call_user_func([$this, $setter], $newValue);
+
+        return $this;
+    }
+
+    public function get(Field $field)
+    {
+        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
+            return $this->getContactInfoOriginal();
+        }
+
+        $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
+
+        if (!method_exists($this, $getter)) {
+            throw new InvalidArgumentException("Getter for {$field->name()} does not exist");
+        }
+
+        return call_user_func([$this, $getter]);
+    }
+
+    public function completeness(): ?int
+    {
+        return (new CompletenessCalc())
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
+            // Name not counted - makes no sense
+            // Formerly not counted - small minority has changed their names
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
+            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
+            ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
+                ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
+            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
+            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModels)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->orderTypes, $this->otherOrderTypes)
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
+            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
+            // FursuitReview not checked, because we can force makers to force their customers to write reviews
+            // ... shame...
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->pricesUrl)
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->faqUrl) // it's optional, but nice to have
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->websiteUrl, $this->deviantArtUrl, $this->furAffinityUrl,
+                $this->twitterUrl, $this->facebookUrl, $this->tumblrUrl, $this->instagramUrl, $this->youtubeUrl)
+            // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->queueUrl) // it's optional, but nice to have
+            // Other URLs not checked - we're not requiring unknown
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
+            // Notes are not supposed to be displayed, thus not counted
+            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
+            // CST last check does not depend on artisan input
+            ->result();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return array_values(array_map(function (Field $field) {
+            switch ($field->name()) {
+                case Fields::CST_LAST_CHECK:
+                    $lc = $this->getCommissionsStatus()->getLastChecked();
+                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+                    break;
+
+                case Fields::COMMISSIONS_STATUS:
+                    $value = $this->getCommissionsStatus()->getStatus();
+                    break;
+
+                case Fields::COMPLETNESS:
+                    $value = $this->completeness();
+                    break;
+
+                default:
+                    $value = $this->get($field);
+            }
+
+            return $field->isList() ? array_filter(explode("\n", $value)) : $value;
+        }, Fields::inJson()));
     }
 
     public function getCommissionsStatus(): ArtisanCommissionsStatus

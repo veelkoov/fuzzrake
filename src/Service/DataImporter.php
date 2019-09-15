@@ -16,6 +16,7 @@ use App\Utils\Import\ImportException;
 use App\Utils\Import\ImportItem;
 use App\Utils\Import\Manager;
 use App\Utils\Import\RawImportItem;
+use App\Utils\StrUtils;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -254,9 +255,9 @@ class DataImporter
 
     private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
     {
-        return 'Was looking for: '.Utils::artisanNamesSafeForCli($artisan).'. Found more than one: '
+        return 'Was looking for: '.StrUtils::artisanNamesSafeForCli($artisan).'. Found more than one: '
             .implode(', ', array_map(function (Artisan $artisan) {
-                return Utils::artisanNamesSafeForCli($artisan);
+                return StrUtils::artisanNamesSafeForCli($artisan);
             }, $results));
     }
 
