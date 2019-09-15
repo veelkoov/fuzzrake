@@ -76,7 +76,7 @@ class MainController extends AbstractController
             $code = $countryData['code'];
             $region = $countryData['region'];
 
-            $countryCount = $countries[$code]->getCount();
+            $countryCount = $countries->offsetExists($code) ? $countries[$code]->getCount() : 0;
 
             $result[$region]->incCount($countryCount);
             $result[$region]->getValue()->addComplexItem($code, $code, $countryData['name'], $countryCount);

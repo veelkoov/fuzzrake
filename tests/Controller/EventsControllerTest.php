@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class EventsControllerTest extends WebTestCase
+class EventsControllerTest extends DbEnabledWebTestCase
 {
     public function testEvents()
     {
         $client = static::createClient();
+        self::addSimpleArtisan();
 
         $client->request('GET', '/events.html');
 

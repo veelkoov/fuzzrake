@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class MainControllerTest extends WebTestCase
+class MainControllerTest extends DbEnabledWebTestCase
 {
     public function testMain()
     {
         $client = static::createClient();
+        self::addSimpleArtisan();
 
         $client->request('GET', '/');
 
