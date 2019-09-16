@@ -50,6 +50,8 @@ class IuFormService
             618562986  => $artisan->getYoutubeUrl(),
             1737459766 => $artisan->getQueueUrl(),
             1355429885 => $artisan->getCstUrl(),
+            350422540  => $artisan->getScritchesUrl(),
+            2080821980 => $artisan->getScritchesPhotosUrls(),
             1507707399 => $artisan->getOtherUrls(),
             528156817  => $artisan->getLanguages(),
             927668258  => $artisan->getMakerId(),
@@ -58,7 +60,7 @@ class IuFormService
             1066294270 => $this->transformContactAllowed($artisan->getContactAllowed()),
             1142456974 => $artisan->getContactInfoObfuscated(),
             1898509469 => 'Yes, I\'m not on the list yet, or I used the update link',
-        ];
+        ]; // NOTE: Update tested fields as well!
 
         $urlParams = [];
 

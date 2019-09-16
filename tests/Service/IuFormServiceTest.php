@@ -15,11 +15,11 @@ class IuFormServiceTest extends TestCase
 {
     private const REGEXP_DATA_ITEM_PUSH = '#\s\d+ +=> (?:\$this->transform[a-z]+\()?\$artisan->get(?<name>[a-z]+)\(\)\)?,#i';
 
-    public function testServiceCodeNaively(): void // TODO: Transform into proper test
+    public function testServiceCodeNaively(): void
     {
         $checkedSource = file_get_contents(__DIR__.'/../../src/Service/IuFormService.php');
 
-        $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $checkedSource, $matches));
+        static::assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $checkedSource, $matches));
 
         $fieldsInForm = Fields::exportedToIuForm();
         unset($fieldsInForm[Fields::VALIDATION_CHECKBOX]);
@@ -28,11 +28,11 @@ class IuFormServiceTest extends TestCase
             $field = Fields::getByModelName(lcfirst($modelName));
             $name = $field->is(Fields::CONTACT_INFO_OBFUSCATED) ? Fields::CONTACT_INPUT_VIRTUAL : $field->name();
 
-            $this->assertArrayHasKey($name, $fieldsInForm);
+            static::assertArrayHasKey($name, $fieldsInForm);
 
             unset($fieldsInForm[$name]);
         }
 
-        $this->assertEmpty($fieldsInForm, 'Fields left to be matched: '.join(', ', $fieldsInForm));
+        static::assertEmpty($fieldsInForm, 'Fields left to be matched: '.join(', ', $fieldsInForm));
     }
 }

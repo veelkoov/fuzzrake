@@ -156,6 +156,8 @@ class Fields
         self::URL_YOUTUBE           => ['#YouTube#i',                         1, 1],
         self::URLS_OTHER            => ['#other websites#i',                  1, 1],
         self::URL_CST               => ['#commissions status#i',              1, 1],
+        self::URL_SCRITCHES         => ['#Got scritch\.es\?#i',               1, 1],
+        self::URLS_SCRITCHES_PHOTOS => ['#"featured" photos#i',               1, 1],
         self::LANGUAGES             => ['#languages#i',                       1, 1],
         self::MAKER_ID              => ['#Maker ID#i',                        1, 1],
         self::INTRO                 => ['#intro#i',                           1, 1],
