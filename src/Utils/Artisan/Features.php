@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-class Features
+class Features extends Dictionary
 {
     public const FOLLOW_ME_EYES = 'Follow-me eyes';
     public const OUTDOOR_FEET = 'Outdoor feet';
@@ -24,4 +24,28 @@ class Features
     public const ADJUSTABLE_EYEBROWS = 'Adjustable eyebrows';
     public const ELECTRONICS_ANIMATRONICS = 'Electronics/animatronics';
     public const REMOVABLE_BLUSH = 'Removable blush';
+
+    public static function getAllValues(): array
+    {
+        return [
+            self::FOLLOW_ME_EYES,
+            self::OUTDOOR_FEET,
+            self::INDOOR_FEET,
+            self::ATTACHED_TAIL,
+            self::EXCHANGEABLE_TONGUES,
+            self::REMOVABLE_EYELIDS,
+            self::MOVABLE_JAW,
+            self::ATTACHED_HANDPAWS_AND_FEETPAWS,
+            self::IN_HEAD_FANS,
+            self::LED_EYES,
+            self::EXCHANGEABLE_HAIRS,
+            self::REMOVABLE_HORNS_ANTLERS,
+            self::WASHABLE_HEADS,
+            self::LED_EL_LIGHTS,
+            self::ADJUSTABLE_WIGGLE_EARS,
+            self::ADJUSTABLE_EYEBROWS,
+            self::ELECTRONICS_ANIMATRONICS,
+            self::REMOVABLE_BLUSH,
+        ];
+    }
 }

@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Service;
 
+use App\Entity\Artisan;
+use App\Utils\Artisan\Features;
 use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\OrderTypes;
+use App\Utils\Artisan\ProductionModels;
+use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Utils;
 use PHPUnit\Framework\TestCase;
 
@@ -34,5 +39,43 @@ class IuFormServiceTest extends TestCase
         }
 
         static::assertEmpty($fieldsInForm, 'Fields left to be matched: '.join(', ', $fieldsInForm));
+    }
+
+    /**
+     * @dataProvider formDataPrefillDataProvider
+     *
+     * @param Artisan $artisan
+     */
+    public function testFormDataPrefill(Artisan $artisan): void
+    {
+        // TODO: implement
+    }
+
+    public function formDataPrefillDataProvider(): array
+    {
+        return [
+            (new Artisan())
+                ->setName('ARTISAN_NAME')
+                ->setFormerly('ARTISAN_FORMERLY')
+                ->setSince('2019-09')
+                ->setCountry('FI')
+                ->setState('ARTISAN_STATE')
+                ->setCity('ARTISAN_CITY')
+                ->setPaymentPlans('ARTISAN_PAYMENT_PLANS')
+                ->setPricesUrl('ARTISAN_PRICES_URL')
+                ->setProductionModels(ProductionModels::getAllValuesAsString())
+                ->setStyles(Styles::getAllValuesAsString())
+                ->setOtherStyles('ARTISAN_OTHER_STYLES')
+                ->setOrderTypes(OrderTypes::getAllValuesAsString())
+                ->setOtherOrderTypes('ARTISAN_OTHER_ORDER_TYPES')
+                ->setFeatures(Features::getAllValuesAsString())
+                ->setOtherFeatures('ARTISAN_OTHER_FEATURES')
+                ->setSpeciesDoes('ARTISAN_SPECIES_DOES')
+                ->setSpeciesDoesnt('ARTISAN_SPECIES_DOESNT')
+                ->setFursuitReviewUrl('ARTISAN_FURSUITREVIEW_URL')
+                ->setWebsiteUrl('ARTISAN_WEBSITE_URL')
+                ->setFaqUrl('ARTISAN_FAQ_URL'),
+                // TODO: finish
+        ];
     }
 }
