@@ -25,7 +25,7 @@ class Features extends Dictionary
     public const ELECTRONICS_ANIMATRONICS = 'Electronics/animatronics';
     public const REMOVABLE_BLUSH = 'Removable blush';
 
-    public static function getAllValues(): array
+    public static function getValues(): array
     {
         return [
             self::FOLLOW_ME_EYES,

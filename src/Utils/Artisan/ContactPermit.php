@@ -11,7 +11,7 @@ class ContactPermit extends Dictionary
     public const ANNOUNCEMENTS = 'ANNOUNCEMENTS';
     public const FEEDBACK = 'FEEDBACK';
 
-    public static function getAllValues(): array
+    public static function getValues(): array
     {
         return [
             self::NO => 'NO, if I made a mistake in the form, feel free to reject whole submission; I don\'t care about keeping my info complete in the future as well.',

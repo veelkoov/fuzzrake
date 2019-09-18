@@ -74,7 +74,7 @@ class IuFormService
 
     private function transformContactAllowed(string $contactAllowed): string
     {
-        return ContactPermit::getAllValues()[$contactAllowed ?: ContactPermit::NO];
+        return ContactPermit::getValues()[$contactAllowed ?: ContactPermit::NO];
     }
 
     private function transformSince(string $since): string

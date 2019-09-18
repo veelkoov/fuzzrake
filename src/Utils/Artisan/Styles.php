@@ -14,7 +14,7 @@ class Styles extends Dictionary
     public const KIGURUMI = 'Kigurumi';
     public const ANIME = 'Anime';
 
-    public static function getAllValues(): array
+    public static function getValues(): array
     {
         return [
             self::TOONY,

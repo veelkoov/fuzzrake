@@ -10,7 +10,7 @@ class ProductionModels extends Dictionary
     public const ARTISTIC_LIBERTY_COMMISSIONS = 'Artistic liberty commissions';
     public const PREMADES = 'Premades';
 
-    public static function getAllValues(): array
+    public static function getValues(): array
     {
         return [
             self::STANDARD_COMMISSIONS,

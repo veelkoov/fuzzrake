@@ -17,7 +17,7 @@ class OrderTypes extends Dictionary
     public const THREE_FOURTH = 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)';
     public const BODYSUITS = 'Bodysuits (as parts/separate)';
 
-    public static function getAllValues(): array
+    public static function getValues(): array
     {
         return [
             self::HEAD,

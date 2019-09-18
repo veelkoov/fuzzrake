@@ -21,6 +21,9 @@ class DataFixer
         '#^n/a$#i'                       => '',
         '#^n/a yet$#i'                   => '',
         '#[ \t]{2,}#'                    => ' ',
+        '#^ANNOUNCEMENTS \+ FEEDBACK$#'  => 'FEEDBACK',
+        '#^ANNOUNCEMENTS \*ONLY\*$#'     => 'ANNOUNCEMENTS',
+        '#^NO \(I may join Telegram\)$#' => 'NO',
     ];
 
     const LIST_REPLACEMENTS = [
@@ -282,8 +285,11 @@ class DataFixer
         return $this->fixString(str_replace("\n", ' ', $input));
     }
 
-    private function fixContactAllowed(string $getContactAllowed): string
+    private function fixContactAllowed(string $contactPermit): string
     {
-        return ContactPermit::getValueKeyMap()[$getContactAllowed];
+        $contactPermit = $this->fixString($contactPermit);
+        $contactPermit = str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $contactPermit);
+
+        return $contactPermit;
     }
 }
