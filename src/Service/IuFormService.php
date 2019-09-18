@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\ContactPermit;
 
 class IuFormService
 {
@@ -73,14 +74,7 @@ class IuFormService
 
     private function transformContactAllowed(string $contactAllowed): string
     {
-        switch ($contactAllowed) {
-            case 'FEEDBACK':
-                return 'ANNOUNCEMENTS + FEEDBACK';
-            case 'ANNOUNCEMENTS':
-                return 'ANNOUNCEMENTS *ONLY*';
-            default:
-                return 'NO (I may join Telegram)';
-        }
+        return ContactPermit::getAllValues()[$contactAllowed ?: ContactPermit::NO];
     }
 
     private function transformSince(string $since): string

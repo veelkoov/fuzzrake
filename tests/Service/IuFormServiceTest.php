@@ -5,21 +5,27 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\Entity\Artisan;
+use App\Service\IuFormService;
+use App\Service\WebpageSnapshotManager;
+use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Utils;
+use App\Utils\Web\UrlFetcherException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-/**
- * Don't judge, I'm having a lot of fun here!
- */
-class IuFormServiceTest extends TestCase
+class IuFormServiceTest extends WebTestCase
 {
     private const REGEXP_DATA_ITEM_PUSH = '#\s\d+ +=> (?:\$this->transform[a-z]+\()?\$artisan->get(?<name>[a-z]+)\(\)\)?,#i';
+    private const POSSIBLE_CONTACT_PERMITS = ['NO', 'CORRECTIONS', 'ANNOUNCEMENTS', 'FEEDBACK'];
 
+    /**
+     * Don't judge, I'm having a lot of fun here!
+     */
     public function testServiceCodeNaively(): void
     {
         $checkedSource = file_get_contents(__DIR__.'/../../src/Service/IuFormService.php');
@@ -41,41 +47,86 @@ class IuFormServiceTest extends TestCase
         static::assertEmpty($fieldsInForm, 'Fields left to be matched: '.join(', ', $fieldsInForm));
     }
 
+    public function testTestCompleteness(): void
+    {
+        static::assertEquals(ContactPermit::count(), count(self::POSSIBLE_CONTACT_PERMITS));
+    }
+
     /**
      * @dataProvider formDataPrefillDataProvider
      *
      * @param Artisan $artisan
+     * @param string $contactAllowed
+     * @throws UrlFetcherException
      */
-    public function testFormDataPrefill(Artisan $artisan): void
+    public function testFormDataPrefill(Artisan $artisan, string $contactAllowed): void
     {
-        // TODO: implement
+        $iuFormService = self::getIuFormService();
+        $webpageSnapshotManager = self::getWebpageSnapshotManager();
+
+        $updateUrl = $iuFormService->getUpdateUrl($artisan);
+        $formWebpage = $webpageSnapshotManager->get($updateUrl, 'N/A');
+        // TODO: finish
     }
 
     public function formDataPrefillDataProvider(): array
     {
-        return [
-            (new Artisan())
-                ->setName('ARTISAN_NAME')
-                ->setFormerly('ARTISAN_FORMERLY')
-                ->setSince('2019-09')
-                ->setCountry('FI')
-                ->setState('ARTISAN_STATE')
-                ->setCity('ARTISAN_CITY')
-                ->setPaymentPlans('ARTISAN_PAYMENT_PLANS')
-                ->setPricesUrl('ARTISAN_PRICES_URL')
-                ->setProductionModels(ProductionModels::getAllValuesAsString())
-                ->setStyles(Styles::getAllValuesAsString())
-                ->setOtherStyles('ARTISAN_OTHER_STYLES')
-                ->setOrderTypes(OrderTypes::getAllValuesAsString())
-                ->setOtherOrderTypes('ARTISAN_OTHER_ORDER_TYPES')
-                ->setFeatures(Features::getAllValuesAsString())
-                ->setOtherFeatures('ARTISAN_OTHER_FEATURES')
-                ->setSpeciesDoes('ARTISAN_SPECIES_DOES')
-                ->setSpeciesDoesnt('ARTISAN_SPECIES_DOESNT')
-                ->setFursuitReviewUrl('ARTISAN_FURSUITREVIEW_URL')
-                ->setWebsiteUrl('ARTISAN_WEBSITE_URL')
-                ->setFaqUrl('ARTISAN_FAQ_URL'),
-                // TODO: finish
-        ];
+        return array_map(function (string $contactAllowed) {
+            return [
+                (new Artisan())
+                    ->setName('ARTISAN_NAME')
+                    ->setFormerly('ARTISAN_FORMERLY')
+                    ->setSince('2019-09')
+                    ->setCountry('FI')
+                    ->setState('ARTISAN_STATE')
+                    ->setCity('ARTISAN_CITY')
+                    ->setPaymentPlans('ARTISAN_PAYMENT_PLANS')
+                    ->setPricesUrl('ARTISAN_PRICES_URL')
+                    ->setProductionModels(ProductionModels::getAllValuesAsString())
+                    ->setStyles(Styles::getAllValuesAsString())
+                    ->setOtherStyles('ARTISAN_OTHER_STYLES')
+                    ->setOrderTypes(OrderTypes::getAllValuesAsString())
+                    ->setOtherOrderTypes('ARTISAN_OTHER_ORDER_TYPES')
+                    ->setFeatures(Features::getAllValuesAsString())
+                    ->setOtherFeatures('ARTISAN_OTHER_FEATURES')
+                    ->setSpeciesDoes('ARTISAN_SPECIES_DOES')
+                    ->setSpeciesDoesnt('ARTISAN_SPECIES_DOESNT')
+                    ->setFursuitReviewUrl('ARTISAN_FURSUITREVIEW_URL')
+                    ->setWebsiteUrl('ARTISAN_WEBSITE_URL')
+                    ->setFaqUrl('ARTISAN_FAQ_URL')
+                    ->setQueueUrl('ARTISAN_QUEUE_URL')
+                    ->setFurAffinityUrl('ARTISAN_FURAFFINITY_URL')
+                    ->setDeviantArtUrl('ARTISAN_DEVIANTART_URL')
+                    ->setTwitterUrl('ARTISAN_TWITTER_URL')
+                    ->setFacebookUrl('ARTISAN_FACEBOOK_URL')
+                    ->setTumblrUrl('ARTISAN_TUMBLR_URL')
+                    ->setInstagramUrl('ARTISAN_INSTAGRAM_URL')
+                    ->setYoutubeUrl('ARTISAN_YOUTUBE_URL')
+                    ->setOtherUrls('ARTISAN_OTHER_URLS')
+                    ->setCstUrl('ARTISAN_CST_URL')
+                    ->setScritchesUrl('ARTISAN_SCRITCHES_URL')
+                    ->setScritchesPhotosUrls('ARTISAN_SCRITCHES_PHOTOS_URLS')
+                    ->setLanguages('ARTISAN_LANGUAGES')
+                    ->setMakerId('ARTISAN_MAKER_UI')
+                    ->setIntro('ARTISAN_INTRO')
+                    ->setNotes('ARTISAN_NOTES')
+                    ->setContactAllowed($contactAllowed)
+                    ->setContactInfoObfuscated('ARTISAN_CONTACT_INFO_OBFUSCATED'),
+                $contactAllowed,
+            ];
+        }, self::POSSIBLE_CONTACT_PERMITS);
+    }
+
+    private static function getIuFormService(): IuFormService
+    {
+        $servicesYamlPath = __DIR__.'/../../config/services.yaml';
+        $iuFormUrl = trim(`sed -n '/iu_form_url:/p' '$servicesYamlPath' | cut -f2 -d"'"`);
+
+        return new IuFormService($iuFormUrl);
+    }
+
+    private static function getWebpageSnapshotManager(): WebpageSnapshotManager
+    {
+        return new WebpageSnapshotManager(__DIR__.'/../../');
     }
 }
