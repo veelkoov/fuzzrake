@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class StatisticsControllerTest extends WebTestCase
+class StatisticsControllerTest extends DbEnabledWebTestCase
 {
     public function testStatistics()
     {
         $client = static::createClient();
+        self::addSimpleArtisan();
 
         $client->request('GET', '/statistics.html');
 
@@ -21,6 +20,7 @@ class StatisticsControllerTest extends WebTestCase
     public function testOrdering()
     {
         $client = static::createClient();
+        self::addSimpleArtisan();
 
         $client->request('GET', '/ordering.html');
 

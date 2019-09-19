@@ -47,7 +47,7 @@ class Event
      *
      * @ORM\Column(type="string", length=16)
      */
-    private $type;
+    private $type = '';
 
     /**
      * @var bool|null
