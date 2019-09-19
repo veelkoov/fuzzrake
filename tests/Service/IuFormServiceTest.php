@@ -15,8 +15,9 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Utils;
 use App\Utils\Web\UrlFetcherException;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
+use Symfony\Component\DomCrawler\Crawler;
 
 class IuFormServiceTest extends WebTestCase
 {
@@ -66,7 +67,71 @@ class IuFormServiceTest extends WebTestCase
 
         $updateUrl = $iuFormService->getUpdateUrl($artisan);
         $formWebpage = $webpageSnapshotManager->get($updateUrl, 'N/A');
-        // TODO: finish
+
+        $crawler = new Crawler($formWebpage->getContents());
+
+        foreach ([
+                     ProductionModels::getValues(),
+                     Features::getValues(),
+                     OrderTypes::getValues(),
+                     Styles::getValues()
+                 ] as $list) {
+            foreach ($list as $value) {
+                self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+            }
+        }
+
+        $textareas = $crawler->filter('textarea[name^="entry."]')->each(function ($node, int $i) {
+            return $node->text();
+        });
+
+        foreach (Fields::exportedToIuForm() as $field) {
+            switch ($field->name()) {
+                case Fields::PRODUCTION_MODELS:
+                case Fields::STYLES:
+                case Fields::ORDER_TYPES:
+                case Fields::FEATURES:
+                    break; // Validated above
+
+                case Fields::INTRO:
+                case Fields::OTHER_FEATURES:
+                case Fields::OTHER_STYLES:
+                case Fields::OTHER_ORDER_TYPES:
+                case Fields::PAYMENT_PLANS:
+                case Fields::SPECIES_DOES:
+                case Fields::SPECIES_DOESNT:
+                case Fields::URLS_SCRITCHES_PHOTOS:
+                case Fields::URLS_OTHER:
+                case Fields::NOTES:
+                    $value = $artisan->get($field);
+                    self::assertContains($value, $textareas, "Failed to find $value");
+                    break;
+
+                case Fields::CONTACT_ALLOWED:
+                    $value = ContactPermit::getValues()[$artisan->get($field)];
+                    self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                    break;
+
+                case Fields::SINCE:
+                    // FIXME: validate; Google throws 3 text inputs at fetcher instead of one date
+                    break;
+
+                case Fields::VALIDATION_CHECKBOX:
+                    $value = 'Yes, I\'m not on the list yet, or I used the update link';
+                    self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                    break;
+
+                default:
+                    $value = $artisan->get($field);
+
+                    try {
+                        self::assertCount(1, $crawler->filter('input[type=text][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                    } catch (SyntaxErrorException $e) {
+                        self::fail("Value caused syntax error {$e->getMessage()}: $value");
+                    }
+                    break;
+            }
+        }
     }
 
     public function formDataPrefillDataProvider(): array
