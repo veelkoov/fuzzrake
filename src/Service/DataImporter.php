@@ -289,11 +289,16 @@ class DataImporter
 
     private function reportInvalidPasscode(SymfonyStyle $io, ImportItem $item, string $expectedPasscode): void
     {
+        $weekLater = DateTimeUtils::getWeekLaterYmd();
+        $makerId = $item->getMakerId();
+        $hash = $item->getHash();
+
         $io->warning("{$item->getNames()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
         $io->writeln([
-            Manager::CMD_IGNORE_PIN.":{$item->getMakerId()}:{$item->getHash()}:",
-            Manager::CMD_REJECT.":{$item->getMakerId()}:{$item->getHash()}:",
-            Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:",
+            Manager::CMD_IGNORE_PIN.":$makerId:$hash:",
+            Manager::CMD_REJECT.":$makerId:$hash:",
+            Manager::CMD_SET_PIN.":$makerId:$hash:",
+            Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
         ]);
     }
 }
