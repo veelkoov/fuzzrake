@@ -392,7 +392,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1065 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1071 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -661,6 +661,12 @@ INSERT INTO `events` VALUES (1046,'2019-09-12 18:07:50', '', 'CS_UPDTD_DETLS', N
 INSERT INTO `events` VALUES (1055,'2019-09-12 18:07:50', '', 'CS_UPDTD_DETLS', 1, 0, 'Goldenpaw Studio', 'https://twitter.com/GoldenpawStudio', '', '[\"lineblock u-dir\\\" dir=\\\"ltr\\\"> @goldenpawstudio </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">\",\"quotes and commissions are closed\",\" until 2020 fursuit maker, doodler, creator stay tuned for many updates as i progress! http://golden\"]');
 INSERT INTO `events` VALUES (1060,'2019-09-15 13:37:43', '- Information on \"Info\" and \"Tracking\" pages was updated (<a href=\"https://twitter.com/veelkoov/status/1173229066792656900\" target=\"_blank\">Twitter</a>, <a href=\"https://github.com/veelkoov/fuzzrake/commit/6952811d4dc8c4031e02049387c3075bcc06a5c9\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
 INSERT INTO `events` VALUES (1061,'2019-09-16 18:07:50', '', 'CS_UPDTD_DETLS', 0, 1, 'Maria\'s Creative Corner', 'http://mcreativecorner.com/', '[\" also support me on patreon. it will help me experiment with some new techniques. </p> <p> </p> <h4>\",\"commission status: open\",\"</h4> <h4>quote status: open</h4> <h5>(waiting time for a finished fursuit for new commissioners, is\"]', '');
+INSERT INTO `events` VALUES (1065,'2019-09-19 19:14:24', '- Updated 2 makers\' data based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/cdd30c4b02aaff39d4b15eb2aa2b7443fe4c6223\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (1066,'2019-09-22 11:06:53', '', 'CS_UPDTD_DETLS', 0, NULL, 'Toffeee', 'http://www.furaffinity.net/user/toffeee/', '', '');
+INSERT INTO `events` VALUES (1067,'2019-09-22 11:06:53', '', 'CS_UPDTD_DETLS', 1, 0, 'Kayla\'s Kritterz', 'https://twitter.com/KaylasKritterz', '', '[\"rops, i do it all! want a commission? email me at kaylaskritterz@yahoo.com-no pms for com inquires- \",\"commission status: closed\",\"</p> <div class=\\\"profileheadercard-location \\\"> usa </div> <div class=\\\"profileheadercard-url \\\"> kayla\"]');
+INSERT INTO `events` VALUES (1068,'2019-09-22 11:06:58', '', 'CS_UPDTD_DETLS', NULL, 0, 'Fursewna Studios', 'http://fursewnastudios.weebly.com/', '', '[\"nner-container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\">fursuit queue \",\"currently: closed\",\"</h2> <div class=\\\"paragraph\\\">for updates: please check out our telegram or trello!</div> </div> </di\"]');
+INSERT INTO `events` VALUES (1069,'2019-09-22 11:06:58', '', 'CS_UPDTD_DETLS', 1, 0, 'Onix Angel Creations', 'https://www.onixangelcreations.com/', '', '[\"spacer\\\"></div> </td> </tr> </tbody> </table> </div></div></div> <h2 class=\\\"wsite-content-title\\\">all \",\"commissions currently closed\",\" until further notice.</h2> <div class=\\\"wsite-spacer\\\"></div> <div><div class=\\\"wsite-multicol\\\"><div c\"]');
+INSERT INTO `events` VALUES (1070,'2019-09-22 11:06:58', '', 'CS_UPDTD_DETLS', 1, 0, 'Color Carnage', 'https://www.colorcarnage.com/', '', '[\"e: styledtext id: dataitem-jaa22m7v ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\">\",\"commission status : closed\",\"</h1> stylesmapid: ck_editor_paragraph_styles type: basicmenuitem id: dataitem-jfpsjitf ispreset: sc\"]');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
