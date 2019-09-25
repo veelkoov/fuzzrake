@@ -40,6 +40,11 @@ function openArtisanByFragment(hash) {
 }
 
 export function init() {
+    $('#scam-risk-acknowledgement').on('click', (event) => {
+        $('#scam-risk-warning, #scam-risk-acknowledged').toggle();
+        event.preventDefault();
+    });
+
     DataTable.init();
     DetailsModal.init();
 
@@ -49,7 +54,7 @@ export function init() {
 
     openArtisanByFragment(window.location.hash);
 
-    $('#processingData, #dataProcessed').toggle();
+    $('#data-loading-message, #data-table-container').toggle();
 }
 
 export {Artisan};
