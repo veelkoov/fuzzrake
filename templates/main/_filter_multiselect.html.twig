@@ -28,7 +28,7 @@
     <div class="row">
         {% apply spaceless %}
             {% for item in items.items %}
-                {% set checkboxId = item.value ~ 'CheckBox' ~ loop.index %}
+                {% set checkboxId = itemName ~ 'CheckBox' ~ loop.index %}
 
                 <div class="col-sm-6 col-lg-3">
                     <div class="form-check form-check-inline">
