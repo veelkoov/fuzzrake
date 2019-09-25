@@ -97,7 +97,6 @@ class HtmlPreprocessor
                 $filtered = $crawler->filter('#page-userpage > tr:first-child > td:first-child > table.maintable > tr:first-child > td:first-child > table.maintable '.$additionalFilter);
 
                 if ($filtered->count() !== 1) {
-                    var_dump($filtered);
                     throw new TrackerException('Failed to filter FA profile, nodes count: '.$filtered->count());
                 }
 
