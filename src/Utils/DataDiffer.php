@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\Field;
+use App\Utils\Artisan\Fields;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Utils\ArtisanFields as Fields;
 
 class DataDiffer
 {
@@ -41,7 +42,7 @@ class DataDiffer
         }
     }
 
-    private function showSingleFieldDiff(bool &$nameShown, ArtisanField $field, Artisan $old, Artisan $new, ?Artisan $imported): void
+    private function showSingleFieldDiff(bool &$nameShown, Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
         $newVal = $new->get($field) ?: '';
         $oldVal = $old->get($field) ?: '';
@@ -65,7 +66,7 @@ class DataDiffer
     private function showArtisanNameIfFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
     {
         if (!$nameShown) {
-            $this->io->section(Utils::artisanNamesSafeForCli($old, $new));
+            $this->io->section(StrUtils::artisanNamesSafeForCli($old, $new));
 
             $nameShown = true;
         }
@@ -81,7 +82,7 @@ class DataDiffer
                 $item = "<d>$item</>";
             }
 
-            $item = Utils::strSafeForCli($item);
+            $item = StrUtils::strSafeForCli($item);
         }
 
         foreach ($newValItems as &$item) {
@@ -89,11 +90,11 @@ class DataDiffer
                 $item = "<a>$item</>";
             }
 
-            $item = Utils::strSafeForCli($item);
+            $item = StrUtils::strSafeForCli($item);
         }
 
         if ($impVal && $impVal !== $newVal) {
-            $impVal = Utils::strSafeForCli($impVal ?: '');
+            $impVal = StrUtils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
 
@@ -107,42 +108,42 @@ class DataDiffer
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
         if ($impVal && $impVal !== $newVal && !$this->skipImpValue($fieldName)) {
-            $impVal = Utils::strSafeForCli($impVal ?: '');
+            $impVal = StrUtils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
 
         if ($oldVal) {
-            $oldVal = Utils::strSafeForCli($oldVal);
+            $oldVal = StrUtils::strSafeForCli($oldVal);
             $this->io->writeln("OLD $fieldName: <d>$oldVal</>");
         }
 
         if ($newVal) {
-            $newVal = Utils::strSafeForCli($newVal);
+            $newVal = StrUtils::strSafeForCli($newVal);
             $this->io->writeln("NEW $fieldName: <a>$newVal</>");
         }
     }
 
-    private function showFixCommandOptionally(string $makerId, ArtisanField $field, string $replaced, string $best)
+    private function showFixCommandOptionally(string $makerId, Field $field, string $replaced, string $best)
     {
         if ($this->showFixCommands && !$this->skipFixCommand($field->name())) {
-            $replaced = Utils::strSafeForCli($replaced);
-            $best = Utils::strSafeForCli($best);
+            $replaced = StrUtils::strSafeForCli($replaced);
+            $best = StrUtils::strSafeForCli($best);
             $this->io->writeln("<f>wr:$makerId:{$field->name()}:|:$replaced|$best|</f>");
         }
     }
 
     private function skipImpValue(string $fieldName): bool
     {
-        return in_array($fieldName, [ArtisanFields::CONTACT_ALLOWED, ArtisanFields::CONTACT_METHOD, ArtisanFields::CONTACT_INFO_OBFUSCATED]);
+        return in_array($fieldName, [Fields::CONTACT_ALLOWED, Fields::CONTACT_METHOD, Fields::CONTACT_INFO_OBFUSCATED]);
     }
 
     private function skipFixCommand(string $fieldName): bool
     {
         return in_array($fieldName, [
-            ArtisanFields::CONTACT_ALLOWED,
-            ArtisanFields::CONTACT_METHOD,
-            ArtisanFields::CONTACT_INFO_OBFUSCATED,
-            ArtisanFields::CONTACT_ADDRESS_PLAIN,
+            Fields::CONTACT_ALLOWED,
+            Fields::CONTACT_METHOD,
+            Fields::CONTACT_INFO_OBFUSCATED,
+            Fields::CONTACT_ADDRESS_PLAIN,
         ]);
     }
 }

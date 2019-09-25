@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class RestApiControllerTest extends WebTestCase
+class RestApiControllerTest extends DbEnabledWebTestCase
 {
     public function testArtisans()
     {
         $client = static::createClient();
+        self::addSimpleArtisan();
 
         $client->request('GET', '/api/artisans.json');
 

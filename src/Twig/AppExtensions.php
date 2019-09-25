@@ -10,7 +10,7 @@ use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\Status;
-use App\Utils\Utils;
+use App\Utils\StrUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -49,7 +49,7 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
-            new TwigFilter('event_url', [Utils::class, 'shortPrintUrl']),
+            new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
             new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),

@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Artisan;
 
 use App\Entity\Artisan;
+use App\Utils\Contact;
 
-class ArtisanUtils
+class Utils
 {
     private function __construct()
     {
@@ -14,10 +15,10 @@ class ArtisanUtils
 
     public static function updateContact(Artisan $artisan, string $newOriginalContactValue): void
     {
-        list($method, $address) = ContactParser::parse($newOriginalContactValue);
+        list($method, $address) = Contact::parse($newOriginalContactValue);
 
         switch ($method) {
-            case ContactParser::INVALID:
+            case Contact::INVALID:
                 $obfuscated = 'PLEASE CORRECT';
                 break;
 
@@ -26,7 +27,7 @@ class ArtisanUtils
                 break;
 
             default:
-                $obfuscated = $method.': '.Utils::obscureContact($address);
+                $obfuscated = $method.': '.Contact::obscure($address);
                 break;
         }
 

@@ -94,8 +94,14 @@ class HtmlPreprocessor
                 $additionalFilter = 'profile' === $additionalFilter ? 'td[width="80%"][align="left"]' : '';
 
                 $crawler = new Crawler($inputText);
+                $filtered = $crawler->filter('#page-userpage > tr:first-child > td:first-child > table.maintable > tr:first-child > td:first-child > table.maintable '.$additionalFilter);
 
-                return $crawler->filter('#page-userpage tr:first-child table.maintable '.$additionalFilter)->html();
+                if ($filtered->count() !== 1) {
+                    var_dump($filtered);
+                    throw new TrackerException('Failed to filter FA profile, nodes count: '.$filtered->count());
+                }
+
+                return $filtered->html();
             }
 
             return $inputText;
@@ -103,14 +109,24 @@ class HtmlPreprocessor
 
         if (WebsiteInfo::isTwitter($inputText)) {
             $crawler = new Crawler($inputText);
+            $filtered = $crawler->filter('div.profileheadercard');
 
-            return $crawler->filter('div.profileheadercard')->html();
+            if ($filtered->count() !== 1) {
+                throw new TrackerException('Failed to filter Twitter profile, nodes count: '.$filtered->count());
+            }
+
+            return $filtered->html();
         }
 
         if (WebsiteInfo::isInstagram($inputText)) {
             $crawler = new Crawler($inputText);
+            $filtered = $crawler->filter('script[type="application/ld+json"]');
 
-            return $crawler->filter('script[type="application/ld+json"]')->html();
+            if ($filtered->count() !== 1) {
+                throw new TrackerException('Failed to filter Instagram profile, nodes count: '.$filtered->count());
+            }
+
+            return $filtered->html();
         }
 
         return $inputText;

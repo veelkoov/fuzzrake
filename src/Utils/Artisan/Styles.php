@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Utils\Artisan;
+
+class Styles
+{
+    public const TOONY = 'Toony';
+    public const SEMI_TOONY = 'Semi Toony';
+    public const SEMI_REALISTIC = 'Semi Realistic';
+    public const REALISTIC = 'Realistic';
+    public const KEMONO = 'Kemono';
+    public const KIGURUMI = 'Kigurumi';
+    public const ANIME = 'Anime';
+}

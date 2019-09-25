@@ -6,8 +6,8 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanFields as Fields;
-use App\Utils\ArtisanUtils;
+use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\Utils;
 use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\DateTimeUtils;
@@ -16,7 +16,7 @@ use App\Utils\Import\ImportException;
 use App\Utils\Import\ImportItem;
 use App\Utils\Import\Manager;
 use App\Utils\Import\RawImportItem;
-use App\Utils\Utils;
+use App\Utils\StrUtils;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -173,7 +173,7 @@ class DataImporter
                         break; // No updates
                     }
 
-                    ArtisanUtils::updateContact($artisan, $newValue);
+                    Utils::updateContact($artisan, $newValue);
                     break;
 
                 default:
@@ -255,9 +255,9 @@ class DataImporter
 
     private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
     {
-        return 'Was looking for: '.Utils::artisanNamesSafeForCli($artisan).'. Found more than one: '
+        return 'Was looking for: '.StrUtils::artisanNamesSafeForCli($artisan).'. Found more than one: '
             .implode(', ', array_map(function (Artisan $artisan) {
-                return Utils::artisanNamesSafeForCli($artisan);
+                return StrUtils::artisanNamesSafeForCli($artisan);
             }, $results));
     }
 
@@ -289,11 +289,16 @@ class DataImporter
 
     private function reportInvalidPasscode(SymfonyStyle $io, ImportItem $item, string $expectedPasscode): void
     {
+        $weekLater = DateTimeUtils::getWeekLaterYmd();
+        $makerId = $item->getMakerId();
+        $hash = $item->getHash();
+
         $io->warning("{$item->getNames()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
         $io->writeln([
-            Manager::CMD_IGNORE_PIN.":{$item->getMakerId()}:{$item->getHash()}:",
-            Manager::CMD_REJECT.":{$item->getMakerId()}:{$item->getHash()}:",
-            Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:",
+            Manager::CMD_IGNORE_PIN.":$makerId:$hash:",
+            Manager::CMD_REJECT.":$makerId:$hash:",
+            Manager::CMD_SET_PIN.":$makerId:$hash:",
+            Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
         ]);
     }
 }

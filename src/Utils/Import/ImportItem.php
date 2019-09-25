@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use App\Entity\Artisan;
-use App\Utils\Utils;
+use App\Utils\StrUtils;
 
 class ImportItem
 {
@@ -65,13 +65,13 @@ class ImportItem
 
     public function getIdStringSafe(): string
     {
-        return Utils::artisanNamesSafeForCli($this->getInput(), $this->getArtisan(), $this->getOriginalArtisan())
+        return StrUtils::artisanNamesSafeForCli($this->getInput(), $this->getArtisan(), $this->getOriginalArtisan())
             .' ['.$this->raw->getTimestamp()->format(DATE_ISO8601).']';
     }
 
     public function getNames(): string
     {
-        return Utils::artisanNamesSafeForCli($this->getOriginalArtisan(), $this->getArtisan());
+        return StrUtils::artisanNamesSafeForCli($this->getOriginalArtisan(), $this->getArtisan());
     }
 
     public function getMakerId(): string

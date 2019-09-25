@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\Features;
+use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\OrderTypes;
 use App\Utils\Regexp\Utils as Regexp;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -24,50 +26,50 @@ class DataFixer
     ];
 
     const LIST_REPLACEMENTS = [
-        'n/a' => '',
+        'n/a'                                                         => '',
 
-        'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
-        'Partial \(Head, handpaws, tail, feetpaws\)'                  => 'Partial (head + handpaws + tail + feetpaws)',
-        'Mini partial \(Head, handpaws, tail\)'                       => 'Mini partial (head + handpaws + tail)',
-        'Three-fourth \(Head+handpaws+tail+legs/pants+feetpaws\)'     => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
-        'Partial \(Head+handpaws+tail+feetpaws\)'                     => 'Partial (head + handpaws + tail + feetpaws)',
-        'Mini partial \(Head+handpaws+tail\)'                         => 'Mini partial (head + handpaws + tail)',
+        'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => OrderTypes::THREE_FOURTH,
+        'Partial \(Head, handpaws, tail, feetpaws\)'                  => OrderTypes::PARTIAL,
+        'Mini partial \(Head, handpaws, tail\)'                       => OrderTypes::MINI_PARTIAL,
+        'Three-fourth \(Head+handpaws+tail+legs/pants+feetpaws\)'     => OrderTypes::THREE_FOURTH,
+        'Partial \(Head+handpaws+tail+feetpaws\)'                     => OrderTypes::PARTIAL,
+        'Mini partial \(Head+handpaws+tail\)'                         => OrderTypes::MINI_PARTIAL,
+        'Follow me eyes'                                              => Features::FOLLOW_ME_EYES,
+        'Adjustable ears / wiggle ears'                               => Features::ADJUSTABLE_WIGGLE_EARS,
 
-        'Excellent vision &amp; breathability' => 'Excellent vision & breathability',
+        'Excellent vision &amp; breathability'                        => 'Excellent vision & breathability',
+        'Bases, jawsets, silicone noses/tongues'                      => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
+        'Silicone and resin parts'                                    => "Silicone parts\nResin parts",
+        'accessories and cleaning'                                    => 'Accessories and cleaning', // TODO
+        'backpacks'                                                   => 'Backpacks',
+        'claws'                                                       => 'Claws',
+        'Armsleeves|Arm Sleeves'                                      => 'Arm sleeves',
+        'Head Bases'                                                  => 'Head bases',
+        'Plushes'                                                     => 'Plushies',
+        'Plushie, backpacks, bandanas, collars, general accessories'  => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
+        'Eyes, noses, claws'                                          => "Eyes\nNoses\nClaws",
+        'Resin and silicone parts'                                    => "Resin parts\nSilicone parts",
+        'Sleeves \(legs and arms\)'                                   => "Arm sleeves\nLeg sleeves",
+        'Fursuit Props'                                               => 'Fursuit props',
+        'Fursuit Props and Accessories, Fursuit supplies'             => "Fursuit props\nFursuit accessories\nFursuit supplies",
+        'Fleece Props, Other accessories'                             => "Fleece props\nOther accessories",
+        'Sock paws'                                                   => 'Sockpaws',
+        'Removable magnetic parts, secret pockets'                    => "Removable magnetic parts\nHidden pockets",
+        'Plush Suits'                                                 => 'Plush suits',
+        'Femme Suits'                                                 => 'Femme suits',
+        'Just Ask'                                                    => 'Just ask',
+        'props and can do plushies'                                   => "Props\nCan do plushies",
+        'Removable Eyes'                                              => 'Removable eyes',
+        'Removable/interchangeable eyes'                              => "Removable eyes\nInterchangeable eyes",
+        'Pickable Nose'                                               => 'Pickable nose',
+        '(.+)changable(.+)'                                           => '$1changeable$2',
+        'Fursuit Sprays?'                                             => 'Fursuit sprays',
+        'Arm sleeves, plush props, fursuit spray'                     => "Arm sleeves\nPlush props\nFursuit sprays",
+        'Body padding/plush suits'                                    => "Body padding\nPlush suits",
+        'Dry brushing'                                                => 'Drybrushing',
+        'Bendable wings and tails'                                    => "Bendable wings\nBendable tails",
 
-        'Follow me eyes'                                             => 'Follow-me eyes',
-        'Adjustable ears / wiggle ears'                              => 'Adjustable/wiggle ears',
-        'Bases, jawsets, silicone noses/tongues'                     => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
-        'Silicone and resin parts'                                   => "Silicone parts\nResin parts",
-        'accessories and cleaning'                                   => 'Accessories and cleaning', // TODO
-        'backpacks'                                                  => 'Backpacks',
-        'claws'                                                      => 'Claws',
-        'Armsleeves|Arm Sleeves'                                     => 'Arm sleeves',
-        'Head Bases'                                                 => 'Head bases',
-        'Plushes'                                                    => 'Plushies',
-        'Plushie, backpacks, bandanas, collars, general accessories' => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
-        'Eyes, noses, claws'                                         => "Eyes\nNoses\nClaws",
-        'Resin and silicone parts'                                   => "Resin parts\nSilicone parts",
-        'Sleeves \(legs and arms\)'                                  => "Arm sleeves\nLeg sleeves",
-        'Fursuit Props'                                              => 'Fursuit props',
-        'Fursuit Props and Accessories, Fursuit supplies'            => "Fursuit props\nFursuit accessories\nFursuit supplies",
-        'Fleece Props, Other accessories'                            => "Fleece props\nOther accessories",
-        'Sock paws'                                                  => 'Sockpaws',
-        'Removable magnetic parts, secret pockets'                   => "Removable magnetic parts\nHidden pockets",
-        'Plush Suits'                                                => 'Plush suits',
-        'Femme Suits'                                                => 'Femme suits',
-        'Just Ask'                                                   => 'Just ask',
-        'props and can do plushies'                                  => "Props\nCan do plushies",
-        'Removable Eyes'                                             => 'Removable eyes',
-        'Removable/interchangeable eyes'                             => "Removable eyes\nInterchangeable eyes",
-        'Pickable Nose'                                              => 'Pickable nose',
-        '(.+)changable(.+)'                                          => '$1changeable$2',
-        'Fursuit Sprays?'                                            => 'Fursuit sprays',
-        'Armsleeves, plush props, fursuit spray'                     => "Arm sleeves\nPlush props\nFursuit sprays",
-        'Body padding/plush suits'                                   => "Body padding\nPlush suits",
-        'Dry brushing'                                               => 'Drybrushing',
-        'Bendable wings and tails'                                   => "Bendable wings\nBendable tails",
-        'QQQQQ'                                                      => 'QQQQQ',
+        'QQQQQ'                                                       => 'QQQQQ',
     ];
 
     const COUNTRIES_REPLACEMENTS = [
@@ -173,7 +175,7 @@ class DataFixer
     {
         foreach (Fields::persisted() as $field) {
             if ($field->validationRegexp() && !Regexp::match($field->validationRegexp(), $artisan->get($field))) {
-                $safeValue = Utils::strSafeForCli($artisan->get($field));
+                $safeValue = StrUtils::strSafeForCli($artisan->get($field));
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }
@@ -181,23 +183,19 @@ class DataFixer
 
     private function fixList(string $input, bool $sort, string $separatorRegexp): string
     {
-        $list = array_filter(array_map(function ($item) {
-            $item = trim($item);
+        $input = implode("\n", array_filter(array_map('trim', Regexp::split($separatorRegexp, $input))));
 
-            foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
-                $item = Regexp::replace("#(?:^|\n)$pattern(?:\n|$)#i", $replacement, $item);
-            }
-
-            return $item;
-        }, Regexp::split($separatorRegexp, $input)));
-
-        $list = ($list);
-
-        if ($sort) {
-            sort($list);
+        foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
+            $input = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $input);
         }
 
-        return implode("\n", array_unique($list));
+        $input = explode("\n", $input);
+
+        if ($sort) {
+            sort($input);
+        }
+
+        return implode("\n", array_unique($input));
     }
 
     private function fixCountry(string $input): string

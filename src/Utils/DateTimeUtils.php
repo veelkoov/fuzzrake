@@ -10,9 +10,6 @@ use Exception;
 
 class DateTimeUtils
 {
-    /**
-     * @return DateTime
-     */
     public static function getNowUtc(): DateTime
     {
         try {
@@ -48,11 +45,11 @@ class DateTimeUtils
         return date('Y-m-d', strtotime('+1 month'));
     }
 
-    /**
-     * @param DateTime $dateTime
-     *
-     * @return bool
-     */
+    public static function getWeekLaterYmd()
+    {
+        return date('Y-m-d', strtotime('+1 week'));
+    }
+
     public static function passed(DateTime $dateTime): bool
     {
         return self::getNowUtc() > $dateTime;
