@@ -15,6 +15,7 @@ use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\UrlFetcherException;
 use Doctrine\Common\Persistence\ObjectManager;
+use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -88,7 +89,7 @@ class CommissionStatusUpdateService
             $webpageSnapshot = $this->snapshots->get($artisan->getCstUrl(), $artisan->getName());
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException | UrlFetcherException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
+        } catch (TrackerException | InvalidArgumentException | UrlFetcherException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
         }
