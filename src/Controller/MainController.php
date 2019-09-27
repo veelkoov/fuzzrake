@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
+use App\Service\IuFormService;
 use App\Utils\FilterItems;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
@@ -38,6 +41,28 @@ class MainController extends AbstractController
             'commissionsStatuses' => $artisanRepository->getDistinctCommissionStatuses(),
             'countries'           => $this->getCountriesFilterData($countriesToCount, $projectDir),
         ]);
+    }
+
+    /**
+     * @Route("/redirect_iu_form/{makerId}", name="redirect_iu_form")
+     *
+     * @param ArtisanRepository $artisanRepository
+     * @param IuFormService     $iuFormService
+     * @param string            $makerId
+     *
+     * @return Response
+     *
+     * @throws NotFoundHttpException
+     */
+    public function redirectToIuForm(ArtisanRepository $artisanRepository, IuFormService $iuFormService, string $makerId): Response
+    {
+        try {
+            $artisan = $artisanRepository->findByMakerId($makerId);
+        } catch (NonUniqueResultException | NoResultException $e) {
+            throw $this->createNotFoundException('Failed to find a maker with given ID');
+        }
+
+        return $this->redirect($iuFormService->getUpdateUrl($artisan));
     }
 
     private function getCountriesFilterData(FilterItems $countries, string $projectDir): FilterItems

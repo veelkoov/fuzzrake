@@ -13,10 +13,6 @@ class Contact
     public const TELEGRAM = 'TELEGRAM';
     public const E_MAIL = 'E-MAIL';
 
-    public const ALLOW_FEEDBACK = 'FEEDBACK';
-    public const ALLOW_ANNOUNCEMENTS = 'ANNOUNCEMENTS';
-    public const ALLOW_NOTHING = 'NO';
-
     private function __construct()
     {
     }

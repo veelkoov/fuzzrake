@@ -35,10 +35,11 @@ class UrlFetcher
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $errorMsg = curl_error($ch);
+        $errorNo = curl_errno($ch);
         curl_close($ch);
 
         if (false === $result || !in_array($httpCode, [200, 401])) {
-            throw new UrlFetcherException("Failed to fetch URL ($httpCode): $url, ".($errorMsg ?: 'CURL failed'));
+            throw new UrlFetcherException("Failed to fetch URL ($httpCode): $url, ".($errorMsg ?: 'CURL failed')." ($errorNo)");
         }
 
         return $result;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\OrderTypes;
@@ -162,7 +163,7 @@ class DataFixer
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
         $artisan->setLanguages($this->fixString($artisan->getLanguages()));
 
-        $artisan->setContactAllowed($this->fixString($artisan->getContactAllowed()));
+        $artisan->setContactAllowed($this->fixContactAllowed($artisan->getContactAllowed()));
 
         if ($this->showDiff) {
             $this->differ->showDiff($originalArtisan, $artisan);
@@ -282,5 +283,13 @@ class DataFixer
     private function fixIntro(string $input): string
     {
         return $this->fixString(str_replace("\n", ' ', $input));
+    }
+
+    private function fixContactAllowed(string $contactPermit): string
+    {
+        $contactPermit = $this->fixString($contactPermit);
+        $contactPermit = str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $contactPermit);
+
+        return $contactPermit;
     }
 }

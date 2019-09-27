@@ -41,6 +41,8 @@ class Fields
     const URL_INSTAGRAM = 'URL_INSTAGRAM';
     const URL_YOUTUBE = 'URL_YOUTUBE';
     const URLS_OTHER = 'URLS_OTHER';
+    const URL_SCRITCHES = 'URL_SCRITCHES';
+    const URLS_SCRITCHES_PHOTOS = 'URLS_SCRITCHES_PHOTOS';
     const URL_CST = 'URL_CST';
     const LANGUAGES = 'LANGUAGES';
     const MAKER_ID = 'MAKER_ID';
@@ -97,6 +99,8 @@ class Fields
         self::URL_INSTAGRAM              => ['instagramUrl',             VR::INSTAGRAM_URL,             0, 1, 1, 1],
         self::URL_YOUTUBE                => ['youtubeUrl',               VR::YOUTUBE_URL,               0, 1, 1, 1],
         self::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
+        self::URL_SCRITCHES              => ['scritchesUrl',             VR::SCRITCHES_URL,             0, 1, 1, 1],
+        self::URLS_SCRITCHES_PHOTOS      => ['scritchesPhotosUrls',      VR::SCRITCHES_PHOTOS_URLS,     0, 1, 1, 1],
         self::URLS_OTHER                 => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
         self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  0, 1, 1, 1],
         self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
@@ -152,6 +156,8 @@ class Fields
         self::URL_YOUTUBE           => ['#YouTube#i',                         1, 1],
         self::URLS_OTHER            => ['#other websites#i',                  1, 1],
         self::URL_CST               => ['#commissions status#i',              1, 1],
+        self::URL_SCRITCHES         => ['#Got scritch\.es\?#i',               1, 1],
+        self::URLS_SCRITCHES_PHOTOS => ['#"featured" photos#i',               1, 1],
         self::LANGUAGES             => ['#languages#i',                       1, 1],
         self::MAKER_ID              => ['#Maker ID#i',                        1, 1],
         self::INTRO                 => ['#intro#i',                           1, 1],
