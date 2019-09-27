@@ -19,10 +19,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 
-class IuFormGetIdsCommand extends Command
+class IuFormUpdateIdsCommand extends Command
 {
-    protected static $defaultName = 'app:iu-form:get-ids';
-    private static $gfHelperFilePath = __DIR__.'/../../assets/js/main/GoogleFormsHelper.ts';
+    protected static $defaultName = 'app:iu-form:update-ids';
+    private static $updatedFilePath = __DIR__.'/../Service/IuFormService.php';
 
     /**
      * @var string
@@ -75,7 +75,7 @@ class IuFormGetIdsCommand extends Command
             return 1;
         }
 
-        $helperFileContents = file_get_contents(self::$gfHelperFilePath);
+        $updatedFileContents = file_get_contents(self::$updatedFilePath);
         $form = new Form($data);
 
         $questionsLeftToMatch = array_filter($form->getItems(), function (Item $item) {
@@ -108,19 +108,23 @@ class IuFormGetIdsCommand extends Command
                 }
 
                 if ($field->modelName()) {
-                    $helperFileContents = $this->updateFieldId($helperFileContents, $field, $question->getOnlyAnswer()->getId());
+                    $updatedFileContents = $this->updateFieldId($updatedFileContents, $field, $question->getOnlyAnswer()->getId());
                 } else {
                     $io->warning('To be updated manually: '.$question->getOnlyAnswer()->getOnlyOption()->getName().' '.$question->getOnlyAnswer()->getId());
                 }
             }
 
             unset($questionsLeftToMatch[$question->getIndex()]);
+        }
 
-            file_put_contents(self::$gfHelperFilePath, $helperFileContents);
+        if (false === file_put_contents(self::$updatedFilePath, $updatedFileContents)) {
+            $io->error('Failed to write the file');
+
+            return 1;
         }
 
         if (!empty($questionsLeftToMatch)) {
-            $io->error("Didn't match the following questions: ".join(', ', $questionsLeftToMatch));
+            $io->error('Didn\'t match the following questions: '.join(', ', $questionsLeftToMatch));
 
             return 1;
         }
@@ -130,7 +134,7 @@ class IuFormGetIdsCommand extends Command
 
     private function updateFieldId(string $helperFileContents, Field $field, int $newId): string
     {
-        return Regexp::replace('#(?<=\s)\d+(: (?:this\.transform[a-z]+\(?)?artisan\.'.preg_quote($field->modelName()).'\)?,)#i',
+        return Regexp::replace('#(?<=\s)\d+( +=> +(?:\$this->transform[a-z]+\(?)?\$artisan->get'.preg_quote(ucfirst($field->modelName())).'\(\)\)?,)#i',
             $newId.'$1', $helperFileContents);
     }
 }

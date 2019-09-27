@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
+use App\Utils\Regexp\Utils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
@@ -237,5 +239,36 @@ class ArtisanRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param string $makerId
+     *
+     * @return Artisan
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function findByMakerId(string $makerId): Artisan
+    {
+        if (!Utils::match(ValidationRegexps::MAKER_ID, $makerId)) {
+            throw new NoResultException();
+        }
+
+        return $this->createQueryBuilder('a')
+            ->where('
+                (a.makerId <> :empty AND a.makerId = :makerId)
+                OR a.formerMakerIds = :makerId
+                OR a.formerMakerIds LIKE :formerMakerIds1
+                OR a.formerMakerIds LIKE :formerMakerIds2
+            ')
+            ->setParameters([
+                'empty'           => '',
+                'makerId'         => $makerId,
+                'formerMakerIds1' => "%$makerId\n%",
+                'formerMakerIds2' => "%\n$makerId%",
+            ])
+            ->getQuery()
+            ->getSingleResult();
     }
 }

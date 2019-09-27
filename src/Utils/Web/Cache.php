@@ -84,7 +84,7 @@ class Cache
     private function snapshotPathForUrl(string $url): string
     {
         $host = Regexp::replace('#^www\.#', '', parse_url($url, PHP_URL_HOST)) ?: 'unknown_host';
-        $hash = sha1($url);
+        $hash = hash('sha512', $url);
 
         return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url)}-$hash.json";
     }

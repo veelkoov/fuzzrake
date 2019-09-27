@@ -13,9 +13,8 @@ use PHPUnit\Framework\TestCase;
  */
 class ArtisanFieldsTest extends TestCase
 {
-    const REGEXP_CONSTRUCTOR = '#constructor\((?<parameters>(?:readonly [a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si';
-    const REGEXP_CONSTRUCTOR_PARAMETER = '#readonly (?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#i';
-    const REGEXP_DATA_ITEM_PUSH = '#\s\d+: (?:this\.transform[a-z]+\()?artisan\.(?<name>[a-z]+)\)?,#i';
+    private const REGEXP_CONSTRUCTOR = '#constructor\((?<parameters>(?:readonly [a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si';
+    private const REGEXP_CONSTRUCTOR_PARAMETER = '#readonly (?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#i';
 
     public function testArtisanTsModel(): void
     {
@@ -36,26 +35,5 @@ class ArtisanFieldsTest extends TestCase
         }
 
         $this->assertEmpty($fieldsInJson);
-    }
-
-    public function testGoogleFormsHelper(): void
-    {
-        $modelSource = file_get_contents(__DIR__.'/../../assets/js/main/GoogleFormsHelper.ts');
-
-        $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $modelSource, $matches));
-
-        $fieldsInForm = Fields::exportedToIuForm();
-        unset($fieldsInForm[Fields::VALIDATION_CHECKBOX]);
-
-        foreach ($matches['name'] as $modelName) {
-            $field = Fields::getByModelName($modelName);
-            $name = $field->is(Fields::CONTACT_INFO_OBFUSCATED) ? Fields::CONTACT_INPUT_VIRTUAL : $field->name();
-
-            $this->assertArrayHasKey($name, $fieldsInForm);
-
-            unset($fieldsInForm[$name]);
-        }
-
-        $this->assertEmpty($fieldsInForm, 'Fields left to be matched: '.join($fieldsInForm));
     }
 }

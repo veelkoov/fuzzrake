@@ -32,6 +32,8 @@ export default class Artisan {
                 readonly instagramUrl: string,
                 readonly youtubeUrl: string,
                 readonly queueUrl: string,
+                readonly scritchesUrl: string,
+                readonly scritchesPhotosUrls: string,
                 readonly otherUrls: string,
                 readonly languages: string,
                 readonly notes: string,
@@ -42,5 +44,17 @@ export default class Artisan {
                 readonly contactAllowed: string,
                 readonly contactInfoObfuscated: string,
     ) {
+    }
+
+    public getLastMakerId(): string {
+        if (this.makerId !== '') {
+            return this.makerId;
+        }
+
+        if (this.formerMakerIds.length !== 0) {
+            return this.formerMakerIds[0];
+        }
+
+        return '';
     }
 }
