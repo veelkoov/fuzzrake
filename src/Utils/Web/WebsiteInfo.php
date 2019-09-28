@@ -8,14 +8,17 @@ use App\Utils\Regexp\Utils as Regexp;
 
 class WebsiteInfo
 {
-    const FA_URL_SEARCH_STRING = 'furaffinity.net/';
-    const FA_CONTENTS_SEARCH_STRING = 'fur affinity [dot] net</title>';
-    const FA_JOUNRAL_CONTENTS_SEARCH_STRING = 'journal -- fur affinity [dot] net</title>';
+    private const FA_URL_SEARCH_STRING = 'furaffinity.net/';
+    private const FA_CONTENTS_SEARCH_STRING = 'fur affinity [dot] net</title>';
+    private const FA_JOUNRAL_CONTENTS_SEARCH_STRING = 'journal -- fur affinity [dot] net</title>';
 
-    const WIXSITE_CONTENTS_REGEXP = '#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si';
+    private const WIXSITE_CONTENTS_REGEXP = '#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si';
 
-    const TWITTER_CONTENTS_SEARCH_STRING = '| Twitter</title>';
-    const INSTAGRAM_CONTENTS_REGEXP = '#Instagram photos and videos\s*</title>#si';
+    private const TWITTER_CONTENTS_SEARCH_STRING = '| Twitter</title>';
+    private const INSTAGRAM_CONTENTS_REGEXP = '#Instagram photos and videos\s*</title>#si';
+
+    public const TRELLO_BOARD_URL_REGEXP = '#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#';
+    public const WIXSITE_CHILDREN_REGEXP = "#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si";
 
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
@@ -65,5 +68,10 @@ class WebsiteInfo
     public static function isInstagram(string $webpageContents): bool
     {
         return Regexp::match(self::INSTAGRAM_CONTENTS_REGEXP, $webpageContents);
+    }
+
+    public static function getTrelloBoardDataUrl($boardId): string
+    {
+        return "https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData";
     }
 }

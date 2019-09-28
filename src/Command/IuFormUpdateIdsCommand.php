@@ -12,7 +12,7 @@ use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
 use App\Utils\JsonException;
 use App\Utils\Regexp\Utils as Regexp;
-use App\Utils\Web\UrlFetcherException;
+use App\Utils\Web\HttpClientException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,7 +53,7 @@ class IuFormUpdateIdsCommand extends Command
 
         try {
             $snapshot = $this->snapshotManager->get($this->iuFormUrl, 'N/A');
-        } catch (UrlFetcherException $e) {
+        } catch (HttpClientException $e) {
             $io->error('Failed fetching the form: '.$e->getMessage());
 
             return 1;

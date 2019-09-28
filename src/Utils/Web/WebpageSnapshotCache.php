@@ -9,7 +9,7 @@ use App\Utils\Regexp\Utils as Regexp;
 use Closure;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Cache
+class WebpageSnapshotCache
 {
     /**
      * @var string
@@ -35,11 +35,11 @@ class Cache
         $this->fs->mkdir($this->cacheDirPath);
     }
 
-    public function getOrSet(string $url, Closure $getUrl)
+    public function getOrSet(Url $url, Closure $getUrl): WebpageSnapshot
     {
         $snapshotPath = $this->snapshotPathForUrl($url);
 
-        if ($this->has($snapshotPath)) {
+        if ($this->cacheItemExists($snapshotPath)) {
             try {
                 return $this->get($snapshotPath);
             } catch (JsonException $e) {
@@ -51,7 +51,12 @@ class Cache
         return $this->put($snapshotPath, $getUrl());
     }
 
-    private function has(string $snapshotPath)
+    public function has(Url $url): bool
+    {
+        return $this->cacheItemExists($this->snapshotPathForUrl($url));
+    }
+
+    private function cacheItemExists(string $snapshotPath): bool
     {
         return file_exists($snapshotPath);
     }
@@ -81,12 +86,12 @@ class Cache
         return $snapshot;
     }
 
-    private function snapshotPathForUrl(string $url): string
+    private function snapshotPathForUrl(Url $url): string
     {
-        $host = Regexp::replace('#^www\.#', '', parse_url($url, PHP_URL_HOST)) ?: 'unknown_host';
-        $hash = hash('sha512', $url);
+        $host = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url->getUrl()));
+        $hash = hash('sha512', $url->getUrl());
 
-        return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url)}-$hash.json";
+        return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url->getUrl())}-$hash.json";
     }
 
     private function urlToFilename(string $url): string

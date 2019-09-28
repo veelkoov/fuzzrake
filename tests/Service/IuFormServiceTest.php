@@ -14,7 +14,8 @@ use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Utils;
-use App\Utils\Web\UrlFetcherException;
+use App\Utils\Web\HttpClientException;
+use App\Utils\Web\Url;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -57,8 +58,9 @@ class IuFormServiceTest extends WebTestCase
      * @dataProvider formDataPrefillDataProvider
      *
      * @param Artisan $artisan
-     * @param string $contactAllowed
-     * @throws UrlFetcherException
+     * @param string  $contactAllowed
+     *
+     * @throws HttpClientException
      */
     public function testFormDataPrefill(Artisan $artisan, string $contactAllowed): void
     {
@@ -66,7 +68,7 @@ class IuFormServiceTest extends WebTestCase
         $webpageSnapshotManager = self::getWebpageSnapshotManager();
 
         $updateUrl = $iuFormService->getUpdateUrl($artisan);
-        $formWebpage = $webpageSnapshotManager->get($updateUrl, 'N/A');
+        $formWebpage = $webpageSnapshotManager->get(new Url($updateUrl, $artisan));
 
         $crawler = new Crawler($formWebpage->getContents());
 
@@ -74,7 +76,7 @@ class IuFormServiceTest extends WebTestCase
                      ProductionModels::getValues(),
                      Features::getValues(),
                      OrderTypes::getValues(),
-                     Styles::getValues()
+                     Styles::getValues(),
                  ] as $list) {
             foreach ($list as $value) {
                 self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");

@@ -4,32 +4,34 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Artisan;
 use App\Utils\DateTimeUtils;
 use App\Utils\Regexp\Utils as Regexp;
-use App\Utils\Web\Cache;
-use App\Utils\Web\UrlFetcher;
-use App\Utils\Web\UrlFetcherException;
+use App\Utils\Web\WebpageSnapshotCache;
+use App\Utils\Web\GentleHttpClient;
+use App\Utils\Web\HttpClientException;
+use App\Utils\Web\Url;
+use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebsiteInfo;
+use Symfony\Component\Console\Style\StyleInterface;
 
 class WebpageSnapshotManager
 {
-    const WIXSITE_CHILDREN_REGEXP = "#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si";
-
     /**
-     * @var Cache
+     * @var WebpageSnapshotCache
      */
     private $cache;
 
     /**
-     * @var UrlFetcher
+     * @var GentleHttpClient
      */
-    private $fetcher;
+    private $httpClient;
 
     public function __construct(string $projectDir)
     {
-        $this->cache = new Cache("$projectDir/var/snapshots");
-        $this->fetcher = new UrlFetcher();
+        $this->cache = new WebpageSnapshotCache("$projectDir/var/snapshots");
+        $this->httpClient = new GentleHttpClient();
     }
 
     public function clearCache(): void
@@ -38,33 +40,65 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param string $url
-     * @param string $ownerName
+     * @param Url $url
      *
      * @return WebpageSnapshot
      *
-     * @throws UrlFetcherException from inside download()
+     * @throws HttpClientException from inside download()
      */
-    public function get(string $url, string $ownerName): WebpageSnapshot
+    public function get(Url $url): WebpageSnapshot
     {
-        return $this->cache->getOrSet($url, function () use ($url, $ownerName) {
-            return $this->download($url, $ownerName);
+        return $this->cache->getOrSet($url, function () use ($url) {
+            return $this->download($url);
         });
     }
 
     /**
-     * @param string $url
-     * @param string $ownerName
+     * @param Url[]          $urls
+     * @param StyleInterface $progressReportIo
+     */
+    public function prefetchUrls(array $urls, StyleInterface $progressReportIo): void
+    {
+        $urls = array_filter($urls, function (Url $url): bool {
+            return !$this->cache->has($url);
+        });
+
+        $queue = new DelayAwareUrlFetchingQueue($urls, GentleHttpClient::DELAY_FOR_HOST_MILLISEC);
+
+        $progressReportIo->progressStart(count($urls));
+
+        while (($url = $queue->pop())) {
+            try {
+                $this->get($url);
+            } catch (HttpClientException $exception) {
+                // Prefetching = keep quiet, we'll retry
+            }
+
+            $progressReportIo->progressAdvance();
+        }
+
+        $progressReportIo->progressFinish();
+    }
+
+    /**
+     * @param Url $url
      *
      * @return WebpageSnapshot
      *
-     * @throws UrlFetcherException
+     * @throws HttpClientException
      */
-    private function download(string $url, string $ownerName): WebpageSnapshot
+    private function download(Url $url): WebpageSnapshot
     {
-        $webpageSnapshot = new WebpageSnapshot($url, $this->fetcher->get($url), DateTimeUtils::getNowUtc(), $ownerName);
+        if ($url->isDependency()) {
+            $contents = $this->httpClient->getImmediately($url->getUrl());
+        } else {
+            $contents = $this->httpClient->get($url->getUrl());
+        }
 
-        $this->downloadChildren($webpageSnapshot);
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $contents,
+            DateTimeUtils::getNowUtc(), $url->getArtisan()->getName());
+
+        $this->downloadChildren($webpageSnapshot, $url->getArtisan());
 
         return $webpageSnapshot;
     }
@@ -72,42 +106,44 @@ class WebpageSnapshotManager
     /**
      * @param WebpageSnapshot $webpageSnapshot
      *
-     * @throws UrlFetcherException
+     * @throws HttpClientException
      */
-    private function downloadChildren(WebpageSnapshot $webpageSnapshot): void
+    private function downloadChildren(WebpageSnapshot $webpageSnapshot, Artisan $artisan): void
     {
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
-            $this->fetchWixsiteContents($webpageSnapshot);
+            $this->fetchWixsiteContents($webpageSnapshot, $artisan);
         } elseif (WebsiteInfo::isTrello($webpageSnapshot)) {
-            $this->fetchTrelloContents($webpageSnapshot);
+            $this->fetchTrelloContents($webpageSnapshot, $artisan);
         }
     }
 
     /**
      * @param WebpageSnapshot $snapshot
+     * @param Artisan         $artisan
      *
-     * @throws UrlFetcherException
+     * @throws HttpClientException
      */
-    private function fetchWixsiteContents(WebpageSnapshot $snapshot): void
+    private function fetchWixsiteContents(WebpageSnapshot $snapshot, Artisan $artisan): void
     {
-        if (Regexp::matchAll(self::WIXSITE_CHILDREN_REGEXP, $snapshot->getContents(), $matches)) {
+        if (Regexp::matchAll(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, $snapshot->getContents(), $matches)) {
             foreach ($matches['data_url'] as $dataUrl) {
-                $snapshot->addChildren($this->get($dataUrl, $snapshot->getOwnerName()));
+                $snapshot->addChildren($this->get(new Url($dataUrl, $artisan, true)));
             }
         }
     }
 
     /**
      * @param WebpageSnapshot $snapshot
+     * @param Artisan         $artisan
      *
-     * @throws UrlFetcherException
+     * @throws HttpClientException
      */
-    private function fetchTrelloContents(WebpageSnapshot $snapshot): void // TODO: refactor
+    private function fetchTrelloContents(WebpageSnapshot $snapshot, Artisan $artisan): void
     {
-        if (!Regexp::match('#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#', $snapshot->getUrl(), $matches)) {
+        if (!Regexp::match(WebsiteInfo::TRELLO_BOARD_URL_REGEXP, $snapshot->getUrl(), $matches)) {
             return;
         }
 
-        $snapshot->addChildren($this->get("https://trello.com/1/Boards/{$matches['boardId']}?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData", $snapshot->getOwnerName()));
+        $snapshot->addChildren($this->get(new Url(WebsiteInfo::getTrelloBoardDataUrl($matches['boardId']), $artisan, true)));
     }
 }

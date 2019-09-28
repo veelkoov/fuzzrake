@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-class UrlFetcher
+class HttpClient
 {
-    private $lastRequests = [];
-
-    const DELAY_FOR_HOST_SEC = 5;
     const CONNECTION_TIMEOUT_SEC = 10;
     const TIMEOUT_SEC = 30;
 
@@ -19,7 +16,7 @@ class UrlFetcher
      *
      * @return string
      *
-     * @throws UrlFetcherException
+     * @throws HttpClientException
      */
     public function get(string $url): string
     {
@@ -29,9 +26,7 @@ class UrlFetcher
             throw new RuntimeUrlFetcherException('Failed to initialize CURL');
         }
 
-        $this->delayForHost($url);
         $result = curl_exec($ch);
-        $this->updateLastHostCall($url);
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $errorMsg = curl_error($ch);
@@ -39,34 +34,10 @@ class UrlFetcher
         curl_close($ch);
 
         if (false === $result || !in_array($httpCode, [200, 401])) {
-            throw new UrlFetcherException("Failed to fetch URL ($httpCode): $url, ".($errorMsg ?: 'CURL failed')." ($errorNo)");
+            throw new HttpClientException("Failed to fetch URL ($httpCode): $url, ".($errorMsg ?: 'CURL failed')." ($errorNo)");
         }
 
         return $result;
-    }
-
-    private function delayForHost(string $url): void
-    {
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if (array_key_exists($host, $this->lastRequests)) {
-            $this->waitUntil($this->lastRequests[$host], self::DELAY_FOR_HOST_SEC);
-        }
-    }
-
-    private function updateLastHostCall(string $url): void
-    {
-        $host = parse_url($url, PHP_URL_HOST);
-        $this->lastRequests[$host] = time();
-    }
-
-    private function waitUntil($basetime, $delay): void
-    {
-        $secondsToWait = $basetime + $delay - time();
-
-        if ($secondsToWait > 0) {
-            sleep($secondsToWait);
-        }
     }
 
     /**

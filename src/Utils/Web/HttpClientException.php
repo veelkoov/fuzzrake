@@ -6,6 +6,6 @@ namespace App\Utils\Web;
 
 use Exception;
 
-class UrlFetcherException extends Exception
+class HttpClientException extends Exception
 {
 }
