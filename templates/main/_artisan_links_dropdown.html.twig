@@ -26,6 +26,9 @@
             {%- if artisan.faqUrl -%}
                 <a class="dropdown-item" href="{{ artisan.faqUrl }}"><i class="fas fa-comments"></i> FAQ</a>
             {%- endif -%}
+            {%- if artisan.queueUrl -%}
+                <a class="dropdown-item" href="{{ artisan.queueUrl }}"><i class="fas fa-clipboard-list"></i> Queue</a>
+            {%- endif -%}
             {%- if artisan.furAffinityUrl -%}
                 <a class="dropdown-item" href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
             {%- endif -%}

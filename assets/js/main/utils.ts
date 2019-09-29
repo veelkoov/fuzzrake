@@ -28,6 +28,7 @@ export function getLinks$(artisan: Artisan): JQuery<HTMLElement> {
     pushLink(links, artisan.websiteUrl, '<i class="fas fa-link"></i> Official website', true);
     pushLink(links, artisan.pricesUrl, '<i class="fas fa-dollar-sign"></i> Prices');
     pushLink(links, artisan.faqUrl, '<i class="fas fa-comments"></i> FAQ');
+    pushLink(links, artisan.queueUrl, '<i class="fas fa-clipboard-list"></i> Queue');
     pushLink(links, artisan.furAffinityUrl, '<img src="FurAffinity.svg" alt=""/> FurAffinity');
     pushLink(links, artisan.deviantArtUrl, '<i class="fab fa-deviantart"></i> DeviantArt');
     pushLink(links, artisan.twitterUrl, '<i class="fab fa-twitter"></i> Twitter');
