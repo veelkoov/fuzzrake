@@ -161,7 +161,7 @@ class DataFixer
         $artisan->setPaymentPlans($this->fixString($artisan->getPaymentPlans()));
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
-        $artisan->setLanguages($this->fixString($artisan->getLanguages()));
+        $artisan->setLanguages($this->fixLanguages($artisan->getLanguages()));
 
         $artisan->setContactAllowed($this->fixContactAllowed($artisan->getContactAllowed()));
 
@@ -291,5 +291,20 @@ class DataFixer
         $contactPermit = str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $contactPermit);
 
         return $contactPermit;
+    }
+
+    private function fixLanguages(string $languages): string
+    {
+        $languages = Regexp::split('#[\n,;&]|and#', $languages);
+        $languages = array_filter(array_map('trim', $languages));
+        $languages = array_map(function (string $language): string {
+            Regexp::match('#(?<prefix>a small bit of |bit of |a little |some |moderate |elementary |slight )?(?<language>.+)#i', $language, $matches);
+
+            $prefix = $matches['prefix'] ? 'Limited ' : '';
+
+            return $prefix.mb_convert_case($matches['language'], MB_CASE_TITLE);
+        }, $languages);
+
+        return implode("\n", $languages);
     }
 }
