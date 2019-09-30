@@ -393,7 +393,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1082 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1087 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -677,6 +677,9 @@ INSERT INTO `events` VALUES (1076,'2019-09-25 06:07:44', '', 'CS_UPDTD_DETLS', 0
 INSERT INTO `events` VALUES (1077,'2019-09-25 20:08:55', '- Added a warning about requirement of verifying the legitimacy of studios/makers by visitors themselves<br />\r\n- HTML code has been fixed which may improve compatibility with some browsers and/or search engine rating<br />\r\n(<a href=\"https://github.com/veelkoov/fuzzrake/commit/52508f65c1b96c4003b8b9ceda427fd05cc77a58\" target=\"_blank\">git: warning</a>, <a href=\"https://github.com/veelkoov/fuzzrake/commit/d7288c202dd0bfe4fc0e90b28f27df0d7503a5d9\" target=\"_blank\">git: html fixes</a>, <a href=\"https://twitter.com/veelkoov/status/1176952580553039878\" target=\"_blank\">Twitter</a>)', '', NULL, NULL, '', '', '', '');
 INSERT INTO `events` VALUES (1078,'2019-09-26 18:07:59', '', 'CS_UPDTD_DETLS', 0, NULL, 'Clockwork Creature', 'http://www.clockworkcreature.com/', '', '');
 INSERT INTO `events` VALUES (1081,'2019-09-27 06:08:01', '', 'CS_UPDTD_DETLS', 1, 0, 'Blue Wolf Studio Fursuit', 'https://twitter.com/BWSFursuit', '', '[\"</h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">//fursuit maker from costa rica since 2014// \",\"commissions closed\",\" - february 1st 2020</p> <div class=\\\"profileheadercard-location \\\"> costa rica </div> <div class=\\\"pro\"]');
+INSERT INTO `events` VALUES (1084,'2019-09-29 06:07:40', '', 'CS_UPDTD_DETLS', NULL, 0, 'Clockwork Creature', 'http://www.clockworkcreature.com/', '', '[\"ng in one-of-a-kind realistic, theatrical, and macabre styles of creature costumes. </p> <hr /> <p> \",\"commission status: closed\",\" </p> <p> quote requests: open! </p> <p> <> sign up for our mailing list! <> </p> <hr /> <p> tweets \"]');
+INSERT INTO `events` VALUES (1085,'2019-09-29 06:07:41', '', 'CS_UPDTD_DETLS', 0, 1, 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '[\"ntent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\"\",\">slots currently - open\",\" for april-october completion</h2> <div class=\\\"paragraph\\\">&#8203;quick turnaround slots for parts an\"]', '');
+INSERT INTO `events` VALUES (1086,'2019-09-30 06:07:50', '', 'CS_UPDTD_DETLS', NULL, 0, 'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '[\"dtext id: dataitem-jk9wgj1g ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_2\\\">costume \",\"commissions: closed\",\"</h2> <h2 class=\\\"font_2\\\"></h2> <h2 class=\\\"font_2\\\">quotes are: open</h2> stylesmapid: ck_editor_parag\"]');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
