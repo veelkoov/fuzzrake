@@ -35,7 +35,7 @@ export default class Artisan {
                 readonly scritchesUrl: string,
                 readonly scritchesPhotosUrls: string,
                 readonly otherUrls: string,
-                readonly languages: string,
+                readonly languages: string[],
                 readonly notes: string,
                 readonly cstUrl: string,
                 readonly commissionsStatus: boolean,
