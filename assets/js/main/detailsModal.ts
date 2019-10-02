@@ -17,31 +17,6 @@ const HTML_SIGN_UNKNOWN = '<i class="fas fa-question-circle" title="Unknown"></i
 let artisanDetailsModalTpl: string;
 let $artisanDetailsModal: JQuery<HTMLElement>;
 
-function strongPrefixHtml(items: string, prefix: string): string {
-    return items ? `<strong>${prefix}</strong>: ${items}` : '';
-}
-
-function formatSpecies(speciesDoes: string, speciesDoesnt: string): string {
-    let doesHtml = strongPrefixHtml(speciesDoes, "Does");
-    let doesntHtml = strongPrefixHtml(speciesDoesnt, "Doesn't");
-
-    if (doesHtml !== '' && doesntHtml !== '') {
-        return `${doesHtml}<br />${doesntHtml}`;
-    } else if (doesHtml + doesntHtml !== '') {
-        return `${doesHtml}${doesntHtml}`;
-    } else {
-        return '<i class="fas fa-question-circle"></i>';
-    }
-}
-
-function formatPaymentPlans(paymentPlans: string): string {
-    return paymentPlans || '<i class="fas fa-question-circle"></i>';
-}
-
-function formatLanguages(languages: string[]): string {
-    return languages.join(', ') || '<i class="fas fa-question-circle"></i>';
-}
-
 function formatLinks($links: any, completeness: number): string {
     $links.addClass('btn btn-light m-1');
 
@@ -86,9 +61,6 @@ function getCompletenessComment(completeness: number): string {
 
 function fillDetailsModalHtml(artisan: Artisan): void {
     let updates = {
-        '#artisanSpecies': formatSpecies(artisan.speciesDoes, artisan.speciesDoesnt),
-        '#artisanPaymentPlans': formatPaymentPlans(artisan.paymentPlans),
-        '#artisanLanguages': formatLanguages(artisan.languages),
         '#artisanCompleteness': artisan.completeness.toString(),
         '#artisanLinks': formatLinks(Utils.getLinks$(artisan), artisan.completeness),
         '#artisanCompletenessComment': getCompletenessComment(artisan.completeness),

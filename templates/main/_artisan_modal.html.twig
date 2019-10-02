@@ -51,15 +51,32 @@
                 </div>
                 <div class="col-sm-6 p-1">
                     <h5>Species</h5>
-                    <div class="small" id="artisanSpecies"></div>
+                    <div class="small" id="artisanSpecies">
+                        [[ #artisan.speciesDoes ]]
+                            <strong>Does</strong>: [[ artisan.speciesDoes ]]
+                            [[ #artisan.speciesDoesnt ]]<br />[[ /artisan.speciesDoesnt ]]
+                        [[ /artisan.speciesDoes ]]
+                        [[ #artisan.speciesDoesnt ]]
+                            <strong>Doesn't</strong>: [[ artisan.speciesDoesnt ]]
+                        [[ /artisan.speciesDoesnt ]]
+                        [[ ^artisan.speciesDoesnt ]]
+                            [[ ^artisan.speciesDoes ]]
+                                <i class="fas fa-question-circle" title="Unknown"></i>
+                            [[ /artisan.speciesDoes ]]
+                        [[ /artisan.speciesDoesnt ]]
+                    </div>
                 </div>
                 <div class="col-sm-6 p-1">
                     <h5>Payment plans</h5>
-                    <div class="small" id="artisanPaymentPlans"></div>
+                    <div class="small">
+                        [[ #optional ]] artisan.paymentPlans [[ /optional ]]
+                    </div>
                 </div>
                 <div class="col-sm-12 p-1">
                     <h5>Languages</h5>
-                    <div class="small" id="artisanLanguages"></div>
+                    <div class="small">
+                        [[ #optional ]] artisan.languagesCommaSeparated [[ /optional ]]
+                    </div>
                 </div>
                 <div class="col-sm-12 p-1">
                     <h5>Links</h5>
