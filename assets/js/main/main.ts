@@ -1,7 +1,6 @@
 'use strict';
 
 import * as $ from 'jquery';
-import * as Mustache from 'mustache';
 import * as DataTable from './dataTable';
 import * as DetailsModal from './detailsModal';
 import * as Utils from './utils'
@@ -41,9 +40,6 @@ function openArtisanByFragment(hash) {
 }
 
 export function init() {
-    // @ts-ignore - https://github.com/janl/mustache.js/blame/v3.1.0/README.md#L519
-    Mustache.tags = ['[[', ']]'];
-
     $('#scam-risk-acknowledgement').on('click', (event) => {
         $('#scam-risk-warning, #scam-risk-acknowledged').toggle();
         event.preventDefault();

@@ -12,6 +12,8 @@ const DATA_COMPLETE_GREAT = 90;
 const DATA_COMPLETE_GOOD = 80;
 const DATA_COMPLETE_OK = 60;
 
+const HTML_SIGN_UNKNOWN = '<i class="fas fa-question-circle" title="Unknown"></i>';
+
 let artisanDetailsModalTpl: string;
 let $artisanDetailsModal: JQuery<HTMLElement>;
 
@@ -52,13 +54,6 @@ function formatLinks($links: any, completeness: number): string {
     return $result.html();
 }
 
-function htmlListFromArrays(list: String[], other: String[] = []): string {
-    let listLis = list.length ? `<li>${list.join('</li><li>')}</li>` : '';
-    let otherLis = other.length ? `<li>Other: ${other.join('; ')}</li>` : '';
-
-    return listLis + otherLis ? `<ul>${listLis}${otherLis}</ul>` : '<i class="fas fa-question-circle"></i>';
-}
-
 function commissionStatusToString(commissionsStatus: boolean): string {
     return commissionsStatus === null ? 'unknown' : commissionsStatus ? 'open' : 'closed';
 }
@@ -89,21 +84,8 @@ function getCompletenessComment(completeness: number): string {
     }
 }
 
-function formatMakerId(artisan: Artisan): string {
-    return artisan.makerId ? '<i class="fas fa-link"></i> ' + artisan.makerId : '';
-}
-
-function formatName(artisan: Artisan): string {
-    return artisan.name + Utils.countryFlagHtml(artisan.country);
-}
-
 function fillDetailsModalHtml(artisan: Artisan): void {
     let updates = {
-        '#artisanProductionModel': htmlListFromArrays(artisan.productionModels),
-        '#artisanStyles': htmlListFromArrays(artisan.styles, artisan.otherStyles),
-        '#artisanTypes': htmlListFromArrays(artisan.orderTypes, artisan.otherOrderTypes),
-        '#artisanFeatures': htmlListFromArrays(artisan.features, artisan.otherFeatures),
-
         '#artisanSpecies': formatSpecies(artisan.speciesDoes, artisan.speciesDoesnt),
         '#artisanPaymentPlans': formatPaymentPlans(artisan.paymentPlans),
         '#artisanLanguages': formatLanguages(artisan.languages),
@@ -118,20 +100,30 @@ function fillDetailsModalHtml(artisan: Artisan): void {
     }
 }
 
+function optionalTplFunc() {
+    return function (text, render) {
+        return render('{{ ' + text + ' }}') || HTML_SIGN_UNKNOWN;
+    }
+}
+
+function optionalListTplFunc() {
+    return function (text, render) {
+        let rendered = render('{{# ' + text + ' }}<li>{{.}}</li>{{/ ' + text + ' }}');
+
+        return rendered ? '<ul>' + rendered + '</ul>' : HTML_SIGN_UNKNOWN;
+    }
+}
+
 function updateDetailsModalWithArtisanData(artisan: Artisan): void {
     $artisanDetailsModal.html(Mustache.render(artisanDetailsModalTpl, {
         artisan: artisan,
-        optional: function () {
-            return function (text, render) {
-                let rendered = render(text);
-
-                return rendered || '<i class="fas fa-question-circle" title="Unknown"></i>';
-            }
-        }
-    }));
+        optional: optionalTplFunc,
+        optionalList: optionalListTplFunc,
+    }, {}, ['[[', ']]']));
 
     fillDetailsModalHtml(artisan);
 
+    $('#makerId').attr('href', `#${artisan.makerId}`);
     $('#statusParsingFailed').toggle(artisan.commissionsStatus === null);
 
     Utils.updateUpdateRequestData('updateRequestFull', artisan);

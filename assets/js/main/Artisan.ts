@@ -3,6 +3,9 @@
 export default class Artisan {
     readonly location: string;
     readonly lcCountry: string;
+    readonly allFeatures: string[];
+    readonly allOrderTypes: string[];
+    readonly allStyles: string[];
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -49,6 +52,9 @@ export default class Artisan {
     ) {
         this.location = [state, city].filter(i => i).join(', ');
         this.lcCountry = country.toLowerCase();
+        this.allFeatures = Artisan.makeAllList(features, otherFeatures);
+        this.allStyles = Artisan.makeAllList(styles, otherStyles);
+        this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
     }
 
     public getLastMakerId(): string {
@@ -61,5 +67,15 @@ export default class Artisan {
         }
 
         return '';
+    }
+
+    private static makeAllList(list: string[], other: string[]): string[] {
+        let result = list.slice();
+
+        if (other.length) {
+            result.push(other.join('; '));
+        }
+
+        return result;
     }
 }
