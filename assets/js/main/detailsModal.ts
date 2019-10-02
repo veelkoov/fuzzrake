@@ -5,8 +5,6 @@ import * as Mustache from 'mustache';
 import * as Utils from "./utils";
 import Artisan from "./Artisan";
 
-declare var TRACKING_URL: string;
-
 const DATA_COMPLETE_PERFECT = 100;
 const DATA_COMPLETE_GREAT = 90;
 const DATA_COMPLETE_GOOD = 80;
@@ -29,22 +27,6 @@ function formatLinks($links: any, completeness: number): string {
     return $result.html();
 }
 
-function commissionStatusToString(commissionsStatus: boolean): string {
-    return commissionsStatus === null ? 'unknown' : commissionsStatus ? 'open' : 'closed';
-}
-
-function formatCommissionsStatus(artisan: Artisan): string {
-    let commissionsStatus = commissionStatusToString(artisan.commissionsStatus);
-
-    if (artisan.cstUrl === '') {
-        return `Commissions are <strong>${commissionsStatus}</strong>. Status is not automatically tracked and updated. <a href="${TRACKING_URL}">Learn more</a>`;
-    } else if (artisan.commissionsStatus === null) {
-        return `Commissions status is unknown. It should be tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>, however the software failed to "understand" the status based on the page contents. Last time it tried on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
-    } else {
-        return `Commissions are <strong>${commissionsStatus}</strong>. Status is tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>. Last time checked on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
-    }
-}
-
 function getCompletenessComment(completeness: number): string {
     if (completeness >= DATA_COMPLETE_PERFECT) {
         return 'Awesome! <i class="fas fa-heart"></i>';
@@ -61,10 +43,8 @@ function getCompletenessComment(completeness: number): string {
 
 function fillDetailsModalHtml(artisan: Artisan): void {
     let updates = {
-        '#artisanCompleteness': artisan.completeness.toString(),
         '#artisanLinks': formatLinks(Utils.getLinks$(artisan), artisan.completeness),
         '#artisanCompletenessComment': getCompletenessComment(artisan.completeness),
-        '#artisanCommissionsStatus': formatCommissionsStatus(artisan),
     };
 
     for (let selector in updates) {
@@ -96,7 +76,6 @@ function updateDetailsModalWithArtisanData(artisan: Artisan): void {
     fillDetailsModalHtml(artisan);
 
     $('#makerId').attr('href', `#${artisan.makerId}`);
-    $('#statusParsingFailed').toggle(artisan.commissionsStatus === null);
 
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
 

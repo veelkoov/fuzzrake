@@ -85,15 +85,45 @@
                 <div class="row p-1">
                     <div class="col-sm">
                         <h5>Commissions status</h5>
-                        <div class="small" id="artisanCommissionsStatus"></div>
+                        <div class="small" id="artisanCommissionsStatus">
+                            [[ ^artisan.cstUrl ]]
+                                Commissions are <strong>[[ artisan.commissionsStatusText ]]</strong>.
+
+                                Status is not automatically tracked and updated.
+                            [[ /artisan.cstUrl ]]
+                            [[ #artisan.cstUrl ]]
+                                [[ #artisan.commissionsStatusKnown ]]
+                                    Commissions are <strong>[[ artisan.commissionsStatusText ]]</strong>.
+
+                                    Status is tracked and updated automatically from this web page:
+                                    <a href="[[ artisan.cstUrl ]]">[[ artisan.cstUrl ]]</a>.
+
+                                    Last time checked on [[ artisan.cstLastCheck ]] UTC.
+                                [[ /artisan.commissionsStatusKnown ]]
+                                [[ ^artisan.commissionsStatusKnown ]]
+                                    Commissions status is <strong>[[ artisan.commissionsStatusText ]]</strong>.
+
+                                    It should be tracked and updated automatically from this web page:
+                                    <a href="[[ artisan.cstUrl ]]">[[ artisan.cstUrl ]]</a>, however the software
+                                    failed to "understand" the status based on the page contents.
+
+                                    Last time it tried on [[ artisan.cstLastCheck ]] UTC.
+                                [[ /artisan.commissionsStatusKnown ]]
+                            [[ /artisan.cstUrl ]]
+                            <a href="{{ path('tracking') }}">Learn more</a>
+                        </div>
                     </div>
-                    <div class="col-sm-4" id="statusParsingFailed">
-                        <img src="{{ asset('images/parsing_failed.png') }}" class="img-fluid" alt="">
-                    </div>
+                    [[ #artisan.cstUrl ]]
+                        [[ ^artisan.commissionsStatusKnown ]]
+                            <div class="col-sm-4">
+                                <img src="{{ asset('images/parsing_failed.png') }}" class="img-fluid" alt="">
+                            </div>
+                        [[ /artisan.commissionsStatusKnown ]]
+                    [[ /artisan.cstUrl ]]
                 </div>
                 <div class="col-sm-12 p-1 pt-3">
                     <h5>Data incomplete/inaccurate/outdated?</h5>
-                    <p class="small">This maker/studio has <span id="artisanCompleteness"></span>% data completeness. <span id="artisanCompletenessComment"></span></p>
+                    <p class="small">This maker/studio has [[ artisan.completeness ]]% data completeness. <span id="artisanCompletenessComment"></span></p>
                     {% include 'main/_update_request_contents.html.twig' with { 'id': 'updateRequestFull' }%}
                 </div>
             </div>

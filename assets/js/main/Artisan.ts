@@ -7,6 +7,8 @@ export default class Artisan {
     readonly allOrderTypes: string[];
     readonly allStyles: string[];
     readonly languagesCommaSeparated: string;
+    readonly commissionsStatusKnown: boolean;
+    readonly commissionsStatusText: string;
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -57,6 +59,8 @@ export default class Artisan {
         this.allStyles = Artisan.makeAllList(styles, otherStyles);
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
         this.languagesCommaSeparated = languages.join(', ');
+        this.commissionsStatusKnown = commissionsStatus !== null;
+        this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);
     }
 
     public getLastMakerId(): string {
@@ -79,5 +83,9 @@ export default class Artisan {
         }
 
         return result;
+    }
+
+    private static getCommissionsStatusText(commissionsStatus: boolean): string {
+        return commissionsStatus === null ? 'unknown' : commissionsStatus ? 'open' : 'closed';
     }
 }
