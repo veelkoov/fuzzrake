@@ -394,7 +394,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1087 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1091 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -681,6 +681,10 @@ INSERT INTO `events` VALUES (1081,'2019-09-27 06:08:01', '', 'CS_UPDTD_DETLS', 1
 INSERT INTO `events` VALUES (1084,'2019-09-29 06:07:40', '', 'CS_UPDTD_DETLS', NULL, 0, 'Clockwork Creature', 'http://www.clockworkcreature.com/', '', '[\"ng in one-of-a-kind realistic, theatrical, and macabre styles of creature costumes. </p> <hr /> <p> \",\"commission status: closed\",\" </p> <p> quote requests: open! </p> <p> <> sign up for our mailing list! <> </p> <hr /> <p> tweets \"]');
 INSERT INTO `events` VALUES (1085,'2019-09-29 06:07:41', '', 'CS_UPDTD_DETLS', 0, 1, 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '[\"ntent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\"\",\">slots currently - open\",\" for april-october completion</h2> <div class=\\\"paragraph\\\">&#8203;quick turnaround slots for parts an\"]', '');
 INSERT INTO `events` VALUES (1086,'2019-09-30 06:07:50', '', 'CS_UPDTD_DETLS', NULL, 0, 'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '[\"dtext id: dataitem-jk9wgj1g ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_2\\\">costume \",\"commissions: closed\",\"</h2> <h2 class=\\\"font_2\\\"></h2> <h2 class=\\\"font_2\\\">quotes are: open</h2> stylesmapid: ck_editor_parag\"]');
+INSERT INTO `events` VALUES (1087,'2019-09-30 20:17:25', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/151a224ce51438a63d3f1fe2320d23d00d2bf6fd\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (1088,'2019-10-01 18:08:07', '', 'CS_UPDTD_DETLS', NULL, 1, 'Alpha Dogs', 'https://twitter.com/AlphaDogsStudio', '[\"lineblock u-dir\\\" dir=\\\"ltr\\\"> @alphadogsstudio </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">\",\"commissions: open\",\" | see website for general pricing</p> <div class=\\\"profileheadercard-location \\\"> france </div> <div \"]', '');
+INSERT INTO `events` VALUES (1089,'2019-10-02 06:07:55', '', 'CS_UPDTD_DETLS', 1, 0, 'Furgetful Fae Fursuits', 'https://www.instagram.com/furgetful_fae/', '', '[\"ternatename\\\":\\\"@furgetful_fae\\\",\\\"description\\\":\\\"\\\\ud83d\\\\udc3b fursuit maker! \\\\ud83d\\\\udc3b\\\\n\\\\ud83d\\\\udc36 \",\"commissions closed\",\". opening dec. 15 2019\\\\ud83d\\\\udc36\\\\n\\\\ud83c\\\\udf44 quotes always open! \\\\ud83c\\\\udf44\\\\n\\\\ud83c\\\\udf31 19y\\\\\"]');
+INSERT INTO `events` VALUES (1090,'2019-10-02 18:07:52', '', 'CS_UPDTD_DETLS', 0, 1, '_Bahamut19', 'https://www.instagram.com/_bahamut19/', '[\"ename\\\":\\\"@STUDIO_NAME\\\",\\\"description\\\":\\\"\\\\u00b0canada\\\\u00b0\\\\u2022\\\\u00b0not into small chat\\\\u00b0\\\\u2022\\\\n\",\"commission open\",\"\\\\nprices are in highlight!\\\",\\\"url\\\":\\\"https:\\\\/\\\\/linktr.ee\\\\/STUDIO_NAME\\\",\\\"mainentityofpage\\\":{\\\"@type\\\":\\\"pr\"]', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
