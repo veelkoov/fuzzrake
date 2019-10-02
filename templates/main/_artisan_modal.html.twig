@@ -1,20 +1,33 @@
 <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName"
      aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+        <div class="modal-content" id="artisanDetailsModal">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <a id="makerId" href="#"></a> <span id="artisanName">Chill down, validator</span>
-                    <small id="artisanShortInfo"></small>
+                    [[ #artisan.makerId ]]
+                        <a id="makerId" href="#[[ artisan.makerId ]]"><i class="fas fa-link"></i> [[ artisan.makerId ]]</a>
+                    [[ /artisan.makerId ]]
+
+                    [[ artisan.name ]][[ #artisan.country ]]&nbsp;<span class="flag-icon flag-icon-[[ artisan.lcCountry ]]"></span>[[ /artisan.country ]]
+
+                    <small>
+                        Based in [[ #optional ]][[ artisan.location ]][[ /optional ]],
+                        crafting since [[ #optional ]][[ artisan.since ]][[ /optional ]]
+                        [[ #artisan.formerly ]]
+                            <br />Formerly [[ artisan.formerly ]]
+                        [[ /artisan.formerly ]]
+                    </small>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body row px-4 py-2">
-                <div class="col-sm-12 p-1">
-                    <p class="lead" id="artisanIntro"></p>
-                </div>
+                [[ #artisan.intro ]]
+                    <div class="col-sm-12 p-1">
+                        <p class="lead" id="artisanIntro">[[ artisan.intro ]]</p>
+                    </div>
+                [[ /artisan.intro ]]
                 <div class="col-sm-4 p-1">
                     <h5>Produces</h5>
                     <div class="small pb-2" id="artisanProductionModel"></div>
@@ -36,6 +49,10 @@
                 <div class="col-sm-6 p-1">
                     <h5>Payment plans</h5>
                     <div class="small" id="artisanPaymentPlans"></div>
+                </div>
+                <div class="col-sm-12 p-1">
+                    <h5>Languages</h5>
+                    <div class="small" id="artisanLanguages"></div>
                 </div>
                 <div class="col-sm-12 p-1">
                     <h5>Links</h5>

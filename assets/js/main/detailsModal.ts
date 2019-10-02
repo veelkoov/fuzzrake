@@ -1,6 +1,7 @@
 'use strict';
 
 import * as $ from "jquery";
+import * as Mustache from 'mustache';
 import * as Utils from "./utils";
 import Artisan from "./Artisan";
 
@@ -11,22 +12,21 @@ const DATA_COMPLETE_GREAT = 90;
 const DATA_COMPLETE_GOOD = 80;
 const DATA_COMPLETE_OK = 60;
 
-function formatShortInfo(state: string, city: string, since: string, formerly: string[]): string {
-    let sinceTxt = since || '<i class="fas fa-question-circle" title="How long?"></i>';
-    let formerlyTxt = formerly.length ? `<br />Formerly ${formerly.join(', ')}` : '';
-    let location = [state, city].filter(i => i).join(', ') || '<i class="fas fa-question-circle" title="Where are you?"></i>';
+let artisanDetailsModalTpl: string;
+let $artisanDetailsModal: JQuery<HTMLElement>;
 
-    return `Based in ${location}, crafting since ${sinceTxt}${formerlyTxt}`;
+function strongPrefixHtml(items: string, prefix: string): string {
+    return items ? `<strong>${prefix}</strong>: ${items}` : '';
 }
 
 function formatSpecies(speciesDoes: string, speciesDoesnt: string): string {
-    let does = speciesDoes !== '' ? '<strong>Does:</strong> ' + speciesDoes : '';
-    let doesnt = speciesDoesnt !== '' ? '<strong>Doesn\'t</strong>: ' + speciesDoesnt : '';
+    let doesHtml = strongPrefixHtml(speciesDoes, "Does");
+    let doesntHtml = strongPrefixHtml(speciesDoesnt, "Doesn't");
 
-    if (does !== '' && doesnt !== '') {
-        return `${does}<br />${doesnt}`;
-    } else if (does !== '' || doesnt !== '') {
-        return `${does}${doesnt}`;
+    if (doesHtml !== '' && doesntHtml !== '') {
+        return `${doesHtml}<br />${doesntHtml}`;
+    } else if (doesHtml + doesntHtml !== '') {
+        return `${doesHtml}${doesntHtml}`;
     } else {
         return '<i class="fas fa-question-circle"></i>';
     }
@@ -34,6 +34,10 @@ function formatSpecies(speciesDoes: string, speciesDoesnt: string): string {
 
 function formatPaymentPlans(paymentPlans: string): string {
     return paymentPlans || '<i class="fas fa-question-circle"></i>';
+}
+
+function formatLanguages(languages: string[]): string {
+    return languages.join(', ') || '<i class="fas fa-question-circle"></i>';
 }
 
 function formatLinks($links: any, completeness: number): string {
@@ -55,27 +59,20 @@ function htmlListFromArrays(list: String[], other: String[] = []): string {
     return listLis + otherLis ? `<ul>${listLis}${otherLis}</ul>` : '<i class="fas fa-question-circle"></i>';
 }
 
-function commissionStatusSrt(commissionsStatus: boolean): string {
+function commissionStatusToString(commissionsStatus: boolean): string {
     return commissionsStatus === null ? 'unknown' : commissionsStatus ? 'open' : 'closed';
 }
 
-function updateCommissionsStatus(artisan: Artisan): void {
-    let commissionsStatus = commissionStatusSrt(artisan.commissionsStatus);
-    let description;
-    let parsingFailed = false;
+function formatCommissionsStatus(artisan: Artisan): string {
+    let commissionsStatus = commissionStatusToString(artisan.commissionsStatus);
 
     if (artisan.cstUrl === '') {
-        description = `Commissions are <strong>${commissionsStatus}</strong>. Status is not automatically tracked and updated. <a href="${TRACKING_URL}">Learn more</a>`;
+        return `Commissions are <strong>${commissionsStatus}</strong>. Status is not automatically tracked and updated. <a href="${TRACKING_URL}">Learn more</a>`;
     } else if (artisan.commissionsStatus === null) {
-        description = `Commissions status is unknown. It should be tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>, however the software failed to "understand" the status based on the page contents. Last time it tried on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
-
-        parsingFailed = true;
+        return `Commissions status is unknown. It should be tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>, however the software failed to "understand" the status based on the page contents. Last time it tried on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
     } else {
-        description = `Commissions are <strong>${commissionsStatus}</strong>. Status is tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>. Last time checked on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
+        return `Commissions are <strong>${commissionsStatus}</strong>. Status is tracked and updated automatically from this web page: <a href="${artisan.cstUrl}">${artisan.cstUrl}</a>. Last time checked on ${artisan.cstLastCheck} UTC. <a href="${TRACKING_URL}">Learn more</a>`;
     }
-
-    $('#artisanCommissionsStatus').html(description);
-    $('#statusParsingFailed').toggle(parsingFailed);
 }
 
 function getCompletenessComment(completeness: number): string {
@@ -92,24 +89,51 @@ function getCompletenessComment(completeness: number): string {
     }
 }
 
-function updateDetailsModalWithArtisanData(artisan: Artisan): void {
-    $('#artisanName').html(artisan.name + Utils.countryFlagHtml(artisan.country));
-    $('#makerId')
-        .html(artisan.makerId ? '<i class="fas fa-link"></i> ' + artisan.makerId : '')
-        .attr('href', `#${artisan.makerId}`);
-    $('#artisanShortInfo').html(formatShortInfo(artisan.state, artisan.city, artisan.since, artisan.formerly));
-    $('#artisanProductionModel').html(htmlListFromArrays(artisan.productionModels));
-    $('#artisanStyles').html(htmlListFromArrays(artisan.styles, artisan.otherStyles));
-    $('#artisanTypes').html(htmlListFromArrays(artisan.orderTypes, artisan.otherOrderTypes));
-    $('#artisanFeatures').html(htmlListFromArrays(artisan.features, artisan.otherFeatures));
-    $('#artisanSpecies').html(formatSpecies(artisan.speciesDoes, artisan.speciesDoesnt));
-    $('#artisanPaymentPlans').html(formatPaymentPlans(artisan.paymentPlans));
-    $('#artisanLinks').html(formatLinks(Utils.getLinks$(artisan), artisan.completeness));
-    $('#artisanIntro').html(artisan.intro).toggle(artisan.intro !== '');
-    $('#artisanCompleteness').html(artisan.completeness.toString());
-    $('#artisanCompletenessComment').html(getCompletenessComment(artisan.completeness));
+function formatMakerId(artisan: Artisan): string {
+    return artisan.makerId ? '<i class="fas fa-link"></i> ' + artisan.makerId : '';
+}
 
-    updateCommissionsStatus(artisan);
+function formatName(artisan: Artisan): string {
+    return artisan.name + Utils.countryFlagHtml(artisan.country);
+}
+
+function fillDetailsModalHtml(artisan: Artisan): void {
+    let updates = {
+        '#artisanProductionModel': htmlListFromArrays(artisan.productionModels),
+        '#artisanStyles': htmlListFromArrays(artisan.styles, artisan.otherStyles),
+        '#artisanTypes': htmlListFromArrays(artisan.orderTypes, artisan.otherOrderTypes),
+        '#artisanFeatures': htmlListFromArrays(artisan.features, artisan.otherFeatures),
+
+        '#artisanSpecies': formatSpecies(artisan.speciesDoes, artisan.speciesDoesnt),
+        '#artisanPaymentPlans': formatPaymentPlans(artisan.paymentPlans),
+        '#artisanLanguages': formatLanguages(artisan.languages),
+        '#artisanCompleteness': artisan.completeness.toString(),
+        '#artisanLinks': formatLinks(Utils.getLinks$(artisan), artisan.completeness),
+        '#artisanCompletenessComment': getCompletenessComment(artisan.completeness),
+        '#artisanCommissionsStatus': formatCommissionsStatus(artisan),
+    };
+
+    for (let selector in updates) {
+        $(selector).html(updates[selector]);
+    }
+}
+
+function updateDetailsModalWithArtisanData(artisan: Artisan): void {
+    $artisanDetailsModal.html(Mustache.render(artisanDetailsModalTpl, {
+        artisan: artisan,
+        optional: function () {
+            return function (text, render) {
+                let rendered = render(text);
+
+                return rendered || '<i class="fas fa-question-circle" title="Unknown"></i>';
+            }
+        }
+    }));
+
+    fillDetailsModalHtml(artisan);
+
+    $('#statusParsingFailed').toggle(artisan.commissionsStatus === null);
+
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
 
     Utils.makeLinksOpenNewTab('#artisanLinks a');
@@ -117,7 +141,11 @@ function updateDetailsModalWithArtisanData(artisan: Artisan): void {
 }
 
 export function init(): void {
-    $('#artisanDetailsModal').on('show.bs.modal', function (event: any) {
+    $artisanDetailsModal = $('#artisanDetailsModal');
+    artisanDetailsModalTpl = $artisanDetailsModal.html();
+    Mustache.parse(artisanDetailsModalTpl);
+
+    $artisanDetailsModal.on('show.bs.modal', function (event: any) {
         updateDetailsModalWithArtisanData($(event.relatedTarget).closest('tr').data('artisan'));
     });
 

@@ -1,6 +1,9 @@
 'use strict';
 
 export default class Artisan {
+    readonly location: string;
+    readonly lcCountry: string;
+
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
                 readonly name: string,
@@ -44,6 +47,8 @@ export default class Artisan {
                 readonly contactAllowed: string,
                 readonly contactInfoObfuscated: string,
     ) {
+        this.location = [state, city].filter(i => i).join(', ');
+        this.lcCountry = country.toLowerCase();
     }
 
     public getLastMakerId(): string {
