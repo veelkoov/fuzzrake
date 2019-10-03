@@ -15,6 +15,7 @@ export default class Artisan {
     readonly commissionsStatusKnown: boolean;
     readonly commissionsStatusText: string;
     readonly completenessComment: string;
+    readonly completenessGood: boolean;
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -68,6 +69,7 @@ export default class Artisan {
         this.commissionsStatusKnown = commissionsStatus !== null;
         this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);
         this.completenessComment = Artisan.getCompletenessComment(completeness);
+        this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
     }
 
     public getLastMakerId(): string {
