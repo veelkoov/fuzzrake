@@ -1,138 +1,132 @@
-<div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    (( #artisan.makerId ))
-                        <a id="makerId" href="#"><i class="fas fa-link"></i> (( artisan.makerId ))</a>
-                    (( /artisan.makerId ))
+<div class="modal-header">
+    <h5 class="modal-title">
+        (( #artisan.makerId ))
+            <a id="makerId" href="#"><i class="fas fa-link"></i> (( artisan.makerId ))</a>
+        (( /artisan.makerId ))
 
-                    <span id="artisanName">(( artisan.name ))</span>(( #artisan.country ))&nbsp;<span class="flag-icon flag-icon-(( artisan.lcCountry ))"></span>(( /artisan.country ))
+        <span id="artisanName">(( artisan.name ))</span>(( #artisan.country ))&nbsp;<span class="flag-icon flag-icon-(( artisan.lcCountry ))"></span>(( /artisan.country ))
 
-                    <small>
-                        Based in (( #optional )) artisan.location (( /optional )),
-                        crafting since (( #optional )) artisan.since (( /optional ))
-                        (( #artisan.formerly ))
-                            <br />Formerly (( artisan.formerly ))
-                        (( /artisan.formerly ))
-                    </small>
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body row px-4 py-2">
-                (( #artisan.intro ))
-                    <div class="col-sm-12 p-1">
-                        <p class="lead">(( artisan.intro ))</p>
-                    </div>
-                (( /artisan.intro ))
-                <div class="col-sm-4 p-1">
-                    <h5>Produces</h5>
-                    <div class="small pb-2">
-                        (( #optionalList ))artisan.productionModels(( /optionalList ))
-                    </div>
-                    <h5>Styles</h5>
-                    <div class="small">
-                        (( #optionalList ))artisan.allStyles(( /optionalList ))
-                    </div>
-                </div>
-                <div class="col-sm-4 p-1">
-                    <h5>Types</h5>
-                    <div class="small">
-                        (( #optionalList ))artisan.allOrderTypes(( /optionalList ))
-                    </div>
-                </div>
-                <div class="col-sm-4 p-1">
-                    <h5>Features</h5>
-                    <div class="small">
-                        (( #optionalList ))artisan.allFeatures(( /optionalList ))
-                    </div>
-                </div>
-                <div class="col-sm-6 p-1">
-                    <h5>Species</h5>
-                    <div class="small" id="artisanSpecies">
-                        (( #artisan.speciesDoes ))
-                            <strong>Does</strong>: (( artisan.speciesDoes ))
-                            (( #artisan.speciesDoesnt ))<br />(( /artisan.speciesDoesnt ))
-                        (( /artisan.speciesDoes ))
-                        (( #artisan.speciesDoesnt ))
-                            <strong>Doesn't</strong>: (( artisan.speciesDoesnt ))
-                        (( /artisan.speciesDoesnt ))
-                        (( ^artisan.speciesDoesnt ))
-                            (( ^artisan.speciesDoes ))
-                                <i class="fas fa-question-circle" title="Unknown"></i>
-                            (( /artisan.speciesDoes ))
-                        (( /artisan.speciesDoesnt ))
-                    </div>
-                </div>
-                <div class="col-sm-6 p-1">
-                    <h5>Payment plans</h5>
-                    <div class="small">
-                        (( #optional )) artisan.paymentPlans (( /optional ))
-                    </div>
-                </div>
-                <div class="col-sm-12 p-1">
-                    <h5>Languages</h5>
-                    <div class="small">
-                        (( #optional )) artisan.languagesCommaSeparated (( /optional ))
-                    </div>
-                </div>
-                <div class="col-sm-12 p-1">
-                    <h5>Links</h5>
-                    <div id="artisanLinks"></div>
-                </div>
-                <div class="row p-1">
-                    <div class="col-sm">
-                        <h5>Commissions status</h5>
-                        <div class="small" id="artisanCommissionsStatus">
-                            (( ^artisan.cstUrl ))
-                                Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
-
-                                Status is not automatically tracked and updated.
-                            (( /artisan.cstUrl ))
-                            (( #artisan.cstUrl ))
-                                (( #artisan.commissionsStatusKnown ))
-                                    Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
-
-                                    Status is tracked and updated automatically from this web page:
-                                    <a href="((artisan.cstUrl))">(( artisan.cstUrl ))</a>.
-
-                                    Last time checked on (( artisan.cstLastCheck )) UTC.
-                                (( /artisan.commissionsStatusKnown ))
-                                (( ^artisan.commissionsStatusKnown ))
-                                    Commissions status is <strong>(( artisan.commissionsStatusText ))</strong>.
-
-                                    It should be tracked and updated automatically from this web page:
-                                    <a href="((artisan.cstUrl))">(( artisan.cstUrl ))</a>, however the software
-                                    failed to "understand" the status based on the page contents.
-
-                                    Last time it tried on (( artisan.cstLastCheck )) UTC.
-                                (( /artisan.commissionsStatusKnown ))
-                            (( /artisan.cstUrl ))
-                            <a href="{{ path('tracking') }}">Learn more</a>
-                        </div>
-                    </div>
-                    (( #artisan.cstUrl ))
-                        (( ^artisan.commissionsStatusKnown ))
-                            <div class="col-sm-4">
-                                <img src="{{ asset('images/parsing_failed.png') }}" class="img-fluid" alt="">
-                            </div>
-                        (( /artisan.commissionsStatusKnown ))
-                    (( /artisan.cstUrl ))
-                </div>
-                <div class="col-sm-12 p-1 pt-3">
-                    <h5>Data incomplete/inaccurate/outdated?</h5>
-                    <p class="small">
-                        This maker/studio has (( artisan.completeness ))% data completeness.
-                        (( artisan.completenessComment ))
-                    </p>
-                    {% include 'main/_update_request_contents.html.twig' with { 'id': 'updateRequestFull' }%}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+        <small>
+            Based in (( #optional )) artisan.location (( /optional )),
+            crafting since (( #optional )) artisan.since (( /optional ))
+            (( #artisan.formerly ))
+                <br />Formerly (( artisan.formerly ))
+            (( /artisan.formerly ))
+        </small>
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body row px-4 py-2">
+    (( #artisan.intro ))
+        <div class="col-sm-12 p-1">
+            <p class="lead">(( artisan.intro ))</p>
+        </div>
+    (( /artisan.intro ))
+    <div class="col-sm-4 p-1">
+        <h5>Produces</h5>
+        <div class="small pb-2">
+            (( #optionalList ))artisan.productionModels(( /optionalList ))
+        </div>
+        <h5>Styles</h5>
+        <div class="small">
+            (( #optionalList ))artisan.allStyles(( /optionalList ))
         </div>
     </div>
+    <div class="col-sm-4 p-1">
+        <h5>Types</h5>
+        <div class="small">
+            (( #optionalList ))artisan.allOrderTypes(( /optionalList ))
+        </div>
+    </div>
+    <div class="col-sm-4 p-1">
+        <h5>Features</h5>
+        <div class="small">
+            (( #optionalList ))artisan.allFeatures(( /optionalList ))
+        </div>
+    </div>
+    <div class="col-sm-6 p-1">
+        <h5>Species</h5>
+        <div class="small" id="artisanSpecies">
+            (( #artisan.speciesDoes ))
+                <strong>Does</strong>: (( artisan.speciesDoes ))
+                (( #artisan.speciesDoesnt ))<br />(( /artisan.speciesDoesnt ))
+            (( /artisan.speciesDoes ))
+            (( #artisan.speciesDoesnt ))
+                <strong>Doesn't</strong>: (( artisan.speciesDoesnt ))
+            (( /artisan.speciesDoesnt ))
+            (( ^artisan.speciesDoesnt ))
+                (( ^artisan.speciesDoes ))
+                    <i class="fas fa-question-circle" title="Unknown"></i>
+                (( /artisan.speciesDoes ))
+            (( /artisan.speciesDoesnt ))
+        </div>
+    </div>
+    <div class="col-sm-6 p-1">
+        <h5>Payment plans</h5>
+        <div class="small">
+            (( #optional )) artisan.paymentPlans (( /optional ))
+        </div>
+    </div>
+    <div class="col-sm-12 p-1">
+        <h5>Languages</h5>
+        <div class="small">
+            (( #optional )) artisan.languagesCommaSeparated (( /optional ))
+        </div>
+    </div>
+    <div class="col-sm-12 p-1">
+        <h5>Links</h5>
+        <div id="artisanLinks"></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-sm">
+            <h5>Commissions status</h5>
+            <div class="small" id="artisanCommissionsStatus">
+                (( ^artisan.cstUrl ))
+                    Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
+
+                    Status is not automatically tracked and updated.
+                (( /artisan.cstUrl ))
+                (( #artisan.cstUrl ))
+                    (( #artisan.commissionsStatusKnown ))
+                        Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
+
+                        Status is tracked and updated automatically from this web page:
+                        <a href="((artisan.cstUrl))">(( artisan.cstUrl ))</a>.
+
+                        Last time checked on (( artisan.cstLastCheck )) UTC.
+                    (( /artisan.commissionsStatusKnown ))
+                    (( ^artisan.commissionsStatusKnown ))
+                        Commissions status is <strong>(( artisan.commissionsStatusText ))</strong>.
+
+                        It should be tracked and updated automatically from this web page:
+                        <a href="((artisan.cstUrl))">(( artisan.cstUrl ))</a>, however the software
+                        failed to "understand" the status based on the page contents.
+
+                        Last time it tried on (( artisan.cstLastCheck )) UTC.
+                    (( /artisan.commissionsStatusKnown ))
+                (( /artisan.cstUrl ))
+                <a href="{{ path('tracking') }}">Learn more</a>
+            </div>
+        </div>
+        (( #artisan.cstUrl ))
+            (( ^artisan.commissionsStatusKnown ))
+                <div class="col-sm-4">
+                    <img src="{{ asset('images/parsing_failed.png') }}" class="img-fluid" alt="">
+                </div>
+            (( /artisan.commissionsStatusKnown ))
+        (( /artisan.cstUrl ))
+    </div>
+    <div class="col-sm-12 p-1 pt-3">
+        <h5>Data incomplete/inaccurate/outdated?</h5>
+        <p class="small">
+            This maker/studio has (( artisan.completeness ))% data completeness.
+            (( artisan.completenessComment ))
+        </p>
+        {% include 'main/_update_request_contents.html.twig' with { 'id': 'updateRequestFull' }%}
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
