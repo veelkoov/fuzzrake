@@ -32,9 +32,6 @@ function updateDetailsModalWithArtisanData(artisan: Artisan): void {
     }, {}, ['((', '))']));
 
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
-
-    Utils.makeLinksOpenNewTab('#artisanLinks a');
-    Utils.makeLinksOpenNewTab('#artisanCommissionsStatus a');
 }
 
 export function init(): void {
@@ -45,6 +42,4 @@ export function init(): void {
     $artisanDetailsModal.on('show.bs.modal', function (event: any) {
         updateDetailsModalWithArtisanData($(event.relatedTarget).closest('tr').data('artisan'));
     });
-
-    Utils.makeLinksOpenNewTab('#updateRequestFull a');
 }

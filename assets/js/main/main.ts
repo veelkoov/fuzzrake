@@ -12,8 +12,6 @@ function initRequestUpdateModal() {
     $('#updateRequestModal').on('show.bs.modal', function (event) {
         updateRequestUpdateModalWithRowData($(event.relatedTarget).closest('tr').data('artisan'));
     });
-
-    Utils.makeLinksOpenNewTab('#updateRequestModal a');
 }
 
 function addReferrerRequestTooltip() {
@@ -50,7 +48,6 @@ export function init() {
 
     initRequestUpdateModal();
     addReferrerRequestTooltip();
-    Utils.makeLinksOpenNewTab('#artisans a:not(.request-update)');
 
     openArtisanByFragment(window.location.hash);
 
