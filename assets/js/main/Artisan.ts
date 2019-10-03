@@ -1,6 +1,11 @@
 'use strict';
 
 export default class Artisan {
+    public static readonly DATA_COMPLETE_LEVEL_PERFECT = 100;
+    public static readonly DATA_COMPLETE_LEVEL_GREAT = 90;
+    public static readonly DATA_COMPLETE_LEVEL_GOOD = 80;
+    public static readonly DATA_COMPLETE_LEVEL_OK = 60;
+
     readonly location: string;
     readonly lcCountry: string;
     readonly allFeatures: string[];
@@ -9,6 +14,7 @@ export default class Artisan {
     readonly languagesCommaSeparated: string;
     readonly commissionsStatusKnown: boolean;
     readonly commissionsStatusText: string;
+    readonly completenessComment: string;
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -61,6 +67,7 @@ export default class Artisan {
         this.languagesCommaSeparated = languages.join(', ');
         this.commissionsStatusKnown = commissionsStatus !== null;
         this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);
+        this.completenessComment = Artisan.getCompletenessComment(completeness);
     }
 
     public getLastMakerId(): string {
@@ -87,5 +94,19 @@ export default class Artisan {
 
     private static getCommissionsStatusText(commissionsStatus: boolean): string {
         return commissionsStatus === null ? 'unknown' : commissionsStatus ? 'open' : 'closed';
+    }
+
+    private static getCompletenessComment(completeness: number): string {
+        if (completeness >= Artisan.DATA_COMPLETE_LEVEL_PERFECT) {
+            return 'Awesome! ❤️';
+        } else if (completeness >= Artisan.DATA_COMPLETE_LEVEL_GREAT) {
+            return 'Great!'
+        } else if (completeness >= Artisan.DATA_COMPLETE_LEVEL_GOOD) {
+            return 'Good job!'
+        } else if (completeness >= Artisan.DATA_COMPLETE_LEVEL_OK) {
+            return 'Some updates might be helpful...';
+        } else {
+            return 'Yikes! :( Updates needed!';
+        }
     }
 }
