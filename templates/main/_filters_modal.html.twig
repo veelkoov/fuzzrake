@@ -23,6 +23,18 @@
                         </div>
                     </div>
 
+                    <div class="card" id="languagesFilter">
+                        <div role="tab" class="card-header collapsed" id="headingSeven" data-toggle="collapse" data-target="#languagesFilterBody" aria-expanded="false" aria-controls="languagesFilterBody">
+                            Languages: <span class="status"></span>
+                        </div>
+
+                        <div id="languagesFilterBody" class="collapse" aria-labelledby="headingSeven" data-parent="#filtersAccordion">
+                            <div class="card-body">
+                                {% include 'main/_filter_multiselect.html.twig' with { itemName: 'lanugage', items: languages } %}
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card" id="stylesFilter">
                         <div role="tab" class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#stylesFilterBody" aria-expanded="false" aria-controls="stylesFilterBody">
                             Styles: <span class="status"></span>

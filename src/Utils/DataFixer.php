@@ -15,7 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataFixer
 {
-    const LANGUAGES_PREFIX_REGEXP = '#(?<prefix>a small bit of |bit of |a little |some |moderate |elementary |slight )?(?<language>.+)#i';
+    const LANGUAGE_REGEXP = '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i';
 
     const REPLACEMENTS = [
         '#’#'                            => "'",
@@ -297,18 +297,21 @@ class DataFixer
 
     private function fixLanguages(string $languages): string
     {
+        $languages = $this->fixString($languages);
         $languages = Regexp::split('#[\n,;&]|and#', $languages);
         $languages = array_filter(array_map('trim', $languages));
         $languages = array_map(function (string $language): string {
-            Regexp::match(self::LANGUAGES_PREFIX_REGEXP, $language, $matches);
+            Regexp::match(self::LANGUAGE_REGEXP, $language, $matches);
 
             $language = $matches['language'];
-            $prefix = $matches['prefix'] ? 'Limited ' : '';
+            $suffix = $matches['prefix'] || ($matches['suffix'] ?? '') ? ' (limited)' : '';
 
             $language = StrUtils::ucfirst($language);
 
-            return $prefix.$language;
+            return $language.$suffix;
         }, $languages);
+
+        sort($languages);
 
         return implode("\n", $languages);
     }

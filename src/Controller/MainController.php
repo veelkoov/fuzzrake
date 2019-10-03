@@ -39,6 +39,7 @@ class MainController extends AbstractController
             'features'            => $artisanRepository->getDistinctFeatures(),
             'productionModels'    => $artisanRepository->getDistinctProductionModels(),
             'commissionsStatuses' => $artisanRepository->getDistinctCommissionStatuses(),
+            'languages'           => $artisanRepository->getDistinctLanguages(),
             'countries'           => $this->getCountriesFilterData($countriesToCount, $projectDir),
         ]);
     }

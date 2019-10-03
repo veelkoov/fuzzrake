@@ -123,6 +123,11 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
+    public function getDistinctLanguages(): FilterItems
+    {
+        return $this->getDistinctItemsWithCountFromJoined('languages');
+    }
+
     public function getDistinctCommissionStatuses(): FilterItems
     {
         $rows = $this->createQueryBuilder('a')

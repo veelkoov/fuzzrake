@@ -98,5 +98,6 @@ export function init() {
     addFilter(new FilterSetWithOthers('features',          '#featuresFilter',            $dataTable.draw, true));
     addFilter(new FilterSetWithOthers('orderTypes',        '#orderTypesFilter',          $dataTable.draw, false));
     addFilter(new FilterSetSingle    ('productionModels',  '#productionModelsFilter',    $dataTable.draw, false));
+    addFilter(new FilterSetSingle    ('languages',         '#languagesFilter',           $dataTable.draw, false));
     addFilter(new FilterSimpleValue  ('commissionsStatus', '#commissionsStatusesFilter', $dataTable.draw));
 }
