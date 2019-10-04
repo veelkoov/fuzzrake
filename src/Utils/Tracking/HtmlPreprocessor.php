@@ -96,7 +96,7 @@ class HtmlPreprocessor
                 $crawler = new Crawler($inputText);
                 $filtered = $crawler->filter('#page-userpage > tr:first-child > td:first-child > table.maintable > tr:first-child > td:first-child > table.maintable '.$additionalFilter);
 
-                if ($filtered->count() !== 1) {
+                if (1 !== $filtered->count()) {
                     throw new TrackerException('Failed to filter FA profile, nodes count: '.$filtered->count());
                 }
 
@@ -110,7 +110,7 @@ class HtmlPreprocessor
             $crawler = new Crawler($inputText);
             $filtered = $crawler->filter('div.profileheadercard');
 
-            if ($filtered->count() !== 1) {
+            if (1 !== $filtered->count()) {
                 throw new TrackerException('Failed to filter Twitter profile, nodes count: '.$filtered->count());
             }
 
@@ -121,7 +121,7 @@ class HtmlPreprocessor
             $crawler = new Crawler($inputText);
             $filtered = $crawler->filter('script[type="application/ld+json"]');
 
-            if ($filtered->count() !== 1) {
+            if (1 !== $filtered->count()) {
                 throw new TrackerException('Failed to filter Instagram profile, nodes count: '.$filtered->count());
             }
 

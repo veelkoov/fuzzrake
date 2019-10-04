@@ -49,4 +49,9 @@ class StrUtils
 
         return $url;
     }
+
+    public static function ucfirst(string $input): string
+    {
+        return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
+    }
 }

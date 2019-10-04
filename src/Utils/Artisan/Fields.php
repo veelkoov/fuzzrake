@@ -102,7 +102,7 @@ class Fields
         self::URL_SCRITCHES              => ['scritchesUrl',             VR::SCRITCHES_URL,             0, 1, 1, 1],
         self::URLS_SCRITCHES_PHOTOS      => ['scritchesPhotosUrls',      VR::SCRITCHES_PHOTOS_URLS,     0, 1, 1, 1],
         self::URLS_OTHER                 => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
-        self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  0, 1, 1, 1],
+        self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  1, 1, 1, 1],
         self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
         self::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         self::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],

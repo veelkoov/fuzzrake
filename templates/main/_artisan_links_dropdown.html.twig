@@ -1,10 +1,10 @@
 <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
     {%- if artisan.fursuitReviewUrl -%}
-        <a class="btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}"><i class="fas fa-balance-scale"></i></a>
+        <a class="btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
     {%- endif -%}
 
     {%- if artisan.websiteUrl -%}
-        <a class="btn btn-secondary" href="{{ artisan.websiteUrl }}"><i class="fas fa-link"></i></a>
+        <a class="btn btn-secondary" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
     {%- endif -%}
 
     <div class="btn-group" role="group">
@@ -15,36 +15,39 @@
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ btnGroupDropLinksId }}">
             {%- if artisan.fursuitReviewUrl -%}
-                <a class="dropdown-item" href="{{ artisan.fursuitReviewUrl }}"><i class="fas fa-balance-scale"></i> FursuitReview</a>
+                <a class="dropdown-item" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
             {%- endif -%}
             {%- if artisan.websiteUrl -%}
-                <a class="dropdown-item" href="{{ artisan.websiteUrl }}"><i class="fas fa-link"></i> Official website</a>
+                <a class="dropdown-item" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {%- endif -%}
             {%- if artisan.pricesUrl -%}
-                <a class="dropdown-item" href="{{ artisan.pricesUrl }}"><i class="fas fa-dollar-sign"></i> Prices</a>
+                <a class="dropdown-item" href="{{ artisan.pricesUrl }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
             {%- endif -%}
             {%- if artisan.faqUrl -%}
-                <a class="dropdown-item" href="{{ artisan.faqUrl }}"><i class="fas fa-comments"></i> FAQ</a>
+                <a class="dropdown-item" href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
+            {%- endif -%}
+            {%- if artisan.queueUrl -%}
+                <a class="dropdown-item" href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
             {%- endif -%}
             {%- if artisan.furAffinityUrl -%}
-                <a class="dropdown-item" href="{{ artisan.furAffinityUrl }}"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
+                <a class="dropdown-item" href="{{ artisan.furAffinityUrl }}" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
             {%- endif -%}
             {%- if artisan.deviantArtUrl -%}
-                <a class="dropdown-item" href="{{ artisan.deviantArtUrl }}"><i class="fab fa-deviantart"></i> DeviantArt</a>
+                <a class="dropdown-item" href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
             {%- endif -%}
             {%- if artisan.twitterUrl -%}
-                <a class="dropdown-item" href="{{ artisan.twitterUrl }}"><i class="fab fa-twitter"></i> Twitter</a>
+                <a class="dropdown-item" href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
             {%- endif -%}
             {%- if artisan.facebookUrl -%}
-                <a class="dropdown-item" href="{{ artisan.facebookUrl }}"><i class="fab fa-facebook"></i> Facebook</a>
+                <a class="dropdown-item" href="{{ artisan.facebookUrl }}" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
             {%- endif -%}
             {%- if artisan.tumblrUrl -%}
-                <a class="dropdown-item" href="{{ artisan.tumblrUrl }}"><i class="fab fa-tumblr"></i> Tumblr</a>
+                <a class="dropdown-item" href="{{ artisan.tumblrUrl }}" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
             {%- endif -%}
             {%- if artisan.instagramUrl -%}
-                <a class="dropdown-item" href="{{ artisan.instagramUrl }}"><i class="fab fa-instagram"></i> Instagram</a>
+                <a class="dropdown-item" href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
             {%- endif -%}
-            <a class="dropdown-item request-update" href="#" data-toggle="modal" data-target="#updateRequestModal">
+            <a class="dropdown-item request-update" data-toggle="modal" data-target="#updateRequestModal">
                 <i class="fas fa-exclamation-triangle"></i> Request update
             </a>
         </div>
@@ -52,5 +55,5 @@
 </div>
 
 {% if isDevMachine() %}
-    <a class="btn btn-warning ml-2" href="{{ pma_edit_url }}{{  artisan.id }}"><i class="fas fa-edit"></i></a>
+    <a class="btn btn-warning ml-2" href="{{ pma_edit_url }}{{ artisan.id }}" target="_blank"><i class="fas fa-edit"></i></a>
 {% endif %}

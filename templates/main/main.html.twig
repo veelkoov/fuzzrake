@@ -16,8 +16,15 @@
 {% block body %}
     {% include 'main/_intro.html.twig' %}
     {% include 'main/_filters_modal.html.twig' %}
-    {% include 'main/_artisan_modal.html.twig' %}
     {% include 'main/_update_request_modal.html.twig' %}
+
+    <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                {% include 'main/_artisan_modal.html.twig' %}
+            </div>
+        </div>
+    </div>
 
     <div id="scam-risk-warning" class="card bg-light mb-3">
         <h4 class="card-header">Don't get scammed!</h4>

@@ -15,6 +15,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataFixer
 {
+    const LANGUAGE_REGEXP = '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i';
+
     const REPLACEMENTS = [
         '#’#'                            => "'",
         '#^Rather not say$#i'            => '',
@@ -161,7 +163,7 @@ class DataFixer
         $artisan->setPaymentPlans($this->fixString($artisan->getPaymentPlans()));
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
-        $artisan->setLanguages($this->fixString($artisan->getLanguages()));
+        $artisan->setLanguages($this->fixLanguages($artisan->getLanguages()));
 
         $artisan->setContactAllowed($this->fixContactAllowed($artisan->getContactAllowed()));
 
@@ -291,5 +293,26 @@ class DataFixer
         $contactPermit = str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $contactPermit);
 
         return $contactPermit;
+    }
+
+    private function fixLanguages(string $languages): string
+    {
+        $languages = $this->fixString($languages);
+        $languages = Regexp::split('#[\n,;&]|and#', $languages);
+        $languages = array_filter(array_map('trim', $languages));
+        $languages = array_map(function (string $language): string {
+            Regexp::match(self::LANGUAGE_REGEXP, $language, $matches);
+
+            $language = $matches['language'];
+            $suffix = $matches['prefix'] || ($matches['suffix'] ?? '') ? ' (limited)' : '';
+
+            $language = StrUtils::ucfirst($language);
+
+            return $language.$suffix;
+        }, $languages);
+
+        sort($languages);
+
+        return implode("\n", $languages);
     }
 }

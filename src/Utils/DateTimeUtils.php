@@ -54,4 +54,9 @@ class DateTimeUtils
     {
         return self::getNowUtc() > $dateTime;
     }
+
+    public static function timems(): int
+    {
+        return (int) (microtime(true) * 1000);
+    }
 }
