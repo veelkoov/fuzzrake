@@ -6,6 +6,8 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -236,6 +238,16 @@ class Artisan implements JsonSerializable, FieldReadInterface
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"})
      */
     private $privateData;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"})
+     */
+    private $artisanUrls;
+
+    public function __construct()
+    {
+        $this->artisanUrls = new ArrayCollection();
+    }
 
     public function __clone()
     {
@@ -915,6 +927,37 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setPasscode(string $passcode): self
     {
         $this->getPrivateData()->setPasscode($passcode);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ArtisanUrl[]
+     */
+    public function getArtisanUrls(): Collection
+    {
+        return $this->artisanUrls;
+    }
+
+    public function addArtisanUrl(ArtisanUrl $artisanUrl): self
+    {
+        if (!$this->artisanUrls->contains($artisanUrl)) {
+            $this->artisanUrls[] = $artisanUrl;
+            $artisanUrl->setArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtisanUrl(ArtisanUrl $artisanUrl): self
+    {
+        if ($this->artisanUrls->contains($artisanUrl)) {
+            $this->artisanUrls->removeElement($artisanUrl);
+            // set the owning side to null (unless already changed)
+            if ($artisanUrl->getArtisan() === $this) {
+                $artisanUrl->setArtisan(null);
+            }
+        }
 
         return $this;
     }
