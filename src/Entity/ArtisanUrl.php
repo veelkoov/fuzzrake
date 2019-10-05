@@ -12,22 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ArtisanUrl
 {
-    public const TYPE_FURSUIT_REVIEW = 'FURSUIT_REVIEW';
-    public const TYPE_WEBSITE = 'WEBSITE';
-    public const TYPE_PRICES = 'PRICES';
-    public const TYPE_FAQ = 'FAQ';
-    public const TYPE_FUR_AFFINITY = 'FUR_AFFINITY';
-    public const TYPE_DEVIANTART = 'DEVIANTART';
-    public const TYPE_TWITTER = 'TWITTER';
-    public const TYPE_FACEBOOK = 'FACEBOOK';
-    public const TYPE_TUMBLR = 'TUMBLR';
-    public const TYPE_INSTAGRAM = 'INSTAGRAM';
-    public const TYPE_YOUTUBE = 'YOUTUBE';
-    public const TYPE_QUEUE = 'QUEUE';
-    public const TYPE_SCRITCH = 'SCRITCH';
-    public const TYPE_SCRITCH_PHOTO = 'SCRITCH_PHOTO';
-    public const TYPE_OTHER = 'OTHER';
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

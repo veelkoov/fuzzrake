@@ -102,8 +102,8 @@ class IuFormServiceTest extends WebTestCase
                 case Fields::PAYMENT_PLANS:
                 case Fields::SPECIES_DOES:
                 case Fields::SPECIES_DOESNT:
-                case Fields::URLS_SCRITCHES_PHOTOS:
-                case Fields::URLS_OTHER:
+                case Fields::URL_SCRITCH_PHOTO:
+                case Fields::URL_OTHER:
                 case Fields::NOTES:
                     $value = $artisan->get($field);
                     self::assertContains($value, $textareas, "Failed to find $value");
