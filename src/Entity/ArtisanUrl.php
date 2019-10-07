@@ -20,7 +20,7 @@ class ArtisanUrl
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Artisan", inversedBy="artisanUrls")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Artisan", inversedBy="urls")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
     private $artisan;
