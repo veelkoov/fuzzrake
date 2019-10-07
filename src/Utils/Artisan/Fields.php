@@ -10,55 +10,57 @@ use App\Utils\Artisan\ValidationRegexps as VR;
 class Fields
 {
     /***** "PRETTY" NAMES START *****/
-    const TIMESTAMP = 'TIMESTAMP';
-    const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
-    const NAME = 'NAME';
-    const FORMERLY = 'FORMERLY';
-    const SINCE = 'SINCE';
-    const COUNTRY = 'COUNTRY';
-    const STATE = 'STATE';
-    const CITY = 'CITY';
-    const PAYMENT_PLANS = 'PAYMENT_PLANS';
-    const URL_PRICES = 'URL_PRICES';
-    const PRODUCTION_MODELS = 'PRODUCTION_MODELS';
-    const STYLES = 'STYLES';
-    const OTHER_STYLES = 'OTHER_STYLES';
-    const ORDER_TYPES = 'ORDER_TYPES';
-    const OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
-    const FEATURES = 'FEATURES';
-    const OTHER_FEATURES = 'OTHER_FEATURES';
-    const SPECIES_DOES = 'SPECIES_DOES';
-    const SPECIES_DOESNT = 'SPECIES_DOESNT';
-    const URL_FSR = 'URL_FSR';
-    const URL_WEBSITE = 'URL_WEBSITE';
-    const URL_FAQ = 'URL_FAQ';
-    const URL_QUEUE = 'URL_QUEUE';
-    const URL_FA = 'URL_FA';
-    const URL_DA = 'URL_DA';
-    const URL_TWITTER = 'URL_TWITTER';
-    const URL_FACEBOOK = 'URL_FACEBOOK';
-    const URL_TUMBLR = 'URL_TUMBLR';
-    const URL_INSTAGRAM = 'URL_INSTAGRAM';
-    const URL_YOUTUBE = 'URL_YOUTUBE';
-    const URLS_OTHER = 'URLS_OTHER';
-    const URL_SCRITCHES = 'URL_SCRITCHES';
-    const URLS_SCRITCHES_PHOTOS = 'URLS_SCRITCHES_PHOTOS';
-    const URL_CST = 'URL_CST';
-    const LANGUAGES = 'LANGUAGES';
-    const MAKER_ID = 'MAKER_ID';
-    const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
-    const INTRO = 'INTRO';
-    const NOTES = 'NOTES';
-    const PASSCODE = 'PASSCODE';
-    const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
-    const CST_LAST_CHECK = 'CST_LAST_CHECK';
-    const COMPLETNESS = 'COMPLETNESS';
-    const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
-    const CONTACT_METHOD = 'CONTACT_METHOD';
-    const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
-    const CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
-    const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
-    const CONTACT_INPUT_VIRTUAL = 'CONTACT_INPUT_VIRTUAL';
+    public const TIMESTAMP = 'TIMESTAMP';
+    public const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
+    public const NAME = 'NAME';
+    public const FORMERLY = 'FORMERLY';
+    public const SINCE = 'SINCE';
+    public const COUNTRY = 'COUNTRY';
+    public const STATE = 'STATE';
+    public const CITY = 'CITY';
+    public const PAYMENT_PLANS = 'PAYMENT_PLANS';
+    public const PRODUCTION_MODELS = 'PRODUCTION_MODELS';
+    public const STYLES = 'STYLES';
+    public const OTHER_STYLES = 'OTHER_STYLES';
+    public const ORDER_TYPES = 'ORDER_TYPES';
+    public const OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
+    public const FEATURES = 'FEATURES';
+    public const OTHER_FEATURES = 'OTHER_FEATURES';
+    public const SPECIES_DOES = 'SPECIES_DOES';
+    public const SPECIES_DOESNT = 'SPECIES_DOESNT';
+
+    public const URL_FURSUITREVIEW = 'URL_FURSUITREVIEW';
+    public const URL_WEBSITE = 'URL_WEBSITE';
+    public const URL_PRICES = 'URL_PRICES';
+    public const URL_FAQ = 'URL_FAQ';
+    public const URL_FUR_AFFINITY = 'URL_FUR_AFFINITY';
+    public const URL_DEVIANTART = 'URL_DEVIANTART';
+    public const URL_TWITTER = 'URL_TWITTER';
+    public const URL_FACEBOOK = 'URL_FACEBOOK';
+    public const URL_TUMBLR = 'URL_TUMBLR';
+    public const URL_INSTAGRAM = 'URL_INSTAGRAM';
+    public const URL_YOUTUBE = 'URL_YOUTUBE';
+    public const URL_QUEUE = 'URL_QUEUE';
+    public const URL_SCRITCH = 'URL_SCRITCH';
+    public const URL_SCRITCH_PHOTO = 'URL_SCRITCH_PHOTO';
+    public const URL_OTHER = 'URL_OTHER';
+    public const URL_CST = 'URL_CST';
+
+    public const LANGUAGES = 'LANGUAGES';
+    public const MAKER_ID = 'MAKER_ID';
+    public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
+    public const INTRO = 'INTRO';
+    public const NOTES = 'NOTES';
+    public const PASSCODE = 'PASSCODE';
+    public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
+    public const CST_LAST_CHECK = 'CST_LAST_CHECK';
+    public const COMPLETNESS = 'COMPLETNESS';
+    public const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
+    public const CONTACT_METHOD = 'CONTACT_METHOD';
+    public const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
+    public const CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
+    public const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
+    public const CONTACT_INPUT_VIRTUAL = 'CONTACT_INPUT_VIRTUAL';
     /***** "PRETTY" NAMES END *****/
 
     private const FIELDS_ARRAY_DATA = [
@@ -87,21 +89,21 @@ class Fields
         self::PAYMENT_PLANS              => ['paymentPlans',             VR::ANYTHING,                  0, 1, 1, 1],
         self::SPECIES_DOES               => ['speciesDoes',              VR::ANYTHING,                  0, 1, 1, 1],
         self::SPECIES_DOESNT             => ['speciesDoesnt',            VR::ANYTHING,                  0, 1, 1, 1],
-        self::URL_FSR                    => ['fursuitReviewUrl',         VR::FSR_URL,                   0, 1, 1, 1],
+        self::URL_FURSUITREVIEW          => ['fursuitReviewUrl',         VR::FSR_URL,                   0, 1, 1, 1],
         self::URL_WEBSITE                => ['websiteUrl',               VR::GENERIC_URL,               0, 1, 1, 1],
         self::URL_PRICES                 => ['pricesUrl',                VR::GENERIC_URL,               0, 1, 1, 1],
         self::URL_FAQ                    => ['faqUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
-        self::URL_FA                     => ['furAffinityUrl',           VR::FA_URL,                    0, 1, 1, 1],
-        self::URL_DA                     => ['deviantArtUrl',            VR::DA_URL,                    0, 1, 1, 1],
+        self::URL_FUR_AFFINITY           => ['furAffinityUrl',           VR::FA_URL,                    0, 1, 1, 1],
+        self::URL_DEVIANTART             => ['deviantArtUrl',            VR::DA_URL,                    0, 1, 1, 1],
         self::URL_TWITTER                => ['twitterUrl',               VR::TWITTER_URL,               0, 1, 1, 1],
         self::URL_FACEBOOK               => ['facebookUrl',              VR::FACEBOOK_URL,              0, 1, 1, 1],
         self::URL_TUMBLR                 => ['tumblrUrl',                VR::TUMBLR_URL,                0, 1, 1, 1],
         self::URL_INSTAGRAM              => ['instagramUrl',             VR::INSTAGRAM_URL,             0, 1, 1, 1],
         self::URL_YOUTUBE                => ['youtubeUrl',               VR::YOUTUBE_URL,               0, 1, 1, 1],
         self::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
-        self::URL_SCRITCHES              => ['scritchesUrl',             VR::SCRITCHES_URL,             0, 1, 1, 1],
-        self::URLS_SCRITCHES_PHOTOS      => ['scritchesPhotosUrls',      VR::SCRITCHES_PHOTOS_URLS,     0, 1, 1, 1],
-        self::URLS_OTHER                 => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
+        self::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
+        self::URL_SCRITCH_PHOTO          => ['scritchPhotosUrls',        VR::SCRITCH_PHOTOS_URLS,       0, 1, 1, 1],
+        self::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
         self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  1, 1, 1, 1],
         self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
         self::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
@@ -143,21 +145,21 @@ class Fields
         self::OTHER_FEATURES        => ['#Any other features#i',              1, 1],
         self::SPECIES_DOES          => ['#What species#i',                    1, 1],
         self::SPECIES_DOESNT        => ['#species you will NOT#i',            1, 1],
-        self::URL_FSR               => ['#fursuitreview#i',                   1, 1],
+        self::URL_FURSUITREVIEW     => ['#fursuitreview#i',                   1, 1],
         self::URL_WEBSITE           => ['#regular website#i',                 1, 1],
         self::URL_FAQ               => ['#FAQ#i',                             1, 1],
         self::URL_QUEUE             => ['#queue/progress#i',                  1, 1],
-        self::URL_FA                => ['#FurAffinity#i',                     1, 1],
-        self::URL_DA                => ['#DeviantArt#i',                      1, 1],
+        self::URL_FUR_AFFINITY      => ['#FurAffinity#i',                     1, 1],
+        self::URL_DEVIANTART        => ['#DeviantArt#i',                      1, 1],
         self::URL_TWITTER           => ['#Twitter#i',                         1, 1],
         self::URL_FACEBOOK          => ['#Facebook#i',                        1, 1],
         self::URL_TUMBLR            => ['#Tumblr#i',                          1, 1],
         self::URL_INSTAGRAM         => ['#Instagram#i',                       1, 1],
         self::URL_YOUTUBE           => ['#YouTube#i',                         1, 1],
-        self::URLS_OTHER            => ['#other websites#i',                  1, 1],
+        self::URL_OTHER             => ['#other websites#i',                  1, 1],
         self::URL_CST               => ['#commissions status#i',              1, 1],
-        self::URL_SCRITCHES         => ['#Got scritch\.es\?#i',               1, 1],
-        self::URLS_SCRITCHES_PHOTOS => ['#"featured" photos#i',               1, 1],
+        self::URL_SCRITCH           => ['#Got scritch\.es\?#i',               1, 1],
+        self::URL_SCRITCH_PHOTO     => ['#"featured" photos#i',               1, 1],
         self::LANGUAGES             => ['#languages#i',                       1, 1],
         self::MAKER_ID              => ['#Maker ID#i',                        1, 1],
         self::INTRO                 => ['#intro#i',                           1, 1],
@@ -216,7 +218,7 @@ class Fields
      */
     public static function persisted(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->isPersisted();
         });
     }
@@ -226,7 +228,7 @@ class Fields
      */
     public static function inJson(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->inJson();
         });
     }
@@ -236,7 +238,7 @@ class Fields
      */
     public static function inStats(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->inStats();
         });
     }
@@ -246,7 +248,7 @@ class Fields
      */
     public static function lists(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->isList();
         });
     }
@@ -256,7 +258,7 @@ class Fields
      */
     public static function inIuForm(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->inIuForm();
         });
     }
@@ -266,7 +268,7 @@ class Fields
      */
     public static function exportedToIuForm(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->exportToIuForm();
         });
     }
@@ -276,8 +278,35 @@ class Fields
      */
     public static function importedFromIuForm(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->importFromIuForm();
+        });
+    }
+
+    /**
+     * @return Field[]
+     */
+    public static function urls(): array
+    {
+        return array_filter(self::$fields, function (Field $field): bool {
+            return in_array($field->name(), [
+                self::URL_FURSUITREVIEW,
+                self::URL_WEBSITE,
+                self::URL_PRICES,
+                self::URL_FAQ,
+                self::URL_FUR_AFFINITY,
+                self::URL_DEVIANTART,
+                self::URL_TWITTER,
+                self::URL_FACEBOOK,
+                self::URL_TUMBLR,
+                self::URL_INSTAGRAM,
+                self::URL_YOUTUBE,
+                self::URL_QUEUE,
+                self::URL_SCRITCH,
+                self::URL_SCRITCH_PHOTO,
+                self::URL_OTHER,
+                self::URL_CST,
+            ]);
         });
     }
 
