@@ -79,7 +79,7 @@ class IuFormServiceTest extends WebTestCase
                      Styles::getValues(),
                  ] as $list) {
             foreach ($list as $value) {
-                self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find '$value'");
             }
         }
 
@@ -111,7 +111,7 @@ class IuFormServiceTest extends WebTestCase
 
                 case Fields::CONTACT_ALLOWED:
                     $value = ContactPermit::getValues()[$artisan->get($field)];
-                    self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                    self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find '$value' for field '{$field->name()}'");
                     break;
 
                 case Fields::SINCE:
@@ -120,14 +120,14 @@ class IuFormServiceTest extends WebTestCase
 
                 case Fields::VALIDATION_CHECKBOX:
                     $value = 'Yes, I\'m not on the list yet, or I used the update link';
-                    self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                    self::assertCount(1, $crawler->filter('input[type=hidden][name^="entry."][value="'.$value.'"]'), "Failed to find '$value' for field '{$field->name()}'");
                     break;
 
                 default:
                     $value = $artisan->get($field);
 
                     try {
-                        self::assertCount(1, $crawler->filter('input[type=text][name^="entry."][value="'.$value.'"]'), "Failed to find $value");
+                        self::assertCount(1, $crawler->filter('input[type=text][name^="entry."][value="'.$value.'"]'), "Failed to find '$value' for field '{$field->name()}'");
                     } catch (SyntaxErrorException $e) {
                         self::fail("Value caused syntax error {$e->getMessage()}: $value");
                     }
@@ -171,8 +171,8 @@ class IuFormServiceTest extends WebTestCase
                     ->setYoutubeUrl('ARTISAN_YOUTUBE_URL')
                     ->setOtherUrls('ARTISAN_OTHER_URLS')
                     ->setCstUrl('ARTISAN_CST_URL')
-                    ->setScritchesUrl('ARTISAN_SCRITCHES_URL')
-                    ->setScritchesPhotosUrls('ARTISAN_SCRITCHES_PHOTOS_URLS')
+                    ->setScritchUrl('ARTISAN_SCRITCH_URL')
+                    ->setScritchPhotosUrls('ARTISAN_SCRITCH_PHOTOS_URLS')
                     ->setLanguages('ARTISAN_LANGUAGES')
                     ->setMakerId('ARTISAN_MAKER_UI')
                     ->setIntro('ARTISAN_INTRO')

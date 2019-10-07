@@ -101,8 +101,8 @@ class Fields
         self::URL_INSTAGRAM              => ['instagramUrl',             VR::INSTAGRAM_URL,             0, 1, 1, 1],
         self::URL_YOUTUBE                => ['youtubeUrl',               VR::YOUTUBE_URL,               0, 1, 1, 1],
         self::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
-        self::URL_SCRITCH                => ['scritchesUrl',             VR::SCRITCHES_URL,             0, 1, 1, 1],
-        self::URL_SCRITCH_PHOTO          => ['scritchesPhotosUrls',      VR::SCRITCHES_PHOTOS_URLS,     0, 1, 1, 1],
+        self::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
+        self::URL_SCRITCH_PHOTO          => ['scritchPhotosUrls',        VR::SCRITCH_PHOTOS_URLS,       0, 1, 1, 1],
         self::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
         self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  1, 1, 1, 1],
         self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
@@ -218,7 +218,7 @@ class Fields
      */
     public static function persisted(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->isPersisted();
         });
     }
@@ -228,7 +228,7 @@ class Fields
      */
     public static function inJson(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->inJson();
         });
     }
@@ -238,7 +238,7 @@ class Fields
      */
     public static function inStats(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->inStats();
         });
     }
@@ -248,7 +248,7 @@ class Fields
      */
     public static function lists(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->isList();
         });
     }
@@ -258,7 +258,7 @@ class Fields
      */
     public static function inIuForm(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->inIuForm();
         });
     }
@@ -268,7 +268,7 @@ class Fields
      */
     public static function exportedToIuForm(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->exportToIuForm();
         });
     }
@@ -278,8 +278,35 @@ class Fields
      */
     public static function importedFromIuForm(): array
     {
-        return array_filter(self::$fields, function (Field $field) {
+        return array_filter(self::$fields, function (Field $field): bool {
             return $field->importFromIuForm();
+        });
+    }
+
+    /**
+     * @return Field[]
+     */
+    public static function urls(): array
+    {
+        return array_filter(self::$fields, function (Field $field): bool {
+            return in_array($field->name(), [
+                self::URL_FURSUITREVIEW,
+                self::URL_WEBSITE,
+                self::URL_PRICES,
+                self::URL_FAQ,
+                self::URL_FUR_AFFINITY,
+                self::URL_DEVIANTART,
+                self::URL_TWITTER,
+                self::URL_FACEBOOK,
+                self::URL_TUMBLR,
+                self::URL_INSTAGRAM,
+                self::URL_YOUTUBE,
+                self::URL_QUEUE,
+                self::URL_SCRITCH,
+                self::URL_SCRITCH_PHOTO,
+                self::URL_OTHER,
+                self::URL_CST,
+            ]);
         });
     }
 

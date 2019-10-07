@@ -26,7 +26,7 @@ class ArtisanUrl
     private $artisan;
 
     /**
-     * @ORM\Column(type="string", length=16)
+     * @ORM\Column(type="string", length=32)
      */
     private $type;
 

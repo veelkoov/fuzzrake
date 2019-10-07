@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Utils\Artisan\Field;
@@ -242,11 +244,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"})
      */
-    private $artisanUrls;
+    private $urls;
 
     public function __construct()
     {
-        $this->artisanUrls = new ArrayCollection();
+        $this->urls = new ArrayCollection();
     }
 
     public function __clone()
@@ -343,96 +345,192 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function getFursuitReviewUrl(): string
     {
-        return $this->fursuitReviewUrl;
+        return $this->getSingleUrl(Fields::URL_FURSUITREVIEW);
     }
 
     public function setFursuitReviewUrl(string $fursuitReviewUrl): self
     {
-        $this->fursuitReviewUrl = $fursuitReviewUrl;
+        $this->setSingleUrl(Fields::URL_FURSUITREVIEW, $fursuitReviewUrl);
 
         return $this;
     }
 
     public function getFurAffinityUrl(): string
     {
-        return $this->furAffinityUrl;
+        return $this->getSingleUrl(Fields::URL_FUR_AFFINITY);
     }
 
     public function setFurAffinityUrl(string $furAffinityUrl): self
     {
-        $this->furAffinityUrl = $furAffinityUrl;
+        $this->setSingleUrl(Fields::URL_FUR_AFFINITY, $furAffinityUrl);
 
         return $this;
     }
 
     public function getDeviantArtUrl(): string
     {
-        return $this->deviantArtUrl;
+        return $this->getSingleUrl(Fields::URL_DEVIANTART);
     }
 
     public function setDeviantArtUrl(string $deviantArtUrl): self
     {
-        $this->deviantArtUrl = $deviantArtUrl;
+        $this->setSingleUrl(Fields::URL_DEVIANTART, $deviantArtUrl);
 
         return $this;
     }
 
     public function getWebsiteUrl(): string
     {
-        return $this->websiteUrl;
+        return $this->getSingleUrl(Fields::URL_WEBSITE);
     }
 
     public function setWebsiteUrl(string $websiteUrl): self
     {
-        $this->websiteUrl = $websiteUrl;
+        $this->setSingleUrl(Fields::URL_WEBSITE, $websiteUrl);
 
         return $this;
     }
 
     public function getFacebookUrl(): string
     {
-        return $this->facebookUrl;
+        return $this->getSingleUrl(Fields::URL_FACEBOOK);
     }
 
     public function setFacebookUrl(string $facebookUrl): self
     {
-        $this->facebookUrl = $facebookUrl;
+        $this->setSingleUrl(Fields::URL_FACEBOOK, $facebookUrl);
 
         return $this;
     }
 
     public function getTwitterUrl(): string
     {
-        return $this->twitterUrl;
+        return $this->getSingleUrl(Fields::URL_TWITTER);
     }
 
     public function setTwitterUrl(string $twitterUrl): self
     {
-        $this->twitterUrl = $twitterUrl;
+        $this->setSingleUrl(Fields::URL_TWITTER, $twitterUrl);
 
         return $this;
     }
 
     public function getTumblrUrl(): string
     {
-        return $this->tumblrUrl;
+        return $this->getSingleUrl(Fields::URL_TUMBLR);
     }
 
     public function setTumblrUrl(string $tumblrUrl): self
     {
-        $this->tumblrUrl = $tumblrUrl;
+        $this->setSingleUrl(Fields::URL_TUMBLR, $tumblrUrl);
 
         return $this;
     }
 
     public function getCstUrl(): string
     {
-        return $this->cstUrl;
+        return $this->getSingleUrl(Fields::URL_CST);
     }
 
     public function setCstUrl(string $cstUrl): self
     {
-        $this->cstUrl = $cstUrl;
+        $this->setSingleUrl(Fields::URL_CST, $cstUrl);
+
+        return $this;
+    }
+
+    public function getQueueUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_QUEUE);
+    }
+
+    public function setQueueUrl(string $queueUrl): self
+    {
+        $this->setSingleUrl(Fields::URL_QUEUE, $queueUrl);
+
+        return $this;
+    }
+
+    public function getInstagramUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_INSTAGRAM);
+    }
+
+    public function setInstagramUrl(string $instagramUrl): self
+    {
+        $this->setSingleUrl(Fields::URL_INSTAGRAM, $instagramUrl);
+
+        return $this;
+    }
+
+    public function getYoutubeUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_YOUTUBE);
+    }
+
+    public function setYoutubeUrl(string $youtubeUrl): self
+    {
+        $this->setSingleUrl(Fields::URL_YOUTUBE, $youtubeUrl);
+
+        return $this;
+    }
+
+    public function getPricesUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_PRICES);
+    }
+
+    public function setPricesUrl(string $pricesUrl): self
+    {
+        $this->setSingleUrl(Fields::URL_PRICES, $pricesUrl);
+
+        return $this;
+    }
+
+    public function getFaqUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_FAQ);
+    }
+
+    public function setFaqUrl(string $faqUrl): self
+    {
+        $this->setSingleUrl(Fields::URL_FAQ, $faqUrl);
+
+        return $this;
+    }
+
+    public function getOtherUrls(): string
+    {
+        return $this->getSingleUrl(Fields::URL_OTHER);
+    }
+
+    public function setOtherUrls($otherUrls): self
+    {
+        $this->setSingleUrl(Fields::URL_OTHER, $otherUrls);
+
+        return $this;
+    }
+
+    public function getScritchUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_SCRITCH);
+    }
+
+    public function setScritchUrl(string $scritchUrl): self
+    {
+        $this->setSingleUrl(Fields::URL_SCRITCH, $scritchUrl);
+
+        return $this;
+    }
+
+    public function getScritchPhotosUrls(): string
+    {
+        return $this->getSingleUrl(Fields::URL_SCRITCH_PHOTO);
+    }
+
+    public function setScritchPhotosUrls(string $scritchPhotosUrls): self
+    {
+        $this->setSingleUrl(Fields::URL_SCRITCH_PHOTO, $scritchPhotosUrls);
 
         return $this;
     }
@@ -445,18 +543,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setOrderTypes(string $orderTypes): self
     {
         $this->orderTypes = $orderTypes;
-
-        return $this;
-    }
-
-    public function getQueueUrl(): string
-    {
-        return $this->queueUrl;
-    }
-
-    public function setQueueUrl(string $queueUrl): self
-    {
-        $this->queueUrl = $queueUrl;
 
         return $this;
     }
@@ -485,18 +571,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getInstagramUrl(): string
-    {
-        return $this->instagramUrl;
-    }
-
-    public function setInstagramUrl(string $instagramUrl): self
-    {
-        $this->instagramUrl = $instagramUrl;
-
-        return $this;
-    }
-
     public function getSince(): string
     {
         return $this->since;
@@ -505,18 +579,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setSince(string $since): self
     {
         $this->since = $since;
-
-        return $this;
-    }
-
-    public function getYoutubeUrl(): string
-    {
-        return $this->youtubeUrl;
-    }
-
-    public function setYoutubeUrl(string $youtubeUrl): self
-    {
-        $this->youtubeUrl = $youtubeUrl;
 
         return $this;
     }
@@ -637,66 +699,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setSpeciesDoesnt($speciesDoesnt): self
     {
         $this->speciesDoesnt = $speciesDoesnt;
-
-        return $this;
-    }
-
-    public function getPricesUrl(): string
-    {
-        return $this->pricesUrl;
-    }
-
-    public function setPricesUrl(string $pricesUrl): self
-    {
-        $this->pricesUrl = $pricesUrl;
-
-        return $this;
-    }
-
-    public function getFaqUrl(): string
-    {
-        return $this->faqUrl;
-    }
-
-    public function setFaqUrl(string $faqUrl): self
-    {
-        $this->faqUrl = $faqUrl;
-
-        return $this;
-    }
-
-    public function getOtherUrls(): string
-    {
-        return $this->otherUrls;
-    }
-
-    public function setOtherUrls($otherUrls): self
-    {
-        $this->otherUrls = $otherUrls;
-
-        return $this;
-    }
-
-    public function getScritchesUrl(): string
-    {
-        return $this->scritchesUrl;
-    }
-
-    public function setScritchesUrl(string $scritchesUrl): self
-    {
-        $this->scritchesUrl = $scritchesUrl;
-
-        return $this;
-    }
-
-    public function getScritchesPhotosUrls(): string
-    {
-        return $this->scritchesPhotosUrls;
-    }
-
-    public function setScritchesPhotosUrls(string $scritchesPhotosUrls): self
-    {
-        $this->scritchesPhotosUrls = $scritchesPhotosUrls;
 
         return $this;
     }
@@ -831,12 +833,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
             // FursuitReview not checked, because we can force makers to force their customers to write reviews
             // ... shame...
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->pricesUrl)
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->faqUrl) // it's optional, but nice to have
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->websiteUrl, $this->deviantArtUrl, $this->furAffinityUrl,
-                $this->twitterUrl, $this->facebookUrl, $this->tumblrUrl, $this->instagramUrl, $this->youtubeUrl)
+            ->anyNotEmpty(CompletenessCalc::MINOR, $this->getPricesUrl())
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->getFaqUrl()) // it's optional, but nice to have
+            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->getWebsiteUrl(), $this->getDeviantArtUrl(),
+                $this->getFurAffinityUrl(), $this->getTwitterUrl(), $this->getFacebookUrl(),
+                $this->getTumblrUrl(), $this->getInstagramUrl(), $this->getYoutubeUrl())
             // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->queueUrl) // it's optional, but nice to have
+            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->getQueueUrl()) // it's optional, but nice to have
             // Other URLs not checked - we're not requiring unknown
             ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
             // Notes are not supposed to be displayed, thus not counted
@@ -934,30 +937,57 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @return Collection|ArtisanUrl[]
      */
-    public function getArtisanUrls(): Collection
+    public function getUrls(): Collection
     {
-        return $this->artisanUrls;
+        return $this->urls;
     }
 
-    public function addArtisanUrl(ArtisanUrl $artisanUrl): self
+    public function addUrl(ArtisanUrl $artisanUrl): self
     {
-        if (!$this->artisanUrls->contains($artisanUrl)) {
-            $this->artisanUrls[] = $artisanUrl;
+        if (!$this->urls->contains($artisanUrl)) {
+            $this->urls[] = $artisanUrl;
             $artisanUrl->setArtisan($this);
         }
 
         return $this;
     }
 
-    public function removeArtisanUrl(ArtisanUrl $artisanUrl): self
+    public function removeUrl(ArtisanUrl $artisanUrl): self
     {
-        if ($this->artisanUrls->contains($artisanUrl)) {
-            $this->artisanUrls->removeElement($artisanUrl);
-            // set the owning side to null (unless already changed)
+        if ($this->urls->contains($artisanUrl)) {
+            $this->urls->removeElement($artisanUrl);
             if ($artisanUrl->getArtisan() === $this) {
                 $artisanUrl->setArtisan(null);
             }
         }
+
+        return $this;
+    }
+
+    private function getSingleUrl(string $urlFieldName): string
+    {
+        foreach ($this->getUrls() as $url) {
+            if ($url->getType() === $urlFieldName) {
+                return $url->getUrl();
+            }
+        }
+
+        return '';
+    }
+
+    private function setSingleUrl(string $urlFieldName, string $newUrl): self
+    {
+        $urlObj = null;
+
+        foreach ($this->getUrls() as $url) {
+            if ($url->getType() === $urlFieldName) {
+                $url->setUrl($newUrl);
+
+                return $this;
+            }
+        }
+
+        $this->addUrl((new ArtisanUrl())->setType($urlFieldName)->setUrl($newUrl));
 
         return $this;
     }

@@ -33,7 +33,9 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 'cs')
+            ->leftJoin('a.urls', 'u')
             ->addSelect('cs')
+            ->addSelect('u')
             ->orderBy('a.name', 'ASC')
             ->getQuery()
             ->getResult();
