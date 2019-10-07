@@ -129,92 +129,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fursuitReviewUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $websiteUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $pricesUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $faqUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $furAffinityUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $deviantArtUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $twitterUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $facebookUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $tumblrUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $instagramUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $youtubeUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $queueUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $scritchesUrl = '';
-
-    /**
-     * @ORM\Column(type="string", length=2048)
-     */
-    private $scritchesPhotosUrls = '';
-
-    /**
-     * @ORM\Column(type="string", length=1023)
-     */
-    private $otherUrls = '';
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $languages = '';
 
     /**
      * @ORM\Column(type="text")
      */
     private $notes = '';
-
-    /**
-     * @ORM\Column(name="cst_url", type="string", length=255)
-     */
-    private $cstUrl = '';
 
     /**
      * @ORM\Column(type="string", length=16)

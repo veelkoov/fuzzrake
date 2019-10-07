@@ -75,12 +75,14 @@ class ArtisanRepository extends ServiceEntityRepository
             ->createNativeQuery('
                 SELECT SUM(acs.status = 1) AS open
                     , SUM(acs.status = 0) AS closed
-                    , SUM(acs.status IS NOT NULL AND cst_url <> \'\') AS successfully_tracked
-                    , SUM(a.cst_url <> \'\') AS tracked
+                    , SUM(acs.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
+                    , SUM(au_cst.url <> \'\') AS tracked
                     , SUM(1) AS total
                 FROM artisans AS a
                 LEFT JOIN artisans_commissions_statues AS acs
                     ON a.id = acs.artisan_id
+                LEFT JOIN artisans_urls AS au_cst
+                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
             ', $rsm)
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
