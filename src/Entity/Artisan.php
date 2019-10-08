@@ -180,6 +180,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
         if ($this->commissionsStatus) {
             $this->commissionsStatus = clone $this->commissionsStatus;
         }
+
+        $urls = $this->urls;
+        $this->urls = new ArrayCollection();
+
+        foreach ($urls as $url) {
+            $this->addUrl(clone $url);
+        }
     }
 
     public function getId()
