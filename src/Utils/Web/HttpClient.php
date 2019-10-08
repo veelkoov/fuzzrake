@@ -6,10 +6,24 @@ namespace App\Utils\Web;
 
 class HttpClient
 {
-    const CONNECTION_TIMEOUT_SEC = 10;
-    const TIMEOUT_SEC = 30;
+    private const CONNECTION_TIMEOUT_SEC = 10;
+    private const TIMEOUT_SEC = 30;
 
-    const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.7; +https://getfursu.it/)';
+    private const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.7; +https://getfursu.it/)';
+
+    /**
+     * @var CookieJarInterface
+     */
+    private $cookieJar;
+
+    public function __construct(CookieJarInterface $cookieJar = null)
+    {
+        if (null === $cookieJar) {
+            $cookieJar = new NullCookieJar();
+        }
+
+        $this->cookieJar = $cookieJar;
+    }
 
     /**
      * @param string $url
@@ -23,7 +37,7 @@ class HttpClient
         $ch = $this->getCurlSessionHandle($url);
 
         if (false === $ch) {
-            throw new RuntimeUrlFetcherException('Failed to initialize CURL');
+            throw new RuntimeHttpClientException('Failed to initialize CURL');
         }
 
         $result = curl_exec($ch);
@@ -49,13 +63,17 @@ class HttpClient
     {
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, self::USER_AGENT);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTION_TIMEOUT_SEC);
-        curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT_SEC);
-        curl_setopt($ch, CURLOPT_ACCEPT_ENCODING, ''); // = all supported
+        curl_setopt_array($ch, [
+            CURLOPT_URL             => $url,
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_FOLLOWLOCATION  => true,
+            CURLOPT_USERAGENT       => self::USER_AGENT,
+            CURLOPT_CONNECTTIMEOUT  => self::CONNECTION_TIMEOUT_SEC,
+            CURLOPT_TIMEOUT         => self::TIMEOUT_SEC,
+            CURLOPT_ACCEPT_ENCODING => '', // = all supported
+        ]);
+
+        $this->cookieJar->setupFor($ch);
 
         if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
             curl_setopt($ch, CURLOPT_COOKIE, $_ENV['FA_COOKIE']);
