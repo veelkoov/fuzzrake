@@ -172,7 +172,7 @@ class IuFormServiceTest extends WebTestCase
                     ->setOtherUrls('ARTISAN_OTHER_URLS')
                     ->setCstUrl('ARTISAN_CST_URL')
                     ->setScritchUrl('ARTISAN_SCRITCH_URL')
-                    ->setScritchPhotosUrls('ARTISAN_SCRITCH_PHOTOS_URLS')
+                    ->setScritchPhotoUrls('ARTISAN_SCRITCH_PHOTOS_URLS')
                     ->setLanguages('ARTISAN_LANGUAGES')
                     ->setMakerId('ARTISAN_MAKER_UI')
                     ->setIntro('ARTISAN_INTRO')
