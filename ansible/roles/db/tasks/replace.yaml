@@ -6,5 +6,6 @@
                --user={{ db_params.user }}
                --password
       {{ db_params.name }} < {{ db_dump_file_path }}'
+    timeout: 120
     responses:
       password: "{{ db_params.password }}"
