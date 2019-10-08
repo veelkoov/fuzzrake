@@ -670,6 +670,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return array_filter(array_merge([$this->getMakerId()], $this->getFormerMakerIdsArr()));
     }
 
+    public function getLastMakerId(): string
+    {
+        return $this->getMakerId() ?: current($this->getFormerMakerIdsArr());
+    }
+
     public function getContactMethod(): string
     {
         return $this->contactMethod;
