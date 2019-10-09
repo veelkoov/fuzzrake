@@ -34,10 +34,54 @@ class HttpClient
      */
     public function get(string $url): string
     {
+        return $this->execute($url);
+    }
+
+    /**
+     * @param string $url
+     * @param string $payload
+     * @param array  $additionalHeaders
+     *
+     * @return string
+     *
+     * @throws HttpClientException
+     */
+    public function post(string $url, string $payload, array $additionalHeaders = []): string
+    {
+        $additionalCurlOpts = [
+            CURLOPT_POST       => true,
+            CURLOPT_POSTFIELDS => $payload,
+        ];
+
+        if (!empty($additionalCurlOpts)) {
+            foreach ($additionalHeaders as $header => $value) {
+                $additionalHeaders[$header] = "$header: $value";
+            }
+
+            $additionalCurlOpts[CURLOPT_HTTPHEADER] = array_values($additionalHeaders);
+        }
+
+        return $this->execute($url, $additionalCurlOpts);
+    }
+
+    /**
+     * @param string $url
+     * @param array  $additionalCurlOpts
+     *
+     * @return bool|string
+     *
+     * @throws HttpClientException
+     */
+    private function execute(string $url, array $additionalCurlOpts = [])
+    {
         $ch = $this->getCurlSessionHandle($url);
 
         if (false === $ch) {
             throw new RuntimeHttpClientException('Failed to initialize CURL');
+        }
+
+        if (!empty($additionalCurlOpts)) {
+            curl_setopt_array($ch, $additionalCurlOpts);
         }
 
         $result = curl_exec($ch);
@@ -75,7 +119,7 @@ class HttpClient
 
         $this->cookieJar->setupFor($ch);
 
-        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
+        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) { // TODO: get rid of!
             curl_setopt($ch, CURLOPT_COOKIE, $_ENV['FA_COOKIE']);
         }
 

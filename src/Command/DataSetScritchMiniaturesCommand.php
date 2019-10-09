@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Repository\ArtisanUrlRepository;
+use App\Repository\ArtisanRepository;
+use App\Utils\Json;
+use App\Utils\JsonException;
+use App\Utils\Regexp\RegexpMatchException;
+use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\GentleHttpClient;
+use App\Utils\Web\HttpClientException;
 use App\Utils\Web\TmpCookieJar;
 use Doctrine\Common\Persistence\ObjectManager;
+use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,26 +21,26 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataSetScritchMiniaturesCommand extends Command
 {
+    private const PICTURE_URL_REGEXP = '#^https://scritch.es/pictures/(?<picture_id>[a-z0-9-]{36})$#';
+
     protected static $defaultName = 'app:data:set-scritch-miniatures';
 
     /**
-     * @var ArtisanUrlRepository
+     * @var ArtisanRepository
      */
-    private $artisanUrlRepository;
+    private $artisanRepository;
 
     /**
      * @var ObjectManager
      */
     private $objectManager;
 
-    public function __construct(ArtisanUrlRepository $artisanUrlRepository, ObjectManager $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
     {
         parent::__construct();
 
-        $this->artisanUrlRepository = $artisanUrlRepository;
+        $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
-
-        $this->httpClient = new GentleHttpClient(new TmpCookieJar());
     }
 
     protected function configure()
@@ -42,11 +48,44 @@ class DataSetScritchMiniaturesCommand extends Command
         $this->addOption('commit', null, null, 'Save changes in the database');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int|void|null
+     *
+     * @throws HttpClientException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
 
-        // TODO
+        $cookieJar = new TmpCookieJar();
+        $httpClient = new GentleHttpClient($cookieJar);
+        $httpClient->get('https://scritch.es/');
+        $csrfToken = $cookieJar->getValue('csrf-token');
+
+        foreach ($this->artisanRepository->getAll() as $artisan) {
+            $pictureUrls = explode("\n", $artisan->getScritchPhotoUrls());
+
+            if (empty($pictureUrls)) {
+                $artisan->setScritchMiniatureUrls('');
+                continue;
+            }
+
+            if (count($pictureUrls) === count(explode("\n", $artisan->getScritchMiniatureUrls()))) {
+                continue;
+            }
+
+            try {
+                $miniatureUrls = $this->retrieveMiniatureUrls($pictureUrls, $httpClient, $csrfToken);
+            } catch (HttpClientException | RegexpMatchException | JsonException | LogicException $e) {
+                $io->error('Failed: '.$artisan->getLastMakerId().', '.$e->getMessage());
+                continue;
+            }
+
+            $artisan->setScritchMiniatureUrls(implode("\n", $miniatureUrls));
+        }
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();
@@ -55,12 +94,69 @@ class DataSetScritchMiniaturesCommand extends Command
             $io->success('Finished without saving');
         }
     }
+
+    /**
+     * @param string[]         $pictureUrls
+     * @param GentleHttpClient $httpClient
+     * @param string           $csrfToken
+     *
+     * @return array
+     *
+     * @throws HttpClientException  From inside array_map
+     * @throws JsonException        From inside array_map
+     * @throws RegexpMatchException
+     * @throws LogicException
+     */
+    private function retrieveMiniatureUrls(array $pictureUrls, GentleHttpClient $httpClient, string $csrfToken): array
+    {
+        $pictureIds = $this->idsFromPicureUrls($pictureUrls);
+        $jsonPayloads = array_map([$this, 'getGraphQlJsonPayload'], $pictureIds);
+
+        return array_map(function (string $jsonPayload) use ($httpClient, $csrfToken): string {
+            $responseJson = $httpClient->post('https://scritch.es/graphql', $jsonPayload, [
+                'Content-Type'  => 'application/json',
+                'X-CSRF-Token'  => $csrfToken,
+                'authorization' => "Scritcher $csrfToken",
+            ]);
+
+            $result = Json::decode($responseJson)['data']['medium']['thumbnail'] ?? '';
+
+            if ('' === $result) {
+                throw new LogicException("No thumbnail URL found in response: $responseJson");
+            }
+
+            return $result;
+        }, $jsonPayloads);
+    }
+
+    /**
+     * @param string[] $pictureUrls
+     *
+     * @return string[]
+     *
+     * @throws RegexpMatchException From inside array_map
+     */
+    private function idsFromPicureUrls(array $pictureUrls): array
+    {
+        return array_map([$this, 'idFromPictureUrl'], $pictureUrls);
+    }
+
+    private function getGraphQlJsonPayload(string $pictureId): string
+    {
+        return '{"operationName": "Medium", "variables": {"id": "'.$pictureId.'"}, "query": "query Medium($id: ID!, $tagging: Boolean) { medium(id: $id, tagging: $tagging) { thumbnail } }"}';
+    }
+
+    /**
+     * @param string $pictureUrl
+     *
+     * @return string
+     *
+     * @throws RegexpMatchException
+     */
+    private function idFromPictureUrl(string $pictureUrl): string
+    {
+        $matches = Regexp::requireMatch(self::PICTURE_URL_REGEXP, $pictureUrl);
+
+        return $matches['picture_id'];
+    }
 }
-
-/*
-
-csrf="$(echo -en "$(curl -c cookies.txt -v https://scritch.es/ 2>&1 | grep 'Set-Cookie: csrf-token=' | cut -f2 -d'=' | cut -f1 -d';' | sed 's/+/ /g;s/%\(..\)/\\x\1/g;')")"
-
-curl -b cookies.txt -v https://scritch.es/graphql -d '{"operationName": "Medium", "variables": {"id":"c980fb70-3478-4f90-ad2b-c6e73f50e270"}, "query": "query Medium($id: ID!, $tagging: Boolean) { medium(id: $id, tagging: $tagging) { thumbnail } }"}' -H 'Content-Type: application/json' -H "X-CSRF-Token: $csrf" -H "authorization: Scritcher $csrf"
-
- */
