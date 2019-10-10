@@ -4,7 +4,7 @@ require('../css/general.less');
 
 function scrollPastMenuBarOnHash(): void {
     if (window.location.hash) {
-        scrollBy(0, -70);
+        scrollBy(0, -70); // FIXME: 70!!!
     }
 }
 
