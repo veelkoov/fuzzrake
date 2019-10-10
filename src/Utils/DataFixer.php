@@ -136,9 +136,9 @@ class DataFixer
         $artisan->setFeatures($this->fixList($artisan->getFeatures(), true, '#[;\n]#'));
         $artisan->setStyles($this->fixList($artisan->getStyles(), true, '#[;\n]#'));
         $artisan->setOrderTypes($this->fixList($artisan->getOrderTypes(), true, '#[;\n]#'));
-        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false, '#\n#'));
-        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false, '#\n#'));
-        $artisan->setOtherOrderTypes($this->fixList($artisan->getOtherOrderTypes(), false, '#\n#'));
+        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false));
+        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false));
+        $artisan->setOtherOrderTypes($this->fixList($artisan->getOtherOrderTypes(), false));
 
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
         $artisan->setState($this->fixString($artisan->getState()));
@@ -157,6 +157,8 @@ class DataFixer
         $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
         $artisan->setWebsiteUrl($this->fixGenericUrl($artisan->getWebsiteUrl()));
         $artisan->setQueueUrl($this->fixGenericUrl($artisan->getQueueUrl()));
+        $artisan->setScritchPhotoUrls($this->fixGenericUrlList($artisan->getScritchPhotoUrls()));
+        $artisan->setScritchMiniatureUrls($this->fixGenericUrlList($artisan->getScritchMiniatureUrls()));
 
         $artisan->setOtherUrls($this->fixString($artisan->getOtherUrls()));
 
@@ -184,7 +186,7 @@ class DataFixer
         }
     }
 
-    private function fixList(string $input, bool $sort, string $separatorRegexp): string
+    private function fixList(string $input, bool $sort, string $separatorRegexp = '#\n#'): string
     {
         $input = implode("\n", array_filter(array_map('trim', Regexp::split($separatorRegexp, $input))));
 
@@ -261,6 +263,11 @@ class DataFixer
     private function fixGenericUrl(string $input): string
     {
         return $this->fixString($input);
+    }
+
+    private function fixGenericUrlList(string $input)
+    {
+        return $this->fixList($input, false);
     }
 
     private function fixNotes(string $notes): string
