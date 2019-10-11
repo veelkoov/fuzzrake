@@ -24,10 +24,33 @@ function optionalListTplFunc() {
     }
 }
 
+function photosTplFunc() {
+    return function (text, render) {
+        let miniaturesStr: string = render('{{#artisan.scritchMiniatureUrls}}{{.}}\n{{/artisan.scritchMiniatureUrls}}');
+        let photosStr: string = render('{{#artisan.scritchPhotoUrls}}{{.}}\n{{/artisan.scritchPhotoUrls}}');
+
+        let miniatures: string[] = miniaturesStr.trimRight().split('\n');
+        let photos: string[] = photosStr.trimRight().split('\n');
+
+        if (miniatures.length === 0 || miniatures.length !== photos.length) {
+            return '';
+        }
+
+        let result: string = '';
+        for (let i: number = 0; i < miniatures.length; i++) {
+            // result += `<div><img src="${miniatures[i]}" alt="" /></div>`;
+            result += `<div><a href="${photos[i]}" target="_blank"><img src="${miniatures[i]}" alt="" /></a></div>`;
+        }
+
+        return `<div class="imgs-container">${result}</div>`;
+    }
+}
+
 function updateDetailsModalWithArtisanData(artisan: Artisan): void {
     $artisanDetailsModal.html(Mustache.render(artisanDetailsModalTpl, {
         artisan: artisan,
         optional: optionalTplFunc,
+        photos: photosTplFunc,
         optionalList: optionalListTplFunc,
     }, {}, ['((', '))']));
 
