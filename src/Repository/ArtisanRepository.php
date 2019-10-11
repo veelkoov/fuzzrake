@@ -29,6 +29,9 @@ class ArtisanRepository extends ServiceEntityRepository
         parent::__construct($registry, Artisan::class);
     }
 
+    /**
+     * @return Artisan[]
+     */
     public function getAll(): array
     {
         return $this->createQueryBuilder('a')
@@ -185,6 +188,13 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @param array       $names
+     * @param array       $makerIds
+     * @param string|null $matchedName
+     *
+     * @return Artisan[]
+     */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
     {
         $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
@@ -211,7 +221,10 @@ class ArtisanRepository extends ServiceEntityRepository
         return $builder->getQuery()->getResult();
     }
 
-    public function getOtherItemsData()
+    /**
+     * @return FilterItem[]
+     */
+    public function getOtherItemsData(): array
     {
         $ot = $this->getDistinctOtherOrderTypes();
         $fe = $this->getDistinctOtherFeatures();
@@ -231,12 +244,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result;
     }
 
-    /**
-     * @param string $columnName
-     * @param bool   $includeOther
-     *
-     * @return array
-     */
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
     {
         $queryBuilder = $this->createQueryBuilder('a')

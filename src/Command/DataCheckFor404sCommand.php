@@ -77,6 +77,7 @@ class DataCheckFor404sCommand extends Command
                 Fields::URL_OTHER,
                 Fields::URL_SCRITCH,
                 Fields::URL_SCRITCH_PHOTO,
+                Fields::URL_SCRITCH_MINIATURE,
             ]);
         });
     }

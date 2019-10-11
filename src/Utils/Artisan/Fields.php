@@ -43,6 +43,7 @@ class Fields
     public const URL_QUEUE = 'URL_QUEUE';
     public const URL_SCRITCH = 'URL_SCRITCH';
     public const URL_SCRITCH_PHOTO = 'URL_SCRITCH_PHOTO';
+    public const URL_SCRITCH_MINIATURE = 'URL_SCRITCH_MINIATURE';
     public const URL_OTHER = 'URL_OTHER';
     public const URL_CST = 'URL_CST';
 
@@ -102,7 +103,8 @@ class Fields
         self::URL_YOUTUBE                => ['youtubeUrl',               VR::YOUTUBE_URL,               0, 1, 1, 1],
         self::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
         self::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
-        self::URL_SCRITCH_PHOTO          => ['scritchPhotosUrls',        VR::SCRITCH_PHOTOS_URLS,       0, 1, 1, 1],
+        self::URL_SCRITCH_PHOTO          => ['scritchPhotoUrls',         VR::SCRITCH_PHOTO_URLS,        1, 1, 1, 1],
+        self::URL_SCRITCH_MINIATURE      => ['scritchMiniatureUrls',     VR::SCRITCH_MINIATURE_URLS,    1, 1, 1, 1],
         self::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
         self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  1, 1, 1, 1],
         self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],

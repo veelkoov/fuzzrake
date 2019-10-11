@@ -6,6 +6,6 @@ namespace App\Utils\Web;
 
 use RuntimeException;
 
-class RuntimeUrlFetcherException extends RuntimeException
+class RuntimeHttpClientException extends RuntimeException
 {
 }

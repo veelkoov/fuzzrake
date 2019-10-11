@@ -31,6 +31,30 @@ class Utils
 
     /**
      * @param string $pattern
+     * @param string $subject
+     * @param string $debugInfo
+     *
+     * @return array
+     *
+     * @throws RegexpMatchException
+     */
+    public static function requireMatch(string $pattern, string $subject, string $debugInfo = ''): array
+    {
+        $result = preg_match($pattern, $subject, $matches);
+
+        if (false === $result) {
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
+        }
+
+        if (0 === $result) {
+            throw new RegexpMatchException("Regexp '$pattern' didn't match ($debugInfo): $subject");
+        }
+
+        return $matches;
+    }
+
+    /**
+     * @param string $pattern
      * @param string $replacement
      * @param string $subject
      * @param string $debugInfo
