@@ -39,7 +39,7 @@ CREATE TABLE `artisans` (
   `contact_method` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `contact_info_obfuscated` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=342 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=343 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `artisans` VALUES (1,'', 'M000001', 'Silvena Handmade', '', '', '', 'PL', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -363,6 +363,7 @@ INSERT INTO `artisans` VALUES (337,'TULIUCO', '', 'Tulius Costumes', 'FinnFox\' 
 INSERT INTO `artisans` VALUES (339,'TOPNKDS', '', 'That One Pink Dog Studios', '', 'We are a fursuit making business from Phoenix, AZ that specializes in affordable adorable toony suits to help you express yourself', '2018-06', 'US', 'Arizona', 'Phoenix', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', '', 'Handpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nTails (as parts/separate)', 'Arm sleeves', 'Exchangeable tongues\nFollow-me eyes\nRemovable eyelids', '', '30% up front to reserve a slot, can pay in full or with monthly plan after that', 'Any species', 'Copyrighted characters', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: thato***********udios@gm*****om');
 INSERT INTO `artisans` VALUES (340,'SANDCAT', '', 'Sandcat Customs', '', 'Thanks for visiting us here at Sandcat Customs! This company is owned and operated by Aleyna Sand – local Pittsburgh fursuiter, and also a full-time nurse. I\'ve been on the sidelines of the fandom, so to speak, for many years, but recently decided to dive right in with both paws and make fursuits!', '2018-06', 'US', 'Pennsylvania', 'Pittsburgh', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kemono\nSemi Toony\nToony', '', 'Handpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nTails (as parts/separate)', '', 'Exchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nLED eyes\nMovable jaw\nRemovable horns/antlers', '', '35% non-refundable deposit, remainder due within 4 weeks of project completion. Parts under $200 require 100% up front.', '', 'Currently not available for reptilian or avian characters.', 'English', '', 'FEEDBACK', 'TELEGRAM', 'TELEGRAM: @Al******nd');
 INSERT INTO `artisans` VALUES (341,'NYYOTE0', '', 'Nyyote', '', 'I am a fursuit maker based in the US, who is interested in trying out different/unique species, I also provide accessories of different types.', '2012-07', 'US', 'Indianapolis', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', '', 'Feetpaws (as parts/separate)\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Digitigrade legs\nArm sleeves\nLegsleeves', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nOutdoor feet\nRemovable eyelids\nWashable heads', 'Ear vents\nAccessories\nPoseable tongues\nHollow foam digitigrade legs and feetpaws', '45% upfront for a slot, rest upon/before completion', 'All', 'I\'d prefer not to do any pokemon/digimon, but still ask since it depends on the design', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: 0k*****ls@gm*****om');
+INSERT INTO `artisans` VALUES (342,'TTHYHND', '', 'ToothyHounds Workshop', 'Hellhound Studios', 'A maker based in San Diego, CA!', '2018-09', 'US', 'California', 'San Diego', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kemono\nSemi Realistic\nSemi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Collars\nBandanas', 'Adjustable/wiggle ears\nAttached tail\nElectronics/animatronics\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nLED eyes\nMovable jaw\nOutdoor feet\nRemovable blush\nRemovable eyelids\nWashable heads', '', '45% with down payment to reserve a spot and order some materials. Payments of $50 is required to begin work when all materials arrive.', 'I will do just about any species!', 'Primagens and protogens.', 'English\nSpanish (limited)', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: tooth**********kshop@ou*******om');
 DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -378,7 +379,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -678,6 +679,7 @@ INSERT INTO `events` VALUES (1100,'2019-10-08 06:01:57', '', 'CS_UPDTD_DETLS', 1
 INSERT INTO `events` VALUES (1101,'2019-10-08 20:26:38', '- Started tidying up and fixing broken links in the database. Implemented tool for checking links automatically. First 29 fixed/removed. Other small data updates. (<a href=\"https://github.com/veelkoov/fuzzrake/commit/0892b898d05bf24ec9a4bde73b56bfb186daae53\" target=\"_blank\">git: tool</a>, <a href=\"https://github.com/veelkoov/fuzzrake/commit/9bf611faf55654484e68eecfbf8e8b34659849cf\" target=\"_blank\">git: data</a>, <a href=\"https://twitter.com/veelkoov/status/1181658288573882368\" target=\"_blank\">Twitter</a>)', '', NULL, NULL, '', '', '', '');
 INSERT INTO `events` VALUES (1102,'2019-10-09 06:02:16', '', 'CS_UPDTD_DETLS', 0, 1, 'RandDfursuits', 'https://www.furaffinity.net/user/randdfursuits/', '[\"r\\\">everything is awesome, when you\'re living out a dream </code> <code class=\\\"bbcode bbcode_center\\\">\",\"commissions: open\",\" for commissions</code> <code class=\\\"bbcode bbcode_center\\\">want to keep updated on open time and upd\"]', '');
 INSERT INTO `events` VALUES (1103,'2019-10-09 06:02:16', '', 'CS_UPDTD_DETLS', NULL, 0, 'Star Fursuits', 'https://www.starfursuits.com/', '', '[\"e: styledtext id: dataitem-jhuynz00 ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_2\\\">\",\"we are currently closed for commissions\",\"! will open november 1st!</h2> stylesmapid: ck_editor_paragraph_styles type: image id: dataitem-ji5b\"]');
+INSERT INTO `events` VALUES (1105,'2019-10-10 06:02:06', '', 'CS_UPDTD_DETLS', 1, 0, 'RandDfursuits', 'https://www.furaffinity.net/user/randdfursuits/', '', '[\"r\\\">everything is awesome, when you\'re living out a dream </code> <code class=\\\"bbcode bbcode_center\\\">\",\"commissions: closed\",\" for commissions</code> <code class=\\\"bbcode bbcode_center\\\">want to keep updated on open time and upd\"]');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -703,7 +705,7 @@ CREATE TABLE `artisans_urls` (
   PRIMARY KEY (`id`),
   KEY `IDX_45AAF3BC5ED3C7B7` (`artisan_id`),
   CONSTRAINT `FK_45AAF3BC5ED3C7B7` FOREIGN KEY (`artisan_id`) REFERENCES `artisans` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1592 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4895 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `artisans_urls` VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
@@ -740,7 +742,7 @@ INSERT INTO `artisans_urls` VALUES (31,7,'URL_INSTAGRAM', 'https://www.instagram
 INSERT INTO `artisans_urls` VALUES (32,7,'URL_YOUTUBE', 'https://www.youtube.com/user/TheHanouk');
 INSERT INTO `artisans_urls` VALUES (33,7,'URL_QUEUE', 'https://trello.com/b/AEQOAYHp/nfs-commission-list');
 INSERT INTO `artisans_urls` VALUES (34,7,'URL_SCRITCH', 'https://scritch.es/makers/neon-fur-studios');
-INSERT INTO `artisans_urls` VALUES (35,7,'URL_SCRITCH_PHOTO', 'https://scritch.es/pictures/c980fb70-3478-4f90-ad2b-c6e73f50e270\nhttps://scritch.es/pictures/13d67d1b-2499-4958-8da7-9d7adb23af3b\nhttps://scritch.es/pictures/799759bb-82d0-4e35-991b-7bb80dc1de2a\nhttps://scritch.es/pictures/11dc1bab-dfa3-449f-88d3-4efc48075a22\nhttps://scritch.es/pictures/9d12e497-2a07-4231-bca4-2e413549572c');
+INSERT INTO `artisans_urls` VALUES (35,7,'URL_SCRITCH_PHOTO', 'https://scritch.es/pictures/c980fb70-3478-4f90-ad2b-c6e73f50e270\nhttps://scritch.es/pictures/997a186d-f724-4e28-a2fa-502565ae846c\nhttps://scritch.es/pictures/799759bb-82d0-4e35-991b-7bb80dc1de2a\nhttps://scritch.es/pictures/11dc1bab-dfa3-449f-88d3-4efc48075a22\nhttps://scritch.es/pictures/9d12e497-2a07-4231-bca4-2e413549572c');
 INSERT INTO `artisans_urls` VALUES (36,7,'URL_OTHER', 'https://www.twitch.tv/neonfurstudios');
 INSERT INTO `artisans_urls` VALUES (37,7,'URL_CST', 'http://www.furaffinity.net/user/neonfurstudios/');
 INSERT INTO `artisans_urls` VALUES (38,8,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/lemonbrat/');
@@ -2279,6 +2281,62 @@ INSERT INTO `artisans_urls` VALUES (1588,341,'URL_OTHER', 'Telegram: https://t.m
 INSERT INTO `artisans_urls` VALUES (1589,149,'URL_CST', 'https://www.starfursuits.com/');
 INSERT INTO `artisans_urls` VALUES (1590,293,'URL_CST', 'https://hunnibearart.wixsite.com/commission');
 INSERT INTO `artisans_urls` VALUES (1591,293,'URL_FACEBOOK', 'https://www.facebook.com/HunniBearArt');
+INSERT INTO `artisans_urls` VALUES (4839,7,'URL_SCRITCH_MINIATURE', 'https://storage.scritch.es/scritch/417a43627ed64fabe72256c5f1da30914d5e9a47/thumbnail_300f5ab6-1960-44ea-b5c6-761fa15a9e08.jpeg#4550\nhttps://storage.scritch.es/scritch/8ee4e6ca0f6e9579271ed888dc51355b8bb8b4b5/thumbnail_8ff3b12a-4003-425f-86ef-19fd0a05bc4b.jpeg#5040\nhttps://storage.scritch.es/scritch/29a00e0385c4ea90715933283f5443906a1d3871/thumbnail_0556e242-ff62-4bdd-a6e4-188385824d6d.jpeg\nhttps://storage.scritch.es/scritch/6d41728e3c9f8e08ca414e04ae8146f566424ba1/thumbnail_c9384707-000c-48ba-9c61-2ddf8b3ca6a9.jpeg#4050\nhttps://storage.scritch.es/scritch/52bd52e48a18cf16f43ebf5d33863d1691ac8c46/thumbnail_f5ab0046-bbc2-40f0-869a-e517afee41b5.jpeg#4050');
+INSERT INTO `artisans_urls` VALUES (4840,7,'URL_FURSUITREVIEW', '');
+INSERT INTO `artisans_urls` VALUES (4841,7,'URL_PRICES', '');
+INSERT INTO `artisans_urls` VALUES (4842,7,'URL_FAQ', '');
+INSERT INTO `artisans_urls` VALUES (4843,7,'URL_DEVIANTART', '');
+INSERT INTO `artisans_urls` VALUES (4844,7,'URL_FACEBOOK', '');
+INSERT INTO `artisans_urls` VALUES (4845,7,'URL_TUMBLR', '');
+INSERT INTO `artisans_urls` VALUES (4846,341,'URL_FURSUITREVIEW', '');
+INSERT INTO `artisans_urls` VALUES (4847,341,'URL_FAQ', '');
+INSERT INTO `artisans_urls` VALUES (4848,341,'URL_FUR_AFFINITY', '');
+INSERT INTO `artisans_urls` VALUES (4849,341,'URL_FACEBOOK', '');
+INSERT INTO `artisans_urls` VALUES (4850,341,'URL_TUMBLR', '');
+INSERT INTO `artisans_urls` VALUES (4851,341,'URL_INSTAGRAM', '');
+INSERT INTO `artisans_urls` VALUES (4852,341,'URL_YOUTUBE', '');
+INSERT INTO `artisans_urls` VALUES (4853,341,'URL_SCRITCH', '');
+INSERT INTO `artisans_urls` VALUES (4854,341,'URL_SCRITCH_PHOTO', '');
+INSERT INTO `artisans_urls` VALUES (4855,341,'URL_CST', '');
+INSERT INTO `artisans_urls` VALUES (4856,194,'URL_FURSUITREVIEW', '');
+INSERT INTO `artisans_urls` VALUES (4857,194,'URL_WEBSITE', '');
+INSERT INTO `artisans_urls` VALUES (4858,194,'URL_PRICES', '');
+INSERT INTO `artisans_urls` VALUES (4859,194,'URL_FUR_AFFINITY', '');
+INSERT INTO `artisans_urls` VALUES (4860,194,'URL_DEVIANTART', '');
+INSERT INTO `artisans_urls` VALUES (4861,194,'URL_TUMBLR', '');
+INSERT INTO `artisans_urls` VALUES (4862,194,'URL_INSTAGRAM', '');
+INSERT INTO `artisans_urls` VALUES (4863,194,'URL_YOUTUBE', '');
+INSERT INTO `artisans_urls` VALUES (4864,194,'URL_QUEUE', '');
+INSERT INTO `artisans_urls` VALUES (4865,194,'URL_SCRITCH', '');
+INSERT INTO `artisans_urls` VALUES (4866,194,'URL_SCRITCH_PHOTO', '');
+INSERT INTO `artisans_urls` VALUES (4867,194,'URL_OTHER', '');
+INSERT INTO `artisans_urls` VALUES (4868,49,'URL_FURSUITREVIEW', '');
+INSERT INTO `artisans_urls` VALUES (4869,49,'URL_PRICES', '');
+INSERT INTO `artisans_urls` VALUES (4870,49,'URL_FAQ', '');
+INSERT INTO `artisans_urls` VALUES (4871,49,'URL_DEVIANTART', '');
+INSERT INTO `artisans_urls` VALUES (4872,49,'URL_FACEBOOK', '');
+INSERT INTO `artisans_urls` VALUES (4873,49,'URL_TUMBLR', '');
+INSERT INTO `artisans_urls` VALUES (4874,49,'URL_INSTAGRAM', '');
+INSERT INTO `artisans_urls` VALUES (4875,49,'URL_QUEUE', '');
+INSERT INTO `artisans_urls` VALUES (4876,49,'URL_SCRITCH', '');
+INSERT INTO `artisans_urls` VALUES (4877,49,'URL_SCRITCH_PHOTO', '');
+INSERT INTO `artisans_urls` VALUES (4878,49,'URL_OTHER', '');
+INSERT INTO `artisans_urls` VALUES (4879,342,'URL_FURSUITREVIEW', '');
+INSERT INTO `artisans_urls` VALUES (4880,342,'URL_WEBSITE', 'https://toothyhoundsworksh.wixsite.com/mysite');
+INSERT INTO `artisans_urls` VALUES (4881,342,'URL_PRICES', 'https://toothyhoundsworksh.wixsite.com/mysite/services');
+INSERT INTO `artisans_urls` VALUES (4882,342,'URL_FAQ', 'https://toothyhoundsworksh.wixsite.com/mysite/faq');
+INSERT INTO `artisans_urls` VALUES (4883,342,'URL_FUR_AFFINITY', '');
+INSERT INTO `artisans_urls` VALUES (4884,342,'URL_DEVIANTART', '');
+INSERT INTO `artisans_urls` VALUES (4885,342,'URL_TWITTER', '');
+INSERT INTO `artisans_urls` VALUES (4886,342,'URL_FACEBOOK', '');
+INSERT INTO `artisans_urls` VALUES (4887,342,'URL_TUMBLR', '');
+INSERT INTO `artisans_urls` VALUES (4888,342,'URL_INSTAGRAM', 'https://www.instagram.com/toothyhoundsworkshop/');
+INSERT INTO `artisans_urls` VALUES (4889,342,'URL_YOUTUBE', '');
+INSERT INTO `artisans_urls` VALUES (4890,342,'URL_QUEUE', 'https://trello.com/b/JhrA8dfX/fursuit-queue');
+INSERT INTO `artisans_urls` VALUES (4891,342,'URL_SCRITCH', '');
+INSERT INTO `artisans_urls` VALUES (4892,342,'URL_SCRITCH_PHOTO', '');
+INSERT INTO `artisans_urls` VALUES (4893,342,'URL_OTHER', 'https://aminoapps.com/c/fursuit-maker-amino/page/user/toothyhounds-workshop/8qwq_vjT1fnKYKbDk0Gp16b32vee7D5K0J');
+INSERT INTO `artisans_urls` VALUES (4894,342,'URL_CST', '');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
