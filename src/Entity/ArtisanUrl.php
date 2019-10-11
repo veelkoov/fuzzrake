@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Utils\Web\Url;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -74,5 +75,10 @@ class ArtisanUrl
         $this->url = $url;
 
         return $this;
+    }
+
+    public function getUrlObject(): Url
+    {
+        return new Url($this->url, $this->artisan);
     }
 }

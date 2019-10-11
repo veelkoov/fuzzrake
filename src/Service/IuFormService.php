@@ -52,7 +52,7 @@ class IuFormService
             1737459766 => $artisan->getQueueUrl(),
             1355429885 => $artisan->getCstUrl(),
             350422540  => $artisan->getScritchUrl(),
-            2080821980 => $artisan->getScritchPhotosUrls(),
+            2080821980 => $artisan->getScritchPhotoUrls(),
             1507707399 => $artisan->getOtherUrls(),
             528156817  => $artisan->getLanguages(),
             927668258  => $artisan->getMakerId(),

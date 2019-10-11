@@ -37,9 +37,15 @@ function openArtisanByFragment(hash) {
     }
 }
 
+function scrollToTopOfTheDataTable() {
+    // Anti-scam warning causes the user to be at the bottom of the table
+    window.scrollTo(0, $('#data-table-container').offset().top - 70); // FIXME: 70!!!
+}
+
 export function init() {
     $('#scam-risk-acknowledgement').on('click', (event) => {
         $('#scam-risk-warning, #scam-risk-acknowledged').toggle();
+        scrollToTopOfTheDataTable();
         event.preventDefault();
     });
 
