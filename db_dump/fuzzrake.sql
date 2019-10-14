@@ -150,7 +150,7 @@ INSERT INTO `artisans` VALUES (114,'', 'M000114', 'Radioactimals', '', '', '', '
 INSERT INTO `artisans` VALUES (116,'', 'M000116', 'Our Mass Hysteria', '', '', '', 'US', 'Missouri', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (117,'', 'M000117', 'Nevask', '', '', '', 'US', 'New Jersey', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (119,'', 'M000119', 'iSqueakeyPinky', '', '', '', 'US', 'Tennessee', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO `artisans` VALUES (120,'', 'M000120', 'Toffeee', '', '', '', 'US', 'Texas', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `artisans` VALUES (120,'', 'M000120', '~ Toffeee [inactive]', '', '', '', 'US', 'Texas', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'Marked as inactive due to the only URL known (http://www.furaffinity.net/user/toffeee) becoming dead', '', '', '');
 INSERT INTO `artisans` VALUES (122,'', 'M000122', 'Kitsune Illusions', 'Mordrudes Monsters', '', '2010-09', 'US', 'Texas', '', '', 'Realistic\nSemi Realistic', '', 'Full digitigrade\nFull plantigrade', 'Full unguligrade', 'Attached handpaws and feetpaws\nAttached tail\nElectronics/animatronics\nExchangeable hairs\nFollow-me eyes\nIn-head fans\nMovable jaw\nOutdoor feet\nRemovable horns/antlers', '', '', '', '', '', 'http://www.mordrudesmonsters.com/index.php https://www.patreon.com/kitsuneillusions', 'FEEDBACK', 'E-MAIL', 'E-MAIL: K*****u@kitsu**********s.com');
 INSERT INTO `artisans` VALUES (123,'', 'M000123', 'BNC Costumes', '', '', '', 'US', 'Washington', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (124,'', 'M000124', 'Isabelapparel', '', '', '', 'CA', '', '', '', 'Realistic\nSemi Realistic\nToony', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -380,7 +380,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -686,6 +686,7 @@ INSERT INTO `events` VALUES (1110,'2019-10-12 06:02:14', '', 'CS_UPDTD_DETLS', N
 INSERT INTO `events` VALUES (1111,'2019-10-13 06:02:05', '', 'CS_UPDTD_DETLS', 0, NULL, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '');
 INSERT INTO `events` VALUES (1112,'2019-10-14 06:02:02', '', 'CS_UPDTD_DETLS', 0, 1, 'Silvena Handmade', 'http://silvenahandmade.com/', '[\"lass=\\\"entry-header\\\"> <h1 class=\\\"entry-title\\\">about</h1> </header><> <div class=\\\"entry-content\\\"> <h1>\",\"commissions open\",\".</h1> <h1>slots from january to june 2020.</h1> <p> </p> <p>i run a small studio &#8211; STUDIO_NAM\"]', '');
 INSERT INTO `events` VALUES (1113,'2019-10-14 18:55:23', '', 'CS_UPDTD_DETLS', NULL, 1, 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '[\": styledtext id: dataitem-ir243rb81 ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_6\\\">\",\"commissions open\",\"!</h2> stylesmapid: ck_editor_paragraph_styles type: imagelist id: dataitem-iraqduk1 ispreset: schem\"]', '');
+INSERT INTO `events` VALUES (1114,'2019-10-14 18:59:54', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/7566d03b6e4a6a0946a4dc19df23ce9c025fe2a2\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1122,8 +1123,6 @@ INSERT INTO `artisans_urls` VALUES (408,117,'URL_FUR_AFFINITY', 'http://www.fura
 INSERT INTO `artisans_urls` VALUES (409,117,'URL_CST', 'http://www.furaffinity.net/user/nevask/');
 INSERT INTO `artisans_urls` VALUES (410,119,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/isqueakypinky');
 INSERT INTO `artisans_urls` VALUES (411,119,'URL_CST', 'http://www.furaffinity.net/user/isqueakypinky/');
-INSERT INTO `artisans_urls` VALUES (412,120,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/toffeee');
-INSERT INTO `artisans_urls` VALUES (413,120,'URL_CST', 'http://www.furaffinity.net/user/toffeee/');
 INSERT INTO `artisans_urls` VALUES (414,122,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/kitsune-illusions/');
 INSERT INTO `artisans_urls` VALUES (415,122,'URL_WEBSITE', 'http://kitsuneillusions.com/');
 INSERT INTO `artisans_urls` VALUES (416,122,'URL_TWITTER', 'https://twitter.com/KitsuneIllusion');
@@ -1755,9 +1754,6 @@ INSERT INTO `artisans_urls` VALUES (1049,239,'URL_WEBSITE', 'http://leoelstar.wi
 INSERT INTO `artisans_urls` VALUES (1050,239,'URL_PRICES', 'http://leoelstar.wixsite.com/tabulambestias/prices');
 INSERT INTO `artisans_urls` VALUES (1051,239,'URL_FAQ', 'http://leoelstar.wixsite.com/tabulambestias/faq');
 INSERT INTO `artisans_urls` VALUES (1052,239,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/tabulambestias');
-INSERT INTO `artisans_urls` VALUES (1053,239,'URL_TWITTER', 'https://twitter.com/TabulamBestias');
-INSERT INTO `artisans_urls` VALUES (1054,239,'URL_FACEBOOK', 'https://www.facebook.com/tabulambestias/');
-INSERT INTO `artisans_urls` VALUES (1055,239,'URL_INSTAGRAM', 'https://www.instagram.com/tabulambestias/');
 INSERT INTO `artisans_urls` VALUES (1056,239,'URL_YOUTUBE', 'https://www.youtube.com/c/tabulambestias');
 INSERT INTO `artisans_urls` VALUES (1057,239,'URL_QUEUE', 'https://trello.com/b/aT5AWVln/queue');
 INSERT INTO `artisans_urls` VALUES (1058,239,'URL_OTHER', 'https://vk.com/tabulam.bestias\nhttps://www.furbuy.com/profile/Elstar.html\nhttps://www.thedealersden.com/store/tabulambestias');
