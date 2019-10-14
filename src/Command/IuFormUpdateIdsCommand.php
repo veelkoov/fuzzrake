@@ -34,7 +34,7 @@ class IuFormUpdateIdsCommand extends Command
      */
     private $snapshotManager;
 
-    public function __construct(WebpageSnapshotManager $snapshotManager, string  $iuFormUrl)
+    public function __construct(WebpageSnapshotManager $snapshotManager, string $iuFormUrl)
     {
         parent::__construct();
 

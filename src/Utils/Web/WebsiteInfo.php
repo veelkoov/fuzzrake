@@ -11,6 +11,7 @@ class WebsiteInfo
     private const FA_URL_SEARCH_STRING = 'furaffinity.net/';
     private const FA_CONTENTS_SEARCH_STRING = 'fur affinity [dot] net</title>';
     private const FA_JOUNRAL_CONTENTS_SEARCH_STRING = 'journal -- fur affinity [dot] net</title>';
+    private const FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING = '<title>Account disabled. -- Fur Affinity [dot] net</title>';
 
     private const WIXSITE_CONTENTS_REGEXP = '#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si';
 
@@ -46,6 +47,17 @@ class WebsiteInfo
 
         if (null !== $webpageContents) {
             return false !== stripos($webpageContents, self::FA_CONTENTS_SEARCH_STRING);
+        }
+
+        return false;
+    }
+
+    public static function isLatent404(WebpageSnapshot $webSnapshot): bool
+    {
+        if (self::isFurAffinity($webSnapshot->getUrl(), $webSnapshot->getContents())) {
+            if (false !== strpos($webSnapshot->getContents(), self::FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING)) {
+                return true;
+            }
         }
 
         return false;

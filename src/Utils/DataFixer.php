@@ -194,6 +194,7 @@ class DataFixer
             $input = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $input);
         }
 
+        $input = $this->fixString($input);
         $input = explode("\n", $input);
 
         if ($sort) {
