@@ -379,7 +379,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -680,6 +680,10 @@ INSERT INTO `events` VALUES (1101,'2019-10-08 20:26:38', '- Started tidying up a
 INSERT INTO `events` VALUES (1102,'2019-10-09 06:02:16', '', 'CS_UPDTD_DETLS', 0, 1, 'RandDfursuits', 'https://www.furaffinity.net/user/randdfursuits/', '[\"r\\\">everything is awesome, when you\'re living out a dream </code> <code class=\\\"bbcode bbcode_center\\\">\",\"commissions: open\",\" for commissions</code> <code class=\\\"bbcode bbcode_center\\\">want to keep updated on open time and upd\"]', '');
 INSERT INTO `events` VALUES (1103,'2019-10-09 06:02:16', '', 'CS_UPDTD_DETLS', NULL, 0, 'Star Fursuits', 'https://www.starfursuits.com/', '', '[\"e: styledtext id: dataitem-jhuynz00 ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_2\\\">\",\"we are currently closed for commissions\",\"! will open november 1st!</h2> stylesmapid: ck_editor_paragraph_styles type: image id: dataitem-ji5b\"]');
 INSERT INTO `events` VALUES (1105,'2019-10-10 06:02:06', '', 'CS_UPDTD_DETLS', 1, 0, 'RandDfursuits', 'https://www.furaffinity.net/user/randdfursuits/', '', '[\"r\\\">everything is awesome, when you\'re living out a dream </code> <code class=\\\"bbcode bbcode_center\\\">\",\"commissions: closed\",\" for commissions</code> <code class=\\\"bbcode bbcode_center\\\">want to keep updated on open time and upd\"]');
+INSERT INTO `events` VALUES (1109,'2019-10-11 21:45:06', '- Scritch photos will now be displayed (<a href=\"https://github.com/veelkoov/fuzzrake/commit/bfeb45c2f8abfa1800201b95993a67467f6a37d9\" target=\"_blank\">git</a>)<br />\r\n- Fixed the bug when viewers were starting at the bottom of the page after acknowledging the risks (<a href=\"https://github.com/veelkoov/fuzzrake/commit/2b0a430477b993a50ee3952e47972ff5bdf60685\" target=\"_blank\">git</a>)<br />\r\n- 1 new maker on board based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/c86b82d923aba4d4ed4ddf3f03405aee71af431a\" target=\"_blank\">git</a>)<br />\r\n(<a href=\"https://twitter.com/veelkoov/status/1182774650125930500\" target=\"_blank\">Twitter</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (1110,'2019-10-12 06:02:14', '', 'CS_UPDTD_DETLS', NULL, 0, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '[\"and clearing the current wor...k block and prepping for anw! </p><div class=\\\"text_exposed_show\\\"><p> \",\"we are not open for quotes\",\" or suits at this time! thank you for understanding!</p><p> edit: if your parts are a christmas gift\"]');
+INSERT INTO `events` VALUES (1111,'2019-10-13 06:02:05', '', 'CS_UPDTD_DETLS', 0, NULL, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '');
+INSERT INTO `events` VALUES (1112,'2019-10-14 06:02:02', '', 'CS_UPDTD_DETLS', 0, 1, 'Silvena Handmade', 'http://silvenahandmade.com/', '[\"lass=\\\"entry-header\\\"> <h1 class=\\\"entry-title\\\">about</h1> </header><> <div class=\\\"entry-content\\\"> <h1>\",\"commissions open\",\".</h1> <h1>slots from january to june 2020.</h1> <p> </p> <p>i run a small studio &#8211; STUDIO_NAM\"]', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
