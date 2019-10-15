@@ -99,7 +99,7 @@ INSERT INTO `artisans` VALUES (57,'', 'M000057', 'HyenaHoy Fursuits', '', '', ''
 INSERT INTO `artisans` VALUES (59,'', 'M000059', 'Kilcodo Costumes', '', '', '', 'US', 'Florida', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (60,'', 'M000060', 'Kodimade', '', '', '', '', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'TIMED: https://www.kodimade.com/', '', '', '');
 INSERT INTO `artisans` VALUES (61,'', 'M000061', 'Kaiborg Studios', '', '', '', 'US', 'Oregon', 'Portland', '', '', 'Specific', '', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO `artisans` VALUES (62,'', 'M000062', 'LaelaMcPitty Suits', '', '', '', 'US', 'South Carolina', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `artisans` VALUES (62,'', 'M000062', '~ LaelaMcPitty Suits [inactive]', '', '', '', 'US', 'South Carolina', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'Marked as inactive due to the only URL kept here (http://laelamcpittysuits.webs.com/) becoming dead and social media looking dead as well', '', '', '');
 INSERT INTO `artisans` VALUES (63,'WNDRLST', '', 'Wanderlust Suits', 'Lazy Lion Fursuits ', 'Wanderlust suits is a one person operated small business. Each and every Fursuit is out with lots of love and care for your own enjoyment! NOTE: Wanderlust Suits is not full time business. Personal life can affect the time span of a suit. Deadlines are also NOT given. Each suits are given a custom deadline made by the maker. Constant contact is done to ensure the client knows what is going on.', '2011-10', 'US', 'New Jersey', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', '', 'Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)', '', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet\nRemovable eyelids\nWashable heads', '', '30% downlayment with $250 USD a month', 'Canines, felines, birds, dragons, bats, kangaroos, equines, etc.', 'Monsters, Dutch angel dragons, complex hybrids, etc.', 'English', '', 'ANNOUNCEMENTS', 'TWITTER', 'TWITTER: @dum********ice');
 INSERT INTO `artisans` VALUES (65,'', 'M000065', 'Lizard Loves Moustache', '', '', '', 'US', 'Indiana', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (66,'', 'M000066', 'LunoVulpes', '', '', '', 'US', 'Texas', '', '', 'Realistic\nSemi Realistic\nToony', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -112,7 +112,7 @@ INSERT INTO `artisans` VALUES (72,'', 'M000072', 'Mixed Candy Costumes', '', '',
 INSERT INTO `artisans` VALUES (73,'', 'M000073', 'More Fur Less', '', '', '', 'US', 'California', 'High Desert', '', 'Toony', '', '', '', '', '', '', '', '', '', 'TIMED: http://www.morefurless.com/commissionstatus/', '', '', '');
 INSERT INTO `artisans` VALUES (74,'', 'M000074', 'MothSicleSuits', '', '', '', 'US', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (75,'', 'M000075', 'Northern Lights Costume Company', '', '', '', '', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO `artisans` VALUES (76,'', 'M000076', 'OMG Pineapples', '', '', '', 'US', 'New Hampshire', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'https://www.weasyl.com/~omgpineapples\r\nhttps://www.flickr.com/photos/omgpineapples', '', '', '');
+INSERT INTO `artisans` VALUES (76,'', 'M000076', 'Corgilegs Crafts', 'OMG Pineapples', '', '', 'US', 'New Hampshire', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'https://www.weasyl.com/~omgpineapples\r\nhttps://www.flickr.com/photos/omgpineapples', '', '', '');
 INSERT INTO `artisans` VALUES (77,'', 'M000077', 'One Fur All Studios', '', '', '', 'CA', '', '', '', 'Realistic\nToony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (79,'', 'M000079', 'The Phoenix Nest', 'Phoenixwolf Suits', '', '', 'US', 'Minnesota', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (80,'', 'M000080', 'Ruffled Designs', '', '', '', 'US', 'Florida', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -143,7 +143,7 @@ INSERT INTO `artisans` VALUES (106,'', 'M000106', 'Sarahcat Fursuits', '', '', '
 INSERT INTO `artisans` VALUES (107,'', 'M000107', 'The Grotto Creations', '', '', '', 'US', 'Florida', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (108,'', 'M000108', '~ SugarCritter Studios [inactive]', '', '', '', 'US', 'Florida', '', '', 'Toony', '', '', '', '', '', '', '', '', '', 'Reason for making inactive: only contact method, e-mail, no longer exists / This mailbox is disabled (554.30)', '', '', '');
 INSERT INTO `artisans` VALUES (109,'LBTWRKS', '', 'LobitaWorks', '', 'LobitaWorks is a two-person fursuit builder team with a heavy focus on quality, creativity, and reliability.', '2006-06', 'US', 'Washington', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', 'Mascot costumes', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Foam Bases\nFursuit Sneakers\nFursuit sprays\nLegs\nSome props', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nIndoor feet\nOutdoor feet\nRemovable eyelids', 'Accessories/jewelry\nBody padding\nEar vents\nFit for glasses\nPadded hands\nWings', '50% up front to reserve a slot, the remaining 50% + shipping due upon the project\'s completion. Rush orders are 100% up front.', 'Anything and everything', '', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: lo*******ks@gm*****om');
-INSERT INTO `artisans` VALUES (110,'', 'M000110', 'Northshore Mascots', '', '', '', 'US', 'Georgia', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `artisans` VALUES (110,'', 'M000110', 'Coyote Mountain Costumes | wildpup11', 'Northshore Mascots', '', '', 'US', 'Georgia', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (112,'', 'M000112', 'Bouncy Bat Works', '', '', '', 'US', 'Massachusetts', '', '', 'Realistic\nSemi Realistic\nToony', '', '', '', '', '', '', '', '', '', 'Normally offers premades only', '', '', '');
 INSERT INTO `artisans` VALUES (113,'', 'M000113', 'Golden Maw', '+3 Defense\r\nPlus 3 Defense', '', '', 'US', 'Michigan', 'Harrison', '', 'Realistic\nToony', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `artisans` VALUES (114,'', 'M000114', 'Radioactimals', '', '', '', 'US', 'Michigan', '', '', 'Realistic\nSemi Realistic', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -310,7 +310,7 @@ INSERT INTO `artisans` VALUES (280,'GOLDPAW', '', 'Goldenpaw Studio', '', 'Frien
 INSERT INTO `artisans` VALUES (281,'CMS2019', '', 'Coyote Mountain Studio', 'Wildpup11', '', '2012-03', 'US', 'Georgia', '', 'Artistic liberty commissions\nPremades', 'Kemono\nToony', '', 'Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Exchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nLED eyes\nLED/EL lights\nOutdoor feet', '', 'None/100% upfront', 'All Creatures', '', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: coyo*********nine@gm*****om');
 INSERT INTO `artisans` VALUES (282,'CHAOTIC', 'FURTAKU', 'chaoticreations', 'That One Furry Otaku', 'Hi! Chaoticreations is an amateur fursuit maker, offering cheaper commissions and Artistic Liberty suits for furries on a budget!', '', 'GB', '', 'Hertfordshire', 'Artistic liberty commissions\nStandard commissions', 'Toony', '', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Attached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nLED/EL lights\nOutdoor feet', 'Wings\nDrybrushing', '50% deposit upfront, and then the other 50% before completion.', '', 'Dutch Angel Dragons/Angel Dragons, Protogens, Skull Animals', 'English', '', 'FEEDBACK', 'TELEGRAM', 'TELEGRAM: @cha*********ons');
 INSERT INTO `artisans` VALUES (283,'CHRYSSI', '', 'Chrysisi', '', 'Hello! I\'m a new fursuit maker from Georgia, and I look forward to working with my future clients and learning everything I can!', '2019-01', 'US', 'Georgia', 'Waycross', 'Artistic liberty commissions\nStandard commissions', 'Semi Toony\nToony', '', 'Head (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)', '', 'Exchangeable hairs\nExchangeable tongues\nOutdoor feet', '', '30% deposit to reserve slot, around 23% for up to 3 months', 'Canines, felines, mustelids, and rodents', 'scalies, horses', 'English', '', 'FEEDBACK', 'TELEGRAM', 'TELEGRAM: @Ch****si');
-INSERT INTO `artisans` VALUES (285,'BFFWRKS', '', 'Butteruffin\'s Fuzzy Friendz Works', '', '', '2017-09', 'US', 'CO', 'Westminster', 'Standard commissions', 'Toony', '', 'Handpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nTails (as parts/separate)', 'Fursuit sprays', 'Adjustable eyebrows\nAttached tail\nExchangeable tongues\nFollow-me eyes\nOutdoor feet', 'Removable eyes', '', 'Almost anything', 'Sergals', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: mir******lf2@Gm*****om');
+INSERT INTO `artisans` VALUES (285,'BFFWRKS', '', 'Butteruffin\'s Fuzzy Friendz Works', '', '', '2017-09', 'US', 'CO', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kemono\nRealistic\nSemi Realistic\nSemi Toony\nToony', '', 'Handpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nTails (as parts/separate)', 'Fursuit sprays\nBandanas', 'Adjustable eyebrows\nAdjustable/wiggle ears\nAttached tail\nExchangeable tongues\nFollow-me eyes\nOutdoor feet', 'Removable eyes', '50% upfront, the final 50% a month before or upon completion', 'Almost anything', 'Sergals', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: mir******lf2@Gm*****om');
 INSERT INTO `artisans` VALUES (286,'OMEGAPW', '', 'Omegapaws !', '', 'Hello world! Big plushie maker here! Or skiny fursuit or inflatable suit', '2015-01', 'FR', '', 'Berlaimont', 'Artistic liberty commissions\nStandard commissions', 'Semi Toony\nToony', 'Plush suits\nLatex', 'Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)', '', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable hairs\nFollow-me eyes\nIndoor feet\nMovable jaw\nOutdoor feet\nWashable heads', '', '50% upfront to reserve a slot, 50% when the fursuit is finished', 'all !', 'copyrighted characters !', 'English\nFrench', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: t****f@ome******.fr');
 INSERT INTO `artisans` VALUES (287,'JACKCAT', '', 'JacKat', '', 'Hiya! I\'m Jackie and I like making interesting/unique suits', '2016-12', 'US', 'Iowa', 'Middle-Of-Nowhere, Eastern Iowa', 'Artistic liberty commissions\nStandard commissions', 'Semi Realistic\nSemi Toony\nToony', 'Experimental\nJust ask\nInteresting/Unique\nMonsters/Creatures\nPlush suits\nFemme suits', 'Full digitigrade\nPartial (head + handpaws + tail + feetpaws)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable eyebrows\nAttached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers', 'Just ask\nAlways Includes Removable Digi Padding Pillows\nWings\nSockpaws\nArt/Concept Art\nBadges\nPlush Claws\nPickable nose\nAccessories (Jewelry/Piercings, Extra Tongues, Etc)\nHeavily padded limbs/paws\nStompy paws\nFloor dragger', '\"Full\", \"30% Upfront with 10% Each Month\", \"30% Upfront with Flexible Payments IF Discussed Prior\"', 'Any and all within my capabilities of foam/fur/minky crafting. Unique or uncommon species are my soft spot.', 'None specifically that I can think of, if unsure just ask.', 'English', '', 'NO', 'E-MAIL', 'E-MAIL: hbc*******ons@ho*******om');
 INSERT INTO `artisans` VALUES (288,'EELOWYN', '', 'Dragons Den Fursuits', '', 'Hi! I am Eelowyn AKA, Dragons Den Fursuits! Making suits is my passion and I am happy to answer any questions anyone may have so feel free to reach out!', '2017-01', 'CA', 'Alberta', 'Edmonton/Calgary', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kigurumi\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Props\nCan do plushies', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable eyelids', '', 'Flexible payments, first 40% is non refundable to cover materials and hold slot, that amount can be made in payments. Commission added to queue once paid off', 'Happy to do any species!', '', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: alc*******les@ho*******om');
@@ -712,7 +712,7 @@ CREATE TABLE `artisans_urls` (
   PRIMARY KEY (`id`),
   KEY `IDX_45AAF3BC5ED3C7B7` (`artisan_id`),
   CONSTRAINT `FK_45AAF3BC5ED3C7B7` FOREIGN KEY (`artisan_id`) REFERENCES `artisans` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4920 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5011 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `artisans_urls` VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
@@ -963,7 +963,6 @@ INSERT INTO `artisans_urls` VALUES (247,60,'URL_TWITTER', 'https://twitter.com/t
 INSERT INTO `artisans_urls` VALUES (248,61,'URL_WEBSITE', 'http://www.kaiborgstudios.com/');
 INSERT INTO `artisans_urls` VALUES (249,61,'URL_TWITTER', 'https://twitter.com/KaiborgStudios');
 INSERT INTO `artisans_urls` VALUES (250,62,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/laela-mcpitty-suits/');
-INSERT INTO `artisans_urls` VALUES (251,62,'URL_WEBSITE', 'http://laelamcpittysuits.webs.com/');
 INSERT INTO `artisans_urls` VALUES (252,63,'URL_WEBSITE', 'https://www.wanderlustsuits.com/');
 INSERT INTO `artisans_urls` VALUES (253,63,'URL_PRICES', 'https://www.wanderlustsuits.com/prices');
 INSERT INTO `artisans_urls` VALUES (254,63,'URL_FAQ', 'https://www.wanderlustsuits.com/frequently-asked-questions');
@@ -1011,9 +1010,9 @@ INSERT INTO `artisans_urls` VALUES (296,74,'URL_FUR_AFFINITY', 'http://www.furaf
 INSERT INTO `artisans_urls` VALUES (297,74,'URL_TWITTER', 'https://twitter.com/MothSicleSuits');
 INSERT INTO `artisans_urls` VALUES (298,74,'URL_QUEUE', 'https://trello.com/b/6xLtEFvA/mothsiclesuits-queue');
 INSERT INTO `artisans_urls` VALUES (299,74,'URL_CST', 'https://mothsicles.wixsite.com/mothsiclesuits');
-INSERT INTO `artisans_urls` VALUES (300,76,'URL_WEBSITE', 'http://www.omgpineapples.net/');
+INSERT INTO `artisans_urls` VALUES (300,76,'URL_WEBSITE', 'https://corgilegs.pizza/');
 INSERT INTO `artisans_urls` VALUES (301,76,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/omgpineapples');
-INSERT INTO `artisans_urls` VALUES (302,76,'URL_TWITTER', 'https://twitter.com/omgpineapples');
+INSERT INTO `artisans_urls` VALUES (302,76,'URL_TWITTER', 'https://twitter.com/corgilegs');
 INSERT INTO `artisans_urls` VALUES (303,76,'URL_TUMBLR', 'http://omgpineapplesfursuits.tumblr.com/');
 INSERT INTO `artisans_urls` VALUES (304,77,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/onefurall/');
 INSERT INTO `artisans_urls` VALUES (305,77,'URL_WEBSITE', 'http://www.onefurall.com/');
@@ -1089,7 +1088,6 @@ INSERT INTO `artisans_urls` VALUES (374,104,'URL_FUR_AFFINITY', 'http://www.fura
 INSERT INTO `artisans_urls` VALUES (375,104,'URL_CST', 'http://www.furaffinity.net/user/dexterouszombie/');
 INSERT INTO `artisans_urls` VALUES (376,105,'URL_WEBSITE', 'http://www.furaffinity.net/user/sugarnspicecostumes');
 INSERT INTO `artisans_urls` VALUES (377,106,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/sarahcat/');
-INSERT INTO `artisans_urls` VALUES (378,106,'URL_WEBSITE', 'http://furredthingsfurst.wix.com/sarahcat-fursuits');
 INSERT INTO `artisans_urls` VALUES (379,107,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/grotto-creations/');
 INSERT INTO `artisans_urls` VALUES (380,107,'URL_WEBSITE', 'http://www.grottocreations.com/');
 INSERT INTO `artisans_urls` VALUES (381,108,'URL_WEBSITE', 'http://sugarcrittersstudios.webs.com/');
@@ -1105,7 +1103,7 @@ INSERT INTO `artisans_urls` VALUES (390,109,'URL_INSTAGRAM', 'https://www.instag
 INSERT INTO `artisans_urls` VALUES (391,109,'URL_YOUTUBE', 'https://www.youtube.com/channel/UC05TWLwvNHIo4qNQMHULDew');
 INSERT INTO `artisans_urls` VALUES (392,109,'URL_CST', 'https://twitter.com/lobitaworks');
 INSERT INTO `artisans_urls` VALUES (393,110,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/northshore-mascots/');
-INSERT INTO `artisans_urls` VALUES (394,110,'URL_WEBSITE', 'http://nmcustomcostumes.weebly.com/nm-blog');
+INSERT INTO `artisans_urls` VALUES (394,110,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/wildpup11/');
 INSERT INTO `artisans_urls` VALUES (395,112,'URL_WEBSITE', 'http://www.bouncybatworks.com/');
 INSERT INTO `artisans_urls` VALUES (396,112,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/bouncybatworks');
 INSERT INTO `artisans_urls` VALUES (397,112,'URL_TWITTER', 'https://twitter.com/BouncyBatWorks');
@@ -1858,8 +1856,6 @@ INSERT INTO `artisans_urls` VALUES (1158,258,'URL_TWITTER', 'https://twitter.com
 INSERT INTO `artisans_urls` VALUES (1159,258,'URL_TUMBLR', 'http://junkirat.tumblr.com/');
 INSERT INTO `artisans_urls` VALUES (1160,258,'URL_QUEUE', 'https://trello.com/b/ltmF3vyK/fursuit-n-parts');
 INSERT INTO `artisans_urls` VALUES (1161,258,'URL_CST', 'https://www.furaffinity.net/user/feely/');
-INSERT INTO `artisans_urls` VALUES (1162,259,'URL_WEBSITE', 'https://aetherwears.com/');
-INSERT INTO `artisans_urls` VALUES (1163,259,'URL_PRICES', 'https://aetherwears.com/');
 INSERT INTO `artisans_urls` VALUES (1164,259,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/sushi.suits');
 INSERT INTO `artisans_urls` VALUES (1165,259,'URL_TWITTER', 'https://twitter.com/aetherwears');
 INSERT INTO `artisans_urls` VALUES (1166,259,'URL_FACEBOOK', 'https://www.facebook.com/Aetherwears/');
@@ -2293,6 +2289,15 @@ INSERT INTO `artisans_urls` VALUES (4906,343,'URL_PRICES', 'https://maxyncheese.
 INSERT INTO `artisans_urls` VALUES (4914,343,'URL_YOUTUBE', 'https://www.youtube.com/channel/UCrSsey2owgw5Ki8RqZrLLng');
 INSERT INTO `artisans_urls` VALUES (4915,343,'URL_QUEUE', 'https://trello.com/b/pcOmcQxK/fursuit-progress');
 INSERT INTO `artisans_urls` VALUES (4919,343,'URL_CST', 'https://maxyncheese.wixsite.com/home');
+INSERT INTO `artisans_urls` VALUES (5002,76,'URL_PRICES', 'https://corgilegs.pizza/#fursuits');
+INSERT INTO `artisans_urls` VALUES (5003,76,'URL_FAQ', 'https://corgilegs.pizza/#frequently-asked-questions');
+INSERT INTO `artisans_urls` VALUES (5004,76,'URL_QUEUE', 'https://trello.com/b/YYFwAOKe/fursuit-work');
+INSERT INTO `artisans_urls` VALUES (5005,106,'URL_FACEBOOK', 'https://www.facebook.com/sarahcatfursuits');
+INSERT INTO `artisans_urls` VALUES (5006,106,'URL_INSTAGRAM', 'https://www.instagram.com/sarahcat_fursuits/');
+INSERT INTO `artisans_urls` VALUES (5007,106,'URL_TWITTER', 'https://twitter.com/SarahcatFursuit');
+INSERT INTO `artisans_urls` VALUES (5008,106,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/SarahCat');
+INSERT INTO `artisans_urls` VALUES (5009,106,'URL_CST', 'http://www.furaffinity.net/user/SarahCat');
+INSERT INTO `artisans_urls` VALUES (5010,110,'URL_QUEUE', 'https://trello.com/b/ocnc03uk/costume-queue');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
