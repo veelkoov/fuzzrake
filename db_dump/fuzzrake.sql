@@ -380,7 +380,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -687,6 +687,9 @@ INSERT INTO `events` VALUES (1111,'2019-10-13 06:02:05', '', 'CS_UPDTD_DETLS', 0
 INSERT INTO `events` VALUES (1112,'2019-10-14 06:02:02', '', 'CS_UPDTD_DETLS', 0, 1, 'Silvena Handmade', 'http://silvenahandmade.com/', '[\"lass=\\\"entry-header\\\"> <h1 class=\\\"entry-title\\\">about</h1> </header><> <div class=\\\"entry-content\\\"> <h1>\",\"commissions open\",\".</h1> <h1>slots from january to june 2020.</h1> <p> </p> <p>i run a small studio &#8211; STUDIO_NAM\"]', '');
 INSERT INTO `events` VALUES (1113,'2019-10-14 18:55:23', '', 'CS_UPDTD_DETLS', NULL, 1, 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '[\": styledtext id: dataitem-ir243rb81 ispreset: schemaversion: 1.0 ishidden: text: <h2 class=\\\"font_6\\\">\",\"commissions open\",\"!</h2> stylesmapid: ck_editor_paragraph_styles type: imagelist id: dataitem-iraqduk1 ispreset: schem\"]', '');
 INSERT INTO `events` VALUES (1114,'2019-10-14 18:59:54', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/7566d03b6e4a6a0946a4dc19df23ce9c025fe2a2\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (1115,'2019-10-15 19:52:15', '- Updated 1 maker data based on the maker\'s request. Removed a few dead links and updated few makers based on gathered information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/763ed622c509cbc5bc25555f1b0549efaa9c2cef\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO `events` VALUES (1116,'2019-10-17 18:02:02', '', 'CS_UPDTD_DETLS', NULL, 0, 'Sarahcat Fursuits', 'http://www.furaffinity.net/user/SarahCat', '', '[\") past conventions attended fursuit commission prices | terms of service | fursuit construction faq \",\"commission status: closed\",\" <u class=\\\"bbcode bbcode_u\\\">queue (updated october 3rd):</u> roxie partial - waiting </code> </td> <\"]');
+INSERT INTO `events` VALUES (1117,'2019-10-17 18:02:04', '', 'CS_UPDTD_DETLS', 1, 0, 'Schorsuits', 'https://schorsuits.wixsite.com/schorsuits', '', '[\"e: styledtext id: dataitem-jzikf02u ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\">\",\"commissions closed\",\"</h1> <h1 class=\\\"font_0\\\">opening next year</h1> stylesmapid: ck_editor_paragraph_styles type: image \"]');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
