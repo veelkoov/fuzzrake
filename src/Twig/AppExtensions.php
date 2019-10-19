@@ -11,7 +11,6 @@ use App\Utils\FilterItem;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Tracking\Status;
 use App\Utils\StrUtils;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
@@ -78,11 +77,7 @@ class AppExtensions extends AbstractExtension
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
     {
-        try {
-            return $this->acsRepository->getLastCstUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | NonUniqueResultException $e) {
-            return 'unknown/error';
-        }
+        return $this->acsRepository->getLastCstUpdateTimeAsString();
     }
 
     public function getLastSystemUpdateTimeUtcStrFunction(): string
