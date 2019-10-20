@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
+use App\Utils\DateTimeUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +38,7 @@ class RestApiController extends AbstractController
         return new JsonResponse([
             'status'        => 'OK',
             'lastCstRunUtc' => $acsr->getLastCstUpdateTimeAsString(),
+            'serverTimeUtc' => DateTimeUtils::getNowUtc()->format('Y-m-d H:i:s'),
         ]);
     }
 }

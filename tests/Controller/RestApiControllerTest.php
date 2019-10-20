@@ -34,5 +34,6 @@ class RestApiControllerTest extends DbEnabledWebTestCase
         $data = json_decode($client->getResponse()->getContent());
         $this->assertEquals('OK', $data->status);
         $this->assertEquals(DateTime::createFromFormat('U', (string) time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data->lastCstRunUtc);
+        $this->assertEquals(DateTime::createFromFormat('U', (string) time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data->serverTimeUtc);
     }
 }
