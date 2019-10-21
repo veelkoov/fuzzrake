@@ -22,6 +22,7 @@ class DataFixer
         '#^Rather not say$#i'            => '',
         '#^n/a$#i'                       => '',
         '#^n/a yet$#i'                   => '',
+        '#^-$#i'                         => '',
         '#[ \t]{2,}#'                    => ' ',
         '#^ANNOUNCEMENTS \+ FEEDBACK$#'  => 'FEEDBACK',
         '#^ANNOUNCEMENTS \*ONLY\*$#'     => 'ANNOUNCEMENTS',
@@ -94,6 +95,7 @@ class DataFixer
         'new zealand'                                   => 'NZ',
         'russia'                                        => 'RU',
         'poland'                                        => 'PL',
+        'sweden'                                        => 'SE',
         'ukraine'                                       => 'UA',
         'united states( of america)?|us of america|usa' => 'US',
     ];
@@ -188,7 +190,13 @@ class DataFixer
 
     private function fixList(string $input, bool $sort, string $separatorRegexp = '#\n#'): string
     {
-        $input = implode("\n", array_filter(array_map('trim', Regexp::split($separatorRegexp, $input))));
+        $input = implode("\n", array_filter(array_map(function (string $item): string {
+            if (substr($item, 0, 4) !== 'http') {
+                $item = StrUtils::ucfirst($item);
+            }
+
+            return trim($item);
+        }, Regexp::split($separatorRegexp, $input))));
 
         foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
             $input = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $input);
