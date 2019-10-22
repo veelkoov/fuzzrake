@@ -92,7 +92,9 @@ class FilterItems implements ArrayAccess
 
     public function sort(): void
     {
-        ksort($this->items);
+        uasort($this->items, function (FilterItem $a, FilterItem $b): int {
+            return strcmp($a->getLabel(), $b->getLabel());
+        });
     }
 
     public function __get(string $key): FilterItem
