@@ -380,7 +380,7 @@ CREATE TABLE `events` (
   `open_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `closed_match` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1321 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO `events` VALUES (5,'2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -690,6 +690,9 @@ INSERT INTO `events` VALUES (1114,'2019-10-14 18:59:54', '- 1 new maker and 1 up
 INSERT INTO `events` VALUES (1115,'2019-10-15 19:52:15', '- Updated 1 maker data based on the maker\'s request. Removed a few dead links and updated few makers based on gathered information (<a href=\"https://github.com/veelkoov/fuzzrake/commit/763ed622c509cbc5bc25555f1b0549efaa9c2cef\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
 INSERT INTO `events` VALUES (1116,'2019-10-17 18:02:02', '', 'CS_UPDTD_DETLS', NULL, 0, 'Sarahcat Fursuits', 'http://www.furaffinity.net/user/SarahCat', '', '[\") past conventions attended fursuit commission prices | terms of service | fursuit construction faq \",\"commission status: closed\",\" <u class=\\\"bbcode bbcode_u\\\">queue (updated october 3rd):</u> roxie partial - waiting </code> </td> <\"]');
 INSERT INTO `events` VALUES (1117,'2019-10-17 18:02:04', '', 'CS_UPDTD_DETLS', 1, 0, 'Schorsuits', 'https://schorsuits.wixsite.com/schorsuits', '', '[\"e: styledtext id: dataitem-jzikf02u ispreset: schemaversion: 1.0 ishidden: text: <h1 class=\\\"font_0\\\">\",\"commissions closed\",\"</h1> <h1 class=\\\"font_0\\\">opening next year</h1> stylesmapid: ck_editor_paragraph_styles type: image \"]');
+INSERT INTO `events` VALUES (1118,'2019-10-18 06:01:54', '', 'CS_UPDTD_DETLS', 0, 1, 'ByCats4Cats', 'http://bycats4cats.com/quote/', '[\"7\' class=\'gfield gsection field_sublabel_below field_description_above\' ><h2 class=\'gsection_title\'>\",\"we are open for commissions\",\"!!! february-may 2020 completion</h2><div class=\'gsection_description\'>this quote request is for tho\"]', '');
+INSERT INTO `events` VALUES (1208,'2019-10-20 18:02:04', '', 'CS_UPDTD_DETLS', 0, NULL, 'TabulamBestias', 'http://leoelstar.wixsite.com/tabulambestias', '', '');
+INSERT INTO `events` VALUES (1280,'2019-10-21 18:02:30', '', 'CS_UPDTD_DETLS', 0, NULL, 'Clockwork Creature', 'http://www.clockworkcreature.com/', '', '');
 DROP TABLE IF EXISTS `artisans_commissions_statues`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
