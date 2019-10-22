@@ -39,4 +39,13 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult());
     }
+
+    public function getLastCstUpdateTimeAsString(): string
+    {
+        try {
+            return $this->getLastCstUpdateTime()->format('Y-m-d H:i');
+        } catch (DateTimeException | NonUniqueResultException $e) {
+            return 'unknown/error';
+        }
+    }
 }

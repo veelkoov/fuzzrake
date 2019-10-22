@@ -38,7 +38,6 @@ function photosTplFunc() {
 
         let result: string = '';
         for (let i: number = 0; i < miniatures.length; i++) {
-            // result += `<div><img src="${miniatures[i]}" alt="" /></div>`;
             result += `<div><a href="${photos[i]}" target="_blank"><img src="${miniatures[i]}" alt="" /></a></div>`;
         }
 

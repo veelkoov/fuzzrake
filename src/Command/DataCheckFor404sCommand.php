@@ -10,6 +10,7 @@ use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
+use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,32 +40,25 @@ class DataCheckFor404sCommand extends Command
 
     protected function configure()
     {
-        // TODO: refresh
-        // TODO: no-prefetch
-//        $this
-//            ->setDescription('Add a short description for your command')
-//            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-//            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-//        ;
+        $this->addOption('refresh', 'r', null, 'Refresh pages cache (re-fetch)');
+        $this->addOption('no-prefetch', null, null, 'Skip pre-fetch phase');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
 
+        if ($input->getOption('refresh')) {
+            $this->webpageSnapshotManager->clearCache();
+        }
+
         $urls = $this->getUrlsToCheck();
 
-        $this->webpageSnapshotManager->prefetchUrls(array_map(function (ArtisanUrl $artisanUrl): Url {
-            return $artisanUrl->getUrlObject();
-        }, $urls), $io);
-
-        foreach ($urls as $url) {
-            try {
-                $this->webpageSnapshotManager->get($url->getUrlObject());
-            } catch (HttpClientException $e) {
-                $io->writeln($url->getArtisan()->getLastMakerId().':'.$url->getType().': '.$e->getMessage());
-            }
+        if (!$input->getOption('no-prefetch')) {
+            $this->prefetchUrls($urls, $io);
         }
+
+        $this->checkUrls($urls, $io);
     }
 
     /**
@@ -80,5 +74,39 @@ class DataCheckFor404sCommand extends Command
                 Fields::URL_SCRITCH_MINIATURE,
             ]);
         });
+    }
+
+    /**
+     * @param ArtisanUrl[] $urls
+     * @param SymfonyStyle $io
+     */
+    private function checkUrls(array $urls, SymfonyStyle $io): void
+    {
+        foreach ($urls as $url) {
+            $error = false;
+
+            try {
+                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url->getUrlObject()))) {
+                    $error = 'Latent 404: '.$url->getUrl();
+                }
+            } catch (HttpClientException $e) {
+                $error = $e->getMessage();
+            }
+
+            if ($error) {
+                $io->writeln($url->getArtisan()->getLastMakerId().':'.$url->getType().': '.$error);
+            }
+        }
+    }
+
+    /**
+     * @param ArtisanUrl[] $urls
+     * @param SymfonyStyle $io
+     */
+    private function prefetchUrls($urls, SymfonyStyle $io): void
+    {
+        $this->webpageSnapshotManager->prefetchUrls(array_map(function (ArtisanUrl $artisanUrl): Url {
+            return $artisanUrl->getUrlObject();
+        }, $urls), $io);
     }
 }

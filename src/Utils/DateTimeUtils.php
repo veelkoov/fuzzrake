@@ -13,7 +13,7 @@ class DateTimeUtils
     public static function getNowUtc(): DateTime
     {
         try {
-            return new DateTime('now', self::getUtc());
+            return DateTime::createFromFormat('U', (string) time(), self::getUtc());
         } catch (Exception $e) {
             throw new RuntimeDateTimeException($e);
         }
