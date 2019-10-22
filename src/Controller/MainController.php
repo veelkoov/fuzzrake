@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
+use App\Service\CountriesDataService;
 use App\Service\IuFormService;
-use App\Utils\FilterItems;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,17 +20,15 @@ class MainController extends AbstractController
      * @Route("/", name="main")
      * @Route("/index.html")
      *
-     * @param ArtisanRepository $artisanRepository
-     * @param string            $projectDir
+     * @param ArtisanRepository    $artisanRepository
+     * @param CountriesDataService $countriesDataService
      *
      * @return Response
      *
      * @throws NonUniqueResultException
      */
-    public function main(ArtisanRepository $artisanRepository, string $projectDir): Response
+    public function main(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
     {
-        $countriesToCount = $artisanRepository->getDistinctCountriesToCountAssoc();
-
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
@@ -40,7 +38,7 @@ class MainController extends AbstractController
             'productionModels'    => $artisanRepository->getDistinctProductionModels(),
             'commissionsStatuses' => $artisanRepository->getDistinctCommissionStatuses(),
             'languages'           => $artisanRepository->getDistinctLanguages(),
-            'countries'           => $this->getCountriesFilterData($countriesToCount, $projectDir),
+            'countries'           => $countriesDataService->getFilterData(),
         ]);
     }
 
@@ -64,50 +62,5 @@ class MainController extends AbstractController
         }
 
         return $this->redirect($iuFormService->getUpdateUrl($artisan));
-    }
-
-    private function getCountriesFilterData(FilterItems $countries, string $projectDir): FilterItems
-    {
-        $countriesData = $this->loadCountriesData($projectDir);
-
-        $result = $this->getRegionsFromCountries($countriesData);
-        $result->incUnknownCount($countries->getUnknownCount());
-
-        foreach ($countriesData as $countryData) {
-            $code = $countryData['code'];
-            $region = $countryData['region'];
-
-            $countryCount = $countries->offsetExists($code) ? $countries[$code]->getCount() : 0;
-
-            $result[$region]->incCount($countryCount);
-            $result[$region]->getValue()->addComplexItem($code, $code, $countryData['name'], $countryCount);
-        }
-
-        return $result;
-    }
-
-    private function getRegionsFromCountries(array $countriesData): FilterItems
-    {
-        $regionNames = array_unique(array_map(function (array $country): string {
-            return $country['region'];
-        }, $countriesData));
-
-        $result = new FilterItems(false);
-
-        foreach ($regionNames as $regionName) {
-            $result->addComplexItem($regionName, new FilterItems(false), $regionName, 0);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $projectDir
-     *
-     * @return array [ [ "name" => "...", "code" => "...", "region" => "..."], ... ]
-     */
-    private function loadCountriesData(string $projectDir): array
-    {
-        return json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
     }
 }
