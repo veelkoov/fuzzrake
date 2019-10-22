@@ -35,6 +35,11 @@
     "region": "Asia"
   },
   {
+    "name": "Costa Rica",
+    "code": "CR",
+    "region": "America"
+  },
+  {
     "name": "Czechia",
     "code": "CZ",
     "region": "Europe"
@@ -107,6 +112,11 @@
   {
     "name": "Slovakia",
     "code": "SK",
+    "region": "Europe"
+  },
+  {
+    "name": "Sweden",
+    "code": "SE",
     "region": "Europe"
   },
   {

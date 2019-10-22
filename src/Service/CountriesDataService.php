@@ -15,7 +15,7 @@ class CountriesDataService
     private $artisanRepository;
 
     /**
-     * @var array [ [ "name" => "...", "code" => "...", "region" => "..."], ... ]
+     * @var array [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ]
      */
     private $data;
 
@@ -33,14 +33,13 @@ class CountriesDataService
         $result = $this->getRegionsFromCountries($this->data);
         $result->incUnknownCount($artisansCountries->getUnknownCount());
 
-        foreach ($this->data as $countryData) {
-            $code = $countryData['code'];
-            $region = $countryData['region'];
+        foreach ($artisansCountries->getItems() as $country) {
+            $code = $country->getValue();
+            $region = $this->data[$code]['region'];
 
-            $countryCount = $artisansCountries->offsetExists($code) ? $artisansCountries[$code]->getCount() : 0;
-
-            $result[$region]->incCount($countryCount);
-            $result[$region]->getValue()->addComplexItem($code, $code, $countryData['name'], $countryCount);
+            $result[$region]->incCount($country->getCount());
+            $result[$region]->getValue()->addComplexItem($code, $code, $this->data[$code]['name'],
+                $country->getCount());
         }
 
         return $result;
@@ -63,6 +62,13 @@ class CountriesDataService
 
     private function loadCountriesData(string $projectDir): void
     {
-        $this->data = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
+        $dataNumberIndexes = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
+        $dataCodeIndexes = [];
+
+        foreach ($dataNumberIndexes as $country) {
+            $dataCodeIndexes[$country['code']] = $country;
+        }
+
+        $this->data = $dataCodeIndexes;
     }
 }
