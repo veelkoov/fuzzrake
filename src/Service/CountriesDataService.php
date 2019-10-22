@@ -42,6 +42,8 @@ class CountriesDataService
                 $country->getCount());
         }
 
+        $this->sortInRegions($result);
+
         return $result;
     }
 
@@ -70,5 +72,12 @@ class CountriesDataService
         }
 
         $this->data = $dataCodeIndexes;
+    }
+
+    private function sortInRegions(FilterItems $result): void
+    {
+        foreach($result->getItems() as $item) {
+            $item->getValue()->sort();
+        }
     }
 }
