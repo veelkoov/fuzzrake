@@ -191,7 +191,7 @@ class DataFixer
     private function fixList(string $input, bool $sort, string $separatorRegexp = '#\n#'): string
     {
         $input = implode("\n", array_filter(array_map(function (string $item): string {
-            if (substr($item, 0, 4) !== 'http') {
+            if ('http' !== substr($item, 0, 4)) {
                 $item = StrUtils::ucfirst($item);
             }
 
