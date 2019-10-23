@@ -76,7 +76,7 @@ class CountriesDataService
 
     private function sortInRegions(FilterItems $result): void
     {
-        foreach($result->getItems() as $item) {
+        foreach ($result->getItems() as $item) {
             $item->getValue()->sort();
         }
     }
