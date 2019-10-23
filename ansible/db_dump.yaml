@@ -4,4 +4,4 @@
   roles:
     - { name: "db", action: "read_params" }
     - { name: "db", action: "dump" }
-    - { name: "manager", action: "commit_db_dump" }
+    - { name: "manager", action: "db_dump_pretty" }

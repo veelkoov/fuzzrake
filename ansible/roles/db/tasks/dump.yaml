@@ -11,7 +11,7 @@
       --skip-lock-tables
       --skip-add-locks
       --order-by-primary
-      --quote-names
+      --skip-quote-names
       --tz-utc
 
       --host={{ db_params.host }}
