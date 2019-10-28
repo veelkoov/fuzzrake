@@ -187,19 +187,20 @@ class HealthCheckServiceTest extends TestCase
     public function getLoadStatusDataProvider(): array
     {
         return [
-            ['OK', ' 1 ', ' 0.1 0.1 0.1 '],
-            ['WARNING', ' 1 ', ' 0.1 0.1 0.2 '],
-            ['OK', ' 2 ', ' 0.1 0.1 0.2 '],
-            ['WARNING', ' 1 ', ' 0.1 0.5 0.1 '],
-            ['OK', ' 2 ', ' 0.1 0.5 0.1 '],
-            ['WARNING', ' 1 ', ' 0.9 0.1 0.1 '],
-            ['OK', ' 2 ', ' 0.9 0.1 0.1 '],
-            ['WARNING', ' e ', ' 0.1 0.1 0.1 '],
-            ['WARNING', '  ', ' 0.1 0.1 0.1 '],
-            ['WARNING', ' 1 ', ' 0.1 0.1 0.1 0.1 '],
+            ['OK', ' 1 ', " 0.1\t0.1\t0.1 "],
+            ['WARNING', ' 1 ', " 0.1\t0.1\t0.2 "],
+            ['OK', ' 2 ', " 0.1\t0.1\t0.2 "],
+            ['WARNING', ' 1 ', " 0.1\t0.5\t0.1 "],
+            ['OK', ' 2 ', " 0.1\t0.5\t0.1 "],
+            ['WARNING', ' 1 ', " 0.9\t0.1\t0.1 "],
+            ['OK', ' 2 ', " 0.9\t0.1\t0.1 "],
+            ['WARNING', ' e ', " 0.1\t0.1\t0.1 "],
+            ['WARNING', '  ', " 0.1\t0.1\t0.1 "],
+            ['WARNING', ' 1 ', " 0.1\t0.1\t0.1\t0.1 "],
             ['WARNING', ' 1 ', ' '],
-            ['WARNING', ' 1 ', ' 1 1 1 e '],
-            ['WARNING', ' 1 ', ' 1 1 1. '],
+            ['WARNING', ' 1 ', " \t\t "],
+            ['WARNING', ' 1 ', " 1\t1\t1\te "],
+            ['WARNING', ' 1 ', " 1\t1\t1. "],
         ];
     }
 

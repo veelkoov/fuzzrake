@@ -94,7 +94,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
     {
         try {
             $cpuCount = Parse::tFloat($cpuCountRawData);
-            $loads = explode(' ', trim($procLoadAvgRawData));
+            $loads = explode("\t", trim($procLoadAvgRawData));
 
             if (3 != count($loads)) {
                 return self::WARNING;
@@ -119,7 +119,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
 
     private static function getProcLoadAvgRawOutput()
     {
-        return file_get_contents('/proc/loadavg');
+        return `awk '{ print $1 "\t" $2 "\t" $3}' < /proc/loadavg`;
     }
 
     private static function getDfRawOutput()
