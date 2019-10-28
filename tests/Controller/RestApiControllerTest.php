@@ -7,6 +7,9 @@ namespace App\Tests\Controller;
 use DateTime;
 use DateTimeZone;
 
+/**
+ * @group time-sensitive
+ */
 class RestApiControllerTest extends DbEnabledWebTestCase
 {
     public function testArtisans()
@@ -19,9 +22,6 @@ class RestApiControllerTest extends DbEnabledWebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @group time-sensitive
-     */
     public function testHealth()
     {
         $client = static::createClient();

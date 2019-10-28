@@ -31,4 +31,20 @@ task :phpunit do
   system('bin/phpunit')
 end
 
+task 'get-snapshots' do
+  system('rsync', '--recursive', '--progress', '--human-readable', 'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
+end
+
+task 'import' do
+  system('bin/console', 'app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt')
+end
+
+task 'importf' do
+  system('bin/console', 'app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--fix-mode')
+end
+
+task 'importc' do
+  system('bin/console', 'app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--commit')
+end
+
 task :qa => ['php-cs-fixer', :phpunit]
