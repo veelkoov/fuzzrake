@@ -6,11 +6,20 @@ namespace App\Service;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Utils\DateTimeUtils;
+use App\Utils\Parse;
+use App\Utils\ParseException;
 
-class HealthCheckService
+class HealthCheckService // TODO: Move hardcoded values to parameters/.env
 {
     private const WARNING = 'WARNING';
     private const OK = 'OK';
+
+    private const MEMORY_FREE_MIN_MIBS = 256;
+    const DISK_FREE_MIN_MIBS = 1024;
+    const DISK_USED_MAX_PERCENT = 90;
+    const LOAD_1M_MAX = 0.9;
+    const LOAD_5M_MAX = 0.5;
+    const LOAD_15M_MAX = 0.2;
 
     /**
      * @var ArtisanCommissionsStatusRepository
@@ -28,9 +37,9 @@ class HealthCheckService
             'status'        => self::OK,
             'lastCstRunUtc' => $this->getLastCstRunUtc(),
             'serverTimeUtc' => $this->getServerTimeUtc(),
-            'disk'          => $this->getDiskStatus($this->readDisksData()),
-            'memory'        => $this->getMemoryStatus($this->readMemoryData()),
-            'load'          => $this->getLoadStatus(...$this->readLoadData()),
+            'disk'          => $this->getDiskStatus(HealthCheckService::getDfRawOutput()),
+            'memory'        => $this->getMemoryStatus(HealthCheckService::getFreeRawOutput()),
+            'load'          => $this->getLoadStatus($this->getCpuCountRawOutput(), HealthCheckService::getProcLoadAvgRawOutput()),
         ];
     }
 
@@ -44,12 +53,25 @@ class HealthCheckService
         return DateTimeUtils::getNowUtc()->format('Y-m-d H:i:s');
     }
 
-    public function getDiskStatus(array $disksData): string
+    public function getDiskStatus(string $rawData): string
     {
-        foreach ($disksData as $disk) {
-            list($kilobytesFree, $percentUsed) = $disk;
+        $disks = explode("\n", trim($rawData));
 
-            if ((int) $kilobytesFree < 1024 * 1024 && $percentUsed > 90) {
+        foreach ($disks as $disk) {
+            $disk = explode("\t", $disk);
+
+            if (2 != count($disk)) {
+                return self::WARNING;
+            }
+
+            try {
+                $mibsFree = Parse::tInt($disk[0]);
+                $percentUsed = Parse::tPercentAsInt($disk[1]);
+            } catch (ParseException $e) {
+                return self::WARNING;
+            }
+
+            if ((int) $mibsFree < self::DISK_FREE_MIN_MIBS && $percentUsed > self::DISK_USED_MAX_PERCENT) {
                 return self::WARNING;
             }
         }
@@ -57,40 +79,56 @@ class HealthCheckService
         return self::OK;
     }
 
-    public function getMemoryStatus(int $megabytesFree): string
+    public function getMemoryStatus(string $rawData): string
     {
-        return $megabytesFree > 256 ? self::OK : self::WARNING;
+        try {
+            $memoryFreeMibs = Parse::tInt($rawData);
+
+            return $memoryFreeMibs > self::MEMORY_FREE_MIN_MIBS ? self::OK : self::WARNING;
+        } catch (ParseException $e) {
+            return self::WARNING;
+        }
     }
 
-    public function getLoadStatus(int $load1m, int $load5m, int $load15m): string
+    public function getLoadStatus(string $cpuCountRawData, string $procLoadAvgRawData): string
     {
-        return self::OK; // FIXME
+        try {
+            $cpuCount = Parse::tFloat($cpuCountRawData);
+            $loads = explode(' ', trim($procLoadAvgRawData));
+
+            if (3 != count($loads)) {
+                return self::WARNING;
+            }
+
+            $load1m = Parse::tFloat($loads[0]) / $cpuCount;
+            $load5m = Parse::tFloat($loads[1]) / $cpuCount;
+            $load15m = Parse::tFloat($loads[2]) / $cpuCount;
+        } catch (ParseException $e) {
+            return self::WARNING;
+        }
+
+        return $load1m < self::LOAD_1M_MAX && $load5m < self::LOAD_5M_MAX && $load15m < self::LOAD_15M_MAX
+            ? self::OK
+            : self::WARNING;
     }
 
-    /**
-     * @return array[] [ [ kilobytesFree, percentUsed ], ... ]
-     */
-    private function readDisksData(): array
+    private function getCpuCountRawOutput(): string
     {
-        $rawData = `df | awk '/^\/dev\// { print $4 "\t" $5 }'`;
-
-        return array_map(function (string $disk): array {
-            list($kilobytesFree, $percentUsed) = explode("\t", $disk);
-
-            return [(int) $kilobytesFree, (int) rtrim($percentUsed, '%')];
-        }, explode("\n", trim($rawData)));
+        return `lscpu | awk '/^CPU\(s\):/ { print $2 }'`;
     }
 
-    private function readMemoryData(): int
+    private static function getProcLoadAvgRawOutput()
     {
-        return 512; // FIXME
+        return file_get_contents('/proc/loadavg');
     }
 
-    /**
-     * @return int[]
-     */
-    private function readLoadData(): array
+    private static function getDfRawOutput()
     {
-        return [0, 0, 0]; // FIXME
+        return `df --block-size=1M | awk '/^\/dev\// { print $4 "\t" $5 }'`;
+    }
+
+    private static function getFreeRawOutput()
+    {
+        return `free -m | awk '/^Mem:/ { print $7 }'`;
     }
 }
