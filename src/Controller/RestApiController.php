@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
-use App\Utils\DateTimeUtils;
+use App\Service\HealthCheckService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,16 +28,12 @@ class RestApiController extends AbstractController
     /**
      * @Route("/health", name="health")
      *
-     * @param ArtisanCommissionsStatusRepository $acsr
+     * @param HealthCheckService $healthCheckService
      *
      * @return JsonResponse
      */
-    public function healthcheck(ArtisanCommissionsStatusRepository $acsr): Response
+    public function healthcheck(HealthCheckService $healthCheckService): Response
     {
-        return new JsonResponse([
-            'status'        => 'OK',
-            'lastCstRunUtc' => $acsr->getLastCstUpdateTimeAsString(),
-            'serverTimeUtc' => DateTimeUtils::getNowUtc()->format('Y-m-d H:i:s'),
-        ]);
+        return new JsonResponse($healthCheckService->getStatus());
     }
 }
