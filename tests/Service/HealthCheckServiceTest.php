@@ -6,10 +6,34 @@ namespace App\Tests\Service;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\HealthCheckService;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class HealthCheckServiceTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
+    public function testCstStatus(): void
+    {
+        $acsrMock = $this->createMock(ArtisanCommissionsStatusRepository::class);
+        $acsrMock
+            ->expects(self::exactly(2))
+            ->method('getLastCstUpdateTime')
+            ->willReturn(
+                new DateTime('-12:10h', new DateTimeZone('UTC')),
+                new DateTime('-12:20h', new DateTimeZone('UTC')))
+        ;
+
+        /* @noinspection PhpParamsInspection */
+        $hcSrv = new HealthCheckService($acsrMock);
+
+        static::assertEquals('OK', $hcSrv->getStatus()['cstStatus']);
+        static::assertEquals('WARNING', $hcSrv->getStatus()['cstStatus']);
+    }
+
     /**
      * @dataProvider getDiskStatusDataProvider
      *

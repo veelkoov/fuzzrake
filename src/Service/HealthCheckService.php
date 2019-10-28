@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Parse;
 use App\Utils\ParseException;
+use Doctrine\ORM\NonUniqueResultException;
 
 class HealthCheckService // TODO: Move hardcoded values to parameters/.env
 {
@@ -35,12 +37,24 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
     {
         return [
             'status'        => self::OK,
+            'cstStatus'     => $this->getCstStatus(),
             'lastCstRunUtc' => $this->getLastCstRunUtc(),
             'serverTimeUtc' => $this->getServerTimeUtc(),
             'disk'          => $this->getDiskStatus(HealthCheckService::getDfRawOutput()),
             'memory'        => $this->getMemoryStatus(HealthCheckService::getFreeRawOutput()),
             'load'          => $this->getLoadStatus($this->getCpuCountRawOutput(), HealthCheckService::getProcLoadAvgRawOutput()),
         ];
+    }
+
+    private function getCstStatus(): string
+    {
+        try {
+            return $this->artisanCommissionsStatusRepository->getLastCstUpdateTime() < DateTimeUtils::getUtcAt('-12:15')
+                ? self::OK
+                : self::WARNING;
+        } catch (DateTimeException | NonUniqueResultException $e) {
+            return self::WARNING;
+        }
     }
 
     private function getLastCstRunUtc(): string
