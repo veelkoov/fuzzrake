@@ -130,6 +130,7 @@ class DataFixer
         $originalArtisan = clone $artisan;
 
         $artisan->setName($this->fixString($artisan->getName()));
+        $artisan->setFormerMakerIds($this->fixList($artisan->getFormerMakerIds(), false));
         $artisan->setSince($this->fixSince($artisan->getSince()));
         $artisan->setSpeciesDoes($this->fixString($artisan->getSpeciesDoes()));
         $artisan->setSpeciesDoesnt($this->fixString($artisan->getSpeciesDoesnt()));
