@@ -381,7 +381,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1340 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1345 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -709,10 +709,13 @@ INSERT INTO events VALUES (1332, '2019-10-25 06:02:27', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1333, '2019-10-25 06:02:28', '', 'CS_UPDTD_DETLS', NULL, 0,'Onix Angel Creations', 'https://www.onixangelcreations.com/', '', '[\"spacer\\\"></div> </td> </tr> </tbody> </table> </div></div></div> <h2 class=\\\"wsite-content-title\\\">all \",\"commissions currently closed\",\" until further notice.</h2> <div class=\\\"wsite-spacer\\\"></div> <div><div class=\\\"wsite-multicol\\\"><div c\"]');
 INSERT INTO events VALUES (1334, '2019-10-25 06:02:28', '', 'CS_UPDTD_DETLS', NULL, 0,'Spud Studios', 'https://spudstudios.net/commissions/', '', '[\"\\\"og:url\\\" content=\\\"https://spudstudios.net/commissions/\\\" /> <meta property=\\\"og:description\\\" content=\\\"\",\"commission status: closed\",\" quotes prices terms of service we offer custom projects like fursuits and other parts. if you are r\"]');
 INSERT INTO events VALUES (1335, '2019-10-25 18:02:21', '', 'CS_UPDTD_DETLS', 1, NULL, 'Silvena Handmade', 'http://silvenahandmade.com/', '', '');
-INSERT INTO events VALUES (1336, '2019-10-27 18:02:24', '', 'CS_UPDTD_DETLS', 0, NULL, 'Schneepardi Creations', 'https://www.schneepardicreations.com/?lang=en', '', '');
 INSERT INTO events VALUES (1337, '2019-10-27 22:41:52', '', 'CS_UPDTD_DETLS', NULL, 1,'Silvena Handmade', 'http://silvenahandmade.com/', '[\"lass=\\\"entry-header\\\"> <h1 class=\\\"entry-title\\\">about</h1> </header><> <div class=\\\"entry-content\\\"> <h1>\",\"commissions open\",\".</h1> <h1>slots from january to june 2020.</h1> <p> </p> <p>i run a small studio &#8211; STUDIO_NAM\"]', '');
-INSERT INTO events VALUES (1338, '2019-10-27 22:41:53', '', 'CS_UPDTD_DETLS', NULL, 0,'Schneepardi Creations', 'https://www.schneepardicreations.com/?lang=en', '', '[\"e_name\\\" content=\\\"STUDIO_NAME - fursuits made in germany\\\"/> <meta property=\\\"og:description\\\" content=\\\"\",\"we are currently closed for commissions\",\"! the inquiry form for orders with start and completion of work in 2020, goes online on 11.11.2019! \"]');
 INSERT INTO events VALUES (1339, '2019-10-27 22:41:54', '', 'CS_UPDTD_DETLS', NULL, 1,'Nyyote', 'https://twitter.com/nyyote', '[\"d-bio u-dir\\\" dir=\\\"ltr\\\">fursuit maker since 2012. interested in making different and unique species. \",\"currently open for commissions\",\". pm for a quote fursuit help discord linked below</p> <div class=\\\"profileheadercard-location \\\"> htt\"]', '');
+INSERT INTO events VALUES (1340, '2019-10-27 22:53:50', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/c5be45e63500b2b351dc1cc25696ba34428bb51f\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1341, '2019-10-28 06:02:19', '', 'CS_UPDTD_DETLS', 1, NULL, 'Silvena Handmade', 'http://silvenahandmade.com/', '', '');
+INSERT INTO events VALUES (1342, '2019-10-28 06:02:22', '', 'CS_UPDTD_DETLS', 0, NULL, 'Schneepardi Creations', 'https://www.schneepardicreations.com/?lang=en', '', '');
+INSERT INTO events VALUES (1343, '2019-10-29 06:02:11', '', 'CS_UPDTD_DETLS', 0, NULL, 'Alligators Always', 'https://twitter.com/AlligatorsAlway', '', '');
+INSERT INTO events VALUES (1344, '2019-10-29 18:02:29', '', 'CS_UPDTD_DETLS', 1, 0,'ByCats4Cats', 'http://bycats4cats.com/quote/', '', '[\"ent\\\" role=\\\"main\\\"> <header class=\\\"entry-header\\\"> </header><> <div class=\\\"entry-content\\\"> <p><centre> \",\"currently i am not accepting new quotes\",\" as my queue is full through may 2020. i will be re-opening again in february 2020 to fill spots for\"]');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
