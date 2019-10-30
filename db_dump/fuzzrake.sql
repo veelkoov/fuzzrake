@@ -378,7 +378,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1346 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1348 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -714,6 +714,8 @@ INSERT INTO events VALUES (1342, '2019-10-28 06:02:22', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO events VALUES (1343, '2019-10-29 06:02:11', '', 'CS_UPDTD_DETLS', 0, NULL, 'Alligators Always', 'https://twitter.com/AlligatorsAlway', '', '');
 INSERT INTO events VALUES (1344, '2019-10-29 18:02:29', '', 'CS_UPDTD_DETLS', 1, 0,'ByCats4Cats', 'http://bycats4cats.com/quote/', '', '[\"ent\\\" role=\\\"main\\\"> <header class=\\\"entry-header\\\"> </header><> <div class=\\\"entry-content\\\"> <p><centre> \",\"currently i am not accepting new quotes\",\" as my queue is full through may 2020. i will be re-opening again in february 2020 to fill spots for\"]');
 INSERT INTO events VALUES (1345, '2019-10-29 21:11:40', '- Identified and removed 3 duplicate maker entries (<a href=\"https://github.com/veelkoov/fuzzrake/commit/b8c53beeb9231da2968c62a6883831e55e1f2cd3\" target=\"_blank\">git</a>, <a href=\"https://twitter.com/veelkoov/status/1189289302569771009\" target=\"_blank\">Twitter</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1346, '2019-10-29 22:06:12', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/254a92f132134797de02768a5c5ab2b247727593\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1347, '2019-10-30 06:02:20', '', 'CS_UPDTD_DETLS', 0, 1,'CCS Mascots', 'http://ccsmascots.com/commission-pricing-2/', '[\"<div class=\\\"entry-meta\\\"></div><> </header><> <div class=\\\"entry-content\\\"> <h1>quotes: open </h1> <h1>\",\"commissions: open\",\" </h1> <h1></h1> <h1> toony foam head</h1> <h2>starting at $1000</h2> <h3>built and carved with foam\"]', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
