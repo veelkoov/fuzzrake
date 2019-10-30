@@ -39,7 +39,7 @@ CREATE TABLE artisans (
   contact_method varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   contact_info_obfuscated varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=346 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=347 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans VALUES (1, '', 'M000001', 'Silvena Handmade', '', '', '', 'PL', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -363,6 +363,7 @@ INSERT INTO artisans VALUES (341, 'NYYOTE0', '', 'Nyyote', '', 'I am a fursuit m
 INSERT INTO artisans VALUES (342, 'TTHYHND', '', 'ToothyHounds Workshop', 'Hellhound Studios', 'A maker based in San Diego, CA!', '2018-09', 'US', 'California', 'San Diego', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kemono\nSemi Realistic\nSemi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Collars\nBandanas', 'Adjustable/wiggle ears\nAttached tail\nElectronics/animatronics\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nLED eyes\nMovable jaw\nOutdoor feet\nRemovable blush\nRemovable eyelids\nWashable heads', '', '45% with down payment to reserve a spot and order some materials. Payments of $50 is required to begin work when all materials arrive.', 'I will do just about any species!', 'Primagens and protogens.', 'English\nSpanish (limited)', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: tooth**********kshop@ou*******om');
 INSERT INTO artisans VALUES (343, 'MXNCHES', '', 'maxyncheese', '', 'Hiya! I\'m maxyncheese, and my passion is bringing your character to life! Maxyncheese offers affordable fursuits and payment plans, customized to our customers needs :) I include lots of work in progress pictures and videos, as well as quick responses!', '2019-07', 'US', '', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Anime\nToony', 'Not currently, but I\'d love to experiment with different body types!', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Props\nArt / badges\nAccessories', 'Adjustable/wiggle ears\nAttached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet\nRemovable eyelids\nRemovable horns/antlers', '', 'I prefer everything up front, but I am very flexible with payment plans! I require %30 upfront for items of $130 or more', 'Basically anything! Except what\'s stated below', 'Elephants, birds, rhinos, lizards', 'English\nSpanish (limited)', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: ma*******se@gm*****om');
 INSERT INTO artisans VALUES (345, 'MEEPSMM', '', 'Meep\'s Marvelous Monstrosities', '', 'Meep\'s Marvelous Monstrosities is a small UK maker, based in North Wales who loves bringing people\'s characters to life, and only uses templates and bases created entirely by them. Meep does both fursuit and art commissions so feel free to inquire about either! Meep\'s Marvelous Monstrosites is happy to try different options on fursuits and has multiple different styles to choose from and is happy to work with those on a smaller budget and offers payment plans on everything.', '2015-04', 'GB', '', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Semi Realistic\nSemi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Props\nPlushies\nWings\nHoodies\nJust ask', 'Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet\nRemovable eyelids', 'Magnetic wings\nDigi feetpaws\nDrybrushing\nAsk about anything wanted and see my website', '30% upfront for fullsuits, 40% upfront for partials and 50% upfront for parts, each £100 minimum per month, or more depending on the total cost quoted.', 'Canines, felines, mustelids, rodents, reptilian, avian, ungulates, equines, any mythical or unique species', '', 'English', 'Original country: Wales', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: squ*******ton@gm*****om');
+INSERT INTO artisans VALUES (346, 'PWMDDEN', '', 'Paw Made Design', '', '', '2019-06', 'SE', '', 'Vellinge', 'Premades\nStandard commissions', 'Anime\nKemono\nSemi Toony\nToony', '', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers', '', 'None, 100% upfront', 'Almost everything', 'Hoofed animals, sergals', 'English\nSwedish', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: paw*******ign@ho*******om');
 DROP TABLE IF EXISTS events;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -741,7 +742,7 @@ CREATE TABLE artisans_urls (
   PRIMARY KEY (`id`),
   KEY IDX_45AAF3BC5ED3C7B7 (artisan_id),
   CONSTRAINT FK_45AAF3BC5ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8994 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans_urls VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
@@ -2333,6 +2334,11 @@ INSERT INTO artisans_urls VALUES (5120,239,'URL_FACEBOOK', 'https://www.facebook
 INSERT INTO artisans_urls VALUES (5122,239,'URL_INSTAGRAM', 'https://www.instagram.com/furoar.suits/');
 INSERT INTO artisans_urls VALUES (5138,341,'URL_CST', 'https://twitter.com/nyyote');
 INSERT INTO artisans_urls VALUES (8879,317,'URL_INSTAGRAM', 'https://www.instagram.com/llm_costumes_/');
+INSERT INTO artisans_urls VALUES (9033,346,'URL_WEBSITE', 'https://pawmadedesign.weebly.com/');
+INSERT INTO artisans_urls VALUES (9034,346,'URL_PRICES', 'https://pawmadedesign.weebly.com/prices.html');
+INSERT INTO artisans_urls VALUES (9041,346,'URL_INSTAGRAM', 'https://www.instagram.com/pawmadedesign/');
+INSERT INTO artisans_urls VALUES (9043,346,'URL_QUEUE', 'https://trello.com/pawmadedesign');
+INSERT INTO artisans_urls VALUES (9047,346,'URL_CST', 'https://pawmadedesign.weebly.com/prices.html');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
