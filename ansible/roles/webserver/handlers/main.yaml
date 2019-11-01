@@ -1,3 +1,15 @@
 ---
 - name: restart apache
   shell: apachectl configtest && apachectl graceful
+
+- name: clear cache
+  shell: rm -rf var/cache/*
+  args:
+    chdir: "{{ deployment_path }}"
+    warn: no
+  become: yes
+
+- name: yarn encore production
+  shell: yarn encore production
+  args:
+    chdir: "{{ deployment_path }}"
