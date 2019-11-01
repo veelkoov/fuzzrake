@@ -5,7 +5,6 @@
     force: yes
     repo: https://github.com/veelkoov/fuzzrake.git
     version: "{{ branch }}"
-
-#- name: composer install
-#  shell:
-#- name: yarn install
+  notify:
+    - clear cache
+    - yarn encore production
