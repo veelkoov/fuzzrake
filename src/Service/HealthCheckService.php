@@ -71,6 +71,10 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
     {
         $disks = explode("\n", trim($rawData));
 
+        if (empty($disks)) {
+            return self::WARNING;
+        }
+
         foreach ($disks as $disk) {
             $disk = explode("\t", $disk);
 
@@ -128,21 +132,21 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
 
     private function getCpuCountRawOutput(): string
     {
-        return `lscpu | awk '/^CPU\(s\):/ { print $2 }'`;
+        return `lscpu 2>&1 | awk '/^CPU\(s\):/ { print $2 }' 2>&1` ?? '';
     }
 
-    private static function getProcLoadAvgRawOutput()
+    private static function getProcLoadAvgRawOutput(): string
     {
-        return `awk '{ print $1 "\t" $2 "\t" $3}' < /proc/loadavg`;
+        return `awk '{ print $1 "\t" $2 "\t" $3}' 2>&1 < /proc/loadavg` ?? '';
     }
 
-    private static function getDfRawOutput()
+    private static function getDfRawOutput(): string
     {
-        return `df --block-size=1M | awk '/^\/dev\// { print $4 "\t" $5 }'`;
+        return `df --block-size=1M 2>&1 | awk '/^\/dev\// { print $4 "\t" $5 }' 2>&1` ?? '';
     }
 
-    private static function getFreeRawOutput()
+    private static function getFreeRawOutput(): string
     {
-        return `free -m | awk '/^Mem:/ { print $7 }'`;
+        return `free -m 2>&1 | awk '/^Mem:/ { print $7 }' 2>&1` ?? '';
     }
 }
