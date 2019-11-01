@@ -4,9 +4,3 @@
   become: yes
   roles:
     - { name: "webserver", mode: "setup_system" }
-
-- hosts: beta
-  become: yes
-  roles:
-    - { name: "webserver", mode: "update_sources" }
-    - { name: "webserver", mode: "php-fpm-docker" }

@@ -6,7 +6,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sh /tmp/symfony_installer \
     && rm /tmp/symfony_installer
 
-RUN apk update && apk add icu-dev git
+RUN apk update && apk add icu-dev git util-linux
 
 RUN docker-php-ext-install -j$(nproc) pdo_mysql intl opcache
 
