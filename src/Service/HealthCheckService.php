@@ -142,7 +142,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
 
     private static function getDfRawOutput(): string
     {
-        return `df --block-size=1M 2>&1 | awk '/^\/dev\// { print $4 "\t" $5 }' 2>&1` ?? '';
+        return `df -B 1M 2>&1 | awk '/^\/dev\// { print $4 "\t" $5 }' 2>&1` ?? '';
     }
 
     private static function getFreeRawOutput(): string
