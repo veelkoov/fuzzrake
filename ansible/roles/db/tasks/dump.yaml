@@ -27,3 +27,4 @@
     responses:
       password: "{{ db_params.password }}"
   check_mode: no # We assume the result file is non-committed temporary
+  changed_when: false
