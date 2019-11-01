@@ -11,7 +11,6 @@
 
 - name: setup PHP-FPM Docker container
   docker_container:
-    env_file: "{{ deployment_path }}/.env.local"
     image: "{{ php_fpm_docker_image_name }}"
     name: "{{ php_fpm_container_name }}"
     published_ports: "{{ php_fpm_container_port }}:9000"

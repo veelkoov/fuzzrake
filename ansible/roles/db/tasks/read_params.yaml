@@ -1,5 +1,6 @@
 ---
-- shell: sed -rn 's/^DATABASE_URL=mysql:\/\/([^:]+):([^@]+)@([^:]+):([^\/]+)\/(.+)/\1\t\2\t\3\t\4\t\5/p' {{ deployment_path }}/.env.local
+- name: read connection URL from the ENV file
+  shell: sed -rn 's/^DATABASE_URL=mysql:\/\/([^:]+):([^@]+)@([^:]+):([^\/]+)\/([^?]+).*/\1\t\2\t\3\t\4\t\5/p' {{ deployment_path }}/.env.local
   register: db_params_out
   check_mode: no
   changed_when: false
@@ -7,10 +8,12 @@
     warn: no
   no_log: yes
 
-- set_fact: db_params_split={{ db_params_out.stdout.split('\t') }}
+- name: split DB connection URL var
+  set_fact: db_params_split={{ db_params_out.stdout.split('\t') }}
   no_log: yes
 
-- set_fact:
+- name: set separate DB connection vars
+  set_fact:
     db_params:
       user: "{{ db_params_split[0] }}"
       password: "{{ db_params_split[1] }}"
