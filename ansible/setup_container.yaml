@@ -1,0 +1,5 @@
+#!ansible/run.sh
+---
+- hosts: localhost
+  roles:
+    - { name: "webserver", action: "php-fpm-docker" }

@@ -1,0 +1,21 @@
+---
+- name: build PHP-FPM Docker image
+  docker_image:
+    build:
+      path: "{{ deployment_path }}/docker/php-fpm"
+      pull: yes
+    force_source: yes
+    name: "{{ php_fpm_docker_image_name }}"
+    source: build
+    state: present
+
+- name: setup PHP-FPM Docker container
+  docker_container:
+    env_file: "{{ deployment_path }}/.env.local"
+    image: "{{ php_fpm_docker_image_name }}"
+    name: "{{ php_fpm_container_name }}"
+    published_ports: "{{ php_fpm_container_port }}:9000"
+    restart_policy: unless-stopped
+    volumes:
+      - "{{ deployment_path }}:/var/www/html"
+      - "{{ mariadb_socket_path }}:/var/run/mysql.sock"
