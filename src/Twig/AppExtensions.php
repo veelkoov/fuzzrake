@@ -19,8 +19,6 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    const MONTHS = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
     /**
      * @var ArtisanCommissionsStatusRepository
      */
@@ -102,26 +100,6 @@ class AppExtensions extends AbstractExtension
         } else {
             return $primaryList;
         }
-    }
-
-    /**
-     * @param string $input
-     *
-     * @return string
-     *
-     * @throws TplDataException
-     */
-    public function sinceFilter(string $input): string
-    {
-        if ('' === $input) {
-            return '';
-        }
-
-        if (!Regexp::match('#^(?<year>\d{4})-(?<month>\d{2})$#', $input, $matches)) {
-            throw new TplDataException("Invalid 'since' data: '$input''");
-        }
-
-        return self::MONTHS[(int) $matches['month']].' '.$matches['year'];
     }
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
