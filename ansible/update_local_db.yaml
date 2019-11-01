@@ -1,14 +1,25 @@
 #!ansible/run.sh
 ---
-- hosts: localhost, getfursu.it
-  roles:
-    - { name: "db", action: "read_params" }
+- hosts: prod, dev
+  tasks:
+    - import_role:
+        name: db
+        tasks_from: read_params
 
-    - { name: "db", action: "dump",
-        when: 'inventory_hostname == "getfursu.it"' }
+    - set_fact:
+        local_db_dump_file_path: "{{ hostvars[groups['dev'][0]]['db_dump_file_path'] }}"
 
-    - { name: "db", action: "fetch_dump", local_db_dump_file_path: "{{ hostvars['localhost']['db_dump_file_path'] }}",
-        when: 'inventory_hostname == "getfursu.it"' }
+    - import_role:
+        name: db
+        tasks_from: dump
+      when: "'prod' in group_names"
 
-    - { name: "db", action: "replace",
-        when: 'inventory_hostname == "localhost"' }
+    - import_role:
+        name: db
+        tasks_from: fetch_dump
+      when: "'prod' in group_names"
+
+    - import_role:
+        name: db
+        tasks_from: replace
+      when: "'dev' in group_names"

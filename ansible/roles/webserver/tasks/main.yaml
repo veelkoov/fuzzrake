@@ -1,2 +1,2 @@
 ---
-- include_tasks: "{{ action }}.yaml"
+- include_tasks: "{{ mode }}.yaml"

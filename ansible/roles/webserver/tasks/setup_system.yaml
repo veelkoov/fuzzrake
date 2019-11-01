@@ -1,22 +1,40 @@
 ---
-- name: "install packages"
+- name: remove packages
   yum:
-    list: mod_http2 php72w-fpm mod_fcgid
-  notify:
-    - restart apache
-
-- name: "remove packages"
-  yum:
-    list: mod_php72w
+    list: mod_php72w python36-docker docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
     state: absent
   notify:
     - restart apache
+
+- name: install packages
+  yum:
+    list: mod_http2 php72w-fpm mod_fcgid yum-utils
+    state: installed
+  notify:
+    - restart apache
+
+- name: install Docker
+  shell: amazon-linux-extras install docker -y
+  args:
+    creates: /usr/bin/dockerd
+
+- name: start docker
+  service:
+    enabled: yes
+    name: docker
+    state: started
 
 - name: "update httpd.conf"
   template:
     src: httpd.j2.conf
     dest: /etc/httpd/conf/httpd.conf
-    backup: yes
+  notify:
+    - restart apache
+
+- name: "update getfursu.it.conf"
+  template:
+    src: httpd_conf.d_getfursu.it.j2.conf
+    dest: /etc/httpd/conf.d/getfursu.it.conf
   notify:
     - restart apache
 
@@ -24,7 +42,6 @@
   template:
     src: httpd-le-ssl.j2.conf
     dest: /etc/httpd/conf/httpd-le-ssl.conf
-    backup: yes
   notify:
     - restart apache
 
@@ -32,7 +49,6 @@
   template:
     src: 00-mpm.j2.conf
     dest: /etc/httpd/conf.modules.d/00-mpm.conf
-    backup: yes
   notify:
     - restart apache
 
@@ -40,7 +56,6 @@
   template:
     src: 00-brotli.j2.conf
     dest: /etc/httpd/conf.modules.d/00-brotli.conf
-    backup: yes
   notify:
     - restart apache
 
