@@ -1,14 +1,14 @@
 ---
 - name: remove packages
   yum:
-    list: mod_php72w python36-docker docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+    list: php72w-xml php72w-mysql php72w-fpm mod_php72w php72w-common php72w-intl php72w-gd php72w-pdo php72w-mbstring php72w-cli webtatic-release-7-3
     state: absent
   notify:
     - restart apache
 
 - name: install packages
   yum:
-    list: mod_http2 php72w-fpm mod_fcgid yum-utils
+    list: mod_http2 mod_fcgid yum-utils
     state: installed
   notify:
     - restart apache
