@@ -1,7 +1,8 @@
 <div class="modal-header">
     <h5 class="modal-title">
         (( #artisan.makerId ))
-            <a id="makerId" href="#((artisan.makerId))"><i class="fas fa-link"></i> (( artisan.makerId ))</a>
+            {# Grep code for WORKAROUND_PLACEHOLDERS_CREATINT_FAKE_404S: data-href ---> href #}
+            <a id="makerId" href="#" data-href="#((artisan.makerId))"><i class="fas fa-link"></i> (( artisan.makerId ))</a>
         (( /artisan.makerId ))
 
         <span id="artisanName">(( artisan.name ))</span>(( #artisan.country ))&nbsp;<span class="flag-icon flag-icon-(( artisan.lcCountry ))"></span>(( /artisan.country ))
@@ -83,37 +84,37 @@
         </p>
         <div id="artisanLinks">
             (( #artisan.fursuitReviewUrl ))
-                <a class="btn btn-light m-1" href="((artisan.fursuitReviewUrl))" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.fursuitReviewUrl))" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
             (( /artisan.fursuitReviewUrl ))
             (( #artisan.websiteUrl ))
-                <a class="btn btn-light m-1" href="((artisan.websiteUrl))" target="_blank"><i class="fas fa-link"></i> Official website</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.websiteUrl))" target="_blank"><i class="fas fa-link"></i> Official website</a>
             (( /artisan.websiteUrl ))
             (( #artisan.pricesUrl ))
-                <a class="btn btn-light m-1" href="((artisan.pricesUrl))" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.pricesUrl))" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
             (( /artisan.pricesUrl ))
             (( #artisan.faqUrl ))
-                <a class="btn btn-light m-1" href="((artisan.faqUrl))" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.faqUrl))" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             (( /artisan.faqUrl ))
             (( #artisan.queueUrl ))
-                <a class="btn btn-light m-1" href="((artisan.queueUrl))" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.queueUrl))" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
             (( /artisan.queueUrl ))
             (( #artisan.furAffinityUrl ))
-                <a class="btn btn-light m-1" href="((artisan.furAffinityUrl))" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.furAffinityUrl))" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
             (( /artisan.furAffinityUrl ))
             (( #artisan.deviantArtUrl ))
-                <a class="btn btn-light m-1" href="((artisan.deviantArtUrl))" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.deviantArtUrl))" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
             (( /artisan.deviantArtUrl ))
             (( #artisan.twitterUrl ))
-                <a class="btn btn-light m-1" href="((artisan.twitterUrl))" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.twitterUrl))" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
             (( /artisan.twitterUrl ))
             (( #artisan.facebookUrl ))
-                <a class="btn btn-light m-1" href="((artisan.facebookUrl))" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.facebookUrl))" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
             (( /artisan.facebookUrl ))
             (( #artisan.tumblrUrl ))
-                <a class="btn btn-light m-1" href="((artisan.tumblrUrl))" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.tumblrUrl))" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
             (( /artisan.tumblrUrl ))
             (( #artisan.instagramUrl ))
-                <a class="btn btn-light m-1" href="((artisan.instagramUrl))" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a class="btn btn-light m-1" href="#" data-href="((artisan.instagramUrl))" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
             (( /artisan.instagramUrl ))
         </div>
     </div>
@@ -131,7 +132,7 @@
                         Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
 
                         Status is tracked and updated automatically from this web page:
-                        <a href="((artisan.cstUrl))" target="_blank">(( artisan.cstUrl ))</a>.
+                        <a href="#" data-href="((artisan.cstUrl))" target="_blank">(( artisan.cstUrl ))</a>.
 
                         Last time checked on (( artisan.cstLastCheck )) UTC.
                     (( /artisan.commissionsStatusKnown ))
@@ -139,7 +140,7 @@
                         Commissions status is <strong>(( artisan.commissionsStatusText ))</strong>.
 
                         It should be tracked and updated automatically from this web page:
-                        <a href="((artisan.cstUrl))" target="_blank">(( artisan.cstUrl ))</a>, however the software
+                        <a href="#" data-href="((artisan.cstUrl))" target="_blank">(( artisan.cstUrl ))</a>, however the software
                         failed to "understand" the status based on the page contents.
 
                         Last time it tried on (( artisan.cstLastCheck )) UTC.

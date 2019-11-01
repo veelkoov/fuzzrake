@@ -58,6 +58,11 @@ function updateDetailsModalWithArtisanData(artisan: Artisan): void {
 
 export function init(): void {
     $artisanDetailsModal = $('#artisanDetailsModal');
+    $artisanDetailsModal.find('a[data-href]').each((index: number, element: HTMLElement) => {
+        /* Grep code for WORKAROUND_PLACEHOLDERS_CREATINT_FAKE_404S: data-href ---> href */
+        element.setAttribute('href', element.getAttribute('data-href'));
+        element.removeAttribute('data-href');
+    });
     artisanDetailsModalTpl = $artisanDetailsModal.html();
     Mustache.parse(artisanDetailsModalTpl);
 
