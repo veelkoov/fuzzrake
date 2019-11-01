@@ -176,7 +176,7 @@ class HealthCheckServiceTest extends TestCase
                 END,
             ],
             ['WARNING', "\n"],
-            ['WARNING', "some error"],
+            ['WARNING', 'some error'],
         ];
     }
 
@@ -199,8 +199,8 @@ class HealthCheckServiceTest extends TestCase
                 
                 END,
             ],
-            ['WARNING', "\n",],
-            ['WARNING', '512 e',],
+            ['WARNING', "\n"],
+            ['WARNING', '512 e'],
         ];
     }
 
@@ -222,9 +222,9 @@ class HealthCheckServiceTest extends TestCase
             ['WARNING', ' 1 ', " 1\t1\t1\te "],
             ['WARNING', ' 1 ', " 1\t1\t1. "],
             ['WARNING', ' 1 ', "\n"],
-            ['WARNING', ' 1 ', "some error"],
+            ['WARNING', ' 1 ', 'some error'],
             ['WARNING', "\n", " 0.1\t0.1\t0.1 "],
-            ['WARNING', "some error", " 0.1\t0.1\t0.1 "],
+            ['WARNING', 'some error', " 0.1\t0.1\t0.1 "],
         ];
     }
 
