@@ -54,6 +54,7 @@ class DataFixer
         'Eyes, noses, claws'                                          => "Eyes\nNoses\nClaws",
         'Resin and silicone parts'                                    => "Resin parts\nSilicone parts",
         'Sleeves \(legs and arms\)'                                   => "Arm sleeves\nLeg sleeves",
+        'Legsleeves'                                                  => 'Leg sleeves',
         'Fursuit Props'                                               => 'Fursuit props',
         'Fursuit Props and Accessories, Fursuit supplies'             => "Fursuit props\nFursuit accessories\nFursuit supplies",
         'Fleece Props, Other accessories'                             => "Fleece props\nOther accessories",
@@ -72,8 +73,11 @@ class DataFixer
         'Body padding/plush suits'                                    => "Body padding\nPlush suits",
         'Dry brushing'                                                => 'Drybrushing',
         'Bendable wings and tails'                                    => "Bendable wings\nBendable tails",
+        'Poseable tongues'                                            => 'Poseable tongue',
+        'Accessories/jewelry'                                         => "Accessories\nJewelry",
+        'Bandannas'                                                   => 'Bandanas',
 
-        'QQQQQ'                                                       => 'QQQQQ',
+        'QQQQQ'       => 'QQQQQ',
     ];
 
     const COUNTRIES_REPLACEMENTS = [
