@@ -152,12 +152,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $contactInfoObfuscated = '';
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", inversedBy="artisan", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $commissionsStatus;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", inversedBy="artisan", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $privateData;
 

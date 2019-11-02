@@ -24,7 +24,7 @@ class ArtisanCommissionsStatus
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", mappedBy="commissionsStatus")
+     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="commissionsStatus")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
     private $artisan;
