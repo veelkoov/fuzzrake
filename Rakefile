@@ -1,3 +1,7 @@
+def console(*args) # FIXME: container name hardcoded
+  system('docker', 'exec', '-ti', 'fuzzrake', 'bin/console', *args)
+end
+
 task :default do
   system('rake', '--tasks', '--all')
 end
@@ -36,15 +40,15 @@ task 'get-snapshots' do
 end
 
 task 'import' do
-  system('bin/console', 'app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt')
+  console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt')
 end
 
 task 'importf' do
-  system('bin/console', 'app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--fix-mode')
+  console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--fix-mode')
 end
 
 task 'importc' do
-  system('bin/console', 'app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--commit')
+  console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--commit')
 end
 
 task :qa => ['php-cs-fixer', :phpunit]
