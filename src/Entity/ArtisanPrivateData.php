@@ -21,7 +21,7 @@ class ArtisanPrivateData
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", mappedBy="privateData", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $artisan;
