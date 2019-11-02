@@ -169,7 +169,7 @@ class ArtisanRepository extends ServiceEntityRepository
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
-                if ($item = trim($item)) {
+                if (($item = trim($item))) {
                     $result->addOrIncItem($item);
                 }
             }
