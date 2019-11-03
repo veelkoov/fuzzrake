@@ -52,6 +52,7 @@ class Fields
     public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
     public const INTRO = 'INTRO';
     public const NOTES = 'NOTES';
+    public const INACTIVE_REASON = 'INACTIVE_REASON';
     public const PASSCODE = 'PASSCODE';
     public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
     public const CST_LAST_CHECK = 'CST_LAST_CHECK';
@@ -108,6 +109,7 @@ class Fields
         self::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
         self::LANGUAGES                  => ['languages',                VR::ANYTHING,                  1, 1, 1, 1],
         self::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
+        self::INACTIVE_REASON            => ['inactiveReason',           VR::ANYTHING,                  0, 1, 1, 1],
         self::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         self::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
         self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
