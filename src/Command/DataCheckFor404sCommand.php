@@ -94,7 +94,10 @@ class DataCheckFor404sCommand extends Command
             }
 
             if ($error) {
-                $io->writeln($url->getArtisan()->getLastMakerId().':'.$url->getType().': '.$error);
+                $artisan = $url->getArtisan();
+                $contact = trim($artisan->getContactAllowed().' '.$artisan->getContactMethod().' '
+                    .$artisan->getContactAddressPlain());
+                $io->writeln($artisan->getLastMakerId().':'.$contact.':'.$url->getType().': '.$error);
             }
         }
     }
