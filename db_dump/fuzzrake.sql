@@ -970,13 +970,11 @@ INSERT INTO artisans_urls VALUES (219,53,'URL_WEBSITE', 'https://www.thefuzzfact
 INSERT INTO artisans_urls VALUES (220,53,'URL_TWITTER', 'https://twitter.com/thefuzzfactory');
 INSERT INTO artisans_urls VALUES (221,54,'URL_WEBSITE', 'http://gtdstudio.wixsite.com/gtdstudio');
 INSERT INTO artisans_urls VALUES (222,54,'URL_FACEBOOK', 'https://www.facebook.com/Grinning-Tiger-Disorder-851857961520502/');
-INSERT INTO artisans_urls VALUES (223,55,'URL_WEBSITE', 'https://www.happytailscostumes.com/');
-INSERT INTO artisans_urls VALUES (224,55,'URL_PRICES', 'https://www.happytailscostumes.com/contact');
 INSERT INTO artisans_urls VALUES (225,55,'URL_TWITTER', 'https://twitter.com/Happytailstweet');
 INSERT INTO artisans_urls VALUES (226,55,'URL_FACEBOOK', 'https://www.facebook.com/HappyTailsCostumes/');
 INSERT INTO artisans_urls VALUES (227,55,'URL_INSTAGRAM', 'https://www.instagram.com/happytailscostumes/');
 INSERT INTO artisans_urls VALUES (228,55,'URL_QUEUE', 'https://trello.com/b/ZqYxHsY8/happytails-costumes');
-INSERT INTO artisans_urls VALUES (229,55,'URL_CST', 'https://twitter.com/Happytailstweet');
+INSERT INTO artisans_urls VALUES (229,55,'URL_CST', 'https://www.instagram.com/happytailscostumes/');
 INSERT INTO artisans_urls VALUES (230,56,'URL_FURSUITREVIEW', 'http://fursuitreview.com/maker/hounds-teeth/');
 INSERT INTO artisans_urls VALUES (231,56,'URL_WEBSITE', 'https://www.hounds-teeth.com/');
 INSERT INTO artisans_urls VALUES (232,56,'URL_PRICES', 'https://www.hounds-teeth.com/pricing/');
@@ -1380,7 +1378,7 @@ INSERT INTO artisans_urls VALUES (639,163,'URL_DEVIANTART', 'https://www.deviant
 INSERT INTO artisans_urls VALUES (640,163,'URL_TWITTER', 'https://twitter.com/phailrp');
 INSERT INTO artisans_urls VALUES (641,163,'URL_INSTAGRAM', 'https://www.instagram.com/hevoyic/');
 INSERT INTO artisans_urls VALUES (642,163,'URL_CST', 'https://trello.com/b/oz5ZdDk4/art-to-do-list');
-INSERT INTO artisans_urls VALUES (643,164,'URL_WEBSITE', 'https://www.kaylaskritterz.net/');
+INSERT INTO artisans_urls VALUES (643,164,'URL_WEBSITE', 'https://www.kaylaskritterz.org/');
 INSERT INTO artisans_urls VALUES (644,164,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/bluewolfcheetah');
 INSERT INTO artisans_urls VALUES (645,164,'URL_DEVIANTART', 'https://www.deviantart.com/bluewolfcheetah');
 INSERT INTO artisans_urls VALUES (646,164,'URL_TWITTER', 'https://twitter.com/KaylasKritterz');
