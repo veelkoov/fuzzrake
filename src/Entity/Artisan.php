@@ -137,6 +137,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $notes = '';
 
     /**
+     * @ORM\Column(type="string", length=512)
+     */
+    private $inactiveReason = '';
+
+    /**
      * @ORM\Column(type="string", length=16)
      */
     private $contactAllowed = '';
@@ -501,6 +506,18 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function getNotes(): string
     {
         return $this->notes;
+    }
+
+    public function getInactiveReason(): string
+    {
+        return $this->inactiveReason;
+    }
+
+    public function setInactiveReason(string $inactiveReason): Artisan
+    {
+        $this->inactiveReason = $inactiveReason;
+
+        return $this;
     }
 
     public function setNotes(string $notes): self
