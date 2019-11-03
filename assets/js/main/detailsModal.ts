@@ -26,13 +26,13 @@ function optionalListTplFunc() {
 
 function photosTplFunc() {
     return function (text, render) {
-        let miniaturesStr: string = render('{{#artisan.scritchMiniatureUrls}}{{.}}\n{{/artisan.scritchMiniatureUrls}}');
-        let photosStr: string = render('{{#artisan.scritchPhotoUrls}}{{.}}\n{{/artisan.scritchPhotoUrls}}');
+        let miniaturesStr: string = render('{{#artisan.scritchMiniatureUrls}}{{.}}\n{{/artisan.scritchMiniatureUrls}}').trimRight();
+        let photosStr: string = render('{{#artisan.scritchPhotoUrls}}{{.}}\n{{/artisan.scritchPhotoUrls}}').trimRight();
 
-        let miniatures: string[] = miniaturesStr.trimRight().split('\n');
-        let photos: string[] = photosStr.trimRight().split('\n');
+        let miniatures: string[] = miniaturesStr.split('\n');
+        let photos: string[] = photosStr.split('\n');
 
-        if (miniatures.length === 0 || miniatures.length !== photos.length) {
+        if (miniaturesStr.length === 0 || miniatures.length !== photos.length) {
             return '';
         }
 

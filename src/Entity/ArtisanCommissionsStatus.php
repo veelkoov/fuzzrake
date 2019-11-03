@@ -39,6 +39,11 @@ class ArtisanCommissionsStatus
      */
     private $lastChecked = null;
 
+    /**
+     * @ORM\Column(type="string", length=256)
+     */
+    private $reason = '';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +81,18 @@ class ArtisanCommissionsStatus
     public function setLastChecked(?DateTimeInterface $lastChecked): self
     {
         $this->lastChecked = $lastChecked;
+
+        return $this;
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): ArtisanCommissionsStatus
+    {
+        $this->reason = $reason;
 
         return $this;
     }

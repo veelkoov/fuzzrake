@@ -105,6 +105,7 @@ class IuFormServiceTest extends WebTestCase
                 case Fields::URL_SCRITCH_PHOTO:
                 case Fields::URL_OTHER:
                 case Fields::NOTES:
+                case Fields::LANGUAGES:
                     $value = $artisan->get($field);
                     self::assertContains($value, $textareas, "Failed to find $value");
                     break;
