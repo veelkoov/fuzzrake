@@ -152,17 +152,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private $contactInfoObfuscated = '';
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $commissionsStatus;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $privateData;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $urls;
 
@@ -921,17 +921,21 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     private function setSingleUrl(string $urlFieldName, string $newUrl): self
     {
-        $urlObj = null;
-
         foreach ($this->getUrls() as $url) {
             if ($url->getType() === $urlFieldName) {
-                $url->setUrl($newUrl);
+                if ('' === $newUrl) {
+                    $this->removeUrl($url);
+                } else {
+                    $url->setUrl($newUrl);
+                }
 
                 return $this;
             }
         }
 
-        $this->addUrl((new ArtisanUrl())->setType($urlFieldName)->setUrl($newUrl));
+        if ('' !== $newUrl) {
+            $this->addUrl((new ArtisanUrl())->setType($urlFieldName)->setUrl($newUrl));
+        }
 
         return $this;
     }

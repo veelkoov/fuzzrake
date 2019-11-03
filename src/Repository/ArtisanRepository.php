@@ -37,8 +37,10 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 'cs')
             ->leftJoin('a.urls', 'u')
+            ->leftJoin('a.privateData', 'pd') // Even if unneded, we have to, because "Inverse side of x-to-one can never be lazy"
             ->addSelect('cs')
             ->addSelect('u')
+            ->addSelect('pd')
             ->orderBy('a.name', 'ASC')
             ->getQuery()
             ->getResult();
@@ -169,7 +171,7 @@ class ArtisanRepository extends ServiceEntityRepository
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
-                if ($item = trim($item)) {
+                if (($item = trim($item))) {
                     $result->addOrIncItem($item);
                 }
             }

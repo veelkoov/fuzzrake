@@ -16,7 +16,7 @@
 
     - import_role:
         name: db
-        tasks_from: copy
+        tasks_from: copy_dump
       when: "'prod' in group_names"
 
     - import_role:
