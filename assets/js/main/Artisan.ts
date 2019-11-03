@@ -54,6 +54,7 @@ export default class Artisan {
                 readonly otherUrls: string,
                 readonly languages: string[],
                 readonly notes: string,
+                readonly inactiveReason: string,
                 readonly cstUrl: string,
                 readonly commissionsStatus: boolean,
                 readonly cstLastCheck: string,
