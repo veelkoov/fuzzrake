@@ -39,16 +39,23 @@ task 'get-snapshots' do
   system('rsync', '--recursive', '--progress', '--human-readable', 'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-task 'import' do
+task :import do
   console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt')
 end
 
-task 'importf' do
+task :importf do
   console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--fix-mode')
 end
 
-task 'importc' do
+task :importc do
   console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--commit')
+end
+
+task 'release-beta' do
+  system('git', 'checkout', 'beta')
+  system('git', 'merge', '--ff', 'develop')
+  system('git', 'push')
+  system('git', 'checkout', 'develop')
 end
 
 task :qa => ['php-cs-fixer', :phpunit]
