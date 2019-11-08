@@ -22,9 +22,7 @@ class FilterItem
     private $count;
 
     /**
-     * @param $value mixed
-     * @param string $label
-     * @param int    $count
+     * @param int|string|FilterItems $value
      */
     public function __construct($value, string $label = '', int $count = 0)
     {

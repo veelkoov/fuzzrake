@@ -12,18 +12,13 @@ class Variant
     private $replacements = [];
 
     /**
-     * RegexpVariant constructor.
-     *
-     * @param array $replacements
+     * @param array[] $replacements
      */
     public function __construct(array $replacements)
     {
         $this->replacements = $replacements;
     }
 
-    /**
-     * @return array
-     */
     public function getReplacements(): array
     {
         return $this->replacements;

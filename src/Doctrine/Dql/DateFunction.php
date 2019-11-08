@@ -20,8 +20,6 @@ class DateFunction extends FunctionNode
     }
 
     /**
-     * @param Parser $parser
-     *
      * @throws QueryException
      */
     public function parse(Parser $parser): void

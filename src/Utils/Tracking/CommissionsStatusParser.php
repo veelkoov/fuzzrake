@@ -49,11 +49,9 @@ class CommissionsStatusParser
 //        $this->debugDumpRegexps();
     }
 
+    /** @noinspection PhpDocRedundantThrowsInspection */
+
     /**
-     * @param WebpageSnapshot $snapshot
-     *
-     * @return AnalysisResult
-     *
      * @throws TrackerException From inside array_map
      */
     public function analyseStatus(WebpageSnapshot $snapshot): AnalysisResult
@@ -73,12 +71,6 @@ class CommissionsStatusParser
 
     /**
      * TODO: Move into HtmlPreprocessor.
-     *
-     * @param string $artisanName
-     * @param string $additionalFilter
-     * @param string $inputText
-     *
-     * @return string
      *
      * @throws TrackerException
      */

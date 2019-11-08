@@ -30,8 +30,8 @@ class ArtisanFieldsTest extends TestCase
             $field = array_shift($fieldsInJson);
 
             $this->assertNotNull($field);
-            $this->assertEquals($field->modelName(), $parMatches['name'][$idx]);
-            $this->assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]));
+            static::assertEquals($field->modelName(), $parMatches['name'][$idx]);
+            static::assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]));
         }
 
         $this->assertEmpty($fieldsInJson);

@@ -19,7 +19,7 @@ class RestApiControllerTest extends DbEnabledWebTestCase
 
         $client->request('GET', '/api/artisans.json');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
     public function testHealth()
@@ -29,11 +29,11 @@ class RestApiControllerTest extends DbEnabledWebTestCase
 
         $client->request('GET', '/health');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
 
         $data = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('OK', $data->status);
-        $this->assertEquals(DateTime::createFromFormat('U', (string) time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data->lastCstRunUtc);
-        $this->assertEquals(DateTime::createFromFormat('U', (string) time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data->serverTimeUtc);
+        static::assertEquals('OK', $data->status);
+        static::assertEquals(DateTime::createFromFormat('U', (string) time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data->lastCstRunUtc);
+        static::assertEquals(DateTime::createFromFormat('U', (string) time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data->serverTimeUtc);
     }
 }

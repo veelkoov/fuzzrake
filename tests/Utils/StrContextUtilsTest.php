@@ -11,21 +11,14 @@ class StrContextUtilsTest extends TestCase
 {
     /**
      * @dataProvider createFromDataProvider
-     *
-     * @param string $input
-     * @param string $match
-     * @param int    $contextLength
-     * @param string $before
-     * @param string $subject
-     * @param string $after
      */
     public function testExtractFrom(string $input, string $match, int $contextLength, string $before, string $subject, string $after): void
     {
         $strContext = StrContextUtils::extractFrom($input, $match, $contextLength);
 
-        $this->assertEquals($before, $strContext->getBefore());
-        $this->assertEquals($subject, $strContext->getSubject());
-        $this->assertEquals($after, $strContext->getAfter());
+        static::assertEquals($before, $strContext->getBefore());
+        static::assertEquals($subject, $strContext->getSubject());
+        static::assertEquals($after, $strContext->getAfter());
     }
 
     public function createFromDataProvider(): array

@@ -6,13 +6,13 @@ namespace App\Command;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\Json;
-use App\Utils\JsonException;
 use App\Utils\Regexp\RegexpMatchException;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\TmpCookieJar;
 use Doctrine\Common\Persistence\ObjectManager;
+use JsonException;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,9 +49,6 @@ class DataSetScritchMiniaturesCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
      * @return int|void|null
      *
      * @throws HttpClientException
@@ -96,11 +93,7 @@ class DataSetScritchMiniaturesCommand extends Command
     }
 
     /**
-     * @param string[]         $pictureUrls
-     * @param GentleHttpClient $httpClient
-     * @param string           $csrfToken
-     *
-     * @return array
+     * @param string[] $pictureUrls
      *
      * @throws HttpClientException  From inside array_map
      * @throws JsonException        From inside array_map
@@ -147,10 +140,6 @@ class DataSetScritchMiniaturesCommand extends Command
     }
 
     /**
-     * @param string $pictureUrl
-     *
-     * @return string
-     *
      * @throws RegexpMatchException
      */
     private function idFromPictureUrl(string $pictureUrl): string

@@ -76,9 +76,6 @@ class CommissionStatusUpdateService
         }
     }
 
-    /**
-     * @param Url $url
-     */
     private function performUpdate(Url $url): void
     {
         $artisan = $url->getArtisan();
@@ -101,10 +98,6 @@ class CommissionStatusUpdateService
         return !empty($artisan->getCstUrl());
     }
 
-    /**
-     * @param Artisan        $artisan
-     * @param AnalysisResult $analysisResult
-     */
     private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult): void
     {
         if ($artisan->getCommissionsStatus()->getStatus() !== $analysisResult->getStatus()) {
@@ -160,9 +153,6 @@ class CommissionStatusUpdateService
         }, $artisans);
     }
 
-    /**
-     * @param SymfonyStyle $style
-     */
     private function setIo(SymfonyStyle $style): void
     {
         $this->io = $style;

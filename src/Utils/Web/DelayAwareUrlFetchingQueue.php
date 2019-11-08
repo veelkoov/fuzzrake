@@ -28,7 +28,6 @@ class DelayAwareUrlFetchingQueue
 
     /**
      * @param Url[] $urls
-     * @param int   $millisecondsDelay
      */
     public function __construct(array $urls = [], int $millisecondsDelay = 0)
     {

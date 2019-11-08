@@ -16,8 +16,6 @@ class RestApiController extends AbstractController
     /**
      * @Route("/api/artisans.json", name="api_artisans")
      *
-     * @param ArtisanRepository $artisanRepository
-     *
      * @return JsonResponse
      */
     public function artisans(ArtisanRepository $artisanRepository): Response
@@ -27,8 +25,6 @@ class RestApiController extends AbstractController
 
     /**
      * @Route("/health", name="health")
-     *
-     * @param HealthCheckService $healthCheckService
      *
      * @return JsonResponse
      */

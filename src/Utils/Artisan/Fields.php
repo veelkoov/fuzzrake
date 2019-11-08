@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use InvalidArgumentException;
 use App\Utils\Artisan\ValidationRegexps as VR;
+use InvalidArgumentException;
 
 class Fields
 {

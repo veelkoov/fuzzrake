@@ -13,8 +13,8 @@ class StatisticsControllerTest extends DbEnabledWebTestCase
 
         $client->request('GET', '/statistics.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1#data_statistics', 'Data statistics');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1#data_statistics', 'Data statistics');
     }
 
     public function testOrdering()
@@ -24,7 +24,7 @@ class StatisticsControllerTest extends DbEnabledWebTestCase
 
         $client->request('GET', '/ordering.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Other items, combined');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', 'Other items, combined');
     }
 }

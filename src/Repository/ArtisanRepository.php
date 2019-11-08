@@ -47,8 +47,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return int
-     *
      * @throws NonUniqueResultException
      */
     public function getDistinctCountriesCount(): int
@@ -61,8 +59,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
-     *
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
@@ -191,10 +187,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array       $names
-     * @param array       $makerIds
-     * @param string|null $matchedName
-     *
      * @return Artisan[]
      */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
@@ -260,10 +252,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $makerId
-     *
-     * @return Artisan
-     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */

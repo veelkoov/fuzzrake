@@ -20,11 +20,6 @@ class MainController extends AbstractController
      * @Route("/", name="main")
      * @Route("/index.html")
      *
-     * @param ArtisanRepository    $artisanRepository
-     * @param CountriesDataService $countriesDataService
-     *
-     * @return Response
-     *
      * @throws NonUniqueResultException
      */
     public function main(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
@@ -44,12 +39,6 @@ class MainController extends AbstractController
 
     /**
      * @Route("/redirect_iu_form/{makerId}", name="redirect_iu_form")
-     *
-     * @param ArtisanRepository $artisanRepository
-     * @param IuFormService     $iuFormService
-     * @param string            $makerId
-     *
-     * @return Response
      *
      * @throws NotFoundHttpException
      */

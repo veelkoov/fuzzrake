@@ -49,8 +49,6 @@ class Manager
     private $itemsIgnoreFinalTimes = [];
 
     /**
-     * @param string $correctionDirectivesFilePath
-     *
      * @throws DateTimeException
      */
     public function __construct(string $correctionDirectivesFilePath)
@@ -103,8 +101,6 @@ class Manager
     }
 
     /**
-     * @param string $filePath
-     *
      * @throws DateTimeException
      */
     private function readDirectivesFromFile(string $filePath)
@@ -131,8 +127,6 @@ class Manager
     }
 
     /**
-     * @param StringBuffer $buffer
-     *
      * @throws DateTimeException
      */
     private function readCommand(StringBuffer $buffer): void

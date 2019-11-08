@@ -21,9 +21,6 @@ class Option
         // ...?
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

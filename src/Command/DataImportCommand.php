@@ -6,8 +6,8 @@ namespace App\Command;
 
 use App\Service\DataImporter;
 use App\Utils\DateTimeException;
-use App\Utils\Import\Manager;
 use App\Utils\Import\ImportException;
+use App\Utils\Import\Manager;
 use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
@@ -54,9 +54,6 @@ class DataImportCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
      * @return int|void|null
      *
      * @throws ImportException
@@ -146,10 +143,6 @@ class DataImportCommand extends Command
     }
 
     /**
-     * @param string $correctionsFilePath
-     *
-     * @return Manager
-     *
      * @throws ImportException
      */
     private function getImportCorrector(string $correctionsFilePath): Manager

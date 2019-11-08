@@ -18,8 +18,6 @@ class Contact
     }
 
     /**
-     * @param string $input
-     *
      * @return string[]
      */
     public static function parse(string $input): array

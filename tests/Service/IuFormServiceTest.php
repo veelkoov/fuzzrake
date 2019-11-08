@@ -57,12 +57,9 @@ class IuFormServiceTest extends WebTestCase
     /**
      * @dataProvider formDataPrefillDataProvider
      *
-     * @param Artisan $artisan
-     * @param string  $contactAllowed
-     *
      * @throws HttpClientException
      */
-    public function testFormDataPrefill(Artisan $artisan, string $contactAllowed): void
+    public function testFormDataPrefill(Artisan $artisan): void
     {
         $iuFormService = self::getIuFormService();
         $webpageSnapshotManager = self::getWebpageSnapshotManager();
@@ -83,9 +80,11 @@ class IuFormServiceTest extends WebTestCase
             }
         }
 
-        $textareas = $crawler->filter('textarea[name^="entry."]')->each(function ($node, int $i) {
-            return $node->text();
-        });
+        $textareas = $crawler->filter('textarea[name^="entry."]')
+            ->each(function ($node, /* @noinspection PhpUnusedParameterInspection */ int $i) {
+                /* @noinspection PhpUndefinedMethodInspection */
+                return $node->text();
+            });
 
         foreach (Fields::exportedToIuForm() as $field) {
             switch ($field->name()) {
@@ -129,7 +128,7 @@ class IuFormServiceTest extends WebTestCase
 
                     try {
                         self::assertCount(1, $crawler->filter('input[type=text][name^="entry."][value="'.$value.'"]'), "Failed to find '$value' for field '{$field->name()}'");
-                    } catch (SyntaxErrorException $e) {
+                    } /* @noinspection PhpRedundantCatchClauseInspection */ catch (SyntaxErrorException $e) {
                         self::fail("Value caused syntax error {$e->getMessage()}: $value");
                     }
                     break;
@@ -180,7 +179,6 @@ class IuFormServiceTest extends WebTestCase
                     ->setNotes('ARTISAN_NOTES')
                     ->setContactAllowed($contactAllowed)
                     ->setContactInfoObfuscated('ARTISAN_CONTACT_INFO_OBFUSCATED'),
-                $contactAllowed,
             ];
         }, self::POSSIBLE_CONTACT_PERMITS);
     }

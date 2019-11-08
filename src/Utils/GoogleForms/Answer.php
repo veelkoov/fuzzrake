@@ -56,8 +56,7 @@ class Answer
     public function getOnlyOption(): Option
     {
         if (1 !== count($this->options)) {
-            throw new GoogleFormsRuntimeException('This answer for item "'.$this->parent->getName()
-                .'" does not have exactly one option, but '.count($this->options).': '.implode(', ', $this->options));
+            throw new GoogleFormsRuntimeException('This answer for item "'.$this->parent->getName().'" does not have exactly one option, but '.count($this->options).': '.implode(', ', $this->options));
         }
 
         return $this->options[0];

@@ -94,8 +94,6 @@ class IuFormService
     }
 
     /**
-     * @param string $array
-     *
      * @return string[]
      */
     private function transformArray(string $array): array

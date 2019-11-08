@@ -54,11 +54,6 @@ class DataImporter
     }
 
     /**
-     * @param array        $artisansData
-     * @param Manager      $importManager
-     * @param SymfonyStyle $io
-     * @param bool         $showFixCommands
-     *
      * @throws ImportException
      */
     public function import(array $artisansData, Manager $importManager, SymfonyStyle $io, bool $showFixCommands): void
@@ -78,9 +73,6 @@ class DataImporter
     }
 
     /**
-     * @param array        $artisansData
-     * @param SymfonyStyle $io
-     *
      * @return ImportItem[]
      *
      * @throws ImportException
@@ -114,10 +106,6 @@ class DataImporter
     }
 
     /**
-     * @param array $artisanData
-     *
-     * @return ImportItem
-     *
      * @throws ImportException
      */
     private function createImportItem(array $artisanData): ImportItem
@@ -185,10 +173,6 @@ class DataImporter
     }
 
     /**
-     * @param Artisan $artisan
-     *
-     * @return Artisan|null
-     *
      * @throws ImportException
      */
     private function findBestMatchArtisan(Artisan $artisan): ?Artisan

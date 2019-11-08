@@ -16,8 +16,6 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
      * @dataProvider findByMakerIdDataProvider
      *
      * @param Artisan[] $artisans
-     * @param string    $makerId
-     * @param int       $resultIdx
      *
      * @throws ORMException
      */
@@ -40,7 +38,7 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
 
         $result = self::$entityManager->getRepository(Artisan::class)->findByMakerId($makerId);
 
-        $this->assertEquals($artisans[$resultIdx], $result);
+        static::assertEquals($artisans[$resultIdx], $result);
     }
 
     public function findByMakerIdDataProvider(): array

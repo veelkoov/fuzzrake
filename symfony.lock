@@ -272,18 +272,6 @@
             "ref": "01a6e80dad40a4ef42dad65877f744a53a121c38"
         }
     },
-    "symfony/polyfill-intl-idn": {
-        "version": "v1.11.0"
-    },
-    "symfony/polyfill-mbstring": {
-        "version": "v1.10.0"
-    },
-    "symfony/polyfill-php72": {
-        "version": "v1.10.0"
-    },
-    "symfony/polyfill-php73": {
-        "version": "v1.11.0"
-    },
     "symfony/process": {
         "version": "v4.1.4"
     },

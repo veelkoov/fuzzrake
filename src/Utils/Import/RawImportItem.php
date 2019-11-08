@@ -10,7 +10,6 @@ use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
-use App\Utils\JsonException;
 use DateTimeInterface;
 
 class RawImportItem implements FieldReadInterface
@@ -31,8 +30,6 @@ class RawImportItem implements FieldReadInterface
     private $hash;
 
     /**
-     * @param array $rawInput
-     *
      * @throws ImportException
      */
     public function __construct(array $rawInput)
@@ -53,8 +50,6 @@ class RawImportItem implements FieldReadInterface
     }
 
     /**
-     * @param array $rawNewData
-     *
      * @throws ImportException
      */
     private function setTimestamp(array $rawNewData): void

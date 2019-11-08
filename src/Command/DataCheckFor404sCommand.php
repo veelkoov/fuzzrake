@@ -78,7 +78,6 @@ class DataCheckFor404sCommand extends Command
 
     /**
      * @param ArtisanUrl[] $urls
-     * @param SymfonyStyle $io
      */
     private function checkUrls(array $urls, SymfonyStyle $io): void
     {
@@ -104,7 +103,6 @@ class DataCheckFor404sCommand extends Command
 
     /**
      * @param ArtisanUrl[] $urls
-     * @param SymfonyStyle $io
      */
     private function prefetchUrls($urls, SymfonyStyle $io): void
     {
