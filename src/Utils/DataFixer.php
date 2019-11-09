@@ -319,7 +319,7 @@ class DataFixer
     private function fixLanguages(string $languages): string
     {
         $languages = $this->fixString($languages);
-        $languages = Regexp::split('#[\n,;&]|and#', $languages);
+        $languages = Regexp::split('#[\n,;&]|[, ]and #', $languages);
         $languages = array_filter(array_map('trim', $languages));
         $languages = array_map(function (string $language): string {
             Regexp::match(self::LANGUAGE_REGEXP, $language, $matches);
