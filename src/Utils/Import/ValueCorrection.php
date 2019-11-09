@@ -80,6 +80,11 @@ class ValueCorrection
         }
     }
 
+    public function __toString(): string
+    {
+        return "{$this->mode} {$this->makerId} {$this->field} {$this->wrongValue} {$this->correctedValue}";
+    }
+
     private function validateAndSetMakerId(string $makerId): void
     {
         if (!Regexp::match('#^([A-Z0-9]{7}|\*)$#', $makerId)) {
