@@ -5,6 +5,7 @@ import * as DataTable from './dataTable';
 import * as DetailsModal from './detailsModal';
 import * as Utils from './utils'
 import Artisan from './Artisan';
+import {makerIdHashRegexp} from "../consts";
 
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
@@ -31,8 +32,8 @@ function updateRequestUpdateModalWithRowData(artisan) {
     Utils.updateUpdateRequestData('updateRequestSingle', artisan);
 }
 
-function openArtisanByFragment(hash) {
-    if (hash) {
+function openArtisanByFragment(hash: string) {
+    if (hash.match(makerIdHashRegexp)) {
         $(hash).children().eq(0).trigger('click');
     }
 }

@@ -6,8 +6,10 @@ import Filter from './Filter';
 import FilterSimpleValue from "./FilterSimpleValue";
 import FilterSetSingle from "./FilterSetSingle";
 import FilterSetWithOthers from "./FilterSetWithOthers";
+import {makerIdCiRegexp} from "../consts";
 
 let $dataTable;
+let $artisanRows: JQuery<HTMLElement>;
 let filters: object = {};
 
 declare var DATA_UPDATES_URL: string;
@@ -51,6 +53,16 @@ function addFilter(filter: Filter) {
     initCheckBoxesMultiswitches(filter.containerSelector);
 }
 
+function highlightByMakerId(): void {
+    $artisanRows.removeClass('matched-maker-id');
+
+    let makerId = $dataTable.search();
+
+    if (makerId.match(makerIdCiRegexp)) {
+        $('#' + makerId.toUpperCase()).addClass('matched-maker-id');
+    }
+}
+
 function initDataTable(): void {
     $dataTable = $('#artisans').DataTable({
         dom:
@@ -79,14 +91,21 @@ function initDataTable(): void {
             </p>`
     });
 
+    $dataTable.on( 'search.dt', highlightByMakerId);
+
     $('#artisans_wrapper .dt-buttons')
         .append(`<button type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`);
 }
 
 function processArtisansTable() {
-    $('#artisans tr.fursuit-maker').each((index: number, item: object) => {
+    let rows: HTMLElement[] = [];
+
+    $('#artisans tr.fursuit-maker').each((index: number, item: HTMLElement) => {
         $(item).data('artisan', ARTISANS[index]);
+        rows.push(item);
     });
+
+    $artisanRows = $(rows);
 }
 
 export function init() {
