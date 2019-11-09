@@ -8,6 +8,7 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
+use App\Utils\Json;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -809,9 +810,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
             ->result();
     }
 
-    public function jsonSerialize(): array
+    private function getValuesForJson(): array
     {
-        return array_values(array_map(function (Field $field) {
+        return array_map(function (Field $field) {
             switch ($field->name()) {
                 case Fields::CST_LAST_CHECK:
                     $lc = $this->getCommissionsStatus()->getLastChecked();
@@ -831,7 +832,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
             }
 
             return $field->isList() ? array_filter(explode("\n", $value)) : $value;
-        }, Fields::inJson()));
+        }, Fields::inJson());
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->getValuesForJson();
+    }
+
+    public function getJsonArray(): string
+    {
+        return Json::encode(array_values($this->getValuesForJson()));
     }
 
     public function getCommissionsStatus(): ArtisanCommissionsStatus

@@ -3,7 +3,7 @@ var ARTISANS;
 $(document).ready(function () {
     ARTISANS = [
         {% for artisan in artisans %}
-        new fuzzrake.Artisan({{ artisan|json_encode|trim('[]')|raw }}),
+        new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
         {% endfor %}
     ];
 
