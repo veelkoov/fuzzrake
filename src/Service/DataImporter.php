@@ -54,6 +54,8 @@ class DataImporter
     }
 
     /**
+     * @param array[] $artisansData
+     *
      * @throws ImportException
      */
     public function import(array $artisansData, Manager $importManager, SymfonyStyle $io, bool $showFixCommands): void
@@ -63,16 +65,12 @@ class DataImporter
         $this->manager = $importManager;
 
         $items = $this->createImportItems($artisansData, $io);
-        $this->processImportItems($items);
-
-        $io->title('Showing artisans\' data before/after fixing');
-        $this->showUpdatedArtisans($items);
-
-        $io->title('Validating updated artisans\' data and passcodes');
-        $this->commitValidImportItems($items, $io);
+        $this->processImportItems($items, $io);
     }
 
     /**
+     * @param ImportItem[] $artisansData
+     *
      * @return ImportItem[]
      *
      * @throws ImportException
@@ -126,7 +124,7 @@ class DataImporter
     /**
      * @param ImportItem[] $items
      */
-    private function processImportItems(array $items): void
+    private function processImportItems(array $items, SymfonyStyle $io): void
     {
         foreach ($items as $item) {
             $this->updateArtisanWithData($item->getArtisan(), $item->getFixedInput(), true);
@@ -134,6 +132,10 @@ class DataImporter
             if ($this->manager->isNewPasscode($item)) {
                 $item->getArtisan()->setPasscode($item->getProvidedPasscode());
             }
+
+            $this->differ->showDiff($item->getOriginalArtisan(), $item->getArtisan(), $item->getInput());
+
+            $this->persistImportIfValid($io, $item);
         }
     }
 
@@ -188,20 +190,6 @@ class DataImporter
         }
 
         return array_pop($results);
-    }
-
-    private function showUpdatedArtisans(array $rows): void
-    {
-        foreach ($rows as $row) {
-            $this->differ->showDiff($row->getOriginalArtisan(), $row->getArtisan(), $row->getInput());
-        }
-    }
-
-    private function commitValidImportItems(array $imports, SymfonyStyle $io): void
-    {
-        foreach ($imports as $import) {
-            $this->persistImportIfValid($io, $import);
-        }
     }
 
     private function persistImportIfValid(SymfonyStyle $io, ImportItem $item): void
