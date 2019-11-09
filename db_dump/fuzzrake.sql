@@ -382,7 +382,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1368 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1370 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -740,6 +740,8 @@ INSERT INTO events VALUES (1364, '2019-11-08 06:02:02', '', 'CS_UPDTD_DETLS', 1,
 INSERT INTO events VALUES (1365, '2019-11-08 06:02:02', '', 'CS_UPDTD_DETLS', NULL, 0,'chaoticreations', 'https://chaoticreations.wixsite.com/chaoticreations/commissions', '', '[\"are closed</h2></div><div data-min-height=\\\"165\\\" class=\\\"txtnew\\\" id=\\\"comp-jzzox4qg\\\"><p class=\\\"font_7\\\">\",\"i am currently closed for commissions\",\".</p> <p class=\\\"font_7\\\">​</p> <p class=\\\"font_7\\\">quotes, for now, are also closed.</p> <p class=\\\"font\"]');
 INSERT INTO events VALUES (1366, '2019-11-09 06:02:04', '', 'CS_UPDTD_DETLS', 0, NULL, 'R5', 'https://trello.com/b/xcdyaWUP/r5-commissions', '', '');
 INSERT INTO events VALUES (1367, '2019-11-09 06:02:05', '', 'CS_UPDTD_DETLS', 1, 0,'AstroAntlers', 'https://twitter.com/AstroAntlers', '', '[\" u-dir\\\" dir=\\\"ltr\\\">fursuit making account for <s>@</s>rioichi4 full-time suit-making since july 2014 \",\"currently closed for commissions\",\" plan to re-open feb 2020</p> <div class=\\\"profileheadercard-location \\\"> previously wolf\'s light suit\"]');
+INSERT INTO events VALUES (1368, '2019-11-09 17:38:31', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/5f81e04527efb93acadf8980fe8474490384897c\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1369, '2019-11-09 18:01:59', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
