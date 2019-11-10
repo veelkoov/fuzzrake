@@ -823,7 +823,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                     $value = $this->getCommissionsStatus()->getStatus();
                     break;
 
-                case Fields::COMPLETNESS:
+                case Fields::COMPLETENESS:
                     $value = $this->completeness();
                     break;
 

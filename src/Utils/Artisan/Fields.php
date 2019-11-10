@@ -56,7 +56,7 @@ class Fields
     public const PASSCODE = 'PASSCODE';
     public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
     public const CST_LAST_CHECK = 'CST_LAST_CHECK';
-    public const COMPLETNESS = 'COMPLETNESS';
+    public const COMPLETENESS = 'COMPLETENESS';
     public const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
     public const CONTACT_METHOD = 'CONTACT_METHOD';
     public const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
@@ -113,7 +113,7 @@ class Fields
         self::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         self::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
         self::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
-        self::COMPLETNESS                => ['completeness',             null,                          0, 0, 0, 1],
+        self::COMPLETENESS               => ['completeness',             null,                          0, 0, 0, 1],
         self::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
         self::CONTACT_METHOD             => ['contactMethod',            null,                          0, 1, 0, 0],
         self::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      null,                          0, 1, 0, 0],
