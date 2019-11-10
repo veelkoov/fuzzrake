@@ -18,17 +18,6 @@ function initRequestUpdateModal(): void {
     });
 }
 
-function addReferrerRequestTooltip(): void {
-    $('div.artisan-links')
-        .attr('title', 'If you\'re going to contact the studio/maker, <u>please let them' +
-            ' know you found them here</u>! This will help us all a lot. Thank you!')
-        .data('placement', 'top')
-        .data('boundary', 'window')
-        .data('html', true)
-        .data('fallbackPlacement', [])
-        .tooltip();
-}
-
 function updateRequestUpdateModalWithRowData(artisan): void {
     $('#artisanNameUR').html(artisan.name);
 
@@ -51,11 +40,23 @@ function initAfterDataLoaded(): void {
         return;
     }
 
+    initLoadChain01();
+}
+
+function initLoadChain01(): void {
     DataTable.init();
+
+    setTimeout(initLoadChain02, 10);
+}
+
+function initLoadChain02(): void {
     DetailsModal.init();
 
+    setTimeout(initLoadChain03, 10);
+}
+
+function initLoadChain03(): void {
     initRequestUpdateModal();
-    addReferrerRequestTooltip();
 
     openArtisanByFragment(window.location.hash);
 
