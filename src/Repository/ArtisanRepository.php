@@ -277,4 +277,29 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    /**
+     * @return string[]
+     */
+    public function getOldToNewMakerIdsMap(): array
+    {
+        $rows = $this->createQueryBuilder('a')
+            ->select('a.makerId')
+            ->addSelect('a.formerMakerIds')
+            ->where('a.makerId <> :empty')
+            ->andWhere('a.formerMakerIds <> :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            foreach (explode("\n", $row['formerMakerIds']) as $formerMakerId) {
+                $result[$formerMakerId] = $row['makerId'];
+            }
+        }
+
+        return $result;
+    }
 }

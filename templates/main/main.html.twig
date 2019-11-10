@@ -5,7 +5,12 @@
     <script src="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.js"></script>
     {{ encore_entry_script_tags('main') }}
     <script>
-        {% include 'main/_data_array.js.twig' %}
+        var ARTISANS = null;
+        var MAKER_IDS_MAP = null;
+
+        $(document).ready(function () {
+            fuzzrake.init('{{ path('api_artisans') }}', '{{ path('api_old_to_new_maker_ids_map') }}');
+        });
     </script>
 {% endblock %}
 

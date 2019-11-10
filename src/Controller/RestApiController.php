@@ -24,6 +24,16 @@ class RestApiController extends AbstractController
     }
 
     /**
+     * @Route("/api/old_to_new_maker_ids_map.json", name="api_old_to_new_maker_ids_map")
+     *
+     * @return JsonResponse
+     */
+    public function oldToNewMakerIdsMap(ArtisanRepository $artisanRepository): Response
+    {
+        return new JsonResponse($artisanRepository->getOldToNewMakerIdsMap());
+    }
+
+    /**
      * @Route("/health", name="health")
      *
      * @return JsonResponse
