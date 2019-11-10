@@ -6,7 +6,7 @@ import Filter from './Filter';
 import FilterSimpleValue from "./FilterSimpleValue";
 import FilterSetSingle from "./FilterSetSingle";
 import FilterSetWithOthers from "./FilterSetWithOthers";
-import {makerIdCiRegexp} from "../consts";
+import {makerIdRegexp} from "../consts";
 
 let $dataTable;
 let $artisanRows: JQuery<HTMLElement>;
@@ -14,6 +14,7 @@ let filters: object = {};
 
 declare var DATA_UPDATES_URL: string;
 declare var ARTISANS: Artisan[];
+declare var MAKER_IDS_MAP: Artisan[];
 
 function getCheckedValueFunction(action: string): any {
     switch (action) {
@@ -56,9 +57,13 @@ function addFilter(filter: Filter) {
 function highlightByMakerId(): void {
     $artisanRows.removeClass('matched-maker-id');
 
-    let makerId = $dataTable.search();
+    let makerId = $dataTable.search().toUpperCase();
 
-    if (makerId.match(makerIdCiRegexp)) {
+    if (makerId in MAKER_IDS_MAP) {
+        makerId = MAKER_IDS_MAP[makerId];
+    }
+
+    if (makerId.match(makerIdRegexp)) {
         $('#' + makerId.toUpperCase()).addClass('matched-maker-id');
     }
 }

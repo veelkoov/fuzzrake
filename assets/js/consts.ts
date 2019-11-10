@@ -1,7 +1,7 @@
-let makerIdCiRegexp = /^[A-Z0-9]{7}$/i;
+let makerIdRegexp = /^[A-Z0-9]{7}$/;
 let makerIdHashRegexp = /^#[A-Z0-9]{7}$/;
 
 export {
-    makerIdCiRegexp,
+    makerIdRegexp,
     makerIdHashRegexp,
 };
