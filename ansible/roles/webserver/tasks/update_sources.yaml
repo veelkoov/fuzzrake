@@ -8,3 +8,4 @@
   notify:
     - clear cache
     - yarn encore production
+    - yarn install

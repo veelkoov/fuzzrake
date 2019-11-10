@@ -13,3 +13,8 @@
   shell: yarn encore production
   args:
     chdir: "{{ deployment_path }}"
+
+- name: yarn install
+  shell: yarn install
+  args:
+    chdir: "{{ deployment_path }}"
