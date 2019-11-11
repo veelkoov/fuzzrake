@@ -26,12 +26,11 @@ class MainController extends AbstractController
      *
      * @throws NonUniqueResultException
      */
-    public function main(Request $request, ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
+    public function main(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
     {
-        $this->addJsonLinks($request);
-
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
+            'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
             'orderTypes'          => $artisanRepository->getDistinctOrderTypes(),
             'styles'              => $artisanRepository->getDistinctStyles(),
@@ -57,21 +56,5 @@ class MainController extends AbstractController
         }
 
         return $this->redirect($iuFormService->getUpdateUrl($artisan));
-    }
-
-    private function addJsonLinks(Request $request): void
-    {
-        $linkProvider = $request->attributes->get('_links', new GenericLinkProvider())
-            ->withLink($this->getJsonLink('api_artisans'))
-            ->withLink($this->getJsonLink('api_old_to_new_maker_ids_map'));
-
-        $request->attributes->set('_links', $linkProvider);
-    }
-
-    private function getJsonLink(string $apiRouteName): EvolvableLinkInterface
-    {
-        return (new Link('preload', $this->generateUrl($apiRouteName)))
-            ->withAttribute('as', 'fetch')
-            ->withAttribute('type', 'application/json');
     }
 }

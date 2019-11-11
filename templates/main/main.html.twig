@@ -5,12 +5,7 @@
     <script src="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.js"></script>
     {{ encore_entry_script_tags('main') }}
     <script>
-        var ARTISANS = null;
-        var MAKER_IDS_MAP = null;
-
-        $(document).ready(function () {
-            fuzzrake.init('{{ path('api_artisans') }}', '{{ path('api_old_to_new_maker_ids_map') }}');
-        });
+        {% include 'main/_data.js.twig' %}
     </script>
 {% endblock %}
 
@@ -73,7 +68,7 @@
 
     <div id="scam-risk-acknowledged" style="display: none;">
         <div id="data-table-container" style="display: none;">
-            {% include 'main/_data_table.html.twig' %}
+            {% include 'main/_artisans_table.html.twig' %}
         </div>
     </div>
 
