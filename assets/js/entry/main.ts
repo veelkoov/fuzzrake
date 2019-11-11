@@ -1,5 +1,7 @@
 'use strict';
 
+import DataBridge from "../class/DataBridge";
+
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
 import * as DataTable from '../main/artisansTable';
@@ -42,7 +44,13 @@ function loadFuzzrakeData(): void {
 function finalizeInit(): void {
     function openArtisanByFragment(hash: string): void {
         if (hash.match(makerIdHashRegexp)) {
-            $(hash).children().eq(0).trigger('click');
+            let makerId = hash.slice(1);
+
+            if (makerId in DataBridge.getMakerIdsMap()) {
+                makerId = DataBridge.getMakerIdsMap()[makerId];
+            }
+
+            $('#' + makerId).children().eq(0).trigger('click');
         }
     }
 
