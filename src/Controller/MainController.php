@@ -9,7 +9,9 @@ use App\Service\CountriesDataService;
 use App\Service\IuFormService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Fig\Link\GenericLinkProvider;
 use Fig\Link\Link;
+use Psr\Link\EvolvableLinkInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,8 +28,7 @@ class MainController extends AbstractController
      */
     public function main(Request $request, ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
     {
-        $this->addLink($request, new Link('preload', $this->generateUrl('api_artisans')));
-        $this->addLink($request, new Link('preload', $this->generateUrl('api_old_to_new_maker_ids_map')));
+        $this->addJsonLinks($request);
 
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
@@ -56,5 +57,21 @@ class MainController extends AbstractController
         }
 
         return $this->redirect($iuFormService->getUpdateUrl($artisan));
+    }
+
+    private function addJsonLinks(Request $request): void
+    {
+        $linkProvider = $request->attributes->get('_links', new GenericLinkProvider())
+            ->withLink($this->getJsonLink('api_artisans'))
+            ->withLink($this->getJsonLink('api_old_to_new_maker_ids_map'));
+
+        $request->attributes->set('_links', $linkProvider);
+    }
+
+    private function getJsonLink(string $apiRouteName): EvolvableLinkInterface
+    {
+        return (new Link('preload', $this->generateUrl($apiRouteName)))
+            ->withAttribute('as', 'fetch')
+            ->withAttribute('type', 'application/json');
     }
 }
