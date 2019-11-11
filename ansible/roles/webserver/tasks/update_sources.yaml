@@ -6,6 +6,7 @@
     repo: https://github.com/veelkoov/fuzzrake.git
     version: "{{ branch }}"
   notify:
+    - composer install
     - yarn install
     - yarn encore production
     - clear cache

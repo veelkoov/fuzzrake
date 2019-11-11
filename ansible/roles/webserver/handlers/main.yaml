@@ -9,6 +9,11 @@
     warn: no
   become: yes
 
+- name: composer install
+  shell: bin/composer.phar install
+  args:
+    chdir: "{{ deployment_path }}"
+
 - name: yarn encore production
   shell: yarn encore production
   args:
