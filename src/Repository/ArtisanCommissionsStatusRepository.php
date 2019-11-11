@@ -26,8 +26,6 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return DateTime
-     *
      * @throws DateTimeException
      * @throws NonUniqueResultException
      */

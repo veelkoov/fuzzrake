@@ -3,3 +3,4 @@
   copy:
     dest: "{{ db_dump_file_path }}"
     src: "{{ local_db_dump_file_path }}"
+  changed_when: false

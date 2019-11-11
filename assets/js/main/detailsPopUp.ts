@@ -1,14 +1,13 @@
 'use strict';
 
-import * as $ from "jquery";
 import * as Mustache from "mustache";
 import * as Utils from "./utils";
-import Artisan from "./Artisan";
+import Artisan from "../class/Artisan";
 
 const HTML_SIGN_UNKNOWN = '<i class="fas fa-question-circle" title="Unknown"></i>';
 
-let artisanDetailsModalTpl: string;
-let $artisanDetailsModal: JQuery<HTMLElement>;
+let detailsPopUpTpl: string;
+let $detailsPopUp: JQuery<HTMLElement>;
 
 function optionalTplFunc() {
     return function (text, render) {
@@ -45,8 +44,8 @@ function photosTplFunc() {
     }
 }
 
-function updateDetailsModalWithArtisanData(artisan: Artisan): void {
-    $artisanDetailsModal.html(Mustache.render(artisanDetailsModalTpl, {
+function populatePopUpWithData(artisan: Artisan): void {
+    $detailsPopUp.html(Mustache.render(detailsPopUpTpl, {
         artisan: artisan,
         optional: optionalTplFunc,
         photos: photosTplFunc,
@@ -56,17 +55,25 @@ function updateDetailsModalWithArtisanData(artisan: Artisan): void {
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
 }
 
-export function init(): void {
-    $artisanDetailsModal = $('#artisanDetailsModal');
-    $artisanDetailsModal.find('a[data-href]').each((index: number, element: HTMLElement) => {
-        /* Grep code for WORKAROUND_PLACEHOLDERS_CREATINT_FAKE_404S: data-href ---> href */
-        element.setAttribute('href', element.getAttribute('data-href'));
-        element.removeAttribute('data-href');
-    });
-    artisanDetailsModalTpl = $artisanDetailsModal.html();
-    Mustache.parse(artisanDetailsModalTpl);
+function detailsPopUpShowCallback(event: any) {
+    populatePopUpWithData($(event.relatedTarget).closest('tr').data('artisan'));
+}
 
-    $artisanDetailsModal.on('show.bs.modal', function (event: any) {
-        updateDetailsModalWithArtisanData($(event.relatedTarget).closest('tr').data('artisan'));
-    });
+export function init(): (() => void)[] {
+    return [
+        () => {
+            $detailsPopUp = $('#artisanDetailsModal');
+
+            $detailsPopUp.find('a[data-href]').each((index: number, element: HTMLElement) => {
+                /* Grep code for WORKAROUND_PLACEHOLDERS_CREATINT_FAKE_404S: data-href ---> href */
+                element.setAttribute('href', element.getAttribute('data-href'));
+                element.removeAttribute('data-href');
+            });
+            $detailsPopUp.on('show.bs.modal', detailsPopUpShowCallback);
+        },
+        () => {
+            detailsPopUpTpl = $detailsPopUp.html();
+            Mustache.parse(detailsPopUpTpl);
+        },
+    ];
 }

@@ -13,7 +13,7 @@ class EventsControllerTest extends DbEnabledWebTestCase
 
         $client->request('GET', '/events.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('p', 'All times are UTC');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('p', 'All times are UTC');
     }
 }

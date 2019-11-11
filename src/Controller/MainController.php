@@ -9,7 +9,11 @@ use App\Service\CountriesDataService;
 use App\Service\IuFormService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Fig\Link\GenericLinkProvider;
+use Fig\Link\Link;
+use Psr\Link\EvolvableLinkInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,17 +24,13 @@ class MainController extends AbstractController
      * @Route("/", name="main")
      * @Route("/index.html")
      *
-     * @param ArtisanRepository    $artisanRepository
-     * @param CountriesDataService $countriesDataService
-     *
-     * @return Response
-     *
      * @throws NonUniqueResultException
      */
     public function main(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
     {
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
+            'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
             'orderTypes'          => $artisanRepository->getDistinctOrderTypes(),
             'styles'              => $artisanRepository->getDistinctStyles(),
@@ -44,12 +44,6 @@ class MainController extends AbstractController
 
     /**
      * @Route("/redirect_iu_form/{makerId}", name="redirect_iu_form")
-     *
-     * @param ArtisanRepository $artisanRepository
-     * @param IuFormService     $iuFormService
-     * @param string            $makerId
-     *
-     * @return Response
      *
      * @throws NotFoundHttpException
      */

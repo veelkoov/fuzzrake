@@ -50,10 +50,6 @@ class StatisticsController extends AbstractController
     /**
      * @Route("/statistics.html", name="statistics")
      *
-     * @param ArtisanRepository $artisanRepository
-     *
-     * @return Response
-     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -87,10 +83,6 @@ class StatisticsController extends AbstractController
 
     /**
      * @Route("/ordering.html", name="ordering")
-     *
-     * @param ArtisanRepository $artisanRepository
-     *
-     * @return Response
      */
     public function ordering(ArtisanRepository $artisanRepository): Response
     {
@@ -160,8 +152,6 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
-     *
-     * @return array
      */
     private function prepareCompletenessData(array $artisans): array
     {

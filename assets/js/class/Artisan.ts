@@ -17,6 +17,7 @@ export default class Artisan {
     readonly completenessComment: string;
     readonly completenessGood: boolean;
 
+    // noinspection OverlyComplexFunctionJS,JSUnusedGlobalSymbols
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
                 readonly name: string,

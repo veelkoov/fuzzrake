@@ -27,10 +27,6 @@ class CommissionsStatusParserTest extends TestCase
     /**
      * @dataProvider areCommissionsOpenDataProvider
      *
-     * @param string          $webpageTextFileName
-     * @param WebpageSnapshot $snapshot
-     * @param bool|null       $expectedResult
-     *
      * @throws TrackerException
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)

@@ -10,7 +10,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class HtmlPreprocessor
 {
-    public static function processArtisansName(string $artisanName, string $inputText)
+    public static function processArtisansName(string $artisanName, string $inputText): string
     {
         $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
         if (strlen($artisanName) > 2 && 's' === strtolower(substr($artisanName, -1))) {
@@ -33,7 +33,7 @@ class HtmlPreprocessor
         return $inputText;
     }
 
-    private static function extractFromJson(string $webpage)
+    private static function extractFromJson(string $webpage): string
     {
         if (empty($webpage) || '{' !== $webpage[0]) {
             return $webpage;
@@ -50,12 +50,8 @@ class HtmlPreprocessor
 
     /**
      * https://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array#comment7768057_1320156.
-     *
-     * @param array $array
-     *
-     * @return string
      */
-    private static function flattenArray(array $array)
+    private static function flattenArray(array $array): string
     {
         $result = '';
 
@@ -76,11 +72,6 @@ class HtmlPreprocessor
     }
 
     /**
-     * @param string $inputText
-     * @param string $additionalFilter
-     *
-     * @return string
-     *
      * @throws TrackerException
      */
     public static function applyFilters(string $inputText, string $additionalFilter): string

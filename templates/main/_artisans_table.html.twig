@@ -30,7 +30,10 @@
                     {%- endif -%}
 
                     {%- if isDevMachine() -%}
-                        <small><strong> {{ artisan.id }}</strong></small>
+                        <small>
+                            <strong> {{ artisan.id }}</strong>
+                            {{ artisan.contactAllowed|slice(0, 4) }} {{ artisan.contactMethod }} {{ artisan.contactAddressPlain }}
+                        </small>
                     {%- endif -%}
                 </td>
                 <td class="maker-id" data-toggle="modal" data-target="#artisanDetailsModal">

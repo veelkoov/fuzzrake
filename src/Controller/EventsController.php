@@ -14,8 +14,6 @@ class EventsController extends AbstractController
     /**
      * @Route("/events.html", name="events")
      *
-     * @param EventRepository $eventRepository
-     *
      * @return Response
      */
     public function events(EventRepository $eventRepository)

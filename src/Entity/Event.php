@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Utils\DateTimeUtils;
@@ -101,12 +103,6 @@ class Event
      */
     private $closedMatch = null;
 
-    /**
-     * @param string         $checkedUrl
-     * @param string         $artisanName
-     * @param bool|null      $oldStatus
-     * @param AnalysisResult $analysisResult
-     */
     public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, AnalysisResult $analysisResult = null)
     {
         $this->timestamp = DateTimeUtils::getNowUtc();

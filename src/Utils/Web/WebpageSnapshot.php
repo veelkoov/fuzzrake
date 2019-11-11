@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use App\Utils\Json;
-use App\Utils\JsonException;
 use DateTime;
 use DateTimeInterface;
+use JsonException;
 use JsonSerializable;
 
 class WebpageSnapshot implements JsonSerializable
@@ -40,12 +40,6 @@ class WebpageSnapshot implements JsonSerializable
      */
     private $children = [];
 
-    /**
-     * @param string   $url
-     * @param string   $contents
-     * @param DateTime $retrievedAt
-     * @param string   $ownerName
-     */
     public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName)
     {
         $this->url = $url;
@@ -55,20 +49,14 @@ class WebpageSnapshot implements JsonSerializable
     }
 
     /**
-     * @param string $json
-     *
-     * @return WebpageSnapshot
-     *
      * @throws JsonException
      */
-    public static function fromJson(string $json)
+    public static function fromJson(string $json): WebpageSnapshot
     {
         return self::fromArray(Json::decode($json));
     }
 
     /**
-     * @return string
-     *
      * @throws JsonException
      */
     public function toJson(): string
@@ -84,7 +72,7 @@ class WebpageSnapshot implements JsonSerializable
     /**
      * @param WebpageSnapshot[] $children
      */
-    public function setChildren(array $children)
+    public function setChildren(array $children): void
     {
         $this->children = $children;
     }

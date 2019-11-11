@@ -14,9 +14,9 @@ class PagesControllerTest extends WebTestCase
 
         $client->request('GET', '/info.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h3#contact', 'Contact maintainer directly');
-        $this->assertSelectorTextContains('h3#data-updates', 'Add your studio/maker info to the list');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h3#contact', 'Contact maintainer directly');
+        static::assertSelectorTextContains('h3#data-updates', 'Add your studio/maker info to the list');
     }
 
     public function testTracking()
@@ -25,8 +25,8 @@ class PagesControllerTest extends WebTestCase
 
         $client->request('GET', '/tracking.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Automatic tracking and status updates');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', 'Automatic tracking and status updates');
     }
 
     public function testWhoopsies()
@@ -35,8 +35,8 @@ class PagesControllerTest extends WebTestCase
 
         $client->request('GET', '/whoopsies.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'Whoopsies!');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', 'Whoopsies!');
     }
 
     public function testMakerIds()
@@ -45,7 +45,7 @@ class PagesControllerTest extends WebTestCase
 
         $client->request('GET', '/maker_ids.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertSelectorTextContains('h1', 'What is a "maker ID"?');
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', 'What is a "maker ID"?');
     }
 }

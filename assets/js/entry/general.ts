@@ -1,6 +1,6 @@
 'use strict';
 
-require('../css/general.less');
+require('../../css/general.less');
 
 function scrollPastMenuBarOnHash(): void {
     if (window.location.hash) {

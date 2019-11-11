@@ -26,10 +26,6 @@ class HttpClient
     }
 
     /**
-     * @param string $url
-     *
-     * @return string
-     *
      * @throws HttpClientException
      */
     public function get(string $url): string
@@ -38,12 +34,6 @@ class HttpClient
     }
 
     /**
-     * @param string $url
-     * @param string $payload
-     * @param array  $additionalHeaders
-     *
-     * @return string
-     *
      * @throws HttpClientException
      */
     public function post(string $url, string $payload, array $additionalHeaders = []): string
@@ -65,9 +55,6 @@ class HttpClient
     }
 
     /**
-     * @param string $url
-     * @param array  $additionalCurlOpts
-     *
      * @return bool|string
      *
      * @throws HttpClientException
@@ -99,8 +86,6 @@ class HttpClient
     }
 
     /**
-     * @param string $url
-     *
      * @return resource
      */
     private function getCurlSessionHandle(string $url)

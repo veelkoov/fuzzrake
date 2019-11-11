@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\JsonException;
 use App\Utils\Regexp\Utils as Regexp;
 use Closure;
+use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebpageSnapshotCache
@@ -62,10 +62,6 @@ class WebpageSnapshotCache
     }
 
     /**
-     * @param string $snapshotPath
-     *
-     * @return WebpageSnapshot
-     *
      * @throws JsonException
      */
     private function get(string $snapshotPath): WebpageSnapshot

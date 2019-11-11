@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
 use App\Entity\Artisan;
@@ -36,6 +38,9 @@ class StrUtils
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
     }
 
+    /**
+     * TODO: Make use of :) .
+     */
     public static function shortPrintUrl(string $originalUrl): string
     {
         $url = Regexp::replace('#^https?://(www\.)?#', '', $originalUrl);

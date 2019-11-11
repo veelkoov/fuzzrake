@@ -13,10 +13,6 @@ class GentleHttpClient extends HttpClient
     private $lastRequests = [];
 
     /**
-     * @param string $url
-     *
-     * @return string
-     *
      * @throws HttpClientException
      */
     public function get(string $url): string
@@ -27,10 +23,6 @@ class GentleHttpClient extends HttpClient
     }
 
     /**
-     * @param string $url
-     *
-     * @return string
-     *
      * @throws HttpClientException
      */
     public function getImmediately(string $url): string

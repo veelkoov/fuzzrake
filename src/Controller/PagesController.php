@@ -12,8 +12,6 @@ class PagesController extends AbstractController
 {
     /**
      * @Route("/info.html", name="info")
-     *
-     * @return Response
      */
     public function info(): Response
     {
@@ -22,8 +20,6 @@ class PagesController extends AbstractController
 
     /**
      * @Route("/tracking.html", name="tracking")
-     *
-     * @return Response
      */
     public function tracking(): Response
     {
@@ -32,8 +28,6 @@ class PagesController extends AbstractController
 
     /**
      * @Route("/whoopsies.html", name="whoopsies")
-     *
-     * @return Response
      */
     public function whoopsies(): Response
     {
@@ -42,8 +36,6 @@ class PagesController extends AbstractController
 
     /**
      * @Route("/maker_ids.html", name="maker_ids")
-     *
-     * @return Response
      */
     public function makerIds(): Response
     {

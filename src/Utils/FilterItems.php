@@ -12,10 +12,12 @@ class FilterItems implements ArrayAccess
      * @var int
      */
     private $unknownCount = 0;
+
     /**
      * @var int
      */
     private $otherCount = 0;
+
     /**
      * @var bool
      */
@@ -26,17 +28,11 @@ class FilterItems implements ArrayAccess
      */
     private $items = [];
 
-    /**
-     * @param bool $hasOther
-     */
     public function __construct(bool $hasOther)
     {
         $this->hasOther = $hasOther;
     }
 
-    /**
-     * @param string $key
-     */
     public function addOrIncItem(string $key): void
     {
         if (!array_key_exists($key, $this->items)) {
@@ -47,10 +43,7 @@ class FilterItems implements ArrayAccess
     }
 
     /**
-     * @param string                 $key
      * @param int|string|FilterItems $value
-     * @param string                 $label
-     * @param int                    $count
      */
     public function addComplexItem(string $key, $value, string $label, int $count): void
     {

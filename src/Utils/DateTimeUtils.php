@@ -25,10 +25,6 @@ class DateTimeUtils
     }
 
     /**
-     * @param string $time
-     *
-     * @return DateTime
-     *
      * @throws DateTimeException
      */
     public static function getUtcAt(string $time): DateTime

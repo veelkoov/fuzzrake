@@ -1,10 +1,7 @@
 'use strict';
 
-import * as $ from "jquery";
-import Artisan from "./Artisan";
-
-declare const IU_FORM_REDIRECT_URL: string;
-declare const REQUEST_FORM_URL: string;
+import Artisan from "../class/Artisan";
+import DataBridge from "../class/DataBridge";
 
 export function updateUpdateRequestData(divId: string, artisan: Artisan): void {
     $(`#${divId} .twitterUrl`).attr('href', getTwitterGuestRequestUrl(artisan));
@@ -17,9 +14,9 @@ function getTwitterGuestRequestUrl(artisan: Artisan) {
 }
 
 function getMakerUpdatePrefilledUrl(artisan: Artisan): string {
-    return IU_FORM_REDIRECT_URL.replace('MAKER_ID', artisan.getLastMakerId())
+    return DataBridge.getIuFormRedirectUrl().replace('MAKER_ID', artisan.getLastMakerId())
 }
 
 function getGuestRequestPrefilledUrl(artisan: Artisan): string {
-    return REQUEST_FORM_URL + '?usp=pp_url&entry.1289735951=' + encodeURIComponent(artisan.name);
+    return DataBridge.getRequestFormUrl() + '?usp=pp_url&entry.1289735951=' + encodeURIComponent(artisan.name);
 }

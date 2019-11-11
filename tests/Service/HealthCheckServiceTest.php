@@ -36,9 +36,6 @@ class HealthCheckServiceTest extends TestCase
 
     /**
      * @dataProvider getDiskStatusDataProvider
-     *
-     * @param string $result
-     * @param string $rawInput
      */
     public function testGetDiskStatus(string $result, string $rawInput): void
     {
@@ -47,9 +44,6 @@ class HealthCheckServiceTest extends TestCase
 
     /**
      * @dataProvider getMemoryStatusDataProvider
-     *
-     * @param string $result
-     * @param string $rawInput
      */
     public function testGetMemoryStatus(string $result, string $rawInput): void
     {
@@ -58,10 +52,6 @@ class HealthCheckServiceTest extends TestCase
 
     /**
      * @dataProvider getLoadStatusDataProvider
-     *
-     * @param string $result
-     * @param string $cpuCountRawData
-     * @param string $procLoadAvgRawData
      */
     public function testGetLoadStatus(string $result, string $cpuCountRawData, string $procLoadAvgRawData): void
     {

@@ -43,10 +43,6 @@ class TmpCookieJar implements CookieJarInterface
     }
 
     /**
-     * @param string $cookieName
-     *
-     * @return string
-     *
      * @throws HttpClientException
      */
     public function getValue(string $cookieName): string

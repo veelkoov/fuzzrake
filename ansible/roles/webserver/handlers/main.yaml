@@ -9,7 +9,17 @@
     warn: no
   become: yes
 
+- name: composer install
+  shell: docker exec -ti {{ php_fpm_container_name }} composer install
+  args:
+    chdir: "{{ deployment_path }}"
+
 - name: yarn encore production
   shell: yarn encore production
+  args:
+    chdir: "{{ deployment_path }}"
+
+- name: yarn install
+  shell: yarn install
   args:
     chdir: "{{ deployment_path }}"

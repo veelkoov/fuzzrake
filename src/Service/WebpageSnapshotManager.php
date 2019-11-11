@@ -7,12 +7,12 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Utils\DateTimeUtils;
 use App\Utils\Regexp\Utils as Regexp;
-use App\Utils\Web\WebpageSnapshotCache;
+use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
-use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\WebpageSnapshot;
+use App\Utils\Web\WebpageSnapshotCache;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\Console\Style\StyleInterface;
 
@@ -40,10 +40,6 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param Url $url
-     *
-     * @return WebpageSnapshot
-     *
      * @throws HttpClientException from inside download()
      */
     public function get(Url $url): WebpageSnapshot
@@ -54,8 +50,7 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param Url[]          $urls
-     * @param StyleInterface $progressReportIo
+     * @param Url[] $urls
      */
     public function prefetchUrls(array $urls, StyleInterface $progressReportIo): void
     {
@@ -81,10 +76,6 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param Url $url
-     *
-     * @return WebpageSnapshot
-     *
      * @throws HttpClientException
      */
     private function download(Url $url): WebpageSnapshot
@@ -104,8 +95,6 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param WebpageSnapshot $webpageSnapshot
-     *
      * @throws HttpClientException
      */
     private function downloadChildren(WebpageSnapshot $webpageSnapshot, Artisan $artisan): void
@@ -118,9 +107,6 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param WebpageSnapshot $snapshot
-     * @param Artisan         $artisan
-     *
      * @throws HttpClientException
      */
     private function fetchWixsiteContents(WebpageSnapshot $snapshot, Artisan $artisan): void
@@ -133,9 +119,6 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param WebpageSnapshot $snapshot
-     * @param Artisan         $artisan
-     *
      * @throws HttpClientException
      */
     private function fetchTrelloContents(WebpageSnapshot $snapshot, Artisan $artisan): void
