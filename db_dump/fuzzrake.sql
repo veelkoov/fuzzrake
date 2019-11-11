@@ -382,7 +382,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1370 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1374 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -742,6 +742,10 @@ INSERT INTO events VALUES (1366, '2019-11-09 06:02:04', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO events VALUES (1367, '2019-11-09 06:02:05', '', 'CS_UPDTD_DETLS', 1, 0,'AstroAntlers', 'https://twitter.com/AstroAntlers', '', '[\" u-dir\\\" dir=\\\"ltr\\\">fursuit making account for <s>@</s>rioichi4 full-time suit-making since july 2014 \",\"currently closed for commissions\",\" plan to re-open feb 2020</p> <div class=\\\"profileheadercard-location \\\"> previously wolf\'s light suit\"]');
 INSERT INTO events VALUES (1368, '2019-11-09 17:38:31', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/5f81e04527efb93acadf8980fe8474490384897c\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
 INSERT INTO events VALUES (1369, '2019-11-09 18:01:59', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
+INSERT INTO events VALUES (1370, '2019-11-09 23:56:26', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/b7abcb47c2f248694fb656a7af9195273d9c66db\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1371, '2019-11-10 06:02:14', '', 'CS_UPDTD_DETLS', NULL, 0,'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '[\"th ashaeda down and out for a few weeks, he will need to focus hard to get it done himself. </p><p> \",\"we are not open for work\",\"! we do not want to fall behind and will not open unless we absolutely have to. currently struggling\"]');
+INSERT INTO events VALUES (1372, '2019-11-10 18:02:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '');
+INSERT INTO events VALUES (1373, '2019-11-11 20:24:07', '- Fixed an issue, where looking for a Maker ID which is a common word (used in studios\' names) would show multiple results. This is achieved by highlighting the studio, which Maker ID matches exactly (try with \"MONSTER\")<br />\r\n- If a studio changes their Maker ID, you can still find it by searching the old Maker ID (try with \"MOCHIDS\" and \"STARLIT\")<br />\r\n- The webpage may behave more responsively during initial load<br />\r\n<a href=\"https://twitter.com/veelkoov/status/1193989313920409600\" target=\"_blank\">Twitter</a>', 'GENERIC', NULL, NULL, '', '', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
