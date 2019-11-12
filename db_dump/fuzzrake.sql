@@ -43,7 +43,7 @@ CREATE TABLE artisans (
 ) ENGINE=InnoDB AUTO_INCREMENT=350 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-INSERT INTO artisans VALUES (1, '', 'M000001', 'Silvena Handmade', '', '', '', 'PL', '', '', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO artisans VALUES (1, 'SILVENA', 'M000001', 'Silvena Handmade', '', 'We are a small studio from Poland, we have already made over 120 costumes, including over 20 fullsuits. We always meet the deadlines in which we define the customer slot, work quickly, accurately and create unique costumes. Most of our heads are hand-modeled, there are no two the same, which distinguishes us from other creators. We are not afraid of difficult projects.', '2016-08', 'PL', '', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Semi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Attached handpaws and feetpaws\nAttached tail\nFollow-me eyes\nIn-head fans\nIndoor feet\nMovable jaw\nOutdoor feet', '', '30% upfront to reserve a slot, the rest before starting work or 30 % upfront to reserve slot, 100$ each next month until fully paid', 'Canine, Feline, Bat, Goat, Ram, Red panda, Panda, Bear, Ferret, Otter, Dinosaur, Dragon, Dutch Angel Dragon, Sergal, Raccon', '', 'English\nPolish', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: ds******na@gm*****om', '');
 INSERT INTO artisans VALUES (2, '', 'M000002', 'Nuke Creations', '', '', '2015-08', 'PL', '', 'Katowice', '', 'Realistic\nSemi Realistic\nSemi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFull digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nElectronics/animatronics\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable eyelids\nRemovable horns/antlers', '', '', '', '', '', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: nuk*******ons@gm*****om', '');
 INSERT INTO artisans VALUES (3, '', 'M000003', 'Fossa Studio', '', '', '', 'PL', '', 'Kraków', '', 'Toony', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO artisans VALUES (4, '', 'M000004', 'Furry Factory', '', '', '', 'PL', '', '', '', 'Realistic', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -773,7 +773,7 @@ CREATE TABLE artisans_urls (
   PRIMARY KEY (`id`),
   KEY IDX_45AAF3BC5ED3C7B7 (artisan_id),
   CONSTRAINT FK_45AAF3BC5ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9056 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9059 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans_urls VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
@@ -2376,6 +2376,9 @@ INSERT INTO artisans_urls VALUES (9052,348,'URL_QUEUE', 'https://trello.com/b/GC
 INSERT INTO artisans_urls VALUES (9053,349,'URL_FACEBOOK', 'https://www.facebook.com/SodaTheFox/');
 INSERT INTO artisans_urls VALUES (9054,293,'URL_FAQ', 'https://hunnibearart.wixsite.com/commission/q-a');
 INSERT INTO artisans_urls VALUES (9055,293,'URL_TWITTER', 'https://twitter.com/Hunni_Bear_Art');
+INSERT INTO artisans_urls VALUES (9056, 1, 'URL_PRICES', 'http://silvenahandmade.com/index.php/prices/');
+INSERT INTO artisans_urls VALUES (9057, 1, 'URL_TWITTER', 'https://twitter.com/SilvenaHandmade');
+INSERT INTO artisans_urls VALUES (9058, 1, 'URL_YOUTUBE', 'https://www.youtube.com/channel/UCQE1E2PybO2UZ_1WQStROYA');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
