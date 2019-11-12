@@ -382,7 +382,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1374 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1375 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -746,6 +746,7 @@ INSERT INTO events VALUES (1370, '2019-11-09 23:56:26', '- Updated 1 maker data 
 INSERT INTO events VALUES (1371, '2019-11-10 06:02:14', '', 'CS_UPDTD_DETLS', NULL, 0,'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '[\"th ashaeda down and out for a few weeks, he will need to focus hard to get it done himself. </p><p> \",\"we are not open for work\",\"! we do not want to fall behind and will not open unless we absolutely have to. currently struggling\"]');
 INSERT INTO events VALUES (1372, '2019-11-10 18:02:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '');
 INSERT INTO events VALUES (1373, '2019-11-11 20:24:07', '- Fixed an issue, where looking for a Maker ID which is a common word (used in studios\' names) would show multiple results. This is achieved by highlighting the studio, which Maker ID matches exactly (try with \"MONSTER\")<br />\r\n- If a studio changes their Maker ID, you can still find it by searching the old Maker ID (try with \"MOCHIDS\" and \"STARLIT\")<br />\r\n- The webpage may behave more responsively during initial load<br />\r\n<a href=\"https://twitter.com/veelkoov/status/1193989313920409600\" target=\"_blank\">Twitter</a>', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1374, '2019-11-12 06:02:01', '', 'CS_UPDTD_DETLS', 0, NULL, 'Matrices', 'https://trello.com/b/Rmlp7JTU/', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
