@@ -284,9 +284,6 @@
             "ref": "01a6e80dad40a4ef42dad65877f744a53a121c38"
         }
     },
-    "symfony/polyfill-intl-icu": {
-        "version": "v1.12.0"
-    },
     "symfony/process": {
         "version": "v4.1.4"
     },

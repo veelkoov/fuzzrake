@@ -19,7 +19,9 @@
         "symfony/dotenv": "*",
         "symfony/expression-language": "*",
         "symfony/flex": "1.*",
+        "symfony/form": "*",
         "symfony/framework-bundle": "*",
+        "symfony/security-csrf": "*",
         "symfony/serializer-pack": "1.*",
         "symfony/twig-bridge": "*",
         "symfony/twig-bundle": "*",
@@ -60,6 +62,7 @@
     "replace": {
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-intl-icu": "*",
         "symfony/polyfill-intl-idn": "*",
         "symfony/polyfill-mbstring": "*",
         "symfony/polyfill-iconv": "*",
