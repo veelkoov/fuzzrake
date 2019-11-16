@@ -41,4 +41,12 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/maker_ids.html.twig', []);
     }
+
+    /**
+     * @Route("/donate.html", name="donate")
+     */
+    public function donate(): Response
+    {
+        return $this->render('pages/donate.html.twig', []);
+    }
 }

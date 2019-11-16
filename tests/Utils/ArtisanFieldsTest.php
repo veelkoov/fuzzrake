@@ -18,22 +18,22 @@ class ArtisanFieldsTest extends TestCase
 
     public function testArtisanTsModel(): void
     {
-        $modelSource = file_get_contents(__DIR__.'/../../assets/js/main/Artisan.ts');
+        $modelSource = file_get_contents(__DIR__.'/../../assets/js/class/Artisan.ts');
 
-        $this->assertTrue(Utils::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
+        static::assertTrue(Utils::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
 
-        $this->assertGreaterThan(0, Utils::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
+        static::assertGreaterThan(0, Utils::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
 
         $fieldsInJson = Fields::inJson();
 
         foreach ($parMatches[0] as $idx => $_) {
             $field = array_shift($fieldsInJson);
 
-            $this->assertNotNull($field);
+            static::assertNotNull($field);
             static::assertEquals($field->modelName(), $parMatches['name'][$idx]);
             static::assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]));
         }
 
-        $this->assertEmpty($fieldsInJson);
+        static::assertEmpty($fieldsInJson);
     }
 }
