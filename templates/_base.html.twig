@@ -60,6 +60,9 @@
                 {% include '_menu_item.html.twig' with {'name': 'whoopsies', 'pretty_name': '<i class="fas fa-smile-wink"></i> Whoopsies' } %}
             </ul>
         </div>
+        <ul class="navbar-nav">
+            {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">❤</span>️ Please donate' } %}
+        </ul>
     </nav>
 
     {% block body %}{% endblock %}
