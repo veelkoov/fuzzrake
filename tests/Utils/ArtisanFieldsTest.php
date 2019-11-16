@@ -18,7 +18,7 @@ class ArtisanFieldsTest extends TestCase
 
     public function testArtisanTsModel(): void
     {
-        $modelSource = file_get_contents(__DIR__.'/../../assets/js/main/Artisan.ts');
+        $modelSource = file_get_contents(__DIR__.'/../../assets/js/class/Artisan.ts');
 
         $this->assertTrue(Utils::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
 
