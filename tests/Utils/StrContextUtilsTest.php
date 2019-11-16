@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 class StrContextUtilsTest extends TestCase
 {
     /**
+     * @noinspection PhpTooManyParametersInspection
      * @dataProvider createFromDataProvider
      */
     public function testExtractFrom(string $input, string $match, int $contextLength, string $before, string $subject, string $after): void

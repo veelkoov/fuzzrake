@@ -42,7 +42,7 @@ class CommissionsStatusParserTest extends TestCase
             $errorMsg .= "\nOPEN: \e[0;30;47m{$oc->getBefore()}\e[0;30;42m{$oc->getSubject()}\e[0;30;47m{$oc->getAfter()}\e[0m";
         }
 
-        $this->assertSame($expectedResult, $result->getStatus(), $errorMsg);
+        static::assertSame($expectedResult, $result->getStatus(), $errorMsg);
     }
 
     public function areCommissionsOpenDataProvider()
