@@ -1,7 +1,6 @@
 'use strict';
 
-import DataBridge from "../class/DataBridge";
-
+require('../../css/main.less');
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
 import * as DataTable from '../main/artisansTable';
@@ -9,6 +8,7 @@ import * as DetailsPopUp from '../main/detailsPopUp';
 import * as AntiScamWarning from '../main/antiScamWarning';
 import * as ArtisanPopUp from "../main/artisanPopUp";
 import Artisan from '../class/Artisan';
+import DataBridge from "../class/DataBridge";
 import {makerIdHashRegexp} from "../consts";
 
 function init(): void {

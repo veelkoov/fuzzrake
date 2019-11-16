@@ -1,5 +1,7 @@
 'use strict';
 
+require('../../css/events.less');
+
 $(function (): void {
     $('#events-list .toggle-details').on('click', (event: Event) => {
         event.preventDefault();
