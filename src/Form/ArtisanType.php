@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -112,6 +115,86 @@ class ArtisanType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('inactiveReason', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('fursuitReviewUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('websiteUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('pricesUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('faqUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('furAffinityUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('deviantArtUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('twitterUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('facebookUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('tumblrUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('instagramUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('youtubeUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('queueUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('cstUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('scritchUrl', UrlType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('scritchPhotoUrls', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('scritchMiniatureUrls', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('otherUrls', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('contactInfoOriginal', TextType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('contactAllowed', ChoiceType::class, [
+                'choices'    => ContactPermit::getKeyKeyMap(),
+                'empty_data' => ContactPermit::NO,
+            ])
+            ->add('passcode', PasswordType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])

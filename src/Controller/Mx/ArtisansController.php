@@ -7,6 +7,7 @@ namespace App\Controller\Mx;
 use App\Entity\Artisan;
 use App\Form\ArtisanType;
 use App\Service\HostsService;
+use App\Utils\Artisan\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,8 @@ class ArtisansController extends AbstractController
             if ($form->get(ArtisanType::BTN_DELETE)->isClicked()) {
                 $this->getDoctrine()->getManager()->remove($artisan);
             }
+
+            Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
 
             $this->getDoctrine()->getManager()->flush();
 
