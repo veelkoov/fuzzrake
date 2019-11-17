@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\DataImporter;
+use App\Service\DataImportFactory;
 use App\Utils\DateTimeException;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\Manager;
@@ -23,23 +23,18 @@ class DataImportCommand extends Command
     protected static $defaultName = 'app:data:import';
 
     /**
-     * @var SymfonyStyle
+     * @var DataImportFactory
      */
-    private $io;
-
-    /**
-     * @var DataImporter
-     */
-    private $dataImporter;
+    private $dataImportFactory;
 
     /**
      * @var ObjectManager
      */
     private $objectManager;
 
-    public function __construct(DataImporter $dataImporter, ObjectManager $objectManager)
+    public function __construct(DataImportFactory $factory, ObjectManager $objectManager)
     {
-        $this->dataImporter = $dataImporter;
+        $this->dataImportFactory = $factory;
         $this->objectManager = $objectManager;
 
         parent::__construct();
@@ -54,23 +49,22 @@ class DataImportCommand extends Command
     }
 
     /**
-     * @return int|void|null
-     *
      * @throws ImportException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
 
-        $this->dataImporter->import($this->arrayFromCsvFile($input->getArgument('import-file')),
-            $this->getImportCorrector($input->getArgument('corrections-file')),
-            $this->io, $input->getOption('fix-mode'));
+        $import = $this->dataImportFactory->get($this->getImportCorrector($input->getArgument('corrections-file')),
+            $io, $input->getOption('fix-mode'));
+
+        $import->import($this->arrayFromCsvFile($input->getArgument('import-file')));
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();
-            $this->io->success('Finished and saved');
+            $io->success('Finished and saved');
         } else {
-            $this->io->success('Finished without saving');
+            $io->success('Finished without saving');
         }
     }
 
