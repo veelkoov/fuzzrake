@@ -6,6 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Entity\Artisan;
 use App\Form\ArtisanType;
+use App\Service\HostsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,8 +43,12 @@ class ArtisansController extends AbstractController
     /**
      * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Artisan $artisan): Response
+    public function edit(Request $request, Artisan $artisan, HostsService $hostsSrv): Response
     {
+        if (!$hostsSrv->isDevMachine()) {
+            throw $this->createAccessDeniedException();
+        }
+
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
 
@@ -62,8 +67,12 @@ class ArtisansController extends AbstractController
     /**
      * @Route("/{id}", name="mx_artisan_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Artisan $artisan): Response
+    public function delete(Request $request, Artisan $artisan, HostsService $hostsSrv): Response
     {
+        if (!$hostsSrv->isDevMachine()) {
+            throw $this->createAccessDeniedException();
+        }
+
         if ($this->isCsrfTokenValid('delete'.$artisan->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($artisan);

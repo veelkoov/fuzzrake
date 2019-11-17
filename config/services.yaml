@@ -17,7 +17,6 @@ services:
         bind:
             $projectDir: '%kernel.project_dir%'
             $hosts:
-                dev_machine: fuzzrake
                 production: getfursu.it
             $iuFormUrl: '%iu_form_url%'
 

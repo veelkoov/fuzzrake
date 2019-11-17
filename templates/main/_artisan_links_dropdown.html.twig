@@ -1,5 +1,7 @@
 <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
-    <a class="btn btn-warning" href="{{ path('mx_artisan_edit', { id: artisan.id }) }}" target="_blank"><i class="fas fa-edit"></i></a>
+    {% if isDevMachine() %}
+        <a class="btn btn-warning" href="{{ path('mx_artisan_edit', { id: artisan.id }) }}" target="_blank"><i class="fas fa-edit"></i></a>
+    {% endif %}
 
     {%- if artisan.fursuitReviewUrl -%}
         <a class="btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>

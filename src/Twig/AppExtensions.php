@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Service\HostsService;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
-use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -25,20 +24,14 @@ class AppExtensions extends AbstractExtension
     private $acsRepository;
 
     /**
-     * @var RequestStack
+     * @var HostsService
      */
-    private $requestStack;
+    private $hostsService;
 
-    /**
-     * @var array
-     */
-    private $hosts;
-
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, RequestStack $requestStack, array $hosts)
+    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, HostsService $hostsService)
     {
         $this->acsRepository = $acsRepository;
-        $this->requestStack = $requestStack;
-        $this->hosts = $hosts;
+        $this->hostsService = $hostsService;
     }
 
     public function getFilters()
@@ -65,12 +58,12 @@ class AppExtensions extends AbstractExtension
 
     public function isDevMachineFunction(): bool
     {
-        return $this->getHostname() === $this->hosts['dev_machine'];
+        return $this->hostsService->isDevMachine();
     }
 
     public function isProductionFunction(): bool
     {
-        return $this->getHostname() === $this->hosts['production'];
+        return $this->hostsService->isProduction();
     }
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
@@ -118,14 +111,5 @@ class AppExtensions extends AbstractExtension
         $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
-    }
-
-    private function getHostname(): string
-    {
-        try {
-            return $this->requestStack->getCurrentRequest()->getHost();
-        } catch (SuspiciousOperationException $e) {
-            return 'unknown/error';
-        }
     }
 }
