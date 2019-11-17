@@ -10,6 +10,7 @@ use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\StrUtils;
 use DateTime;
+use InvalidArgumentException;
 
 class Manager
 {
@@ -54,6 +55,22 @@ class Manager
     public function __construct(string $correctionDirectivesFilePath)
     {
         $this->readDirectivesFromFile($correctionDirectivesFilePath);
+    }
+
+    /**
+     * @throws ImportException
+     */
+    public static function createFromFile(string $correctionsFilePath): self
+    {
+        if (!file_exists($correctionsFilePath)) {
+            throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
+        }
+
+        try {
+            return new Manager($correctionsFilePath);
+        } catch (DateTimeException $e) {
+            throw new ImportException('Failed initializing import corrector due to incorrect date format', 0, $e);
+        }
     }
 
     public function correctArtisan(Artisan $artisan): void
