@@ -179,6 +179,7 @@ class Fields
     public static function init()
     {
         self::$fields = [];
+        self::$fieldsByModelName = [];
 
         foreach (self::FIELDS_ARRAY_DATA as $name => $fieldData) {
             $uiFormIndex = self::getUiFormIndexByFieldName($name);
