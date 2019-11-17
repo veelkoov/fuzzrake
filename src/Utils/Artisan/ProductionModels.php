@@ -13,9 +13,9 @@ class ProductionModels extends Dictionary
     public static function getValues(): array
     {
         return [
-            self::STANDARD_COMMISSIONS,
-            self::ARTISTIC_LIBERTY_COMMISSIONS,
-            self::PREMADES,
+            self::STANDARD_COMMISSIONS         => self::STANDARD_COMMISSIONS,
+            self::ARTISTIC_LIBERTY_COMMISSIONS => self::ARTISTIC_LIBERTY_COMMISSIONS,
+            self::PREMADES                     => self::PREMADES,
         ];
     }
 }

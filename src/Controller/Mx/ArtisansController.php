@@ -17,31 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ArtisansController extends AbstractController
 {
-//    /**
-//     * @Route("/new", name="mx_artisan_new", methods={"GET","POST"})
-//     */
-//    public function new(Request $request): Response
-//    {
-//        $artisan = new Artisan();
-//        $form = $this->createForm(ArtisanType::class, $artisan);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $entityManager = $this->getDoctrine()->getManager();
-//            $entityManager->persist($artisan);
-//            $entityManager->flush();
-//
-//            return $this->redirectToRoute('artisan_index');
-//        }
-//
-//        return $this->render('artisan/new.html.twig', [
-//            'artisan' => $artisan,
-//            'form' => $form->createView(),
-//        ]);
-//    }
-
     /**
-     * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, Artisan $artisan, HostsService $hostsSrv): Response
     {
@@ -53,6 +30,10 @@ class ArtisansController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get(ArtisanType::BTN_DELETE)->isClicked()) {
+                $this->getDoctrine()->getManager()->remove($artisan);
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('main');
@@ -62,23 +43,5 @@ class ArtisansController extends AbstractController
             'artisan' => $artisan,
             'form'    => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/{id}", name="mx_artisan_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Artisan $artisan, HostsService $hostsSrv): Response
-    {
-        if (!$hostsSrv->isDevMachine()) {
-            throw $this->createAccessDeniedException();
-        }
-
-        if ($this->isCsrfTokenValid('delete'.$artisan->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($artisan);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('main');
     }
 }
