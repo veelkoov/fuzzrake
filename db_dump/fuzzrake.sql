@@ -382,7 +382,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1375 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -747,6 +747,20 @@ INSERT INTO events VALUES (1371, '2019-11-10 06:02:14', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1372, '2019-11-10 18:02:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '');
 INSERT INTO events VALUES (1373, '2019-11-11 20:24:07', '- Fixed an issue, where looking for a Maker ID which is a common word (used in studios\' names) would show multiple results. This is achieved by highlighting the studio, which Maker ID matches exactly (try with \"MONSTER\")<br />\r\n- If a studio changes their Maker ID, you can still find it by searching the old Maker ID (try with \"MOCHIDS\" and \"STARLIT\")<br />\r\n- The webpage may behave more responsively during initial load<br />\r\n<a href=\"https://twitter.com/veelkoov/status/1193989313920409600\" target=\"_blank\">Twitter</a>', 'GENERIC', NULL, NULL, '', '', '', '');
 INSERT INTO events VALUES (1374, '2019-11-12 06:02:01', '', 'CS_UPDTD_DETLS', 0, NULL, 'Matrices', 'https://trello.com/b/Rmlp7JTU/', '', '');
+INSERT INTO events VALUES (1375, '2019-11-12 19:32:19', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/81cdf682353e32e2325f5f0105304e113c83007b\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1376, '2019-11-14 06:02:02', '', 'CS_UPDTD_DETLS', 1, 0,'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '[\"g\\\" class=\\\"ca1img\\\"></wix-image></div></div><div class=\\\"txtnew\\\" id=\\\"comp-ir243rb8\\\"><h2 class=\\\"font_6\\\">\",\"commissions closed\",\"</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-irarbd0i\\\"><h2 class=\\\"font_6\\\">&middot;affordable fursuits, pr\"]');
+INSERT INTO events VALUES (1377, '2019-11-14 18:01:55', '', 'CS_UPDTD_DETLS', 0, NULL, 'Clockwork Creature', 'http://www.clockworkcreature.com/', '', '');
+INSERT INTO events VALUES (1378, '2019-11-15 06:01:58', '', 'CS_UPDTD_DETLS', NULL, 0,'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '[\"22 page type-page status-publish hentry\\\"> <div class=\\\"post-content\\\"> <h2>commission status:</h2> <p>\",\"i am currently closed for new projects\",\" until my current que is nearly cleared. you can view my current projects and progress here. please \"]');
+INSERT INTO events VALUES (1379, '2019-11-15 06:01:59', '', 'CS_UPDTD_DETLS', 0, 1,'fancyfishfursuits', 'https://twitter.com/fancyfishfurs', '[\"\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">midwest based kemono and toony fursuit maker and fish lover \",\"commissions open\",\" email or dm</p> <div class=\\\"profileheadercard-location \\\"> minnesota, usa </div> <div class=\\\"profile\"]', '');
+INSERT INTO events VALUES (1380, '2019-11-15 18:02:16', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
+INSERT INTO events VALUES (1381, '2019-11-15 18:02:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'Tokai Suiting', 'http://tokaisuiting.com/', '', '');
+INSERT INTO events VALUES (1382, '2019-11-16 06:01:43', '', 'CS_UPDTD_DETLS', NULL, 1,'Silvena Handmade', 'http://silvenahandmade.com/', '[\"lass=\\\"entry-header\\\"> <h1 class=\\\"entry-title\\\">about</h1> </header><> <div class=\\\"entry-content\\\"> <h1>\",\"commissions open\",\".</h1> <h1>slots from january to june 2020.</h1> <p> </p> <p>i run a small studio &#8211; STUDIO_NAM\"]', '');
+INSERT INTO events VALUES (1383, '2019-11-16 06:01:44', '', 'CS_UPDTD_DETLS', 0, NULL, 'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/', '', '');
+INSERT INTO events VALUES (1384, '2019-11-16 06:01:44', '', 'CS_UPDTD_DETLS', NULL, 0,'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '[\"22 page type-page status-publish hentry\\\"> <div class=\\\"post-content\\\"> <h2>commission status:</h2> <p>\",\"i am currently closed for new projects\",\" until my current que is nearly cleared. you can view my current projects and progress here. please \"]');
+INSERT INTO events VALUES (1385, '2019-11-16 06:01:45', '', 'CS_UPDTD_DETLS', 0, 1,'Bird King Creations', 'http://www.birdkingcreations.com/', '[\"AME\\\" /> <meta property=\\\"og:title\\\" content=\\\"STUDIO_NAME\\\" /> <meta property=\\\"og:description\\\" content=\\\"\",\"commission status: open\",\"! ​ STUDIO_NAME is a toony fursuit maker located in cincinnati, ohio! i offer commissions for fursui\"]', '');
+INSERT INTO events VALUES (1386, '2019-11-16 18:01:41', '', 'CS_UPDTD_DETLS', NULL, 0,'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/', '', '[\"••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••–</code> <code class=\\\"bbcode bbcode_center\\\">commission status: \",\"we don\'t do commissions.\",\" </code> <code class=\\\"bbcode bbcode_center\\\">–••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ \"]');
+INSERT INTO events VALUES (1387, '2019-11-16 18:01:41', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
+INSERT INTO events VALUES (1388, '2019-11-17 06:01:30', '', 'CS_UPDTD_DETLS', 0, NULL, 'Furry Factory', 'http://www.furaffinity.net/user/furry-factory/#profile', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
