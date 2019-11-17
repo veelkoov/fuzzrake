@@ -40,7 +40,7 @@ CREATE TABLE artisans (
   contact_info_obfuscated varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   inactive_reason varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=350 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans VALUES (1, 'SILVENA', 'M000001', 'Silvena Handmade', '', 'We are a small studio from Poland, we have already made over 120 costumes, including over 20 fullsuits. We always meet the deadlines in which we define the customer slot, work quickly, accurately and create unique costumes. Most of our heads are hand-modeled, there are no two the same, which distinguishes us from other creators. We are not afraid of difficult projects.', '2016-08', 'PL', '', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Semi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Attached handpaws and feetpaws\nAttached tail\nFollow-me eyes\nIn-head fans\nIndoor feet\nMovable jaw\nOutdoor feet', '', '30% upfront to reserve a slot, the rest before starting work or 30 % upfront to reserve slot, 100$ each next month until fully paid', 'Canine, Feline, Bat, Goat, Ram, Red panda, Panda, Bear, Ferret, Otter, Dinosaur, Dragon, Dutch Angel Dragon, Sergal, Raccon', '', 'English\nPolish', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: ds******na@gm*****om', '');
@@ -367,6 +367,7 @@ INSERT INTO artisans VALUES (345, 'MEEPSMM', '', 'Meep\'s Marvelous Monstrositie
 INSERT INTO artisans VALUES (346, 'PWMDDEN', '', 'Paw Made Design', '', '', '2019-06', 'SE', '', 'Vellinge', 'Premades\nStandard commissions', 'Anime\nKemono\nToony', '', 'Handpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nTails (as parts/separate)', 'Arm sleeves\nLeg sleeves\nPlantigrade legs', 'Attached handpaws and feetpaws\nAttached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nRemovable blush\nRemovable eyelids', '', 'None, 100% upfront', 'Almost everything. Just ask', '', 'English\nSwedish', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: paw*******ign@ho*******om', '');
 INSERT INTO artisans VALUES (348, 'MONSTER', '', 'Monster in the Closet', '', 'Hello! I am a relatively new fursuit maker on the market! I enjoy making monsters, beasts, anything you could possibly imagine! At this time I can only take orders from those located in the US.', '2018-03', 'US', 'Pennsylvania', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Anime\nKemono\nRealistic\nSemi Realistic\nSemi Toony\nToony', '', 'Feetpaws (as parts/separate)\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)', '', 'Adjustable eyebrows\nAttached handpaws and feetpaws\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers', '', 'All payment plans are welcome, although I request 100% upfront', 'All', '', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: monste***************ations@gm*****om', '');
 INSERT INTO artisans VALUES (349, 'SODACSC', '', 'SodaCreationsStudio', '', 'Hey. I am Soda, I have been making fursuits for a while now and I am ready for doing commisions. I have already made some heads, legs and tails. I am very precise because if I am satisfied then it is also good.', '2017-01', 'NL', '', 'Goirle', 'Standard commissions', 'Toony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Attached tail\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nWashable heads', '', '50% upfront to reserve a slot', 'Wolf,Fox,Dog', '', 'English\nNederlands', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: rein**********kers@l*****l', '');
+INSERT INTO artisans VALUES (350, 'TINYDRC', '', 'Tiny Dream Creations', '', 'Heya, this is Tiny Dream. I\'m a small fursuit maker from Germany, and I\'d love you to look around at my homepage. I\'d love to make your next/first suit.', '2019-08', 'DE', '', 'Großröhrsdorf', 'Standard commissions', 'Toony', '', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nMovable jaw\nOutdoor feet\nRemovable eyelids', '', 'Normally 50% upfront, 50% when finished, but the upfront amount is negotiable (has to be at least 50%)', 'Canines in general, tigers, dragons, scalies, sergal, bird, hybrides', 'Horses, lions, bats', 'English\nGerman', 'Shipping international, speaks German and English fluently', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: tiny***********ions@gm*****om', '');
 DROP TABLE IF EXISTS events;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -382,7 +383,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1375 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -747,6 +748,20 @@ INSERT INTO events VALUES (1371, '2019-11-10 06:02:14', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1372, '2019-11-10 18:02:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '', '');
 INSERT INTO events VALUES (1373, '2019-11-11 20:24:07', '- Fixed an issue, where looking for a Maker ID which is a common word (used in studios\' names) would show multiple results. This is achieved by highlighting the studio, which Maker ID matches exactly (try with \"MONSTER\")<br />\r\n- If a studio changes their Maker ID, you can still find it by searching the old Maker ID (try with \"MOCHIDS\" and \"STARLIT\")<br />\r\n- The webpage may behave more responsively during initial load<br />\r\n<a href=\"https://twitter.com/veelkoov/status/1193989313920409600\" target=\"_blank\">Twitter</a>', 'GENERIC', NULL, NULL, '', '', '', '');
 INSERT INTO events VALUES (1374, '2019-11-12 06:02:01', '', 'CS_UPDTD_DETLS', 0, NULL, 'Matrices', 'https://trello.com/b/Rmlp7JTU/', '', '');
+INSERT INTO events VALUES (1375, '2019-11-12 19:32:19', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/81cdf682353e32e2325f5f0105304e113c83007b\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1376, '2019-11-14 06:02:02', '', 'CS_UPDTD_DETLS', 1, 0,'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '[\"g\\\" class=\\\"ca1img\\\"></wix-image></div></div><div class=\\\"txtnew\\\" id=\\\"comp-ir243rb8\\\"><h2 class=\\\"font_6\\\">\",\"commissions closed\",\"</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-irarbd0i\\\"><h2 class=\\\"font_6\\\">&middot;affordable fursuits, pr\"]');
+INSERT INTO events VALUES (1377, '2019-11-14 18:01:55', '', 'CS_UPDTD_DETLS', 0, NULL, 'Clockwork Creature', 'http://www.clockworkcreature.com/', '', '');
+INSERT INTO events VALUES (1378, '2019-11-15 06:01:58', '', 'CS_UPDTD_DETLS', NULL, 0,'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '[\"22 page type-page status-publish hentry\\\"> <div class=\\\"post-content\\\"> <h2>commission status:</h2> <p>\",\"i am currently closed for new projects\",\" until my current que is nearly cleared. you can view my current projects and progress here. please \"]');
+INSERT INTO events VALUES (1379, '2019-11-15 06:01:59', '', 'CS_UPDTD_DETLS', 0, 1,'fancyfishfursuits', 'https://twitter.com/fancyfishfurs', '[\"\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">midwest based kemono and toony fursuit maker and fish lover \",\"commissions open\",\" email or dm</p> <div class=\\\"profileheadercard-location \\\"> minnesota, usa </div> <div class=\\\"profile\"]', '');
+INSERT INTO events VALUES (1380, '2019-11-15 18:02:16', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
+INSERT INTO events VALUES (1381, '2019-11-15 18:02:18', '', 'CS_UPDTD_DETLS', 0, NULL, 'Tokai Suiting', 'http://tokaisuiting.com/', '', '');
+INSERT INTO events VALUES (1382, '2019-11-16 06:01:43', '', 'CS_UPDTD_DETLS', NULL, 1,'Silvena Handmade', 'http://silvenahandmade.com/', '[\"lass=\\\"entry-header\\\"> <h1 class=\\\"entry-title\\\">about</h1> </header><> <div class=\\\"entry-content\\\"> <h1>\",\"commissions open\",\".</h1> <h1>slots from january to june 2020.</h1> <p> </p> <p>i run a small studio &#8211; STUDIO_NAM\"]', '');
+INSERT INTO events VALUES (1383, '2019-11-16 06:01:44', '', 'CS_UPDTD_DETLS', 0, NULL, 'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/', '', '');
+INSERT INTO events VALUES (1384, '2019-11-16 06:01:44', '', 'CS_UPDTD_DETLS', NULL, 0,'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '[\"22 page type-page status-publish hentry\\\"> <div class=\\\"post-content\\\"> <h2>commission status:</h2> <p>\",\"i am currently closed for new projects\",\" until my current que is nearly cleared. you can view my current projects and progress here. please \"]');
+INSERT INTO events VALUES (1385, '2019-11-16 06:01:45', '', 'CS_UPDTD_DETLS', 0, 1,'Bird King Creations', 'http://www.birdkingcreations.com/', '[\"AME\\\" /> <meta property=\\\"og:title\\\" content=\\\"STUDIO_NAME\\\" /> <meta property=\\\"og:description\\\" content=\\\"\",\"commission status: open\",\"! ​ STUDIO_NAME is a toony fursuit maker located in cincinnati, ohio! i offer commissions for fursui\"]', '');
+INSERT INTO events VALUES (1386, '2019-11-16 18:01:41', '', 'CS_UPDTD_DETLS', NULL, 0,'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/', '', '[\"••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••–</code> <code class=\\\"bbcode bbcode_center\\\">commission status: \",\"we don\'t do commissions.\",\" </code> <code class=\\\"bbcode bbcode_center\\\">–••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ \"]');
+INSERT INTO events VALUES (1387, '2019-11-16 18:01:41', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
+INSERT INTO events VALUES (1388, '2019-11-17 06:01:30', '', 'CS_UPDTD_DETLS', 0, NULL, 'Furry Factory', 'http://www.furaffinity.net/user/furry-factory/#profile', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -773,7 +788,7 @@ CREATE TABLE artisans_urls (
   PRIMARY KEY (`id`),
   KEY IDX_45AAF3BC5ED3C7B7 (artisan_id),
   CONSTRAINT FK_45AAF3BC5ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9059 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9065 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans_urls VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
@@ -2379,6 +2394,12 @@ INSERT INTO artisans_urls VALUES (9055,293,'URL_TWITTER', 'https://twitter.com/H
 INSERT INTO artisans_urls VALUES (9056, 1, 'URL_PRICES', 'http://silvenahandmade.com/index.php/prices/');
 INSERT INTO artisans_urls VALUES (9057, 1, 'URL_TWITTER', 'https://twitter.com/SilvenaHandmade');
 INSERT INTO artisans_urls VALUES (9058, 1, 'URL_YOUTUBE', 'https://www.youtube.com/channel/UCQE1E2PybO2UZ_1WQStROYA');
+INSERT INTO artisans_urls VALUES (9059,350,'URL_WEBSITE', 'https://tinydreamcreations.wixsite.com/tinydreamcreations');
+INSERT INTO artisans_urls VALUES (9060,350,'URL_PRICES', 'https://tinydreamcreations.wixsite.com/tinydreamcreations');
+INSERT INTO artisans_urls VALUES (9061,350,'URL_TWITTER', 'https://twitter.com/FjordenFurr');
+INSERT INTO artisans_urls VALUES (9062,350,'URL_SCRITCH', 'https://scritch.es/tiny-dream-fjorden');
+INSERT INTO artisans_urls VALUES (9063,350,'URL_OTHER', 'http://aminoapps.com/p/cjziw0\nhttp://aminoapps.com/p/2agrr18');
+INSERT INTO artisans_urls VALUES (9064,350,'URL_CST', 'https://tinydreamcreations.wixsite.com/tinydreamcreations');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

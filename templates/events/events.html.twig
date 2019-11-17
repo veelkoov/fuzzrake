@@ -7,6 +7,11 @@
     {{ encore_entry_script_tags('events') }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('events') }}
+{% endblock %}
+
 {% block body %}
     <p class="small">All times are UTC</p>
 

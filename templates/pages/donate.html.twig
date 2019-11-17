@@ -1,0 +1,35 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}donate!{% endblock %}
+
+{% block body %}
+    <h1>
+        TL;DR
+    </h1>
+    <p>
+        getfursu.it was given to you for free, how about you give something back and donate a few bucks
+        to a charity of your choice, whether it be for animals&#8203;/environment/&#8203;people?
+    </p>
+
+    <h2>Please donate</h2>
+
+    <p>
+        How much are you going to spend on the fursuit stuff? Tens, hundreds, thousands? Would it really make
+        a big difference if you added a few bucks on top of it and give it to a charity? I don't want to point
+        out which one. Please follow your heart and donate to the charity which you most want to support.
+    </p>
+
+    <p>
+        I don't know how many hours have i spent on developing and maintaining this website. All this effort
+        was given to you for free<sup>1</sup>, and has been secured by the free/open &amp; permissive licenses
+        applied<sup>2</sup>. I don't want anything in exchange<sup>3</sup>, but if i knew, that the fact that
+        someone has made something for you for free, motivated you to - in exchange - do something good for someone
+        in need, that'd definitely make my day.
+    </p>
+
+    <p class="small">
+        1 - In the future you might see some ads here for the sake of infrastructure funding.<br />
+        2 - See the <i>Licenses</i> section on the <a href="{{ path('info', { fragment: 'licenses' }) }}">Info</a> page.<br />
+        3 - OK, i'll take hugs.
+    </p>
+{% endblock %}

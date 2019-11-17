@@ -48,4 +48,14 @@ class PagesControllerTest extends WebTestCase
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', 'What is a "maker ID"?');
     }
+
+    public function testDonate()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/donate.html');
+
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h2', 'Please donate');
+    }
 }

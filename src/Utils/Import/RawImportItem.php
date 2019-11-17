@@ -11,6 +11,7 @@ use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use DateTimeInterface;
+use JsonException;
 
 class RawImportItem implements FieldReadInterface
 {

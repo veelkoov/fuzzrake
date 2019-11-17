@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
@@ -12,15 +12,11 @@ use App\Utils\DataDiffer;
 use App\Utils\DataFixer;
 use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
-use App\Utils\Import\ImportException;
-use App\Utils\Import\ImportItem;
-use App\Utils\Import\Manager;
-use App\Utils\Import\RawImportItem;
 use App\Utils\StrUtils;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DataImporter
+class DataImport
 {
     /**
      * @var ArtisanRepository
@@ -47,10 +43,21 @@ class DataImporter
      */
     private $manager;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    /**
+     * @var SymfonyStyle
+     */
+    private $io;
+
+    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager,
+        Manager $importManager, SymfonyStyle $io, bool $showFixCommands)
     {
         $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
+        $this->io = $io;
+
+        $this->fixer = new DataFixer($io, false);
+        $this->differ = new DataDiffer($io, $showFixCommands);
+        $this->manager = $importManager;
     }
 
     /**
@@ -58,14 +65,10 @@ class DataImporter
      *
      * @throws ImportException
      */
-    public function import(array $artisansData, Manager $importManager, SymfonyStyle $io, bool $showFixCommands): void
+    public function import(array $artisansData): void
     {
-        $this->fixer = new DataFixer($io, false);
-        $this->differ = new DataDiffer($io, $showFixCommands);
-        $this->manager = $importManager;
-
-        $items = $this->createImportItems($artisansData, $io);
-        $this->processImportItems($items, $io);
+        $items = $this->createImportItems($artisansData);
+        $this->processImportItems($items);
     }
 
     /**
@@ -75,7 +78,7 @@ class DataImporter
      *
      * @throws ImportException
      */
-    private function createImportItems(array $artisansData, SymfonyStyle $io): array
+    private function createImportItems(array $artisansData): array
     {
         $result = [];
 
@@ -87,14 +90,14 @@ class DataImporter
             }
 
             if ($this->manager->isDelayed($item)) {
-                $io->note("Ignoring {$item->getIdStringSafe()} until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
+                $this->io->note("Ignoring {$item->getIdStringSafe()} until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
                 continue;
             }
 
             $makerId = $item->getOriginalArtisan()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $io->note($item->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
+                $this->io->note($item->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
             }
 
             $result[$makerId] = $item;
@@ -124,7 +127,7 @@ class DataImporter
     /**
      * @param ImportItem[] $items
      */
-    private function processImportItems(array $items, SymfonyStyle $io): void
+    private function processImportItems(array $items): void
     {
         foreach ($items as $item) {
             $this->updateArtisanWithData($item->getArtisan(), $item->getFixedInput(), true);
@@ -135,7 +138,7 @@ class DataImporter
 
             $this->differ->showDiff($item->getOriginalArtisan(), $item->getArtisan(), $item->getInput());
 
-            $this->persistImportIfValid($io, $item);
+            $this->persistImportIfValid($item);
         }
     }
 
@@ -192,7 +195,7 @@ class DataImporter
         return array_pop($results);
     }
 
-    private function persistImportIfValid(SymfonyStyle $io, ImportItem $item): void
+    private function persistImportIfValid(ImportItem $item): void
     {
         $new = $item->getArtisan();
         $old = $item->getOriginalArtisan();
@@ -200,20 +203,20 @@ class DataImporter
         $ok = true;
 
         if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
-            $this->reportNewMaker($io, $item);
+            $this->reportNewMaker($item);
             $ok = false;
         }
 
         if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
-            $this->reportChangedMakerId($io, $item);
+            $this->reportChangedMakerId($item);
         }
 
         if ('' === ($expectedPasscode = $item->getArtisan()->getPrivateData()->getPasscode())) {
-            $this->reportNewPasscode($io, $item);
+            $this->reportNewPasscode($item);
 
             $ok = false;
         } elseif ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
-            $this->reportInvalidPasscode($io, $item, $expectedPasscode);
+            $this->reportInvalidPasscode($item, $expectedPasscode);
 
             $ok = false;
         }
@@ -233,13 +236,13 @@ class DataImporter
             }, $results));
     }
 
-    private function reportNewMaker(SymfonyStyle $io, ImportItem $item): void
+    private function reportNewMaker(ImportItem $item): void
     {
         $monthLater = DateTimeUtils::getMonthLaterYmd();
         $makerId = $item->getMakerId();
 
-        $io->warning("New maker: {$item->getNames()}");
-        $io->writeln([
+        $this->io->warning("New maker: {$item->getNames()}");
+        $this->io->writeln([
             Manager::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:",
             Manager::CMD_ACK_NEW.":$makerId:",
             Manager::CMD_REJECT.":$makerId:{$item->getHash()}:",
@@ -247,26 +250,26 @@ class DataImporter
         ]);
     }
 
-    private function reportChangedMakerId(SymfonyStyle $io, ImportItem $item): void
+    private function reportChangedMakerId(ImportItem $item): void
     {
-        $io->warning($item->getNames().' changed their maker ID from '.$item->getOriginalArtisan()->getMakerId()
+        $this->io->warning($item->getNames().' changed their maker ID from '.$item->getOriginalArtisan()->getMakerId()
             .' to '.$item->getArtisan()->getMakerId());
     }
 
-    private function reportNewPasscode(SymfonyStyle $io, ImportItem $item): void
+    private function reportNewPasscode(ImportItem $item): void
     {
-        $io->warning("{$item->getNames()} set new passcode: {$item->getProvidedPasscode()}");
-        $io->writeln(Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:");
+        $this->io->warning("{$item->getNames()} set new passcode: {$item->getProvidedPasscode()}");
+        $this->io->writeln(Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:");
     }
 
-    private function reportInvalidPasscode(SymfonyStyle $io, ImportItem $item, string $expectedPasscode): void
+    private function reportInvalidPasscode(ImportItem $item, string $expectedPasscode): void
     {
         $weekLater = DateTimeUtils::getWeekLaterYmd();
         $makerId = $item->getMakerId();
         $hash = $item->getHash();
 
-        $io->warning("{$item->getNames()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
-        $io->writeln([
+        $this->io->warning("{$item->getNames()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
+        $this->io->writeln([
             Manager::CMD_IGNORE_PIN.":$makerId:$hash:",
             Manager::CMD_REJECT.":$makerId:$hash:",
             Manager::CMD_SET_PIN.":$makerId:$hash:",
