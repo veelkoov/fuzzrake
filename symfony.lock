@@ -218,6 +218,9 @@
             "ref": "5f8a51c0fad684396f6b6c0fd770e043439cb632"
         }
     },
+    "symfony/form": {
+        "version": "v4.3.8"
+    },
     "symfony/framework-bundle": {
         "version": "4.2",
         "recipe": {
@@ -241,6 +244,9 @@
     },
     "symfony/inflector": {
         "version": "v4.2.1"
+    },
+    "symfony/intl": {
+        "version": "v4.3.8"
     },
     "symfony/maker-bundle": {
         "version": "1.0",
@@ -299,6 +305,12 @@
             "ref": "5374e24d508ba8fd6ba9eb15170255fdb778316a"
         }
     },
+    "symfony/security-core": {
+        "version": "v4.3.8"
+    },
+    "symfony/security-csrf": {
+        "version": "v4.3.8"
+    },
     "symfony/serializer": {
         "version": "v4.2.1"
     },
@@ -328,6 +340,19 @@
             "version": "3.3",
             "ref": "369b5b29dc52b2c190002825ae7ec24ab6f962dd"
         }
+    },
+    "symfony/validator": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "d902da3e4952f18d3bf05aab29512eb61cabd869"
+        },
+        "files": [
+            "config/packages/test/validator.yaml",
+            "config/packages/validator.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v4.2.1"
