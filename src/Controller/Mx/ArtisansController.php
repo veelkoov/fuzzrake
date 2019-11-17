@@ -20,11 +20,16 @@ class ArtisansController extends AbstractController
 {
     /**
      * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET", "POST"})
+     * @Route("/new", name="mx_artisan_new", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Artisan $artisan, HostsService $hostsSrv): Response
+    public function edit(Request $request, ?Artisan $artisan, HostsService $hostsSrv): Response
     {
         if (!$hostsSrv->isDevMachine()) {
             throw $this->createAccessDeniedException();
+        }
+
+        if (null === $artisan) {
+            $artisan = new Artisan();
         }
 
         $form = $this->createForm(ArtisanType::class, $artisan);
@@ -37,6 +42,7 @@ class ArtisansController extends AbstractController
 
             Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
 
+            $this->getDoctrine()->getManager()->persist($artisan);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('main');

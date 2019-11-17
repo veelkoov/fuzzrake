@@ -21,7 +21,7 @@ class StringArrayTransformer implements DataTransformerInterface
 
     public function transform($value)
     {
-        return explode("\n", $value);
+        return array_filter(explode("\n", $value ?? ''));
     }
 
     public function reverseTransform($value)
