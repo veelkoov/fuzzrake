@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<title>Edit Artisan</title>
+
+{% block body %}
+    <h1>Edit Artisan</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">Save</button>
+    {{ form_end(form) }}
+
+    <form method="post" action="{{ path('mx_artisan_delete', {'id': artisan.id}) }}"
+          onsubmit="return confirm('Are you sure you want to delete this artisan?');">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ artisan.id) }}">
+        <button class="btn">Delete</button>
+    </form>
+{% endblock %}
