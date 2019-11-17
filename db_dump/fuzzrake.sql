@@ -383,7 +383,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1389 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1393 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -762,6 +762,10 @@ INSERT INTO events VALUES (1385, '2019-11-16 06:01:45', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO events VALUES (1386, '2019-11-16 18:01:41', '', 'CS_UPDTD_DETLS', NULL, 0,'NeonFurStudios', 'http://www.furaffinity.net/user/neonfurstudios/', '', '[\"••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••–</code> <code class=\\\"bbcode bbcode_center\\\">commission status: \",\"we don\'t do commissions.\",\" </code> <code class=\\\"bbcode bbcode_center\\\">–••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ –••– ✄ \"]');
 INSERT INTO events VALUES (1387, '2019-11-16 18:01:41', '', 'CS_UPDTD_DETLS', 0, NULL, 'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '', '');
 INSERT INTO events VALUES (1388, '2019-11-17 06:01:30', '', 'CS_UPDTD_DETLS', 0, NULL, 'Furry Factory', 'http://www.furaffinity.net/user/furry-factory/#profile', '', '');
+INSERT INTO events VALUES (1389, '2019-11-17 14:54:55', '- 1 new maker based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/e25eff937f674fa5a32e7a0833481388ab447772\" target=\"_blank\">git</a>)', '', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1390, '2019-11-17 18:01:38', '', 'CS_UPDTD_DETLS', NULL, 0,'Furry Factory', 'http://www.furaffinity.net/user/furry-factory/#profile', '', '[\" <code class=\\\"bbcode bbcode_center\\\"> kay-ra sethu team! ★★★ deviantart|facebook|twitter|youtube ★★★ \",\"commissions status: closed\",\" before sending enquiry - add your ref sheets , and what you need and what you expect ; ) email: fur\"]');
+INSERT INTO events VALUES (1391, '2019-11-17 18:01:41', '', 'CS_UPDTD_DETLS', NULL, 0,'Sab!er Studios | Sabier Studios', 'https://twitter.com/StudiosSab', '', '[\"b </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">fursuit maker | lloteer 21/she/her | pan | \",\"commissions on hold\",\". http://patreon.com/sabierstudios interested in a commission? check this link below!</p> <div class\"]');
+INSERT INTO events VALUES (1392, '2019-11-17 18:01:42', '', 'CS_UPDTD_DETLS', NULL, 1,'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '[\"econtent-gridcontainer\\\" ><div class=\\\"txtnew\\\" id=\\\"comp-k2z58pkx2\\\"><h2 class=\\\"font_4\\\">commissions</h2>\",\"<h2 class=\\\"font_4\\\">open</h2>\",\"</div></div></div></div></div></div></div></div></section><section data-is-screen-width=\\\"true\\\" data-\"]', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -774,7 +778,7 @@ CREATE TABLE artisans_commissions_statues (
   PRIMARY KEY (`id`),
   UNIQUE KEY UNIQ_4148D9A35ED3C7B7 (artisan_id),
   CONSTRAINT FK_4148D9A35ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=319 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=320 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 DROP TABLE IF EXISTS artisans_urls;
