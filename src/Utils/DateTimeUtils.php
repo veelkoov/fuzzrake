@@ -27,10 +27,10 @@ class DateTimeUtils
     /**
      * @throws DateTimeException
      */
-    public static function getUtcAt(string $time): DateTime
+    public static function getUtcAt(?string $time): DateTime
     {
         try {
-            return new DateTime($time, self::getUtc());
+            return new DateTime($time ?: 'invalid', self::getUtc());
         } catch (Exception $e) {
             throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }
