@@ -1,0 +1,218 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}edit {{ artisan.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ artisan.name }}</h1>
+
+    {{ form_start(form) }}
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                {{ form_label(form.makerId) }}
+                {{ form_widget(form.makerId) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+            </div>
+            <div class="form-group col-md-2">
+                {{ form_label(form.country) }}
+                {{ form_widget(form.country) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.state) }}
+                {{ form_widget(form.state) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                {{ form_label(form.formerMakerIds) }}
+                {{ form_widget(form.formerMakerIds) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.formerly) }}
+                {{ form_widget(form.formerly) }}
+            </div>
+            <div class="form-group col-md-2">
+                {{ form_label(form.since) }}
+                {{ form_widget(form.since) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.city) }}
+                {{ form_widget(form.city) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                {{ form_label(form.intro) }}
+                {{ form_widget(form.intro) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.productionModels) }}
+                {{ form_widget(form.productionModels) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form_label(form.styles) }}
+                {{ form_widget(form.styles) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.orderTypes) }}
+                {{ form_widget(form.orderTypes) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.features) }}
+                {{ form_widget(form.features) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form_label(form.otherStyles) }}
+                {{ form_widget(form.otherStyles) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.otherOrderTypes) }}
+                {{ form_widget(form.otherOrderTypes) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.otherFeatures) }}
+                {{ form_widget(form.otherFeatures) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form_label(form.speciesDoes) }}
+                {{ form_widget(form.speciesDoes) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.speciesDoesnt) }}
+                {{ form_widget(form.speciesDoesnt) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.paymentPlans) }}
+                {{ form_widget(form.paymentPlans) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form_label(form.languages) }}
+                {{ form_widget(form.languages) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.notes) }}
+                {{ form_widget(form.notes) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.inactiveReason) }}
+                {{ form_widget(form.inactiveReason) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.fursuitReviewUrl) }}
+                {{ form_widget(form.fursuitReviewUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.websiteUrl) }}
+                {{ form_widget(form.websiteUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.pricesUrl) }}
+                {{ form_widget(form.pricesUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.faqUrl) }}
+                {{ form_widget(form.faqUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.cstUrl) }}
+                {{ form_widget(form.cstUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.queueUrl) }}
+                {{ form_widget(form.queueUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.furAffinityUrl) }}
+                {{ form_widget(form.furAffinityUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.deviantArtUrl) }}
+                {{ form_widget(form.deviantArtUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.twitterUrl) }}
+                {{ form_widget(form.twitterUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.facebookUrl) }}
+                {{ form_widget(form.facebookUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.tumblrUrl) }}
+                {{ form_widget(form.tumblrUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.instagramUrl) }}
+                {{ form_widget(form.instagramUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.youtubeUrl) }}
+                {{ form_widget(form.youtubeUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.scritchUrl) }}
+                {{ form_widget(form.scritchUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.scritchPhotoUrls) }}
+                {{ form_widget(form.scritchPhotoUrls) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.scritchMiniatureUrls) }}
+                {{ form_widget(form.scritchMiniatureUrls) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.otherUrls) }}
+                {{ form_widget(form.otherUrls) }}
+            </div>
+            <div class="form-group col-md-6">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                {{ form_label(form.contactAllowed) }}
+                {{ form_widget(form.contactAllowed) }}
+            </div>
+            <div class="form-group col-md-7">
+                {{ form_label(form.contactInfoOriginal) }}
+                {{ form_widget(form.contactInfoOriginal) }}
+            </div>
+            <div class="form-group col-md-2">
+                {{ form_label(form.passcode) }}
+                {{ form_widget(form.passcode) }}
+            </div>
+        </div>
+
+        {{ form_widget(form.save) }}
+        {{ form_widget(form.delete) }}
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

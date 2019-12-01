@@ -1,4 +1,8 @@
 <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
+    {% if isDevMachine() %}
+        <a class="btn btn-warning" href="{{ path('mx_artisan_edit', { id: artisan.id }) }}"><i class="fas fa-edit"></i></a>
+    {% endif %}
+
     {%- if artisan.fursuitReviewUrl -%}
         <a class="btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
     {%- endif -%}
@@ -51,7 +55,7 @@
                 <a class="dropdown-item" href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
             {%- endif -%}
             <a class="dropdown-item request-update" data-toggle="modal" data-target="#updateRequestModal">
-                <i class="fas fa-exclamation-triangle"></i> Request update
+                <i class="fas fa-exclamation-triangle"></i> Report inaccurate/outdated
             </a>
         </div>
     </div>

@@ -6,7 +6,8 @@ namespace App\Utils\Artisan;
 
 abstract class Dictionary
 {
-    protected static $flipped = null;
+    protected static $valueKeyMap = null;
+    protected static $keyKeyMap = null;
 
     abstract public static function getValues(): array;
 
@@ -15,9 +16,14 @@ abstract class Dictionary
         return array_keys(static::getValues());
     }
 
+    public static function getKeyKeyMap(): array
+    {
+        return self::$keyKeyMap ?? self::$keyKeyMap = array_combine(self::getKeys(), self::getKeys());
+    }
+
     public static function getValueKeyMap(): array
     {
-        return static::$flipped ?? static::$flipped = array_flip(static::getValues());
+        return self::$valueKeyMap ?? self::$valueKeyMap = array_flip(static::getValues());
     }
 
     public static function getValuesAsString(): string
