@@ -2,8 +2,12 @@ def exec_or_die(*args)
   system(*args) or raise "Command returned non-zero exit code"
 end
 
-def console(*args) # FIXME: container name hardcoded
-  exec_or_die('docker', 'exec', '-ti', 'fuzzrake', 'bin/console', *args)
+def docker(*args) # FIXME: container name hardcoded
+  exec_or_die('docker', 'exec', '-ti', 'fuzzrake', *args)
+end
+
+def console(*args)
+  docker('bin/console', *args)
 end
 
 task :default do
@@ -32,11 +36,12 @@ task :dbcommit do
 end
 
 task 'php-cs-fixer' do
-  exec_or_die('bin/php-cs-fixer')
+  docker('vendor/bin/php-cs-fixer', 'fix', 'src')
+  docker('vendor/bin/php-cs-fixer', 'fix', 'tests')
 end
 
 task :phpunit do
-  exec_or_die('bin/phpunit')
+  docker('bin/phpunit')
 end
 
 task 'get-snapshots' do
