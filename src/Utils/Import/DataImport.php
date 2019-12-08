@@ -8,8 +8,8 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
-use App\Utils\DataDiffer;
-use App\Utils\DataFixer;
+use App\Utils\Data\Differ;
+use App\Utils\Data\Fixer;
 use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StrUtils;
@@ -29,12 +29,12 @@ class DataImport
     private $objectManager;
 
     /**
-     * @var DataFixer
+     * @var Fixer
      */
     private $fixer;
 
     /**
-     * @var DataDiffer
+     * @var Differ
      */
     private $differ;
 
@@ -55,8 +55,8 @@ class DataImport
         $this->objectManager = $objectManager;
         $this->io = $io;
 
-        $this->fixer = new DataFixer($io, false);
-        $this->differ = new DataDiffer($io, $showFixCommands);
+        $this->fixer = new Fixer($io, false);
+        $this->differ = new Differ($io, $showFixCommands);
         $this->manager = $importManager;
     }
 

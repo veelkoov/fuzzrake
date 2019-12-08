@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Repository\ArtisanRepository;
-use App\Utils\DataFixer;
+use App\Utils\Data\Fixer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,7 +42,7 @@ class DataTidyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $fixer = new DataFixer($io, true);
+        $fixer = new Fixer($io, true);
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
             $fixer->fixArtisanData($artisan);

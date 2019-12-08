@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Data;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
+use App\Utils\StrUtils;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DataDiffer
+class Differ
 {
     /**
      * @var SymfonyStyle

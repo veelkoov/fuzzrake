@@ -2,83 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Data;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\ContactPermit;
-use App\Utils\Artisan\Features;
 use App\Utils\Artisan\Fields;
-use App\Utils\Artisan\OrderTypes;
+use App\Utils\Data\Fixer\DefinedListFixer;
+use App\Utils\Data\Fixer\FreeListFixer;
+use App\Utils\Data\Fixer\StringFixer;
 use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\StrUtils;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DataFixer
+class Fixer
 {
     const LANGUAGE_REGEXP = '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i';
-
-    const REPLACEMENTS = [
-        '#’#'                            => "'",
-        '#^Rather not say$#i'            => '',
-        '#^n/a$#i'                       => '',
-        '#^n/a yet$#i'                   => '',
-        '#^-$#i'                         => '',
-        '#[ \t]{2,}#'                    => ' ',
-        '#^ANNOUNCEMENTS \+ FEEDBACK$#'  => 'FEEDBACK',
-        '#^ANNOUNCEMENTS \*ONLY\*$#'     => 'ANNOUNCEMENTS',
-        '#^NO \(I may join Telegram\)$#' => 'NO',
-    ];
-
-    const LIST_REPLACEMENTS = [
-        'n/a'                                                         => '',
-
-        'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => OrderTypes::THREE_FOURTH,
-        'Partial \(Head, handpaws, tail, feetpaws\)'                  => OrderTypes::PARTIAL,
-        'Mini partial \(Head, handpaws, tail\)'                       => OrderTypes::MINI_PARTIAL,
-        'Three-fourth \(Head+handpaws+tail+legs/pants+feetpaws\)'     => OrderTypes::THREE_FOURTH,
-        'Partial \(Head+handpaws+tail+feetpaws\)'                     => OrderTypes::PARTIAL,
-        'Mini partial \(Head+handpaws+tail\)'                         => OrderTypes::MINI_PARTIAL,
-        'Follow me eyes'                                              => Features::FOLLOW_ME_EYES,
-        'Adjustable ears / wiggle ears'                               => Features::ADJUSTABLE_WIGGLE_EARS,
-
-        'Excellent vision &amp; breathability'                        => 'Excellent vision & breathability',
-        'Bases, jawsets, silicone noses/tongues'                      => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
-        'Silicone and resin parts'                                    => "Silicone parts\nResin parts",
-        'accessories and cleaning'                                    => 'Accessories and cleaning', // TODO
-        'backpacks'                                                   => 'Backpacks',
-        'claws'                                                       => 'Claws',
-        'Armsleeves|Arm Sleeves'                                      => 'Arm sleeves',
-        'Head Bases'                                                  => 'Head bases',
-        'Plushes'                                                     => 'Plushies',
-        'Plushie, backpacks, bandanas, collars, general accessories'  => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
-        'Eyes, noses, claws'                                          => "Eyes\nNoses\nClaws",
-        'Resin and silicone parts'                                    => "Resin parts\nSilicone parts",
-        'Sleeves \(legs and arms\)'                                   => "Arm sleeves\nLeg sleeves",
-        'Legsleeves'                                                  => 'Leg sleeves',
-        'Fursuit Props'                                               => 'Fursuit props',
-        'Fursuit Props and Accessories, Fursuit supplies'             => "Fursuit props\nFursuit accessories\nFursuit supplies",
-        'Fleece Props, Other accessories'                             => "Fleece props\nOther accessories",
-        'Sock paws'                                                   => 'Sockpaws',
-        'Removable magnetic parts, secret pockets'                    => "Removable magnetic parts\nHidden pockets",
-        'Plush Suits'                                                 => 'Plush suits',
-        'Femme Suits'                                                 => 'Femme suits',
-        'Just Ask'                                                    => 'Just ask',
-        'props and can do plushies'                                   => "Props\nCan do plushies",
-        'Removable Eyes'                                              => 'Removable eyes',
-        'Removable/interchangeable eyes'                              => "Removable eyes\nInterchangeable eyes",
-        'Pickable Nose'                                               => 'Pickable nose',
-        '(.+)changable(.+)'                                           => '$1changeable$2',
-        'Fursuit Sprays?'                                             => 'Fursuit sprays',
-        'Arm sleeves, plush props, fursuit spray'                     => "Arm sleeves\nPlush props\nFursuit sprays",
-        'Body padding/plush suits'                                    => "Body padding\nPlush suits",
-        'Dry brushing'                                                => 'Drybrushing',
-        'Bendable wings and tails'                                    => "Bendable wings\nBendable tails",
-        'Poseable tongues'                                            => 'Poseable tongue',
-        'Accessories/jewelry'                                         => "Accessories\nJewelry",
-        'Bandannas'                                                   => 'Bandanas',
-
-        'QQQQQ'       => 'QQQQQ',
-    ];
 
     const COUNTRIES_REPLACEMENTS = [
         'argentina'                                     => 'AR',
@@ -104,13 +43,17 @@ class DataFixer
         'united states( of america)?|us of america|usa' => 'US',
     ];
 
+    const KEEP_WHOLE = [
+        'All species, but I specialize in dragons',
+    ];
+
     /**
      * @var SymfonyStyle
      */
     private $io;
 
     /**
-     * @var DataDiffer
+     * @var Differ
      */
     private $differ;
 
@@ -119,12 +62,30 @@ class DataFixer
      */
     private $showDiff;
 
+    /**
+     * @var StringFixer
+     */
+    private $stringFixer;
+
+    /**
+     * @var DefinedListFixer
+     */
+    private $definedListFixer;
+
+    /**
+     * @var FreeListFixer
+     */
+    private $freeListFixer;
+
     public function __construct(SymfonyStyle $io, bool $showDiff)
     {
         $this->io = $io;
         $this->io->getFormatter()->setStyle('wrong', new OutputFormatterStyle('red'));
 
-        $this->differ = new DataDiffer($io);
+        $this->differ = new Differ($io);
+        $this->stringFixer = new StringFixer();
+        $this->definedListFixer = new DefinedListFixer();
+        $this->freeListFixer = new FreeListFixer();
 
         $this->showDiff = $showDiff;
     }
@@ -133,23 +94,23 @@ class DataFixer
     {
         $originalArtisan = clone $artisan;
 
-        $artisan->setName($this->fixString($artisan->getName()));
-        $artisan->setFormerMakerIds($this->fixList($artisan->getFormerMakerIds(), false));
+        $artisan->setName($this->stringFixer->fix($artisan->getName()));
+        $artisan->setFormerMakerIds($this->freeListFixer->fix($artisan->getFormerMakerIds()));
         $artisan->setSince($this->fixSince($artisan->getSince()));
-        $artisan->setSpeciesDoes($this->fixString($artisan->getSpeciesDoes()));
-        $artisan->setSpeciesDoesnt($this->fixString($artisan->getSpeciesDoesnt()));
+        $artisan->setSpeciesDoes($this->fixSpecies($artisan->getSpeciesDoes()));
+        $artisan->setSpeciesDoesnt($this->fixSpecies($artisan->getSpeciesDoesnt()));
 
-        $artisan->setProductionModels($this->fixList($artisan->getProductionModels(), true, '#[;\n]#'));
-        $artisan->setFeatures($this->fixList($artisan->getFeatures(), true, '#[;\n]#'));
-        $artisan->setStyles($this->fixList($artisan->getStyles(), true, '#[;\n]#'));
-        $artisan->setOrderTypes($this->fixList($artisan->getOrderTypes(), true, '#[;\n]#'));
-        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false));
-        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false));
-        $artisan->setOtherOrderTypes($this->fixList($artisan->getOtherOrderTypes(), false));
+        $artisan->setProductionModels($this->definedListFixer->fix($artisan->getProductionModels()));
+        $artisan->setFeatures($this->definedListFixer->fix($artisan->getFeatures()));
+        $artisan->setStyles($this->definedListFixer->fix($artisan->getStyles()));
+        $artisan->setOrderTypes($this->definedListFixer->fix($artisan->getOrderTypes()));
+        $artisan->setOtherFeatures($this->freeListFixer->fix($artisan->getOtherFeatures()));
+        $artisan->setOtherStyles($this->freeListFixer->fix($artisan->getOtherStyles()));
+        $artisan->setOtherOrderTypes($this->freeListFixer->fix($artisan->getOtherOrderTypes()));
 
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
-        $artisan->setState($this->fixString($artisan->getState()));
-        $artisan->setCity($this->fixString($artisan->getCity()));
+        $artisan->setState($this->stringFixer->fix($artisan->getState()));
+        $artisan->setCity($this->stringFixer->fix($artisan->getCity()));
 
         $artisan->setCstUrl($this->fixGenericUrl($artisan->getCstUrl()));
         $artisan->setDeviantArtUrl($this->fixDeviantArtUrl($artisan->getDeviantArtUrl()));
@@ -167,9 +128,9 @@ class DataFixer
         $artisan->setScritchPhotoUrls($this->fixGenericUrlList($artisan->getScritchPhotoUrls()));
         $artisan->setScritchMiniatureUrls($this->fixGenericUrlList($artisan->getScritchMiniatureUrls()));
 
-        $artisan->setOtherUrls($this->fixString($artisan->getOtherUrls()));
+        $artisan->setOtherUrls($this->stringFixer->fix($artisan->getOtherUrls()));
 
-        $artisan->setPaymentPlans($this->fixString($artisan->getPaymentPlans()));
+        $artisan->setPaymentPlans($this->stringFixer->fix($artisan->getPaymentPlans()));
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
         $artisan->setLanguages($this->fixLanguages($artisan->getLanguages()));
@@ -191,30 +152,6 @@ class DataFixer
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }
-    }
-
-    private function fixList(string $input, bool $sort, string $separatorRegexp = '#\n#'): string
-    {
-        $input = implode("\n", array_filter(array_map(function (string $item): string {
-            if ('http' !== substr($item, 0, 4)) {
-                $item = StrUtils::ucfirst($item);
-            }
-
-            return trim($item);
-        }, Regexp::split($separatorRegexp, $input))));
-
-        foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
-            $input = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $input);
-        }
-
-        $input = $this->fixString($input);
-        $input = explode("\n", $input);
-
-        if ($sort) {
-            sort($input);
-        }
-
-        return implode("\n", array_unique($input));
     }
 
     private function fixCountry(string $input): string
@@ -276,17 +213,17 @@ class DataFixer
 
     private function fixGenericUrl(string $input): string
     {
-        return $this->fixString($input);
+        return $this->stringFixer->fix($input);
     }
 
     private function fixGenericUrlList(string $input)
     {
-        return $this->fixList($input, false);
+        return $this->freeListFixer->fix($input);
     }
 
     private function fixNotes(string $notes): string
     {
-        return $this->fixString($notes);
+        return $this->stringFixer->fix($notes);
     }
 
     private function fixSince(string $input): string
@@ -294,23 +231,14 @@ class DataFixer
         return Regexp::replace('#(\d{4})-(\d{2})(?:-\d{2})?#', '$1-$2', trim($input));
     }
 
-    private function fixString(string $subject): string
-    {
-        foreach (self::REPLACEMENTS as $pattern => $replacement) {
-            $subject = Regexp::replace($pattern, $replacement, $subject);
-        }
-
-        return trim($subject);
-    }
-
     private function fixIntro(string $input): string
     {
-        return $this->fixString(str_replace("\n", ' ', $input));
+        return $this->stringFixer->fix(str_replace("\n", ' ', $input));
     }
 
     private function fixContactAllowed(string $contactPermit): string
     {
-        $contactPermit = $this->fixString($contactPermit);
+        $contactPermit = $this->stringFixer->fix($contactPermit);
         $contactPermit = str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $contactPermit);
 
         return $contactPermit;
@@ -318,7 +246,7 @@ class DataFixer
 
     private function fixLanguages(string $languages): string
     {
-        $languages = $this->fixString($languages);
+        $languages = $this->stringFixer->fix($languages);
         $languages = Regexp::split('#[\n,;&]|[, ]and #', $languages);
         $languages = array_filter(array_map('trim', $languages));
         $languages = array_map(function (string $language): string {
@@ -335,5 +263,12 @@ class DataFixer
         sort($languages);
 
         return implode("\n", $languages);
+    }
+
+    private function fixSpecies(string $species): string
+    {
+        $species = $this->stringFixer->fix($species);
+
+        return $species;
     }
 }
