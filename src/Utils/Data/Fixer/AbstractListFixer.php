@@ -61,7 +61,7 @@ abstract class AbstractListFixer extends StringFixer
         'Big/small felines'                                           => "Big felines\nSmall felines",
     ];
 
-    public function fix(string $subject): string
+    public function fix(string $fieldName, string $subject): string
     {
         $subject = implode("\n", array_filter(array_map(function (string $item): string {
             if ('http' !== substr($item, 0, 4)) {
@@ -75,7 +75,7 @@ abstract class AbstractListFixer extends StringFixer
             $subject = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $subject);
         }
 
-        $subject = parent::fix($subject);
+        $subject = parent::fix($fieldName, $subject);
         $subject = explode("\n", $subject);
 
         if (static::shouldSort()) {

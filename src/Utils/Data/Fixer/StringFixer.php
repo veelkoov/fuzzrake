@@ -8,7 +8,7 @@ use App\Utils\Regexp\Utils as Regexp;
 
 class StringFixer implements FixerInterface
 {
-    public const REPLACEMENTS = [
+    private const REPLACEMENTS = [
         '#’#'                 => "'",
         '#^-$#'               => '',
         '#^Rather not say$#i' => '',
@@ -18,7 +18,7 @@ class StringFixer implements FixerInterface
         '#[ \t]{2,}#'         => ' ',
     ];
 
-    public function fix(string $subject): string
+    public function fix(string $fieldName, string $subject): string
     {
         foreach (self::REPLACEMENTS as $pattern => $replacement) {
             $subject = Regexp::replace($pattern, $replacement, $subject);
