@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Parse;
 use App\Utils\ParseException;
 use Doctrine\ORM\NonUniqueResultException;

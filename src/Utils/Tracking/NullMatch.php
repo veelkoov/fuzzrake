@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\Tracking;
 
 use App\Utils\NullObjectTrait;
-use App\Utils\NullStrContext;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\Variant;
-use App\Utils\StrContextInterface;
+use App\Utils\StrContext\NullStrContext;
+use App\Utils\StrContext\StrContextInterface;
 
 class NullMatch implements MatchInterface
 {

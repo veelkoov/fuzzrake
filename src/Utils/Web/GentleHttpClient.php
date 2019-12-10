@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeUtils;
 
 class GentleHttpClient extends HttpClient
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use App\Utils\StrContextUtils;
+use App\Utils\StrContext\StrContextUtils;
 use App\Utils\Tracking\Match;
 use SplObjectStorage;
 

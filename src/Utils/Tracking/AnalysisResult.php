@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\StrContextInterface;
+use App\Utils\StrContext\StrContextInterface;
 
 class AnalysisResult
 {
