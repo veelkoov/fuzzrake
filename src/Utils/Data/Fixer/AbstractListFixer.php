@@ -7,6 +7,7 @@ namespace App\Utils\Data\Fixer;
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\OrderTypes;
 use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\StringList;
 use App\Utils\StrUtils;
 
 abstract class AbstractListFixer extends StringFixer
@@ -60,22 +61,23 @@ abstract class AbstractListFixer extends StringFixer
 
     public function fix(string $fieldName, string $subject): string
     {
-        $items = array_filter(array_map([$this, 'fixItem'], $this->split($subject)));
+        $items = StringList::split($subject, static::getSeparatorRegexp(), static::getNonsplittable());
+        $items = array_filter(array_map([$this, 'fixItem'], $items));
 
-        $subject = implode("\n", $items);
+        $subject = StringList::pack($items);
 
         foreach (static::getReplacements() as $pattern => $replacement) {
             $subject = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $subject);
         }
 
         $subject = parent::fix($fieldName, $subject);
-        $subject = explode("\n", $subject);
+        $subject = StringList::unpack($subject);
 
         if (static::shouldSort()) {
             sort($subject);
         }
 
-        return implode("\n", array_unique($subject));
+        return StringList::pack(array_unique($subject));
     }
 
     abstract protected static function shouldSort(): bool;
@@ -96,31 +98,6 @@ abstract class AbstractListFixer extends StringFixer
     protected static function getReplacements(): array
     {
         return self::REPLACEMENTS;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function split(string $subject): array
-    {
-        $nonsplittable = array_fill_keys(static::getNonsplittable(), null);
-        $i = 0;
-
-        foreach ($nonsplittable as &$uItem) {
-            $uItem = uniqid((string) $i++, false);
-        }
-
-        $subject = str_replace(array_keys($nonsplittable), array_values($nonsplittable), $subject);
-
-        $items = Regexp::split(static::getSeparatorRegexp(), $subject);
-
-        $nonsplittable = array_flip($nonsplittable);
-
-        foreach ($items as &$sItem) {
-            $sItem = $nonsplittable[$sItem] ?? $sItem;
-        }
-
-        return $items;
     }
 
     private function fixItem(string $subject): string
