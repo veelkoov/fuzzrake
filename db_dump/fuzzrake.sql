@@ -40,7 +40,7 @@ CREATE TABLE artisans (
   contact_info_obfuscated varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   inactive_reason varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=354 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=355 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans VALUES (1, 'SILVENA', 'M000001', 'Silvena Handmade', '', 'We are a small studio from Poland, we have already made over 120 costumes, including over 20 fullsuits. We always meet the deadlines in which we define the customer slot, work quickly, accurately and create unique costumes. Most of our heads are hand-modeled, there are no two the same, which distinguishes us from other creators. We are not afraid of difficult projects.', '2016-08', 'PL', '', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Semi Toony\nToony', '', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Attached handpaws and feetpaws\nAttached tail\nFollow-me eyes\nIn-head fans\nIndoor feet\nMovable jaw\nOutdoor feet', '', '30% upfront to reserve a slot, the rest before starting work or 30 % upfront to reserve slot, 100$ each next month until fully paid', 'Canine, Feline, Bat, Goat, Ram, Red panda, Panda, Bear, Ferret, Otter, Dinosaur, Dragon, Dutch Angel Dragon, Sergal, Raccon', '', 'English\nPolish', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: ds******na@gm*****om', '');
@@ -370,6 +370,7 @@ INSERT INTO artisans VALUES (349, 'SODACSC', '', 'SodaCreationsStudio', '', 'Hey
 INSERT INTO artisans VALUES (350, 'TINYDRC', '', 'Tiny Dream Creations', '', 'Heya, this is Tiny Dream. I\'m a small fursuit maker from Germany, and I\'d love you to look around at my homepage. I\'d love to make your next/first suit.', '2019-08', 'DE', '', 'Großröhrsdorf', 'Standard commissions', 'Toony', '', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nMovable jaw\nOutdoor feet\nRemovable eyelids', '', 'Normally 50% upfront, 50% when finished, but the upfront amount is negotiable (has to be at least 50%)', 'Canines in general, tigers, dragons, scalies, sergal, bird, hybrides', 'Horses, lions, bats', 'English\nGerman', 'Shipping international, speaks German and English fluently', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: tiny***********ions@gm*****om', '');
 INSERT INTO artisans VALUES (351, 'UNLESHD', '', 'Unleashed Studios', '', 'Welcome', '2015-12', 'CA', 'Ontario', 'Cambridge', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Realistic\nSemi Realistic\nToony', '', 'Feetpaws (as parts/separate)\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)', '', 'Adjustable eyebrows\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable eyelids\nRemovable horns/antlers', '', 'Minimum 40% Upfront.', 'Canines, vulpine, felines, equine, ungulates, sergal, mannokit, dragons, hyena, hybrids', 'Dutch Angel Dragons, Protogen, Avians, reptile', 'English', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: equ******e93@gm*****om', '');
 INSERT INTO artisans VALUES (353, 'GLXCRTN', '', 'Galaxy Creations', '', '', '2018-02', 'GB', '', 'Portsmouth', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', '', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Exchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet', '', 'Minimum 25% per month for parts or partials, 14% per month for full suits', '', '', 'English', '', 'ANNOUNCEMENTS', 'E-MAIL', 'E-MAIL: l****h@galax***********co.uk', '');
+INSERT INTO artisans VALUES (354, 'LSDSUIT', '', 'Liquid Sunshine Designs', '', 'Hi! Here at Liquid Sunshine we make your dreams come true. With a fun blend of Eastern and Western styles, we bring your character to life!', '2015-01', 'US', 'New York', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kemono\nToony', 'Kemoony Kemono/Toony', 'Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nElectronics/animatronics\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nOutdoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers', '', '100% up front or 40% down and rest in 3 months.', '', 'Sergals', '', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: liqui***********udios@gm*****om', '');
 DROP TABLE IF EXISTS events;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -385,7 +386,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1453 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1455 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -828,6 +829,7 @@ INSERT INTO events VALUES (1449, '2019-12-09 18:01:49', '', 'CS_UPDTD_DETLS', 1,
 INSERT INTO events VALUES (1450, '2019-12-10 06:01:48', '', 'CS_UPDTD_DETLS', NULL, 1,'chaoticreations', 'https://chaoticreations.wixsite.com/chaoticreations/commissions', '[\"omp-jzzoli0tinlinecontent-gridcontainer\\\" ><div class=\\\"txtnew\\\" id=\\\"comp-jzzougm8\\\"><h2 class=\\\"font_2\\\">\",\"commissions are open\",\"</h2></div><div data-min-height=\\\"165\\\" class=\\\"txtnew\\\" id=\\\"comp-jzzox4qg\\\"><p class=\\\"font_7\\\">i am curre\"]', '');
 INSERT INTO events VALUES (1451, '2019-12-11 06:02:10', '', 'CS_UPDTD_DETLS', 0, NULL, 'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '');
 INSERT INTO events VALUES (1452, '2019-12-11 18:01:48', '', 'CS_UPDTD_DETLS', NULL, 0,'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '[\"\\\"style-jdwcba4k\\\" >view slots</div><div class=\\\"txtnew\\\" id=\\\"comp-jk9wgizz\\\"><h2 class=\\\"font_2\\\">costume \",\"commissions: closed\",\"</h2> <h2 class=\\\"font_2\\\"></h2> <h2 class=\\\"font_2\\\">quotes are: open</h2></div><div class=\\\"style-jb2fe\"]');
+INSERT INTO events VALUES (1454, '2019-12-13 21:17:46', '', 'CS_UPDTD_DETLS', NULL, 1,'Liquid Sunshine Designs', 'https://liquidsunshinedesigns.weebly.com/', '[\"tent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\">\",\"now open for new orders\",\"!</h2> <div><div></div> order now <div></div></div> </div> </div> </div> </div> </div> <div class=\\\"w\"]', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -840,7 +842,7 @@ CREATE TABLE artisans_commissions_statues (
   PRIMARY KEY (`id`),
   UNIQUE KEY UNIQ_4148D9A35ED3C7B7 (artisan_id),
   CONSTRAINT FK_4148D9A35ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=322 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=323 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 DROP TABLE IF EXISTS artisans_urls;
@@ -854,7 +856,7 @@ CREATE TABLE artisans_urls (
   PRIMARY KEY (`id`),
   KEY IDX_45AAF3BC5ED3C7B7 (artisan_id),
   CONSTRAINT FK_45AAF3BC5ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9083 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9092 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO artisans_urls VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
@@ -2484,6 +2486,15 @@ INSERT INTO artisans_urls VALUES (9079,327,'URL_DEVIANTART', 'https://www.devian
 INSERT INTO artisans_urls VALUES (9080,327,'URL_TUMBLR', 'https://cupcakecritters.tumblr.com/');
 INSERT INTO artisans_urls VALUES (9081,327,'URL_INSTAGRAM', 'https://www.instagram.com/cupcake_critters/');
 INSERT INTO artisans_urls VALUES (9082,327,'URL_QUEUE', 'https://trello.com/b/G9jG5kAg/artwork');
+INSERT INTO artisans_urls VALUES (9083,354,'URL_WEBSITE', 'https://liquidsunshinedesigns.weebly.com/');
+INSERT INTO artisans_urls VALUES (9084,354,'URL_PRICES', 'https://liquidsunshinedesigns.weebly.com/prices.html');
+INSERT INTO artisans_urls VALUES (9085,354,'URL_FAQ', 'https://liquidsunshinedesigns.weebly.com/faqs.html');
+INSERT INTO artisans_urls VALUES (9086,354,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/lsdfursuits');
+INSERT INTO artisans_urls VALUES (9087,354,'URL_TWITTER', 'https://twitter.com/lsdfursuits');
+INSERT INTO artisans_urls VALUES (9088,354,'URL_FACEBOOK', 'https://www.facebook.com/liquidsunshinedesigns/');
+INSERT INTO artisans_urls VALUES (9089,354,'URL_INSTAGRAM', 'https://www.instagram.com/lsdfursuits/');
+INSERT INTO artisans_urls VALUES (9090,354,'URL_YOUTUBE', 'https://www.youtube.com/user/luckiione');
+INSERT INTO artisans_urls VALUES (9091,354,'URL_CST', 'https://liquidsunshinedesigns.weebly.com/');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
