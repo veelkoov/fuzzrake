@@ -386,7 +386,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1455 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1457 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -829,7 +829,10 @@ INSERT INTO events VALUES (1449, '2019-12-09 18:01:49', '', 'CS_UPDTD_DETLS', 1,
 INSERT INTO events VALUES (1450, '2019-12-10 06:01:48', '', 'CS_UPDTD_DETLS', NULL, 1,'chaoticreations', 'https://chaoticreations.wixsite.com/chaoticreations/commissions', '[\"omp-jzzoli0tinlinecontent-gridcontainer\\\" ><div class=\\\"txtnew\\\" id=\\\"comp-jzzougm8\\\"><h2 class=\\\"font_2\\\">\",\"commissions are open\",\"</h2></div><div data-min-height=\\\"165\\\" class=\\\"txtnew\\\" id=\\\"comp-jzzox4qg\\\"><p class=\\\"font_7\\\">i am curre\"]', '');
 INSERT INTO events VALUES (1451, '2019-12-11 06:02:10', '', 'CS_UPDTD_DETLS', 0, NULL, 'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '');
 INSERT INTO events VALUES (1452, '2019-12-11 18:01:48', '', 'CS_UPDTD_DETLS', NULL, 0,'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '', '[\"\\\"style-jdwcba4k\\\" >view slots</div><div class=\\\"txtnew\\\" id=\\\"comp-jk9wgizz\\\"><h2 class=\\\"font_2\\\">costume \",\"commissions: closed\",\"</h2> <h2 class=\\\"font_2\\\"></h2> <h2 class=\\\"font_2\\\">quotes are: open</h2></div><div class=\\\"style-jb2fe\"]');
+INSERT INTO events VALUES (1453, '2019-12-13 21:17:44', '', 'CS_UPDTD_DETLS', NULL, 1,'Vegasyote', 'https://vegasyote.weebly.com/', '[\" </div></div> </td> <td class=\\\"wsite-multicol-col\\\"> <h2 class=\\\"wsite-content-title\\\">~ physical item \",\"commissions are currently open\",\" ~</h2> </td> <td class=\\\"wsite-multicol-col\\\"> <div class=\\\"paragraph\\\">here, what is offered is the im\"]', '');
 INSERT INTO events VALUES (1454, '2019-12-13 21:17:46', '', 'CS_UPDTD_DETLS', NULL, 1,'Liquid Sunshine Designs', 'https://liquidsunshinedesigns.weebly.com/', '[\"tent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\">\",\"now open for new orders\",\"!</h2> <div><div></div> order now <div></div></div> </div> </div> </div> </div> </div> <div class=\\\"w\"]', '');
+INSERT INTO events VALUES (1455, '2019-12-13 21:20:16', '- 1 new maker based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/8eb24a2e198e091ac5e796fa6ef618f16a58fea0\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1456, '2019-12-14 06:01:44', '', 'CS_UPDTD_DETLS', 1, NULL, 'Vegasyote', 'https://vegasyote.weebly.com/', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
