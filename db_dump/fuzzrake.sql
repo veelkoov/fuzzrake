@@ -387,7 +387,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1458 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1462 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -835,6 +835,10 @@ INSERT INTO events VALUES (1454, '2019-12-13 21:17:46', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1455, '2019-12-13 21:20:16', '- 1 new maker based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/8eb24a2e198e091ac5e796fa6ef618f16a58fea0\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
 INSERT INTO events VALUES (1456, '2019-12-14 06:01:44', '', 'CS_UPDTD_DETLS', 1, NULL, 'Vegasyote', 'https://vegasyote.weebly.com/', '', '');
 INSERT INTO events VALUES (1457, '2019-12-14 20:42:01', '', 'CS_UPDTD_DETLS', NULL, 1,'Skylight Suits', 'http://skylightsuits.com/', '[\"/ul> </div> </nav> <h1>STUDIO_NAME</h1> <hr></hr> <div class = \\\"container\\\"> <div class = \\\"row\\\"> <h2>\",\"commission status: open\",\"!</h2> </div> <div class = \\\"row\\\"> <div class = \\\"col-lg-6 col-md-6 col-sm-12 col-xs-12\\\"> <div class =\"]', '');
+INSERT INTO events VALUES (1458, '2019-12-14 20:43:51', '- 1 new maker based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/cfbdbc27c66bf4568a8d83116c5ad08e9f8b4fd5\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1459, '2019-12-15 06:01:50', '', 'CS_UPDTD_DETLS', NULL, 1,'FursuitUP', 'http://www.fursuitup.com/', '[\".71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4v17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z\\\"/></svg></div></div>\",\"we are open for new quotes and commissions\",\"!</div></h3></div></div></div></div></div></div></div></div></div></section><section id=\\\"h.p_d8evyoa\"]', '');
+INSERT INTO events VALUES (1460, '2019-12-15 06:01:52', '', 'CS_UPDTD_DETLS', 1, 0,'chaoticreations', 'https://chaoticreations.wixsite.com/chaoticreations/commissions', '', '[\"omp-jzzoli0tinlinecontent-gridcontainer\\\" ><div class=\\\"txtnew\\\" id=\\\"comp-jzzougm8\\\"><h2 class=\\\"font_2\\\">\",\"commissions are closed\",\"</h2></div><div data-min-height=\\\"165\\\" class=\\\"txtnew\\\" id=\\\"comp-jzzox4qg\\\"><p class=\\\"font_7\\\">​</p> <p c\"]');
+INSERT INTO events VALUES (1461, '2019-12-16 06:01:43', '', 'CS_UPDTD_DETLS', 0, NULL, 'Meep\'s Marvelous Monstrosities', 'https://twitter.com/MarvelousMeep', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
