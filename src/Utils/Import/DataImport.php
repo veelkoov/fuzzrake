@@ -116,7 +116,7 @@ class DataImport
 
         $fixedInput = clone $input;
         $this->manager->correctArtisan($fixedInput);
-        $this->fixer->fixArtisanData($fixedInput);
+        $this->fixer->fix($fixedInput);
 
         $artisan = $this->findBestMatchArtisan($fixedInput) ?: new Artisan();
         $originalArtisan = clone $artisan; // Clone unmodified

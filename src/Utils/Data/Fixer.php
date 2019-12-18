@@ -77,12 +77,12 @@ class Fixer
      */
     private $introFixer;
 
-    public function __construct()
+    public function __construct(SpeciesListFixer $speciesListFixer)
     {
         $this->stringFixer = new StringFixer();
         $this->definedListFixer = new DefinedListFixer();
         $this->freeListFixer = new FreeListFixer();
-        $this->speciesListFixer = new SpeciesListFixer();
+        $this->speciesListFixer = $speciesListFixer;
         $this->urlFixer = new UrlFixer();
         $this->noopFixer = new NoopFixer();
         $this->sinceFixer = new SinceFixer();
@@ -92,7 +92,7 @@ class Fixer
         $this->contactAllowedFixer = new ContactAllowedFixer();
     }
 
-    public function fixArtisanData(Artisan $artisan): Artisan
+    public function fix(Artisan $artisan): Artisan
     {
         foreach (Fields::persisted() as $field) {
             $fixer = $this->getFixer($field);

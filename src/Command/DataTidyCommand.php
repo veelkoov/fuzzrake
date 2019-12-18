@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Data\Differ;
 use App\Utils\Data\Fixer;
-use App\Utils\Data\Validator;
+use App\Utils\Data\ValidatorFactory;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,10 +29,22 @@ class DataTidyCommand extends Command
      */
     private $objectManager;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    /**
+     * @var Fixer
+     */
+    private $fixer;
+
+    /**
+     * @var ValidatorFactory
+     */
+    private $validatorFactory;
+
+    public function __construct(ObjectManager $objectManager, Fixer $fixer, ValidatorFactory $validatorFactory)
     {
-        $this->artisanRepository = $artisanRepository;
+        $this->artisanRepository = $objectManager->getRepository(Artisan::class);
         $this->objectManager = $objectManager;
+        $this->fixer = $fixer;
+        $this->validatorFactory = $validatorFactory;
 
         parent::__construct();
     }
@@ -44,18 +57,17 @@ class DataTidyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $fixer = new Fixer();
-        $validator = new Validator($io);
+        $validator = $this->validatorFactory->create($io);
         $differ = new Differ($io);
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
             $originalArtisan = clone $artisan;
-            $fixer->fixArtisanData($artisan);
+            $this->fixer->fix($artisan);
             $differ->showDiff($originalArtisan, $artisan);
-        }
 
-        foreach ($this->artisanRepository->findAll() as $artisan) {
-            $validator->validate($artisan);
+            if (!$validator->validate($artisan)) {
+                $this->objectManager->refresh($artisan);
+            }
         }
 
         if ($input->getOption('commit')) {

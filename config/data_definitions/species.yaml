@@ -1,0 +1,152 @@
+parameters:
+  species:
+    valid_choices:
+      "Any species":
+      "Most species":
+      Real:
+        Pinnipeds: # FIXME
+          Seals:
+  
+        Mammals:
+          Marsupials:
+            Kangaroos:
+            Opossums:
+  
+          Cats:
+            "Small cats":
+              "Domestic cats":
+            "Big cats":
+              Lions:
+              Lynxes:
+              Tigers:
+  
+          Bears:
+            Panda:
+  
+          Bats:
+  
+          Hooved:
+            Horses:
+            Rams:
+            Goats:
+            Cervines:
+              Deers:
+            Cows:
+  
+          Canines:
+            Vulpines:
+              Foxes:
+              Fennecs:
+            Wolves:
+            Hyenas:
+            Domestic dogs:
+  
+          Mustelids: # weasels, badgers, otters, ferrets, martens, minks, and wolverines
+            Otters:
+            Ferrets:
+  
+          Rodents:
+            Mouse:
+            Rats:
+  
+        Avians: == birds
+          Birds:
+  
+        Scalies:
+          Reptilians: # == Reptiles ==  turtles, crocodilians, snakes, amphisbaenians, lizards, tuatara
+            Lizards:
+  
+      Hybrides:
+  
+      Fiction/fantasy:
+        MLP:
+        "Skull animals":
+        "Ghost Bones Dragon":
+        Manokits:
+        Dutchies:
+        "Dutch Angel Dragons":
+        "Angel Dragons":
+        Gryphons:
+        Sergals:
+        Dragons:
+        Protogens:
+        "TV heads":
+        Wickerbeasts:
+  
+      Dinosaurs:
+  
+      Monkeys:
+      Raccons:
+  
+      Aquatic:
+  
+      Rhinos:
+  
+      "Red pandas":
+
+    replacements:
+      'Currently not available for reptilian or avian characters':  "Avians\nReptilians"
+      'Canines, felines, mustelids, and rodents':                   "Canines\nFelines\nMustelids\nRodents"
+      '"([^"]+)"':                                                  '$1'
+
+      '((Any and )?All ?!?|Anything|(Any|all) ?(species?|creatures?|kind|really)( (are )?welcome)?)':  'Any species'
+      '(Will(ing)? (to )?(try|craft|do) Any(thing| species)?)':                                        'Any species'
+      '((I will do just about|We are okay with|Happy to do) any species!?)':                           'Any species'
+      '(I''m (willing|open) to (take on any species|consider anything|almost anything))':              'Any species'
+      '(Everything and anything)':                                                                     'Any species'
+
+      '(Almost everything\. Just ask|Almost (all|Any)(thing| species?| animals?)?)':                   'Most species'
+      '(All species for the most part|Open to most species|Most animals OK|Most species considered)':  'Most species'
+      '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
+
+      'None':  ''
+
+      '(\s|^)and':                          ''
+      'I can craft any real life animal':   'Real life animals'
+      'Avians?':                            'Avians'
+      'Bats?':                              'Bats'
+      'Bears?':                             'Bears'
+      'Big/small felines':                  "Big felines\nSmall felines"
+      'Big and small cats':                 "Big cats\nSmall cats"
+      'Birds?':                             'Birds'
+      'Bunn(y|ies)':                        'Bunnies'
+      'Cats?':                              'Cats'
+      'Canines?( in)? ?\(?general\)?':      'Canines in general'
+      'copyrighted characters?[ !]*':       'Copyrighted characters'
+      'Deers?':                             'Deers'
+      'Dinosaurs?':                         'Dinosaurs'
+      'Dogs?':                              'Dogs'
+      'Dragons?':                           'Dragons'
+      'Drekkubus(es)?':                     'Drekkubuses'
+      'Angel dragons?':                     'Angel dragons'
+      'Dutch Angel Dragons/Angel Dragons':  "Dutch Angel Dragons\nAngel Dragons"
+      'DAD''s':                             'Dutch Angel Dragons'
+      'Equines?':                           'Equines'
+      'Felines?':                           'Felines'
+      'Fennecs?':                           'Fennecs'
+      'Ferrets?':                           'Ferrets'
+      'Fish(es)?':                          'Fishes'
+      'Fox(es)?':                           'Foxes'
+      'Goats?':                             'Goats'
+      'Hyenas?':                            'Hyenas'
+      'K-9''s':                             'Canines'
+      'Lions?':                             'Lions'
+      'Lupines?':                           'Lupines'
+      'Mann?okits?':                        'Manokits'
+      'Monkeys?':                           'Monkeys'
+      'Opossums?':                          'Opossums'
+      'Otters?':                            'Otters'
+      'Primagens and protogens':            "Primagens\nProtogens"
+      'Protogens?':                         'Protogens'
+      'Rams?':                              'Rams'
+      'Rats?':                              'Rats'
+      'Raccoons?':                          'Raccoons'
+      'Red pandas?':                        'Red pandas'
+      'Reptiles?':                          'Reptiles'
+      'Reptilians?':                        'Reptilians'
+      'Rodents?':                           'Rodents'
+      'Ser[gi]als?':                        'Sergals'
+      'Skull Animals?':                     'Skull animals'
+      'Wolf':                               'Wolves'
+      'Wickerbeasts?':                      'Wickerbeasts'
+      'Vulpines?':                          'Vulpines'

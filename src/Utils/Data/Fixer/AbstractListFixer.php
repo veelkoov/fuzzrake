@@ -66,7 +66,7 @@ abstract class AbstractListFixer extends StringFixer
 
         $subject = StringList::pack($items);
 
-        foreach (static::getReplacements() as $pattern => $replacement) {
+        foreach ($this->getReplacements() as $pattern => $replacement) {
             $subject = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $subject);
         }
 
@@ -95,7 +95,7 @@ abstract class AbstractListFixer extends StringFixer
     /**
      * @return string[]
      */
-    protected static function getReplacements(): array
+    protected function getReplacements(): array
     {
         return self::REPLACEMENTS;
     }

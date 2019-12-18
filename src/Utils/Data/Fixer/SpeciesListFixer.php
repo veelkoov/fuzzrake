@@ -15,42 +15,28 @@ class SpeciesListFixer extends AbstractListFixer
         'Almost everything. Just ask',
         'If I find something would be too complicated to pull off, I may decline.',
         'skullsuits...', // FIXME: How the heck am i supposed to interpret that
+        'None specifically that I can think of, if unsure just ask',
+        'Will not do characters with antlers or overly complicated anatomy (3 mouths, 4 eyes, etc.)',
+        'I won\'t take on anything that has a beak like ducks, birds, and pancans.',
+        'I\'m willing to take on any species, but enjoy making monsters and creepy/crazy species most!',
+        'Any and all within my capabilities of foam/fur/minky crafting. Unique or uncommon species are my soft spot.',
     ];
 
-    private const REPLACEMENTS = [
-        'Currently not available for reptilian or avian characters' => "Avians\nReptilians",
-        'Canines, felines, mustelids, and rodents'                  => "Canines\nFelines\nMustelids\nRodents",
+    /**
+     * @var string|array[]
+     */
+    private $validChoices;
 
-        'All ?!?'                           => 'Any',
-        'Almost everything. Just ask'       => 'Most species',
-        'Avians?'                           => 'Avians',
-        'Big/small felines'                 => "Big felines\nSmall felines",
-        'Big and small cats'                => "Big cats\nSmall cats",
-        'Birds?'                            => 'Birds',
-        'Cats?'                             => 'Cats',
-        'Deers?'                            => 'Deers',
-        'Dogs?'                             => 'Dogs',
-        'Dragons?'                          => 'Dragons',
-        'Drekkubus(es)?'                    => 'Drekkubuses',
-        'Dutch Angel Dragons/Angel Dragons' => "Dutch Angel Dragons\nAngel Dragons",
-        'Equines?'                          => 'Equines',
-        'Fish(es)?'                         => 'Fishes',
-        'Fox(es)?'                          => 'Foxes',
-        'K-9\'s'                            => 'Canines',
-        'Lions?'                            => 'Lions',
-        'Manokits?'                         => 'Manokits',
-        'Opossums?'                         => 'Opossums',
-        'Primagens and protogens'           => "Primagens\nProtogens",
-        'Protogens?'                        => 'Protogens',
-        'Rats?'                             => 'Rats',
-        'Reptiles?'                         => 'Reptiles',
-        'Reptilians?'                       => 'Reptilians',
-        'Ser[gi]als?'                       => 'Sergals',
-        'Skull Animals?'                    => 'Skull animals',
-        'Wolf'                              => 'Wolves',
-        'Wickerbeasts?'                     => 'Wickerbeasts',
-        'Vulpines?'                         => 'Vulpine',
-    ];
+    /**
+     * @var string[]
+     */
+    private $replacements;
+
+    public function __construct(array $species)
+    {
+        $this->validChoices = $this->gatherValidChoices($species['valid_choices']);
+        $this->replacements = $species['replacements'];
+    }
 
     protected static function shouldSort(): bool
     {
@@ -67,8 +53,24 @@ class SpeciesListFixer extends AbstractListFixer
         return self::UNSPLITTABLE;
     }
 
-    protected static function getReplacements(): array
+    protected function getReplacements(): array
     {
-        return self::REPLACEMENTS;
+        return $this->replacements;
+    }
+
+    /**
+     * @param string[] $species
+     */
+    private function gatherValidChoices(array $species): array
+    {
+        $result = array_keys($species);
+
+        foreach ($species as $specie => $subspecies) {
+            if (is_array($subspecies)) {
+                $result = array_merge($result, $this->gatherValidChoices($subspecies));
+            }
+        }
+
+        return $result;
     }
 }
