@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Repository\ArtisanRepository;
+use App\Utils\Data\Differ;
 use App\Utils\Data\Fixer;
+use App\Utils\Data\Validator;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,14 +44,18 @@ class DataTidyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $fixer = new Fixer($io, true);
+        $fixer = new Fixer();
+        $validator = new Validator($io);
+        $differ = new Differ($io);
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
+            $originalArtisan = clone $artisan;
             $fixer->fixArtisanData($artisan);
+            $differ->showDiff($originalArtisan, $artisan);
         }
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
-            $fixer->validateArtisanData($artisan);
+            $validator->validate($artisan);
         }
 
         if ($input->getOption('commit')) {

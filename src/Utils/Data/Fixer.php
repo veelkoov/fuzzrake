@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Fixer\ContactAllowedFixer;
 use App\Utils\Data\Fixer\CountryFixer;
@@ -18,28 +19,9 @@ use App\Utils\Data\Fixer\SinceFixer;
 use App\Utils\Data\Fixer\SpeciesListFixer;
 use App\Utils\Data\Fixer\StringFixer;
 use App\Utils\Data\Fixer\UrlFixer;
-use App\Utils\Regexp\Utils as Regexp;
-use App\Utils\StrUtils;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Fixer
 {
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @var Differ
-     */
-    private $differ;
-
-    /**
-     * @var bool
-     */
-    private $showDiff;
-
     /**
      * @var StringFixer
      */
@@ -95,12 +77,8 @@ class Fixer
      */
     private $introFixer;
 
-    public function __construct(SymfonyStyle $io, bool $showDiff)
+    public function __construct()
     {
-        $this->io = $io;
-        $this->io->getFormatter()->setStyle('wrong', new OutputFormatterStyle('red'));
-
-        $this->differ = new Differ($io);
         $this->stringFixer = new StringFixer();
         $this->definedListFixer = new DefinedListFixer();
         $this->freeListFixer = new FreeListFixer();
@@ -112,38 +90,20 @@ class Fixer
         $this->countryFixer = new CountryFixer();
         $this->introFixer = new IntroFixer();
         $this->contactAllowedFixer = new ContactAllowedFixer();
-
-        $this->showDiff = $showDiff;
     }
 
     public function fixArtisanData(Artisan $artisan): Artisan
     {
-        $originalArtisan = clone $artisan;
-
         foreach (Fields::persisted() as $field) {
             $fixer = $this->getFixer($field);
 
             $artisan->set($field, $fixer->fix($field->name(), $artisan->get($field)));
         }
 
-        if ($this->showDiff) {
-            $this->differ->showDiff($originalArtisan, $artisan);
-        }
-
         return $artisan;
     }
 
-    public function validateArtisanData(Artisan $artisan): void
-    {
-        foreach (Fields::persisted() as $field) {
-            if ($field->validationRegexp() && !Regexp::match($field->validationRegexp(), $artisan->get($field))) {
-                $safeValue = StrUtils::strSafeForCli($artisan->get($field));
-                $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
-            }
-        }
-    }
-
-    private function getFixer(\App\Utils\Artisan\Field $field): FixerInterface
+    private function getFixer(Field $field): FixerInterface
     {
         switch ($field->name()) {
             case Fields::NAME:
