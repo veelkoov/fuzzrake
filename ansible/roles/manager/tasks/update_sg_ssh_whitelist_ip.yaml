@@ -1,5 +1,5 @@
 ---
-- shell: curl -4 http://ifconfig.co/ip
+- shell: curl -4 https://api.ipify.org/
   register: ip_output
   args:
     warn: false
