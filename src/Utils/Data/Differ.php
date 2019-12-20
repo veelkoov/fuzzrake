@@ -18,15 +18,9 @@ class Differ
      */
     private $io;
 
-    /**
-     * @var bool
-     */
-    private $showFixCommands;
-
-    public function __construct(SymfonyStyle $io, bool $showFixCommands = false)
+    public function __construct(SymfonyStyle $io)
     {
         $this->io = $io;
-        $this->showFixCommands = $showFixCommands;
 
         $this->io->getFormatter()->setStyle('a', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('d', new OutputFormatterStyle('red'));
@@ -43,6 +37,11 @@ class Differ
         }
     }
 
+    public function showDiffFixed(FixedArtisan $artisan): void
+    {
+        $this->showDiff($artisan->getOriginal(), $artisan->getFixed());
+    }
+
     private function showSingleFieldDiff(bool &$nameShown, Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
         $newVal = $new->get($field) ?: '';
@@ -57,8 +56,6 @@ class Differ
             } else {
                 $this->showSingleValueDiff($field->name(), $oldVal, $newVal, $impVal);
             }
-
-            $this->showFixCommandOptionally($new->getMakerId(), $field, $impVal ?? $oldVal, $newVal);
 
             $this->io->writeln('');
         }
@@ -124,27 +121,8 @@ class Differ
         }
     }
 
-    private function showFixCommandOptionally(string $makerId, Field $field, string $replaced, string $best)
-    {
-        if ($this->showFixCommands && !$this->skipFixCommand($field->name())) {
-            $replaced = StrUtils::strSafeForCli($replaced);
-            $best = StrUtils::strSafeForCli($best);
-            $this->io->writeln("<f>wr:$makerId:{$field->name()}:|:$replaced|$best|</f>");
-        }
-    }
-
     private function skipImpValue(string $fieldName): bool
     {
         return in_array($fieldName, [Fields::CONTACT_ALLOWED, Fields::CONTACT_METHOD, Fields::CONTACT_INFO_OBFUSCATED]);
-    }
-
-    private function skipFixCommand(string $fieldName): bool
-    {
-        return in_array($fieldName, [
-            Fields::CONTACT_ALLOWED,
-            Fields::CONTACT_METHOD,
-            Fields::CONTACT_INFO_OBFUSCATED,
-            Fields::CONTACT_ADDRESS_PLAIN,
-        ]);
     }
 }

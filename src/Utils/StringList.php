@@ -13,8 +13,12 @@ abstract class StringList
     /**
      * @return string[]
      */
-    public static function unpack(string $input): array
+    public static function unpack(?string $input): array
     {
+        if (null === $input || '' === $input) {
+            return [];
+        }
+
         return explode(self::STD_SEPARATOR, $input);
     }
 

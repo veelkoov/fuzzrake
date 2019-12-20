@@ -8,8 +8,7 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
-use App\Utils\Data\Differ;
-use App\Utils\Data\Fixer;
+use App\Utils\Data\FixerDifferValidator;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StrUtils;
@@ -29,16 +28,6 @@ class DataImport
     private $objectManager;
 
     /**
-     * @var Fixer
-     */
-    private $fixer;
-
-    /**
-     * @var Differ
-     */
-    private $differ;
-
-    /**
      * @var Manager
      */
     private $manager;
@@ -48,16 +37,21 @@ class DataImport
      */
     private $io;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager,
-        Manager $importManager, SymfonyStyle $io, bool $showFixCommands)
+    /**
+     * @var FixerDifferValidator
+     */
+    private $fdv;
+
+    public function __construct(ObjectManager $objectManager,
+        Manager $importManager, SymfonyStyle $io, bool $showFixCommands, FixerDifferValidator $fdv)
     {
-        $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
+        $this->manager = $importManager;
         $this->io = $io;
 
-        $this->fixer = new Fixer($io, false);
-        $this->differ = new Differ($io, $showFixCommands);
-        $this->manager = $importManager;
+        $this->artisanRepository = $objectManager->getRepository(Artisan::class);
+
+        $this->fdv = $fdv;
     }
 
     /**
@@ -116,7 +110,7 @@ class DataImport
 
         $fixedInput = clone $input;
         $this->manager->correctArtisan($fixedInput);
-        $this->fixer->fix($fixedInput);
+        $this->fdv->fix($fixedInput);
 
         $artisan = $this->findBestMatchArtisan($fixedInput) ?: new Artisan();
         $originalArtisan = clone $artisan; // Clone unmodified
@@ -136,7 +130,7 @@ class DataImport
                 $item->getArtisan()->setPasscode($item->getProvidedPasscode());
             }
 
-            $this->differ->showDiff($item->getOriginalArtisan(), $item->getArtisan(), $item->getInput());
+            $this->fdv->showDiff($item->getOriginalArtisan(), $item->getArtisan(), $item->getInput());
 
             $this->persistImportIfValid($item);
         }
@@ -199,7 +193,7 @@ class DataImport
     {
         $new = $item->getArtisan();
         $old = $item->getOriginalArtisan();
-        $this->fixer->validateArtisanData($new);
+        $this->fdv->validate($new);
         $ok = true;
 
         if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {

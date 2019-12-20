@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Validator\GenericValidator;
@@ -40,21 +39,17 @@ class Validator
         $this->genericValidator = new GenericValidator();
     }
 
-    public function validate(Artisan $artisan): bool
+    public function resetInvalidFields(FixedArtisan $artisan, bool $showFixCommands): void
     {
-        $result = true;
-
         foreach (Fields::persisted() as $field) {
-            if (!$this->getValidator($field)->validate($field, $artisan->get($field))) {
-                $safeValue = StrUtils::strSafeForCli($artisan->get($field));
+            if (!$this->getValidator($field)->validate($field, $artisan->getFixed()->get($field))) {
+                if ($showFixCommands) {
+                    $this->printFixCommandOptionally($field, $artisan);
+                }
 
-                $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
-
-                $result = false;
+                $artisan->reset($field);
             }
         }
-
-        return $result;
     }
 
     private function getValidator(Field $field): ValidatorInterface
@@ -67,5 +62,27 @@ class Validator
             default:
                 return $this->genericValidator;
         }
+    }
+
+    private function printFixCommandOptionally(Field $field, FixedArtisan $artisan): void
+    {
+        if (!$this->hideFixCommandFor($field)) {
+            $fieldName = $field->name();
+            $makerId = $artisan->getFixed()->getMakerId();
+            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field));
+            $originalVal = StrUtils::strSafeForCli($artisan->getOriginal()->get($field));
+
+            $this->io->writeln("wr:$makerId:$fieldName:|:<wrong>$originalVal</>|$proposedVal|");
+        }
+    }
+
+    private function hideFixCommandFor(Field $field): bool
+    {
+        return in_array($field->name(), [
+            Fields::CONTACT_ALLOWED,
+            Fields::CONTACT_METHOD,
+            Fields::CONTACT_INFO_OBFUSCATED,
+            Fields::CONTACT_ADDRESS_PLAIN,
+        ]);
     }
 }

@@ -19,6 +19,7 @@ use App\Utils\Data\Fixer\SinceFixer;
 use App\Utils\Data\Fixer\SpeciesListFixer;
 use App\Utils\Data\Fixer\StringFixer;
 use App\Utils\Data\Fixer\UrlFixer;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class Fixer
 {
@@ -77,7 +78,12 @@ class Fixer
      */
     private $introFixer;
 
-    public function __construct(SpeciesListFixer $speciesListFixer)
+    /**
+     * @var ObjectManager
+     */
+    private $objectMgr;
+
+    public function __construct(ObjectManager $objectMgr, SpeciesListFixer $speciesListFixer)
     {
         $this->stringFixer = new StringFixer();
         $this->definedListFixer = new DefinedListFixer();
@@ -90,6 +96,12 @@ class Fixer
         $this->countryFixer = new CountryFixer();
         $this->introFixer = new IntroFixer();
         $this->contactAllowedFixer = new ContactAllowedFixer();
+        $this->objectMgr = $objectMgr;
+    }
+
+    public function getFixed(Artisan $artisan): FixedArtisan
+    {
+        return new FixedArtisan(clone $artisan, $this->fix($artisan), $this->objectMgr);
     }
 
     public function fix(Artisan $artisan): Artisan

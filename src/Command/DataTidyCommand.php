@@ -6,9 +6,9 @@ namespace App\Command;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Data\Differ;
+use App\Utils\Data\FdvFactory;
+use App\Utils\Data\FixedArtisan;
 use App\Utils\Data\Fixer;
-use App\Utils\Data\ValidatorFactory;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,16 +35,16 @@ class DataTidyCommand extends Command
     private $fixer;
 
     /**
-     * @var ValidatorFactory
+     * @var FdvFactory
      */
-    private $validatorFactory;
+    private $fdvFactory;
 
-    public function __construct(ObjectManager $objectManager, Fixer $fixer, ValidatorFactory $validatorFactory)
+    public function __construct(ObjectManager $objectManager, Fixer $fixer, FdvFactory $fdvFactory)
     {
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
         $this->objectManager = $objectManager;
         $this->fixer = $fixer;
-        $this->validatorFactory = $validatorFactory;
+        $this->fdvFactory = $fdvFactory;
 
         parent::__construct();
     }
@@ -57,17 +57,13 @@ class DataTidyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $validator = $this->validatorFactory->create($io);
-        $differ = new Differ($io);
+        $fdv = $this->fdvFactory->create($io);
 
-        foreach ($this->artisanRepository->findAll() as $artisan) {
-            $originalArtisan = clone $artisan;
-            $this->fixer->fix($artisan);
-            $differ->showDiff($originalArtisan, $artisan);
+        $artisans = $this->getFixed($this->artisanRepository->findAll());
 
-            if (!$validator->validate($artisan)) {
-                $this->objectManager->refresh($artisan);
-            }
+        foreach ($artisans as $artisan) {
+            $fdv->showDiffFixed($artisan);
+            $fdv->resetInvalidFields($artisan, true);
         }
 
         if ($input->getOption('commit')) {
@@ -76,5 +72,17 @@ class DataTidyCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+    }
+
+    /**
+     * @param Artisan[] $artisans
+     *
+     * @return FixedArtisan[]
+     */
+    private function getFixed(array $artisans): array
+    {
+        return array_map(function (Artisan $artisan) {
+            return $this->fixer->getFixed($artisan);
+        }, $artisans);
     }
 }

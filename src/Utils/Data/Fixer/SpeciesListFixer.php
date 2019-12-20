@@ -23,18 +23,12 @@ class SpeciesListFixer extends AbstractListFixer
     ];
 
     /**
-     * @var string|array[]
-     */
-    private $validChoices;
-
-    /**
      * @var string[]
      */
     private $replacements;
 
     public function __construct(array $species)
     {
-        $this->validChoices = $this->gatherValidChoices($species['valid_choices']);
         $this->replacements = $species['replacements'];
     }
 
@@ -56,21 +50,5 @@ class SpeciesListFixer extends AbstractListFixer
     protected function getReplacements(): array
     {
         return $this->replacements;
-    }
-
-    /**
-     * @param string[] $species
-     */
-    private function gatherValidChoices(array $species): array
-    {
-        $result = array_keys($species);
-
-        foreach ($species as $specie => $subspecies) {
-            if (is_array($subspecies)) {
-                $result = array_merge($result, $this->gatherValidChoices($subspecies));
-            }
-        }
-
-        return $result;
     }
 }
