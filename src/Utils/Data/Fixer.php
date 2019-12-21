@@ -19,7 +19,6 @@ use App\Utils\Data\Fixer\SinceFixer;
 use App\Utils\Data\Fixer\SpeciesListFixer;
 use App\Utils\Data\Fixer\StringFixer;
 use App\Utils\Data\Fixer\UrlFixer;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class Fixer
 {
@@ -78,12 +77,7 @@ class Fixer
      */
     private $introFixer;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectMgr;
-
-    public function __construct(ObjectManager $objectMgr, SpeciesListFixer $speciesListFixer)
+    public function __construct(SpeciesListFixer $speciesListFixer)
     {
         $this->stringFixer = new StringFixer();
         $this->definedListFixer = new DefinedListFixer();
@@ -96,23 +90,11 @@ class Fixer
         $this->countryFixer = new CountryFixer();
         $this->introFixer = new IntroFixer();
         $this->contactAllowedFixer = new ContactAllowedFixer();
-        $this->objectMgr = $objectMgr;
     }
 
-    public function getFixed(Artisan $artisan): FixedArtisan
+    public function fix(Artisan $artisan, Field $field): void
     {
-        return new FixedArtisan(clone $artisan, $this->fix($artisan), $this->objectMgr);
-    }
-
-    public function fix(Artisan $artisan): Artisan
-    {
-        foreach (Fields::persisted() as $field) {
-            $fixer = $this->getFixer($field);
-
-            $artisan->set($field, $fixer->fix($field->name(), $artisan->get($field)));
-        }
-
-        return $artisan;
+        $artisan->set($field, $this->getFixer($field)->fix($field->name(), $artisan->get($field)));
     }
 
     private function getFixer(Field $field): FixerInterface

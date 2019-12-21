@@ -8,5 +8,5 @@ use App\Utils\Artisan\Field;
 
 interface ValidatorInterface
 {
-    public function validate(Field $field, $subject): bool;
+    public function isValid(Field $field, $subject): bool;
 }

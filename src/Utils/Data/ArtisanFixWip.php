@@ -8,7 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class FixedArtisan
+class ArtisanFixWip
 {
     /**
      * @var Artisan
@@ -25,10 +25,10 @@ class FixedArtisan
      */
     private $objectMgr;
 
-    public function __construct(Artisan $original, Artisan $fixed, ObjectManager $objectMgr)
+    public function __construct(Artisan $fixSubject, ObjectManager $objectMgr)
     {
-        $this->original = $original;
-        $this->fixed = $fixed;
+        $this->original = clone $fixSubject;
+        $this->fixed = $fixSubject;
         $this->objectMgr = $objectMgr;
     }
 

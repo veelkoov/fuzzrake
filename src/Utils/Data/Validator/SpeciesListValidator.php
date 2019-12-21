@@ -19,7 +19,7 @@ class SpeciesListValidator implements ValidatorInterface
         $this->validChoices = $this->gatherValidChoices($species['valid_choices']);
     }
 
-    public function validate(Field $field, $subject): bool
+    public function isValid(Field $field, $subject): bool
     {
         foreach (StringList::unpack($subject) as $specie) {
             if (!in_array($specie, $this->validChoices)) {

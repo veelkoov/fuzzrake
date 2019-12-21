@@ -7,8 +7,8 @@ namespace App\Command;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Data\FdvFactory;
-use App\Utils\Data\FixedArtisan;
-use App\Utils\Data\Fixer;
+use App\Utils\Data\FixerDifferValidator as FDV;
+use App\Utils\Data\Printer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,20 +30,14 @@ class DataTidyCommand extends Command
     private $objectManager;
 
     /**
-     * @var Fixer
-     */
-    private $fixer;
-
-    /**
      * @var FdvFactory
      */
     private $fdvFactory;
 
-    public function __construct(ObjectManager $objectManager, Fixer $fixer, FdvFactory $fdvFactory)
+    public function __construct(ObjectManager $objectManager, FdvFactory $fdvFactory)
     {
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
         $this->objectManager = $objectManager;
-        $this->fixer = $fixer;
         $this->fdvFactory = $fdvFactory;
 
         parent::__construct();
@@ -57,13 +51,10 @@ class DataTidyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $fdv = $this->fdvFactory->create($io);
+        $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $artisans = $this->getFixed($this->artisanRepository->findAll());
-
-        foreach ($artisans as $artisan) {
-            $fdv->showDiffFixed($artisan);
-            $fdv->resetInvalidFields($artisan, true);
+        foreach ($this->artisanRepository->findAll() as $artisan) {
+            $fdv->perform($artisan, FDV::FIX | FDV::SHOW_DIFF | FDV::RESET_INVALID_PLUS_SHOW_FIX_CMD);
         }
 
         if ($input->getOption('commit')) {
@@ -72,17 +63,5 @@ class DataTidyCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
-    }
-
-    /**
-     * @param Artisan[] $artisans
-     *
-     * @return FixedArtisan[]
-     */
-    private function getFixed(array $artisans): array
-    {
-        return array_map(function (Artisan $artisan) {
-            return $this->fixer->getFixed($artisan);
-        }, $artisans);
     }
 }

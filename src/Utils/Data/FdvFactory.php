@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Utils\Data\Fixer\SpeciesListFixer;
 use App\Utils\Data\Validator\SpeciesListValidator;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class FdvFactory
 {
@@ -17,9 +15,9 @@ class FdvFactory
     private $objectMgr;
 
     /**
-     * @var SpeciesListFixer
+     * @var Fixer
      */
-    private $speciesListFixer;
+    private $fixer;
 
     /**
      * @var SpeciesListValidator
@@ -28,16 +26,16 @@ class FdvFactory
 
     public function __construct(
         ObjectManager $objectMgr,
-        SpeciesListFixer $speciesListFixer,
+        Fixer $fixer,
         SpeciesListValidator $speciesListValidator
     ) {
         $this->objectMgr = $objectMgr;
-        $this->speciesListFixer = $speciesListFixer;
+        $this->fixer = $fixer;
         $this->speciesListValidator = $speciesListValidator;
     }
 
-    public function create(SymfonyStyle $io): FixerDifferValidator
+    public function create(Printer $printer): FixerDifferValidator
     {
-        return new FixerDifferValidator($this->objectMgr, $this->speciesListFixer, $this->speciesListValidator, $io);
+        return new FixerDifferValidator($this->objectMgr, $this->fixer, $this->speciesListValidator, $printer);
     }
 }

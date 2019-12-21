@@ -7,77 +7,44 @@ namespace App\Utils\Data;
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
+use App\Utils\StringList;
 use App\Utils\StrUtils;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Differ
 {
     /**
-     * @var SymfonyStyle
+     * @var Printer
      */
-    private $io;
+    private $printer;
 
-    public function __construct(SymfonyStyle $io)
+    public function __construct(Printer $printer)
     {
-        $this->io = $io;
-
-        $this->io->getFormatter()->setStyle('a', new OutputFormatterStyle('green'));
-        $this->io->getFormatter()->setStyle('d', new OutputFormatterStyle('red'));
-        $this->io->getFormatter()->setStyle('i', new OutputFormatterStyle('black', 'cyan'));
-        $this->io->getFormatter()->setStyle('f', new OutputFormatterStyle('blue'));
+        $this->printer = $printer;
     }
 
-    public function showDiff(Artisan $old, Artisan $new, Artisan $imported = null): void
-    {
-        $nameShown = false;
-
-        foreach (Fields::persisted() as $field) {
-            $this->showSingleFieldDiff($nameShown, $field, $old, $new, $imported);
-        }
-    }
-
-    public function showDiffFixed(FixedArtisan $artisan): void
-    {
-        $this->showDiff($artisan->getOriginal(), $artisan->getFixed());
-    }
-
-    private function showSingleFieldDiff(bool &$nameShown, Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
+    public function showDiff(Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
         $newVal = $new->get($field) ?: '';
         $oldVal = $old->get($field) ?: '';
         $impVal = $imported ? $imported->get($field) : null;
 
         if ($oldVal !== $newVal) {
-            $this->showArtisanNameIfFirstTime($nameShown, $old, $new);
-
             if ($field->isList()) {
                 $this->showListDiff($field->name(), $oldVal, $newVal, $impVal);
             } else {
                 $this->showSingleValueDiff($field->name(), $oldVal, $newVal, $impVal);
             }
-
-            $this->io->writeln('');
-        }
-    }
-
-    private function showArtisanNameIfFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
-    {
-        if (!$nameShown) {
-            $this->io->section(StrUtils::artisanNamesSafeForCli($old, $new));
-
-            $nameShown = true;
         }
     }
 
     private function showListDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
-        $oldValItems = explode("\n", $oldVal);
-        $newValItems = explode("\n", $newVal);
+        $oldValItems = StringList::unpack($oldVal);
+        $newValItems = StringList::unpack($newVal);
 
         foreach ($oldValItems as &$item) {
             if (!in_array($item, $newValItems)) {
-                $item = "<d>$item</>";
+                $item = Printer::formatDeleted($item);
             }
 
             $item = StrUtils::strSafeForCli($item);
@@ -85,7 +52,7 @@ class Differ
 
         foreach ($newValItems as &$item) {
             if (!in_array($item, $oldValItems)) {
-                $item = "<a>$item</>";
+                $item = Printer::formatAdded($item);
             }
 
             $item = StrUtils::strSafeForCli($item);
@@ -93,31 +60,31 @@ class Differ
 
         if ($impVal && $impVal !== $newVal) {
             $impVal = StrUtils::strSafeForCli($impVal ?: '');
-            $this->io->writeln("IMP $fieldName: <i>$impVal</>");
+            $this->printer->writeln("IMP $fieldName: ".Printer::formatImported($impVal));
         }
 
         if ($oldVal) { // In case order changed or duplicates got removed, etc.
-            $this->io->writeln("OLD $fieldName: ".implode('|', $oldValItems));
+            $this->printer->writeln("OLD $fieldName: ".implode('|', $oldValItems));
         }
 
-        $this->io->writeln("NEW $fieldName: ".implode('|', $newValItems));
+        $this->printer->writeln("NEW $fieldName: ".implode('|', $newValItems));
     }
 
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
         if ($impVal && $impVal !== $newVal && !$this->skipImpValue($fieldName)) {
             $impVal = StrUtils::strSafeForCli($impVal ?: '');
-            $this->io->writeln("IMP $fieldName: <i>$impVal</>");
+            $this->printer->writeln("IMP $fieldName: ".Printer::formatImported($impVal));
         }
 
         if ($oldVal) {
             $oldVal = StrUtils::strSafeForCli($oldVal);
-            $this->io->writeln("OLD $fieldName: <d>$oldVal</>");
+            $this->printer->writeln("OLD $fieldName: ".Printer::formatDeleted($oldVal));
         }
 
         if ($newVal) {
             $newVal = StrUtils::strSafeForCli($newVal);
-            $this->io->writeln("NEW $fieldName: <a>$newVal</>");
+            $this->printer->writeln("NEW $fieldName: ".Printer::formatAdded($newVal));
         }
     }
 
