@@ -43,8 +43,18 @@ class DataImport
      */
     private $fdv;
 
-    public function __construct(ObjectManager $objectManager, Manager $importManager, Printer $printer, FDV $fdv)
-    {
+    /**
+     * @var bool
+     */
+    private $showAllFixCmds;
+
+    public function __construct(
+        ObjectManager $objectManager,
+        Manager $importManager,
+        Printer $printer,
+        FDV $fdv,
+        bool $showAllFixCmds
+    ) {
         $this->objectManager = $objectManager;
         $this->manager = $importManager;
         $this->printer = $printer;
@@ -52,6 +62,7 @@ class DataImport
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
 
         $this->fdv = $fdv;
+        $this->showAllFixCmds = $showAllFixCmds;
     }
 
     /**
@@ -125,6 +136,8 @@ class DataImport
      */
     private function processImportItems(array $items): void
     {
+        $flags = FDV::SHOW_DIFF | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD : 0);
+
         foreach ($items as $item) {
             $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
 
@@ -132,7 +145,7 @@ class DataImport
                 $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
             }
 
-            $this->fdv->perform($item->getEntity(), FDV::SHOW_DIFF | FDV::SHOW_ALL_FIX_CMD, $item->getOriginalInput());
+            $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
 
             $this->persistImportIfValid($item);
         }

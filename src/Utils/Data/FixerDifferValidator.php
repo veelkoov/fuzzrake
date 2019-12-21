@@ -98,7 +98,7 @@ class FixerDifferValidator
         if (!$this->hideFixCommandFor($field)) {
             $fieldName = $field->name();
             $makerId = $artisan->getFixed()->getMakerId();
-            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field));
+            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
             $originalVal = Printer::formatInvalid(StrUtils::strSafeForCli($artisan->getOriginal()->get($field)));
 
             $this->printer->writeln("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|");
