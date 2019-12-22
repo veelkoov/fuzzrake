@@ -31,11 +31,9 @@ class Printer
 
         $this->io->getFormatter()->setStyle('diff_added', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('diff_deleted', new OutputFormatterStyle('red'));
-        $this->io->getFormatter()->setStyle('diff_imported', new OutputFormatterStyle('cyan'));
+        $this->io->getFormatter()->setStyle('diff_imported', new OutputFormatterStyle('magenta'));
 
         $this->io->getFormatter()->setStyle('invalid', new OutputFormatterStyle('red'));
-
-//        $this->showArtisanNameIfFirstTime($nameShown, $old, $new);
     }
 
     public static function formatImported(string $item): string
