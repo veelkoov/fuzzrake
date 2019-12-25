@@ -13,8 +13,10 @@ use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\NullMatch;
 use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
-use App\Utils\Web\UrlFetcherException;
+use App\Utils\Web\HttpClientException;
+use App\Utils\Web\Url;
 use Doctrine\Common\Persistence\ObjectManager;
+use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -56,39 +58,33 @@ class CommissionStatusUpdateService
 
     public function updateAll(SymfonyStyle $style, bool $refresh, bool $dryRun)
     {
-        $this->io = $style;
-        $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
-        $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
-        $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
+        if ($refresh) {
+            $this->snapshots->clearCache();
+        }
 
-        $artisans = $this->getArtisans();
-        $this->prefetchStatusWebpages($artisans, $refresh);
-        $this->updateArtisans($artisans);
+        $this->setIo($style);
+        $urls = $this->getCstUrls($this->getTrackedArtisans());
+
+        $this->snapshots->prefetchUrls($urls, $this->io);
+
+        foreach ($urls as $url) {
+            $this->performUpdate($url);
+        }
 
         if (!$dryRun) {
             $this->objectManager->flush();
         }
     }
 
-    private function updateArtisans(array $artisans): void
+    private function performUpdate(Url $url): void
     {
-        foreach ($artisans as $artisan) {
-            if ($this->canAutoUpdate($artisan)) {
-                $this->updateArtisan($artisan);
-            }
-        }
-    }
+        $artisan = $url->getArtisan();
 
-    /**
-     * @param Artisan $artisan
-     */
-    private function updateArtisan(Artisan $artisan): void
-    {
         try {
-            $webpageSnapshot = $this->snapshots->get($artisan->getCstUrl(), $artisan->getName());
+            $webpageSnapshot = $this->snapshots->get($url);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException | UrlFetcherException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
+        } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
         }
@@ -102,10 +98,6 @@ class CommissionStatusUpdateService
         return !empty($artisan->getCstUrl());
     }
 
-    /**
-     * @param Artisan        $artisan
-     * @param AnalysisResult $analysisResult
-     */
     private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult): void
     {
         if ($artisan->getCommissionsStatus()->getStatus() !== $analysisResult->getStatus()) {
@@ -139,36 +131,33 @@ class CommissionStatusUpdateService
         }
     }
 
-    private function prefetchStatusWebpages(array $artisans, bool $refresh): void
-    {
-        if ($refresh) {
-            $this->snapshots->clearCache();
-        }
-
-        $this->io->progressStart(count($artisans));
-
-        foreach ($artisans as $artisan) {
-            if ($this->canAutoUpdate($artisan)) {
-                $url = $artisan->getCstUrl();
-
-                try {
-                    $this->snapshots->get($url, $artisan->getName());
-                } catch (UrlFetcherException $exception) {
-                    $this->io->note("Failed fetching: {$artisan->getName()} ( {$url} ): {$exception->getMessage()}");
-                }
-            }
-
-            $this->io->progressAdvance();
-        }
-
-        $this->io->progressFinish();
-    }
-
     /**
      * @return Artisan[]
      */
-    private function getArtisans(): array
+    private function getTrackedArtisans(): array
     {
-        return $this->artisanRepository->findAll();
+        return array_filter($this->artisanRepository->findAll(), function (Artisan $artisan): bool {
+            return $this->canAutoUpdate($artisan);
+        });
+    }
+
+    /**
+     * @param Artisan[]
+     *
+     * @return Url[]
+     */
+    private function getCstUrls(array $artisans): array
+    {
+        return array_map(function (Artisan $artisan): Url {
+            return new Url($artisan->getCstUrl(), $artisan);
+        }, $artisans);
+    }
+
+    private function setIo(SymfonyStyle $style): void
+    {
+        $this->io = $style;
+        $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
+        $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
+        $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
     }
 }

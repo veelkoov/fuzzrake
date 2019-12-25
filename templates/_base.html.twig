@@ -9,14 +9,14 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css"
-          href="//cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/cr-1.5.0/fc-3.2.5/fh-3.1.4/sc-1.5.0/datatables.min.css"/>
 
     <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
 
     <script>
         var DATA_UPDATES_URL = '{{ path('info', { _fragment: 'data-updates' }) }}';
-        var TRACKING_URL = '{{ path('tracking') }}';
+
+        var IU_FORM_REDIRECT_URL = '{{ path('redirect_iu_form', { makerId: 'MAKER_ID' }) }}';
+        var REQUEST_FORM_URL = '{{ request_form_url }}';
     </script>
 
     {% block stylesheets %}
@@ -58,8 +58,14 @@
                 {% include '_menu_item.html.twig' with {'name': 'statistics', 'pretty_name': '<i class="fas fa-chart-pie"></i> Stats' } %}
                 {% include '_menu_item.html.twig' with {'name': 'events', 'pretty_name': '<i class="fas fa-history"></i> Changes' } %}
                 {% include '_menu_item.html.twig' with {'name': 'whoopsies', 'pretty_name': '<i class="fas fa-smile-wink"></i> Whoopsies' } %}
+                {% if isDevMachine() %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'pretty_name': '<i class="fas fa-plus"></i> New maker' } %}
+                {% endif %}
             </ul>
         </div>
+        <ul class="navbar-nav">
+            {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">❤</span>️ Please donate' } %}
+        </ul>
     </nav>
 
     {% block body %}{% endblock %}
@@ -76,7 +82,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
-<script src="//cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/cr-1.5.0/fc-3.2.5/fh-3.1.4/sc-1.5.0/datatables.min.js"></script>
 {% block javascripts %}
     {{ encore_entry_script_tags('general') }}
 {% endblock %}

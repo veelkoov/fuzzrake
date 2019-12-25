@@ -11,7 +11,7 @@
       --skip-lock-tables
       --skip-add-locks
       --order-by-primary
-      --quote-names
+      --skip-quote-names
       --tz-utc
 
       --host={{ db_params.host }}
@@ -23,8 +23,8 @@
 
       {{ db_params.name }}
 
-      artisans events artisans_commissions_statues
+      artisans events artisans_commissions_statues artisans_urls
     responses:
       password: "{{ db_params.password }}"
   check_mode: no # We assume the result file is non-committed temporary
-  no_log: yes
+  changed_when: false

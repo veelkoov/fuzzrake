@@ -1,0 +1,117 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}general information{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm">
+            <h3 id="introduction">OwO what's this?</h3>
+            <p>
+                No one cares about introductions. Long story short: enjoy!
+            </p>
+
+            <h3>Help needed!</h3>
+            <ul>
+                <li>Know a maker, who's missing on this list? - Let them know about this website!</li>
+                <li>See outdated information? - Report it! (you can do this from the main page)</li>
+                <li>Encountered a bug? - <a href="{{ feedback_form_url }}">Report it</a>!</li>
+                <li>Want a feature added/improved? - <a href="{{ feedback_form_url }}">Let me know</a>!</li>
+                <li>Post a link to this website on Facebook/Twitter/forums/your blog/your webpage</li>
+                <li>Own a fursuit already? - <a href="http://forms.fursuitreview.com/">Submit a review</a>!</li>
+            </ul>
+
+            <h3 id="commissions-status-tracking">
+                Commission Status Tracker
+            </h3>
+
+            <p>
+                You don't have to update your commissions status (open/closed) on this website. getfursu.it can
+                check for updates on <b>your</b> website, twice a day, and update it here.
+                Explanation and all the information is available <a href="{{ path('tracking') }}">here</a>.
+            </p>
+
+            <h3>Friends</h3>
+
+            <p>
+                <a href="http://fursuitmaterials.com/">fursuitmaterials.com</a> - great resource for fursuit makers and
+                DYI folks.
+            </p>
+            <p>
+                <a href="http://fursuitreview.com/">fursuitreview.com</a> - a place to look for reviews of fursuit
+                makers' creations. Don't forget to submit yours!
+            </p>
+            <p>
+                <a href="https://www.furaffinity.net/user/slatemist/">AngoraRam</a> - the artist behind the artwork
+                on this website.
+            </p>
+            <p>
+                <a href="https://scritch.es/">Scritch</a> - it's <strong>the</strong> place for fursuit photos, and
+                they agreed to serve photos of suits which you can find here (not a lot of them yet...)
+            </p>
+        </div>
+
+        <div class="col-sm">
+            <h3 id="data-updates">
+                Add your studio/maker info to the list
+            </h3>
+
+            <p>
+                If you want your studio/maker info to be included in this list, and you are sure you are not on the
+                list already (ARE YOU?), feel free to click the button below. If you are on the list, please click
+                on your row in the table and use the update link at the bottom of the pop-up which will show up.
+            </p>
+            <p class="text-center overflow-x-auto">
+                <a href="{{ iu_form_url }}" class="btn btn-warning btn-lg my-1">
+                    <i class="fas fa-plus-circle"></i> Add my studio</a>
+            </p>
+
+            <h3 id="keep-in-touch">Keep in touch</h3>
+
+            <p class="text-center overflow-x-auto">
+                <a href="https://t.me/getfursuit_chat" class="btn btn-primary my-1 btn-sm">
+                    <i class="fab fa-telegram"></i> Telegram discussion group</a>
+                <a href="https://t.me/getfursuit" class="btn btn-primary my-1 btn-sm">
+                    <i class="fab fa-telegram"></i> Telegram announcements channel</a>
+            </p>
+
+            <h3 id="contact">Contact maintainer directly</h3>
+
+            <p class="text-center">
+                <a href="https://twitter.com/veelkoov" class="btn btn-primary my-1 btn-sm">
+                    <i class="fab fa-twitter"></i> Twitter</a>
+                <a href="https://t.me/veelkoov" class="btn btn-primary my-1 btn-sm">
+                    <i class="fab fa-telegram"></i> Telegram</a>
+                <a href="https://www.instagram.com/veelkoov/" class="btn btn-primary my-1 btn-sm">
+                    <i class="fab fa-instagram"></i> Instagram</a>
+                <span class="btn btn-secondary my-1 btn-sm">
+                    <i class="fab fa-discord"></i> Discord: veelkoov#3359</span>
+            </p>
+
+            <h3 id="tasklist">Plans/features/bugs</h3>
+
+            <p class="text-center">
+                <a href="https://trello.com/b/pU0QDmav" class="btn btn-primary my-1 btn-sm">
+                    <i class="fab fa-trello"></i> Trello trollo board</a>
+            </p>
+
+            <h3 id="licenses">Licenses</h3>
+
+            <p>
+                Except where otherwise noted, all data&amp;information available on this website is licensed
+                under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                    Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+
+            <p>
+                License terms for graphics used on this website are available under each of the image used in the
+                <a href="https://www.furaffinity.net/user/slatemist/">artist's FurAffinity gallery</a>.
+            </p>
+
+            <p>
+                The software ("Fuzzrake") is licensed under the
+                <a href="https://github.com/veelkoov/fuzzrake/blob/master/LICENSE">GNU Affero General Public License v3</a>.
+                The source code can be found in <a href="https://github.com/veelkoov/fuzzrake">the GitHub repository</a>.
+            </p>
+        </div>
+    </div>
+{% endblock %}

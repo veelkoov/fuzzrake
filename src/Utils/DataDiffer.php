@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\Field;
+use App\Utils\Artisan\Fields;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Utils\ArtisanFields as Fields;
 
 class DataDiffer
 {
@@ -29,6 +30,7 @@ class DataDiffer
         $this->io->getFormatter()->setStyle('a', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('d', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('i', new OutputFormatterStyle('black', 'cyan'));
+        $this->io->getFormatter()->setStyle('f', new OutputFormatterStyle('blue'));
     }
 
     public function showDiff(Artisan $old, Artisan $new, Artisan $imported = null): void
@@ -40,11 +42,11 @@ class DataDiffer
         }
     }
 
-    private function showSingleFieldDiff(bool &$nameShown, ArtisanField $field, Artisan $old, Artisan $new, ?Artisan $imported): void
+    private function showSingleFieldDiff(bool &$nameShown, Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
-        $newVal = $new->get($field->modelName()) ?: '';
-        $oldVal = $old->get($field->modelName()) ?: '';
-        $impVal = $imported ? $imported->get($field->modelName()) : null;
+        $newVal = $new->get($field) ?: '';
+        $oldVal = $old->get($field) ?: '';
+        $impVal = $imported ? $imported->get($field) : null;
 
         if ($oldVal !== $newVal) {
             $this->showArtisanNameIfFirstTime($nameShown, $old, $new);
@@ -55,7 +57,7 @@ class DataDiffer
                 $this->showSingleValueDiff($field->name(), $oldVal, $newVal, $impVal);
             }
 
-            $this->showFixCommandOptionally($new->getMakerId(), $field->name(), $impVal ?? $oldVal, $newVal);
+            $this->showFixCommandOptionally($new->getMakerId(), $field, $impVal ?? $oldVal, $newVal);
 
             $this->io->writeln('');
         }
@@ -64,7 +66,7 @@ class DataDiffer
     private function showArtisanNameIfFirstTime(bool &$nameShown, Artisan $old, Artisan $new): void
     {
         if (!$nameShown) {
-            $this->io->section(Utils::artisanNamesSafeForCli($old, $new));
+            $this->io->section(StrUtils::artisanNamesSafeForCli($old, $new));
 
             $nameShown = true;
         }
@@ -80,7 +82,7 @@ class DataDiffer
                 $item = "<d>$item</>";
             }
 
-            $item = Utils::strSafeForCli($item);
+            $item = StrUtils::strSafeForCli($item);
         }
 
         foreach ($newValItems as &$item) {
@@ -88,11 +90,11 @@ class DataDiffer
                 $item = "<a>$item</>";
             }
 
-            $item = Utils::strSafeForCli($item);
+            $item = StrUtils::strSafeForCli($item);
         }
 
         if ($impVal && $impVal !== $newVal) {
-            $impVal = Utils::strSafeForCli($impVal ?: '');
+            $impVal = StrUtils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
 
@@ -105,28 +107,43 @@ class DataDiffer
 
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
-        if ($impVal && $impVal !== $newVal) {
-            $impVal = Utils::strSafeForCli($impVal ?: '');
+        if ($impVal && $impVal !== $newVal && !$this->skipImpValue($fieldName)) {
+            $impVal = StrUtils::strSafeForCli($impVal ?: '');
             $this->io->writeln("IMP $fieldName: <i>$impVal</>");
         }
 
         if ($oldVal) {
-            $oldVal = Utils::strSafeForCli($oldVal);
+            $oldVal = StrUtils::strSafeForCli($oldVal);
             $this->io->writeln("OLD $fieldName: <d>$oldVal</>");
         }
 
         if ($newVal) {
-            $newVal = Utils::strSafeForCli($newVal);
+            $newVal = StrUtils::strSafeForCli($newVal);
             $this->io->writeln("NEW $fieldName: <a>$newVal</>");
         }
     }
 
-    private function showFixCommandOptionally(string $makerId, string $prettyFieldName, string $replaced, string $best)
+    private function showFixCommandOptionally(string $makerId, Field $field, string $replaced, string $best)
     {
-        if ($this->showFixCommands) {
-            $replaced = Utils::strSafeForCli($replaced);
-            $best = Utils::strSafeForCli($best);
-            $this->io->writeln("wr:$makerId:$prettyFieldName:|:$replaced|$best|");
+        if ($this->showFixCommands && !$this->skipFixCommand($field->name())) {
+            $replaced = StrUtils::strSafeForCli($replaced);
+            $best = StrUtils::strSafeForCli($best);
+            $this->io->writeln("<f>wr:$makerId:{$field->name()}:|:$replaced|$best|</f>");
         }
+    }
+
+    private function skipImpValue(string $fieldName): bool
+    {
+        return in_array($fieldName, [Fields::CONTACT_ALLOWED, Fields::CONTACT_METHOD, Fields::CONTACT_INFO_OBFUSCATED]);
+    }
+
+    private function skipFixCommand(string $fieldName): bool
+    {
+        return in_array($fieldName, [
+            Fields::CONTACT_ALLOWED,
+            Fields::CONTACT_METHOD,
+            Fields::CONTACT_INFO_OBFUSCATED,
+            Fields::CONTACT_ADDRESS_PLAIN,
+        ]);
     }
 }

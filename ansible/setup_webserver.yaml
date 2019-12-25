@@ -3,4 +3,4 @@
 - hosts: getfursu.it
   become: yes
   roles:
-    - { name: "webserver", action: "setup" }
+    - { name: "webserver", mode: "setup_system" }

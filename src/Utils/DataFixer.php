@@ -5,61 +5,79 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
-use App\Utils\ArtisanFields as Fields;
+use App\Utils\Artisan\ContactPermit;
+use App\Utils\Artisan\Features;
+use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\OrderTypes;
 use App\Utils\Regexp\Utils as Regexp;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataFixer
 {
+    const LANGUAGE_REGEXP = '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i';
+
     const REPLACEMENTS = [
-        '#’#'                 => "'",
-        '#^Rather not say$#i' => '',
-        '#^n/a$#i'            => '',
-        '#^n/a yet$#i'        => '',
-        '#[ \t]{2,}#'         => ' ',
+        '#’#'                            => "'",
+        '#^Rather not say$#i'            => '',
+        '#^n/a$#i'                       => '',
+        '#^n/a yet$#i'                   => '',
+        '#^-$#i'                         => '',
+        '#[ \t]{2,}#'                    => ' ',
+        '#^ANNOUNCEMENTS \+ FEEDBACK$#'  => 'FEEDBACK',
+        '#^ANNOUNCEMENTS \*ONLY\*$#'     => 'ANNOUNCEMENTS',
+        '#^NO \(I may join Telegram\)$#' => 'NO',
     ];
 
     const LIST_REPLACEMENTS = [
-        'n/a' => '',
+        'n/a'                                                         => '',
 
-        'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
-        'Partial \(Head, handpaws, tail, feetpaws\)'                  => 'Partial (head + handpaws + tail + feetpaws)',
-        'Mini partial \(Head, handpaws, tail\)'                       => 'Mini partial (head + handpaws + tail)',
-        'Three-fourth \(Head+handpaws+tail+legs/pants+feetpaws\)'     => 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)',
-        'Partial \(Head+handpaws+tail+feetpaws\)'                     => 'Partial (head + handpaws + tail + feetpaws)',
-        'Mini partial \(Head+handpaws+tail\)'                         => 'Mini partial (head + handpaws + tail)',
+        'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => OrderTypes::THREE_FOURTH,
+        'Partial \(Head, handpaws, tail, feetpaws\)'                  => OrderTypes::PARTIAL,
+        'Mini partial \(Head, handpaws, tail\)'                       => OrderTypes::MINI_PARTIAL,
+        'Three-fourth \(Head+handpaws+tail+legs/pants+feetpaws\)'     => OrderTypes::THREE_FOURTH,
+        'Partial \(Head+handpaws+tail+feetpaws\)'                     => OrderTypes::PARTIAL,
+        'Mini partial \(Head+handpaws+tail\)'                         => OrderTypes::MINI_PARTIAL,
+        'Follow me eyes'                                              => Features::FOLLOW_ME_EYES,
+        'Adjustable ears / wiggle ears'                               => Features::ADJUSTABLE_WIGGLE_EARS,
 
-        'Excellent vision &amp; breathability' => 'Excellent vision & breathability',
+        'Excellent vision &amp; breathability'                        => 'Excellent vision & breathability',
+        'Bases, jawsets, silicone noses/tongues'                      => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
+        'Silicone and resin parts'                                    => "Silicone parts\nResin parts",
+        'accessories and cleaning'                                    => 'Accessories and cleaning', // TODO
+        'backpacks'                                                   => 'Backpacks',
+        'claws'                                                       => 'Claws',
+        'Armsleeves|Arm Sleeves'                                      => 'Arm sleeves',
+        'Head Bases'                                                  => 'Head bases',
+        'Plushes'                                                     => 'Plushies',
+        'Plushie, backpacks, bandanas, collars, general accessories'  => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
+        'Eyes, noses, claws'                                          => "Eyes\nNoses\nClaws",
+        'Resin and silicone parts'                                    => "Resin parts\nSilicone parts",
+        'Sleeves \(legs and arms\)'                                   => "Arm sleeves\nLeg sleeves",
+        'Legsleeves'                                                  => 'Leg sleeves',
+        'Fursuit Props'                                               => 'Fursuit props',
+        'Fursuit Props and Accessories, Fursuit supplies'             => "Fursuit props\nFursuit accessories\nFursuit supplies",
+        'Fleece Props, Other accessories'                             => "Fleece props\nOther accessories",
+        'Sock paws'                                                   => 'Sockpaws',
+        'Removable magnetic parts, secret pockets'                    => "Removable magnetic parts\nHidden pockets",
+        'Plush Suits'                                                 => 'Plush suits',
+        'Femme Suits'                                                 => 'Femme suits',
+        'Just Ask'                                                    => 'Just ask',
+        'props and can do plushies'                                   => "Props\nCan do plushies",
+        'Removable Eyes'                                              => 'Removable eyes',
+        'Removable/interchangeable eyes'                              => "Removable eyes\nInterchangeable eyes",
+        'Pickable Nose'                                               => 'Pickable nose',
+        '(.+)changable(.+)'                                           => '$1changeable$2',
+        'Fursuit Sprays?'                                             => 'Fursuit sprays',
+        'Arm sleeves, plush props, fursuit spray'                     => "Arm sleeves\nPlush props\nFursuit sprays",
+        'Body padding/plush suits'                                    => "Body padding\nPlush suits",
+        'Dry brushing'                                                => 'Drybrushing',
+        'Bendable wings and tails'                                    => "Bendable wings\nBendable tails",
+        'Poseable tongues'                                            => 'Poseable tongue',
+        'Accessories/jewelry'                                         => "Accessories\nJewelry",
+        'Bandannas'                                                   => 'Bandanas',
 
-        'Follow me eyes'                                             => 'Follow-me eyes',
-        'Adjustable ears / wiggle ears'                              => 'Adjustable/wiggle ears',
-        'Bases, jawsets, silicone noses/tongues'                     => "Bases\nJawsets\nSilicone noses\nSilicone tongues",
-        'Silicone and resin parts'                                   => "Silicone parts\nResin parts",
-        'accessories and cleaning'                                   => 'Accessories and cleaning', // TODO
-        'backpacks'                                                  => 'Backpacks',
-        'claws'                                                      => 'Claws',
-        'Armsleeves'                                                 => 'Arm sleeves',
-        'Head Bases'                                                 => 'Head bases',
-        'Plushes'                                                    => 'Plushies',
-        'Plushie, backpacks, bandanas, collars, general accessories' => "Plushies\nBackpacks\nBandanas\nCollars\nGeneral accessories",
-        'Eyes, noses, claws'                                         => "Eyes\nNoses\nClaws",
-        'Resin and silicone parts'                                   => "Resin parts\nSilicone parts",
-        'Sleeves \(legs and arms\)'                                  => "Arm sleeves\nLeg sleeves",
-        'Fursuit Props'                                              => 'Fursuit props',
-        'Fursuit Props and Accessories, Fursuit supplies'            => "Fursuit props\nFursuit accessories\nFursuit supplies",
-        'Fleece Props, Other accessories'                            => "Fleece props\nOther accessories",
-        'Sock paws'                                                  => 'Sockpaws',
-        'Removable magnetic parts, secret pockets'                   => "Removable magnetic parts\nHidden pockets",
-        'Plush Suits'                                                => 'Plush suits',
-        'Femme Suits'                                                => 'Femme suits',
-        'Just Ask'                                                   => 'Just ask',
-        'props and can do plushies'                                  => "Props\nCan do plushies",
-        'Removable Eyes'                                             => 'Removable eyes',
-        'Removable/interchangeable eyes'                             => "Removable eyes\nInterchangeable eyes",
-        'Pickable Nose'                                              => 'Pickable nose',
-        '(.+)changable(.+)'                                          => '$1changeable$2',
-        'QQQQQ'                                                      => 'QQQQQ',
+        'QQQQQ'       => 'QQQQQ',
     ];
 
     const COUNTRIES_REPLACEMENTS = [
@@ -81,6 +99,7 @@ class DataFixer
         'new zealand'                                   => 'NZ',
         'russia'                                        => 'RU',
         'poland'                                        => 'PL',
+        'sweden'                                        => 'SE',
         'ukraine'                                       => 'UA',
         'united states( of america)?|us of america|usa' => 'US',
     ];
@@ -115,6 +134,7 @@ class DataFixer
         $originalArtisan = clone $artisan;
 
         $artisan->setName($this->fixString($artisan->getName()));
+        $artisan->setFormerMakerIds($this->fixList($artisan->getFormerMakerIds(), false));
         $artisan->setSince($this->fixSince($artisan->getSince()));
         $artisan->setSpeciesDoes($this->fixString($artisan->getSpeciesDoes()));
         $artisan->setSpeciesDoesnt($this->fixString($artisan->getSpeciesDoesnt()));
@@ -123,9 +143,9 @@ class DataFixer
         $artisan->setFeatures($this->fixList($artisan->getFeatures(), true, '#[;\n]#'));
         $artisan->setStyles($this->fixList($artisan->getStyles(), true, '#[;\n]#'));
         $artisan->setOrderTypes($this->fixList($artisan->getOrderTypes(), true, '#[;\n]#'));
-        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false, '#\n#'));
-        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false, '#\n#'));
-        $artisan->setOtherOrderTypes($this->fixList($artisan->getOtherOrderTypes(), false, '#\n#'));
+        $artisan->setOtherFeatures($this->fixList($artisan->getOtherFeatures(), false));
+        $artisan->setOtherStyles($this->fixList($artisan->getOtherStyles(), false));
+        $artisan->setOtherOrderTypes($this->fixList($artisan->getOtherOrderTypes(), false));
 
         $artisan->setCountry($this->fixCountry($artisan->getCountry()));
         $artisan->setState($this->fixString($artisan->getState()));
@@ -144,13 +164,17 @@ class DataFixer
         $artisan->setYoutubeUrl($this->fixYoutubeUrl($artisan->getYoutubeUrl()));
         $artisan->setWebsiteUrl($this->fixGenericUrl($artisan->getWebsiteUrl()));
         $artisan->setQueueUrl($this->fixGenericUrl($artisan->getQueueUrl()));
+        $artisan->setScritchPhotoUrls($this->fixGenericUrlList($artisan->getScritchPhotoUrls()));
+        $artisan->setScritchMiniatureUrls($this->fixGenericUrlList($artisan->getScritchMiniatureUrls()));
 
         $artisan->setOtherUrls($this->fixString($artisan->getOtherUrls()));
 
         $artisan->setPaymentPlans($this->fixString($artisan->getPaymentPlans()));
         $artisan->setIntro($this->fixIntro($artisan->getIntro()));
         $artisan->setNotes($this->fixNotes($artisan->getNotes()));
-        $artisan->setLanguages($this->fixString($artisan->getLanguages()));
+        $artisan->setLanguages($this->fixLanguages($artisan->getLanguages()));
+
+        $artisan->setContactAllowed($this->fixContactAllowed($artisan->getContactAllowed()));
 
         if ($this->showDiff) {
             $this->differ->showDiff($originalArtisan, $artisan);
@@ -162,34 +186,35 @@ class DataFixer
     public function validateArtisanData(Artisan $artisan): void
     {
         foreach (Fields::persisted() as $field) {
-            $value = $artisan->get($field->modelName());
-
-            if (!Regexp::match($field->validationRegexp(), $value)) {
-                $safeValue = Utils::strSafeForCli($value);
+            if ($field->validationRegexp() && !Regexp::match($field->validationRegexp(), $artisan->get($field))) {
+                $safeValue = StrUtils::strSafeForCli($artisan->get($field));
                 $this->io->writeln("wr:{$artisan->getMakerId()}:{$field->name()}:|:<wrong>$safeValue</>|$safeValue|");
             }
         }
     }
 
-    private function fixList(string $input, bool $sort, string $separatorRegexp): string
+    private function fixList(string $input, bool $sort, string $separatorRegexp = '#\n#'): string
     {
-        $list = array_filter(array_map(function ($item) {
-            $item = trim($item);
-
-            foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
-                $item = Regexp::replace("#(?:^|\n)$pattern(?:\n|$)#i", $replacement, $item);
+        $input = implode("\n", array_filter(array_map(function (string $item): string {
+            if ('http' !== substr($item, 0, 4)) {
+                $item = StrUtils::ucfirst($item);
             }
 
-            return $item;
-        }, Regexp::split($separatorRegexp, $input)));
+            return trim($item);
+        }, Regexp::split($separatorRegexp, $input))));
 
-        $list = ($list);
-
-        if ($sort) {
-            sort($list);
+        foreach (self::LIST_REPLACEMENTS as $pattern => $replacement) {
+            $input = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $input);
         }
 
-        return implode("\n", array_unique($list));
+        $input = $this->fixString($input);
+        $input = explode("\n", $input);
+
+        if ($sort) {
+            sort($input);
+        }
+
+        return implode("\n", array_unique($input));
     }
 
     private function fixCountry(string $input): string
@@ -254,14 +279,14 @@ class DataFixer
         return $this->fixString($input);
     }
 
+    private function fixGenericUrlList(string $input)
+    {
+        return $this->fixList($input, false);
+    }
+
     private function fixNotes(string $notes): string
     {
-        $notes = $this->fixString($notes);
-        $notes = Regexp::replace('#([,;])([,; ]*[,;])#s', '$1', $notes);
-        $notes = str_replace('@', '(e)', $notes);
-        $notes = Regexp::replace('#(e-?)?mail#i', 'eeeee', $notes);
-
-        return $notes;
+        return $this->fixString($notes);
     }
 
     private function fixSince(string $input): string
@@ -281,5 +306,34 @@ class DataFixer
     private function fixIntro(string $input): string
     {
         return $this->fixString(str_replace("\n", ' ', $input));
+    }
+
+    private function fixContactAllowed(string $contactPermit): string
+    {
+        $contactPermit = $this->fixString($contactPermit);
+        $contactPermit = str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $contactPermit);
+
+        return $contactPermit;
+    }
+
+    private function fixLanguages(string $languages): string
+    {
+        $languages = $this->fixString($languages);
+        $languages = Regexp::split('#[\n,;&]|[, ]and #', $languages);
+        $languages = array_filter(array_map('trim', $languages));
+        $languages = array_map(function (string $language): string {
+            Regexp::match(self::LANGUAGE_REGEXP, $language, $matches);
+
+            $language = $matches['language'];
+            $suffix = $matches['prefix'] || ($matches['suffix'] ?? '') ? ' (limited)' : '';
+
+            $language = StrUtils::ucfirst($language);
+
+            return $language.$suffix;
+        }, $languages);
+
+        sort($languages);
+
+        return implode("\n", $languages);
     }
 }

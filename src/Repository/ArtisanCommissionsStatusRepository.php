@@ -26,8 +26,6 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return DateTime
-     *
      * @throws DateTimeException
      * @throws NonUniqueResultException
      */
@@ -38,5 +36,14 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->select('MAX(s.lastChecked)')
             ->getQuery()
             ->getSingleScalarResult());
+    }
+
+    public function getLastCstUpdateTimeAsString(): string
+    {
+        try {
+            return $this->getLastCstUpdateTime()->format('Y-m-d H:i');
+        } catch (DateTimeException | NonUniqueResultException $e) {
+            return 'unknown/error';
+        }
     }
 }

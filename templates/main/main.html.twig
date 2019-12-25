@@ -2,24 +2,62 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.js"></script>
     {{ encore_entry_script_tags('main') }}
     <script>
-        {% include 'main/_data_array.js.twig' %}
+        {% include 'main/_data.js.twig' %}
     </script>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.css" />
     {{ encore_entry_link_tags('main') }}
 {% endblock %}
 
 {% block body %}
     {% include 'main/_intro.html.twig' %}
     {% include 'main/_filters_modal.html.twig' %}
-    {% include 'main/_artisan_modal.html.twig' %}
     {% include 'main/_update_request_modal.html.twig' %}
 
-    <div id="processingData" class="alert alert-primary" role="alert">
+    <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                {% include 'main/_artisan_modal.html.twig' %}
+            </div>
+        </div>
+    </div>
+
+    {% if not isDevMachine() %}
+        <div id="scam-risk-warning" class="card bg-light mb-3">
+            <h4 class="card-header">Don't get scammed!</h4>
+            <div class="card-body">
+                <h5 class="card-title">
+                    Fursuit stuff isn't cheap and you don't want to lose the precious money you've been saving
+                </h5>
+                <p class="card-text">
+                    This tool serves for finding a maker which will best match your expectations. It can save
+                    you some time on searching. What it can't do for you - <strong>which means you must do that
+                        yourself</strong> - is to verify the legitimacy of the studio/maker you want to commission.
+                    When you decide on the maker/studio, <strong>PLEASE</strong>:
+                </p>
+                <ul>
+                    <li>Ask on social media/groups/forums if someone had prior experience working with the maker/studio</li>
+                    <li>Check if they have any reviews on <a href="http://fursuitreview.com/" target="_blank">FursuitReview</a></li>
+                    <li>Check if they've been listed on <a href="https://artistsbeware.info/" target="_blank">Artists Beware</a></li>
+                </ul>
+                <p class="card-text">
+                    You can to read a bit more on the topic under <i>Buying a custom fursuit carries a substantial risk</i>
+                    section of this article: <a href="http://fursuitreview.com/blog/2017/12/04/how-to-buy-a-fursuit/" target="_blank">How To Buy A Fursuit</a>
+                </p>
+                <p class="card-text text-right">
+                    <a href="#" id="scam-risk-acknowledgement" class="btn btn-danger">I'll be careful, I promise!</a>
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="data-loading-message" class="alert alert-primary" role="alert">
         The data is being processed. This may take several seconds. If it's stuck for
         <strong>more than half a minute</strong>, you may want to try:
 
@@ -30,11 +68,13 @@
         </ul>
     </div>
 
-    <div id="dataProcessed" style="display: none;">
-        {% include 'main/_data_table.html.twig' %}
+    <div id="scam-risk-acknowledged" {% if not isDevMachine() %}style="display: none;"{% endif %}>
+        <div id="data-table-container" style="display: none;">
+            {% include 'main/_artisans_table.html.twig' %}
+        </div>
     </div>
 
     <div class="container text-center">
-        <img src="{{ asset('images/website-banner-bottom.png') }}" class="img-fluid" alt="">
+        <img src="{{ asset('images/website-banner-bottom.webp') }}" class="img-fluid" alt="">
     </div>
 {% endblock %}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -21,8 +23,8 @@ class ArtisanPrivateData
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
+     * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
     private $artisan;
 

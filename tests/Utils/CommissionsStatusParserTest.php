@@ -27,10 +27,6 @@ class CommissionsStatusParserTest extends TestCase
     /**
      * @dataProvider areCommissionsOpenDataProvider
      *
-     * @param string          $webpageTextFileName
-     * @param WebpageSnapshot $snapshot
-     * @param bool|null       $expectedResult
-     *
      * @throws TrackerException
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
@@ -46,7 +42,7 @@ class CommissionsStatusParserTest extends TestCase
             $errorMsg .= "\nOPEN: \e[0;30;47m{$oc->getBefore()}\e[0;30;42m{$oc->getSubject()}\e[0;30;47m{$oc->getAfter()}\e[0m";
         }
 
-        $this->assertSame($expectedResult, $result->getStatus(), $errorMsg);
+        static::assertSame($expectedResult, $result->getStatus(), $errorMsg);
     }
 
     public function areCommissionsOpenDataProvider()
@@ -72,6 +68,6 @@ class CommissionsStatusParserTest extends TestCase
             $snapshot = WebpageSnapshot::fromJson(file_get_contents($filepath));
 
             return [basename($filepath), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../snapshots/**/*.json', GLOB_BRACE)));
+        }, glob(__DIR__.'/../snapshots/**/*.json')));
     }
 }

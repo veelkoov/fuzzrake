@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use JsonException;
+
 class StrContextUtils
 {
     private function __construct()
@@ -28,7 +30,7 @@ class StrContextUtils
         }
 
         try {
-            return Utils::toJson([
+            return Json::encode([
                 $strContext->getBefore(),
                 $strContext->getSubject(),
                 $strContext->getAfter(),
@@ -45,7 +47,7 @@ class StrContextUtils
         }
 
         try {
-            $array = Utils::fromJson($input);
+            $array = Json::decode($input);
         } catch (JsonException $e) {
             throw new StrContextRuntimeException('Failed to read JSON object', 0, $e);
         }

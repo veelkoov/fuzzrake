@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
+use App\Utils\Regexp\Utils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
@@ -27,19 +29,24 @@ class ArtisanRepository extends ServiceEntityRepository
         parent::__construct($registry, Artisan::class);
     }
 
+    /**
+     * @return Artisan[]
+     */
     public function getAll(): array
     {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 'cs')
+            ->leftJoin('a.urls', 'u')
+            ->leftJoin('a.privateData', 'pd') // Even if unneded, we have to, because "Inverse side of x-to-one can never be lazy"
             ->addSelect('cs')
+            ->addSelect('u')
+            ->addSelect('pd')
             ->orderBy('a.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * @return int
-     *
      * @throws NonUniqueResultException
      */
     public function getDistinctCountriesCount(): int
@@ -52,8 +59,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
-     *
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
@@ -71,12 +76,14 @@ class ArtisanRepository extends ServiceEntityRepository
             ->createNativeQuery('
                 SELECT SUM(acs.status = 1) AS open
                     , SUM(acs.status = 0) AS closed
-                    , SUM(acs.status IS NOT NULL AND cst_url <> \'\') AS successfully_tracked
-                    , SUM(a.cst_url <> \'\') AS tracked
+                    , SUM(acs.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
+                    , SUM(au_cst.url <> \'\') AS tracked
                     , SUM(1) AS total
                 FROM artisans AS a
                 LEFT JOIN artisans_commissions_statues AS acs
                     ON a.id = acs.artisan_id
+                LEFT JOIN artisans_urls AS au_cst
+                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
             ', $rsm)
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
@@ -121,6 +128,11 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
+    public function getDistinctLanguages(): FilterItems
+    {
+        return $this->getDistinctItemsWithCountFromJoined('languages');
+    }
+
     public function getDistinctCommissionStatuses(): FilterItems
     {
         $rows = $this->createQueryBuilder('a')
@@ -155,7 +167,7 @@ class ArtisanRepository extends ServiceEntityRepository
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
-                if ($item = trim($item)) {
+                if (($item = trim($item))) {
                     $result->addOrIncItem($item);
                 }
             }
@@ -174,6 +186,9 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Artisan[]
+     */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
     {
         $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
@@ -200,7 +215,10 @@ class ArtisanRepository extends ServiceEntityRepository
         return $builder->getQuery()->getResult();
     }
 
-    public function getOtherItemsData()
+    /**
+     * @return FilterItem[]
+     */
+    public function getOtherItemsData(): array
     {
         $ot = $this->getDistinctOtherOrderTypes();
         $fe = $this->getDistinctOtherFeatures();
@@ -220,12 +238,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result;
     }
 
-    /**
-     * @param string $columnName
-     * @param bool   $includeOther
-     *
-     * @return array
-     */
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
     {
         $queryBuilder = $this->createQueryBuilder('a')
@@ -237,5 +249,57 @@ class ArtisanRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function findByMakerId(string $makerId): Artisan
+    {
+        if (!Utils::match(ValidationRegexps::MAKER_ID, $makerId)) {
+            throw new NoResultException();
+        }
+
+        return $this->createQueryBuilder('a')
+            ->where('
+                (a.makerId <> :empty AND a.makerId = :makerId)
+                OR a.formerMakerIds = :makerId
+                OR a.formerMakerIds LIKE :formerMakerIds1
+                OR a.formerMakerIds LIKE :formerMakerIds2
+            ')
+            ->setParameters([
+                'empty'           => '',
+                'makerId'         => $makerId,
+                'formerMakerIds1' => "%$makerId\n%",
+                'formerMakerIds2' => "%\n$makerId%",
+            ])
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOldToNewMakerIdsMap(): array
+    {
+        $rows = $this->createQueryBuilder('a')
+            ->select('a.makerId')
+            ->addSelect('a.formerMakerIds')
+            ->where('a.makerId <> :empty')
+            ->andWhere('a.formerMakerIds <> :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            foreach (explode("\n", $row['formerMakerIds']) as $formerMakerId) {
+                $result[$formerMakerId] = $row['makerId'];
+            }
+        }
+
+        return $result;
     }
 }

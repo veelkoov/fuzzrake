@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use DateTimeInterface;
@@ -36,6 +38,11 @@ class ArtisanCommissionsStatus
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastChecked = null;
+
+    /**
+     * @ORM\Column(type="string", length=256)
+     */
+    private $reason = '';
 
     public function getId(): ?int
     {
@@ -74,6 +81,18 @@ class ArtisanCommissionsStatus
     public function setLastChecked(?DateTimeInterface $lastChecked): self
     {
         $this->lastChecked = $lastChecked;
+
+        return $this;
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(string $reason): ArtisanCommissionsStatus
+    {
+        $this->reason = $reason;
 
         return $this;
     }

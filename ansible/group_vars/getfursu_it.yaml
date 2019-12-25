@@ -1,0 +1,2 @@
+---
+mariadb_socket_path: /var/lib/mysql/mysql.sock

@@ -10,13 +10,10 @@ use Exception;
 
 class DateTimeUtils
 {
-    /**
-     * @return DateTime
-     */
     public static function getNowUtc(): DateTime
     {
         try {
-            return new DateTime('now', self::getUtc());
+            return DateTime::createFromFormat('U', (string) time(), self::getUtc());
         } catch (Exception $e) {
             throw new RuntimeDateTimeException($e);
         }
@@ -28,18 +25,14 @@ class DateTimeUtils
     }
 
     /**
-     * @param string $time
-     *
-     * @return DateTime
-     *
      * @throws DateTimeException
      */
-    public static function getUtcAt(string $time): DateTime
+    public static function getUtcAt(?string $time): DateTime
     {
         try {
-            return new DateTime($time, self::getUtc());
+            return new DateTime($time ?: 'invalid', self::getUtc());
         } catch (Exception $e) {
-            throw new DateTimeException($e);
+            throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -48,13 +41,18 @@ class DateTimeUtils
         return date('Y-m-d', strtotime('+1 month'));
     }
 
-    /**
-     * @param DateTime $dateTime
-     *
-     * @return bool
-     */
+    public static function getWeekLaterYmd()
+    {
+        return date('Y-m-d', strtotime('+1 week'));
+    }
+
     public static function passed(DateTime $dateTime): bool
     {
         return self::getNowUtc() > $dateTime;
+    }
+
+    public static function timems(): int
+    {
+        return (int) (microtime(true) * 1000);
     }
 }

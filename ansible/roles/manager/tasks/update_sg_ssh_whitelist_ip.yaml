@@ -1,10 +1,9 @@
 ---
-- shell: curl -4 http://ifconfig.co/ip
+- shell: curl -4 https://api.ipify.org/
   register: ip_output
   args:
     warn: false
   changed_when: false
-  delegate_to: localhost
 
 - ec2_group:
     name: "{{ sg_name }}"
@@ -31,4 +30,3 @@
       from_port: 22
       to_port: 22
       cidr_ip: "{{ ip_output.stdout_lines[0] }}/32"
-  delegate_to: localhost

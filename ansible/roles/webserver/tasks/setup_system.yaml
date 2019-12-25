@@ -1,0 +1,66 @@
+---
+- name: remove packages
+  yum:
+    list: php72w-xml php72w-mysql php72w-fpm mod_php72w php72w-common php72w-intl php72w-gd php72w-pdo php72w-mbstring php72w-cli webtatic-release-7-3
+    state: absent
+  notify:
+    - restart apache
+
+- name: install packages
+  yum:
+    list: mod_http2 mod_fcgid yum-utils
+    state: installed
+  notify:
+    - restart apache
+
+- name: install Docker
+  shell: amazon-linux-extras install docker -y
+  args:
+    creates: /usr/bin/dockerd
+
+- name: start docker
+  service:
+    enabled: yes
+    name: docker
+    state: started
+
+- name: "update httpd.conf"
+  template:
+    src: httpd.j2.conf
+    dest: /etc/httpd/conf/httpd.conf
+  notify:
+    - restart apache
+
+- name: "update getfursu.it.conf"
+  template:
+    src: httpd_conf.d_getfursu.it.j2.conf
+    dest: /etc/httpd/conf.d/getfursu.it.conf
+  notify:
+    - restart apache
+
+- name: "update httpd-le-ssl.conf"
+  template:
+    src: httpd-le-ssl.j2.conf
+    dest: /etc/httpd/conf/httpd-le-ssl.conf
+  notify:
+    - restart apache
+
+- name: "update 00-mpm.conf"
+  template:
+    src: 00-mpm.j2.conf
+    dest: /etc/httpd/conf.modules.d/00-mpm.conf
+  notify:
+    - restart apache
+
+- name: "update 00-brotli.conf"
+  template:
+    src: 00-brotli.j2.conf
+    dest: /etc/httpd/conf.modules.d/00-brotli.conf
+  notify:
+    - restart apache
+
+- name: "update logrotate.d/httpd"
+  template:
+    src: logrotate.d/httpd.j2
+    dest: /etc/logrotate.d/httpd
+    backup: yes

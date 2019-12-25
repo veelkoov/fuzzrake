@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Import;
 
-use App\Utils\ArtisanField;
+use App\Utils\Artisan\Field;
 use App\Utils\Regexp\Utils as Regexp;
 use InvalidArgumentException;
 
@@ -20,7 +20,7 @@ class ValueCorrection
     private $correctedValue;
     private $mode;
 
-    public function __construct(string $makerId, ArtisanField $field, string $mode, string $wrongValue, string $correctedValue)
+    public function __construct(string $makerId, Field $field, string $mode, string $wrongValue, string $correctedValue)
     {
         $this->validateAndSetMakerId($makerId);
         $this->field = $field;
@@ -34,7 +34,7 @@ class ValueCorrection
         return $this->makerId;
     }
 
-    public function getField(): ArtisanField
+    public function getField(): Field
     {
         return $this->field;
     }
@@ -78,6 +78,11 @@ class ValueCorrection
                 throw new InvalidArgumentException("Invalid mode: '$this->mode'");
                 break;
         }
+    }
+
+    public function __toString(): string
+    {
+        return "{$this->mode} {$this->makerId} {$this->field} {$this->wrongValue} {$this->correctedValue}";
     }
 
     private function validateAndSetMakerId(string $makerId): void

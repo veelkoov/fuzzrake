@@ -27,9 +27,6 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param DateTimeInterface $date1
-     * @param DateTimeInterface $date2
-     *
      * @return Event[]
      */
     public function selectTrackingTmpFailures(DateTimeInterface $date1, DateTimeInterface $date2): array

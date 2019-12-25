@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\ArtisanFields;
+use App\Utils\Artisan\Fields;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
 use Doctrine\ORM\NonUniqueResultException;
@@ -21,38 +21,34 @@ use Symfony\Component\Routing\Annotation\Route;
 class StatisticsController extends AbstractController
 {
     const MATCH_WORDS = [
-        'part(?!ial)s?|elements?',
-        'props?',
-        'remove?able',
-        'pose?able',
-        'bendable',
-        'change?able',
-        'brush',
-        'details?',
-        'pads?',
-        'sleeves?',
-        'claws?',
-        'eyes?',
-        'noses?|nostril',
-        'ears?',
-        'paws?',
-        'jaw|muzzle',
-        '(?<!de)tail',
-        'wings?',
-        'sneakers|sandals|feet',
-        '(?<![a-z])(LCD|LED|EL)(?![a-z])',
-        'plush',
-        'pocket',
         'accessor',
         'bases?|blanks?',
+        'bendable|pose?able|lickable',
+        'brush',
+        'change?able|detach|remove?able',
+        'claws?',
+        'details?',
+        '(?<!g)ears?',
+        'eyes?',
+        'jaw|muzzle',
+        '(?<![a-z])(LCD|LED|EL)(?![a-z])',
+        'magnet',
+        'noses?|nostril',
+        'paw ?pad|pads',
+        'padd',
+        'part(?!ial)s?|elements?',
+        'paws?',
+        'plush',
+        'pocket',
+        'props?',
+        'sleeves?',
+        'sneakers|sandals|feet',
+        '(?<!de)tail',
+        'wings?',
     ];
 
     /**
      * @Route("/statistics.html", name="statistics")
-     *
-     * @param ArtisanRepository $artisanRepository
-     *
-     * @return Response
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -87,10 +83,6 @@ class StatisticsController extends AbstractController
 
     /**
      * @Route("/ordering.html", name="ordering")
-     *
-     * @param ArtisanRepository $artisanRepository
-     *
-     * @return Response
      */
     public function ordering(ArtisanRepository $artisanRepository): Response
     {
@@ -160,8 +152,6 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
-     *
-     * @return array
      */
     private function prepareCompletenessData(array $artisans): array
     {
@@ -191,9 +181,9 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach (ArtisanFields::persisted() as $field) {
+        foreach (Fields::inStats() as $field) {
             $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
-                return $carry + ('' !== $artisan->get($field->modelName()) ? 1 : 0);
+                return $carry + ('' !== $artisan->get($field) ? 1 : 0);
             }, 0);
         }
 

@@ -1,0 +1,12 @@
+---
+- name: checkout sources
+  git:
+    dest: "{{ deployment_path }}"
+    force: yes
+    repo: https://github.com/veelkoov/fuzzrake.git
+    version: "{{ branch }}"
+  notify:
+    - composer install
+    - yarn install
+    - yarn encore production
+    - clear cache
