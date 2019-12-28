@@ -16,6 +16,10 @@ Encore
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = 3;
+    })
     .enableTypeScriptLoader()
     .enableLessLoader()
 ;
