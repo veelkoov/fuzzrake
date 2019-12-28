@@ -8,7 +8,7 @@ use App\Service\DataImportFactory;
 use App\Utils\Import\CSV;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\Manager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,11 +25,11 @@ class DataImportCommand extends Command
     private $dataImportFactory;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
-    public function __construct(DataImportFactory $factory, ObjectManager $objectManager)
+    public function __construct(DataImportFactory $factory, EntityManagerInterface $objectManager)
     {
         $this->dataImportFactory = $factory;
         $this->objectManager = $objectManager;

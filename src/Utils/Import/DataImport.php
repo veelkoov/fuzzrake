@@ -13,7 +13,7 @@ use App\Utils\DataFixer;
 use App\Utils\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StrUtils;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImport
@@ -24,7 +24,7 @@ class DataImport
     private $artisanRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
@@ -48,7 +48,7 @@ class DataImport
      */
     private $io;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager,
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager,
         Manager $importManager, SymfonyStyle $io, bool $showFixCommands)
     {
         $this->artisanRepository = $artisanRepository;

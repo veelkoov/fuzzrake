@@ -11,7 +11,7 @@ use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\TmpCookieJar;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
@@ -31,11 +31,11 @@ class DataSetScritchMiniaturesCommand extends Command
     private $artisanRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {
         parent::__construct();
 

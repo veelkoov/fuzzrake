@@ -6,10 +6,10 @@ namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
 use App\Utils\DateTimeUtils;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Repository\ArtisanRepository;
 use App\Utils\Import\DataImport;
 use App\Utils\Import\Manager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImportFactory
@@ -18,11 +18,11 @@ class DataImportFactory
     private $artisanRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {
         $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;

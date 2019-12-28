@@ -15,7 +15,7 @@ use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -29,7 +29,7 @@ class CommissionStatusUpdateService
     private $artisanRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
@@ -48,7 +48,7 @@ class CommissionStatusUpdateService
      */
     private $parser;
 
-    public function __construct(ObjectManager $objectManager, WebpageSnapshotManager $snapshots)
+    public function __construct(EntityManagerInterface $objectManager, WebpageSnapshotManager $snapshots)
     {
         $this->objectManager = $objectManager;
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);

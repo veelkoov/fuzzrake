@@ -35,8 +35,18 @@
             "ref": "453e89b78ded666f351617baca5ae40d20622351"
         }
     },
-    "doctrine/doctrine-cache-bundle": {
-        "version": "1.3.5"
+    "doctrine/doctrine-migrations-bundle": {
+        "version": "1.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.2",
+            "ref": "c1431086fec31f17fbcfe6d6d7e92059458facc1"
+        },
+        "files": [
+            "config/packages/doctrine_migrations.yaml",
+            "src/Migrations/.gitignore"
+        ]
     },
     "doctrine/event-manager": {
         "version": "v1.0.0"
@@ -49,6 +59,9 @@
     },
     "doctrine/lexer": {
         "version": "v1.0.1"
+    },
+    "doctrine/migrations": {
+        "version": "2.2.0"
     },
     "doctrine/orm": {
         "version": "v2.6.3"
@@ -68,9 +81,6 @@
             "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
         }
     },
-    "fig/link-util": {
-        "version": "1.0.0"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -88,6 +98,15 @@
     },
     "nikic/php-parser": {
         "version": "v4.1.0"
+    },
+    "ocramius/package-versions": {
+        "version": "1.5.1"
+    },
+    "ocramius/proxy-manager": {
+        "version": "2.5.1"
+    },
+    "php": {
+        "version": "7.4"
     },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
@@ -194,6 +213,9 @@
     "symfony/dotenv": {
         "version": "v4.2.1"
     },
+    "symfony/error-handler": {
+        "version": "v4.4.2"
+    },
     "symfony/event-dispatcher": {
         "version": "v4.2.1"
     },
@@ -274,6 +296,9 @@
     },
     "symfony/options-resolver": {
         "version": "v4.2.1"
+    },
+    "symfony/orm-pack": {
+        "version": "v1.0.7"
     },
     "symfony/phpunit-bridge": {
         "version": "4.1",
@@ -398,5 +423,11 @@
     },
     "webmozart/assert": {
         "version": "1.3.0"
+    },
+    "zendframework/zend-code": {
+        "version": "3.4.1"
+    },
+    "zendframework/zend-eventmanager": {
+        "version": "3.2.1"
     }
 }

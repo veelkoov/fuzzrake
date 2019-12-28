@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\DataFixer;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,11 +22,11 @@ class DataTidyCommand extends Command
     private $artisanRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $objectManager;
 
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {
         $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;

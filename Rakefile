@@ -36,8 +36,7 @@ task :dbcommit do
 end
 
 task 'php-cs-fixer' do
-  docker('vendor/bin/php-cs-fixer', 'fix', 'src')
-  docker('vendor/bin/php-cs-fixer', 'fix', 'tests')
+  docker('vendor/bin/php-cs-fixer', 'fix')
 end
 
 task :phpunit do

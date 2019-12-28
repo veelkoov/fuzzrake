@@ -1,6 +1,6 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.27.0",
+        "@symfony/webpack-encore": "^0.28.2",
         "@types/bootstrap": "^4.1.2",
         "@types/datatables.net": "^1.10.13",
         "@types/datatables.net-buttons": "^1.4.0",
@@ -10,6 +10,7 @@
         "less-loader": "^4.1.0",
         "ts-loader": "^5.3.0",
         "typescript": "^3.1.6",
+        "regenerator-runtime": "^0.13.2",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -18,10 +19,10 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production"
+        "build": "encore production --progress"
     },
     "dependencies": {
-        "core-js": "3",
+        "core-js": "^3.0.0",
         "jquery": "^3.3.1",
         "mustache": "^3.1.0"
     }
