@@ -48,6 +48,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
     /**
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getDistinctCountriesCount(): int
     {
