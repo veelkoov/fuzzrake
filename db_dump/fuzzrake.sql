@@ -387,7 +387,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1469 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1478 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 INSERT INTO events VALUES (5, '2019-02-17 14:16:00', 'From now on, the software will record all changes in commissions statuses.', 'GENERIC', NULL, NULL, '', '', '', '');
@@ -846,6 +846,15 @@ INSERT INTO events VALUES (1465, '2019-12-18 18:01:57', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1466, '2019-12-20 18:02:01', '', 'CS_UPDTD_DETLS', 0, NULL, 'SereStudios', 'https://www.serestudios.com/', '', '');
 INSERT INTO events VALUES (1467, '2019-12-21 06:01:44', '', 'CS_UPDTD_DETLS', NULL, 0,'SereStudios', 'https://www.serestudios.com/', '', '[\"20counter\\\">1/23</div></div></div><div class=\\\"txtnew\\\" id=\\\"wrchtxth-igg\\\"><h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">\",\"commissions are now closed\",\"</h1> <h1 class=\\\"font_0\\\" dir=\\\"ltr\\\">thank you for all the submissions!</h1></div><div class=\\\"s_biwzig\"]');
 INSERT INTO events VALUES (1468, '2019-12-21 06:01:46', '', 'CS_UPDTD_DETLS', 0, 1,'Thunderhowl Studios', 'https://thunderhowlstudios.weebly.com/', '[\"<div class=\\\"wsite-image wsite-image-border-none \\\"> <div></div> </div></div> <div class=\\\"paragraph\\\">*\",\"open for commissions\",\"*( december 20th-25th 2019)</div> <div class=\\\"paragraph\\\">custom costume designer</div> <div class=\\\"w\"]', '');
+INSERT INTO events VALUES (1469, '2019-12-22 17:55:58', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/00dc85ff65004323fe96e7a36593afdfda99559b\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1470, '2019-12-24 06:01:45', '', 'CS_UPDTD_DETLS', 0, 1,'Golden Maw', 'https://www.goldenmaw.com/how-to-commission', '[\"TUDIO_NAME</p><h3> </h3><h2>step 5: <p class=\\\"\\\">i have recently discontinued my mailing list and am \",\"now accepting commissions\",\" on a case by case basis when i have the interest and am open for new projects. usually on the sideb\"]', '');
+INSERT INTO events VALUES (1471, '2019-12-24 18:01:47', '', 'CS_UPDTD_DETLS', 0, 1,'Furgetful Fae Fursuits', 'https://www.instagram.com/furgetful_fae/', '[\"ternatename\\\":\\\"@furgetful_fae\\\",\\\"description\\\":\\\"\\\\ud83d\\\\udc3b fursuit maker! \\\\ud83d\\\\udc3b\\\\n\\\\ud83d\\\\udc36 \",\"commissions open\",\" \\\\ud83d\\\\udc36\\\\n\\\\ud83c\\\\udf44 quotes always open! \\\\ud83c\\\\udf44\\\\n\\\\ud83c\\\\udf31 19y\\\\/o - she\\\\/her \\\\ud83c\\\\\"]', '');
+INSERT INTO events VALUES (1472, '2019-12-25 06:01:50', '', 'CS_UPDTD_DETLS', NULL, 0,'Norman Patches n\' Furs', 'https://trello.com/b/88vs2gGa/norman-patches-n-furs-comission-queue', '', '[\"mation, pricing, and details are here id: 5e025c74ac7fed24a8eaa2b5 desc: descdata: name: [12/24/19] \",\"commissions closed\",\" indefinitely: focusing on my career and my phd! id: 5c6051bd8c00138a12417500 desc: fursuit pricing \"]');
+INSERT INTO events VALUES (1473, '2019-12-25 18:02:04', '', 'CS_UPDTD_DETLS', NULL, 0,'Hunni Bear Art', 'https://hunnibearart.wixsite.com/commission', '', '[\"sion or get a rough quote, fill in the form below:</p> <p class=\\\"font_7\\\">​</p> <p class=\\\"font_7\\\">if \",\"commissions are closed\",\", you can still request a quote &amp; will be notified when commission slots open.</p> <p class=\\\"fon\"]');
+INSERT INTO events VALUES (1474, '2019-12-26 18:01:57', '', 'CS_UPDTD_DETLS', 0, NULL, 'SmolShepSuits', 'https://twitter.com/SmolShepSuits', '', '');
+INSERT INTO events VALUES (1475, '2019-12-26 18:01:58', '', 'CS_UPDTD_DETLS', 0, 1,'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '[\"\\\"style-jdwcba4k\\\" >view slots</div><div class=\\\"txtnew\\\" id=\\\"comp-jk9wgizz\\\"><h2 class=\\\"font_2\\\">costume \",\"commissions: open\",\"</h2> <h2 class=\\\"font_2\\\"></h2> <h2 class=\\\"font_2\\\">quotes are: open</h2></div><div class=\\\"style-jb2fe\"]', '');
+INSERT INTO events VALUES (1476, '2019-12-29 18:02:06', '', 'CS_UPDTD_DETLS', 0, NULL, 'Maria\'s Creative Corner', 'http://mcreativecorner.com/', '', '');
+INSERT INTO events VALUES (1477, '2019-12-29 22:33:41', '- Updated 1 maker data based on the maker\'s request (<a href=\"https://github.com/veelkoov/fuzzrake/commit/86333a9e18d88597316e5904996bf710009a6c4f\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
