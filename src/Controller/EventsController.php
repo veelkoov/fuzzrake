@@ -19,7 +19,7 @@ class EventsController extends AbstractController
     public function events(EventRepository $eventRepository)
     {
         return $this->render('events/events.html.twig', [
-            'events' => $eventRepository->findBy([], ['timestamp' => 'DESC']),
+            'events' => $eventRepository->getAll(),
         ]);
     }
 }

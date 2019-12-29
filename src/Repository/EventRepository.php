@@ -45,8 +45,21 @@ class EventRepository extends ServiceEntityRepository
             ->setParameters(['date1' => $date1, 'date2' => $date2])
             ->select('en.id')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getResult(ColumnHydrator::COLUMN_HYDRATOR);
 
         return $this->findBy(['id' => $ids]);
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function getAll(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.timestamp', 'DESC')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getResult();
     }
 }

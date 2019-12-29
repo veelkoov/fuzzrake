@@ -38,6 +38,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->select('MAX(s.lastChecked)')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getSingleScalarResult());
     }
 
