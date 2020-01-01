@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Artisan;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
@@ -12,6 +13,7 @@ use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\HttpClientException;
+use App\Utils\Web\Url;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,12 +49,12 @@ class IuFormUpdateIdsCommand extends Command
         $this->setDescription('Fetch ID of I/U form\'s fields');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $snapshot = $this->snapshotManager->get($this->iuFormUrl, 'N/A');
+            $snapshot = $this->snapshotManager->get(new Url($this->iuFormUrl, (new Artisan())->setName('Virtual / N/A')));
         } catch (HttpClientException $e) {
             $io->error('Failed fetching the form: '.$e->getMessage());
 

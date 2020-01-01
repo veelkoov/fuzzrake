@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\Event;
@@ -45,7 +47,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
             ->addOption('commit', null, InputOption::VALUE_NONE, 'Save changes in the database');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -69,5 +71,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
         } else {
             $io->success('Finished without removing');
         }
+
+        return 0;
     }
 }

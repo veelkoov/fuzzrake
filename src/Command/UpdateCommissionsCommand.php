@@ -32,12 +32,14 @@ class UpdateCommissionsCommand extends Command
         $this->addOption('dry-run', 'd', null, 'Dry run (don\'t update the DB)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $this->commissionStatusUpdateService->updateAll($io, $input->getOption('refresh'), $input->getOption('dry-run'));
 
         $io->success('Finished');
+
+        return 0;
     }
 }

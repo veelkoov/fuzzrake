@@ -53,7 +53,7 @@ class DataSetScritchMiniaturesCommand extends Command
      *
      * @throws HttpClientException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -90,6 +90,8 @@ class DataSetScritchMiniaturesCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+
+        return 0;
     }
 
     /**

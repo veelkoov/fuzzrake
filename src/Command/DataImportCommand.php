@@ -48,7 +48,7 @@ class DataImportCommand extends Command
     /**
      * @throws ImportException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -63,5 +63,7 @@ class DataImportCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+
+        return 0;
     }
 }

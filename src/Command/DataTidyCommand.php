@@ -39,7 +39,7 @@ class DataTidyCommand extends Command
         $this->addOption('commit', null, null, 'Save changes in the database');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $fixer = new DataFixer($io, true);
@@ -58,5 +58,7 @@ class DataTidyCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+
+        return 0;
     }
 }

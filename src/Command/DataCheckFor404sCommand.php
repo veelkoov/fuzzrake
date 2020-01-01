@@ -44,7 +44,7 @@ class DataCheckFor404sCommand extends Command
         $this->addOption('no-prefetch', null, null, 'Skip pre-fetch phase');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -59,6 +59,8 @@ class DataCheckFor404sCommand extends Command
         }
 
         $this->checkUrls($urls, $io);
+
+        return 0;
     }
 
     /**
