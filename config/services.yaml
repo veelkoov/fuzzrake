@@ -34,3 +34,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Doctrine\Subscribers\PostFlushSubscriber:
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+        arguments:
+            - "@doctrine.orm.cache.provider.doctrine.result_cache_pool"
