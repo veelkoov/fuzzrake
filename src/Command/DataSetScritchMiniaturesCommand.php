@@ -25,15 +25,8 @@ class DataSetScritchMiniaturesCommand extends Command
 
     protected static $defaultName = 'app:data:set-scritch-miniatures';
 
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $objectManager;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $objectManager;
 
     public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {

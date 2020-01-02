@@ -19,15 +19,8 @@ class DataImportCommand extends Command
 {
     protected static $defaultName = 'app:data:import';
 
-    /**
-     * @var DataImportFactory
-     */
-    private $dataImportFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $objectManager;
+    private DataImportFactory $dataImportFactory;
+    private EntityManagerInterface $objectManager;
 
     public function __construct(DataImportFactory $factory, EntityManagerInterface $objectManager)
     {

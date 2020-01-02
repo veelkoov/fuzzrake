@@ -14,10 +14,7 @@ class UpdateCommissionsCommand extends Command
 {
     protected static $defaultName = 'app:update:commissions';
 
-    /**
-     * @var CommissionStatusUpdateService
-     */
-    private $commissionStatusUpdateService;
+    private CommissionStatusUpdateService $commissionStatusUpdateService;
 
     public function __construct(CommissionStatusUpdateService $commissionStatusUpdateService)
     {

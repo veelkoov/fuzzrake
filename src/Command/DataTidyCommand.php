@@ -16,15 +16,8 @@ class DataTidyCommand extends Command
 {
     protected static $defaultName = 'app:data:tidy';
 
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $objectManager;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $objectManager;
 
     public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {

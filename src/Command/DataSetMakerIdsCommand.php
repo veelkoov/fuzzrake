@@ -14,15 +14,8 @@ class DataSetMakerIdsCommand extends Command
 {
     protected static $defaultName = 'app:data:set-maker-ids';
 
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $entityManager)
     {

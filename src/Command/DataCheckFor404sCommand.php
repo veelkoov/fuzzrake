@@ -20,15 +20,8 @@ class DataCheckFor404sCommand extends Command
 {
     protected static $defaultName = 'app:data:check-for-404s';
 
-    /**
-     * @var ArtisanUrlRepository
-     */
-    private $artisanUrlRepository;
-
-    /**
-     * @var WebpageSnapshotManager
-     */
-    private $webpageSnapshotManager;
+    private ArtisanUrlRepository $artisanUrlRepository;
+    private WebpageSnapshotManager $webpageSnapshotManager;
 
     public function __construct(ArtisanUrlRepository $artisanUrlRepository, WebpageSnapshotManager $webpageSnapshotManager)
     {

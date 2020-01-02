@@ -9,6 +9,7 @@ use App\Repository\EventRepository;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,15 +21,12 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
 {
     protected static $defaultName = 'app:events:remove-tmp-tracking-failures';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * @var EventRepository
+     * @var EventRepository|ObjectRepository
      */
-    private $eventRepository;
+    private ObjectRepository $eventRepository;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

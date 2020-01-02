@@ -24,17 +24,10 @@ use Symfony\Component\DomCrawler\Crawler;
 class IuFormUpdateIdsCommand extends Command
 {
     protected static $defaultName = 'app:iu-form:update-ids';
-    private static $updatedFilePath = __DIR__.'/../Service/IuFormService.php';
+    private static string $updatedFilePath = __DIR__.'/../Service/IuFormService.php';
 
-    /**
-     * @var string
-     */
-    private $iuFormUrl;
-
-    /**
-     * @var WebpageSnapshotManager
-     */
-    private $snapshotManager;
+    private string $iuFormUrl;
+    private WebpageSnapshotManager $snapshotManager;
 
     public function __construct(WebpageSnapshotManager $snapshotManager, string $iuFormUrl)
     {
