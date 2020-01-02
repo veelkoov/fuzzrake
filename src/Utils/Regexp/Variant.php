@@ -9,7 +9,7 @@ class Variant
     /**
      * @var array[]
      */
-    private $replacements = [];
+    private array $replacements = [];
 
     /**
      * @param array[] $replacements

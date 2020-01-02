@@ -12,15 +12,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImportFactory
 {
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $objectManager;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $objectManager;
 
     public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {

@@ -9,10 +9,7 @@ use App\Utils\Artisan\ContactPermit;
 
 class IuFormService
 {
-    /**
-     * @var string
-     */
-    private $iuFormUrl;
+    private string $iuFormUrl;
 
     public function __construct(string $iuFormUrl)
     {

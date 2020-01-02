@@ -9,10 +9,7 @@ use SplObjectStorage;
 
 class Factory
 {
-    /**
-     * @var array
-     */
-    private $commonReplacements;
+    private array $commonReplacements;
 
     public function __construct(array $commonReplacements)
     {

@@ -28,25 +28,10 @@ class CommissionStatusUpdateService
      */
     private $artisanRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $objectManager;
-
-    /**
-     * @var WebpageSnapshotManager
-     */
-    private $snapshots;
-
-    /**
-     * @var StyleInterface
-     */
-    private $io;
-
-    /**
-     * @var CommissionsStatusParser
-     */
-    private $parser;
+    private EntityManagerInterface $objectManager;
+    private WebpageSnapshotManager $snapshots;
+    private StyleInterface $io;
+    private CommissionsStatusParser $parser;
 
     public function __construct(EntityManagerInterface $objectManager, WebpageSnapshotManager $snapshots)
     {

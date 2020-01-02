@@ -18,35 +18,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImport
 {
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $objectManager;
-
-    /**
-     * @var DataFixer
-     */
-    private $fixer;
-
-    /**
-     * @var DataDiffer
-     */
-    private $differ;
-
-    /**
-     * @var Manager
-     */
-    private $manager;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $objectManager;
+    private DataFixer $fixer;
+    private DataDiffer $differ;
+    private Manager $manager;
+    private SymfonyStyle $io;
 
     public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager,
         Manager $importManager, SymfonyStyle $io, bool $showFixCommands)

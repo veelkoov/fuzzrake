@@ -6,9 +6,9 @@ namespace App\Utils;
 
 class StrContext implements StrContextInterface
 {
-    private $before;
-    private $subject;
-    private $after;
+    private string $before;
+    private string $subject;
+    private string $after;
 
     public function __construct(string $before, string $subject, string $after)
     {

@@ -28,9 +28,7 @@ class ArtisansController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        if (null === $artisan) {
-            $artisan = new Artisan();
-        }
+        $artisan ??= new Artisan();
 
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);

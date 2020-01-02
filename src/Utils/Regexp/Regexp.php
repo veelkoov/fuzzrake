@@ -12,15 +12,8 @@ class Regexp
 {
     const CONTEXT_LENGTH = 100;
 
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $original;
+    private string $id;
+    private string $original;
 
     /**
      * @var string[] SplObjectStorage of strings

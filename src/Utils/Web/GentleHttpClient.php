@@ -15,7 +15,7 @@ class GentleHttpClient extends HttpClient
      *
      * @var int[]
      */
-    private $lastRequestsMs = [];
+    private array $lastRequestsMs = [];
 
     /**
      * @throws HttpClientException

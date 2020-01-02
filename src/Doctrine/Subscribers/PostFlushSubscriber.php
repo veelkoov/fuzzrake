@@ -10,10 +10,7 @@ use Doctrine\ORM\Events;
 
 class PostFlushSubscriber implements EventSubscriber
 {
-    /**
-     * @var CacheProvider
-     */
-    private $cacheProvider;
+    private CacheProvider $cacheProvider;
 
     public function __construct(CacheProvider $cacheProvider)
     {

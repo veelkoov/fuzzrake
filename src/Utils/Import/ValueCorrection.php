@@ -14,11 +14,11 @@ class ValueCorrection
     const MODE_WHOLE = 'wr';
     const MODE_ALL = 'ar';
 
-    private $makerId;
-    private $field;
-    private $wrongValue;
-    private $correctedValue;
-    private $mode;
+    private string $makerId;
+    private Field $field;
+    private string $wrongValue;
+    private string $correctedValue;
+    private string $mode;
 
     public function __construct(string $makerId, Field $field, string $mode, string $wrongValue, string $correctedValue)
     {

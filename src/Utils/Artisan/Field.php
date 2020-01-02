@@ -6,60 +6,17 @@ namespace App\Utils\Artisan;
 
 class Field
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string|null
-     */
-    private $modelName;
-
-    /**
-     * @var string|null
-     */
-    private $validationRegexp;
-
-    /**
-     * @var bool
-     */
-    private $isList;
-
-    /**
-     * @var int|null
-     */
-    private $uiFormIndex;
-
-    /**
-     * @var bool
-     */
-    private $isPersisted;
-
-    /**
-     * @var bool
-     */
-    private $inJson;
-
-    /**
-     * @var bool
-     */
-    private $inStats;
-
-    /**
-     * @var string|null
-     */
-    private $iuFormRegexp;
-
-    /**
-     * @var bool
-     */
-    private $importFromIuForm;
-
-    /**
-     * @var bool
-     */
-    private $exportToIuForm;
+    private string $name;
+    private ?string $modelName;
+    private ?string $validationRegexp;
+    private bool $isList;
+    private ?int $uiFormIndex;
+    private bool $isPersisted;
+    private bool $inJson;
+    private bool $inStats;
+    private ?string $iuFormRegexp;
+    private bool $importFromIuForm;
+    private bool $exportToIuForm;
 
     public function __construct(string $name, ?string $modelName, ?string $validationRegexp,
         int $isList, int $isPersisted, int $inStats, int $inJson,

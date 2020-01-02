@@ -8,20 +8,9 @@ use App\Entity\Artisan;
 
 class Url
 {
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var Artisan
-     */
-    private $artisan;
-
-    /**
-     * @var bool
-     */
-    private $isDependency;
+    private string $url;
+    private Artisan $artisan;
+    private bool $isDependency;
 
     public function __construct(string $url, Artisan $artisan, bool $isDependency = false)
     {
