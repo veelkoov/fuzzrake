@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-class Parse
+abstract class Parse
 {
-    private function __construct()
-    {
-    }
-
     public static function tInt(?string $input): int
     {
         return self::int(trim($input ?? ''));

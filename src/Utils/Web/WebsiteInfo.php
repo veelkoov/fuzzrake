@@ -6,7 +6,7 @@ namespace App\Utils\Web;
 
 use App\Utils\Regexp\Utils as Regexp;
 
-class WebsiteInfo
+abstract class WebsiteInfo
 {
     private const FA_URL_SEARCH_STRING = 'furaffinity.net/';
     private const FA_CONTENTS_SEARCH_STRING = 'fur affinity [dot] net</title>';

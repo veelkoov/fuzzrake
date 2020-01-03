@@ -12,15 +12,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataDiffer
 {
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @var bool
-     */
-    private $showFixCommands;
+    private SymfonyStyle $io;
+    private bool $showFixCommands;
 
     public function __construct(SymfonyStyle $io, bool $showFixCommands = false)
     {

@@ -15,30 +15,15 @@ class WebpageSnapshot implements JsonSerializable
     const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
                                      | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
 
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var string
-     */
-    private $contents;
-
-    /**
-     * @var DateTime
-     */
-    private $retrievedAt;
-
-    /**
-     * @var string
-     */
-    private $ownerName;
+    private string $url;
+    private string $contents;
+    private DateTime $retrievedAt;
+    private string $ownerName;
 
     /**
      * @var WebpageSnapshot[]
      */
-    private $children = [];
+    private array $children = [];
 
     public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName)
     {

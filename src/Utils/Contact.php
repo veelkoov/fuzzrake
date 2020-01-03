@@ -6,16 +6,12 @@ namespace App\Utils;
 
 use App\Utils\Regexp\Utils;
 
-class Contact
+abstract class Contact
 {
     public const INVALID = 'INVALID';
     public const TWITTER = 'TWITTER';
     public const TELEGRAM = 'TELEGRAM';
     public const E_MAIL = 'E-MAIL';
-
-    private function __construct()
-    {
-    }
 
     /**
      * @return string[]

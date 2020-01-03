@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\Event;
@@ -7,6 +9,7 @@ use App\Repository\EventRepository;
 use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,15 +21,12 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
 {
     protected static $defaultName = 'app:events:remove-tmp-tracking-failures';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * @var EventRepository
+     * @var EventRepository|ObjectRepository
      */
-    private $eventRepository;
+    private ObjectRepository $eventRepository;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -45,7 +45,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
             ->addOption('commit', null, InputOption::VALUE_NONE, 'Save changes in the database');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -69,5 +69,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
         } else {
             $io->success('Finished without removing');
         }
+
+        return 0;
     }
 }

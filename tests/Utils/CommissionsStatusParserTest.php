@@ -19,7 +19,7 @@ class CommissionsStatusParserTest extends TestCase
      */
     private static $csp;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$csp = new CommissionsStatusParser();
     }

@@ -11,15 +11,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class WebpageSnapshotCache
 {
-    /**
-     * @var string
-     */
-    private $cacheDirPath;
-
-    /**
-     * @var Filesystem
-     */
-    private $fs;
+    private string $cacheDirPath;
+    private Filesystem $fs;
 
     public function __construct(string $cacheDirPath)
     {

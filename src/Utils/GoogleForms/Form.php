@@ -9,7 +9,7 @@ class Form
     /**
      * @var Item[]
      */
-    private $items;
+    private array $items;
 
     public function __construct(array $data)
     {

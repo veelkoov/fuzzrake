@@ -6,10 +6,7 @@ namespace App\Utils\GoogleForms;
 
 class Option
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     public function __construct(array $data)
     {

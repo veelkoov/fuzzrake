@@ -104,20 +104,9 @@ class DataFixer
         'united states( of america)?|us of america|usa' => 'US',
     ];
 
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @var DataDiffer
-     */
-    private $differ;
-
-    /**
-     * @var bool
-     */
-    private $showDiff;
+    private SymfonyStyle $io;
+    private DataDiffer $differ;
+    private bool $showDiff;
 
     public function __construct(SymfonyStyle $io, bool $showDiff)
     {

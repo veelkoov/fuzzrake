@@ -7,12 +7,8 @@ namespace App\Utils\Artisan;
 use App\Entity\Artisan;
 use App\Utils\Contact;
 
-class Utils
+abstract class Utils
 {
-    private function __construct()
-    {
-    }
-
     public static function updateContact(Artisan $artisan, string $newOriginalContactValue): void
     {
         list($method, $address) = Contact::parse($newOriginalContactValue);

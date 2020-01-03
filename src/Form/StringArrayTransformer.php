@@ -8,7 +8,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class StringArrayTransformer implements DataTransformerInterface
 {
-    private static $INSTANCE = null;
+    private static ?self $INSTANCE = null;
 
     private function __construct()
     {

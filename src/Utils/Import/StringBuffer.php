@@ -8,7 +8,7 @@ use UnexpectedValueException;
 
 class StringBuffer
 {
-    private $buffer;
+    private string $buffer;
 
     public function __construct(string $initialValue)
     {
