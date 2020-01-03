@@ -14,27 +14,16 @@ class CommissionsStatusParser
     /**
      * @var Regexp[]
      */
-    private $falsePositivesRegexps;
+    private array $falsePositivesRegexps;
 
     /**
      * @var Regexp[]
      */
-    private $statusRegexps;
+    private array $statusRegexps;
 
-    /**
-     * @var Variant
-     */
-    private $open;
-
-    /**
-     * @var Variant
-     */
-    private $closed;
-
-    /**
-     * @var Variant
-     */
-    private $any;
+    private Variant $open;
+    private Variant $closed;
+    private Variant $any;
 
     public function __construct()
     {

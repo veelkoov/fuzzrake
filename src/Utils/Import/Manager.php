@@ -32,22 +32,22 @@ class Manager
     /**
      * @var array List of hashes of rows which contain invalid passcodes, to be approved & imported
      */
-    private $itemsWithPasscodeExceptions = [];
+    private array $itemsWithPasscodeExceptions = [];
 
     /**
      * @var array List of hashes of rows which contain passcodes supposed to be set / to replace earlier
      */
-    private $itemsWithNewPasscodes = [];
+    private array $itemsWithNewPasscodes = [];
 
     /**
      * @var array List of hashes of rows which got rejected
      */
-    private $rejectedItems = [];
+    private array $rejectedItems = [];
 
     /**
      * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
      */
-    private $itemsIgnoreFinalTimes = [];
+    private array $itemsIgnoreFinalTimes = [];
 
     /**
      * @throws DateTimeException

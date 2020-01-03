@@ -9,7 +9,7 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Validator\SpeciesListValidator;
 use App\Utils\StrUtils;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 
 class FixerDifferValidator
@@ -19,32 +19,14 @@ class FixerDifferValidator
     public const SHOW_ALL_FIX_CMD = 0x4;
     public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 0x8;
 
-    /**
-     * @var Fixer
-     */
-    private $fixer;
-
-    /**
-     * @var Differ
-     */
-    private $differ;
-
-    /**
-     * @var Validator
-     */
-    private $validator;
-    /**
-     * @var ObjectManager
-     */
-    private $objectMgr;
-
-    /**
-     * @var Printer
-     */
-    private $printer;
+    private Fixer $fixer;
+    private Differ $differ;
+    private Validator $validator;
+    private EntityManagerInterface $objectMgr;
+    private Printer $printer;
 
     public function __construct(
-        ObjectManager $objectMgr,
+        EntityManagerInterface $objectMgr,
         Fixer $fixer,
         SpeciesListValidator $speciesListValidator,
         Printer $printer

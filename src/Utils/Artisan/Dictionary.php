@@ -6,8 +6,8 @@ namespace App\Utils\Artisan;
 
 abstract class Dictionary
 {
-    protected static $valueKeyMap = null;
-    protected static $keyKeyMap = null;
+    protected static ?array $valueKeyMap = null;
+    protected static ?array $keyKeyMap = null;
 
     abstract public static function getValues(): array;
 

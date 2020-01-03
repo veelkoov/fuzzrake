@@ -10,9 +10,9 @@ use App\Utils\StrContext\StrContextInterface;
 
 class Match implements MatchInterface
 {
-    private $regexp;
-    private $variant;
-    private $strContext;
+    private Regexp $regexp;
+    private Variant $variant;
+    private StrContextInterface $strContext;
 
     public function __construct(Regexp $regexp, Variant $variant, StrContextInterface $match)
     {

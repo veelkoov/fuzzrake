@@ -8,15 +8,8 @@ use App\Utils\StrContext\StrContextInterface;
 
 class AnalysisResult
 {
-    /**
-     * @var MatchInterface
-     */
-    private $openMatch;
-
-    /**
-     * @var MatchInterface
-     */
-    private $closedMatch;
+    private MatchInterface $openMatch;
+    private MatchInterface $closedMatch;
 
     public function __construct(MatchInterface $openMatch, MatchInterface $closedMatch)
     {

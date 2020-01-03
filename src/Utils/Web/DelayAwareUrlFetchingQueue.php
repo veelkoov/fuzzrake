@@ -14,17 +14,10 @@ class DelayAwareUrlFetchingQueue
     /**
      * @var Url[]
      */
-    private $hosts = [];
+    private array $hosts = [];
 
-    /**
-     * @var int
-     */
-    private $millisecondsDelay;
-
-    /**
-     * @var string
-     */
-    private $lastHost = null;
+    private int $millisecondsDelay;
+    private ?string $lastHost = null;
 
     /**
      * @param Url[] $urls

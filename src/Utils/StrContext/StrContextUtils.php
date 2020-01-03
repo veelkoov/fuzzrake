@@ -7,12 +7,8 @@ namespace App\Utils\StrContext;
 use App\Utils\Json;
 use JsonException;
 
-class StrContextUtils
+abstract class StrContextUtils
 {
-    private function __construct()
-    {
-    }
-
     public static function extractFrom(string $input, string $match, int $contextLength): StrContextInterface
     {
         $index = mb_strpos($input, $match);

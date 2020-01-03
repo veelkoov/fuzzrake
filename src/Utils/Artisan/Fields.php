@@ -173,8 +173,8 @@ class Fields
         self::CONTACT_INPUT_VIRTUAL => ['#How can I contact#i',               1, 1],
     ];
 
-    private static $fields;
-    private static $fieldsByModelName;
+    private static ?array $fields;
+    private static ?array $fieldsByModelName;
 
     public static function init()
     {

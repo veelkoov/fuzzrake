@@ -6,26 +6,15 @@ namespace App\Utils\Data;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ArtisanFixWip
 {
-    /**
-     * @var Artisan
-     */
-    private $original;
+    private Artisan $original;
+    private Artisan $fixed;
+    private EntityManagerInterface $objectMgr;
 
-    /**
-     * @var Artisan
-     */
-    private $fixed;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectMgr;
-
-    public function __construct(Artisan $fixSubject, ObjectManager $objectMgr)
+    public function __construct(Artisan $fixSubject, EntityManagerInterface $objectMgr)
     {
         $this->original = clone $fixSubject;
         $this->fixed = $fixSubject;

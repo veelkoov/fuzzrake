@@ -11,7 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Expr\Orx;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,7 +21,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class EventRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Event::class);
     }
@@ -45,8 +45,21 @@ class EventRepository extends ServiceEntityRepository
             ->setParameters(['date1' => $date1, 'date2' => $date2])
             ->select('en.id')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getResult(ColumnHydrator::COLUMN_HYDRATOR);
 
         return $this->findBy(['id' => $ids]);
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function getAll(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.timestamp', 'DESC')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getResult();
     }
 }

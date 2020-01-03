@@ -6,30 +6,23 @@ namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
 use App\Utils\DateTime\DateTimeUtils;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class DbEnabledWebTestCase extends WebTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    protected static $entityManager;
-
-    /**
-     * @var SchemaTool
-     */
-    private static $schemaTool;
+    protected static EntityManager $entityManager;
+    private static SchemaTool $schemaTool;
 
     /**
      * @var ClassMetadata[]
      */
-    private static $metadata;
+    private static array $metadata;
 
     protected static function createClient(array $options = [], array $server = []): KernelBrowser
     {

@@ -14,42 +14,24 @@ use App\Utils\Data\Printer;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StrUtils;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 
 class DataImport
 {
     /**
-     * @var ArtisanRepository
+     * @var ObjectRepository|ArtisanRepository
      */
-    private $artisanRepository;
+    private ObjectRepository $artisanRepository;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
-     * @var Manager
-     */
-    private $manager;
-
-    /**
-     * @var Printer
-     */
-    private $printer;
-
-    /**
-     * @var FDV
-     */
-    private $fdv;
-
-    /**
-     * @var bool
-     */
-    private $showAllFixCmds;
+    private EntityManagerInterface $objectManager;
+    private Manager $manager;
+    private Printer $printer;
+    private FDV $fdv;
+    private bool $showAllFixCmds;
 
     public function __construct(
-        ObjectManager $objectManager,
+        EntityManagerInterface $objectManager,
         Manager $importManager,
         Printer $printer,
         FDV $fdv,

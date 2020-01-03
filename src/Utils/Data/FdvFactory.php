@@ -5,27 +5,16 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\Utils\Data\Validator\SpeciesListValidator;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class FdvFactory
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectMgr;
-
-    /**
-     * @var Fixer
-     */
-    private $fixer;
-
-    /**
-     * @var SpeciesListValidator
-     */
-    private $speciesListValidator;
+    private EntityManagerInterface $objectMgr;
+    private Fixer $fixer;
+    private SpeciesListValidator $speciesListValidator;
 
     public function __construct(
-        ObjectManager $objectMgr,
+        EntityManagerInterface $objectMgr,
         Fixer $fixer,
         SpeciesListValidator $speciesListValidator
     ) {

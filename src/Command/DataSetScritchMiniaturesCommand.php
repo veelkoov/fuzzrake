@@ -11,7 +11,7 @@ use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\TmpCookieJar;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
@@ -25,17 +25,10 @@ class DataSetScritchMiniaturesCommand extends Command
 
     protected static $defaultName = 'app:data:set-scritch-miniatures';
 
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $objectManager;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {
         parent::__construct();
 
@@ -53,7 +46,7 @@ class DataSetScritchMiniaturesCommand extends Command
      *
      * @throws HttpClientException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -90,6 +83,8 @@ class DataSetScritchMiniaturesCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+
+        return 0;
     }
 
     /**

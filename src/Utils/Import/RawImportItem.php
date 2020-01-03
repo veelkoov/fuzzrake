@@ -15,20 +15,9 @@ use JsonException;
 
 class RawImportItem implements FieldReadInterface
 {
-    /**
-     * @var DateTimeInterface
-     */
-    private $timestamp;
-
-    /**
-     * @var array
-     */
-    private $rawInput;
-
-    /**
-     * @var string
-     */
-    private $hash;
+    private DateTimeInterface $timestamp;
+    private array $rawInput;
+    private string $hash;
 
     /**
      * @throws ImportException

@@ -10,7 +10,9 @@ use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\UnexpectedResultException;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method ArtisanCommissionsStatus|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,7 +22,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ArtisanCommissionsStatus::class);
     }
@@ -28,6 +30,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     /**
      * @throws DateTimeException
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getLastCstUpdateTime(): DateTime
     {
@@ -35,6 +38,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->select('MAX(s.lastChecked)')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getSingleScalarResult());
     }
 
@@ -42,7 +46,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     {
         try {
             return $this->getLastCstUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | NonUniqueResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException $e) {
             return 'unknown/error';
         }
     }

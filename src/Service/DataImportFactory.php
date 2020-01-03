@@ -8,21 +8,15 @@ use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
 use App\Utils\Import\DataImport;
 use App\Utils\Import\Manager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImportFactory
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-    /**
-     * @var FdvFactory
-     */
-    private $fdvFactory;
+    private EntityManagerInterface $objectManager;
+    private FdvFactory $fdvFactory;
 
-    public function __construct(ObjectManager $objectManager, FdvFactory $fdvFactory)
+    public function __construct(EntityManagerInterface $objectManager, FdvFactory $fdvFactory)
     {
         $this->objectManager = $objectManager;
         $this->fdvFactory = $fdvFactory;

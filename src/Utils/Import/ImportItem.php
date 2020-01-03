@@ -10,20 +10,9 @@ use App\Utils\StrUtils;
 
 class ImportItem
 {
-    /**
-     * @var RawImportItem
-     */
-    private $raw;
-
-    /**
-     * @var ArtisanFixWip
-     */
-    private $input;
-
-    /**
-     * @var ArtisanFixWip
-     */
-    private $entity;
+    private RawImportItem $raw;
+    private ArtisanFixWip $input;
+    private ArtisanFixWip $entity;
 
     public function __construct(RawImportItem $raw, ArtisanFixWip $input, ArtisanFixWip $entity)
     {
