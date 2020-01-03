@@ -23,10 +23,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
     const LOAD_5M_MAX = 0.5;
     const LOAD_15M_MAX = 0.2;
 
-    /**
-     * @var ArtisanCommissionsStatusRepository
-     */
-    private $artisanCommissionsStatusRepository;
+    private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository;
 
     public function __construct(ArtisanCommissionsStatusRepository $acsr)
     {

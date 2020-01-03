@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\DataFixer;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,17 +16,10 @@ class DataTidyCommand extends Command
 {
     protected static $defaultName = 'app:data:tidy';
 
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $objectManager;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
     {
         $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
@@ -39,7 +32,7 @@ class DataTidyCommand extends Command
         $this->addOption('commit', null, null, 'Save changes in the database');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $fixer = new DataFixer($io, true);
@@ -58,5 +51,7 @@ class DataTidyCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+
+        return 0;
     }
 }

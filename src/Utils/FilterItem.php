@@ -6,20 +6,13 @@ namespace App\Utils;
 
 class FilterItem
 {
-    /**
-     * @var string
-     */
-    private $label;
+    private string $label;
+    private int $count;
 
     /**
      * @var int|string|FilterItems
      */
     private $value;
-
-    /**
-     * @var int
-     */
-    private $count;
 
     /**
      * @param int|string|FilterItems $value

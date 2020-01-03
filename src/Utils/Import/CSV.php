@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use InvalidArgumentException;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\Mime\MimeTypes;
 use ZipArchive;
 
 abstract class CSV
@@ -16,7 +16,7 @@ abstract class CSV
             throw new InvalidArgumentException("File '$filePath' does not exist");
         }
 
-        if ('application/zip' === MimeTypeGuesser::getInstance()->guess($filePath)) {
+        if ('application/zip' === MimeTypes::getDefault()->guessMimeType($filePath)) {
             $fileContents = self::readOnlyFileInZip($filePath);
         } else {
             $fileContents = file_get_contents($filePath);

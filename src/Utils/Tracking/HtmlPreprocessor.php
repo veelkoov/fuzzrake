@@ -8,7 +8,7 @@ use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\DomCrawler\Crawler;
 
-class HtmlPreprocessor
+abstract class HtmlPreprocessor
 {
     public static function processArtisansName(string $artisanName, string $inputText): string
     {

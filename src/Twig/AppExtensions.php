@@ -18,15 +18,8 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    /**
-     * @var ArtisanCommissionsStatusRepository
-     */
-    private $acsRepository;
-
-    /**
-     * @var HostsService
-     */
-    private $hostsService;
+    private ArtisanCommissionsStatusRepository $acsRepository;
+    private HostsService $hostsService;
 
     public function __construct(ArtisanCommissionsStatusRepository $acsRepository, HostsService $hostsService)
     {

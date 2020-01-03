@@ -13,15 +13,8 @@ class TmpCookieJar implements CookieJarInterface
     private const NAME_PLACEHOLDER = '__COOKIE_NAME__';
     private const COOKIE_VALUE_REGEXP = '#^\S+\t(?:FALSE|TRUE)\t\S+\t(?:FALSE|TRUE)\t\d+\t'.self::NAME_PLACEHOLDER.'\t(?<value>\S+)$#mi';
 
-    /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
-     * @var Filesystem
-     */
-    private $fs;
+    private string $filePath;
+    private Filesystem $fs;
 
     public function __construct()
     {

@@ -18,15 +18,8 @@ use Symfony\Component\Console\Style\StyleInterface;
 
 class WebpageSnapshotManager
 {
-    /**
-     * @var WebpageSnapshotCache
-     */
-    private $cache;
-
-    /**
-     * @var GentleHttpClient
-     */
-    private $httpClient;
+    private WebpageSnapshotCache $cache;
+    private GentleHttpClient $httpClient;
 
     public function __construct(string $projectDir)
     {

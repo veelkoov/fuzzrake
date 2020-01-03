@@ -14,7 +14,7 @@ use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Artisan|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,7 +24,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class ArtisanRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Artisan::class);
     }
@@ -43,11 +43,13 @@ class ArtisanRepository extends ServiceEntityRepository
             ->addSelect('pd')
             ->orderBy('a.name', 'ASC')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getResult();
     }
 
     /**
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getDistinctCountriesCount(): int
     {
@@ -55,6 +57,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->select('COUNT (DISTINCT a.country)')
             ->where('a.country != \'\'')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getSingleScalarResult();
     }
 
@@ -85,6 +88,7 @@ class ArtisanRepository extends ServiceEntityRepository
                 LEFT JOIN artisans_urls AS au_cst
                     ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
             ', $rsm)
+            ->enableResultCache(3600)
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
@@ -140,6 +144,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->select("s.status, COUNT(COALESCE(s.status, 'null')) AS count")
             ->groupBy('s.status')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getArrayResult();
 
         $result = new FilterItems(false);
@@ -212,7 +217,9 @@ class ArtisanRepository extends ServiceEntityRepository
             ++$i;
         }
 
-        return $builder->getQuery()->getResult();
+        return $builder->getQuery()
+            ->enableResultCache(3600)
+            ->getResult();
     }
 
     /**
@@ -248,7 +255,9 @@ class ArtisanRepository extends ServiceEntityRepository
             $queryBuilder->addSelect("a.$otherColumnName AS otherItems");
         }
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        return $queryBuilder->getQuery()
+            ->enableResultCache(3600)
+            ->getArrayResult();
     }
 
     /**
@@ -275,6 +284,7 @@ class ArtisanRepository extends ServiceEntityRepository
                 'formerMakerIds2' => "%\n$makerId%",
             ])
             ->getQuery()
+            ->enableResultCache(3600)
             ->getSingleResult();
     }
 
@@ -290,6 +300,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->andWhere('a.formerMakerIds <> :empty')
             ->setParameter('empty', '')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getArrayResult();
 
         $result = [];

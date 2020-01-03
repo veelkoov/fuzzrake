@@ -9,30 +9,11 @@ use App\Utils\StrUtils;
 
 class ImportItem
 {
-    /**
-     * @var RawImportItem
-     */
-    private $raw;
-
-    /**
-     * @var Artisan
-     */
-    private $input;
-
-    /**
-     * @var Artisan
-     */
-    private $fixedInput;
-
-    /**
-     * @var Artisan
-     */
-    private $artisan;
-
-    /**
-     * @var Artisan
-     */
-    private $originalArtisan;
+    private RawImportItem $raw;
+    private Artisan $input;
+    private Artisan $fixedInput;
+    private Artisan $artisan;
+    private Artisan $originalArtisan;
 
     public function __construct(RawImportItem $raw, Artisan $input, Artisan $fixedInput, Artisan $originalArtisan, Artisan $artisan)
     {

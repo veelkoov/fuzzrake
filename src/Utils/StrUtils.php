@@ -7,12 +7,8 @@ namespace App\Utils;
 use App\Entity\Artisan;
 use App\Utils\Regexp\Utils as Regexp;
 
-class StrUtils
+abstract class StrUtils
 {
-    private function __construct()
-    {
-    }
-
     public static function artisanNamesSafeForCli(Artisan ...$artisans): string
     {
         $names = $makerIds = [];
