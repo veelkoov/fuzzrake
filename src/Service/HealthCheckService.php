@@ -16,14 +16,14 @@ class HealthCheckService
     private const WARNING = 'WARNING';
     private const OK = 'OK';
 
-    public const MEMORY_FREE_MIN_MIBS = 'MEMORY_FREE_MIN_MIBS';
+    public const MEMORY_AVAILABLE_MIN_MIBS = 'MEMORY_AVAILABLE_MIN_MIBS';
     public const DISK_FREE_MIN_MIBS = 'DISK_FREE_MIN_MIBS';
     public const DISK_USED_MAX_PERCENT = 'DISK_USED_MAX_PERCENT';
     public const LOAD_1M_MAX = 'LOAD_1M_MAX';
     public const LOAD_5M_MAX = 'LOAD_5M_MAX';
     public const LOAD_15M_MAX = 'LOAD_15M_MAX';
 
-    private int $memoryFreeMinMibs;
+    private int $memoryAvailableMinMibs;
     private int $diskFreeMinMibs;
     private int $diskUsedMaxPercent;
     private float $load1mMax;
@@ -36,7 +36,7 @@ class HealthCheckService
     {
         $this->artisanCommissionsStatusRepository = $acsr;
 
-        $this->memoryFreeMinMibs = Parse::tInt($healthCheckValues[self::MEMORY_FREE_MIN_MIBS]);
+        $this->memoryAvailableMinMibs = Parse::tInt($healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS]);
         $this->diskFreeMinMibs = Parse::tInt($healthCheckValues[self::DISK_FREE_MIN_MIBS]);
         $this->diskUsedMaxPercent = Parse::tInt($healthCheckValues[self::DISK_USED_MAX_PERCENT]);
         $this->load1mMax = Parse::tFloat($healthCheckValues[self::LOAD_1M_MAX]);
@@ -52,7 +52,7 @@ class HealthCheckService
             'lastCstRunUtc' => $this->getLastCstRunUtc(),
             'serverTimeUtc' => $this->getServerTimeUtc(),
             'disk'          => $this->getDiskStatus(HealthCheckService::getDfRawOutput()),
-            'memory'        => $this->getMemoryStatus(HealthCheckService::getFreeRawOutput()),
+            'memory'        => $this->getMemoryStatus(HealthCheckService::getMemoryAvailableRawOutput()),
             'load'          => $this->getLoadStatus($this->getCpuCountRawOutput(), HealthCheckService::getProcLoadAvgRawOutput()),
         ];
     }
@@ -111,9 +111,9 @@ class HealthCheckService
     public function getMemoryStatus(string $rawData): string
     {
         try {
-            $memoryFreeMibs = Parse::tInt($rawData);
+            $memoryAvailableMibs = Parse::tInt($rawData);
 
-            return $memoryFreeMibs > $this->memoryFreeMinMibs ? self::OK : self::WARNING;
+            return $memoryAvailableMibs > $this->memoryAvailableMinMibs ? self::OK : self::WARNING;
         } catch (ParseException $e) {
             return self::WARNING;
         }
@@ -156,7 +156,7 @@ class HealthCheckService
         return `df -B 1M 2>&1 | awk '/^\/dev\// { print $4 "\t" $5 }' 2>&1` ?? '';
     }
 
-    private static function getFreeRawOutput(): string
+    private static function getMemoryAvailableRawOutput(): string
     {
         return `free -m 2>&1 | awk '/^Mem:/ { print $7 }' 2>&1` ?? '';
     }
