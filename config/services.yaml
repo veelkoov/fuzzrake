@@ -19,6 +19,13 @@ services:
             $hosts:
                 production: getfursu.it
             $iuFormUrl: '%iu_form_url%'
+            $healthCheckValues:
+                MEMORY_FREE_MIN_MIBS: '%env(resolve:MEMORY_FREE_MIN_MIBS)%'
+                DISK_FREE_MIN_MIBS: '%env(resolve:DISK_FREE_MIN_MIBS)%'
+                DISK_USED_MAX_PERCENT: '%env(resolve:DISK_USED_MAX_PERCENT)%'
+                LOAD_1M_MAX: '%env(resolve:LOAD_1M_MAX)%'
+                LOAD_5M_MAX: '%env(resolve:LOAD_5M_MAX)%'
+                LOAD_15M_MAX: '%env(resolve:LOAD_15M_MAX)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
