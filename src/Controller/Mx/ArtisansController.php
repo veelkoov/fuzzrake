@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Form\ArtisanType;
 use App\Service\HostsService;
 use App\Utils\Artisan\Utils;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ class ArtisansController extends AbstractController
     /**
      * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET", "POST"})
      * @Route("/new", name="mx_artisan_new", methods={"GET", "POST"})
+     * @Cache(maxage=0, public=false)
      */
     public function edit(Request $request, ?Artisan $artisan, HostsService $hostsSrv): Response
     {
