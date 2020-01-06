@@ -10,6 +10,13 @@ def console(*args)
   docker('bin/console', *args)
 end
 
+def do_release(branch)
+  exec_or_die('git', 'checkout', branch)
+  exec_or_die('git', 'merge', 'develop')
+  exec_or_die('git', 'push')
+  exec_or_die('git', 'checkout', 'develop')
+end
+
 task :default do
   exec_or_die('rake', '--tasks', '--all')
 end
@@ -60,10 +67,11 @@ task :importc do
 end
 
 task 'release-beta' do
-  exec_or_die('git', 'checkout', 'beta')
-  exec_or_die('git', 'merge', '--ff', 'develop')
-  exec_or_die('git', 'push')
-  exec_or_die('git', 'checkout', 'develop')
+  do_release('beta')
+end
+
+task 'release-prod' do
+  do_release('master')
 end
 
 task :qa => ['php-cs-fixer', :phpunit]
