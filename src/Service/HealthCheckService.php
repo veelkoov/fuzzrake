@@ -9,25 +9,39 @@ use App\Utils\DateTimeException;
 use App\Utils\DateTimeUtils;
 use App\Utils\Parse;
 use App\Utils\ParseException;
-use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\UnexpectedResultException;
 
-class HealthCheckService // TODO: Move hardcoded values to parameters/.env
+class HealthCheckService
 {
     private const WARNING = 'WARNING';
     private const OK = 'OK';
 
-    private const MEMORY_FREE_MIN_MIBS = 256;
-    const DISK_FREE_MIN_MIBS = 1024;
-    const DISK_USED_MAX_PERCENT = 90;
-    const LOAD_1M_MAX = 0.9;
-    const LOAD_5M_MAX = 0.5;
-    const LOAD_15M_MAX = 0.2;
+    public const MEMORY_AVAILABLE_MIN_MIBS = 'MEMORY_AVAILABLE_MIN_MIBS';
+    public const DISK_FREE_MIN_MIBS = 'DISK_FREE_MIN_MIBS';
+    public const DISK_USED_MAX_PERCENT = 'DISK_USED_MAX_PERCENT';
+    public const LOAD_1M_MAX = 'LOAD_1M_MAX';
+    public const LOAD_5M_MAX = 'LOAD_5M_MAX';
+    public const LOAD_15M_MAX = 'LOAD_15M_MAX';
+
+    private int $memoryAvailableMinMibs;
+    private int $diskFreeMinMibs;
+    private int $diskUsedMaxPercent;
+    private float $load1mMax;
+    private float $load5mMax;
+    private float $load15mMax;
 
     private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository;
 
-    public function __construct(ArtisanCommissionsStatusRepository $acsr)
+    public function __construct(ArtisanCommissionsStatusRepository $acsr, array $healthCheckValues)
     {
         $this->artisanCommissionsStatusRepository = $acsr;
+
+        $this->memoryAvailableMinMibs = Parse::tInt($healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS]);
+        $this->diskFreeMinMibs = Parse::tInt($healthCheckValues[self::DISK_FREE_MIN_MIBS]);
+        $this->diskUsedMaxPercent = Parse::tInt($healthCheckValues[self::DISK_USED_MAX_PERCENT]);
+        $this->load1mMax = Parse::tFloat($healthCheckValues[self::LOAD_1M_MAX]);
+        $this->load5mMax = Parse::tFloat($healthCheckValues[self::LOAD_5M_MAX]);
+        $this->load15mMax = Parse::tFloat($healthCheckValues[self::LOAD_15M_MAX]);
     }
 
     public function getStatus(): array
@@ -38,7 +52,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
             'lastCstRunUtc' => $this->getLastCstRunUtc(),
             'serverTimeUtc' => $this->getServerTimeUtc(),
             'disk'          => $this->getDiskStatus(HealthCheckService::getDfRawOutput()),
-            'memory'        => $this->getMemoryStatus(HealthCheckService::getFreeRawOutput()),
+            'memory'        => $this->getMemoryStatus(HealthCheckService::getMemoryAvailableRawOutput()),
             'load'          => $this->getLoadStatus($this->getCpuCountRawOutput(), HealthCheckService::getProcLoadAvgRawOutput()),
         ];
     }
@@ -49,7 +63,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
             return $this->artisanCommissionsStatusRepository->getLastCstUpdateTime() < DateTimeUtils::getUtcAt('-12:15')
                 ? self::OK
                 : self::WARNING;
-        } catch (DateTimeException | NonUniqueResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException $e) {
             return self::WARNING;
         }
     }
@@ -86,7 +100,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
                 return self::WARNING;
             }
 
-            if ((int) $mibsFree < self::DISK_FREE_MIN_MIBS && $percentUsed > self::DISK_USED_MAX_PERCENT) {
+            if ((int) $mibsFree < $this->diskFreeMinMibs && $percentUsed > $this->diskUsedMaxPercent) {
                 return self::WARNING;
             }
         }
@@ -97,9 +111,9 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
     public function getMemoryStatus(string $rawData): string
     {
         try {
-            $memoryFreeMibs = Parse::tInt($rawData);
+            $memoryAvailableMibs = Parse::tInt($rawData);
 
-            return $memoryFreeMibs > self::MEMORY_FREE_MIN_MIBS ? self::OK : self::WARNING;
+            return $memoryAvailableMibs > $this->memoryAvailableMinMibs ? self::OK : self::WARNING;
         } catch (ParseException $e) {
             return self::WARNING;
         }
@@ -122,7 +136,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
             return self::WARNING;
         }
 
-        return $load1m < self::LOAD_1M_MAX && $load5m < self::LOAD_5M_MAX && $load15m < self::LOAD_15M_MAX
+        return $load1m < $this->load1mMax && $load5m < $this->load5mMax && $load15m < $this->load15mMax
             ? self::OK
             : self::WARNING;
     }
@@ -142,7 +156,7 @@ class HealthCheckService // TODO: Move hardcoded values to parameters/.env
         return `df -B 1M 2>&1 | awk '/^\/dev\// { print $4 "\t" $5 }' 2>&1` ?? '';
     }
 
-    private static function getFreeRawOutput(): string
+    private static function getMemoryAvailableRawOutput(): string
     {
         return `free -m 2>&1 | awk '/^Mem:/ { print $7 }' 2>&1` ?? '';
     }

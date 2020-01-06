@@ -67,3 +67,7 @@ task 'release-beta' do
 end
 
 task :qa => ['php-cs-fixer', :phpunit]
+
+task :cc do
+  console('cache:clear')
+end

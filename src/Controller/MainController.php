@@ -8,6 +8,7 @@ use App\Repository\ArtisanRepository;
 use App\Service\CountriesDataService;
 use App\Service\IuFormService;
 use Doctrine\ORM\UnexpectedResultException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -18,6 +19,7 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="main")
      * @Route("/index.html")
+     * @Cache(maxage=3600, public=true)
      *
      * @throws UnexpectedResultException
      */
@@ -39,6 +41,7 @@ class MainController extends AbstractController
 
     /**
      * @Route("/redirect_iu_form/{makerId}", name="redirect_iu_form")
+     * @Cache(maxage=0, public=false)
      *
      * @throws NotFoundHttpException
      */
