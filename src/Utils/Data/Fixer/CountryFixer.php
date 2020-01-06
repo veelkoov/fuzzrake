@@ -20,6 +20,7 @@ class CountryFixer implements FixerInterface
         'finland'                                       => 'FI',
         'france'                                        => 'FR',
         'uk|england|united kingdom'                     => 'GB',
+        'hungary'                                       => 'HU',
         'ireland'                                       => 'IE',
         'italia|italy'                                  => 'IT',
         'mexico'                                        => 'MX',
