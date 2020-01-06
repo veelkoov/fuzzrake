@@ -1,6 +1,9 @@
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
 
+imports:
+    - { resource: data_definitions/species.yaml }
+
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
@@ -19,6 +22,7 @@ services:
             $hosts:
                 production: getfursu.it
             $iuFormUrl: '%iu_form_url%'
+            $species: '%species%'
             $healthCheckValues:
                 MEMORY_AVAILABLE_MIN_MIBS: '%env(resolve:MEMORY_AVAILABLE_MIN_MIBS)%'
                 DISK_FREE_MIN_MIBS:        '%env(resolve:DISK_FREE_MIN_MIBS)%'

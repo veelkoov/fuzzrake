@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\StrContext;
 
+use App\Utils\Json;
 use JsonException;
 
 abstract class StrContextUtils

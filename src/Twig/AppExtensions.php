@@ -6,8 +6,8 @@ namespace App\Twig;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\HostsService;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\StrUtils;

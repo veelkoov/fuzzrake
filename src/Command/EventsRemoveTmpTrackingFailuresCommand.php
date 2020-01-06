@@ -6,8 +6,8 @@ namespace App\Command;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;

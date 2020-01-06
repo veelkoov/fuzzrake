@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Utils\DateTimeUtils;
-use App\Utils\StrContextInterface;
-use App\Utils\StrContextUtils;
+use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\StrContext\StrContextInterface;
+use App\Utils\StrContext\StrContextUtils;
 use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
