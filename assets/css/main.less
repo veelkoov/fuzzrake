@@ -106,16 +106,15 @@ table#artisans {
       padding: 0;
 
       li {
-        display: inline;
+        display: inline-block;
+        margin-right: 1ex;
       }
 
-      li.yes:before {
-        content: ' ✅ ';
+      li.yes i {
         color: #4cae4c;
       }
 
-      li.no:before {
-        content: ' ⛔ ';
+      li.no i {
         color: #f20600;
       }
     }

@@ -59,10 +59,10 @@
                     {%- if artisan.speciesDoes or artisan.speciesDoesnt -%}
                         <ul>
                             {%- for specie in artisan.speciesDoes|list -%}
-                                <li class="yes">{{ specie }}</li>
+                                <li class="yes"><i class="fas fa-check-square"></i>&nbsp;{{ specie }}</li>
                             {%- endfor -%}
                             {%- for specie in artisan.speciesDoesnt|list -%}
-                                <li class="no">{{ specie }}</li>
+                                <li class="no"><i class="fas fa-times-circle"></i>&nbsp;{{ specie }}</li>
                             {%- endfor -%}
                         </ul>
                     {%- endif -%}
