@@ -95,10 +95,29 @@ table#artisans {
       text-align: left;
     }
 
-    td.features, td.types, td.styles, td.production-models, td.languages {
+    td.features, td.types, td.styles, td.production-models, td.languages, td.species {
       text-align: left;
       display: table-cell;
       font-size: 75%;
+    }
+
+    td.species ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: inline;
+      }
+
+      li.yes:before {
+        content: ' ✅ ';
+        color: #4cae4c;
+      }
+
+      li.no:before {
+        content: ' ⛔ ';
+        color: #f20600;
+      }
     }
 
     td.commissions {
