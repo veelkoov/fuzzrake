@@ -12,7 +12,7 @@ use App\Utils\StrUtils;
 
 abstract class AbstractListFixer extends StringFixer
 {
-    private const REPLACEMENTS = [ # TODO: Should be moved elsewhere, import files or whatever.
+    private const REPLACEMENTS = [ // TODO: Should be moved elsewhere, import files or whatever.
         'Three-fourth \(Head, handpaws, tail, legs/pants, feetpaws\)' => OrderTypes::THREE_FOURTH,
         'Partial \(Head, handpaws, tail, feetpaws\)'                  => OrderTypes::PARTIAL,
         'Mini partial \(Head, handpaws, tail\)'                       => OrderTypes::MINI_PARTIAL,

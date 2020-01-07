@@ -6,7 +6,7 @@ namespace App\Utils\Data\Fixer;
 
 class SpeciesListFixer extends AbstractListFixer
 {
-    private const UNSPLITTABLE = [ # TODO: Improve. Should be part of import fixes file or whatever.
+    private const UNSPLITTABLE = [ // TODO: Improve. Should be part of import fixes file or whatever.
         'All species, but I specialize in dragons',
         'I\'d prefer not to do any pokemon/digimon, but still ask since it depends on the design',
         'I greatly prefer uncommon species and will be much more excited to work on such species. I do all, but uncommon is prefered. Examples: elephants, caracles, sheep, birds, ect.',
