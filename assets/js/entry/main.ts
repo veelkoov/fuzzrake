@@ -6,16 +6,16 @@ require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 import * as DataTable from '../main/artisansTable';
 import * as DetailsPopUp from '../main/detailsPopUp';
 import * as AntiScamWarning from '../main/antiScamWarning';
-import * as ArtisanPopUp from "../main/artisanPopUp";
+import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
-import DataBridge from "../class/DataBridge";
-import {makerIdHashRegexp} from "../consts";
+import DataBridge from '../class/DataBridge';
+import {makerIdHashRegexp} from '../consts';
 
 function init(): void {
     let callbacks: (() => void)[] = [
         loadFuzzrakeData,
     ];
-    callbacks.push(...ArtisanPopUp.init());
+    callbacks.push(...UpdateRequestPopUp.init());
     callbacks.push(...AntiScamWarning.init());
     callbacks.push(...DataTable.init());
     callbacks.push(...DetailsPopUp.init());
