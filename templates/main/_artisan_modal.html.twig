@@ -1,18 +1,19 @@
+{% verbatim %}
 <div class="modal-header">
     <h5 class="modal-title">
-        (( #artisan.makerId ))
-            {# Grep code for WORKAROUND_PLACEHOLDERS_CREATINT_FAKE_404S: data-href ---> href #}
-            <a id="makerId" href="#" data-href="#((artisan.makerId))"><i class="fas fa-link"></i> (( artisan.makerId ))</a>
-        (( /artisan.makerId ))
+        {{# if artisan.makerId }}
+            {{! Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href }}
+            <a id="makerId" href="#" data-href="#{{ artisan.makerId }}"><i class="fas fa-link"></i> {{ artisan.makerId }}</a>
+        {{/ if }}
 
-        <span id="artisanName">(( artisan.name ))</span>(( #artisan.country ))&nbsp;<span class="flag-icon flag-icon-(( artisan.lcCountry ))"></span>(( /artisan.country ))
+        <span id="artisanName">{{ artisan.name }}</span>{{# if artisan.country }}&nbsp;<span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>{{/ if }}
 
         <small>
-            Based in (( #optional )) artisan.location (( /optional )),
-            crafting since (( #optional )) artisan.since (( /optional ))
-            (( #artisan.formerly ))
-                <br />Formerly (( artisan.formerly ))
-            (( /artisan.formerly ))
+            Based in {{ optional artisan.location }};
+            crafting since {{ optional artisan.since }}
+            {{# if artisan.formerly }}
+                <br />Formerly {{ commaSeparated artisan.formerly }}
+            {{/ if }}
         </small>
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -20,160 +21,158 @@
     </button>
 </div>
 <div class="modal-body row px-4 py-2">
-    (( #artisan.inactiveReason ))
+    {{# if artisan.inactiveReason }}
         <div class="col-sm-12 p-1 alert alert-warning" role="alert">
-            <strong>This maker has been marked as inactive</strong>, reason: (( artisan.inactiveReason ))
+            <strong>This maker has been marked as inactive</strong>, reason: {{ artisan.inactiveReason }}
         </div>
-    (( /artisan.inactiveReason ))
-    (( #photos )) (( /photos ))
-    (( #artisan.intro ))
+    {{/ if }}
+    {{ photos artisan.scritchMiniatureUrls artisan.scritchPhotoUrls }}
+    {{# if artisan.intro }}
         <div class="col-sm-12 p-1">
-            <p class="lead">(( artisan.intro ))</p>
+            <p class="lead">{{ artisan.intro }}</p>
         </div>
-    (( /artisan.intro ))
+    {{/ if }}
     <div class="col-sm-4 p-1">
         <h5>Produces</h5>
         <div class="small pb-2">
-            (( #optionalList ))artisan.productionModels(( /optionalList ))
+            {{ optionalList artisan.productionModels }}
         </div>
         <h5>Styles</h5>
         <div class="small">
-            (( #optionalList ))artisan.allStyles(( /optionalList ))
+            {{ optionalList artisan.allStyles }}
         </div>
     </div>
     <div class="col-sm-4 p-1">
         <h5>Types</h5>
         <div class="small">
-            (( #optionalList ))artisan.allOrderTypes(( /optionalList ))
+            {{ optionalList artisan.allOrderTypes }}
         </div>
     </div>
     <div class="col-sm-4 p-1">
         <h5>Features</h5>
         <div class="small">
-            (( #optionalList ))artisan.allFeatures(( /optionalList ))
+            {{ optionalList artisan.allFeatures }}
         </div>
     </div>
     <div class="col-sm-6 p-1">
         <h5>Species</h5>
         <div class="small" id="artisanSpecies">
-            (( #artisan.speciesDoes ))
-                <strong>Does</strong>: (( artisan.speciesDoes ))
-                (( #artisan.speciesDoesnt ))<br />(( /artisan.speciesDoesnt ))
-            (( /artisan.speciesDoes ))
-            (( #artisan.speciesDoesnt ))
-                <strong>Doesn't</strong>: (( artisan.speciesDoesnt ))
-            (( /artisan.speciesDoesnt ))
-            (( ^artisan.speciesDoesnt ))
-                (( ^artisan.speciesDoes ))
+            {{# if artisan.speciesDoes }}
+                <strong>Does</strong>: {{ commaSeparated artisan.speciesDoes }}
+                {{# if artisan.speciesDoesnt }}<br />{{/ if }}
+            {{/ if }}
+            {{# if artisan.speciesDoesnt }}
+                <strong>Doesn't</strong>: {{ commaSeparated artisan.speciesDoesnt }}
+            {{ else }}
+                {{# unless artisan.speciesDoes }}
                     <i class="fas fa-question-circle" title="Unknown"></i>
-                (( /artisan.speciesDoes ))
-            (( /artisan.speciesDoesnt ))
+                {{/ unless }}
+            {{/ if }}
         </div>
     </div>
     <div class="col-sm-6 p-1">
         <h5>Payment plans</h5>
         <div class="small">
-            (( #optional )) artisan.paymentPlans (( /optional ))
+            {{ optional artisan.paymentPlans }}
         </div>
     </div>
     <div class="col-sm-12 p-1">
         <h5>Languages</h5>
         <div class="small">
-            (( #optional )) artisan.languagesCommaSeparated (( /optional ))
+            {{ optional artisan.languages }}
         </div>
     </div>
     <div class="col-sm-12 p-1">
         <h5>Links</h5>
         <p class="small">
-            If you're going to contact the studio/maker, <u>please let them know you found them here(( ^artisan.completenessGood )) and that their data could use some updates(( /artisan.completenessGood ))</u>! This&nbsp;will help us all a lot. Thank you!
+            If you're going to contact the studio/maker, <u>please let them know you found them here{{# unless artisan.completenessGood }} and that their data could use some updates{{/ unless }}</u>! This&nbsp;will help us all a lot. Thank you!
         </p>
         <div id="artisanLinks">
-            (( #artisan.fursuitReviewUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.fursuitReviewUrl))" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
-            (( /artisan.fursuitReviewUrl ))
-            (( #artisan.websiteUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.websiteUrl))" target="_blank"><i class="fas fa-link"></i> Official website</a>
-            (( /artisan.websiteUrl ))
-            (( #artisan.pricesUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.pricesUrl))" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
-            (( /artisan.pricesUrl ))
-            (( #artisan.faqUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.faqUrl))" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
-            (( /artisan.faqUrl ))
-            (( #artisan.queueUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.queueUrl))" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
-            (( /artisan.queueUrl ))
-            (( #artisan.furAffinityUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.furAffinityUrl))" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
-            (( /artisan.furAffinityUrl ))
-            (( #artisan.deviantArtUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.deviantArtUrl))" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
-            (( /artisan.deviantArtUrl ))
-            (( #artisan.twitterUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.twitterUrl))" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-            (( /artisan.twitterUrl ))
-            (( #artisan.facebookUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.facebookUrl))" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
-            (( /artisan.facebookUrl ))
-            (( #artisan.tumblrUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.tumblrUrl))" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
-            (( /artisan.tumblrUrl ))
-            (( #artisan.youtubeUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.youtubeUrl))" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
-            (( /artisan.youtubeUrl ))
-            (( #artisan.instagramUrl ))
-                <a class="btn btn-light m-1" href="#" data-href="((artisan.instagramUrl))" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-            (( /artisan.instagramUrl ))
+            {{# if artisan.fursuitReviewUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
+            {{/ if }}
+            {{# if artisan.websiteUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a>
+            {{/ if }}
+            {{# if artisan.pricesUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.pricesUrl }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+            {{/ if }}
+            {{# if artisan.faqUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
+            {{/ if }}
+            {{# if artisan.queueUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
+            {{/ if }}
+            {{# if artisan.furAffinityUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.furAffinityUrl }}" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
+            {{/ if }}
+            {{# if artisan.deviantArtUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
+            {{/ if }}
+            {{# if artisan.twitterUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+            {{/ if }}
+            {{# if artisan.facebookUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.facebookUrl }}" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+            {{/ if }}
+            {{# if artisan.tumblrUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.tumblrUrl }}" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
+            {{/ if }}
+            {{# if artisan.youtubeUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.youtubeUrl }}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+            {{/ if }}
+            {{# if artisan.instagramUrl }}
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+            {{/ if }}
         </div>
     </div>
     <div class="row p-1">
         <div class="col-sm">
             <h5>Commissions status</h5>
             <div class="small" id="artisanCommissionsStatus">
-                (( ^artisan.cstUrl ))
-                    Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
-
-                    Status is not automatically tracked and updated.
-                (( /artisan.cstUrl ))
-                (( #artisan.cstUrl ))
-                    (( #artisan.commissionsStatusKnown ))
-                        Commissions are <strong>(( artisan.commissionsStatusText ))</strong>.
+                {{# if artisan.cstUrl }}
+                    {{# if artisan.commissionsStatusKnown }}
+                        Commissions are <strong>{{ artisan.commissionsStatusText }}</strong>.
 
                         Status is tracked and updated automatically from this web page:
-                        <a href="#" data-href="((artisan.cstUrl))" target="_blank">(( artisan.cstUrl ))</a>.
+                        <a href="#" data-href="{{ artisan.cstUrl }}" target="_blank">{{ artisan.cstUrl }}</a>.
 
-                        Last time checked on (( artisan.cstLastCheck )) UTC.
-                    (( /artisan.commissionsStatusKnown ))
-                    (( ^artisan.commissionsStatusKnown ))
-                        Commissions status is <strong>(( artisan.commissionsStatusText ))</strong>.
+                        Last time checked on {{ artisan.cstLastCheck }} UTC.
+                    {{ else }}
+                        Commissions status is <strong>{{ artisan.commissionsStatusText }}</strong>.
 
                         It should be tracked and updated automatically from this web page:
-                        <a href="#" data-href="((artisan.cstUrl))" target="_blank">(( artisan.cstUrl ))</a>, however the software
+                        <a href="#" data-href="{{ artisan.cstUrl }}" target="_blank">{{ artisan.cstUrl }}</a>, however the software
                         failed to "understand" the status based on the page contents.
 
-                        Last time it tried on (( artisan.cstLastCheck )) UTC.
-                    (( /artisan.commissionsStatusKnown ))
-                (( /artisan.cstUrl ))
-                <a href="{{ path('tracking') }}" target="_blank">Learn more</a>
+                        Last time it tried on {{ artisan.cstLastCheck }} UTC.
+                    {{/ if }}
+                {{ else }}
+                    Commissions are <strong>{{ artisan.commissionsStatusText }}</strong>.
+
+                    Status is not automatically tracked and updated.
+                {{/ if }}
+                <a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a>
             </div>
         </div>
-        (( #artisan.cstUrl ))
-            (( ^artisan.commissionsStatusKnown ))
+        {{# if artisan.cstUrl }}
+            {{# unless artisan.commissionsStatusKnown }}
                 <div class="col-sm-4">
-                    <img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid" alt="">
+                    <img src="{% endverbatim %}{{ asset('images/parsing_failed.webp') }}{% verbatim %}" class="img-fluid" alt="">
                 </div>
-            (( /artisan.commissionsStatusKnown ))
-        (( /artisan.cstUrl ))
+            {{/ unless }}
+        {{/ if }}
     </div>
     <div class="col-sm-12 p-1 pt-3">
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
         <p class="small">
-            This maker/studio has (( artisan.completeness ))% data completeness.
-            (( artisan.completenessComment ))
+            This maker/studio has {{ artisan.completeness }}% data completeness.
+            {{ artisan.completenessComment }}
         </p>
-        {% include 'main/_update_request_contents.html.twig' with { 'id': 'updateRequestFull' }%}
+        {% endverbatim %}{% include 'main/_update_request_contents.html.twig' with { 'id': 'updateRequestFull' }%}{% verbatim %}
     </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
+{% endverbatim %}

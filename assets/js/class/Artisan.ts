@@ -11,7 +11,6 @@ export default class Artisan {
     readonly allFeatures: string[];
     readonly allOrderTypes: string[];
     readonly allStyles: string[];
-    readonly languagesCommaSeparated: string;
     readonly commissionsStatusKnown: boolean;
     readonly commissionsStatusText: string;
     readonly completenessComment: string;
@@ -68,7 +67,6 @@ export default class Artisan {
         this.allFeatures = Artisan.makeAllList(features, otherFeatures);
         this.allStyles = Artisan.makeAllList(styles, otherStyles);
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
-        this.languagesCommaSeparated = languages.join(', ');
         this.commissionsStatusKnown = commissionsStatus !== null;
         this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);
         this.completenessComment = Artisan.getCompletenessComment(completeness);
