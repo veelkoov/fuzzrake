@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\NullMatch;

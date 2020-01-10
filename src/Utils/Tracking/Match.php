@@ -6,7 +6,7 @@ namespace App\Utils\Tracking;
 
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\Variant;
-use App\Utils\StrContextInterface;
+use App\Utils\StrContext\StrContextInterface;
 
 class Match implements MatchInterface
 {

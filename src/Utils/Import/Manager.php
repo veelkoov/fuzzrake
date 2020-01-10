@@ -6,8 +6,8 @@ namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Fields;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
 use DateTime;
 use InvalidArgumentException;

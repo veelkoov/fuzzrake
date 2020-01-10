@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use JsonException;
 use JsonSerializable;
 
 /**
@@ -840,6 +841,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getValuesForJson();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function getJsonArray(): string
     {
         return Json::encode(array_values($this->getValuesForJson()));
@@ -880,6 +884,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function getContactAddressPlain(): string
     {
         return $this->getPrivateData()->getContactAddress();
+    }
+
+    public function setContactAddressPlain(string $contactAddressPlain): self
+    {
+        $this->getPrivateData()->setContactAddress($contactAddressPlain);
+
+        return $this;
     }
 
     public function getPasscode(): string

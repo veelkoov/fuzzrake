@@ -1,56 +1,53 @@
 'use strict';
 
-import * as Mustache from "mustache";
+import * as Handlebars from "handlebars";
 import * as Utils from "./utils";
 import Artisan from "../class/Artisan";
 
-const HTML_SIGN_UNKNOWN = '<i class="fas fa-question-circle" title="Unknown"></i>';
+const HTML_SIGN_UNKNOWN = new Handlebars.SafeString('<i class="fas fa-question-circle" title="Unknown"></i>');
+const safeStr = Handlebars.Utils.escapeExpression;
 
-let detailsPopUpTpl: string;
+let detailsPopUpTpl: HandlebarsTemplateDelegate;
 let $detailsPopUp: JQuery<HTMLElement>;
 
-function optionalTplFunc() {
-    return function (text, render) {
-        return render('{{ ' + text + ' }}') || HTML_SIGN_UNKNOWN;
+function optionalTplFunc(element: string|string[]): string|object {
+    if (element instanceof Array) {
+        element = element.join(', ');
     }
+
+    return element !== '' ? element : HTML_SIGN_UNKNOWN;
 }
 
-function optionalListTplFunc() {
-    return function (text, render) {
-        let rendered = render('{{# ' + text + ' }}<li>{{.}}</li>{{/ ' + text + ' }}');
-
-        return rendered ? '<ul>' + rendered + '</ul>' : HTML_SIGN_UNKNOWN;
-    }
+function commaSeparatedTplFunc(elements: string[]): string {
+    return elements.join(', ');
 }
 
-function photosTplFunc() {
-    return function (text, render) {
-        let miniaturesStr: string = render('{{#artisan.scritchMiniatureUrls}}{{.}}\n{{/artisan.scritchMiniatureUrls}}').trimRight();
-        let photosStr: string = render('{{#artisan.scritchPhotoUrls}}{{.}}\n{{/artisan.scritchPhotoUrls}}').trimRight();
+function optionalListTplFunc(list: string[]): string|object {
+    let rendered = list.map(function (value: string): string {
+        return `<li>${safeStr(value)}</li>`;
+    }).join('');
 
-        let miniatures: string[] = miniaturesStr.split('\n');
-        let photos: string[] = photosStr.split('\n');
+    return rendered ? new Handlebars.SafeString(`<ul>${rendered}</ul>`) : HTML_SIGN_UNKNOWN;
+}
 
-        if (miniaturesStr.length === 0 || miniatures.length !== photos.length) {
-            return '';
-        }
-
-        let result: string = '';
-        for (let i: number = 0; i < miniatures.length; i++) {
-            result += `<div><a href="${photos[i]}" target="_blank"><img src="${miniatures[i]}" alt="" /></a></div>`;
-        }
-
-        return `<div class="imgs-container">${result}</div>`;
+function photosTplFunc(miniatures: string[], photos: string[]): string|object {
+    if (miniatures.length === 0 || miniatures.length !== photos.length) {
+        return '';
     }
+
+    let result: string = '';
+
+    for (let i: number = 0; i < miniatures.length; i++) {
+        result += `<div><a href="${safeStr(photos[i])}" target="_blank"><img src="${safeStr(miniatures[i])}" alt="" /></a></div>`;
+    }
+
+    return new Handlebars.SafeString(`<div class="imgs-container">${result}</div>`);
 }
 
 function populatePopUpWithData(artisan: Artisan): void {
-    $detailsPopUp.html(Mustache.render(detailsPopUpTpl, {
-        artisan: artisan,
-        optional: optionalTplFunc,
-        photos: photosTplFunc,
-        optionalList: optionalListTplFunc,
-    }, {}, ['((', '))']));
+    $detailsPopUp.html(detailsPopUpTpl({
+        'artisan': artisan,
+    }));
 
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
 }
@@ -65,15 +62,32 @@ export function init(): (() => void)[] {
             $detailsPopUp = $('#artisanDetailsModal');
 
             $detailsPopUp.find('a[data-href]').each((index: number, element: HTMLElement) => {
-                /* Grep code for WORKAROUND_PLACEHOLDERS_CREATINT_FAKE_404S: data-href ---> href */
+                /* Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href */
                 element.setAttribute('href', element.getAttribute('data-href'));
                 element.removeAttribute('data-href');
             });
             $detailsPopUp.on('show.bs.modal', detailsPopUpShowCallback);
         },
         () => {
-            detailsPopUpTpl = $detailsPopUp.html();
-            Mustache.parse(detailsPopUpTpl);
+            Handlebars.registerHelper({
+                optional: optionalTplFunc,
+                optionalList: optionalListTplFunc,
+                commaSeparated: commaSeparatedTplFunc,
+                photos: photosTplFunc,
+            });
+        },
+        () => {
+            detailsPopUpTpl = Handlebars.compile($detailsPopUp.html(), {
+                assumeObjects: true,
+                data: false,
+                knownHelpersOnly: true,
+                knownHelpers: {
+                    'optional': true,
+                    'optionalList': true,
+                    'commaSeparated': true,
+                    'photos': true,
+                },
+            });
         },
     ];
 }
