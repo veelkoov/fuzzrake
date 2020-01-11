@@ -11,6 +11,7 @@ use App\Utils\FilterItem;
 use App\Utils\FilterItems;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,6 +50,7 @@ class StatisticsController extends AbstractController
 
     /**
      * @Route("/statistics.html", name="statistics")
+     * @Cache(maxage=3600, public=true)
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -75,14 +77,15 @@ class StatisticsController extends AbstractController
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->getItems()),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
-            'completeness'     => $this->prepareCompletenessData($artisanRepository->findAll()),
-            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->findAll()),
+            'completeness'     => $this->prepareCompletenessData($artisanRepository->getAll()),
+            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getAll()),
             'matchWords'       => self::MATCH_WORDS,
         ]);
     }
 
     /**
      * @Route("/ordering.html", name="ordering")
+     * @Cache(maxage=3600, public=true)
      */
     public function ordering(ArtisanRepository $artisanRepository): Response
     {

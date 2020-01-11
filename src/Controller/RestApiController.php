@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Service\HealthCheckService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ class RestApiController extends AbstractController
 {
     /**
      * @Route("/api/artisans.json", name="api_artisans")
+     * @Cache(maxage=3600, public=true)
      *
      * @return JsonResponse
      */
@@ -25,6 +27,7 @@ class RestApiController extends AbstractController
 
     /**
      * @Route("/api/old_to_new_maker_ids_map.json", name="api_old_to_new_maker_ids_map")
+     * @Cache(maxage=3600, public=true)
      *
      * @return JsonResponse
      */
@@ -35,6 +38,7 @@ class RestApiController extends AbstractController
 
     /**
      * @Route("/health", name="health")
+     * @Cache(maxage=0, public=false)
      *
      * @return JsonResponse
      */

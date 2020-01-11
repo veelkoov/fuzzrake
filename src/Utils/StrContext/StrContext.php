@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\StrContext;
 
 class StrContext implements StrContextInterface
 {
-    private $before;
-    private $subject;
-    private $after;
+    private string $before;
+    private string $subject;
+    private string $after;
 
     public function __construct(string $before, string $subject, string $after)
     {

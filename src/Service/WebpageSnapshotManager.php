@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Artisan;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\GentleHttpClient;
@@ -18,15 +18,8 @@ use Symfony\Component\Console\Style\StyleInterface;
 
 class WebpageSnapshotManager
 {
-    /**
-     * @var WebpageSnapshotCache
-     */
-    private $cache;
-
-    /**
-     * @var GentleHttpClient
-     */
-    private $httpClient;
+    private WebpageSnapshotCache $cache;
+    private GentleHttpClient $httpClient;
 
     public function __construct(string $projectDir)
     {

@@ -7,19 +7,15 @@ namespace App\Utils;
 use App\Entity\Artisan;
 use App\Utils\Regexp\Utils as Regexp;
 
-class StrUtils
+abstract class StrUtils
 {
-    private function __construct()
-    {
-    }
-
     public static function artisanNamesSafeForCli(Artisan ...$artisans): string
     {
         $names = $makerIds = [];
 
-        foreach (array_filter($artisans) as $artisan) {
-            $names = array_merge($names, $artisan->getAllNamesArr());
-            $makerIds = array_merge($makerIds, $artisan->getAllMakerIdsArr());
+        foreach (array_filter($artisans) as /* @var Artisan $artisan */ $artisan) {
+            $names = array_merge($artisan->getAllNamesArr(), $names);
+            $makerIds = array_merge($artisan->getAllMakerIdsArr(), $makerIds);
         }
 
         return self::strSafeForCli(implode(' / ', array_merge(

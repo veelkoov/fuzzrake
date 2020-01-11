@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use App\Utils\StrContextUtils;
+use App\Utils\StrContext\StrContextUtils;
 use App\Utils\Tracking\Match;
 use SplObjectStorage;
 
@@ -12,15 +12,8 @@ class Regexp
 {
     const CONTEXT_LENGTH = 100;
 
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $original;
+    private string $id;
+    private string $original;
 
     /**
      * @var string[] SplObjectStorage of strings

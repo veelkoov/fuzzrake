@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeUtils;
 
 class DelayAwareUrlFetchingQueue
 {
@@ -14,17 +14,10 @@ class DelayAwareUrlFetchingQueue
     /**
      * @var Url[]
      */
-    private $hosts = [];
+    private array $hosts = [];
 
-    /**
-     * @var int
-     */
-    private $millisecondsDelay;
-
-    /**
-     * @var string
-     */
-    private $lastHost = null;
+    private int $millisecondsDelay;
+    private ?string $lastHost = null;
 
     /**
      * @param Url[] $urls

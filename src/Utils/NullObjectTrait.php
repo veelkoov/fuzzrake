@@ -8,7 +8,7 @@ use RuntimeException;
 
 trait NullObjectTrait
 {
-    private static $me = null;
+    private static ?self $me = null;
 
     public static function get(): self
     {

@@ -7,8 +7,8 @@ namespace App\Controller;
 use App\Repository\ArtisanRepository;
 use App\Service\CountriesDataService;
 use App\Service\IuFormService;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\UnexpectedResultException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,8 +19,9 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="main")
      * @Route("/index.html")
+     * @Cache(maxage=3600, public=true)
      *
-     * @throws NonUniqueResultException
+     * @throws UnexpectedResultException
      */
     public function main(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
     {
@@ -40,6 +41,7 @@ class MainController extends AbstractController
 
     /**
      * @Route("/redirect_iu_form/{makerId}", name="redirect_iu_form")
+     * @Cache(maxage=0, public=false)
      *
      * @throws NotFoundHttpException
      */
@@ -47,7 +49,7 @@ class MainController extends AbstractController
     {
         try {
             $artisan = $artisanRepository->findByMakerId($makerId);
-        } catch (NonUniqueResultException | NoResultException $e) {
+        } catch (UnexpectedResultException $e) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 

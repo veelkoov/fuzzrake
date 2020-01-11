@@ -20,15 +20,8 @@ class DataCheckFor404sCommand extends Command
 {
     protected static $defaultName = 'app:data:check-for-404s';
 
-    /**
-     * @var ArtisanUrlRepository
-     */
-    private $artisanUrlRepository;
-
-    /**
-     * @var WebpageSnapshotManager
-     */
-    private $webpageSnapshotManager;
+    private ArtisanUrlRepository $artisanUrlRepository;
+    private WebpageSnapshotManager $webpageSnapshotManager;
 
     public function __construct(ArtisanUrlRepository $artisanUrlRepository, WebpageSnapshotManager $webpageSnapshotManager)
     {
@@ -44,7 +37,7 @@ class DataCheckFor404sCommand extends Command
         $this->addOption('no-prefetch', null, null, 'Skip pre-fetch phase');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -59,6 +52,8 @@ class DataCheckFor404sCommand extends Command
         }
 
         $this->checkUrls($urls, $io);
+
+        return 0;
     }
 
     /**

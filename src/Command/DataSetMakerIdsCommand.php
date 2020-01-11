@@ -14,15 +14,8 @@ class DataSetMakerIdsCommand extends Command
 {
     protected static $defaultName = 'app:data:set-maker-ids';
 
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ArtisanRepository $artisanRepository;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $entityManager)
     {
@@ -32,7 +25,7 @@ class DataSetMakerIdsCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->artisanRepository->findAll() as $artisan) {
             if (empty($artisan->getAllMakerIdsArr())) {
@@ -41,5 +34,7 @@ class DataSetMakerIdsCommand extends Command
         }
 
         $this->entityManager->flush();
+
+        return 0;
     }
 }

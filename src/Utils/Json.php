@@ -6,12 +6,8 @@ namespace App\Utils;
 
 use JsonException;
 
-class Json
+abstract class Json
 {
-    private function __construct()
-    {
-    }
-
     /** @noinspection PhpDocRedundantThrowsInspection */
 
     /**

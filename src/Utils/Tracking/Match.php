@@ -6,13 +6,13 @@ namespace App\Utils\Tracking;
 
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\Variant;
-use App\Utils\StrContextInterface;
+use App\Utils\StrContext\StrContextInterface;
 
 class Match implements MatchInterface
 {
-    private $regexp;
-    private $variant;
-    private $strContext;
+    private Regexp $regexp;
+    private Variant $variant;
+    private StrContextInterface $strContext;
 
     public function __construct(Regexp $regexp, Variant $variant, StrContextInterface $match)
     {

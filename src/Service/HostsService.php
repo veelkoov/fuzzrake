@@ -9,15 +9,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class HostsService
 {
-    /**
-     * @var array
-     */
-    private $hosts;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private array $hosts;
+    private RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack, array $hosts)
     {

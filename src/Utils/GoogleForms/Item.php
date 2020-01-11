@@ -12,33 +12,16 @@ class Item
     private const SECTION = 6;
     private const DATE = 9;
 
-    /**
-     * @var int
-     */
-    private $index;
-
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $description;
-    /**
-     * @var int
-     */
-    private $type;
+    private int $index;
+    private int $id;
+    private string $name;
+    private string $description;
+    private int $type;
 
     /**
      * @var Answer[]
      */
-    private $answers = [];
+    private array $answers = [];
 
     public function __construct(array $data, int $index)
     {

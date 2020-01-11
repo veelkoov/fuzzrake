@@ -6,8 +6,8 @@ namespace App\Utils\Import;
 
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use DateTimeInterface;
@@ -15,20 +15,9 @@ use JsonException;
 
 class RawImportItem implements FieldReadInterface
 {
-    /**
-     * @var DateTimeInterface
-     */
-    private $timestamp;
-
-    /**
-     * @var array
-     */
-    private $rawInput;
-
-    /**
-     * @var string
-     */
-    private $hash;
+    private DateTimeInterface $timestamp;
+    private array $rawInput;
+    private string $hash;
 
     /**
      * @throws ImportException

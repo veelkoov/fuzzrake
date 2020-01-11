@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeUtils;
 
 class GentleHttpClient extends HttpClient
 {
     public const DELAY_FOR_HOST_MILLISEC = 5000;
 
-    private $lastRequests = [];
+    /**
+     * Host => Last request since Epoch [ms].
+     *
+     * @var int[]
+     */
+    private array $lastRequestsMs = [];
 
     /**
      * @throws HttpClientException
@@ -37,8 +42,8 @@ class GentleHttpClient extends HttpClient
     {
         $host = UrlUtils::hostFromUrl($url);
 
-        if (array_key_exists($host, $this->lastRequests)) {
-            $millisecondsToWait = $this->lastRequests[$host] + self::DELAY_FOR_HOST_MILLISEC - DateTimeUtils::timems();
+        if (array_key_exists($host, $this->lastRequestsMs)) {
+            $millisecondsToWait = $this->lastRequestsMs[$host] + self::DELAY_FOR_HOST_MILLISEC - DateTimeUtils::timems();
 
             if ($millisecondsToWait > 0) {
                 usleep($millisecondsToWait * 1000);
@@ -48,6 +53,6 @@ class GentleHttpClient extends HttpClient
 
     private function updateLastHostCall(string $url): void
     {
-        $this->lastRequests[UrlUtils::hostFromUrl($url)] = time();
+        $this->lastRequestsMs[UrlUtils::hostFromUrl($url)] = DateTimeUtils::timems();
     }
 }

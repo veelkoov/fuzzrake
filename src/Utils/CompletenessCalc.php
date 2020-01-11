@@ -13,8 +13,8 @@ class CompletenessCalc
     const TRIVIAL = 1;
     const INSIGNIFICANT = 0;
 
-    private $earned = 0;
-    private $total = 0;
+    private int $earned = 0;
+    private int $total = 0;
 
     public function result(): ?int
     {

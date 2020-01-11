@@ -4,32 +4,29 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\ArtisanRepository;
+use App\Utils\Data\FdvFactory;
+use App\Utils\Data\Printer;
 use App\Utils\Import\DataImport;
 use App\Utils\Import\Manager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImportFactory
 {
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
+    private EntityManagerInterface $objectManager;
+    private FdvFactory $fdvFactory;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager)
+    public function __construct(EntityManagerInterface $objectManager, FdvFactory $fdvFactory)
     {
-        $this->artisanRepository = $artisanRepository;
         $this->objectManager = $objectManager;
+        $this->fdvFactory = $fdvFactory;
     }
 
-    public function get(Manager $importManager, SymfonyStyle $io, bool $showFixCommands): DataImport
+    public function get(Manager $importManager, SymfonyStyle $io, $showAllFixCmds): DataImport
     {
-        return new DataImport($this->artisanRepository, $this->objectManager, $importManager, $io, $showFixCommands);
+        $printer = new Printer($io);
+
+        return new DataImport($this->objectManager, $importManager, $printer, $this->fdvFactory->create($printer),
+            $showAllFixCmds);
     }
 }

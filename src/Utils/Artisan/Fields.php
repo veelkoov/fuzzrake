@@ -89,8 +89,8 @@ class Fields
         self::FEATURES                   => ['features',                 VR::LIST_VALIDATION,           1, 1, 1, 1],
         self::OTHER_FEATURES             => ['otherFeatures',            VR::LIST_VALIDATION,           1, 1, 1, 1],
         self::PAYMENT_PLANS              => ['paymentPlans',             VR::ANYTHING,                  0, 1, 1, 1],
-        self::SPECIES_DOES               => ['speciesDoes',              VR::ANYTHING,                  0, 1, 1, 1],
-        self::SPECIES_DOESNT             => ['speciesDoesnt',            VR::ANYTHING,                  0, 1, 1, 1],
+        self::SPECIES_DOES               => ['speciesDoes',              VR::ANYTHING,                  1, 1, 1, 1],
+        self::SPECIES_DOESNT             => ['speciesDoesnt',            VR::ANYTHING,                  1, 1, 1, 1],
         self::URL_FURSUITREVIEW          => ['fursuitReviewUrl',         VR::FSR_URL,                   0, 1, 1, 1],
         self::URL_WEBSITE                => ['websiteUrl',               VR::GENERIC_URL,               0, 1, 1, 1],
         self::URL_PRICES                 => ['pricesUrl',                VR::GENERIC_URL,               0, 1, 1, 1],
@@ -173,8 +173,8 @@ class Fields
         self::CONTACT_INPUT_VIRTUAL => ['#How can I contact#i',               1, 1],
     ];
 
-    private static $fields;
-    private static $fieldsByModelName;
+    private static ?array $fields;
+    private static ?array $fieldsByModelName;
 
     public static function init()
     {

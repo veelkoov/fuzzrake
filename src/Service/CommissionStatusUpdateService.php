@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\NullMatch;
@@ -15,7 +15,7 @@ use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -28,27 +28,12 @@ class CommissionStatusUpdateService
      */
     private $artisanRepository;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private EntityManagerInterface $objectManager;
+    private WebpageSnapshotManager $snapshots;
+    private StyleInterface $io;
+    private CommissionsStatusParser $parser;
 
-    /**
-     * @var WebpageSnapshotManager
-     */
-    private $snapshots;
-
-    /**
-     * @var StyleInterface
-     */
-    private $io;
-
-    /**
-     * @var CommissionsStatusParser
-     */
-    private $parser;
-
-    public function __construct(ObjectManager $objectManager, WebpageSnapshotManager $snapshots)
+    public function __construct(EntityManagerInterface $objectManager, WebpageSnapshotManager $snapshots)
     {
         $this->objectManager = $objectManager;
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);

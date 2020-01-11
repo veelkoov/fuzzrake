@@ -8,8 +8,9 @@
         <th class="text-center toggleable no-sorting">Styles</th>
         <th class="text-center toggleable no-sorting default-hidden">Types</th>
         <th class="text-center toggleable no-sorting default-hidden">Features</th>
+        <th class="text-center toggleable no-sorting default-hidden">Species</th>
         <th class="text-center toggleable">Commissions</th>
-        <th class="text-right no-sorting">Links</th>
+        <th class="text-right  toggleable no-sorting">Links</th>
         <th class="hidden searchable">Data for searching</th>
     </tr>
     </thead>
@@ -20,7 +21,7 @@
             {%- apply spaceless %}
                 <td class="name" data-toggle="modal" data-target="#artisanDetailsModal">
                     {%- if artisan.inactiveReason -%}
-                        {{- '~ ' ~ artisan.name ~ ' [inactive]' -}}
+                        <span class="hidden" aria-hidden="true">~</span>{{- artisan.name ~ ' [inactive]' -}}
                     {% else %}
                         {{- artisan.name -}}
                     {%- endif -%}
@@ -53,6 +54,18 @@
                 </td>
                 <td class="features" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.features|other(artisan.otherFeatures) -}}
+                </td>
+                <td class="species" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {%- if artisan.speciesDoes or artisan.speciesDoesnt -%}
+                        <ul>
+                            {%- for specie in artisan.speciesDoes|list -%}
+                                <li class="yes"><i class="fas fa-check-square"></i>&nbsp;{{ specie }}</li>
+                            {%- endfor -%}
+                            {%- for specie in artisan.speciesDoesnt|list -%}
+                                <li class="no"><i class="fas fa-times-circle"></i>&nbsp;{{ specie }}</li>
+                            {%- endfor -%}
+                        </ul>
+                    {%- endif -%}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
                     {%- if artisan.commissionsStatus.status is not null -%}

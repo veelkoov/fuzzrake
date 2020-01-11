@@ -6,25 +6,14 @@ namespace App\Utils\GoogleForms;
 
 class Answer
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
+    private bool $required;
+    private Item $parent;
 
     /**
      * @var Option[]
      */
-    private $options = [];
-
-    /**
-     * @var bool
-     */
-    private $required;
-
-    /**
-     * @var Item
-     */
-    private $parent;
+    private array $options = [];
 
     public function __construct(array $data, Item $parent)
     {

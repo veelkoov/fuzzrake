@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\DateTime;
 
 use DateTime;
 use DateTimeZone;
 use Exception;
 
-class DateTimeUtils
+abstract class DateTimeUtils
 {
     public static function getNowUtc(): DateTime
     {

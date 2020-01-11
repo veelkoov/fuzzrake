@@ -6,10 +6,11 @@ namespace App\Twig;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\HostsService;
-use App\Utils\DateTimeException;
-use App\Utils\DateTimeUtils;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
 use Twig\Extension\AbstractExtension;
@@ -18,15 +19,8 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    /**
-     * @var ArtisanCommissionsStatusRepository
-     */
-    private $acsRepository;
-
-    /**
-     * @var HostsService
-     */
-    private $hostsService;
+    private ArtisanCommissionsStatusRepository $acsRepository;
+    private HostsService $hostsService;
 
     public function __construct(ArtisanCommissionsStatusRepository $acsRepository, HostsService $hostsService)
     {
@@ -37,6 +31,7 @@ class AppExtensions extends AbstractExtension
     public function getFilters()
     {
         return [
+            new TwigFilter('list', [$this, 'listFilter']),
             new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
@@ -93,6 +88,11 @@ class AppExtensions extends AbstractExtension
         } else {
             return $primaryList;
         }
+    }
+
+    public function listFilter(string $input): array
+    {
+        return StringList::unpack($input);
     }
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array

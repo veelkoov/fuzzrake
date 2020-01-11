@@ -8,7 +8,7 @@ use App\Service\DataImportFactory;
 use App\Utils\Import\CSV;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\Manager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,17 +19,10 @@ class DataImportCommand extends Command
 {
     protected static $defaultName = 'app:data:import';
 
-    /**
-     * @var DataImportFactory
-     */
-    private $dataImportFactory;
+    private DataImportFactory $dataImportFactory;
+    private EntityManagerInterface $objectManager;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    public function __construct(DataImportFactory $factory, ObjectManager $objectManager)
+    public function __construct(DataImportFactory $factory, EntityManagerInterface $objectManager)
     {
         $this->dataImportFactory = $factory;
         $this->objectManager = $objectManager;
@@ -48,7 +41,7 @@ class DataImportCommand extends Command
     /**
      * @throws ImportException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -63,5 +56,7 @@ class DataImportCommand extends Command
         } else {
             $io->success('Finished without saving');
         }
+
+        return 0;
     }
 }

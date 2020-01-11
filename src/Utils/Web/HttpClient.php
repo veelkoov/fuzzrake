@@ -11,10 +11,7 @@ class HttpClient
 
     private const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.7; +https://getfursu.it/)';
 
-    /**
-     * @var CookieJarInterface
-     */
-    private $cookieJar;
+    private CookieJarInterface $cookieJar;
 
     public function __construct(CookieJarInterface $cookieJar = null)
     {

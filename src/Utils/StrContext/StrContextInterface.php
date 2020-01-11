@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Utils;
+declare(strict_types=1);
+
+namespace App\Utils\StrContext;
 
 interface StrContextInterface
 {

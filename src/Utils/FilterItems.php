@@ -8,25 +8,14 @@ use ArrayAccess;
 
 class FilterItems implements ArrayAccess
 {
-    /**
-     * @var int
-     */
-    private $unknownCount = 0;
-
-    /**
-     * @var int
-     */
-    private $otherCount = 0;
-
-    /**
-     * @var bool
-     */
-    private $hasOther;
+    private int $unknownCount = 0;
+    private int $otherCount = 0;
+    private bool $hasOther;
 
     /**
      * @var FilterItem[]
      */
-    private $items = [];
+    private array $items = [];
 
     public function __construct(bool $hasOther)
     {

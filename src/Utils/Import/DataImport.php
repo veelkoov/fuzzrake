@@ -8,56 +8,43 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
-use App\Utils\DataDiffer;
-use App\Utils\DataFixer;
-use App\Utils\DateTimeUtils;
+use App\Utils\Data\ArtisanFixWip;
+use App\Utils\Data\FixerDifferValidator as FDV;
+use App\Utils\Data\Printer;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StrUtils;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 
 class DataImport
 {
     /**
-     * @var ArtisanRepository
+     * @var ObjectRepository|ArtisanRepository
      */
-    private $artisanRepository;
+    private ObjectRepository $artisanRepository;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private EntityManagerInterface $objectManager;
+    private Manager $manager;
+    private Printer $printer;
+    private FDV $fdv;
+    private bool $showAllFixCmds;
 
-    /**
-     * @var DataFixer
-     */
-    private $fixer;
-
-    /**
-     * @var DataDiffer
-     */
-    private $differ;
-
-    /**
-     * @var Manager
-     */
-    private $manager;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    public function __construct(ArtisanRepository $artisanRepository, ObjectManager $objectManager,
-        Manager $importManager, SymfonyStyle $io, bool $showFixCommands)
-    {
-        $this->artisanRepository = $artisanRepository;
+    public function __construct(
+        EntityManagerInterface $objectManager,
+        Manager $importManager,
+        Printer $printer,
+        FDV $fdv,
+        bool $showAllFixCmds
+    ) {
         $this->objectManager = $objectManager;
-        $this->io = $io;
-
-        $this->fixer = new DataFixer($io, false);
-        $this->differ = new DataDiffer($io, $showFixCommands);
         $this->manager = $importManager;
+        $this->printer = $printer;
+
+        $this->artisanRepository = $objectManager->getRepository(Artisan::class);
+
+        $this->fdv = $fdv;
+        $this->showAllFixCmds = $showAllFixCmds;
     }
 
     /**
@@ -90,14 +77,14 @@ class DataImport
             }
 
             if ($this->manager->isDelayed($item)) {
-                $this->io->note("Ignoring {$item->getIdStringSafe()} until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
+                $this->printer->note("Ignoring {$item->getIdStrSafe()} until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
                 continue;
             }
 
-            $makerId = $item->getOriginalArtisan()->getMakerId() ?: $item->getFixedInput()->getMakerId();
+            $makerId = $item->getOriginalEntity()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $this->io->note($item->getIdStringSafe().' was identified as an update to '.$result[$makerId]->getIdStringSafe());
+                $this->printer->note($item->getIdStrSafe().' was identified as an update to '.$result[$makerId]->getIdStrSafe());
             }
 
             $result[$makerId] = $item;
@@ -112,16 +99,18 @@ class DataImport
     private function createImportItem(array $artisanData): ImportItem
     {
         $raw = new RawImportItem($artisanData);
-        $input = $this->updateArtisanWithData(new Artisan(), $raw, false);
 
-        $fixedInput = clone $input;
-        $this->manager->correctArtisan($fixedInput);
-        $this->fixer->fixArtisanData($fixedInput);
+        $originalInput = $this->updateArtisanWithData(new Artisan(), $raw, false);
 
-        $artisan = $this->findBestMatchArtisan($fixedInput) ?: new Artisan();
-        $originalArtisan = clone $artisan; // Clone unmodified
+        $input = new ArtisanFixWip($originalInput, $this->objectManager);
+        $this->manager->correctArtisan($input->getFixed());
+        $this->fdv->perform($input, FDV::FIX);
 
-        return new ImportItem($raw, $input, $fixedInput, $originalArtisan, $artisan);
+        $originalEntity = $this->findBestMatchArtisan($input->getFixed()) ?: new Artisan();
+
+        $entity = new ArtisanFixWip($originalEntity, $this->objectManager);
+
+        return new ImportItem($raw, $input, $entity);
     }
 
     /**
@@ -129,14 +118,16 @@ class DataImport
      */
     private function processImportItems(array $items): void
     {
+        $flags = FDV::SHOW_DIFF | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD : 0);
+
         foreach ($items as $item) {
-            $this->updateArtisanWithData($item->getArtisan(), $item->getFixedInput(), true);
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
 
             if ($this->manager->isNewPasscode($item)) {
-                $item->getArtisan()->setPasscode($item->getProvidedPasscode());
+                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
             }
 
-            $this->differ->showDiff($item->getOriginalArtisan(), $item->getArtisan(), $item->getInput());
+            $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
 
             $this->persistImportIfValid($item);
         }
@@ -197,9 +188,8 @@ class DataImport
 
     private function persistImportIfValid(ImportItem $item): void
     {
-        $new = $item->getArtisan();
-        $old = $item->getOriginalArtisan();
-        $this->fixer->validateArtisanData($new);
+        $new = $item->getFixedEntity();
+        $old = $item->getOriginalEntity();
         $ok = true;
 
         if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
@@ -211,7 +201,7 @@ class DataImport
             $this->reportChangedMakerId($item);
         }
 
-        if ('' === ($expectedPasscode = $item->getArtisan()->getPrivateData()->getPasscode())) {
+        if ('' === ($expectedPasscode = $item->getFixedEntity()->getPrivateData()->getPasscode())) {
             $this->reportNewPasscode($item);
 
             $ok = false;
@@ -241,8 +231,8 @@ class DataImport
         $monthLater = DateTimeUtils::getMonthLaterYmd();
         $makerId = $item->getMakerId();
 
-        $this->io->warning("New maker: {$item->getNames()}");
-        $this->io->writeln([
+        $this->printer->warning("New maker: {$item->getNamesStrSafe()}");
+        $this->printer->writeln([
             Manager::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:",
             Manager::CMD_ACK_NEW.":$makerId:",
             Manager::CMD_REJECT.":$makerId:{$item->getHash()}:",
@@ -252,14 +242,14 @@ class DataImport
 
     private function reportChangedMakerId(ImportItem $item): void
     {
-        $this->io->warning($item->getNames().' changed their maker ID from '.$item->getOriginalArtisan()->getMakerId()
-            .' to '.$item->getArtisan()->getMakerId());
+        $this->printer->warning($item->getNamesStrSafe().' changed their maker ID from '.$item->getOriginalEntity()->getMakerId()
+            .' to '.$item->getFixedEntity()->getMakerId());
     }
 
     private function reportNewPasscode(ImportItem $item): void
     {
-        $this->io->warning("{$item->getNames()} set new passcode: {$item->getProvidedPasscode()}");
-        $this->io->writeln(Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:");
+        $this->printer->warning("{$item->getNamesStrSafe()} set new passcode: {$item->getProvidedPasscode()}");
+        $this->printer->writeln(Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:");
     }
 
     private function reportInvalidPasscode(ImportItem $item, string $expectedPasscode): void
@@ -268,8 +258,8 @@ class DataImport
         $makerId = $item->getMakerId();
         $hash = $item->getHash();
 
-        $this->io->warning("{$item->getNames()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
-        $this->io->writeln([
+        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
+        $this->printer->writeln([
             Manager::CMD_IGNORE_PIN.":$makerId:$hash:",
             Manager::CMD_REJECT.":$makerId:$hash:",
             Manager::CMD_SET_PIN.":$makerId:$hash:",

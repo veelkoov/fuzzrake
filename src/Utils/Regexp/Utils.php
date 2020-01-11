@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-class Utils
+abstract class Utils
 {
-    private function __construct()
-    {
-    }
-
     public static function match(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): bool
     {
         $result = preg_match($pattern, $subject, $matches);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\StrContextUtils;
+use App\Utils\StrContext\StrContextUtils;
 use PHPUnit\Framework\TestCase;
 
 class StrContextUtilsTest extends TestCase

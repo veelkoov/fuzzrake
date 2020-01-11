@@ -9,15 +9,12 @@ use App\Utils\FilterItems;
 
 class CountriesDataService
 {
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
+    private ArtisanRepository $artisanRepository;
 
     /**
-     * @var array [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ]
+     * [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ].
      */
-    private $data;
+    private array $data;
 
     public function __construct(ArtisanRepository $artisanRepository, string $projectDir)
     {
