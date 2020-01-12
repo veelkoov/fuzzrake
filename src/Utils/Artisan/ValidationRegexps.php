@@ -12,7 +12,7 @@ abstract class ValidationRegexps
     public const FACEBOOK_URL = '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#';
     public const FSR_URL = '#^(http://fursuitreview.com/maker/[^/]+/)?$#';
     public const FA_URL = '#^(http://www\.furaffinity\.net/user/[^/]+)?$#';
-    public const YOUTUBE_URL = '#^(https://www\.youtube\.com/(channel|user|c)/[^/?]+)?$#';
+    public const YOUTUBE_URL = '#^(https://www\.youtube\.com/((channel|user|c)/)?[^/?]+)?$#';
     public const INSTAGRAM_URL = '#^(https://www\.instagram\.com/[^/]+/)?$#';
     public const TUMBLR_URL = '#^(https?://[^.]+\.tumblr\.com/)?$#';
     public const TWITTER_URL = '#^(https://twitter\.com/[^/]+)?$#';

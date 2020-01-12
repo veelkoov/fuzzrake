@@ -24,7 +24,7 @@ abstract class Contact
             return ['', ''];
         }
 
-        if (Utils::match('#(?:^|email: ?| |\()([a-z0-9._]+@[a-z0-9.]+)(?:$|[ )])#i', $input, $matches)) {
+        if (Utils::match('#(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])#i', $input, $matches)) {
             return [self::E_MAIL, $matches[1]];
         }
 

@@ -75,13 +75,18 @@ class FixerDifferValidator
     private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, Artisan $imported): void
     {
         if (!$this->hideFixCommandFor($field)) {
-            $original = $imported ?? $artisan->getOriginal();
-            $fieldName = $field->name();
             $makerId = $artisan->getFixed()->getMakerId();
-            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
-            $originalVal = Printer::formatInvalid(StrUtils::strSafeForCli($original->get($field)));
+            $fieldName = $field->name();
 
-            $this->printer->writeln("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|");
+            $original = $imported ?? $artisan->getOriginal();
+            $originalVal = StrUtils::strSafeForCli($original->get($field));
+            if (!$this->validator->isValid($artisan, $field)) {
+                $originalVal = Printer::formatInvalid($originalVal);
+            }
+
+            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
+
+            $this->printer->writeln(Printer::formatFix("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|"));
         }
     }
 
