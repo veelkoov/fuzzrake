@@ -10,20 +10,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Printer
 {
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private SymfonyStyle $io;
 
-    /**
-     * @var ArtisanFixWip
-     */
-    private $lastContext = null;
-
-    /**
-     * @var ArtisanFixWip
-     */
-    private $currentContext = null;
+    private ?ArtisanFixWip $lastContext = null;
+    private ?ArtisanFixWip $currentContext = null;
 
     public function __construct(SymfonyStyle $io)
     {
