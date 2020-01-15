@@ -119,7 +119,7 @@ parameters: # TODO: improve!
       '(Will(ing)? (to )?(try|craft|do) Any(thing| species)?)':                                        'Any species'
       '((I will do just about|We are okay with|Happy to do) any species!?)':                           'Any species'
       '(I''m (willing|open) to (take on any species|consider anything|almost anything))':              'Any species'
-      '(Everything and anything|Anything!?|any|all ?!?)':                                              'Any species'
+      '(Everything and anything|Anything!?|any ?!?|all ?!?)':                                          'Any species'
 
       '(Almost everything\. Just ask|Almost (all|Any)(thing| species?| animals?)?)':                   'Most species'
       '(All species for the most part|Open to most species|Most animals OK|Most species considered)':  'Most species'

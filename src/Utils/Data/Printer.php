@@ -10,20 +10,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Printer
 {
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private SymfonyStyle $io;
 
-    /**
-     * @var ArtisanFixWip
-     */
-    private $lastContext = null;
-
-    /**
-     * @var ArtisanFixWip
-     */
-    private $currentContext = null;
+    private ?ArtisanFixWip $lastContext = null;
+    private ?ArtisanFixWip $currentContext = null;
 
     public function __construct(SymfonyStyle $io)
     {
@@ -34,6 +24,7 @@ class Printer
         $this->io->getFormatter()->setStyle('diff_imported', new OutputFormatterStyle('magenta'));
 
         $this->io->getFormatter()->setStyle('invalid', new OutputFormatterStyle('red'));
+        $this->io->getFormatter()->setStyle('fix', new OutputFormatterStyle('blue'));
     }
 
     public static function formatImported(string $item): string
@@ -54,6 +45,11 @@ class Printer
     public static function formatInvalid(string $item): string
     {
         return "<invalid>$item</>";
+    }
+
+    public static function formatFix(string $item): string
+    {
+        return "<fix>$item</>";
     }
 
     public function setCurrentContext(ArtisanFixWip $artisan)

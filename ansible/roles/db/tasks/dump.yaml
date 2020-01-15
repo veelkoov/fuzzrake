@@ -4,7 +4,7 @@
       --add-drop-table
       --create-options
       --default-character-set=utf8mb4
-      --skip-disable-keys
+      --disable-keys
       --skip-extended-insert
       --skip-dump-date
       --skip-comments

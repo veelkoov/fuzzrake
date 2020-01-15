@@ -44,11 +44,8 @@ class FixerDifferValidator
      */
     public function perform($artisan, int $flags = 0, Artisan $imported = null): ArtisanFixWip
     {
-        if ($artisan instanceof Artisan) {
-            $artisan = new ArtisanFixWip($artisan, $this->objectMgr);
-        } elseif (!($artisan instanceof ArtisanFixWip)) {
-            throw new InvalidArgumentException();
-        }
+        $artisan = $this->getArtisanFixWip($artisan);
+        $anyDifference = $this->hasAnyDifference($artisan);
 
         foreach (Fields::persisted() as $field) {
             $this->printer->setCurrentContext($artisan);
@@ -63,8 +60,8 @@ class FixerDifferValidator
 
             $needsReset = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$this->validator->isValid($artisan, $field);
 
-            if ($flags & self::SHOW_ALL_FIX_CMD || $needsReset) {
-                $this->printFixCommandOptionally($field, $artisan);
+            if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD || $needsReset) {
+                $this->printFixCommandOptionally($field, $artisan, $imported);
             }
 
             if ($needsReset) {
@@ -75,15 +72,21 @@ class FixerDifferValidator
         return $artisan;
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan): void
+    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, Artisan $imported): void
     {
         if (!$this->hideFixCommandFor($field)) {
-            $fieldName = $field->name();
             $makerId = $artisan->getFixed()->getMakerId();
-            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
-            $originalVal = Printer::formatInvalid(StrUtils::strSafeForCli($artisan->getOriginal()->get($field)));
+            $fieldName = $field->name();
 
-            $this->printer->writeln("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|");
+            $original = $imported ?? $artisan->getOriginal();
+            $originalVal = StrUtils::strSafeForCli($original->get($field));
+            if (!$this->validator->isValid($artisan, $field)) {
+                $originalVal = Printer::formatInvalid($originalVal);
+            }
+
+            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
+
+            $this->printer->writeln(Printer::formatFix("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|"));
         }
     }
 
@@ -95,5 +98,30 @@ class FixerDifferValidator
             Fields::CONTACT_INFO_OBFUSCATED,
             Fields::CONTACT_ADDRESS_PLAIN,
         ]);
+    }
+
+    /**
+     *  @param Artisan|ArtisanFixWip $artisan
+     */
+    private function getArtisanFixWip($artisan): ArtisanFixWip
+    {
+        if ($artisan instanceof Artisan) {
+            $artisan = new ArtisanFixWip($artisan, $this->objectMgr);
+        } elseif (!($artisan instanceof ArtisanFixWip)) {
+            throw new InvalidArgumentException();
+        }
+
+        return $artisan;
+    }
+
+    private function hasAnyDifference(ArtisanFixWip $artisan): bool
+    {
+        foreach (Fields::persisted() as $field) {
+            if ($artisan->getOriginal()->get($field) != $artisan->getFixed()->get($field)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
