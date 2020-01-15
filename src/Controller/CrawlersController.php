@@ -36,14 +36,6 @@ class CrawlersController extends AbstractController
         ], self::getTextResponse());
     }
 
-    /**
-     * @Route("/robots.txt", name="robots")
-     */
-    public function robots(): Response
-    {
-        return $this->render('crawlers/robots.txt.twig', [], self::getTextResponse());
-    }
-
     private static function getTextResponse(): Response
     {
         return new Response('', Response::HTTP_OK, ['Content-Type' => 'text/plain']);
