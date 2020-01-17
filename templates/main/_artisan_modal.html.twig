@@ -3,7 +3,7 @@
     <h5 class="modal-title">
         {{# if artisan.makerId }}
             {{! Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href }}
-            <a id="makerId" href="#" data-href="#{{ artisan.makerId }}"><i class="fas fa-link"></i> {{ artisan.makerId }}</a>
+            <a id="makerId" href="#" data-href="#{{ artisan.makerId }}" rel="nofollow"><i class="fas fa-link"></i> {{ artisan.makerId }}</a>
         {{/ if }}
 
         <span id="artisanName">{{ artisan.name }}</span>{{# if artisan.country }}&nbsp;<span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>{{/ if }}
@@ -89,40 +89,40 @@
         </p>
         <div id="artisanLinks">
             {{# if artisan.fursuitReviewUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.fursuitReviewUrl }}" rel="nofollow" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
             {{/ if }}
             {{# if artisan.websiteUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {{/ if }}
             {{# if artisan.pricesUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.pricesUrl }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.pricesUrl }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
             {{/ if }}
             {{# if artisan.faqUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.faqUrl }}" rel="nofollow" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             {{/ if }}
             {{# if artisan.queueUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.queueUrl }}" rel="nofollow" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
             {{/ if }}
             {{# if artisan.furAffinityUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.furAffinityUrl }}" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.furAffinityUrl }}" rel="nofollow" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
             {{/ if }}
             {{# if artisan.deviantArtUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.deviantArtUrl }}" rel="nofollow" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
             {{/ if }}
             {{# if artisan.twitterUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.twitterUrl }}" rel="nofollow" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
             {{/ if }}
             {{# if artisan.facebookUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.facebookUrl }}" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.facebookUrl }}" rel="nofollow" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
             {{/ if }}
             {{# if artisan.tumblrUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.tumblrUrl }}" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.tumblrUrl }}" rel="nofollow" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
             {{/ if }}
             {{# if artisan.youtubeUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.youtubeUrl }}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.youtubeUrl }}" rel="nofollow" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
             {{/ if }}
             {{# if artisan.instagramUrl }}
-                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a class="btn btn-light m-1" href="#" data-href="{{ artisan.instagramUrl }}" rel="nofollow" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
             {{/ if }}
         </div>
     </div>
@@ -135,15 +135,15 @@
                         Commissions are <strong>{{ artisan.commissionsStatusText }}</strong>.
 
                         Status is tracked and updated automatically from this web page:
-                        <a href="#" data-href="{{ artisan.cstUrl }}" target="_blank">{{ artisan.cstUrl }}</a>.
+                        <a href="#" data-href="{{ artisan.cstUrl }}" rel="nofollow" target="_blank">{{ artisan.cstUrl }}</a>.
 
                         Last time checked on {{ artisan.cstLastCheck }} UTC.
                     {{ else }}
                         Commissions status is <strong>{{ artisan.commissionsStatusText }}</strong>.
 
                         It should be tracked and updated automatically from this web page:
-                        <a href="#" data-href="{{ artisan.cstUrl }}" target="_blank">{{ artisan.cstUrl }}</a>, however the software
-                        failed to "understand" the status based on the page contents.
+                        <a href="#" data-href="{{ artisan.cstUrl }}" rel="nofollow" target="_blank">{{ artisan.cstUrl }}</a>,
+                        however the software failed to "understand" the status based on the page contents.
 
                         Last time it tried on {{ artisan.cstLastCheck }} UTC.
                     {{/ if }}
