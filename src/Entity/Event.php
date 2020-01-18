@@ -200,7 +200,7 @@ class Event
 
     public function isLostTrack(): bool
     {
-        return self::TYPE_CS_UPDATED === $this->type && null === $this->newStatus;
+        return $this->isChangedStatus() && null === $this->newStatus;
     }
 
     public function isChangedStatus(): bool
