@@ -2,6 +2,7 @@
 
 import * as $ from "jquery";
 import Artisan from "./Artisan";
+import ClickEvent = JQuery.ClickEvent;
 
 export default abstract class Filter {
     protected readonly UNKNOWN_VALUE: string = '?';
@@ -10,17 +11,26 @@ export default abstract class Filter {
     protected selectedValues: string[] = [];
     protected selectedLabels: string[] = [];
     protected $statusDisplay: JQuery<HTMLElement>;
+    private $clearButton: JQuery<HTMLElement>;
 
     protected constructor(protected readonly fieldName: string,
-                          public readonly containerSelector: string,
-                          protected readonly refreshCallback: () => void) {
+                          public readonly containerSelector: string) {
 
         this.$statusDisplay = $(`${containerSelector} .status`);
-        this.updateStatusDisplay();
 
         let _this = this;
         this.$checkboxes = $(`${containerSelector} input[type=checkbox]`);
         this.$checkboxes.on('change', () => { _this.updateSelection(); });
+
+        this.$clearButton = $(`${containerSelector} button`);
+        this.$clearButton.on('click', (evt: ClickEvent) => {
+            evt.stopImmediatePropagation();
+
+            this.$checkboxes.prop('checked', false);
+            this.updateSelection();
+        });
+
+        this.updateStatusDisplay();
     }
 
     public updateSelection(): void {
@@ -36,7 +46,7 @@ export default abstract class Filter {
 
         if (oldSelection != this.selectedValues) {
             this.updateStatusDisplay();
-            this.refreshCallback();
+            this.saveChoices();
         }
     }
 
@@ -49,7 +59,34 @@ export default abstract class Filter {
         };
     }
 
+    public restoreChoices(): void {
+        let values: string = localStorage[`filters/${this.fieldName}/choices`];
+
+        if (values) {
+            let valuesArr: string[] = values.split('\n');
+
+            this.$checkboxes.filter(
+                (index: number, element: HTMLElement) => valuesArr.includes(element.getAttribute('value'))
+            ).prop('checked', true);
+
+            this.updateSelection();
+        }
+    }
+
+    public saveChoices(): void {
+        try {
+            localStorage[`filters/${this.fieldName}/choices`] = this.selectedValues.join('\n');
+        } catch (e) {
+            // Not allowed? - I don't care then
+        }
+    }
+
+    public hasAnyChoice(): boolean {
+        return this.selectedValues.length !== 0;
+    }
+
     protected abstract matches(artisan: Artisan): boolean;
+
     protected abstract getStatusText(): string;
 
     protected noneSelected(): boolean {
@@ -70,5 +107,6 @@ export default abstract class Filter {
 
     private updateStatusDisplay(): void {
         this.$statusDisplay.text(this.getStatusText());
+        this.$clearButton.toggle(this.hasAnyChoice());
     }
 }

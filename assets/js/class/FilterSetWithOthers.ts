@@ -10,9 +10,8 @@ export default class FilterSetWithOthers extends FilterSetSingle {
 
     constructor(protected readonly fieldName: string,
                 public readonly containerSelector: string,
-                protected readonly refreshCallback: () => void,
                 protected readonly isAnd: boolean) {
-        super(fieldName, containerSelector, refreshCallback, isAnd);
+        super(fieldName, containerSelector, isAnd);
 
         this.otherFieldName = FilterSetWithOthers.getOtherFieldName(fieldName);
     }

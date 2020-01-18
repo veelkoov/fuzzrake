@@ -3,11 +3,10 @@
 import {makerIdRegexp} from "../consts";
 import DataBridge from "../class/DataBridge";
 import Artisan from "../class/Artisan";
-import {initFilters} from "./filters";
+import {initFilters, refreshEverything, restoreFilters} from "./filters";
 import Api = DataTables.Api;
 
-
-const filtersButtonHtml = `<button type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`;
+const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`;
 
 const dataTableOptions = {
     dom:
@@ -52,7 +51,7 @@ function highlightByMakerIdCallback(): void {
     }
 }
 
-// noinspection OverlyComplexFunctionJS
+// noinspection OverlyComplexFunctionJS - DataTable's fault
 function dataTableInfoCallback(settings, start, end, max, total, _) {
     return `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database. &nbsp;
                 <a href="${DataBridge.getDataUpdatesUrl()}"><span class="badge badge-warning">Studio missing?</span></a>
@@ -79,6 +78,12 @@ export function init(): (() => void)[] {
         },
         () => {
             initFilters($dtDataTable.draw);
-        }
+        },
+        () => {
+            restoreFilters();
+        },
+        () => {
+            refreshEverything();
+        },
     ];
 }
