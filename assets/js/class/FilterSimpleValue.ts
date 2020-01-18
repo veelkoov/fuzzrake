@@ -5,9 +5,8 @@ import Artisan from "./Artisan";
 
 export default class FilterSimpleValue extends Filter {
     constructor(protected readonly fieldName: string,
-                public readonly containerSelector: string,
-                protected readonly refreshCallback: () => void) {
-        super(fieldName, containerSelector, refreshCallback);
+                public readonly containerSelector: string) {
+        super(fieldName, containerSelector);
     }
 
     protected matches(artisan: Artisan): boolean {

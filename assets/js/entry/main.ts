@@ -33,7 +33,7 @@ function executeOneByOne(callbacks): void {
 
             executeOneByOne(callbacks);
         }
-    }, 10);
+    }, 1);
 }
 
 function loadFuzzrakeData(): void {
