@@ -42,7 +42,7 @@ class CommissionsStatusRegexps
     ];
 
     const GENERIC_REGEXES = [
-        'G01' => '((WE_ARE )?(?<!not )TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',
+        'G01' => '((WE_ARE )?(?<!not )TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|work)( requests)?',
         'G02' => 'COMMISSIONS( status|:? are| have| info)?( TIMESPAN)?[-: ]+(&gt;)*STATUS(&lt;)*',
         'G03' => 'quotes? have TIMESPAN STATUS',
         'G04' => 'order quotes are STATUS',
