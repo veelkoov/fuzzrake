@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Utils\Tracking;
 
 use App\Utils\Regexp\Factory;
-use App\Utils\Regexp\Regexp;
+use App\Utils\Regexp\TrackingRegexp;
 use App\Utils\Regexp\Variant;
 use App\Utils\Web\WebpageSnapshot;
 
 class CommissionsStatusParser
 {
     /**
-     * @var Regexp[]
+     * @var TrackingRegexp[]
      */
     private array $falsePositivesRegexps;
 
     /**
-     * @var Regexp[]
+     * @var TrackingRegexp[]
      */
     private array $statusRegexps;
 

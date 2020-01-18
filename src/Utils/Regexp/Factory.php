@@ -23,7 +23,7 @@ class Factory
         }, array_keys($originals));
     }
 
-    private function create(string $key, string $original, array $variants = []): Regexp
+    private function create(string $key, string $original, array $variants = []): TrackingRegexp
     {
         $compiled = new SplObjectStorage();
 
@@ -31,7 +31,7 @@ class Factory
             $compiled[$variant] = $this->compileVariant($original, $variant);
         }
 
-        return new Regexp($key, $original, $compiled);
+        return new TrackingRegexp($key, $original, $compiled);
     }
 
     private function compileVariant(string $regexp, Variant $variant): string

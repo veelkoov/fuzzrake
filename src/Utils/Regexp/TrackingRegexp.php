@@ -8,7 +8,7 @@ use App\Utils\StrContext\StrContextUtils;
 use App\Utils\Tracking\Match;
 use SplObjectStorage;
 
-class Regexp
+class TrackingRegexp
 {
     const CONTEXT_LENGTH = 100;
 
