@@ -392,7 +392,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1603 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1616 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -890,6 +890,19 @@ INSERT INTO events VALUES (1599, '2020-01-10 06:04:40', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1600, '2020-01-10 06:04:43', '', 'CS_UPDTD_DETLS', 1, 0,'Goldenpaw Studio', 'https://twitter.com/GoldenpawStudio', '', '[\"lineblock u-dir\\\" dir=\\\"ltr\\\"> @goldenpawstudio </h2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">\",\"commissions are closed\",\" fursuit maker, doodler, creator studio hours: 9 am - 5 pm est mon-fri http://goldenpawstudio.ca </p\"]');
 INSERT INTO events VALUES (1601, '2020-01-11 06:04:33', '', 'CS_UPDTD_DETLS', 1, NULL, 'grayREALM Studio', 'https://www.grayrealmstudio.com/commission-tac', '[\" class=\\\"font_8\\\">​</p> <p class=\\\"font_8\\\">how to order:</p> <p class=\\\"font_8\\\"> </p> <p class=\\\"font_8\\\">\",\"commissions open\",\" until 12/31/19 or once i have filled all slots.</p> <p class=\\\"font_8\\\">if you have your quote, the a\"]', '[\"\\\"style-jdwcba4k\\\" >view slots</div><div class=\\\"txtnew\\\" id=\\\"comp-jk9wgizz\\\"><h2 class=\\\"font_2\\\">costume \",\"commissions: closed\",\"</h2> <h2 class=\\\"font_2\\\"></h2> <h2 class=\\\"font_2\\\">quotes are: open</h2></div><div class=\\\"style-jb2fe\"]');
 INSERT INTO events VALUES (1602, '2020-01-12 06:04:44', '', 'CS_UPDTD_DETLS', 0, 1,'Stuffed Panda Studios', 'http://stuffedpandastudios.com/commissions/', '[\"-22 page type-page status-publish hentry\\\"> <div class=\\\"post-content\\\"> <h1>commission status</h1> <p>\",\"commissions open\",\" up one at a time via patreon for a fast turnaround and the best possible customer service. new slot\"]', '');
+INSERT INTO events VALUES (1603, '2020-01-12 19:02:40', '- 2 new makers and 2 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/61e8ff4bfa9ca229a44f9bb0e226256ba49cba78\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1604, '2020-01-13 06:04:40', '', 'CS_UPDTD_DETLS', NULL, 0,'Kloofsuits', 'https://www.kloofsuits.co.uk/home', '', '[\"div id=\\\"cjg9inlinecontent-gridcontainer\\\" ><div class=\\\"txtnew\\\" id=\\\"comp-jfryh3va\\\"><h1 class=\\\"font_0\\\">\",\"commissions are currently closed\",\"</h1> <h1 class=\\\"font_0\\\">estimated opening date 2020 (tbc)</h1></div><div class=\\\"style-k0vdez24\\\" id=\"]');
+INSERT INTO events VALUES (1605, '2020-01-13 06:04:40', '', 'CS_UPDTD_DETLS', NULL, 0,'Sushi Serpent Suits', 'https://www.sushiserpent.com/', '', '[\"tent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\">\",\"commissions are currently closed\",\"!(but check back for openings soon!)</h2> <div><div class=\\\"wsite-multicol\\\"><div class=\\\"wsite-multico\"]');
+INSERT INTO events VALUES (1606, '2020-01-14 06:04:35', '', 'CS_UPDTD_DETLS', 0, NULL, 'Don\'t Hug Cacti', 'https://donthugcacti.com/', '', '');
+INSERT INTO events VALUES (1607, '2020-01-14 06:04:36', '', 'CS_UPDTD_DETLS', 0, NULL, 'Kilcodo Costumes', 'http://www.kilcodocostumes.com/', '', '');
+INSERT INTO events VALUES (1608, '2020-01-14 06:04:38', '', 'CS_UPDTD_DETLS', 0, 1,'Koshka Fursuits', 'https://twitter.com/koshkafursuits', '[\"ass=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">fursuit maker and artist 25 years old ~ open for quotes \",\"commissions open\",\" ~ https://ko-fi.com/koshkafursuits </p> <div class=\\\"profileheadercard-location \\\"> buenos aires, arg\"]', '');
+INSERT INTO events VALUES (1609, '2020-01-14 18:04:49', '', 'CS_UPDTD_DETLS', NULL, 0,'Kilcodo Costumes', 'http://www.kilcodocostumes.com/', '', '[\"me creations since 2008! custom costume tails and paws are always for sale in the etsy shop!fursuit \",\"commission status: closed\",\" until spring 2020 | </p> </div> <div> tweets by @kilcodocostumes <script>!function(d,s,id){var js,f\"]');
+INSERT INTO events VALUES (1610, '2020-01-17 06:04:41', '', 'CS_UPDTD_DETLS', NULL, 0,'PeaceWolf Creations', 'http://peacewolfcreations.com/', '', '[\"\\\" ><div class=\\\"sppb-addon sppb-addon-button-group sppb-text-center\\\"><div class=\\\"sppb-addon-content\\\">\",\"commissions: closed\",\"dealers den store</div></div></div></div></div></div></div></div></div></section><section id=\\\"sectio\"]');
+INSERT INTO events VALUES (1611, '2020-01-17 06:04:43', '', 'CS_UPDTD_DETLS', NULL, 0,'Sab!er Studios | Sabier Studios', 'https://twitter.com/StudiosSab', '', '[\"2> <p class=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">fursuit maker | lloteer 21/she/her | collared | \",\"commissions closed\",\" http://patreon.com/sabierstudios interested in a commission? check this link below!</p> <div class=\"]');
+INSERT INTO events VALUES (1612, '2020-01-17 18:04:41', '', 'CS_UPDTD_DETLS', 1, 0,'Koshka Fursuits', 'https://twitter.com/koshkafursuits', '', '[\"ass=\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">fursuit maker and artist 25 years old ~ open for quotes \",\"commissions closed\",\" ~ https://ko-fi.com/koshkafursuits </p> <div class=\\\"profileheadercard-location \\\"> buenos aires, arg\"]');
+INSERT INTO events VALUES (1613, '2020-01-18 06:04:40', '', 'CS_UPDTD_DETLS', 1, NULL, 'Wanderlust Suits', 'https://www.wanderlustsuits.com/', '', '');
+INSERT INTO events VALUES (1614, '2020-01-18 18:04:45', '', 'CS_UPDTD_DETLS', NULL, 1,'Wanderlust Suits', 'https://www.wanderlustsuits.com/', '[\"container\\\"></ul></div></nav></div><div class=\\\"txtnew\\\" id=\\\"comp-jfjcf1cl\\\"><h2 class=\\\"font_2\\\">fursuit \",\"commissions open\",\"! august 1st-3rd 2019.</h2></div></div></div></div></div></header></div></div><div id=\\\"wix_ads\\\" clas\"]', '');
+INSERT INTO events VALUES (1615, '2020-01-18 21:43:21', '- getfursu.it will now remember chosen filters. This doesn\'t work between devices, browsers and incognito mode, but you won\'t have to select the same filters over and over again on a single device and browser.<br />\r\n- To avoid confusion when coming back to the website, number of active filters is now shown on the \"Choose filters\" button.<br />\r\n- Added \"Clear\" buttons to quickly remove all selections within one filter. <br />\r\n- Small overall optimizations around filters.<br />\r\n- Feature introduced recently, but not announced yet: you can now choose to show \"Species\" column, and \"Links\" can now be hidden which may come handy on narrow devices.', 'GENERIC', NULL, NULL, '', '', '', '');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -903,7 +916,7 @@ CREATE TABLE artisans_commissions_statues (
   PRIMARY KEY (`id`),
   UNIQUE KEY UNIQ_4148D9A35ED3C7B7 (artisan_id),
   CONSTRAINT FK_4148D9A35ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=324 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=326 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans_commissions_statues DISABLE KEYS */;
