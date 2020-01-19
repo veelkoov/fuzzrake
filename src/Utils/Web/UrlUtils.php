@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 
 abstract class UrlUtils
 {

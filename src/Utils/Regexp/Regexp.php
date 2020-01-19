@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-abstract class Utils
+abstract class Regexp
 {
     public static function match(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): bool
     {

@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;

@@ -9,7 +9,7 @@ use App\Service\HostsService;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;

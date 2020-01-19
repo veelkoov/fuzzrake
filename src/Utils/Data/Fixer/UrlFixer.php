@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data\Fixer;
 
 use App\Utils\Artisan\Fields;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 
 class UrlFixer extends StringFixer
 {

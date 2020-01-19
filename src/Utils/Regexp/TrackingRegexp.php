@@ -32,7 +32,7 @@ class TrackingRegexp
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        if (!Utils::match($this->compiled[$variant], $subject, $matches, 'ID='.$this->id)) {
+        if (!Regexp::match($this->compiled[$variant], $subject, $matches, 'ID='.$this->id)) {
             return null;
         }
 
@@ -43,7 +43,7 @@ class TrackingRegexp
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        return Utils::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
+        return Regexp::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
     }
 
     public function getCompiled(Variant $variant = null): string

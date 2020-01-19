@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use App\Utils\Regexp\Utils as RegexpUtils;
 use SplObjectStorage;
 
 class Factory
@@ -39,7 +38,7 @@ class Factory
         $result = $regexp;
 
         foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $needle => $replacement) {
-            $result = RegexpUtils::replace("#$needle#", $replacement, $result);
+            $result = Regexp::replace("#$needle#", $replacement, $result);
         }
 
         return "#$result#s";

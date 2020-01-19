@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\DomCrawler\Crawler;
 

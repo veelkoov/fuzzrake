@@ -6,7 +6,7 @@ namespace App\Utils\Data\Fixer;
 
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\OrderTypes;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 
