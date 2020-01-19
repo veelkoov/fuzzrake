@@ -40,7 +40,7 @@ CREATE TABLE artisans (
   contact_info_obfuscated varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   inactive_reason varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=361 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=362 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans DISABLE KEYS */;
@@ -330,7 +330,7 @@ INSERT INTO artisans VALUES (301, 'FURIOUS', '', 'Furious Fur Studios', '', 'Hel
 INSERT INTO artisans VALUES (302, '', 'M000302', 'Alligators Always', '', '', '', 'US', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO artisans VALUES (303, 'BLKSTKY', 'M000303', 'Black Sticky', '', '​My artist name is Black Sticky but you can call me Pearl. I\'m a freelance artist from Uppsala, Sweden. I make unique fursuits, kigurumis, art and more. I love everything spooky especially skulls and bones. ♡ And I have my own monster species called Skullzters.', '2015-01', 'SE', '', 'Uppsala', 'Artistic liberty commissions\nStandard commissions', 'Kigurumi\nToony', '', 'Feetpaws (as parts/separate)\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Dice bags\nPlushies\nFleece hats with ears\nFursuit props\nHeadband ears', 'Adjustable eyebrows\nAttached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nOutdoor feet\nRemovable eyelids\nRemovable horns/antlers', '', '20% upfront to reserve a slot, after that choose between 2, 3 or 6 installments.', '', '', 'English\nSwedish', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: i**o@bla*********com', '');
 INSERT INTO artisans VALUES (304, '', 'M000304', 'FFC Fursuits', '', '', '', 'US', 'Oklahoma', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO artisans VALUES (305, '', 'M000305', 'ArvinsLair', '', '', '', 'RU', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO artisans VALUES (305, 'ARVNSLR', 'M000305', 'ArvinsLair', 'Studio Fursuit Vici', 'Our Studio is a married couple. Fursuit is the main job. We love each of our fursuits and care about the quality of the masks we create. We need 2 to 4 months to create a standard Commission without complicated patterns. Sometimes our pre-made brand new fursuts can be found on The Dealers Den.', '2013-05', 'RU', '', 'Moscow', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Realistic\nSemi Realistic', '', 'Full digitigrade', '', 'Follow-me eyes\nIn-head fans\nLED eyes\nMovable jaw\nOutdoor feet', 'Silicone scar\nZipper tail\nAttached hair', '50% upfront to reserve a slot, 50% before sending of finished fursuit', 'Canines\nSmall cats\nSnow leopards', 'Ungulates\nDragons\nScalies\nSergals', 'English (with a translator)\nRussian', '', 'ANNOUNCEMENTS', 'TWITTER', 'TWITTER: @ar******ir', '');
 INSERT INTO artisans VALUES (306, '', 'M000306', 'BeastLabs', '', '', '', 'DE', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO artisans VALUES (307, '', 'M000307', 'Rum Wolf Studios', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO artisans VALUES (308, '', 'M000308', 'Nevfurmore', '', '', '', 'US', 'Pennsylvania', 'Sharpsburg', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
@@ -376,6 +376,7 @@ INSERT INTO artisans VALUES (355, 'SKYSUIT', '', 'Skylight Suits', '', 'Hello! I
 INSERT INTO artisans VALUES (356, 'YEENBUG', '', 'YeenBug Studio', '', 'Hey there! We are a loving couple with a certified artist hyena, and an electrical engineer space cat. We are always up to something new, committed to satisfy both the needs of the suiters and the needs of the audience.', '2012-09', 'HU', '', 'Vác', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Kigurumi\nRealistic\nSemi Toony\nToony', 'Mascot costumes\nI am excited to branch out and try new styles', 'Feetpaws (as parts/separate)\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)', 'Arm sleeves\nProps\nPremade props\nPlushies\nFursuit props\nArt\nBadges\nDice bags\nPuppets\nResin parts', 'Exchangeable tongues\nFollow-me eyes\nIn-head fans\nRemovable eyelids\nRemovable horns/antlers\nWashable heads', 'Puffy handpaws\nAccessories\nExcellent vision & breathability\nWhiskers\nArt/Concept Art\n3d printed fursuit parts', '100% upfront by default, or 50% to start then the rest 50% before shipping', 'Any species', 'Sergals', 'English\nHungarian', '', 'ANNOUNCEMENTS', 'TELEGRAM', 'TELEGRAM: @Mi*****at', '');
 INSERT INTO artisans VALUES (359, 'KLOOFST', '', 'Kloofsuits', '', '', '2009-06', 'GB', '', '', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Semi Toony\nToony', '', 'Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)', '', 'Adjustable eyebrows\nAttached tail\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIndoor feet\nLED eyes\nLED/EL lights\nOutdoor feet\nRemovable eyelids\nRemovable horns/antlers', '', '30% non refundable deposit, payment plans accepted up to 3 months.', 'Felines\nCanines\nAvians\nScalies\nRodents', 'Angel Dragons', 'English', '', 'FEEDBACK', 'TELEGRAM', 'TELEGRAM: @Kl******ts', '');
 INSERT INTO artisans VALUES (360, 'SUSRPNT', '', 'Sushi Serpent Suits', '', 'I\'m Sushi Serpent Suits, and I\'m here to bring you quality fursuits! I\'m a one man team on a mission for cute. Have questions? - feel free to contact me! I can\'t wait to help you bring your characters to life in a way only made possible by the magic of fursuiting!', '2012-04', 'US', 'NY', 'Inlet', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', '', 'Full digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Adjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nExchangeable tongues\nIndoor feet\nOutdoor feet\nRemovable eyelids\nWashable heads', 'Pickable noses\nFit for glasses\nAirbrushing\nWhiskers\nAccessories (ear plugs, piercings, etc.)\nPlush teeth\nPlush claws', '30% Upfront with 2 months to pay remaining 70%. Other more individual payment plans can be worked out if needed.', 'Any species', '', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: a*t@sush********.com', '');
+INSERT INTO artisans VALUES (361, 'JUSTDRA', '', 'Just A Dragon Creations', '', 'uwu', '2016-01', 'US', '', '', 'Standard commissions', 'Kemono\nToony', '', 'Full digitigrade\nFull plantigrade\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '', 'Follow-me eyes\nOutdoor feet\nRemovable eyelids', '', '', 'Any species', '', 'English', '', 'NO', 'INVALID', 'PLEASE CORRECT', '');
 /*!40000 ALTER TABLE artisans ENABLE KEYS */;
 DROP TABLE IF EXISTS events;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -934,7 +935,7 @@ CREATE TABLE artisans_urls (
   PRIMARY KEY (`id`),
   KEY IDX_45AAF3BC5ED3C7B7 (artisan_id),
   CONSTRAINT FK_45AAF3BC5ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9131 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9140 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans_urls DISABLE KEYS */;
@@ -2317,7 +2318,7 @@ INSERT INTO artisans_urls VALUES (1408,305,'URL_TWITTER', 'https://twitter.com/a
 INSERT INTO artisans_urls VALUES (1409,305,'URL_FACEBOOK', 'https://www.facebook.com/ArvinsLair-331614857541234/');
 INSERT INTO artisans_urls VALUES (1410,305,'URL_INSTAGRAM', 'https://www.instagram.com/arvinslair/');
 INSERT INTO artisans_urls VALUES (1411,305,'URL_YOUTUBE', 'https://www.youtube.com/user/arvin689');
-INSERT INTO artisans_urls VALUES (1412,305,'URL_OTHER', 'http://www.flickr.com/photos/arvin69\r\nhttps://www.thedealersden.com/other-items/gedjit/112468');
+INSERT INTO artisans_urls VALUES (1412,305,'URL_OTHER', 'https://vk.com/arvins_lair\nhttp://www.flickr.com/photos/arvin69\nhttps://www.thedealersden.com/other-items/gedjit/112468');
 INSERT INTO artisans_urls VALUES (1413,306,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/beastlabs');
 INSERT INTO artisans_urls VALUES (1414,306,'URL_TWITTER', 'https://twitter.com/BeastLabsSuits');
 INSERT INTO artisans_urls VALUES (1415,307,'URL_WEBSITE', 'https://www.rumwolf.net/');
@@ -2612,6 +2613,15 @@ INSERT INTO artisans_urls VALUES (9127,360,'URL_PRICES', 'https://www.sushiserpe
 INSERT INTO artisans_urls VALUES (9128,360,'URL_TWITTER', 'https://twitter.com/sushiserpent');
 INSERT INTO artisans_urls VALUES (9129,360,'URL_QUEUE', 'https://trello.com/b/aLXNAG64');
 INSERT INTO artisans_urls VALUES (9130,360,'URL_CST', 'https://www.sushiserpent.com/');
+INSERT INTO artisans_urls VALUES (9131,305,'URL_PRICES', 'http://www.furaffinity.net/commissions/arvin69/');
+INSERT INTO artisans_urls VALUES (9132,305,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/arvin69');
+INSERT INTO artisans_urls VALUES (9133,305,'URL_DEVIANTART', 'https://www.deviantart.com/antella689');
+INSERT INTO artisans_urls VALUES (9134,305,'URL_TUMBLR', 'https://arvinslair.tumblr.com/');
+INSERT INTO artisans_urls VALUES (9135,305,'URL_QUEUE', 'https://trello.com/b/jmC5kLXr/arvinslair-fursuits');
+INSERT INTO artisans_urls VALUES (9136,305,'URL_CST', 'http://www.furaffinity.net/commissions/arvin69/');
+INSERT INTO artisans_urls VALUES (9137,361,'URL_WEBSITE', 'http://justadragoncreations.com/');
+INSERT INTO artisans_urls VALUES (9138,361,'URL_PRICES', 'http://justadragoncreations.com/');
+INSERT INTO artisans_urls VALUES (9139,361,'URL_FAQ', 'http://justadragoncreations.com/faq-2/');
 /*!40000 ALTER TABLE artisans_urls ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
