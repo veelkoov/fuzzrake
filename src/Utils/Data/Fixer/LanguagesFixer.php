@@ -9,7 +9,18 @@ use App\Utils\StrUtils;
 
 class LanguagesFixer extends StringFixer
 {
-    private const LANGUAGE_REGEXP = '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i';
+    private string $regexp;
+
+    /**
+     * @var string[]
+     */
+    private array $replacements;
+
+    public function __construct(array $languages)
+    {
+        $this->regexp = $languages['regexp'];
+        $this->replacements = $languages['replacements'];
+    }
 
     public function fix(string $fieldName, string $subject): string
     {
@@ -18,7 +29,9 @@ class LanguagesFixer extends StringFixer
         $subject = Regexp::split('#[\n,;&]|[, ]and #', $subject);
         $subject = array_filter(array_map('trim', $subject));
         $subject = array_map(function (string $language): string {
-            Regexp::match(self::LANGUAGE_REGEXP, $language, $matches);
+            $language = Regexp::replaceAll($this->replacements, $language);
+
+            Regexp::match($this->regexp, $language, $matches);
 
             $language = $matches['language'];
             $suffix = $matches['prefix'] || ($matches['suffix'] ?? '') ? ' (limited)' : '';
