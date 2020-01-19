@@ -8,7 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
-use App\Utils\Regexp\Utils;
+use App\Utils\Regexp\Regexp;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
@@ -266,7 +266,7 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function findByMakerId(string $makerId): Artisan
     {
-        if (!Utils::match(ValidationRegexps::MAKER_ID, $makerId)) {
+        if (!Regexp::match(ValidationRegexps::MAKER_ID, $makerId)) {
             throw new NoResultException();
         }
 

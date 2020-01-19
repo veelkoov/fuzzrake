@@ -4,70 +4,78 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use App\Utils\StrContext\StrContextUtils;
-use App\Utils\Tracking\Match;
-use SplObjectStorage;
-
-class Regexp
+abstract class Regexp
 {
-    const CONTEXT_LENGTH = 100;
+    public static function match(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): bool
+    {
+        $result = preg_match($pattern, $subject, $matches);
 
-    private string $id;
-    private string $original;
+        if (false === $result) {
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
+        }
+
+        return 1 === $result;
+    }
 
     /**
-     * @var string[] SplObjectStorage of strings
+     * @throws RegexpMatchException
      */
-    private $compiled;
-
-    public function __construct(string $id, string $original, SplObjectStorage $compiled)
+    public static function requireMatch(string $pattern, string $subject, string $debugInfo = ''): array
     {
-        $this->id = $id;
-        $this->original = $original;
-        $this->compiled = $compiled;
-        $this->compiled->rewind();
-    }
+        $result = preg_match($pattern, $subject, $matches);
 
-    public function matches(string $subject, Variant $variant): ?Match
-    {
-        $variant = $this->useDefaultVariantWhenNull($variant);
-
-        if (!Utils::match($this->compiled[$variant], $subject, $matches, 'ID='.$this->id)) {
-            return null;
+        if (false === $result) {
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
         }
 
-        return new Match($this, $variant, StrContextUtils::extractFrom($subject, $matches[0], self::CONTEXT_LENGTH));
-    }
-
-    public function removeFrom(string $input, Variant $variant = null): string
-    {
-        $variant = $this->useDefaultVariantWhenNull($variant);
-
-        return Utils::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
-    }
-
-    public function getCompiled(Variant $variant = null): string
-    {
-        $variant = $this->useDefaultVariantWhenNull($variant);
-
-        return (string) $this->compiled[$variant];
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    private function useDefaultVariantWhenNull(Variant $variant = null): Variant
-    {
-        if (null !== $variant) {
-            return $variant;
+        if (0 === $result) {
+            throw new RegexpMatchException("Regexp '$pattern' didn't match ($debugInfo): $subject");
         }
 
-        if (count($this->compiled) > 1) {
-            throw new RuntimeRegexpException('Regexp variant selection required');
+        return $matches;
+    }
+
+    public static function replace(string $pattern, string $replacement, string $subject, string $debugInfo = ''): string
+    {
+        $result = preg_replace($pattern, $replacement, $subject);
+
+        if (null === $result) {
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
         }
 
-        return $this->compiled->current();
+        return $result;
+    }
+
+    public static function replaceAll(array $replacements, string $subject, string $patternPrefix = '', string $patternSuffix = ''): string
+    {
+        $result = $subject;
+
+        foreach ($replacements as $pattern => $replacement) {
+            $result = self::replace("$patternPrefix$pattern$patternSuffix", $replacement, $result);
+        }
+
+        return $result;
+    }
+
+    public static function matchAll(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): int
+    {
+        $result = preg_match_all($pattern, $subject, $matches);
+
+        if (false === $result) {
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
+        }
+
+        return $result;
+    }
+
+    public static function split(string $pattern, string $subject, string $debugInfo = ''): array
+    {
+        $result = preg_split($pattern, $subject);
+
+        if (false === $result) {
+            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
+        }
+
+        return $result;
     }
 }

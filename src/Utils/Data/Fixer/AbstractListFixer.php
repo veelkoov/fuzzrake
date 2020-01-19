@@ -6,7 +6,7 @@ namespace App\Utils\Data\Fixer;
 
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\OrderTypes;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 
@@ -65,11 +65,7 @@ abstract class AbstractListFixer extends StringFixer
         $items = array_filter(array_map([$this, 'fixItem'], $items));
 
         $subject = StringList::pack($items);
-
-        foreach ($this->getReplacements() as $pattern => $replacement) {
-            $subject = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $subject);
-        }
-
+        $subject = Regexp::replaceAll($this->getReplacements(), $subject, "#(?<=^|\n)", "(?=\n|$)#i");
         $subject = parent::fix($fieldName, $subject);
         $subject = StringList::unpack($subject);
 

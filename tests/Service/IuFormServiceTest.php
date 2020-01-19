@@ -13,7 +13,7 @@ use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
-use App\Utils\Regexp\Utils;
+use App\Utils\Regexp\Regexp;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -32,7 +32,7 @@ class IuFormServiceTest extends WebTestCase
     {
         $checkedSource = file_get_contents(__DIR__.'/../../src/Service/IuFormService.php');
 
-        static::assertGreaterThan(0, Utils::matchAll(self::REGEXP_DATA_ITEM_PUSH, $checkedSource, $matches));
+        static::assertGreaterThan(0, Regexp::matchAll(self::REGEXP_DATA_ITEM_PUSH, $checkedSource, $matches));
 
         $fieldsInForm = Fields::exportedToIuForm();
         unset($fieldsInForm[Fields::VALIDATION_CHECKBOX]);

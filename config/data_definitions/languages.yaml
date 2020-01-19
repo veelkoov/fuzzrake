@@ -1,0 +1,6 @@
+parameters: # TODO: improve!
+  languages:
+    replacements:
+      '# with Google Translate#i': ' (with a translator)'
+
+    regexp: '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i'

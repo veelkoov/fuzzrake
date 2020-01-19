@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Tracking;
 
 use App\Utils\NullObjectTrait;
-use App\Utils\Regexp\Regexp;
+use App\Utils\Regexp\TrackingRegexp;
 use App\Utils\Regexp\Variant;
 use App\Utils\StrContext\NullStrContext;
 use App\Utils\StrContext\StrContextInterface;
@@ -14,7 +14,7 @@ class NullMatch implements MatchInterface
 {
     use NullObjectTrait;
 
-    public function getRegexp(): Regexp
+    public function getRegexp(): TrackingRegexp
     {
         throw self::incomplete();
     }

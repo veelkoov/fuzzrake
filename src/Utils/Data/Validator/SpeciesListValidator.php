@@ -10,9 +10,9 @@ use App\Utils\StringList;
 class SpeciesListValidator implements ValidatorInterface
 {
     /**
-     * @var string|array[]
+     * @var string[]
      */
-    private $validChoices;
+    private array $validChoices;
 
     public function __construct(array $species)
     {

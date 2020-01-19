@@ -72,7 +72,7 @@ class FixerDifferValidator
         return $artisan;
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, Artisan $imported): void
+    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, ?Artisan $imported): void
     {
         if (!$this->hideFixCommandFor($field)) {
             $makerId = $artisan->getFixed()->getMakerId();

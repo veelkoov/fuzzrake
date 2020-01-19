@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Import;
 
 use App\Utils\Artisan\Field;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use InvalidArgumentException;
 
 class ValueCorrection

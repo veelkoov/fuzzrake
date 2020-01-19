@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Utils\Regexp\Utils;
+use App\Utils\Regexp\Regexp;
 
 abstract class Contact
 {
@@ -24,27 +24,27 @@ abstract class Contact
             return ['', ''];
         }
 
-        if (Utils::match('#(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])#i', $input, $matches)) {
+        if (Regexp::match('#(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])#i', $input, $matches)) {
             return [self::E_MAIL, $matches[1]];
         }
 
-        if (Utils::match('#telegram *[:-]? ?[ @]([a-z0-9_]+)#i', $input, $matches)) {
+        if (Regexp::match('#telegram *[:-]? ?[ @]([a-z0-9_]+)#i', $input, $matches)) {
             return [self::TELEGRAM, '@'.$matches[1]];
         }
 
-        if (Utils::match('#@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram#i', $input, $matches)) {
+        if (Regexp::match('#@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram#i', $input, $matches)) {
             return [self::TELEGRAM, '@'.$matches[1]];
         }
 
-        if (Utils::match('#@?([a-z0-9_]+)( on|@) twitter#i', $input, $matches)) {
+        if (Regexp::match('#@?([a-z0-9_]+)( on|@) twitter#i', $input, $matches)) {
             return [self::TWITTER, '@'.$matches[1]];
         }
 
-        if (Utils::match('#^https://twitter.com/([a-z0-9_-]+)$#i', $input, $matches)) {
+        if (Regexp::match('#^https://twitter.com/([a-z0-9_-]+)$#i', $input, $matches)) {
             return [self::TWITTER, $matches[1]];
         }
 
-        if (Utils::match('#twitter[-:, ]* ?@?([a-z0-9_]+)#i', $input, $matches)) {
+        if (Regexp::match('#twitter[-:, ]* ?@?([a-z0-9_]+)#i', $input, $matches)) {
             return [self::TWITTER, '@'.$matches[1]];
         }
 

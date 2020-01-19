@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\Artisan\Fields;
-use App\Utils\Regexp\Utils;
+use App\Utils\Regexp\Regexp;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,9 +20,9 @@ class ArtisanFieldsTest extends TestCase
     {
         $modelSource = file_get_contents(__DIR__.'/../../assets/js/class/Artisan.ts');
 
-        static::assertTrue(Utils::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
+        static::assertTrue(Regexp::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
 
-        static::assertGreaterThan(0, Utils::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
+        static::assertGreaterThan(0, Regexp::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
 
         $fieldsInJson = Fields::inJson();
 
