@@ -392,7 +392,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1616 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1618 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -903,6 +903,8 @@ INSERT INTO events VALUES (1612, '2020-01-17 18:04:41', '', 'CS_UPDTD_DETLS', 1,
 INSERT INTO events VALUES (1613, '2020-01-18 06:04:40', '', 'CS_UPDTD_DETLS', 1, NULL, 'Wanderlust Suits', 'https://www.wanderlustsuits.com/', '', '');
 INSERT INTO events VALUES (1614, '2020-01-18 18:04:45', '', 'CS_UPDTD_DETLS', NULL, 1,'Wanderlust Suits', 'https://www.wanderlustsuits.com/', '[\"container\\\"></ul></div></nav></div><div class=\\\"txtnew\\\" id=\\\"comp-jfjcf1cl\\\"><h2 class=\\\"font_2\\\">fursuit \",\"commissions open\",\"! august 1st-3rd 2019.</h2></div></div></div></div></div></header></div></div><div id=\\\"wix_ads\\\" clas\"]', '');
 INSERT INTO events VALUES (1615, '2020-01-18 21:43:21', '- getfursu.it will now remember chosen filters. This doesn\'t work between devices, browsers and incognito mode, but you won\'t have to select the same filters over and over again on a single device and browser.<br />\r\n- To avoid confusion when coming back to the website, number of active filters is now shown on the \"Choose filters\" button.<br />\r\n- Added \"Clear\" buttons to quickly remove all selections within one filter. <br />\r\n- Small overall optimizations around filters.<br />\r\n- Feature introduced recently, but not announced yet: you can now choose to show \"Species\" column, and \"Links\" can now be hidden which may come handy on narrow devices.', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1616, '2020-01-19 06:04:36', '', 'CS_UPDTD_DETLS', 0, NULL, 'ByCats4Cats', 'http://bycats4cats.com/quote/', '', '');
+INSERT INTO events VALUES (1617, '2020-01-19 06:04:36', '', 'CS_UPDTD_DETLS', 1, NULL, 'Star Fursuits', 'https://www.starfursuits.com/', '', '');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
