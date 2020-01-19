@@ -35,7 +35,7 @@ class CommissionsStatusRegexps
         'FP01' => '(once|when) ((WE_ARE|WE) STATUS( for)? COMMISSIONS|COMMISSIONS are STATUS)',
         'FP02' => 'will not be STATUS for COMMISSIONS',
         'FP03' => '(art|painted glass|illustrations?) COMMISSIONS( status:| are|:) STATUS',
-        'FP04' => 'COMMISSIONS (status:)?STATUS( in| for)?( late| early)? (MONTHS|20\d\d)',
+        'FP04' => 'COMMISSIONS (status:)?STATUS( in| for| on)?( late| early)? (MONTHS|20\d\d)',
         'FP05' => 'open for commissions\?</h[1-6]>',
         'FP06' => 'if WE_ARE STATUS (for )?(new )?COMMISSIONS',
         'FP07' => 'COMMISSIONS:? opens? (20[0-9]{2}|soon)',
