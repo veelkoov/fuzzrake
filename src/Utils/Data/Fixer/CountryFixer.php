@@ -36,10 +36,7 @@ class CountryFixer implements FixerInterface
     public function fix(string $fieldName, string $subject): string
     {
         $subject = trim($subject);
-
-        foreach (self::COUNTRIES_REPLACEMENTS as $regexp => $replacement) {
-            $subject = Regexp::replace("#^$regexp$#i", $replacement, $subject);
-        }
+        $subject = Regexp::replaceAll(self::COUNTRIES_REPLACEMENTS, $subject, '#^', '$#i');
 
         return $subject;
     }

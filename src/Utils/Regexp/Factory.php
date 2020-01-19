@@ -35,11 +35,7 @@ class Factory
 
     private function compileVariant(string $regexp, Variant $variant): string
     {
-        $result = $regexp;
-
-        foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $needle => $replacement) {
-            $result = Regexp::replace("#$needle#", $replacement, $result);
-        }
+        $result = Regexp::replaceAll(array_merge($variant->getReplacements(), $this->commonReplacements), $regexp, '#', '#');
 
         return "#$result#s";
     }

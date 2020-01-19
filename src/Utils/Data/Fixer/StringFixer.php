@@ -20,10 +20,6 @@ class StringFixer implements FixerInterface
 
     public function fix(string $fieldName, string $subject): string
     {
-        foreach (self::REPLACEMENTS as $pattern => $replacement) {
-            $subject = Regexp::replace($pattern, $replacement, $subject);
-        }
-
-        return trim($subject);
+        return trim(Regexp::replaceAll(self::REPLACEMENTS, $subject));
     }
 }

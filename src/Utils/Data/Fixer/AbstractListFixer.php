@@ -65,11 +65,7 @@ abstract class AbstractListFixer extends StringFixer
         $items = array_filter(array_map([$this, 'fixItem'], $items));
 
         $subject = StringList::pack($items);
-
-        foreach ($this->getReplacements() as $pattern => $replacement) {
-            $subject = Regexp::replace("#(?<=^|\n)$pattern(?=\n|$)#i", $replacement, $subject);
-        }
-
+        $subject = Regexp::replaceAll($this->getReplacements(), $subject, "#(?<=^|\n)", "(?=\n|$)#i");
         $subject = parent::fix($fieldName, $subject);
         $subject = StringList::unpack($subject);
 

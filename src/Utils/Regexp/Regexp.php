@@ -46,6 +46,17 @@ abstract class Regexp
         return $result;
     }
 
+    public static function replaceAll(array $replacements, string $subject, string $patternPrefix = '', string $patternSuffix = ''): string
+    {
+        $result = $subject;
+
+        foreach ($replacements as $pattern => $replacement) {
+            $result = self::replace("$patternPrefix$pattern$patternSuffix", $replacement, $result);
+        }
+
+        return $result;
+    }
+
     public static function matchAll(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): int
     {
         $result = preg_match_all($pattern, $subject, $matches);

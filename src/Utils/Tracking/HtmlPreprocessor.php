@@ -25,10 +25,7 @@ abstract class HtmlPreprocessor
     {
         $inputText = strtolower($inputText);
         $inputText = HtmlPreprocessor::extractFromJson($inputText);
-
-        foreach (CommissionsStatusRegexps::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
-            $inputText = Regexp::replace($regexp, $replacement, $inputText);
-        }
+        $inputText = Regexp::replaceAll(CommissionsStatusRegexps::HTML_CLEANER_REGEXPS, $inputText);
 
         return $inputText;
     }
