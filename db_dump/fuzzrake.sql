@@ -398,7 +398,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1619 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1622 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -912,6 +912,9 @@ INSERT INTO events VALUES (1615, '2020-01-18 21:43:21', '- getfursu.it will now 
 INSERT INTO events VALUES (1616, '2020-01-19 06:04:36', '', 'CS_UPDTD_DETLS', 0, NULL, 'ByCats4Cats', 'http://bycats4cats.com/quote/', '', '');
 INSERT INTO events VALUES (1617, '2020-01-19 06:04:36', '', 'CS_UPDTD_DETLS', 1, NULL, 'Star Fursuits', 'https://www.starfursuits.com/', '', '');
 INSERT INTO events VALUES (1618, '2020-01-19 16:59:03', '- 1 new maker and 1 updated based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/b1be72245d6af404437febde76a7ff9977e08db6\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1619, '2020-01-19 21:30:30', '- Based on a visitor\'s request, 5 new studios were added. Thank you for your contribution!', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1620, '2020-01-19 21:35:28', '', 'CS_UPDTD_DETLS', NULL, 0,'Lucky Gum Fursuits', 'http://www.luckygumfursuits.com/', '', '[\"tent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\">\",\"commissions are closed\",\"!</h2> <div class=\\\"paragraph\\\">sorry!i have a large queue to work thru at this moment, and will not b\"]');
+INSERT INTO events VALUES (1621, '2020-01-20 18:05:02', '', 'CS_UPDTD_DETLS', 0, NULL, 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '', '');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -925,7 +928,7 @@ CREATE TABLE artisans_commissions_statues (
   PRIMARY KEY (`id`),
   UNIQUE KEY UNIQ_4148D9A35ED3C7B7 (artisan_id),
   CONSTRAINT FK_4148D9A35ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=326 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=330 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans_commissions_statues DISABLE KEYS */;
