@@ -7,7 +7,7 @@ import FilterSetSingle from "../class/FilterSetSingle";
 
 let filters: { [id: string]: Filter } = {};
 let $filtersButton: JQuery<HTMLElement>;
-let refreshList: () => void;
+let refreshList: () => void; // FIXME
 
 function getCheckedValueFunction(action: string): any {
     switch (action) {
@@ -41,8 +41,8 @@ function initCheckBoxesMultiswitches(containerSelector: string): void {
 function addFilter(filter: Filter): void {
     filters[filter.containerSelector] = filter;
 
-    $.fn.dataTable.ext.search.push(filters[filter.containerSelector]
-        .getDataTableFilterCallback(DataBridge.getArtisans()));
+    // $.fn.dataTable.ext.search.push(filters[filter.containerSelector]
+    //     .getDataTableFilterCallback(DataBridge.getArtisans()));
 
     initCheckBoxesMultiswitches(filter.containerSelector);
 }
@@ -58,12 +58,10 @@ function refreshEverything(): void {
 
     $filtersButton.html('Choose filters' + (count > 0 ? ` <span class="badge badge-pill badge-light">${count}</span>` : ''));
 
-    refreshList();
+    // refreshList(); // FIXME
 }
 
-function initFilters(refreshCallback: () => void): void {
-    refreshList = refreshCallback;
-
+function initFilters(): void {
     addFilter(new FilterSimpleValue  ('country',           '#countriesFilter'));
     addFilter(new FilterSetWithOthers('styles',            '#stylesFilter',           false));
     addFilter(new FilterSetWithOthers('features',          '#featuresFilter',         true));

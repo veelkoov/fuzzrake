@@ -691,21 +691,6 @@
     "@types/jquery" "*"
     popper.js "^1.14.1"
 
-"@types/datatables.net-buttons@^1.4.0":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@types/datatables.net-buttons/-/datatables.net-buttons-1.4.3.tgz#bcb6e196afbb5024cf6c8b2655a3cb012a1b846c"
-  integrity sha512-4Lyuxui1V1pA8OD4PCihJH3HxT779e39aUtT4vhPAjKUd0t9wPNRL3CEfEtG0yOa/RYkJvJw9ZAxdTaym1p8NA==
-  dependencies:
-    "@types/datatables.net" "*"
-    "@types/jquery" "*"
-
-"@types/datatables.net@*", "@types/datatables.net@^1.10.13":
-  version "1.10.18"
-  resolved "https://registry.yarnpkg.com/@types/datatables.net/-/datatables.net-1.10.18.tgz#620c318cdd4a4a11b2e1c619b6747745a25c1d8d"
-  integrity sha512-uz80YsSHTLGd14/A3P4+EIp4n5SqBIbjtd2Hl7SwsXl/9zpsXzE2OY+sz0Gm8TF2jPfsKl0+9yB7/8RtoD3qoA==
-  dependencies:
-    "@types/jquery" "*"
-
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
