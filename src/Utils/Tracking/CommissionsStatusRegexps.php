@@ -35,14 +35,14 @@ class CommissionsStatusRegexps
         'FP01' => '(once|when) ((WE_ARE|WE) STATUS( for)? COMMISSIONS|COMMISSIONS are STATUS)',
         'FP02' => 'will not be STATUS for COMMISSIONS',
         'FP03' => '(art|painted glass|illustrations?) COMMISSIONS( status:| are|:) STATUS',
-        'FP04' => 'COMMISSIONS (status:)?STATUS( in| for)?( late| early)? (MONTHS|20\d\d)',
+        'FP04' => 'COMMISSIONS (status:)?STATUS( in| for| on)?( late| early)? (MONTHS|20\d\d)',
         'FP05' => 'open for commissions\?</h[1-6]>',
         'FP06' => 'if WE_ARE STATUS (for )?(new )?COMMISSIONS',
         'FP07' => 'COMMISSIONS:? opens? (20[0-9]{2}|soon)',
     ];
 
     const GENERIC_REGEXES = [
-        'G01' => '((WE_ARE )?(?<!not )TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|quotes|work)( requests)?',
+        'G01' => '((WE_ARE )?(?<!not )TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|work)( requests)?',
         'G02' => 'COMMISSIONS( status|:? are| have| info)?( TIMESPAN)?[-: ]+(&gt;)*STATUS(&lt;)*',
         'G03' => 'quotes? have TIMESPAN STATUS',
         'G04' => 'order quotes are STATUS',

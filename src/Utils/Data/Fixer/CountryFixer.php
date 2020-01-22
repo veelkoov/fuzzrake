@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 
 class CountryFixer implements FixerInterface
 {
@@ -36,10 +36,7 @@ class CountryFixer implements FixerInterface
     public function fix(string $fieldName, string $subject): string
     {
         $subject = trim($subject);
-
-        foreach (self::COUNTRIES_REPLACEMENTS as $regexp => $replacement) {
-            $subject = Regexp::replace("#^$regexp$#i", $replacement, $subject);
-        }
+        $subject = Regexp::replaceAll(self::COUNTRIES_REPLACEMENTS, $subject, '#^', '$#i');
 
         return $subject;
     }

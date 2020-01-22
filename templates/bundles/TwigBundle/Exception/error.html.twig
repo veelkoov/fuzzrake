@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>getfursu.it, but broke :(</title>
+
+    <meta charset="UTF-8"/>
+    <meta name="robots" content="noindex" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        iframe {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container p-5">
+    <div class="jumbotron bg-light border-warning border">
+        <div class="container-fluid">
+            <h1 class="display-4">Error 482{% if status_code != 404 %}<sup>*</sup>{% endif %} 🙀</h1>
+            <p class="lead">Somebody shot the server with a 12-gauge. Please contact your administrator.</p>
+            <hr class="my-4">
+            <p>
+                {% if status_code == 404 %}
+                    No, but seriously, the page/resource you requested does not exist. Broken or outdated link? Typo in the address?
+                {% else %}
+                    No, but seriously, something went wrong. I probably already know about it.
+                    My apologies for the inconvenience!
+                {% endif %}
+            </p>
+            <p class="mt-5 overflow-x-auto">
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nxXrYOnFLEk?start=375"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            </p>
+
+            {% if status_code != 404 %}
+                <small>* 4xx errors are reserved for client-side errors, but whatever</small>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>

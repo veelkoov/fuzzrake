@@ -5,7 +5,9 @@ import FilterSimpleValue from "../class/FilterSimpleValue";
 import FilterSetWithOthers from "../class/FilterSetWithOthers";
 import FilterSetSingle from "../class/FilterSetSingle";
 
-let filters: object = {};
+let filters: { [id: string]: Filter } = {};
+let $filtersButton: JQuery<HTMLElement>;
+let refreshList: () => void;
 
 function getCheckedValueFunction(action: string): any {
     switch (action) {
@@ -20,7 +22,7 @@ function getCheckedValueFunction(action: string): any {
     }
 }
 
-function initCheckBoxesMultiswitches(containerSelector: string) {
+function initCheckBoxesMultiswitches(containerSelector: string): void {
     $(`${containerSelector} a`).each((_, element) => {
         let $a = $(element);
         let $checkboxes = $a.parents('fieldset').find('input:checkbox');
@@ -36,7 +38,7 @@ function initCheckBoxesMultiswitches(containerSelector: string) {
     });
 }
 
-function addFilter(filter: Filter) {
+function addFilter(filter: Filter): void {
     filters[filter.containerSelector] = filter;
 
     $.fn.dataTable.ext.search.push(filters[filter.containerSelector]
@@ -45,14 +47,39 @@ function addFilter(filter: Filter) {
     initCheckBoxesMultiswitches(filter.containerSelector);
 }
 
-function initFilters(refreshCallback: () => void) {
-    addFilter(new FilterSimpleValue  ('country',           '#countriesFilter',           refreshCallback));
-    addFilter(new FilterSetWithOthers('styles',            '#stylesFilter',              refreshCallback, false));
-    addFilter(new FilterSetWithOthers('features',          '#featuresFilter',            refreshCallback, true));
-    addFilter(new FilterSetWithOthers('orderTypes',        '#orderTypesFilter',          refreshCallback, false));
-    addFilter(new FilterSetSingle    ('productionModels',  '#productionModelsFilter',    refreshCallback, false));
-    addFilter(new FilterSetSingle    ('languages',         '#languagesFilter',           refreshCallback, false));
-    addFilter(new FilterSimpleValue  ('commissionsStatus', '#commissionsStatusesFilter', refreshCallback));
+function refreshEverything(): void {
+    let count: number = 0;
+
+    for (let f in filters) {
+        if (filters[f].hasAnyChoice()) {
+            count++;
+        }
+    }
+
+    $filtersButton.html('Choose filters' + (count > 0 ? ` <span class="badge badge-pill badge-light">${count}</span>` : ''));
+
+    refreshList();
 }
 
-export { initFilters }
+function initFilters(refreshCallback: () => void): void {
+    refreshList = refreshCallback;
+
+    addFilter(new FilterSimpleValue  ('country',           '#countriesFilter'));
+    addFilter(new FilterSetWithOthers('styles',            '#stylesFilter',           false));
+    addFilter(new FilterSetWithOthers('features',          '#featuresFilter',         true));
+    addFilter(new FilterSetWithOthers('orderTypes',        '#orderTypesFilter',       false));
+    addFilter(new FilterSetSingle    ('productionModels',  '#productionModelsFilter', false));
+    addFilter(new FilterSetSingle    ('languages',         '#languagesFilter',        false));
+    addFilter(new FilterSimpleValue  ('commissionsStatus', '#commissionsStatusesFilter'));
+
+    $filtersButton = $('#filtersButton');
+    $('#filtersModal').on('hidden.bs.modal', refreshEverything);
+}
+
+function restoreFilters(): void {
+    for (let selector in filters) {
+        filters[selector].restoreChoices();
+    }
+}
+
+export { initFilters, restoreFilters, refreshEverything }

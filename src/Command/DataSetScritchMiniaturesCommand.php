@@ -6,8 +6,8 @@ namespace App\Command;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\Json;
+use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\RegexpMatchException;
-use App\Utils\Regexp\Utils as Regexp;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\TmpCookieJar;

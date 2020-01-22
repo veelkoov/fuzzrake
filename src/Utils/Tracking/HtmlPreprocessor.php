@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -25,10 +25,7 @@ abstract class HtmlPreprocessor
     {
         $inputText = strtolower($inputText);
         $inputText = HtmlPreprocessor::extractFromJson($inputText);
-
-        foreach (CommissionsStatusRegexps::HTML_CLEANER_REGEXPS as $regexp => $replacement) {
-            $inputText = Regexp::replace($regexp, $replacement, $inputText);
-        }
+        $inputText = Regexp::replaceAll(CommissionsStatusRegexps::HTML_CLEANER_REGEXPS, $inputText);
 
         return $inputText;
     }

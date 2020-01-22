@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\Regexp\TrackingRegexp;
 use App\Utils\Regexp\Variant;
 use App\Utils\StrContext\StrContextInterface;
 
 class Match implements MatchInterface
 {
-    private Regexp $regexp;
+    private TrackingRegexp $regexp;
     private Variant $variant;
     private StrContextInterface $strContext;
 
-    public function __construct(Regexp $regexp, Variant $variant, StrContextInterface $match)
+    public function __construct(TrackingRegexp $regexp, Variant $variant, StrContextInterface $match)
     {
         $this->regexp = $regexp;
         $this->variant = $variant;
         $this->strContext = $match;
     }
 
-    public function getRegexp(): Regexp
+    public function getRegexp(): TrackingRegexp
     {
         return $this->regexp;
     }

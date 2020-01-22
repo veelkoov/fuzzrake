@@ -22,71 +22,29 @@ use App\Utils\Data\Fixer\UrlFixer;
 
 class Fixer
 {
-    /**
-     * @var StringFixer
-     */
-    private $stringFixer;
+    private StringFixer $stringFixer;
+    private DefinedListFixer $definedListFixer;
+    private FreeListFixer $freeListFixer;
+    private SpeciesListFixer $speciesListFixer;
+    private UrlFixer $urlFixer;
+    private ContactAllowedFixer $contactAllowedFixer;
+    private CountryFixer $countryFixer;
+    private LanguagesFixer $languagesFixer;
+    private SinceFixer $sinceFixer;
+    private NoopFixer $noopFixer;
+    private IntroFixer $introFixer;
 
-    /**
-     * @var DefinedListFixer
-     */
-    private $definedListFixer;
-
-    /**
-     * @var FreeListFixer
-     */
-    private $freeListFixer;
-
-    /**
-     * @var SpeciesListFixer
-     */
-    private $speciesListFixer;
-
-    /**
-     * @var UrlFixer
-     */
-    private $urlFixer;
-
-    /**
-     * @var ContactAllowedFixer
-     */
-    private $contactAllowedFixer;
-
-    /**
-     * @var CountryFixer
-     */
-    private $countryFixer;
-
-    /**
-     * @var LanguagesFixer
-     */
-    private $languagesFixer;
-
-    /**
-     * @var SinceFixer
-     */
-    private $sinceFixer;
-
-    /**
-     * @var NoopFixer
-     */
-    private $noopFixer;
-
-    /**
-     * @var IntroFixer
-     */
-    private $introFixer;
-
-    public function __construct(SpeciesListFixer $speciesListFixer)
+    public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer)
     {
+        $this->speciesListFixer = $speciesListFixer;
+        $this->languagesFixer = $languagesFixer;
+
         $this->stringFixer = new StringFixer();
         $this->definedListFixer = new DefinedListFixer();
         $this->freeListFixer = new FreeListFixer();
-        $this->speciesListFixer = $speciesListFixer;
         $this->urlFixer = new UrlFixer();
         $this->noopFixer = new NoopFixer();
         $this->sinceFixer = new SinceFixer();
-        $this->languagesFixer = new LanguagesFixer();
         $this->countryFixer = new CountryFixer();
         $this->introFixer = new IntroFixer();
         $this->contactAllowedFixer = new ContactAllowedFixer();

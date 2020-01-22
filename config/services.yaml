@@ -2,7 +2,7 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 imports:
-    - { resource: data_definitions/species.yaml }
+    - { resource: data_definitions/*.yaml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -19,10 +19,11 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $projectDir: '%kernel.project_dir%'
+            $iuFormUrl:  '%iu_form_url%'
+            $species:    '%species%'
+            $languages:  '%languages%'
             $hosts:
                 production: getfursu.it
-            $iuFormUrl: '%iu_form_url%'
-            $species: '%species%'
             $healthCheckValues:
                 MEMORY_AVAILABLE_MIN_MIBS: '%env(resolve:MEMORY_AVAILABLE_MIN_MIBS)%'
                 DISK_FREE_MIN_MIBS:        '%env(resolve:DISK_FREE_MIN_MIBS)%'

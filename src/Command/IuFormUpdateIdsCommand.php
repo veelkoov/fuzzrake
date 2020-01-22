@@ -11,7 +11,7 @@ use App\Utils\Artisan\Fields;
 use App\Utils\GoogleForms\Form;
 use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
-use App\Utils\Regexp\Utils as Regexp;
+use App\Utils\Regexp\Regexp;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
 use JsonException;
