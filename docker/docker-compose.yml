@@ -25,7 +25,7 @@ services:
   php-fpm:
     build: php-fpm
     volumes:
-      - ..:/var/www/html
+      - ..:/application
 
   pma:
     image: phpmyadmin/phpmyadmin:latest
