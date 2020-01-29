@@ -10,7 +10,6 @@ use InvalidArgumentException;
 
 class ValueCorrection
 {
-    const MODE_REGEXP = 'rr';
     const MODE_WHOLE = 'wr';
     const MODE_ALL = 'ar';
 
@@ -52,16 +51,6 @@ class ValueCorrection
     public function apply($value)
     {
         switch ($this->mode) {
-            case self::MODE_REGEXP:
-                $result = Regexp::replace($this->wrongValue, $this->correctedValue, $value);
-
-                if (null === $result) {
-                    throw new InvalidArgumentException("Regexp failed: '$this->wrongValue'");
-                }
-
-                return $result;
-                break;
-
             case self::MODE_ALL:
                 return str_replace($this->wrongValue, $this->correctedValue, $value);
                 break;
