@@ -36,6 +36,16 @@ class ArtisanUrl
      */
     private $url;
 
+    private $lastSuccess;
+
+
+    private $lastFailure;
+
+    /**
+     * @ORM\Column(type="string", length=512)
+     */
+    private $lastFailReason;
+
     public function getId(): ?int
     {
         return $this->id;
