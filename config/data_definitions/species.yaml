@@ -1,5 +1,9 @@
 parameters: # TODO: improve!
   species:
+    filterable:
+      "Any species":
+      "Most species":
+
     valid_choices:
       "Any species":
       "Most species":
@@ -19,6 +23,7 @@ parameters: # TODO: improve!
               "Big cats":
                 Lions:
                 Lynxes:
+                Snow leopards:
                 Tigers:
 
           Bears:
@@ -58,7 +63,7 @@ parameters: # TODO: improve!
             Mouse:
             Rats:
 
-        Avians: == birds
+        Avians: # == birds
           Birds:
 
         Scalies:
@@ -88,6 +93,8 @@ parameters: # TODO: improve!
         "TV heads":
         Wickerbeasts:
         Drekkubuses:
+        Pokemons:
+        Digimons:
 
       Dinosaurs:
 
@@ -127,9 +134,11 @@ parameters: # TODO: improve!
       '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
 
       'None|Nope':                          ''
-      '(\s|^)and':                          ''
+      '(\s|^)(and|or)':                     '' # FIXME
 
       'I can craft any real life animal':   'Real life animals'
+
+      'AD''s|Angel dragons?':               'Angel Dragons'
       'Antelopes?':                         'Antelopes'
       'Avians?':                            'Avians'
       'Bats?':                              'Bats'
@@ -147,11 +156,10 @@ parameters: # TODO: improve!
       'Dogs?':                              'Dogs'
       'Dragons?':                           'Dragons'
       'Drekkubus(es)?':                     'Drekkubuses'
-      'Angel dragons?':                     'Angel Dragons'
       'Dutch Angel Dragons/Angel Dragons':  "Dutch Angel Dragons\nAngel Dragons"
       'DAD''s|Dutch angel dragons?':        'Dutch Angel Dragons'
       'Equines?':                           'Equines'
-      'Felines?':                           'Felines'
+      'Felines?( in general)?':             'Felines'
       'Fennecs?':                           'Fennecs'
       'Ferrets?':                           'Ferrets'
       'Fish(es)?':                          'Fishes'
@@ -180,10 +188,11 @@ parameters: # TODO: improve!
       'Reptiles?':                          'Reptiles'
       'Reptilians?':                        'Reptilians'
       'Robots?':                            'Robots'
-      '(and )?Rodents?':                    'Rodents'
+      'Rodents?( in general)?':             'Rodents'
       'Scalies?( in general)?':             'Scalies'
       'Ser[gi]als?':                        'Sergals'
       'Skull Animals?':                     'Skull animals'
-      'Wolf':                               'Wolves'
-      'Wickerbeasts?':                      'Wickerbeasts'
+      'Snow leopards?':                     'Snow leopards'
       'Vulpines?':                          'Vulpines'
+      'Wolf':                               'Wolves'
+      'Ungulates?( in general)?':           'Ungulates'
