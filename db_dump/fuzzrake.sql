@@ -398,7 +398,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1622 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1635 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -915,6 +915,19 @@ INSERT INTO events VALUES (1618, '2020-01-19 16:59:03', '- 1 new maker and 1 upd
 INSERT INTO events VALUES (1619, '2020-01-19 21:30:30', '- Based on a visitor\'s request, 5 new studios were added. Thank you for your contribution!', 'GENERIC', NULL, NULL, '', '', '', '');
 INSERT INTO events VALUES (1620, '2020-01-19 21:35:28', '', 'CS_UPDTD_DETLS', NULL, 0,'Lucky Gum Fursuits', 'http://www.luckygumfursuits.com/', '', '[\"tent\\\"> <div class=\\\"container\\\"> <div class=\\\"wsite-section-elements\\\"> <h2 class=\\\"wsite-content-title\\\">\",\"commissions are closed\",\"!</h2> <div class=\\\"paragraph\\\">sorry!i have a large queue to work thru at this moment, and will not b\"]');
 INSERT INTO events VALUES (1621, '2020-01-20 18:05:02', '', 'CS_UPDTD_DETLS', 0, NULL, 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '', '');
+INSERT INTO events VALUES (1622, '2020-01-20 20:32:23', '- Updated 2 makers data based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/b691a0b47b8daa3d5f62be4fbfafa1b6666dfffc\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1623, '2020-01-21 06:04:50', '', 'CS_UPDTD_DETLS', NULL, 0,'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '', '[\"nt-gridcontainer\\\" ><div class=\\\"txtnew\\\" id=\\\"comp-k2z58pkx2\\\"><h2 class=\\\"font_4\\\">commissions 2019:</h2>\",\" <h2 class=\\\"font_4\\\">closed</h2>\",\"</div></div></div></div></div></div></div></div></section><section data-is-screen-width=\\\"true\\\" data-\"]');
+INSERT INTO events VALUES (1624, '2020-01-22 06:04:52', '', 'CS_UPDTD_DETLS', 1, NULL, 'Liquid Sunshine Designs', 'https://liquidsunshinedesigns.weebly.com/', '', '');
+INSERT INTO events VALUES (1625, '2020-01-23 18:04:50', '', 'CS_UPDTD_DETLS', 1, 0,'fancyfishfursuits', 'https://twitter.com/fancyfishfurs', '', '[\"\\\"profileheadercard-bio u-dir\\\" dir=\\\"ltr\\\">midwest based kemono and toony fursuit maker and fish lover \",\"commission closed\",\"</p> <div class=\\\"profileheadercard-location \\\"> minnesota, usa </div> <div class=\\\"profileheadercard-u\"]');
+INSERT INTO events VALUES (1626, '2020-01-24 06:04:42', '', 'CS_UPDTD_DETLS', 0, NULL, '_Bahamut19', 'https://www.instagram.com/_bahamut19/', '[\"NAME\\\",\\\"description\\\":\\\"parts maker ( no head )\\\\n\\\\u00b0canada\\\\u00b0\\\\nfursuit commission close\\\\nharness \",\"commission open\",\"\\\",\\\"url\\\":\\\"https:\\\\/\\\\/linktr.ee\\\\/STUDIO_NAME\\\",\\\"mainentityofpage\\\":{\\\"@type\\\":\\\"profilepage\\\",\\\"@id\\\":\\\"https:\\\\/\"]', '[\",\\\"alternatename\\\":\\\"@STUDIO_NAME\\\",\\\"description\\\":\\\"parts maker ( no head )\\\\n\\\\u00b0canada\\\\u00b0\\\\nfursuit \",\"commission close\",\"\\\\nharness commission open\\\",\\\"url\\\":\\\"https:\\\\/\\\\/linktr.ee\\\\/STUDIO_NAME\\\",\\\"mainentityofpage\\\":{\\\"@type\\\":\\\"pro\"]');
+INSERT INTO events VALUES (1627, '2020-01-24 18:04:55', '', 'CS_UPDTD_DETLS', 0, NULL, 'FurSuitsUK Creations', 'https://twitter.com/FurSuitsUK', '', '');
+INSERT INTO events VALUES (1628, '2020-01-27 06:04:53', '', 'CS_UPDTD_DETLS', 1, NULL, 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '', '');
+INSERT INTO events VALUES (1629, '2020-01-27 18:04:44', '', 'CS_UPDTD_DETLS', 0, 1,'Nuke Creations', 'https://nukecreations.com/ordering/', '[\"lock sqs-block-html\\\" id=\\\"block-yui_3_17_2_3_1483040695923_63362\\\"><div class=\\\"sqs-block-content\\\"><h2>\",\"we are currently open for the commissions\",\"!</h2></div></div><div class=\\\"sqs-block form-block sqs-block-form\\\" id=\\\"block-yui_3_17_2_39_145168581\"]', '');
+INSERT INTO events VALUES (1630, '2020-01-28 18:05:03', '', 'CS_UPDTD_DETLS', 0, NULL, 'Cant of Togs', 'https://www.cantoftogs.com/', '', '');
+INSERT INTO events VALUES (1631, '2020-01-29 06:04:40', '', 'CS_UPDTD_DETLS', NULL, 0,'Cant of Togs', 'https://www.cantoftogs.com/', '', '[\"\\\"i8hiyi5f\\\"><h2 class=\\\"font_2\\\">welcome everyone...</h2> <h2 class=\\\"font_2\\\"> </h2> <h2 class=\\\"font_2\\\">\",\"commissions are: closed\",\"</h2> <h2 class=\\\"font_2\\\">quotes are: open</h2> </div></div></div></div></div></div></div></div></mai\"]');
+INSERT INTO events VALUES (1632, '2020-01-30 18:04:49', '', 'CS_UPDTD_DETLS', 0, 1,'Color Carnage', 'https://www.colorcarnage.com/', '[\"/h2> <h2 class=\\\"font_0\\\">carnage</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-jaa22m71\\\"><h1 class=\\\"font_0\\\">\",\"commission status : open\",\"</h1></div><section data-is-screen-width=\\\"true\\\" data-row-margin=\\\"0\\\" class=\\\"strc1\\\" id=\\\"comp-ja861d48\\\"\"]', '');
+INSERT INTO events VALUES (1633, '2020-01-31 06:04:54', '', 'CS_UPDTD_DETLS', 0, NULL, 'Lazy Leopard Fursuits', 'https://lazyleopard.ca/', '', '');
+INSERT INTO events VALUES (1634, '2020-02-02 06:04:49', '', 'CS_UPDTD_DETLS', 0, NULL, 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
