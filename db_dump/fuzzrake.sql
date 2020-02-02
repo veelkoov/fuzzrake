@@ -398,7 +398,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1635 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1636 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -928,6 +928,7 @@ INSERT INTO events VALUES (1631, '2020-01-29 06:04:40', '', 'CS_UPDTD_DETLS', NU
 INSERT INTO events VALUES (1632, '2020-01-30 18:04:49', '', 'CS_UPDTD_DETLS', 0, 1,'Color Carnage', 'https://www.colorcarnage.com/', '[\"/h2> <h2 class=\\\"font_0\\\">carnage</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-jaa22m71\\\"><h1 class=\\\"font_0\\\">\",\"commission status : open\",\"</h1></div><section data-is-screen-width=\\\"true\\\" data-row-margin=\\\"0\\\" class=\\\"strc1\\\" id=\\\"comp-ja861d48\\\"\"]', '');
 INSERT INTO events VALUES (1633, '2020-01-31 06:04:54', '', 'CS_UPDTD_DETLS', 0, NULL, 'Lazy Leopard Fursuits', 'https://lazyleopard.ca/', '', '');
 INSERT INTO events VALUES (1634, '2020-02-02 06:04:49', '', 'CS_UPDTD_DETLS', 0, NULL, 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '');
+INSERT INTO events VALUES (1635, '2020-02-02 18:04:52', '', 'CS_UPDTD_DETLS', NULL, 0,'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '[\"g\\\" class=\\\"ca1img\\\"></wix-image></div></div><div class=\\\"txtnew\\\" id=\\\"comp-ir243rb8\\\"><h2 class=\\\"font_6\\\">\",\"commissions closed\",\"</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-irarbd0i\\\"><h2 class=\\\"font_6\\\">&middot;affordable fursuits, pr\"]');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
