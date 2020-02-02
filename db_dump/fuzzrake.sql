@@ -40,7 +40,7 @@ CREATE TABLE artisans (
   contact_info_obfuscated varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   inactive_reason varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=367 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=369 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans DISABLE KEYS */;
@@ -382,6 +382,8 @@ INSERT INTO artisans VALUES (363, '', 'M000363', 'Salty Bunny Costumes', '', '',
 INSERT INTO artisans VALUES (364, '', 'M000364', 'Tangerine Yeen Fursuits', '', '', '', 'US', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'NO', '', '', '');
 INSERT INTO artisans VALUES (365, '', 'M000365', '8Bit-Works', '', '', '', 'AU', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'NO', '', '', '');
 INSERT INTO artisans VALUES (366, '', 'M000366', '79th Element', '', '', '', 'US', 'New Jersey', '', '', '', '', '', '', '', '', '', '', '', '', '', 'NO', '', '', '');
+INSERT INTO artisans VALUES (367, 'BETTAFS', '', 'Betta\'s Fursuit Studios', '', 'Betta\'s Fursuit Studios specializes in handmade, custom high quality partial fursuits! We strive for innovating designs that will be have rarely, if not, never seen before on a fursuit! We have yet had a bad review and our streak for 5 star customer service is still ongoing!', '2018-01', 'US', 'Virginia', 'Chesapeake', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', '', 'Feetpaws (as parts/separate)\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)', 'Arm sleeves', 'Exchangeable tongues\nLED/EL lights\nOutdoor feet', 'Removable eyelids', '50% upfront to reserve a slot, pay rest in less than 1 month', 'Canines\nBig cats\nSmall cats\nDragons\nRabbits\nBirds\nDeers\nProtogens (for paws and tail ONLY)\nDutch Angel Dragons (Tail, paws and feet paws ONLY)', 'Raptor Masks\nFishes\nRodents\nSergals\nBats', 'English\nSpanish', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: be******04@gm*****om', '');
+INSERT INTO artisans VALUES (368, 'SALTYSS', '', 'saltyseasadness', '', '', '2017-10', 'US', 'Ohio', 'Youngstown', 'Artistic liberty commissions\nPremades\nStandard commissions', 'Toony', 'I am excited to branch out and try new styles', 'Feetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', 'Arm sleeves\nBandanas\nCan do plushies\nWings\nArt\nBadges\nFoam Bases\nRepairs\nParts (Eyes, Claws, Paw Pads)\nLeg sleeves', 'Adjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nExchangeable hairs\nExchangeable tongues\nRemovable eyelids\nRemovable horns/antlers', 'Pickable nose\nFit for glasses\n100% plush paws\nPuffy handpaws\nPlush claws\nFloor dragger\nSqueaker in nose\nWaterproof eyes\nAsk me about features, I will happily try to accomodate your needs!', 'Negotiable upfront + per month amounts until fully paid, or 100% upfront', 'Canines\nFelines\nCaracals\nFennec foxes\nSables\nOtters\nRodents\nProtogens (on a foam base)\nPrimagens (on a foam base)\nManokits', 'Horses\nSergals\nScalies\nDutchies\nSome birds (unless its on another headbase then I\'ll do it)', 'English', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: sn*******75@gm*****om', '');
 /*!40000 ALTER TABLE artisans ENABLE KEYS */;
 DROP TABLE IF EXISTS events;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -398,7 +400,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1636 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1637 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -929,6 +931,7 @@ INSERT INTO events VALUES (1632, '2020-01-30 18:04:49', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO events VALUES (1633, '2020-01-31 06:04:54', '', 'CS_UPDTD_DETLS', 0, NULL, 'Lazy Leopard Fursuits', 'https://lazyleopard.ca/', '', '');
 INSERT INTO events VALUES (1634, '2020-02-02 06:04:49', '', 'CS_UPDTD_DETLS', 0, NULL, 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '');
 INSERT INTO events VALUES (1635, '2020-02-02 18:04:52', '', 'CS_UPDTD_DETLS', NULL, 0,'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '[\"g\\\" class=\\\"ca1img\\\"></wix-image></div></div><div class=\\\"txtnew\\\" id=\\\"comp-ir243rb8\\\"><h2 class=\\\"font_6\\\">\",\"commissions closed\",\"</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-irarbd0i\\\"><h2 class=\\\"font_6\\\">&middot;affordable fursuits, pr\"]');
+INSERT INTO events VALUES (1636, '2020-02-02 21:02:40', '', 'CS_UPDTD_DETLS', NULL, 1,'saltyseasadness', 'https://instagram.com/saltyseasuits?igshid=1xnwr6n4ujaf4', '[\"ema.org\\\",\\\"@type\\\":\\\"store\\\",\\\"name\\\":\\\"saltyseasuits\\\",\\\"alternatename\\\":\\\"@saltyseasuits\\\",\\\"description\\\":\\\"all \",\"commissions are open\",\"!\\\\nshowcase account for @STUDIO_NAME\\\\ninterested? dm @STUDIO_NAME\\\\nfursuit puffy paws for sale! \\\\u2b\"]', '');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -942,7 +945,7 @@ CREATE TABLE artisans_commissions_statues (
   PRIMARY KEY (`id`),
   UNIQUE KEY UNIQ_4148D9A35ED3C7B7 (artisan_id),
   CONSTRAINT FK_4148D9A35ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=330 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=332 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans_commissions_statues DISABLE KEYS */;
@@ -958,7 +961,7 @@ CREATE TABLE artisans_urls (
   PRIMARY KEY (`id`),
   KEY IDX_45AAF3BC5ED3C7B7 (artisan_id),
   CONSTRAINT FK_45AAF3BC5ED3C7B7 FOREIGN KEY (artisan_id) REFERENCES artisans (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9170 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE artisans_urls DISABLE KEYS */;
@@ -2675,6 +2678,17 @@ INSERT INTO artisans_urls VALUES (9166,9,'URL_INSTAGRAM', 'https://www.instagram
 INSERT INTO artisans_urls VALUES (9167,9,'URL_YOUTUBE', 'https://www.youtube.com/channel/UCK5AacLRtSQttu2JmQEqtDQ');
 INSERT INTO artisans_urls VALUES (9168,282,'URL_YOUTUBE', 'https://www.youtube.com/channel/UCcf3NYK0E06ON4OAQ6Xphrw');
 INSERT INTO artisans_urls VALUES (9169,282,'URL_SCRITCH', 'https://scritch.es/makers/chaoticreations');
+INSERT INTO artisans_urls VALUES (9170,367,'URL_WEBSITE', 'https://bettasfursuitstudios.wixsite.com/mysite');
+INSERT INTO artisans_urls VALUES (9171,367,'URL_PRICES', 'https://bettasfursuitstudios.wixsite.com/mysite/pricing');
+INSERT INTO artisans_urls VALUES (9172,367,'URL_INSTAGRAM', 'https://www.instagram.com/bettas.fursuit.studios/');
+INSERT INTO artisans_urls VALUES (9173,367,'URL_CST', 'https://bettasfursuitstudios.wixsite.com/mysite/commissions');
+INSERT INTO artisans_urls VALUES (9174,368,'URL_DEVIANTART', 'https://www.deviantart.com/saltyseasadness');
+INSERT INTO artisans_urls VALUES (9175,368,'URL_TWITTER', 'https://twitter.com/saltyseasadness');
+INSERT INTO artisans_urls VALUES (9176,368,'URL_INSTAGRAM', 'https://www.instagram.com/saltyseasuits/');
+INSERT INTO artisans_urls VALUES (9177,368,'URL_YOUTUBE', 'https://www.youtube.com/channel/UCcQDYPsF5h2VSz_Q_BhnQhQ');
+INSERT INTO artisans_urls VALUES (9178,368,'URL_QUEUE', 'https://trello.com/b/QkdlOLY7/fursuit-queue');
+INSERT INTO artisans_urls VALUES (9179,368,'URL_SCRITCH', 'https://scritch.es/makers/saltyseasadness');
+INSERT INTO artisans_urls VALUES (9180,368,'URL_CST', 'https://instagram.com/saltyseasuits?igshid=1xnwr6n4ujaf4');
 /*!40000 ALTER TABLE artisans_urls ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
