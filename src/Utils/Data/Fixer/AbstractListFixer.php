@@ -83,7 +83,7 @@ abstract class AbstractListFixer extends StringFixer
     /**
      * @return string[]
      */
-    protected static function getNonsplittable(): array
+    protected function getNonsplittable(): array
     {
         return [];
     }
