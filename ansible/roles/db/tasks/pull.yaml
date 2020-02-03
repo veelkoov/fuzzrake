@@ -1,0 +1,6 @@
+---
+- name: fetch DB file from the remote side
+  fetch:
+    flat: yes
+    dest: "{{ local_db_path }}"
+    src: "{{ db_path }}"

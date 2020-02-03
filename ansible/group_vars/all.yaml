@@ -1,4 +1,10 @@
 ---
-db_dump_file_path: "{{ deployment_path }}/db_dump/db_dump_{{ ansible_date_time.iso8601 }}.nocommit.sql"
-
 php_fpm_docker_image_name: fuzzrake/php-fpm:latest
+
+db_path: "{{ deployment_path }}/var/db.sqlite"
+
+dumpable_tables:
+  - artisans
+  - events
+  - artisans_commissions_statues
+  - artisans_urls

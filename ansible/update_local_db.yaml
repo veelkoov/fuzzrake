@@ -1,25 +1,11 @@
 #!ansible/run.sh
 ---
-- hosts: prod, dev
+- hosts: local, prod
   tasks:
-    - import_role:
-        name: db
-        tasks_from: read_params
-
     - set_fact:
-        local_db_dump_file_path: "{{ hostvars[groups['dev'][0]]['db_dump_file_path'] }}"
+        local_db_path: "{{ hostvars[groups['local'][0]]['db_path'] }}"
 
     - import_role:
         name: db
-        tasks_from: dump
+        tasks_from: pull
       when: "'prod' in group_names"
-
-    - import_role:
-        name: db
-        tasks_from: fetch_dump
-      when: "'prod' in group_names"
-
-    - import_role:
-        name: db
-        tasks_from: replace
-      when: "'dev' in group_names"
