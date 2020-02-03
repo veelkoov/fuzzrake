@@ -17,4 +17,3 @@
     restart_policy: unless-stopped
     volumes:
       - "{{ deployment_path }}:/var/www/html"
-      - "{{ mariadb_socket_path }}:/var/run/mysql.sock"
