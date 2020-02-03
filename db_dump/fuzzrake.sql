@@ -400,7 +400,7 @@ CREATE TABLE `events` (
   open_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   closed_match longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1637 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1641 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE events DISABLE KEYS */;
@@ -932,6 +932,10 @@ INSERT INTO events VALUES (1633, '2020-01-31 06:04:54', '', 'CS_UPDTD_DETLS', 0,
 INSERT INTO events VALUES (1634, '2020-02-02 06:04:49', '', 'CS_UPDTD_DETLS', 0, NULL, 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '');
 INSERT INTO events VALUES (1635, '2020-02-02 18:04:52', '', 'CS_UPDTD_DETLS', NULL, 0,'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '[\"g\\\" class=\\\"ca1img\\\"></wix-image></div></div><div class=\\\"txtnew\\\" id=\\\"comp-ir243rb8\\\"><h2 class=\\\"font_6\\\">\",\"commissions closed\",\"</h2></div><div class=\\\"txtnew\\\" id=\\\"comp-irarbd0i\\\"><h2 class=\\\"font_6\\\">&middot;affordable fursuits, pr\"]');
 INSERT INTO events VALUES (1636, '2020-02-02 21:02:40', '', 'CS_UPDTD_DETLS', NULL, 1,'saltyseasadness', 'https://instagram.com/saltyseasuits?igshid=1xnwr6n4ujaf4', '[\"ema.org\\\",\\\"@type\\\":\\\"store\\\",\\\"name\\\":\\\"saltyseasuits\\\",\\\"alternatename\\\":\\\"@saltyseasuits\\\",\\\"description\\\":\\\"all \",\"commissions are open\",\"!\\\\nshowcase account for @STUDIO_NAME\\\\ninterested? dm @STUDIO_NAME\\\\nfursuit puffy paws for sale! \\\\u2b\"]', '');
+INSERT INTO events VALUES (1637, '2020-02-02 21:06:37', '- 2 new makers based on the makers\' requests (<a href=\"https://github.com/veelkoov/fuzzrake/commit/54e1a67b744553ef895d3a0369d1cbc36e0873e8\" target=\"_blank\">git</a>)', 'GENERIC', NULL, NULL, '', '', '', '');
+INSERT INTO events VALUES (1638, '2020-02-03 06:04:44', '', 'CS_UPDTD_DETLS', 1, 0,'CupcakeCritters', 'https://twitter.com/CupcakeCritters', '', '[\"ard-bio u-dir\\\" dir=\\\"ltr\\\"> liz she/her i make fursuits and draw things! currently remaking old suits \",\"commissions are closed\",\"! will reopen 5/1/2020! ask to reserve a slot! </p> <div class=\\\"profileheadercard-location u-hidden\\\"\"]');
+INSERT INTO events VALUES (1639, '2020-02-03 18:04:42', '', 'CS_UPDTD_DETLS', 1, 0,'Nuke Creations', 'https://nukecreations.com/ordering/', '', '[\"div> <div class=\\\"sqs-slice\\\" data-slice-id=\\\"5c58328d15fcc09e6fd1012a\\\"><h1 id=\\\"sqs-slash-page-header\\\">\",\"commissions are closed\",\"</h1> </div> <div class=\\\"sqs-slice\\\" data-slice-id=\\\"5c58328d15fcc09e6fd1012b\\\"><p>subscribe to get ear\"]');
+INSERT INTO events VALUES (1640, '2020-02-03 18:04:46', '', 'CS_UPDTD_DETLS', 1, NULL, 'Galaxy Creations', 'https://galaxycreations.co.uk/', '', '');
 /*!40000 ALTER TABLE events ENABLE KEYS */;
 DROP TABLE IF EXISTS artisans_commissions_statues;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2147,7 +2151,7 @@ INSERT INTO artisans_urls VALUES (1210,267,'URL_TWITTER', 'https://twitter.com/c
 INSERT INTO artisans_urls VALUES (1211,267,'URL_TUMBLR', 'https://monstercultmakers.tumblr.com/');
 INSERT INTO artisans_urls VALUES (1212,267,'URL_INSTAGRAM', 'https://www.instagram.com/monstercultmakers/');
 INSERT INTO artisans_urls VALUES (1213,267,'URL_CST', 'http://www.furaffinity.net/user/kalorian/#profile');
-INSERT INTO artisans_urls VALUES (1214,268,'URL_PRICES', 'https://www.furaffinity.net/journals/mackbear/');
+INSERT INTO artisans_urls VALUES (1214,268,'URL_PRICES', 'https://trello.com/b/qrWj57VG/important-information');
 INSERT INTO artisans_urls VALUES (1215,268,'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/mackbear');
 INSERT INTO artisans_urls VALUES (1216,268,'URL_DEVIANTART', 'https://www.deviantart.com/feralunicornfursuits');
 INSERT INTO artisans_urls VALUES (1217,268,'URL_FACEBOOK', 'https://www.facebook.com/FeralUnicornCostumes/');
