@@ -6,9 +6,9 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sh /tmp/symfony_installer \
     && rm /tmp/symfony_installer
 
-RUN apk update && apk add icu-dev git util-linux zlib-dev libzip-dev
+RUN apk update && apk add icu-dev git util-linux zlib-dev libzip-dev sqlite-dev
 
-RUN docker-php-ext-install -j$(nproc) pdo_mysql intl opcache zip
+RUN docker-php-ext-install -j$(nproc) pdo_sqlite intl opcache zip
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -17,4 +17,3 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && rm /tmp/composer_installer
 
 VOLUME /application
-VOLUME /var/run/mysql
