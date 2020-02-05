@@ -877,6 +877,8 @@ INSERT INTO events VALUES(1637,NULL,NULL,'2020-02-02 21:06:37.000000 +00:00','- 
 INSERT INTO events VALUES(1638,1,0,'2020-02-03 06:04:44.000000 +00:00','','CS_UPDTD_DETLS','CupcakeCritters','https://twitter.com/CupcakeCritters','','["ard-bio u-dir\" dir=\"ltr\"> liz she/her i make fursuits and draw things! currently remaking old suits ","commissions are closed","! will reopen 5/1/2020! ask to reserve a slot! </p> <div class=\"profileheadercard-location u-hidden\""]');
 INSERT INTO events VALUES(1639,1,0,'2020-02-03 18:04:42.000000 +00:00','','CS_UPDTD_DETLS','Nuke Creations','https://nukecreations.com/ordering/','','["div> <div class=\"sqs-slice\" data-slice-id=\"5c58328d15fcc09e6fd1012a\"><h1 id=\"sqs-slash-page-header\">","commissions are closed","</h1> </div> <div class=\"sqs-slice\" data-slice-id=\"5c58328d15fcc09e6fd1012b\"><p>subscribe to get ear"]');
 INSERT INTO events VALUES(1640,1,NULL,'2020-02-03 18:04:46.000000 +00:00','','CS_UPDTD_DETLS','Galaxy Creations','https://galaxycreations.co.uk/','','');
+INSERT INTO events VALUES(1641,0,NULL,'2020-02-04 06:05:43','','CS_UPDTD_DETLS','Sab!er Studios | Sabier Studios','https://twitter.com/StudiosSab','','');
+INSERT INTO events VALUES(1642,NULL,1,'2020-02-04 18:05:44','','CS_UPDTD_DETLS','ByCats4Cats','http://bycats4cats.com/quote/','["7'' class=''gfield gsection field_sublabel_below field_description_above'' ><h2 class=''gsection_title''>","we are open for commissions","!!! june-september 2020 completion</h2><div class=''gsection_description''>this quote request is for t"]','');
 COMMIT;
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
