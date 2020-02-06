@@ -12,6 +12,7 @@ parameters: # TODO: improve!
           Seals:
 
         Mammals:
+          Sables:
           Marsupials:
             Kangaroos:
             Opossums:
@@ -89,7 +90,9 @@ parameters: # TODO: improve!
         Dragons:
         Robots:
         Primagens:
+          Primagens (on a foam base):
         Protogens:
+          Protogens (on a foam base):
         "TV heads":
         Wickerbeasts:
         Drekkubuses:
@@ -133,69 +136,70 @@ parameters: # TODO: improve!
       '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
       '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
 
-      'None|Nope':                          ''
-      '(\s|^)(and|or)':                     '' # FIXME
+      'None|Nope':                                           ''
+      '(\s|^)(and|or)':                                      '' # FIXME
 
-      'I can craft any real life animal':   'Real life animals'
+      'I can craft any real life animal':                    'Real life animals'
 
-      'AD''s|Angel dragons?':               'Angel Dragons'
-      'Antelopes?':                         'Antelopes'
-      'Avians?':                            'Avians'
-      'Bats?':                              'Bats'
-      'Bears?':                             'Bears'
-      'Big/small felines':                  "Big felines\nSmall felines"
-      'Big and small cats':                 "Big cats\nSmall cats"
-      'Birds?':                             'Birds'
-      'Bunn(y|ies)':                        'Bunnies'
-      'Cats?( in general)?':                'Felines'
-      'Canines?( in)? ?(\(?general\)?)?':   'Canines'
-      'copyrighted characters?[ !]*':       'Copyrighted characters'
-      'Closed? species?':                   'Closed species'
-      'Deers?':                             'Deers'
-      'Dinosaurs?':                         'Dinosaurs'
-      'Dogs?':                              'Dogs'
-      'Dragons?':                           'Dragons'
-      'Drekkubus(es)?':                     'Drekkubuses'
-      'Dutch Angel Dragons/Angel Dragons':  "Dutch Angel Dragons\nAngel Dragons"
-      'DAD''s|Dutch angel dragons?':        'Dutch Angel Dragons'
-      'Equines?':                           'Equines'
-      'Felines?( in general)?':             'Felines'
-      'Fennecs?':                           'Fennecs'
-      'Ferrets?':                           'Ferrets'
-      'Fish(es)?':                          'Fishes'
-      'Fox(es)?':                           'Foxes'
-      'Goats?':                             'Goats'
-      'Horses?':                            'Horses'
-      'Hybride?s?':                         'Hybrides'
-      'Hyenas?':                            'Hyenas'
-      'K-9''s':                             'Canines'
-      'Lions?':                             'Lions'
-      'Lupines?':                           'Lupines'
-      'Mammals?( in general)?':             'Mammals'
-      'Mann?okits?':                        'Manokits'
-      'Monkeys?':                           'Monkeys'
-      'Open species?':                      'Open species'
-      'Opossums?':                          'Opossums'
-      'Otters?':                            'Otters'
-      'Primagens and protogens':            "Primagens\nProtogens"
-      'Pokemons?':                          'Pokemons'
-      'Protogens?':                         'Protogens'
-      'Rams?':                              'Rams'
-      'Raccoons?':                          'Raccoons'
-      'Rats?':                              'Rats'
-      'Rare/closed species':                "Rare species\nClosed species"
-      'Red pandas?':                        'Red pandas'
-      'Reptiles?':                          'Reptiles'
-      'Reptilians?':                        'Reptilians'
-      'Robots?':                            'Robots'
-      'Rodents?( in general)?':             'Rodents'
-      'Scalies?( in general)?':             'Scalies'
-      'Ser[gi]als?':                        'Sergals'
-      'Skull Animals?':                     'Skull animals'
-      'Snow leopards?':                     'Snow leopards'
-      'Vulpines?':                          'Vulpines'
-      'Wolf':                               'Wolves'
-      'Ungulates?( in general)?':           'Ungulates'
+      'AD''s|Angel dragons?':                                'Angel Dragons'
+      'Antelopes?':                                          'Antelopes'
+      'Avians?':                                             'Avians'
+      'Bats?':                                               'Bats'
+      'Bears?':                                              'Bears'
+      'Big/small felines':                                   "Big felines\nSmall felines"
+      'Big and small cats':                                  "Big cats\nSmall cats"
+      'Birds?':                                              'Birds'
+      'Bunn(y|ies)':                                         'Bunnies'
+      'Cats?( in general)?':                                 'Felines'
+      'Canines?( in)? ?(\(?general\)?)?':                    'Canines'
+      'copyrighted characters?[ !]*':                        'Copyrighted characters'
+      'Closed? species?':                                    'Closed species'
+      'Deers?':                                              'Deers'
+      'Dinosaurs?':                                          'Dinosaurs'
+      'Dogs?':                                               'Dogs'
+      'Dragons?':                                            'Dragons'
+      'Drekkubus(es)?':                                      'Drekkubuses'
+      'Dutch Angel Dragons/Angel Dragons':                   "Dutch Angel Dragons\nAngel Dragons"
+      'DAD''s|Dutch angel dragons?':                         'Dutch Angel Dragons'
+      'Equines?':                                            'Equines'
+      'Felines?( in general)?':                              'Felines'
+      'Fennecs?':                                            'Fennecs'
+      'Ferrets?':                                            'Ferrets'
+      'Fish(es)?':                                           'Fishes'
+      'Fox(es)?':                                            'Foxes'
+      'Goats?':                                              'Goats'
+      'Horses?':                                             'Horses'
+      'Hybride?s?':                                          'Hybrides'
+      'Hyenas?':                                             'Hyenas'
+      'K-9''s':                                              'Canines'
+      'Lions?':                                              'Lions'
+      'Lupines?':                                            'Lupines'
+      'Mammals?( in general)?':                              'Mammals'
+      'Mann?okits?':                                         'Manokits'
+      'Monkeys?':                                            'Monkeys'
+      'Open species?':                                       'Open species'
+      'Opossums?':                                           'Opossums'
+      'Otters?':                                             'Otters'
+      'Primagens and protogens':                             "Primagens\nProtogens"
+      'Pokemons?':                                           'Pokemons'
+      'Protogens?':                                          'Protogens'
+      'Protogens/primagens \(on a foam base\)':              "Protogens (on a foam base)\nPrimagens (on a foam base)"
+      'Rams?':                                               'Rams'
+      'Raccoons?':                                           'Raccoons'
+      'Rats?':                                               'Rats'
+      'Rare/closed species':                                 "Rare species\nClosed species"
+      'Red pandas?':                                         'Red pandas'
+      'Reptiles?':                                           'Reptiles'
+      'Reptilians?':                                         'Reptilians'
+      'Robots?':                                             'Robots'
+      'Rodents?( in general)?':                              'Rodents'
+      '(any )?Scalies?( in general)?':                       'Scalies'
+      'Ser[gi]als?':                                         'Sergals'
+      'Skull Animals?':                                      'Skull animals'
+      'Snow leopards?':                                      'Snow leopards'
+      'Vulpines?':                                           'Vulpines'
+      'Wolf':                                                'Wolves'
+      'Ungulates?( in general)?':                            'Ungulates'
 
     leave_unchanged:
       - All species, but I specialize in dragons
@@ -212,3 +216,5 @@ parameters: # TODO: improve!
       - I'm willing to take on any species, but enjoy making monsters and creepy/crazy species most!
       - Any and all within my capabilities of foam/fur/minky crafting. Unique or uncommon species are my soft spot.
       - Only things that are completely and literally impossible, like breaking the laws of physics
+      - Some birds (unless its on another headbase then I'll do it)
+      - Dutch Angel Dragons (Tail, paws and feet paws ONLY)
