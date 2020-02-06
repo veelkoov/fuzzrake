@@ -31,6 +31,7 @@ class CountryFixer implements FixerInterface
         'sweden'                                        => 'SE',
         'ukraine'                                       => 'UA',
         'united states( of america)?|us of america|usa' => 'US',
+        'south africa'                                  => 'ZA',
     ];
 
     public function fix(string $fieldName, string $subject): string
