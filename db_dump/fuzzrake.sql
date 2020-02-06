@@ -879,6 +879,7 @@ INSERT INTO events VALUES(1639,1,0,'2020-02-03 18:04:42.000000 +00:00','','CS_UP
 INSERT INTO events VALUES(1640,1,NULL,'2020-02-03 18:04:46.000000 +00:00','','CS_UPDTD_DETLS','Galaxy Creations','https://galaxycreations.co.uk/','','');
 INSERT INTO events VALUES(1641,0,NULL,'2020-02-04 06:05:43','','CS_UPDTD_DETLS','Sab!er Studios | Sabier Studios','https://twitter.com/StudiosSab','','');
 INSERT INTO events VALUES(1642,NULL,1,'2020-02-04 18:05:44','','CS_UPDTD_DETLS','ByCats4Cats','http://bycats4cats.com/quote/','["7'' class=''gfield gsection field_sublabel_below field_description_above'' ><h2 class=''gsection_title''>","we are open for commissions","!!! june-september 2020 completion</h2><div class=''gsection_description''>this quote request is for t"]','');
+INSERT INTO events VALUES(1643,1,0,'2020-02-06 06:05:47','','CS_UPDTD_DETLS','Noodleteeth','https://noodleteeth.weebly.com/','','["AME\" /> <meta property=\"og:title\" content=\"STUDIO_NAME\" /> <meta property=\"og:description\" content=\"","commission status: closed"," will open late 2020 ✧ queue ✧\" /> <meta property=\"og:image\" content=\"https://cdn2.editmysite.com/im"]');
 COMMIT;
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
