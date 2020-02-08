@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
+use App\Entity\Event;
 use App\Utils\DateTime\DateTimeUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -50,7 +51,24 @@ abstract class DbEnabledWebTestCase extends WebTestCase
             ->setMakerId('TEST000')
             ->getCommissionsStatus()
             ->setLastChecked(DateTimeUtils::getNowUtc())
-            ->getArtisan();
+            ->getArtisan()
+        ;
+
+        try {
+            self::$entityManager->persist($artisan);
+            self::$entityManager->flush();
+        } catch (ORMException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $artisan;
+    }
+
+    protected static function addSimpleGenericEvent(): Event
+    {
+        $artisan = (new Event())
+            ->setDescription('Test event')
+        ;
 
         try {
             self::$entityManager->persist($artisan);

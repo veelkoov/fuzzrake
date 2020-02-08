@@ -201,13 +201,16 @@ class ArtisanType extends AbstractType
             ->add(self::BTN_SAVE, SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
             ])
-            ->add(self::BTN_DELETE, SubmitType::class, [
+        ;
+
+        if (null !== $builder->getData()->getId()) {
+            $builder->add(self::BTN_DELETE, SubmitType::class, [
                 'attr' => [
                     'class'   => 'btn btn-danger',
                     'onclick' => 'return confirm("Delete?");',
                 ],
-            ])
-        ;
+            ]);
+        }
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());

@@ -22,7 +22,7 @@ class HostsService
 
     public function isDevMachine(): bool
     {
-        return 'dev' === $this->environment && '127.0.0.1' === $this->requestStack->getMasterRequest()->getClientIp();
+        return in_array($this->environment, ['dev', 'test']) && '127.0.0.1' === $this->requestStack->getMasterRequest()->getClientIp();
     }
 
     public function isProduction(): bool
