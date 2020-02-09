@@ -34,6 +34,7 @@ end
 
 task(:default) { exec_or_die('rake', '--tasks', '--all') }
 task(:sg)      { exec_or_die('ansible/update_sg.yaml') }
+task(:cc)      { symfony_console('cache:clear') }
 
 #
 # DATABASE MANAGEMENT
@@ -74,22 +75,6 @@ task(:phpunit)       { docker('bin/phpunit') }
 task qa: ['php-cs-fixer', :phpunit]
 
 #
-# COMMISSIONS STATUS UPDATES
-#
-
-def cst(*args)
-  symfony_console('app:update:commissions', *args)
-end
-
-task 'get-snapshots' do
-  exec_or_die('rsync', '--recursive', '--progress', '--human-readable',
-              'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
-end
-
-task(:cst)  { cst('-d') }
-task(:cstc) { cst }
-
-#
 # RELEASES MANAGEMENT
 #
 
@@ -106,7 +91,23 @@ task('release-beta') { do_release('beta') }
 task('release-prod') { do_release('master') }
 
 #
-# CONSOLE SHORTCUTS
+# COMMISSIONS STATUS UPDATES
+#
+
+def cst(*args)
+  symfony_console('app:update:commissions', *args)
+end
+
+task 'get-snapshots' do
+  exec_or_die('rsync', '--recursive', '--progress', '--human-readable',
+              'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
+end
+
+task(:cst)  { cst('-d') }
+task(:cstc) { cst }
+
+#
+# IMPORT TASKS
 #
 
 def import(*args)
@@ -116,5 +117,3 @@ end
 task(:import)  { import }
 task(:importf) { import('--fix-mode') }
 task(:importc) { import('--commit') }
-
-task(:cc) { symfony_console('cache:clear') }
