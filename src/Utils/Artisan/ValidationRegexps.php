@@ -14,7 +14,7 @@ abstract class ValidationRegexps
     public const FA_URL = '#^(http://www\.furaffinity\.net/user/[^/]+)?$#';
     public const YOUTUBE_URL = '#^(https://www\.youtube\.com/((channel|user|c)/)?[^/?]+)?$#';
     public const INSTAGRAM_URL = '#^(https://www\.instagram\.com/[^/]+/)?$#';
-    public const TUMBLR_URL = '#^(https?://[^.]+\.tumblr\.com/)?$#';
+    public const TUMBLR_URL = '#^((https?://[^.]+\.tumblr\.com/)|(https://pupdates.matrices.net/))?$#'; // FIXME: Allow custom-domain exceptions
     public const TWITTER_URL = '#^(https://twitter\.com/[^/]+)?$#';
 
     public const LIST_VALIDATION = '#^[-,&!.A-Za-z0-9+()/\n %:"\']*$#';

@@ -123,7 +123,7 @@ task(:importc) { sc_data_import('--commit') }
 #
 
 def sc_data_tidy(*args)
-  symfony_console('app:data:tidy', *args)
+  symfony_console('app:data:tidy', FIXES_FILE_PATH, *args)
 end
 
 task(:tidy)  { sc_data_tidy }
