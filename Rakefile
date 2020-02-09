@@ -10,6 +10,10 @@ DB_DUMP_TMP_PATH = 'db_dump/fuzzrake.tmp.sql'
 DB_DUMP_PATH = 'db_dump/fuzzrake.sql'
 DB_DUMP_PRV_PATH = 'db_dump/fuzzrake-private.nocommit.sql'
 
+#
+# HELPER FUNCTIONS
+#
+
 def exec_or_die(*args)
   print("Executing: '" + args.join("' '") + "'\n")
   system(*args) || raise('Command returned non-zero exit code')
@@ -24,20 +28,16 @@ def symfony_console(*args)
   docker('bin/console', *args)
 end
 
-def do_release(branch)
-  exec_or_die('git', 'checkout', branch)
-  exec_or_die('git', 'merge', 'develop')
-  exec_or_die('git', 'push')
-  exec_or_die('git', 'checkout', 'develop')
-end
+#
+# MISCELLANEOUS TASKS
+#
 
-task :default do
-  exec_or_die('rake', '--tasks', '--all')
-end
+task(:default) { exec_or_die('rake', '--tasks', '--all') }
+task(:sg)      { exec_or_die('ansible/update_sg.yaml') }
 
-task :sg do
-  exec_or_die('ansible/update_sg.yaml')
-end
+#
+# DATABASE MANAGEMENT
+#
 
 task :dbpush do
   exec_or_die('cp', DB_PATH, DB_TMP_PATH)
@@ -66,16 +66,19 @@ end
 
 task :dbcommit do
   exec_or_die('git', 'reset', 'HEAD')
-  exec_or_die('git', 'commit', '-m', 'Updated DB dump',
-              '-p', 'db_dump/fuzzrake.sql')
+  exec_or_die('git', 'commit', '-m', 'Updated DB dump', '-p', 'db_dump/fuzzrake.sql')
 end
 
-task 'php-cs-fixer' do
-  docker('vendor/bin/php-cs-fixer', 'fix')
-end
+task('php-cs-fixer') { docker('vendor/bin/php-cs-fixer', 'fix') }
+task(:phpunit)       { docker('bin/phpunit') }
+task qa: ['php-cs-fixer', :phpunit]
 
-task :phpunit do
-  docker('bin/phpunit')
+#
+# COMMISSIONS STATUS UPDATES
+#
+
+def cst(*args)
+  symfony_console('app:update:commissions', *args)
 end
 
 task 'get-snapshots' do
@@ -83,28 +86,35 @@ task 'get-snapshots' do
               'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-task :import do
-  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH)
+task(:cst)  { cst('-d') }
+task(:cstc) { cst }
+
+#
+# RELEASES MANAGEMENT
+#
+
+def do_release(branch)
+  exec_or_die('git', 'checkout', branch)
+  exec_or_die('git', 'merge', '--no-ff', 'develop')
+  exec_or_die('git', 'push')
+  exec_or_die('git', 'checkout', 'develop')
+  exec_or_die('git', 'merge', branch)
+  exec_or_die('git', 'push')
 end
 
-task :importf do
-  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH, '--fix-mode')
+task('release-beta') { do_release('beta') }
+task('release-prod') { do_release('master') }
+
+#
+# CONSOLE SHORTCUTS
+#
+
+def import(*args)
+  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH, *args)
 end
 
-task :importc do
-  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH, '--commit')
-end
+task(:import)  { import }
+task(:importf) { import('--fix-mode') }
+task(:importc) { import('--commit') }
 
-task 'release-beta' do
-  do_release('beta')
-end
-
-task 'release-prod' do
-  do_release('master')
-end
-
-task qa: ['php-cs-fixer', :phpunit]
-
-task :cc do
-  symfony_console('cache:clear')
-end
+task(:cc) { symfony_console('cache:clear') }
