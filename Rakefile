@@ -1,12 +1,19 @@
+# frozen_string_literal: true
+
+IMPORT_FILE_PATH = 'imports/IU form v5 - getfursu.it.csv.zip'
+FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
+
 def exec_or_die(*args)
-  system(*args) or raise "Command returned non-zero exit code"
+  print("Executing: '" + args.join("' '") + "'\n")
+  system(*args) || raise('Command returned non-zero exit code')
 end
 
-def docker(*args) # FIXME: container name hardcoded
+def docker(*args)
+  # FIXME: container name hardcoded
   exec_or_die('docker', 'exec', '-ti', 'fuzzrake', *args)
 end
 
-def console(*args)
+def symfony_console(*args)
   docker('bin/console', *args)
 end
 
@@ -34,12 +41,20 @@ task :dbpull do
 end
 
 task :dbdump do
-  exec_or_die('ansible/db_dump.yaml')
+  db_path = 'var/db.sqlite'
+  out_tmp_path = 'db_dump/fuzzrake.tmp.sql'
+  out_path = 'db_dump/fuzzrake.sql'
+  out_prv_path = 'db_dump/fuzzrake-private.nocommit.sql'
+
+  exec_or_die('sqlite3', db_path, ".output #{out_tmp_path}", '.dump')
+  exec_or_die('bin/format_dump.py', out_tmp_path, out_path, out_prv_path)
+  exec_or_die('rm', out_tmp_path)
 end
 
 task :dbcommit do
   exec_or_die('git', 'reset', 'HEAD')
-  exec_or_die('git', 'commit', '-m', 'Updated DB dump', '-p', 'db_dump/fuzzrake.sql')
+  exec_or_die('git', 'commit', '-m', 'Updated DB dump',
+              '-p', 'db_dump/fuzzrake.sql')
 end
 
 task 'php-cs-fixer' do
@@ -51,19 +66,22 @@ task :phpunit do
 end
 
 task 'get-snapshots' do
-  exec_or_die('rsync', '--recursive', '--progress', '--human-readable', 'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
+  exec_or_die('rsync', '--recursive', '--progress', '--human-readable',
+              'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
 task :import do
-  console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt')
+  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH)
 end
 
 task :importf do
-  console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--fix-mode')
+  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH,
+                  '--fix-mode')
 end
 
 task :importc do
-  console('app:data:import', 'imports/IU form v5 - getfursu.it.csv.zip', 'imports/import-fixes-v5.txt', '--commit')
+  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH,
+                  '--commit')
 end
 
 task 'release-beta' do
@@ -74,8 +92,8 @@ task 'release-prod' do
   do_release('master')
 end
 
-task :qa => ['php-cs-fixer', :phpunit]
+task qa: ['php-cs-fixer', :phpunit]
 
 task :cc do
-  console('cache:clear')
+  symfony_console('cache:clear')
 end
