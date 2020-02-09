@@ -3,6 +3,13 @@
 IMPORT_FILE_PATH = 'imports/IU form v5 - getfursu.it.csv.zip'
 FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
 
+DB_PATH = 'var/db.sqlite'
+DB_TMP_PATH = DB_PATH + '.tmp'
+
+DB_DUMP_TMP_PATH = 'db_dump/fuzzrake.tmp.sql'
+DB_DUMP_PATH = 'db_dump/fuzzrake.sql'
+DB_DUMP_PRV_PATH = 'db_dump/fuzzrake-private.nocommit.sql'
+
 def exec_or_die(*args)
   print("Executing: '" + args.join("' '") + "'\n")
   system(*args) || raise('Command returned non-zero exit code')
@@ -33,22 +40,28 @@ task :sg do
 end
 
 task :dbpush do
-  exec_or_die('ansible/update_remote_db.yaml')
+  exec_or_die('cp', DB_PATH, DB_TMP_PATH)
+
+  exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
+
+  exec_or_die('scp', DB_TMP_PATH, 'getfursu.it:/var/www/prod/' + DB_PATH)
+  exec_or_die('scp', DB_TMP_PATH, 'getfursu.it:/var/www/beta/' + DB_PATH)
+
+  exec_or_die('rm', DB_TMP_PATH)
 end
 
 task :dbpull do
-  exec_or_die('ansible/update_local_db.yaml')
+  exec_or_die('scp', 'getfursu.it:/var/www/prod/' + DB_PATH, DB_TMP_PATH)
+  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump artisans_private_data')
+  exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_TMP_PATH}")
+  exec_or_die('mv', DB_TMP_PATH, DB_PATH)
+  exec_or_die('rm', DB_DUMP_TMP_PATH)
 end
 
 task :dbdump do
-  db_path = 'var/db.sqlite'
-  out_tmp_path = 'db_dump/fuzzrake.tmp.sql'
-  out_path = 'db_dump/fuzzrake.sql'
-  out_prv_path = 'db_dump/fuzzrake-private.nocommit.sql'
-
-  exec_or_die('sqlite3', db_path, ".output #{out_tmp_path}", '.dump')
-  exec_or_die('bin/format_dump.py', out_tmp_path, out_path, out_prv_path)
-  exec_or_die('rm', out_tmp_path)
+  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump')
+  exec_or_die('bin/format_dump.py', DB_DUMP_TMP_PATH, DB_DUMP_PATH, DB_DUMP_PRV_PATH)
+  exec_or_die('rm', DB_DUMP_TMP_PATH)
 end
 
 task :dbcommit do
@@ -75,13 +88,11 @@ task :import do
 end
 
 task :importf do
-  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH,
-                  '--fix-mode')
+  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH, '--fix-mode')
 end
 
 task :importc do
-  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH,
-                  '--commit')
+  symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH, '--commit')
 end
 
 task 'release-beta' do
