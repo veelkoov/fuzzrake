@@ -35,7 +35,7 @@ class EventsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get(EventType::BTN_DELETE)->isClicked()) {
+            if (null !== $event->getId() && $form->get(EventType::BTN_DELETE)->isClicked()) {
                 $this->getDoctrine()->getManager()->remove($event);
             } else {
                 $this->getDoctrine()->getManager()->persist($event);
