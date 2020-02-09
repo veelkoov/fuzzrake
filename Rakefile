@@ -94,7 +94,7 @@ task('release-prod') { do_release('master') }
 # COMMISSIONS STATUS UPDATES
 #
 
-def cst(*args)
+def sc_cst(*args)
   symfony_console('app:update:commissions', *args)
 end
 
@@ -103,17 +103,28 @@ task 'get-snapshots' do
               'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-task(:cst)  { cst('-d') }
-task(:cstc) { cst }
+task(:cst)  { sc_cst('-d') }
+task(:cstc) { sc_cst }
 
 #
 # IMPORT TASKS
 #
 
-def import(*args)
+def sc_data_import(*args)
   symfony_console('app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH, *args)
 end
 
-task(:import)  { import }
-task(:importf) { import('--fix-mode') }
-task(:importc) { import('--commit') }
+task(:import)  { sc_data_import }
+task(:importf) { sc_data_import('--fix-mode') }
+task(:importc) { sc_data_import('--commit') }
+
+#
+# IMPORT TASKS
+#
+
+def sc_data_tidy(*args)
+  symfony_console('app:data:tidy', *args)
+end
+
+task(:tidy)  { sc_data_tidy }
+task(:tidyc) { sc_data_tidy('--commit') }
