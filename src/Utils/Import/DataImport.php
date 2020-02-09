@@ -214,7 +214,7 @@ class DataImport
         if ($ok) {
             $this->objectManager->persist($new);
         } elseif ($new->getId()) {
-            $this->objectManager->refresh($new);
+            $this->reset($new);
         }
     }
 
@@ -265,5 +265,15 @@ class DataImport
             Manager::CMD_SET_PIN.":$makerId:$hash:",
             Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
         ]);
+    }
+
+    private function reset(Artisan $artisan): void
+    {
+        $this->objectManager->refresh($artisan);
+        $this->objectManager->refresh($artisan->getPrivateData());
+
+        foreach ($artisan->getUrls() as $url) {
+            $this->objectManager->refresh($url);
+        }
     }
 }
