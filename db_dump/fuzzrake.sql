@@ -885,6 +885,11 @@ INSERT INTO events VALUES (1645, NULL, 1, '2020-02-06 21:02:58', '', 'CS_UPDTD_D
 INSERT INTO events VALUES (1646, NULL, 1, '2020-02-06 21:02:58', '', 'CS_UPDTD_DETLS', 'KawaiiCraftey', 'https://www.instagram.com/kawaiicraftey/', '["hema.org\",\"@type\":\"organization\",\"name\":\"STUDIO_NAME\",\"alternatename\":\"@STUDIO_NAME\",\"description\":\"","i am currently open for fursuit commissions",". you will join my queue and can be paid straight away or when i reach you. pm me for more.\",\"mainen"]', '');
 INSERT INTO events VALUES (1647, NULL, NULL, '2020-02-06 21:10:31', '- 2 new makers and 1 maker updated based on the makers'' requests, 1 maker links updated (<a href="https://github.com/veelkoov/fuzzrake/commit/7965eab97d98a2b75cc4aa4297439ca1f0ddc527" target="_blank">git</a>)', 'GENERAL', '', '', '', '');
 INSERT INTO events VALUES (1648, NULL, NULL, '2020-02-09 17:35:00', '- Updated 2 makers'' data based on the makers'' requests (<a href="https://github.com/veelkoov/fuzzrake/commit/194df8bd57ca2a528178ac3b69fe4c4d00cf0968" target="_blank">git</a>)', 'GENERIC', '', '', '', '');
+INSERT INTO events VALUES (1649, 0, NULL, '2020-02-10 18:05:52', '', 'CS_UPDTD_DETLS', 'Fursuits by Lacy and Nick', 'http://www.fursuiting.com/', '', '');
+INSERT INTO events VALUES (1650, 0, NULL, '2020-02-10 18:05:55', '', 'CS_UPDTD_DETLS', 'Schorsuits', 'https://schorsuits.wixsite.com/schorsuits', '', '');
+INSERT INTO events VALUES (1651, NULL, 0, '2020-02-11 06:05:53', '', 'CS_UPDTD_DETLS', 'Schorsuits', 'https://schorsuits.wixsite.com/schorsuits', '', '[" questions.</p></div><div data-min-height=\"92\" class=\"txtnew\" id=\"comp-jzikf008\"><h1 class=\"font_0\">","commissions closed","</h1> <h1 class=\"font_0\">opening end of may</h1> <h1 class=\"font_0\">quotes always open</h1></div></d"]');
+INSERT INTO events VALUES (1652, 0, NULL, '2020-02-13 18:05:44', '', 'CS_UPDTD_DETLS', 'Hunni Bear Art', 'https://hunnibearart.wixsite.com/commission', '', '');
+INSERT INTO events VALUES (1653, 0, 1, '2020-02-13 18:05:45', '', 'CS_UPDTD_DETLS', 'Schorsuits', 'https://schorsuits.wixsite.com/schorsuits', '[" questions.</p></div><div data-min-height=\"92\" class=\"txtnew\" id=\"comp-jzikf008\"><h1 class=\"font_0\">","commissions open","</h1> <h1 class=\"font_0\">at the moment only for small coms</h1> <h1 class=\"font_0\">quotes always ope"]', '');
 CREATE TABLE artisans_urls (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, artisan_id INTEGER NOT NULL, type VARCHAR (32) NOT NULL, url VARCHAR (1023) NOT NULL);
 INSERT INTO artisans_urls VALUES (1, 1, 'URL_WEBSITE', 'http://silvenahandmade.com/');
 INSERT INTO artisans_urls VALUES (2, 1, 'URL_FUR_AFFINITY', 'http://www.furaffinity.net/user/silvena');
@@ -2631,7 +2636,7 @@ INSERT INTO artisans_urls VALUES (9199, 367, 'URL_TWITTER', 'https://twitter.com
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans', 370);
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 333);
-INSERT INTO sqlite_sequence VALUES ('events', 1648);
+INSERT INTO sqlite_sequence VALUES ('events', 1653);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9199);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 COMMIT;
