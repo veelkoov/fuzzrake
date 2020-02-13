@@ -106,6 +106,7 @@ end
 
 task(:cst)  { sc_cst('-d') }
 task(:cstc) { sc_cst }
+task(:cstr) { sc_cst('-rd') }
 
 #
 # IMPORT TASKS
