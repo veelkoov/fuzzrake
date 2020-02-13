@@ -43,7 +43,7 @@ task(:cc)      { symfony_console('cache:clear') }
 task :dbpush do
   exec_or_die('cp', DB_PATH, DB_TMP_PATH)
 
-  exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
+  exec_or_die('sqlite3', DB_TMP_PATH, 'DELETE FROM artisans_private_data;')
 
   exec_or_die('scp', '-p', DB_TMP_PATH, 'getfursu.it:/var/www/prod/' + DB_PATH)
   exec_or_die('scp', '-p', DB_TMP_PATH, 'getfursu.it:/var/www/beta/' + DB_PATH)
@@ -54,6 +54,7 @@ end
 task :dbpull do
   exec_or_die('scp', '-p', 'getfursu.it:/var/www/prod/' + DB_PATH, DB_TMP_PATH)
   exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump artisans_private_data')
+  exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
   exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_TMP_PATH}")
   exec_or_die('mv', DB_TMP_PATH, DB_PATH)
   exec_or_die('rm', DB_DUMP_TMP_PATH)
