@@ -1,7 +1,0 @@
-#!ansible/run.sh
----
-- hosts: dev
-  roles:
-    - { name: "db", mode: "read_params" }
-    - { name: "db", mode: "dump" }
-    - { name: "manager", mode: "db_dump_pretty" }

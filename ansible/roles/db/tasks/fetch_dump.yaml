@@ -1,7 +1,0 @@
----
-- name: fetch DB dump from the remote side
-  fetch:
-    flat: yes
-    dest: "{{ local_db_dump_file_path }}"
-    src: "{{ db_dump_file_path }}"
-  changed_when: false

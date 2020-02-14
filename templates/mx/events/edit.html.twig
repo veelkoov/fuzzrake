@@ -1,0 +1,33 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}{% if event.id is not null %}Edit: event #{{ event.id }}{% else %}New events{% endif %}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {{ form_start(form) }}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.timestamp) }}
+                {{ form_widget(form.timestamp) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.type) }}
+                {{ form_widget(form.type) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+            </div>
+        </div>
+
+        {{ form_widget(form.save) }}
+        {% if event.id is not null %}
+            {{ form_widget(form.delete) }}
+        {% endif %}
+
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

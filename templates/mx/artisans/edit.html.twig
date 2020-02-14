@@ -1,9 +1,9 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}edit {{ artisan.name }}{% endblock %}
+{% block title %}{% if artisan.id is not null %}Edit: {{ artisan.name }}{% else %}New artisan{% endif %}{% endblock %}
 
 {% block body %}
-    <h1>{{ artisan.name }}</h1>
+    <h1>{{ block('title') }}</h1>
 
     {{ form_start(form) }}
         <div class="form-row">
@@ -212,7 +212,10 @@
         </div>
 
         {{ form_widget(form.save) }}
-        {{ form_widget(form.delete) }}
+        {% if artisan.id is not null %}
+            {{ form_widget(form.delete) }}
+        {% endif %}
+
         {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

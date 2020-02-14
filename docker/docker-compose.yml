@@ -4,16 +4,6 @@
 
 version: "3.1"
 services:
-  database:
-    image: mariadb:10.4
-    environment:
-      - MYSQL_PASSWORD=${VARIABLE:-fuzzrake}
-      - MYSQL_DATABASE=fuzzrake
-      - MYSQL_USER=fuzzrake
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    ports:
-      - "3306:3306"
-
   webserver:
     image: nginx:alpine
     volumes:
@@ -26,11 +16,3 @@ services:
     build: php-fpm
     volumes:
       - ..:/application
-
-  pma:
-    image: phpmyadmin/phpmyadmin:latest
-    ports:
-      - "8081:80"
-    environment:
-      - PMA_HOST=database
-      - PMA_PORT=3306
