@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
+use App\Utils\Web\Fetchable;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\Url;
@@ -35,7 +36,7 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException from inside download()
      */
-    public function get(Url $url): WebpageSnapshot
+    public function get(Fetchable $url): WebpageSnapshot
     {
         return $this->cache->getOrSet($url, function () use ($url) {
             return $this->download($url);
@@ -43,11 +44,11 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @param Url[] $urls
+     * @param Fetchable[] $urls
      */
     public function prefetchUrls(array $urls, StyleInterface $progressReportIo): void
     {
-        $urls = array_filter($urls, function (Url $url): bool {
+        $urls = array_filter($urls, function (Fetchable $url): bool {
             return !$this->cache->has($url);
         });
 
@@ -59,6 +60,7 @@ class WebpageSnapshotManager
             try {
                 $this->get($url);
             } catch (HttpClientException $exception) {
+                // TODO: record failure
                 // Prefetching = keep quiet, we'll retry
             }
 
@@ -71,7 +73,7 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function download(Url $url): WebpageSnapshot
+    private function download(Fetchable $url): WebpageSnapshot
     {
         if ($url->isDependency()) {
             $contents = $this->httpClient->getImmediately($url->getUrl());

@@ -6,7 +6,7 @@ namespace App\Utils\Web;
 
 use App\Entity\Artisan;
 
-class Url
+class Url implements Fetchable
 {
     private string $url;
     private Artisan $artisan;
@@ -32,5 +32,15 @@ class Url
     public function isDependency(): bool
     {
         return $this->isDependency;
+    }
+
+    public function recordSuccessfulFetch(): void
+    {
+        // TODO: Implement recordSuccessfulFetch() method.
+    }
+
+    public function recordFailedFetch(int $code, string $reason): void
+    {
+        // TODO: Implement recordFailedFetch() method.
     }
 }
