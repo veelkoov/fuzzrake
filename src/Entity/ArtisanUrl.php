@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Web\Fetchable;
-use App\Utils\Web\Url;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -153,11 +152,6 @@ class ArtisanUrl implements Fetchable
         $this->lastFailureReason = $lastFailureReason;
 
         return $this;
-    }
-
-    public function getUrlObject(): Url
-    {
-        return new Url($this->url, $this->artisan);
     }
 
     public function isDependency(): bool

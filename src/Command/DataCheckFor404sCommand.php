@@ -9,7 +9,6 @@ use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
 use App\Utils\Web\HttpClientException;
-use App\Utils\Web\Url;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +47,7 @@ class DataCheckFor404sCommand extends Command
         $urls = $this->getUrlsToCheck();
 
         if (!$input->getOption('no-prefetch')) {
-            $this->prefetchUrls($urls, $io);
+            $this->webpageSnapshotManager->prefetchUrls($urls, $io);
         }
 
         $this->checkUrls($urls, $io);
@@ -80,7 +79,7 @@ class DataCheckFor404sCommand extends Command
             $error = false;
 
             try {
-                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url->getUrlObject()))) {
+                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url))) {
                     $error = 'Latent 404: '.$url->getUrl();
                 }
             } catch (HttpClientException $e) {
@@ -94,15 +93,5 @@ class DataCheckFor404sCommand extends Command
                 $io->writeln($artisan->getLastMakerId().':'.$contact.':'.$url->getType().': '.$error);
             }
         }
-    }
-
-    /**
-     * @param ArtisanUrl[] $urls
-     */
-    private function prefetchUrls($urls, SymfonyStyle $io): void
-    {
-        $this->webpageSnapshotManager->prefetchUrls(array_map(function (ArtisanUrl $artisanUrl): Url {
-            return $artisanUrl->getUrlObject();
-        }, $urls), $io);
     }
 }
