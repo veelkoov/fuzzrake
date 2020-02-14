@@ -170,4 +170,9 @@ class ArtisanUrl implements Fetchable
         $this->lastFailureCode = $code;
         $this->lastFailureReason = $reason;
     }
+
+    public function getOwnerName(): string
+    {
+        return $this->artisan->getName();
+    }
 }

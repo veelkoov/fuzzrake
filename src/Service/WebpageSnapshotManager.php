@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Artisan;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
-use App\Utils\Web\Url;
 use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebpageSnapshotCache;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\Console\Style\StyleInterface;
+use Utils\Web\DependencyUrl;
 
 class WebpageSnapshotManager
 {
@@ -82,9 +81,9 @@ class WebpageSnapshotManager
         }
 
         $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $contents,
-            DateTimeUtils::getNowUtc(), $url->getArtisan()->getName());
+            DateTimeUtils::getNowUtc(), $url->getOwnerName());
 
-        $this->downloadChildren($webpageSnapshot, $url->getArtisan());
+        $this->downloadChildren($webpageSnapshot, $url);
 
         return $webpageSnapshot;
     }
@@ -92,23 +91,23 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function downloadChildren(WebpageSnapshot $webpageSnapshot, Artisan $artisan): void
+    private function downloadChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
     {
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
-            $this->fetchWixsiteContents($webpageSnapshot, $artisan);
+            $this->fetchWixsiteContents($webpageSnapshot, $url);
         } elseif (WebsiteInfo::isTrello($webpageSnapshot)) {
-            $this->fetchTrelloContents($webpageSnapshot, $artisan);
+            $this->fetchTrelloContents($webpageSnapshot, $url);
         }
     }
 
     /**
      * @throws HttpClientException
      */
-    private function fetchWixsiteContents(WebpageSnapshot $snapshot, Artisan $artisan): void
+    private function fetchWixsiteContents(WebpageSnapshot $snapshot, Fetchable $url): void
     {
         if (Regexp::matchAll(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, $snapshot->getContents(), $matches)) {
             foreach ($matches['data_url'] as $dataUrl) {
-                $snapshot->addChildren($this->get(new Url($dataUrl, $artisan, true)));
+                $snapshot->addChildren($this->get(new DependencyUrl($dataUrl, $url)));
             }
         }
     }
@@ -116,12 +115,12 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function fetchTrelloContents(WebpageSnapshot $snapshot, Artisan $artisan): void
+    private function fetchTrelloContents(WebpageSnapshot $snapshot, Fetchable $url): void
     {
         if (!Regexp::match(WebsiteInfo::TRELLO_BOARD_URL_REGEXP, $snapshot->getUrl(), $matches)) {
             return;
         }
 
-        $snapshot->addChildren($this->get(new Url(WebsiteInfo::getTrelloBoardDataUrl($matches['boardId']), $artisan, true)));
+        $snapshot->addChildren($this->get(new DependencyUrl(WebsiteInfo::getTrelloBoardDataUrl($matches['boardId']), $url)));
     }
 }

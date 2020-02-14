@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Entity\Artisan;
-
 interface Fetchable
 {
     public function getUrl(): string;
 
     public function isDependency(): bool;
 
-    public function getArtisan(): Artisan;
+    public function getOwnerName(): string;
 
     public function recordSuccessfulFetch(): void;
 

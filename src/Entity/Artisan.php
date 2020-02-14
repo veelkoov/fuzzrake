@@ -947,15 +947,24 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    private function getSingleUrl(string $urlFieldName): string
+    public function getSingleUrlObject(string $urlFieldName): ?ArtisanUrl
     {
         foreach ($this->getUrls() as $url) {
             if ($url->getType() === $urlFieldName) {
-                return $url->getUrl();
+                return $url;
             }
         }
 
-        return '';
+        return null;
+    }
+
+    private function getSingleUrl(string $urlFieldName): string
+    {
+        if (($url = $this->getSingleUrlObject($urlFieldName))) {
+            return $url->getUrl();
+        } else {
+            return '';
+        }
     }
 
     private function setSingleUrl(string $urlFieldName, string $newUrl): self
