@@ -10,6 +10,7 @@ use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\WebsiteInfo;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,13 +22,15 @@ class DataCheckFor404sCommand extends Command
 
     private ArtisanUrlRepository $artisanUrlRepository;
     private WebpageSnapshotManager $webpageSnapshotManager;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ArtisanUrlRepository $artisanUrlRepository, WebpageSnapshotManager $webpageSnapshotManager)
+    public function __construct(EntityManagerInterface $entityManager, WebpageSnapshotManager $webpageSnapshotManager)
     {
         parent::__construct();
 
-        $this->artisanUrlRepository = $artisanUrlRepository;
+        $this->entityManager = $entityManager;
         $this->webpageSnapshotManager = $webpageSnapshotManager;
+        $this->artisanUrlRepository = $entityManager->getRepository(ArtisanUrl::class);
     }
 
     protected function configure()
@@ -51,6 +54,9 @@ class DataCheckFor404sCommand extends Command
         }
 
         $this->checkUrls($urls, $io);
+        $this->entityManager->flush();
+
+        $io->success('Finished');
 
         return 0;
     }

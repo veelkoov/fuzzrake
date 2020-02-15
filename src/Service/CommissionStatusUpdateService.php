@@ -54,30 +54,38 @@ class CommissionStatusUpdateService
         $this->snapshots->prefetchUrls($urls, $this->io);
 
         foreach ($urls as $url) {
-            $this->performUpdate($url);
-        }
-
-        if (!$dryRun) {
-            $this->objectManager->flush();
+            $this->performUpdate($url, $dryRun);
         }
     }
 
-    private function performUpdate(Fetchable $url): void
+    private function performUpdate(Fetchable $url, bool $dryRun): void
     {
         $artisan = $url->getArtisan();
 
+        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url);
+
+        $this->reportStatusChange($artisan, $analysisResult);
+
+        if (!$dryRun) {
+            $artisan->getCommissionsStatus()
+                ->setStatus($analysisResult->getStatus())
+                ->setLastChecked($datetimeRetrieved);
+        }
+    }
+
+    private function analyzeStatus(Fetchable $url): array
+    {
         try {
             $webpageSnapshot = $this->snapshots->get($url);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
+        } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) {
+            // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
-            // TODO: mark failure?
         }
 
-        $this->reportStatusChange($artisan, $analysisResult);
-        $artisan->getCommissionsStatus()->setStatus($analysisResult->getStatus())->setLastChecked($datetimeRetrieved);
+        return [$datetimeRetrieved, $analysisResult];
     }
 
     private function canAutoUpdate(Artisan $artisan): bool

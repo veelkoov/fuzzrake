@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Web\Fetchable;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,14 +40,14 @@ class ArtisanUrl implements Fetchable
     private string $url = '';
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTime $lastSuccess;
+    private ?DateTimeInterface $lastSuccess;
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTime $lastFailure;
+    private ?DateTimeInterface $lastFailure;
 
     /**
      * @ORM\Column(type="integer")

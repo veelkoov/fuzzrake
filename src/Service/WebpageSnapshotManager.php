@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\Regexp\Regexp;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
@@ -33,12 +32,20 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @throws HttpClientException from inside download()
+     * @throws HttpClientException from inside fetch()
      */
     public function get(Fetchable $url): WebpageSnapshot
     {
         return $this->cache->getOrSet($url, function () use ($url) {
-            return $this->download($url);
+            try {
+                $result = $this->fetch($url);
+                $url->recordSuccessfulFetch();
+
+                return $result;
+            } catch (HttpClientException $exception) {
+                $url->recordFailedFetch($exception->getCode(), $exception->getMessage());
+                throw $exception;
+            }
         });
     }
 
@@ -59,7 +66,6 @@ class WebpageSnapshotManager
             try {
                 $this->get($url);
             } catch (HttpClientException $exception) {
-                // TODO: record failure
                 // Prefetching = keep quiet, we'll retry
             }
 
@@ -72,7 +78,7 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function download(Fetchable $url): WebpageSnapshot
+    private function fetch(Fetchable $url): WebpageSnapshot
     {
         if ($url->isDependency()) {
             $contents = $this->httpClient->getImmediately($url->getUrl());
@@ -83,7 +89,7 @@ class WebpageSnapshotManager
         $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $contents,
             DateTimeUtils::getNowUtc(), $url->getOwnerName());
 
-        $this->downloadChildren($webpageSnapshot, $url);
+        $this->fetchChildren($webpageSnapshot, $url);
 
         return $webpageSnapshot;
     }
@@ -91,36 +97,10 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function downloadChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
+    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
     {
-        if (WebsiteInfo::isWixsite($webpageSnapshot)) {
-            $this->fetchWixsiteContents($webpageSnapshot, $url);
-        } elseif (WebsiteInfo::isTrello($webpageSnapshot)) {
-            $this->fetchTrelloContents($webpageSnapshot, $url);
+        foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
+            $webpageSnapshot->addChild($this->get(new DependencyUrl($childUrl, $url)));
         }
-    }
-
-    /**
-     * @throws HttpClientException
-     */
-    private function fetchWixsiteContents(WebpageSnapshot $snapshot, Fetchable $url): void
-    {
-        if (Regexp::matchAll(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, $snapshot->getContents(), $matches)) {
-            foreach ($matches['data_url'] as $dataUrl) {
-                $snapshot->addChildren($this->get(new DependencyUrl($dataUrl, $url)));
-            }
-        }
-    }
-
-    /**
-     * @throws HttpClientException
-     */
-    private function fetchTrelloContents(WebpageSnapshot $snapshot, Fetchable $url): void
-    {
-        if (!Regexp::match(WebsiteInfo::TRELLO_BOARD_URL_REGEXP, $snapshot->getUrl(), $matches)) {
-            return;
-        }
-
-        $snapshot->addChildren($this->get(new DependencyUrl(WebsiteInfo::getTrelloBoardDataUrl($matches['boardId']), $url)));
     }
 }

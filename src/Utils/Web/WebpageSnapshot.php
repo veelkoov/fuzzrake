@@ -49,7 +49,7 @@ class WebpageSnapshot implements JsonSerializable
         return Json::encode($this, self::JSON_SERIALIZATION_OPTIONS);
     }
 
-    public function addChildren(WebpageSnapshot $children): void
+    public function addChild(WebpageSnapshot $children): void
     {
         $this->children[] = $children;
     }
