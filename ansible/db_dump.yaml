@@ -1,5 +1,0 @@
-#!ansible/run.sh
----
-- hosts: dev
-  roles:
-    - { name: "manager", mode: "db_dump" }

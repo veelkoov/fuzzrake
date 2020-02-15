@@ -17,91 +17,63 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
-    const TYPE_CS_UPDATED = 'CS_UPDATED';
-    const TYPE_CS_UPDATED_WITH_DETAILS = 'CS_UPDTD_DETLS';
-    const TYPE_GENERIC = 'GENERIC';
+    public const TYPE_CS_UPDATED = 'CS_UPDATED';
+    public const TYPE_CS_UPDATED_WITH_DETAILS = 'CS_UPDTD_DETLS';
+    public const TYPE_GENERIC = 'GENERIC';
 
     /**
-     * @var int
-     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
-     * @var DateTimeInterface
-     *
      * @ORM\Column(type="datetime")
      */
-    private $timestamp;
+    private DateTimeInterface $timestamp;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=4095)
      */
-    private $description = '';
+    private string $description = '';
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=16)
      */
-    private $type = '';
+    private string $type = self::TYPE_GENERIC;
 
     /**
-     * @var bool|null
-     *
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $oldStatus;
+    private ?bool $oldStatus = null;
 
     /**
-     * @var bool|null
-     *
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $newStatus = null;
+    private ?bool $newStatus = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=256)
      */
-    private $artisanName;
+    private string $artisanName = '';
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=1024)
      */
-    private $checkedUrl = '';
+    private string $checkedUrl = '';
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text", name="open_match")
      */
-    private $openMatchRepr = '';
+    private string $openMatchRepr = '';
+    private ?StrContextInterface $openMatch = null;
 
     /**
-     * @var StrContextInterface
-     */
-    private $openMatch = null;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(type="text", name="closed_match")
      */
-    private $closedMatchRepr = '';
-
-    /**
-     * @var StrContextInterface
-     */
-    private $closedMatch = null;
+    private string $closedMatchRepr = '';
+    private ?StrContextInterface $closedMatch = null;
 
     public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, AnalysisResult $analysisResult = null)
     {
@@ -118,14 +90,16 @@ class Event
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function setId(int $id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
     public function getTimestamp(): DateTimeInterface
@@ -133,9 +107,11 @@ class Event
         return $this->timestamp;
     }
 
-    public function setTimestamp(DateTimeInterface $timestamp): void
+    public function setTimestamp(DateTimeInterface $timestamp): self
     {
         $this->timestamp = $timestamp;
+
+        return $this;
     }
 
     public function getDescription(): string
@@ -143,9 +119,11 @@ class Event
         return $this->description;
     }
 
-    public function setDescription(string $description): void
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
     }
 
     public function getType(): string
@@ -153,9 +131,11 @@ class Event
         return $this->type;
     }
 
-    public function setType(string $type): void
+    public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
     }
 
     public function getOldStatus(): ?bool
@@ -163,9 +143,11 @@ class Event
         return $this->oldStatus;
     }
 
-    public function setOldStatus(?bool $oldStatus): void
+    public function setOldStatus(?bool $oldStatus): self
     {
         $this->oldStatus = $oldStatus;
+
+        return $this;
     }
 
     public function getNewStatus(): ?bool
@@ -173,9 +155,11 @@ class Event
         return $this->newStatus;
     }
 
-    public function setNewStatus(?bool $newStatus): void
+    public function setNewStatus(?bool $newStatus): self
     {
         $this->newStatus = $newStatus;
+
+        return $this;
     }
 
     public function getArtisanName(): string
@@ -183,9 +167,11 @@ class Event
         return $this->artisanName;
     }
 
-    public function setArtisanName(string $artisanName): void
+    public function setArtisanName(string $artisanName): self
     {
         $this->artisanName = $artisanName;
+
+        return $this;
     }
 
     public function getCheckedUrl(): string
@@ -193,9 +179,11 @@ class Event
         return $this->checkedUrl;
     }
 
-    public function setCheckedUrl(string $checkedUrl): void
+    public function setCheckedUrl(string $checkedUrl): self
     {
         $this->checkedUrl = $checkedUrl;
+
+        return $this;
     }
 
     public function isLostTrack(): bool
@@ -218,10 +206,12 @@ class Event
         return $this->openMatch = $this->openMatch ?? StrContextUtils::fromString($this->openMatchRepr);
     }
 
-    public function setOpenMatch(StrContextInterface $openMatch): void
+    public function setOpenMatch(StrContextInterface $openMatch): self
     {
         $this->openMatch = $openMatch;
         $this->openMatchRepr = StrContextUtils::toStr($openMatch);
+
+        return $this;
     }
 
     public function getClosedMatch(): StrContextInterface
@@ -229,9 +219,16 @@ class Event
         return $this->closedMatch = $this->closedMatch ?? StrContextUtils::fromString($this->closedMatchRepr);
     }
 
-    public function setClosedMatch(StrContextInterface $closedMatch): void
+    public function setClosedMatch(StrContextInterface $closedMatch): self
     {
         $this->closedMatch = $closedMatch;
         $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
+
+        return $this;
+    }
+
+    public function isEditable(): bool
+    {
+        return in_array($this->type, [self::TYPE_GENERIC]);
     }
 }

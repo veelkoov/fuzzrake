@@ -28,9 +28,9 @@ class WebpageSnapshotCache
         $this->fs->mkdir($this->cacheDirPath);
     }
 
-    public function getOrSet(Url $url, Closure $getUrl): WebpageSnapshot
+    public function getOrSet(Fetchable $url, Closure $getUrl): WebpageSnapshot
     {
-        $snapshotPath = $this->snapshotPathForUrl($url);
+        $snapshotPath = $this->snapshotPathForUrl($url->getUrl());
 
         if ($this->cacheItemExists($snapshotPath)) {
             try {
@@ -44,9 +44,9 @@ class WebpageSnapshotCache
         return $this->put($snapshotPath, $getUrl());
     }
 
-    public function has(Url $url): bool
+    public function has(Fetchable $url): bool
     {
-        return $this->cacheItemExists($this->snapshotPathForUrl($url));
+        return $this->cacheItemExists($this->snapshotPathForUrl($url->getUrl()));
     }
 
     private function cacheItemExists(string $snapshotPath): bool
@@ -75,12 +75,12 @@ class WebpageSnapshotCache
         return $snapshot;
     }
 
-    private function snapshotPathForUrl(Url $url): string
+    private function snapshotPathForUrl(string $url): string
     {
-        $host = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url->getUrl()));
-        $hash = hash('sha512', $url->getUrl());
+        $host = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
+        $hash = hash('sha512', $url);
 
-        return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url->getUrl())}-$hash.json";
+        return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url)}-$hash.json";
     }
 
     private function urlToFilename(string $url): string

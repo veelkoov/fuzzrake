@@ -36,13 +36,14 @@ class ArtisansController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get(ArtisanType::BTN_DELETE)->isClicked()) {
+            if (null !== $artisan->getId() && $form->get(ArtisanType::BTN_DELETE)->isClicked()) {
                 $this->getDoctrine()->getManager()->remove($artisan);
+            } else {
+                Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
+
+                $this->getDoctrine()->getManager()->persist($artisan);
             }
 
-            Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
-
-            $this->getDoctrine()->getManager()->persist($artisan);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('main');

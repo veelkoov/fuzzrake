@@ -86,4 +86,46 @@ abstract class WebsiteInfo
     {
         return "https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData";
     }
+
+    /**
+     * @return string[]
+     */
+    public static function getChildrenUrls(WebpageSnapshot $webpageSnapshot): array
+    {
+        if (WebsiteInfo::isWixsite($webpageSnapshot)) {
+            return self::getWixsiteDependencyUrls($webpageSnapshot);
+        } elseif (WebsiteInfo::isTrello($webpageSnapshot)) {
+            return self::getTrelloDependencyUrls($webpageSnapshot);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function getWixsiteDependencyUrls(WebpageSnapshot $webpageSnapshot): array
+    {
+        $result = [];
+
+        if (Regexp::matchAll(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, $webpageSnapshot->getContents(), $matches)) {
+            foreach ($matches['data_url'] as $dataUrl) {
+                $result[] = $dataUrl;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function getTrelloDependencyUrls(WebpageSnapshot $webpageSnapshot): array
+    {
+        if (Regexp::match(WebsiteInfo::TRELLO_BOARD_URL_REGEXP, $webpageSnapshot->getUrl(), $matches)) {
+            return [WebsiteInfo::getTrelloBoardDataUrl($matches['boardId'])];
+        } else {
+            return [];
+        }
+    }
 }

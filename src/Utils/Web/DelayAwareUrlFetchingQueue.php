@@ -12,7 +12,7 @@ class DelayAwareUrlFetchingQueue
     private const URLS = 'urls';
 
     /**
-     * @var Url[]
+     * @var Fetchable[]
      */
     private array $hosts = [];
 
@@ -20,7 +20,7 @@ class DelayAwareUrlFetchingQueue
     private ?string $lastHost = null;
 
     /**
-     * @param Url[] $urls
+     * @param Fetchable[] $urls
      */
     public function __construct(array $urls = [], int $millisecondsDelay = 0)
     {
@@ -31,7 +31,7 @@ class DelayAwareUrlFetchingQueue
         $this->millisecondsDelay = $millisecondsDelay;
     }
 
-    public function addUrl(Url $url): void
+    public function addUrl(Fetchable $url): void
     {
         $host = UrlUtils::hostFromUrl($url->getUrl());
 
@@ -45,7 +45,7 @@ class DelayAwareUrlFetchingQueue
         $this->hosts[$host][self::URLS][] = $url;
     }
 
-    public function pop(): ?Url
+    public function pop(): ?Fetchable
     {
         if (empty($this->hosts)) {
             $this->lastHost = null;
