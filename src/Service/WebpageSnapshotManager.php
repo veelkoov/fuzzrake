@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
+use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\GentleHttpClient;
 use App\Utils\Web\HttpClientException;
@@ -14,7 +15,6 @@ use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebpageSnapshotCache;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\Console\Style\StyleInterface;
-use Utils\Web\DependencyUrl;
 
 class WebpageSnapshotManager
 {

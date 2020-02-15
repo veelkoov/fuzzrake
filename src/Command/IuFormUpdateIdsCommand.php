@@ -11,6 +11,7 @@ use App\Utils\GoogleForms\Form;
 use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
+use App\Utils\Web\FreeUrl;
 use App\Utils\Web\HttpClientException;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
@@ -18,7 +19,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
-use Utils\Web\FreeUrl;
 
 class IuFormUpdateIdsCommand extends Command
 {

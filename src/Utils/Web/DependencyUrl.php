@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Utils\Web;
-
-use App\Utils\Web\Fetchable;
+namespace App\Utils\Web;
 
 class DependencyUrl implements Fetchable
 {

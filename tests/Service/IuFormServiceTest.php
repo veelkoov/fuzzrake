@@ -14,11 +14,11 @@ use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Regexp;
+use App\Utils\Web\FreeUrl;
 use App\Utils\Web\HttpClientException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
 use Symfony\Component\DomCrawler\Crawler;
-use Utils\Web\FreeUrl;
 
 class IuFormServiceTest extends WebTestCase
 {
