@@ -75,8 +75,8 @@ class HttpClient
         $errorNo = curl_errno($ch);
         curl_close($ch);
 
-        if (false === $result || !in_array($httpCode, [200, 401])) {
-            throw new HttpClientException("Failed to fetch URL ($httpCode): $url, ".($errorMsg ?: 'CURL failed')." ($errorNo)");
+        if (false === $result || !in_array($httpCode, [200, 401])) { // TODO: Rethink 401 here
+            throw new HttpClientException(($errorMsg ?: 'CURL failed')." ($errorNo)", $httpCode);
         }
 
         return $result;
