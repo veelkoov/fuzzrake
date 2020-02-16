@@ -7,14 +7,15 @@ namespace App\Service;
 use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
+use App\Utils\Artisan\Fields;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\NullMatch;
 use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
+use App\Utils\Web\Fetchable;
 use App\Utils\Web\HttpClientException;
-use App\Utils\Web\Url;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -53,29 +54,38 @@ class CommissionStatusUpdateService
         $this->snapshots->prefetchUrls($urls, $this->io);
 
         foreach ($urls as $url) {
-            $this->performUpdate($url);
-        }
-
-        if (!$dryRun) {
-            $this->objectManager->flush();
+            $this->performUpdate($url, $dryRun);
         }
     }
 
-    private function performUpdate(Url $url): void
+    private function performUpdate(Fetchable $url, bool $dryRun): void
     {
         $artisan = $url->getArtisan();
 
+        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url);
+
+        $this->reportStatusChange($artisan, $analysisResult);
+
+        if (!$dryRun) {
+            $artisan->getCommissionsStatus()
+                ->setStatus($analysisResult->getStatus())
+                ->setLastChecked($datetimeRetrieved);
+        }
+    }
+
+    private function analyzeStatus(Fetchable $url): array
+    {
         try {
             $webpageSnapshot = $this->snapshots->get($url);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) { // FIXME: actual failure would result in "NONE MATCHES" interpretation
+        } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) {
+            // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
         }
 
-        $this->reportStatusChange($artisan, $analysisResult);
-        $artisan->getCommissionsStatus()->setStatus($analysisResult->getStatus())->setLastChecked($datetimeRetrieved);
+        return [$datetimeRetrieved, $analysisResult];
     }
 
     private function canAutoUpdate(Artisan $artisan): bool
@@ -129,12 +139,12 @@ class CommissionStatusUpdateService
     /**
      * @param Artisan[]
      *
-     * @return Url[]
+     * @return Fetchable[]
      */
     private function getCstUrls(array $artisans): array
     {
-        return array_map(function (Artisan $artisan): Url {
-            return new Url($artisan->getCstUrl(), $artisan);
+        return array_map(function (Artisan $artisan): Fetchable {
+            return $artisan->getSingleUrlObject(Fields::URL_CST);
         }, $artisans);
     }
 

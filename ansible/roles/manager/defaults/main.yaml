@@ -1,2 +1,0 @@
----
-committed_db_dump_path: "{{ deployment_path }}/db_dump/fuzzrake.sql"

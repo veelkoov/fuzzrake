@@ -1,10 +1,2 @@
 ---
 php_fpm_docker_image_name: fuzzrake/php-fpm:latest
-
-db_path: "{{ deployment_path }}/var/db.sqlite"
-
-dumpable_tables:
-  - artisans
-  - events
-  - artisans_commissions_statues
-  - artisans_urls

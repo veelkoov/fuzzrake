@@ -18,10 +18,11 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $projectDir: '%kernel.project_dir%'
-            $iuFormUrl:  '%iu_form_url%'
-            $species:    '%species%'
-            $languages:  '%languages%'
+            $projectDir:  '%kernel.project_dir%'
+            $environment: '%kernel.environment%'
+            $iuFormUrl:   '%iu_form_url%'
+            $species:     '%species%'
+            $languages:   '%languages%'
             $hosts:
                 production: getfursu.it
             $healthCheckValues:

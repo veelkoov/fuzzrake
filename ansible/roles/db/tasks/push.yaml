@@ -1,5 +1,0 @@
----
-- name: copy DB file to the remote side
-  copy:
-    dest: "{{ db_path }}"
-    src: "{{ local_db_path }}"
