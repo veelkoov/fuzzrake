@@ -42,12 +42,12 @@ class ArtisanUrl implements Fetchable
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $lastSuccess;
+    private ?DateTimeInterface $lastSuccess = null;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $lastFailure;
+    private ?DateTimeInterface $lastFailure = null;
 
     /**
      * @ORM\Column(type="integer")
