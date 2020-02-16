@@ -12,6 +12,7 @@ use App\Utils\Web\HttpClientException;
 use App\Utils\Web\WebsiteInfo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -25,7 +26,10 @@ class DataCheckFor404sCommand extends Command
         Fields::URL_SCRITCH_MINIATURE,
     ];
 
-    protected static $defaultName = 'app:data:check-for-404s';
+    const DEFAULT_LIMIT = 10;
+    const ARG_LIMIT = 'limit';
+
+    protected static $defaultName = 'app:data:check-for-404s'; // TODO: rename
 
     private ArtisanUrlRepository $artisanUrlRepository;
     private WebpageSnapshotManager $webpageSnapshotManager;
@@ -42,46 +46,46 @@ class DataCheckFor404sCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('refresh', 'r', null, 'Refresh pages cache (re-fetch)');
-        $this->addOption('no-prefetch', null, null, 'Skip pre-fetch phase');
+        $this->addArgument(self::ARG_LIMIT, InputArgument::OPTIONAL, 'Number of URLs to check', self::DEFAULT_LIMIT);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('refresh')) {
-            $this->webpageSnapshotManager->clearCache();
+        $limit = $input->getArgument(self::ARG_LIMIT);
+        if (!is_int($limit) || $limit <= 0 || $limit >= 100) {
+            $io->error('Argument "'.self::ARG_LIMIT.'" must be a number between 1 and 100');
+
+            return 1;
         }
 
-        $urls = $this->getUrlsToCheck();
+        $urls = $this->artisanUrlRepository->getLeastRecentFetched($limit, self::SKIPPED_TYPES);
 
-        if (!$input->getOption('no-prefetch')) {
-            $this->webpageSnapshotManager->prefetchUrls($urls, $io);
+        $io->progressStart(count($urls));
+
+        foreach ($urls as $url) {
+            try {
+                $this->webpageSnapshotManager->get($url);
+            } catch (HttpClientException $e) {
+                // Ignore - failure has been recorded
+            }
+
+            $io->progressAdvance();
         }
 
-        $this->checkUrls($urls, $io);
         $this->entityManager->flush();
 
+        $io->progressFinish();
         $io->success('Finished');
 
         return 0;
     }
 
     /**
-     * @return ArtisanUrl[]
-     */
-    private function getUrlsToCheck(): array
-    {
-        return array_filter($this->artisanUrlRepository->findAll(), function (ArtisanUrl $artisanUrl): bool {
-            return !in_array($artisanUrl->getType(), self::SKIPPED_TYPES);
-        });
-    }
-
-    /**
      * @param ArtisanUrl[] $urls
      */
-    private function checkUrls(array $urls, SymfonyStyle $io): void
+    private function checkUrls(array $urls, SymfonyStyle $io): void // TODO: relocate to either manager or HTTP client
     {
         foreach ($urls as $url) {
             $error = false;

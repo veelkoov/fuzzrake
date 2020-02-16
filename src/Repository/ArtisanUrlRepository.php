@@ -46,7 +46,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
                     ORDER BY MAX(
                         COALESCE(last_failure, '2020-01-01 00:00:00'),
                         COALESCE(last_success, '2020-01-01 00:00:00')
-                    ) DESC
+                    ) ASC
                     LIMIT {$limit}
                 ", $rsm)
             ->execute();
