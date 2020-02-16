@@ -18,6 +18,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataCheckFor404sCommand extends Command
 {
+    private const SKIPPED_TYPES = [
+        Fields::URL_OTHER,
+        Fields::URL_SCRITCH,
+        Fields::URL_SCRITCH_PHOTO,
+        Fields::URL_SCRITCH_MINIATURE,
+    ];
+
     protected static $defaultName = 'app:data:check-for-404s';
 
     private ArtisanUrlRepository $artisanUrlRepository;
@@ -67,12 +74,7 @@ class DataCheckFor404sCommand extends Command
     private function getUrlsToCheck(): array
     {
         return array_filter($this->artisanUrlRepository->findAll(), function (ArtisanUrl $artisanUrl): bool {
-            return !in_array($artisanUrl->getType(), [
-                Fields::URL_OTHER,
-                Fields::URL_SCRITCH,
-                Fields::URL_SCRITCH_PHOTO,
-                Fields::URL_SCRITCH_MINIATURE,
-            ]);
+            return !in_array($artisanUrl->getType(), self::SKIPPED_TYPES);
         });
     }
 
