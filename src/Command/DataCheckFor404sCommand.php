@@ -8,12 +8,13 @@ use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
+use App\Utils\Parse;
 use App\Utils\Web\HttpClientException;
 use App\Utils\Web\WebsiteInfo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -26,8 +27,8 @@ class DataCheckFor404sCommand extends Command
         Fields::URL_SCRITCH_MINIATURE,
     ];
 
-    const DEFAULT_LIMIT = 10;
-    const ARG_LIMIT = 'limit';
+    private const DEFAULT_LIMIT = 10;
+    private const OPT_LIMIT = 'limit';
 
     protected static $defaultName = 'app:data:check-for-404s'; // TODO: rename
 
@@ -46,16 +47,16 @@ class DataCheckFor404sCommand extends Command
 
     protected function configure()
     {
-        $this->addArgument(self::ARG_LIMIT, InputArgument::OPTIONAL, 'Number of URLs to check', self::DEFAULT_LIMIT);
+        $this->addOption(self::OPT_LIMIT, '', InputOption::VALUE_REQUIRED, 'Number of URLs to check', self::DEFAULT_LIMIT);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $limit = $input->getArgument(self::ARG_LIMIT);
-        if (!is_int($limit) || $limit <= 0 || $limit >= 100) {
-            $io->error('Argument "'.self::ARG_LIMIT.'" must be a number between 1 and 100');
+        $limit = Parse::int($input->getOption(self::OPT_LIMIT));
+        if ($limit <= 0 || $limit >= 100) {
+            $io->error('Value of "'.self::OPT_LIMIT.'" must be a number between 1 and 100');
 
             return 1;
         }
