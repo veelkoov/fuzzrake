@@ -2636,10 +2636,11 @@ INSERT INTO events VALUES (1653, 0, 1, '2020-02-13 18:05:45', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1654, 0, NULL, '2020-02-16 06:04:42', 'CS_UPDTD_DETLS', 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '', '');
 INSERT INTO events VALUES (1655, 0, NULL, '2020-02-16 18:04:53', 'CS_UPDTD_DETLS', 'Fix It Fursuits', 'https://www.fixitfursuits.com/get-a-quote', '', '', '');
 INSERT INTO events VALUES (1656, NULL, 0, '2020-02-16 18:04:57', 'CS_UPDTD_DETLS', 'maxyncheese', 'https://maxyncheese.wixsite.com/home', '', '["g\" class=\"ca1img\"></wix-image></div></div><div class=\"txtnew\" id=\"comp-ir243rb8\"><h2 class=\"font_6\">","commissions closed","</h2></div><div class=\"txtnew\" id=\"comp-irarbd0i\"><h2 class=\"font_6\">&middot;affordable fursuits, pr"]', '');
+INSERT INTO events VALUES (1657, NULL, NULL, '2020-02-16 21:00:00', 'GENERIC', '', '', '', '', '- Updated 1 maker data based on the maker''s request (<a href="https://github.com/veelkoov/fuzzrake/commit/a485a7f85c875b74304b1406bdb03947026d25cd" target="_blank">git</a>)');
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans', 370);
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 333);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9200);
-INSERT INTO sqlite_sequence VALUES ('events', 1656);
+INSERT INTO sqlite_sequence VALUES ('events', 1657);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 COMMIT;
