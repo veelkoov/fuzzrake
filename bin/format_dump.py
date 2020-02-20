@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import sys
 
 if len(sys.argv) != 4:
@@ -42,12 +43,19 @@ def is_skippable(line: str) -> bool:
     return line.find('INSERT INTO artisans_commissions_statues VALUES') != -1
 
 
+def remove_dynamic_data(line: str) -> str:  # TODO: Same story again. Move this data to another table?
+    return re.sub(
+        r"(INSERT INTO artisans_urls VALUES \(\d+, \d+, '[A-Z_]+', '.+'), (?:NULL|'[0-9: .-]+'), (?:NULL|'[0-9: .-]+'), \d+, '.*'\);\n",
+        "\\1, NULL, NULL, 0 , '');\n", line)
+
+
 def reformat_file() -> None:
     with open(input_path) as input_file, \
             open(output_path, 'w') as output_file, \
             open(output_private_path, 'w') as output_private_file:
         for line in input_file:
             res_line = reformat_line(line)
+            res_line = remove_dynamic_data(res_line)
 
             if is_skippable(res_line):
                 continue
