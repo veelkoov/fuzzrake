@@ -9,7 +9,7 @@ use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
 use App\Utils\Parse;
-use App\Utils\Web\HttpClientException;
+use App\Utils\Web\HttpClient\HttpClientException;
 use App\Utils\Web\WebsiteInfo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;

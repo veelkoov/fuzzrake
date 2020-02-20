@@ -12,7 +12,7 @@ use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\FreeUrl;
-use App\Utils\Web\HttpClientException;
+use App\Utils\Web\HttpClient\HttpClientException;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

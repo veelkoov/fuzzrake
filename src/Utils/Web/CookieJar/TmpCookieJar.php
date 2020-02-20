@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\CookieJar;
 
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\RegexpMatchException;
+use App\Utils\Web\HttpClient\HttpClientException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class TmpCookieJar implements CookieJarInterface

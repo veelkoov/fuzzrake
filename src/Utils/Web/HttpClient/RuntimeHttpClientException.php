@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\HttpClient;
 
 use RuntimeException;
 

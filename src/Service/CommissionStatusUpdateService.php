@@ -15,7 +15,7 @@ use App\Utils\Tracking\NullMatch;
 use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Fetchable;
-use App\Utils\Web\HttpClientException;
+use App\Utils\Web\HttpClient\HttpClientException;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;

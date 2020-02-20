@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\HttpClient;
+
+use App\Utils\Web\CookieJar\CookieJarInterface;
+use App\Utils\Web\CookieJar\NullCookieJar;
+use App\Utils\Web\WebsiteInfo;
 
 class HttpClient
 {
