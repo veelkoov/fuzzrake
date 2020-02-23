@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DataCheckFor404sCommand extends Command
+class DataCheckUrlsCommand extends Command
 {
     private const SKIPPED_TYPES = [
         Fields::URL_OTHER,
@@ -30,7 +30,7 @@ class DataCheckFor404sCommand extends Command
     private const DEFAULT_LIMIT = 10;
     private const OPT_LIMIT = 'limit';
 
-    protected static $defaultName = 'app:data:check-for-404s'; // TODO: rename
+    protected static $defaultName = 'app:data:check-urls';
 
     private ArtisanUrlRepository $artisanUrlRepository;
     private WebpageSnapshotManager $webpageSnapshotManager;
