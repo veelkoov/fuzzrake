@@ -34,7 +34,7 @@ final class WebpageSnapshotJar
         $result = WebpageSnapshot::fromArray($data);
 
         for ($index = 0; $index < $data['childCount']; ++$index) {
-            self::load(self::getChildDirPath($baseDir, $index));
+            $result->addChild(self::load(self::getChildDirPath($baseDir, $index)));
         }
 
         return $result;
