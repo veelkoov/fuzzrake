@@ -25,7 +25,6 @@ class HttpClient
         $this->client = new CurlHttpClient([
             'headers' => [
                 'User-Agent'      => self::USER_AGENT,
-                'Accept-Encoding' => '*',
             ],
             'http_version' => 1.1, // 2.0 likes to Segmentation fault (core dumped)
             'timeout'      => self::CONNECTION_TIMEOUT_SEC,
