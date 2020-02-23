@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Tasks;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
+use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
@@ -17,61 +18,79 @@ use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Fetchable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
-class CommissionStatusUpdateService
+final class CommissionsStatusesUpdate
 {
+    private LoggerInterface $logger;
     private ArtisanRepository $artisanRepository;
-    private EntityManagerInterface $objectManager;
+    private EntityManagerInterface $entityManager;
     private WebpageSnapshotManager $snapshots;
-    private StyleInterface $io;
+    private SymfonyStyle $io;
     private CommissionsStatusParser $parser;
+    private bool $refetch;
+    private bool $dryRun;
 
-    public function __construct(EntityManagerInterface $objectManager, WebpageSnapshotManager $snapshots)
-    {
-        $this->objectManager = $objectManager;
-        $this->artisanRepository = $objectManager->getRepository(Artisan::class);
+    public function __construct(
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager,
+        WebpageSnapshotManager $snapshots,
+        SymfonyStyle $io,
+        bool $refetch,
+        bool $dryRun
+    ) {
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
+        $this->artisanRepository = $entityManager->getRepository(Artisan::class);
         $this->snapshots = $snapshots;
         $this->parser = new CommissionsStatusParser();
+
+        $this->io = $io;
+        $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
+        $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
+        $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
+
+        $this->refetch = $refetch;
+        $this->dryRun = $dryRun;
     }
 
-    public function updateAll(SymfonyStyle $style, bool $refetch, bool $dryRun)
+    public function updateAll()
     {
-        $this->setIo($style);
         $urls = $this->getCstUrls($this->getTrackedArtisans());
 
-        $this->snapshots->prefetchUrls($urls, $refetch, $this->io);
+        $this->snapshots->prefetchUrls($urls, $this->refetch, $this->io);
 
         foreach ($urls as $url) {
-            $this->performUpdate($url, $refetch, $dryRun);
+            $this->performUpdate($url);
         }
     }
 
-    private function performUpdate(Fetchable $url, bool $refetch, bool $dryRun): void
+    private function performUpdate(Fetchable $url): void
     {
         $artisan = $url->getArtisan();
 
-        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url, $refetch);
+        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url);
 
         $this->reportStatusChange($artisan, $analysisResult);
 
-        if (!$dryRun) {
+        if (!$this->dryRun) {
             $artisan->getCommissionsStatus()
                 ->setStatus($analysisResult->getStatus())
                 ->setLastChecked($datetimeRetrieved);
         }
     }
 
-    private function analyzeStatus(Fetchable $url, bool $refetch): array
+    private function analyzeStatus(Fetchable $url): array
     {
         try {
-            $webpageSnapshot = $this->snapshots->get($url, $refetch);
+            $webpageSnapshot = $this->snapshots->get($url, $this->refetch);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | InvalidArgumentException | ExceptionInterface $exception) {
+            echo $exception->getMessage();
             // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
@@ -113,7 +132,7 @@ class CommissionStatusUpdateService
         }
 
         if ($artisan->getCommissionsStatus()->getStatus() !== $analysisResult->getStatus()) {
-            $this->objectManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
+            $this->entityManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
                 $artisan->getCommissionsStatus()->getStatus(), $analysisResult));
         }
     }
@@ -138,13 +157,5 @@ class CommissionStatusUpdateService
         return array_map(function (Artisan $artisan): Fetchable {
             return $artisan->getSingleUrlObject(Fields::URL_CST);
         }, $artisans);
-    }
-
-    private function setIo(SymfonyStyle $style): void
-    {
-        $this->io = $style;
-        $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
-        $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
-        $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
     }
 }
