@@ -41,7 +41,7 @@ class CommissionsStatusParser
     /** @noinspection PhpDocRedundantThrowsInspection */
 
     /**
-     * @throws TrackerException From inside array_map
+     * @throws TrackerException
      */
     public function analyseStatus(WebpageSnapshot $snapshot): AnalysisResult
     {

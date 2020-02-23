@@ -37,4 +37,9 @@ class FreeUrl implements Fetchable
     {
         return 'N/A';
     }
+
+    public function __toString()
+    {
+        return __CLASS__."[{$this->url}]";
+    }
 }

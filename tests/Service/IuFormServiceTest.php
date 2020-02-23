@@ -15,10 +15,11 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\FreeUrl;
-use App\Utils\Web\HttpClient\HttpClientException;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class IuFormServiceTest extends WebTestCase
 {
@@ -57,7 +58,7 @@ class IuFormServiceTest extends WebTestCase
     /**
      * @dataProvider formDataPrefillDataProvider
      *
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
     public function testFormDataPrefill(Artisan $artisan): void
     {
@@ -193,6 +194,6 @@ class IuFormServiceTest extends WebTestCase
 
     private static function getWebpageSnapshotManager(): WebpageSnapshotManager
     {
-        return new WebpageSnapshotManager(__DIR__.'/../../');
+        return new WebpageSnapshotManager(__DIR__.'/../../', new NullLogger());
     }
 }

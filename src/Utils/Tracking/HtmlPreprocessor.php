@@ -75,7 +75,7 @@ abstract class HtmlPreprocessor
     {
         if (WebsiteInfo::isFurAffinity(null, $inputText)) {
             if (false !== stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.')) {
-                throw new TrackerException('FurAffinity login required');
+                throw new TrackerException('FurAffinity login required'); // FIXME: Should be 401
             }
 
             if (WebsiteInfo::isFurAffinityUserProfile(null, $inputText)) {

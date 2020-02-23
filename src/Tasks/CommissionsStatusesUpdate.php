@@ -12,7 +12,6 @@ use App\Utils\Artisan\Fields;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\AnalysisResult;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\NullMatch;
 use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Fetchable;
@@ -85,18 +84,20 @@ final class CommissionsStatusesUpdate
 
     private function analyzeStatus(Fetchable $url): array
     {
+        $datetimeRetrieved = null;
+        $analysisResult = null;
+
         try {
             $webpageSnapshot = $this->snapshots->get($url, $this->refetch);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | InvalidArgumentException | ExceptionInterface $exception) {
-            echo $exception->getMessage();
+            $this->logger->warning($exception->getMessage());
+            // TODO: Split into different levels based on severity after latent codes implementation
             // FIXME: actual failure would result in "NONE MATCHES" interpretation
-            $datetimeRetrieved = DateTimeUtils::getNowUtc();
-            $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());
         }
 
-        return [$datetimeRetrieved, $analysisResult];
+        return [$datetimeRetrieved ?? DateTimeUtils::getNowUtc(), $analysisResult ?? AnalysisResult::getNull()];
     }
 
     private function canAutoUpdate(Artisan $artisan): bool

@@ -9,8 +9,6 @@ use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Artisan\Fields;
 use App\Utils\Parse;
-use App\Utils\Web\HttpClient\HttpClientException;
-use App\Utils\Web\WebsiteInfo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -84,28 +82,25 @@ class DataCheckUrlsCommand extends Command
         return 0;
     }
 
-    /**
-     * @param ArtisanUrl[] $urls
-     */
-    private function checkUrls(array $urls, SymfonyStyle $io): void // TODO: relocate to either manager or HTTP client
-    {
-        foreach ($urls as $url) {
-            $error = false;
-
-            try {
-                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url))) {
-                    $error = 'Latent 404: '.$url->getUrl();
-                }
-            } catch (HttpClientException $e) {
-                $error = $e->getMessage();
-            }
-
-            if ($error) {
-                $artisan = $url->getArtisan();
-                $contact = trim($artisan->getContactAllowed().' '.$artisan->getContactMethod().' '
-                    .$artisan->getContactAddressPlain());
-                $io->writeln($artisan->getLastMakerId().':'.$contact.':'.$url->getType().': '.$error);
-            }
-        }
-    }
+//    private function checkUrls(array $urls, SymfonyStyle $io): void // TODO: relocate to either manager or HTTP client
+//    {
+//        foreach ($urls as $url) {
+//            $error = false;
+//
+//            try {
+//                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url))) {
+//                    $error = 'Latent 404: '.$url->getUrl();
+//                }
+//            } catch (HttpClientException $e) {
+//                $error = $e->getMessage();
+//            }
+//
+//            if ($error) {
+//                $artisan = $url->getArtisan();
+//                $contact = trim($artisan->getContactAllowed().' '.$artisan->getContactMethod().' '
+//                    .$artisan->getContactAddressPlain());
+//                $io->writeln($artisan->getLastMakerId().':'.$contact.':'.$url->getType().': '.$error);
+//            }
+//        }
+//    }
 }

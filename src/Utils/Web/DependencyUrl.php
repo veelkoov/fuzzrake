@@ -39,4 +39,9 @@ class DependencyUrl implements Fetchable
     {
         $this->parent->recordFailedFetch($code, $reason); // TODO: What if one child fails, and the other one succeeds?
     }
+
+    public function __toString()
+    {
+        return __CLASS__."[{$this->url}]";
+    }
 }

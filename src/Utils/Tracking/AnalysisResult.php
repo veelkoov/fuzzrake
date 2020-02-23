@@ -89,4 +89,9 @@ class AnalysisResult
     {
         return $this->closedMatch->getRegexp()->getId();
     }
+
+    public static function getNull(): self
+    {
+        return new self(NullMatch::get(), NullMatch::get());
+    }
 }

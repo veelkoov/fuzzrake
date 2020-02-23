@@ -12,13 +12,13 @@ use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\FreeUrl;
-use App\Utils\Web\HttpClient\HttpClientException;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class IuFormUpdateIdsCommand extends Command
 {
@@ -48,7 +48,7 @@ class IuFormUpdateIdsCommand extends Command
 
         try {
             $snapshot = $this->snapshotManager->get(new FreeUrl($this->iuFormUrl), $input->getOption('refresh'));
-        } catch (HttpClientException $e) {
+        } catch (ExceptionInterface $e) {
             $io->error('Failed fetching the form: '.$e->getMessage());
 
             return 1;
