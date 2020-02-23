@@ -94,6 +94,7 @@ class WebpageSnapshotManager
         $content = $response->getContent($throw);
 
         if (200 === $code && null !== ($latentCode = WebsiteInfo::getLatentCode($url->getUrl(), $content))) {
+            $this->logger->info("Correcting response code for $url from $code to $latentCode");
             $code = $latentCode;
         }
 
