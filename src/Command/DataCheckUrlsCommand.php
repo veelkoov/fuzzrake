@@ -55,7 +55,7 @@ class DataCheckUrlsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $limit = Parse::int($input->getOption(self::OPT_LIMIT));
-        if ($limit <= 0 || $limit >= 100) {
+        if ($limit <= 0 || $limit > 100) {
             $io->error('Value of "'.self::OPT_LIMIT.'" must be a number between 1 and 100');
 
             return 1;
