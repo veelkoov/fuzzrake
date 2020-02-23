@@ -65,7 +65,7 @@ class IuFormServiceTest extends WebTestCase
         $webpageSnapshotManager = self::getWebpageSnapshotManager();
 
         $updateUrl = $iuFormService->getUpdateUrl($artisan);
-        $formWebpage = $webpageSnapshotManager->get(new FreeUrl($updateUrl));
+        $formWebpage = $webpageSnapshotManager->get(new FreeUrl($updateUrl), false);
 
         $crawler = new Crawler($formWebpage->getContents());
 

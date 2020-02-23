@@ -28,8 +28,8 @@ class UpdateCommissionsCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('refresh', 'r', null, 'Refresh pages cache (re-fetch)');
-        $this->addOption('dry-run', 'd', null, 'Dry run (don\'t update the DB)');
+        $this->addOption('refresh', 'r', null, 'Refresh pages in cache (re-fetch)');
+        $this->addOption('dry-run', 'd', null, 'Dry run (don\'t update the DB)'); // TODO: Change to "commit" (inverse)
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

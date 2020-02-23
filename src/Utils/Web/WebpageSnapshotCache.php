@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use App\Utils\Regexp\Regexp;
-use Closure;
 use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -22,57 +21,35 @@ class WebpageSnapshotCache
         $this->fs->mkdir($this->cacheDirPath);
     }
 
-    public function clear()
-    {
-        $this->fs->remove($this->cacheDirPath);
-        $this->fs->mkdir($this->cacheDirPath);
-    }
-
-    public function getOrSet(Fetchable $url, Closure $getUrl): WebpageSnapshot
-    {
-        $snapshotPath = $this->snapshotPathForUrl($url->getUrl());
-
-        if ($this->cacheItemExists($snapshotPath)) {
-            try {
-                return $this->get($snapshotPath);
-            } catch (JsonException $e) {
-                // TODO: Log exception; snapshot was corrupted
-                // Fallback below
-            }
-        }
-
-        return $this->put($snapshotPath, $getUrl());
-    }
-
     public function has(Fetchable $url): bool
     {
-        return $this->cacheItemExists($this->snapshotPathForUrl($url->getUrl()));
+        return file_exists($this->snapshotPathForUrl($url->getUrl()));
     }
 
-    private function cacheItemExists(string $snapshotPath): bool
+    public function get(Fetchable $url): ?WebpageSnapshot
     {
-        return file_exists($snapshotPath);
+        if (!$this->has($url)) {
+            return null;
+        }
+
+        try {
+            return WebpageSnapshot::fromJson(file_get_contents($this->snapshotPathForUrl($url->getUrl())));
+        } catch (JsonException $e) {
+            // TODO: INFO log
+            return null;
+        }
     }
 
-    /**
-     * @throws JsonException
-     */
-    private function get(string $snapshotPath): WebpageSnapshot
+    public function set(Fetchable $url, WebpageSnapshot $snapshot): void
     {
-        return WebpageSnapshot::fromJson(file_get_contents($snapshotPath));
-    }
-
-    private function put(string $snapshotPath, WebpageSnapshot $snapshot): WebpageSnapshot
-    {
+        $snapshotPath = $this->snapshotPathForUrl($url->getUrl());
         $this->fs->mkdir(dirname($snapshotPath));
 
         try {
             $this->fs->dumpFile($snapshotPath, $snapshot->toJson());
         } catch (JsonException $e) {
-            // TODO: Add logging/notifying
+            // TODO: WARN log
         }
-
-        return $snapshot;
     }
 
     private function snapshotPathForUrl(string $url): string

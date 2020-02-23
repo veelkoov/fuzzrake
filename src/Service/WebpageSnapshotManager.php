@@ -26,33 +26,31 @@ class WebpageSnapshotManager
         $this->httpClient = new GentleHttpClient();
     }
 
-    public function clearCache(): void
-    {
-        $this->cache->clear();
-    }
-
     /**
-     * @throws HttpClientException from inside fetch()
+     * @throws HttpClientException
      */
-    public function get(Fetchable $url): WebpageSnapshot
+    public function get(Fetchable $url, bool $refetch): WebpageSnapshot
     {
-        return $this->cache->getOrSet($url, function () use ($url) {
+        if ($refetch || (null === ($result = $this->cache->get($url)))) {
             try {
-                $result = $this->fetch($url);
+                $result = $this->fetch($url, $refetch);
                 $url->recordSuccessfulFetch();
 
-                return $result;
+                $this->cache->set($url, $result);
             } catch (HttpClientException $exception) {
                 $url->recordFailedFetch($exception->getCode(), $exception->getMessage());
+
                 throw $exception;
             }
-        });
+        }
+
+        return $result;
     }
 
     /**
      * @param Fetchable[] $urls
      */
-    public function prefetchUrls(array $urls, StyleInterface $progressReportIo): void
+    public function prefetchUrls(array $urls, bool $refetch, StyleInterface $progressReportIo): void
     {
         $urls = array_filter($urls, function (Fetchable $url): bool {
             return !$this->cache->has($url);
@@ -64,7 +62,7 @@ class WebpageSnapshotManager
 
         while (($url = $queue->pop())) {
             try {
-                $this->get($url);
+                $this->get($url, $refetch);
             } catch (HttpClientException $exception) {
                 // Prefetching = keep quiet, we'll retry
             }
@@ -78,7 +76,7 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function fetch(Fetchable $url): WebpageSnapshot
+    private function fetch(Fetchable $url, bool $refetch): WebpageSnapshot
     {
         if ($url->isDependency()) {
             $contents = $this->httpClient->getImmediately($url->getUrl());
@@ -89,7 +87,7 @@ class WebpageSnapshotManager
         $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $contents,
             DateTimeUtils::getNowUtc(), $url->getOwnerName());
 
-        $this->fetchChildren($webpageSnapshot, $url);
+        $this->fetchChildren($webpageSnapshot, $url, $refetch);
 
         return $webpageSnapshot;
     }
@@ -97,10 +95,10 @@ class WebpageSnapshotManager
     /**
      * @throws HttpClientException
      */
-    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
+    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url, bool $refetch): void
     {
         foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
-            $webpageSnapshot->addChild($this->get(new DependencyUrl($childUrl, $url)));
+            $webpageSnapshot->addChild($this->get(new DependencyUrl($childUrl, $url), $refetch));
         }
     }
 }

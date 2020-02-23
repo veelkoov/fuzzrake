@@ -67,7 +67,7 @@ class DataCheckUrlsCommand extends Command
 
         foreach ($urls as $url) {
             try {
-                $this->webpageSnapshotManager->get($url);
+                $this->webpageSnapshotManager->get($url, true);
             } catch (HttpClientException $e) {
                 // Ignore - failure has been recorded
             }

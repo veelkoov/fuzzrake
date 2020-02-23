@@ -24,11 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CommissionStatusUpdateService
 {
-    /**
-     * @var ArtisanRepository
-     */
-    private $artisanRepository;
-
+    private ArtisanRepository $artisanRepository;
     private EntityManagerInterface $objectManager;
     private WebpageSnapshotManager $snapshots;
     private StyleInterface $io;
@@ -42,27 +38,23 @@ class CommissionStatusUpdateService
         $this->parser = new CommissionsStatusParser();
     }
 
-    public function updateAll(SymfonyStyle $style, bool $refresh, bool $dryRun)
+    public function updateAll(SymfonyStyle $style, bool $refetch, bool $dryRun)
     {
-        if ($refresh) {
-            $this->snapshots->clearCache();
-        }
-
         $this->setIo($style);
         $urls = $this->getCstUrls($this->getTrackedArtisans());
 
-        $this->snapshots->prefetchUrls($urls, $this->io);
+        $this->snapshots->prefetchUrls($urls, $refetch, $this->io);
 
         foreach ($urls as $url) {
-            $this->performUpdate($url, $dryRun);
+            $this->performUpdate($url, $refetch, $dryRun);
         }
     }
 
-    private function performUpdate(Fetchable $url, bool $dryRun): void
+    private function performUpdate(Fetchable $url, bool $refetch, bool $dryRun): void
     {
         $artisan = $url->getArtisan();
 
-        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url);
+        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url, $refetch);
 
         $this->reportStatusChange($artisan, $analysisResult);
 
@@ -73,10 +65,10 @@ class CommissionStatusUpdateService
         }
     }
 
-    private function analyzeStatus(Fetchable $url): array
+    private function analyzeStatus(Fetchable $url, bool $refetch): array
     {
         try {
-            $webpageSnapshot = $this->snapshots->get($url);
+            $webpageSnapshot = $this->snapshots->get($url, $refetch);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) {
