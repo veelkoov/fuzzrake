@@ -56,6 +56,7 @@ task :dbpull do
   exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump artisans_private_data')
   exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
   exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_TMP_PATH}")
+  exec_or_die('chmod', 'a+w', DB_TMP_PATH)
   exec_or_die('mv', DB_TMP_PATH, DB_PATH)
   exec_or_die('rm', DB_DUMP_TMP_PATH)
 end
@@ -104,9 +105,9 @@ task 'get-snapshots' do
               'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-task(:cst)  { sc_cst('-d') }
-task(:cstc) { sc_cst }
-task(:cstr) { sc_cst('-rd') }
+task(:cst)  { sc_cst }
+task(:cstc) { sc_cst('-c') }
+task(:cstr) { sc_cst('-r') }
 
 #
 # IMPORT TASKS

@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\HttpClient;
 
 use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\Web\UrlUtils;
+use Symfony\Component\BrowserKit\CookieJar;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class GentleHttpClient extends HttpClient
 {
@@ -18,21 +22,21 @@ class GentleHttpClient extends HttpClient
     private array $lastRequestsMs = [];
 
     /**
-     * @throws HttpClientException
+     * @throws TransportExceptionInterface
      */
-    public function get(string $url): string
+    public function get(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
     {
         $this->delayForHost($url);
 
-        return $this->getImmediately($url);
+        return $this->getImmediately($url, $cookieJar, $additionalHeaders);
     }
 
     /**
-     * @throws HttpClientException
+     * @throws TransportExceptionInterface
      */
-    public function getImmediately(string $url): string
+    public function getImmediately(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
     {
-        $result = parent::get($url);
+        $result = parent::get($url, $cookieJar, $additionalHeaders);
         $this->updateLastHostCall($url);
 
         return $result;

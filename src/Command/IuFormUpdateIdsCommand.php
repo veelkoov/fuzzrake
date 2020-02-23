@@ -12,13 +12,13 @@ use App\Utils\GoogleForms\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\FreeUrl;
-use App\Utils\Web\HttpClientException;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class IuFormUpdateIdsCommand extends Command
 {
@@ -39,6 +39,7 @@ class IuFormUpdateIdsCommand extends Command
     protected function configure()
     {
         $this->setDescription('Fetch ID of I/U form\'s fields');
+        $this->addOption('refresh', 'r', null, 'Refresh pages in cache (re-fetch)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -46,8 +47,8 @@ class IuFormUpdateIdsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $snapshot = $this->snapshotManager->get(new FreeUrl($this->iuFormUrl));
-        } catch (HttpClientException $e) {
+            $snapshot = $this->snapshotManager->get(new FreeUrl($this->iuFormUrl), $input->getOption('refresh'), true);
+        } catch (ExceptionInterface $e) {
             $io->error('Failed fetching the form: '.$e->getMessage());
 
             return 1;
