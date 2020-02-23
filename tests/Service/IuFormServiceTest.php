@@ -15,7 +15,7 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\FreeUrl;
-use App\Utils\Web\WebpageSnapshotCache;
+use App\Utils\Web\Snapshot\WebpageSnapshotCache;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;

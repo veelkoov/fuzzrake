@@ -7,7 +7,7 @@ namespace App\Tests\Utils;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
-use App\Utils\Web\WebpageSnapshot;
+use App\Utils\Web\Snapshot\WebpageSnapshot;
 use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase

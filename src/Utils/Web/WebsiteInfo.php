@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use App\Utils\Regexp\Regexp;
+use App\Utils\Web\Snapshot\WebpageSnapshot;
 
 abstract class WebsiteInfo
 {

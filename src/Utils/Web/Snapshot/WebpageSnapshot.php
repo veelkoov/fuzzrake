@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\Snapshot;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;

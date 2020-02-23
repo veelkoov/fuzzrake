@@ -7,7 +7,7 @@ namespace App\Utils\Tracking;
 use App\Utils\Regexp\Factory;
 use App\Utils\Regexp\TrackingRegexp;
 use App\Utils\Regexp\Variant;
-use App\Utils\Web\WebpageSnapshot;
+use App\Utils\Web\Snapshot\WebpageSnapshot;
 
 class CommissionsStatusParser
 {
