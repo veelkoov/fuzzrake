@@ -6,17 +6,12 @@ namespace App\Utils\Web;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\Json;
 use DateTime;
 use DateTimeInterface;
-use JsonException;
-use JsonSerializable;
+use InvalidArgumentException;
 
-class WebpageSnapshot implements JsonSerializable
+class WebpageSnapshot
 {
-    const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-                                     | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
-
     /**
      * @var WebpageSnapshot[]
      */
@@ -41,23 +36,6 @@ class WebpageSnapshot implements JsonSerializable
         $this->ownerName = $ownerName;
         $this->httpCode = $httpCode;
         $this->headers = $headers;
-    }
-
-    /**
-     * @throws JsonException
-     * @throws DateTimeException
-     */
-    public static function fromJson(string $json): WebpageSnapshot
-    {
-        return self::fromArray(Json::decode($json));
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function toJson(): string
-    {
-        return Json::encode($this, self::JSON_SERIALIZATION_OPTIONS);
     }
 
     public function addChild(WebpageSnapshot $children): void
@@ -127,14 +105,13 @@ class WebpageSnapshot implements JsonSerializable
         return array_merge([$this->contents], ...array_map(function (WebpageSnapshot $snapshot) { return $snapshot->getAllContents(); }, $this->getChildren()));
     }
 
-    public function jsonSerialize(): array
+    public function getMetadata(): array
     {
         return [
             'url'         => $this->url,
             'ownerName'   => $this->ownerName,
             'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
-            'contents'    => $this->contents,
-            'children'    => $this->children,
+            'childCount'  => count($this->children),
             'headers'     => $this->headers,
             'httpCode'    => $this->httpCode,
         ];
@@ -143,12 +120,13 @@ class WebpageSnapshot implements JsonSerializable
     /**
      * @throws DateTimeException
      */
-    private static function fromArray(array $input): WebpageSnapshot
+    public static function fromArray(array $input): WebpageSnapshot
     {
-        $result = new self($input['url'], $input['contents'], DateTimeUtils::getUtcAt($input['retrievedAt']),
-            $input['ownerName'], $input['httpCode'] ?? 0, $input['headers'] ?? []);
-        $result->setChildren(array_map([WebpageSnapshot::class, 'fromArray'], $input['children']));
+        if (!is_string($input['contents'])) {
+            throw new InvalidArgumentException('Contents is not a string');
+        }
 
-        return $result;
+        return new self($input['url'], $input['contents'], DateTimeUtils::getUtcAt($input['retrievedAt']),
+            $input['ownerName'], $input['httpCode'] ?? 0, $input['headers'] ?? []);
     }
 }

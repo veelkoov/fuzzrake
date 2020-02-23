@@ -5,13 +5,21 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use App\Utils\DateTime\DateTimeException;
+use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebpageSnapshotCache
 {
+    private const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+                                             | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
+    private const PATH_META_FILE = 'meta_file';
+    private const PATH_DATA_FILE = 'data_file';
+
     private LoggerInterface $logger;
     private string $cacheDirPath;
     private Filesystem $fs;
@@ -27,22 +35,7 @@ class WebpageSnapshotCache
 
     public function has(Fetchable $url): bool
     {
-        return file_exists($this->snapshotPathForUrl($url->getUrl()));
-    }
-
-    public function get(Fetchable $url): ?WebpageSnapshot
-    {
-        if (!$this->has($url)) {
-            return null;
-        }
-
-        try {
-            return WebpageSnapshot::fromJson(file_get_contents($this->snapshotPathForUrl($url->getUrl())));
-        } catch (JsonException | DateTimeException $e) {
-            $this->logger->warning('Failed reading snapshot from cache', ['url' => $url, 'exception' => $e]);
-
-            return null;
-        }
+        return file_exists($this->getPaths($this->getBaseDir($url->getUrl()))[self::PATH_META_FILE]);
     }
 
     public function getOK(Fetchable $url): ?WebpageSnapshot
@@ -52,31 +45,91 @@ class WebpageSnapshotCache
         return $result && $result->isOK() ? $result : null;
     }
 
-    public function set(Fetchable $url, WebpageSnapshot $snapshot): void
+    public function get(Fetchable $url): ?WebpageSnapshot
     {
-        $snapshotPath = $this->snapshotPathForUrl($url->getUrl());
-        $this->fs->mkdir(dirname($snapshotPath));
+        if (!$this->has($url)) {
+            return null;
+        }
 
         try {
-            $this->fs->dumpFile($snapshotPath, $snapshot->toJson());
-        } catch (JsonException $e) {
+            return $this->load($this->getBaseDir($url->getUrl()));
+        } catch (JsonException | DateTimeException | InvalidArgumentException $e) {
+            $this->logger->warning('Failed reading snapshot from cache', ['url' => $url, 'exception' => $e]);
+
+            return null;
+        }
+    }
+
+    public function set(Fetchable $url, WebpageSnapshot $snapshot): void
+    {
+        try {
+            $this->dump($this->getBaseDir($url->getUrl()), $snapshot);
+        } catch (JsonException | IOException $e) {
             $this->logger->warning('Failed saving snapshot into cache', ['url' => $url, 'exception' => $e]);
         }
     }
 
-    private function snapshotPathForUrl(string $url): string
+    /**
+     * @throws JsonException
+     * @throws DateTimeException
+     * @throws InvalidArgumentException
+     */
+    private function load(string $baseDir): WebpageSnapshot
     {
-        $host = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
-        $hash = hash('sha512', $url);
+        $paths = $this->getPaths($baseDir);
 
-        return "{$this->cacheDirPath}/{$host}/{$this->urlToFilename($url)}-$hash.json";
+        $data = Json::decode(file_get_contents($paths[self::PATH_META_FILE]));
+        $data['contents'] = file_get_contents($paths[self::PATH_DATA_FILE]);
+
+        $result = WebpageSnapshot::fromArray($data);
+
+        for ($index = 0; $index < $data['childCount']; $index++) {
+            $this->load($this->getChildDirPath($baseDir, $index));
+        }
+
+        return $result;
     }
 
-    private function urlToFilename(string $url): string
+    /**
+     * @throws JsonException
+     */
+    private function dump(string $baseDir, WebpageSnapshot $snapshot): void
     {
-        return trim(
-            Regexp::replace('#[^a-z0-9_.-]+#i', '_',
-                Regexp::replace('~^https?://(www\.)?|(\?|#).+$~', '', $url)
-            ), '_');
+        $this->fs->mkdir($baseDir);
+
+        $paths = $this->getPaths($baseDir);
+        $this->fs->dumpFile($paths[self::PATH_META_FILE], Json::encode($snapshot->getMetadata(), self::JSON_SERIALIZATION_OPTIONS));
+        $this->fs->dumpFile($paths[self::PATH_DATA_FILE], $snapshot->getContents());
+
+        foreach ($snapshot->getChildren() as $index => $child) {
+            $this->dump($this->getChildDirPath($baseDir, $index), $child);
+        }
+    }
+
+    private function getPaths(string $baseDir): array
+    {
+        return [
+            self::PATH_META_FILE => $baseDir.'/metadata.json',
+            self::PATH_DATA_FILE => $baseDir.'/contents.data',
+        ];
+    }
+
+    private function getChildDirPath(string $baseDir, int $childIndex): string
+    {
+        return "$baseDir/child.$childIndex";
+    }
+
+    private function getBaseDir(string $url)
+    {
+        $hostName = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
+
+        $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
+        if (strpos($urlFsSafe, $hostName) === 0) {
+            $urlFsSafe = substr($urlFsSafe, strlen($hostName));
+        }
+
+        $urlHash = hash('sha224', $url);
+
+        return "{$this->cacheDirPath}/{$hostName}/{$urlFsSafe}-{$urlHash}";
     }
 }
