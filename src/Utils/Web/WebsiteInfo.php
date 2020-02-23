@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use App\Utils\Regexp\Regexp;
+use App\Utils\Web\Snapshot\WebpageSnapshot;
 
 abstract class WebsiteInfo
 {
@@ -12,14 +13,16 @@ abstract class WebsiteInfo
     private const FA_CONTENTS_SEARCH_STRING = 'fur affinity [dot] net</title>';
     private const FA_JOUNRAL_CONTENTS_SEARCH_STRING = 'journal -- fur affinity [dot] net</title>';
     private const FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING = '<title>Account disabled. -- Fur Affinity [dot] net</title>';
+    private const FA_ACCOUNT_LOGIN_REQUIRED_CONTENTS_SEARCH_STRING = '<p class="link-override">The owner of this page has elected to make it available to registered users only.';
+    private const FA_USER_NOT_FOUND_CONTENTS_SEARCH_STRING = 'This user cannot be found.';
+    private const FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING = '<title>System Error</title>';
 
     private const WIXSITE_CONTENTS_REGEXP = '#<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>#si';
-
     private const TWITTER_CONTENTS_SEARCH_STRING = '| Twitter</title>';
     private const INSTAGRAM_CONTENTS_REGEXP = '#Instagram photos and videos\s*</title>#si';
 
-    public const TRELLO_BOARD_URL_REGEXP = '#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#';
-    public const WIXSITE_CHILDREN_REGEXP = "#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si";
+    private const TRELLO_BOARD_URL_REGEXP = '#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#';
+    private const WIXSITE_CHILDREN_REGEXP = "#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si";
 
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
@@ -47,17 +50,6 @@ abstract class WebsiteInfo
 
         if (null !== $webpageContents) {
             return false !== stripos($webpageContents, self::FA_CONTENTS_SEARCH_STRING);
-        }
-
-        return false;
-    }
-
-    public static function isLatent404(WebpageSnapshot $webSnapshot): bool
-    {
-        if (self::isFurAffinity($webSnapshot->getUrl(), $webSnapshot->getContents())) {
-            if (false !== strpos($webSnapshot->getContents(), self::FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING)) {
-                return true;
-            }
         }
 
         return false;
@@ -127,5 +119,21 @@ abstract class WebsiteInfo
         } else {
             return [];
         }
+    }
+
+    public static function getLatentCode(string $url, string $content): ?int
+    {
+        if (self::isFurAffinity($url, $content)) {
+            if (false !== strpos($content, self::FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING)) {
+                return 410;
+            } elseif (false !== stripos($content, self::FA_ACCOUNT_LOGIN_REQUIRED_CONTENTS_SEARCH_STRING)) {
+                return 401;
+            } elseif (false !== stripos($content, self::FA_USER_NOT_FOUND_CONTENTS_SEARCH_STRING)
+                && false !== stripos($content, self::FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING)) {
+                return 404;
+            }
+        }
+
+        return null;
     }
 }

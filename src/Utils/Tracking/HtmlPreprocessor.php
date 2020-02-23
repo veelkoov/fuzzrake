@@ -74,10 +74,6 @@ abstract class HtmlPreprocessor
     public static function applyFilters(string $inputText, string $additionalFilter): string
     {
         if (WebsiteInfo::isFurAffinity(null, $inputText)) {
-            if (false !== stripos($inputText, '<p class="link-override">The owner of this page has elected to make it available to registered users only.')) {
-                throw new TrackerException('FurAffinity login required');
-            }
-
             if (WebsiteInfo::isFurAffinityUserProfile(null, $inputText)) {
                 $additionalFilter = 'profile' === $additionalFilter ? 'td[width="80%"][align="left"]' : '';
 

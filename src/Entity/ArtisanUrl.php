@@ -27,7 +27,7 @@ class ArtisanUrl implements Fetchable
      * @ORM\ManyToOne(targetEntity="App\Entity\Artisan", inversedBy="urls")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private Artisan $artisan;
+    private ?Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -42,12 +42,12 @@ class ArtisanUrl implements Fetchable
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $lastSuccess;
+    private ?DateTimeInterface $lastSuccess = null;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $lastFailure;
+    private ?DateTimeInterface $lastFailure = null;
 
     /**
      * @ORM\Column(type="integer")
@@ -71,12 +71,12 @@ class ArtisanUrl implements Fetchable
         return $this;
     }
 
-    public function getArtisan(): Artisan
+    public function getArtisan(): ?Artisan
     {
         return $this->artisan;
     }
 
-    public function setArtisan(Artisan $artisan): self
+    public function setArtisan(?Artisan $artisan): self
     {
         $this->artisan = $artisan;
 
@@ -175,5 +175,10 @@ class ArtisanUrl implements Fetchable
     public function getOwnerName(): string
     {
         return $this->artisan->getName();
+    }
+
+    public function __toString()
+    {
+        return __CLASS__.":{$this->id}:{$this->url}";
     }
 }

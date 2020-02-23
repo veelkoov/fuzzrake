@@ -8,51 +8,57 @@ use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
-use App\Utils\Web\GentleHttpClient;
-use App\Utils\Web\HttpClientException;
-use App\Utils\Web\WebpageSnapshot;
-use App\Utils\Web\WebpageSnapshotCache;
+use App\Utils\Web\HttpClient\GentleHttpClient;
+use App\Utils\Web\Snapshot\WebpageSnapshot;
+use App\Utils\Web\Snapshot\WebpageSnapshotCache;
 use App\Utils\Web\WebsiteInfo;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\StyleInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class WebpageSnapshotManager
 {
     private WebpageSnapshotCache $cache;
     private GentleHttpClient $httpClient;
+    private LoggerInterface $logger;
 
-    public function __construct(string $projectDir)
+    public function __construct(LoggerInterface $logger, WebpageSnapshotCache $cache)
     {
-        $this->cache = new WebpageSnapshotCache("$projectDir/var/snapshots");
+        $this->logger = $logger;
+        $this->cache = $cache;
         $this->httpClient = new GentleHttpClient();
     }
 
-    public function clearCache(): void
-    {
-        $this->cache->clear();
-    }
-
     /**
-     * @throws HttpClientException from inside fetch()
+     * @throws ExceptionInterface
      */
-    public function get(Fetchable $url): WebpageSnapshot
+    public function get(Fetchable $url, bool $refetch, bool $throw): WebpageSnapshot
     {
-        return $this->cache->getOrSet($url, function () use ($url) {
-            try {
-                $result = $this->fetch($url);
-                $url->recordSuccessfulFetch();
+        if (!$refetch && (null !== ($result = $this->cache->getOK($url)))) {
+            $this->logger->debug('Retrieved from cache: '.$url);
 
-                return $result;
-            } catch (HttpClientException $exception) {
-                $url->recordFailedFetch($exception->getCode(), $exception->getMessage());
-                throw $exception;
-            }
-        });
+            return $result;
+        }
+
+        try {
+            $result = $this->fetch($url, $throw);
+            $this->updateUrlHealthStatus($url, $result, null);
+
+            $this->cache->set($url, $result);
+        } catch (ExceptionInterface $exception) {
+            $this->updateUrlHealthStatus($url, null, $exception);
+
+            throw $exception;
+        }
+
+        return $result;
     }
 
     /**
      * @param Fetchable[] $urls
      */
-    public function prefetchUrls(array $urls, StyleInterface $progressReportIo): void
+    public function prefetchUrls(array $urls, bool $refetch, StyleInterface $progressReportIo): void
     {
         $urls = array_filter($urls, function (Fetchable $url): bool {
             return !$this->cache->has($url);
@@ -64,8 +70,8 @@ class WebpageSnapshotManager
 
         while (($url = $queue->pop())) {
             try {
-                $this->get($url);
-            } catch (HttpClientException $exception) {
+                $this->get($url, $refetch, false);
+            } catch (ExceptionInterface $exception) {
                 // Prefetching = keep quiet, we'll retry
             }
 
@@ -76,31 +82,64 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
-    private function fetch(Fetchable $url): WebpageSnapshot
+    private function fetch(Fetchable $url, bool $throw): WebpageSnapshot
     {
-        if ($url->isDependency()) {
-            $contents = $this->httpClient->getImmediately($url->getUrl());
-        } else {
-            $contents = $this->httpClient->get($url->getUrl());
+        $this->logger->debug('Will request: '.$url);
+        $response = $this->getDependencyAware($url);
+        $this->logger->debug('Sent request: '.$url);
+
+        $code = $response->getStatusCode();
+        $content = $response->getContent($throw);
+
+        if (200 === $code && null !== ($latentCode = WebsiteInfo::getLatentCode($url->getUrl(), $content))) {
+            $this->logger->info("Correcting response code for $url from $code to $latentCode");
+            $code = $latentCode;
         }
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $contents,
-            DateTimeUtils::getNowUtc(), $url->getOwnerName());
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content, DateTimeUtils::getNowUtc(),
+            $url->getOwnerName(), $code, $response->getHeaders($throw));
 
-        $this->fetchChildren($webpageSnapshot, $url);
+        $this->logger->debug('Received response: '.$url);
+
+        $this->fetchChildren($webpageSnapshot, $url, $throw);
 
         return $webpageSnapshot;
     }
 
     /**
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
-    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
+    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url, bool $throw): void
     {
         foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
-            $webpageSnapshot->addChild($this->get(new DependencyUrl($childUrl, $url)));
+            $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url), $throw));
+        }
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    private function getDependencyAware(Fetchable $url): ResponseInterface
+    {
+        if ($url->isDependency()) {
+            return $this->httpClient->getImmediately($url->getUrl());
+        } else {
+            return $this->httpClient->get($url->getUrl());
+        }
+    }
+
+    private function updateUrlHealthStatus(Fetchable $url, ?WebpageSnapshot $snapshot, ?ExceptionInterface $exception): void
+    {
+        if ($snapshot && $snapshot->isOK()) {
+            $url->recordSuccessfulFetch();
+        } else {
+            $code = $exception ? $exception->getCode() : $snapshot->getHttpCode();
+            $message = $exception ? $exception->getMessage() : "HTTP {$code} returned for \"{$url->getUrl()}\"";
+
+            $url->recordFailedFetch($code, $message);
+            $this->logger->debug("Failed fetching: {$url} {$message}");
         }
     }
 }

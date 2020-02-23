@@ -8,32 +8,37 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\RegexpMatchException;
-use App\Utils\Web\GentleHttpClient;
-use App\Utils\Web\HttpClientException;
-use App\Utils\Web\TmpCookieJar;
+use App\Utils\Web\HttpClient\GentleHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use LogicException;
+use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class DataSetScritchMiniaturesCommand extends Command
 {
-    private const PICTURE_URL_REGEXP = '#^https://scritch.es/pictures/(?<picture_id>[a-z0-9-]{36})$#';
+    private const PICTURE_URL_REGEXP = '#^https://scritch\.es/pictures/(?<picture_id>[a-z0-9-]{36})$#';
 
     protected static $defaultName = 'app:data:set-scritch-miniatures';
 
     private ArtisanRepository $artisanRepository;
-    private EntityManagerInterface $objectManager;
+    private EntityManagerInterface $entityManager;
+    private CookieJar $cookieJar;
+    private GentleHttpClient $httpClient;
 
-    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $objectManager)
+    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $entityManager)
     {
         parent::__construct();
 
         $this->artisanRepository = $artisanRepository;
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
+        $this->cookieJar = new CookieJar();
+        $this->httpClient = new GentleHttpClient();
     }
 
     protected function configure()
@@ -42,18 +47,15 @@ class DataSetScritchMiniaturesCommand extends Command
     }
 
     /**
-     * @return int|void|null
-     *
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $response = $this->httpClient->get('https://scritch.es/', $this->cookieJar);
 
-        $cookieJar = new TmpCookieJar();
-        $httpClient = new GentleHttpClient($cookieJar);
-        $httpClient->get('https://scritch.es/');
-        $csrfToken = $cookieJar->getValue('csrf-token');
+        $this->updateCookies($response);
+        $csrfToken = $this->cookieJar->get('csrf-token')->getValue();
 
         foreach ($this->artisanRepository->getAll() as $artisan) {
             $pictureUrls = explode("\n", $artisan->getScritchPhotoUrls());
@@ -68,8 +70,8 @@ class DataSetScritchMiniaturesCommand extends Command
             }
 
             try {
-                $miniatureUrls = $this->retrieveMiniatureUrls($pictureUrls, $httpClient, $csrfToken);
-            } catch (HttpClientException | RegexpMatchException | JsonException | LogicException $e) {
+                $miniatureUrls = $this->retrieveMiniatureUrls($pictureUrls, $csrfToken);
+            } catch (ExceptionInterface | RegexpMatchException | JsonException | LogicException $e) {
                 $io->error('Failed: '.$artisan->getLastMakerId().', '.$e->getMessage());
                 continue;
             }
@@ -78,7 +80,7 @@ class DataSetScritchMiniaturesCommand extends Command
         }
 
         if ($input->getOption('commit')) {
-            $this->objectManager->flush();
+            $this->entityManager->flush();
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');
@@ -90,31 +92,38 @@ class DataSetScritchMiniaturesCommand extends Command
     /**
      * @param string[] $pictureUrls
      *
-     * @throws HttpClientException  From inside array_map
-     * @throws JsonException        From inside array_map
+     * @return string[]
+     *
+     * @throws JsonException
      * @throws RegexpMatchException
      * @throws LogicException
+     * @throws ExceptionInterface
      */
-    private function retrieveMiniatureUrls(array $pictureUrls, GentleHttpClient $httpClient, string $csrfToken): array
+    private function retrieveMiniatureUrls(array $pictureUrls, string $csrfToken): array
     {
         $pictureIds = $this->idsFromPicureUrls($pictureUrls);
         $jsonPayloads = array_map([$this, 'getGraphQlJsonPayload'], $pictureIds);
+        $result = [];
 
-        return array_map(function (string $jsonPayload) use ($httpClient, $csrfToken): string {
-            $responseJson = $httpClient->post('https://scritch.es/graphql', $jsonPayload, [
+        foreach ($jsonPayloads as $jsonPayload) {
+            $response = $this->httpClient->post('https://scritch.es/graphql', $jsonPayload, $this->cookieJar, [
                 'Content-Type'  => 'application/json',
                 'X-CSRF-Token'  => $csrfToken,
                 'authorization' => "Scritcher $csrfToken",
             ]);
 
-            $result = Json::decode($responseJson)['data']['medium']['thumbnail'] ?? '';
+            $this->updateCookies($response);
 
-            if ('' === $result) {
-                throw new LogicException("No thumbnail URL found in response: $responseJson");
+            $thumbnailUrl = Json::decode($response->getContent(true))['data']['medium']['thumbnail'] ?? '';
+
+            if ('' === $thumbnailUrl) {
+                throw new LogicException("No thumbnail URL found in response: $response");
             }
 
-            return $result;
-        }, $jsonPayloads);
+            $result[] = $thumbnailUrl;
+        }
+
+        return $result;
     }
 
     /**
@@ -126,7 +135,13 @@ class DataSetScritchMiniaturesCommand extends Command
      */
     private function idsFromPicureUrls(array $pictureUrls): array
     {
-        return array_map([$this, 'idFromPictureUrl'], $pictureUrls);
+        $result = [];
+
+        foreach ($pictureUrls as $pictureUrl) {
+            $result[] = Regexp::requireMatch(self::PICTURE_URL_REGEXP, $pictureUrl)['picture_id'];
+        }
+
+        return $result;
     }
 
     private function getGraphQlJsonPayload(string $pictureId): string
@@ -135,12 +150,10 @@ class DataSetScritchMiniaturesCommand extends Command
     }
 
     /**
-     * @throws RegexpMatchException
+     * @throws ExceptionInterface
      */
-    private function idFromPictureUrl(string $pictureUrl): string
+    private function updateCookies(ResponseInterface $response): void
     {
-        $matches = Regexp::requireMatch(self::PICTURE_URL_REGEXP, $pictureUrl);
-
-        return $matches['picture_id'];
+        $this->cookieJar->updateFromSetCookie($response->getHeaders(true)['set-cookie'] ?? []);
     }
 }
