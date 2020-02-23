@@ -179,6 +179,6 @@ class ArtisanUrl implements Fetchable
 
     public function __toString()
     {
-        return __CLASS__."[{$this->id} {$this->url}]";
+        return __CLASS__.":{$this->id}:{$this->url}";
     }
 }

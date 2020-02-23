@@ -40,6 +40,6 @@ class FreeUrl implements Fetchable
 
     public function __toString()
     {
-        return __CLASS__."[{$this->url}]";
+        return __CLASS__.":{$this->url}";
     }
 }

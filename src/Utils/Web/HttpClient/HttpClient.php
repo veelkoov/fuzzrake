@@ -27,6 +27,7 @@ class HttpClient
                 'User-Agent'      => self::USER_AGENT,
                 'Accept-Encoding' => '*', // TODO: verify proper behavior, with native option '' = all supported
             ],
+            'http_version' => 1.1, // 2.0 likes to Segmentation fault (core dumped)
             'timeout'      => self::CONNECTION_TIMEOUT_SEC,
             'max_duration' => self::TIMEOUT_SEC,
         ]);

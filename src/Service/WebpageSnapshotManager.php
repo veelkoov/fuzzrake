@@ -42,7 +42,7 @@ class WebpageSnapshotManager
 
                 $this->cache->set($url, $result);
             } catch (ExceptionInterface $exception) {
-                $this->logger->debug('Failed fetching: '.$url);
+                $this->logger->debug("Failed fetching: {$url} {$exception->getMessage()}");
 
                 $url->recordFailedFetch($exception->getCode(), $exception->getMessage());
 
