@@ -90,8 +90,15 @@ class WebpageSnapshotManager
         $response = $this->getDependencyAware($url);
         $this->logger->debug('Sent request: '.$url);
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $response->getContent($throw), DateTimeUtils::getNowUtc(),
-            $url->getOwnerName(), $response->getStatusCode(), $response->getHeaders($throw));
+        $code = $response->getStatusCode();
+        $content = $response->getContent($throw);
+
+        if (200 === $code && null !== ($latentCode = WebsiteInfo::getLatentCode($url->getUrl(), $content))) {
+            $code = $latentCode;
+        }
+
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content, DateTimeUtils::getNowUtc(),
+            $url->getOwnerName(), $code, $response->getHeaders($throw));
 
         $this->logger->debug('Received response: '.$url);
 
