@@ -176,4 +176,9 @@ class ArtisanUrl implements Fetchable
     {
         return $this->artisan->getName();
     }
+
+    public function __toString()
+    {
+        return __CLASS__.":{$this->id}:{$this->url}";
+    }
 }

@@ -7,17 +7,15 @@ namespace App\Tests\Utils;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
-use App\Utils\Web\WebpageSnapshot;
+use App\Utils\Web\Snapshot\WebpageSnapshot;
+use App\Utils\Web\Snapshot\WebpageSnapshotJar;
 use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase
 {
-    const FILENAME_PATTERN = '#^\d+_(?<status>open|closed|unknown)\.json$#';
+    const FILEPATH_PATTERN = '#/\d+_(?<status>open|closed|unknown)/metadata\.json$#';
 
-    /**
-     * @var CommissionsStatusParser
-     */
-    private static $csp;
+    private static CommissionsStatusParser $csp;
 
     public static function setUpBeforeClass(): void
     {
@@ -48,8 +46,8 @@ class CommissionsStatusParserTest extends TestCase
     public function areCommissionsOpenDataProvider()
     {
         return array_filter(array_map(function ($filepath) {
-            if (!Regexp::match(self::FILENAME_PATTERN, basename($filepath), $matches)) {
-                echo "Invalid filename: $filepath\n";
+            if (!Regexp::match(self::FILEPATH_PATTERN, $filepath, $matches)) {
+                echo "Invalid filepath: $filepath\n";
 
                 return false;
             }
@@ -65,9 +63,9 @@ class CommissionsStatusParserTest extends TestCase
                     $expectedResult = null;
             }
 
-            $snapshot = WebpageSnapshot::fromJson(file_get_contents($filepath));
+            $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
-            return [basename($filepath), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../snapshots/**/*.json')));
+            return [basename(dirname($filepath)), $snapshot, $expectedResult];
+        }, glob(__DIR__.'/../snapshots/*/93_closed/metadata.json')));
     }
 }

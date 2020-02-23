@@ -105,9 +105,9 @@ task 'get-snapshots' do
               'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-task(:cst)  { sc_cst('-d') }
-task(:cstc) { sc_cst }
-task(:cstr) { sc_cst('-rd') }
+task(:cst)  { sc_cst }
+task(:cstc) { sc_cst('-c') }
+task(:cstr) { sc_cst('-r') }
 
 #
 # IMPORT TASKS

@@ -2,51 +2,40 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Utils\Web\Snapshot;
 
-use App\Utils\Json;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
 use DateTimeInterface;
-use JsonException;
-use JsonSerializable;
+use InvalidArgumentException;
 
-class WebpageSnapshot implements JsonSerializable
+class WebpageSnapshot
 {
-    const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-                                     | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
-
-    private string $url;
-    private string $contents;
-    private DateTime $retrievedAt;
-    private string $ownerName;
-
     /**
      * @var WebpageSnapshot[]
      */
     private array $children = [];
 
-    public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName)
+    /**
+     * @var string[]
+     */
+    private array $headers = [];
+    private string $url;
+    private string $contents;
+    private DateTime $retrievedAt;
+    private string $ownerName;
+    private int $httpCode = 0;
+
+    public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName, int $httpCode,
+        array $headers)
     {
         $this->url = $url;
         $this->contents = $contents;
         $this->retrievedAt = $retrievedAt;
         $this->ownerName = $ownerName;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public static function fromJson(string $json): WebpageSnapshot
-    {
-        return self::fromArray(Json::decode($json));
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function toJson(): string
-    {
-        return Json::encode($this, self::JSON_SERIALIZATION_OPTIONS);
+        $this->httpCode = $httpCode;
+        $this->headers = $headers;
     }
 
     public function addChild(WebpageSnapshot $children): void
@@ -90,6 +79,24 @@ class WebpageSnapshot implements JsonSerializable
         return $this->retrievedAt;
     }
 
+    public function getHttpCode(): int
+    {
+        return $this->httpCode;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    public function isOK(): bool
+    {
+        return 200 === $this->httpCode;
+    }
+
     /**
      * @return string[]
      */
@@ -98,23 +105,28 @@ class WebpageSnapshot implements JsonSerializable
         return array_merge([$this->contents], ...array_map(function (WebpageSnapshot $snapshot) { return $snapshot->getAllContents(); }, $this->getChildren()));
     }
 
-    public function jsonSerialize(): array
+    public function getMetadata(): array
     {
         return [
             'url'         => $this->url,
             'ownerName'   => $this->ownerName,
             'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
-            'contents'    => $this->contents,
-            'children'    => $this->children,
+            'childCount'  => count($this->children),
+            'headers'     => $this->headers,
+            'httpCode'    => $this->httpCode,
         ];
     }
 
-    private static function fromArray(array $input): WebpageSnapshot
+    /**
+     * @throws DateTimeException
+     */
+    public static function fromArray(array $input): WebpageSnapshot
     {
-        $result = new self($input['url'], $input['contents'], DateTime::createFromFormat(DateTimeInterface::ISO8601,
-            $input['retrievedAt']), $input['ownerName']);
-        $result->setChildren(array_map([WebpageSnapshot::class, 'fromArray'], $input['children']));
+        if (!is_string($input['contents'])) {
+            throw new InvalidArgumentException('Contents is not a string');
+        }
 
-        return $result;
+        return new self($input['url'], $input['contents'], DateTimeUtils::getUtcAt($input['retrievedAt']),
+            $input['ownerName'], $input['httpCode'] ?? 0, $input['headers'] ?? []);
     }
 }

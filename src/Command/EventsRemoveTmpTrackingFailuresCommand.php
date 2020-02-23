@@ -39,7 +39,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Add a short description for your command')
+            ->setDescription('Get rid of X -> unknown -> x state changes between two given dates')
             ->addArgument('date1', InputArgument::REQUIRED, 'Date when failures occurred')
             ->addArgument('date2', InputArgument::REQUIRED, 'Date when failures were corrected')
             ->addOption('commit', null, InputOption::VALUE_NONE, 'Save changes in the database');
