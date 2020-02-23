@@ -25,7 +25,7 @@ class HttpClient
         $this->client = new CurlHttpClient([
             'headers' => [
                 'User-Agent'      => self::USER_AGENT,
-                'Accept-Encoding' => '*', // TODO: verify proper behavior, with native option '' = all supported
+                'Accept-Encoding' => '*',
             ],
             'http_version' => 1.1, // 2.0 likes to Segmentation fault (core dumped)
             'timeout'      => self::CONNECTION_TIMEOUT_SEC,
@@ -46,11 +46,7 @@ class HttpClient
             $options['headers']['cookie'] = $_ENV['FA_COOKIE']; // TODO: get rid of!
         }
 
-        $response = $this->client->request('GET', $url, $options);
-
-        // TODO: Correct latent 404s for FA, etc.
-
-        return $response;
+        return $this->client->request('GET', $url, $options);
     }
 
     /**

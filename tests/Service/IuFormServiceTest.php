@@ -15,6 +15,7 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\FreeUrl;
+use App\Utils\Web\WebpageSnapshotCache;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
@@ -66,7 +67,7 @@ class IuFormServiceTest extends WebTestCase
         $webpageSnapshotManager = self::getWebpageSnapshotManager();
 
         $updateUrl = $iuFormService->getUpdateUrl($artisan);
-        $formWebpage = $webpageSnapshotManager->get(new FreeUrl($updateUrl), false);
+        $formWebpage = $webpageSnapshotManager->get(new FreeUrl($updateUrl), false, true);
 
         $crawler = new Crawler($formWebpage->getContents());
 
@@ -194,6 +195,7 @@ class IuFormServiceTest extends WebTestCase
 
     private static function getWebpageSnapshotManager(): WebpageSnapshotManager
     {
-        return new WebpageSnapshotManager(__DIR__.'/../../', new NullLogger());
+        return new WebpageSnapshotManager(new NullLogger(), new WebpageSnapshotCache(new NullLogger(),
+            __DIR__.'/../../var/snapshots'));
     }
 }

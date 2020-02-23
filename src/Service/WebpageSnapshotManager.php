@@ -15,6 +15,7 @@ use App\Utils\Web\WebsiteInfo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class WebpageSnapshotManager
 {
@@ -22,34 +23,33 @@ class WebpageSnapshotManager
     private GentleHttpClient $httpClient;
     private LoggerInterface $logger;
 
-    public function __construct(string $projectDir, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, WebpageSnapshotCache $cache)
     {
-        $this->cache = new WebpageSnapshotCache("$projectDir/var/snapshots");
-        $this->httpClient = new GentleHttpClient();
         $this->logger = $logger;
+        $this->cache = $cache;
+        $this->httpClient = new GentleHttpClient();
     }
 
     /**
      * @throws ExceptionInterface
      */
-    public function get(Fetchable $url, bool $refetch): WebpageSnapshot
+    public function get(Fetchable $url, bool $refetch, bool $throw): WebpageSnapshot
     {
-        if ($refetch || (null === ($result = $this->cache->get($url)))) {
-            try {
-                $result = $this->fetch($url);
-
-                $url->recordSuccessfulFetch();
-
-                $this->cache->set($url, $result);
-            } catch (ExceptionInterface $exception) {
-                $this->logger->debug("Failed fetching: {$url} {$exception->getMessage()}");
-
-                $url->recordFailedFetch($exception->getCode(), $exception->getMessage());
-
-                throw $exception;
-            }
-        } else {
+        if (!$refetch && (null !== ($result = $this->cache->getOK($url)))) {
             $this->logger->debug('Retrieved from cache: '.$url);
+
+            return $result;
+        }
+
+        try {
+            $result = $this->fetch($url, $throw);
+            $this->updateUrlHealthStatus($url, $result, null);
+
+            $this->cache->set($url, $result);
+        } catch (ExceptionInterface $exception) {
+            $this->updateUrlHealthStatus($url, null, $exception);
+
+            throw $exception;
         }
 
         return $result;
@@ -70,7 +70,7 @@ class WebpageSnapshotManager
 
         while (($url = $queue->pop())) {
             try {
-                $this->get($url, $refetch);
+                $this->get($url, $refetch, false);
             } catch (ExceptionInterface $exception) {
                 // Prefetching = keep quiet, we'll retry
             }
@@ -84,24 +84,18 @@ class WebpageSnapshotManager
     /**
      * @throws ExceptionInterface
      */
-    private function fetch(Fetchable $url): WebpageSnapshot
+    private function fetch(Fetchable $url, bool $throw): WebpageSnapshot
     {
-        $this->logger->debug('Fetching: '.$url);
-
-        if ($url->isDependency()) {
-            $response = $this->httpClient->getImmediately($url->getUrl());
-        } else {
-            $response = $this->httpClient->get($url->getUrl(), );
-        }
-
+        $this->logger->debug('Will request: '.$url);
+        $response = $this->getDependencyAware($url);
         $this->logger->debug('Sent request: '.$url);
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $response->getContent(true),
-            DateTimeUtils::getNowUtc(), $url->getOwnerName());
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $response->getContent($throw), DateTimeUtils::getNowUtc(),
+            $url->getOwnerName(), $response->getStatusCode(), $response->getHeaders($throw));
 
-        $this->logger->debug('Fetched: '.$url);
+        $this->logger->debug('Received response: '.$url);
 
-        $this->fetchChildren($webpageSnapshot, $url);
+        $this->fetchChildren($webpageSnapshot, $url, $throw);
 
         return $webpageSnapshot;
     }
@@ -109,10 +103,57 @@ class WebpageSnapshotManager
     /**
      * @throws ExceptionInterface
      */
-    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
+    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url, bool $throw): void
     {
         foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
-            $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
+            $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url), $throw));
+        }
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    private function getDependencyAware(Fetchable $url): ResponseInterface
+    {
+        if ($url->isDependency()) {
+            return $this->httpClient->getImmediately($url->getUrl());
+        } else {
+            return $this->httpClient->get($url->getUrl());
+        }
+    }
+
+    private function updateUrlHealthStatus(Fetchable $url, ?WebpageSnapshot $snapshot, ?ExceptionInterface $exception): void
+    {
+        if ($snapshot && $snapshot->isOK()) {
+            $url->recordSuccessfulFetch();
+        } else {
+            $code = $exception ? $exception->getCode() : $snapshot->getHttpCode();
+            $message = $exception ? $exception->getMessage() : "HTTP {$code} returned for \"{$url->getUrl()}\"";
+
+            $url->recordFailedFetch($code, $message);
+            $this->logger->debug("Failed fetching: {$url} {$message}");
         }
     }
 }
+
+//    private function checkUrls(array $urls, SymfonyStyle $io): void // TODO: relocate to either manager or HTTP client
+//    {
+//        foreach ($urls as $url) {
+//            $error = false;
+//
+//            try {
+//                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url))) {
+//                    $error = 'Latent 404: '.$url->getUrl();
+//                }
+//            } catch (HttpClientException $e) {
+//                $error = $e->getMessage();
+//            }
+//
+//            if ($error) {
+//                $artisan = $url->getArtisan();
+//                $contact = trim($artisan->getContactAllowed().' '.$artisan->getContactMethod().' '
+//                    .$artisan->getContactAddressPlain());
+//                $io->writeln($artisan->getLastMakerId().':'.$contact.':'.$url->getType().': '.$error);
+//            }
+//        }
+//    }

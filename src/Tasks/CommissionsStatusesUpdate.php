@@ -88,13 +88,14 @@ final class CommissionsStatusesUpdate
         $analysisResult = null;
 
         try {
-            $webpageSnapshot = $this->snapshots->get($url, $this->refetch);
+            $webpageSnapshot = $this->snapshots->get($url, $this->refetch, false);
+
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException | InvalidArgumentException | ExceptionInterface $exception) {
+        } catch (TrackerException | InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
-            // TODO: Split into different levels based on severity after latent codes implementation
-            // FIXME: actual failure would result in "NONE MATCHES" interpretation
+        } catch (ExceptionInterface $exception) {
+            /* Was recorded & logged, proceed with "UNKNOWN" */
         }
 
         return [$datetimeRetrieved ?? DateTimeUtils::getNowUtc(), $analysisResult ?? AnalysisResult::getNull()];

@@ -47,7 +47,7 @@ class IuFormUpdateIdsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $snapshot = $this->snapshotManager->get(new FreeUrl($this->iuFormUrl), $input->getOption('refresh'));
+            $snapshot = $this->snapshotManager->get(new FreeUrl($this->iuFormUrl), $input->getOption('refresh'), true);
         } catch (ExceptionInterface $e) {
             $io->error('Failed fetching the form: '.$e->getMessage());
 

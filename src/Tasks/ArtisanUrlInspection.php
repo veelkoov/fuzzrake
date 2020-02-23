@@ -42,7 +42,7 @@ final class ArtisanUrlInspection
 
         foreach ($urls as $url) {
             try {
-                $this->webpageSnapshotManager->get($url, true);
+                $this->webpageSnapshotManager->get($url, true, false);
             } catch (ExceptionInterface $e) {
                 // Ignore - failure has been recorded
             }
@@ -52,26 +52,4 @@ final class ArtisanUrlInspection
 
         $this->io->progressFinish();
     }
-
-    //    private function checkUrls(array $urls, SymfonyStyle $io): void // TODO: relocate to either manager or HTTP client
-//    {
-//        foreach ($urls as $url) {
-//            $error = false;
-//
-//            try {
-//                if (WebsiteInfo::isLatent404($this->webpageSnapshotManager->get($url))) {
-//                    $error = 'Latent 404: '.$url->getUrl();
-//                }
-//            } catch (HttpClientException $e) {
-//                $error = $e->getMessage();
-//            }
-//
-//            if ($error) {
-//                $artisan = $url->getArtisan();
-//                $contact = trim($artisan->getContactAllowed().' '.$artisan->getContactMethod().' '
-//                    .$artisan->getContactAddressPlain());
-//                $io->writeln($artisan->getLastMakerId().':'.$contact.':'.$url->getType().': '.$error);
-//            }
-//        }
-//    }
 }

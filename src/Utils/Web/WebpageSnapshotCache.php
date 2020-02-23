@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
+use App\Utils\DateTime\DateTimeException;
 use App\Utils\Regexp\Regexp;
 use JsonException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebpageSnapshotCache
 {
+    private LoggerInterface $logger;
     private string $cacheDirPath;
     private Filesystem $fs;
 
-    public function __construct(string $cacheDirPath)
+    public function __construct(LoggerInterface $logger, string $snapshotCacheDirPath)
     {
-        $this->cacheDirPath = $cacheDirPath;
+        $this->logger = $logger;
+        $this->cacheDirPath = $snapshotCacheDirPath;
 
         $this->fs = new Filesystem();
         $this->fs->mkdir($this->cacheDirPath);
@@ -34,10 +38,18 @@ class WebpageSnapshotCache
 
         try {
             return WebpageSnapshot::fromJson(file_get_contents($this->snapshotPathForUrl($url->getUrl())));
-        } catch (JsonException $e) {
-            // TODO: INFO log
+        } catch (JsonException | DateTimeException $e) {
+            $this->logger->warning('Failed reading snapshot from cache', ['url' => $url, 'exception' => $e]);
+
             return null;
         }
+    }
+
+    public function getOK(Fetchable $url): ?WebpageSnapshot
+    {
+        $result = $this->get($url);
+
+        return $result && $result->isOK() ? $result : null;
     }
 
     public function set(Fetchable $url, WebpageSnapshot $snapshot): void
@@ -48,7 +60,7 @@ class WebpageSnapshotCache
         try {
             $this->fs->dumpFile($snapshotPath, $snapshot->toJson());
         } catch (JsonException $e) {
-            // TODO: WARN log
+            $this->logger->warning('Failed saving snapshot into cache', ['url' => $url, 'exception' => $e]);
         }
     }
 
