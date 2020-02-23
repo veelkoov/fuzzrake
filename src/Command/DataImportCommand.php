@@ -24,10 +24,10 @@ class DataImportCommand extends Command
 
     public function __construct(DataImportFactory $factory, EntityManagerInterface $objectManager)
     {
+        parent::__construct();
+
         $this->dataImportFactory = $factory;
         $this->objectManager = $objectManager;
-
-        parent::__construct();
     }
 
     protected function configure()
