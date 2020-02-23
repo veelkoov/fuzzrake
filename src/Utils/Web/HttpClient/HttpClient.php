@@ -7,108 +7,62 @@ namespace App\Utils\Web\HttpClient;
 use App\Utils\Web\CookieJar\CookieJarInterface;
 use App\Utils\Web\CookieJar\NullCookieJar;
 use App\Utils\Web\WebsiteInfo;
+use Symfony\Component\HttpClient\CurlHttpClient;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class HttpClient
 {
     private const CONNECTION_TIMEOUT_SEC = 10;
     private const TIMEOUT_SEC = 30;
 
-    private const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.7; +https://getfursu.it/)';
+    private const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.8; Symfony HttpClient/Curl; +https://getfursu.it/)';
 
     private CookieJarInterface $cookieJar;
+    private CurlHttpClient $client;
 
     public function __construct(CookieJarInterface $cookieJar = null)
     {
-        if (null === $cookieJar) {
-            $cookieJar = new NullCookieJar();
-        }
-
-        $this->cookieJar = $cookieJar;
-    }
-
-    /**
-     * @throws HttpClientException
-     */
-    public function get(string $url): string
-    {
-        return $this->execute($url);
-    }
-
-    /**
-     * @throws HttpClientException
-     */
-    public function post(string $url, string $payload, array $additionalHeaders = []): string
-    {
-        $additionalCurlOpts = [
-            CURLOPT_POST       => true,
-            CURLOPT_POSTFIELDS => $payload,
-        ];
-
-        if (!empty($additionalCurlOpts)) {
-            foreach ($additionalHeaders as $header => $value) {
-                $additionalHeaders[$header] = "$header: $value";
-            }
-
-            $additionalCurlOpts[CURLOPT_HTTPHEADER] = array_values($additionalHeaders);
-        }
-
-        return $this->execute($url, $additionalCurlOpts);
-    }
-
-    /**
-     * @return bool|string
-     *
-     * @throws HttpClientException
-     */
-    private function execute(string $url, array $additionalCurlOpts = [])
-    {
-        $ch = $this->getCurlSessionHandle($url);
-
-        if (false === $ch) {
-            throw new RuntimeHttpClientException('Failed to initialize CURL');
-        }
-
-        if (!empty($additionalCurlOpts)) {
-            curl_setopt_array($ch, $additionalCurlOpts);
-        }
-
-        $result = curl_exec($ch);
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $errorMsg = curl_error($ch);
-        $errorNo = curl_errno($ch);
-        curl_close($ch);
-
-        if (false === $result || !in_array($httpCode, [200, 401])) { // TODO: Rethink 401 here
-            throw new HttpClientException(($errorMsg ?: 'CURL failed')." ($errorNo)", $httpCode);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return resource
-     */
-    private function getCurlSessionHandle(string $url)
-    {
-        $ch = curl_init();
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL             => $url,
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_FOLLOWLOCATION  => true,
-            CURLOPT_USERAGENT       => self::USER_AGENT,
-            CURLOPT_CONNECTTIMEOUT  => self::CONNECTION_TIMEOUT_SEC,
-            CURLOPT_TIMEOUT         => self::TIMEOUT_SEC,
-            CURLOPT_ACCEPT_ENCODING => '', // = all supported
+        $this->client = new CurlHttpClient([
+            'headers' => [
+                'User-Agent'      => self::USER_AGENT,
+                'Accept-Encoding' => '*', // TODO: verify proper behavior, with native option '' = all supported
+            ],
+            'timeout'      => self::CONNECTION_TIMEOUT_SEC,
+            'max_duration' => self::TIMEOUT_SEC,
         ]);
 
-        $this->cookieJar->setupFor($ch);
+        $this->cookieJar = $cookieJar ?? new NullCookieJar(); // TODO: implement usage
+    }
 
-        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) { // TODO: get rid of!
-            curl_setopt($ch, CURLOPT_COOKIE, $_ENV['FA_COOKIE']);
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function get(string $url): ResponseInterface
+    {
+        $options = [
+            'headers' => [],
+        ];
+
+        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
+            $options['headers']['Cookie'] = $_ENV['FA_COOKIE']; // TODO: get rid of!
         }
 
-        return $ch;
+        $response = $this->client->request('GET', $url, $options);
+
+        // TODO: Correct latent 404s for FA, etc.
+
+        return $response;
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function post(string $url, string $payload, array $additionalHeaders = []): ResponseInterface
+    {
+        return $this->client->request('POST', $url, [
+            'body'    => $payload,
+            'headers' => $additionalHeaders,
+        ]);
     }
 }

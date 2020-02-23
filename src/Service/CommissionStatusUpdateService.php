@@ -15,12 +15,12 @@ use App\Utils\Tracking\NullMatch;
 use App\Utils\Tracking\Status;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Fetchable;
-use App\Utils\Web\HttpClient\HttpClientException;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class CommissionStatusUpdateService
 {
@@ -71,7 +71,7 @@ class CommissionStatusUpdateService
             $webpageSnapshot = $this->snapshots->get($url, $refetch);
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
-        } catch (TrackerException | InvalidArgumentException | HttpClientException $exception) {
+        } catch (TrackerException | InvalidArgumentException | ExceptionInterface $exception) {
             // FIXME: actual failure would result in "NONE MATCHES" interpretation
             $datetimeRetrieved = DateTimeUtils::getNowUtc();
             $analysisResult = new AnalysisResult(NullMatch::get(), NullMatch::get());

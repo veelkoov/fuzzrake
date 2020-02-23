@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class DataCheckUrlsCommand extends Command
 {
@@ -68,7 +69,7 @@ class DataCheckUrlsCommand extends Command
         foreach ($urls as $url) {
             try {
                 $this->webpageSnapshotManager->get($url, true);
-            } catch (HttpClientException $e) {
+            } catch (ExceptionInterface $e) {
                 // Ignore - failure has been recorded
             }
 

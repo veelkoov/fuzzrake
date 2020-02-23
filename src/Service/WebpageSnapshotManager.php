@@ -9,11 +9,11 @@ use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\HttpClient\HttpClientException;
 use App\Utils\Web\WebpageSnapshot;
 use App\Utils\Web\WebpageSnapshotCache;
 use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\Console\Style\StyleInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class WebpageSnapshotManager
 {
@@ -27,7 +27,7 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
     public function get(Fetchable $url, bool $refetch): WebpageSnapshot
     {
@@ -37,7 +37,7 @@ class WebpageSnapshotManager
                 $url->recordSuccessfulFetch();
 
                 $this->cache->set($url, $result);
-            } catch (HttpClientException $exception) {
+            } catch (ExceptionInterface $exception) {
                 $url->recordFailedFetch($exception->getCode(), $exception->getMessage());
 
                 throw $exception;
@@ -63,7 +63,7 @@ class WebpageSnapshotManager
         while (($url = $queue->pop())) {
             try {
                 $this->get($url, $refetch);
-            } catch (HttpClientException $exception) {
+            } catch (ExceptionInterface $exception) {
                 // Prefetching = keep quiet, we'll retry
             }
 
@@ -74,17 +74,17 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
     private function fetch(Fetchable $url, bool $refetch): WebpageSnapshot
     {
         if ($url->isDependency()) {
-            $contents = $this->httpClient->getImmediately($url->getUrl());
+            $response = $this->httpClient->getImmediately($url->getUrl());
         } else {
-            $contents = $this->httpClient->get($url->getUrl());
+            $response = $this->httpClient->get($url->getUrl());
         }
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $contents,
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $response->getContent(true),
             DateTimeUtils::getNowUtc(), $url->getOwnerName());
 
         $this->fetchChildren($webpageSnapshot, $url, $refetch);
@@ -93,7 +93,7 @@ class WebpageSnapshotManager
     }
 
     /**
-     * @throws HttpClientException
+     * @throws ExceptionInterface
      */
     private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url, bool $refetch): void
     {

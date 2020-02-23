@@ -6,6 +6,8 @@ namespace App\Utils\Web\HttpClient;
 
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Web\UrlUtils;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class GentleHttpClient extends HttpClient
 {
@@ -19,9 +21,9 @@ class GentleHttpClient extends HttpClient
     private array $lastRequestsMs = [];
 
     /**
-     * @throws HttpClientException
+     * @throws TransportExceptionInterface
      */
-    public function get(string $url): string
+    public function get(string $url): ResponseInterface
     {
         $this->delayForHost($url);
 
@@ -29,9 +31,9 @@ class GentleHttpClient extends HttpClient
     }
 
     /**
-     * @throws HttpClientException
+     * @throws TransportExceptionInterface
      */
-    public function getImmediately(string $url): string
+    public function getImmediately(string $url): ResponseInterface
     {
         $result = parent::get($url);
         $this->updateLastHostCall($url);
