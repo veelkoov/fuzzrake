@@ -6,13 +6,25 @@ namespace App\Utils;
 
 abstract class Parse
 {
-    public static function tInt(?string $input): int
+    public static function tInt($input): int
     {
-        return self::int(trim($input ?? ''));
+        if (is_int($input)) {
+            return $input;
+        }
+
+        if (is_string($input)) {
+            $input = trim($input);
+        }
+
+        return self::int($input ?? '');
     }
 
-    public static function int(?string $input): int
+    public static function int($input): int
     {
+        if (is_int($input)) {
+            return $input;
+        }
+
         $input = $input ?? '';
 
         $result = (int) $input;
