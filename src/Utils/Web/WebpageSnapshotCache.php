@@ -83,7 +83,7 @@ class WebpageSnapshotCache
 
         $result = WebpageSnapshot::fromArray($data);
 
-        for ($index = 0; $index < $data['childCount']; $index++) {
+        for ($index = 0; $index < $data['childCount']; ++$index) {
             $this->load($this->getChildDirPath($baseDir, $index));
         }
 
@@ -124,7 +124,7 @@ class WebpageSnapshotCache
         $hostName = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
 
         $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
-        if (strpos($urlFsSafe, $hostName) === 0) {
+        if (0 === strpos($urlFsSafe, $hostName)) {
             $urlFsSafe = substr($urlFsSafe, strlen($hostName));
         }
 
