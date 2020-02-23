@@ -70,16 +70,18 @@ class HttpClient
      *
      * @see HttpBrowser::getHeaders
      */
-    private function appendCookieToHeaders(array $headers, CookieJar $cookieJar, string $url): array
+    private function appendCookieToHeaders(array $headers, ?CookieJar $cookieJar, string $url): array
     {
-        $cookies = [];
+        if ($cookieJar) {
+            $cookies = [];
 
-        foreach ($cookieJar->allRawValues($url) as $name => $value) {
-            $cookies[] = $name.'='.$value;
-        }
+            foreach ($cookieJar->allRawValues($url) as $name => $value) {
+                $cookies[] = $name.'='.$value;
+            }
 
-        if ($cookies) {
-            $headers['cookie'] = implode('; ', $cookies);
+            if ($cookies) {
+                $headers['cookie'] = implode('; ', $cookies);
+            }
         }
 
         return $headers;
