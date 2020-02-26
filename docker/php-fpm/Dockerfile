@@ -16,5 +16,5 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
         && rm /tmp/composer_installer
 
-VOLUME /var/www/html
-WORKDIR /var/www/html
+VOLUME /application
+WORKDIR /application
