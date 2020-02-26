@@ -60,10 +60,6 @@ class WebpageSnapshotManager
      */
     public function prefetchUrls(array $urls, bool $refetch, StyleInterface $progressReportIo): void
     {
-        $urls = array_filter($urls, function (Fetchable $url): bool {
-            return !$this->cache->has($url);
-        });
-
         $queue = new DelayAwareUrlFetchingQueue($urls, GentleHttpClient::DELAY_FOR_HOST_MILLISEC);
 
         $progressReportIo->progressStart(count($urls));
