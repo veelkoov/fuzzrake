@@ -106,8 +106,8 @@ task 'get-snapshots' do
 end
 
 task(:cst)  { sc_cst }
-task(:cstc) { sc_cst('-c') }
-task(:cstr) { sc_cst('-r') }
+task(:cstc) { sc_cst('--commit') }
+task(:cstr) { sc_cst('--refetch') }
 
 #
 # IMPORT TASKS

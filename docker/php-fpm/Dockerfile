@@ -17,3 +17,4 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && rm /tmp/composer_installer
 
 VOLUME /application
+WORKDIR /application
