@@ -28,7 +28,7 @@ class UpdateCommissionsCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('refresh', 'r', null, 'Refresh pages in cache (re-fetch)');
+        $this->addOption('refetch', null, null, 'Refresh cache (re-fetch pages)');
         $this->addOption('commit', null, null, 'Save changes in the database');
     }
 
@@ -36,7 +36,7 @@ class UpdateCommissionsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $task = $this->factory->get($io, $input->getOption('refresh'), !$input->getOption('commit'));
+        $task = $this->factory->get($io, $input->getOption('refetch'), !$input->getOption('commit'));
         $task->updateAll();
 
         $this->entityManager->flush();
