@@ -16,4 +16,4 @@
     published_ports: "{{ php_fpm_container_port }}:9000"
     restart_policy: unless-stopped
     volumes:
-      - "{{ deployment_path }}:/application"
+      - "{{ deployment_path }}:/var/www/html"
