@@ -248,8 +248,12 @@ class DataImport
 
     private function reportNewPasscode(ImportItem $item): void
     {
+        $hash = $item->getHash();
+        $makerId = $item->getMakerId();
+
         $this->printer->warning("{$item->getNamesStrSafe()} set new passcode: {$item->getProvidedPasscode()}");
-        $this->printer->writeln(Manager::CMD_SET_PIN.":{$item->getMakerId()}:{$item->getHash()}:");
+        $this->printer->writeln(Manager::CMD_SET_PIN.":$makerId:$hash:");
+        $this->printer->writeln(Manager::CMD_REJECT.":$makerId:$hash:");
     }
 
     private function reportInvalidPasscode(ImportItem $item, string $expectedPasscode): void

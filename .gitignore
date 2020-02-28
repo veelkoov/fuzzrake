@@ -1,5 +1,7 @@
 *.nocommit.*
 *.nocommit
+*.iml
+/.idea/
 /tests/snapshots/*
 !/tests/snapshots/.gitkeep
 
