@@ -88,7 +88,7 @@ final class CommissionsStatusesUpdate
         $analysisResult = null;
 
         try {
-            $webpageSnapshot = $this->snapshots->get($url, $this->refetch, false);
+            $webpageSnapshot = $this->snapshots->get($url, false, false);
 
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
             $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
