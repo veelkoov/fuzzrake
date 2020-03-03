@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\DataImportFactory;
+use App\Tasks\DataImportFactory;
 use App\Utils\Import\CSV;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\Manager;

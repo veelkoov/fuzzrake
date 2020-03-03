@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Import;
+namespace App\Tasks;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
@@ -13,6 +13,10 @@ use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
+use App\Utils\Import\ImportException;
+use App\Utils\Import\ImportItem;
+use App\Utils\Import\Manager;
+use App\Utils\Import\RawImportItem;
 use App\Utils\StrUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -77,14 +81,14 @@ class DataImport
             }
 
             if ($this->manager->isDelayed($item)) {
-                $this->printer->note("Ignoring {$item->getIdStrSafe()} until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
+                $this->printer->writeln("{$item->getIdStrSafe()} ignored until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
                 continue;
             }
 
             $makerId = $item->getOriginalEntity()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $this->printer->note($item->getIdStrSafe().' was identified as an update to '.$result[$makerId]->getIdStrSafe());
+                $this->printer->writeln($item->getIdStrSafe().' update replaces '.$result[$makerId]->getIdStrSafe());
             }
 
             $result[$makerId] = $item;
