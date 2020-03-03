@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Entity\Artisan;
+use App\Twig\AppExtensions;
 use App\Utils\Regexp\Regexp;
 
 abstract class StrUtils
@@ -35,7 +36,9 @@ abstract class StrUtils
     }
 
     /**
-     * TODO: Make use of :) .
+     * @noinspection PhpUnused
+     *
+     * @see AppExtensions
      */
     public static function shortPrintUrl(string $originalUrl): string
     {

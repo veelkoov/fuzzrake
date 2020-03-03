@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 declare(strict_types=1);
 
 namespace App\Twig;
@@ -32,7 +34,6 @@ class AppExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('list', [$this, 'listFilter']),
-            new TwigFilter('since', [$this, 'sinceFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
             new TwigFilter('status_text', [Status::class, 'text']),
@@ -75,7 +76,7 @@ class AppExtensions extends AbstractExtension
         }
     }
 
-    public function otherFilter($primaryList, $otherList)
+    public function otherFilter($primaryList, $otherList): string
     {
         $primaryList = str_replace("\n", ', ', $primaryList);
 
