@@ -15,6 +15,7 @@ use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
+use DateTimeInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -35,6 +36,7 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('list', [$this, 'listFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
+            new TwigFilter('nulldate', [$this, 'nulldateFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
             new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
@@ -94,6 +96,17 @@ class AppExtensions extends AbstractExtension
     public function listFilter(string $input): array
     {
         return StringList::unpack($input);
+    }
+
+    public function nulldateFilter($input, string $format = 'Y-m-d H:i'): string
+    {
+        if (null === $input) {
+            return 'never';
+        } elseif ($input instanceof DateTimeInterface) {
+            return $input->format($format);
+        } else {
+            return 'unknown/error';
+        }
     }
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array

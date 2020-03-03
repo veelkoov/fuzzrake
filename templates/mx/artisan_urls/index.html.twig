@@ -1,0 +1,44 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}List of URLs{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>URL</th>
+                <th>Last success</th>
+                <th>Last failure</th>
+                <th>Failure code</th>
+                <th>Failure reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+                <tr>
+                    <td class="text-nowrap">
+                        {{ url.type }}
+                    </td>
+                    <td class="text-break">
+                        <a href="{{ path('mx_artisan_edit', {'id': url.artisan.id}) }}">{{ url.url|event_url|nl2br }}</a>
+                    </td>
+                    <td class="text-nowrap">
+                        {{ url.lastSuccess|nulldate }}
+                    </td>
+                    <td class="text-nowrap">
+                        {{ url.lastFailure|nulldate }}
+                    </td>
+                    <td>
+                        {{ url.lastFailureCode }}
+                    </td>
+                    <td>
+                        {{ url.lastFailureReason }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
