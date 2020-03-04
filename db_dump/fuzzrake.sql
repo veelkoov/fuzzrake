@@ -1052,7 +1052,7 @@ INSERT INTO artisans_urls VALUES (718, 178, 'URL_YOUTUBE', 'https://www.youtube.
 INSERT INTO artisans_urls VALUES (719, 178, 'URL_CST', 'http://mcreativecorner.com/', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (720, 179, 'URL_WEBSITE', 'https://www.grayrealmstudio.com/', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (721, 179, 'URL_PRICES', 'https://www.grayrealmstudio.com/fursuit-commissions', NULL, NULL, 0 , '');
-INSERT INTO artisans_urls VALUES (722, 179, 'URL_FAQ', 'https://www.grayrealmstudio.com/faq', NULL, NULL, 0 , '');
+INSERT INTO artisans_urls VALUES (722, 179, 'URL_FAQ', 'https://www.grayrealmstudio.com/policies-faq', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (723, 179, 'URL_DEVIANTART', 'https://www.deviantart.com/grayrem', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (724, 179, 'URL_TWITTER', 'https://twitter.com/grayestREM', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (725, 179, 'URL_FACEBOOK', 'https://www.facebook.com/grayREM/', NULL, NULL, 0 , '');
