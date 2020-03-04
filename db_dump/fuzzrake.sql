@@ -2731,10 +2731,11 @@ INSERT INTO events VALUES (1725, 1, NULL, '2020-03-01 06:05:40', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1726, 1, 0, '2020-03-01 06:09:15', 'CS_UPDTD_DETLS', 'Furgetful Fae Fursuits', 'https://www.instagram.com/furgetful_fae/', '', '["ternatename\":\"@furgetful_fae\",\"description\":\"\\ud83d\\udc3b fursuit maker! \\ud83d\\udc3b\\n\\ud83d\\udc36 ","commissions closed"," \\ud83d\\udc36\\n\\ud83c\\udf44 quotes always open! \\ud83c\\udf44\\n\\ud83c\\udf31 19y\\/o - she\\/her \\ud83c\\"]', '');
 INSERT INTO events VALUES (1727, 1, 0, '2020-03-02 06:07:34', 'CS_UPDTD_DETLS', 'Dragon''s Grin Studios', 'https://dragonsgrinstudios.weebly.com/', '', '["> </div></div> <div class=\"wsite-spacer\"></div> <h2 class=\"wsite-content-title\">fursuit and cosplay ","commissions are closed","!</h2> <div class=\"paragraph\">all slots are full! please reffer to my etsy for additional smaller pa"]', '');
 INSERT INTO events VALUES (1728, NULL, NULL, '2020-03-03 14:48:00', 'GENERIC', '', '', '', '', '- 1 new maker based on the maker''s request (<a href="https://github.com/veelkoov/fuzzrake/commit/f0f3d1636e49e89a8213222740ec63029725b456" target="_blank">git</a>)');
+INSERT INTO events VALUES (1729, NULL, NULL, '2020-03-03 20:33:00', 'GENERIC', '', '', '', '', '- Updated 1 maker data based on the maker''s request (<a href="https://github.com/veelkoov/fuzzrake/commit/f8ae13360291fd7b6fec44dda4c88e99490ee6bc" target="_blank">git</a>)');
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans', 372);
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 334);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9222);
-INSERT INTO sqlite_sequence VALUES ('events', 1728);
+INSERT INTO sqlite_sequence VALUES ('events', 1729);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 COMMIT;
