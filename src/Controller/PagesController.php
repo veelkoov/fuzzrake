@@ -12,6 +12,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class PagesController extends AbstractController
 {
     /**
+     * @Route("/data_updates.html", name="data_updates")
+     * @Cache(maxage=21600, public=true)
+     */
+    public function dataUpdates(): Response
+    {
+        return $this->render('pages/data_updates.html.twig', []);
+    }
+
+    /**
      * @Route("/info.html", name="info")
      * @Cache(maxage=21600, public=true)
      */
