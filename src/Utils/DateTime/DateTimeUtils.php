@@ -30,7 +30,7 @@ abstract class DateTimeUtils
     public static function getUtcAt(?string $time): DateTime
     {
         try {
-            return new DateTime($time ?: 'invalid', self::getUtc());
+            return (new DateTime($time ?: 'invalid'))->setTimezone(self::getUtc());
         } catch (Exception $e) {
             throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }
