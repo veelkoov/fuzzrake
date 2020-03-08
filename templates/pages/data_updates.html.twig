@@ -1,0 +1,113 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}how to update data{% endblock %}
+
+{% block body %}
+    {% macro start_section(id) %}
+        <div id="{{ id }}" class="data-updates-section">
+            <span class="badge badge-primary">{{ id }}</span>
+    {% endmacro %}
+
+    {% macro end_section() %}
+        </div>
+    {% endmacro %}
+
+    {% macro link(id) %}
+        &rarr; <a href="#{{ id }}" class="badge badge-secondary btn-secondary">{{ id }}</a>
+    {% endmacro %}
+
+    <h1>Who adds/updates information on getfursu.it?</h1>
+
+    <p>Only the makers themselves can provide accurate and sufficient information. That's why majority of the information here comes from themselves.</p>
+
+    <ul>
+        <li>getfursu.it maintainer will rarely add/update any data on their own.</li>
+        <li>If you see that a maker is missing, or their data is outdated, the best you can do is to poke them and ask them to send updates.</li>
+        <li>If you are the maker, please follow below instructions to get your information up-to-date.</li>
+    </ul>
+
+    <h1 id="how_to_add">How do I get my info added/updated?</h1>
+
+    <p>Hint: click on the answers (grey stuff) to get your next step highlighted. <a href="#START_HERE">Click here to get started</a>.</p>
+
+    {{ _self.start_section('START_HERE') }}
+
+    Are you the maker/studio member?<br />
+    YES {{ _self.link('I_AM_MAKER') }}
+    NO {{ _self.link('I_AM_VISITOR') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('I_AM_MAKER') }}
+
+    Have you previously sent an inclusion/update request which seems not to have been processed yet?<br />
+    YES (I don't see my requested updates) {{ _self.link('UPDATES_SENT') }}
+    NO {{ _self.link('NEW_REQUEST') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('NEW_REQUEST') }}
+
+    Are you/is your studio on the list already (please check old studio names/your own nicknames as well)?<br />
+    YES {{ _self.link('UPDATE') }}
+    NO {{ _self.link('NEW_MAKER') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('NEW_MAKER') }}
+
+    Please start with filling in the inclusion/update form. After you are finished, proceed with the {{ _self.link('UPDATES_SENT') }} step (important if you want to be sure you got in). <strong>Please</strong>, be sure to read all the intro information in the form. Click <a href="{{ iu_form_url }}" target="_blank">here</a> to fill the form.
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('UPDATE') }}
+
+    Please navigate to the <a href="{{ path('main') }}" target="_blank">main page</a> and find your studio on the list. Click on it to show the details pop-up. On the bottom you will find a link to the inclusion/update form pre-filled with all your old information. Click the link to open the form. <strong>Please</strong>, be sure to read all the intro information there. Update your information and proceed with the {{ _self.link('UPDATES_SENT') }} step (important if you want to be sure your updates got in).
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('UPDATES_SENT') }}
+
+    Is any of the below statements true for you?
+
+    <ul>
+        <li>I/my studio wasn't on the list already (this was an inclusion request)</li>
+        <li>I was asked for a passcode previously and I provided the same one this time</li>
+    </ul>
+
+    YES {{ _self.link('PASSCODE_OK') }}
+    NO {{ _self.link('PASSCODE_UNSURE') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('PASSCODE_UNSURE') }}
+
+    In the form, there's a question if the maintainer is allowed to contact you. Have you selected <em>NO</em> this time or the previous one you were sending inclusion/update request?<br />
+
+    YES, I've selected <em>NO</em> {{ _self.link('CONTACT_MAINTAINER') }}
+    NO, I selected something else {{ _self.link('PASSCODE_OK') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('PASSCODE_OK') }}
+
+    Is any of the below statements true for you?
+
+    <ul>
+        <li>I prefer my updates being included as soon, as possible</li>
+        <li>I have doubts/questions</li>
+    </ul>
+
+    YES {{ _self.link('CONTACT_MAINTAINER') }}
+    NO {{ _self.link('WAIT_ONE_WEEK') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('WAIT_ONE_WEEK') }}
+
+    Please wait a few days. If you are waiting more than a week, and the updates are still not there, please follow this {{ _self.link('CONTACT_MAINTAINER') }}
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('CONTACT_MAINTAINER') }}
+
+    Please contact this website's maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+
+    {{ _self.end_section() }}
+    {{ _self.start_section('I_AM_VISITOR') }}
+
+    Please contact the fursuit maker/studio which data is missing/outdated and ask them to send inclusion/update request (this is the link you should send them: <a href="{{ path('data_updates') }}">right-click or press&amp;hold then copy link address/URL</a>). Please do not fill the inclusion/update form for them. It will get rejected.
+
+    {{ _self.end_section() }}
+{% endblock %}

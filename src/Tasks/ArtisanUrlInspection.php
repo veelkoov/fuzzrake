@@ -7,20 +7,13 @@ namespace App\Tasks;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\FieldsDefinitions;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 final class ArtisanUrlInspection
 {
-    private const SKIPPED_TYPES = [
-        Fields::URL_OTHER,
-        Fields::URL_SCRITCH,
-        Fields::URL_SCRITCH_PHOTO,
-        Fields::URL_SCRITCH_MINIATURE,
-    ];
-
     private ArtisanUrlRepository $artisanUrlRepository;
     private WebpageSnapshotManager $webpageSnapshotManager;
     private EntityManagerInterface $entityManager;
@@ -36,7 +29,7 @@ final class ArtisanUrlInspection
 
     public function inspect(int $limit): void
     {
-        $urls = $this->artisanUrlRepository->getLeastRecentFetched($limit, self::SKIPPED_TYPES);
+        $urls = $this->artisanUrlRepository->getLeastRecentFetched($limit, FieldsDefinitions::NON_INSPECTED_URLS);
 
         $this->io->progressStart(count($urls));
 

@@ -54,7 +54,7 @@ class ImportItem
     public function getIdStrSafe(): string
     {
         return StrUtils::artisanNamesSafeForCli($this->getOriginalInput(), $this->getFixedEntity(), $this->getOriginalEntity())
-            .' ['.$this->raw->getTimestamp()->format(DATE_ISO8601).']';
+            .' ['.$this->raw->getTimestamp()->format('Y-m-d H:i').']';
     }
 
     public function getNamesStrSafe(): string

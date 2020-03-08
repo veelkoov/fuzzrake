@@ -51,4 +51,19 @@ class ArtisanUrlRepository extends ServiceEntityRepository
                 ", $rsm)
             ->execute();
     }
+
+    public function getOrderedBySuccessDate(array $excludedTypes): array
+    {
+        $builder = $this->createQueryBuilder('u')
+            ->orderBy('u.lastSuccess', 'ASC')
+            ->addOrderBy('u.lastFailure', 'ASC');
+
+        if (!empty($excludedTypes)) {
+            $builder
+                ->where('u.type NOT IN (:excluded)')
+                ->setParameter('excluded', $excludedTypes);
+        }
+
+        return $builder->getQuery()->execute();
+    }
 }

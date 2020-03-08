@@ -10,8 +10,8 @@ div.footer {
   font-size: 75%;
 }
 
-ul {
-  padding-left: 3ex;
+ol ol {
+  list-style: lower-alpha;
 }
 
 p.item-pills {
@@ -22,6 +22,19 @@ p.item-pills {
   overflow-x: auto;
 }
 
-#tracking_content img {
+.img-tracking img {
   max-height: 15em;
+}
+
+.data-updates-section {
+  padding: 2ex;
+
+  + .data-updates-section {
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+  }
+}
+
+.data-updates-section:target {
+  background-color: #9fcdff;
 }
