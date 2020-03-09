@@ -103,6 +103,7 @@ parameters: # TODO: improve!
         Digimons:
         Sparkledogs:
         Monsters:
+        Lloteer: # WAT
 
       Dinosaurs:
 
@@ -113,6 +114,7 @@ parameters: # TODO: improve!
         Sharks:
         Fishes:
 
+      Others:
       Rhinos:
 
       "Red pandas":
@@ -138,9 +140,8 @@ parameters: # TODO: improve!
         "I greatly prefer uncommon species and will be much more excited to work on such species. I do all, but uncommon is prefered.":
         "Etc.": # De hecc
         "Robotic stuff":
-        'Species with robotic/cybernetic':
         'Almost anything organic (non robotic/cybernetic)':
-        'Species with robotic/cybernetic, or otherwise mechanical appearance.':
+        'Species with robotic/cybernetic, or otherwise mechanical appearance':
         "All species and all fur based characters":
         "Skullsuits":
         "Anyone since we like to experience new species":
@@ -216,7 +217,7 @@ parameters: # TODO: improve!
       - Etc.
       - "I greatly prefer uncommon species and will be much more excited to work on such species. I do all, but uncommon is prefered."
       - 'Any animal and most mysticals (dragons*, serials, gryphons)'
-      - 'Species with robotic/cybernetic, or otherwise mechanical appearance.'
+      - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
 
     replacements:
       'Currently not available for reptilian or avian characters':  "Avians\nReptilians"
@@ -263,6 +264,7 @@ parameters: # TODO: improve!
       'Dutch Angel Dragons/Angel Dragons':                   "Dutch Angel Dragons\nAngel Dragons"
       'DAD''s|Dutch ange?le? dragons?':                      'Dutch Angel Dragons'
       'Equines?( in general)?':                              'Equines'
+      'Etc\.?':                                              'Etc.'
       'Felines?( in general)?':                              'Felines'
       'Fennecs?( foxes)?':                                   'Fennecs'
       'Ferrets?':                                            'Ferrets'
