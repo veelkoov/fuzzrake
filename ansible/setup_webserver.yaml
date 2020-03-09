@@ -1,6 +1,6 @@
 #!ansible/run.sh
 ---
-- hosts: getfursu.it
+- hosts: getfursu.it-prod
   become: yes
   roles:
     - { name: "webserver", mode: "setup_system" }

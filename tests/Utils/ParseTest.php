@@ -80,6 +80,12 @@ class ParseTest extends TestCase
     {
         return [
             [null, false, false],
+            [0, 0, 0],
+            [1, 1, 1],
+            [-1, -1, -1],
+            [0.1, false, false],
+            [1.1, false, false],
+            [-1.1, false, false],
             ['', false, false],
             [' ', false, false],
             ['0', 0, 0],

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\DataImportFactory;
+use App\Tasks\DataImportFactory;
 use App\Utils\Import\CSV;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\Manager;
@@ -24,10 +24,10 @@ class DataImportCommand extends Command
 
     public function __construct(DataImportFactory $factory, EntityManagerInterface $objectManager)
     {
+        parent::__construct();
+
         $this->dataImportFactory = $factory;
         $this->objectManager = $objectManager;
-
-        parent::__construct();
     }
 
     protected function configure()

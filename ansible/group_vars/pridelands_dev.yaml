@@ -1,6 +1,5 @@
 ---
 deployment_path: "{{ inventory_dir }}/../"
-mariadb_socket_path: /var/run/mysqld/mysqld.sock
 
 php_fpm_container_port: 9555
 php_fpm_container_name: fuzzrake

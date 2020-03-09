@@ -9,18 +9,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class HostsService
 {
-    private array $hosts;
     private RequestStack $requestStack;
+    private array $hosts;
+    private string $environment;
 
-    public function __construct(RequestStack $requestStack, array $hosts)
+    public function __construct(RequestStack $requestStack, array $hosts, string $environment)
     {
-        $this->hosts = $hosts;
         $this->requestStack = $requestStack;
+        $this->hosts = $hosts;
+        $this->environment = $environment;
     }
 
     public function isDevMachine(): bool
     {
-        return '127.0.0.1' === $this->requestStack->getMasterRequest()->getClientIp();
+        return in_array($this->environment, ['dev', 'test']);
     }
 
     public function isProduction(): bool

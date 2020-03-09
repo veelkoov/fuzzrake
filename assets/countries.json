@@ -32,7 +32,7 @@
   {
     "name": "China",
     "code": "CN",
-    "region": "Asia"
+    "region": "Africa & Asia"
   },
   {
     "name": "Costa Rica",
@@ -127,7 +127,7 @@
   {
     "name": "Taiwan",
     "code": "TW",
-    "region": "Asia"
+    "region": "Africa & Asia"
   },
   {
     "name": "Ukraine",
@@ -143,5 +143,10 @@
     "name": "United States",
     "code": "US",
     "region": "America"
+  },
+  {
+    "name": "South Africa",
+    "code": "ZA",
+    "region": "Africa & Asia"
   }
 ]

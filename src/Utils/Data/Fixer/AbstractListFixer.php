@@ -57,6 +57,7 @@ abstract class AbstractListFixer extends StringFixer
         'Poseable tongues'                                           => 'Poseable tongue',
         'Accessories/jewelry'                                        => "Accessories\nJewelry",
         'Bandannas'                                                  => 'Bandanas',
+        'Removable Eyelids'                                          => 'Removable eyelids',
     ];
 
     public function fix(string $fieldName, string $subject): string
@@ -83,7 +84,7 @@ abstract class AbstractListFixer extends StringFixer
     /**
      * @return string[]
      */
-    protected static function getNonsplittable(): array
+    protected function getNonsplittable(): array
     {
         return [];
     }
