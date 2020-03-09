@@ -22,7 +22,7 @@ services:
             $environment:          '%kernel.environment%'
             $snapshotCacheDirPath: '%kernel.project_dir%/var/snapshots'
             $iuFormUrl:            '%iu_form_url%'
-            $species:              '%species%'
+            $speciesData:          '%species%'
             $languages:            '%languages%'
             $hosts:
                 production: getfursu.it
