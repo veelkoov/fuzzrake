@@ -34,7 +34,7 @@ class Fixer
     private NoopFixer $noopFixer;
     private IntroFixer $introFixer;
 
-    public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer)
+    public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer, CountryFixer $countryFixer)
     {
         $this->speciesListFixer = $speciesListFixer;
         $this->languagesFixer = $languagesFixer;
@@ -45,7 +45,7 @@ class Fixer
         $this->urlFixer = new UrlFixer();
         $this->noopFixer = new NoopFixer();
         $this->sinceFixer = new SinceFixer();
-        $this->countryFixer = new CountryFixer();
+        $this->countryFixer = $countryFixer;
         $this->introFixer = new IntroFixer();
         $this->contactAllowedFixer = new ContactAllowedFixer();
     }
