@@ -1,33 +1,43 @@
 parameters:
   strings:
     replacements:
-        "#’#":                 "'"
-        "#^-$#":               ""
-        "#^Rather not say$#i": ""
-        "#^n/a$#i":            ""
-        "#^n/a yet$#i":        ""
-        "#^-$#i":              ""
-        "#[ \t]{2,}#":         " "
-      
+      "#’#":                        "'"
+      "#^-$#":                      ""
+      "#^Rather not say$#i":        ""
+      "#^n/a$#i":                   ""
+      "#^n/a yet$#i":               ""
+      "#^-$#i":                     ""
+      "#[ \t]{2,}#":                " "
+      "#(p)ose?able#i":             "$1oseable"
+      "#(^|\\s)LED($|\\s)#i":       "$1LED$2"
+
   lists:
     replacements:
-        'Excellent vision &amp; breathability':        'Excellent vision & breathability'
-        'backpacks':                                   'Backpacks'
-        'claws':                                       'Claws'
-        'Armsleeves|Arm Sleeves':                      'Arm sleeves'
-        'Head Bases':                                  'Head bases'
-        'Plushes':                                     'Plushies'
-        'Legsleeves':                                  'Leg sleeves'
-        'Fursuit Props':                               'Fursuit props'
-        'Sock paws':                                   'Sockpaws'
-        'Plush Suits':                                 'Plush suits'
-        'Femme Suits':                                 'Femme suits'
-        'Just Ask':                                    'Just ask'
-        'Removable Eyes':                              'Removable eyes'
-        'Pickable Nose':                               'Pickable nose'
-        '(.+)changable(.+)':                           '$1changeable$2'
-        'Fursuit Sprays?':                             'Fursuit sprays'
-        'Dry brushing':                                'Drybrushing'
-        'Poseable tongues':                            'Poseable tongue'
-        'Bandannas':                                   'Bandanas'
-        'Removable Eyelids':                           'Removable eyelids'
+      'Armsleeves|Arm Sleeves':                      'Arm sleeves'
+      'backpacks':                                   'Backpacks'
+      'Bandannas':                                   'Bandanas'
+      '(.+)changable(.+)':                           '$1changeable$2'
+      'claws':                                       'Claws'
+      'Dry brushing':                                'Drybrushing'
+      'Excellent vision &(amp;)? breathability':     "Excellent vision\nExcellent breathability"
+      'Femme Suits':                                 'Femme suits'
+      'Foam Bases':                                  'Foam bases'
+      'Fursuit Props':                               'Fursuit props'
+      'Fursuit Sneakers':                            'Fursuit sneakers'
+      'Fursuit Sprays?':                             'Fursuit sprays'
+      'Head ?Bases':                                 'Head bases'
+      'Hidden pockets?':                             'Hidden pocket'
+      'Just Ask':                                    'Just ask'
+      'Legsleeves':                                  'Leg sleeves'
+      'Pickable Noses?':                             'Pickable nose'
+      'Plush Suits':                                 'Plush suits'
+      'Plush Claws':                                 'Plush claws'
+      'Plushes':                                     'Plushies'
+      'Poseable tongues':                            'Poseable tongue'
+      'Removable Eyelids':                           'Removable eyelids'
+      'Removable Eyes':                              'Removable eyes'
+      'Sock paws':                                   'Sockpaws'
+      'Toony Foam Bases':                            'Toony foam bases'
+      'Premade Props':                               'Premade props'
+      'Refurbishing':                                'Refurbishments'
+      'Zipper tails?':                               'Zipper tails'
