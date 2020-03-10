@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Validator;
 
-use App\Service\Species;
 use App\Utils\Artisan\Field;
+use App\Utils\Species\SpeciesService;
 use App\Utils\StringList;
 
 class SpeciesListValidator implements ValidatorInterface
 {
-    private Species $species;
+    private SpeciesService $species;
 
-    public function __construct(Species $species)
+    public function __construct(SpeciesService $species)
     {
         $this->species = $species;
     }

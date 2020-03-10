@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Service\Species;
+use App\Utils\Species\SpeciesService;
 
 class SpeciesListFixer extends AbstractListFixer
 {
-    private Species $species;
+    private SpeciesService $species;
 
-    public function __construct(Species $species)
+    public function __construct(SpeciesService $species)
     {
         $this->species = $species;
     }

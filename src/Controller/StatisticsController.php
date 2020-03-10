@@ -9,6 +9,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
+use App\Utils\Species\SpeciesService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -55,7 +56,7 @@ class StatisticsController extends AbstractController
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function statistics(ArtisanRepository $artisanRepository): Response
+    public function statistics(ArtisanRepository $artisanRepository, SpeciesService $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
@@ -66,6 +67,7 @@ class StatisticsController extends AbstractController
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $artisanRepository->getCommissionsStats();
+        $speciesStats = $species->getStats();
 
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
@@ -79,6 +81,7 @@ class StatisticsController extends AbstractController
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness'     => $this->prepareCompletenessData($artisanRepository->getAll()),
             'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getAll()),
+            'speciesStats'     => $speciesStats,
             'matchWords'       => self::MATCH_WORDS,
         ]);
     }
