@@ -1,0 +1,13 @@
+parameters:
+  strings:
+    replacements:
+        "#’#":                 "'"
+        "#^-$#":               ""
+        "#^Rather not say$#i": ""
+        "#^n/a$#i":            ""
+        "#^n/a yet$#i":        ""
+        "#^-$#i":              ""
+        "#[ \t]{2,}#":         " "
+      
+  lists: # TODO
+    replacements:

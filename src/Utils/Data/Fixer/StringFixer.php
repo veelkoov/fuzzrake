@@ -8,18 +8,18 @@ use App\Utils\Regexp\Regexp;
 
 class StringFixer implements FixerInterface
 {
-    private const REPLACEMENTS = [
-        '#’#'                 => "'",
-        '#^-$#'               => '',
-        '#^Rather not say$#i' => '',
-        '#^n/a$#i'            => '',
-        '#^n/a yet$#i'        => '',
-        '#^-$#i'              => '',
-        '#[ \t]{2,}#'         => ' ',
-    ];
+    /**
+     * @var string[]
+     */
+    private array $replacements;
+
+    public function __construct(array $strings)
+    {
+        $this->replacements = $strings['replacements'];
+    }
 
     public function fix(string $fieldName, string $subject): string
     {
-        return trim(Regexp::replaceAll(self::REPLACEMENTS, $subject));
+        return trim(Regexp::replaceAll($this->replacements, $subject));
     }
 }

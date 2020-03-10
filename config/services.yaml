@@ -25,6 +25,8 @@ services:
             $species:              '%species%'
             $languages:            '%languages%'
             $countries:            '%countries%'
+            $strings:              '%strings%'
+            $lists:                '%lists%'
             $hosts:
                 production: getfursu.it
             $healthCheckValues:
