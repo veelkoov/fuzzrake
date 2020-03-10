@@ -41,6 +41,7 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
+            new TwigFilter('highlightQuery', [$this, 'filterHighlightQuery']),
         ];
     }
 
@@ -125,5 +126,22 @@ class AppExtensions extends AbstractExtension
         $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
+    }
+
+    public function filterHighlightQuery(string $input, array $searchedItems): string
+    {
+        $subjectItems = StringList::unpack($input);
+        $result = [];
+
+        foreach ($subjectItems as $subjectItem) {
+            foreach ($searchedItems as $searchedItem) {
+                if (false !== stripos($subjectItem, $searchedItem)) {
+                    $result[] = $subjectItem;
+                    break;
+                }
+            }
+        }
+
+        return implode(', ', $result);
     }
 }

@@ -1,0 +1,39 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}Query data{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {{ form_start(form) }}
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+    {% if result %}
+    <hr />
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Maker ID</th>
+                    <th>Feedback?</th>
+                    <th>Contact</th>
+                    <th>Styles</th>
+                    <th>Order types</th>
+                    <th>Features</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for artisan in result %}
+                    <tr>
+                        <td>{{ artisan.lastMakerId }}</td>
+                        <td>{{ artisan.allowsFeedback ? 'YES' : 'NO' }}</td>
+                        <td>{% if artisan.allowsFeedback %}{{ artisan.contactInfoOriginal }}{% endif %}</td>
+                        <td>{{ artisan.otherStyles|highlightQuery(query) }}</td>
+                        <td>{{ artisan.otherOrderTypes|highlightQuery(query) }}</td>
+                        <td>{{ artisan.otherFeatures|highlightQuery(query) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
