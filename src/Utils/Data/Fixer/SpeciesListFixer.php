@@ -16,9 +16,9 @@ class SpeciesListFixer extends AbstractListFixer
      */
     private array $replacements;
 
-    public function __construct(array $species, array $strings)
+    public function __construct(array $species, array $strings, array $lists)
     {
-        parent::__construct($strings);
+        parent::__construct($lists, $strings);
 
         $this->replacements = $species['replacements'];
         $this->unsplittable = $species['leave_unchanged'];
