@@ -8,6 +8,7 @@ namespace App\Twig;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\HostsService;
+use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
@@ -41,7 +42,7 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
-            new TwigFilter('highlightQuery', [$this, 'filterHighlightQuery']),
+            new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
         ];
     }
 
@@ -128,20 +129,8 @@ class AppExtensions extends AbstractExtension
         return strtoupper($input);
     }
 
-    public function filterHighlightQuery(string $input, array $searchedItems): string
+    public function filterFilterByQuery(string $input, DataQuery $query): string
     {
-        $subjectItems = StringList::unpack($input);
-        $result = [];
-
-        foreach ($subjectItems as $subjectItem) {
-            foreach ($searchedItems as $searchedItem) {
-                if (false !== stripos($subjectItem, $searchedItem)) {
-                    $result[] = $subjectItem;
-                    break;
-                }
-            }
-        }
-
-        return implode(', ', $result);
+        return implode(', ', $query->filterList($input));
     }
 }

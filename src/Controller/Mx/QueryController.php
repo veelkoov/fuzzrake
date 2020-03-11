@@ -7,7 +7,7 @@ namespace App\Controller\Mx;
 use App\Form\QueryType;
 use App\Repository\ArtisanRepository;
 use App\Service\HostsService;
-use App\Utils\Regexp\Regexp;
+use App\Utils\DataQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,17 +33,15 @@ class QueryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $query = array_filter(Regexp::split('#\s+#', $form->get(QueryType::ITEM_QUERY)->getData()));
-            $result = $artisanRepository->getOthersLike($query);
+            $query = new DataQuery($form->get(QueryType::ITEM_QUERY)->getData());
+            $query->run($artisanRepository);
         } else {
-            $query = [];
-            $result = [];
+            $query = new DataQuery('');
         }
 
         return $this->render('mx/query/index.html.twig', [
             'form'   => $form->createView(),
             'query'  => $query,
-            'result' => $result,
         ]);
     }
 }

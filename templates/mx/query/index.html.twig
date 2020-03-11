@@ -5,12 +5,28 @@
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
+    {% if query.errors %}
+        <div class="alert alert-danger" role="alert">
+            <ul>
+                {% for error in query.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     {{ form_start(form) }}
     {{ form_rest(form) }}
     {{ form_end(form) }}
 
-    {% if result %}
-    <hr />
+    {% if query.wasRun %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Matched items:</h5>
+                <p class="card-text">{{ query.matchedItems|join(', ') }}</p>
+            </div>
+        </div>
+
         <table class="table table-sm">
             <thead>
                 <tr>
@@ -23,14 +39,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for artisan in result %}
+                {% for artisan in query.result %}
                     <tr>
                         <td>{{ artisan.lastMakerId }}</td>
                         <td>{{ artisan.allowsFeedback ? 'YES' : 'NO' }}</td>
                         <td>{% if artisan.allowsFeedback %}{{ artisan.contactInfoOriginal }}{% endif %}</td>
-                        <td>{{ artisan.otherStyles|highlightQuery(query) }}</td>
-                        <td>{{ artisan.otherOrderTypes|highlightQuery(query) }}</td>
-                        <td>{{ artisan.otherFeatures|highlightQuery(query) }}</td>
+                        <td>{{ artisan.otherStyles|filterByQuery(query) }}</td>
+                        <td>{{ artisan.otherOrderTypes|filterByQuery(query) }}</td>
+                        <td>{{ artisan.otherFeatures|filterByQuery(query) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
