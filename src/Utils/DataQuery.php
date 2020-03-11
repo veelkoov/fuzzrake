@@ -30,7 +30,7 @@ class DataQuery
     private array $blacklistedItems = [];
 
     /**
-     * @var string[]
+     * @var string[] Associative: name = item, value = count
      */
     private array $matchedItems = [];
 
@@ -96,7 +96,15 @@ class DataQuery
      */
     public function getMatchedItems(): array
     {
-        return $this->matchedItems;
+        $res = $this->matchedItems;
+
+        arsort($res);
+
+        foreach ($res as $k => &$v) {
+            $v = "$k ({$v}×)";
+        }
+
+        return $res;
     }
 
     /**
@@ -151,7 +159,7 @@ class DataQuery
                 $result[] = $item;
 
                 if ($addMatches && !in_array($item, $this->matchedItems)) {
-                    $this->matchedItems[] = $item;
+                    $this->matchedItems[$item] = ($this->matchedItems[$item] ?? 0) + 1;
                 }
             }
         }
