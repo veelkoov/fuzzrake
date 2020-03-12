@@ -16,8 +16,10 @@ class LanguagesFixer extends StringFixer
      */
     private array $replacements;
 
-    public function __construct(array $languages)
+    public function __construct(array $languages, array $strings)
     {
+        parent::__construct($strings);
+
         $this->regexp = $languages['regexp'];
         $this->replacements = $languages['replacements'];
     }

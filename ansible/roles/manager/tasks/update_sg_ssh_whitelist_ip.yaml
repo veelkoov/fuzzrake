@@ -1,6 +1,12 @@
 ---
 - shell: curl -4 https://api.ipify.org/
-  register: ip_output
+  register: ip4_output
+  args:
+    warn: false
+  changed_when: false
+
+- shell: curl -6 https://api6.ipify.org/
+  register: ip6_output
   args:
     warn: false
   changed_when: false
@@ -29,4 +35,8 @@
     - proto: tcp
       from_port: 22
       to_port: 22
-      cidr_ip: "{{ ip_output.stdout_lines[0] }}/32"
+      cidr_ip: "{{ ip4_output.stdout_lines[0] }}/32"
+    - proto: tcp
+      from_port: 22
+      to_port: 22
+      cidr_ipv6: "{{ ip6_output.stdout_lines[0] }}/128"

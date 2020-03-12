@@ -9,6 +9,7 @@ DB_TMP_PATH = DB_PATH + '.tmp'
 DB_DUMP_TMP_PATH = 'db_dump/fuzzrake.tmp.sql'
 DB_DUMP_PATH = 'db_dump/fuzzrake.sql'
 DB_DUMP_PRV_PATH = 'db_dump/fuzzrake-private.nocommit.sql'
+DB_DUMP_PRV_COPY_PATH = 'db_dump/fuzzrake-private-' + Time.now.getutc.strftime('%Y-%m-%d_%H-%M-%S') + '.nocommit.sql'
 
 #
 # HELPER FUNCTIONS
@@ -53,15 +54,15 @@ end
 
 task :dbpull do
   exec_or_die('scp', '-p', 'getfursu.it:/var/www/prod/' + DB_PATH, DB_TMP_PATH)
-  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump artisans_private_data')
+  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_PRV_COPY_PATH}", '.dump artisans_private_data')
   exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
-  exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_TMP_PATH}")
+  exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_PRV_COPY_PATH}")
   exec_or_die('chmod', 'a+w', DB_TMP_PATH)
   exec_or_die('mv', DB_TMP_PATH, DB_PATH)
-  exec_or_die('rm', DB_DUMP_TMP_PATH)
 end
 
 task :dbdump do
+  exec_or_die('cp', DB_DUMP_PRV_PATH, DB_DUMP_PRV_COPY_PATH)
   exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump')
   exec_or_die('bin/format_dump.py', DB_DUMP_TMP_PATH, DB_DUMP_PATH, DB_DUMP_PRV_PATH)
   exec_or_die('rm', DB_DUMP_TMP_PATH)

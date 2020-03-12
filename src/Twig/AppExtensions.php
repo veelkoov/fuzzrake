@@ -8,6 +8,7 @@ namespace App\Twig;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\HostsService;
+use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
@@ -41,6 +42,7 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
+            new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
         ];
     }
 
@@ -125,5 +127,10 @@ class AppExtensions extends AbstractExtension
         $input = Regexp::replace('#\[.+?\]#', '', $input);
 
         return strtoupper($input);
+    }
+
+    public function filterFilterByQuery(string $input, DataQuery $query): string
+    {
+        return implode(', ', $query->filterList($input));
     }
 }

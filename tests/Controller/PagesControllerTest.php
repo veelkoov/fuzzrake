@@ -15,7 +15,7 @@ class PagesControllerTest extends WebTestCase
         $client->request('GET', '/info.html');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h3#contact', 'Contact maintainer directly');
+        static::assertSelectorTextContains('h3#contact', 'Contact maintainer');
         static::assertSelectorTextContains('h3#data-updates', 'Add your studio/maker info to the list');
     }
 
