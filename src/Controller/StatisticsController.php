@@ -83,20 +83,6 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/ordering.html", name="ordering")
-     * @Cache(maxage=3600, public=true)
-     */
-    public function ordering(ArtisanRepository $artisanRepository): Response
-    {
-        $otherItems = $artisanRepository->getOtherItemsData();
-
-        return $this->render('statistics/ordering.html.twig', [
-            'otherItems' => $this->prepareListData($otherItems),
-            'matchWords' => self::MATCH_WORDS,
-        ]);
-    }
-
     private function prepareTableData(FilterItems $input): array
     {
         $result = [];

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\CompletenessCalc;
@@ -956,6 +957,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
         }
 
         return null;
+    }
+
+    public function allowsFeedback(): bool
+    {
+        return ContactPermit::FEEDBACK === $this->contactAllowed;
     }
 
     private function getSingleUrl(string $urlFieldName): string

@@ -313,4 +313,26 @@ class ArtisanRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+    /**
+     * @param string[] $items
+     *
+     * @return Artisan[]
+     */
+    public function getOthersLike(array $items): array
+    {
+        $ORs = [];
+        $parameters = [];
+
+        foreach ($items as $i => $item) {
+            $ORs[] = "a.otherOrderTypes LIKE :par$i OR a.otherStyles LIKE :par$i OR a.otherFeatures LIKE :par$i";
+            $parameters["par$i"] = "%{$items[$i]}%";
+        }
+
+        return $this->createQueryBuilder('a')
+            ->where(implode(' OR ', $ORs))
+            ->setParameters($parameters)
+            ->getQuery()
+            ->getResult();
+    }
 }

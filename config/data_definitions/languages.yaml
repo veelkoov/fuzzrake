@@ -1,4 +1,4 @@
-parameters: # TODO: improve!
+parameters:
   languages:
     replacements:
       '# with Google Translate#i': ' (with a translator)'
