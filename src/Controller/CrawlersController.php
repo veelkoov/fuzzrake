@@ -22,6 +22,7 @@ class CrawlersController extends AbstractController
             return $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }, [
             'main',
+            'data_updates',
             'info',
             'tracking',
             'maker_ids',
