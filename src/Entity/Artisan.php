@@ -10,6 +10,7 @@ use App\Utils\Artisan\Fields;
 use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
+use App\Utils\StringList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -227,7 +228,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
      */
     public function getFormerlyArr(): array
     {
-        return explode("\n", $this->formerly);
+        return StringList::unpack($this->formerly);
     }
 
     /**
@@ -680,7 +681,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
      */
     public function getFormerMakerIdsArr(): array
     {
-        return explode("\n", $this->formerMakerIds);
+        return StringList::unpack($this->formerMakerIds);
     }
 
     public function setFormerMakerIds(string $formerMakerIds): self
@@ -829,7 +830,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                     $value = $this->get($field);
             }
 
-            return $field->isList() ? array_filter(explode("\n", $value)) : $value;
+            return $field->isList() ? StringList::unpack($value) : $value;
         }, Fields::inJson());
     }
 
