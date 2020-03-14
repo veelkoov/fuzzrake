@@ -23,156 +23,152 @@ use JsonSerializable;
  */
 class Artisan implements JsonSerializable, FieldReadInterface
 {
-    const OPEN = true;
-    const CLOSED = false;
-    const UNKNOWN = null;
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=31)
      */
-    private $makerId = '';
+    private string $makerId = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $formerMakerIds = '';
+    private string $formerMakerIds = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name = '';
+    private string $name = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $formerly = '';
+    private string $formerly = '';
 
     /**
      * @ORM\Column(type="string", length=511)
      */
-    private $intro = '';
+    private string $intro = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $since = '';
+    private string $since = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $country = '';
+    private string $country = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $state = '';
+    private string $state = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $city = '';
+    private string $city = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $productionModels = '';
+    private string $productionModels = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $styles = '';
+    private string $styles = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherStyles = '';
+    private string $otherStyles = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $orderTypes = '';
+    private string $orderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $otherOrderTypes = '';
+    private string $otherOrderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $features = '';
+    private string $features = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $otherFeatures = '';
+    private string $otherFeatures = '';
 
     /**
      * @ORM\Column(type="string", length=1023)
      */
-    private $paymentPlans = '';
+    private string $paymentPlans = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $speciesDoes = '';
+    private string $speciesDoes = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $speciesDoesnt = '';
+    private string $speciesDoesnt = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $languages = '';
+    private string $languages = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    private $notes = '';
+    private string $notes = '';
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    private $inactiveReason = '';
+    private string $inactiveReason = '';
 
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private $contactAllowed = '';
+    private string $contactAllowed = '';
 
     /**
      * @ORM\Column(type="string", length=32)
      */
-    private $contactMethod = '';
+    private string $contactMethod = '';
 
     /**
      * @ORM\Column(type="string", length=128)
      */
-    private $contactInfoObfuscated = '';
+    private string $contactInfoObfuscated = '';
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $commissionsStatus;
+    private ?ArtisanCommissionsStatus $commissionsStatus = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $privateData;
+    private ?ArtisanPrivateData $privateData = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $urls;
+    private Collection $urls;
 
     public function __construct()
     {
