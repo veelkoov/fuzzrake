@@ -76,6 +76,11 @@ class Specie
         return $result;
     }
 
+    public function isDescendantOf(Specie $ancestor): bool
+    {
+        return in_array($ancestor, $this->getAncestors());
+    }
+
     /**
      * @return Specie[]
      */

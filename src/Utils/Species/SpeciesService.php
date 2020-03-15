@@ -56,6 +56,14 @@ class SpeciesService
     }
 
     /**
+     * @return Specie[]
+     */
+    public function getSpeciesFlat(): array
+    {
+        return $this->speciesFlat;
+    }
+
+    /**
      * @return string[]
      */
     public function getReplacements(): array
