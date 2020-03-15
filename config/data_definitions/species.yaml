@@ -54,56 +54,24 @@ parameters:
 
         Insects:
         Birds:
+          Ducks:
         Reptiles:
           Lizards:
         Fishes:
           Sharks:
-
-      With antlers:
-
-      Scalies: # Fill
-        Dinosaurs:
-        Reptiles:
-        Dragons:
-
-      Aquatic: # Fill
-        Fishes:
-        Otters:
-
-      Hooved: # Fill
-        Ungulates:
-        MLP:
-
-      Winged: # Fill
-        Birds:
-        "Dutch Angel Dragons":
-        "Angel Dragons":
-        Gryphons:
-        Dragons:
-
-
-      With beak:
-        Ducks: # Add above
-        Birds:
-        Pancans: # Add above
-
-      Others:
-      "All hybrids":
-        Hybrids:
-        "Hybrids of these":
 
       "Fantasy creatures":
         MLP:
         Crux:
         "Skull animals":
         "Ghost Bones Dragon":
-        Dreccubuses:
         Manokits:
         Dutchies:
         "Dutch Angel Dragons":
         "Angel Dragons":
         Gryphons:
         Sergals:
+        Pancans:
         Dragons:
 
         Robotic/cybernetic/mechanical:
@@ -122,12 +90,53 @@ parameters:
         Monsters:
         Lloteer: # WAT
 
-      "Copyrighted characters":
-      "Copyrighted species": # Alias of below?
-      "Closed species":
-      "Open species":
-      "Self-made species":
-      "Original species":
+      With antlers: # Fill
+        Antelopes:
+        Cervines:
+        Goats:
+
+      Scalies: # Fill
+        Dinosaurs:
+        Reptiles:
+        Dragons:
+
+      Aquatic: # Fill
+        Fishes:
+        Otters:
+
+      Hooved: # Fill
+        Ungulates:
+        MLP:
+
+      Winged: # Fill
+        Bats:
+        Birds:
+        "Dutch Angel Dragons":
+        "Angel Dragons":
+        Gryphons:
+        Dragons:
+        Pancans:
+
+      With beak:
+        Ducks: # Add above
+        Birds:
+        Pancans: # Add above
+
+      "Copyright-related classification?": # FIXME
+        "Copyrighted characters":
+        "Copyrighted species": # Alias of below?
+        "Closed species":
+        "Open species":
+        "Self-made species":
+        "Original species":
+
+      Others:
+      "Any/most species":
+
+      "All hybrids":
+        Hybrids:
+          Pancans:
+        "Hybrids of these":
 
       to_be_tidied: # Just to silence the validator, to be fixed/approved later
         "Most experienced in wolves":
@@ -251,7 +260,7 @@ parameters:
       'Dogs?':                                               'Dogs'
       'Domestic Cats?':                                      'Domestic cats'
       'Dragons?':                                            'Dragons'
-      'Drekkubus(es)?':                                      'Drekkubuses'
+      'Dre[ck]{2}ubus(es)?':                                 'Drekkubuses'
       'Dutch Angel Dragons/Angel Dragons':                   "Dutch Angel Dragons\nAngel Dragons"
       'DAD''s|Dutch ange?le? dragons?':                      'Dutch Angel Dragons'
       'Equines?( in general)?':                              'Equines'
