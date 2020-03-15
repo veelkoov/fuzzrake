@@ -24,6 +24,9 @@ services:
             $iuFormUrl:            '%iu_form_url%'
             $speciesData:          '%species%'
             $languages:            '%languages%'
+            $countries:            '%countries%'
+            $strings:              '%strings%'
+            $lists:                '%lists%'
             $hosts:
                 production: getfursu.it
             $healthCheckValues:

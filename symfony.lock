@@ -83,6 +83,9 @@
     "nikic/php-parser": {
         "version": "v4.1.0"
     },
+    "ocramius/package-versions": {
+        "version": "1.7.0"
+    },
     "php": {
         "version": "7.4"
     },

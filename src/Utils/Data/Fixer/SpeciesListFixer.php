@@ -10,8 +10,10 @@ class SpeciesListFixer extends AbstractListFixer
 {
     private SpeciesService $species;
 
-    public function __construct(SpeciesService $species)
+    public function __construct(SpeciesService $species, array $strings, array $lists)
     {
+        parent::__construct($lists, $strings);
+
         $this->species = $species;
     }
 

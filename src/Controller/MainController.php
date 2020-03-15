@@ -10,6 +10,7 @@ use App\Service\IuFormService;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,8 +24,14 @@ class MainController extends AbstractController
      *
      * @throws UnexpectedResultException
      */
-    public function main(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
+    public function main(Request $request, ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
     {
+        if ('hexometer' === $request->get('ref')) {
+            return new Response('*Notices your scan* OwO what\'s this?', Response::HTTP_MISDIRECTED_REQUEST,
+                ['Content-Type' => 'text/plain; charset=UTF-8']
+            );
+        }
+
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
             'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
