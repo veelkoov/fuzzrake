@@ -2797,10 +2797,16 @@ INSERT INTO events VALUES (1791, 1, 0, '2020-03-12 18:04:39', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1792, 1, 0, '2020-03-14 06:04:38', 'CS_UPDTD_DETLS', 'Fursuits by Lacy and Nick', 'http://www.fursuiting.com/', '', '["</div><div data-min-height=\"40\" class=\"txtnew\" id=\"comp-k7hqysyy\"><h3 class=\"font_3\">custom fursuit ","commissions are now closed","</h3></div><div data-svg-type=\"shape\" data-strokewidth=\"2\" data-preserve-viewbox=\"ignore\" class=\"sty"]', '');
 INSERT INTO events VALUES (1793, 0, NULL, '2020-03-15 06:04:55', 'CS_UPDTD_DETLS', 'SereStudios', 'https://www.serestudios.com/', '', '', '');
 INSERT INTO events VALUES (1794, 1, NULL, '2020-03-15 06:04:58', 'CS_UPDTD_DETLS', 'saltyseasadness', 'https://instagram.com/saltyseasuits?igshid=1xnwr6n4ujaf4', '', '', '');
+INSERT INTO events VALUES (1795, NULL, 0, '2020-03-15 18:04:50', 'CS_UPDTD_DETLS', 'SereStudios', 'https://www.serestudios.com/', '', '["20counter\">1/27</div></div></div><div class=\"txtnew\" id=\"wrchtxth-igg\"><h1 class=\"font_0\" dir=\"ltr\">","commissions are now closed","</h1> <h1 class=\"font_0\" dir=\"ltr\">next opening: spring 2020</h1> <h1 class=\"font_0\" dir=\"ltr\">thank"]', '');
+INSERT INTO events VALUES (1796, 0, 1, '2020-03-16 18:04:41', 'CS_UPDTD_DETLS', 'Made By Mercury', 'http://www.madebymercury.co.uk/', '["div class=\"card-content\"> <div class=\"has-text-centered\"> <p class=\"title commission-status quotes\">","we are now open for commission"," quote requests</p> request a quote </div> <hr /> <p> welcome to STUDIO_NAME! we are a business dedi"]', '', '');
+INSERT INTO events VALUES (1797, 0, NULL, '2020-03-17 18:05:00', 'CS_UPDTD_DETLS', 'Nuke Creations', 'https://nukecreations.com/ordering/', '', '', '');
+INSERT INTO events VALUES (1798, NULL, 0, '2020-03-18 06:04:58', 'CS_UPDTD_DETLS', 'Nuke Creations', 'https://nukecreations.com/ordering/', '', '["div> <div class=\"sqs-slice\" data-slice-id=\"5c58328d15fcc09e6fd1012a\"><h1 id=\"sqs-slash-page-header\">","commissions are closed","</h1> </div> <div class=\"sqs-slice\" data-slice-id=\"5c58328d15fcc09e6fd1012b\"><p>subscribe to get ear"]', '');
+INSERT INTO events VALUES (1799, 0, NULL, '2020-03-18 06:04:59', 'CS_UPDTD_DETLS', 'Cant of Togs', 'https://www.cantoftogs.com/', '', '', '');
+INSERT INTO events VALUES (1800, NULL, 0, '2020-03-18 18:04:56', 'CS_UPDTD_DETLS', 'Cant of Togs', 'https://www.cantoftogs.com/', '', '["\"i8hiyi5f\"><h2 class=\"font_2\">welcome everyone...</h2> <h2 class=\"font_2\"> </h2> <h2 class=\"font_2\">","commissions are: closed","</h2> <h2 class=\"font_2\">quotes are: open</h2> </div></div></div></div></div></div></div></div></mai"]', '');
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans', 372);
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 334);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9222);
-INSERT INTO sqlite_sequence VALUES ('events', 1794);
+INSERT INTO sqlite_sequence VALUES ('events', 1800);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 COMMIT;
