@@ -234,7 +234,7 @@ parameters:
       '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
       '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
 
-      '^(None|Nope)$':                                       ''
+      '^(None|Nope|no)$':                                    ''
       '(\s|^)(and|or)':                                      '' # FIXME
 
       'I can craft any real life animal':                    'Real life animals'
