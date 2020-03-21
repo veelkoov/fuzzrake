@@ -55,4 +55,4 @@ services:
         tags:
             - { name: 'doctrine.event_subscriber' }
         arguments:
-            - "@doctrine.orm.cache.provider.doctrine.result_cache_pool"
+            - "@doctrine.orm.default_result_cache"
