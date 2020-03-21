@@ -32,102 +32,137 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="string", length=31)
+     * @ORM\Column(type="string", length=16)
      */
     private string $makerId = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=64)
      */
     private string $formerMakerIds = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=128)
      */
     private string $name = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256)
      */
     private string $formerly = '';
 
     /**
-     * @ORM\Column(type="string", length=511)
+     * @ORM\Column(type="string", length=512)
      */
     private string $intro = '';
 
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=16)
      */
     private string $since = '';
 
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=16)
      */
     private string $country = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=32)
      */
     private string $state = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=32)
      */
     private string $city = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256, options={"default": ""})
+     */
+    private string $productionModelsComment = '';
+
+    /**
+     * @ORM\Column(type="string", length=256)
      */
     private string $productionModels = '';
 
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=256, options={"default": ""})
+     */
+    private string $stylesComment = '';
+
+    /**
+     * @ORM\Column(type="string", length=1024)
      */
     private string $styles = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256)
      */
     private string $otherStyles = '';
 
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=256, options={"default": ""})
+     */
+    private string $orderTypesComment = '';
+
+    /**
+     * @ORM\Column(type="string", length=1024)
      */
     private string $orderTypes = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256)
      */
     private string $otherOrderTypes = '';
 
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=256, options={"default": ""})
+     */
+    private string $featuresComment = '';
+
+    /**
+     * @ORM\Column(type="string", length=1024)
      */
     private string $features = '';
 
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=1024)
      */
     private string $otherFeatures = '';
 
     /**
-     * @ORM\Column(type="string", length=1023)
+     * @ORM\Column(type="string", length=256)
      */
     private string $paymentPlans = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256, options={"default": ""})
+     */
+    private string $paymentMethods = '';
+
+    /**
+     * @ORM\Column(type="string", length=64, options={"default": ""})
+     */
+    private string $currenciesAccepted = '';
+
+    /**
+     * @ORM\Column(type="string", length=256, options={"default": ""})
+     */
+    private string $speciesComment = '';
+
+    /**
+     * @ORM\Column(type="string", length=256)
      */
     private string $speciesDoes = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256)
      */
     private string $speciesDoesnt = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=256)
      */
     private string $languages = '';
 
@@ -309,6 +344,18 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
+    public function getProductionModelsComment(): string
+    {
+        return $this->productionModelsComment;
+    }
+
+    public function setProductionModelsComment(string $productionModelsComment): self
+    {
+        $this->productionModelsComment = $productionModelsComment;
+
+        return $this;
+    }
+
     public function getProductionModels(): string
     {
         return $this->productionModels;
@@ -317,6 +364,18 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setProductionModels(string $productionModels): self
     {
         $this->productionModels = $productionModels;
+
+        return $this;
+    }
+
+    public function getStylesComment(): string
+    {
+        return $this->stylesComment;
+    }
+
+    public function setStylesComment(string $stylesComment): self
+    {
+        $this->stylesComment = $stylesComment;
 
         return $this;
     }
@@ -345,6 +404,18 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
+    public function getOrderTypesComment(): string
+    {
+        return $this->orderTypesComment;
+    }
+
+    public function setOrderTypesComment(string $orderTypesComment): self
+    {
+        $this->orderTypesComment = $orderTypesComment;
+
+        return $this;
+    }
+
     public function getOrderTypes(): string
     {
         return $this->orderTypes;
@@ -365,6 +436,18 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setOtherOrderTypes(string $otherOrderTypes): self
     {
         $this->otherOrderTypes = $otherOrderTypes;
+
+        return $this;
+    }
+
+    public function getFeaturesComment(): string
+    {
+        return $this->featuresComment;
+    }
+
+    public function setFeaturesComment(string $featuresComment): self
+    {
+        $this->featuresComment = $featuresComment;
 
         return $this;
     }
@@ -401,6 +484,42 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setPaymentPlans(string $paymentPlans): self
     {
         $this->paymentPlans = $paymentPlans;
+
+        return $this;
+    }
+
+    public function getPaymentMethods(): string
+    {
+        return $this->paymentMethods;
+    }
+
+    public function setPaymentMethods(string $paymentMethods): self
+    {
+        $this->paymentMethods = $paymentMethods;
+
+        return $this;
+    }
+
+    public function getCurrenciesAccepted(): string
+    {
+        return $this->currenciesAccepted;
+    }
+
+    public function setCurrenciesAccepted(string $currenciesAccepted): self
+    {
+        $this->currenciesAccepted = $currenciesAccepted;
+
+        return $this;
+    }
+
+    public function getSpeciesComment(): string
+    {
+        return $this->speciesComment;
+    }
+
+    public function setSpeciesComment(string $speciesComment): self
+    {
+        $this->speciesComment = $speciesComment;
 
         return $this;
     }
@@ -458,7 +577,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->inactiveReason;
     }
 
-    public function setInactiveReason(string $inactiveReason): Artisan
+    public function setInactiveReason(string $inactiveReason): self
     {
         $this->inactiveReason = $inactiveReason;
 
@@ -872,6 +991,66 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function setFaqUrl(string $faqUrl): self
     {
         $this->setSingleUrl(Fields::URL_FAQ, $faqUrl);
+
+        return $this;
+    }
+
+    public function getLinktreeUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_LINKTREE);
+    }
+
+    public function setLinktreeUrl(string $url): self
+    {
+        $this->setSingleUrl(Fields::URL_LINKTREE, $url);
+
+        return $this;
+    }
+
+    public function getFurryAminoUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_FURRY_AMINO);
+    }
+
+    public function setFurryAminoUrl(string $url): self
+    {
+        $this->setSingleUrl(Fields::URL_FURRY_AMINO, $url);
+
+        return $this;
+    }
+
+    public function getEtsyUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_ETSY);
+    }
+
+    public function setEtsyUrl(string $url): self
+    {
+        $this->setSingleUrl(Fields::URL_ETSY, $url);
+
+        return $this;
+    }
+
+    public function getTheDealersDenUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_THE_DEALERS_DEN);
+    }
+
+    public function setTheDealersDenUrl(string $url): self
+    {
+        $this->setSingleUrl(Fields::URL_THE_DEALERS_DEN, $url);
+
+        return $this;
+    }
+
+    public function getOtherShopUrl(): string
+    {
+        return $this->getSingleUrl(Fields::URL_OTHER_SHOP);
+    }
+
+    public function setOtherShopUrl(string $url): self
+    {
+        $this->setSingleUrl(Fields::URL_OTHER_SHOP, $url);
 
         return $this;
     }
