@@ -10,20 +10,41 @@ final class Fields
 {
     public const TIMESTAMP = 'TIMESTAMP';
     public const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
+
+    public const MAKER_ID = 'MAKER_ID';
+    public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
+
     public const NAME = 'NAME';
     public const FORMERLY = 'FORMERLY';
+
+    public const INTRO = 'INTRO';
     public const SINCE = 'SINCE';
+
+    public const LANGUAGES = 'LANGUAGES';
     public const COUNTRY = 'COUNTRY';
     public const STATE = 'STATE';
     public const CITY = 'CITY';
+
     public const PAYMENT_PLANS = 'PAYMENT_PLANS';
+    public const PAYMENT_METHODS = 'PAYMENT_METHODS';
+    public const CURRENCIES_ACCEPTED = 'CURRENCIES_ACCEPTED';
+
+    public const PRODUCTION_MODELS_COMMENT = 'PRODUCTION_MODELS_COMMENT';
     public const PRODUCTION_MODELS = 'PRODUCTION_MODELS';
+
+    public const STYLES_COMMENT = 'STYLES_COMMENT';
     public const STYLES = 'STYLES';
     public const OTHER_STYLES = 'OTHER_STYLES';
+
+    public const ORDER_TYPES_COMMENT = 'ORDER_TYPES_COMMENT';
     public const ORDER_TYPES = 'ORDER_TYPES';
     public const OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
+
+    public const FEATURES_COMMENT = 'FEATURES_COMMENT';
     public const FEATURES = 'FEATURES';
     public const OTHER_FEATURES = 'OTHER_FEATURES';
+
+    public const SPECIES_COMMENT = 'SPECIES_COMMENT';
     public const SPECIES_DOES = 'SPECIES_DOES';
     public const SPECIES_DOESNT = 'SPECIES_DOESNT';
 
@@ -38,6 +59,11 @@ final class Fields
     public const URL_TUMBLR = 'URL_TUMBLR';
     public const URL_INSTAGRAM = 'URL_INSTAGRAM';
     public const URL_YOUTUBE = 'URL_YOUTUBE';
+    public const URL_LINKTREE = 'URL_LINKTREE';
+    public const URL_FURRY_AMINO = 'URL_FURRY_AMINO';
+    public const URL_ETSY = 'URL_ETSY';
+    public const URL_THE_DEALERS_DEN = 'URL_THE_DEALERS_DEN';
+    public const URL_OTHER_SHOP = 'URL_OTHER_SHOP';
     public const URL_QUEUE = 'URL_QUEUE';
     public const URL_SCRITCH = 'URL_SCRITCH';
     public const URL_SCRITCH_PHOTO = 'URL_SCRITCH_PHOTO';
@@ -45,16 +71,13 @@ final class Fields
     public const URL_OTHER = 'URL_OTHER';
     public const URL_CST = 'URL_CST';
 
-    public const LANGUAGES = 'LANGUAGES';
-    public const MAKER_ID = 'MAKER_ID';
-    public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
-    public const INTRO = 'INTRO';
     public const NOTES = 'NOTES';
     public const INACTIVE_REASON = 'INACTIVE_REASON';
     public const PASSCODE = 'PASSCODE';
     public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
     public const CST_LAST_CHECK = 'CST_LAST_CHECK';
     public const COMPLETENESS = 'COMPLETENESS';
+
     public const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
     public const CONTACT_METHOD = 'CONTACT_METHOD';
     public const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
