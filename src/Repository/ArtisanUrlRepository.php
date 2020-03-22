@@ -55,6 +55,12 @@ class ArtisanUrlRepository extends ServiceEntityRepository
     public function getOrderedBySuccessDate(array $excludedTypes): array
     {
         $builder = $this->createQueryBuilder('u')
+            ->join('u.artisan', 'a')
+            ->join('a.commissionsStatus', 'acs')
+            ->join('a.privateData', 'apd')
+            ->addSelect('a')
+            ->addSelect('acs')
+            ->addSelect('apd')
             ->orderBy('u.lastSuccess', 'ASC')
             ->addOrderBy('u.lastFailure', 'ASC');
 
