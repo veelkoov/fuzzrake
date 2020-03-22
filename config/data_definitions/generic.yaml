@@ -1,0 +1,43 @@
+parameters:
+  strings:
+    replacements:
+      "#’#":                        "'"
+      "#^-$#":                      ""
+      "#^Rather not say$#i":        ""
+      "#^n/a$#i":                   ""
+      "#^n/a yet$#i":               ""
+      "#^-$#i":                     ""
+      "#[ \t]{2,}#":                " "
+      "#(p)ose?able#i":             "$1oseable"
+      "#(^|\\s)LED($|\\s)#i":       "$1LED$2"
+
+  lists:
+    replacements:
+      'Armsleeves|Arm Sleeves':                      'Arm sleeves'
+      'backpacks':                                   'Backpacks'
+      'Bandannas':                                   'Bandanas'
+      '(.+)changable(.+)':                           '$1changeable$2'
+      'claws':                                       'Claws'
+      'Dry brushing':                                'Drybrushing'
+      'Excellent vision &(amp;)? breathability':     "Excellent vision\nExcellent breathability"
+      'Femme Suits':                                 'Femme suits'
+      'Foam Bases':                                  'Foam bases'
+      'Fursuit Props':                               'Fursuit props'
+      'Fursuit Sneakers':                            'Fursuit sneakers'
+      'Fursuit Sprays?':                             'Fursuit sprays'
+      'Head ?Bases':                                 'Head bases'
+      'Hidden pockets?':                             'Hidden pocket'
+      'Just Ask':                                    'Just ask'
+      'Legsleeves':                                  'Leg sleeves'
+      'Pickable Noses?':                             'Pickable nose'
+      'Plush Suits':                                 'Plush suits'
+      'Plush Claws':                                 'Plush claws'
+      'Plushes':                                     'Plushies'
+      'Poseable tongues':                            'Poseable tongue'
+      'Removable Eyelids':                           'Removable eyelids'
+      'Removable Eyes':                              'Removable eyes'
+      'Sock paws':                                   'Sockpaws'
+      'Toony Foam Bases':                            'Toony foam bases'
+      'Premade Props':                               'Premade props'
+      'Refurbishing':                                'Refurbishments'
+      'Zipper tails?':                               'Zipper tails'

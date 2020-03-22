@@ -24,6 +24,9 @@ services:
             $iuFormUrl:            '%iu_form_url%'
             $species:              '%species%'
             $languages:            '%languages%'
+            $countries:            '%countries%'
+            $strings:              '%strings%'
+            $lists:                '%lists%'
             $hosts:
                 production: getfursu.it
             $healthCheckValues:
@@ -52,4 +55,4 @@ services:
         tags:
             - { name: 'doctrine.event_subscriber' }
         arguments:
-            - "@doctrine.orm.cache.provider.doctrine.result_cache_pool"
+            - "@doctrine.orm.default_result_cache"

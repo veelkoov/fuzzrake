@@ -16,15 +16,4 @@ class StatisticsControllerTest extends DbEnabledWebTestCase
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1#data_statistics', 'Data statistics');
     }
-
-    public function testOrdering()
-    {
-        $client = static::createClient();
-        self::addSimpleArtisan();
-
-        $client->request('GET', '/ordering.html');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Other items, combined');
-    }
 }

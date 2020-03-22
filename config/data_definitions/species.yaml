@@ -1,101 +1,86 @@
-parameters: # TODO: improve!
+parameters:
   species:
-    filterable:
-      "Any species":
-      "Most species":
-
     valid_choices:
       "Any species":
       "Most species":
-      Real:
-        Pinnipeds: # FIXME
-          Seals:
 
+      "Real life animals":
         Mammals:
-          Sables:
-          Marsupials:
-            Kangaroos:
-            Opossums:
-
-          Felines:
-            Cats:
-              "Small cats":
-                "Domestic cats":
-              "Big cats":
-                Caracals:
-                Lions:
-                Lynxes:
-                Snow leopards:
-                Tigers:
-
-          Bears:
-            Panda:
-
-          Bats:
-
-          Elephants:
-
-          Hooved:
-            Ungulates:
-            Equines:
-            Antelopes:
-            Cervines:
-              Deers:
-            Cows:
-            Goats:
-            Horses:
-            Rams:
-            Sheeps:
-
           Canines:
             Dogs:
-              Domestic dogs:
+            Lupines:
+              Wolves:
             Vulpines:
               Foxes:
-              Fennecs:
-            Lupines: # Ain't it a synonym of wolves?
-              Wolves:
-            Hyenas:
-
-          Mustelids: # weasels, badgers, otters, ferrets, martens, minks, and wolverines
+                Fennecs:
+          Felines:
+            "Small cats":
+              "Domestic cats":
+            "Big cats":
+              Lions:
+              Snow leopards:
+              Lynxes:
+              Caracals:
+              Tigers:
+          Hyenas:
+          Bears:
+            Giant pandas:
+          Ungulates:
+            Rhinos:
+            Antelopes:
+              Sable antelope:
+            Equines: # Avoid?
+              Horses:
+            Sheeps:
+            Cows:
+            Cervines:
+              Deers:
+            Goats:
+          Rodents:
+            Mice:
+            Rats:
+          Rabbits:
+          Bats:
+          Mustelids:
             Otters:
             Ferrets:
+          Kangaroos:
+          Opossums:
+          Elephants:
+          Monkeys:
+          Red pandas:
+          Pinnipeds:
+          Raccoons:
 
-          Rodents:
-            Rabbits: # Here?
-            Mouse:
-            Rats:
+        Insects:
+        Birds:
+          Ducks:
+        Reptiles:
+          Lizards:
+        Fishes:
+          Sharks:
 
-        Avians: # == birds
-          Birds:
-
-        Scalies:
-          Reptiles:
-          Reptilians: # == Reptiles ==  turtles, crocodilians, snakes, amphisbaenians, lizards, tuatara
-            Lizards:
-
-      Hybrides:
-      "Hybrids of these":
-
-      Fantasy creatures: # Alias of below?
-      Fiction/fantasy:
+      "Fantasy creatures":
         MLP:
         Crux:
         "Skull animals":
         "Ghost Bones Dragon":
-        Dreccubuses:
         Manokits:
         Dutchies:
         "Dutch Angel Dragons":
         "Angel Dragons":
         Gryphons:
         Sergals:
+        Pancans:
         Dragons:
-        Robots:
-        Primagens:
-          Primagens (on a foam base):
-        Protogens:
-          Protogens (on a foam base):
+
+        Robotic/cybernetic/mechanical:
+          Robots:
+          Primagens: # Are they robots?
+            Primagens (on a foam base):
+          Protogens: # Are they robots?
+            Protogens (on a foam base):
+
         "TV heads":
         Wickerbeasts:
         Drekkubuses:
@@ -103,28 +88,55 @@ parameters: # TODO: improve!
         Digimons:
         Sparkledogs:
         Monsters:
+        Lloteer: # WAT
 
-      Dinosaurs:
+      With antlers: # Fill
+        Antelopes:
+        Cervines:
+        Goats:
 
-      Monkeys:
-      Raccoons:
+      Scalies: # Fill
+        Dinosaurs:
+        Reptiles:
+        Dragons:
 
-      Aquatic:
-        Sharks:
+      Aquatic: # Fill
         Fishes:
+        Otters:
 
-      Rhinos:
+      Hooved: # Fill
+        Ungulates:
+        MLP:
 
-      "Red pandas":
-      "Insects":
+      Winged: # Fill
+        Bats:
+        Birds:
+        "Dutch Angel Dragons":
+        "Angel Dragons":
+        Gryphons:
+        Dragons:
+        Pancans:
 
-      "Copyrighted characters":
-      "Copyrighted species": # Alias of below?
-      "Closed species":
-      "Open species":
-      "Self-made species":
-      "Original species":
-      "Rare species":
+      With beak:
+        Ducks: # Add above
+        Birds:
+        Pancans: # Add above
+
+      "Copyright-related classification?": # FIXME
+        "Copyrighted characters":
+        "Copyrighted species": # Alias of below?
+        "Closed species":
+        "Open species":
+        "Self-made species":
+        "Original species":
+
+      Others:
+      "Any/most species":
+
+      "All hybrids":
+        Hybrids:
+          Pancans:
+        "Hybrids of these":
 
       to_be_tidied: # Just to silence the validator, to be fixed/approved later
         "Most experienced in wolves":
@@ -138,15 +150,13 @@ parameters: # TODO: improve!
         "I greatly prefer uncommon species and will be much more excited to work on such species. I do all, but uncommon is prefered.":
         "Etc.": # De hecc
         "Robotic stuff":
-        'Species with robotic/cybernetic':
         'Almost anything organic (non robotic/cybernetic)':
-        'Species with robotic/cybernetic, or otherwise mechanical appearance.':
+        'Species with robotic/cybernetic, or otherwise mechanical appearance':
         "All species and all fur based characters":
         "Skullsuits":
         "Anyone since we like to experience new species":
         "Nothing on the hard pass list, but I do not have experience with scalies or other animals without fur. I am willing to try anything!":
         "Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
-        "Fantasie":
         "I can also do velvet or minky skinned characters":
         "*Extremely intricate dragons":
         "Extremely intricate anything":
@@ -156,21 +166,17 @@ parameters: # TODO: improve!
         'A big fan of things with horns and claws':
         'Not sure yet':
         'Unsafe creations':
-        'All species and hybrids welcome':
         'I like to make unusual creatures and monsters':
         'Things of an adult nature':
         'Standard animals are fine as well':
         "I enjoy making monsters and creepy/crazy species most!":
         "I'm open to all species except avian":
-        "I won't take on anything that has a beak like ducks, birds, and pancans.":
         "I'm willing to try almost anything if discussed clearly":
         "Will not do characters with antlers or overly complicated anatomy (3 mouths, 4 eyes, etc.)":
-        "I'll try anything!":
         'Critters':
         'Especially less common species':
         'Some scalies':
-        'Canides and dragons in general but will do any species':
-        'Bugs':
+        'Bugs': # Ambiguous
         "Specialises in mythical creatures/monsters":
         "Most experience in canines":
         "Any sort of animal or fantasy creature, just ask":
@@ -180,9 +186,6 @@ parameters: # TODO: improve!
         "Experienced in felines and canines but I'm willing to take on almost anything!":
         "Most anything covered in fur":
         "Prefer making original species":
-        "Any creature, whether it is Canine, Feline, Equine, Mustelid, Monkey, Rodent.. etc!":
-        'And most other species':
-        'Real life animals':
         'Any really just depends if I can make it will to check into it however give us a shot':
         'Please inquire about fantasy creatures':
         'I especially love to create less common species':
@@ -191,11 +194,10 @@ parameters: # TODO: improve!
         'I specialize in dragons':
         'Complex hybrids':
         'Up to new species as a challenge':
-        'Birds/avians in general':
         'Deer&similar':
+        "Rare species":
 
     leave_unchanged:
-      - All species, but I specialize in dragons
       - I'd prefer not to do any pokemon/digimon, but still ask since it depends on the design
       - Nothing on the hard pass list, but I do not have experience with scalies or other animals without fur. I am willing to try anything!
       - Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)
@@ -204,7 +206,6 @@ parameters: # TODO: improve!
       - skullsuits... # FIXME: How the heck am i supposed to interpret that
       - None specifically that I can think of, if unsure just ask
       - Will not do characters with antlers or overly complicated anatomy (3 mouths, 4 eyes, etc.)
-      - I won't take on anything that has a beak like ducks, birds, and pancans.
       - I'm willing to take on any species, but enjoy making monsters and creepy/crazy species most!
       - Any and all within my capabilities of foam/fur/minky crafting. Unique or uncommon species are my soft spot.
       - Only things that are completely and literally impossible, like breaking the laws of physics
@@ -212,11 +213,10 @@ parameters: # TODO: improve!
       - Dutch Angel Dragons (Tail, paws and feet paws ONLY)
       - Any sort of animal or fantasy creature, just ask
       - Basic canines, vulpines, angel dragons. (Will consider if unique)
-      - Any creature, whether it is Canine, Feline, Equine, Mustelid, Monkey, Rodent.. etc!
       - Etc.
       - "I greatly prefer uncommon species and will be much more excited to work on such species. I do all, but uncommon is prefered."
       - 'Any animal and most mysticals (dragons*, serials, gryphons)'
-      - 'Species with robotic/cybernetic, or otherwise mechanical appearance.'
+      - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
 
     replacements:
       'Currently not available for reptilian or avian characters':  "Avians\nReptilians"
@@ -234,20 +234,21 @@ parameters: # TODO: improve!
       '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
       '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
 
-      '^(None|Nope)$':                                       ''
+      '^(None|Nope|no)$':                                    ''
       '(\s|^)(and|or)':                                      '' # FIXME
 
       'I can craft any real life animal':                    'Real life animals'
 
       "AD's|(Angel dragons?)":                               'Angel Dragons'
       'Antelopes?':                                          'Antelopes'
-      'Avians?':                                             'Avians'
+      'Avians?':                                             'Birds'
       'Bats?':                                               'Bats'
       'Bears?':                                              'Bears'
       'Big/small felines':                                   "Big felines\nSmall felines"
       'Big and small cats':                                  "Big cats\nSmall cats"
       'Big (cats|felines)( in general)?':                    "Big cats"
       'Birds?':                                              'Birds'
+      'Birds/avians in general':                             'Birds'
       'Bunn(y|ies)':                                         'Rabbits'
       'Caracles|Caracals?':                                  'Caracals'
       'Cats?( in general)?':                                 'Felines'
@@ -259,10 +260,12 @@ parameters: # TODO: improve!
       'Dogs?':                                               'Dogs'
       'Domestic Cats?':                                      'Domestic cats'
       'Dragons?':                                            'Dragons'
-      'Drekkubus(es)?':                                      'Drekkubuses'
+      'Dre[ck]{2}ubus(es)?':                                 'Drekkubuses'
       'Dutch Angel Dragons/Angel Dragons':                   "Dutch Angel Dragons\nAngel Dragons"
       'DAD''s|Dutch ange?le? dragons?':                      'Dutch Angel Dragons'
       'Equines?( in general)?':                              'Equines'
+      'Etc\.?':                                              'Etc.'
+      'Fantasie':                                            'Fantasy creatures'
       'Felines?( in general)?':                              'Felines'
       'Fennecs?( foxes)?':                                   'Fennecs'
       'Ferrets?':                                            'Ferrets'
@@ -270,37 +273,39 @@ parameters: # TODO: improve!
       'Fox(es)?':                                            'Foxes'
       'Goats?':                                              'Goats'
       'Horses?':                                             'Horses'
-      'Hybride?s?':                                          'Hybrides'
+      'Hybride?s?':                                          'Hybrids'
       'Hyenas?':                                             'Hyenas'
       'K-9''s':                                              'Canines'
       'Lions?':                                              'Lions'
-      'Lupines?':                                            'Lupines'
       'Mammals?( in general)?':                              'Mammals'
       'Mann?okits?':                                         'Manokits'
       'Monkeys?( in general)?':                              'Monkeys'
+      'Mouse':                                               'Mice'
       'Open species?':                                       'Open species'
       'Opossums?':                                           'Opossums'
       'Otters?':                                             'Otters'
+      'Pandas?':                                             'Giant pandas'
       'Pinnipeds?( in general)?':                            'Pinnipeds'
       'Primagens and protogens':                             "Primagens\nProtogens"
       'Pokemons?':                                           'Pokemons'
       'Protogens?':                                          'Protogens'
       'Protogens/primagens \(on a foam base\)':              "Protogens (on a foam base)\nPrimagens (on a foam base)"
-      'Rams?':                                               'Rams'
+      'Rams?':                                               'Sheeps'
       'Racc?oo?ns?':                                         'Raccoons'
       'Rats?':                                               'Rats'
       'Rare/closed species':                                 "Rare species\nClosed species"
       'Red pandas?':                                         'Red pandas'
       'Reptiles?':                                           'Reptiles'
-      'Reptilians?( in general)?':                           'Reptilians'
+      'Reptilians?( in general)?':                           'Reptiles'
       'Robots?':                                             'Robots'
       'Rodents?( in general)?':                              'Rodents'
+      'Sables':                                              'Sable antelope'
       '(any )?Scalies?( in general)?':                       'Scalies'
       'Ser[gi]als?':                                         'Sergals'
       'Sheeps?':                                             'Sheeps'
       'Skull Animals?':                                      'Skull animals'
       'Small felines?':                                      'Small cats'
       'Snow leopards?':                                      'Snow leopards'
-      'Vulpines?':                                           'Vulpines'
       'Wolf':                                                'Wolves'
       'Ungulates?(( in)? \(?general\)?)?':                   'Ungulates'
+      'Vulpines?':                                           'Vulpines'
