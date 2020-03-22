@@ -2473,6 +2473,8 @@ INSERT INTO events VALUES (1805, NULL, 0, '2020-03-21 06:04:40', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1806, NULL, 0, '2020-03-21 06:04:41', 'CS_UPDTD_DETLS', 'Cawstumes', 'http://www.cawstumes.com/fursuits/', '', '[" you have any questions or comments, you can check out the contact page to reach us!</p> <p>fursuit ","commissions are currently:</p> </div> </div> <div class=\"vc_btn3-container vc_btn3-center\" >closed",", sorry!</div></div></div></div><div class=\"wpb_column vc_column_container vc_col-sm-6 pearl_column_"]', '');
 INSERT INTO events VALUES (1807, NULL, 0, '2020-03-21 06:04:41', 'CS_UPDTD_DETLS', 'Tesyra Creations', 'https://fire-feather.wixsite.com/tesyracreations/commission-status-and-current-queue', '', '["v data-min-height=\"411\" class=\"txtnew\" id=\"comp-jj8uxwca\"><p class=\"font_8\">​</p> <p class=\"font_8\">","commissions are currently closed","!</p> <p class=\"font_8\">​</p> <p class=\"font_8\">my queue is broken up into three categories: regular"]', '');
 INSERT INTO events VALUES (1808, 1, 0, '2020-03-21 06:04:42', 'CS_UPDTD_DETLS', 'Sab!er Studios | Sabier Studios', 'https://www.instagram.com/aspexofsalt/', '', '[" ac \\/ mp\\nself taught #artist\\nexpressive #fursuitmaker of thicc suits\\n#lloteer species creator\\n[","commissions closed","]\\n\\u2b50 tos and more below\",\"url\":\"http:\\/\\/linktr.ee\\/aspexofsalt\",\"mainentityofpage\":{\"@type\":\"p"]', '');
+INSERT INTO events VALUES (1809, 0, NULL, '2020-03-22 06:04:46', 'CS_UPDTD_DETLS', 'Gold Ribbon Studio', 'https://www.goldribbonstudio.com/', '', '', '');
+INSERT INTO events VALUES (1810, NULL, 0, '2020-03-22 18:04:57', 'CS_UPDTD_DETLS', 'Gold Ribbon Studio', 'https://www.goldribbonstudio.com/', '', '["impo\"><h1 class=\"font_0\">closed</h1></div><div class=\"txtnew\" id=\"comp-jkk2u1hx\"><h2 class=\"font_2\">","currently not accepting new projects","</h2> <h2 class=\"font_2\">next opening: july 2020</h2></div><div class=\"txtnew\" id=\"comp-jkk2lgtc\"><p"]', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2856,7 +2858,7 @@ INSERT INTO artisans VALUES (373, 'VTSTUDS', '', 'VioletTrench', 'Viiolett', 'ge
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 335);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9229);
-INSERT INTO sqlite_sequence VALUES ('events', 1808);
+INSERT INTO sqlite_sequence VALUES ('events', 1810);
 INSERT INTO sqlite_sequence VALUES ('artisans', 373);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
