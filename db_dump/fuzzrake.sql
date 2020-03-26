@@ -2483,6 +2483,7 @@ INSERT INTO events VALUES (1820, 1, 0, '2020-03-24 06:04:52', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1821, 0, 1, '2020-03-25 18:04:45', 'CS_UPDTD_DETLS', 'Onix Angel Creations', 'https://www.onixangelcreations.com/', '["er\"></div> </td> </tr> </tbody> </table> </div></div></div> <h2 class=\"wsite-content-title\">fursuit ","commisions: open","digital traditional art commissions: see social media</h2> <div class=\"wsite-spacer\"></div> <div><di"]', '', '');
 INSERT INTO events VALUES (1822, 0, 1, '2020-03-25 18:04:45', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '["ntent\"> <div class=\"container\"> <div class=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\"",">slot open"," for may completion - parts, head, partial or fullsuit ( fullsuit only if you have someone in your h"]', '', '');
 INSERT INTO events VALUES (1823, 1, NULL, '2020-03-26 18:04:37', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '', '', '');
+INSERT INTO events VALUES (1824, NULL, NULL, '2020-03-26 19:48:00', 'GENERIC', '', '', '', '', '- Added "state" column and filter (<a href="https://github.com/veelkoov/fuzzrake/commit/64fb88ccc59cf285637a69aa1b0ea84f0d2318b4" target="_blank">git</a>, <a href="https://twitter.com/veelkoov/status/1243263616440307712" target="_blank">Twitter</a>)');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2867,7 +2868,7 @@ INSERT INTO artisans VALUES (374, 'LIVBSTS', '', 'LivingBeasts', '', 'Greetings!
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 336);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9242);
-INSERT INTO sqlite_sequence VALUES ('events', 1823);
+INSERT INTO sqlite_sequence VALUES ('events', 1824);
 INSERT INTO sqlite_sequence VALUES ('artisans', 374);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
