@@ -3,6 +3,7 @@
     <tr>
         <th class="text-left name">Fursuit maker /&nbsp;studio name</th>
         <th class="text-center toggleable default-hidden maker-id">Maker ID</th>
+        <th class="text-center toggleable no-sorting default-hidden">State</th>
         <th class="text-center toggleable no-sorting default-hidden">Languages</th>
         <th class="text-center toggleable no-sorting default-hidden">Production model</th>
         <th class="text-center toggleable no-sorting">Styles</th>
@@ -39,6 +40,9 @@
                 </td>
                 <td class="maker-id" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.makerId -}}
+                </td>
+                <td class="state" data-toggle="modal" data-target="#artisanDetailsModal">
+                    {{- artisan.state -}}
                 </td>
                 <td class="languages" data-toggle="modal" data-target="#artisanDetailsModal">
                     {{- artisan.languages|other('') -}}

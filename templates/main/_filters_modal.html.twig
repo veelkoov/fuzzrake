@@ -24,6 +24,19 @@
                         </div>
                     </div>
 
+                    <div class="card" id="statesFilter">
+                        <div role="tab" class="card-header collapsed" id="headingEight" data-toggle="collapse" data-target="#statesFilterBody" aria-expanded="false" aria-controls="statesFilterBody">
+                            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
+                            States: <span class="status"></span>
+                        </div>
+
+                        <div id="statesFilterBody" class="collapse" aria-labelledby="headingEight" data-parent="#filtersAccordion">
+                            <div class="card-body">
+                                {% include 'main/_filter_multiselect.html.twig' with { itemName: 'state', items: states } %}
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card" id="languagesFilter">
                         <div role="tab" class="card-header collapsed" id="headingSeven" data-toggle="collapse" data-target="#languagesFilterBody" aria-expanded="false" aria-controls="languagesFilterBody">
                             <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>

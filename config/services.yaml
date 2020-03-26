@@ -25,6 +25,7 @@ services:
             $species:              '%species%'
             $languages:            '%languages%'
             $countries:            '%countries%'
+            $states:               '%states%'
             $strings:              '%strings%'
             $lists:                '%lists%'
             $hosts:
