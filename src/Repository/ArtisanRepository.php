@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\ValidationRegexps;
-use App\Utils\FilterItem;
 use App\Utils\FilterItems;
 use App\Utils\Regexp\Regexp;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -95,6 +94,11 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getDistinctCountriesToCountAssoc(): FilterItems
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
+    }
+
+    public function getDistinctStatesToCountAssoc(): FilterItems
+    {
+        return $this->getDistinctItemsWithCountFromJoined('state');
     }
 
     public function getDistinctOrderTypes(): FilterItems
@@ -220,29 +224,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $builder->getQuery()
             ->enableResultCache(3600)
             ->getResult();
-    }
-
-    /**
-     * @return FilterItem[]
-     */
-    public function getOtherItemsData(): array
-    {
-        $ot = $this->getDistinctOtherOrderTypes();
-        $fe = $this->getDistinctOtherFeatures();
-        $st = $this->getDistinctOtherStyles();
-
-        $result = [];
-
-        foreach (['OT' => $ot, 'FE' => $fe, 'ST' => $st] as $suffix => $items) {
-            foreach ($items->getItems() as $item) {
-                $newLabel = "{$item->getLabel()} ($suffix)";
-                $result[$newLabel] = new FilterItem($newLabel, $newLabel, $item->getCount());
-            }
-        }
-
-        ksort($result);
-
-        return $result;
     }
 
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array

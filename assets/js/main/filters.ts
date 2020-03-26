@@ -65,6 +65,7 @@ function initFilters(refreshCallback: () => void): void {
     refreshList = refreshCallback;
 
     addFilter(new FilterSimpleValue  ('country',           '#countriesFilter'));
+    addFilter(new FilterSimpleValue  ('state',             '#statesFilter'));
     addFilter(new FilterSetWithOthers('styles',            '#stylesFilter',           false));
     addFilter(new FilterSetWithOthers('features',          '#featuresFilter',         true));
     addFilter(new FilterSetWithOthers('orderTypes',        '#orderTypesFilter',       false));

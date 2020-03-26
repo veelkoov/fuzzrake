@@ -43,6 +43,7 @@ class MainController extends AbstractController
             'commissionsStatuses' => $artisanRepository->getDistinctCommissionStatuses(),
             'languages'           => $artisanRepository->getDistinctLanguages(),
             'countries'           => $countriesDataService->getFilterData(),
+            'states'              => $artisanRepository->getDistinctStatesToCountAssoc(),
         ]);
     }
 

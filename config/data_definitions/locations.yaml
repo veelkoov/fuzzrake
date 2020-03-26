@@ -1,5 +1,7 @@
 parameters:
   countries:
+    commonRegexPrefix: '#^'
+    commonRegexSuffix: '$#i'
     replacements:
       "argentina":                                     "AR"
       "australia":                                     "AU"
@@ -26,3 +28,18 @@ parameters:
       "united states( of america)?":                   "US"
       "u\\.?s\\.?( of america)?|usa":                  "US"
       "south africa":                                  "ZA"
+
+  states:
+    commonRegexPrefix: '#^'
+    commonRegexSuffix: '$#i'
+    replacements:
+      'AZ$|^Arizona':                   'Arizona'
+      'CA$|^California':                'California'
+      'CO$|^Colorado':                  'Colorado'
+      'FL$|^Florida':                   'Florida'
+      'MN$|^Minnesota':                 'Minnesota'
+      'NY$|^New York':                  'New York'
+      'OH$|^Ohio':                      'Ohio'
+      'OK$|^Oklahoma':                  'Oklahoma'
+      'VA$|^Virginia':                  'Virginia'
+      'Quebec':                         'Québec'
