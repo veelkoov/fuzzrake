@@ -2483,6 +2483,16 @@ INSERT INTO events VALUES (1821, 0, 1, '2020-03-25 18:04:45', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1822, 0, 1, '2020-03-25 18:04:45', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '["ntent\"> <div class=\"container\"> <div class=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\"",">slot open"," for may completion - parts, head, partial or fullsuit ( fullsuit only if you have someone in your h"]', '', '');
 INSERT INTO events VALUES (1823, 1, NULL, '2020-03-26 18:04:37', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '', '', '');
 INSERT INTO events VALUES (1824, NULL, NULL, '2020-03-26 19:48:00', 'GENERIC', '', '', '', '', '- Added "state" column and filter (<a href="https://github.com/veelkoov/fuzzrake/commit/64fb88ccc59cf285637a69aa1b0ea84f0d2318b4" target="_blank">git</a>, <a href="https://twitter.com/veelkoov/status/1243263616440307712" target="_blank">Twitter</a>)');
+INSERT INTO events VALUES (1825, NULL, NULL, '2020-03-26 20:08:00', 'GENERIC', '', '', '', '', '- Marked one maker as inactive after receiving a report from a visitor. Thank you for your contribution! (<a href="https://github.com/veelkoov/fuzzrake/commit/92b01b746b14c5925ad3b454a93d21df4f468ccc" target="_blank">git</a>)');
+INSERT INTO events VALUES (1826, 1, 0, '2020-03-27 06:04:47', 'CS_UPDTD_DETLS', 'Ya Boy Luke Suits', 'http://yaboylukesuits.com/index.html', '', '["lass=\"sqs-block-content\"> <div class=\"sqs-block-button-container--center\" data-alignment=\"center\" > ","commissions are closed"," </div> </div></div></div></div></div> </div> </div> </section> <section class=''page-section layout-"]', '');
+INSERT INTO events VALUES (1827, 0, 1, '2020-03-27 18:04:36', 'CS_UPDTD_DETLS', 'Sab!er Studios | Sabier Studios', 'https://www.instagram.com/aspexofsalt/', '[" ac \\/ mp\\nself taught #artist\\nexpressive #fursuitmaker of thicc suits\\n#lloteer species creator\\n[","commissions open","]\\n\\u2b50 tos and more below\",\"url\":\"http:\\/\\/linktr.ee\\/aspexofsalt\",\"mainentityofpage\":{\"@type\":\"p"]', '', '');
+INSERT INTO events VALUES (1828, NULL, 1, '2020-03-28 06:05:00', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '["ntent\"> <div class=\"container\"> <div class=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\"",">slot open"," for may completion - parts, head, partial or fullsuit ( fullsuit only if you have someone in your h"]', '', '');
+INSERT INTO events VALUES (1829, 0, NULL, '2020-03-28 06:05:00', 'CS_UPDTD_DETLS', 'FuroarSuits', 'http://leoelstar.wixsite.com/furoar', '', '', '');
+INSERT INTO events VALUES (1830, 1, NULL, '2020-03-28 18:04:45', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '', '', '');
+INSERT INTO events VALUES (1831, NULL, 0, '2020-03-28 18:04:45', 'CS_UPDTD_DETLS', 'FuroarSuits', 'http://leoelstar.wixsite.com/furoar', '', '["ontent-gridcontainer\" ><div class=\"txtnew\" id=\"comp-isnovlmu\"><h2 class=\"font_2\">commission status: ","commissions are closed",". </h2></div></div></div></div></div></div></div></div></div></header><main tabindex=\"-1\" data-is-me"]', '');
+INSERT INTO events VALUES (1832, 0, NULL, '2020-03-29 06:04:48', 'CS_UPDTD_DETLS', 'Starry Kitsune', 'https://www.starrykitsune.com/contact', '', '', '');
+INSERT INTO events VALUES (1833, 0, 1, '2020-03-29 06:04:48', 'CS_UPDTD_DETLS', 'FurR.CluB', 'http://furr.club/', '["we are fursuits makers! on this site you will find some information about how we assemble fursuits. ","commissions status - open","</div> <h4>the design of our fursuits have the \"know-how\": our fursuit fits like a glove and univers"]', '', '');
+INSERT INTO events VALUES (1834, NULL, 1, '2020-03-29 06:04:49', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '["ntent\"> <div class=\"container\"> <div class=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\"",">slot open"," for may completion - parts, head, partial or fullsuit ( fullsuit only if you have someone in your h"]', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2867,7 +2877,7 @@ INSERT INTO artisans VALUES (374, 'LIVBSTS', '', 'LivingBeasts', '', 'Greetings!
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 336);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9242);
-INSERT INTO sqlite_sequence VALUES ('events', 1824);
+INSERT INTO sqlite_sequence VALUES ('events', 1834);
 INSERT INTO sqlite_sequence VALUES ('artisans', 374);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
