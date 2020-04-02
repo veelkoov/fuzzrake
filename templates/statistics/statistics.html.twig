@@ -53,7 +53,7 @@
     </div>
 
     <h1>Countries</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: countries, name: 'Country', total: commissionsStats.Total } %}
+    {% include 'statistics/_data_table.html.twig' with { data: countries, name: 'Country', total: commissionsStats.Total, merge_row_percents: true } %}
 
     <h1 id="production_models">Production models</h1>
     {% include 'statistics/_data_table.html.twig' with { data: productionModels, name: 'Production model', total: commissionsStats.Total } %}
