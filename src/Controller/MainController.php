@@ -34,6 +34,7 @@ class MainController extends AbstractController
 
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
+            'activeArtisansCount' => $artisanRepository->getActiveCount(),
             'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
             'orderTypes'          => $artisanRepository->getDistinctOrderTypes(),

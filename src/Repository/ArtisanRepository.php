@@ -14,6 +14,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
 
 /**
  * @method Artisan|null find($id, $lockMode = null, $lockVersion = null)
@@ -86,6 +87,7 @@ class ArtisanRepository extends ServiceEntityRepository
                     ON a.id = acs.artisan_id
                 LEFT JOIN artisans_urls AS au_cst
                     ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
+                WHERE a.inactive_reason = \'\'
             ', $rsm)
             ->enableResultCache(3600)
             ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
@@ -146,6 +148,8 @@ class ArtisanRepository extends ServiceEntityRepository
         $rows = $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 's')
             ->select("s.status, COUNT(COALESCE(s.status, 'null')) AS count")
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
             ->groupBy('s.status')
             ->getQuery()
             ->enableResultCache(3600)
@@ -229,7 +233,9 @@ class ArtisanRepository extends ServiceEntityRepository
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
     {
         $queryBuilder = $this->createQueryBuilder('a')
-            ->select("a.$columnName AS items");
+            ->select("a.$columnName AS items")
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '');
 
         if ($includeOther) {
             $otherColumnName = 'other'.ucfirst($columnName);
@@ -303,7 +309,9 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getOthersLike(array $items): array
     {
         $ORs = [];
-        $parameters = [];
+        $parameters = [
+            'empty' => '',
+        ];
 
         foreach ($items as $i => $item) {
             $ORs[] = "a.otherOrderTypes LIKE :par$i OR a.otherStyles LIKE :par$i OR a.otherFeatures LIKE :par$i";
@@ -312,8 +320,23 @@ class ArtisanRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('a')
             ->where(implode(' OR ', $ORs))
+            ->andWhere('a.inactiveReason = :empty')
             ->setParameters($parameters)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getActiveCount(): int
+    {
+        try {
+            return (int) $this->createQueryBuilder('a')
+                ->select('COUNT(a)')
+                ->where('a.inactiveReason = :empty')
+                ->setParameter('empty', '')
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NoResultException | NonUniqueResultException $e) {
+            throw new RuntimeException($e);
+        }
     }
 }
