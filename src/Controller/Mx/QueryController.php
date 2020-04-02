@@ -23,7 +23,7 @@ class QueryController extends AbstractController
      * @Route("/", name="mx_query")
      * @Cache(maxage=0, public=false)
      */
-    public function ordering(Request $request, ArtisanRepository $artisanRepository, HostsService $hostsSrv): Response
+    public function query(Request $request, ArtisanRepository $artisanRepository, HostsService $hostsSrv): Response
     {
         if (!$hostsSrv->isDevMachine()) {
             throw $this->createAccessDeniedException();
