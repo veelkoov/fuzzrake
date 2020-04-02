@@ -2492,6 +2492,13 @@ INSERT INTO events VALUES (1831, NULL, 0, '2020-03-28 18:04:45', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1832, 0, NULL, '2020-03-29 06:04:48', 'CS_UPDTD_DETLS', 'Starry Kitsune', 'https://www.starrykitsune.com/contact', '', '', '');
 INSERT INTO events VALUES (1833, 0, 1, '2020-03-29 06:04:48', 'CS_UPDTD_DETLS', 'FurR.CluB', 'http://furr.club/', '["we are fursuits makers! on this site you will find some information about how we assemble fursuits. ","commissions status - open","</div> <h4>the design of our fursuits have the \"know-how\": our fursuit fits like a glove and univers"]', '', '');
 INSERT INTO events VALUES (1834, NULL, 1, '2020-03-29 06:04:49', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '["ntent\"> <div class=\"container\"> <div class=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\"",">slot open"," for may completion - parts, head, partial or fullsuit ( fullsuit only if you have someone in your h"]', '', '');
+INSERT INTO events VALUES (1835, NULL, NULL, '2020-03-29 12:55:00', 'GENERIC', '', '', '', '', '- Marked one maker as inactive after receiving a report from a visitor. Thank you for your contribution! (<a href="https://github.com/veelkoov/fuzzrake/commit/f09df4ab5c4e5fcebefd2b47a88816d32f9a123c" target="_blank">git</a>)');
+INSERT INTO events VALUES (1836, NULL, 0, '2020-03-29 18:04:42', 'CS_UPDTD_DETLS', 'Starry Kitsune', 'https://www.starrykitsune.com/contact', '', '["age></div></div><div data-min-height=\"204\" class=\"txtnew\" id=\"i023zxoo_0\"><p class=\"font_7\">fursuit ","commission are closed","</p> <p class=\"font_7\">my next estimate commission opening date will be november 1st 2018</p> <p cla"]', '');
+INSERT INTO events VALUES (1837, 1, NULL, '2020-03-29 18:04:43', 'CS_UPDTD_DETLS', 'Furry Tailor', 'http://www.furrytailor.co.uk/slots.html', '', '', '');
+INSERT INTO events VALUES (1838, 0, 1, '2020-03-30 18:05:03', 'CS_UPDTD_DETLS', 'Blue Wolf Studio Fursuit', 'https://twitter.com/BWSFursuit', '["</h2> <p class=\"profileheadercard-bio u-dir\" dir=\"ltr\">//fursuit maker from costa rica since 2014// ","commissions open","</p> <div class=\"profileheadercard-location \"> costa rica </div> <div class=\"profileheadercard-url \""]', '', '');
+INSERT INTO events VALUES (1839, NULL, 1, '2020-03-31 06:04:52', 'CS_UPDTD_DETLS', 'Don''t Hug Cacti', 'https://donthugcacti.com/', '["ontent/themes/dhc2017/js/jquery.parallax.min.js\"></script> <div class=\"commission-status\"><p>custom ","commissions are open","!  click here!</p> </div> <div class=\"grid-container full\"> <div class=\"grid-x\" data-equalizer> <nav"]', '', '');
+INSERT INTO events VALUES (1840, NULL, 1, '2020-04-01 06:04:56', 'CS_UPDTD_DETLS', '_Bahamut19', 'https://www.instagram.com/_bahamut19/', '[",\"alternatename\":\"@STUDIO_NAME\",\"description\":\"parts maker ( no head )\\n\\u00b0canada\\u00b0\\nfursuit ","commission open","\\nharness commission open\",\"url\":\"https:\\/\\/trello.com\\/b\\/as6xzayb\\/bahamut19-store\",\"mainentityofp"]', '', '');
+INSERT INTO events VALUES (1841, NULL, 1, '2020-04-01 18:04:57', 'CS_UPDTD_DETLS', 'ByCats4Cats', 'http://bycats4cats.com/quote/', '["7'' class=''gfield gsection field_sublabel_below field_description_above'' ><h2 class=''gsection_title''>","we are open for commissions","!!! august-september 2020 completion</h2><div class=''gsection_description''>this quote request is for"]', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2876,7 +2883,7 @@ INSERT INTO artisans VALUES (374, 'LIVBSTS', '', 'LivingBeasts', '', 'Greetings!
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 336);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9242);
-INSERT INTO sqlite_sequence VALUES ('events', 1834);
+INSERT INTO sqlite_sequence VALUES ('events', 1841);
 INSERT INTO sqlite_sequence VALUES ('artisans', 374);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
