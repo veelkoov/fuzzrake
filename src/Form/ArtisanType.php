@@ -34,6 +34,7 @@ class ArtisanType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('formerMakerIds', TextareaType::class, [
+                'label'      => 'Former Maker IDs',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -99,10 +100,12 @@ class ArtisanType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('speciesDoes', TextareaType::class, [
+                'label'      => 'Species done',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('speciesDoesnt', TextareaType::class, [
+                'label'      => 'Species not done',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -119,82 +122,102 @@ class ArtisanType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('fursuitReviewUrl', UrlType::class, [
+                'label'      => 'FursuitReview URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('websiteUrl', UrlType::class, [
+                'label'      => 'Website URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('pricesUrl', UrlType::class, [
+                'label'      => 'Prices URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('faqUrl', UrlType::class, [
+                'label'      => 'FAQ URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('furAffinityUrl', UrlType::class, [
+                'label'      => 'Fur Affinity URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('deviantArtUrl', UrlType::class, [
+                'label'      => 'DeviantArt URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('twitterUrl', UrlType::class, [
+                'label'      => 'Twitter URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('facebookUrl', UrlType::class, [
+                'label'      => 'Facebook URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('tumblrUrl', UrlType::class, [
+                'label'      => 'Tumblr URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('instagramUrl', UrlType::class, [
+                'label'      => 'Instagram URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('youtubeUrl', UrlType::class, [
+                'label'      => 'YouTube URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('queueUrl', UrlType::class, [
+                'label'      => 'Queue URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('cstUrl', UrlType::class, [
+                'label'      => 'CST URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('scritchUrl', UrlType::class, [
+                'label'      => 'Scritch URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('scritchPhotoUrls', TextareaType::class, [
+                'label'      => 'Scritch photos URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('scritchMiniatureUrls', TextareaType::class, [
+                'label'      => 'Scritch miniatures URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('otherUrls', TextareaType::class, [
+                'label'      => 'Other URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('contactInfoOriginal', TextType::class, [
+                'label'      => 'Original contact info',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('contactAllowed', ChoiceType::class, [
+                'label'      => 'Contact allowed?',
                 'choices'    => ContactPermit::getKeyKeyMap(),
                 'empty_data' => ContactPermit::NO,
             ])
             ->add('passcode', PasswordType::class, [
+                'label'      => 'New passcode',
                 'required'   => false,
                 'empty_data' => '',
             ])
