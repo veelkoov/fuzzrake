@@ -4,6 +4,7 @@
         "@types/bootstrap": "^4.1.2",
         "@types/datatables.net": "^1.10.13",
         "@types/datatables.net-buttons": "^1.4.0",
+        "@types/grecaptcha": "^3.0.1",
         "@types/jquery": "^3.3.22",
         "@types/mustache": "^0.8.32",
         "less": "^3.8.1",

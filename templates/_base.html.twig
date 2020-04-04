@@ -13,8 +13,9 @@
     <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
 
     <script>
+        var API_BASE_URL = '{{ url('api') }}';
         var DATA_UPDATES_URL = '{{ path('info', { _fragment: 'data-updates' }) }}';
-
+        var GOOGLE_RECAPTCHA_SITE_KEY = '{{ google_recaptcha_site_key }}';
         var IU_FORM_REDIRECT_URL = '{{ path('redirect_iu_form', { makerId: 'MAKER_ID' }) }}';
         var REQUEST_FORM_URL = '{{ request_form_url }}';
     </script>

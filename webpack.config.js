@@ -12,6 +12,7 @@ Encore
     .addEntry('general', './assets/js/entry/general.ts')
     .addEntry('main', './assets/js/entry/main.ts')
     .addEntry('events', './assets/js/entry/events.ts')
+    .addEntry('info', './assets/js/entry/info.ts')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
