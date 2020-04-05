@@ -5,14 +5,14 @@
                 <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="?" data-label="Unknown" />
                 <label class="form-check-label" for="countryCheckBoxUnknown">
                     <i class="fas fa-question-circle"></i> Unknown
-                    <span class="count">({{ countries.unknownCount }})</span>
+                    <span class="count">({{ filters.countries.unknownCount }})</span>
                 </label>
             </div>
         </div>
     </div>
 </fieldset>
 
-{% for region in countries.items %}
+{% for region in filters.countries.items %}
     {% apply spaceless %}
         <fieldset class="region">
             <legend>
