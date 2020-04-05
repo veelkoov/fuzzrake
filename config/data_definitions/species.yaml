@@ -1,5 +1,5 @@
 parameters:
-  species:
+  species_definitions:
     valid_choices:
       "Any species":
       "Most species":
@@ -122,7 +122,7 @@ parameters:
         Birds:
         Pancans: # Add above
 
-      "Copyright-related classification?": # FIXME
+      "i_Copyright-related classification?": # FIXME
         "Copyrighted characters":
         "Copyrighted species": # Alias of below?
         "Closed species":
@@ -131,14 +131,13 @@ parameters:
         "Original species":
 
       Others:
-      "Any/most species":
 
       "All hybrids":
         Hybrids:
           Pancans:
         "Hybrids of these":
 
-      to_be_tidied: # Just to silence the validator, to be fixed/approved later
+      "if_To be fixed": # Just to silence the validator, to be fixed/approved later
         "Most experienced in wolves":
         "I'd prefer not to do any pokemon/digimon, but still ask since it depends on the design":
         "Some birds (unless its on another headbase then I'll do it)":

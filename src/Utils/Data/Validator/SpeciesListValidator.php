@@ -5,44 +5,26 @@ declare(strict_types=1);
 namespace App\Utils\Data\Validator;
 
 use App\Utils\Artisan\Field;
+use App\Utils\Data\Definitions\Species;
 use App\Utils\StringList;
 
 class SpeciesListValidator implements ValidatorInterface
 {
-    /**
-     * @var string[]
-     */
-    private array $validChoices;
+    private Species $speciesService;
 
-    public function __construct(array $species)
+    public function __construct(Species $speciesService)
     {
-        $this->validChoices = $this->gatherValidChoices($species['valid_choices']);
+        $this->speciesService = $speciesService;
     }
 
     public function isValid(Field $field, $subject): bool
     {
         foreach (StringList::unpack($subject) as $specie) {
-            if (!in_array($specie, $this->validChoices)) {
+            if (!in_array($specie, $this->speciesService->getValidChoicesList())) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    /**
-     * @param string[] $species
-     */
-    private function gatherValidChoices(array $species): array
-    {
-        $result = array_keys($species);
-
-        foreach ($species as $specie => $subspecies) {
-            if (is_array($subspecies)) {
-                $result = array_merge($result, $this->gatherValidChoices($subspecies));
-            }
-        }
-
-        return $result;
     }
 }

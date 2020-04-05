@@ -27,7 +27,6 @@ services:
             $lists:                '%lists%'
             $projectDir:           '%kernel.project_dir%'
             $snapshotCacheDirPath: '%kernel.project_dir%/var/snapshots'
-            $species:              '%species%'
             $states:               '%states%'
             $strings:              '%strings%'
 
@@ -61,3 +60,6 @@ services:
             - { name: 'doctrine.event_subscriber' }
         arguments:
             - "@doctrine.orm.default_result_cache"
+
+    App\Utils\Data\Definitions\Species:
+        arguments: [ '%species_definitions%' ]
