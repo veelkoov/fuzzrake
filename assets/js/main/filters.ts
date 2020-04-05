@@ -22,12 +22,11 @@ function getCheckedValueFunction(action: string): any {
     }
 }
 
-function initCheckBoxesMultiswitches(containerSelector: string): void {
-    $(`${containerSelector} a`).each((_, element) => {
+function initCheckBoxesMultiswitches(filter: Filter): void {
+    $(`${filter.getBodySelector()} a`).each((_, element) => {
         let $a = $(element);
         let $checkboxes = $a.parents('fieldset').find('input:checkbox');
         let checkedValueFunction: any = getCheckedValueFunction($a.data('action'));
-        let filter: Filter = filters[containerSelector];
 
         $a.on('click', function (event, __) {
             event.preventDefault();
@@ -39,12 +38,9 @@ function initCheckBoxesMultiswitches(containerSelector: string): void {
 }
 
 function addFilter(filter: Filter): void {
-    filters[filter.containerSelector] = filter;
-
-    $.fn.dataTable.ext.search.push(filters[filter.containerSelector]
-        .getDataTableFilterCallback(DataBridge.getArtisans()));
-
-    initCheckBoxesMultiswitches(filter.containerSelector);
+    filters[filter.getFieldName()] = filter;
+    $.fn.dataTable.ext.search.push(filter.getDataTableFilterCallback(DataBridge.getArtisans()));
+    initCheckBoxesMultiswitches(filter);
 }
 
 function refreshEverything(): void {
@@ -64,14 +60,14 @@ function refreshEverything(): void {
 function initFilters(refreshCallback: () => void): void {
     refreshList = refreshCallback;
 
-    addFilter(new FilterSimpleValue  ('country',           '#countriesFilter'));
-    addFilter(new FilterSimpleValue  ('state',             '#statesFilter'));
-    addFilter(new FilterSetWithOthers('styles',            '#stylesFilter',           false));
-    addFilter(new FilterSetWithOthers('features',          '#featuresFilter',         true));
-    addFilter(new FilterSetWithOthers('orderTypes',        '#orderTypesFilter',       false));
-    addFilter(new FilterSetSingle    ('productionModels',  '#productionModelsFilter', false));
-    addFilter(new FilterSetSingle    ('languages',         '#languagesFilter',        false));
-    addFilter(new FilterSimpleValue  ('commissionsStatus', '#commissionsStatusesFilter'));
+    addFilter(new FilterSimpleValue  ('country',           'countries'));
+    addFilter(new FilterSimpleValue  ('state',             'states'));
+    addFilter(new FilterSetWithOthers('styles',            'styles',              false));
+    addFilter(new FilterSetWithOthers('features',          'features',            true));
+    addFilter(new FilterSetWithOthers('orderTypes',        'orderTypes',          false));
+    addFilter(new FilterSetSingle    ('productionModels',  'productionModels',    false));
+    addFilter(new FilterSetSingle    ('languages',         'languages',           false));
+    addFilter(new FilterSimpleValue  ('commissionsStatus', 'commissionsStatus'));
 
     $filtersButton = $('#filtersButton');
     $('#filtersModal').on('hidden.bs.modal', refreshEverything);

@@ -1,100 +1,59 @@
-<div class="accordion" id="filtersAccordion" role="tablist">
-    <div class="card" id="countriesFilter">
-        <div role="tab" class="card-header collapsed" id="headingOne" data-toggle="collapse" data-target="#countriesFilterBody" aria-expanded="false" aria-controls="countriesFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Countries: <span class="status"></span>
-        </div>
-
-        <div id="countriesFilterBody" class="collapse" aria-labelledby="headingOne" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/countries.html.twig' %}
-            </div>
-        </div>
+<div id="filters-parents">
+    <div id="filter-ctrl-countries" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-countries" class="btn btn-outline-secondary" data-toggle="collapse">Countries: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-states" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-states" class="btn btn-outline-secondary" data-toggle="collapse">States: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-languages" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-languages" class="btn btn-outline-secondary" data-toggle="collapse">Languages: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-styles" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-styles" class="btn btn-outline-secondary" data-toggle="collapse">Styles: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-features" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-features" class="btn btn-outline-secondary" data-toggle="collapse">Features: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-orderTypes" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-orderTypes" class="btn btn-outline-secondary" data-toggle="collapse">Order types: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-productionModels" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-productionModels" class="btn btn-outline-secondary" data-toggle="collapse">Production models: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
+    <div id="filter-ctrl-commissionsStatus" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-commissionsStatus" class="btn btn-outline-secondary" data-toggle="collapse">Commissions status: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
     </div>
 
-    <div class="card" id="statesFilter">
-        <div role="tab" class="card-header collapsed" id="headingEight" data-toggle="collapse" data-target="#statesFilterBody" aria-expanded="false" aria-controls="statesFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            States: <span class="status"></span>
-        </div>
-
-        <div id="statesFilterBody" class="collapse" aria-labelledby="headingEight" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'state', items: filters.states } %}
-            </div>
-        </div>
+    <div id="filter-body-countries" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/countries.html.twig' %}
     </div>
-
-    <div class="card" id="languagesFilter">
-        <div role="tab" class="card-header collapsed" id="headingSeven" data-toggle="collapse" data-target="#languagesFilterBody" aria-expanded="false" aria-controls="languagesFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Languages: <span class="status"></span>
-        </div>
-
-        <div id="languagesFilterBody" class="collapse" aria-labelledby="headingSeven" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'lanugage', items: filters.languages } %}
-            </div>
-        </div>
+    <div id="filter-body-states" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'state', items: filters.states } %}
     </div>
-
-    <div class="card" id="stylesFilter">
-        <div role="tab" class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#stylesFilterBody" aria-expanded="false" aria-controls="stylesFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Styles: <span class="status"></span>
-        </div>
-        <div id="stylesFilterBody" class="collapse" aria-labelledby="headingTwo" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'style', items: filters.styles } %}
-            </div>
-        </div>
+    <div id="filter-body-languages" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'lanugage', items: filters.languages } %}
     </div>
-
-    <div class="card" id="featuresFilter">
-        <div role="tab" class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#featuresFilterBody" aria-expanded="false" aria-controls="featuresFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Features: <span class="status"></span>
-        </div>
-        <div id="featuresFilterBody" class="collapse" aria-labelledby="headingThree" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'feature', items: filters.features } %}
-            </div>
-        </div>
+    <div id="filter-body-styles" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'style', items: filters.styles } %}
     </div>
-
-    <div class="card" id="orderTypesFilter">
-        <div role="tab" class="card-header collapsed" id="headingFour" data-toggle="collapse" data-target="#orderTypesFilterBody" aria-expanded="false" aria-controls="orderTypesFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Order types: <span class="status"></span>
-        </div>
-        <div id="orderTypesFilterBody" class="collapse" aria-labelledby="headingFour" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'orderType', items: filters.orderTypes } %}
-            </div>
-        </div>
+    <div id="filter-body-features" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'feature', items: filters.features } %}
     </div>
-
-    <div class="card" id="productionModelsFilter">
-        <div role="tab" class="card-header collapsed" id="headingFive" data-toggle="collapse" data-target="#productionModelsFilterBody" aria-expanded="false" aria-controls="productionModelsFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Production models: <span class="status"></span>
-        </div>
-        <div id="productionModelsFilterBody" class="collapse" aria-labelledby="headingFive" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'productionModel', items: filters.productionModels } %}
-            </div>
-        </div>
+    <div id="filter-body-orderTypes" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'orderType', items: filters.orderTypes } %}
     </div>
-
-    <div class="card" id="commissionsStatusesFilter">
-        <div role="tab" class="card-header collapsed" id="headingSix" data-toggle="collapse" data-target="#commissionsStatusesFilterBody" aria-expanded="false" aria-controls="commissionsStatusesFilterBody">
-            <button type="button" class="btn btn-outline-secondary float-right btn-sm">Clear</button>
-            Commissions status: <span class="status"></span>
-        </div>
-        <div id="commissionsStatusesFilterBody" class="collapse" aria-labelledby="headingSix" data-parent="#filtersAccordion">
-            <div class="card-body">
-                {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'commissionsStatuses', items: filters.commissionsStatuses } %}
-            </div>
-        </div>
+    <div id="filter-body-productionModels" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'productionModel', items: filters.productionModels } %}
+    </div>
+    <div id="filter-body-commissionsStatus" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'commissionsStatuses', items: filters.commissionsStatuses } %}
     </div>
 </div>

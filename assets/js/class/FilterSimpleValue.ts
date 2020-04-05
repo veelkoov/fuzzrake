@@ -4,9 +4,8 @@ import Filter from "./Filter";
 import Artisan from "./Artisan";
 
 export default class FilterSimpleValue extends Filter {
-    constructor(protected readonly fieldName: string,
-                public readonly containerSelector: string) {
-        super(fieldName, containerSelector);
+    constructor(fieldName: string, idPart: string) {
+        super(fieldName, idPart);
     }
 
     protected matches(artisan: Artisan): boolean {
@@ -30,10 +29,12 @@ export default class FilterSimpleValue extends Filter {
             return 'any';
         }
 
-        const anyOrAll = this.selectedLabels.length > 1 ? 'any of: ' : '';
-
-        return anyOrAll + this.selectedLabels.join(', ')
-            .replace(this.UNKNOWN_VALUE, 'Unknown')
-            .replace(/ \(.+?\)/g, ''); // TODO: Drop () earlier
+        if (this.selectedValues.length > 2) {
+            return 'any of ' + this.selectedValues.length + ' selected';
+        } else if (this.selectedValues.length === 2) {
+            return 'any of: ' + this.getSelectedLabelsCommaSeparated();
+        } else {
+            return this.getSelectedLabelsCommaSeparated();
+        }
     }
 }

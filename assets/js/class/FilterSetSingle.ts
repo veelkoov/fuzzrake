@@ -4,10 +4,8 @@ import Filter from "./Filter";
 import Artisan from "./Artisan";
 
 export default class FilterSetSingle extends Filter {
-    constructor(protected readonly fieldName: string,
-                public readonly containerSelector: string,
-                protected readonly isAnd: boolean) {
-        super(fieldName, containerSelector);
+    constructor(fieldName: string, idPart: string, protected readonly isAnd: boolean) {
+        super(fieldName, idPart);
     }
 
     protected matches(artisan: Artisan): boolean {
@@ -43,13 +41,18 @@ export default class FilterSetSingle extends Filter {
             return 'any';
         }
 
-        return this.getAnyOrAllStatusTextPart()
-            + this.selectedLabels.join(', ')
-                .replace(this.UNKNOWN_VALUE, 'Unknown')
-                .replace(/ \(.+?\)/g, ''); // TODO: Drop () earlier
+        if (this.selectedValues.length > 2) {
+            return this.getStatusTextAnyAllOfPart() + ' '
+                + this.selectedValues.length + ' selected';
+        } else if (this.selectedValues.length === 2) {
+            return this.getStatusTextAnyAllOfPart() + ': '
+                + this.getSelectedLabelsCommaSeparated();
+        } else {
+            return this.getSelectedLabelsCommaSeparated();
+        }
     }
 
-    protected getAnyOrAllStatusTextPart() {
-        return this.selectedValues.length > 1 ? (this.isAnd ? 'all of: ' : 'any of: ') : '';
+    protected getStatusTextAnyAllOfPart(): string {
+        return this.isAnd ? 'all of' : 'any of';
     }
 }

@@ -5,16 +5,13 @@
                 <h5 class="modal-title" id="filtersTitle">
                     Filters
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <span>
+                    <a class="btn btn-secondary" href="{{ filter_suggest_form_url }}" target="_blank">Suggest new</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Apply</button>
+                </span>
             </div>
             <div class="modal-body">
                 {%  include 'main/modals/filters/body.html.twig' %}
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-secondary" href="{{ filter_suggest_form_url }}" target="_blank">Suggest more filters</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hide</button>
             </div>
         </div>
     </div>

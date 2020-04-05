@@ -13,16 +13,14 @@ export default abstract class Filter {
     protected $statusDisplay: JQuery<HTMLElement>;
     private $clearButton: JQuery<HTMLElement>;
 
-    protected constructor(protected readonly fieldName: string,
-                          public readonly containerSelector: string) {
-
-        this.$statusDisplay = $(`${containerSelector} .status`);
+    protected constructor(protected readonly fieldName: string, private readonly idPart: string) {
+        this.$statusDisplay = $(`${this.getCtrlSelector()} .status`);
 
         let _this = this;
-        this.$checkboxes = $(`${containerSelector} input[type=checkbox]`);
+        this.$checkboxes = $(`${this.getBodySelector()} input[type=checkbox]`);
         this.$checkboxes.on('change', () => { _this.updateSelection(); });
 
-        this.$clearButton = $(`${containerSelector} button`);
+        this.$clearButton = $(`${this.getCtrlSelector()} button.filter-ctrl-remove`);
         this.$clearButton.on('click', (evt: ClickEvent) => {
             evt.stopImmediatePropagation();
 
@@ -85,6 +83,18 @@ export default abstract class Filter {
         return this.selectedValues.length !== 0;
     }
 
+    public getBodySelector(): string {
+        return '#filter-body-' + this.idPart;
+    }
+
+    public getCtrlSelector(): string {
+        return '#filter-ctrl-' + this.idPart;
+    }
+
+    public getFieldName(): string {
+        return this.fieldName;
+    }
+
     protected abstract matches(artisan: Artisan): boolean;
 
     protected abstract getStatusText(): string;
@@ -103,6 +113,12 @@ export default abstract class Filter {
 
     protected isUnknown(artisan: Artisan): boolean {
         return artisan[this.fieldName] === null || artisan[this.fieldName].length === 0;
+    }
+
+    protected getSelectedLabelsCommaSeparated(): string {
+        return this.selectedLabels.join(', ')
+            .replace(this.UNKNOWN_VALUE, 'Unknown')
+            .replace(/ \(.+?\)/g, ''); // TODO: Drop () earlier
     }
 
     private updateStatusDisplay(): void {
