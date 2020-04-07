@@ -2525,6 +2525,7 @@ INSERT INTO events VALUES (1847, 1, 0, '2020-04-06 06:05:02', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1848, 1, 0, '2020-04-06 18:05:00', 'CS_UPDTD_DETLS', 'Don''t Hug Cacti', 'https://donthugcacti.com/', '', '["ontent/themes/dhc2017/js/jquery.parallax.min.js\"></script> <div class=\"commission-status\"><p>custom ","commissions closed",".  check out our suits for sale</p> </div> <div class=\"grid-container full\"> <div class=\"grid-x\" dat"]', '');
 INSERT INTO events VALUES (1849, 0, 1, '2020-04-07 06:04:55', 'CS_UPDTD_DETLS', '_Bahamut19', 'https://www.instagram.com/_bahamut19/', '["on\",\"name\":\"bahamut\",\"alternatename\":\"@STUDIO_NAME\",\"description\":\"fursuit parts maker ( no head )\\n","commission open","\\nv-- quote and shop --v\",\"url\":\"https:\\/\\/linktr.ee\\/STUDIO_NAME\",\"mainentityofpage\":{\"@type\":\"prof"]', '', '');
 INSERT INTO events VALUES (1850, 0, NULL, '2020-04-07 18:04:51', 'CS_UPDTD_DETLS', 'Nuke Creations', 'https://nukecreations.com/ordering/', '', '', '');
+INSERT INTO events VALUES (1851, NULL, NULL, '2020-04-07 19:42:00', 'GENERIC', '', '', '', '', '- 2 new makers and 1 updated based on the makers'' requests (<a href="https://github.com/veelkoov/fuzzrake/commit/c91d0dfe238cf197644cef61f1393f56b96e0223" target="_blank">git</a>)');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2911,7 +2912,7 @@ INSERT INTO artisans VALUES (376, 'NYXIACR', '', 'Nyxia Creations', 'TakaraFur S
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 336);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9260);
-INSERT INTO sqlite_sequence VALUES ('events', 1850);
+INSERT INTO sqlite_sequence VALUES ('events', 1851);
 INSERT INTO sqlite_sequence VALUES ('artisans', 376);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
