@@ -11,13 +11,13 @@ use App\Utils\Artisan\Utils;
 use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
-use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Import\ImportException;
 use App\Utils\Import\ImportItem;
 use App\Utils\Import\Manager;
+use App\Utils\Import\Messaging;
 use App\Utils\Import\RawImportItem;
-use App\Utils\StrUtils;
+use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 
@@ -30,7 +30,7 @@ class DataImport
 
     private EntityManagerInterface $objectManager;
     private Manager $manager;
-    private Printer $printer;
+    private Messaging $messaging;
     private FDV $fdv;
     private bool $showAllFixCmds;
 
@@ -43,7 +43,7 @@ class DataImport
     ) {
         $this->objectManager = $objectManager;
         $this->manager = $importManager;
-        $this->printer = $printer;
+        $this->messaging = new Messaging($printer, $importManager);
 
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
 
@@ -63,7 +63,7 @@ class DataImport
     }
 
     /**
-     * @param ImportItem[] $artisansData
+     * @param array[] $artisansData
      *
      * @return ImportItem[]
      *
@@ -81,14 +81,14 @@ class DataImport
             }
 
             if ($this->manager->isDelayed($item)) {
-                $this->printer->writeln("{$item->getIdStrSafe()} ignored until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
+                $this->messaging->reportIgnoredItem($item);
                 continue;
             }
 
             $makerId = $item->getOriginalEntity()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $this->printer->writeln($item->getIdStrSafe().' update replaces '.$result[$makerId]->getIdStrSafe());
+                $this->messaging->reportUpdatedItem($item, $result[$makerId]);
             }
 
             $result[$makerId] = $item;
@@ -122,7 +122,7 @@ class DataImport
      */
     private function processImportItems(array $items): void
     {
-        $flags = FDV::SHOW_DIFF | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD : 0);
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
 
         foreach ($items as $item) {
             $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
@@ -149,7 +149,7 @@ class DataImport
                     $newValue = $source->get($field);
 
                     if ($newValue !== $artisan->getMakerId()) {
-                        $artisan->setFormerMakerIds(implode("\n", $artisan->getAllMakerIdsArr()));
+                        $artisan->setFormerMakerIds(StringList::pack($artisan->getAllMakerIdsArr()));
                         $artisan->setMakerId($newValue);
                     }
                     break;
@@ -172,9 +172,6 @@ class DataImport
         return $artisan;
     }
 
-    /**
-     * @throws ImportException
-     */
     private function findBestMatchArtisan(Artisan $artisan): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
@@ -184,7 +181,9 @@ class DataImport
         );
 
         if (count($results) > 1) {
-            throw new ImportException($this->getMoreThanOneArtisansMatchedMessage($artisan, $results));
+            $this->messaging->reportMoreThanOneMatchedArtisans($artisan, $results);
+
+            return null;
         }
 
         return array_pop($results);
@@ -197,20 +196,20 @@ class DataImport
         $ok = true;
 
         if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
-            $this->reportNewMaker($item);
+            $this->messaging->reportNewMaker($item);
             $ok = false;
         }
 
         if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
-            $this->reportChangedMakerId($item);
+            $this->messaging->reportChangedMakerId($item);
         }
 
         if ('' === ($expectedPasscode = $item->getFixedEntity()->getPrivateData()->getPasscode())) {
-            $this->reportNewPasscode($item);
+            $this->messaging->reportNewPasscode($item);
 
             $ok = false;
         } elseif ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
-            $this->reportInvalidPasscode($item, $expectedPasscode);
+            $this->messaging->reportInvalidPasscode($item, $expectedPasscode);
 
             $ok = false;
         }
@@ -218,70 +217,7 @@ class DataImport
         if ($ok) {
             $this->objectManager->persist($new);
         } elseif ($new->getId()) {
-            $this->reset($new);
-        }
-    }
-
-    private function getMoreThanOneArtisansMatchedMessage(Artisan $artisan, array $results): string
-    {
-        return 'Was looking for: '.StrUtils::artisanNamesSafeForCli($artisan).'. Found more than one: '
-            .implode(', ', array_map(function (Artisan $artisan) {
-                return StrUtils::artisanNamesSafeForCli($artisan);
-            }, $results));
-    }
-
-    private function reportNewMaker(ImportItem $item): void
-    {
-        $monthLater = DateTimeUtils::getMonthLaterYmd();
-        $makerId = $item->getMakerId();
-
-        $this->printer->warning("New maker: {$item->getNamesStrSafe()}");
-        $this->printer->writeln([
-            Manager::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:",
-            Manager::CMD_ACK_NEW.":$makerId:",
-            Manager::CMD_REJECT.":$makerId:{$item->getHash()}:",
-            Manager::CMD_IGNORE_UNTIL.":$makerId:{$item->getHash()}:$monthLater:",
-        ]);
-    }
-
-    private function reportChangedMakerId(ImportItem $item): void
-    {
-        $this->printer->warning($item->getNamesStrSafe().' changed their maker ID from '.$item->getOriginalEntity()->getMakerId()
-            .' to '.$item->getFixedEntity()->getMakerId());
-    }
-
-    private function reportNewPasscode(ImportItem $item): void
-    {
-        $hash = $item->getHash();
-        $makerId = $item->getMakerId();
-
-        $this->printer->warning("{$item->getNamesStrSafe()} set new passcode: {$item->getProvidedPasscode()}");
-        $this->printer->writeln(Manager::CMD_SET_PIN.":$makerId:$hash:");
-        $this->printer->writeln(Manager::CMD_REJECT.":$makerId:$hash:");
-    }
-
-    private function reportInvalidPasscode(ImportItem $item, string $expectedPasscode): void
-    {
-        $weekLater = DateTimeUtils::getWeekLaterYmd();
-        $makerId = $item->getMakerId();
-        $hash = $item->getHash();
-
-        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
-        $this->printer->writeln([
-            Manager::CMD_IGNORE_PIN.":$makerId:$hash:",
-            Manager::CMD_REJECT.":$makerId:$hash:",
-            Manager::CMD_SET_PIN.":$makerId:$hash:",
-            Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
-        ]);
-    }
-
-    private function reset(Artisan $artisan): void
-    {
-        $this->objectManager->refresh($artisan);
-        $this->objectManager->refresh($artisan->getPrivateData());
-
-        foreach ($artisan->getUrls() as $url) {
-            $this->objectManager->refresh($url);
+            $item->getEntity()->reset();
         }
     }
 }
