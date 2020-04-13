@@ -12,6 +12,10 @@ export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseF
         this.fieldName = fieldName;
     }
 
+    public getStorageName(): string {
+        return this.fieldName;
+    }
+
     protected matchesUnknown(artisan: Artisan): boolean {
         return this.unknownSelected && this.isValueUnknown(artisan[this.fieldName]);
     }

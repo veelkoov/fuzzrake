@@ -9,4 +9,5 @@ export default interface FilterInterface {
     isSelected(value: string): boolean;
     clear(): void;
     getStatus(): string;
+    getStorageName(): string;
 }

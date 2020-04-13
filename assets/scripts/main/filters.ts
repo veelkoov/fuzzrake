@@ -31,9 +31,13 @@ export function setRefreshCallback(refreshCallback: () => void): void {
     refreshList = refreshCallback;
 }
 
-export function refreshEverything(): void {
+export function applyFilters(): void {
     refreshFiltersShowButton();
     refreshList();
+
+    for (let filter of filters) {
+        filter.saveChoices();
+    }
 }
 
 export function initFilters(): void {
@@ -49,7 +53,7 @@ export function initFilters(): void {
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);
     jQuery.fn.dataTable.ext.search.push(filterDtPlugin.getCallback());
     $filtersShowButton = jQuery('#filtersButton');
-    jQuery('#filtersModal').on('hidden.bs.modal', refreshEverything);
+    jQuery('#filtersModal').on('hidden.bs.modal', applyFilters);
 }
 
 export function restoreFilters(): void {

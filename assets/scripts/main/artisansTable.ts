@@ -1,7 +1,7 @@
 import {makerIdRegexp} from "../consts";
 import DataBridge from "../class/DataBridge";
 import Artisan from "../class/Artisan";
-import {initFilters, refreshEverything, restoreFilters, setRefreshCallback} from "./filters";
+import {initFilters, applyFilters, restoreFilters, setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
 const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`;
@@ -82,7 +82,7 @@ export function init(): (() => void)[] {
             restoreFilters();
         },
         () => {
-            refreshEverything();
+            applyFilters();
         },
     ];
 }
