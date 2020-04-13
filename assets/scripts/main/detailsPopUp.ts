@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Handlebars from "handlebars";
 import * as Utils from "./utils";
 import Artisan from "../class/Artisan";
@@ -53,17 +51,17 @@ function populatePopUpWithData(artisan: Artisan): void {
 }
 
 function detailsPopUpShowCallback(event: any) {
-    populatePopUpWithData($(event.relatedTarget).closest('tr').data('artisan'));
+    populatePopUpWithData(jQuery(event.relatedTarget).closest('tr').data('artisan'));
 }
 
 export function init(): (() => void)[] {
     return [
         () => {
-            $detailsPopUp = $('#artisanDetailsModal');
+            $detailsPopUp = jQuery('#artisanDetailsModal');
 
             $detailsPopUp.find('a[data-href]').each((index: number, element: HTMLElement) => {
                 /* Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href */
-                element.setAttribute('href', element.getAttribute('data-href'));
+                element.setAttribute('href', element.getAttribute('data-href') || '');
                 element.removeAttribute('data-href');
             });
             $detailsPopUp.on('show.bs.modal', detailsPopUpShowCallback);

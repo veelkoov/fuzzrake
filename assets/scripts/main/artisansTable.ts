@@ -1,9 +1,7 @@
-'use strict';
-
 import {makerIdRegexp} from "../consts";
 import DataBridge from "../class/DataBridge";
 import Artisan from "../class/Artisan";
-import {initFilters, refreshEverything, restoreFilters} from "./filters";
+import {initFilters, refreshEverything, restoreFilters, setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
 const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`;
@@ -47,12 +45,12 @@ function highlightByMakerIdCallback(): void {
     }
 
     if (makerId.match(makerIdRegexp)) {
-        $('#' + makerId.toUpperCase()).addClass('matched-maker-id');
+        jQuery('#' + makerId.toUpperCase()).addClass('matched-maker-id');
     }
 }
 
 // noinspection OverlyComplexFunctionJS - DataTable's fault
-function dataTableInfoCallback(settings, start, end, max, total, _) {
+function dataTableInfoCallback(settings: object, start: number, end: number, max: number, total: number, _: any) {
     return `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database. &nbsp;
                 <a href="${DataBridge.getDataUpdatesUrl()}"><span class="badge badge-warning">Studio missing?</span></a>
             </p>`;
@@ -61,23 +59,24 @@ function dataTableInfoCallback(settings, start, end, max, total, _) {
 export function init(): (() => void)[] {
     return [
         () => {
-            $jqDataTable = $('#artisans');
-            $artisanRows = $('#artisans tr.fursuit-maker');
+            $jqDataTable = jQuery('#artisans');
+            $artisanRows = jQuery('#artisans tr.fursuit-maker');
         },
         () => {
             let artisans: Artisan[] = DataBridge.getArtisans();
 
             $artisanRows.each((index: number, item: HTMLElement) => {
-                $.data(item, 'artisan', artisans[index]);
+                jQuery.data(item, 'artisan', artisans[index]);
             });
         },
         () => {
             $dtDataTable = $jqDataTable.DataTable(dataTableOptions);
             $jqDataTable.on('search.dt', highlightByMakerIdCallback);
             $jqDataTable.parents('.dataTables_wrapper').find('.dt-buttons').append(filtersButtonHtml);
+            setRefreshCallback($dtDataTable.draw);
         },
         () => {
-            initFilters($dtDataTable.draw);
+            initFilters();
         },
         () => {
             restoreFilters();

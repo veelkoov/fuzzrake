@@ -1,6 +1,4 @@
-'use strict';
-
-require('../../css/main.less');
+require('../../styles/main.less');
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
 import * as DataTable from '../main/artisansTable';
@@ -50,11 +48,11 @@ function finalizeInit(): void {
                 makerId = DataBridge.getMakerIdsMap()[makerId];
             }
 
-            $('#' + makerId).children().eq(0).trigger('click');
+            jQuery('#' + makerId).children().eq(0).trigger('click');
         }
     }
 
-    $('#data-loading-message, #data-table-container').toggle();
+    jQuery('#data-loading-message, #data-table-container').toggle();
 
     openArtisanByFragment(window.location.hash);
 }
