@@ -1,7 +1,7 @@
 import AbstractBaseFilter from "./AbstractBaseFilter";
 import Artisan from "../../class/Artisan";
 
-export default abstract class AbstractSingleFieldFilter extends AbstractBaseFilter {
+export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseFilter<T> {
     private readonly UNKNOWN_VALUE: string = '?';
 
     protected readonly fieldName: string;

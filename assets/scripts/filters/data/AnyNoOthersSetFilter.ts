@@ -1,7 +1,7 @@
 import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 import Artisan from "../../class/Artisan";
 
-export default class AnyNoOthersSetFilter extends AbstractSingleFieldFilter {
+export default class AnyNoOthersSetFilter<T> extends AbstractSingleFieldFilter<T> {
     public constructor(fieldName: string) {
         super(fieldName);
     }
@@ -11,7 +11,7 @@ export default class AnyNoOthersSetFilter extends AbstractSingleFieldFilter {
             return true;
         }
 
-        let target: Set<string|boolean> = artisan[this.fieldName];
+        let target: Set<T> = artisan[this.fieldName];
 
         for (let value of this.selectedValues.values()) {
             if (target.has(value)) {

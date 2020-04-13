@@ -1,7 +1,7 @@
 import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 import Artisan from "../../class/Artisan";
 
-export default abstract class AbstractSingleFieldWithOthersFilter extends AbstractSingleFieldFilter {
+export default abstract class AbstractSingleFieldWithOthersFilter<T> extends AbstractSingleFieldFilter<T> {
     private readonly otherFieldName: string;
     private readonly OTHER_VALUE: string = '*';
     private otherSelected: boolean = false;

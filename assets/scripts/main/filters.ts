@@ -37,14 +37,14 @@ export function refreshEverything(): void {
 }
 
 export function initFilters(): void {
-    filters.push(new ValueFilterVis('countries', 'country'));
-    filters.push(new ValueFilterVis('states', 'state'));
-    filters.push(new SetFilterVis('styles', 'styles', false, true));
-    filters.push(new SetFilterVis('features', 'features', true, true));
-    filters.push(new SetFilterVis('orderTypes', 'orderTypes', false, true));
-    filters.push(new SetFilterVis('productionModels', 'productionModels', false, false));
-    filters.push(new SetFilterVis('languages', 'languages', false, false));
-    filters.push(new ValueFilterVis('commissionsStatus', 'commissionsStatus'));
+    filters.push(new ValueFilterVis<string>('countries', 'country'));
+    filters.push(new ValueFilterVis<string>('states', 'state'));
+    filters.push(new SetFilterVis<string>('styles', 'styles', false, true));
+    filters.push(new SetFilterVis<string>('features', 'features', true, true));
+    filters.push(new SetFilterVis<string>('orderTypes', 'orderTypes', false, true));
+    filters.push(new SetFilterVis<string>('productionModels', 'productionModels', false, false));
+    filters.push(new SetFilterVis<string>('languages', 'languages', false, false));
+    filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus'));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);
     jQuery.fn.dataTable.ext.search.push(filterDtPlugin.getCallback());

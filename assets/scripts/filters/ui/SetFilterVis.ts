@@ -4,12 +4,12 @@ import AnyOrOtherSetFilter from "../data/AnyOrOtherSetFilter";
 import AnyNoOthersSetFilter from "../data/AnyNoOthersSetFilter";
 import AllOrOtherSetFilter from "../data/AllOrOtherSetFilter";
 
-export default class SetFilterVis extends AbstractBaseFilterVis {
+export default class SetFilterVis<T> extends AbstractBaseFilterVis {
     public constructor(idPart: string, fieldName: string, isAnd: boolean, hasOther: boolean) {
-        super(idPart, SetFilterVis.getFilter(fieldName, isAnd, hasOther));
+        super(idPart, SetFilterVis.getFilter<T>(fieldName, isAnd, hasOther));
     }
 
-    private static getFilter(fieldName: string, isAnd: boolean, hasOther: boolean): FilterInterface {
+    private static getFilter<T>(fieldName: string, isAnd: boolean, hasOther: boolean): FilterInterface {
         if (isAnd) {
             return SetFilterVis.getAllFilter(fieldName, hasOther);
         } else {
@@ -17,17 +17,17 @@ export default class SetFilterVis extends AbstractBaseFilterVis {
         }
     }
 
-    private static getAnyFilter(fieldName: string, hasOther: boolean): FilterInterface {
+    private static getAnyFilter<T>(fieldName: string, hasOther: boolean): FilterInterface {
         if (hasOther) {
-            return new AnyOrOtherSetFilter(fieldName);
+            return new AnyOrOtherSetFilter<T>(fieldName);
         } else {
-            return new AnyNoOthersSetFilter(fieldName);
+            return new AnyNoOthersSetFilter<T>(fieldName);
         }
     }
 
-    private static getAllFilter(fieldName: string, hasOther: boolean): FilterInterface {
+    private static getAllFilter<T>(fieldName: string, hasOther: boolean): FilterInterface {
         if (hasOther) {
-            return new AllOrOtherSetFilter(fieldName);
+            return new AllOrOtherSetFilter<T>(fieldName);
         } else {
             throw new Error('AllNoOthersSetFilter not implemented');
         }

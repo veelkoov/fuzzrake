@@ -1,7 +1,7 @@
 import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 import Artisan from "../../class/Artisan";
 
-export default class ValueFilter extends AbstractSingleFieldFilter {
+export default class ValueFilter<T> extends AbstractSingleFieldFilter<T> {
     public constructor(fieldName: string) {
         super(fieldName);
     }
@@ -11,7 +11,7 @@ export default class ValueFilter extends AbstractSingleFieldFilter {
             return true;
         }
 
-        let target: string = artisan[this.fieldName];
+        let target: T = artisan[this.fieldName];
 
         for (let value of this.selectedValues.values()) {
             if (target === value) {

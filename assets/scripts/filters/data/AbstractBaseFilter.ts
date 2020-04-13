@@ -1,8 +1,8 @@
 import FilterInterface from "./FilterInterface";
 import Artisan from "../../class/Artisan";
 
-export default abstract class AbstractBaseFilter implements FilterInterface {
-    protected selectedValues: Set<string|boolean> = new Set<string|boolean>();
+export default abstract class AbstractBaseFilter<T> implements FilterInterface {
+    protected selectedValues: Set<T> = new Set<T>();
 
     public abstract matches(artisan: Artisan): boolean;
 
@@ -15,24 +15,24 @@ export default abstract class AbstractBaseFilter implements FilterInterface {
     }
 
     public deselect(value: string): void {
-        this.selectedValues.delete(AbstractBaseFilter.mapValue(value));
+        this.selectedValues.delete(this.mapValue(value));
     }
 
     public select(value: string): void {
-        this.selectedValues.add(AbstractBaseFilter.mapValue(value));
+        this.selectedValues.add(this.mapValue(value));
     }
 
     protected isValueUnknown(value: any): boolean {
         return value === null || value === '' || value instanceof Set && value.size === 0 || value instanceof Array && value.length === 0;
     }
 
-    private static mapValue(value: string): string|boolean {
+    private mapValue(value: string): T {
         if (value === '0') {
-            return false;
+            return <T><unknown>false;
         } else if (value === '1') {
-            return true;
+            return <T><unknown>true;
         } else {
-            return value;
+            return <T><unknown>value;
         }
     }
 }
