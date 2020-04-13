@@ -10,15 +10,6 @@ export default abstract class AbstractBaseFilter implements FilterInterface {
         this.selectedValues.clear();
     }
 
-    public getDataTableFilterCallback(artisans: Artisan[]): (_: any, __: any, index: number) => boolean {
-        let _this: FilterInterface = this; // TODO: try without
-        let _artisans: Artisan[] = artisans; // TODO: try without
-
-        return function (_, __, index: number): boolean {
-            return _this.matches(_artisans[index]);
-        };
-    }
-
     public isActive(): boolean {
         return this.selectedValues.size !== 0;
     }

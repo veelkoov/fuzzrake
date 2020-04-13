@@ -4,6 +4,7 @@ export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_GOOD = 80;
     public static readonly DATA_COMPLETE_LEVEL_OK = 60;
 
+    readonly languages: Set<string>;
     readonly location: string;
     readonly lcCountry: string;
     readonly productionModels: Set<string>;
@@ -28,7 +29,7 @@ export default class Artisan {
                 readonly intro: string,
                 readonly since: string,
 
-                readonly languages: Set<string>,
+                languages: string[],
                 readonly country: string,
                 readonly state: string,
                 readonly city: string,
@@ -88,6 +89,7 @@ export default class Artisan {
                 readonly contactAllowed: string,
                 readonly contactInfoObfuscated: string,
     ) {
+        this.languages = new Set<string>(languages);
         this.location = [state, city].filter(i => i).join(', ');
         this.lcCountry = country.toLowerCase();
         this.productionModels = new Set<string>(productionModels);

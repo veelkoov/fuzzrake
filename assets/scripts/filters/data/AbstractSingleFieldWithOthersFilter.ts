@@ -31,6 +31,11 @@ export default abstract class AbstractSingleFieldWithOthersFilter extends Abstra
         }
     }
 
+    public clear(): void {
+        super.clear();
+        this.otherSelected = false;
+    }
+
     protected matchesOther(artisan: Artisan): boolean {
         return this.otherSelected && artisan[this.otherFieldName];
     }

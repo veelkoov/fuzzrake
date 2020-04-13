@@ -7,7 +7,7 @@ export default class AnyOrOtherSetFilter extends AbstractSingleFieldWithOthersFi
     }
 
     public matches(artisan: Artisan): boolean {
-        if (!this.isActive() || this.matchesOther(artisan) || this.matchesUnknown(artisan)) {
+        if (!this.isActive() || this.matchesUnknown(artisan) || this.matchesOther(artisan)) {
             return true;
         }
 
