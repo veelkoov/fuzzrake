@@ -25,6 +25,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         this.setupCheckboxes();
         this.setupClearButton();
         this.refreshClearButton();
+        this.setupAllNoneInvertLinks();
     }
 
     public matches(artisan: Artisan): boolean {
@@ -89,5 +90,33 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
 
     private refreshClearButton(): void {
         this.$clearButton.toggle(this.filter.isActive());
+    }
+
+    private setupAllNoneInvertLinks(): void {
+        jQuery(`${this.bodySelector} a`).each((_, element) => {
+            let $a = jQuery(element);
+            let $checkboxes = $a.parents('fieldset').find('input:checkbox');
+            let checkedValueFunction: any = AbstractBaseFilterVis.getCheckedValueFunction($a.data('action'));
+
+            $a.on('click', function (event, __) {
+                event.preventDefault();
+
+                $checkboxes.prop('checked', checkedValueFunction);
+                $checkboxes.trigger('change');
+            });
+        });
+    }
+
+    private static getCheckedValueFunction(action: string): any {
+        switch (action) {
+            case 'none':
+                return false; // "function"
+            case 'all':
+                return true; // "function"
+            case 'invert':
+                return (_, checked) => !checked;
+            default:
+                throw new Error();
+        }
     }
 }

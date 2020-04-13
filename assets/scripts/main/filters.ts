@@ -1,4 +1,3 @@
-import ValueCategorizedFilterVis from "../filters/ui/ValueCategorizedFilterVis";
 import ValueFilterVis from "../filters/ui/ValueFilterVis";
 import SetFilterVis from "../filters/ui/SetFilterVis";
 import FilterVisInterface from "../filters/ui/FilterVisInterface";
@@ -38,7 +37,7 @@ export function refreshEverything(): void {
 }
 
 export function initFilters(): void {
-    filters.push(new ValueCategorizedFilterVis('countries', 'country'));
+    filters.push(new ValueFilterVis('countries', 'country'));
     filters.push(new ValueFilterVis('states', 'state'));
     filters.push(new SetFilterVis('styles', 'styles', false, true));
     filters.push(new SetFilterVis('features', 'features', true, true));
