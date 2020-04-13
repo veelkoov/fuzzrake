@@ -13,11 +13,7 @@ export default abstract class AbstractSingleFieldFilter extends AbstractBaseFilt
     }
 
     protected matchesUnknown(artisan: Artisan): boolean {
-        return this.unknownSelected && !this.isValueUnknown(artisan[this.fieldName]);
-    }
-
-    protected isValueUnknown(value: any): boolean {
-        return value === null || value === '' || value instanceof Set && value.size === 0 || value instanceof Array && value.length === 0;
+        return this.unknownSelected && this.isValueUnknown(artisan[this.fieldName]);
     }
 
     public clear(): void {

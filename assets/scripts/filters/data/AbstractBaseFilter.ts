@@ -21,6 +21,10 @@ export default abstract class AbstractBaseFilter implements FilterInterface {
     public select(value: string): void {
         this.selectedValues.add(value);
     }
+
+    protected isValueUnknown(value: any): boolean {
+        return value === null || value === '' || value instanceof Set && value.size === 0 || value instanceof Array && value.length === 0;
+    }
 }
 
 // public restoreChoices(): void { // TODO

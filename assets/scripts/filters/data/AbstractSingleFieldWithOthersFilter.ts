@@ -37,15 +37,19 @@ export default abstract class AbstractSingleFieldWithOthersFilter extends Abstra
     }
 
     protected matchesOther(artisan: Artisan): boolean {
-        return this.otherSelected && artisan[this.otherFieldName];
+        return this.otherSelected && this.hasOtherValue(artisan);
     }
 
     protected notMatchesOther(artisan: Artisan): boolean {
-        return this.otherSelected && !artisan[this.otherFieldName];
+        return this.otherSelected && !this.hasOtherValue(artisan);
     }
 
     protected matchesUnknown(artisan: Artisan): boolean {
-        return !artisan[this.otherFieldName] && super.matchesUnknown(artisan);
+        return !this.hasOtherValue(artisan) && super.matchesUnknown(artisan);
+    }
+
+    private hasOtherValue(artisan: Artisan): boolean {
+        return !this.isValueUnknown(artisan[this.otherFieldName]);
     }
 
     private static getOtherFieldName(fieldName: string) {
