@@ -5,7 +5,7 @@ import ClickEvent = JQuery.ClickEvent;
 
 export default abstract class AbstractBaseFilterVis implements FilterVisInterface {
     private readonly idPart: string;
-    private readonly $checkboxes: JQuery<HTMLElement>;
+    private readonly $checkboxes: JQuery<HTMLInputElement>;
     private readonly $clearButton: JQuery<HTMLElement>;
     private readonly $statusDisplay: JQuery<HTMLElement>;
     private readonly filter: FilterInterface;
@@ -24,9 +24,9 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
 
         this.setupCheckboxes();
         this.setupClearButton();
-        this.refreshClearButton();
-        this.refreshStatusDisplay();
         this.setupAllNoneInvertLinks();
+
+        this.refreshUi();
     }
 
     public matches(artisan: Artisan): boolean {
@@ -48,17 +48,9 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
     private setupCheckboxes(): void {
         this.$checkboxes.on('change', (event: Event) => {
             if (event.currentTarget instanceof HTMLInputElement) {
-                let value: string = event.currentTarget.value;
-                let label: string = event.currentTarget.dataset.label;
+                this.filter.setSelected(event.currentTarget.checked, event.currentTarget.value, event.currentTarget.dataset.label);
 
-                if (event.currentTarget.checked) {
-                    this.filter.select(value, label);
-                } else {
-                    this.filter.deselect(value, label);
-                }
-
-                this.refreshClearButton();
-                this.refreshStatusDisplay();
+                this.refreshUi();
             }
         });
     }
@@ -79,7 +71,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         return jQuery(`${this.ctrlSelector} button.filter-ctrl-remove`);
     }
 
-    private getCheckboxes(): JQuery<HTMLElement> {
+    private getCheckboxes(): JQuery<HTMLInputElement> {
         return jQuery(`${this.bodySelector} input[type=checkbox]`);
     }
 
@@ -87,33 +79,31 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         this.$clearButton.on('click', (event: ClickEvent) => {
             event.stopImmediatePropagation();
 
-            this.$checkboxes.prop('checked', false);
             this.filter.clear();
-            this.refreshClearButton();
-            this.refreshStatusDisplay();
+            this.dataFromModelToUi();
+            this.refreshUi();
         });
     }
 
-    private refreshClearButton(): void {
-        this.$clearButton.toggle(this.filter.isActive());
-    }
-
     private setupAllNoneInvertLinks(): void {
+        let _this = this;
+
         jQuery(`${this.bodySelector} a`).each((_, element) => {
             let $a = jQuery(element);
             let $checkboxes = $a.parents('fieldset').find('input:checkbox');
-            let checkedValueFunction: any = AbstractBaseFilterVis.getCheckedValueFunction($a.data('action'));
+            let valueFunction: any = AbstractBaseFilterVis.getValueFunction($a.data('action'));
 
             $a.on('click', function (event, __) {
                 event.preventDefault();
 
-                $checkboxes.prop('checked', checkedValueFunction);
-                $checkboxes.trigger('change');
+                $checkboxes.prop('checked', valueFunction);
+                _this.dataFromUiToModel();
+                _this.refreshUi();
             });
         });
     }
 
-    private static getCheckedValueFunction(action: string): any {
+    private static getValueFunction(action: string): any {
         switch (action) {
             case 'none':
                 return false; // "function"
@@ -126,7 +116,20 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         }
     }
 
-    private refreshStatusDisplay(): void {
+    private refreshUi(): void {
+        this.$clearButton.toggle(this.filter.isActive());
         this.$statusDisplay.text(this.filter.getStatus());
+    }
+
+    private dataFromModelToUi(): void {
+        this.$checkboxes.each((index, element) => {
+            element.checked = this.filter.isSelected(element.value);
+        });
+    }
+
+    private dataFromUiToModel(): void {
+        this.$checkboxes.each((index, element) => {
+            this.filter.setSelected(element.checked, element.value, element.dataset.label);
+        });
     }
 }

@@ -15,6 +15,14 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
         return this.selectedValues.size !== 0;
     }
 
+    public setSelected(isSelected: boolean, value: string, label: string): void {
+        if (isSelected) {
+            this.select(value, label);
+        } else {
+            this.deselect(value, label);
+        }
+    }
+
     public deselect(value: string, label: string): void {
         this.selectedValues.delete(this.mapValue(value));
         this.selectedLabels.delete(AbstractBaseFilter.fixLabel(label));
@@ -23,6 +31,10 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     public select(value: string, label: string): void {
         this.selectedValues.add(this.mapValue(value));
         this.selectedLabels.add(AbstractBaseFilter.fixLabel(label));
+    }
+
+    public isSelected(value: string): boolean {
+        return this.selectedValues.has(this.mapValue(value));
     }
 
     public abstract getStatus(): string;

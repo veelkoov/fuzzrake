@@ -35,6 +35,14 @@ export default abstract class AbstractSingleFieldWithOthersFilter<T> extends Abs
         }
     }
 
+    public isSelected(value: string): boolean {
+        if (value === this.OTHER_VALUE) {
+            return this.otherSelected;
+        } else {
+            return super.isSelected(value);
+        }
+    }
+
     public clear(): void {
         super.clear();
         this.otherSelected = false;

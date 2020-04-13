@@ -13,7 +13,6 @@ export default class DataTablesFilterPlugin {
 
             for (let filter of this.filters) {
                 if (!filter.matches(artisan)) {
-                    console.log(`${artisan.name} hidden by ${filter.getFilterId()}`);
                     return false;
                 }
             }
