@@ -15,7 +15,7 @@ export default class AllOrOtherSetFilter extends AbstractSingleFieldWithOthersFi
             return false;
         }
 
-        let target: Set<string> = artisan[this.fieldName];
+        let target: Set<string|boolean> = artisan[this.fieldName];
 
         for (let value of this.selectedValues.values()) {
             if (!target.has(value)) {
