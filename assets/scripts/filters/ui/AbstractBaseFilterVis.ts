@@ -27,8 +27,8 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         this.refreshClearButton();
     }
 
-    public getDataTableFilterCallback(artisans: Artisan[]): (_: any, __: any, index: number) => boolean {
-        return this.filter.getDataTableFilterCallback(artisans);
+    public matches(artisan: Artisan): boolean {
+        return this.filter.matches(artisan);
     }
 
     public restoreChoices(): void {

@@ -16,6 +16,10 @@ export default abstract class AbstractSingleFieldFilter extends AbstractBaseFilt
         return this.unknownSelected && !artisan[this.fieldName];
     }
 
+    public isActive(): boolean {
+        return this.unknownSelected || super.isActive();
+    }
+
     public select(value: string): void {
         if (value === this.UNKNOWN_VALUE) {
             this.unknownSelected = true;

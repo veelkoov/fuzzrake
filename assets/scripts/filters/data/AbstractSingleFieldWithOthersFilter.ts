@@ -11,6 +11,10 @@ export default abstract class AbstractSingleFieldWithOthersFilter extends Abstra
         this.otherFieldName = AbstractSingleFieldWithOthersFilter.getOtherFieldName(fieldName);
     }
 
+    public isActive(): boolean {
+        return this.otherSelected || super.isActive();
+    }
+
     public select(value: string): void {
         if (value === this.OTHER_VALUE) {
             this.otherSelected = true;
