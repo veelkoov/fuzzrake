@@ -1,5 +1,6 @@
 import Artisan from "../../class/Artisan";
 import AbstractSingleFieldWithOthersFilter from "./AbstractSingleFieldWithOthersFilter";
+import StatusWriter from "../StatusWriter";
 
 export default class AllOrOtherSetFilter<T> extends AbstractSingleFieldWithOthersFilter<T> {
     public constructor(fieldName: string) {
@@ -24,5 +25,9 @@ export default class AllOrOtherSetFilter<T> extends AbstractSingleFieldWithOther
         }
 
         return true;
+    }
+
+    public getStatus(): string {
+        return StatusWriter.get(this.isActive(), this.isUnknownSelected(), 'all of', this.selectedLabels, this.isOtherSelected() ? 'Other' : undefined);
     }
 }

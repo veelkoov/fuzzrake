@@ -3,6 +3,7 @@ import Artisan from "../../class/Artisan";
 
 export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     protected selectedValues: Set<T> = new Set<T>();
+    protected selectedLabels: Set<string> = new Set<string>();
 
     public abstract matches(artisan: Artisan): boolean;
 
@@ -14,13 +15,17 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
         return this.selectedValues.size !== 0;
     }
 
-    public deselect(value: string): void {
+    public deselect(value: string, label: string): void {
         this.selectedValues.delete(this.mapValue(value));
+        this.selectedLabels.delete(AbstractBaseFilter.fixLabel(label));
     }
 
-    public select(value: string): void {
+    public select(value: string, label: string): void {
         this.selectedValues.add(this.mapValue(value));
+        this.selectedLabels.add(AbstractBaseFilter.fixLabel(label));
     }
+
+    public abstract getStatus(): string;
 
     protected isValueUnknown(value: any): boolean {
         return value === null || value === '' || value instanceof Set && value.size === 0 || value instanceof Array && value.length === 0;
@@ -34,6 +39,10 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
         } else {
             return <T><unknown>value;
         }
+    }
+
+    private static fixLabel(label: string): string {
+        return label.replace(/ \(.+?\)$/, '')
     }
 }
 

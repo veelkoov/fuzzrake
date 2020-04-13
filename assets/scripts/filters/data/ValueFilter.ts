@@ -1,5 +1,6 @@
 import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 import Artisan from "../../class/Artisan";
+import StatusWriter from "../StatusWriter";
 
 export default class ValueFilter<T> extends AbstractSingleFieldFilter<T> {
     public constructor(fieldName: string) {
@@ -20,5 +21,9 @@ export default class ValueFilter<T> extends AbstractSingleFieldFilter<T> {
         }
 
         return false;
+    }
+
+    public getStatus(): string {
+        return StatusWriter.get(this.isActive(), this.isUnknownSelected(), 'any of', this.selectedLabels);
     }
 }

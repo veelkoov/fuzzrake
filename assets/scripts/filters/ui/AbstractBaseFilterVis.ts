@@ -25,6 +25,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         this.setupCheckboxes();
         this.setupClearButton();
         this.refreshClearButton();
+        this.refreshStatusDisplay();
         this.setupAllNoneInvertLinks();
     }
 
@@ -47,13 +48,17 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
     private setupCheckboxes(): void {
         this.$checkboxes.on('change', (event: Event) => {
             if (event.currentTarget instanceof HTMLInputElement) {
+                let value: string = event.currentTarget.value;
+                let label: string = event.currentTarget.dataset.label;
+
                 if (event.currentTarget.checked) {
-                    this.filter.select(event.currentTarget.value);
+                    this.filter.select(value, label);
                 } else {
-                    this.filter.deselect(event.currentTarget.value);
+                    this.filter.deselect(value, label);
                 }
 
                 this.refreshClearButton();
+                this.refreshStatusDisplay();
             }
         });
     }
@@ -85,6 +90,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
             this.$checkboxes.prop('checked', false);
             this.filter.clear();
             this.refreshClearButton();
+            this.refreshStatusDisplay();
         });
     }
 
@@ -118,5 +124,9 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
             default:
                 throw new Error();
         }
+    }
+
+    private refreshStatusDisplay(): void {
+        this.$statusDisplay.text(this.filter.getStatus());
     }
 }

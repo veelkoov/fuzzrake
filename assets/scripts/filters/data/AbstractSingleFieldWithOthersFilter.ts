@@ -15,19 +15,23 @@ export default abstract class AbstractSingleFieldWithOthersFilter<T> extends Abs
         return this.otherSelected || super.isActive();
     }
 
-    public select(value: string): void {
+    protected isOtherSelected(): boolean {
+        return this.otherSelected;
+    }
+
+    public select(value: string, label: string): void {
         if (value === this.OTHER_VALUE) {
             this.otherSelected = true;
         } else {
-            super.select(value);
+            super.select(value, label);
         }
     }
 
-    public deselect(value: string): void {
+    public deselect(value: string, label: string): void {
         if (value === this.OTHER_VALUE) {
             this.otherSelected = false;
         } else {
-            super.deselect(value);
+            super.deselect(value, label);
         }
     }
 

@@ -25,19 +25,23 @@ export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseF
         return this.unknownSelected || super.isActive();
     }
 
-    public select(value: string): void {
+    protected isUnknownSelected(): boolean {
+        return this.unknownSelected;
+    }
+
+    public select(value: string, label: string): void {
         if (value === this.UNKNOWN_VALUE) {
             this.unknownSelected = true;
         } else {
-            super.select(value);
+            super.select(value, label);
         }
     }
 
-    public deselect(value: string): void {
+    public deselect(value: string, label: string): void {
         if (value === this.UNKNOWN_VALUE) {
             this.unknownSelected = false;
         } else {
-            super.deselect(value);
+            super.deselect(value, label);
         }
     }
 }
