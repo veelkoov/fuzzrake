@@ -1,16 +1,19 @@
-'use strict';
-
 export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_PERFECT = 100;
     public static readonly DATA_COMPLETE_LEVEL_GREAT = 90;
     public static readonly DATA_COMPLETE_LEVEL_GOOD = 80;
     public static readonly DATA_COMPLETE_LEVEL_OK = 60;
 
+    readonly languages: Set<string>;
     readonly location: string;
     readonly lcCountry: string;
-    readonly allFeatures: string[];
-    readonly allOrderTypes: string[];
+    readonly productionModels: Set<string>;
+    readonly styles: Set<string>;
     readonly allStyles: string[];
+    readonly orderTypes: Set<string>;
+    readonly allOrderTypes: string[];
+    readonly features: Set<string>;
+    readonly allFeatures: string[];
     readonly commissionsStatusKnown: boolean;
     readonly commissionsStatusText: string;
     readonly completenessComment: string;
@@ -26,24 +29,24 @@ export default class Artisan {
                 readonly intro: string,
                 readonly since: string,
 
-                readonly languages: string[],
+                languages: string[],
                 readonly country: string,
                 readonly state: string,
                 readonly city: string,
 
                 readonly productionModelsComment: string,
-                readonly productionModels: string[],
+                productionModels: string[],
 
                 readonly stylesComment: string,
-                readonly styles: string[],
+                styles: string[],
                 readonly otherStyles: string[],
 
                 readonly orderTypesComment: string,
-                readonly orderTypes: string[],
+                orderTypes: string[],
                 readonly otherOrderTypes: string[],
 
                 readonly featuresComment: string,
-                readonly features: string[],
+                features: string[],
                 readonly otherFeatures: string[],
 
                 readonly paymentPlans: string,
@@ -86,10 +89,15 @@ export default class Artisan {
                 readonly contactAllowed: string,
                 readonly contactInfoObfuscated: string,
     ) {
+        this.languages = new Set<string>(languages);
         this.location = [state, city].filter(i => i).join(', ');
         this.lcCountry = country.toLowerCase();
+        this.productionModels = new Set<string>(productionModels);
+        this.features = new Set<string>(features);
         this.allFeatures = Artisan.makeAllList(features, otherFeatures);
+        this.styles = new Set<string>(styles);
         this.allStyles = Artisan.makeAllList(styles, otherStyles);
+        this.orderTypes = new Set<string>(orderTypes);
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
         this.commissionsStatusKnown = commissionsStatus !== null;
         this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);

@@ -1,12 +1,10 @@
-'use strict';
-
 import Artisan from "../class/Artisan";
 import DataBridge from "../class/DataBridge";
 
 export function updateUpdateRequestData(divId: string, artisan: Artisan): void {
-    $(`#${divId} .twitterUrl`).attr('href', getTwitterGuestRequestUrl(artisan));
-    $(`#${divId} .artisanGoogleFormUrl`).attr('href', getMakerUpdatePrefilledUrl(artisan));
-    $(`#${divId} .guestGoogleFormUrl`).attr('href', getGuestRequestPrefilledUrl(artisan));
+    jQuery(`#${divId} .twitterUrl`).attr('href', getTwitterGuestRequestUrl(artisan));
+    jQuery(`#${divId} .artisanGoogleFormUrl`).attr('href', getMakerUpdatePrefilledUrl(artisan));
+    jQuery(`#${divId} .guestGoogleFormUrl`).attr('href', getGuestRequestPrefilledUrl(artisan));
 }
 
 function getTwitterGuestRequestUrl(artisan: Artisan) {
