@@ -20,7 +20,11 @@ function commaSeparatedTplFunc(elements: string[]): string {
     return elements.join(', ');
 }
 
-function optionalListTplFunc(list: string[]): string|object {
+function optionalListTplFunc(list: string[]|Set<string>): string|object {
+    if (list instanceof Set) {
+        list = Array.from(list);
+    }
+
     let rendered = list.map(function (value: string): string {
         return `<li>${safeStr(value)}</li>`;
     }).join('');
