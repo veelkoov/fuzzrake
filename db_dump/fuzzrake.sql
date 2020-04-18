@@ -2545,6 +2545,7 @@ INSERT INTO events VALUES (1864, 1, 0, '2020-04-16 18:04:43', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1865, 0, 1, '2020-04-17 06:04:57', 'CS_UPDTD_DETLS', 'CupcakeCritters', 'https://twitter.com/CupcakeCritters', '["ard-bio u-dir\" dir=\"ltr\"> liz she/her i make fursuits and draw things! currently remaking old suits ","commissions are open","! </p> <div class=\"profileheadercard-location u-hidden\"> </div> <div class=\"profileheadercard-url \">"]', '', '');
 INSERT INTO events VALUES (1866, 0, 1, '2020-04-17 18:04:44', 'CS_UPDTD_DETLS', 'FurtasticStudios', 'http://www.furaffinity.net/user/furtasticstudios#profile', '["individually! bringing cute furry critters to life since 2010! quotes: closed trades: not right now ","commissions: open","! we handsew everything right now, so your suit may take a while! links ▪ ▪ ▪ ━━━━━━━━━━━━━━━━━━━━▪▪"]', '', '');
 INSERT INTO events VALUES (1867, 0, NULL, '2020-04-17 18:04:44', 'CS_UPDTD_DETLS', 'Tribal Paw Studios', 'https://www.instagram.com/tribalpawstudios/', '', '', '');
+INSERT INTO events VALUES (1868, NULL, 1, '2020-04-18 18:04:49', 'CS_UPDTD_DETLS', 'Weasels on Easels', 'https://www.facebook.com/weaselsoneasels', '[" ><div id=\"id_5e9b403d2e5cd8e31905668\" class=\"text_exposed_root\"><p>welcome to STUDIO_NAME!!</p><p> ","commissions open"," : three 2020 queue slots only! apply here! &gt;&gt; https://wp.me/p8roce-t4 &lt;&lt;</p>...<div cla"]', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2932,7 +2933,7 @@ INSERT INTO artisans VALUES (377, 'BROKESS', '', 'Broken Stitches Suits', '', 'I
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 338);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9263);
-INSERT INTO sqlite_sequence VALUES ('events', 1867);
+INSERT INTO sqlite_sequence VALUES ('events', 1868);
 INSERT INTO sqlite_sequence VALUES ('artisans', 377);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
