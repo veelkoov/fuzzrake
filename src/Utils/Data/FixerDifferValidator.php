@@ -14,11 +14,11 @@ use InvalidArgumentException;
 
 class FixerDifferValidator
 {
-    public const FIX = 0x1;
-    public const SHOW_DIFF = 0x2;
-    public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 0x4;
-    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 0x8;
-    public const SHOW_FIX_CMD_FOR_INVALID = 0x16;
+    public const FIX = 1;
+    public const SHOW_DIFF = 2;
+    public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
+    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
+    public const SHOW_FIX_CMD_FOR_INVALID = 16;
 
     private Fixer $fixer;
     private Differ $differ;
