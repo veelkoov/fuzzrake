@@ -8,7 +8,7 @@ parameters:
       "belgium":                                       "BE"
       "canada":                                        "CA"
       "costa rica":                                    "CR"
-      "czech republic":                                "CZ"
+      "czech( republic)?":                             "CZ"
       "d[ea]nmark":                                    "DK"
       "germany":                                       "DE"
       "finland":                                       "FI"
