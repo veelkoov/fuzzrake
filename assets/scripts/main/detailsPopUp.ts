@@ -8,7 +8,11 @@ const safeStr = Handlebars.Utils.escapeExpression;
 let detailsPopUpTpl: HandlebarsTemplateDelegate;
 let $detailsPopUp: JQuery<HTMLElement>;
 
-function optionalTplFunc(element: string|string[]): string|object {
+function optionalTplFunc(element: string|string[]|Set<string>): string|object {
+    if (element instanceof Set) {
+        element = Array.from(element);
+    }
+
     if (element instanceof Array) {
         element = element.join(', ');
     }
