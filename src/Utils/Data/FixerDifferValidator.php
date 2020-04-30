@@ -105,7 +105,7 @@ class FixerDifferValidator
     }
 
     /**
-     *  @param Artisan|ArtisanFixWip $artisan
+     * @param Artisan|ArtisanFixWip $artisan
      */
     private function getArtisanFixWip($artisan): ArtisanFixWip
     {
