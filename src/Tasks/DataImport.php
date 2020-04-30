@@ -131,6 +131,9 @@ class DataImport
                 $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
             }
 
+            $item->calculateDiff();
+            echo $item->getDiff()->getDescription(); // FIXME!
+
             $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
 
             $this->persistImportIfValid($item);

@@ -6,6 +6,7 @@ namespace App\Utils\Import;
 
 use App\Entity\Artisan;
 use App\Utils\Data\ArtisanFixWip;
+use App\Utils\Data\Diff;
 use App\Utils\StrUtils;
 
 class ImportItem
@@ -13,6 +14,7 @@ class ImportItem
     private RawImportItem $raw;
     private ArtisanFixWip $input;
     private ArtisanFixWip $entity;
+    private ?Diff $diff = null;
 
     public function __construct(RawImportItem $raw, ArtisanFixWip $input, ArtisanFixWip $entity)
     {
@@ -75,5 +77,15 @@ class ImportItem
     public function getProvidedPasscode(): string
     {
         return $this->input->getFixed()->getPasscode();
+    }
+
+    public function getDiff(): ?Diff
+    {
+        return $this->diff;
+    }
+
+    public function calculateDiff(): void
+    {
+        $this->diff = new Diff($this->getOriginalEntity(), $this->getFixedEntity(), $this->getFixedInput());
     }
 }
