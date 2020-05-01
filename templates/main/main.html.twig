@@ -5,7 +5,7 @@
     <script src="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.js"></script>
     {{ encore_entry_script_tags('main') }}
     <script>
-        {% include 'main/_data.js.twig' %}
+        {% include 'main/parts/data.js.twig' %}
     </script>
 {% endblock %}
 
@@ -16,14 +16,14 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'main/_intro.html.twig' %}
-    {% include 'main/_filters_modal.html.twig' %}
-    {% include 'main/_update_request_modal.html.twig' %}
+    {% include 'main/parts/intro.html.twig' %}
+    {% include 'main/modals/filters.html.twig' %}
+    {% include 'main/modals/update_request.html.twig' %}
 
     <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                {% include 'main/_artisan_modal.html.twig' %}
+                {% include 'main/modals/artisan.html.twig' %}
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
 
     <div id="scam-risk-acknowledged" {% if not isDevMachine() %}style="display: none;"{% endif %}>
         <div id="data-table-container" style="display: none;">
-            {% include 'main/_artisans_table.html.twig' %}
+            {% include 'main/table/body.html.twig' %}
         </div>
     </div>
 

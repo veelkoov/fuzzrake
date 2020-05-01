@@ -9,9 +9,10 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 Encore
     .setOutputPath('public/assets/')
     .setPublicPath('/assets')
-    .addEntry('general', './assets/js/entry/general.ts')
-    .addEntry('main', './assets/js/entry/main.ts')
-    .addEntry('events', './assets/js/entry/events.ts')
+    .addEntry('general', './assets/scripts/entry/general.ts')
+    .addEntry('main', './assets/scripts/entry/main.ts')
+    .addEntry('events', './assets/scripts/entry/events.ts')
+    .addEntry('info', './assets/scripts/entry/info.ts')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
@@ -20,7 +21,9 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
-    .enableTypeScriptLoader()
+    .enableTypeScriptLoader((config) => {
+        config.configFile = '../tsconfig.json'; // Relative to the entrypoint
+    })
     .enableLessLoader()
 ;
 

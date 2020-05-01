@@ -4,22 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Regexp\Regexp;
-
-class StringFixer implements FixerInterface
+class StringFixer extends AbstractStringFixer
 {
-    /**
-     * @var string[]
-     */
-    private array $replacements;
-
     public function __construct(array $strings)
     {
-        $this->replacements = $strings['replacements'];
-    }
-
-    public function fix(string $fieldName, string $subject): string
-    {
-        return trim(Regexp::replaceAll($this->replacements, $subject));
+        parent::__construct($strings);
     }
 }

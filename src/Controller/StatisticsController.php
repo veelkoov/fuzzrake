@@ -7,9 +7,9 @@ namespace App\Controller;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
+use App\Utils\Data\Definitions\Species;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
-use App\Utils\Species\SpeciesService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -56,7 +56,7 @@ class StatisticsController extends AbstractController
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function statistics(ArtisanRepository $artisanRepository, SpeciesService $species): Response
+    public function statistics(ArtisanRepository $artisanRepository, Species $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();

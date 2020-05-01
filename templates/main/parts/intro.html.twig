@@ -1,0 +1,30 @@
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <h4>Fursuit makers database</h4>
+
+            <p>
+                Welcome to the spawnbase of the furries! Currently {{ activeArtisansCount }}&nbsp;makers from
+                {{ countryCount }}&nbsp;countries are listed here. Do you know one missing from here? - let them know!
+            </p>
+
+            <p class="small">
+                Last update: {{ getLastDataUpdateTimeUtcStr() }} UTC (data)
+                / {{ getLastSystemUpdateTimeUtcStr() }} UTC (system).
+            </p>
+
+            <p>
+                <span class="badge badge-danger">Encountered a bug?</span> Want a feature? Want more information?
+                <a href="{{ feedback_form_url }}" onclick="window.open(this.href); return false;">Click here!</a>
+            </p>
+        </div>
+
+        <div class="col-sm-4 px-0 text-center">
+            <img src="{{ asset('images/website-banner-top-transparent.webp') }}" class="img-fluid" alt="">
+        </div>
+    </div>
+</div>

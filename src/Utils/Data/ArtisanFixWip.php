@@ -6,7 +6,9 @@ namespace App\Utils\Data;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
+use App\Utils\Artisan\Fields;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 
 class ArtisanFixWip
 {
@@ -31,12 +33,25 @@ class ArtisanFixWip
         return $this->fixed;
     }
 
-    public function reset(Field $field = null): void
+    public function reset(): void
     {
-        if (null === $field) {
-            $this->objectMgr->refresh($this->fixed);
-        } else {
-            $this->fixed->set($field, $this->original->get($field));
+        $urls = $this->fixed->getUrls()->toArray(); // Copy
+        $this->objectMgr->refresh($this->fixed);
+
+        foreach ($urls as $url) {
+            if (!$this->fixed->getUrls()->contains($url)) {
+                $url->setArtisan(null);
+                $this->objectMgr->remove($url);
+            }
         }
+    }
+
+    public function resetField(Field $field): void
+    {
+        if (in_array($field, Fields::urls())) {
+            throw new InvalidArgumentException('URL fields not supported by '.__METHOD__);
+        }
+
+        $this->fixed->set($field, $this->original->get($field));
     }
 }

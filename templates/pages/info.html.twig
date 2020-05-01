@@ -2,12 +2,18 @@
 
 {% block title %}general information{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
+    {{ encore_entry_script_tags('info') }}
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="col-sm">
             <h3 id="introduction">OwO what's this?</h3>
             <p>
-                No one cares about introductions. Long story short: enjoy!
+                This is basically what you can see on <a href="{{ path('main') }}">this page</a>. A list of fursuit makers.
             </p>
 
             <h3>Help needed!</h3>
@@ -64,7 +70,8 @@
 
             <p class="text-center overflow-x-auto">
                 <a href="https://linktr.ee/veelkoov" class="btn btn-primary my-1 btn-sm">
-                    <i class="fas fa-link"></i> See available options on my Linktree</a>
+                    <i class="fas fa-link"></i> Click here for contact options</a>
+                <span id="protected-contact-info"></span>
                 <span class="btn btn-secondary my-1 btn-sm">
                     <i class="fab fa-discord"></i> Discord: veelkoov#3359</span>
             </p>

@@ -31,7 +31,7 @@ class ArtisanFieldsTest extends TestCase
 
             static::assertNotNull($field);
             static::assertEquals($field->modelName(), $parMatches['name'][$idx]);
-            static::assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]));
+            static::assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]), "{$field->modelName()} should be a list");
         }
 
         static::assertEmpty($fieldsInJson);

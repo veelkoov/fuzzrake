@@ -11,6 +11,7 @@ use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use DateTimeInterface;
+use InvalidArgumentException;
 use JsonException;
 
 class RawImportItem implements FieldReadInterface
@@ -66,6 +67,12 @@ class RawImportItem implements FieldReadInterface
 
     public function get(Field $field)
     {
-        return $this->rawInput[$field->uiFormIndex()];
+        $uiFormIndex = $field->uiFormIndex();
+
+        if (null === $uiFormIndex) {
+            throw new InvalidArgumentException("{$field->name()} is not present in the IU form");
+        }
+
+        return $this->rawInput[$uiFormIndex];
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Utils\Data\Definitions\Species;
 use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,13 +15,13 @@ class GenerateSpeciesDotCommand extends Command
 {
     protected static $defaultName = 'app:data:generate-species-dot';
 
-    private SpeciesService $speciesService;
+    private Species $species;
 
-    public function __construct(SpeciesService $speciesService)
+    public function __construct(Species $species)
     {
         parent::__construct();
 
-        $this->speciesService = $speciesService;
+        $this->species = $species;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -32,7 +32,7 @@ class GenerateSpeciesDotCommand extends Command
 
         $hidden = '[style = invis]';
 
-        $species = $this->speciesService->getSpeciesFlat();
+        $species = $this->species->getSpeciesFlat();
         $splitGroups = ['Mammals', 'Fantasy creatures', 'Ungulates', 'Copyright-related classification?'];
 
         foreach ($splitGroups as $specieName) {

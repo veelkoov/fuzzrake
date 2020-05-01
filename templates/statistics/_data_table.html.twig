@@ -8,9 +8,18 @@
         </thead>
         <tbody>
         {% for a, b in data %}
+            {% set count = a|split(',')|length %}
+            {% set show_merged = count > 1 and merge_row_percents|default(false) %}
             <tr>
                 <td>{{ a }}</td>
-                <td>{{ b }} ({{ (b / total * 100)|number_format("2") }}%)</td>
+                <td>
+                    {{ b }} (
+                    {{- (b / total * 100)|number_format("2") }}%
+                    {%- if show_merged %}
+                        &times; {{ count }} = {{ (count * b / total * 100)|number_format("2") }}%
+                    {%- endif -%}
+                    )
+                </td>
             </tr>
         {% endfor %}
         </tbody>

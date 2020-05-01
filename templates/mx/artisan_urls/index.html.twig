@@ -8,6 +8,7 @@
     <table class="table table-sm">
         <thead>
             <tr>
+                <th>Maker</th>
                 <th>Type</th>
                 <th>URL</th>
                 <th>Last success</th>
@@ -18,12 +19,29 @@
         </thead>
         <tbody>
             {% for url in urls %}
+                {% if url.lastSuccess is not null %}
+                    {% if url.lastFailure is not null and url.lastFailure > url.lastSuccess%}
+                        {% set class = 'table-danger' %}
+                    {% else %}
+                        {% set class = 'table-success' %}
+                    {% endif %}
+                {% else %}
+                    {% if url.lastFailure is not null %}
+                        {% set class = 'table-danger' %}
+                    {% else %}
+                        {% set class = '' %}
+                    {% endif %}
+                {% endif %}
+
                 <tr>
-                    <td class="text-nowrap">
+                    <td>
+                        <a href="{{ path('mx_artisan_edit', { 'id': url.artisan.id }) }}">{{ url.artisan.lastMakerId }}</a>
+                    </td>
+                    <td class="text-nowrap {{ class }}">
                         {{ url.type }}
                     </td>
                     <td class="text-break">
-                        <a href="{{ path('mx_artisan_edit', {'id': url.artisan.id}) }}">{{ url.url|event_url|nl2br }}</a>
+                        <a href="{{ url.url }}">{{ url.url|event_url|nl2br }}</a>
                     </td>
                     <td class="text-nowrap">
                         {{ url.lastSuccess|nulldate }}
@@ -34,7 +52,7 @@
                     <td>
                         {{ url.lastFailureCode }}
                     </td>
-                    <td>
+                    <td class="text-break">
                         {{ url.lastFailureReason }}
                     </td>
                 </tr>

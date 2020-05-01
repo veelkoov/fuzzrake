@@ -81,17 +81,18 @@ task qa: ['php-cs-fixer', :phpunit]
 # RELEASES MANAGEMENT
 #
 
-def do_release(branch)
+def do_release(branch, environment)
   exec_or_die('git', 'checkout', branch)
-  exec_or_die('git', 'merge', '--no-ff', 'develop')
+  exec_or_die('git', 'merge', '--no-edit', 'develop')
   exec_or_die('git', 'push')
   exec_or_die('git', 'checkout', 'develop')
   exec_or_die('git', 'merge', branch)
   exec_or_die('git', 'push')
+  exec_or_die('ansible/update_environments.yaml', '--limit', environment)
 end
 
-task('release-beta') { do_release('beta') }
-task('release-prod') { do_release('master') }
+task('release-beta') { do_release('beta', 'beta') }
+task('release-prod') { do_release('master', 'prod') }
 
 #
 # COMMISSIONS STATUS UPDATES

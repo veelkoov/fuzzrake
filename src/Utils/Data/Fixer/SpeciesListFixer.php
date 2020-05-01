@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Species\SpeciesService;
+use App\Utils\Data\Definitions\Species;
 
 class SpeciesListFixer extends AbstractListFixer
 {
-    private SpeciesService $species;
+    /**
+     * @var string[]
+     */
+    private array $unsplittable;
 
-    public function __construct(SpeciesService $species, array $strings, array $lists)
+    /**
+     * @var string[]
+     */
+    private array $replacements;
+
+    public function __construct(Species $species, array $strings, array $lists)
     {
         parent::__construct($lists, $strings);
 
-        $this->species = $species;
+        $this->replacements = $species->getListFixerReplacements();
+        $this->unsplittable = $species->getListFixerUnsplittable();
     }
 
     protected static function shouldSort(): bool
@@ -29,11 +38,11 @@ class SpeciesListFixer extends AbstractListFixer
 
     protected function getNonsplittable(): array
     {
-        return $this->species->getNonsplittable();
+        return $this->unsplittable;
     }
 
     protected function getReplacements(): array
     {
-        return $this->species->getReplacements();
+        return $this->replacements;
     }
 }

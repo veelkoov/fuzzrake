@@ -1,0 +1,42 @@
+<fieldset class="region">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" name="countries[]" type="checkbox" id="countryCheckBoxUnknown" value="?" data-label="Unknown" />
+                <label class="form-check-label" for="countryCheckBoxUnknown">
+                    <i class="fas fa-question-circle"></i> Unknown
+                    <span class="count">({{ filters.countries.unknownCount }})</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+{% for region in filters.countries.items %}
+    {% apply spaceless %}
+        <fieldset class="region">
+            <legend>
+                {{ region.label }} <span class="count">({{ region.count }})</span>
+
+                <span class="allNoneInvert" aria-hidden="true">
+                    selection: <a data-action="all" href="">all</a>
+                    &bull; <a data-action="none" href="">none</a>
+                    &bull; <a data-action="invert" href="">invert</a>
+                </span>
+            </legend>
+
+            <div class="row">
+                {% for country in region.value.items %}
+                    {% set checkboxId = 'countryCheckBox' ~ country.value %}
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="countries[]" type="checkbox" id="{{ checkboxId }}" value="{{ country.value }}" data-label="{{ country.label }}" />
+                            <label class="form-check-label" for="{{ checkboxId }}"><span class="flag-icon flag-icon-{{ country.value|lower }}"></span> {{ country.label }} <span class="count">({{ country.count }})</span></label>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+    {% endapply %}
+{% endfor %}

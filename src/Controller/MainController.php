@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
-use App\Service\CountriesDataService;
+use App\Service\FilterService;
 use App\Service\IuFormService;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -24,7 +24,7 @@ class MainController extends AbstractController
      *
      * @throws UnexpectedResultException
      */
-    public function main(Request $request, ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService): Response
+    public function main(Request $request, ArtisanRepository $artisanRepository, FilterService $filterService): Response
     {
         if ('hexometer' === $request->get('ref')) {
             return new Response('*Notices your scan* OwO what\'s this?', Response::HTTP_MISDIRECTED_REQUEST,
@@ -34,15 +34,10 @@ class MainController extends AbstractController
 
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
+            'activeArtisansCount' => $artisanRepository->getActiveCount(),
             'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
-            'orderTypes'          => $artisanRepository->getDistinctOrderTypes(),
-            'styles'              => $artisanRepository->getDistinctStyles(),
-            'features'            => $artisanRepository->getDistinctFeatures(),
-            'productionModels'    => $artisanRepository->getDistinctProductionModels(),
-            'commissionsStatuses' => $artisanRepository->getDistinctCommissionStatuses(),
-            'languages'           => $artisanRepository->getDistinctLanguages(),
-            'countries'           => $countriesDataService->getFilterData(),
+            'filters'             => $filterService->getFiltersTplData(),
         ]);
     }
 

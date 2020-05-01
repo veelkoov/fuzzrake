@@ -7,6 +7,20 @@
 
     {{ form_start(form) }}
         <div class="form-row">
+            <div class="form-group col-md-3">
+                {{ form_label(form.contactAllowed) }}
+                {{ form_widget(form.contactAllowed) }}
+            </div>
+            <div class="form-group col-md-7">
+                {{ form_label(form.contactInfoOriginal) }}
+                {{ form_widget(form.contactInfoOriginal) }}
+            </div>
+            <div class="form-group col-md-2">
+                {{ form_label(form.passcode) }}
+                {{ form_widget(form.passcode) }}
+            </div>
+        </div>
+        <div class="form-row">
             <div class="form-group col-md-2">
                 {{ form_label(form.makerId) }}
                 {{ form_widget(form.makerId) }}
@@ -194,20 +208,6 @@
                 {{ form_widget(form.otherUrls) }}
             </div>
             <div class="form-group col-md-6">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-3">
-                {{ form_label(form.contactAllowed) }}
-                {{ form_widget(form.contactAllowed) }}
-            </div>
-            <div class="form-group col-md-7">
-                {{ form_label(form.contactInfoOriginal) }}
-                {{ form_widget(form.contactInfoOriginal) }}
-            </div>
-            <div class="form-group col-md-2">
-                {{ form_label(form.passcode) }}
-                {{ form_widget(form.passcode) }}
             </div>
         </div>
 

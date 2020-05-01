@@ -17,6 +17,7 @@ use App\Utils\Data\Fixer\LanguagesFixer;
 use App\Utils\Data\Fixer\NoopFixer;
 use App\Utils\Data\Fixer\SinceFixer;
 use App\Utils\Data\Fixer\SpeciesListFixer;
+use App\Utils\Data\Fixer\StateFixer;
 use App\Utils\Data\Fixer\StringFixer;
 use App\Utils\Data\Fixer\UrlFixer;
 
@@ -33,8 +34,14 @@ class Fixer
     private SinceFixer $sinceFixer;
     private NoopFixer $noopFixer;
     private IntroFixer $introFixer;
+    /**
+     * @var StateFixer
+     */
+    private StateFixer $stateFixer;
 
-    public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer, CountryFixer $countryFixer, StringFixer $stringFixer, DefinedListFixer $definedListFixer, FreeListFixer $freeListFixer, UrlFixer $urlFixer, IntroFixer $introFixer)
+    public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer,
+        CountryFixer $countryFixer, StateFixer $stateFixer, StringFixer $stringFixer,
+        DefinedListFixer $definedListFixer, FreeListFixer $freeListFixer, UrlFixer $urlFixer, IntroFixer $introFixer)
     {
         $this->speciesListFixer = $speciesListFixer;
         $this->languagesFixer = $languagesFixer;
@@ -46,6 +53,7 @@ class Fixer
         $this->noopFixer = new NoopFixer();
         $this->sinceFixer = new SinceFixer();
         $this->countryFixer = $countryFixer;
+        $this->stateFixer = $stateFixer;
         $this->introFixer = $introFixer;
         $this->contactAllowedFixer = new ContactAllowedFixer();
     }
@@ -59,7 +67,6 @@ class Fixer
     {
         switch ($field->name()) {
             case Fields::NAME:
-            case Fields::STATE:
             case Fields::CITY:
             case Fields::URL_OTHER:
             case Fields::PAYMENT_PLANS:
@@ -104,6 +111,9 @@ class Fixer
 
             case Fields::COUNTRY:
                 return $this->countryFixer;
+
+            case Fields::STATE:
+                return $this->stateFixer;
 
             case Fields::INTRO:
                 return $this->introFixer;

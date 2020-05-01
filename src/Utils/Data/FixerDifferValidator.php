@@ -14,10 +14,11 @@ use InvalidArgumentException;
 
 class FixerDifferValidator
 {
-    public const FIX = 0x1;
-    public const SHOW_DIFF = 0x2;
-    public const SHOW_ALL_FIX_CMD = 0x4;
-    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 0x8;
+    public const FIX = 1;
+    public const SHOW_DIFF = 2;
+    public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
+    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
+    public const SHOW_FIX_CMD_FOR_INVALID = 16;
 
     private Fixer $fixer;
     private Differ $differ;
@@ -58,14 +59,17 @@ class FixerDifferValidator
                 $this->differ->showDiff($field, $artisan->getOriginal(), $artisan->getFixed(), $imported);
             }
 
-            $needsReset = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$this->validator->isValid($artisan, $field);
+            $isValid = $this->validator->isValid($artisan, $field);
+            $resetAndShowFixCommand = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$isValid;
 
-            if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD || $needsReset) {
+            if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
+                || !$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID
+                || $resetAndShowFixCommand) {
                 $this->printFixCommandOptionally($field, $artisan, $imported);
             }
 
-            if ($needsReset) {
-                $artisan->reset($field);
+            if ($resetAndShowFixCommand) {
+                $artisan->resetField($field);
             }
         }
 
@@ -101,7 +105,7 @@ class FixerDifferValidator
     }
 
     /**
-     *  @param Artisan|ArtisanFixWip $artisan
+     * @param Artisan|ArtisanFixWip $artisan
      */
     private function getArtisanFixWip($artisan): ArtisanFixWip
     {
