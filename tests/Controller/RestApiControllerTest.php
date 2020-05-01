@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
 use DateTimeZone;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @group time-sensitive
@@ -24,6 +26,8 @@ class RestApiControllerTest extends DbEnabledWebTestCase
 
     public function testHealth()
     {
+        ClockMock::register(DateTimeUtils::class);
+
         $client = static::createClient();
         self::addSimpleArtisan();
 
