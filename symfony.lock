@@ -116,9 +116,6 @@
     "psr/log": {
         "version": "1.1.0"
     },
-    "rawr/t-regx": {
-        "version": "v0.9.6"
-    },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
         "recipe": {
