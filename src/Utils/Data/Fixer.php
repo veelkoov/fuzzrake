@@ -34,9 +34,6 @@ class Fixer
     private SinceFixer $sinceFixer;
     private NoopFixer $noopFixer;
     private IntroFixer $introFixer;
-    /**
-     * @var StateFixer
-     */
     private StateFixer $stateFixer;
 
     public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer,
