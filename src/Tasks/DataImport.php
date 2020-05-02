@@ -58,8 +58,23 @@ class DataImport
      */
     public function import(array $artisansData): void
     {
-        $items = $this->createImportItems($artisansData);
-        $this->processImportItems($items);
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
+
+        foreach ($this->createImportItems($artisansData) as $item) {
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
+
+            if ($this->manager->isNewPasscode($item)) {
+                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
+            }
+
+            $item->calculateDiff();
+
+            $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
+
+            if ($this->checkValidEmitWarnings($item)) {
+                $this->commit($item);
+            }
+        }
     }
 
     /**
@@ -117,33 +132,10 @@ class DataImport
         return new ImportItem($raw, $input, $entity);
     }
 
-    /**
-     * @param ImportItem[] $items
-     */
-    private function processImportItems(array $items): void
-    {
-        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
-
-        foreach ($items as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
-
-            if ($this->manager->isNewPasscode($item)) {
-                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
-            }
-
-            $item->calculateDiff();
-            echo $item->getDiff()->getDescription(); // FIXME!
-
-            $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
-
-            $this->persistImportIfValid($item);
-        }
-    }
-
-    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $protectedChanges): Artisan
+    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan
     {
         foreach (Fields::importedFromIuForm() as $field) {
-            if ($protectedChanges && $field->is(Fields::PASSCODE)) {
+            if ($skipPasscodeUpdate && $field->is(Fields::PASSCODE)) {
                 continue;
             }
 
@@ -192,35 +184,39 @@ class DataImport
         return array_pop($results);
     }
 
-    private function persistImportIfValid(ImportItem $item): void
+    private function checkValidEmitWarnings(ImportItem $item): bool
     {
         $new = $item->getFixedEntity();
         $old = $item->getOriginalEntity();
-        $ok = true;
 
         if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
             $this->messaging->reportNewMaker($item);
-            $ok = false;
+
+            return false;
         }
 
         if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ('' === ($expectedPasscode = $item->getFixedEntity()->getPrivateData()->getPasscode())) {
+        if ('' === ($expectedPasscode = $new->getPrivateData()->getPasscode())) {
             $this->messaging->reportNewPasscode($item);
 
-            $ok = false;
-        } elseif ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
+            return false;
+        }
+
+        if ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
             $this->messaging->reportInvalidPasscode($item, $expectedPasscode);
 
-            $ok = false;
+            return false;
         }
 
-        if ($ok) {
-            $this->objectManager->persist($new);
-        } elseif ($new->getId()) {
-            $item->getEntity()->reset();
-        }
+        return true;
+    }
+
+    private function commit(ImportItem $item): void
+    {
+        $item->getEntity()->apply();
+        $this->objectManager->persist($item->getOriginalEntity());
     }
 }

@@ -81,7 +81,9 @@ class Messaging
             Manager::CMD_REJECT.":$makerId:$hash:",
             Manager::CMD_SET_PIN.":$makerId:$hash:",
             Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
+            '',
         ]);
+        $this->printer->writeln($item->getDiff()->getDescription());
         $this->printer->writeln('Contact info: '.$item->getOriginalEntity()->getContactInfoOriginal());
     }
 }
