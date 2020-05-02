@@ -68,8 +68,8 @@ class FixerDifferValidator
                 $this->printFixCommandOptionally($field, $artisan, $imported);
             }
 
-            if ($resetAndShowFixCommand) {
-                $artisan->resetField($field);
+            if (!$resetAndShowFixCommand) {
+                $artisan->applyField($field);
             }
         }
 
