@@ -58,7 +58,7 @@ class DataTidyCommand extends Command
         $manager = Manager::createFromFile($input->getArgument('corrections-file') ?: '/dev/null');
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
-            $artisanFixWip = new ArtisanFixWip($artisan, $this->objectManager);
+            $artisanFixWip = new ArtisanFixWip($artisan);
 
             $manager->correctArtisan($artisanFixWip->getFixed());
 

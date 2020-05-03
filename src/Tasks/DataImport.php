@@ -121,13 +121,13 @@ class DataImport
 
         $originalInput = $this->updateArtisanWithData(new Artisan(), $raw, false);
 
-        $input = new ArtisanFixWip($originalInput, $this->objectManager);
+        $input = new ArtisanFixWip($originalInput);
         $this->manager->correctArtisan($input->getFixed());
         $this->fdv->perform($input, FDV::FIX);
 
         $originalEntity = $this->findBestMatchArtisan($input->getFixed()) ?: new Artisan();
 
-        $entity = new ArtisanFixWip($originalEntity, $this->objectManager);
+        $entity = new ArtisanFixWip($originalEntity);
 
         return new ImportItem($raw, $input, $entity);
     }

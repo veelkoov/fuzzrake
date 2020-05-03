@@ -9,7 +9,6 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Validator\SpeciesListValidator;
 use App\Utils\StrUtils;
-use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 
 class FixerDifferValidator
@@ -23,16 +22,9 @@ class FixerDifferValidator
     private Fixer $fixer;
     private Differ $differ;
     private Validator $validator;
-    private EntityManagerInterface $objectMgr;
     private Printer $printer;
 
-    public function __construct(
-        EntityManagerInterface $objectMgr,
-        Fixer $fixer,
-        SpeciesListValidator $speciesListValidator,
-        Printer $printer
-    ) {
-        $this->objectMgr = $objectMgr;
+    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator, Printer $printer) {
         $this->fixer = $fixer;
         $this->printer = $printer;
 
@@ -110,7 +102,7 @@ class FixerDifferValidator
     private function getArtisanFixWip($artisan): ArtisanFixWip
     {
         if ($artisan instanceof Artisan) {
-            $artisan = new ArtisanFixWip($artisan, $this->objectMgr);
+            $artisan = new ArtisanFixWip($artisan);
         } elseif (!($artisan instanceof ArtisanFixWip)) {
             throw new InvalidArgumentException();
         }
