@@ -1,17 +1,29 @@
 ---
-- shell: curl -4 https://api.ipify.org/
+- name: get IPv4 address
+  shell: curl -4 https://api.ipify.org/
   register: ip4_output
   args:
     warn: false
   changed_when: false
+  failed_when: false
 
-- shell: curl -6 https://api6.ipify.org/
+- name: get IPv6 address
+  shell: curl -6 https://api6.ipify.org/
   register: ip6_output
   args:
     warn: false
   changed_when: false
+  failed_when: false
 
-- ec2_group:
+- name: require at least one working IP address
+  fail:
+    message: Couldn't get neither IPv4 nor IPv6 address
+  when:
+    - ip4_output.rc != 0
+    - ip6_output.rc != 0
+
+- name: update security group
+  ec2_group:
     name: "{{ sg_name }}"
     description: "{{ sg_description }}"
     vpc_id: "{{ vpc_id }}"
@@ -35,8 +47,8 @@
     - proto: tcp
       from_port: 22
       to_port: 22
-      cidr_ip: "{{ ip4_output.stdout_lines[0] }}/32"
+      cidr_ip: "{{ ip4_output.stdout_lines[0] if ip4_output.rc == 0 else '127.0.0.1' }}/32"
     - proto: tcp
       from_port: 22
       to_port: 22
-      cidr_ipv6: "{{ ip6_output.stdout_lines[0] }}/128"
+      cidr_ipv6: "{{ ip6_output.stdout_lines[0] if ip6_output.rc == 0 else '::1'  }}/128"
