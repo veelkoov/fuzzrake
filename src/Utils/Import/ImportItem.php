@@ -16,6 +16,11 @@ class ImportItem
     private ArtisanFixWip $entity;
     private ?Diff $diff = null;
 
+    /**
+     * @var string[]
+     */
+    private array $replaced;
+
     public function __construct(RawImportItem $raw, ArtisanFixWip $input, ArtisanFixWip $entity)
     {
         $this->raw = $raw;
@@ -87,5 +92,18 @@ class ImportItem
     public function calculateDiff(): void
     {
         $this->diff = new Diff($this->getOriginalEntity(), $this->getFixedEntity(), $this->getFixedInput());
+    }
+
+    public function addReplaced(ImportItem $replaced): void
+    {
+        $this->replaced[] = $replaced->getIdStrSafe();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReplaced(): array
+    {
+        return $this->replaced;
     }
 }

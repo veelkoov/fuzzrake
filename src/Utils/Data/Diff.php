@@ -29,6 +29,11 @@ class Diff
         return '' === $res ? '' : $res."\n";
     }
 
+    public function hasAnythingChanged(): bool
+    {
+        return !empty($this->changes);
+    }
+
     private function getField(Field $field, Artisan $old, Artisan $new, ?Artisan $imported)
     {
         return [$field, $old->get($field), $new->get($field), $imported ? $imported->get($field) : null];

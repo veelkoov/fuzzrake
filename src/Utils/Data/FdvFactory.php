@@ -11,7 +11,8 @@ class FdvFactory
     private Fixer $fixer;
     private SpeciesListValidator $speciesListValidator;
 
-    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator) {
+    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator)
+    {
         $this->fixer = $fixer;
         $this->speciesListValidator = $speciesListValidator;
     }

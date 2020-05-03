@@ -30,6 +30,7 @@ class DataImport
 
     private EntityManagerInterface $objectManager;
     private Manager $manager;
+    private Printer $printer;
     private Messaging $messaging;
     private FDV $fdv;
     private bool $showAllFixCmds;
@@ -43,6 +44,7 @@ class DataImport
     ) {
         $this->objectManager = $objectManager;
         $this->manager = $importManager;
+        $this->printer = $printer;
         $this->messaging = new Messaging($printer, $importManager);
 
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
@@ -68,6 +70,10 @@ class DataImport
             }
 
             $item->calculateDiff();
+            if ($item->getDiff()->hasAnythingChanged()) {
+                $this->printer->setCurrentContext($item->getEntity());
+                $this->messaging->reportUpdates($item);
+            }
 
             $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
 
@@ -103,7 +109,7 @@ class DataImport
             $makerId = $item->getOriginalEntity()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $this->messaging->reportUpdatedItem($item, $result[$makerId]);
+                $item->addReplaced($result[$makerId]);
             }
 
             $result[$makerId] = $item;

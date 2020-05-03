@@ -24,7 +24,8 @@ class FixerDifferValidator
     private Validator $validator;
     private Printer $printer;
 
-    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator, Printer $printer) {
+    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator, Printer $printer)
+    {
         $this->fixer = $fixer;
         $this->printer = $printer;
 
