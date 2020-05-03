@@ -25,11 +25,6 @@ class Messaging
         $this->printer->writeln("{$item->getIdStrSafe()} ignored until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
     }
 
-    public function reportUpdatedItem(ImportItem $replacement, ImportItem $replaced): void
-    {
-        $this->printer->writeln($replacement->getIdStrSafe().' update replaces '.$replaced->getIdStrSafe());
-    }
-
     public function reportMoreThanOneMatchedArtisans(Artisan $artisan, array $results): void
     {
         $namesList = implode(', ', array_map(function (Artisan $artisan) {
@@ -81,7 +76,20 @@ class Messaging
             Manager::CMD_REJECT.":$makerId:$hash:",
             Manager::CMD_SET_PIN.":$makerId:$hash:",
             Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
+            '',
         ]);
+        $this->printer->writeln($item->getDiff()->getDescription());
         $this->printer->writeln('Contact info: '.$item->getOriginalEntity()->getContactInfoOriginal());
+    }
+
+    public function reportUpdates(ImportItem $item): void
+    {
+        if (!empty($item->getReplaced())) {
+            $this->printer->writeln([
+                $item->getIdStrSafe().' replaced',
+                implode(" replaced\n", $item->getReplaced()),
+                '',
+            ]);
+        }
     }
 }
