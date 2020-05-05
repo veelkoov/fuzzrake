@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
-use App\Service\HostsService;
+use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -24,12 +24,12 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     private ArtisanCommissionsStatusRepository $acsRepository;
-    private HostsService $hostsService;
+    private EnvironmentsService $environments;
 
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, HostsService $hostsService)
+    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, EnvironmentsService $environments)
     {
         $this->acsRepository = $acsRepository;
-        $this->hostsService = $hostsService;
+        $this->environments = $environments;
     }
 
     public function getFilters()
@@ -58,12 +58,12 @@ class AppExtensions extends AbstractExtension
 
     public function isDevMachineFunction(): bool
     {
-        return $this->hostsService->isDevMachine();
+        return $this->environments->isDevMachine();
     }
 
     public function isProductionFunction(): bool
     {
-        return $this->hostsService->isProduction();
+        return $this->environments->isProduction();
     }
 
     public function getLastDataUpdateTimeUtcStrFunction(): string

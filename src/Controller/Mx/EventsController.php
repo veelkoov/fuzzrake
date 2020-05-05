@@ -6,7 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Entity\Event;
 use App\Form\EventType;
-use App\Service\HostsService;
+use App\Service\EnvironmentsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +23,11 @@ class EventsController extends AbstractController
      * @Route("/new", name="mx_event_new", methods={"GET", "POST"})
      * @Cache(maxage=0, public=false)
      */
-    public function edit(Request $request, ?Event $event, HostsService $hostsSrv): Response
+    public function edit(Request $request, ?Event $event, EnvironmentsService $environments): Response
     {
         $event ??= new Event();
 
-        if (!$hostsSrv->isDevMachine() || !$event->isEditable()) {
+        if (!$environments->isDevMachine() || !$event->isEditable()) {
             throw $this->createAccessDeniedException();
         }
 

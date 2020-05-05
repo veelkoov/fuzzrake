@@ -30,9 +30,6 @@ services:
             $states:               '%states%'
             $strings:              '%strings%'
 
-            $hosts: # TODO: get rid of
-                production: getfursu.it
-
             $healthCheckValues:
                 MEMORY_AVAILABLE_MIN_MIBS: '%env(resolve:MEMORY_AVAILABLE_MIN_MIBS)%'
                 DISK_FREE_MIN_MIBS:        '%env(resolve:DISK_FREE_MIN_MIBS)%'

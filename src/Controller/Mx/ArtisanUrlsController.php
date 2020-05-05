@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Mx;
 
 use App\Repository\ArtisanUrlRepository;
-use App\Service\HostsService;
+use App\Service\EnvironmentsService;
 use App\Utils\Artisan\FieldsDefinitions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,9 +21,9 @@ class ArtisanUrlsController extends AbstractController
      * @Route("/", name="mx_artisan_urls")
      * @Cache(maxage=0, public=false)
      */
-    public function index(ArtisanUrlRepository $repository, HostsService $hostsSrv): Response
+    public function index(ArtisanUrlRepository $repository, EnvironmentsService $environments): Response
     {
-        if (!$hostsSrv->isDevMachine()) {
+        if (!$environments->isDevMachine()) {
             throw $this->createAccessDeniedException();
         }
 
