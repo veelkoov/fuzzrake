@@ -6,6 +6,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-zip": "*",
         "doctrine/doctrine-bundle": "2.0.*",
         "doctrine/orm": "2.7.*",
         "google/recaptcha": "^1.2",

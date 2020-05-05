@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Import;
+namespace App\Utils\DataInput;
 
 use App\Entity\Artisan;
 use App\Utils\Data\Printer;

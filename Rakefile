@@ -124,7 +124,7 @@ task(:importf) { sc_data_import('--fix-mode') }
 task(:importc) { sc_data_import('--commit') }
 
 #
-# IMPORT TASKS
+# DATA TIDY TASKS
 #
 
 def sc_data_tidy(*args)

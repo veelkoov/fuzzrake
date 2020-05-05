@@ -7,18 +7,21 @@ namespace App\Utils\Regexp;
 class Variant
 {
     /**
-     * @var array[]
+     * @var string[]
      */
-    private array $replacements = [];
+    private array $replacements;
 
     /**
-     * @param array[] $replacements
+     * @param string[] $replacements
      */
     public function __construct(array $replacements)
     {
         $this->replacements = $replacements;
     }
 
+    /**
+     * @return string[]
+     */
     public function getReplacements(): array
     {
         return $this->replacements;

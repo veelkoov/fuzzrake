@@ -12,11 +12,11 @@ use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
 use App\Utils\FieldReadInterface;
-use App\Utils\Import\ImportException;
-use App\Utils\Import\ImportItem;
-use App\Utils\Import\Manager;
-use App\Utils\Import\Messaging;
-use App\Utils\Import\RawImportItem;
+use App\Utils\DataInput\DataInputException;
+use App\Utils\DataInput\ImportItem;
+use App\Utils\DataInput\Manager;
+use App\Utils\DataInput\Messaging;
+use App\Utils\DataInput\RawImportItem;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -56,7 +56,7 @@ class DataImport
     /**
      * @param array[] $artisansData
      *
-     * @throws ImportException
+     * @throws DataInputException
      */
     public function import(array $artisansData): void
     {
@@ -88,7 +88,7 @@ class DataImport
      *
      * @return ImportItem[]
      *
-     * @throws ImportException
+     * @throws DataInputException
      */
     private function createImportItems(array $artisansData): array
     {
@@ -119,7 +119,7 @@ class DataImport
     }
 
     /**
-     * @throws ImportException
+     * @throws DataInputException
      */
     private function createImportItem(array $artisanData): ImportItem
     {

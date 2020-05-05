@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Import;
+namespace App\Utils\DataInput;
 
 use App\Utils\Artisan\Field;
 use App\Utils\Regexp\Regexp;

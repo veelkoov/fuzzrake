@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Import;
+namespace App\Utils\DataInput;
 
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
@@ -21,7 +21,7 @@ class RawImportItem implements FieldReadInterface
     private string $hash;
 
     /**
-     * @throws ImportException
+     * @throws DataInputException
      */
     public function __construct(array $rawInput)
     {
@@ -41,17 +41,20 @@ class RawImportItem implements FieldReadInterface
     }
 
     /**
-     * @throws ImportException
+     * @throws DataInputException
      */
     private function setTimestamp(array $rawNewData): void
     {
         try {
             $this->timestamp = DateTimeUtils::getUtcAt($rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)]);
         } catch (DateTimeException $e) {
-            throw new ImportException("Failed parsing import row's date", 0, $e);
+            throw new DataInputException("Failed parsing import row's date", 0, $e);
         }
     }
 
+    /**
+     * @throws DataInputException
+     */
     private function setHash(array $rawNewData)
     {
         /* It looks like Google Forms changes timestamp's timezone,
@@ -61,7 +64,7 @@ class RawImportItem implements FieldReadInterface
         try {
             $this->hash = sha1(Json::encode($rawNewData));
         } catch (JsonException $e) {
-            throw new RuntimeImportException('Failed to calculate hash of the data row due to a JSON encoding error', 0, $e);
+            throw new DataInputException('Failed to calculate hash of the data row due to a JSON encoding error', 0, $e);
         }
     }
 
