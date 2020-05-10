@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\DataInput;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -16,6 +17,7 @@ use InvalidArgumentException;
 class Manager
 {
     public const CMD_ACK_NEW = 'ack new';
+    public const CMD_REPLACE = 'replace';
     public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
                                          * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
                                          * then I can't include your bare studio name on the list. No one else will be able
@@ -26,7 +28,7 @@ class Manager
     public const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
     public const CMD_IGNORE_REST = 'ignore rest';
 
-    private array $corrections = ['*' => []];
+    private array $corrections = [];
     private array $acknowledgedNewItems = [];
     private array $matchedNames = [];
 
@@ -129,15 +131,13 @@ class Manager
         }
     }
 
-    private function addCorrection(ValueCorrection $correction): void
+    private function addCorrection(string $makerId, Field $field, string $wrongValue, string $correctedValue): void
     {
-        $makerId = $correction->getMakerId();
-
         if (!array_key_exists($makerId, $this->corrections)) {
             $this->corrections[$makerId] = [];
         }
 
-        $this->corrections[$makerId][] = $correction;
+        $this->corrections[$makerId][] = new ValueCorrection($makerId, $field, $wrongValue, $correctedValue);
     }
 
     /**
@@ -186,18 +186,23 @@ class Manager
                 }
                 break;
 
-            default:
+            case self::CMD_REPLACE:
                 $fieldName = $buffer->readUntil(':');
                 $delimiter = $buffer->readUntil(':');
                 $wrongValue = StrUtils::undoStrSafeForCli($buffer->readUntil($delimiter));
                 $correctedValue = StrUtils::undoStrSafeForCli($buffer->readUntil($delimiter));
 
-                $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
-                    $command, $wrongValue, $correctedValue));
-                break;
+                $this->addCorrection($makerId, Fields::get($fieldName), $wrongValue, $correctedValue);
+            break;
+
+            default:
+                throw new DataInputException("Unknown command: {$command}");
         }
     }
 
+    /**
+     * @param ValueCorrection[] $corrections
+     */
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
@@ -209,10 +214,6 @@ class Manager
 
     private function getCorrectionsFor(Artisan $artisan): array
     {
-        if (array_key_exists($artisan->getMakerId(), $this->corrections)) {
-            return array_merge($this->corrections['*'], $this->corrections[$artisan->getMakerId()]);
-        } else {
-            return $this->corrections['*'];
-        }
+        return $this->corrections[$artisan->getMakerId()] ?? [];
     }
 }

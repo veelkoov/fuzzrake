@@ -10,20 +10,15 @@ use InvalidArgumentException;
 
 class ValueCorrection
 {
-    const MODE_WHOLE = 'wr';
-    const MODE_ALL = 'ar';
-
     private string $makerId;
     private Field $field;
     private string $wrongValue;
     private string $correctedValue;
-    private string $mode;
 
-    public function __construct(string $makerId, Field $field, string $mode, string $wrongValue, string $correctedValue)
+    public function __construct(string $makerId, Field $field, string $wrongValue, string $correctedValue)
     {
         $this->validateAndSetMakerId($makerId);
         $this->field = $field;
-        $this->mode = $mode;
         $this->wrongValue = $wrongValue;
         $this->correctedValue = $correctedValue;
     }
@@ -50,28 +45,12 @@ class ValueCorrection
 
     public function apply($value)
     {
-        switch ($this->mode) {
-            case self::MODE_ALL:
-                return str_replace($this->wrongValue, $this->correctedValue, $value);
-                break;
-
-            case self::MODE_WHOLE:
-                if ($value === $this->wrongValue || '*' === $this->wrongValue) {
-                    return $this->correctedValue;
-                } else {
-                    return $value;
-                }
-                break;
-
-            default:
-                throw new InvalidArgumentException("Invalid mode: '$this->mode'");
-                break;
-        }
+        return $value === $this->wrongValue ? $this->correctedValue : $value;
     }
 
     public function __toString(): string
     {
-        return "{$this->mode} {$this->makerId} {$this->field} {$this->wrongValue} {$this->correctedValue}";
+        return "{$this->makerId} {$this->field} {$this->wrongValue} {$this->correctedValue}";
     }
 
     private function validateAndSetMakerId(string $makerId): void

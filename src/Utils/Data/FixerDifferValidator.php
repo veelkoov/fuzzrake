@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Validator\SpeciesListValidator;
+use App\Utils\DataInput\Manager;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 
@@ -61,8 +62,8 @@ class FixerDifferValidator
                 $this->printFixCommandOptionally($field, $artisan, $imported);
             }
 
-            if (!$resetAndShowFixCommand) {
-                $artisan->applyField($field);
+            if ($resetAndShowFixCommand) {
+                $artisan->getFixed()->set($field, $artisan->getOriginal()->get($field));
             }
         }
 
@@ -83,7 +84,7 @@ class FixerDifferValidator
 
             $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
 
-            $this->printer->writeln(Printer::formatFix("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|"));
+            $this->printer->writeln(Printer::formatFix(Manager::CMD_REPLACE.":$makerId:$fieldName:|:$originalVal|$proposedVal|"));
         }
     }
 
