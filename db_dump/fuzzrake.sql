@@ -1530,10 +1530,8 @@ INSERT INTO artisans_urls VALUES (1589, 149, 'URL_CST', 'https://www.starfursuit
 INSERT INTO artisans_urls VALUES (1590, 293, 'URL_CST', 'https://www.hunnibear.art/', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (1591, 293, 'URL_FACEBOOK', 'https://www.facebook.com/HunniBearArt/', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (4839, 7, 'URL_SCRITCH_MINIATURE', replace ('https://storage.scritch.es/scritch/417a43627ed64fabe72256c5f1da30914d5e9a47/thumbnail_300f5ab6-1960-44ea-b5c6-761fa15a9e08.jpeg#4550\nhttps://storage.scritch.es/scritch/8ee4e6ca0f6e9579271ed888dc51355b8bb8b4b5/thumbnail_8ff3b12a-4003-425f-86ef-19fd0a05bc4b.jpeg#5040\nhttps://storage.scritch.es/scritch/29a00e0385c4ea90715933283f5443906a1d3871/thumbnail_0556e242-ff62-4bdd-a6e4-188385824d6d.jpeg\nhttps://storage.scritch.es/scritch/6d41728e3c9f8e08ca414e04ae8146f566424ba1/thumbnail_c9384707-000c-48ba-9c61-2ddf8b3ca6a9.jpeg#4050\nhttps://storage.scritch.es/scritch/52bd52e48a18cf16f43ebf5d33863d1691ac8c46/thumbnail_f5ab0046-bbc2-40f0-869a-e517afee41b5.jpeg#4050', '\n', char (10)), NULL, NULL, 0, '');
-INSERT INTO artisans_urls VALUES (4880, 342, 'URL_WEBSITE', 'https://toothyhoundsworksh.wixsite.com/mysite', NULL, NULL, 0 , '');
-INSERT INTO artisans_urls VALUES (4881, 342, 'URL_PRICES', 'https://toothyhoundsworksh.wixsite.com/mysite/services', NULL, NULL, 0 , '');
-INSERT INTO artisans_urls VALUES (4882, 342, 'URL_FAQ', 'https://toothyhoundsworksh.wixsite.com/mysite/faq', NULL, NULL, 0 , '');
-INSERT INTO artisans_urls VALUES (4888, 342, 'URL_INSTAGRAM', 'https://www.instagram.com/toothyhoundsworkshop/', NULL, NULL, 0 , '');
+INSERT INTO artisans_urls VALUES (4880, 342, 'URL_WEBSITE', 'https://toothyhoundsworkshop.weebly.com/', NULL, NULL, 0 , '');
+INSERT INTO artisans_urls VALUES (4882, 342, 'URL_FAQ', 'https://toothyhoundsworkshop.weebly.com/tos.html', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (4890, 342, 'URL_QUEUE', 'https://trello.com/b/JhrA8dfX/fursuit-queue', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (4893, 342, 'URL_OTHER', 'https://aminoapps.com/c/fursuit-maker-amino/page/user/toothyhounds-workshop/8qwq_vjT1fnKYKbDk0Gp16b32vee7D5K0J', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (4905, 343, 'URL_WEBSITE', 'https://maxyncheese.wixsite.com/home', NULL, NULL, 0 , '');
@@ -1818,6 +1816,7 @@ INSERT INTO artisans_urls VALUES (9293, 380, 'URL_INSTAGRAM', 'https://www.insta
 INSERT INTO artisans_urls VALUES (9294, 380, 'URL_SCRITCH', 'https://scritch.es/alpinehuskies', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (9295, 380, 'URL_OTHER', 'https://aminoapps.com/u/AlpineHuskies', NULL, NULL, 0 , '');
 INSERT INTO artisans_urls VALUES (9296, 380, 'URL_CST', 'https://alpinehuskiesfursuits.weebly.com/commission-status.html', NULL, NULL, 0 , '');
+INSERT INTO artisans_urls VALUES (9297, 342, 'URL_CST', 'https://toothyhoundsworkshop.weebly.com/', NULL, NULL, 0 , '');
 CREATE TABLE events (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, old_status BOOLEAN DEFAULT NULL, new_status BOOLEAN DEFAULT NULL, timestamp DATETIME NOT NULL, type VARCHAR (16) NOT NULL COLLATE BINARY, artisan_name VARCHAR (256) NOT NULL COLLATE BINARY, checked_url VARCHAR (1024) NOT NULL COLLATE BINARY, open_match CLOB NOT NULL COLLATE BINARY, closed_match CLOB NOT NULL COLLATE BINARY, description CLOB NOT NULL);
 INSERT INTO events VALUES (5, NULL, NULL, '2019-02-17 14:16:00.000000 +00:00', 'GENERIC', '', '', '', '', 'From now on, the software will record all changes in commissions statuses.');
 INSERT INTO events VALUES (6, NULL, 0, '2019-02-17 14:17:07.000000 +00:00', 'CS_UPDATED', 'Happy Tails Costumes', 'https://twitter.com/Happytailstweet', '', '', '');
@@ -2999,8 +2998,8 @@ INSERT INTO artisans VALUES (379, 'ROCKYST', '', 'RockyStudios', '', '', '', 'CZ
 INSERT INTO artisans VALUES (380, 'ALPHUSK', '', 'AlpineHuskies Fursuits', '', '', '2015-06', 'US', 'Massachusetts', 'Boston', replace ('Artistic liberty commissions\nPremades\nStandard commissions', '\n', char (10)), 'Toony', '', replace ('Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)', '\n', char (10)), replace ('Plush suits\nMascots\nHead bases', '\n', char (10)), replace ('Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nElectronics/animatronics\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers\nWashable heads', '\n', char (10)), replace ('Pickable nose\nFit for glasses\nPuffy handpaws\nEar vents\nBody padding\nExcellent vision\nWhiskers\nAccessories\nExcellent breathability\nFloor dragger\nHairstyling\nArt\nBadges\nHair\nJewelry\nNostril holes\nRemovable hair\nCustom lycra lining\nExchangeable indoor/outdoor feetpaw soles\nLickable muzzle\nMagnets\nProps\nToys\nSqueakers\nZip on tails\nJust ask', '\n', char (10)), '100% upfront, 40% upfront to reserve a slot, monthly payment plans', replace ('Canines\nFelines\nDeers\nManokits\nDutch Angel Dragons\nHybrids', '\n', char (10)), replace ('Amphibians\nReptiles', '\n', char (10)), 'English', '', '', '', '', '', '', '', '', 'FEEDBACK', 'E-MAIL', 'E-MAIL: na*******ws@gm*****om', '');
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 340);
-INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9296);
-INSERT INTO sqlite_sequence VALUES ('events', 1900);
+INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9297);
+INSERT INTO sqlite_sequence VALUES ('events', 1901);
 INSERT INTO sqlite_sequence VALUES ('artisans', 380);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
