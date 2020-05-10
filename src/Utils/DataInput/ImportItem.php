@@ -19,7 +19,7 @@ class ImportItem
     /**
      * @var string[]
      */
-    private array $replaced;
+    private array $replaced = [];
 
     public function __construct(RawImportItem $raw, ArtisanFixWip $input, ArtisanFixWip $entity)
     {
