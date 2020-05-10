@@ -2609,6 +2609,8 @@ INSERT INTO events VALUES (1897, NULL, 1, '2020-05-09 06:04:49', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1898, 0, NULL, '2020-05-09 06:04:52', 'CS_UPDTD_DETLS', 'NorthCat Creations', 'https://northcatcreations.weebly.com/fursuits.html', '', '', '');
 INSERT INTO events VALUES (1899, NULL, 1, '2020-05-09 18:04:51', 'CS_UPDTD_DETLS', 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '["content-gridcontainer\" ><div class=\"txtnew\" id=\"comp-k2z58pkx2\"><h2 class=\"font_4\">commissions:</h2>"," <h2 class=\"font_4\">open</h2>","</div></div></div></div></div></div></div></div></section><div class=\"style-k6y4eqrk\" id=\"comp-k6y4e"]', '', '');
 INSERT INTO events VALUES (1900, NULL, 0, '2020-05-10 18:04:51', 'CS_UPDTD_DETLS', 'NorthCat Creations', 'https://northcatcreations.weebly.com/fursuits.html', '', '["O_NAME\" /> <meta property=\"og:title\" content=\"fursuits\" /> <meta property=\"og:description\" content=\"","commissions are currently closed"," opening after the current queue is done. ​somewhere mid- late summer 2019.\" /> <meta property=\"og:i"]', '');
+INSERT INTO events VALUES (1901, NULL, NULL, '2020-05-10 18:29:00', 'GENERIC', '', '', '', '', '- Updated 1 maker data based on the maker''s request (<a href="https://github.com/veelkoov/fuzzrake/commit/29b495bb854997e03d6792af2bba23769e878aec" target="_blank">git</a>)');
+INSERT INTO events VALUES (1902, NULL, NULL, '2020-05-10 19:12:00', 'GENERIC', '', '', '', '', '- Updated 1 maker data based on an outdated information report from a visitor. Thank you for your contribution! (<a href="https://github.com/veelkoov/fuzzrake/commit/5ba82e431c54c8e3172f4f765f840f5344ab35eb" target="_blank">git</a>)');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2999,7 +3001,7 @@ INSERT INTO artisans VALUES (380, 'ALPHUSK', '', 'AlpineHuskies Fursuits', '', '
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 340);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9297);
-INSERT INTO sqlite_sequence VALUES ('events', 1901);
+INSERT INTO sqlite_sequence VALUES ('events', 1902);
 INSERT INTO sqlite_sequence VALUES ('artisans', 380);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
