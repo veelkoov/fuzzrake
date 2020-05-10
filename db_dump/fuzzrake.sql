@@ -2601,6 +2601,14 @@ INSERT INTO events VALUES (1888, 0, 1, '2020-05-01 06:04:59', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1889, 0, 1, '2020-05-01 18:05:24', 'CS_UPDTD_DETLS', 'Winters Howling', 'https://www.wintershowling.com/', '["rom concept to creation</h1> <h1 class=\"font_0\">​</h1> <h1 class=\"font_0\"> </h1> <h1 class=\"font_0\">","commission status: open","</h1> <h1 class=\"font_0\">may 1st - 7th 2020</h1> <h1 class=\"font_0\">​</h1> <h1 class=\"font_0\">fill i"]', '', '');
 INSERT INTO events VALUES (1890, 1, 0, '2020-05-02 06:04:48', 'CS_UPDTD_DETLS', 'CupcakeCritters', 'https://twitter.com/CupcakeCritters', '', '["/h2> <p class=\"profileheadercard-bio u-dir\" dir=\"ltr\"> liz she/her i make fursuits and draw things! ","commissions are closed","! ask to reserve a slot for when they open in july! </p> <div class=\"profileheadercard-location u-hi"]', '');
 INSERT INTO events VALUES (1891, 1, NULL, '2020-05-02 06:04:48', 'CS_UPDTD_DETLS', 'AlpineHuskies Fursuits', 'https://alpinehuskiesfursuits.weebly.com/commission-status.html', '["ss=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\">fursuit commissions are on holdartwork ","commissions are open","</h2> </div> </div> </div> </div> <div class=\"\"></div> </div> </div> </div> </div> <div id=\"main\"> <"]', '["div class=\"container\"> <div class=\"wsite-section-elements\"> <h2 class=\"wsite-content-title\">fursuit ","commissions are on hold","artwork commissions are open</h2> </div> </div> </div> </div> <div class=\"\"></div> </div> </div> </d"]', '');
+INSERT INTO events VALUES (1892, NULL, NULL, '2020-05-03 11:24:00', 'GENERIC', '', '', '', '', '- Updated 1 maker data based on the maker''s request (<a href="https://github.com/veelkoov/fuzzrake/commit/bbd5af02832ed14ba00b048f5801f968e9abb40a" target="_blank">git</a>)');
+INSERT INTO events VALUES (1893, 0, NULL, '2020-05-05 18:04:52', 'CS_UPDTD_DETLS', 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '', '', '');
+INSERT INTO events VALUES (1894, NULL, 1, '2020-05-07 06:04:44', 'CS_UPDTD_DETLS', 'ByCats4Cats', 'http://bycats4cats.com/quote/', '["7'' class=''gfield gsection field_sublabel_below field_description_above'' ><h2 class=''gsection_title''>","we are open for commissions","!!! august-september 2020 completion</h2><div class=''gsection_description''>this quote request is for"]', '', '');
+INSERT INTO events VALUES (1895, 1, NULL, '2020-05-08 06:04:49', 'CS_UPDTD_DETLS', 'Monster Cult Makers', 'http://www.furaffinity.net/user/kalorian/#profile', '', '', '');
+INSERT INTO events VALUES (1896, 0, 1, '2020-05-08 18:05:06', 'CS_UPDTD_DETLS', 'Koshka Fursuits', 'https://twitter.com/koshkafursuits', '["ass=\"profileheadercard-bio u-dir\" dir=\"ltr\">fursuit maker and artist 25 years old ~ open for quotes ","commissions open"," ~ https://ko-fi.com/koshkafursuits </p> <div class=\"profileheadercard-location \"> buenos aires, arg"]', '', '');
+INSERT INTO events VALUES (1897, NULL, 1, '2020-05-09 06:04:49', 'CS_UPDTD_DETLS', 'Hiero Craft Creations', 'https://www.facebook.com/pg/HieroCraftCreations/posts/', '["pbx usercontent _3ds9 _3576\" ><div id=\"id_5eb6470e495ef1d80167943\" class=\"text_exposed_root\"><p>all ","commissions open","</p><p> current month: may 2020 ———————————— jade mckenna- dvc drekkubus head with small feline jaw "]', '', '');
+INSERT INTO events VALUES (1898, 0, NULL, '2020-05-09 06:04:52', 'CS_UPDTD_DETLS', 'NorthCat Creations', 'https://northcatcreations.weebly.com/fursuits.html', '', '', '');
+INSERT INTO events VALUES (1899, NULL, 1, '2020-05-09 18:04:51', 'CS_UPDTD_DETLS', 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '["content-gridcontainer\" ><div class=\"txtnew\" id=\"comp-k2z58pkx2\"><h2 class=\"font_4\">commissions:</h2>"," <h2 class=\"font_4\">open</h2>","</div></div></div></div></div></div></div></div></section><div class=\"style-k6y4eqrk\" id=\"comp-k6y4e"]', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2991,7 +2999,7 @@ INSERT INTO artisans VALUES (380, 'ALPHUSK', '', 'AlpineHuskies Fursuits', '', '
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 340);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9296);
-INSERT INTO sqlite_sequence VALUES ('events', 1891);
+INSERT INTO sqlite_sequence VALUES ('events', 1899);
 INSERT INTO sqlite_sequence VALUES ('artisans', 380);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
