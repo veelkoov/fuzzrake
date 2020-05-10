@@ -8,30 +8,25 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Validator\SpeciesListValidator;
+use App\Utils\DataInput\Manager;
 use App\Utils\StrUtils;
-use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 
 class FixerDifferValidator
 {
-    public const FIX = 0x1;
-    public const SHOW_DIFF = 0x2;
-    public const SHOW_ALL_FIX_CMD = 0x4;
-    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 0x8;
+    public const FIX = 1;
+    public const SHOW_DIFF = 2;
+    public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
+    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
+    public const SHOW_FIX_CMD_FOR_INVALID = 16;
 
     private Fixer $fixer;
     private Differ $differ;
     private Validator $validator;
-    private EntityManagerInterface $objectMgr;
     private Printer $printer;
 
-    public function __construct(
-        EntityManagerInterface $objectMgr,
-        Fixer $fixer,
-        SpeciesListValidator $speciesListValidator,
-        Printer $printer
-    ) {
-        $this->objectMgr = $objectMgr;
+    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator, Printer $printer)
+    {
         $this->fixer = $fixer;
         $this->printer = $printer;
 
@@ -58,14 +53,17 @@ class FixerDifferValidator
                 $this->differ->showDiff($field, $artisan->getOriginal(), $artisan->getFixed(), $imported);
             }
 
-            $needsReset = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$this->validator->isValid($artisan, $field);
+            $isValid = $this->validator->isValid($artisan, $field);
+            $resetAndShowFixCommand = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$isValid;
 
-            if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD || $needsReset) {
+            if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
+                || !$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID
+                || $resetAndShowFixCommand) {
                 $this->printFixCommandOptionally($field, $artisan, $imported);
             }
 
-            if ($needsReset) {
-                $artisan->reset($field);
+            if ($resetAndShowFixCommand) {
+                $artisan->getFixed()->set($field, $artisan->getOriginal()->get($field));
             }
         }
 
@@ -86,7 +84,7 @@ class FixerDifferValidator
 
             $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
 
-            $this->printer->writeln(Printer::formatFix("wr:$makerId:$fieldName:|:$originalVal|$proposedVal|"));
+            $this->printer->writeln(Printer::formatFix(Manager::CMD_REPLACE.":$makerId:$fieldName:|:$originalVal|$proposedVal|"));
         }
     }
 
@@ -101,12 +99,12 @@ class FixerDifferValidator
     }
 
     /**
-     *  @param Artisan|ArtisanFixWip $artisan
+     * @param Artisan|ArtisanFixWip $artisan
      */
     private function getArtisanFixWip($artisan): ArtisanFixWip
     {
         if ($artisan instanceof Artisan) {
-            $artisan = new ArtisanFixWip($artisan, $this->objectMgr);
+            $artisan = new ArtisanFixWip($artisan);
         } elseif (!($artisan instanceof ArtisanFixWip)) {
             throw new InvalidArgumentException();
         }

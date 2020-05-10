@@ -6,19 +6,17 @@ namespace App\Utils\Data;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Utils\Artisan\Fields;
 
 class ArtisanFixWip
 {
     private Artisan $original;
     private Artisan $fixed;
-    private EntityManagerInterface $objectMgr;
 
-    public function __construct(Artisan $fixSubject, EntityManagerInterface $objectMgr)
+    public function __construct(Artisan $fixSubject)
     {
-        $this->original = clone $fixSubject;
-        $this->fixed = $fixSubject;
-        $this->objectMgr = $objectMgr;
+        $this->original = $fixSubject;
+        $this->fixed = clone $fixSubject;
     }
 
     public function getOriginal(): Artisan
@@ -31,12 +29,15 @@ class ArtisanFixWip
         return $this->fixed;
     }
 
-    public function reset(Field $field = null): void
+    public function apply(): void
     {
-        if (null === $field) {
-            $this->objectMgr->refresh($this->fixed);
-        } else {
-            $this->fixed->set($field, $this->original->get($field));
+        foreach (Fields::persisted() as $field) {
+            $this->applyField($field);
         }
+    }
+
+    public function applyField(Field $field): void
+    {
+        $this->original->set($field, $this->fixed->get($field));
     }
 }

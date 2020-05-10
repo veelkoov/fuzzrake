@@ -1,5 +1,5 @@
 parameters:
-  species:
+  species_definitions:
     valid_choices:
       "Any species":
       "Most species":
@@ -32,7 +32,8 @@ parameters:
             Equines: # Avoid?
               Horses:
             Sheeps:
-            Cows:
+            Bovines:
+              Cows:
             Cervines:
               Deers:
             Goats:
@@ -52,6 +53,7 @@ parameters:
           Pinnipeds:
           Raccoons:
 
+        Amphibians:
         Insects:
         Birds:
           Ducks:
@@ -122,7 +124,7 @@ parameters:
         Birds:
         Pancans: # Add above
 
-      "Copyright-related classification?": # FIXME
+      "i_Copyright-related classification?": # FIXME
         "Copyrighted characters":
         "Copyrighted species": # Alias of below?
         "Closed species":
@@ -131,14 +133,16 @@ parameters:
         "Original species":
 
       Others:
-      "Any/most species":
 
       "All hybrids":
         Hybrids:
           Pancans:
         "Hybrids of these":
 
-      to_be_tidied: # Just to silence the validator, to be fixed/approved later
+      "if_To be fixed": # Just to silence the validator, to be fixed/approved later
+        'Most comfortable with Canines':
+        'Gem raptors':
+        'Most species - probably less likely to do unusual species like aquatics or unusually-shaped reptiles or reptiles':
         "Most experienced in wolves":
         "I'd prefer not to do any pokemon/digimon, but still ask since it depends on the design":
         "Some birds (unless its on another headbase then I'll do it)":
@@ -219,8 +223,6 @@ parameters:
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
 
     replacements:
-      'Currently not available for reptilian or avian characters':  "Avians\nReptilians"
-      'Canines, felines, mustelids, and rodents':                   "Canines\nFelines\nMustelids\nRodents"
       '"([^"]+)"':                                                  '$1'
 
       '(((Any and )?All ?|Anything|Any|all) ?(species?|creatures?|kind|really)( (are )?welcome)?)':    'Any species'
@@ -239,7 +241,7 @@ parameters:
 
       'I can craft any real life animal':                    'Real life animals'
 
-      "AD's|(Angel dragons?)":                               'Angel Dragons'
+      "AD's|(Ange?le? dragons?)":                            'Angel Dragons'
       'Antelopes?':                                          'Antelopes'
       'Avians?':                                             'Birds'
       'Bats?':                                               'Bats'
@@ -271,6 +273,7 @@ parameters:
       'Ferrets?':                                            'Ferrets'
       'Fish(es)?':                                           'Fishes'
       'Fox(es)?':                                            'Foxes'
+      'Gem Raptors?':                                        'Gem raptors'
       'Goats?':                                              'Goats'
       'Horses?':                                             'Horses'
       'Hybride?s?':                                          'Hybrids'
@@ -288,6 +291,7 @@ parameters:
       'Pinnipeds?( in general)?':                            'Pinnipeds'
       'Primagens and protogens':                             "Primagens\nProtogens"
       'Pokemons?':                                           'Pokemons'
+      'Primagens?':                                          'Primagens'
       'Protogens?':                                          'Protogens'
       'Protogens/primagens \(on a foam base\)':              "Protogens (on a foam base)\nPrimagens (on a foam base)"
       'Rams?':                                               'Sheeps'

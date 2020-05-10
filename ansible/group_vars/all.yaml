@@ -1,2 +1,4 @@
 ---
 php_fpm_docker_image_name: fuzzrake/php-fpm:latest
+beta_php_fpm_container_port: 9556
+prod_php_fpm_container_port: 9557

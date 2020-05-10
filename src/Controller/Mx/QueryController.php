@@ -6,7 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Form\QueryType;
 use App\Repository\ArtisanRepository;
-use App\Service\HostsService;
+use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,9 +23,9 @@ class QueryController extends AbstractController
      * @Route("/", name="mx_query")
      * @Cache(maxage=0, public=false)
      */
-    public function ordering(Request $request, ArtisanRepository $artisanRepository, HostsService $hostsSrv): Response
+    public function query(Request $request, ArtisanRepository $artisanRepository, EnvironmentsService $environments): Response
     {
-        if (!$hostsSrv->isDevMachine()) {
+        if (!$environments->isDevMachine()) {
             throw $this->createAccessDeniedException();
         }
 

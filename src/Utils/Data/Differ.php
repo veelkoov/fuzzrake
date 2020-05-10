@@ -12,10 +12,7 @@ use App\Utils\StrUtils;
 
 class Differ
 {
-    /**
-     * @var Printer
-     */
-    private $printer;
+    private Printer $printer;
 
     public function __construct(Printer $printer)
     {

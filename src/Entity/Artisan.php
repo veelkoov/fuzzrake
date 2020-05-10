@@ -77,7 +77,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $city = '';
 
     /**
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $productionModelsComment = '';
 
@@ -87,7 +87,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $productionModels = '';
 
     /**
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $stylesComment = '';
 
@@ -97,12 +97,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $styles = '';
 
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=1024)
      */
     private string $otherStyles = '';
 
     /**
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $orderTypesComment = '';
 
@@ -112,12 +112,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $orderTypes = '';
 
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="string", length=1024)
      */
     private string $otherOrderTypes = '';
 
     /**
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $featuresComment = '';
 
@@ -137,17 +137,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $paymentPlans = '';
 
     /**
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $paymentMethods = '';
 
     /**
-     * @ORM\Column(type="string", length=64, options={"default": ""})
+     * @ORM\Column(type="string", length=64)
      */
     private string $currenciesAccepted = '';
 
     /**
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $speciesComment = '';
 

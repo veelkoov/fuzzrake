@@ -105,7 +105,7 @@
     </div>
 
     <p>
-        Now that you've read this you should understand how this works and why I decided to give up on learning how to draw and instead focused on getfursu.it development. <small class="text-muted">Disclaimer: images <strong>below</strong> were <strong>not</strong> drawn by me, obviously. Artist is credited on the <a href="{{ path('info') }}">info page</a>.</small> {# TODO: precise link #}
+        Now that you've read this you should understand how this works and why I decided to give up on learning how to draw and instead focused on getfursu.it development. <small class="text-muted">Disclaimer: images <strong>below</strong> were <strong>not</strong> drawn by me, obviously. Artist is credited on the <a href="{{ path('info', { _fragment: 'artist' }) }}">info page</a>.</small>
     </p>
 
     <h1 id="tracking_limitations">Limitations</h1>
@@ -216,7 +216,7 @@
     <h1 id="tracking_how_to_enroll" class="mt-4">How to enroll</h1>
 
     <p>
-        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('info', { _fragment: 'data-updates' }) }}">send the inclusion/update form</a>, providing the website's address in correct field. Make sure the status is visible immediately when you navigate to the address of your choice (no link clicks/actions required; scrolling is OK).
+        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('data_updates') }}">send the inclusion/update form</a>, providing the website's address in correct field. Make sure the status is visible immediately when you navigate to the address of your choice (no link clicks/actions required; scrolling is OK).
     </p>
 
     <p>

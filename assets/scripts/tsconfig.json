@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "strict": false,
+    "downlevelIteration": true
+  }
+}

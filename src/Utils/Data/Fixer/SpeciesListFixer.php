@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
+use App\Utils\Data\Definitions\Species;
+
 class SpeciesListFixer extends AbstractListFixer
 {
     /**
@@ -16,12 +18,12 @@ class SpeciesListFixer extends AbstractListFixer
      */
     private array $replacements;
 
-    public function __construct(array $species, array $strings, array $lists)
+    public function __construct(Species $species, array $strings, array $lists)
     {
         parent::__construct($lists, $strings);
 
-        $this->replacements = $species['replacements'];
-        $this->unsplittable = $species['leave_unchanged'];
+        $this->replacements = $species->getListFixerReplacements();
+        $this->unsplittable = $species->getListFixerUnsplittable();
     }
 
     protected static function shouldSort(): bool

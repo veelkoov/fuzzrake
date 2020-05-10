@@ -78,7 +78,7 @@ class DataQuery
         $this->wasRun = true;
     }
 
-    public function isWasRun(): bool
+    public function getWasRun(): bool
     {
         return $this->wasRun;
     }

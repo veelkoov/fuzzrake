@@ -2,5 +2,6 @@ parameters:
   languages:
     replacements:
       '# with Google Translate#i': ' (with a translator)'
+      '# ?\(native\)#i':                ''
 
-    regexp: '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited\))?#i'
+    regexp: '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited|beginner\))?#i'

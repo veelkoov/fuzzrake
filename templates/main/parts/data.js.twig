@@ -1,0 +1,20 @@
+var ARTISANS = null;
+var MAKER_IDS_MAP = null;
+
+window.loadFuzzrakeData = function () {
+    ARTISANS = [
+        {% for artisan in artisans %}
+        new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
+        {% endfor %}
+    ];
+
+    MAKER_IDS_MAP = {
+        {% for old, new in makerIdsMap %}
+            '{{ old }}': '{{ new }}',
+        {% endfor %}
+    };
+}
+
+jQuery(function () {
+    fuzzrake.init();
+});
