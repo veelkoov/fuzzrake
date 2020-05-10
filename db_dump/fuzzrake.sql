@@ -2609,6 +2609,7 @@ INSERT INTO events VALUES (1896, 0, 1, '2020-05-08 18:05:06', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1897, NULL, 1, '2020-05-09 06:04:49', 'CS_UPDTD_DETLS', 'Hiero Craft Creations', 'https://www.facebook.com/pg/HieroCraftCreations/posts/', '["pbx usercontent _3ds9 _3576\" ><div id=\"id_5eb6470e495ef1d80167943\" class=\"text_exposed_root\"><p>all ","commissions open","</p><p> current month: may 2020 ———————————— jade mckenna- dvc drekkubus head with small feline jaw "]', '', '');
 INSERT INTO events VALUES (1898, 0, NULL, '2020-05-09 06:04:52', 'CS_UPDTD_DETLS', 'NorthCat Creations', 'https://northcatcreations.weebly.com/fursuits.html', '', '', '');
 INSERT INTO events VALUES (1899, NULL, 1, '2020-05-09 18:04:51', 'CS_UPDTD_DETLS', 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '["content-gridcontainer\" ><div class=\"txtnew\" id=\"comp-k2z58pkx2\"><h2 class=\"font_4\">commissions:</h2>"," <h2 class=\"font_4\">open</h2>","</div></div></div></div></div></div></div></div></section><div class=\"style-k6y4eqrk\" id=\"comp-k6y4e"]', '', '');
+INSERT INTO events VALUES (1900, NULL, 0, '2020-05-10 18:04:51', 'CS_UPDTD_DETLS', 'NorthCat Creations', 'https://northcatcreations.weebly.com/fursuits.html', '', '["O_NAME\" /> <meta property=\"og:title\" content=\"fursuits\" /> <meta property=\"og:description\" content=\"","commissions are currently closed"," opening after the current queue is done. ​somewhere mid- late summer 2019.\" /> <meta property=\"og:i"]', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -2999,7 +3000,7 @@ INSERT INTO artisans VALUES (380, 'ALPHUSK', '', 'AlpineHuskies Fursuits', '', '
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 340);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9296);
-INSERT INTO sqlite_sequence VALUES ('events', 1899);
+INSERT INTO sqlite_sequence VALUES ('events', 1900);
 INSERT INTO sqlite_sequence VALUES ('artisans', 380);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
