@@ -141,6 +141,7 @@ parameters:
 
       "if_To be fixed": # Just to silence the validator, to be fixed/approved later
         'Most comfortable with Canines':
+        'Heavily complicated creatures':
         'Gem raptors':
         'Most species - probably less likely to do unusual species like aquatics or unusually-shaped reptiles or reptiles':
         "Most experienced in wolves":
@@ -310,6 +311,7 @@ parameters:
       'Skull Animals?':                                      'Skull animals'
       'Small felines?':                                      'Small cats'
       'Snow leopards?':                                      'Snow leopards'
+      'Wicker ?beas?ts?':                                    'Wickerbeasts'
       'Wolf':                                                'Wolves'
       'Ungulates?(( in)? \(?general\)?)?':                   'Ungulates'
       'Vulpines?':                                           'Vulpines'
