@@ -39,6 +39,17 @@ class FilterItems implements ArrayAccess
         $this->items[$key] = new FilterItem($value, $label, $count);
     }
 
+    public function hasComplexItem(): bool
+    {
+        foreach ($this->items as $item) {
+            if ($item->isComplex()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function incUnknownCount(int $number = 1): void
     {
         $this->unknownCount += $number;

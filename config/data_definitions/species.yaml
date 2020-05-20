@@ -1,145 +1,145 @@
 parameters:
   species_definitions:
     valid_choices:
-      "Any species":
       "Most species":
+        "Real life animals":
+          Mammals:
+            Canines:
+              Lupines:
+                Wolves:
+              Vulpines:
+                Foxes:
+                  Fennecs:
+              Dogs:
+            Felines:
+              "Small cats":
+                "Domestic cats":
+              "Big cats":
+                Lions:
+                Snow leopards:
+                Lynxes:
+                Caracals:
+                Tigers:
+            Bears:
+              Giant pandas:
+            Ungulates:
+              Rhinos:
+              Antelopes:
+                Sable antelope:
+              Equines: # Avoid?
+                Horses:
+              Sheeps:
+              Bovines:
+                Cows:
+              Cervines:
+                Deers:
+              Goats:
+            Rodents:
+              Mice:
+              Rats:
+            Mustelids:
+              Otters:
+              Ferrets:
+            Rabbits:
+            Hyenas:
+            Bats:
+            Kangaroos:
+            Opossums:
+            Elephants:
+            Monkeys:
+            Red pandas:
+            Pinnipeds:
+            Raccoons:
 
-      "Real life animals":
-        Mammals:
-          Canines:
-            Dogs:
-            Lupines:
-              Wolves:
-            Vulpines:
-              Foxes:
-                Fennecs:
-          Felines:
-            "Small cats":
-              "Domestic cats":
-            "Big cats":
-              Lions:
-              Snow leopards:
-              Lynxes:
-              Caracals:
-              Tigers:
-          Hyenas:
-          Bears:
-            Giant pandas:
-          Ungulates:
-            Rhinos:
-            Antelopes:
-              Sable antelope:
-            Equines: # Avoid?
-              Horses:
-            Sheeps:
-            Bovines:
-              Cows:
-            Cervines:
-              Deers:
-            Goats:
-          Rodents:
-            Mice:
-            Rats:
-          Rabbits:
-          Bats:
-          Mustelids:
-            Otters:
-            Ferrets:
-          Kangaroos:
-          Opossums:
-          Elephants:
-          Monkeys:
-          Red pandas:
-          Pinnipeds:
-          Raccoons:
+          Birds:
+            Ducks:
+          Reptiles:
+            Lizards:
+          Fishes:
+            Sharks:
 
-        Amphibians:
-        Insects:
-        Birds:
-          Ducks:
-        Reptiles:
-          Lizards:
-        Fishes:
-          Sharks:
+          Amphibians:
+          Insects:
 
-      "Fantasy creatures":
-        MLP:
-        Crux:
-        "Skull animals":
-        "Ghost Bones Dragon":
-        Manokits:
-        Dutchies:
-        "Dutch Angel Dragons":
-        "Angel Dragons":
-        Gryphons:
-        Sergals:
-        Pancans:
-        Dragons:
+        "Fantasy creatures":
+          Robotic/cybernetic/mechanical:
+            Primagens: # Are they robots?
+              Primagens (on a foam base):
+            Protogens: # Are they robots?
+              Protogens (on a foam base):
+            Robots:
 
-        Robotic/cybernetic/mechanical:
-          Robots:
-          Primagens: # Are they robots?
-            Primagens (on a foam base):
-          Protogens: # Are they robots?
-            Protogens (on a foam base):
-
-        "TV heads":
-        Wickerbeasts:
-        Drekkubuses:
-        Pokemons:
-        Digimons:
-        Sparkledogs:
-        Monsters:
-        Lloteer: # WAT
-
-      With antlers: # Fill
-        Antelopes:
-        Cervines:
-        Goats:
-
-      Scalies: # Fill
-        Dinosaurs:
-        Reptiles:
-        Dragons:
-
-      Aquatic: # Fill
-        Fishes:
-        Otters:
-
-      Hooved: # Fill
-        Ungulates:
-        MLP:
-
-      Winged: # Fill
-        Bats:
-        Birds:
-        "Dutch Angel Dragons":
-        "Angel Dragons":
-        Gryphons:
-        Dragons:
-        Pancans:
-
-      With beak:
-        Ducks: # Add above
-        Birds:
-        Pancans: # Add above
-
-      "i_Copyright-related classification?": # FIXME
-        "Copyrighted characters":
-        "Copyrighted species": # Alias of below?
-        "Closed species":
-        "Open species":
-        "Self-made species":
-        "Original species":
-
-      Others:
-
-      "All hybrids":
-        Hybrids:
+          MLP:
+          Crux:
+          "Skull animals":
+          "Ghost Bones Dragon":
+          Manokits:
+          Dutchies:
+          "Dutch Angel Dragons":
+          "Angel Dragons":
+          Gryphons:
+          Sergals:
           Pancans:
-        "Hybrids of these":
+          Dragons:
 
-      "if_To be fixed": # Just to silence the validator, to be fixed/approved later
+
+          "TV heads":
+          Wickerbeasts:
+          Drekkubuses:
+          Pokemons:
+          Digimons:
+          Sparkledogs:
+          Monsters:
+          Lloteer: # WAT
+
+        With antlers: # Fill
+          Antelopes:
+          Cervines:
+          Goats:
+
+        Scalies: # Fill
+          Dinosaurs:
+          Reptiles:
+          Dragons:
+
+        Aquatic: # Fill
+          Fishes:
+          Otters:
+
+        Hooved: # Fill
+          Ungulates:
+          MLP:
+
+        Winged: # Fill
+          Bats:
+          Birds:
+          "Dutch Angel Dragons":
+          "Angel Dragons":
+          Gryphons:
+          Dragons:
+          Pancans:
+
+        With beak:
+          Ducks: # Add above
+          Birds:
+          Pancans: # Add above
+
+        "i_Copyright-related classification?": # FIXME
+          "Copyrighted characters":
+          "Copyrighted species": # Alias of below?
+          "Closed species":
+          "Open species":
+          "Self-made species":
+          "Original species":
+
+        Others:
+
+        "All hybrids":
+          Hybrids:
+            Pancans:
+          "Hybrids of these":
+
+      "i_To be fixed": # Just to silence the validator, to be fixed/approved later
         'Most comfortable with Canines':
         'Heavily complicated creatures':
         'Gem raptors':
@@ -226,16 +226,17 @@ parameters:
     replacements:
       '"([^"]+)"':                                                  '$1'
 
-      '(((Any and )?All ?|Anything|Any|all) ?(species?|creatures?|kind|really)( (are )?welcome)?)':    'Any species'
-      '(Will(ing)? (to )?(try|craft|do) Any(thing| species)?)':                                        'Any species'
-      '((I will do just about|We are okay with|Happy to do) any species!?)':                           'Any species'
-      '(I''m (willing|open) to (take on any species|consider anything))':                              'Any species'
-      '(Everything and anything|Anything!?|any ?!?|all ?!?)':                                          'Any species'
+      '(((Any and )?All ?|Anything|Any|all) ?(species?|creatures?|kind|really)( (are )?welcome)?)':    'Most species'
+      '(Will(ing)? (to )?(try|craft|do) Any(thing| species)?)':                                        'Most species'
+      '((I will do just about|We are okay with|Happy to do) any species!?)':                           'Most species'
+      '(I''m (willing|open) to (take on any species|consider anything))':                              'Most species'
+      '(Everything and anything|Anything!?|any ?!?|all ?!?)':                                          'Most species'
 
       '(Almost everything\. Just ask|Almost (all|Any)(thing| species?| animals?)?)':                   'Most species'
       '(All species for the most part|Open to most species|Most animals OK|Most species considered)':  'Most species'
       '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
       '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
+      'Any species':                                                                                   'Most species'
 
       '^(None|Nope|no)$':                                    ''
       '(\s|^)(and|or)':                                      '' # FIXME

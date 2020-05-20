@@ -108,7 +108,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
     private setupAllNoneInvertLinks(): void {
         let _this = this;
 
-        jQuery(`${this.bodySelector} a`).each((_, element) => {
+        jQuery(`${this.bodySelector} .allNoneInvert a`).each((_, element) => {
             let $a = jQuery(element);
             let $checkboxes = $a.parents('fieldset').find('input:checkbox');
             let valueFunction: any = AbstractBaseFilterVis.getValueFunction($a.data('action'));
