@@ -132,12 +132,12 @@ parameters:
           "Self-made species":
           "Original species":
 
-        Others:
-
         "All hybrids":
           Hybrids:
             Pancans:
           "Hybrids of these":
+
+        Others:
 
       "i_To be fixed": # Just to silence the validator, to be fixed/approved later
         'Most comfortable with Canines':
