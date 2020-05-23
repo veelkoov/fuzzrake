@@ -28,7 +28,7 @@
                     <div class="btn-group specie" role="group">
                         <button type="button" class="btn btn-outline-secondary">
                             <input name="species[]" type="checkbox" id="{{ checkboxId }}" value="{{ item.label }}" data-label="{{ item.label }}" />
-                            <label for="{{ checkboxId }}">{{ item.label }} <span class="count">({{ item.count }})</span></label>
+                            <label for="{{ checkboxId }}">{{ item.label }}{# TODO <span class="count">({{ item.count }})</span> #}</label>
                         </button>
 
                         {% if item.isComplex() %}
