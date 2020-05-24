@@ -4,15 +4,14 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" name="species[]" type="checkbox" id="specieCheckBoxUnknown" value="?" data-label="Unknown" />
                 <label class="form-check-label" for="specieCheckBoxUnknown">
-                    <i class="fas fa-question-circle"></i> Unknown
-                    <span class="count">({{ filters.species.unknownCount }})</span>
+                    <i class="fas fa-question-circle"></i> Unknown{# TODO <span class="count">({{ filters.species.unknownCount }})</span>#}
                 </label>
             </div>
 
             <div class="form-check form-check-inline">
                 <input class="form-check-input" name="species[]" type="checkbox" id="specieCheckBoxOther" value="*" data-label="Other" />
                 <label class="form-check-label" for="specieCheckBoxOther">
-                    <i class="fas fa-asterisk"></i> Other <span class="count">({{ filters.species.otherCount }})</span>
+                    <i class="fas fa-asterisk"></i> Other{# TODO  <span class="count">({{ filters.species.otherCount }})</span>#}
                 </label>
             </div>
         </div>
