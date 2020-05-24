@@ -65,8 +65,7 @@ class Messaging
             Manager::CMD_REJECT.":$makerId:$hash:",
             '',
         ]);
-        $this->printer->writeln($item->getDiff()->getDescription());
-        $this->printer->writeln('Contact info: '.$item->getOriginalEntity()->getContactInfoOriginal());
+        $this->emitDiffAndContactDetails($item);
     }
 
     public function reportInvalidPasscode(ImportItem $item, string $expectedPasscode): void
@@ -83,8 +82,7 @@ class Messaging
             Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
             '',
         ]);
-        $this->printer->writeln($item->getDiff()->getDescription());
-        $this->printer->writeln('Contact info: '.$item->getOriginalEntity()->getContactInfoOriginal());
+        $this->emitDiffAndContactDetails($item);
     }
 
     public function reportUpdates(ImportItem $item): void
@@ -96,5 +94,14 @@ class Messaging
                 '',
             ]);
         }
+    }
+
+    private function emitDiffAndContactDetails(ImportItem $item): void
+    {
+        $this->printer->writeln($item->getDiff()->getDescription());
+        $this->printer->writeln('Contact info: '
+            .($item->getOriginalEntity()->getContactAllowed() ?: '-')
+            .'/'.$item->getFixedEntity()->getContactAllowed()
+            .' '.($item->getOriginalEntity()->getContactInfoOriginal() ?: '?'));
     }
 }
