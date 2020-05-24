@@ -26,7 +26,7 @@ def docker(*args)
 end
 
 def symfony_console(*args)
-  docker('bin/console', *args)
+  docker('./bin/console', *args)
 end
 
 #
@@ -64,7 +64,7 @@ end
 task :dbdump do
   exec_or_die('cp', DB_DUMP_PRV_PATH, DB_DUMP_PRV_COPY_PATH)
   exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump')
-  exec_or_die('bin/format_dump.py', DB_DUMP_TMP_PATH, DB_DUMP_PATH, DB_DUMP_PRV_PATH)
+  exec_or_die('./bin/format_dump.py', DB_DUMP_TMP_PATH, DB_DUMP_PATH, DB_DUMP_PRV_PATH)
   exec_or_die('rm', DB_DUMP_TMP_PATH)
 end
 
@@ -73,8 +73,8 @@ task :dbcommit do
   exec_or_die('git', 'commit', '-m', 'Updated DB dump', '-p', 'db_dump/fuzzrake.sql')
 end
 
-task('php-cs-fixer') { docker('vendor/bin/php-cs-fixer', 'fix') }
-task(:phpunit)       { docker('bin/phpunit') }
+task('php-cs-fixer') { docker('./vendor/bin/php-cs-fixer', 'fix') }
+task(:phpunit)       { docker('./bin/phpunit') }
 task qa: ['php-cs-fixer', :phpunit]
 
 #

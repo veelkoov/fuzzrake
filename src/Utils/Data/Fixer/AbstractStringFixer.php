@@ -24,6 +24,11 @@ class AbstractStringFixer implements FixerInterface
 
     public function fix(string $fieldName, string $subject): string
     {
-        return Regexp::replaceAll($this->replacements, trim($subject), $this->commonRegexPrefix, $this->commonRegexSuffix);
+        return $this->fixWith($this->replacements, trim($subject), $this->commonRegexPrefix, $this->commonRegexSuffix);
+    }
+
+    protected function fixWith(array $replacements, string $subject, string $commonRegexPrefix, string $commonRegexSuffix): string
+    {
+        return Regexp::replaceAll($replacements, $subject, $commonRegexPrefix, $commonRegexSuffix);
     }
 }

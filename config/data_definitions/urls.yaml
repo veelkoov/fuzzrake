@@ -1,0 +1,27 @@
+parameters:
+  urls:
+    commonRegexPrefix: '#'
+    commonRegexSuffix: '#i'
+
+    replacements:
+      generic:
+          '^no$': ''
+
+      instagram:
+        '^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$': 'https://www.instagram.com/$1/'
+
+      twitter:
+        '^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?$': 'https://twitter.com/$1'
+
+      facebook:
+        '^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts|/about)?/?(\?(?!id=)[a-z_]+=[a-z_0-9]+)?$': 'https://www.facebook.com/$1/'
+
+      fur_affinity:
+        '^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$': 'http://www.furaffinity.net/user/$1'
+
+      youtube:
+        '^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$': 'https://www.youtube.com/$1'
+
+      deviantart:
+        '^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?$': 'https://www.deviantart.com/$1'
+        '^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$': 'https://$1.deviantart.com/'
