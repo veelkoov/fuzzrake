@@ -14,6 +14,8 @@ export default class Artisan {
     readonly allOrderTypes: string[];
     readonly features: Set<string>;
     readonly allFeatures: string[];
+    readonly speciesDoes: Set<string>;
+    readonly speciesDoesnt: Set<string>;
     readonly commissionsStatusKnown: boolean;
     readonly commissionsStatusText: string;
     readonly completenessComment: string;
@@ -54,8 +56,8 @@ export default class Artisan {
                 readonly currenciesAccepted: string[],
 
                 readonly speciesComment: string,
-                readonly speciesDoes: string[],
-                readonly speciesDoesnt: string[],
+                speciesDoes: string[],
+                speciesDoesnt: string[],
 
                 readonly fursuitReviewUrl: string,
                 readonly websiteUrl: string,
@@ -99,6 +101,8 @@ export default class Artisan {
         this.allStyles = Artisan.makeAllList(styles, otherStyles);
         this.orderTypes = new Set<string>(orderTypes);
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
+        this.speciesDoes = new Set<string>(speciesDoes);
+        this.speciesDoesnt = new Set<string>(speciesDoesnt);
         this.commissionsStatusKnown = commissionsStatus !== null;
         this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);
         this.completenessComment = Artisan.getCompletenessComment(completeness);

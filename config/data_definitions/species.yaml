@@ -67,7 +67,6 @@ parameters:
               Primagens (on a foam base):
             Protogens: # Are they robots?
               Protogens (on a foam base):
-            Robots:
 
           MLP:
           Crux:
@@ -137,9 +136,9 @@ parameters:
             Pancans:
           "Hybrids of these":
 
-        Others:
-
       "i_To be fixed": # Just to silence the validator, to be fixed/approved later
+        'Others':
+        'Robots':
         'Most comfortable with Canines':
         'Heavily complicated creatures':
         'Gem raptors':
