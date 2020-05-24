@@ -29,6 +29,7 @@ services:
             $snapshotCacheDirPath: '%kernel.project_dir%/var/snapshots'
             $states:               '%states%'
             $strings:              '%strings%'
+            $urls:                 '%urls%'
 
             $healthCheckValues:
                 MEMORY_AVAILABLE_MIN_MIBS: '%env(resolve:MEMORY_AVAILABLE_MIN_MIBS)%'
