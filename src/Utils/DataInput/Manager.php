@@ -2,55 +2,58 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Import;
+namespace App\Utils\DataInput;
 
 use App\Entity\Artisan;
+use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
 use DateTime;
+use DateTimeInterface;
 use InvalidArgumentException;
 
 class Manager
 {
-    const CMD_ACK_NEW = 'ack new';
-    const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
-                                  * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
-                                  * then I can't include your bare studio name on the list. No one else will be able
-                                  * to find you anyway. */
-    const CMD_MATCH_NAME = 'match name';
-    const CMD_IGNORE_PIN = 'ignore pin';
-    const CMD_SET_PIN = 'set pin';
-    const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
-    const CMD_IGNORE_REST = 'ignore rest';
+    public const CMD_ACK_NEW = 'ack new';
+    public const CMD_REPLACE = 'replace';
+    public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
+                                         * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
+                                         * then I can't include your bare studio name on the list. No one else will be able
+                                         * to find you anyway. */
+    public const CMD_MATCH_NAME = 'match name';
+    public const CMD_IGNORE_PIN = 'ignore pin';
+    public const CMD_SET_PIN = 'set pin';
+    public const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
+    public const CMD_IGNORE_REST = 'ignore rest';
 
-    private $corrections = ['*' => []];
-    private $acknowledgedNewItems = [];
-    private $matchedNames = [];
+    private array $corrections = [];
+    private array $acknowledgedNewItems = [];
+    private array $matchedNames = [];
 
     /**
-     * @var array List of hashes of rows which contain invalid passcodes, to be approved & imported
+     * @var string[] List of hashes of rows which contain invalid passcodes, to be approved & imported
      */
     private array $itemsWithPasscodeExceptions = [];
 
     /**
-     * @var array List of hashes of rows which contain passcodes supposed to be set / to replace earlier
+     * @var string[] List of hashes of rows which contain passcodes supposed to be set as new / to replace earlier
      */
     private array $itemsWithNewPasscodes = [];
 
     /**
-     * @var array List of hashes of rows which got rejected
+     * @var string[] List of hashes of rows which got rejected
      */
     private array $rejectedItems = [];
 
     /**
-     * @var DateTime[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
+     * @var DateTimeInterface[] Associative list of requests waiting for re-validation. Key = row hash, value = date until when ignored
      */
     private array $itemsIgnoreFinalTimes = [];
 
     /**
-     * @throws DateTimeException
+     * @throws DataInputException
      */
     public function __construct(string $correctionDirectivesFilePath)
     {
@@ -58,7 +61,7 @@ class Manager
     }
 
     /**
-     * @throws ImportException
+     * @throws DataInputException
      */
     public static function createFromFile(string $correctionsFilePath): self
     {
@@ -66,11 +69,7 @@ class Manager
             throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
         }
 
-        try {
-            return new Manager($correctionsFilePath);
-        } catch (DateTimeException $e) {
-            throw new ImportException('Failed initializing import corrector due to incorrect date format', 0, $e);
-        }
+        return new Manager($correctionsFilePath);
     }
 
     public function correctArtisan(Artisan $artisan): void
@@ -118,7 +117,7 @@ class Manager
     }
 
     /**
-     * @throws DateTimeException
+     * @throws DataInputException
      */
     private function readDirectivesFromFile(string $filePath)
     {
@@ -132,19 +131,17 @@ class Manager
         }
     }
 
-    private function addCorrection(ValueCorrection $correction): void
+    private function addCorrection(string $makerId, Field $field, string $wrongValue, string $correctedValue): void
     {
-        $makerId = $correction->getMakerId();
-
         if (!array_key_exists($makerId, $this->corrections)) {
             $this->corrections[$makerId] = [];
         }
 
-        $this->corrections[$makerId][] = $correction;
+        $this->corrections[$makerId][] = new ValueCorrection($makerId, $field, $wrongValue, $correctedValue);
     }
 
     /**
-     * @throws DateTimeException
+     * @throws DataInputException
      */
     private function readCommand(StringBuffer $buffer): void
     {
@@ -182,21 +179,30 @@ class Manager
             case self::CMD_IGNORE_UNTIL:
                 // Maker ID kept only informative
                 $rawDataHash = $buffer->readUntil(':');
-                $this->itemsIgnoreFinalTimes[$rawDataHash] = DateTimeUtils::getUtcAt($buffer->readUntil(':'));
+                try {
+                    $this->itemsIgnoreFinalTimes[$rawDataHash] = DateTimeUtils::getUtcAt($buffer->readUntil(':'));
+                } catch (DateTimeException $e) {
+                    throw new DataInputException('Failed to parse date', 0, $e);
+                }
                 break;
 
-            default:
+            case self::CMD_REPLACE:
                 $fieldName = $buffer->readUntil(':');
                 $delimiter = $buffer->readUntil(':');
                 $wrongValue = StrUtils::undoStrSafeForCli($buffer->readUntil($delimiter));
                 $correctedValue = StrUtils::undoStrSafeForCli($buffer->readUntil($delimiter));
 
-                $this->addCorrection(new ValueCorrection($makerId, Fields::get($fieldName),
-                    $command, $wrongValue, $correctedValue));
-                break;
+                $this->addCorrection($makerId, Fields::get($fieldName), $wrongValue, $correctedValue);
+            break;
+
+            default:
+                throw new DataInputException("Unknown command: {$command}");
         }
     }
 
+    /**
+     * @param ValueCorrection[] $corrections
+     */
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
@@ -208,10 +214,6 @@ class Manager
 
     private function getCorrectionsFor(Artisan $artisan): array
     {
-        if (array_key_exists($artisan->getMakerId(), $this->corrections)) {
-            return array_merge($this->corrections['*'], $this->corrections[$artisan->getMakerId()]);
-        } else {
-            return $this->corrections['*'];
-        }
+        return $this->corrections[$artisan->getMakerId()] ?? [];
     }
 }

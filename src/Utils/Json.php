@@ -8,8 +8,6 @@ use JsonException;
 
 abstract class Json
 {
-    /** @noinspection PhpDocRedundantThrowsInspection */
-
     /**
      * @param mixed $input
      *
@@ -19,8 +17,6 @@ abstract class Json
     {
         return json_encode($input, $options | JSON_THROW_ON_ERROR);
     }
-
-    /** @noinspection PhpDocRedundantThrowsInspection */
 
     /**
      * @return mixed

@@ -11,12 +11,12 @@ use App\Utils\Artisan\Utils;
 use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
+use App\Utils\DataInput\DataInputException;
+use App\Utils\DataInput\ImportItem;
+use App\Utils\DataInput\Manager;
+use App\Utils\DataInput\Messaging;
+use App\Utils\DataInput\RawImportItem;
 use App\Utils\FieldReadInterface;
-use App\Utils\Import\ImportException;
-use App\Utils\Import\ImportItem;
-use App\Utils\Import\Manager;
-use App\Utils\Import\Messaging;
-use App\Utils\Import\RawImportItem;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -30,6 +30,7 @@ class DataImport
 
     private EntityManagerInterface $objectManager;
     private Manager $manager;
+    private Printer $printer;
     private Messaging $messaging;
     private FDV $fdv;
     private bool $showAllFixCmds;
@@ -43,6 +44,7 @@ class DataImport
     ) {
         $this->objectManager = $objectManager;
         $this->manager = $importManager;
+        $this->printer = $printer;
         $this->messaging = new Messaging($printer, $importManager);
 
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
@@ -54,12 +56,31 @@ class DataImport
     /**
      * @param array[] $artisansData
      *
-     * @throws ImportException
+     * @throws DataInputException
      */
     public function import(array $artisansData): void
     {
-        $items = $this->createImportItems($artisansData);
-        $this->processImportItems($items);
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
+
+        foreach ($this->createImportItems($artisansData) as $item) {
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
+
+            if ($this->manager->isNewPasscode($item)) {
+                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
+            }
+
+            $item->calculateDiff();
+            if ($item->getDiff()->hasAnythingChanged()) {
+                $this->printer->setCurrentContext($item->getEntity());
+                $this->messaging->reportUpdates($item);
+            }
+
+            $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
+
+            if ($this->checkValidEmitWarnings($item)) {
+                $this->commit($item);
+            }
+        }
     }
 
     /**
@@ -67,7 +88,7 @@ class DataImport
      *
      * @return ImportItem[]
      *
-     * @throws ImportException
+     * @throws DataInputException
      */
     private function createImportItems(array $artisansData): array
     {
@@ -88,7 +109,7 @@ class DataImport
             $makerId = $item->getOriginalEntity()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $this->messaging->reportUpdatedItem($item, $result[$makerId]);
+                $item->addReplaced($result[$makerId]);
             }
 
             $result[$makerId] = $item;
@@ -98,7 +119,7 @@ class DataImport
     }
 
     /**
-     * @throws ImportException
+     * @throws DataInputException
      */
     private function createImportItem(array $artisanData): ImportItem
     {
@@ -106,41 +127,21 @@ class DataImport
 
         $originalInput = $this->updateArtisanWithData(new Artisan(), $raw, false);
 
-        $input = new ArtisanFixWip($originalInput, $this->objectManager);
+        $input = new ArtisanFixWip($originalInput);
         $this->manager->correctArtisan($input->getFixed());
         $this->fdv->perform($input, FDV::FIX);
 
         $originalEntity = $this->findBestMatchArtisan($input->getFixed()) ?: new Artisan();
 
-        $entity = new ArtisanFixWip($originalEntity, $this->objectManager);
+        $entity = new ArtisanFixWip($originalEntity);
 
         return new ImportItem($raw, $input, $entity);
     }
 
-    /**
-     * @param ImportItem[] $items
-     */
-    private function processImportItems(array $items): void
-    {
-        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
-
-        foreach ($items as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
-
-            if ($this->manager->isNewPasscode($item)) {
-                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
-            }
-
-            $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
-
-            $this->persistImportIfValid($item);
-        }
-    }
-
-    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $protectedChanges): Artisan
+    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan
     {
         foreach (Fields::importedFromIuForm() as $field) {
-            if ($protectedChanges && $field->is(Fields::PASSCODE)) {
+            if ($skipPasscodeUpdate && $field->is(Fields::PASSCODE)) {
                 continue;
             }
 
@@ -189,35 +190,39 @@ class DataImport
         return array_pop($results);
     }
 
-    private function persistImportIfValid(ImportItem $item): void
+    private function checkValidEmitWarnings(ImportItem $item): bool
     {
         $new = $item->getFixedEntity();
         $old = $item->getOriginalEntity();
-        $ok = true;
 
         if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
             $this->messaging->reportNewMaker($item);
-            $ok = false;
+
+            return false;
         }
 
         if (!empty($old->getMakerId()) && $old->getMakerId() !== $new->getMakerId()) {
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ('' === ($expectedPasscode = $item->getFixedEntity()->getPrivateData()->getPasscode())) {
+        if ('' === ($expectedPasscode = $new->getPrivateData()->getPasscode())) {
             $this->messaging->reportNewPasscode($item);
 
-            $ok = false;
-        } elseif ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
+            return false;
+        }
+
+        if ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
             $this->messaging->reportInvalidPasscode($item, $expectedPasscode);
 
-            $ok = false;
+            return false;
         }
 
-        if ($ok) {
-            $this->objectManager->persist($new);
-        } elseif ($new->getId()) {
-            $item->getEntity()->reset();
-        }
+        return true;
+    }
+
+    private function commit(ImportItem $item): void
+    {
+        $item->getEntity()->apply();
+        $this->objectManager->persist($item->getOriginalEntity());
     }
 }

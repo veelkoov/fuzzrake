@@ -10,8 +10,7 @@ use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
-use App\Utils\Import\ImportException;
-use App\Utils\Import\Manager;
+use App\Utils\DataInput\Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
@@ -47,9 +46,6 @@ class DataTidyCommand extends Command
         $this->addArgument('corrections-file', InputArgument::OPTIONAL, 'Corrections file path');
     }
 
-    /**
-     * @throws ImportException # FIXME: This is not import
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -58,11 +54,12 @@ class DataTidyCommand extends Command
         $manager = Manager::createFromFile($input->getArgument('corrections-file') ?: '/dev/null');
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
-            $artisanFixWip = new ArtisanFixWip($artisan, $this->objectManager);
+            $artisanFixWip = new ArtisanFixWip($artisan);
 
             $manager->correctArtisan($artisanFixWip->getFixed());
 
             $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF | FDV::RESET_INVALID_PLUS_SHOW_FIX_CMD);
+            $artisanFixWip->apply();
         }
 
         if ($input->getOption('commit')) {

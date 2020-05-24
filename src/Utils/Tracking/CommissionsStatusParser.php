@@ -35,7 +35,7 @@ class CommissionsStatusParser
         $this->falsePositivesRegexps = $rf->createSet(CommissionsStatusRegexps::FALSE_POSITIVES_REGEXES, [$this->any]);
         $this->statusRegexps = $rf->createSet(CommissionsStatusRegexps::GENERIC_REGEXES, [$this->open, $this->closed]);
 
-//        $this->debugDumpRegexps();
+        // $this->debugDumpRegexps(); // DEBUG
     }
 
     /** @noinspection PhpDocRedundantThrowsInspection */
@@ -86,7 +86,7 @@ class CommissionsStatusParser
     {
         foreach ($testedStrings as $testedString) {
             foreach ($regexpSet as $regexp) {
-                if ($result = $regexp->matches($testedString, $variant)) {
+                if (($result = $regexp->matches($testedString, $variant))) {
                     return $result;
                 }
             }
@@ -95,6 +95,9 @@ class CommissionsStatusParser
         return NullMatch::get();
     }
 
+    /**
+     * @noinspection PhpUnusedPrivateMethodInspection - saved for debugging
+     */
     private function debugDumpRegexps(): void
     {
         echo "FALSE-POSITIVES =========================================\n";

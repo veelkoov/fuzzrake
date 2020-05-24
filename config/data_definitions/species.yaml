@@ -53,6 +53,7 @@ parameters:
           Pinnipeds:
           Raccoons:
 
+        Amphibians:
         Insects:
         Birds:
           Ducks:
@@ -139,6 +140,8 @@ parameters:
         "Hybrids of these":
 
       "if_To be fixed": # Just to silence the validator, to be fixed/approved later
+        'Most comfortable with Canines':
+        'Heavily complicated creatures':
         'Gem raptors':
         'Most species - probably less likely to do unusual species like aquatics or unusually-shaped reptiles or reptiles':
         "Most experienced in wolves":
@@ -273,6 +276,7 @@ parameters:
       'Fox(es)?':                                            'Foxes'
       'Gem Raptors?':                                        'Gem raptors'
       'Goats?':                                              'Goats'
+      'Griff[io]ns?':                                        'Gryphons'
       'Horses?':                                             'Horses'
       'Hybride?s?':                                          'Hybrids'
       'Hyenas?':                                             'Hyenas'
@@ -308,6 +312,7 @@ parameters:
       'Skull Animals?':                                      'Skull animals'
       'Small felines?':                                      'Small cats'
       'Snow leopards?':                                      'Snow leopards'
+      'Wicker ?beas?ts?':                                    'Wickerbeasts'
       'Wolf':                                                'Wolves'
       'Ungulates?(( in)? \(?general\)?)?':                   'Ungulates'
       'Vulpines?':                                           'Vulpines'

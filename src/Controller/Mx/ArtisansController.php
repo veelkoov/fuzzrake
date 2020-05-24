@@ -6,7 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Entity\Artisan;
 use App\Form\ArtisanType;
-use App\Service\HostsService;
+use App\Service\EnvironmentsService;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -25,9 +25,9 @@ class ArtisansController extends AbstractController
      * @Route("/new", name="mx_artisan_new", methods={"GET", "POST"})
      * @Cache(maxage=0, public=false)
      */
-    public function edit(Request $request, ?Artisan $artisan, HostsService $hostsSrv): Response
+    public function edit(Request $request, ?Artisan $artisan, EnvironmentsService $environments): Response
     {
-        if (!$hostsSrv->isDevMachine()) {
+        if (!$environments->isDevMachine()) {
             throw $this->createAccessDeniedException();
         }
 

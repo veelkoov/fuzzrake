@@ -47,6 +47,7 @@
     - "autoindex.j2.conf"
   notify:
     - restart apache
+  tags: conf.d
 
 - name: "update conf.modules.d"
   template:
