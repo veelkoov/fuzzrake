@@ -2633,6 +2633,17 @@ INSERT INTO events VALUES (1908, 0, 1, '2020-05-15 18:04:54', 'CS_UPDTD_DETLS', 
 INSERT INTO events VALUES (1909, 0, NULL, '2020-05-15 18:04:59', 'CS_UPDTD_DETLS', 'FuroarSuits', 'http://leoelstar.wixsite.com/furoar', '', '', '');
 INSERT INTO events VALUES (1910, NULL, 0, '2020-05-16 06:04:56', 'CS_UPDTD_DETLS', 'FuroarSuits', 'http://leoelstar.wixsite.com/furoar', '', '["ontent-gridcontainer\" ><div class=\"txtnew\" id=\"comp-isnovlmu\"><h2 class=\"font_2\">commission status: ","commissions are closed",". </h2></div></div></div></div></div></div></div></div></div></header><main tabindex=\"-1\" data-is-me"]', '');
 INSERT INTO events VALUES (1911, 1, 0, '2020-05-16 06:04:57', 'CS_UPDTD_DETLS', 'Koshka Fursuits', 'https://twitter.com/koshkafursuits', '', '["ass=\"profileheadercard-bio u-dir\" dir=\"ltr\">fursuit maker and artist 25 years old ~ open for quotes ","commissions closed","~ https://ko-fi.com/koshkafursuits </p> <div class=\"profileheadercard-location \"> buenos aires, arge"]', '');
+INSERT INTO events VALUES (1912, NULL, NULL, '2020-05-16 19:00:00', 'GENERIC', '', '', '', '', '- 2 new makers based on the makers'' requests (<a href="https://github.com/veelkoov/fuzzrake/commit/3f6f72733c0218b9041ef4617d91b0765645e07f" target="_blank">git</a>)');
+INSERT INTO events VALUES (1913, 0, NULL, '2020-05-18 18:05:15', 'CS_UPDTD_DETLS', 'NorthCat Creations', 'https://northcatcreations.weebly.com/fursuits.html', '', '', '');
+INSERT INTO events VALUES (1914, 1, 0, '2020-05-19 06:05:07', 'CS_UPDTD_DETLS', 'SereStudios', 'https://www.serestudios.com/', '', '["20counter\">1/31</div></div></div><div class=\"txtnew\" id=\"wrchtxth-igg\"><h1 class=\"font_0\" dir=\"ltr\">","commissions are closed"," </h1> <h1 class=\"font_0\" dir=\"ltr\">next opening: est. november 2020</h1> <h1 class=\"font_0\" dir=\"lt"]', '');
+INSERT INTO events VALUES (1915, 0, NULL, '2020-05-19 18:05:00', 'CS_UPDTD_DETLS', 'PeaceWolf Creations', 'http://peacewolfcreations.com/', '', '', '');
+INSERT INTO events VALUES (1916, 1, NULL, '2020-05-20 18:05:02', 'CS_UPDTD_DETLS', 'ByCats4Cats', 'http://bycats4cats.com/quote/', '', '', '');
+INSERT INTO events VALUES (1917, 0, NULL, '2020-05-20 18:05:02', 'CS_UPDTD_DETLS', 'Fursuits by Lacy and Nick', 'http://www.fursuiting.com/', '', '', '');
+INSERT INTO events VALUES (1918, 1, 0, '2020-05-20 18:05:08', 'CS_UPDTD_DETLS', 'Fur O''Clock Creations', 'http://furoclockcreations.wixsite.com/furoclockcreations', '', '["g\" class=\"ca1img\"></wix-image></div></div><div class=\"txtnew\" id=\"comp-k509k3to\"><h2 class=\"font_2\">","commission status:</h2> <h2 class=\"font_2\">closed","... fur now</h2></div><div class=\"txtnew\" id=\"comp-k508uqam\"><h4 class=\"font_4\">our dream</h4></div>"]', '');
+INSERT INTO events VALUES (1919, NULL, 0, '2020-05-21 06:04:49', 'CS_UPDTD_DETLS', 'Fursuits by Lacy and Nick', 'http://www.fursuiting.com/', '', '["</div><div data-min-height=\"40\" class=\"txtnew\" id=\"comp-k7hqysyy\"><h3 class=\"font_3\">custom fursuit ","commissions are now closed","</h3></div><div data-svg-type=\"shape\" data-strokewidth=\"2\" data-preserve-viewbox=\"ignore\" class=\"sty"]', '');
+INSERT INTO events VALUES (1920, 1, 0, '2020-05-21 06:04:53', 'CS_UPDTD_DETLS', 'Deadly Creations Fursuits', 'https://deadlycreationsfursuits.weebly.com/commissions.html', '', '["/h2> <div><div></div> <hr class=\"styled-hr\"></hr> <div></div></div> <h2 class=\"wsite-content-title\">","commissions status: closed","thank you so much for your interest! we are so excited to get to these future projects! </h2> <div><"]', '');
+INSERT INTO events VALUES (1921, 1, 0, '2020-05-21 18:05:23', 'CS_UPDTD_DETLS', 'Curlworks', 'https://www.curlworks.net/', '', '["d reach out! </p></p></div> <div class=\"col-md-4\"> <div class=\"sidebar block red\"> <h4> custom kigu ","commissions are closed","</h4> <p>our next opening for kigus will be winter 2020.</p> kigurumi info </div> </div> <div class="]', '');
+INSERT INTO events VALUES (1922, 1, NULL, '2020-05-21 18:05:26', 'CS_UPDTD_DETLS', '2 Stupid Furs', 'https://2stupidfurs.weebly.com/prices---quote-forms---deals.html', '', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -3025,7 +3036,7 @@ INSERT INTO artisans VALUES (382, 'FRILLED', '', 'Frilled Lizard Studios', '', '
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 341);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9310);
-INSERT INTO sqlite_sequence VALUES ('events', 1911);
+INSERT INTO sqlite_sequence VALUES ('events', 1922);
 INSERT INTO sqlite_sequence VALUES ('artisans', 382);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
