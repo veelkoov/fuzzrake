@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Repository\ArtisanRepository;
 use App\Utils\Data\Definitions\Species;
 use App\Utils\FilterItems;
+use App\Utils\Species\Specie;
 
 class FilterService
 {
@@ -38,15 +39,18 @@ class FilterService
 
     private function getSpeciesFilterItems(): FilterItems
     {
-        return $this->getSpeciesFilterItemsFromArray($this->species->getFilterChoicesTree());
+        return $this->getSpeciesFilterItemsFromArray($this->species->getSpeciesTree());
     }
 
-    private function getSpeciesFilterItemsFromArray($species): FilterItems
+    /**
+     * @param Specie[] $species
+     */
+    private function getSpeciesFilterItemsFromArray(array $species): FilterItems
     {
         $result = new FilterItems(true);
 
-        foreach ($species as $specie => $subspecies) {
-            $result->addComplexItem($specie, $this->getSpeciesFilterItem($specie, $subspecies), $specie, 0); // TODO: count
+        foreach ($species as $specie) {
+            $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO: count
         }
 
         return $result;
@@ -55,10 +59,10 @@ class FilterService
     /**
      * @return FilterItems|string
      */
-    private function getSpeciesFilterItem(string $specie, array $subspecies)
+    private function getSpeciesFilterItem(Specie $specie)
     {
-        if (!empty($subspecies)) {
-            return $this->getSpeciesFilterItemsFromArray($subspecies);
+        if ($specie->hasChildren()) {
+            return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
         } else {
             return $specie;
         }
