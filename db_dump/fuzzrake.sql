@@ -2658,6 +2658,7 @@ INSERT INTO events VALUES (1919, NULL, 0, '2020-05-21 06:04:49', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1920, 1, 0, '2020-05-21 06:04:53', 'CS_UPDTD_DETLS', 'Deadly Creations Fursuits', 'https://deadlycreationsfursuits.weebly.com/commissions.html', '', '["/h2> <div><div></div> <hr class=\"styled-hr\"></hr> <div></div></div> <h2 class=\"wsite-content-title\">","commissions status: closed","thank you so much for your interest! we are so excited to get to these future projects! </h2> <div><"]', '');
 INSERT INTO events VALUES (1921, 1, 0, '2020-05-21 18:05:23', 'CS_UPDTD_DETLS', 'Curlworks', 'https://www.curlworks.net/', '', '["d reach out! </p></p></div> <div class=\"col-md-4\"> <div class=\"sidebar block red\"> <h4> custom kigu ","commissions are closed","</h4> <p>our next opening for kigus will be winter 2020.</p> kigurumi info </div> </div> <div class="]', '');
 INSERT INTO events VALUES (1922, 1, NULL, '2020-05-21 18:05:26', 'CS_UPDTD_DETLS', '2 Stupid Furs', 'https://2stupidfurs.weebly.com/prices---quote-forms---deals.html', '', '', '');
+INSERT INTO events VALUES (1923, NULL, NULL, '2020-05-24 11:47:00', 'GENERIC', '', '', '', '', '- 3 new makers and 1 updated based on the makers'' requests (<a href="https://github.com/veelkoov/fuzzrake/commit/60c939ffcd2653ddd861858d9bb41e88a415f621" target="_blank">git</a>)');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -3053,7 +3054,7 @@ INSERT INTO artisans VALUES (385, 'FLUFFY2', '', 'Feeling Fluffy', 'Feeling Fluf
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 341);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9324);
-INSERT INTO sqlite_sequence VALUES ('events', 1922);
+INSERT INTO sqlite_sequence VALUES ('events', 1923);
 INSERT INTO sqlite_sequence VALUES ('artisans', 385);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
