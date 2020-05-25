@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data\Definitions;
+namespace App\Utils\Species;
 
 use App\Repository\ArtisanRepository;
-use App\Utils\Species\Specie;
 use TRegx\CleanRegex\Match\Details\Match;
 
 class Species
@@ -40,16 +39,13 @@ class Species
 
     private ArtisanRepository $artisanRepository;
 
-    /**
-     * @param array[]|string[] $species_definitions
-     */
-    public function __construct(array $species_definitions, ArtisanRepository $artisanRepository)
+    public function __construct(array $speciesDefinitions, ArtisanRepository $artisanRepository)
     {
         $this->artisanRepository = $artisanRepository;
-        $this->replacements = $species_definitions['replacements'];
-        $this->unsplittable = $species_definitions['leave_unchanged'];
+        $this->replacements = $speciesDefinitions['replacements'];
+        $this->unsplittable = $speciesDefinitions['leave_unchanged'];
 
-        $this->initialize($species_definitions['valid_choices']);
+        $this->initialize($speciesDefinitions['valid_choices']);
     }
 
     /**
@@ -58,6 +54,22 @@ class Species
     public function getValidChoicesList()
     {
         return $this->validChoicesList;
+    }
+
+    /**
+     * @return Specie[]
+     */
+    public function getSpeciesFlat(): array
+    {
+        return $this->speciesFlat;
+    }
+
+    /**
+     * @return Specie[]
+     */
+    public function getSpeciesTree(): array
+    {
+        return $this->speciesTree;
     }
 
     /**
@@ -74,6 +86,26 @@ class Species
     public function getListFixerUnsplittable(): array
     {
         return $this->unsplittable;
+    }
+
+    private function splitSpecieFlagsName(string $specie): array
+    {
+        return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)->findFirst(function (Match $match): array {
+            return [$match->group('flags')->text(), $match->group('specie')->text()];
+        })->orReturn(['', $specie]);
+    }
+
+    private function flagged(string $flags, string $flag): bool
+    {
+        return false !== strpos($flags, $flag);
+    }
+
+    private function initialize(array $species): void
+    {
+        $this->speciesFlat = [];
+        $this->speciesTree = $this->getTreeFor($species);
+
+        $this->validChoicesList = $this->gatherValidChoices($species);
     }
 
     /**
@@ -100,44 +132,7 @@ class Species
         return $result;
     }
 
-    private function splitSpecieFlagsName(string $specie): array
-    {
-        return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)->findFirst(function (Match $match): array {
-            return [$match->group('flags')->text(), $match->group('specie')->text()];
-        })->orReturn(['', $specie]);
-    }
-
-    private function flagged(string $flags, string $flag): bool
-    {
-        return false !== strpos($flags, $flag);
-    }
-
-    /**
-     * @return Specie[]
-     */
-    public function getSpeciesFlat(): array
-    {
-        return $this->speciesFlat;
-    }
-
-    /**
-     * @return Specie[]
-     */
-    public function getSpeciesTree(): array
-    {
-        return $this->speciesTree;
-    }
-
-    private function initialize(array $species): void
-    {
-        $this->validChoicesList = [];
-        $this->speciesFlat = [];
-        $this->speciesTree = $this->processTreeNodes($species);
-
-        array_unique($this->validChoicesList);
-    }
-
-    private function processTreeNodes(array $species, Specie $parent = null): array
+    private function getTreeFor(array $species, Specie $parent = null): array
     {
         $result = [];
 
@@ -150,19 +145,33 @@ class Species
                 continue;
             }
 
-            $result[$specieName] = $specie = $this->speciesFlat[$specieName] ??= new Specie($specieName);
+            $specie = $this->getUpdatedSpecie($specieName, $parent, $subspecies);
 
-            if (null !== $parent) {
-                $specie->addParent($parent);
-            }
-
-            if (!empty($subspecies)) {
-                foreach ($this->processTreeNodes($subspecies, $specie) as $subspecie) {
-                    $specie->addChild($subspecie);
-                }
-            }
+            $result[$specieName] = $specie;
         }
 
         return $result;
+    }
+
+    private function getUpdatedSpecie(string $specieName, ?Specie $parent, ?array $subspecies): Specie
+    {
+        $specie = $this->getSpecie($specieName);
+
+        if (null !== $parent) {
+            $specie->addParent($parent);
+        }
+
+        if (!empty($subspecies)) {
+            foreach ($this->getTreeFor($subspecies, $specie) as $subspecie) {
+                $specie->addChild($subspecie);
+            }
+        }
+
+        return $specie;
+    }
+
+    private function getSpecie($specieName): Specie
+    {
+        return $this->speciesFlat[$specieName] ??= new Specie($specieName);
     }
 }

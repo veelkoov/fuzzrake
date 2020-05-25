@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Repository\ArtisanRepository;
 use App\Service\FilterService;
 use App\Service\IuFormService;
-use App\Utils\Data\Definitions\Species;
+use App\Utils\Species\Species;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

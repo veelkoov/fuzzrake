@@ -1,10 +1,11 @@
 var ARTISANS = null;
 var MAKER_IDS_MAP = null;
+var SPECIES = null;
 
 window.loadFuzzrakeData = function () {
     ARTISANS = [
         {% for artisan in artisans %}
-        new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
+            new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
         {% endfor %}
     ];
 

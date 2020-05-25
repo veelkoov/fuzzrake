@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Repository\ArtisanRepository;
-use App\Utils\Data\Definitions\Species;
 use App\Utils\FilterItems;
 use App\Utils\Species\Specie;
+use App\Utils\Species\Species;
 
 class FilterService
 {
