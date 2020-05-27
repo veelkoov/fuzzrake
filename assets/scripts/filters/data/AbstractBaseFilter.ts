@@ -55,6 +55,6 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     }
 
     private static fixLabel(label: string): string {
-        return label.replace(/ \(.+?\)$/, '')
+        return label.replace(/ \(.+?\)$/, '') // FIXME: Need to get rid of this when explanation of items won't be done by appending it to the name of the item
     }
 }

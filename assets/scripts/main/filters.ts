@@ -56,7 +56,7 @@ export function initFilters(): void {
     filters.push(new SetFilterVis<string>('productionModels', 'productionModels', false, false));
     filters.push(new SetFilterVis<string>('languages', 'languages', false, false));
     filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus'));
-    filters.push(new SpeciesFilterVis<string>('species', 'speciesDoes', 'speciesDoesnt'));
+    filters.push(new SpeciesFilterVis('species', 'speciesDoes', 'speciesDoesnt', DataBridge.getSpecies()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);
     jQuery.fn.dataTable.ext.search.push(filterDtPlugin.getCallback());

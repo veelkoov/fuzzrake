@@ -29,7 +29,7 @@ export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseF
         return this.unknownSelected || super.isActive();
     }
 
-    protected isUnknownSelected(): boolean {
+    public isUnknownSelected(): boolean {
         return this.unknownSelected;
     }
 

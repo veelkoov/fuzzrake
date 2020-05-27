@@ -15,7 +15,7 @@ export default abstract class AbstractSingleFieldWithOthersFilter<T> extends Abs
         return this.otherSelected || super.isActive();
     }
 
-    protected isOtherSelected(): boolean {
+    public isOtherSelected(): boolean {
         return this.otherSelected;
     }
 
