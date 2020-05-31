@@ -201,8 +201,10 @@ parameters:
         'Up to new species as a challenge':
         'Deer&similar':
         "Rare species":
+        'Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)':
 
     leave_unchanged:
+      - 'Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)'
       - I'd prefer not to do any pokemon/digimon, but still ask since it depends on the design
       - Nothing on the hard pass list, but I do not have experience with scalies or other animals without fur. I am willing to try anything!
       - Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)
@@ -257,7 +259,7 @@ parameters:
       'Cats?( in general)?':                                 'Felines'
       'Canines?( in)? ?(\(?general\)?)?':                    'Canines'
       'copyrighted characters?[ !]*':                        'Copyrighted characters'
-      'Closed? species?':                                    'Closed species'
+      '(any )?Closed? species?':                             'Closed species'
       'Deers?':                                              'Deers'
       'Dinosaurs?':                                          'Dinosaurs'
       'Dogs?':                                               'Dogs'
