@@ -7,15 +7,22 @@ import AbstractBaseFilter from "./AbstractBaseFilter";
 import StatusWriter from "../StatusWriter";
 import AbstractSingleFieldWithOthersFilter from "./AbstractSingleFieldWithOthersFilter";
 import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
+import AbstractUnknownValue from "./special/AbstractUnknownValue";
+import OtherValue from "./special/OtherValue";
+import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
 
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private inFilter: AbstractSingleFieldWithOthersFilter<string>;
     private outFilter: AbstractSingleFieldFilter<string>;
+    private unknown: AbstractUnknownValue;
+    private other: OtherValue; // FIXME: Not working!
 
     public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string, private readonly species: Species) {
         super();
         this.inFilter = new AnyOrOtherSetFilter<string>(fieldNameIn);
         this.outFilter = new AllOrOtherSetFilter<string>(fieldNameOut);
+        this.unknown = new UnknownValueTwoFields(fieldNameIn, fieldNameOut);
+        this.other = new OtherValue(fieldNameIn);
     }
 
     public getStorageName(): string {
@@ -23,11 +30,19 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     }
 
     public getStatus(): string {
-        return StatusWriter.get(this.isActive(), this.inFilter.isUnknownSelected(), 'any of', this.selectedLabels, this.inFilter.isOtherSelected() ? 'Other' : undefined);
+        return StatusWriter.get(this.isActive(), this.unknown.isSelected(), 'any of', this.selectedLabels, this.other.isSelected() ? 'Other' : undefined);
     }
 
     public matches(artisan: Artisan): boolean {
-        return this.inFilter.matches(artisan); // && (!this.outFilter.isActive() || !this.outFilter.matches(artisan)); // FIXME
+        if (!this.isActive() || this.unknown.matches(artisan) || this.other.matches(artisan)) {
+            return true;
+        }
+
+        return this.inFilter.matches(artisan) && !this.outFilter.matches(artisan);
+    }
+
+    public isActive(): boolean {
+        return this.unknown.isSelected() || this.other.isSelected() || super.isActive();
     }
 
     public clear(): void {
@@ -36,12 +51,22 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     }
 
     public select(value: string, label: string): void {
-        super.select(value, label);
+        this.unknown.select(value, label, () => {
+            this.other.select(value, label, () => {
+                super.select(value, label);
+            });
+        });
+
         this.recalculateSet();
     }
 
     public deselect(value: string, label: string): void {
-        super.deselect(value, label);
+        this.unknown.deselect(value, label, () => {
+            this.other.deselect(value, label, () => {
+                super.deselect(value, label);
+            });
+        });
+
         this.recalculateSet();
     }
 

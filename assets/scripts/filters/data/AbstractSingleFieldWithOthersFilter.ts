@@ -3,13 +3,11 @@ import Artisan from "../../class/Artisan";
 import OtherValue from "./special/OtherValue";
 
 export default abstract class AbstractSingleFieldWithOthersFilter<T> extends AbstractSingleFieldFilter<T> {
-    private readonly otherFieldName: string;
     private readonly other: OtherValue
 
     protected constructor(fieldName: string) {
         super(fieldName);
-        this.otherFieldName = AbstractSingleFieldWithOthersFilter.getOtherFieldName(fieldName);
-        this.other = new OtherValue(this.otherFieldName);
+        this.other = new OtherValue(fieldName);
     }
 
     public isActive(): boolean {
@@ -49,9 +47,5 @@ export default abstract class AbstractSingleFieldWithOthersFilter<T> extends Abs
 
     protected matchesUnknown(artisan: Artisan): boolean {
         return !this.other.hasOtherValue(artisan) && super.matchesUnknown(artisan);
-    }
-
-    private static getOtherFieldName(fieldName: string) {
-        return 'other' + fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
     }
 }

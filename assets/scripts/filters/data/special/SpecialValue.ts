@@ -4,8 +4,7 @@ import Artisan from "../../../class/Artisan";
 export default abstract class SpecialValue implements SpecialValueInterface {
     protected selected: boolean = false;
 
-    protected constructor(protected readonly value: string,
-                          protected readonly fieldName: string) {
+    protected constructor(protected readonly value: string) {
     }
 
     public select(value: string, label: string, otherwise: () => void): void {
