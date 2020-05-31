@@ -6,10 +6,11 @@ import Specie from "../../class/Specie";
 import AbstractBaseFilter from "./AbstractBaseFilter";
 import StatusWriter from "../StatusWriter";
 import AbstractSingleFieldWithOthersFilter from "./AbstractSingleFieldWithOthersFilter";
+import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private inFilter: AbstractSingleFieldWithOthersFilter<string>;
-    private outFilter: AbstractSingleFieldWithOthersFilter<string>;
+    private outFilter: AbstractSingleFieldFilter<string>;
 
     public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string, private readonly species: Species) {
         super();
@@ -31,11 +32,6 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
 
     public clear(): void {
         super.clear();
-        this.recalculateSet();
-    }
-
-    public setSelected(isSelected: boolean, value: string, label: string): void {
-        super.setSelected(isSelected, value, label);
         this.recalculateSet();
     }
 

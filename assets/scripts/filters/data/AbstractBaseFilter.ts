@@ -6,7 +6,10 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     protected selectedLabels: Set<string> = new Set<string>();
 
     public abstract matches(artisan: Artisan): boolean;
+
     public abstract getStorageName(): string;
+
+    public abstract getStatus(): string;
 
     public clear(): void {
         this.selectedValues.clear();
@@ -36,12 +39,6 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
 
     public isSelected(value: string): boolean {
         return this.selectedValues.has(this.mapValue(value));
-    }
-
-    public abstract getStatus(): string;
-
-    protected isValueUnknown(value: any): boolean {
-        return value === null || value === '' || value instanceof Set && value.size === 0 || value instanceof Array && value.length === 0;
     }
 
     private mapValue(value: string): T {
