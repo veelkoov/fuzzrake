@@ -21,6 +21,8 @@ export default class Artisan {
     readonly completenessComment: string;
     readonly completenessGood: boolean;
 
+    private otherSpeciesDoes: boolean = null;
+
     // noinspection OverlyComplexFunctionJS,JSUnusedGlobalSymbols
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -119,6 +121,10 @@ export default class Artisan {
         }
 
         return '';
+    }
+
+    public setHasOtherSpecies() {
+        this.otherSpeciesDoes = true;
     }
 
     private static makeAllList(list: string[], other: string[]): string[] {
