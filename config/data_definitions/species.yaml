@@ -23,16 +23,16 @@ parameters:
             Bears:
               Giant pandas:
             Ungulates:
-              Rhinos:
               Antelopes:
                 Sable antelope:
               Equines: # Avoid?
                 Horses:
-              Sheeps:
               Bovines:
                 Cows:
               Cervines:
                 Deers:
+              Sheeps:
+              Rhinos:
               Goats:
             Rodents:
               Mice:
@@ -63,10 +63,10 @@ parameters:
 
         "Fantasy creatures":
           Robotic/cybernetic/mechanical:
-            Primagens: # Are they robots?
-              Primagens (on a foam base):
-            Protogens: # Are they robots?
-              Protogens (on a foam base):
+            Primagens:
+              "i_Primagens (on a foam base)":
+            Protogens:
+              "i_Protogens (on a foam base)":
 
           MLP:
           Crux:
@@ -97,8 +97,8 @@ parameters:
           Goats:
 
         Scalies: # Fill
-          Dinosaurs:
           Reptiles:
+          Dinosaurs:
           Dragons:
 
         Aquatic: # Fill
@@ -110,8 +110,8 @@ parameters:
           MLP:
 
         Winged: # Fill
-          Bats:
           Birds:
+          Bats:
           "Dutch Angel Dragons":
           "Angel Dragons":
           Gryphons:
@@ -119,8 +119,8 @@ parameters:
           Pancans:
 
         With beak:
-          Ducks: # Add above
           Birds:
+          Ducks: # Add above
           Pancans: # Add above
 
         "i_Copyright-related classification?": # FIXME
@@ -134,7 +134,7 @@ parameters:
         "All hybrids":
           Hybrids:
             Pancans:
-          "Hybrids of these":
+          "i_Hybrids of these":
 
       "i_To be fixed": # Just to silence the validator, to be fixed/approved later
         'Others':
