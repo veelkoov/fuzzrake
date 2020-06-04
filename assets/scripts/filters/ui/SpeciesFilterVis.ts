@@ -12,7 +12,7 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
         super(idPart, new SpeciesFilter(fieldNameIn, fieldNameOut, species));
 
         this.species = DataBridge.getSpecies();
-        this.markersByDescendantSpecie = this.grabMarkersByDescendantSpecie();
+        this.markersByDescendantSpecie = this.getMarkersByDescendantSpecies();
         this.markers = this.grabMarkers(idPart);
 
         this.$checkboxes.on('change', (event) => {
@@ -49,23 +49,34 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
         return jQuery(`${this.bodySelector} span.descendants-indicator`);
     }
 
-    private grabMarkersByDescendantSpecie(): { [specieName: string]: JQuery<HTMLSpanElement> } {
+    private getMarkersByDescendantSpecies(): { [specieName: string]: JQuery<HTMLSpanElement> } {
         let result = {};
 
-        let markersBySpecie = this.grabMarkersBySpecie();
+        let markersBySpecie = this.getMarkersBySpecie();
+        let checkboxesValues = new Set<string>(this.$checkboxes.map(function (): string {
+            return <string>$(this).val();
+        }).get());
 
-        for (let specie in this.species.flat) {
-            result[specie] = jQuery<HTMLSpanElement>();
+        for (let specieName of checkboxesValues) {
+            result[specieName] = this.getMarkersForDescentantSpecie(specieName, markersBySpecie);
+        }
 
-            for (let ancestor of this.species.flat[specie].getAncestors()) {
-                result[specie] = result[specie].add(markersBySpecie[ancestor.name].toArray());
+        return result;
+    }
+
+    private getMarkersForDescentantSpecie(specie: string, markersBySpecie: { [specieName: string]: JQuery<HTMLSpanElement> }): JQuery<HTMLSpanElement> {
+        let result = jQuery<HTMLSpanElement>();
+
+        if (this.species.flat.hasOwnProperty(specie)) {
+            for (let ancestor in this.species.flat[specie].getAncestors()) {
+                result = result[specie].add(markersBySpecie[ancestor].toArray());
             }
         }
 
         return result;
     }
 
-    private grabMarkersBySpecie(): { [id: string]: JQuery<HTMLSpanElement> } {
+    private getMarkersBySpecie(): { [specieName: string]: JQuery<HTMLSpanElement> } {
         let result = {};
 
         for (let specie in this.species.flat) {
