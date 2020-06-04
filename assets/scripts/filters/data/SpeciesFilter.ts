@@ -15,7 +15,8 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private inFilter: AbstractSingleFieldWithOthersFilter<string>;
     private outFilter: AbstractSingleFieldFilter<string>;
     private unknown: AbstractUnknownValue;
-    private other: OtherValue; // FIXME: Not working!
+    private other: OtherValue;
+    private recalculationRequired = true;
 
     public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string, private readonly species: Species) {
         super();
@@ -34,6 +35,11 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     }
 
     public matches(artisan: Artisan): boolean {
+        if (this.recalculationRequired) {
+            this.recalculateSet();
+            this.recalculationRequired = false;
+        }
+
         if (!this.isActive() || this.unknown.matches(artisan) || this.other.matches(artisan)) {
             return true;
         }
@@ -47,7 +53,8 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
 
     public clear(): void {
         super.clear();
-        this.recalculateSet();
+
+        this.recalculationRequired = true;
     }
 
     public select(value: string, label: string): void {
@@ -57,7 +64,7 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
             });
         });
 
-        this.recalculateSet();
+        this.recalculationRequired = true;
     }
 
     public deselect(value: string, label: string): void {
@@ -67,24 +74,24 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
             });
         });
 
-        this.recalculateSet();
+        this.recalculationRequired = true;
     }
 
     private recalculateSet(): void {
         let calculated: Set<string> = new Set<string>();
 
         for (let selected of this.selectedValues) {
-            this.addSpecieAndSubspeciesNames(this.species.flat[selected], calculated);
+            this.addSpecieAndParentsNames(this.species.flat[selected], calculated);
         }
 
         this.selectInInternalFilters(calculated);
     }
 
-    private addSpecieAndSubspeciesNames(specie: Specie, calculated: Set<string>): void {
+    private addSpecieAndParentsNames(specie: Specie, calculated: Set<string>): void {
         calculated.add(specie.name);
 
-        for (let subspecie of specie.children) {
-            this.addSpecieAndSubspeciesNames(subspecie, calculated);
+        for (let subspecie of specie.parents) {
+            this.addSpecieAndParentsNames(subspecie, calculated);
         }
     }
 
