@@ -1,5 +1,10 @@
 <fieldset class="species">
     <div class="row">
+        <div class="col"> {# TODO: Improve this #}
+            Note: &nbsp; <i class="fas fa-tasks"></i> &nbsp; - means the item has descendants selected
+        </div>
+    </div>
+    <div class="row">
         <div class="col">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" name="species[]" type="checkbox" id="specieCheckBoxUnknown" value="?" data-label="Unknown" />
@@ -13,9 +18,6 @@
                 <label class="form-check-label" for="specieCheckBoxOther">
                     <i class="fas fa-asterisk"></i> Other{# TODO  <span class="count">({{ filters.species.otherCount }})</span>#}
                 </label>
-            </div>
-            <div class="form-check form-check-inline">{# TODO: Improve this #}
-                | Note: &nbsp; <i class="fas fa-tasks"></i> &nbsp; - means the item has descendants selected
             </div>
         </div>
     </div>
