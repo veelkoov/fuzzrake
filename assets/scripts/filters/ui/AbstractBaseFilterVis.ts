@@ -65,6 +65,11 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         return this.filter.isActive();
     }
 
+    protected refreshUi(): void {
+        this.$clearButton.toggle(this.filter.isActive());
+        this.$statusDisplay.text(this.filter.getStatus());
+    }
+
     private setupCheckboxes(): void {
         this.$checkboxes.on('change', (event: Event) => {
             if (event.currentTarget instanceof HTMLInputElement) {
@@ -134,11 +139,6 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
             default:
                 throw new Error();
         }
-    }
-
-    private refreshUi(): void {
-        this.$clearButton.toggle(this.filter.isActive());
-        this.$statusDisplay.text(this.filter.getStatus());
     }
 
     private dataFromModelToUi(): void {
