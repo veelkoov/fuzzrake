@@ -5,7 +5,7 @@ import ClickEvent = JQuery.ClickEvent;
 
 export default abstract class AbstractBaseFilterVis implements FilterVisInterface {
     private readonly idPart: string;
-    private readonly $checkboxes: JQuery<HTMLInputElement>;
+    protected readonly $checkboxes: JQuery<HTMLInputElement>;
     private readonly $clearButton: JQuery<HTMLElement>;
     private readonly $statusDisplay: JQuery<HTMLElement>;
     private readonly filter: FilterInterface;

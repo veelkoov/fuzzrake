@@ -14,6 +14,9 @@
                     <i class="fas fa-asterisk"></i> Other{# TODO  <span class="count">({{ filters.species.otherCount }})</span>#}
                 </label>
             </div>
+            <div class="form-check form-check-inline">{# TODO: Improve this #}
+                | Note: &nbsp; <i class="fas fa-tasks"></i> &nbsp; - means the item has descendants selected
+            </div>
         </div>
     </div>
 
@@ -25,15 +28,18 @@
                 {% for item in species.items %}
                     {% set checkboxId = 'specieCheckBox' ~ counter.next() %}
                     <div class="btn-group specie" role="group">
-                        <button type="button" class="btn btn-outline-secondary">
+                        <span class="btn btn-outline-secondary">
                             <input name="species[]" type="checkbox" id="{{ checkboxId }}" value="{{ item.label }}" data-label="{{ item.label }}" />
-                            <label for="{{ checkboxId }}">{{ item.label }}{# TODO <span class="count">({{ item.count }})</span> #}</label>
-                        </button>
+                            <label for="{{ checkboxId }}">
+                                {{ item.label }}{# TODO <span class="count">({{ item.count }})</span> #}
+                                <span class="descendants-indicator"><i class="fas fa-tasks"></i></span>
+                            </label>
+                        </span>
 
                         {% if item.isComplex() %}
-                            <button type="button" class="btn btn-outline-secondary toggle">
+                            <span class="btn btn-outline-secondary toggle">
                                 <i class="fas fa-caret-right"></i>
-                            </button>
+                            </span>
                         {% endif %}
                     </div>
 
