@@ -64,12 +64,12 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
         return result;
     }
 
-    private getMarkersForDescentantSpecie(specie: string, markersBySpecie: { [specieName: string]: JQuery<HTMLSpanElement> }): JQuery<HTMLSpanElement> {
+    private getMarkersForDescentantSpecie(specieName: string, markersBySpecie: { [specieName: string]: JQuery<HTMLSpanElement> }): JQuery<HTMLSpanElement> {
         let result = jQuery<HTMLSpanElement>();
 
-        if (this.species.flat.hasOwnProperty(specie)) {
-            for (let ancestor in this.species.flat[specie].getAncestors()) {
-                result = result[specie].add(markersBySpecie[ancestor].toArray());
+        if (this.species.flat.hasOwnProperty(specieName)) {
+            for (let ancestor of this.species.flat[specieName].getAncestors()) {
+                result = result.add(markersBySpecie[ancestor.name].toArray());
             }
         }
 
