@@ -53,6 +53,8 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
 
     public clear(): void {
         super.clear();
+        this.other.clear();
+        this.unknown.clear();
 
         this.recalculationRequired = true;
     }
