@@ -289,6 +289,9 @@
             "ref": "01a6e80dad40a4ef42dad65877f744a53a121c38"
         }
     },
+    "symfony/polyfill-php80": {
+        "version": "v1.17.0"
+    },
     "symfony/process": {
         "version": "v5.0.2"
     },
