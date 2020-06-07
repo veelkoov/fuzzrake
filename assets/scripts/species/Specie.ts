@@ -10,7 +10,7 @@ export default class Specie {
     }
 
     public getDescendants(): Set<Specie> {
-        return this.getTree(s => s.parents);
+        return this.getTree(s => s.children);
     }
 
     public getTree(retrievalFunc: (Specie) => Set<Specie>): Set<Specie> {
