@@ -64,6 +64,7 @@ class Fixer
     {
         switch ($field->name()) {
             case Fields::NAME:
+            case Fields::FORMERLY:
             case Fields::CITY:
             case Fields::PAYMENT_PLANS:
             case Fields::NOTES:
