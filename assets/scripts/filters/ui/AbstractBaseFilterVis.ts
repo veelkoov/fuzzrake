@@ -50,11 +50,17 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
 
     public saveChoices(): void {
         try {
-            localStorage[`filters/${this.filter.getStorageName()}/choices`] = this.$checkboxes.filter(':checked')
-                .map((_: number, element: HTMLInputElement): string => element.value).toArray().join('\n');
+            localStorage[`filters/${this.filter.getStorageName()}/choices`] = this.getSelectedChoices().join('\n');
         } catch (e) {
             // Not allowed? - I don't care then
         }
+    }
+
+    private getSelectedChoices(): Array<string> {
+        let nonUnique = this.$checkboxes.filter(':checked')
+            .map((_: number, element: HTMLInputElement): string => element.value).toArray();
+
+        return [...new Set<string>(nonUnique)];
     }
 
     public getFilterId(): string {
