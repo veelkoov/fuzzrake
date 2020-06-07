@@ -4,7 +4,7 @@ import Artisan from "../../../class/Artisan";
 export default abstract class AbstractUnknownValue extends SpecialValue {
     public static readonly VALUE: string = '?';
 
-    public constructor() {
+    protected constructor() {
         super(AbstractUnknownValue.VALUE);
     }
 
