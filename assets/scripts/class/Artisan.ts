@@ -14,14 +14,16 @@ export default class Artisan {
     readonly allOrderTypes: string[];
     readonly features: Set<string>;
     readonly allFeatures: string[];
-    readonly speciesDoes: Set<string>;
-    readonly speciesDoesnt: Set<string>;
     readonly commissionsStatusKnown: boolean;
     readonly commissionsStatusText: string;
     readonly completenessComment: string;
     readonly completenessGood: boolean;
 
-    private otherSpeciesDoes: boolean = null;
+    // noinspection JSMismatchedCollectionQueryUpdate Used by filters; FIXME: Proper accessors
+    private speciesDoesntFilters: Set<string>;
+    // noinspection JSMismatchedCollectionQueryUpdate Used by filters; FIXME: Proper accessors
+    private speciesDoesFilters: Set<string>;
+    private otherSpeciesDoesFilters: boolean = null; // FUsed by filters; FIXME: Proper accessors
 
     // noinspection OverlyComplexFunctionJS,JSUnusedGlobalSymbols
     constructor(readonly makerId: string,
@@ -58,8 +60,8 @@ export default class Artisan {
                 readonly currenciesAccepted: string[],
 
                 readonly speciesComment: string,
-                speciesDoes: string[],
-                speciesDoesnt: string[],
+                readonly speciesDoes: string[],
+                readonly speciesDoesnt: string[],
 
                 readonly fursuitReviewUrl: string,
                 readonly websiteUrl: string,
@@ -103,8 +105,6 @@ export default class Artisan {
         this.allStyles = Artisan.makeAllList(styles, otherStyles);
         this.orderTypes = new Set<string>(orderTypes);
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
-        this.speciesDoes = new Set<string>(speciesDoes);
-        this.speciesDoesnt = new Set<string>(speciesDoesnt);
         this.commissionsStatusKnown = commissionsStatus !== null;
         this.commissionsStatusText = Artisan.getCommissionsStatusText(commissionsStatus);
         this.completenessComment = Artisan.getCompletenessComment(completeness);
@@ -123,8 +123,16 @@ export default class Artisan {
         return '';
     }
 
-    public setHasOtherSpecies() {
-        this.otherSpeciesDoes = true;
+    public setHasOtherSpeciesDoesFilters(): void {
+        this.otherSpeciesDoesFilters = true;
+    }
+
+    public setSpeciesDoesntFilters(speciesDoesntFilters: Set<string>): void {
+        this.speciesDoesntFilters = speciesDoesntFilters;
+    }
+
+    public setSpeciesDoesFilters(speciesDoesFilters: Set<string>): void {
+        this.speciesDoesFilters = speciesDoesFilters;
     }
 
     private static makeAllList(list: string[], other: string[]): string[] {

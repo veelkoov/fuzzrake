@@ -4,6 +4,7 @@ import FilterVisInterface from "../filters/ui/FilterVisInterface";
 import DataBridge from "../class/DataBridge";
 import DataTablesFilterPlugin from "../filters/DataTablesFilterPlugin";
 import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
+import Species from "../species/Species";
 
 let filters: FilterVisInterface[] = [];
 let $filtersShowButton: JQuery<HTMLElement>;
@@ -56,7 +57,7 @@ export function initFilters(): void {
     filters.push(new SetFilterVis<string>('productionModels', 'productionModels', false, false));
     filters.push(new SetFilterVis<string>('languages', 'languages', false, false));
     filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus'));
-    filters.push(new SpeciesFilterVis('species', 'speciesDoes', 'speciesDoesnt', DataBridge.getSpecies()));
+    filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);
     jQuery.fn.dataTable.ext.search.push(filterDtPlugin.getCallback());

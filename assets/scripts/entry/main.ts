@@ -1,4 +1,4 @@
-import Specie from "../class/Specie";
+import Species from "../species/Species";
 
 require('../../styles/main.less');
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
@@ -14,8 +14,8 @@ import {makerIdHashRegexp} from '../consts';
 function init(): void {
     let callbacks: (() => void)[] = [
         loadFuzzrakeData,
-        processSpecies,
     ];
+    callbacks.push(...Species.initWithArtisansUpdate()); // FIXME: Artisans should be completely initialized in one step
     callbacks.push(...UpdateRequestPopUp.init());
     callbacks.push(...AntiScamWarning.init());
     callbacks.push(...DataTable.init());
@@ -40,23 +40,6 @@ function executeOneByOne(callbacks): void {
 function loadFuzzrakeData(): void {
     // @ts-ignore
     window.loadFuzzrakeData();
-}
-
-function processSpecies(): void {
-    for (let artisan of DataBridge.getArtisans()) {
-        processSpeciesForArtisan(artisan);
-    }
-}
-
-function processSpeciesForArtisan(artisan: Artisan): void {
-    let species: { [specieName: string]: Specie } = DataBridge.getSpecies().flat;
-
-    for (let specie of artisan.speciesDoes) {
-        if (!species.hasOwnProperty(specie)) {
-            artisan.setHasOtherSpecies();
-            break;
-        }
-    }
 }
 
 function finalizeInit(): void {

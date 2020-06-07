@@ -1,8 +1,6 @@
 import Artisan from "../../class/Artisan";
 import AnyOrOtherSetFilter from "./AnyOrOtherSetFilter";
 import AllOrOtherSetFilter from "./AllOrOtherSetFilter";
-import Species from "../../class/Species";
-import Specie from "../../class/Specie";
 import AbstractBaseFilter from "./AbstractBaseFilter";
 import StatusWriter from "../StatusWriter";
 import AbstractSingleFieldWithOthersFilter from "./AbstractSingleFieldWithOthersFilter";
@@ -10,6 +8,8 @@ import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 import AbstractUnknownValue from "./special/AbstractUnknownValue";
 import OtherValue from "./special/OtherValue";
 import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
+import Specie from "../../species/Specie";
+import Species from "../../species/Species";
 
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private inFilter: AbstractSingleFieldWithOthersFilter<string>;

@@ -1,17 +1,14 @@
 import AbstractBaseFilterVis from "./AbstractBaseFilterVis";
 import SpeciesFilter from "../data/SpeciesFilter";
-import Species from "../../class/Species";
-import DataBridge from "../../class/DataBridge";
+import Species from "../../species/Species";
 
 export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private readonly markersByDescendantSpecie: { [specieName: string]: JQuery<HTMLSpanElement> };
     private readonly markers: JQuery<HTMLSpanElement>;
-    private readonly species: Species;
 
-    public constructor(idPart: string, fieldNameIn: string, fieldNameOut: string, species: Species) {
+    public constructor(idPart: string, fieldNameIn: string, fieldNameOut: string, private readonly species: Species) {
         super(idPart, new SpeciesFilter(fieldNameIn, fieldNameOut, species));
 
-        this.species = DataBridge.getSpecies();
         this.markersByDescendantSpecie = this.getMarkersByDescendantSpecies();
         this.markers = this.grabMarkers(idPart);
 
