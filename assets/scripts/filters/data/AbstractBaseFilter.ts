@@ -13,6 +13,7 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
 
     public clear(): void {
         this.selectedValues.clear();
+        this.selectedLabels.clear();
     }
 
     public isActive(): boolean {
