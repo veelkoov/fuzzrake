@@ -1,7 +1,7 @@
 parameters:
   species_definitions:
     valid_choices:
-      "Most species":
+      "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
         "Real life animals":
           Mammals:
             Canines:

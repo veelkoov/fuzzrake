@@ -19,11 +19,9 @@ export default class Artisan {
     readonly completenessComment: string;
     readonly completenessGood: boolean;
 
-    // noinspection JSMismatchedCollectionQueryUpdate Used by filters; FIXME: Proper accessors
     private speciesDoesntFilters: Set<string>;
-    // noinspection JSMismatchedCollectionQueryUpdate Used by filters; FIXME: Proper accessors
     private speciesDoesFilters: Set<string>;
-    private otherSpeciesDoesFilters: boolean = null; // FUsed by filters; FIXME: Proper accessors
+    private otherSpeciesDoesFilters: boolean = null; // Used by filters; FIXME: Proper accessors
 
     // noinspection OverlyComplexFunctionJS,JSUnusedGlobalSymbols
     constructor(readonly makerId: string,
@@ -133,6 +131,14 @@ export default class Artisan {
 
     public setSpeciesDoesFilters(speciesDoesFilters: Set<string>): void {
         this.speciesDoesFilters = speciesDoesFilters;
+    }
+
+    public getSpeciesDoesntFilters(): Set<string> {
+        return this.speciesDoesntFilters;
+    }
+
+    public getSpeciesDoesFilters(): Set<string> {
+        return this.speciesDoesFilters;
     }
 
     private static makeAllList(list: string[], other: string[]): string[] {
