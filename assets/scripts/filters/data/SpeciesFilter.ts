@@ -10,6 +10,7 @@ import OtherValue from "./special/OtherValue";
 import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
 import Specie from "../../species/Specie";
 import Species from "../../species/Species";
+import FilterInterface from "./FilterInterface";
 
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private inFilter: AbstractSingleFieldWithOthersFilter<string>;
@@ -80,30 +81,20 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     }
 
     private recalculateSet(): void {
-        let calculated: Set<string> = new Set<string>();
-
-        for (let selected of this.selectedValues) {
-            this.addSpecieAndParentsNames(this.species.flat[selected], calculated);
-        }
-
-        this.selectInInternalFilters(calculated);
-    }
-
-    private addSpecieAndParentsNames(specie: Specie, calculated: Set<string>): void {
-        calculated.add(specie.name);
-
-        for (let subspecie of specie.parents) {
-            this.addSpecieAndParentsNames(subspecie, calculated);
-        }
-    }
-
-    private selectInInternalFilters(calculated: Set<string>): void {
         this.inFilter.clear();
         this.outFilter.clear();
 
-        for (let specie of calculated) {
-            this.inFilter.select(specie, '');
-            this.outFilter.select(specie, '');
+        for (let selected of this.selectedValues) {
+            this.selectSpecieAndAncestors(this.species.flat[selected], this.inFilter);
+            this.outFilter.select(selected, '');
+        }
+    }
+
+    private selectSpecieAndAncestors(specie: Specie, filter: FilterInterface): void {
+        filter.select(specie.name, '');
+
+        for (let subspecie of specie.parents) {
+            this.selectSpecieAndAncestors(subspecie, filter);
         }
     }
 }
