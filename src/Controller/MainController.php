@@ -22,6 +22,7 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="main")
      * @Route("/index.html")
+     * @Cache(public=true)
      *
      * @throws UnexpectedResultException|DateTimeException
      */
