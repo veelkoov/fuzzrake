@@ -3,7 +3,15 @@ parameters:
     valid_choices:
       "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
         "Real life animals":
+          Birds:
+            Ducks:
+
+          Fishes:
+            Sharks:
+
           Mammals:
+            Bears:
+              Giant pandas:
             Canines:
               Lupines:
                 Wolves:
@@ -12,51 +20,45 @@ parameters:
                   Fennecs:
               Dogs:
             Felines:
+              "Big cats":
+                Caracals:
+                Lions:
+                Lynxes:
+                Snow leopards:
+                Tigers:
               "Small cats":
                 "Domestic cats":
-              "Big cats":
-                Lions:
-                Snow leopards:
-                Lynxes:
-                Caracals:
-                Tigers:
-            Bears:
-              Giant pandas:
+            Mustelids:
+              Ferrets:
+              Otters:
+            Rodents:
+              Mice:
+              Rats:
             Ungulates:
               Antelopes:
                 Sable antelope:
-              Equines: # Avoid?
-                Horses:
               Bovines:
                 Cows:
               Cervines:
                 Deers:
-              Sheeps:
-              Rhinos:
+              Equines: # Avoid?
+                Horses:
               Goats:
-            Rodents:
-              Mice:
-              Rats:
-            Mustelids:
-              Otters:
-              Ferrets:
-            Rabbits:
-            Hyenas:
+              Rhinos:
+              Sheeps:
             Bats:
-            Kangaroos:
-            Opossums:
             Elephants:
+            Hyenas:
+            Kangaroos:
             Monkeys:
-            Red pandas:
+            Opossums:
             Pinnipeds:
+            Rabbits:
             Raccoons:
+            Red pandas:
 
-          Birds:
-            Ducks:
           Reptiles:
             Lizards:
-          Fishes:
-            Sharks:
 
           Amphibians:
           Insects:
@@ -68,59 +70,61 @@ parameters:
             Protogens:
               "i_Protogens (on a foam base)":
 
-          MLP:
+          "Angel Dragons":
           Crux:
-          "Skull animals":
-          "Ghost Bones Dragon":
-          Manokits:
+          Digimons:
+          Dragons:
+          Drekkubuses:
           Dutchies:
           "Dutch Angel Dragons":
-          "Angel Dragons":
+          "Ghost Bones Dragon":
           Gryphons:
-          Sergals:
+          Lloteer: # WAT
+          Manokits:
+          MLP:
+          Monsters:
           Pancans:
-          Dragons:
-
-
+          Pokemons:
+          Sergals:
+          "Skull animals":
+          Sparkledogs:
           "TV heads":
           Wickerbeasts:
-          Drekkubuses:
-          Pokemons:
-          Digimons:
-          Sparkledogs:
-          Monsters:
-          Lloteer: # WAT
 
-        With antlers: # Fill
-          Antelopes:
-          Cervines:
-          Goats:
-
-        Scalies: # Fill
-          Reptiles:
-          Dinosaurs:
-          Dragons:
+        "All hybrids":
+          Hybrids:
+            Pancans:
+          "i_Hybrids of these":
 
         Aquatic: # Fill
           Fishes:
           Otters:
 
         Hooved: # Fill
-          Ungulates:
           MLP:
+          Ungulates:
+
+        Scalies: # Fill
+          Dinosaurs:
+          Dragons:
+          Reptiles:
 
         Winged: # Fill
-          Birds:
-          Bats:
-          "Dutch Angel Dragons":
           "Angel Dragons":
-          Gryphons:
+          Bats:
+          Birds:
           Dragons:
+          "Dutch Angel Dragons":
+          Gryphons:
           Pancans:
+
+        With antlers: # Fill
+          Antelopes:
+          Cervines:
+          Goats:
 
         With beak:
           Birds:
-          Ducks: # Add above
           Pancans: # Add above
 
         "i_Copyright-related classification?": # FIXME
@@ -130,11 +134,6 @@ parameters:
           "Open species":
           "Self-made species":
           "Original species":
-
-        "All hybrids":
-          Hybrids:
-            Pancans:
-          "i_Hybrids of these":
 
       "i_To be fixed": # Just to silence the validator, to be fixed/approved later
         'Others':
