@@ -8,6 +8,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Regexp\RegexpMatchException;
+use App\Utils\StrUtils;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
@@ -58,14 +59,14 @@ class DataSetScritchMiniaturesCommand extends Command
         $csrfToken = $this->cookieJar->get('csrf-token')->getValue();
 
         foreach ($this->artisanRepository->getAll() as $artisan) {
-            $pictureUrls = explode("\n", $artisan->getScritchPhotoUrls());
+            $pictureUrls = array_filter(explode("\n", $artisan->getScritchPhotoUrls()));
 
             if (empty($pictureUrls)) {
                 $artisan->setScritchMiniatureUrls('');
                 continue;
             }
 
-            if (count($pictureUrls) === count(explode("\n", $artisan->getScritchMiniatureUrls()))) {
+            if (count($pictureUrls) === count(array_filter(explode("\n", $artisan->getScritchMiniatureUrls())))) {
                 continue;
             }
 
@@ -77,6 +78,7 @@ class DataSetScritchMiniaturesCommand extends Command
             }
 
             $artisan->setScritchMiniatureUrls(implode("\n", $miniatureUrls));
+            $io->writeln('Retrieved miniatures for '.StrUtils::artisanNamesSafeForCli($artisan));
         }
 
         if ($input->getOption('commit')) {
