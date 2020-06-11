@@ -19,6 +19,10 @@ export default class Artisan {
     readonly completenessComment: string;
     readonly completenessGood: boolean;
 
+    private speciesDoesntFilters: Set<string>;
+    private speciesDoesFilters: Set<string>;
+    private otherSpeciesDoesFilters: boolean = null; // Used by filters; FIXME: Proper accessors
+
     // noinspection OverlyComplexFunctionJS,JSUnusedGlobalSymbols
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -115,6 +119,26 @@ export default class Artisan {
         }
 
         return '';
+    }
+
+    public setHasOtherSpeciesDoesFilters(): void {
+        this.otherSpeciesDoesFilters = true;
+    }
+
+    public setSpeciesDoesntFilters(speciesDoesntFilters: Set<string>): void {
+        this.speciesDoesntFilters = speciesDoesntFilters;
+    }
+
+    public setSpeciesDoesFilters(speciesDoesFilters: Set<string>): void {
+        this.speciesDoesFilters = speciesDoesFilters;
+    }
+
+    public getSpeciesDoesntFilters(): Set<string> {
+        return this.speciesDoesntFilters;
+    }
+
+    public getSpeciesDoesFilters(): Set<string> {
+        return this.speciesDoesFilters;
     }
 
     private static makeAllList(list: string[], other: string[]): string[] {

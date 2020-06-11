@@ -53,6 +53,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
             new TwigFunction('isDevMachine', [$this, 'isDevMachineFunction']),
             new TwigFunction('isProduction', [$this, 'isProductionFunction']),
+            new TwigFunction('getCounter', [$this, 'getCounterFunction']),
         ];
     }
 
@@ -69,6 +70,11 @@ class AppExtensions extends AbstractExtension
     public function getLastDataUpdateTimeUtcStrFunction(): string
     {
         return $this->acsRepository->getLastCstUpdateTimeAsString();
+    }
+
+    public function getCounterFunction(): Counter
+    {
+        return new Counter();
     }
 
     public function getLastSystemUpdateTimeUtcStrFunction(): string

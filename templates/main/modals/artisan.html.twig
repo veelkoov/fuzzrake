@@ -57,14 +57,14 @@
     <div class="col-sm-6 p-1">
         <h5>Species</h5>
         <div class="small" id="artisanSpecies">
-            {{# if artisan.speciesDoes }}
+            {{# if (has artisan.speciesDoes) }}
                 <strong>Does</strong>: {{ commaSeparated artisan.speciesDoes }}
-                {{# if artisan.speciesDoesnt }}<br />{{/ if }}
+                {{# if (has artisan.speciesDoesnt) }}<br />{{/ if }}
             {{/ if }}
-            {{# if artisan.speciesDoesnt }}
+            {{# if (has artisan.speciesDoesnt) }}
                 <strong>Doesn't</strong>: {{ commaSeparated artisan.speciesDoesnt }}
             {{ else }}
-                {{# unless artisan.speciesDoes }}
+                {{# unless (has artisan.speciesDoes) }}
                     <i class="fas fa-question-circle" title="Unknown"></i>
                 {{/ unless }}
             {{/ if }}

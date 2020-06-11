@@ -3,21 +3,41 @@ img[src="FurAffinity.svg"] {
 }
 
 #filters-parents {
-  fieldset {
-    font-size: 110%;
+  .species {
+    .specie {
+      margin: 0.5ex 0.5ex 0 0;
+
+      label {
+        margin: 0 0 0 1ex;
+      }
+
+      button.toggle {
+        padding-left: 2ex;
+        padding-right: 2ex;
+      }
+    }
+
+    .subspecies {
+      margin-left: 1.5em;
+      display: none;
+    }
+
+    .descendants-indicator {
+      display: none;
+    }
   }
 
   .allNoneInvert {
-    padding-left: 1em;
     font-size: 90%;
     font-weight: normal;
     color: #aaa;
   }
 
-  .allNoneInvertSingle {
-    font-size: 90%;
-    font-weight: normal;
-    color: #aaa;
+  .allNoneInvertCountries {
+    padding-left: 1em;
+  }
+
+  .allNoneInvertSimple {
     float: right;
   }
 

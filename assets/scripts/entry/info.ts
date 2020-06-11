@@ -5,7 +5,7 @@ import jqXHR = JQuery.jqXHR;
 grecaptcha.ready((): void => {
     grecaptcha.execute(DataBridge.getGoogleRecaptchaSiteKey(), { action: 'info_emailHtml' }).then((token: string): void => {
         jQuery.ajax(DataBridge.getApiUrl('info/email.part.html?token=' + token), {
-            success: (data: any, status: SuccessTextStatus, jqXHR: jqXHR): void => {
+            success: (data: any, status: SuccessTextStatus, _: jqXHR): void => {
                 jQuery('#protected-contact-info').html(data);
             },
         });

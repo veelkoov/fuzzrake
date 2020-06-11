@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Data\Definitions\Species;
+use App\Utils\Species\Species;
 
 class SpeciesListFixer extends AbstractListFixer
 {

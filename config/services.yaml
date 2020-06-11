@@ -27,6 +27,7 @@ services:
             $lists:                '%lists%'
             $projectDir:           '%kernel.project_dir%'
             $snapshotCacheDirPath: '%kernel.project_dir%/var/snapshots'
+            $speciesDefinitions:   '%species_definitions%'
             $states:               '%states%'
             $strings:              '%strings%'
             $urls:                 '%urls%'

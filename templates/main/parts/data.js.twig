@@ -1,10 +1,11 @@
 var ARTISANS = null;
 var MAKER_IDS_MAP = null;
+var SPECIES = null;
 
 window.loadFuzzrakeData = function () {
     ARTISANS = [
         {% for artisan in artisans %}
-        new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
+            new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
         {% endfor %}
     ];
 
@@ -12,6 +13,18 @@ window.loadFuzzrakeData = function () {
         {% for old, new in makerIdsMap %}
             '{{ old }}': '{{ new }}',
         {% endfor %}
+    };
+
+    SPECIES = {
+        {% macro species_json(species) %}
+            {% for specie in species %}
+                '{{ specie.name }}': {
+                    {{ _self.species_json(specie.children) }}
+                }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        {% endmacro %}
+
+        {{ _self.species_json(species) }}
     };
 }
 

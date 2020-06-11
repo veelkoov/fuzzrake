@@ -1,3 +1,5 @@
+import Species from "../species/Species";
+
 require('../../styles/main.less');
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
@@ -13,6 +15,7 @@ function init(): void {
     let callbacks: (() => void)[] = [
         loadFuzzrakeData,
     ];
+    callbacks.push(...Species.initWithArtisansUpdate()); // FIXME: Artisans should be completely initialized in one step
     callbacks.push(...UpdateRequestPopUp.init());
     callbacks.push(...AntiScamWarning.init());
     callbacks.push(...DataTable.init());

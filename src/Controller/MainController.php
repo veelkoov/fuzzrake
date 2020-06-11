@@ -9,6 +9,7 @@ use App\Service\FilterService;
 use App\Service\IuFormService;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\Species\Species;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,7 @@ class MainController extends AbstractController
      *
      * @throws UnexpectedResultException|DateTimeException
      */
-    public function main(Request $request, ArtisanRepository $artisanRepository, FilterService $filterService): Response
+    public function main(Request $request, ArtisanRepository $artisanRepository, FilterService $filterService, Species $species): Response
     {
         if ('hexometer' === $request->get('ref')) {
             return new Response('*Notices your scan* OwO what\'s this?', Response::HTTP_MISDIRECTED_REQUEST,
@@ -40,6 +41,7 @@ class MainController extends AbstractController
             'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
             'filters'             => $filterService->getFiltersTplData(),
+            'species'             => $species->getSpeciesTree(),
         ]);
 
         self::setExpires($response);

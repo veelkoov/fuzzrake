@@ -23,6 +23,7 @@
         "symfony/framework-bundle": "*",
         "symfony/mime": "*",
         "symfony/monolog-bundle": "^3.5",
+        "symfony/process": "5.0.*",
         "symfony/security-csrf": "*",
         "symfony/twig-pack": "^1.0",
         "symfony/validator": "*",
