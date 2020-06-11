@@ -10,7 +10,7 @@ use TRegx\CleanRegex\Match\Details\Match;
 class Species
 {
     private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
-    private const FLAG_IGNORE_THIS_FLAG = 'i';
+    private const FLAG_IGNORE_THIS_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
     /**
      * @return string[]
@@ -118,11 +118,9 @@ class Species
         $result = [];
 
         foreach ($species as $specie => $subspecies) {
-            list($flags, $specie) = $this->splitSpecieFlagsName($specie);
+            list(, $specie) = $this->splitSpecieFlagsName($specie);
 
-            if (!$this->flagged($flags, self::FLAG_IGNORE_THIS_FLAG)) {
-                $result[] = $specie;
-            }
+            $result[] = $specie;
 
             if (is_array($subspecies)) {
                 $result = array_merge($result, $this->gatherValidChoices($subspecies));
