@@ -2742,6 +2742,8 @@ INSERT INTO events VALUES (1974, 1, NULL, '2020-06-08 06:05:11', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1975, NULL, 0, '2020-06-08 06:05:13', 'CS_UPDTD_DETLS', 'Kloofsuits', 'https://www.kloofsuits.co.uk/home', '', '["ridcontainer\" ><div data-vertical-text=\"false\" class=\"txtnew\" id=\"comp-jfryh3va\"><h1 class=\"font_0\">","commissions are currently closed","</h1> <h1 class=\"font_0\">estimated opening date 2020 (tbc)</h1></div><div class=\"style-k0vdez24\" id="]', '');
 INSERT INTO events VALUES (1976, NULL, 1, '2020-06-08 18:04:54', 'CS_UPDTD_DETLS', 'Furry Tailor', 'https://www.furrytailor.co.uk/slots', '["gridcontainer\" ><div data-vertical-text=\"false\" class=\"txtnew\" id=\"comp-k891dscq\"><h2 class=\"font_2\"",">slots currently - open","!</h2> <h2 class=\"font_2\">​</h2> <p class=\"font_8\">​quick turnaround slots for parts and plushies us"]', '', '');
 INSERT INTO events VALUES (1977, 1, 0, '2020-06-10 06:04:55', 'CS_UPDTD_DETLS', 'Skylight Suits', 'http://skylightsuits.com/', '', '["/ul> </div> </nav> <h1>STUDIO_NAME</h1> <hr></hr> <div class = \"container\"> <div class = \"row\"> <h2>","commission status: closed","! (but open for quotes!)</h2> </div> <div class = \"row\"> <div class = \"col-lg-6 col-md-6 col-sm-12 c"]', '');
+INSERT INTO events VALUES (1978, NULL, NULL, '2020-06-11 16:53:00', 'GENERIC', '', '', '', '', replace (replace ('- getfursu.it will now remember chosen columns visibility on same browser&amp;device<br />\r\n- Filtering by species is now available. The functionality is limited; consider checking results with "Unknown" and/or "Other" selected (<a href="https://github.com/veelkoov/fuzzrake/pull/15/files" target="_blank">git</a>)', '\r', char (13)), '\n', char (10)));
+INSERT INTO events VALUES (1979, 1, NULL, '2020-06-14 18:04:39', 'CS_UPDTD_DETLS', 'Silvena Handmade', 'http://silvenahandmade.com/', '', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -3139,7 +3141,7 @@ INSERT INTO artisans VALUES (387, 'JAWNPAW', '', 'JawsandPaws_UK', '', 'Hello I'
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 343);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9354);
-INSERT INTO sqlite_sequence VALUES ('events', 1977);
+INSERT INTO sqlite_sequence VALUES ('events', 1979);
 INSERT INTO sqlite_sequence VALUES ('artisans', 387);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
