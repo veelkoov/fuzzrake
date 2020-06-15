@@ -60,5 +60,9 @@ services:
         arguments:
             - "@doctrine.orm.default_result_cache"
 
-    App\Utils\Data\Definitions\Species:
-        arguments: [ '%species_definitions%' ]
+    App\Doctrine\Listeners\ArtisanUrlListener:
+        tags:
+            - name: 'doctrine.orm.entity_listener'
+              event: 'preUpdate'
+              entity: 'App\Entity\ArtisanUrl'
+              lazy: true

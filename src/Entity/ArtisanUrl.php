@@ -107,24 +107,24 @@ class ArtisanUrl implements Fetchable
         return $this;
     }
 
-    public function getLastSuccess(): ?DateTime
+    public function getLastSuccess(): ?DateTimeInterface
     {
         return $this->lastSuccess;
     }
 
-    public function setLastSuccess(DateTime $lastSuccess): self
+    public function setLastSuccess(?DateTime $lastSuccess): self
     {
         $this->lastSuccess = $lastSuccess;
 
         return $this;
     }
 
-    public function getLastFailure(): ?DateTime
+    public function getLastFailure(): ?DateTimeInterface
     {
         return $this->lastFailure;
     }
 
-    public function setLastFailure(DateTime $lastFailure): self
+    public function setLastFailure(?DateTimeInterface $lastFailure): self
     {
         $this->lastFailure = $lastFailure;
 
