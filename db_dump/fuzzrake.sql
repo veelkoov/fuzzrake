@@ -2746,6 +2746,8 @@ INSERT INTO events VALUES (1981, NULL, 0, '2020-06-15 18:04:50', 'CS_UPDTD_DETLS
 INSERT INTO events VALUES (1982, NULL, 0, '2020-06-15 18:04:51', 'CS_UPDTD_DETLS', 'Schneepardi Creations', 'https://www.schneepardicreations.com/en/', '', '["e\" content=\"STUDIO_NAME - fursuits made in germany\"/> <meta property=\"og:description\" content=\"news ","we are currently closed for new orders",". we will accept new orders as soon as all orders for the year 2020 have been finished. we cannot pr"]', '');
 INSERT INTO events VALUES (1983, 1, 0, '2020-06-15 18:04:51', 'CS_UPDTD_DETLS', 'Tiny Dream Creations', 'https://tinydreamcreations.wixsite.com/tinydreamcreations', '', '["v data-vertical-text=\"false\" class=\"txtnew\" id=\"comp-k2z58pkx2\"><h2 class=\"font_4\">commissions:</h2>"," <h2 class=\"font_4\">closed</h2>","</div></div></div></div></div></div></div></div></section><div class=\"style-k6y4eqrk\" id=\"comp-k6y4e"]', '');
 INSERT INTO events VALUES (1984, 0, 1, '2020-06-16 06:04:45', 'CS_UPDTD_DETLS', 'Bird King Creations', 'http://www.birdkingcreations.com/', '["AME\" /> <meta property=\"og:title\" content=\"STUDIO_NAME\" /> <meta property=\"og:description\" content=\"","commission status: open"," check prices page for quote form if interested ​ STUDIO_NAME is a toony fursuit maker located in ci"]', '', '');
+INSERT INTO events VALUES (1985, 0, NULL, '2020-06-18 06:04:41', 'CS_UPDTD_DETLS', 'Streifensuits', 'https://twitter.com/StreifenSuits', '', '', '');
+INSERT INTO events VALUES (1986, 1, NULL, '2020-06-18 18:04:44', 'CS_UPDTD_DETLS', 'Furry Tailor', 'https://www.furrytailor.co.uk/slots', '', '', '');
 CREATE TABLE IF NOT EXISTS "artisans" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	"maker_id"	VARCHAR (16) NOT NULL, 
@@ -3143,7 +3145,7 @@ INSERT INTO artisans VALUES (387, 'JAWNPAW', '', 'JawsandPaws_UK', '', 'Hello I'
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES ('artisans_commissions_statues', 343);
 INSERT INTO sqlite_sequence VALUES ('artisans_urls', 9356);
-INSERT INTO sqlite_sequence VALUES ('events', 1984);
+INSERT INTO sqlite_sequence VALUES ('events', 1986);
 INSERT INTO sqlite_sequence VALUES ('artisans', 387);
 CREATE UNIQUE INDEX UNIQ_4148D9A35ED3C7B7 ON artisans_commissions_statues (artisan_id);
 CREATE INDEX IDX_45AAF3BC5ED3C7B7 ON artisans_urls (artisan_id);
