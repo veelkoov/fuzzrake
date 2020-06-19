@@ -55,6 +55,7 @@ class EventRepository extends ServiceEntityRepository
 
     /**
      * @return Event[]
+     *
      * @throws DateTimeException
      */
     public function getRecent(): array

@@ -18,6 +18,7 @@ class EventsController extends AbstractController
      * @Cache(maxage=3600, public=true)
      *
      * @return Response
+     *
      * @throws DateTimeException
      */
     public function events(EventRepository $eventRepository)

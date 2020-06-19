@@ -82,6 +82,7 @@ class MainController extends AbstractController
         foreach ($nextExpiresCandidates as $nextExpires) {
             if ($nextExpires > $now) {
                 $response->setExpires($nextExpires);
+
                 return;
             }
         }
