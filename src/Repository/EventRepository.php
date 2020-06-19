@@ -6,6 +6,8 @@ namespace App\Repository;
 
 use App\Doctrine\Hydrators\ColumnHydrator;
 use App\Entity\Event;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Andx;
@@ -53,11 +55,14 @@ class EventRepository extends ServiceEntityRepository
 
     /**
      * @return Event[]
+     * @throws DateTimeException
      */
-    public function getAll(): array
+    public function getRecent(): array
     {
         return $this->createQueryBuilder('e')
+            ->where('e.timestamp >= :oldest')
             ->orderBy('e.timestamp', 'DESC')
+            ->setParameter('oldest', DateTimeUtils::getUtcAt('-31 days'))
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();

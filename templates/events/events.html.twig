@@ -23,8 +23,8 @@
             {% set time_changed = last_timestamp is null or last_timestamp|date('Y-m-d H:i') != event.timestamp|date('Y-m-d H:i') %}
             {% set last_timestamp = event.timestamp %}
 
-            <li class="events-item row {% if day_changed %}separator-day{% endif %} {% if time_changed %}separator-time{% endif %}" id="event{{ event.id }}">
-                <div class="col-sm-2 text-right small">
+            <li class="events-item row" id="event{{ event.id }}">
+                <div class="col-sm-2 pb-1 text-right small {% if day_changed %}border-top{% endif %}">
                     <a href="#event{{ event.id }}">
                         {% if day_changed %} {{ event.timestamp|date('jS M Y') }}, {% endif %}
                         {% if time_changed %} {{ event.timestamp|date('H:i') }} {% endif %}
@@ -32,18 +32,14 @@
                 </div>
 
                 <div class="col-sm-10">
-                    <p class="m-0">
+                    <p>
                         {% if event.lostTrack %}
 
-                            Failed to interpret commission status based on the contents of:
-                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
                             <b>{{ event.artisanName }}</b> commissions status is now
                             <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
                         {% elseif event.changedStatus %}
 
-                            Based on the contents of
-                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>,
                             <b>{{ event.artisanName }}</b> commissions status is now
                             <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
 
@@ -58,14 +54,26 @@
                         {% endif %}
 
                         {% if event.details %}
-                            <a href="#" class="toggle-details">Toggle details</a>
+                            <a href="#" class="toggle-details btn btn-sm btn-outline-secondary">Toggle details</a>
                         {% endif %}
                     </p>
 
                     {% if event.details %}
                         <div class="event-details pl-4">
+                            {% if event.lostTrack %}
+                                <p>
+                                    Failed to interpret commission status based on the contents of
+                                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                                </p>
+                            {% elseif event.changedStatus %}
+                                <p>
+                                    The status is based on the contents of
+                                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                                </p>
+                            {% endif %}
+
                             {% if not event.closedMatch.empty %}
-                                <blockquote class="blockquote m-1">
+                                <blockquote class="blockquote">
                                     <strong>Closed match:</strong>
                                     {% apply spaceless %}
                                         <span class="text-secondary">{{ event.closedMatch.before }}</span>
@@ -76,7 +84,7 @@
                             {% endif %}
 
                             {% if not event.openMatch.empty %}
-                                <blockquote class="blockquote m-1">
+                                <blockquote class="blockquote">
                                     <strong>Open match:</strong>
                                     {% apply spaceless %}
                                         <span class="text-secondary">{{ event.openMatch.before }}</span>
