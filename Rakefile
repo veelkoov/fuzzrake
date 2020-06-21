@@ -11,8 +11,10 @@ DB_DUMP_TMP_PATH = DB_DUMP_DIR_PATH + '/fuzzrake.tmp.sql'
 DB_DUMP_PRV_COPY_PATH = DB_DUMP_DIR_PATH + '/artisans_private_data-' \
                       + Time.now.getutc.strftime('%Y-%m-%d_%H-%M-%S') + '.sql'
 
-IGNORED_TABLES = [
-  'artisans_commissions_statues' # Volatile information, easily reproducible
+# Volatile information, easily reproducible
+IGNORED_TABLES = %w[
+  artisans_commissions_statues
+  artisans_urls_states
 ].freeze
 
 #
