@@ -24,7 +24,6 @@ def exec_or_die(*args)
 end
 
 def docker(*args)
-  # FIXME: container name hardcoded
   exec_or_die('docker', 'exec', '-ti', 'fuzzrake', *args)
 end
 
