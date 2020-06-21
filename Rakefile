@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-IMPORT_FILE_PATH = 'imports/IU form v5 - getfursu.it.csv.zip'
+IMPORT_FILE_PATH = 'imports/iu_form_current.csv.zip'
 FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
 
 DB_PATH = 'var/db.sqlite'
