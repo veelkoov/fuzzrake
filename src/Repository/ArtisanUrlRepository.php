@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\ArtisanUrl;
+use App\Entity\ArtisanUrlState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
@@ -32,6 +33,8 @@ class ArtisanUrlRepository extends ServiceEntityRepository
     {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(ArtisanUrl::class, 'u');
+        $rsm->addJoinedEntityFromClassMetadata(ArtisanUrlState::class, 'us', 'u',
+            'state', ['id' => 's_id']);
 
         $whereClause = empty($excludedTypes) ? '' :
             'WHERE u.type NOT IN ('.implode(',', array_map(function (string $item): string {
@@ -42,10 +45,11 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->createNativeQuery("
                     SELECT {$rsm->generateSelectClause()}
                     FROM artisans_urls AS u
+                    LEFT JOIN artisans_urls_states AS us ON us.artisan_url_id = u.id
                     $whereClause
                     ORDER BY MAX(
-                        COALESCE(last_failure, '2020-01-01 00:00:00'),
-                        COALESCE(last_success, '2020-01-01 00:00:00')
+                        COALESCE(us.last_failure, '2020-01-01 00:00:00'),
+                        COALESCE(us.last_success, '2020-01-01 00:00:00')
                     ) ASC
                     LIMIT {$limit}
                 ", $rsm)
@@ -58,11 +62,13 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->join('u.artisan', 'a')
             ->join('a.commissionsStatus', 'acs')
             ->join('a.privateData', 'apd')
+            ->leftJoin('u.state', 'us')
             ->addSelect('a')
             ->addSelect('acs')
             ->addSelect('apd')
-            ->orderBy('u.lastSuccess', 'ASC')
-            ->addOrderBy('u.lastFailure', 'ASC');
+            ->addSelect('us')
+            ->orderBy('us.lastSuccess', 'ASC')
+            ->addOrderBy('us.lastFailure', 'ASC');
 
         if (!empty($excludedTypes)) {
             $builder

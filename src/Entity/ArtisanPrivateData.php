@@ -20,28 +20,28 @@ class ArtisanPrivateData
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private $artisan;
+    private ?Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    private $contactAddress = '';
+    private string $contactAddress = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $passcode = '';
+    private string $passcode = '';
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    private $originalContactInfo = '';
+    private string $originalContactInfo = '';
 
     public function getId(): ?int
     {
