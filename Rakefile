@@ -6,10 +6,13 @@ FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
 DB_PATH = 'var/db.sqlite'
 DB_TMP_PATH = DB_PATH + '.tmp'
 
-DB_DUMP_TMP_PATH = 'db_dump/fuzzrake.tmp.sql'
-DB_DUMP_PATH = 'db_dump/fuzzrake.sql'
-DB_DUMP_PRV_PATH = 'db_dump/fuzzrake-private.nocommit.sql'
-DB_DUMP_PRV_COPY_PATH = 'db_dump/fuzzrake-private-' + Time.now.getutc.strftime('%Y-%m-%d_%H-%M-%S') + '.nocommit.sql'
+DB_DUMP_DIR_PATH = 'db_dump'
+DB_DUMP_TMP_PATH = DB_DUMP_DIR_PATH + '/fuzzrake.tmp.sql'
+DB_DUMP_PRV_COPY_PATH = DB_DUMP_DIR_PATH + '/artisans_private_data-' + Time.now.getutc.strftime('%Y-%m-%d_%H-%M-%S') + '.sql'
+
+IGNORED_TABLES = [
+    'artisans_commissions_statues', # Volatile information, easily reproducible
+]
 
 #
 # HELPER FUNCTIONS
@@ -33,9 +36,12 @@ end
 # MISCELLANEOUS TASKS
 #
 
-task(:default) { exec_or_die('rake', '--tasks', '--all') }
-task(:sg)      { exec_or_die('ansible/update_sg.yaml') }
-task(:cc)      { symfony_console('cache:clear') }
+task(:default)       { exec_or_die('rake', '--tasks', '--all') }
+task(:sg)            { exec_or_die('ansible/update_sg.yaml') }
+task(:cc)            { symfony_console('cache:clear') }
+task('php-cs-fixer') { docker('./vendor/bin/php-cs-fixer', 'fix') }
+task(:phpunit)       { docker('./bin/phpunit') }
+task qa: ['php-cs-fixer', :phpunit]
 
 #
 # DATABASE MANAGEMENT
@@ -62,20 +68,26 @@ task :dbpull do
 end
 
 task :dbdump do
-  exec_or_die('cp', DB_DUMP_PRV_PATH, DB_DUMP_PRV_COPY_PATH)
-  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_TMP_PATH}", '.dump')
-  exec_or_die('./bin/format_dump.py', DB_DUMP_TMP_PATH, DB_DUMP_PATH, DB_DUMP_PRV_PATH)
-  exec_or_die('rm', DB_DUMP_TMP_PATH)
+  table_names = `sqlite3 #{DB_PATH} .tables`.split(/\s+/)
+
+  IGNORED_TABLES.each do |table_name| # Sanity check
+    raise "#{table_name} does not exist in the DB #{DB_PATH}" unless table_names.include?(table_name)
+  end
+
+  table_names.each do |table_name|
+    next if IGNORED_TABLES.include?(table_name)
+
+    exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_DIR_PATH}/#{table_name}.sql", ".dump #{table_name}")
+  end
 end
 
 task :dbcommit do
-  exec_or_die('git', 'reset', 'HEAD')
-  exec_or_die('git', 'commit', '-m', 'Updated DB dump', '-p', 'db_dump/fuzzrake.sql')
+  Dir.chdir(DB_DUMP_DIR_PATH) do
+    exec_or_die('git', 'reset', 'HEAD')
+    exec_or_die('git', 'commit', '-m', 'Updated DB dump', '-p')
+    exec_or_die('git', 'push')
+  end
 end
-
-task('php-cs-fixer') { docker('./vendor/bin/php-cs-fixer', 'fix') }
-task(:phpunit)       { docker('./bin/phpunit') }
-task qa: ['php-cs-fixer', :phpunit]
 
 #
 # RELEASES MANAGEMENT

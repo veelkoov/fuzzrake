@@ -4,6 +4,8 @@
 /.idea/
 /tests/snapshots/*
 !/tests/snapshots/.gitkeep
+/db_dump/*
+!/db_dump/.gitkeep
 
 ###> symfony/framework-bundle ###
 /.env.local
