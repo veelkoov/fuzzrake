@@ -1,0 +1,19 @@
+<div class="text-right helphints-toggle">
+    <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#{{ block('name') }}Help" aria-expanded="false" aria-controls="{{ block('name') }}Help">Help and hints</button>
+</div>
+
+<div class="collapse helphints-contents" id="{{ block('name') }}Help">
+    <div class="card card-body">
+        <ul>
+            {% block contents %}{% endblock %}
+
+            <li class="small">
+                You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supplied some information), you can ask them to fill the missing information, e.g.:
+
+                <em>I found you on getfursu.it, but some information is missing there. Please consider sending updates: <a href="{{ url('data_updates') }}" target="_blank">{{ url('data_updates') }}</a> .</em>
+
+                Thank you! <i class="fas fa-heart"></i>
+            </li>
+        </ul>
+    </div>
+</div>

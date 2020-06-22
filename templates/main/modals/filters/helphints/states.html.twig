@@ -1,0 +1,9 @@
+{% extends 'main/modals/filters/helphints/parent.html.twig' %}
+
+{% block name %}states{% endblock %}
+
+{% block contents %}
+    <li>If you don't see the state you want to filter by, this means there is no maker from that state in the database.</li>
+    <li>Makers outside US and Canada don't have state information. If you want to look outside those countries, don't use the <em>States</em> filter or check <em>Unknown</em> option.</li>
+    <li>Some makers in US and Canada still don't have the state information supplied. You might want to try <em>Unknown</em> option as well.</li>
+{% endblock %}
