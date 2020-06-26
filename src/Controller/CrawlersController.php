@@ -28,7 +28,6 @@ class CrawlersController extends AbstractController
             'maker_ids',
             'statistics',
             'events',
-            'whoopsies',
             'donate',
         ]);
 

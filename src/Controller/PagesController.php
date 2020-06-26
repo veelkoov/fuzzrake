@@ -39,15 +39,6 @@ class PagesController extends AbstractController
     }
 
     /**
-     * @Route("/whoopsies.html", name="whoopsies")
-     * @Cache(maxage=21600, public=true)
-     */
-    public function whoopsies(): Response
-    {
-        return $this->render('pages/whoopsies.html.twig', []);
-    }
-
-    /**
      * @Route("/maker_ids.html", name="maker_ids")
      * @Cache(maxage=21600, public=true)
      */
