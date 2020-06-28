@@ -37,9 +37,15 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 'cs')
             ->leftJoin('a.urls', 'u')
-            ->leftJoin('a.privateData', 'pd') // Even if unneded, we have to, because "Inverse side of x-to-one can never be lazy"
+            ->leftJoin('u.state', 'us')
+            /*
+             * Even if unneeded, we have to join the private data table, because of Doctrine's limitation (as of 2.7):
+             * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
+             */
+            ->leftJoin('a.privateData', 'pd')
             ->addSelect('cs')
             ->addSelect('u')
+            ->addSelect('us')
             ->addSelect('pd')
             ->orderBy('a.name', 'ASC')
             ->getQuery()
