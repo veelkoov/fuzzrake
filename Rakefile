@@ -92,6 +92,7 @@ task :dbcommit do
     exec_or_die('git', 'reset', 'HEAD')
     exec_or_die('git', 'commit', '-m', 'Updated DB dump', '-p')
     exec_or_die('git', 'push')
+    exec_or_die('git', 'show', '-q')
   end
 end
 
