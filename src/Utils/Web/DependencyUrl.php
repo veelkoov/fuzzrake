@@ -44,4 +44,9 @@ class DependencyUrl implements Fetchable
     {
         return __CLASS__.":{$this->url}";
     }
+
+    public function resetFetchResults(): void
+    {
+        // Noop
+    }
 }

@@ -125,6 +125,15 @@ class ArtisanUrl implements Fetchable
             ->setLastFailureReason($reason);
     }
 
+    public function resetFetchResults(): void
+    {
+        $this->getState()
+            ->setLastFailure(null)
+            ->setLastSuccess(null)
+            ->setLastFailureReason('')
+            ->setLastFailureCode(0);
+    }
+
     public function getOwnerName(): string
     {
         return $this->artisan->getName();

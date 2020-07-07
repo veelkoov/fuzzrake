@@ -12,10 +12,7 @@ class ArtisanUrlListener
     public function preUpdate(ArtisanUrl $url, PreUpdateEventArgs $event): void
     {
         if ($event->getNewValue('url') !== $event->getOldValue('url')) {
-            $url->setLastFailure(null);
-            $url->setLastSuccess(null);
-            $url->setLastFailureReason('');
-            $url->setLastFailureCode(0);
+            $url->resetFetchResults();
         }
     }
 }
