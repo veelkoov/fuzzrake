@@ -28,6 +28,7 @@ class StatisticsController extends AbstractController
         'brush',
         'change?able|detach|remove?able',
         'claws?',
+        'cosplay',
         'details?',
         '(?<!g)ears?',
         'eyes?',

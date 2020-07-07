@@ -3,5 +3,6 @@ parameters:
     replacements:
       '# with Google Translate#i': ' (with a translator)'
       '# ?\(native\)#i':                ''
+      '#a small bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner#i': 'limited'
 
-    regexp: '#(?<prefix>a small bit of |bit of |a little |some |moderate |basic |elementary |slight |limited )?(?<language>.+)(?<suffix> \(limited|beginner\))?#i'
+    regexp: '#(?<prefix>limited\s+)?(?<language>.+)(?<suffix>\s+\(limited\))?#i'

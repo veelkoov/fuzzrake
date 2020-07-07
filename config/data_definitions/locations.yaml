@@ -37,6 +37,7 @@ parameters:
       'CA$|^California':                'California'
       'CO$|^Colorado':                  'Colorado'
       'FL$|^Florida':                   'Florida'
+      'MD$|^Maryland':                  'Maryland'
       'MN$|^Minnesota':                 'Minnesota'
       'NY$|^New York':                  'New York'
       'OH$|^Ohio':                      'Ohio'
