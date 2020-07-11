@@ -1,0 +1,113 @@
+parameters:
+  attributes:
+    contact_permit:
+      values:
+        v1:
+          NO: # grep-contact-permit-no
+            label: "NO, if I made a mistake in the form, feel free to reject whole submission; I don't care about keeping my info complete in the future as well."
+          CORRECTIONS:
+            label: "If I made a mistake in the form - contact me for CORRECTIONS; I don't care about keeping my info complete in the future."
+          ANNOUNCEMENTS:
+            label: "Contact me for CORRECTIONS and also send me ANNOUNCEMENTS about getfursu.it updates, so I can keep my info complete & up to date. Contact me to correct links, when old break."
+          FEEDBACK:
+            label: "Contact for CORRECTIONS and ANNOUNCEMENTS is OK. I can also fill some questionnaires to provide FEEDBACK and make the website better. I will remember I DON'T HAVE TO fill the questionnaire or respond when I receive a request."
+
+    features:
+      values:
+        v1:
+          ADJUSTABLE_EYEBROWS:
+            label: 'Adjustable eyebrows'
+          ADJUSTABLE_WIGGLE_EARS:
+            label: 'Adjustable/wiggle ears'
+          ATTACHED_HANDPAWS_AND_FEETPAWS:
+            label: 'Attached handpaws and feetpaws'
+          ATTACHED_TAIL:
+            label: 'Attached tail'
+          ELECTRONICS_ANIMATRONICS:
+            label: 'Electronics/animatronics'
+          EXCHANGEABLE_HAIRS:
+            label: 'Exchangeable hairs'
+          EXCHANGEABLE_TONGUES:
+            label: 'Exchangeable tongues'
+          FOLLOW_ME_EYES:
+            label: 'Follow-me eyes'
+          IN_HEAD_FANS:
+            label: 'In-head fans'
+          INDOOR_FEET:
+            label: 'Indoor feet'
+          LED_EL_LIGHTS:
+            label: 'LED/EL lights'
+          LED_EYES:
+            label: 'LED eyes'
+          MOVABLE_JAW:
+            label: 'Movable jaw'
+          OUTDOOR_FEET:
+            label: 'Outdoor feet'
+          REMOVABLE_BLUSH:
+            label: 'Removable blush'
+          REMOVABLE_EYELIDS:
+            label: 'Removable eyelids'
+          REMOVABLE_HORNS_ANTLERS:
+            label: 'Removable horns/antlers'
+          WASHABLE_HEADS:
+            label: 'Washable heads'
+          
+    order_types:
+      values:
+        v1:
+          HEAD:
+            label: 'Head'
+            explanation: 'As parts/separate'
+          MINI_PARTIAL:
+            label: 'Mini partial'
+            explanation: 'Head + handpaws + tail'
+          PARTIAL:
+            label: 'Partial'
+            explanation: 'Head + handpaws + tail + feetpaws'
+          FULL_PLANTIGRADE:
+            label: 'Full plantigrade'
+          FULL_DIGITIGRADE:
+            label: 'Full digitigrade'
+          TAILS:
+            label: 'Tails'
+            explataion: 'As parts/separate'
+          HANDPAWS:
+            label: 'Handpaws'
+            explanation: 'As parts/separate'
+          FEETPAWS:
+            label: 'Feetpaws'
+            explanation: 'As parts/separate'
+          THREE_FOURTH:
+            label: 'Three-fourth'
+            explanation: 'Head + handpaws + tail + legs/pants + feetpaws'
+          BODYSUITS:
+            label: 'Bodysuits'
+            explanation: 'As parts/separate'
+
+    production_models:
+      values:
+        v1:
+          STANDARD_COMMISSIONS:
+            label: 'Standard commissions'
+          PREMADES:
+            label: 'Premades'
+          ARTISTIC_LIBERTY_COMMISSIONS:
+            label: 'Artistic liberty commissions'
+
+    styles:
+      values:
+        v1:
+          TOONY:
+            label: 'Toony'
+          SEMI_TOONY:
+            label: 'Semi Toony'
+          SEMI_REALISTIC:
+            label: 'Semi Realistic'
+          REALISTIC:
+            label: 'Realistic'
+          KEMONO:
+            label: 'Kemono'
+          KIGURUMI:
+            label: 'Kigurumi'
+          ANIME:
+            label: 'Anime'

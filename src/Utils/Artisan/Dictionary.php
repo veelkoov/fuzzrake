@@ -6,33 +6,65 @@ namespace App\Utils\Artisan;
 
 abstract class Dictionary
 {
-    protected static ?array $valueKeyMap = null;
-    protected static ?array $keyKeyMap = null;
+    protected array $keyValueMap;
+    protected array $keyKeyMap;
 
-    abstract public static function getValues(): array;
-
-    public static function getKeys(): array
+    public function __construct(array $attributes)
     {
-        return array_keys(static::getValues());
+        $this->keyValueMap = [];
+
+        foreach ($attributes[$this->getAttributeKey()]['values'] as $version => $items) {
+            $this->keyValueMap += $this->getVersionAttrItems($version, $items);
+        }
     }
 
-    public static function getKeyKeyMap(): array
+    abstract public function getAttributeKey(): string;
+
+    /**
+     * @return AttrItem[]
+     */
+    public function getValues(): array
     {
-        return self::$keyKeyMap ?? self::$keyKeyMap = array_combine(self::getKeys(), self::getKeys());
+        return $this->keyValueMap;
     }
 
-    public static function getValueKeyMap(): array
+    /**
+     * @return string[]
+     */
+    public function getKeys(): array
     {
-        return self::$valueKeyMap ?? self::$valueKeyMap = array_flip(static::getValues());
+        return array_keys($this->keyValueMap);
     }
 
-    public static function getValuesAsString(): string
+    /**
+     * @return string[]
+     */
+    public function getKeyKeyMap(): array
     {
-        return implode("\n", static::getValues());
+        return $this->keyKeyMap ?? $this->keyKeyMap = array_combine($this->getKeys(), $this->getKeys());
     }
 
-    public static function count(): int
+    public function getValuesAsString(): string
     {
-        return count(static::getValues());
+        return implode("\n", $this->keyValueMap);
+    }
+
+    public function count(): int
+    {
+        return count($this->keyValueMap);
+    }
+
+    /**
+     * @return AttrItem[]
+     */
+    private function getVersionAttrItems(string $version, array $items): array
+    {
+        $result = [];
+
+        foreach ($items as $key => $data) {
+            $result[$key] = new AttrItem($data, $key, $version);
+        }
+
+        return $result;
     }
 }

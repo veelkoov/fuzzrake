@@ -38,7 +38,7 @@ class Fixer
 
     public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer,
         CountryFixer $countryFixer, StateFixer $stateFixer, StringFixer $stringFixer,
-        DefinedListFixer $definedListFixer, FreeListFixer $freeListFixer, UrlFixer $urlFixer, IntroFixer $introFixer)
+        DefinedListFixer $definedListFixer, FreeListFixer $freeListFixer, UrlFixer $urlFixer, IntroFixer $introFixer, ContactAllowedFixer $contactAllowedFixer)
     {
         $this->speciesListFixer = $speciesListFixer;
         $this->languagesFixer = $languagesFixer;
@@ -52,7 +52,7 @@ class Fixer
         $this->countryFixer = $countryFixer;
         $this->stateFixer = $stateFixer;
         $this->introFixer = $introFixer;
-        $this->contactAllowedFixer = new ContactAllowedFixer();
+        $this->contactAllowedFixer = $contactAllowedFixer;
     }
 
     public function fix(Artisan $artisan, Field $field): void

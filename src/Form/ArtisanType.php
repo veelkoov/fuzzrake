@@ -25,6 +25,25 @@ class ArtisanType extends AbstractType
     const BTN_SAVE = 'save';
     const BTN_DELETE = 'delete';
 
+    private ContactPermit $contactPermit;
+
+    private ProductionModels $productionModels;
+
+    private Styles $styles;
+
+    private OrderTypes $orderTypes;
+
+    private Features $features;
+
+    public function __construct(ContactPermit $contactPermit, ProductionModels $productionModels, Styles $styles, OrderTypes $orderTypes, Features $features)
+    {
+        $this->contactPermit = $contactPermit;
+        $this->productionModels = $productionModels;
+        $this->styles = $styles;
+        $this->orderTypes = $orderTypes;
+        $this->features = $features;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -64,32 +83,36 @@ class ArtisanType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('productionModels', ChoiceType::class, [
-                'required' => false,
-                'choices'  => ProductionModels::getValues(),
-                'multiple' => true,
+                'required'     => false,
+                'choices'      => $this->productionModels->getValues(),
+                'multiple'     => true,
+                'choice_label' => 'label',
             ])
             ->add('styles', ChoiceType::class, [
-                'required' => false,
-                'choices'  => Styles::getValues(),
-                'multiple' => true,
+                'required'     => false,
+                'choices'      => $this->styles->getValues(),
+                'multiple'     => true,
+                'choice_label' => 'label',
             ])
             ->add('otherStyles', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('orderTypes', ChoiceType::class, [
-                'required' => false,
-                'choices'  => OrderTypes::getValues(),
-                'multiple' => true,
+                'required'     => false,
+                'choices'      => $this->orderTypes->getValues(),
+                'multiple'     => true,
+                'choice_label' => 'label',
             ])
             ->add('otherOrderTypes', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('features', ChoiceType::class, [
-                'required' => false,
-                'choices'  => Features::getValues(),
-                'multiple' => true,
+                'required'     => false,
+                'choices'      => $this->features->getValues(),
+                'multiple'     => true,
+                'choice_label' => 'label',
             ])
             ->add('otherFeatures', TextareaType::class, [
                 'required'   => false,
@@ -213,7 +236,7 @@ class ArtisanType extends AbstractType
             ])
             ->add('contactAllowed', ChoiceType::class, [
                 'label'      => 'Contact allowed?',
-                'choices'    => ContactPermit::getKeyKeyMap(),
+                'choices'    => $this->contactPermit->getKeyKeyMap(),
                 'empty_data' => ContactPermit::NO,
             ])
             ->add('passcode', PasswordType::class, [
