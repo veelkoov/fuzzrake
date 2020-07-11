@@ -2,7 +2,6 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bootstrap_4_layout.html.twig']
     globals:
-        iu_form_url:             '%iu_form_url%'
         request_form_url:        '%request_form_url%'
         feedback_form_url:       '%feedback_form_url%'
         filter_suggest_form_url: '%filter_suggest_form_url%'

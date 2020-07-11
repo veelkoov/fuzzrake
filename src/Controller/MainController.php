@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Service\FilterService;
-use App\Service\IuFormService;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Species\Species;
@@ -15,7 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
@@ -47,23 +45,6 @@ class MainController extends AbstractController
         self::setExpires($response);
 
         return $response;
-    }
-
-    /**
-     * @Route("/redirect_iu_form/{makerId}", name="redirect_iu_form")
-     * @Cache(maxage=0, public=false)
-     *
-     * @throws NotFoundHttpException
-     */
-    public function redirectToIuForm(ArtisanRepository $artisanRepository, IuFormService $iuFormService, string $makerId): Response
-    {
-        try {
-            $artisan = $artisanRepository->findByMakerId($makerId);
-        } catch (UnexpectedResultException $e) {
-            throw $this->createNotFoundException('Failed to find a maker with given ID');
-        }
-
-        return $this->redirect($iuFormService->getUpdateUrl($artisan));
     }
 
     /**
