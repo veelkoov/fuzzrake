@@ -118,7 +118,7 @@ task('release-prod') { do_release('master', 'prod') }
 #
 
 task 'get-snapshots' do
-  exec_or_die('rsync', '--recursive', '--progress', '--human-readable',
+  exec_or_die('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
               'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
