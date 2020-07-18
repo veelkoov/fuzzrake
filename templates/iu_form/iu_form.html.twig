@@ -2,216 +2,376 @@
 
 {% block title %}Inclusion/update form{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('iu_form') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('iu_form') }}
+{% endblock %}
+
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
-    {{ form_start(form) }}
-        <div class="form-row">
-            <div class="form-group col-md-3">
-                {{ form_label(form.contactAllowed) }}
-                {{ form_widget(form.contactAllowed) }}
-            </div>
-            <div class="form-group col-md-7">
-                {{ form_label(form.contactInfoOriginal) }}
-                {{ form_widget(form.contactInfoOriginal) }}
-            </div>
-            <div class="form-group col-md-2">
-                {{ form_label(form.passcode) }}
-                {{ form_widget(form.passcode) }}
-            </div>
+    <div class="card text-white bg-danger my-4">
+        <div class="card-body">
+            <h5 class="card-title">Please don't rush</h5>
+            <p class="card-text">
+                You don't want your information to be inaccurate/incomplete. Reserve some time for filling this. Grab your favourite beverage. This form can wait. I am aware of the fact that this form is long as hecc. But you can't say your business is a trivial thing, can you? Please start with the second suggestion <em>Please first read the whole thing, then fill in</em> and then plan ahead.
+            </p>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-2">
-                {{ form_label(form.makerId) }}
-                {{ form_widget(form.makerId) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.name) }}
-                {{ form_widget(form.name) }}
-            </div>
-            <div class="form-group col-md-2">
-                {{ form_label(form.country) }}
-                {{ form_widget(form.country) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.state) }}
-                {{ form_widget(form.state) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-2">
-                {{ form_label(form.formerMakerIds) }}
-                {{ form_widget(form.formerMakerIds) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.formerly) }}
-                {{ form_widget(form.formerly) }}
-            </div>
-            <div class="form-group col-md-2">
-                {{ form_label(form.since) }}
-                {{ form_widget(form.since) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.city) }}
-                {{ form_widget(form.city) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-8">
-                {{ form_label(form.intro) }}
-                {{ form_widget(form.intro) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.productionModels) }}
-                {{ form_widget(form.productionModels) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {{ form_label(form.styles) }}
-                {{ form_widget(form.styles) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.orderTypes) }}
-                {{ form_widget(form.orderTypes) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.features) }}
-                {{ form_widget(form.features) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {{ form_label(form.otherStyles) }}
-                {{ form_widget(form.otherStyles) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.otherOrderTypes) }}
-                {{ form_widget(form.otherOrderTypes) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.otherFeatures) }}
-                {{ form_widget(form.otherFeatures) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {{ form_label(form.speciesDoes) }}
-                {{ form_widget(form.speciesDoes) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.speciesDoesnt) }}
-                {{ form_widget(form.speciesDoesnt) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.paymentPlans) }}
-                {{ form_widget(form.paymentPlans) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {{ form_label(form.languages) }}
-                {{ form_widget(form.languages) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.notes) }}
-                {{ form_widget(form.notes) }}
-            </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.inactiveReason) }}
-                {{ form_widget(form.inactiveReason) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.fursuitReviewUrl) }}
-                {{ form_widget(form.fursuitReviewUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.websiteUrl) }}
-                {{ form_widget(form.websiteUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.pricesUrl) }}
-                {{ form_widget(form.pricesUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.faqUrl) }}
-                {{ form_widget(form.faqUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.cstUrl) }}
-                {{ form_widget(form.cstUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.queueUrl) }}
-                {{ form_widget(form.queueUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.furAffinityUrl) }}
-                {{ form_widget(form.furAffinityUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.deviantArtUrl) }}
-                {{ form_widget(form.deviantArtUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.twitterUrl) }}
-                {{ form_widget(form.twitterUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.facebookUrl) }}
-                {{ form_widget(form.facebookUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.tumblrUrl) }}
-                {{ form_widget(form.tumblrUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.instagramUrl) }}
-                {{ form_widget(form.instagramUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.youtubeUrl) }}
-                {{ form_widget(form.youtubeUrl) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.scritchUrl) }}
-                {{ form_widget(form.scritchUrl) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.scritchPhotoUrls) }}
-                {{ form_widget(form.scritchPhotoUrls) }}
-            </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.scritchMiniatureUrls) }}
-                {{ form_widget(form.scritchMiniatureUrls) }}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.otherUrls) }}
-                {{ form_widget(form.otherUrls) }}
-            </div>
-            <div class="form-group col-md-6">
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Please first read the whole thing, then fill in</h5>
+                    <p class="card-text">
+                        Yes, I'm serious. I suggest to first take a look at the whole questionnaire, and start filling from the start after getting familiar with what information goes where. You'll avoid repeating yourself and/or confusing your potential customers. You will also be able to tell how much time this will take.
+                    </p>
+                </div>
             </div>
         </div>
 
-        {{ form_widget(form.submit) }}
-        {{ form_rest(form) }}
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Avoid using a smartphone/tablet</h5>
+                    <p class="card-text">
+                        I strongly suggest filling this up using computer/laptop! Mobile devices made enough weird stuff here, and will take away any comfort possible. Don't make your life hard! This form can wait.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">I may take stuff literally</h5>
+                    <p class="card-text">
+                        If you make a typo, or e.g. spell your name lowercase - that's how it will end up on the site. Later correction is possible though, so no need to panic.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Expect changes</h5>
+                    <p class="card-text">
+                        Please note, that getfursu.it is still in development. Changes will happen, and there will be probably even more data gathered in the future. Not all data you put here will be available on the website immediately - some might be kept for the future.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Help needed? Problem with the form? Anything ambiguous?</h5>
+                    <p class="card-text">
+                        In case of any questions/issues, feel free to <a href="{{ path('info', { _fragment: 'contact' }) }}" target="_blank">contact me</a>!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Feedback is welcome</h5>
+                    <p class="card-text">
+                        In case you have any remarks, please add them into <em>notes</em> at the end. This is important. This will help you in properly advertising your studio and will help me improving the website. Thank you!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-danger">Privacy</h5>
+            <p class="card-text">
+                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through getfursu.it website or through it's sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked <span class="badge badge-danger">PRIVATE</span> .
+            </p>
+        </div>
+    </div>
+
+    {{ form_start(form) }}
+
+    <h2>General info</h2>
+
+    <div class="form-group">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.formerly) }}
+        <p class="hint">If your studio changed name in the past, what was it? You can keep any old names here. Please: each name on a separate line.</p>
+        {{ form_widget(form.formerly) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.since) }}
+        <p class="hint">Please provide month and year when started (day will be ignored). If your studio has only one maker, skip rest of this paragraph. If your studio has more than one maker, please provide information on experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)</p>
+        {{ form_widget(form.since) }}
+    </div>
+
+    <h2>Location</h2>
+
+    <div class="form-group">
+        {{ form_label(form.country) }}
+        <p class="hint">Type full name or two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO 3166 code</a> (but not both).</p>
+        {{ form_widget(form.country) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.state) }}
+        {{ form_widget(form.state) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.city) }}
+        {{ form_widget(form.city) }}
+    </div>
+
+    <h2>Payments</h2>
+
+    <div class="form-group">
+        {{ form_label(form.paymentPlans) }}
+        <p class="hint">Please provide precise description. EXAMPLES: "None/100% upfront", "40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months", "50% upfront to reserve a slot, 10% each next month", "50% upfront for slot reservation, 100$ each next month until fully paid", etc.</p>
+        {{ form_widget(form.paymentPlans) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.pricesUrl) }}
+        <p class="hint">Please supply PRECISE link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid: images, social media.</p>
+        {{ form_widget(form.pricesUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.paymentMethods) }}
+        <p class="hint">E.g. bank transfers, debit cards, on-line payments (please mention the services names). Each in a separate line.</p>
+        {{ form_widget(form.paymentMethods) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.currenciesAccepted) }}
+        <p class="hint">E.g. USD, AUD, CAD, EUR, BRL, CZK. Each in a separate line, please.</p>
+        {{ form_widget(form.currenciesAccepted) }}
+    </div>
+
+    <h2>Types, features, available stuff</h2>
+
+    <div class="form-group">
+        {{ form_label(form.productionModels) }}
+        {{ form_widget(form.productionModels) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.styles) }}
+        {{ form_widget(form.styles) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.otherStyles) }}
+        <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+        {{ form_widget(form.otherStyles) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.orderTypes) }}
+        {{ form_widget(form.orderTypes) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.otherOrderTypes) }}
+        <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+        {{ form_widget(form.otherOrderTypes) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.features) }}
+        {{ form_widget(form.features) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.otherFeatures) }}
+        <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+        {{ form_widget(form.otherFeatures) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.speciesDoes) }}
+        <p class="hint">EXAMPLES: "Most species" (+ specify below which definitely not), or either in general: canines, cats, rodents, ungulates, or more specifically: dogs, wolves, foxes, horses, lynxes, lions, tigers, sergals, bats, etc. Please no comments here, e.g. "willing to try XYZ" or "most experience with XYZ" fits in the comments field below. Please: one specie (group) = one line.</p>
+        {{ form_widget(form.speciesDoes) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.speciesDoesnt) }}
+        <p class="hint">Please: one specie (group) = one line.</p>
+        {{ form_widget(form.speciesDoesnt) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.speciesComment) }}
+        <p class="hint">E.g. "most experienced in XYZ", "willing to try anything", "Just ask!".</p>
+        {{ form_widget(form.speciesComment) }}
+    </div>
+
+    <h2>Links to websites</h2>
+
+    <div class="form-group">
+        {{ form_label(form.fursuitReviewUrl) }}
+        <p class="hint">This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!</p>
+        {{ form_widget(form.fursuitReviewUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.websiteUrl) }}
+        {{ form_widget(form.websiteUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.faqUrl) }}
+        <p class="hint">Please supply PRECISE link, not one to e.g. homepage.</p>
+        {{ form_widget(form.faqUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.queueUrl) }}
+        {{ form_widget(form.queueUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.furAffinityUrl) }}
+        {{ form_widget(form.furAffinityUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.deviantArtUrl) }}
+        {{ form_widget(form.deviantArtUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.twitterUrl) }}
+        {{ form_widget(form.twitterUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.facebookUrl) }}
+        {{ form_widget(form.facebookUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.tumblrUrl) }}
+        {{ form_widget(form.tumblrUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.instagramUrl) }}
+        {{ form_widget(form.instagramUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.youtubeUrl) }}
+        {{ form_widget(form.youtubeUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.etsyUrl) }}
+        {{ form_widget(form.etsyUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.theDealersDenUrl) }}
+        {{ form_widget(form.theDealersDenUrl) }}
+    </div>
+    {# TODO: other shops, "Linktr.ee"
+    <div class="form-group">
+        {{ form_label(form.otherShopUrls) }}
+        {{ form_widget(form.otherShopUrls) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.linklistUrl) }}
+        {{ form_widget(form.linklistUrl) }}
+    </div>
+    #}
+    <div class="form-group">
+        {{ form_label(form.furryAminoUrl) }}
+        {{ form_widget(form.furryAminoUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.otherUrls) }}
+        <p class="hint">Please note that they will NOT be visible on the website, but if I see significant number of links to one portal, I might add support for it in the future. Please do NOT post links to instant messaging here (e.g. Telegram), e-mail addresses or any other direct contact measures. getfursu.it will only link to websites, on which you can post such information.</p>
+        {{ form_widget(form.otherUrls) }}
+    </div>
+
+    <h2>Automatic commissions status tracking (open/closed)</h2>
+    <p>I highly encourage you to take advantage of this feature! Here's how it works: https://getfursu.it/tracking.html . I'll be happy to help if you need assistance. If you keep an eligible webpage up-to-date with commissions status, please copy+paste the full link to it: Note: Putting "open" here will not work, sorry. Please read about tracking by clicking the link above.</p>
+
+    <div class="form-group">
+        {{ form_label(form.cstUrl) }}
+        <p class="hint">Note: Putting "open" here will not work, sorry. Please read about tracking by clicking the link above.</p>
+        {{ form_widget(form.cstUrl) }}
+    </div>
+
+    <h2>scritch.es - link to PHOTOS of your creations</h2>
+    <p>Have you heard about https://scritch.es/ ? It's a fairly new initiative of creating a proper service for publishing photos with fursuiters, while being able to tag them and their makers. Whole community can take part in tagging ("I know this guy on the photo, here goes a tag!"). Makers keep their pages with all their fursuits listed. Fursuiters have access to all their photos. It's far better than tagging on Facebook or Twitter, or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is not involved in scritch.es development/maintenance; in case of any questions/issues, please reach to the scritch.es support by going to their website and using the link in the top menu.</p>
+
+    <div class="form-group">
+        {{ form_label(form.scritchUrl) }}
+        <p class="hint">YES, you probably do! Go claim your page already if it's there waiting there for you</p>
+        {{ form_widget(form.scritchUrl) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.scritchPhotoUrls) }}
+        <p class="hint">You can copy the right URL after opening the photo and clicking "Copy link" on the upper-right side of the pop-up.</p>
+        {{ form_widget(form.scritchPhotoUrls) }}
+    </div>
+
+    <h2>Other/remarks/additional information</h2>
+
+    <div class="form-group">
+        {{ form_label(form.languages) }}
+        <p class="hint">Each one in a separate line, please.</p>
+        {{ form_widget(form.languages) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.makerId) }}
+        <p class="hint">This will be your "Maker ID", a short identification thingy. Please read about it here: https://getfursu.it/maker_ids.html . 7 characters, uppercase letters and/or digits. Here are some possible examples: "SILVENA", "2STFURS", "DIRECRTS", "DHCACTI", "NUKECTS", "GOFURIT", "ALPHADG". You might use abbreviations, state or country codes, etc.</p>
+        {{ form_widget(form.makerId) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.intro) }}
+        <p class="hint">Feel free to put here any "welcome" or "who are we/am I" or "what makes me/us special" text that'll be displayed on top of your details pop-up. Max 500 characters!</p>
+        {{ form_widget(form.intro) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.notes) }}
+        <p class="small"><strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet 2) <strong>WILL</strong> however be public. Treat this as place for comments for getfursu.it maintainer or some additional information which might be added in the future to the website</p>
+        {{ form_widget(form.notes) }}
+    </div>
+
+
+    <div class="form-group">
+        {{ form_label(form.passcode) }}
+        <p class="small"><span class="badge badge-danger">PRIVATE</span> Please provide some kind of passcode/password/pin (DO NOT USE THE ONE YOU USE ELSEWHERE!). Write it down, and provide it every time when you send updates in the future. If you lost the PIN/passcode, please put "I forgot", or something like that. Whenever you send updates with invalid or missing PIN/passcode, I will reach up to you to make sure it was you, who posted the updates. There are reasons it is done this particular way, explanation to long for this form. IMPORTANT: I REPEAT, DO NOT USE ANY PASSCODE YOU USE ANYWHERE ELSE! IMPORTANT 2: This passcode can be seen by the maintainer (as plain text). Please use at least 6 characters. <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
+        {{ form_widget(form.passcode) }}
+    </div>
+
+    <h2>Contact, updates &amp; feedback</h2>
+
+    <p><strong>Please consider</strong></p>
+
+    <p>getfursu.it is under development. Slow, but it is. This means two things:</p>
+    <ol>
+        <li>In the future, your studio information here will most probably become incomplete or outdated. This happens when new data gets introduced here. For example, when getfursu.it started, there weren't info about production models, species, payment plans. Those who didn't make updates since then, have incomplete info now.</li>
+        <li>I value makers' feedback, because it lets me make changes and improvements properly (you know the business far better than I do). I'd love to get a good advice or opinion from you.</li>
+    </ol>
+
+    <p>Alternatives for Telegram users: If you want ANNOUNCEMENTS through Telegram, join this channel: <a href="https://t.me/getfursuit" target="_blank">https://t.me/getfursuit</a> and select CORRECTIONS below. If you want to provide FEEDBACK through Telegram, consider joining this group: <a href="https://t.me/getfursuit_chat" target="_blank">https://t.me/getfursuit_chat</a> and selecting CORRECTIONS below. Want to be contacted individually through Telegram? Just select the proper option below without joining anywhere.</p>
+
+    <div class="form-group">
+        {{ form_label(form.contactAllowed) }}
+        <ol class="small">
+            <li>I explain "WHY" above</li>
+            <li>I don't flood</li>
+            <li>You can opt-out anytime</li>
+            <li>You are not obliged, in any way, to provide answer/respond/react</li>
+            <li>Your contact info will never be shared</li>
+        </ol>
+        {{ form_widget(form.contactAllowed) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.contactInfoOriginal) }}
+        <p class="small"><span class="badge badge-danger">PRIVATE</span> If you selected "NO" above, put "-" here. Please provide "E-MAIL: e-mail@address" (***best***) or "TELEGRAM: @username" or "TWITTER: @username". No other possibilities, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
+        {{ form_widget(form.contactInfoOriginal) }}
+    </div>
+
+    {{ form_widget(form.submit) }}
+    {{ form_rest(form) }}
+
     {{ form_end(form) }}
 {% endblock %}

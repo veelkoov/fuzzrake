@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IuFormController extends AbstractController
 {
     /**
-     * @Route("/iu_form/{makerId}", name="redirect_iu_form")
+     * @Route("/iu_form/{makerId}", name="iu_form")
      * @Cache(maxage=0, public=false)
      *
      * @throws NotFoundHttpException

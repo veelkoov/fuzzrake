@@ -13,6 +13,7 @@ Encore
     .addEntry('main', './assets/scripts/entry/main.ts')
     .addEntry('events', './assets/scripts/entry/events.ts')
     .addEntry('info', './assets/scripts/entry/info.ts')
+    .addEntry('iu_form', './assets/scripts/entry/iu_form.ts')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())

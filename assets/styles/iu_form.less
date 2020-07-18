@@ -1,0 +1,28 @@
+.form-group {
+  label {
+    font-weight: bold;
+  }
+
+  label.form-check-label {
+    font-weight: normal;
+  }
+}
+
+legend {
+  font-weight: bold;
+}
+
+.hint {
+  font-size: 80%;
+  font-weight: 400;
+}
+
+label.required:after, legend.required:after {
+  content: ' (mandatory)';
+  color: #f00;
+  font-weight: bold;
+}
+
+label.required.form-check-label:after {
+  content: '';
+}
