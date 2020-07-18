@@ -6,9 +6,12 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sh /tmp/symfony_installer \
     && rm /tmp/symfony_installer
 
-RUN apk update && apk add icu-dev git util-linux zlib-dev libzip-dev sqlite-dev
+RUN apk update && apk add icu-dev git util-linux zlib-dev libzip-dev sqlite-dev python3 py3-pip \
+        && rm -rf /var/cache/apk/*
 
-RUN docker-php-ext-install -j$(nproc) pdo_sqlite intl opcache zip
+RUN pip3 install awscli
+
+RUN docker-php-ext-install -j$(nproc) intl opcache zip
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 

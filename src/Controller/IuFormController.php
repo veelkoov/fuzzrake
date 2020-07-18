@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Artisan;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
+use App\Service\IuFormService;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,16 +24,22 @@ class IuFormController extends AbstractController
      *
      * @throws NotFoundHttpException
      */
-    public function iuForm(Request $request, ArtisanRepository $artisanRepository, string $makerId): Response
+    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuFormService $iuFormService, ?string $makerId = null): Response
     {
         try {
-            $artisan = $artisanRepository->findByMakerId($makerId);
+            $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();
         } catch (UnexpectedResultException $e) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
         $form = $this->createForm(IuForm::class, $artisan);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $iuFormService->submit($artisan);
+
+            return $this->redirectToRoute('data_updates', ['_fragment' => 'UPDATES_SENT']); // TODO: Should show a nice message instead
+        }
 
         return $this->render('iu_form/iu_form.html.twig', ['form' => $form->createView()]);
     }

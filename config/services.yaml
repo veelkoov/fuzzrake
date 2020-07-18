@@ -18,17 +18,19 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $contactEmail:         '%env(resolve:CONTACT_EMAIL)%'
-            $countries:            '%countries%'
-            $environment:          '%kernel.environment%'
-            $languages:            '%languages%'
-            $lists:                '%lists%'
-            $projectDir:           '%kernel.project_dir%'
-            $snapshotCacheDirPath: '%kernel.project_dir%/var/snapshots'
-            $speciesDefinitions:   '%species_definitions%'
-            $states:               '%states%'
-            $strings:              '%strings%'
-            $urls:                 '%urls%'
+            $contactEmail:                    '%env(resolve:CONTACT_EMAIL)%'
+            $countries:                       '%countries%'
+            $environment:                     '%kernel.environment%'
+            $iuFormDataDirPath:               '%kernel.project_dir%/var/iuFormData'
+            $iuFormDataS3CopiesBucketUrl:     '%env(resolve:S3_COPIES_BUCKET_URL)%'
+            $languages:                       '%languages%'
+            $lists:                           '%lists%'
+            $projectDir:                      '%kernel.project_dir%'
+            $snapshotCacheDirPath:            '%kernel.project_dir%/var/snapshots'
+            $speciesDefinitions:              '%species_definitions%'
+            $states:                          '%states%'
+            $strings:                         '%strings%'
+            $urls:                            '%urls%'
 
             $healthCheckValues:
                 MEMORY_AVAILABLE_MIN_MIBS: '%env(resolve:MEMORY_AVAILABLE_MIN_MIBS)%'
