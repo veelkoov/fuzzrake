@@ -44,8 +44,8 @@ task(:console) { |_t, args| docker('./bin/console', *args) }
 
 task(:default)       { exec_or_die('rake', '--tasks', '--all') }
 task(:sg)            { exec_or_die('ansible/update_sg.yaml') }
-task('php-cs-fixer') { docker('./vendor/bin/php-cs-fixer', 'fix') }
-task(:phpunit)       { docker('./bin/phpunit') }
+task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
+task(:phpunit)       { |_t, args| docker('./bin/phpunit', *args) }
 task qa: ['php-cs-fixer', :phpunit]
 mtask(:cc, :console, 'cache:clear')
 
