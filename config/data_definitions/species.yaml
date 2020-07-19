@@ -200,6 +200,10 @@ parameters:
         'Deer&similar':
         "Rare species":
         'Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)':
+        'I make exceptions on rare occasions':
+        'Most furless/featherless species':
+        'Most reptiles':
+        'Cervidae/deer family species with large antlers':
 
     leave_unchanged:
       - 'Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)'
