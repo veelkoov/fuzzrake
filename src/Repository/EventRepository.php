@@ -10,6 +10,7 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Expr\Orx;
@@ -44,10 +45,10 @@ class EventRepository extends ServiceEntityRepository
                         ]),
                 ])
             )
-            ->setParameters(['date1' => $date1, 'date2' => $date2])
+            ->setParameter('date1', $date1, Types::DATE_MUTABLE)
+            ->setParameter('date2', $date2, Types::DATE_MUTABLE)
             ->select('en.id')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult(ColumnHydrator::COLUMN_HYDRATOR);
 
         return $this->findBy(['id' => $ids]);
