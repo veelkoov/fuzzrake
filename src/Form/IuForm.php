@@ -267,6 +267,7 @@ class IuForm extends AbstractType
             ])
             ->add('contactAllowed', ChoiceType::class, [
                 'label'      => 'Contact allowed?',
+                'required'   => true,
                 'choices'    => ContactPermit::getValueKeyMap(),
                 'empty_data' => ContactPermit::NO,
                 'expanded'   => true,
@@ -284,12 +285,19 @@ class IuForm extends AbstractType
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
+
+        $builder->get('contactAllowed')->addModelTransformer(NullToEmptyStringTransformer::getInstance());
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Artisan::class,
+            'data_class'        => Artisan::class,
+            'validation_groups' => ['iu_form'],
+            'error_mapping'     => [
+                'privateData.passcode'            => 'passcode',
+                'privateData.originalContactInfo' => 'contactInfoOriginal',
+            ],
         ]);
     }
 }

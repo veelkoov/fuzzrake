@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonException;
 use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
@@ -33,6 +34,8 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Regex(pattern="/^[A-Z0-9]{7}$/", message="Use only uppercase letters and/or digits (A-Z, 0-9).", groups={"iu_form"})
+     * @Assert\Length(min="7", max="7", groups={"iu_form"})
      */
     private string $makerId = '';
 
@@ -43,141 +46,172 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Assert\Length(max="128", groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"})
      */
     private string $name = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $formerly = '';
 
     /**
      * @ORM\Column(type="string", length=512)
+     * @Assert\Length(max="512", groups={"iu_form"})
      */
     private string $intro = '';
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Length(max="16", groups={"iu_form"})
      */
     private string $since = '';
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Length(max="16", groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"})
      */
     private string $country = '';
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Assert\Length(max="32", groups={"iu_form"})
      */
     private string $state = '';
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Assert\Length(max="32", groups={"iu_form"})
      */
     private string $city = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $productionModelsComment = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $productionModels = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $stylesComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $styles = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $otherStyles = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $orderTypesComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $orderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $otherOrderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $featuresComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $features = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $otherFeatures = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $paymentPlans = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $paymentMethods = '';
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\Length(max="64", groups={"iu_form"})
      */
     private string $currenciesAccepted = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $speciesComment = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $speciesDoes = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $speciesDoesnt = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $languages = '';
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(max="4096", groups={"iu_form"})
      */
     private string $notes = '';
 
     /**
      * @ORM\Column(type="string", length=512)
+     * @Assert\Length(max="512", groups={"iu_form"})
      */
     private string $inactiveReason = '';
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Length(max="16", groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"})
      */
     private string $contactAllowed = '';
 
@@ -198,6 +232,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Assert\Valid(groups={"iu_form"})
      */
     private ?ArtisanPrivateData $privateData = null;
 
