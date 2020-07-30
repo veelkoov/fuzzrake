@@ -26,7 +26,7 @@ parameters:
       "sweden":                                        "SE"
       "ukraine":                                       "UA"
       "united states( of america)?":                   "US"
-      "u\\.?s\\.?( of america)?|usa":                  "US"
+      "(u\\.?s\\.?( of america)?|usa)":                "US"
       "south africa":                                  "ZA"
 
   states:
