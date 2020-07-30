@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\Json;
 use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -35,7 +36,7 @@ class IuFormService
     public function submit(Artisan $data): bool
     {
         try {
-            $jsonData = json_encode($data);
+            $jsonData = Json::encode($data, JSON_PRETTY_PRINT);
 
             $filePath = $this->saveOnDisk($jsonData);
             $this->sendCopyToS3($filePath);
@@ -57,7 +58,9 @@ class IuFormService
         $this->filesystem->mkdir($this->dataDirPath);
 
         do {
-            $filePath = $this->dataDirPath.'/'.DateTimeUtils::getNowUtc()->format('Y-m-d_H:i:s').random_int(1000, 9999);
+            $filePath = $this->dataDirPath.'/'
+                .DateTimeUtils::getNowUtc()->format('Y-m-d_H:i:s').'_'
+                .random_int(1000, 9999).'.json';
         } while ($this->filesystem->exists($filePath)); // Accepting risk of possible overwrite
 
         $this->filesystem->dumpFile($filePath, $jsonData);
