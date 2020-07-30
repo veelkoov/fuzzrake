@@ -25,6 +25,7 @@ services:
             $iuFormDataS3CopiesBucketUrl:     '%env(resolve:S3_COPIES_BUCKET_URL)%'
             $languages:                       '%languages%'
             $lists:                           '%lists%'
+            $notificationSnsTopicArn:         '%env(resolve:NOTIFICATIONS_TOPIC_ARN)%'
             $projectDir:                      '%kernel.project_dir%'
             $snapshotCacheDirPath:            '%kernel.project_dir%/var/snapshots'
             $speciesDefinitions:              '%species_definitions%'
