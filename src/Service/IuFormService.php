@@ -6,30 +6,24 @@ namespace App\Service;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Fields;
-use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Json;
 use App\Utils\StrUtils;
 use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 class IuFormService
 {
     private LoggerInterface $logger;
-    private string $dataDirPath;
-    private Filesystem $filesystem;
     private string $s3CopiesBucketUrl;
     private string $notificationsSnsTopicArn;
+    private IuFormSubmissionLocalService $local;
 
-    public function __construct(LoggerInterface $logger, string $iuFormDataDirPath, string $iuFormDataS3CopiesBucketUrl,
-        string $notificationSnsTopicArn
-    ) {
-        $this->filesystem = new Filesystem();
-
+    public function __construct(LoggerInterface $logger, IuFormSubmissionLocalService $iuFormSubmissionLocalService, string $iuFormDataS3CopiesBucketUrl, string $notificationSnsTopicArn)
+    {
         $this->logger = $logger;
-        $this->dataDirPath = $iuFormDataDirPath;
+        $this->local = $iuFormSubmissionLocalService;
         $this->s3CopiesBucketUrl = $iuFormDataS3CopiesBucketUrl;
         $this->notificationsSnsTopicArn = $notificationSnsTopicArn;
 
@@ -47,8 +41,8 @@ class IuFormService
         try {
             $jsonData = Json::encode($data, JSON_PRETTY_PRINT);
 
-            $filePath = $this->saveOnDisk($jsonData);
-            $this->sendCopyToS3($filePath);
+            $relativeFilePath = $this->local->saveOnDiskGetRelativePath($jsonData);
+            $this->sendCopyToS3($relativeFilePath);
             $this->notifyAboutSubmission($data);
 
             return true;
@@ -57,24 +51,6 @@ class IuFormService
 
             return false;
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function saveOnDisk(string $jsonData): string
-    {
-        $this->filesystem->mkdir($this->dataDirPath);
-
-        do {
-            $filePath = $this->dataDirPath.'/'
-                .DateTimeUtils::getNowUtc()->format('Y-m-d_H:i:s').'_'
-                .random_int(1000, 9999).'.json';
-        } while ($this->filesystem->exists($filePath)); // Accepting risk of possible overwrite
-
-        $this->filesystem->dumpFile($filePath, $jsonData);
-
-        return $filePath;
     }
 
     private function notifyAboutSubmission(Artisan $data): void
@@ -96,10 +72,10 @@ class IuFormService
             '--subject', "IU submission: {$data->getName()}", '--message', $message, ], 'Sending copy to S3');
     }
 
-    private function sendCopyToS3(string $filePath): void
+    private function sendCopyToS3(string $relativeFilePath): void
     {
-        $this->runAwsCliCmd(['aws', 's3', 'cp', $filePath, $this->s3CopiesBucketUrl],
-            'Sending copy to S3');
+        $this->runAwsCliCmd(['aws', 's3', 'cp', $this->local->getAbsolutePath($relativeFilePath),
+            $this->s3CopiesBucketUrl.'/'.$relativeFilePath, ], 'Sending copy to S3');
     }
 
     private function runAwsCliCmd(array $command, string $description): void
