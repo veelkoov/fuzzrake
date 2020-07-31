@@ -72,6 +72,9 @@ class IuFormService
             '--subject', "IU submission: {$data->getName()}", '--message', $message, ], 'Sending copy to S3');
     }
 
+    /**
+     * The only purpose of this is to have a backup of the submission in case something bad happened to the VM.
+     */
     private function sendCopyToS3(string $relativeFilePath): void
     {
         $this->runAwsCliCmd(['aws', 's3', 'cp', $this->local->getAbsolutePath($relativeFilePath),
