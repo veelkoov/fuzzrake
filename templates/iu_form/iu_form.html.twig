@@ -165,33 +165,55 @@
         {{ form_label(form.productionModels) }}
         {{ form_widget(form.productionModels) }}
     </div>
-    <div class="form-group">
-        {{ form_label(form.styles) }}
-        {{ form_widget(form.styles) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.styles) }}
+                {{ form_widget(form.styles) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.otherStyles) }}
+                <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+                {{ form_widget(form.otherStyles) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.otherStyles) }}
-        <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
-        {{ form_widget(form.otherStyles) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.orderTypes) }}
+                {{ form_widget(form.orderTypes) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.otherOrderTypes) }}
+                <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+                {{ form_widget(form.otherOrderTypes) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.orderTypes) }}
-        {{ form_widget(form.orderTypes) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.features) }}
+                {{ form_widget(form.features) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.otherFeatures) }}
+                <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+                {{ form_widget(form.otherFeatures) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.otherOrderTypes) }}
-        <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
-        {{ form_widget(form.otherOrderTypes) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.features) }}
-        {{ form_widget(form.features) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.otherFeatures) }}
-        <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
-        {{ form_widget(form.otherFeatures) }}
-    </div>
+
     <div class="form-group">
         {{ form_label(form.speciesDoes) }}
         <p class="hint">EXAMPLES: "Most species" (+ specify below which definitely not), or either in general: canines, cats, rodents, ungulates, or more specifically: dogs, wolves, foxes, horses, lynxes, lions, tigers, sergals, bats, etc. Please no comments here, e.g. "willing to try XYZ" or "most experience with XYZ" fits in the comments field below. Please: one specie (group) = one line.</p>
@@ -210,60 +232,113 @@
 
     <h2>Links to websites</h2>
 
-    <div class="form-group">
-        {{ form_label(form.fursuitReviewUrl) }}
-        <p class="hint">This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!</p>
-        {{ form_widget(form.fursuitReviewUrl) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.fursuitReviewUrl) }}
+                <p class="hint">This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!</p>
+                {{ form_widget(form.fursuitReviewUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.websiteUrl) }}
+                {{ form_widget(form.websiteUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.websiteUrl) }}
-        {{ form_widget(form.websiteUrl) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.faqUrl) }}
+                <p class="hint">Please supply PRECISE link, not one to e.g. homepage.</p>
+                {{ form_widget(form.faqUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.queueUrl) }}
+                {{ form_widget(form.queueUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.faqUrl) }}
-        <p class="hint">Please supply PRECISE link, not one to e.g. homepage.</p>
-        {{ form_widget(form.faqUrl) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.furAffinityUrl) }}
+                {{ form_widget(form.furAffinityUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.deviantArtUrl) }}
+                {{ form_widget(form.deviantArtUrl) }}
+            </div>
+         </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.queueUrl) }}
-        {{ form_widget(form.queueUrl) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.twitterUrl) }}
+                {{ form_widget(form.twitterUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.facebookUrl) }}
+                {{ form_widget(form.facebookUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.furAffinityUrl) }}
-        {{ form_widget(form.furAffinityUrl) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.tumblrUrl) }}
+                {{ form_widget(form.tumblrUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.instagramUrl) }}
+                {{ form_widget(form.instagramUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.deviantArtUrl) }}
-        {{ form_widget(form.deviantArtUrl) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.youtubeUrl) }}
+                {{ form_widget(form.youtubeUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.etsyUrl) }}
+                {{ form_widget(form.etsyUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.twitterUrl) }}
-        {{ form_widget(form.twitterUrl) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.theDealersDenUrl) }}
+                {{ form_widget(form.theDealersDenUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.furryAminoUrl) }}
+                {{ form_widget(form.furryAminoUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.facebookUrl) }}
-        {{ form_widget(form.facebookUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.tumblrUrl) }}
-        {{ form_widget(form.tumblrUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.instagramUrl) }}
-        {{ form_widget(form.instagramUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.youtubeUrl) }}
-        {{ form_widget(form.youtubeUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.etsyUrl) }}
-        {{ form_widget(form.etsyUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.theDealersDenUrl) }}
-        {{ form_widget(form.theDealersDenUrl) }}
-    </div>
+
     {# TODO: other shops, "Linktr.ee"
     <div class="form-group">
         {{ form_label(form.otherShopUrls) }}
@@ -274,13 +349,10 @@
         {{ form_widget(form.linklistUrl) }}
     </div>
     #}
-    <div class="form-group">
-        {{ form_label(form.furryAminoUrl) }}
-        {{ form_widget(form.furryAminoUrl) }}
-    </div>
+
     <div class="form-group">
         {{ form_label(form.otherUrls) }}
-        <p class="hint">Please note that they will NOT be visible on the website, but if I see significant number of links to one portal, I might add support for it in the future. Please do NOT post links to instant messaging here (e.g. Telegram), e-mail addresses or any other direct contact measures. getfursu.it will only link to websites, on which you can post such information.</p>
+        <p class="hint">Please note that they will NOT be visible on the website, but if I see significant number of links to one portal, I might add support for it in the future. Do NOT post links to instant messaging here (e.g. Telegram), e-mail addresses or any other direct contact measures. getfursu.it will only link to websites, on which you can post such information. Please: one address = one line.</p>
         {{ form_widget(form.otherUrls) }}
     </div>
 
@@ -296,15 +368,21 @@
     <h2>scritch.es - link to PHOTOS of your creations</h2>
     <p>Have you heard about https://scritch.es/ ? It's a fairly new initiative of creating a proper service for publishing photos with fursuiters, while being able to tag them and their makers. Whole community can take part in tagging ("I know this guy on the photo, here goes a tag!"). Makers keep their pages with all their fursuits listed. Fursuiters have access to all their photos. It's far better than tagging on Facebook or Twitter, or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is not involved in scritch.es development/maintenance; in case of any questions/issues, please reach to the scritch.es support by going to their website and using the link in the top menu.</p>
 
-    <div class="form-group">
-        {{ form_label(form.scritchUrl) }}
-        <p class="hint">YES, you probably do! Go claim your page already if it's there waiting there for you</p>
-        {{ form_widget(form.scritchUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.scritchPhotoUrls) }}
-        <p class="hint">You can copy the right URL after opening the photo and clicking "Copy link" on the upper-right side of the pop-up.</p>
-        {{ form_widget(form.scritchPhotoUrls) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.scritchUrl) }}
+                <p class="hint">YES, you probably do! Go claim your page already if it's there waiting there for you</p>
+                {{ form_widget(form.scritchUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.scritchPhotoUrls) }}
+                <p class="hint">You can copy the right URL after opening the photo and clicking "Copy link" on the upper-right side of the pop-up.</p>
+                {{ form_widget(form.scritchPhotoUrls) }}
+            </div>
+        </div>
     </div>
 
     <h2>Other/remarks/additional information</h2>
