@@ -107,6 +107,14 @@ final class Fields
         }
     }
 
+    /**
+     * @return Field[]
+     */
+    public static function getAll(): array
+    {
+        return self::$fields;
+    }
+
     public static function get(string $name): Field
     {
         if (!array_key_exists($name, self::$fields)) {
