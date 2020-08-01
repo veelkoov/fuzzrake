@@ -7,78 +7,108 @@ namespace App\Tests\E2E;
 use App\Entity\Artisan;
 use App\Tests\Controller\DbEnabledWebTestCase;
 use App\Utils\Artisan\Fields;
+use App\Utils\StringList;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
 {
-    private const INITIAL_VALUE = 0;
-    private const VALUE_EXPECTED_IN_FORM = 1;
+    private const VARIANT_FULL_DATA = '0';
+    private const VARIANT_HALF_DATA_1 = '1';
+    private const VARIANT_HALF_DATA_2 = '2';
 
     private const SKIP = 'SKIP_FIELD_CHECK';
 
     private const FIELDS = [ // TODO: Make values something more specific
-        'MAKER_ID'                  => ['MAKERI1', true],
-        'PASSCODE'                  => ['Passcode 1', false],
-        'CONTACT_INFO_OBFUSCATED'   => ['Contact info obfuscated 1', true],
-        'CONTACT_INFO_ORIGINAL'     => ['Contact info original 1', false],
+        'MAKER_ID'                  => 'MAKERI__VARIANT__',
+        'PASSCODE'                  => 'Passcode __VARIANT__',
+        'CONTACT_INFO_OBFUSCATED'   => 'Contact info obfuscated __VARIANT__',
+        'CONTACT_INFO_ORIGINAL'     => 'Contact info original __VARIANT__',
+        'FORMER_MAKER_IDS'          => 'MAK__VARIANT__RID\nART__VARIANT__SID', // TODO: Should verify they're updated
+        'NAME'                      => 'Turbopumpernikiel__VARIANT__',
+        'FORMERLY'                  => 'Ultrapu__VARIANT__mpernikiel\nSzyc__VARIANT__iciel',
+        'INTRO'                     => 'Le intro __VARIANT__',
+        'SINCE'                     => '2020-0__VARIANT__',
+        'LANGUAGES'                 => 'English__VARIANT__\nCzech__VARIANT__ (limited)',
+        'COUNTRY'                   => 'C__VARIANT__',
+        'STATE'                     => 'of mind __VARIANT__',
+        'CITY'                      => 'Lisek __VARIANT__',
+        'PAYMENT_PLANS'             => '30% upfront, rest in 100 Eur/mth until fully paid (__VARIANT__)',
+        'PAYMENT_METHODS'           => 'Cash\nBank transfer\nPalPay\nHugs',
+        'CURRENCIES_ACCEPTED'       => 'USD\nEUR',
+        'PRODUCTION_MODELS_COMMENT' => 'Prod mod com',
+        'PRODUCTION_MODELS'         => 'Standard commissions', // FIXME
+        'STYLES_COMMENT'            => 'STYLES_COMMENT',
+        'STYLES'                    => 'Toony', // FIXME
+        'OTHER_STYLES'              => 'OTHER_STYLES',
+        'ORDER_TYPES_COMMENT'       => 'ORDER_TYPES_COMMENT',
+        'ORDER_TYPES'               => 'Head (as parts/separate)', // FIXME
+        'OTHER_ORDER_TYPES'         => 'OTHER_ORDER_TYPES',
+        'FEATURES_COMMENT'          => 'FEATURES_COMMENT',
+        'FEATURES'                  => 'Follow-me eyes', // FIXME
+        'OTHER_FEATURES'            => 'OTHER_FEATURES',
+        'SPECIES_COMMENT'           => 'SPECIES_COMMENT',
+        'SPECIES_DOES'              => 'SPECIES_DOES',
+        'SPECIES_DOESNT'            => 'SPECIES_DOESNT',
+        'URL_FURSUITREVIEW'         => 'http://fursuitreview.com/value_1.html',
+        'URL_WEBSITE'               => 'https://mywebsite.com/value_1.html',
+        'URL_PRICES'                => 'https://mywebsite.com/prices_1.html',
+        'URL_FAQ'                   => 'https://mywebsite.com/faq_1.html',
+        'URL_FUR_AFFINITY'          => 'http://furaffinity.com/value_1.html',
+        'URL_DEVIANTART'            => 'https://deviantart.com/value_1.html',
+        'URL_TWITTER'               => 'https://twitter.com/value_1.html',
+        'URL_FACEBOOK'              => 'https://facebook.com/value_1.html',
+        'URL_TUMBLR'                => 'https://tumblr.com/value_1.html',
+        'URL_INSTAGRAM'             => 'https://instagram.com/value_1.html',
+        'URL_YOUTUBE'               => 'https://youtube.com/value_1.html',
+        'URL_LINKTREE'              => 'https://linktreee.com/value_1.html',
+        'URL_FURRY_AMINO'           => 'https://furryamino.com/value_1.html',
+        'URL_ETSY'                  => 'https://etsy.com/value_1.html',
+        'URL_THE_DEALERS_DEN'       => 'https://tdealrsdn.com/value_1.html',
+        'URL_OTHER_SHOP'            => 'https://othershop.com/value_1.html',
+        'URL_QUEUE'                 => 'https://queue.com/value_1.html',
+        'URL_SCRITCH'               => 'https://scritch.com/value_1.html',
+        'URL_SCRITCH_PHOTO'         => 'https://scritchphotos.com/value_1.html',
+        'URL_SCRITCH_MINIATURE'     => 'https://scritchphotosmini.com/value_1.html',
+        'URL_OTHER'                 => 'https://other.com/value_1.html',
+        'URL_CST'                   => 'https://cst.com/value_1.html',
+        'NOTES'                     => 'NOTES',
+        'INACTIVE_REASON'           => 'INACTIVE_REASON',
+        'COMMISSIONS_STATUS'        => self::SKIP,
+        'CST_LAST_CHECK'            => self::SKIP,
+        'COMPLETENESS'              => self::SKIP,
+        'CONTACT_ALLOWED'           => 'CORRECTIONS', // FIXME: VARIABLES
+        'CONTACT_METHOD'            => 'CONTACT_METHOD',
+        'CONTACT_ADDRESS_PLAIN'     => 'CONTACT_ADDRESS_PLAIN',
+    ];
 
-        'FORMER_MAKER_IDS'          => ['MAKERID\nMAKERI0', false],
-        'NAME'                      => ['Turbopumpernikiel', true],
-        'FORMERLY'                  => ['Ultrapumpernikiel\nSzyciciel', true],
-        'INTRO'                     => ['Le intro', true],
-        'SINCE'                     => ['2020-07', true],
-        'LANGUAGES'                 => ['English\nCzech (limited)', true],
-        'COUNTRY'                   => ['CZ', true],
-        'STATE'                     => ['of mind', true],
-        'CITY'                      => ['Lisek', true],
-        'PAYMENT_PLANS'             => ['30% upfront, rest in 100 Eur/mth until fully paid', true],
-        'PAYMENT_METHODS'           => ['Cash\nBank transfer\nPalPay\nHugs', true],
-        'CURRENCIES_ACCEPTED'       => ['USD\nEUR', true],
-        'PRODUCTION_MODELS_COMMENT' => ['Prod mod com', false], // TODO
-        'PRODUCTION_MODELS'         => ['Standard commissions', true],
-        'STYLES_COMMENT'            => ['STYLES_COMMENT', false], // TODO
-        'STYLES'                    => ['STYLES', true],
-        'OTHER_STYLES'              => ['OTHER_STYLES', true],
-        'ORDER_TYPES_COMMENT'       => ['ORDER_TYPES_COMMENT', false], // TODO
-        'ORDER_TYPES'               => ['ORDER_TYPES', true],
-        'OTHER_ORDER_TYPES'         => ['OTHER_ORDER_TYPES', true],
-        'FEATURES_COMMENT'          => ['FEATURES_COMMENT', false], // TODO
-        'FEATURES'                  => ['FEATURES', true],
-        'OTHER_FEATURES'            => ['OTHER_FEATURES', true],
-        'SPECIES_COMMENT'           => ['SPECIES_COMMENT', true], // TODO
-        'SPECIES_DOES'              => ['SPECIES_DOES', true],
-        'SPECIES_DOESNT'            => ['SPECIES_DOESNT', true],
-        'URL_FURSUITREVIEW'         => ['http://fursuitreview.com/value_1.html', true],
-        'URL_WEBSITE'               => ['https://mywebsite.com/value_1.html', true],
-        'URL_PRICES'                => ['https://mywebsite.com/prices_1.html', true],
-        'URL_FAQ'                   => ['https://mywebsite.com/faq_1.html', true],
-        'URL_FUR_AFFINITY'          => ['http://furaffinity.com/value_1.html', true],
-        'URL_DEVIANTART'            => ['https://deviantart.com/value_1.html', true],
-        'URL_TWITTER'               => ['https://twitter.com/value_1.html', true],
-        'URL_FACEBOOK'              => ['https://facebook.com/value_1.html', true],
-        'URL_TUMBLR'                => ['https://tumblr.com/value_1.html', true],
-        'URL_INSTAGRAM'             => ['https://instagram.com/value_1.html', true],
-        'URL_YOUTUBE'               => ['https://youtube.com/value_1.html', true],
-        'URL_LINKTREE'              => ['https://linktreee.com/value_1.html', false], // TODO
-        'URL_FURRY_AMINO'           => ['https://furryamino.com/value_1.html', true],
-        'URL_ETSY'                  => ['https://etsy.com/value_1.html', true],
-        'URL_THE_DEALERS_DEN'       => ['https://tdealrsdn.com/value_1.html', true],
-        'URL_OTHER_SHOP'            => ['https://othershop.com/value_1.html', false], // TODO
-        'URL_QUEUE'                 => ['https://queue.com/value_1.html', true],
-        'URL_SCRITCH'               => ['https://scritch.com/value_1.html', true],
-        'URL_SCRITCH_PHOTO'         => ['https://scritchphotos.com/value_1.html', true],
-        'URL_SCRITCH_MINIATURE'     => ['https://scritchphotosmini.com/value_1.html', false],
-        'URL_OTHER'                 => ['https://other.com/value_1.html', true],
-        'URL_CST'                   => ['https://cst.com/value_1.html', true],
-        'NOTES'                     => ['NOTES', true],
-        'INACTIVE_REASON'           => ['INACTIVE_REASON', false],
-        'COMMISSIONS_STATUS'        => [self::SKIP, false],
-        'CST_LAST_CHECK'            => [self::SKIP, false],
-        'COMPLETENESS'              => [self::SKIP, false],
-        'CONTACT_ALLOWED'           => ['CONTACT_ALLOWED', false],
-        'CONTACT_METHOD'            => ['CONTACT_METHOD', false],
-        'CONTACT_ADDRESS_PLAIN'     => ['CONTACT_ADDRESS_PLAIN', false],
+    private const VALUE_NOT_SHOWN_IN_FORM = [
+        'PASSCODE',
+    ];
+
+    private const FIELD_NOT_IN_FORM = [
+        'URL_LINKTREE', // TODO: Should be in the form
+        'URL_OTHER_SHOP', // TODO: Should be in the form
+        'PRODUCTION_MODELS_COMMENT', // TODO: Should be in the form
+        'STYLES_COMMENT', // TODO: Should be in the form
+        'ORDER_TYPES_COMMENT', // TODO: Should be in the form
+        'FEATURES_COMMENT', // TODO: Should be in the form
+        'FORMER_MAKER_IDS',
+        'URL_SCRITCH_MINIATURE',
+        'CONTACT_INFO_ORIGINAL',
+        'CONTACT_METHOD',
+        'CONTACT_ADDRESS_PLAIN',
+        'INACTIVE_REASON',
+        'COMPLETENESS',
+        'COMMISSIONS_STATUS',
+        'CST_LAST_CHECK',
+    ];
+
+    private const EXPANDED = [
+        'PRODUCTION_MODELS',
+        'FEATURES',
+        'STYLES',
+        'ORDER_TYPES',
     ];
 
     /**
@@ -88,56 +118,66 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      * - no newly added field gets overseen in the I/U form,
      * - TODO: all data submitted in the form is saved in the submission.
      *
-     * Two tested artisans: an updated one
-     * ( @see IuSubmissionTest::getHalfFull1Artisan()
-     *     -> @see IuSubmissionTest::getHalfFull2Artisan() )
-     * and a new one
-     * ( none -> @see IuSubmissionTest::getFullArtisan() )
+     * Two tested artisans: an updated one, and a new one.
      *
      * @throws ORMException
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        $this->checkFieldsArrayCompleteness();
+        $this->checkFieldsArrayCompleteness(); // Test self-test
 
         // TODO: refactor initialization of the Entity Manager so that this can be done in processIuForm each time
         $client = static::createClient();
 
-        self::$entityManager->persist($this->getHalfFull1Artisan());
+        self::$entityManager->persist($this->getArtisan(self::VARIANT_HALF_DATA_1));
         self::$entityManager->flush();
 
-        $oldArtisan1 = $this->getHalfFull1Artisan();
+        $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1);
 
-        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getHalfFull2Artisan());
-        $this->processIuForm($client, '', new Artisan(), $this->getFullArtisan());
+        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getArtisan(self::VARIANT_HALF_DATA_2));
+        $this->processIuForm($client, '', new Artisan(), $this->getArtisan(self::VARIANT_FULL_DATA));
 
         $this->performImport();
 
-        $this->validateArtisanAfterImport($this->getHalfFull2Artisan());
-        $this->validateArtisanAfterImport($this->getFullArtisan());
+        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_HALF_DATA_2));
+        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_FULL_DATA));
     }
 
-    private function processIuForm(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void // FIXME
+    private function processIuForm(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
     {
-        $client->request('GET', '/iu_form'.($urlMakerId ? '/'.$urlMakerId : ''));
+        $client->request('GET', $this->getIuFormUrlForMakerId($urlMakerId));
+
         self::assertEquals(200, $client->getResponse()->getStatusCode());
-        $body = $client->getResponse()->getContent();
 
+        $this->verifyGeneratedIuForm($oldData, $client->getResponse()->getContent());
+
+        $client->submitForm('Submit', $this->getFormDataForClient($newData));
+
+        if (302 !== $client->getResponse()->getStatusCode()) {
+            echo $client->getResponse()->getContent();
+        }
+
+        self::assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        self::assertSelectorTextContains('h1#how_to_add', 'How do I get my info added/updated?');
+    }
+
+    private function verifyGeneratedIuForm(Artisan $oldData, string $body): void
+    {
         foreach (Fields::getAll() as $fieldName => $field) {
-            $fieldTestData = self::FIELDS[$fieldName];
-
-            if (self::SKIP === $fieldTestData[self::INITIAL_VALUE]) {
+            if (self::SKIP === self::FIELDS[$fieldName]) {
                 continue;
             }
 
             $oldValue = $oldData->get($field);
 
-            if ($fieldTestData[self::VALUE_EXPECTED_IN_FORM]) {
+            // TODO: lists?
+            if (!in_array($fieldName, self::VALUE_NOT_SHOWN_IN_FORM) && !in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
                 self::assertStringContainsString($oldValue, $body,
-                    "Field $fieldName value NOT found in the I/U form HTML code"); // TODO: Check COUNT of encounters
+                    "Field $fieldName value '$oldValue' NOT found in the I/U form HTML code"); // TODO: Check COUNT of encounters
             } elseif ('' !== $oldValue) {
                 self::assertStringNotContainsStringIgnoringCase($oldValue, $body,
-                    "Field $fieldName value FOUND in the I/U form HTML code");
+                    "Field $fieldName value '$oldValue' FOUND in the I/U form HTML code");
             }
         }
     }
@@ -152,23 +192,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         // TODO
     }
 
-    private function getHalfFull1Artisan(): Artisan
-    {
-        return $this->getFullArtisan()->setMakerId('HF1MAKR'); // FIXME
-    }
-
-    private function getHalfFull2Artisan(): Artisan
-    {
-        return $this->getFullArtisan()->setMakerId('HF2MAKR'); // FIXME
-    }
-
-    private function getFullArtisan(): Artisan
+    private function getArtisan(string $variant): Artisan
     {
         $result = new Artisan();
 
-        foreach (self::FIELDS as $fieldName => $fieldTestData) {
-            if (self::SKIP !== $fieldTestData[self::INITIAL_VALUE]) {
-                $result->set(Fields::get($fieldName), $fieldTestData[self::INITIAL_VALUE]);
+        foreach (self::FIELDS as $fieldName => $value) {
+            if (self::SKIP !== $value) {
+                $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
             }
         }
 
@@ -180,5 +210,29 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         foreach (Fields::getAll() as $fieldName => $field) {
             self::assertArrayHasKey($fieldName, self::FIELDS);
         }
+    }
+
+    private function getIuFormUrlForMakerId(string $urlMakerId): string
+    {
+        return '/iu_form'.($urlMakerId ? '/'.$urlMakerId : '');
+    }
+
+    private function getFormDataForClient(Artisan $modelData): array
+    {
+        $result = [];
+
+        foreach (Fields::getAll() as $fieldName => $field) {
+            if (!in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
+                $newValue = $modelData->get($field);
+
+                if (in_array($fieldName, self::EXPANDED)) {
+                    $newValue = StringList::unpack($newValue);
+                }
+
+                $result["iu_form[{$field->modelName()}]"] = $newValue;
+            }
+        }
+
+        return $result;
     }
 }

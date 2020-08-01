@@ -222,6 +222,8 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Assert\NotBlank(groups={"iu_form"})
+     * @Assert\Length(max=128, groups={"iu_form"})
      */
     private string $contactInfoObfuscated = '';
 

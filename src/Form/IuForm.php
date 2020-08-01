@@ -296,7 +296,6 @@ class IuForm extends AbstractType
             'validation_groups' => ['iu_form'],
             'error_mapping'     => [
                 'privateData.passcode'            => 'passcode',
-                'privateData.originalContactInfo' => 'contactInfoOriginal',
             ],
         ]);
     }

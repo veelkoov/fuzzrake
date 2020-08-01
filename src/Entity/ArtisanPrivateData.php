@@ -42,8 +42,6 @@ class ArtisanPrivateData
 
     /**
      * @ORM\Column(type="string", length=512)
-     * @Assert\NotBlank(groups={"iu_form"})
-     * @Assert\Length(max=512, groups={"iu_form"})
      */
     private string $originalContactInfo = '';
 
