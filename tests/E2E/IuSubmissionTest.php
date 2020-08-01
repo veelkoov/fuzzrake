@@ -10,6 +10,7 @@ use App\Utils\Artisan\Fields;
 use App\Utils\StringList;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Filesystem\Filesystem;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
 {
@@ -24,18 +25,18 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'PASSCODE'                  => 'Passcode __VARIANT__',
         'CONTACT_INFO_OBFUSCATED'   => 'Contact info obfuscated __VARIANT__',
         'CONTACT_INFO_ORIGINAL'     => 'Contact info original __VARIANT__',
-        'FORMER_MAKER_IDS'          => 'MAK__VARIANT__RID\nART__VARIANT__SID', // TODO: Should verify they're updated
+        'FORMER_MAKER_IDS'          => "MAK__VARIANT__RID\nART__VARIANT__SID", // TODO: Should verify they're updated
         'NAME'                      => 'Turbopumpernikiel__VARIANT__',
-        'FORMERLY'                  => 'Ultrapu__VARIANT__mpernikiel\nSzyc__VARIANT__iciel',
+        'FORMERLY'                  => "Ultrapu__VARIANT__mpernikiel\nSzyc__VARIANT__iciel",
         'INTRO'                     => 'Le intro __VARIANT__',
         'SINCE'                     => '2020-0__VARIANT__',
-        'LANGUAGES'                 => 'English__VARIANT__\nCzech__VARIANT__ (limited)',
+        'LANGUAGES'                 => "English__VARIANT__\nCzech__VARIANT__ (limited)",
         'COUNTRY'                   => 'C__VARIANT__',
         'STATE'                     => 'of mind __VARIANT__',
         'CITY'                      => 'Lisek __VARIANT__',
         'PAYMENT_PLANS'             => '30% upfront, rest in 100 Eur/mth until fully paid (__VARIANT__)',
-        'PAYMENT_METHODS'           => 'Cash\nBank transfer\nPalPay\nHugs',
-        'CURRENCIES_ACCEPTED'       => 'USD\nEUR',
+        'PAYMENT_METHODS'           => "Cash\nBank transfer\nPalPay\nHugs",
+        'CURRENCIES_ACCEPTED'       => "USD\nEUR",
         'PRODUCTION_MODELS_COMMENT' => 'Prod mod com',
         'PRODUCTION_MODELS'         => 'Standard commissions', // FIXME
         'STYLES_COMMENT'            => 'STYLES_COMMENT',
@@ -124,10 +125,12 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        $this->checkFieldsArrayCompleteness(); // Test self-test
-
         // TODO: refactor initialization of the Entity Manager so that this can be done in processIuForm each time
         $client = static::createClient();
+
+        $this->checkFieldsArrayCompleteness(); // Test self-test
+
+        $this->emptyTestSubmissionsDir();
 
         self::$entityManager->persist($this->getArtisan(self::VARIANT_HALF_DATA_1));
         self::$entityManager->flush();
@@ -234,5 +237,10 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
 
         return $result;
+    }
+
+    private function emptyTestSubmissionsDir(): void
+    {
+        (new Filesystem())->remove(__DIR__.'/../../var/testIuFormData'); // TODO: This path should be coming from the container
     }
 }

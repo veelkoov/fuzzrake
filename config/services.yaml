@@ -21,7 +21,7 @@ services:
             $contactEmail:                    '%env(resolve:CONTACT_EMAIL)%'
             $countries:                       '%countries%'
             $environment:                     '%kernel.environment%'
-            $iuFormDataDirPath:               '%kernel.project_dir%/var/iuFormData'
+            $iuFormDataDirPath:               '%env(resolve:SUBMISSIONS_DIR_PATH)%'
             $iuFormDataS3CopiesBucketUrl:     '%env(resolve:S3_COPIES_BUCKET_URL)%'
             $languages:                       '%languages%'
             $lists:                           '%lists%'
