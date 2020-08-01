@@ -21,6 +21,8 @@ class StringArrayTransformer implements DataTransformerInterface
 
     public function transform($value)
     {
+        $value = str_replace("\r\n", "\n", $value);
+
         return array_filter(explode("\n", $value ?? ''));
     }
 
