@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Tests\Controller\DbEnabledWebTestCase;
 use App\Utils\Artisan\Fields;
 use Doctrine\ORM\ORMException;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
 {
@@ -87,40 +88,81 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      * - no newly added field gets overseen in the I/U form,
      * - TODO: all data submitted in the form is saved in the submission.
      *
+     * Two tested artisans: an updated one
+     * ( @see IuSubmissionTest::getHalfFull1Artisan()
+     *     -> @see IuSubmissionTest::getHalfFull2Artisan() )
+     * and a new one
+     * ( none -> @see IuSubmissionTest::getFullArtisan() )
+     *
      * @throws ORMException
      */
-    public function testIuSubmissionFlow(): void
+    public function testIuSubmissionAndImportFlow(): void
     {
-        $client = static::createClient();
-        $artisan = $this->getTestArtisan();
+        $this->checkFieldsArrayCompleteness();
 
-        self::$entityManager->persist($artisan);
+        // TODO: refactor initialization of the Entity Manager so that this can be done in processIuForm each time
+        $client = static::createClient();
+
+        self::$entityManager->persist($this->getHalfFull1Artisan());
         self::$entityManager->flush();
 
-        $client->request('GET', '/iu_form/'.self::FIELDS['MAKER_ID'][self::INITIAL_VALUE]);
+        $oldArtisan1 = $this->getHalfFull1Artisan();
+
+        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getHalfFull2Artisan());
+        $this->processIuForm($client, '', new Artisan(), $this->getFullArtisan());
+
+        $this->performImport();
+
+        $this->validateArtisanAfterImport($this->getHalfFull2Artisan());
+        $this->validateArtisanAfterImport($this->getFullArtisan());
+    }
+
+    private function processIuForm(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void // FIXME
+    {
+        $client->request('GET', '/iu_form'.($urlMakerId ? '/'.$urlMakerId : ''));
         self::assertEquals(200, $client->getResponse()->getStatusCode());
         $body = $client->getResponse()->getContent();
 
         foreach (Fields::getAll() as $fieldName => $field) {
-            self::assertArrayHasKey($fieldName, self::FIELDS);
-
             $fieldTestData = self::FIELDS[$fieldName];
 
             if (self::SKIP === $fieldTestData[self::INITIAL_VALUE]) {
                 continue;
             }
 
+            $oldValue = $oldData->get($field);
+
             if ($fieldTestData[self::VALUE_EXPECTED_IN_FORM]) {
-                self::assertStringContainsString($fieldTestData[self::INITIAL_VALUE], $body,
+                self::assertStringContainsString($oldValue, $body,
                     "Field $fieldName value NOT found in the I/U form HTML code"); // TODO: Check COUNT of encounters
-            } else {
-                self::assertStringNotContainsStringIgnoringCase($fieldTestData[self::INITIAL_VALUE], $body,
+            } elseif ('' !== $oldValue) {
+                self::assertStringNotContainsStringIgnoringCase($oldValue, $body,
                     "Field $fieldName value FOUND in the I/U form HTML code");
             }
         }
     }
 
-    private function getTestArtisan(): Artisan
+    private function performImport(): void
+    {
+        // TODO
+    }
+
+    private function validateArtisanAfterImport(Artisan $artisan)
+    {
+        // TODO
+    }
+
+    private function getHalfFull1Artisan(): Artisan
+    {
+        return $this->getFullArtisan()->setMakerId('HF1MAKR'); // FIXME
+    }
+
+    private function getHalfFull2Artisan(): Artisan
+    {
+        return $this->getFullArtisan()->setMakerId('HF2MAKR'); // FIXME
+    }
+
+    private function getFullArtisan(): Artisan
     {
         $result = new Artisan();
 
@@ -131,5 +173,12 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
 
         return $result;
+    }
+
+    private function checkFieldsArrayCompleteness(): void
+    {
+        foreach (Fields::getAll() as $fieldName => $field) {
+            self::assertArrayHasKey($fieldName, self::FIELDS);
+        }
     }
 }
