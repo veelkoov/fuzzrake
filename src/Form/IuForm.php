@@ -272,7 +272,7 @@ class IuForm extends AbstractType
                 'empty_data' => ContactPermit::NO,
                 'expanded'   => true,
             ])
-            ->add('contactInfoOriginal', TextType::class, [
+            ->add('contactInfoObfuscated', TextType::class, [
                 'label'      => 'How can I contact you',
                 'required'   => true,
                 'empty_data' => '',

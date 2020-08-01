@@ -443,9 +443,9 @@
     </div>
 
     <div class="form-group">
-        {{ form_label(form.contactInfoOriginal) }}
+        {{ form_label(form.contactInfoObfuscated) }}
         <p class="small"><span class="badge badge-danger">PRIVATE</span> If you selected "NO" above, put "-" here. Please provide "E-MAIL: e-mail@address" (***best***) or "TELEGRAM: @username" or "TWITTER: @username". No other possibilities, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
-        {{ form_widget(form.contactInfoOriginal) }}
+        {{ form_widget(form.contactInfoObfuscated) }}
     </div>
 
     {{ form_widget(form.submit) }}

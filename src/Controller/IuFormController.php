@@ -28,6 +28,7 @@ class IuFormController extends AbstractController
     {
         try {
             $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();
+            $artisan->setPasscode(''); // Should never appear in the form
         } catch (UnexpectedResultException $e) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
