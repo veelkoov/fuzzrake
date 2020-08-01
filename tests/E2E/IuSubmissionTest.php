@@ -7,9 +7,17 @@ namespace App\Tests\E2E;
 use App\Entity\Artisan;
 use App\Tests\Controller\DbEnabledWebTestCase;
 use App\Utils\Artisan\Fields;
+use App\Utils\DataInput\DataInputException;
+use App\Utils\DataInput\JsonFinder;
+use App\Utils\DataInput\Manager;
 use App\Utils\StringList;
 use Doctrine\ORM\ORMException;
+use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
@@ -112,6 +120,8 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'ORDER_TYPES',
     ];
 
+    private const IMPORT_DATA_DIR = __DIR__.'/../../var/testIuFormData'; // TODO: This path should be coming from the container
+
     /**
      * Purpose of this test is to make sure:
      * - all fields, which values should be displayed in the I/U form, are,
@@ -122,6 +132,8 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      * Two tested artisans: an updated one, and a new one.
      *
      * @throws ORMException
+     * @throws JsonException
+     * @throws DataInputException
      */
     public function testIuSubmissionAndImportFlow(): void
     {
@@ -185,9 +197,23 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
     }
 
+    /**
+     * @throws DataInputException
+     * @throws ORMException
+     * @throws JsonException
+     */
     private function performImport(): void
     {
-        // TODO
+        $output = new BufferedOutput();
+        $io = new SymfonyStyle(new StringInput(''), $output);
+
+        /** @noinspection CaseSensitivityServiceInspection */
+        $import = static::$container->get('App\Tasks\DataImportFactory')->get($this->getImportManager(), $io, false);
+        $import->import(JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
+
+        //echo $output->fetch(); // TODO: Check the output
+
+        self::$entityManager->flush();
     }
 
     private function validateArtisanAfterImport(Artisan $artisan)
@@ -241,6 +267,44 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
     private function emptyTestSubmissionsDir(): void
     {
-        (new Filesystem())->remove(__DIR__.'/../../var/testIuFormData'); // TODO: This path should be coming from the container
+        (new Filesystem())->remove(self::IMPORT_DATA_DIR);
+    }
+
+    private function getManagerCorrectionsFileContents(): string
+    {
+        $newMakerId = $this->getArtisan(self::VARIANT_FULL_DATA)->getMakerId();
+        $result = "ack new:$newMakerId:\n";
+
+        foreach ($this->getImportDataFilesHashes() as $hash) {
+            $result .= "set pin::$hash:\n";
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getImportDataFilesHashes(): array
+    {
+        return [
+            'asdfgqwer', // FIXME
+        ];
+    }
+
+    /**
+     * @throws DataInputException
+     */
+    private function getImportManager(): Manager
+    {
+        $filesystem = new Filesystem();
+        $tmpFilePath = $filesystem->tempnam(sys_get_temp_dir(), 'import_manager');
+        $filesystem->dumpFile($tmpFilePath, $this->getManagerCorrectionsFileContents());
+
+        $result = new Manager($tmpFilePath);
+
+        $filesystem->remove($tmpFilePath);
+
+        return $result;
     }
 }
