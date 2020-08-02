@@ -6,17 +6,20 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Entity\Artisan;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
+use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
 use DateTimeInterface;
+use JsonException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -43,6 +46,7 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
             new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
+            new TwigFilter('jsonToArtisanParameters', [$this, 'jsonToArtisanParametersFilter'], ['is_safe' => ['js']]),
         ];
     }
 
@@ -104,6 +108,14 @@ class AppExtensions extends AbstractExtension
     public function listFilter(string $input): array
     {
         return StringList::unpack($input);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function jsonToArtisanParametersFilter(Artisan $artisan): string
+    {
+        return trim(Json::encode(array_values($artisan->getPublicData())), '[]');
     }
 
     public function nulldateFilter($input, string $format = 'Y-m-d H:i'): string

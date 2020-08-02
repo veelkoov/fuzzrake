@@ -24,7 +24,7 @@ class ArtisanFieldsTest extends TestCase
 
         static::assertGreaterThan(0, Regexp::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
 
-        $fieldsInJson = Fields::inJson();
+        $fieldsInJson = Fields::public();
 
         foreach ($parMatches[0] as $idx => $_) {
             $field = array_shift($fieldsInJson);

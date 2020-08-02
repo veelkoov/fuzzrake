@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Utils\DataInput;
 
 use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
+use App\Utils\StringList;
 use DateTimeInterface;
-use InvalidArgumentException;
 use JsonException;
 
 class RawImportItem implements FieldReadInterface
@@ -46,7 +45,7 @@ class RawImportItem implements FieldReadInterface
     private function setTimestamp(array $rawNewData): void
     {
         try {
-            $this->timestamp = DateTimeUtils::getUtcAt($rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)]);
+            $this->timestamp = DateTimeUtils::getNowUtc(); // FIXME
         } catch (DateTimeException $e) {
             throw new DataInputException("Failed parsing import row's date", 0, $e);
         }
@@ -57,10 +56,6 @@ class RawImportItem implements FieldReadInterface
      */
     private function setHash(array $rawNewData)
     {
-        /* It looks like Google Forms changes timestamp's timezone,
-         * so let's get rid of it for the sake of hash calculation */
-        $rawNewData[Fields::uiFormIndex(Fields::TIMESTAMP)] = null;
-
         try {
             $this->hash = sha1(Json::encode($rawNewData));
         } catch (JsonException $e) {
@@ -70,12 +65,8 @@ class RawImportItem implements FieldReadInterface
 
     public function get(Field $field)
     {
-        $uiFormIndex = $field->uiFormIndex();
+        $value = $this->rawInput[$field->name()];
 
-        if (null === $uiFormIndex) {
-            throw new InvalidArgumentException("{$field->name()} is not present in the IU form");
-        }
-
-        return $this->rawInput[$uiFormIndex];
+        return $field->isList() ? StringList::pack($value) : $value;
     }
 }

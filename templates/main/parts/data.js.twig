@@ -5,7 +5,7 @@ var SPECIES = null;
 window.loadFuzzrakeData = function () {
     ARTISANS = [
         {% for artisan in artisans %}
-            new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
+            new fuzzrake.Artisan({{ artisan|jsonToArtisanParameters }}),
         {% endfor %}
     ];
 

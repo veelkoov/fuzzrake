@@ -13,6 +13,7 @@ abstract class JsonFinder
 {
     /**
      * @return array[]
+     *
      * @throws JsonException
      */
     public static function arrayFromFiles(string $directoryPath): array

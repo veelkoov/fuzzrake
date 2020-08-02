@@ -39,7 +39,7 @@ class IuFormService
     public function submit(Artisan $data): bool
     {
         try {
-            $jsonData = Json::encode($data, JSON_PRETTY_PRINT);
+            $jsonData = Json::encode($data->getAllData(), JSON_PRETTY_PRINT);
 
             $relativeFilePath = $this->local->saveOnDiskGetRelativePath($jsonData);
             $this->sendCopyToS3($relativeFilePath);

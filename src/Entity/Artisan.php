@@ -9,13 +9,11 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
-use App\Utils\Json;
 use App\Utils\StringList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
-use JsonException;
 use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -723,12 +721,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function set(Field $field, $newValue): self
     {
-        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
-            $this->setContactInfoOriginal($newValue);
-
-            return $this;
-        }
-
         $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $setter)) {
@@ -742,10 +734,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function get(Field $field)
     {
-        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
-            return $this->getContactInfoOriginal();
-        }
-
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $getter)) {
@@ -1185,7 +1173,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
     // ===== JSON STUFF =====
     //
 
-    private function getValuesForJson(): array
+    /**
+     * @param Field[] $fields
+     */
+    private function getValuesForJson(array $fields): array
     {
         return array_map(function (Field $field) {
             switch ($field->name()) {
@@ -1207,19 +1198,21 @@ class Artisan implements JsonSerializable, FieldReadInterface
             }
 
             return $field->isList() ? StringList::unpack($value) : $value;
-        }, Fields::inJson());
+        }, $fields);
     }
 
-    public function jsonSerialize(): array
+    public function getPublicData(): array
     {
-        return $this->getValuesForJson();
+        return $this->getValuesForJson(Fields::public());
     }
 
-    /**
-     * @throws JsonException
-     */
-    public function getJsonArray(): string
+    public function getAllData(): array
     {
-        return Json::encode(array_values($this->getValuesForJson()));
+        return $this->getValuesForJson(Fields::getAll());
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getPublicData();
     }
 }

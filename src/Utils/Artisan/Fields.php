@@ -8,9 +8,6 @@ use InvalidArgumentException;
 
 final class Fields
 {
-    public const TIMESTAMP = 'TIMESTAMP';
-    public const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
-
     public const MAKER_ID = 'MAKER_ID';
     public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
 
@@ -83,7 +80,6 @@ final class Fields
     public const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
     public const CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
     public const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
-    public const CONTACT_INPUT_VIRTUAL = 'CONTACT_INPUT_VIRTUAL';
 
     private static ?array $fields;
     private static ?array $fieldsByModelName;
@@ -94,13 +90,7 @@ final class Fields
         self::$fieldsByModelName = [];
 
         foreach (FieldsDefinitions::FIELDS_ARRAY_DATA as $name => $fieldData) {
-            $uiFormIndex = self::getUiFormIndexByFieldName($name);
-            $iuFormRegexp = FieldsDefinitions::IU_FORM_FIELDS_ORDERED[$name][0] ?? null;
-            $importFromIuForm = (bool) (FieldsDefinitions::IU_FORM_FIELDS_ORDERED[$name][1] ?? false);
-            $exportFromIuForm = (bool) (FieldsDefinitions::IU_FORM_FIELDS_ORDERED[$name][2] ?? false);
-
-            $field = new Field($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
-                $fieldData[5], $uiFormIndex, $iuFormRegexp, $importFromIuForm, $exportFromIuForm);
+            $field = new Field($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4], $fieldData[5]);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
@@ -108,7 +98,7 @@ final class Fields
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function getAll(): array
     {
@@ -133,13 +123,8 @@ final class Fields
         return self::$fieldsByModelName[$modelName];
     }
 
-    public static function uiFormIndex(string $name): int
-    {
-        return self::get($name)->uiFormIndex();
-    }
-
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function persisted(): array
     {
@@ -149,17 +134,17 @@ final class Fields
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
-    public static function inJson(): array
+    public static function public(): array
     {
         return array_filter(self::$fields, function (Field $field): bool {
-            return $field->inJson();
+            return $field->public();
         });
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function inStats(): array
     {
@@ -169,7 +154,7 @@ final class Fields
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function lists(): array
     {
@@ -179,50 +164,13 @@ final class Fields
     }
 
     /**
-     * @return Field[]
-     */
-    public static function inIuForm(): array
-    {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->inIuForm();
-        });
-    }
-
-    /**
-     * @return Field[]
-     */
-    public static function exportedToIuForm(): array
-    {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->exportToIuForm();
-        });
-    }
-
-    /**
-     * @return Field[]
-     */
-    public static function importedFromIuForm(): array
-    {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->importFromIuForm();
-        });
-    }
-
-    /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function urls(): array
     {
         return array_filter(self::$fields, function (Field $field): bool {
             return in_array($field->name(), FieldsDefinitions::URLS);
         });
-    }
-
-    private static function getUiFormIndexByFieldName(string $fieldName): ?int
-    {
-        $result = array_search($fieldName, array_keys(FieldsDefinitions::IU_FORM_FIELDS_ORDERED), true);
-
-        return false === $result ? null : $result;
     }
 
     private function __construct()

@@ -140,7 +140,7 @@ class DataImport
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan
     {
-        foreach (Fields::importedFromIuForm() as $field) {
+        foreach (Fields::getAll() as $field) {
             if ($skipPasscodeUpdate && $field->is(Fields::PASSCODE)) {
                 continue;
             }
@@ -155,7 +155,7 @@ class DataImport
                     }
                     break;
 
-                case Fields::CONTACT_INPUT_VIRTUAL:
+                case Fields::CONTACT_INFO_OBFUSCATED:
                     $newValue = $source->get($field);
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
@@ -163,6 +163,14 @@ class DataImport
                     }
 
                     Utils::updateContact($artisan, $newValue);
+                    break;
+
+                case Fields::COMMISSIONS_STATUS:
+                case Fields::CST_LAST_CHECK:
+                case Fields::COMPLETENESS:
+                case Fields::CONTACT_METHOD:
+                case Fields::CONTACT_ADDRESS_PLAIN:
+                case Fields::CONTACT_INFO_ORIGINAL:
                     break;
 
                 default:
