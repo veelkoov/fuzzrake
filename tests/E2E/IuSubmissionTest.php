@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\Entity\Artisan;
+use App\Repository\ArtisanRepository;
+use App\Tasks\DataImport;
 use App\Tests\Controller\DbEnabledWebTestCase;
 use App\Utils\Artisan\Fields;
+use App\Utils\Data\FdvFactory;
+use App\Utils\Data\Printer;
 use App\Utils\DataInput\DataInputException;
 use App\Utils\DataInput\JsonFinder;
 use App\Utils\DataInput\Manager;
+use App\Utils\DataInput\RawImportItem;
 use App\Utils\StringList;
 use Doctrine\ORM\ORMException;
 use JsonException;
@@ -32,9 +37,9 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'PASSCODE'                  => 'Passcode __VARIANT__',
         'CONTACT_INFO_OBFUSCATED'   => 'Contact info obfuscated __VARIANT__',
         'CONTACT_INFO_ORIGINAL'     => 'Contact info original __VARIANT__',
-        'FORMER_MAKER_IDS'          => "MAK__VARIANT__RID\nART__VARIANT__SID", // TODO: Should verify they're updated
+        'FORMER_MAKER_IDS'          => '', // "MAK__VARIANT__RID\nART__VARIANT__SID", // TODO: Should verify they're updated
         'NAME'                      => 'Turbopumpernikiel__VARIANT__',
-        'FORMERLY'                  => "Ultrapu__VARIANT__mpernikiel\nSzyc__VARIANT__iciel",
+        'FORMERLY'                  => '', // "Ultrapu__VARIANT__mpernikiel\nSzyc__VARIANT__iciel",
         'INTRO'                     => 'Le intro __VARIANT__',
         'SINCE'                     => '2020-0__VARIANT__',
         'LANGUAGES'                 => "English__VARIANT__\nCzech__VARIANT__ (limited)",
@@ -126,13 +131,11 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      * - all fields, which values should be displayed in the I/U form, are,
      * - all fields, which values should NOT be displayed, are not,
      * - no newly added field gets overseen in the I/U form,
-     * - TODO: all data submitted in the form is saved in the submission.
+     * - all data submitted in the form is saved in the submission.
      *
      * Two tested artisans: an updated one, and a new one.
      *
-     * @throws ORMException
-     * @throws JsonException
-     * @throws DataInputException
+     * @throws ORMException|JsonException|DataInputException
      */
     public function testIuSubmissionAndImportFlow(): void
     {
@@ -152,6 +155,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $this->processIuForm($client, '', new Artisan(), $this->getArtisan(self::VARIANT_FULL_DATA));
 
         $this->performImport();
+        self::$entityManager->flush();
 
         $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_HALF_DATA_2));
         $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_FULL_DATA));
@@ -197,27 +201,30 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     }
 
     /**
-     * @throws DataInputException
-     * @throws ORMException
-     * @throws JsonException
+     * @throws DataInputException|JsonException
      */
     private function performImport(): void
     {
         $output = new BufferedOutput();
-        $io = new SymfonyStyle(new StringInput(''), $output);
 
-        /** @noinspection CaseSensitivityServiceInspection */
-        $import = static::$container->get('App\Tasks\DataImportFactory')->get($this->getImportManager(), $io, false);
+        $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
+        $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
+            static::$container->get(FdvFactory::class)->create($printer), false);
+
         $import->import(JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
 
         //echo $output->fetch(); // TODO: Check the output
-
-        self::$entityManager->flush();
     }
 
-    private function validateArtisanAfterImport(Artisan $artisan)
+    private function validateArtisanAfterImport(Artisan $expected): void
     {
-        // TODO
+        $actual = static::$container->get(ArtisanRepository::class)->findOneBy(['makerId' => $expected->getMakerId()]);
+
+        self::assertNotNull($actual);
+
+        foreach (Fields::getAll() as $fieldName => $field) {
+            self::assertEquals($expected->get($field), $actual->get($field));
+        }
     }
 
     private function getArtisan(string $variant): Artisan
@@ -228,6 +235,10 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             if (self::SKIP !== $value) {
                 $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
             }
+        }
+
+        if (self::VARIANT_HALF_DATA_2 === $variant) {
+            $result->setFormerly(str_replace('__VARIANT__', self::VARIANT_HALF_DATA_1, self::FIELDS['NAME'])."\n".$result->getFormerly());
         }
 
         return $result;
@@ -269,6 +280,9 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         (new Filesystem())->remove(self::IMPORT_DATA_DIR);
     }
 
+    /**
+     * @throws DataInputException|JsonException
+     */
     private function getManagerCorrectionsFileContents(): string
     {
         $newMakerId = $this->getArtisan(self::VARIANT_FULL_DATA)->getMakerId();
@@ -282,17 +296,17 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     }
 
     /**
-     * @return string[]
+     * @throws JsonException|DataInputException
      */
     private function getImportDataFilesHashes(): array
     {
-        return [
-            'asdfgqwer', // FIXME
-        ];
+        return array_map(function (array $data): string {
+            return (new RawImportItem($data))->getHash();
+        }, JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
     }
 
     /**
-     * @throws DataInputException
+     * @throws DataInputException|JsonException
      */
     private function getImportManager(): Manager
     {

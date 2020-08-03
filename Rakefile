@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-IMPORT_FILE_PATH = 'imports/iu_form_current.csv.zip'
+IMPORT_DIR_PATH = 'var/testIuFormData'
 FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
 
 DB_PATH = 'var/db.sqlite'
@@ -135,7 +135,7 @@ task 'get-submissions' do
               'getfursu.it:/var/www/prod/var/iuFormData/', 'var/iuFormData/')
 end
 
-mtask(:import, :console, 'app:data:import', IMPORT_FILE_PATH, FIXES_FILE_PATH)
+mtask(:import, :console, 'app:data:import', IMPORT_DIR_PATH, FIXES_FILE_PATH)
 mtask(:importf, :import, '--fix-mode')
 mtask(:importc, :import, '--commit')
 

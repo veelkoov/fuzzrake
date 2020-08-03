@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Tasks\DataImportFactory;
-use App\Utils\DataInput\CSV;
 use App\Utils\DataInput\DataInputException;
+use App\Utils\DataInput\JsonFinder;
 use App\Utils\DataInput\Manager;
 use Doctrine\ORM\EntityManagerInterface;
+use JsonException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,12 +35,12 @@ class DataImportCommand extends Command
     {
         $this->addOption('commit', null, null, 'Save changes in the database');
         $this->addOption('fix-mode', null, null, 'Show import command for fixes');
-        $this->addArgument('import-file', InputArgument::REQUIRED, 'Import file path');
+        $this->addArgument('import-dir', InputArgument::REQUIRED, 'Import directory path');
         $this->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path');
     }
 
     /**
-     * @throws DataInputException
+     * @throws DataInputException|JsonException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -48,7 +49,7 @@ class DataImportCommand extends Command
         $import = $this->dataImportFactory->get(Manager::createFromFile($input->getArgument('corrections-file')),
             $io, $input->getOption('fix-mode'));
 
-        $import->import(CSV::arrayFromFile($input->getArgument('import-file')));
+        $import->import(JsonFinder::arrayFromFiles($input->getArgument('import-dir')));
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();
