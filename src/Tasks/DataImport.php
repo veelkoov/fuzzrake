@@ -155,7 +155,7 @@ class DataImport
                     }
                     break;
 
-                case Fields::CONTACT_INFO_OBFUSCATED:
+                case Fields::CONTACT_INFO_ORIGINAL:
                     $newValue = $source->get($field);
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
@@ -170,7 +170,8 @@ class DataImport
                 case Fields::COMPLETENESS:
                 case Fields::CONTACT_METHOD:
                 case Fields::CONTACT_ADDRESS_PLAIN:
-                case Fields::CONTACT_INFO_ORIGINAL:
+                case Fields::CONTACT_INFO_OBFUSCATED:
+                case Fields::FORMER_MAKER_IDS:
                     break;
 
                 default:

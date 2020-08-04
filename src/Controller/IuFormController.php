@@ -39,6 +39,7 @@ class IuFormController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
             $iuFormService->submit($artisan);
 
             return $this->redirectToRoute('data_updates', ['_fragment' => 'UPDATES_SENT']); // TODO: Should show a nice message instead

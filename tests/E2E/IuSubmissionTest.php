@@ -9,6 +9,7 @@ use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
 use App\Tests\Controller\DbEnabledWebTestCase;
 use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\Utils;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
 use App\Utils\DataInput\DataInputException;
@@ -26,73 +27,91 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
 {
-    private const VARIANT_FULL_DATA = '0';
-    private const VARIANT_HALF_DATA_1 = '1';
-    private const VARIANT_HALF_DATA_2 = '2';
+    private const VARIANT_FULL_DATA = 0;
+    private const VARIANT_HALF_DATA_1 = 1;
+    private const VARIANT_HALF_DATA_2 = 2;
 
-    private const SKIP = 'SKIP_FIELD_CHECK';
+    private const SKIP = '_SKIP_FIELD_';
+    private const SET = '_SET_';
+    private const CHECK = '_CHECK_';
 
     private const FIELDS = [ // TODO: Make values something more specific
-        'MAKER_ID'                  => 'MAKERI__VARIANT__',
+        'MAKER_ID'                  => ['MAKERI0', 'MAKERI1', 'MAKERI2'],
+        'FORMER_MAKER_IDS'          => [
+            self::SKIP,
+            [self::SET => 'OLDMKR1', self::CHECK => 'OLDMKR1'],
+            [self::SET => self::SKIP, self::CHECK => "MAKERI1\nOLDMKR1"],
+        ],
+        'NAME'                      => ['Maker name 0', 'Maker name old', 'Maker name new'],
+        'FORMERLY'                  => ['Formerly 0', 'Formerly old', "Formerly old\nMaker name old"],
         'PASSCODE'                  => 'Passcode __VARIANT__',
-        'CONTACT_INFO_OBFUSCATED'   => 'Contact info obfuscated __VARIANT__',
-        'CONTACT_INFO_ORIGINAL'     => 'Contact info original __VARIANT__',
-        'FORMER_MAKER_IDS'          => '', // "MAK__VARIANT__RID\nART__VARIANT__SID", // TODO: Should verify they're updated
-        'NAME'                      => 'Turbopumpernikiel__VARIANT__',
-        'FORMERLY'                  => '', // "Ultrapu__VARIANT__mpernikiel\nSzyc__VARIANT__iciel",
+        'CONTACT_INFO_OBFUSCATED'   => [
+            [self::SET => 'E-mail: email@e.mail', self::CHECK => 'E-MAIL: e***l@e****l'],
+            [self::SET => self::SKIP, self::CHECK => 'TELEGRAM: @te*****am'],
+            [self::SET => 'Twitter: @twit_ter', self::CHECK => 'TWITTER: @tw****er'],
+        ],
+        'CONTACT_INFO_ORIGINAL'     => [
+            [self::SET => self::SKIP, self::CHECK => 'E-mail: email@e.mail'],
+            [self::SET => 'Telegram: @tele_gram', self::CHECK => 'Telegram: @tele_gram'],
+            [self::SET => self::SKIP, self::CHECK => 'Twitter: @twit_ter'],
+        ],
+        'CONTACT_ADDRESS_PLAIN'     => [
+            [self::SET => self::SKIP, self::CHECK => 'email@e.mail'],
+            [self::SET => self::SKIP, self::CHECK => '@tele_gram'],
+            [self::SET => self::SKIP, self::CHECK => '@twit_ter'],
+        ],
+        'CONTACT_METHOD'            => self::SKIP,
+        'CONTACT_ALLOWED'           => ['CORRECTIONS', 'ANNOUNCEMENTS', 'FEEDBACK'],
         'INTRO'                     => 'Le intro __VARIANT__',
         'SINCE'                     => '2020-0__VARIANT__',
-        'LANGUAGES'                 => "English__VARIANT__\nCzech__VARIANT__ (limited)",
+        'LANGUAGES'                 => "Czech__VARIANT__ (limited)\nEnglish__VARIANT__",
         'COUNTRY'                   => 'C__VARIANT__',
         'STATE'                     => 'of mind __VARIANT__',
         'CITY'                      => 'Lisek __VARIANT__',
         'PAYMENT_PLANS'             => '30% upfront, rest in 100 Eur/mth until fully paid (__VARIANT__)',
-        'PAYMENT_METHODS'           => "Cash\nBank transfer\nPalPay\nHugs",
-        'CURRENCIES_ACCEPTED'       => "USD\nEUR",
-        'PRODUCTION_MODELS_COMMENT' => 'Prod mod com',
+        'PAYMENT_METHODS'           => "Cash\nBank transfer\nPalPay\nHugs___VARIANT__",
+        'CURRENCIES_ACCEPTED'       => "USD\nEU__VARIANT__",
+        'PRODUCTION_MODELS_COMMENT' => 'Comment about production models, without VARIANT',
         'PRODUCTION_MODELS'         => 'Standard commissions', // FIXME
-        'STYLES_COMMENT'            => 'STYLES_COMMENT',
+        'STYLES_COMMENT'            => 'Comment about styles, without VARIANT',
         'STYLES'                    => 'Toony', // FIXME
-        'OTHER_STYLES'              => 'OTHER_STYLES',
-        'ORDER_TYPES_COMMENT'       => 'ORDER_TYPES_COMMENT',
+        'OTHER_STYLES'              => 'OTHER_STYLES___VARIANT__',
+        'ORDER_TYPES_COMMENT'       => 'Comment for order types, without VARIANT',
         'ORDER_TYPES'               => 'Head (as parts/separate)', // FIXME
-        'OTHER_ORDER_TYPES'         => 'OTHER_ORDER_TYPES',
-        'FEATURES_COMMENT'          => 'FEATURES_COMMENT',
+        'OTHER_ORDER_TYPES'         => 'OTHER_ORDER_TYPES___VARIANT__',
+        'FEATURES_COMMENT'          => 'Comment about features, without VARIANT',
         'FEATURES'                  => 'Follow-me eyes', // FIXME
-        'OTHER_FEATURES'            => 'OTHER_FEATURES',
-        'SPECIES_COMMENT'           => 'SPECIES_COMMENT',
-        'SPECIES_DOES'              => 'SPECIES_DOES',
-        'SPECIES_DOESNT'            => 'SPECIES_DOESNT',
-        'URL_FURSUITREVIEW'         => 'http://fursuitreview.com/value_1.html',
-        'URL_WEBSITE'               => 'https://mywebsite.com/value_1.html',
-        'URL_PRICES'                => 'https://mywebsite.com/prices_1.html',
-        'URL_FAQ'                   => 'https://mywebsite.com/faq_1.html',
-        'URL_FUR_AFFINITY'          => 'http://furaffinity.com/value_1.html',
-        'URL_DEVIANTART'            => 'https://deviantart.com/value_1.html',
-        'URL_TWITTER'               => 'https://twitter.com/value_1.html',
-        'URL_FACEBOOK'              => 'https://facebook.com/value_1.html',
-        'URL_TUMBLR'                => 'https://tumblr.com/value_1.html',
-        'URL_INSTAGRAM'             => 'https://instagram.com/value_1.html',
-        'URL_YOUTUBE'               => 'https://youtube.com/value_1.html',
-        'URL_LINKTREE'              => 'https://linktreee.com/value_1.html',
-        'URL_FURRY_AMINO'           => 'https://furryamino.com/value_1.html',
-        'URL_ETSY'                  => 'https://etsy.com/value_1.html',
-        'URL_THE_DEALERS_DEN'       => 'https://tdealrsdn.com/value_1.html',
-        'URL_OTHER_SHOP'            => 'https://othershop.com/value_1.html',
-        'URL_QUEUE'                 => 'https://queue.com/value_1.html',
-        'URL_SCRITCH'               => 'https://scritch.com/value_1.html',
-        'URL_SCRITCH_PHOTO'         => 'https://scritchphotos.com/value_1.html',
-        'URL_SCRITCH_MINIATURE'     => 'https://scritchphotosmini.com/value_1.html',
-        'URL_OTHER'                 => 'https://other.com/value_1.html',
-        'URL_CST'                   => 'https://cst.com/value_1.html',
-        'NOTES'                     => 'NOTES',
-        'INACTIVE_REASON'           => 'INACTIVE_REASON',
+        'OTHER_FEATURES'            => 'OTHER_FEATURES___VARIANT__',
+        'SPECIES_COMMENT'           => 'SPECIES_COMMENT___VARIANT__',
+        'SPECIES_DOES'              => 'SPECIES_DOES___VARIANT__',
+        'SPECIES_DOESNT'            => 'SPECIES_DOESNT___VARIANT__',
+        'NOTES'                     => 'NOTES___VARIANT__',
+        'INACTIVE_REASON'           => ['', 'INACTIVE_REASON12', 'INACTIVE_REASON12'],
+        'URL_FURSUITREVIEW'         => 'http://fursuitreview.com/value___VARIANT__.html',
+        'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
+        'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html',
+        'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
+        'URL_FUR_AFFINITY'          => 'http://www.furaffinity.net/user/value___VARIANT__.html',
+        'URL_DEVIANTART'            => 'https://www.deviantart.com/value___VARIANT__.html',
+        'URL_TWITTER'               => 'https://twitter.com/value___VARIANT__.html',
+        'URL_FACEBOOK'              => 'https://www.facebook.com/value___VARIANT__.html/',
+        'URL_TUMBLR'                => 'https://tumblr.com/value___VARIANT__.html',
+        'URL_INSTAGRAM'             => 'https://www.instagram.com/value___VARIANT__.html/',
+        'URL_YOUTUBE'               => 'https://youtube.com/value___VARIANT__.html',
+        'URL_LINKLIST'              => 'https://linklist.com/value___VARIANT__.html',
+        'URL_FURRY_AMINO'           => 'https://furryamino.com/value___VARIANT__.html',
+        'URL_ETSY'                  => 'https://etsy.com/value___VARIANT__.html',
+        'URL_THE_DEALERS_DEN'       => 'https://tdealrsdn.com/value___VARIANT__.html',
+        'URL_OTHER_SHOP'            => 'https://othershop.com/value___VARIANT__.html',
+        'URL_QUEUE'                 => 'https://queue.com/value___VARIANT__.html',
+        'URL_SCRITCH'               => 'https://scritch.com/value___VARIANT__.html',
+        'URL_SCRITCH_PHOTO'         => 'https://scritchphotos.com/value___VARIANT__.html',
+        'URL_SCRITCH_MINIATURE'     => ['', 'URL_SCRITCH_MINIATURE12', 'URL_SCRITCH_MINIATURE12'],
+        'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
+        'URL_CST'                   => 'https://cst.com/value___VARIANT__.html',
         'COMMISSIONS_STATUS'        => self::SKIP,
         'CST_LAST_CHECK'            => self::SKIP,
         'COMPLETENESS'              => self::SKIP,
-        'CONTACT_ALLOWED'           => 'CORRECTIONS', // FIXME: VARIABLES
-        'CONTACT_METHOD'            => 'CONTACT_METHOD',
-        'CONTACT_ADDRESS_PLAIN'     => 'CONTACT_ADDRESS_PLAIN',
     ];
 
     private const VALUE_NOT_SHOWN_IN_FORM = [
@@ -100,12 +119,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     ];
 
     private const FIELD_NOT_IN_FORM = [
-        'URL_LINKTREE', // TODO: Should be in the form
-        'URL_OTHER_SHOP', // TODO: Should be in the form
-        'PRODUCTION_MODELS_COMMENT', // TODO: Should be in the form
-        'STYLES_COMMENT', // TODO: Should be in the form
-        'ORDER_TYPES_COMMENT', // TODO: Should be in the form
-        'FEATURES_COMMENT', // TODO: Should be in the form
         'FORMER_MAKER_IDS',
         'URL_SCRITCH_MINIATURE',
         'CONTACT_INFO_ORIGINAL',
@@ -146,19 +159,60 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         $this->emptyTestSubmissionsDir();
 
-        self::$entityManager->persist($this->getArtisan(self::VARIANT_HALF_DATA_1));
+        $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1, self::SET);
+        Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
+
+        self::$entityManager->persist($oldArtisan1);
         self::$entityManager->flush();
 
-        $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1);
+        $repo = self::$entityManager->getRepository(Artisan::class);
+        self::assertCount(1, $repo->findAll());
 
-        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getArtisan(self::VARIANT_HALF_DATA_2));
-        $this->processIuForm($client, '', new Artisan(), $this->getArtisan(self::VARIANT_FULL_DATA));
+        $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1, self::CHECK);
+        $newArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_2, self::SET);
+        $newArtisan1_expected = $this->getArtisan(self::VARIANT_HALF_DATA_2, self::CHECK);
+        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $newArtisan1);
+        $this->processIuForm($client, '', new Artisan(), $this->getArtisan(self::VARIANT_FULL_DATA, self::SET));
 
         $this->performImport();
         self::$entityManager->flush();
+        self::assertCount(2, $repo->findAll());
 
-        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_HALF_DATA_2));
-        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_FULL_DATA));
+        $this->validateArtisanAfterImport($newArtisan1_expected);
+        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_FULL_DATA, self::CHECK));
+    }
+
+    private function checkFieldsArrayCompleteness(): void
+    {
+        foreach (Fields::getAll() as $fieldName => $field) {
+            self::assertArrayHasKey($fieldName, self::FIELDS);
+        }
+    }
+
+    private function emptyTestSubmissionsDir(): void
+    {
+        (new Filesystem())->remove(self::IMPORT_DATA_DIR);
+    }
+
+    private function getArtisan(int $variant, string $purpose): Artisan
+    {
+        $result = new Artisan();
+
+        foreach (self::FIELDS as $fieldName => $value) {
+            if (is_array($value)) {
+                $value = $value[$variant];
+            }
+
+            if (is_array($value)) {
+                $value = $value[$purpose];
+            }
+
+            if (self::SKIP !== $value) {
+                $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
+            }
+        }
+
+        return $result;
     }
 
     private function processIuForm(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
@@ -178,6 +232,11 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         self::assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
         self::assertSelectorTextContains('h1#how_to_add', 'How do I get my info added/updated?');
+    }
+
+    private function getIuFormUrlForMakerId(string $urlMakerId): string
+    {
+        return '/iu_form'.($urlMakerId ? '/'.$urlMakerId : '');
     }
 
     private function verifyGeneratedIuForm(Artisan $oldData, string $body): void
@@ -200,62 +259,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
-    private function performImport(): void
-    {
-        $output = new BufferedOutput();
-
-        $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
-        $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
-            static::$container->get(FdvFactory::class)->create($printer), false);
-
-        $import->import(JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
-
-        //echo $output->fetch(); // TODO: Check the output
-    }
-
-    private function validateArtisanAfterImport(Artisan $expected): void
-    {
-        $actual = static::$container->get(ArtisanRepository::class)->findOneBy(['makerId' => $expected->getMakerId()]);
-
-        self::assertNotNull($actual);
-
-        foreach (Fields::getAll() as $fieldName => $field) {
-            self::assertEquals($expected->get($field), $actual->get($field));
-        }
-    }
-
-    private function getArtisan(string $variant): Artisan
-    {
-        $result = new Artisan();
-
-        foreach (self::FIELDS as $fieldName => $value) {
-            if (self::SKIP !== $value) {
-                $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
-            }
-        }
-
-        if (self::VARIANT_HALF_DATA_2 === $variant) {
-            $result->setFormerly(str_replace('__VARIANT__', self::VARIANT_HALF_DATA_1, self::FIELDS['NAME'])."\n".$result->getFormerly());
-        }
-
-        return $result;
-    }
-
-    private function checkFieldsArrayCompleteness(): void
-    {
-        foreach (Fields::getAll() as $fieldName => $field) {
-            self::assertArrayHasKey($fieldName, self::FIELDS);
-        }
-    }
-
-    private function getIuFormUrlForMakerId(string $urlMakerId): string
-    {
-        return '/iu_form'.($urlMakerId ? '/'.$urlMakerId : '');
-    }
-
     private function getFormDataForClient(Artisan $modelData): array
     {
         $result = [];
@@ -275,9 +278,36 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         return $result;
     }
 
-    private function emptyTestSubmissionsDir(): void
+    /**
+     * @throws DataInputException|JsonException
+     */
+    private function performImport(): void
     {
-        (new Filesystem())->remove(self::IMPORT_DATA_DIR);
+        $output = new BufferedOutput();
+
+        $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
+        $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
+            static::$container->get(FdvFactory::class)->create($printer), false);
+
+        $import->import(JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
+
+        //echo $output->fetch(); // TODO: Check the output
+    }
+
+    /**
+     * @throws DataInputException|JsonException
+     */
+    private function getImportManager(): Manager
+    {
+        $filesystem = new Filesystem();
+        $tmpFilePath = $filesystem->tempnam(sys_get_temp_dir(), 'import_manager');
+        $filesystem->dumpFile($tmpFilePath, $this->getManagerCorrectionsFileContents());
+
+        $result = new Manager($tmpFilePath);
+
+        $filesystem->remove($tmpFilePath);
+
+        return $result;
     }
 
     /**
@@ -285,7 +315,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getManagerCorrectionsFileContents(): string
     {
-        $newMakerId = $this->getArtisan(self::VARIANT_FULL_DATA)->getMakerId();
+        $newMakerId = $this->getArtisan(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
         $result = "ack new:$newMakerId:\n";
 
         foreach ($this->getImportDataFilesHashes() as $hash) {
@@ -305,19 +335,16 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }, JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
-    private function getImportManager(): Manager
+    private function validateArtisanAfterImport(Artisan $expected): void
     {
-        $filesystem = new Filesystem();
-        $tmpFilePath = $filesystem->tempnam(sys_get_temp_dir(), 'import_manager');
-        $filesystem->dumpFile($tmpFilePath, $this->getManagerCorrectionsFileContents());
+        $actual = static::$container->get(ArtisanRepository::class)->findOneBy(['makerId' => $expected->getMakerId()]);
 
-        $result = new Manager($tmpFilePath);
+        self::assertNotNull($actual);
 
-        $filesystem->remove($tmpFilePath);
-
-        return $result;
+        foreach (Fields::getAll() as $fieldName => $field) {
+            if (self::SKIP !== self::FIELDS[$fieldName]) {
+                self::assertEquals($expected->get($field), $actual->get($field), "Field {$fieldName} differs");
+            }
+        }
     }
 }
