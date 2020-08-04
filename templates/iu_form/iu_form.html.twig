@@ -339,16 +339,20 @@
         </div>
     </div>
 
-    {# TODO: other shops, "Linktr.ee"
-    <div class="form-group">
-        {{ form_label(form.otherShopUrls) }}
-        {{ form_widget(form.otherShopUrls) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.otherShopUrl) }}
+                {{ form_widget(form.otherShopUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.linklistUrl) }}
+                {{ form_widget(form.linklistUrl) }}
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form_label(form.linklistUrl) }}
-        {{ form_widget(form.linklistUrl) }}
-    </div>
-    #}
 
     <div class="form-group">
         {{ form_label(form.otherUrls) }}

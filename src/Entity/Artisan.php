@@ -1020,14 +1020,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getLinktreeUrl(): string
+    public function getLinklistUrl(): string
     {
-        return $this->getSingleUrl(Fields::URL_LINKTREE);
+        return $this->getSingleUrl(Fields::URL_LINKLIST);
     }
 
-    public function setLinktreeUrl(string $url): self
+    public function setLinklistUrl(string $url): self
     {
-        $this->setSingleUrl(Fields::URL_LINKTREE, $url);
+        $this->setSingleUrl(Fields::URL_LINKLIST, $url);
 
         return $this;
     }

@@ -56,7 +56,7 @@ final class Fields
     public const URL_TUMBLR = 'URL_TUMBLR';
     public const URL_INSTAGRAM = 'URL_INSTAGRAM';
     public const URL_YOUTUBE = 'URL_YOUTUBE';
-    public const URL_LINKTREE = 'URL_LINKTREE';
+    public const URL_LINKLIST = 'URL_LINKLIST';
     public const URL_FURRY_AMINO = 'URL_FURRY_AMINO';
     public const URL_ETSY = 'URL_ETSY';
     public const URL_THE_DEALERS_DEN = 'URL_THE_DEALERS_DEN';

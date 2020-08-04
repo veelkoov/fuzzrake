@@ -72,7 +72,7 @@ export default class Artisan {
                 readonly tumblrUrl: string,
                 readonly instagramUrl: string,
                 readonly youtubeUrl: string,
-                readonly linktreeUrl: string,
+                readonly linklistUrl: string,
                 readonly furryAminoUrl: string,
                 readonly etsyUrl: string,
                 readonly theDealersDenUrl: string,

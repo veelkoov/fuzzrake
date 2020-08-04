@@ -84,6 +84,11 @@ class IuForm extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+            ->add('productionModelsComment', TextareaType::class, [
+                'label'      => 'Any comments on the production models?', // TODO: Improve descriptions
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('styles', ChoiceType::class, [
                 'label'    => 'What styles do you manufacture?',
                 'required' => false,
@@ -93,6 +98,11 @@ class IuForm extends AbstractType
             ])
             ->add('otherStyles', TextareaType::class, [
                 'label'      => 'Any other styles?',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('stylesComment', TextareaType::class, [
+                'label'      => 'Any comments on the styles?', // TODO: Improve descriptions
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -108,6 +118,11 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('orderTypesComment', TextareaType::class, [
+                'label'      => 'Any comments on the order types?', // TODO: Improve descriptions
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('features', ChoiceType::class, [
                 'label'    => 'What features do you support?',
                 'required' => false,
@@ -117,6 +132,11 @@ class IuForm extends AbstractType
             ])
             ->add('otherFeatures', TextareaType::class, [
                 'label'      => 'Any other features?',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('featuresComment', TextareaType::class, [
+                'label'      => 'Any comments on the features?', // TODO: Improve descriptions
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -201,16 +221,16 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-//            ->add('otherShopUrls', TextareaType::class, [
-//                'label'      => 'Got any other on-line shop? Please copy+paste full link to your store:',
-//                'required'   => false,
-//                'empty_data' => '',
-//            ])
-//            ->add('linklistUrl', UrlType::class, [
-//                'label'      => 'Got Linktree or similar link list? Please copy+paste full link here:',
-//                'required'   => false,
-//                'empty_data' => '',
-//            ])
+            ->add('otherShopUrl', TextareaType::class, [
+                'label'      => 'Got any other on-line shop? Please copy+paste full link to your store:',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('linklistUrl', UrlType::class, [
+                'label'      => 'Got Linktree or similar link list? Please copy+paste full link here:',
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('furryAminoUrl', UrlType::class, [
                 'label'      => 'Got Furry Amino? Please copy+paste full link to your profile here:',
                 'required'   => false,
