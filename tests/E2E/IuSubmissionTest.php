@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
 use App\Tests\Controller\DbEnabledWebTestCase;
+use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\Data\FdvFactory;
@@ -17,6 +18,7 @@ use App\Utils\DataInput\JsonFinder;
 use App\Utils\DataInput\Manager;
 use App\Utils\DataInput\RawImportItem;
 use App\Utils\StringList;
+use App\Utils\StrUtils;
 use Doctrine\ORM\ORMException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -24,6 +26,7 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use TRegx\CleanRegex\Pattern;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
 {
@@ -35,7 +38,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private const SET = '_SET_';
     private const CHECK = '_CHECK_';
 
-    private const FIELDS = [ // TODO: Make values something more specific
+    private const FIELDS = [
         'MAKER_ID'                  => ['MAKERI0', 'MAKERI1', 'MAKERI2'],
         'FORMER_MAKER_IDS'          => [
             self::SKIP,
@@ -71,15 +74,15 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'PAYMENT_PLANS'             => '30% upfront, rest in 100 Eur/mth until fully paid (__VARIANT__)',
         'PAYMENT_METHODS'           => "Cash\nBank transfer\nPalPay\nHugs___VARIANT__",
         'CURRENCIES_ACCEPTED'       => "USD\nEU__VARIANT__",
-        'PRODUCTION_MODELS_COMMENT' => 'Comment about production models, without VARIANT',
+        'PRODUCTION_MODELS_COMMENT' => 'Comment about production models __VARIANT__',
         'PRODUCTION_MODELS'         => 'Standard commissions', // FIXME
-        'STYLES_COMMENT'            => 'Comment about styles, without VARIANT',
+        'STYLES_COMMENT'            => 'Comment about styles __VARIANT__',
         'STYLES'                    => 'Toony', // FIXME
         'OTHER_STYLES'              => 'OTHER_STYLES___VARIANT__',
-        'ORDER_TYPES_COMMENT'       => 'Comment for order types, without VARIANT',
+        'ORDER_TYPES_COMMENT'       => 'Comment for order types __VARIANT__',
         'ORDER_TYPES'               => 'Head (as parts/separate)', // FIXME
         'OTHER_ORDER_TYPES'         => 'OTHER_ORDER_TYPES___VARIANT__',
-        'FEATURES_COMMENT'          => 'Comment about features, without VARIANT',
+        'FEATURES_COMMENT'          => 'Comment about features __VARIANT__',
         'FEATURES'                  => 'Follow-me eyes', // FIXME
         'OTHER_FEATURES'            => 'OTHER_FEATURES___VARIANT__',
         'SPECIES_COMMENT'           => 'SPECIES_COMMENT___VARIANT__',
@@ -152,8 +155,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        // TODO: refactor initialization of the Entity Manager so that this can be done in processIuForm each time
-        $client = static::createClient();
+        $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
 
         $this->checkFieldsArrayCompleteness(); // Test self-test
 
@@ -166,20 +168,20 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         self::$entityManager->flush();
 
         $repo = self::$entityManager->getRepository(Artisan::class);
-        self::assertCount(1, $repo->findAll());
+        self::assertCount(1, $repo->findAll(), 'Single artisan in the DB before import');
 
         $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1, self::CHECK);
-        $newArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_2, self::SET);
-        $newArtisan1_expected = $this->getArtisan(self::VARIANT_HALF_DATA_2, self::CHECK);
-        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $newArtisan1);
+        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getArtisan(self::VARIANT_HALF_DATA_2, self::SET));
         $this->processIuForm($client, '', new Artisan(), $this->getArtisan(self::VARIANT_FULL_DATA, self::SET));
 
         $this->performImport();
         self::$entityManager->flush();
-        self::assertCount(2, $repo->findAll());
+        self::assertCount(2, $repo->findAll(), 'Expected two artisans in the DB after import');
 
-        $this->validateArtisanAfterImport($newArtisan1_expected);
+        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_HALF_DATA_2, self::CHECK));
         $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_FULL_DATA, self::CHECK));
+
+        $this->emptyTestSubmissionsDir();
     }
 
     private function checkFieldsArrayCompleteness(): void
@@ -239,23 +241,59 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         return '/iu_form'.($urlMakerId ? '/'.$urlMakerId : '');
     }
 
-    private function verifyGeneratedIuForm(Artisan $oldData, string $body): void
+    private function verifyGeneratedIuForm(Artisan $oldData, string $htmlBody): void
     {
+        $htmlBodyLc = $this->removeLabelsFromLowercaseHtml(mb_strtolower($htmlBody));
+        $checked = pattern('<input type="(checkbox|radio)" [^>]*value="(?<value>[^"]+)" checked="checked"\s?/?>')
+            ->match($htmlBodyLc)->groupBy('value')->texts();
+
         foreach (Fields::getAll() as $fieldName => $field) {
-            if (self::SKIP === self::FIELDS[$fieldName]) {
+            if (self::SKIP === self::FIELDS[$fieldName] || '' === ($value = $oldData->get($field))) {
                 continue;
             }
 
-            $oldValue = $oldData->get($field);
-
-            // TODO: lists?
-            if (!in_array($fieldName, self::VALUE_NOT_SHOWN_IN_FORM) && !in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
-                self::assertStringContainsString($oldValue, $body,
-                    "Field $fieldName value '$oldValue' NOT found in the I/U form HTML code"); // TODO: Check COUNT of encounters
-            } elseif ('' !== $oldValue) {
-                self::assertStringNotContainsStringIgnoringCase($oldValue, $body,
-                    "Field $fieldName value '$oldValue' FOUND in the I/U form HTML code");
+            if (in_array($fieldName, self::VALUE_NOT_SHOWN_IN_FORM) || in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
+                self::assertEquals(0, substr_count($htmlBodyLc, mb_strtolower($value)),
+                    "Field {$field->name()} value '$value' FOUND in the I/U form HTML code");
+            } else {
+                if (in_array($fieldName, self::EXPANDED)) {
+                    $this->validateListFieldInGeneratedIuForm($field, $checked, $value);
+                } else {
+                    $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
+                }
             }
+        }
+    }
+
+    private function removeLabelsFromLowercaseHtml(string $inputLowercaseHtml): string
+    {
+        return pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
+    }
+
+    private function validateNonListFieldInGeneratedIuForm(Field $field, string $htmlBodyLowercase, string $value): void
+    {
+        // TODO: Try updating T-Regx and doing the Pattern::inject parameters according to the docs once again
+        $count = Pattern::inject('(<textarea[^>]*>\s*@\s*</textarea>)|("\s*@\s*")', [
+            mb_strtolower($value),
+            mb_strtolower($value),
+        ])->count($htmlBodyLowercase);
+
+        self::assertEquals(1, $count,
+            "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
+    }
+
+    /**
+     * @param array[] $checked
+     */
+    private function validateListFieldInGeneratedIuForm(Field $field, array $checked, string $value): void
+    {
+        $valuesLc = StringList::unpack(mb_strtolower($value));
+
+        foreach ($valuesLc as $valueLc) {
+            self::assertArrayHasKey($valueLc, $checked,
+                "Field {$field->name()} value '$value' NOT present in the I/U form HTML code");
+            self::assertCount(1, $checked[$valueLc],
+                "Field {$field->name()} value '$value' present more than once in the I/U form HTML code");
         }
     }
 
@@ -291,7 +329,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         $import->import(JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
 
-        //echo $output->fetch(); // TODO: Check the output
+        $this->validateConsoleOutput($output->fetch());
     }
 
     /**
@@ -346,5 +384,24 @@ class IuSubmissionTest extends DbEnabledWebTestCase
                 self::assertEquals($expected->get($field), $actual->get($field), "Field {$fieldName} differs");
             }
         }
+    }
+
+    private function validateConsoleOutput(string $output): void
+    {
+        $output = str_replace("\r", "\n", $output);
+        $output = pattern('^(OLD |NEW |IMP |replace:)[^\n]+\n+', 'm')->remove($output)->all();
+        $output = pattern('^-+\n+', 'm')->remove($output)->all();
+
+        $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')
+            ->remove($output)->all();
+
+        $header1 = StrUtils::artisanNamesSafeForCli($this->getArtisan(self::VARIANT_FULL_DATA, self::CHECK));
+        $header2 = StrUtils::artisanNamesSafeForCli($this->getArtisan(self::VARIANT_HALF_DATA_2, self::CHECK));
+
+        $output = str_replace([$header1, $header2], '', $output);
+
+        $output = trim($output);
+
+        self::assertEmpty($output, "Unexpected output in the console: \n".$output);
     }
 }
