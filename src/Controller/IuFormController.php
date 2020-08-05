@@ -45,6 +45,9 @@ class IuFormController extends AbstractController
             return $this->redirectToRoute('data_updates', ['_fragment' => 'UPDATES_SENT']); // TODO: Should show a nice message instead
         }
 
-        return $this->render('iu_form/iu_form.html.twig', ['form' => $form->createView()]);
+        return $this->render('iu_form/iu_form.html.twig', [
+            'form'    => $form->createView(),
+            'noindex' => true,
+        ]);
     }
 }
