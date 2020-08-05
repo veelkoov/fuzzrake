@@ -20,11 +20,14 @@ use App\Utils\DataInput\RawImportItem;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\ORMException;
+use InvalidArgumentException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Filesystem\Filesystem;
 use TRegx\CleanRegex\Pattern;
 
@@ -75,15 +78,15 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'PAYMENT_METHODS'           => "Cash\nBank transfer\nPalPay\nHugs___VARIANT__",
         'CURRENCIES_ACCEPTED'       => "USD\nEU__VARIANT__",
         'PRODUCTION_MODELS_COMMENT' => 'Comment about production models __VARIANT__',
-        'PRODUCTION_MODELS'         => 'Standard commissions', // FIXME
+        'PRODUCTION_MODELS'         => "Artistic liberty commissions\nPremades\nStandard commissions",
         'STYLES_COMMENT'            => 'Comment about styles __VARIANT__',
-        'STYLES'                    => 'Toony', // FIXME
+        'STYLES'                    => "Anime\nKemono\nKigurumi\nRealistic\nSemi Realistic\nSemi Toony\nToony",
         'OTHER_STYLES'              => 'OTHER_STYLES___VARIANT__',
         'ORDER_TYPES_COMMENT'       => 'Comment for order types __VARIANT__',
-        'ORDER_TYPES'               => 'Head (as parts/separate)', // FIXME
+        'ORDER_TYPES'               => "Bodysuits (as parts/separate)\nFeetpaws (as parts/separate)\nFull digitigrade\nFull plantigrade\nHandpaws (as parts/separate)\nHead (as parts/separate)\nMini partial (head + handpaws + tail)\nPartial (head + handpaws + tail + feetpaws)\nTails (as parts/separate)\nThree-fourth (head + handpaws + tail + legs/pants + feetpaws)",
         'OTHER_ORDER_TYPES'         => 'OTHER_ORDER_TYPES___VARIANT__',
         'FEATURES_COMMENT'          => 'Comment about features __VARIANT__',
-        'FEATURES'                  => 'Follow-me eyes', // FIXME
+        'FEATURES'                  => "Adjustable eyebrows\nAdjustable/wiggle ears\nAttached handpaws and feetpaws\nAttached tail\nElectronics/animatronics\nExchangeable hairs\nExchangeable tongues\nFollow-me eyes\nIn-head fans\nIndoor feet\nLED eyes\nLED/EL lights\nMovable jaw\nOutdoor feet\nRemovable blush\nRemovable eyelids\nRemovable horns/antlers\nWashable heads",
         'OTHER_FEATURES'            => 'OTHER_FEATURES___VARIANT__',
         'SPECIES_COMMENT'           => 'SPECIES_COMMENT___VARIANT__',
         'SPECIES_DOES'              => 'SPECIES_DOES___VARIANT__',
@@ -209,9 +212,16 @@ class IuSubmissionTest extends DbEnabledWebTestCase
                 $value = $value[$purpose];
             }
 
-            if (self::SKIP !== $value) {
-                $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
+            if (self::SKIP === $value) {
+                continue;
             }
+
+            if (in_array($fieldName, self::EXPANDED) && in_array($variant, [self::VARIANT_HALF_DATA_1, self::VARIANT_HALF_DATA_2])) {
+                /* For testing purposes, select only either odd or even options available */
+                $value = $this->selectOddOrEvenItems($value, self::VARIANT_HALF_DATA_1 === $variant);
+            }
+
+            $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
         }
 
         return $result;
@@ -225,11 +235,9 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         $this->verifyGeneratedIuForm($oldData, $client->getResponse()->getContent());
 
-        $client->submitForm('Submit', $this->getFormDataForClient($newData));
-
-        if (302 !== $client->getResponse()->getStatusCode()) {
-            echo $client->getResponse()->getContent();
-        }
+        $form = $client->getCrawler()->selectButton('Submit')->form();
+        $this->setValuesInForm($form, $newData);
+        $client->submit($form);
 
         self::assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
@@ -297,23 +305,35 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
     }
 
-    private function getFormDataForClient(Artisan $modelData): array
+    private function setValuesInForm(Form $form, Artisan $data): void
     {
-        $result = [];
-
         foreach (Fields::getAll() as $fieldName => $field) {
-            if (!in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
-                $newValue = $modelData->get($field);
+            if (in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
+                continue;
+            }
 
-                if (in_array($fieldName, self::EXPANDED)) {
-                    $newValue = StringList::unpack($newValue);
+            $value = $data->get($field);
+            $fields = $form["iu_form[{$field->modelName()}]"];
+
+            if (!in_array($fieldName, self::EXPANDED)) {
+                $fields->setValue($value);
+                continue;
+            }
+
+            $values = StringList::unpack($value);
+
+            foreach ($fields as $formField) {
+                if (!($formField instanceof ChoiceFormField)) {
+                    throw new InvalidArgumentException('Expected choice field');
                 }
 
-                $result["iu_form[{$field->modelName()}]"] = $newValue;
+                if (in_array($formField->availableOptionValues()[0], $values)) {
+                    $formField->tick();
+                } else {
+                    $formField->untick();
+                }
             }
         }
-
-        return $result;
     }
 
     /**
@@ -403,5 +423,20 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $output = trim($output);
 
         self::assertEmpty($output, "Unexpected output in the console: \n".$output);
+    }
+
+    private function selectOddOrEvenItems(string $itemsListPacked, bool $selectOdd): string
+    {
+        $values = StringList::unpack($itemsListPacked);
+
+        $rest = $selectOdd ? 0 : 1;
+
+        for ($i = 0, $c = count($values); $i < $c; ++$i) {
+            if ($rest === $i % 2) {
+                unset($values[$i]);
+            }
+        }
+
+        return StringList::pack($values);
     }
 }
