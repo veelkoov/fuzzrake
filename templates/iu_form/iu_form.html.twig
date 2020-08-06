@@ -161,9 +161,19 @@
 
     <h2>Types, features, available stuff</h2>
 
-    <div class="form-group">
-        {{ form_label(form.productionModels) }}
-        {{ form_widget(form.productionModels) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.productionModels) }}
+                {{ form_widget(form.productionModels) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.productionModelsComment) }}
+                {{ form_widget(form.productionModelsComment) }}
+            </div>
+        </div>
     </div>
 
     <div class="row">
@@ -178,6 +188,10 @@
                 {{ form_label(form.otherStyles) }}
                 <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
                 {{ form_widget(form.otherStyles) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.stylesComment) }}
+                {{ form_widget(form.stylesComment) }}
             </div>
         </div>
     </div>
@@ -195,6 +209,10 @@
                 <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
                 {{ form_widget(form.otherOrderTypes) }}
             </div>
+            <div class="form-group">
+                {{ form_label(form.orderTypesComment) }}
+                {{ form_widget(form.orderTypesComment) }}
+            </div>
         </div>
     </div>
 
@@ -210,6 +228,10 @@
                 {{ form_label(form.otherFeatures) }}
                 <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
                 {{ form_widget(form.otherFeatures) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.featuresComment) }}
+                {{ form_widget(form.featuresComment) }}
             </div>
         </div>
     </div>
