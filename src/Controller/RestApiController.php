@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RestApiController extends AbstractController
+class RestApiController extends AbstractRecaptchaBackedController
 {
     /**
      * @Route("/api/", name="api")
@@ -29,9 +29,9 @@ class RestApiController extends AbstractController
      * @Route("/api/info/email.part.html")
      * @Cache(maxage=0, public=false)
      */
-    public function info_emailHtml(Request $request, ReCaptcha $captcha, string $contactEmail): Response
+    public function info_emailHtml(Request $request, string $contactEmail): Response
     {
-        $ok = $this->isReCaptchaTokenOk($captcha, $request);
+        $ok = $this->isReCaptchaTokenOk($request, 'info_emailHtml');
 
         if ($ok) {
             $contactEmail = htmlspecialchars($contactEmail);
@@ -67,14 +67,5 @@ class RestApiController extends AbstractController
     public function healthcheck(HealthCheckService $healthCheckService): JsonResponse
     {
         return new JsonResponse($healthCheckService->getStatus());
-    }
-
-    private function isReCaptchaTokenOk(ReCaptcha $captcha, Request $request): bool
-    {
-        return $captcha
-            ->setExpectedHostname($request->getHttpHost())
-            ->setExpectedAction('info_emailHtml')
-            ->setScoreThreshold($_ENV['GOOGLE_RECAPTCHA_SCORE_THRESHOLD'] ?: 0.8)
-            ->verify($request->get('token', 'missing-token'), $request->getClientIp())->isSuccess();
     }
 }
