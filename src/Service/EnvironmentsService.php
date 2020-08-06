@@ -22,4 +22,9 @@ class EnvironmentsService
     {
         return 'prod' === $this->environment;
     }
+
+    public function isTesting(): bool
+    {
+        return 'test' === $this->environment;
+    }
 }

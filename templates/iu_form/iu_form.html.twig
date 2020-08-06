@@ -4,6 +4,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
     {{ encore_entry_script_tags('iu_form') }}
 {% endblock %}
 
@@ -14,6 +15,12 @@
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
+
+    {% if submitted %}
+        <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#iu_form_instructions_container">Toggle instructions</button>
+    {% endif %}
+
+    <div id="iu_form_instructions_container" {% if submitted %}class="collapse"{% endif %}>
 
     <div class="card text-white bg-danger my-4">
         <div class="card-body">
@@ -101,9 +108,14 @@
         </div>
     </div>
 
+    </div> <!-- id="iu_form_instructions_container" -->
+
+    {# Hide the form initially, so in case automatic captcha fails from the start, the user won't waste time on the form they won't be able to submit #}
+    <div id="iu_form_container" {% if not submitted %}class="d-none"{% endif %}>
+
     {{ form_start(form) }}
 
-    <h2>General info</h2>
+    <h2 class="mt-4">General info</h2>
 
     <div class="form-group">
         {{ form_label(form.name) }}
@@ -474,8 +486,14 @@
         {{ form_widget(form.contactInfoObfuscated) }}
     </div>
 
-    {{ form_widget(form.submit) }}
     {{ form_rest(form) }}
+    <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
+    <button class="btn btn-primary g-recaptcha"
+            data-sitekey="{{ google_recaptcha_site_key }}"
+            data-callback="iuFormRecaptchaValidationCallback"
+            data-action="iu_form_submit">Submit</button>
 
     {{ form_end(form) }}
+
+    </div> <!-- id="iu_form_container" -->
 {% endblock %}

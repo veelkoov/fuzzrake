@@ -13,7 +13,6 @@ use App\Utils\Artisan\Styles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -22,8 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IuForm extends AbstractType
 {
-    const BTN_SUBMIT = 'submit';
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -296,9 +293,6 @@ class IuForm extends AbstractType
                 'label'      => 'How can I contact you',
                 'required'   => true,
                 'empty_data' => '',
-            ])
-            ->add(self::BTN_SUBMIT, SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
             ])
         ;
 

@@ -6,9 +6,7 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Service\HealthCheckService;
-use ReCaptcha\ReCaptcha;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +35,21 @@ class RestApiController extends AbstractRecaptchaBackedController
             $contactEmail = htmlspecialchars($contactEmail);
 
             return new Response("<a href=\"mailto:$contactEmail\" class=\"btn btn-primary my-1 btn-sm\"><i class=\"fas fa-envelope\"></i> $contactEmail</a>");
+        } else {
+            return new Response('', Response::HTTP_FORBIDDEN, ['X-Fuzzrake-Debug' => 'reCAPTCHA validation failed']);
+        }
+    }
+
+    /**
+     * @Route("/api/iu_form/verify")
+     * @Cache(maxage=0, public=false)
+     */
+    public function iu_form_verify(Request $request): Response
+    {
+        $ok = $this->isReCaptchaTokenOk($request, 'iu_form_verify');
+
+        if ($ok) {
+            return new Response('', Response::HTTP_NO_CONTENT);
         } else {
             return new Response('', Response::HTTP_FORBIDDEN, ['X-Fuzzrake-Debug' => 'reCAPTCHA validation failed']);
         }

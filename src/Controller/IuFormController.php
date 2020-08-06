@@ -10,13 +10,12 @@ use App\Repository\ArtisanRepository;
 use App\Service\IuFormService;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IuFormController extends AbstractController
+class IuFormController extends AbstractRecaptchaBackedController
 {
     /**
      * @Route("/iu_form/{makerId}", name="iu_form")
@@ -38,7 +37,7 @@ class IuFormController extends AbstractController
         $form = $this->createForm(IuForm::class, $artisan);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->isReCaptchaTokenOk($request, 'iu_form_submit')) {
             $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
             $iuFormService->submit($artisan);
 
@@ -46,8 +45,9 @@ class IuFormController extends AbstractController
         }
 
         return $this->render('iu_form/iu_form.html.twig', [
-            'form'    => $form->createView(),
-            'noindex' => true,
+            'form'      => $form->createView(),
+            'noindex'   => true,
+            'submitted' => $form->isSubmitted(),
         ]);
     }
 }

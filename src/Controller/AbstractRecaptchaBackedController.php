@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\EnvironmentsService;
 use ReCaptcha\ReCaptcha;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,14 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 class AbstractRecaptchaBackedController extends AbstractController
 {
     private ReCaptcha $reCaptcha;
+    private EnvironmentsService $environments;
 
-    public function __construct(ReCaptcha $reCaptcha)
+    public function __construct(ReCaptcha $reCaptcha, EnvironmentsService $environments)
     {
         $this->reCaptcha = $reCaptcha;
+        $this->environments = $environments;
     }
 
     protected function isReCaptchaTokenOk(Request $request, $action): bool
     {
+        if ($this->environments->isTesting()) {
+            return true;
+        }
+
         return $this->reCaptcha
             ->setExpectedHostname($request->getHttpHost())
             ->setExpectedAction($action)
