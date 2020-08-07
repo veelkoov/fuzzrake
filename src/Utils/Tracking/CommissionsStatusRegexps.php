@@ -17,7 +17,7 @@ class CommissionsStatusRegexps
     ];
 
     const COMMON_REPLACEMENTS = [
-        'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?i?ons?((/| and | )quotes)?|comms)',
+        'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?i?ons?((/| and | )(quotes|trades))?|comms)',
         'OPEN'              => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',
         'CLOSED'            => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
         'fursuits'          => 'fursuits?',
