@@ -17,7 +17,7 @@ class CommissionsStatusRegexps
     ];
 
     const COMMON_REPLACEMENTS = [
-        'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?i?ons?((/| and | )quotes)?|comms)',
+        'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?i?ons?((/| and | )(quotes|trades))?|comms)',
         'OPEN'              => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',
         'CLOSED'            => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
         'fursuits'          => 'fursuits?',
@@ -34,7 +34,7 @@ class CommissionsStatusRegexps
     const FALSE_POSITIVES_REGEXES = [
         'FP01' => '(once|when) ((WE_ARE|WE) STATUS( for)? COMMISSIONS|COMMISSIONS are STATUS)',
         'FP02' => 'will not be STATUS for COMMISSIONS',
-        'FP03' => '(art|painted glass|illustrations?) COMMISSIONS( status:| are|:) STATUS',
+        'FP03' => '(art|artwork|painted glass|illustrations?) COMMISSIONS( status:| are|:) STATUS',
         'FP04' => 'COMMISSIONS (status:)?STATUS( in| for| on)?( late| early)? (MONTHS|20\d\d)',
         'FP05' => 'open for commissions\?</h[1-6]>',
         'FP06' => 'if WE_ARE STATUS (for )?(new )?COMMISSIONS',

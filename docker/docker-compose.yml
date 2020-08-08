@@ -18,7 +18,10 @@ services:
 
   php-fpm:
     container_name: fuzzrake
-    build: php-fpm
+    build:
+      context: php-fpm
+      args:
+        INSTALL_XDEBUG: "yes"
     restart: unless-stopped
     volumes:
       - ..:/var/www/html
