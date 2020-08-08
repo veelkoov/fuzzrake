@@ -2,9 +2,9 @@ FROM php:7.4-fpm-alpine
 
 ARG INSTALL_XDEBUG=no
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev      libzip-dev
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip
+RUN apk add --no-cache git icu php-intl python3 py3-pip      libzip
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -12,7 +12,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sh /tmp/symfony_installer \
     && rm /tmp/symfony_installer
 
-RUN docker-php-ext-install -j$(nproc) intl opcache
+RUN docker-php-ext-install -j$(nproc) intl opcache      zip
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
