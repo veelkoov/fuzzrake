@@ -12,6 +12,7 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,18 +35,24 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('since', TextType::class, [ // FIXME: date type
-                'label'      => 'Since when are you crafting (maker\'s experience, NOT studio age)?',
-                'required'   => false,
-                'empty_data' => '',
+            ->add('since', DateType::class, [ // grep-default-auto-since-day-01
+                'label'        => 'Since when are you crafting (maker\'s experience, NOT studio age)?',
+                'required'     => false,
+                'empty_data'   => '',
+                'widget'       => 'choice',
+                'input'        => 'string',
+                'input_format' => 'Y-m-d',
+                'format'       => 'yyyy/MM dd',
+                'placeholder'  => ['year' => 'Year', 'month' => 'Month', 'day' => ''],
+                'years'        => $this->getSinceYears(),
             ])
             ->add('country', TextType::class, [
-                'label'      => 'What country is your studio located in?',
+                'label'      => 'Country',
                 'required'   => true,
                 'empty_data' => '',
             ])
             ->add('state', TextType::class, [
-                'label'      => 'If your studio is in US or Canada, what state is it in?',
+                'label'      => 'State',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -301,6 +308,7 @@ class IuForm extends AbstractType
         }
 
         $builder->get('contactAllowed')->addModelTransformer(NullToEmptyStringTransformer::getInstance());
+        $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -312,5 +320,20 @@ class IuForm extends AbstractType
                 'privateData.passcode'            => 'passcode',
             ],
         ]);
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getSinceYears(): array
+    {
+        $year = (int) date('Y');
+        $result = [];
+
+        do {
+            $result[] = $year;
+        } while (--$year >= 1990);
+
+        return $result;
     }
 }

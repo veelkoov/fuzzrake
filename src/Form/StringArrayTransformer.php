@@ -4,20 +4,12 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Utils\Traits\Singleton;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class StringArrayTransformer implements DataTransformerInterface
 {
-    private static ?self $INSTANCE = null;
-
-    private function __construct()
-    {
-    }
-
-    public static function getInstance(): self
-    {
-        return self::$INSTANCE ?? self::$INSTANCE = new self();
-    }
+    use Singleton;
 
     public function transform($value)
     {

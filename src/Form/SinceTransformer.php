@@ -7,17 +7,17 @@ namespace App\Form;
 use App\Utils\Traits\Singleton;
 use Symfony\Component\Form\DataTransformerInterface;
 
-class NullToEmptyStringTransformer implements DataTransformerInterface
+class SinceTransformer implements DataTransformerInterface
 {
     use Singleton;
 
     public function transform($value)
     {
-        return $value ?? '';
+        return pattern('^\d{4}-\d{2}$')->test($value) ? $value.'-01' : '';
     }
 
     public function reverseTransform($value)
     {
-        return $value ?? '';
+        return substr($value, 0, 7);
     }
 }

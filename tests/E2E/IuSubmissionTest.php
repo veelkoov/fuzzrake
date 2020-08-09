@@ -27,6 +27,7 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Filesystem\Filesystem;
 use TRegx\CleanRegex\Pattern;
@@ -69,7 +70,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'CONTACT_METHOD'            => self::SKIP,
         'CONTACT_ALLOWED'           => ['CORRECTIONS', 'ANNOUNCEMENTS', 'FEEDBACK'],
         'INTRO'                     => 'Le intro __VARIANT__',
-        'SINCE'                     => '2020-0__VARIANT__',
+        'SINCE'                     => ['2020-10', '2020-11', '2020-12'],
         'LANGUAGES'                 => "Czech__VARIANT__ (limited)\nEnglish__VARIANT__",
         'COUNTRY'                   => 'C__VARIANT__',
         'STATE'                     => 'of mind __VARIANT__',
@@ -251,7 +252,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
     private function verifyGeneratedIuForm(Artisan $oldData, string $htmlBody): void
     {
-        $htmlBodyLc = $this->removeLabelsFromLowercaseHtml(mb_strtolower($htmlBody));
+        $htmlBodyLc = $this->removeFalsePositivesFromLowercaseHtml(mb_strtolower($htmlBody));
         $checked = pattern('<input type="(checkbox|radio)" [^>]*value="(?<value>[^"]+)" checked="checked"\s?/?>')
             ->match($htmlBodyLc)->groupBy('value')->texts();
 
@@ -267,15 +268,23 @@ class IuSubmissionTest extends DbEnabledWebTestCase
                 if (in_array($fieldName, self::EXPANDED)) {
                     $this->validateListFieldInGeneratedIuForm($field, $checked, $value);
                 } else {
-                    $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
+                    if (Fields::SINCE == $fieldName) {
+                        $this->validateSinceFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
+                    } else {
+                        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
+                    }
                 }
             }
         }
     }
 
-    private function removeLabelsFromLowercaseHtml(string $inputLowercaseHtml): string
+    private function removeFalsePositivesFromLowercaseHtml(string $inputLowercaseHtml): string
     {
-        return pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
+        $result = pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
+        $result = pattern('<select id="iu_form_since_day"[^>]*><option value=""></option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>')
+            ->remove($result)->first();
+
+        return $result;
     }
 
     private function validateNonListFieldInGeneratedIuForm(Field $field, string $htmlBodyLowercase, string $value): void
@@ -305,6 +314,14 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
     }
 
+    private function validateSinceFieldInGeneratedIuForm(Field $field, string $htmlBodyLc, $value)
+    {
+        list($year, $month) = explode('-', $value);
+
+        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $year);
+        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $month);
+    }
+
     private function setValuesInForm(Form $form, Artisan $data): void
     {
         foreach (Fields::getAll() as $fieldName => $field) {
@@ -315,23 +332,45 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             $value = $data->get($field);
             $fields = $form["iu_form[{$field->modelName()}]"];
 
-            if (!in_array($fieldName, self::EXPANDED)) {
+            if (Fields::SINCE === $fieldName) {
+                $this->setValuesInSinceField($value, $fields);
+            } elseif (in_array($fieldName, self::EXPANDED)) {
+                $this->setValuesInExpandedField($value, $fields);
+            } else {
                 $fields->setValue($value);
-                continue;
+            }
+        }
+    }
+
+    /**
+     * @param FormField[] $fields
+     */
+    private function setValuesInSinceField(string $value, array $fields): void
+    {
+        list($year, $month) = explode('-', $value);
+
+        if (!($fields['year'] instanceof ChoiceFormField) || !($fields['month'] instanceof ChoiceFormField) || !($fields['day'] instanceof ChoiceFormField)) {
+            throw new InvalidArgumentException('Expected array of '.ChoiceFormField::class);
+        }
+
+        $fields['year']->select($year);
+        $fields['month']->select($month);
+        $fields['day']->select('1'); // grep-default-auto-since-day-01
+    }
+
+    private function setValuesInExpandedField(string $value, array $fields): void
+    {
+        $values = StringList::unpack($value);
+
+        foreach ($fields as $formField) {
+            if (!($formField instanceof ChoiceFormField)) {
+                throw new InvalidArgumentException('Expected choice field');
             }
 
-            $values = StringList::unpack($value);
-
-            foreach ($fields as $formField) {
-                if (!($formField instanceof ChoiceFormField)) {
-                    throw new InvalidArgumentException('Expected choice field');
-                }
-
-                if (in_array($formField->availableOptionValues()[0], $values)) {
-                    $formField->tick();
-                } else {
-                    $formField->untick();
-                }
+            if (in_array($formField->availableOptionValues()[0], $values)) {
+                $formField->tick();
+            } else {
+                $formField->untick();
             }
         }
     }

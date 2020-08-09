@@ -18,7 +18,7 @@ grecaptcha.ready((): void => {
     });
 });
 
-jQuery(() => {
+jQuery(($: JQueryStatic) => {
     // @ts-ignore
     window.iuFormRecaptchaValidationCallback = function(token: string): void {
         try {
@@ -27,4 +27,6 @@ jQuery(() => {
             alert('ERROR! Sending form failed. ' + e);
         }
     }
+
+    $('#iu_form_since_day').hide().val('1'); // grep-default-auto-since-day-01
 });

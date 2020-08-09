@@ -117,47 +117,62 @@
 
     <h2 class="mt-4">General info</h2>
 
-    <div class="form-group">
-        {{ form_label(form.name) }}
-        {{ form_widget(form.name) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.formerly) }}
-        <p class="hint">If your studio changed name in the past, what was it? You can keep any old names here. Please: each name on a separate line.</p>
-        {{ form_widget(form.formerly) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.since) }}
-        <p class="hint">Please provide month and year when started (day will be ignored). If your studio has only one maker, skip rest of this paragraph. If your studio has more than one maker, please provide information on experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)</p>
-        {{ form_widget(form.since) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.formerly) }}
+                <p class="hint">If your studio changed name in the past, what was it? You can keep any old names here. Please: each name on a separate line.</p>
+                {{ form_widget(form.formerly) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.since) }}
+                <p class="hint">If your studio has more than one maker, please provide information on experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)</p>
+                {{ form_widget(form.since) }}
+            </div>
+        </div>
     </div>
 
-    <h2>Location</h2>
+    <h2>Location of the studio</h2>
 
-    <div class="form-group">
-        {{ form_label(form.country) }}
-        <p class="hint">Type full name or two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO 3166 code</a> (but not both).</p>
-        {{ form_widget(form.country) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.state) }}
-        {{ form_widget(form.state) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.city) }}
-        {{ form_widget(form.city) }}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.country) }}
+                <p class="hint">Type full name or two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO 3166 code</a> (but not both).</p>
+                {{ form_widget(form.country) }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.state) }}
+                <p class="hint">Only for US and Canada, otherwise please leave empty.</p>
+                {{ form_widget(form.state) }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form_label(form.city) }}
+                {{ form_widget(form.city) }}
+            </div>
+        </div>
     </div>
 
     <h2>Payments</h2>
 
     <div class="form-group">
         {{ form_label(form.paymentPlans) }}
-        <p class="hint">Please provide precise description. EXAMPLES: "None/100% upfront", "40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months", "50% upfront to reserve a slot, 10% each next month", "50% upfront for slot reservation, 100$ each next month until fully paid", etc.</p>
+        <p class="hint">Please provide precise description. If you leave this empty, getfursu.it will treat this information as missing, not "doesn't support payment plans". EXAMPLES: "None/100% upfront", "40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months", "50% upfront to reserve a slot, 10% each next month", "50% upfront for slot reservation, 100$ each next month until fully paid", etc.</p>
         {{ form_widget(form.paymentPlans) }}
     </div>
     <div class="form-group">
         {{ form_label(form.pricesUrl) }}
-        <p class="hint">Please supply PRECISE link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid: images, social media.</p>
+        <p class="hint">Please supply a PRECISE link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid: images, social media.</p>
         {{ form_widget(form.pricesUrl) }}
     </div>
     <div class="form-group">
