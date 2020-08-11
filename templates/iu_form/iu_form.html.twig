@@ -26,7 +26,7 @@
         <div class="card-body">
             <h5 class="card-title">Please don't rush</h5>
             <p class="card-text">
-                You don't want your information to be inaccurate/incomplete. Reserve some time for filling this. Grab your favourite beverage. This form can wait. I am aware of the fact that this form is long as hecc. But you can't say your business is a trivial thing, can you? Please start with the second suggestion <em>Please first read the whole thing, then fill in</em> and then plan ahead.
+                You don't want your information to be inaccurate/incomplete. Reserve some time for filling this. Grab your favorite beverage. This form can wait. I am aware of the fact that this form is long as hecc. But you can't say your business is a trivial thing, can you? Please start with the second suggestion <em>Please first read the whole thing, then fill in</em>.
             </p>
         </div>
     </div>
@@ -37,7 +37,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-danger">Please first read the whole thing, then fill in</h5>
                     <p class="card-text">
-                        Yes, I'm serious. I suggest to first take a look at the whole questionnaire, and start filling from the start after getting familiar with what information goes where. You'll avoid repeating yourself and/or confusing your potential customers. You will also be able to tell how much time this will take.
+                        Yes, I'm serious. I suggest to first take a look at the whole questionnaire and start filling from the start after getting familiar with what information goes where. You'll avoid repeating yourself and/or confusing your potential customers. You will also be able to tell how much time filling all of this will take.
                     </p>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-warning">Avoid using a smartphone/tablet</h5>
                     <p class="card-text">
-                        I strongly suggest filling this up using computer/laptop! Mobile devices made enough weird stuff here, and will take away any comfort possible. Don't make your life hard! This form can wait.
+                        I strongly suggest filling this up using a computer/laptop! Mobile devices made enough weird stuff here and will take away any comfort possible. Don't make your life hard! This form can wait.
                     </p>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                 <div class="card-body">
                     <h5 class="card-title">I may take stuff literally</h5>
                     <p class="card-text">
-                        If you make a typo, or e.g. spell your name lowercase - that's how it will end up on the site. Later correction is possible though, so no need to panic.
+                        If you make a typo or e.g. spell your name lowercase, that's how it will end up on the site. Later correction is possible though, so no need to panic.
                     </p>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Feedback is welcome</h5>
                     <p class="card-text">
-                        In case you have any remarks, please add them into <em>notes</em> at the end. This is important. This will help you in properly advertising your studio and will help me improving the website. Thank you!
+                        In case you have any remarks, please add them to <em>notes</em> at the end. This is important. This will help you in properly advertising your studio and will help me improve the website. Thank you!
                     </p>
                 </div>
             </div>
@@ -103,7 +103,7 @@
         <div class="card-body">
             <h5 class="card-title text-danger">Privacy</h5>
             <p class="card-text">
-                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through getfursu.it website or through it's sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked <span class="badge badge-danger">PRIVATE</span> .
+                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge badge-danger">PRIVATE</span>
             </p>
         </div>
     </div>
@@ -111,7 +111,7 @@
     </div> <!-- id="iu_form_instructions_container" -->
 
     {# Hide the form initially, so in case automatic captcha fails from the start, the user won't waste time on the form they won't be able to submit #}
-    <div id="iu_form_container" {% if not submitted %}class="d-none"{% endif %}>
+    <div id="iu_form_container">
 
     {{ form_start(form) }}
 
@@ -125,19 +125,20 @@
             </div>
             <div class="form-group">
                 {{ form_label(form.formerly) }}
-                <p class="hint">If your studio changed name in the past, what was it? You can keep any old names here. Please: each name on a separate line.</p>
+                <p class="hint">If your studio changed its name in the past, what was it? You can keep any old names here. Please: each name on a separate line.</p>
                 {{ form_widget(form.formerly) }}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.since) }}
-                <p class="hint">If your studio has more than one maker, please provide information on experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)</p>
+                <p class="hint">If your studio has more than one maker, please provide information on the experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)</p>
                 {{ form_widget(form.since) }}
             </div>
         </div>
     </div>
 
+    <hr />
     <h2>Location of the studio</h2>
 
     <div class="row">
@@ -151,7 +152,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 {{ form_label(form.state) }}
-                <p class="hint">Only for US and Canada, otherwise please leave empty.</p>
+                <p class="hint">Only for the US and Canada, otherwise please leave empty.</p>
                 {{ form_widget(form.state) }}
             </div>
         </div>
@@ -163,30 +164,38 @@
         </div>
     </div>
 
+    <hr />
     <h2>Payments</h2>
 
-    <div class="form-group">
-        {{ form_label(form.paymentPlans) }}
-        <p class="hint">Please provide precise description. If you leave this empty, getfursu.it will treat this information as missing, not "doesn't support payment plans". EXAMPLES: "None/100% upfront", "40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months", "50% upfront to reserve a slot, 10% each next month", "50% upfront for slot reservation, 100$ each next month until fully paid", etc.</p>
-        {{ form_widget(form.paymentPlans) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.pricesUrl) }}
-        <p class="hint">Please supply a PRECISE link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid: images, social media.</p>
-        {{ form_widget(form.pricesUrl) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.paymentMethods) }}
-        <p class="hint">E.g. bank transfers, debit cards, on-line payments (please mention the services names). Each in a separate line.</p>
-        {{ form_widget(form.paymentMethods) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.currenciesAccepted) }}
-        <p class="hint">E.g. USD, AUD, CAD, EUR, BRL, CZK. Each in a separate line, please.</p>
-        {{ form_widget(form.currenciesAccepted) }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.paymentPlans) }}
+                <p class="hint">Please provide a precise description. If you leave this empty, getfursu.it will treat this information as missing! (see the first example). Examples: <em>None/100% upfront</em>, <em>40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months</em>, <em>50% upfront to reserve a slot, 10% each next month</em>, <em>50% upfront for slot reservation, 100$ each next month until fully paid</em>.</p>
+                {{ form_widget(form.paymentPlans) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.pricesUrl) }}
+                <p class="hint">Please supply a <strong>precise</strong> link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid images, social media.</p>
+                {{ form_widget(form.pricesUrl) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.paymentMethods) }}
+                <p class="hint">Examples: <em>Bank transfers</em>, <em>Debit cards</em>, on-line payments (please mention the services names, e.g. <em>PayPal</em>), <em>Cash</em>. Each in a separate line.</p>
+                {{ form_widget(form.paymentMethods) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.currenciesAccepted) }}
+                <p class="hint">Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please.</p>
+                {{ form_widget(form.currenciesAccepted) }}
+            </div>
+        </div>
     </div>
 
-    <h2>Types, features, available stuff</h2>
+    <hr />
+    <h2>Production models</h2>
 
     <div class="row">
         <div class="col-md-6">
@@ -198,10 +207,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.productionModelsComment) }}
+                <p class="hint">Example: <em>I usually work with pre-mades, but I'm willing to do an interesting commission</em>.</p>
                 {{ form_widget(form.productionModelsComment) }}
             </div>
         </div>
     </div>
+
+    <hr />
+    <h2>Styles</h2>
 
     <div class="row">
         <div class="col-md-6">
@@ -213,15 +226,19 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.otherStyles) }}
-                <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+                <p class="hint">You can check what other makers listed <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">here</a>. Please: one item = one line.</p>
                 {{ form_widget(form.otherStyles) }}
             </div>
             <div class="form-group">
                 {{ form_label(form.stylesComment) }}
+                <p class="hint">Example: <em>I usually work with pre-mades, but I'm willing to do an interesting commission.</em></p>
                 {{ form_widget(form.stylesComment) }}
             </div>
         </div>
     </div>
+
+    <hr />
+    <h2>Order types</h2>
 
     <div class="row">
         <div class="col-md-6">
@@ -233,15 +250,19 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.otherOrderTypes) }}
-                <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+                <p class="hint">You can check what other makers listed <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">here</a>. Please: one item = one line.</p>
                 {{ form_widget(form.otherOrderTypes) }}
             </div>
             <div class="form-group">
                 {{ form_label(form.orderTypesComment) }}
+                <p class="hint">Example: <em>Especially pumped to do digitigrades because I have too much foam stacked, and I want to get rid of it.</em></p>
                 {{ form_widget(form.orderTypesComment) }}
             </div>
         </div>
     </div>
+
+    <hr />
+    <h2>Features</h2>
 
     <div class="row">
         <div class="col-md-6">
@@ -253,19 +274,25 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.otherFeatures) }}
-                <p class="hint">You can check what other makers <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">listed here</a>. Please: one item = one line.</p>
+                <p class="hint">You can check what other makers listed <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">here</a>. Please: one item = one line.</p>
                 {{ form_widget(form.otherFeatures) }}
             </div>
             <div class="form-group">
                 {{ form_label(form.featuresComment) }}
+                <p class="hint">Example: <em>Prefer not doing follow-me eyes, because I don't like being observed while in the workshop.</em></p>
                 {{ form_widget(form.featuresComment) }}
             </div>
         </div>
     </div>
 
+    <hr />
+    <h2>Species</h2>
+
+    <p></p>
+
     <div class="form-group">
         {{ form_label(form.speciesDoes) }}
-        <p class="hint">EXAMPLES: "Most species" (+ specify below which definitely not), or either in general: canines, cats, rodents, ungulates, or more specifically: dogs, wolves, foxes, horses, lynxes, lions, tigers, sergals, bats, etc. Please no comments here, e.g. "willing to try XYZ" or "most experience with XYZ" fits in the comments field below. Please: one specie (group) = one line.</p>
+        <p class="hint">Examples: <em>Most species</em> (+ more specific in the "will not do" field), but you may list only some groups here, e.g. <em>Scalies</em>, <em>Fantasy creatures</em>, or even particular species, e.g. <em>Lions</em>, <em>Tigers</em>. Just keep in mind that if you specify a wider group (<em>Most species</em> or <em>Felines</em>), then listing particular species is redundant (e.g. <em>Lions</em>). Don't put any comments here, e.g. <em>willing to try XYZ</em> or <em>most experience with XYZ</em> should be placed in the separate comments field instead. Please: one specie (group) = one line.</p>
         {{ form_widget(form.speciesDoes) }}
     </div>
     <div class="form-group">
@@ -275,17 +302,25 @@
     </div>
     <div class="form-group">
         {{ form_label(form.speciesComment) }}
-        <p class="hint">E.g. "most experienced in XYZ", "willing to try anything", "Just ask!".</p>
+        <p class="hint">Examples: <em>Most experienced in canines</em>, <em>I especially enjoy dragons (and scalies in general)</em>, <em>Willing to try anything</em>, <em>Just ask!</em></p>
         {{ form_widget(form.speciesComment) }}
     </div>
 
     <h2>Links to websites</h2>
 
+    <ol>
+        <li><span class="mandatory"></span>You must provide at least one link to a website/social media.</li>
+        <li>Instant messaging (i.a. Telegram, Messenger), e-mail addresses, and other direct contact measures are not allowed anywhere here. getfursu.it can only link to websites, on which you can post such information.</li>
+        <li>Work-in-progress websites are not accepted (keep in mind, that any portfolio is more important than an empty website; if you don't have one, start with Fur Affinity, or similar).</li>
+        <li>Adding links to empty accounts/websites will only make your visitors frustrated. Consider adding links when content will already be there.</li>
+        <li>All links put here must not require the visitor to click anything to view your content (scrolling is OK). E.g. if you keep FAQ on your website, then you should link the precise link to the FAQ, instead of the one to the homepage.</li>
+    </ol>
+
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.fursuitReviewUrl) }}
-                <p class="hint">This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!</p>
+                <p class="hint"><a href="http://fursuitreview.com/makers" target="_blank">Check here</a>. This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!</p>
                 {{ form_widget(form.fursuitReviewUrl) }}
             </div>
         </div>
@@ -301,7 +336,6 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.faqUrl) }}
-                <p class="hint">Please supply PRECISE link, not one to e.g. homepage.</p>
                 {{ form_widget(form.faqUrl) }}
             </div>
         </div>
@@ -405,19 +439,20 @@
 
     <div class="form-group">
         {{ form_label(form.otherUrls) }}
-        <p class="hint">Please note that they will NOT be visible on the website, but if I see significant number of links to one portal, I might add support for it in the future. Do NOT post links to instant messaging here (e.g. Telegram), e-mail addresses or any other direct contact measures. getfursu.it will only link to websites, on which you can post such information. Please: one address = one line.</p>
+        <p class="hint">Please note that they will <strong>not</strong> be visible on the website, but if I see a significant number of links to one portal, I might add support for it in the future. Please: one address = one line.</p>
         {{ form_widget(form.otherUrls) }}
     </div>
 
     <h2>Automatic commissions status tracking (open/closed)</h2>
-    <p>I highly encourage you to take advantage of this feature! Here's how it works: https://getfursu.it/tracking.html . I'll be happy to help if you need assistance. If you keep an eligible webpage up-to-date with commissions status, please copy+paste the full link to it: Note: Putting "open" here will not work, sorry. Please read about tracking by clicking the link above.</p>
+    <p>I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. You can <a href="{{ path('tracking') }}" target="_blank">read here</a> how the tracking works. I'll be happy to help if you need assistance.</p>
 
     <div class="form-group">
         {{ form_label(form.cstUrl) }}
-        <p class="hint">Note: Putting "open" here will not work, sorry. Please read about tracking by clicking the link above.</p>
+        <p class="hint">Note: Putting <em>open</em> here will not work, sorry. Please read about tracking by clicking the link above.</p>
         {{ form_widget(form.cstUrl) }}
     </div>
 
+    {# TODO: rephrase, reformat, add Furtrack #}
     <h2>scritch.es - link to PHOTOS of your creations</h2>
     <p>Have you heard about https://scritch.es/ ? It's a fairly new initiative of creating a proper service for publishing photos with fursuiters, while being able to tag them and their makers. Whole community can take part in tagging ("I know this guy on the photo, here goes a tag!"). Makers keep their pages with all their fursuits listed. Fursuiters have access to all their photos. It's far better than tagging on Facebook or Twitter, or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is not involved in scritch.es development/maintenance; in case of any questions/issues, please reach to the scritch.es support by going to their website and using the link in the top menu.</p>
 
@@ -442,13 +477,13 @@
 
     <div class="form-group">
         {{ form_label(form.languages) }}
-        <p class="hint">Each one in a separate line, please.</p>
+        <p class="hint">Each one in a separate line, please. Examples: <em>English</em>, <em>English (limited)</em>.</p>
         {{ form_widget(form.languages) }}
     </div>
 
     <div class="form-group">
         {{ form_label(form.makerId) }}
-        <p class="hint">This will be your "Maker ID", a short identification thingy. Please read about it here: https://getfursu.it/maker_ids.html . 7 characters, uppercase letters and/or digits. Here are some possible examples: "SILVENA", "2STFURS", "DIRECRTS", "DHCACTI", "NUKECTS", "GOFURIT", "ALPHADG". You might use abbreviations, state or country codes, etc.</p>
+        <p class="hint">This will be your <strong>Maker ID</strong>, a short identification thingy. Please <a href="{{ path('maker_ids') }}" target="_blank">read about it here</a>. 7 characters, uppercase letters and/or digits. Here are some possible examples: <em>SILVENA</em>, <em>2STFURS</em>, <em>DIRECRTS</em>, <em>DHCACTI</em>, <em>NUKECTS</em>, <em>GOFURIT</em>, <em>ALPHADG</em>. You might use abbreviations, state or country codes, etc.</p>
         {{ form_widget(form.makerId) }}
     </div>
 
@@ -460,22 +495,20 @@
 
     <div class="form-group">
         {{ form_label(form.notes) }}
-        <p class="small"><strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet 2) <strong>WILL</strong> however be public. Treat this as place for comments for getfursu.it maintainer or some additional information which might be added in the future to the website</p>
+        <p class="small"><strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments for getfursu.it maintainer or some additional information which might be added to the website in the future.</p>
         {{ form_widget(form.notes) }}
     </div>
 
-
     <div class="form-group">
         {{ form_label(form.passcode) }}
-        <p class="small"><span class="badge badge-danger">PRIVATE</span> Please provide some kind of passcode/password/pin (DO NOT USE THE ONE YOU USE ELSEWHERE!). Write it down, and provide it every time when you send updates in the future. If you lost the PIN/passcode, please put "I forgot", or something like that. Whenever you send updates with invalid or missing PIN/passcode, I will reach up to you to make sure it was you, who posted the updates. There are reasons it is done this particular way, explanation to long for this form. IMPORTANT: I REPEAT, DO NOT USE ANY PASSCODE YOU USE ANYWHERE ELSE! IMPORTANT 2: This passcode can be seen by the maintainer (as plain text). Please use at least 6 characters. <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
+        <p class="small"><span class="badge badge-danger">PRIVATE</span> Please provide some kind of passcode/password. <span class="passcode-confidentiality-warning">Do not use the one you use elsewhere!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you. This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> <span class="passcode-confidentiality-warning">Important 2: This passcode can be seen by the maintainer in the clear text!</span> Please use at least 6 characters. <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
         {{ form_widget(form.passcode) }}
     </div>
 
+    {# TODO: rephrase, reformat #}
     <h2>Contact, updates &amp; feedback</h2>
 
-    <p><strong>Please consider</strong></p>
-
-    <p>getfursu.it is under development. Slow, but it is. This means two things:</p>
+    <p><strong>Please consider:</strong> getfursu.it is under development. Slow, but it is. This means two things:</p>
     <ol>
         <li>In the future, your studio information here will most probably become incomplete or outdated. This happens when new data gets introduced here. For example, when getfursu.it started, there weren't info about production models, species, payment plans. Those who didn't make updates since then, have incomplete info now.</li>
         <li>I value makers' feedback, because it lets me make changes and improvements properly (you know the business far better than I do). I'd love to get a good advice or opinion from you.</li>

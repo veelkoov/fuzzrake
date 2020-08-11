@@ -161,7 +161,7 @@ class IuForm extends AbstractType
             ])
 
             ->add('fursuitReviewUrl', UrlType::class, [
-                'label'      => 'If you are listed on http://fursuitreview.com/makers , please copy+paste full link:',
+                'label'      => 'If you are listed on FursuitReview, please copy+paste full link:',
                 'required'   => false,
                 'empty_data' => '',
             ])

@@ -17,7 +17,7 @@ legend {
   font-weight: 400;
 }
 
-label.required:before, legend.required:before {
+label.required:before, legend.required:before, .mandatory:before {
   content: '(mandatory) ';
   color: #f00;
   font-weight: bold;
@@ -25,4 +25,16 @@ label.required:before, legend.required:before {
 
 label.required.form-check-label:before {
   content: '';
+}
+
+.hint em {
+  margin: 0 0.3ex;
+  background-color: #efefef;
+  color: teal;
+}
+
+.passcode-confidentiality-warning {
+  color: #f00;
+  text-transform: uppercase;
+  font-weight: bold;
 }
