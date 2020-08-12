@@ -43,7 +43,7 @@ class IuForm extends AbstractType
                 'input'        => 'string',
                 'input_format' => 'Y-m-d',
                 'format'       => 'yyyy/MM dd',
-                'placeholder'  => ['year' => 'Year', 'month' => 'Month', 'day' => ''],
+                'placeholder'  => ['year' => 'Year', 'month' => 'Month', 'day' => 'Day'],
                 'years'        => $this->getSinceYears(),
             ])
             ->add('country', TextType::class, [

@@ -281,7 +281,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function removeFalsePositivesFromLowercaseHtml(string $inputLowercaseHtml): string
     {
         $result = pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
-        $result = pattern('<select id="iu_form_since_day"[^>]*><option value=""></option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>')
+        $result = pattern('<select id="iu_form_since_day"[^>]*><option value="">day</option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>')
             ->remove($result)->first();
 
         return $result;
