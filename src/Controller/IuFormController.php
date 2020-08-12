@@ -32,8 +32,6 @@ class IuFormController extends AbstractRecaptchaBackedController
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
-        // TODO: New maker - require them to check the list
-
         $form = $this->createForm(IuForm::class, $artisan);
         $form->handleRequest($request);
 
