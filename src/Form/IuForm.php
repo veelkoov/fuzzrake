@@ -89,7 +89,7 @@ class IuForm extends AbstractType
                 'expanded' => true,
             ])
             ->add('productionModelsComment', TextareaType::class, [
-                'label'      => 'Any comments on the production models?', // TODO: Improve descriptions
+                'label'      => 'Any comments on the production models?',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -106,7 +106,7 @@ class IuForm extends AbstractType
                 'empty_data' => '',
             ])
             ->add('stylesComment', TextareaType::class, [
-                'label'      => 'Any comments on the styles?', // TODO: Improve descriptions
+                'label'      => 'Any comments on the styles?',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -123,7 +123,7 @@ class IuForm extends AbstractType
                 'empty_data' => '',
             ])
             ->add('orderTypesComment', TextareaType::class, [
-                'label'      => 'Any comments on the order types?', // TODO: Improve descriptions
+                'label'      => 'Any comments on the order types?',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -140,7 +140,7 @@ class IuForm extends AbstractType
                 'empty_data' => '',
             ])
             ->add('featuresComment', TextareaType::class, [
-                'label'      => 'Any comments on the features?', // TODO: Improve descriptions
+                'label'      => 'Any comments on the features?',
                 'required'   => false,
                 'empty_data' => '',
             ])
