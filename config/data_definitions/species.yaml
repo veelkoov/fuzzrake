@@ -242,7 +242,7 @@ parameters:
       '(All species for the most part|Open to most species|Most animals OK|Most species considered)':  'Most species'
       '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
       '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
-      'Any species':                                                                                   'Most species'
+      'Any species|Most species':                                                                      'Most species'
 
       '^(None|Nope|no)$':                                    ''
       '(\s|^)(and|or)':                                      '' # FIXME
