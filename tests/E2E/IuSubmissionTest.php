@@ -17,7 +17,6 @@ use App\Utils\DataInput\DataInputException;
 use App\Utils\DataInput\IuSubmission;
 use App\Utils\DataInput\IuSubmissionFinder;
 use App\Utils\DataInput\Manager;
-use App\Utils\DataInput\RawImportItem;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\ORMException;

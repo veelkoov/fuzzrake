@@ -132,7 +132,7 @@ mtask(:cstr, :cst, '--refetch')
 
 task 'get-submissions' do
   exec_or_die('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
-              'getfursu.it:/var/www/prod/var/iuFormData/', 'var/iuFormData/')
+              'getfursu.it:/var/www/prod/var/iuFormData/', IMPORT_DIR_PATH)
 end
 
 mtask(:import, :console, 'app:data:import', IMPORT_DIR_PATH, FIXES_FILE_PATH)
