@@ -500,12 +500,6 @@
         {{ form_widget(form.notes) }}
     </div>
 
-    <div class="form-group">
-        {{ form_label(form.passcode) }}
-        <p class="hint"><span class="badge badge-danger">PRIVATE</span> Please provide some kind of passcode/password. <span class="passcode-confidentiality-warning">Do not use the one you use elsewhere!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> <span class="passcode-confidentiality-warning">Important 2: This passcode can be seen by the maintainer in the clear text!</span> Please use at least 6 characters. <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
-        {{ form_widget(form.passcode) }}
-    </div>
-
     <h2>Contact, updates &amp; feedback</h2>
 
     <p><strong>Please consider:</strong> getfursu.it is under development. Slow, but it is. This means two things:</p>
@@ -534,12 +528,20 @@
         {{ form_widget(form.contactInfoObfuscated) }}
     </div>
 
+    <div class="form-group">
+        {{ form_label(form.passcode) }}
+        <p class="hint"><span class="badge badge-danger">PRIVATE</span> Please provide some kind of passcode/password. Please use at least 6 characters. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form.  <span class="passcode-confidentiality-warning">Important: This passcode can be seen by the maintainer in the clear text!</span> <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
+        {{ form_widget(form.passcode) }}
+    </div>
+
     {{ form_rest(form) }}
     <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
-    <button class="btn btn-primary g-recaptcha"
-            data-sitekey="{{ google_recaptcha_site_key }}"
-            data-callback="iuFormRecaptchaValidationCallback"
-            data-action="iu_form_submit">Submit</button>
+    <div class="text-right">
+        <button class="btn btn-primary btn-lg g-recaptcha"
+                data-sitekey="{{ google_recaptcha_site_key }}"
+                data-callback="iuFormRecaptchaValidationCallback"
+                data-action="iu_form_submit">Submit</button>
+    </div>
 
     {{ form_end(form) }}
 

@@ -36,7 +36,8 @@ class ArtisanPrivateData
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=4, max=255, groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"}, message="Passcode is required")
+     * @Assert\Length(min=4, max=255, groups={"iu_form"}, minMessage="Passcode is not long enough")
      */
     private string $passcode = '';
 
