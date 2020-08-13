@@ -1,15 +1,22 @@
 # frozen_string_literal: true
 
-IMPORT_DIR_PATH = 'var/iuFormData'
+def read_iu_submissions_s3_path # TODO: dotenv
+  result = `grep S3_COPIES_BUCKET_URL .env.local | cut -f2 -d'='`.strip!
+  result += '/' unless result.end_with?('/')
+
+  result
+end
+
+IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
 FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
+IU_SUBMISSIONS_S3_PATH = read_iu_submissions_s3_path
 
 DB_PATH = 'var/db.sqlite'
-DB_TMP_PATH = DB_PATH + '.tmp'
+DB_TMP_PATH = "#{DB_PATH}.tmp"
 
 DB_DUMP_DIR_PATH = 'db_dump'
-DB_DUMP_TMP_PATH = DB_DUMP_DIR_PATH + '/fuzzrake.tmp.sql'
-DB_DUMP_PRV_COPY_PATH = DB_DUMP_DIR_PATH + '/artisans_private_data-' \
-                      + Time.now.getutc.strftime('%Y-%m-%d_%H-%M-%S') + '.sql'
+DB_DUMP_TMP_PATH = "#{DB_DUMP_DIR_PATH}/fuzzrake.tmp.sql"
+DB_DUMP_PRV_COPY_PATH = "#{DB_DUMP_DIR_PATH}/artisans_private_data-#{Time.now.getutc.strftime('%Y-%m-%d_%H-%M-%S')}.sql"
 
 # Volatile information, easily reproducible
 IGNORED_TABLES = %w[
@@ -28,7 +35,7 @@ def mtask(the_task, called_task, *additional_args)
 end
 
 def exec_or_die(*args)
-  print("Executing: '" + args.join("' '") + "'\n")
+  print("Executing: '#{args.join("' '")}'\n")
   system(*args) || raise('Command returned non-zero exit code')
 end
 
@@ -58,14 +65,14 @@ task :dbpush do
 
   exec_or_die('sqlite3', DB_TMP_PATH, 'DELETE FROM artisans_private_data;')
 
-  exec_or_die('scp', '-p', DB_TMP_PATH, 'getfursu.it:/var/www/prod/' + DB_PATH)
-  exec_or_die('scp', '-p', DB_TMP_PATH, 'getfursu.it:/var/www/beta/' + DB_PATH)
+  exec_or_die('scp', '-p', DB_TMP_PATH, "getfursu.it:/var/www/prod/#{DB_PATH}")
+  exec_or_die('scp', '-p', DB_TMP_PATH, "getfursu.it:/var/www/beta/#{DB_PATH}")
 
   exec_or_die('rm', DB_TMP_PATH)
 end
 
 task :dbpull do
-  exec_or_die('scp', '-p', 'getfursu.it:/var/www/prod/' + DB_PATH, DB_TMP_PATH)
+  exec_or_die('scp', '-p', "getfursu.it:/var/www/prod/#{DB_PATH}", DB_TMP_PATH)
   exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_PRV_COPY_PATH}", '.dump artisans_private_data')
   exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
   exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_PRV_COPY_PATH}")
@@ -133,6 +140,7 @@ mtask(:cstr, :cst, '--refetch')
 task 'get-submissions' do
   exec_or_die('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
               'getfursu.it:/var/www/prod/var/iuFormData/', IMPORT_DIR_PATH)
+  exec_or_die('aws', 's3', 'sync', '--size-only', IU_SUBMISSIONS_S3_PATH, IMPORT_DIR_PATH)
 end
 
 mtask(:import, :console, 'app:data:import', IMPORT_DIR_PATH, FIXES_FILE_PATH)
