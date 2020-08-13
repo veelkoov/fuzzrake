@@ -27,6 +27,13 @@ jQuery(($: JQueryStatic) => {
             alert('ERROR! Sending form failed. ' + e);
         }
     }
-
-    $('#iu_form_since_day').hide().val('1'); // grep-default-auto-since-day-01
 });
+
+function set_day() {
+    // Change value only if year&month are set; otherwise we'll get an error message if date's not set - unintentional requirement
+    day.val(month.val() && year.val() ? '1' : ''); // grep-default-auto-since-day-01
+}
+
+let day = jQuery('#iu_form_since_day').hide();
+let month = jQuery('#iu_form_since_month').on('change', set_day);
+let year = jQuery('#iu_form_since_year').on('change', set_day);
