@@ -1,0 +1,26 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}Successful submission!{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
+    {{ encore_entry_script_tags('iu_form') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('iu_form') }}
+{% endblock %}
+
+{% block body %}
+    <div class="alert alert-success my-5" role="alert">
+        <h4 class="alert-heading">It's done!</h4>
+
+        <p>
+            You submission has been recorded. Please follow
+            <a href="{{ path('data_updates', { '_fragment': 'UPDATES_SENT' }) }}">this
+                link</a> {# grep-iu-submission-updates-sent #} to figure out next steps.
+        </p>
+    </div>
+{% endblock %}

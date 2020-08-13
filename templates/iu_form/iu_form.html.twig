@@ -16,6 +16,8 @@
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
+    {{ form_errors(form) }}
+
     {% if submitted %}
         <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#iu_form_instructions_container">Toggle instructions</button>
     {% endif %}

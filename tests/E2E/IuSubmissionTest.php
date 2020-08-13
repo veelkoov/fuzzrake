@@ -242,7 +242,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         self::assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
-        self::assertSelectorTextContains('h1#how_to_add', 'How do I get my info added/updated?');
+        self::assertSelectorTextContains('p', 'You submission has been recorded.');
     }
 
     private function getIuFormUrlForMakerId(string $urlMakerId): string

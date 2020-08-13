@@ -84,9 +84,16 @@ class IuSubmission implements FieldReadInterface
         }
     }
 
+    /**
+     * @throws DataInputException
+     */
     public function get(Field $field)
     {
-        $value = $this->data[$field->name()];
+        $value = $this->data[$field->name()] ?? false;
+
+        if (false === $value) {
+            throw new DataInputException("Submission {$this->id} is missing {$field->name()}");
+        }
 
         return $field->isList() ? StringList::pack($value) : $value;
     }

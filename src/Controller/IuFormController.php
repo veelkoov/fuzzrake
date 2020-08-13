@@ -38,15 +38,29 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         if ($form->isSubmitted() && $form->isValid() && $this->isReCaptchaTokenOk($request, 'iu_form_submit')) {
             $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
-            $iuFormService->submit($artisan);
 
-            return $this->redirectToRoute('data_updates', ['_fragment' => 'UPDATES_SENT']); // TODO: Should show a nice message instead
+            if ($iuFormService->submit($artisan)) {
+                return $this->redirectToRoute('iu_form_confirmation');
+            } else {
+                $form->addError(new FormError('There was an error while trying to submit the form.'
+                .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
+            }
         }
 
         return $this->render('iu_form/iu_form.html.twig', [
             'form'      => $form->createView(),
             'noindex'   => true,
             'submitted' => $form->isSubmitted(),
+        ]);
+    }
+
+    /**
+     * @Route("/iu_form_confirmation", name="iu_form_confirmation")
+     * @Cache(maxage=0, public=false)
+     */
+    public function iuFormConfirmation(): Response
+    {
+        return $this->render('iu_form/confirmation.html.twig', [
         ]);
     }
 }
