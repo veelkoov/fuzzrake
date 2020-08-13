@@ -13,10 +13,10 @@ use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
-use App\Utils\DataInput\DataInputException;
-use App\Utils\DataInput\IuSubmission;
-use App\Utils\DataInput\IuSubmissionFinder;
-use App\Utils\DataInput\Manager;
+use App\Utils\DataInputException;
+use App\Utils\IuSubmissions\Finder;
+use App\Utils\IuSubmissions\IuSubmission;
+use App\Utils\IuSubmissions\Manager;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\ORMException;
@@ -386,7 +386,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
             static::$container->get(FdvFactory::class)->create($printer), false);
 
-        $import->import(IuSubmissionFinder::getFrom(self::IMPORT_DATA_DIR));
+        $import->import(Finder::getFrom(self::IMPORT_DATA_DIR));
 
         $this->validateConsoleOutput($output->fetch());
     }
@@ -429,7 +429,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     {
         return array_map(function (IuSubmission $submission): string {
             return $submission->getId();
-        }, IuSubmissionFinder::getFrom(self::IMPORT_DATA_DIR));
+        }, Finder::getFrom(self::IMPORT_DATA_DIR));
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void

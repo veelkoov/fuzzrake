@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Utils\IuSubmissions;
 
 use App\Entity\Artisan;
+use App\Service\AwsCliService;
 use App\Utils\Artisan\Fields;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
-class IuFormSnsService
+class SnsService
 {
     private AwsCliService $cli;
     private string $notificationSnsTopicArn;
@@ -27,7 +28,7 @@ class IuFormSnsService
         }
     }
 
-    public function notifyAboutSubmission(Artisan $data): bool
+    public function notifyAboutSubmission(Artisan $data, bool $s3SendingOk): bool
     {
         if ('' === $this->notificationSnsTopicArn) {
             $this->logger->warning('Unable to send SNS notification - the URL is not configured');

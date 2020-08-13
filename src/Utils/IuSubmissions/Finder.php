@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\DataInput;
+namespace App\Utils\IuSubmissions;
 
+use App\Utils\DataInputException;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use JsonException;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\Finder as FileFinder;
 
-final class IuSubmissionFinder
+final class Finder
 {
     use UtilityClass;
 
@@ -26,7 +27,7 @@ final class IuSubmissionFinder
 
         $result = [];
 
-        $finder = new Finder();
+        $finder = new FileFinder();
         $finder->files()->in($directoryPath);
 
         foreach ($finder as $file) {

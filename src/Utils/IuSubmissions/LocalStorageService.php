@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Utils\IuSubmissions;
 
 use App\Utils\DateTime\DateTimeUtils;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class IuFormSubmissionLocalService
+class LocalStorageService
 {
     private LoggerInterface $logger;
     private string $dataDirPath;

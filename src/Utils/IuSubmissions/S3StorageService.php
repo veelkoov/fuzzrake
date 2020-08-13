@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Utils\IuSubmissions;
 
+use App\Service\AwsCliService;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
-class IuFormS3Service
+class S3StorageService
 {
     private LoggerInterface $logger;
-    private IuFormSubmissionLocalService $local;
+    private LocalStorageService $local;
     private AwsCliService $cli;
     private string $s3CopiesBucketUrl;
 
-    public function __construct(LoggerInterface $logger, IuFormSubmissionLocalService $local, AwsCliService $cli, string $iuFormDataS3CopiesBucketUrl)
+    public function __construct(LoggerInterface $logger, LocalStorageService $local, AwsCliService $cli, string $iuFormDataS3CopiesBucketUrl)
     {
         $this->logger = $logger;
         $this->local = $local;

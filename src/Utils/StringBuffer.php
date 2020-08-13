@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\DataInput;
+namespace App\Utils;
 
 use UnexpectedValueException;
 

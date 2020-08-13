@@ -7,9 +7,10 @@ namespace App\Controller;
 use App\Entity\Artisan;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
-use App\Service\IuFormService;
+use App\Utils\IuSubmissions\IuSubmissionService;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,7 +24,7 @@ class IuFormController extends AbstractRecaptchaBackedController
      *
      * @throws NotFoundHttpException
      */
-    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuFormService $iuFormService, ?string $makerId = null): Response
+    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, ?string $makerId = null): Response
     {
         try {
             $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();

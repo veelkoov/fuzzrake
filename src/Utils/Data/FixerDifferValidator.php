@@ -8,7 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\Validator\SpeciesListValidator;
-use App\Utils\DataInput\Manager;
+use App\Utils\IuSubmissions\Manager;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 

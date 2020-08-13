@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Tasks\DataImportFactory;
-use App\Utils\DataInput\DataInputException;
-use App\Utils\DataInput\IuSubmissionFinder;
-use App\Utils\DataInput\Manager;
+use App\Utils\DataInputException;
+use App\Utils\IuSubmissions\Finder;
+use App\Utils\IuSubmissions\Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
@@ -49,7 +49,7 @@ class DataImportCommand extends Command
         $import = $this->dataImportFactory->get(Manager::createFromFile($input->getArgument('corrections-file')),
             $io, $input->getOption('fix-mode'));
 
-        $import->import(IuSubmissionFinder::getFrom($input->getArgument('import-dir')));
+        $import->import(Finder::getFrom($input->getArgument('import-dir')));
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();

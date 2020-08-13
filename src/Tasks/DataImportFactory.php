@@ -6,7 +6,7 @@ namespace App\Tasks;
 
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
-use App\Utils\DataInput\Manager;
+use App\Utils\IuSubmissions\Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
