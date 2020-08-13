@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-IMPORT_DIR_PATH = 'var/testIuFormData'
+IMPORT_DIR_PATH = 'var/iuFormData'
 FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
 
 DB_PATH = 'var/db.sqlite'
