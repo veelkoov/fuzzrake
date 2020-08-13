@@ -24,11 +24,11 @@
 
     <div id="iu_form_instructions_container" {% if submitted %}class="collapse"{% endif %}>
 
-    <div class="card text-white bg-danger my-4">
+    <div class="card my-4">
         <div class="card-body">
-            <h5 class="card-title">Please don't rush</h5>
+            <h5 class="card-title text-danger">Please don't rush</h5>
             <p class="card-text">
-                You don't want your information to be inaccurate/incomplete. Reserve some time for filling this. Grab your favorite beverage. This form can wait. I am aware of the fact that this form is long as hecc. But you can't say your business is a trivial thing, can you? Please start with the second suggestion <em>Please first read the whole thing, then fill in</em>.
+                You don't want your information to be inaccurate/incomplete. Reserve some time for filling this. Grab your favorite beverage. This form can wait. I am aware of the fact that this form is long as hecc. But you can't say your business is a trivial thing, can you? Please start with the second suggestion: <em>Please first read the whole thing, then fill in</em>.
             </p>
         </div>
     </div>
@@ -105,7 +105,7 @@
         <div class="card-body">
             <h5 class="card-title text-danger">Privacy</h5>
             <p class="card-text">
-                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge badge-danger">PRIVATE</span>
+                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge badge-warning">PRIVATE</span>
             </p>
         </div>
     </div>
@@ -524,13 +524,13 @@
 
     <div class="form-group">
         {{ form_label(form.contactInfoObfuscated) }}
-        <p class="hint"><span class="badge badge-danger">PRIVATE</span> If you selected <em>NO</em> above, simply put <em>&mdash;</em> here. Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
+        <p class="hint"><span class="badge badge-warning">PRIVATE</span> If you selected <em>NO</em> above, simply put <em>&mdash;</em> here. Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
         {{ form_widget(form.contactInfoObfuscated) }}
     </div>
 
     <div class="form-group">
         {{ form_label(form.passcode) }}
-        <p class="hint"><span class="badge badge-danger">PRIVATE</span> Please provide some kind of passcode/password. Please use at least 6 characters. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form.  <span class="passcode-confidentiality-warning">Important: This passcode can be seen by the maintainer in the clear text!</span> <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
+        <p class="hint"><span class="badge badge-warning">PRIVATE</span> Please provide some kind of passcode/password. Please use at least 6 characters. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form.  <span class="passcode-confidentiality-warning">Important: This passcode can be seen by the maintainer in the clear text!</span> <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
         {{ form_widget(form.passcode) }}
     </div>
 

@@ -24,9 +24,15 @@ legend {
 }
 
 label.required:before, legend.required:before, .mandatory:before {
-  content: '(mandatory) ';
-  color: #f00;
+  content: '(mandatory)';
+  color: #212529;
+  background-color: #ffc107;
+  border-radius: .25rem;
+  display: inline-block;
+  padding: 0.05ex 0.2ex;
   font-weight: bold;
+  margin-right: 0.75ex;
+  font-size: 80%;
 }
 
 label.required.form-check-label:before {
