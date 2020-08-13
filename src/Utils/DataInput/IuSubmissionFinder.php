@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Utils\DataInput;
 
-use App\Utils\Json;
+use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Component\Finder\Finder;
 
-abstract class JsonFinder
+final class IuSubmissionFinder
 {
+    use UtilityClass;
+
     /**
-     * @return array[]
+     * @return IuSubmission[]
      *
-     * @throws JsonException
+     * @throws JsonException|DataInputException
      */
-    public static function arrayFromFiles(string $directoryPath): array
+    public static function getFrom(string $directoryPath): array
     {
         if (!is_dir($directoryPath)) {
             throw new InvalidArgumentException("Directory '$directoryPath' does not exist");
@@ -28,7 +30,7 @@ abstract class JsonFinder
         $finder->files()->in($directoryPath);
 
         foreach ($finder as $file) {
-            $result[] = Json::decode($file->getContents());
+            $result[] = new IuSubmission($file);
         }
 
         return $result;

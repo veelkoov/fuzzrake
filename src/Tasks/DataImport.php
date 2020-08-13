@@ -13,9 +13,9 @@ use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
 use App\Utils\DataInput\DataInputException;
 use App\Utils\DataInput\ImportItem;
+use App\Utils\DataInput\IuSubmission;
 use App\Utils\DataInput\Manager;
 use App\Utils\DataInput\Messaging;
-use App\Utils\DataInput\RawImportItem;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,7 +54,7 @@ class DataImport
     }
 
     /**
-     * @param array[] $artisansData
+     * @param IuSubmission[] $artisansData
      *
      * @throws DataInputException
      */
@@ -84,7 +84,7 @@ class DataImport
     }
 
     /**
-     * @param array[] $artisansData
+     * @param IuSubmission[] $artisansData
      *
      * @return ImportItem[]
      *
@@ -121,11 +121,9 @@ class DataImport
     /**
      * @throws DataInputException
      */
-    private function createImportItem(array $artisanData): ImportItem
+    private function createImportItem(IuSubmission $submission): ImportItem
     {
-        $raw = new RawImportItem($artisanData);
-
-        $originalInput = $this->updateArtisanWithData(new Artisan(), $raw, false);
+        $originalInput = $this->updateArtisanWithData(new Artisan(), $submission, false);
 
         $input = new ArtisanFixWip($originalInput);
         $this->manager->correctArtisan($input->getFixed());
@@ -135,7 +133,7 @@ class DataImport
 
         $entity = new ArtisanFixWip($originalEntity);
 
-        return new ImportItem($raw, $input, $entity);
+        return new ImportItem($submission, $input, $entity);
     }
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan

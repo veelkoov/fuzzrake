@@ -93,27 +93,27 @@ class Manager
 
     public function shouldIgnorePasscode(ImportItem $item): bool
     {
-        return in_array($item->getHash(), $this->itemsWithPasscodeExceptions);
+        return in_array($item->getId(), $this->itemsWithPasscodeExceptions);
     }
 
     public function isNewPasscode(ImportItem $item): bool
     {
-        return in_array($item->getHash(), $this->itemsWithNewPasscodes);
+        return in_array($item->getId(), $this->itemsWithNewPasscodes);
     }
 
     public function isRejected(ImportItem $item): bool
     {
-        return in_array($item->getHash(), $this->rejectedItems);
+        return in_array($item->getId(), $this->rejectedItems);
     }
 
     public function getIgnoredUntilDate(ImportItem $item): DateTime
     {
-        return $this->itemsIgnoreFinalTimes[$item->getHash()];
+        return $this->itemsIgnoreFinalTimes[$item->getId()];
     }
 
     public function isDelayed(ImportItem $item): bool
     {
-        return array_key_exists($item->getHash(), $this->itemsIgnoreFinalTimes) && !DateTimeUtils::passed($this->itemsIgnoreFinalTimes[$item->getHash()]);
+        return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !DateTimeUtils::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
     }
 
     /**

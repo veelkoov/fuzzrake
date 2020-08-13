@@ -11,7 +11,7 @@ use App\Utils\StrUtils;
 
 class ImportItem
 {
-    private RawImportItem $raw;
+    private IuSubmission $iuSubmission;
     private ArtisanFixWip $input;
     private ArtisanFixWip $entity;
     private ?Diff $diff = null;
@@ -21,9 +21,9 @@ class ImportItem
      */
     private array $replaced = [];
 
-    public function __construct(RawImportItem $raw, ArtisanFixWip $input, ArtisanFixWip $entity)
+    public function __construct(IuSubmission $iuSubmission, ArtisanFixWip $input, ArtisanFixWip $entity)
     {
-        $this->raw = $raw;
+        $this->iuSubmission = $iuSubmission;
         $this->input = $input;
         $this->entity = $entity;
     }
@@ -61,7 +61,7 @@ class ImportItem
     public function getIdStrSafe(): string
     {
         return StrUtils::artisanNamesSafeForCli($this->getOriginalInput(), $this->getFixedEntity(), $this->getOriginalEntity())
-            .' ['.$this->raw->getTimestamp()->format('Y-m-d H:i').']';
+            .' ['.$this->iuSubmission->getTimestamp()->format('Y-m-d H:i').']';
     }
 
     public function getNamesStrSafe(): string
@@ -74,9 +74,9 @@ class ImportItem
         return $this->entity->getFixed()->getMakerId();
     }
 
-    public function getHash(): string
+    public function getId(): string
     {
-        return $this->raw->getHash();
+        return $this->iuSubmission->getId();
     }
 
     public function getProvidedPasscode(): string

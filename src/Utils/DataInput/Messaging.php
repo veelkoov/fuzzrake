@@ -43,8 +43,8 @@ class Messaging
         $this->printer->writeln([
             Manager::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:",
             Manager::CMD_ACK_NEW.":$makerId:",
-            Manager::CMD_REJECT.":$makerId:{$item->getHash()}:",
-            Manager::CMD_IGNORE_UNTIL.":$makerId:{$item->getHash()}:$monthLater:",
+            Manager::CMD_REJECT.":$makerId:{$item->getId()}:",
+            Manager::CMD_IGNORE_UNTIL.":$makerId:{$item->getId()}:$monthLater:",
         ]);
     }
 
@@ -56,7 +56,7 @@ class Messaging
 
     public function reportNewPasscode(ImportItem $item): void
     {
-        $hash = $item->getHash();
+        $hash = $item->getId();
         $makerId = $item->getMakerId();
 
         $this->printer->warning("{$item->getNamesStrSafe()} set new passcode: {$item->getProvidedPasscode()}");
@@ -72,7 +72,7 @@ class Messaging
     {
         $weekLater = DateTimeUtils::getWeekLaterYmd();
         $makerId = $item->getMakerId();
-        $hash = $item->getHash();
+        $hash = $item->getId();
 
         $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
         $this->printer->writeln([

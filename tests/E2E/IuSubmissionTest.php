@@ -14,7 +14,8 @@ use App\Utils\Artisan\Utils;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
 use App\Utils\DataInput\DataInputException;
-use App\Utils\DataInput\JsonFinder;
+use App\Utils\DataInput\IuSubmission;
+use App\Utils\DataInput\IuSubmissionFinder;
 use App\Utils\DataInput\Manager;
 use App\Utils\DataInput\RawImportItem;
 use App\Utils\StringList;
@@ -386,7 +387,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
             static::$container->get(FdvFactory::class)->create($printer), false);
 
-        $import->import(JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
+        $import->import(IuSubmissionFinder::getFrom(self::IMPORT_DATA_DIR));
 
         $this->validateConsoleOutput($output->fetch());
     }
@@ -415,7 +416,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $newMakerId = $this->getArtisan(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
         $result = "ack new:$newMakerId:\n";
 
-        foreach ($this->getImportDataFilesHashes() as $hash) {
+        foreach ($this->getIuSubmissionsIds() as $hash) {
             $result .= "set pin::$hash:\n";
         }
 
@@ -425,11 +426,11 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     /**
      * @throws JsonException|DataInputException
      */
-    private function getImportDataFilesHashes(): array
+    private function getIuSubmissionsIds(): array
     {
-        return array_map(function (array $data): string {
-            return (new RawImportItem($data))->getHash();
-        }, JsonFinder::arrayFromFiles(self::IMPORT_DATA_DIR));
+        return array_map(function (IuSubmission $submission): string {
+            return $submission->getId();
+        }, IuSubmissionFinder::getFrom(self::IMPORT_DATA_DIR));
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void

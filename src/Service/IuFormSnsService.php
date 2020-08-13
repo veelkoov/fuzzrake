@@ -22,7 +22,7 @@ class IuFormSnsService
         $this->cli = $cli;
         $this->notificationSnsTopicArn = $notificationSnsTopicArn;
 
-        if (pattern('^arn:aws:sns:[-a-z0-9]+:\d+:[-_a-z0-9]+$', 'i')->fails($notificationSnsTopicArn)) {
+        if (pattern('^(arn:aws:sns:[-a-z0-9]+:\d+:[-_a-z0-9]+)?$', 'i')->fails($notificationSnsTopicArn)) {
             throw new InvalidArgumentException("$notificationSnsTopicArn is not a valid SNS topic ARN");
         }
     }

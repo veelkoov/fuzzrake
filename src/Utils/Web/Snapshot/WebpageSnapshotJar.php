@@ -6,12 +6,15 @@ namespace App\Utils\Web\Snapshot;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Json;
+use App\Utils\Traits\UtilityClass;
 use JsonException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class WebpageSnapshotJar
 {
+    use UtilityClass;
+
     private const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
                                              | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
     private const PATH_META_FILE = 'meta_file';
@@ -68,10 +71,5 @@ final class WebpageSnapshotJar
     private static function getChildDirPath(string $baseDir, int $childIndex): string
     {
         return "$baseDir/child.$childIndex";
-    }
-
-    private function __construct()
-    {
-        /* You're an utility, Harry */
     }
 }

@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Tasks\DataImportFactory;
 use App\Utils\DataInput\DataInputException;
-use App\Utils\DataInput\JsonFinder;
+use App\Utils\DataInput\IuSubmissionFinder;
 use App\Utils\DataInput\Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
@@ -49,7 +49,7 @@ class DataImportCommand extends Command
         $import = $this->dataImportFactory->get(Manager::createFromFile($input->getArgument('corrections-file')),
             $io, $input->getOption('fix-mode'));
 
-        $import->import(JsonFinder::arrayFromFiles($input->getArgument('import-dir')));
+        $import->import(IuSubmissionFinder::getFrom($input->getArgument('import-dir')));
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();
