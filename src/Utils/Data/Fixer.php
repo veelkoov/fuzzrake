@@ -84,8 +84,8 @@ class Fixer
             case Fields::OTHER_FEATURES:
             case Fields::OTHER_ORDER_TYPES:
             case Fields::OTHER_STYLES:
-            case Fields::URL_SCRITCH_PHOTO:
-            case Fields::URL_SCRITCH_MINIATURE:
+            case Fields::URL_PHOTOS:
+            case Fields::URL_MINIATURES:
                 return $this->freeListFixer;
 
             case Fields::URL_CST:

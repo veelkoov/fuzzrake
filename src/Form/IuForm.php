@@ -22,6 +22,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IuForm extends AbstractType
 {
+    public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
+    public const PHOTOS_COPYRIGHT_OK = 'PHOTOS_COPYRIGHT_OK';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -253,14 +256,28 @@ class IuForm extends AbstractType
             ])
 
             ->add('scritchUrl', UrlType::class, [
-                'label'      => 'Got scritch.es? Please copy+paste full link to your maker page:',
+                'label'      => 'Got Scritch page? Please copy+paste full link to your maker page:',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('scritchPhotoUrls', TextareaType::class, [
-                'label'      => 'Please post up to 5 full links to "featured" photos of your creations hosted on scritch.es',
+            ->add('furtrackUrl', UrlType::class, [
+                'label'      => 'Got Furtrack page? Please copy+paste full link to your maker page:',
                 'required'   => false,
                 'empty_data' => '',
+            ])
+            ->add('photoUrls', TextareaType::class, [
+                'label'      => 'Choose up to 5 "featured" photos of your creations',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add(self::FLD_PHOTOS_COPYRIGHT, ChoiceType::class, [
+                'label'      => 'Copyright acknowledgement',
+                'data'       => $options[self::PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
+                'required'   => false,
+                'mapped'     => false,
+                'expanded'   => true,
+                'multiple'   => true,
+                'choices'    => ['I captured those photos myself or I got photographer\'s permission to use them on getfursu.it' => 'OK'],
             ])
 
             ->add('languages', TextareaType::class, [
@@ -313,12 +330,16 @@ class IuForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefined(self::PHOTOS_COPYRIGHT_OK);
+        $resolver->addAllowedTypes(self::PHOTOS_COPYRIGHT_OK, 'boolean');
+
         $resolver->setDefaults([
             'data_class'        => Artisan::class,
             'validation_groups' => ['iu_form'],
             'error_mapping'     => [
                 'privateData.passcode'            => 'passcode',
             ],
+            self::PHOTOS_COPYRIGHT_OK => false,
         ]);
     }
 

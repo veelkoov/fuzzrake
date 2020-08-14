@@ -59,14 +59,14 @@ class DataSetScritchMiniaturesCommand extends Command
         $csrfToken = $this->cookieJar->get('csrf-token')->getValue();
 
         foreach ($this->artisanRepository->getAll() as $artisan) {
-            $pictureUrls = array_filter(explode("\n", $artisan->getScritchPhotoUrls()));
+            $pictureUrls = array_filter(explode("\n", $artisan->getPhotoUrls()));
 
             if (empty($pictureUrls)) {
-                $artisan->setScritchMiniatureUrls('');
+                $artisan->setMiniatureUrls('');
                 continue;
             }
 
-            if (count($pictureUrls) === count(array_filter(explode("\n", $artisan->getScritchMiniatureUrls())))) {
+            if (count($pictureUrls) === count(array_filter(explode("\n", $artisan->getMiniatureUrls())))) {
                 continue;
             }
 
@@ -77,7 +77,7 @@ class DataSetScritchMiniaturesCommand extends Command
                 continue;
             }
 
-            $artisan->setScritchMiniatureUrls(implode("\n", $miniatureUrls));
+            $artisan->setMiniatureUrls(implode("\n", $miniatureUrls));
             $io->writeln('Retrieved miniatures for '.StrUtils::artisanNamesSafeForCli($artisan));
         }
 

@@ -1104,26 +1104,38 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getScritchPhotoUrls(): string
+    public function getFurtrackUrl(): string
     {
-        return $this->getSingleUrl(Fields::URL_SCRITCH_PHOTO);
+        return $this->getSingleUrl(Fields::URL_FURTRACK);
     }
 
-    public function setScritchPhotoUrls(string $scritchPhotoUrls): self
+    public function setFurtrackUrl(string $furtrackUrl): self
     {
-        $this->setSingleUrl(Fields::URL_SCRITCH_PHOTO, $scritchPhotoUrls);
+        $this->setSingleUrl(Fields::URL_FURTRACK, $furtrackUrl);
 
         return $this;
     }
 
-    public function getScritchMiniatureUrls(): string
+    public function getPhotoUrls(): string
     {
-        return $this->getSingleUrl(Fields::URL_SCRITCH_MINIATURE);
+        return $this->getSingleUrl(Fields::URL_PHOTOS);
     }
 
-    public function setScritchMiniatureUrls(string $scritchMiniatureUrls): self
+    public function setPhotoUrls(string $photoUrls): self
     {
-        $this->setSingleUrl(Fields::URL_SCRITCH_MINIATURE, $scritchMiniatureUrls);
+        $this->setSingleUrl(Fields::URL_PHOTOS, $photoUrls);
+
+        return $this;
+    }
+
+    public function getMiniatureUrls(): string
+    {
+        return $this->getSingleUrl(Fields::URL_MINIATURES);
+    }
+
+    public function setMiniatureUrls(string $scritchMiniatureUrls): self
+    {
+        $this->setSingleUrl(Fields::URL_MINIATURES, $scritchMiniatureUrls);
 
         return $this;
     }

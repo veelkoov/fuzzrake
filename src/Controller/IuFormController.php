@@ -11,6 +11,7 @@ use App\Utils\IuSubmissions\IuSubmissionService;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,8 +34,9 @@ class IuFormController extends AbstractRecaptchaBackedController
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
-        $form = $this->createForm(IuForm::class, $artisan);
+        $form = $this->getIuForm($artisan, $makerId);
         $form->handleRequest($request);
+        $this->validatePhotosCopyright($form, $artisan);
 
         if ($form->isSubmitted() && $form->isValid() && $this->isReCaptchaTokenOk($request, 'iu_form_submit')) {
             $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
@@ -62,5 +64,21 @@ class IuFormController extends AbstractRecaptchaBackedController
     {
         return $this->render('iu_form/confirmation.html.twig', [
         ]);
+    }
+
+    private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface
+    {
+        return $this->createForm(IuForm::class, $artisan, [
+            IuForm::PHOTOS_COPYRIGHT_OK => '' !== $makerId && '' !== $artisan->getPhotoUrls(),
+        ]);
+    }
+
+    private function validatePhotosCopyright(FormInterface $form, Artisan $artisan): void
+    {
+        $field = $form->get(IuForm::FLD_PHOTOS_COPYRIGHT);
+
+        if ('' !== $artisan->getPhotoUrls() && 'OK' !== ($field->getData()[0] ?? null)) {
+            $field->addError(new FormError('Permission to use the photos is required'));
+        }
     }
 }

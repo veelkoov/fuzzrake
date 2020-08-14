@@ -70,8 +70,9 @@ final class FieldsDefinitions
         Fields::URL_OTHER_SHOP             => ['otherShopUrl',             VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
-        Fields::URL_SCRITCH_PHOTO          => ['scritchPhotoUrls',         VR::SCRITCH_PHOTO_URLS,        1, 1, 1, 1],
-        Fields::URL_SCRITCH_MINIATURE      => ['scritchMiniatureUrls',     VR::SCRITCH_MINIATURE_URLS,    1, 1, 1, 1],
+        Fields::URL_FURTRACK               => ['furtrackUrl',              VR::FURTRACK_URL,              0, 1, 1, 1],
+        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URLS,                1, 1, 1, 1],
+        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URLS,            1, 1, 1, 1],
         Fields::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
 
         Fields::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
@@ -109,16 +110,16 @@ final class FieldsDefinitions
         Fields::URL_OTHER_SHOP,
         Fields::URL_QUEUE,
         Fields::URL_SCRITCH,
-        Fields::URL_SCRITCH_PHOTO,
-        Fields::URL_SCRITCH_MINIATURE,
+        Fields::URL_PHOTOS,
+        Fields::URL_MINIATURES,
         Fields::URL_OTHER,
         Fields::URL_CST,
     ];
 
     public const NON_INSPECTED_URLS = [
         Fields::URL_SCRITCH,
-        Fields::URL_SCRITCH_PHOTO,
-        Fields::URL_SCRITCH_MINIATURE,
+        Fields::URL_PHOTOS,
+        Fields::URL_MINIATURES,
         Fields::URL_OTHER,
     ];
 
