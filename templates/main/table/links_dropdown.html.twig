@@ -34,7 +34,7 @@
                 <a class="dropdown-item" href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
             {%- endif -%}
             {%- if artisan.furAffinityUrl -%}
-                <a class="dropdown-item" href="{{ artisan.furAffinityUrl }}" target="_blank"><img src="FurAffinity.svg" alt=""/> FurAffinity</a>
+                <a class="dropdown-item" href="{{ artisan.furAffinityUrl }}" target="_blank"><i class="fas fa-image"></i> FurAffinity</a>
             {%- endif -%}
             {%- if artisan.deviantArtUrl -%}
                 <a class="dropdown-item" href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
@@ -53,6 +53,24 @@
             {%- endif -%}
             {%- if artisan.instagramUrl -%}
                 <a class="dropdown-item" href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+            {%- endif -%}
+            {%- if artisan.etsyUrl -%}
+                <a class="dropdown-item" href="{{ artisan.etsyUrl }}" target="_blank"><i class="fab fa-etsy"></i> Etsy</a>
+            {%- endif -%}
+            {%- if artisan.theDealersDenUrl -%}
+                <a class="dropdown-item" href="{{ artisan.theDealersDenUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a>
+            {%- endif -%}
+            {%- if artisan.otherShopUrl -%}
+                <a class="dropdown-item" href="{{ artisan.otherShopUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a>
+            {%- endif -%}
+            {%- if artisan.furryAminoUrl -%}
+                <a class="dropdown-item" href="{{ artisan.furryAminoUrl }}" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a>
+            {%- endif -%}
+            {%- if artisan.scritchUrl -%}
+                <a class="dropdown-item" href="{{ artisan.scritchUrl }}" target="_blank"><i class="fas fa-camera"></i> Scritch</a>
+            {%- endif -%}
+            {%- if artisan.linklistUrl -%}
+                <a class="dropdown-item" href="{{ artisan.linklistUrl }}" target="_blank"><i class="fas fa-link"></i> List of links</a>
             {%- endif -%}
             <a class="dropdown-item request-update" data-toggle="modal" data-target="#updateRequestModal">
                 <i class="fas fa-exclamation-triangle"></i> Report inaccurate/outdated

@@ -68,12 +68,20 @@ class ArtisanType extends AbstractType
                 'choices'  => ProductionModels::getValues(),
                 'multiple' => true,
             ])
+            ->add('productionModelsComment', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('styles', ChoiceType::class, [
                 'required' => false,
                 'choices'  => Styles::getValues(),
                 'multiple' => true,
             ])
             ->add('otherStyles', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('stylesComment', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -86,6 +94,10 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('orderTypesComment', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('features', ChoiceType::class, [
                 'required' => false,
                 'choices'  => Features::getValues(),
@@ -95,7 +107,19 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('featuresComment', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('paymentPlans', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('currenciesAccepted', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('paymentMethods', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -106,6 +130,11 @@ class ArtisanType extends AbstractType
             ])
             ->add('speciesDoesnt', TextareaType::class, [
                 'label'      => 'Species not done',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('speciesComment', TextareaType::class, [
+                'label'      => 'Species comment',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -191,13 +220,33 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('linklistUrl', UrlType::class, [
+                'label'      => 'Link list URL',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('furryAminoUrl', UrlType::class, [
+                'label'      => 'Furry Amino URL',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('theDealersDenUrl', UrlType::class, [
+                'label'      => 'The Dealers Den URL',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('etsyUrl', UrlType::class, [
+                'label'      => 'Etsy URL',
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('furtrackUrl', UrlType::class, [
                 'label'      => 'Furtrack URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('photoUrls', TextareaType::class, [
-                'label'      => 'Photos URLs',
+                'label'      => 'Scritch photos URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -208,6 +257,11 @@ class ArtisanType extends AbstractType
             ])
             ->add('otherUrls', TextareaType::class, [
                 'label'      => 'Other URLs',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('otherShopUrl', UrlType::class, [
+                'label'      => 'Other shop URL',
                 'required'   => false,
                 'empty_data' => '',
             ])

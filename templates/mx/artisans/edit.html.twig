@@ -57,13 +57,17 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-4">
                 {{ form_label(form.intro) }}
                 {{ form_widget(form.intro) }}
             </div>
             <div class="form-group col-md-4">
                 {{ form_label(form.productionModels) }}
                 {{ form_widget(form.productionModels) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.productionModelsComment) }}
+                {{ form_widget(form.productionModelsComment) }}
             </div>
         </div>
         <div class="form-row">
@@ -96,12 +100,40 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
+                {{ form_label(form.stylesComment) }}
+                {{ form_widget(form.stylesComment) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.orderTypesComment) }}
+                {{ form_widget(form.orderTypesComment) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.featuresComment) }}
+                {{ form_widget(form.featuresComment) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
                 {{ form_label(form.speciesDoes) }}
                 {{ form_widget(form.speciesDoes) }}
             </div>
             <div class="form-group col-md-4">
                 {{ form_label(form.speciesDoesnt) }}
                 {{ form_widget(form.speciesDoesnt) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.speciesComment) }}
+                {{ form_widget(form.speciesComment) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form_label(form.paymentMethods) }}
+                {{ form_widget(form.paymentMethods) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.currenciesAccepted) }}
+                {{ form_widget(form.currenciesAccepted) }}
             </div>
             <div class="form-group col-md-4">
                 {{ form_label(form.paymentPlans) }}
@@ -180,6 +212,30 @@
             <div class="form-group col-md-6">
                 {{ form_label(form.instagramUrl) }}
                 {{ form_widget(form.instagramUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form_label(form.linklistUrl) }}
+                {{ form_widget(form.linklistUrl) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.furryAminoUrl) }}
+                {{ form_widget(form.furryAminoUrl) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form_label(form.theDealersDenUrl) }}
+                {{ form_widget(form.theDealersDenUrl) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.etsyUrl) }}
+                {{ form_widget(form.etsyUrl) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.otherShopUrl) }}
+                {{ form_widget(form.otherShopUrl) }}
             </div>
         </div>
         <div class="form-row">
