@@ -111,9 +111,10 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'URL_THE_DEALERS_DEN'       => 'https://tdealrsdn.com/value___VARIANT__.html',
         'URL_OTHER_SHOP'            => 'https://othershop.com/value___VARIANT__.html',
         'URL_QUEUE'                 => 'https://queue.com/value___VARIANT__.html',
-        'URL_SCRITCH'               => 'https://scritch.com/value___VARIANT__.html',
-        'URL_SCRITCH_PHOTO'         => 'https://scritchphotos.com/value___VARIANT__.html',
-        'URL_SCRITCH_MINIATURE'     => ['', 'URL_SCRITCH_MINIATURE12', 'URL_SCRITCH_MINIATURE12'],
+        'URL_SCRITCH'               => 'https://scritch.es/value___VARIANT__.html',
+        'URL_FURTRACK'              => 'https://www.furtrack.com/value___VARIANT__.html',
+        'URL_PHOTOS'                => "https://scritchphotos.com/value___VARIANT__.html\nhttps://www.furtrack.com/value___VARIANT__.html",
+        'URL_MINIATURES'            => ['', 'URL_MINIATURE12', 'URL_MINIATURE12'],
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
         'URL_CST'                   => 'https://cst.com/value___VARIANT__.html',
         'COMMISSIONS_STATUS'        => self::SKIP,
@@ -127,7 +128,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
     private const FIELD_NOT_IN_FORM = [
         'FORMER_MAKER_IDS',
-        'URL_SCRITCH_MINIATURE',
+        'URL_MINIATURES',
         'CONTACT_INFO_ORIGINAL',
         'CONTACT_METHOD',
         'CONTACT_ADDRESS_PLAIN',
@@ -190,8 +191,14 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
     private function checkFieldsArrayCompleteness(): void
     {
-        foreach (Fields::getAll() as $fieldName => $field) {
+        $fields = Fields::getAll();
+
+        foreach ($fields as $fieldName => $field) {
             self::assertArrayHasKey($fieldName, self::FIELDS);
+        }
+
+        foreach (array_merge(array_keys(self::FIELDS), self::EXPANDED, self::FIELD_NOT_IN_FORM, self::VALUE_NOT_SHOWN_IN_FORM) as $fieldName) {
+            self::assertArrayHasKey($fieldName, $fields);
         }
     }
 
@@ -340,6 +347,10 @@ class IuSubmissionTest extends DbEnabledWebTestCase
                 $fields->setValue($value);
             }
         }
+
+        $field = $form['iu_form[photosCopyright]'][0];
+        /* @var ChoiceFormField $field */
+        $field->tick();
     }
 
     /**

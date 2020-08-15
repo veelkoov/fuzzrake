@@ -63,8 +63,9 @@ final class Fields
     public const URL_OTHER_SHOP = 'URL_OTHER_SHOP';
     public const URL_QUEUE = 'URL_QUEUE';
     public const URL_SCRITCH = 'URL_SCRITCH';
-    public const URL_SCRITCH_PHOTO = 'URL_SCRITCH_PHOTO';
-    public const URL_SCRITCH_MINIATURE = 'URL_SCRITCH_MINIATURE';
+    public const URL_FURTRACK = 'URL_FURTRACK';
+    public const URL_PHOTOS = 'URL_PHOTOS';
+    public const URL_MINIATURES = 'URL_MINIATURES';
     public const URL_OTHER = 'URL_OTHER';
     public const URL_CST = 'URL_CST';
 

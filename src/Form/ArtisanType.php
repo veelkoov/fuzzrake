@@ -240,13 +240,18 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('scritchPhotoUrls', TextareaType::class, [
+            ->add('furtrackUrl', UrlType::class, [
+                'label'      => 'Furtrack URL',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('photoUrls', TextareaType::class, [
                 'label'      => 'Scritch photos URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('scritchMiniatureUrls', TextareaType::class, [
-                'label'      => 'Scritch miniatures URLs',
+            ->add('miniatureUrls', TextareaType::class, [
+                'label'      => 'Miniatures URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])

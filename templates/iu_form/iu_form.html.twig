@@ -454,22 +454,40 @@
         {{ form_widget(form.cstUrl) }}
     </div>
 
-    <h2>Scritch - photos of your creations</h2>
-    <p>Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a>? It's an initiative of creating a proper service for publishing photos with fursuiters, while being able to tag them and their makers. Whole community can take part in tagging ("I know this guy on the photo, here goes a tag!"). Makers keep their pages with all their fursuits listed. Fursuiters have access to all their photos. It's far better than tagging on Facebook or Twitter, or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is not involved in Scritch development/maintenance; in case of any questions/issues, please reach to the Scritch support by going to their website and using the link in the top menu.</p>
+    <h2>Scritch &amp; Furtrack - photos of your creations</h2>
+    <p class="small">Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners. The whole community can take part in tagging ("I know this fursuiter, here goes a tag!"). Makers keep their pages with links to their websites &amp; social media and a list of the photos of their creations. Fursuiters have easy access to all their photos. It's far better than tagging on Facebook or Twitter or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
 
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 {{ form_label(form.scritchUrl) }}
-                <p class="hint"><strong>Yes, you probably already do!</strong> Go claim your page already if it's there waiting for you.</p>
+                <p class="hint"><strong>You may already have one created for you.</strong> Go claim your page already if it's there.</p>
                 {{ form_widget(form.scritchUrl) }}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{ form_label(form.scritchPhotoUrls) }}
-                <p class="hint">You can copy the right URL after 1) opening the photo and 2) clicking "Copy link" buton on the upper-right side of the pop-up. Kindly place each photo link in a single line.</p>
-                {{ form_widget(form.scritchPhotoUrls) }}
+                {{ form_label(form.furtrackUrl) }}
+                <p class="hint"><strong>Someone may have already created one for you.</strong> Go there check for photos tagged with your studio's name already.</p>
+                {{ form_widget(form.furtrackUrl) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.photoUrls) }}
+                <p class="hint">
+                    You can use photos hosted on either Scritch or Furtrack or both (mixed). To copy a link from <strong>Scritch</strong>, open the photo and click "Get link" on the upper-right of the pop-up. You should end up with something similar to this: <em>https://scritch.es/pictures/25ae6f07-9855-445f-9c1d-a8c78166b81b</em>. To copy a link from <strong>Furtrack</strong>, open the photo and click the link on the upper-right corner of the pop-up. You should end up with something similar to this: <em>https://www.furtrack.com/p/49767</em>. Kindly place each photo link in a single line.
+                </p>
+                {{ form_widget(form.photoUrls) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_label(form.photosCopyright) }}
+                <p class="hint">Fact of the photos being published on Scritch or Furtrack <strong>doesn't necessarily mean the photographers agreed to repost/reuse it elsewhere</strong>, including getfursu.it. Please make sure you are allowed to link those photos here.</p>
+                {{ form_widget(form.photosCopyright) }}
             </div>
         </div>
     </div>

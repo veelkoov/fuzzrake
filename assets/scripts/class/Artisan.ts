@@ -79,8 +79,9 @@ export default class Artisan {
                 readonly otherShopUrl: string,
                 readonly queueUrl: string,
                 readonly scritchUrl: string,
-                readonly scritchPhotoUrls: string[],
-                readonly scritchMiniatureUrls: string[],
+                readonly furtrackUrl: string,
+                readonly photoUrls: string[],
+                readonly miniatureUrls: string[],
                 readonly otherUrls: string,
 
                 readonly notes: string,
