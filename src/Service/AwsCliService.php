@@ -19,7 +19,7 @@ class AwsCliService
     public function execute(array $commandArgv, string $commandDescription): bool
     {
         $process = new Process($commandArgv);
-        $process->mustRun();
+        $process->run();
 
         $context = [
             'stdout' => $process->getOutput(),
