@@ -7,6 +7,7 @@ namespace App\Utils\Data;
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
+use App\Utils\StrUtils;
 
 class Diff
 {
@@ -22,9 +23,9 @@ class Diff
         }
     }
 
-    public function getDescription(): string
+    public function getDescriptionCliSafe(): string
     {
-        $res = implode("\n", array_map(fn (ChangeInterface $change) => $change->getDescription(), $this->changes));
+        $res = implode("\n", array_map(fn (ChangeInterface $change) => StrUtils::strSafeForCli($change->getDescription()), $this->changes));
 
         return '' === $res ? '' : $res."\n";
     }

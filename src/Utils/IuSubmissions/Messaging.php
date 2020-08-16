@@ -98,7 +98,7 @@ class Messaging
 
     private function emitDiffAndContactDetails(ImportItem $item): void
     {
-        $this->printer->writeln($item->getDiff()->getDescription());
+        $this->printer->writeln($item->getDiff()->getDescriptionCliSafe());
         $this->printer->writeln('Contact info: '
             .($item->getOriginalEntity()->getContactAllowed() ?: '-')
             .'/'.$item->getFixedEntity()->getContactAllowed()
