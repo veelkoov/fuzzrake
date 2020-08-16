@@ -32,9 +32,9 @@ class IuSubmission implements FieldReadInterface
     public function __construct(SplFileInfo $source)
     {
         $this->fileName = $source->getRelativePathname();
-        $this->data = Json::decode($source->getContents());
         $this->setTimestamp($source->getRelativePathname());
         $this->setId($source->getRelativePathname());
+        $this->data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()), $this->timestamp);
     }
 
     public function getFileName(): string
@@ -93,6 +93,10 @@ class IuSubmission implements FieldReadInterface
 
         if (false === $value) {
             throw new DataInputException("Submission {$this->id} is missing {$field->name()}");
+        }
+
+        if ($field->isList() && !is_array($value)) {
+            throw new DataInputException("Expected an array for {$field->name()}, got '$value' instead in {$this->id}");
         }
 
         return $field->isList() ? StringList::pack($value) : $value;
