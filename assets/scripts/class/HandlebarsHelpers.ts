@@ -3,6 +3,21 @@ import * as Handlebars from "handlebars";
 const escape = Handlebars.Utils.escapeExpression;
 
 export default class HandlebarsHelpers {
+    private static readonly MONTHS = {
+        '01': 'Jan',
+        '02': 'Feb',
+        '03': 'Mar',
+        '04': 'Apr',
+        '05': 'May',
+        '06': 'Jun',
+        '07': 'Jul',
+        '08': 'Aug',
+        '09': 'Sep',
+        '10': 'Oct',
+        '11': 'Nov',
+        '12': 'Dec',
+    };
+
     private static readonly HTML_SIGN_UNKNOWN = new Handlebars.SafeString('<i class="fas fa-question-circle" title="Unknown"></i>');
 
     private constructor() {
@@ -15,6 +30,7 @@ export default class HandlebarsHelpers {
             commaSeparated: HandlebarsHelpers.commaSeparated,
             photos: HandlebarsHelpers.photos,
             has: HandlebarsHelpers.has,
+            since: HandlebarsHelpers.since,
         };
     }
 
@@ -25,6 +41,7 @@ export default class HandlebarsHelpers {
             'commaSeparated': true,
             'photos': true,
             'has': true,
+            'since': true,
         };
     }
 
@@ -58,6 +75,16 @@ export default class HandlebarsHelpers {
         }
 
         return element !== '' ? element : HandlebarsHelpers.HTML_SIGN_UNKNOWN;
+    }
+
+    public static since(element: string): string | object {
+        if (element !== '') {
+            let parts = element.split('-');
+
+            element = HandlebarsHelpers.MONTHS[parts[1]] + ' ' + parts[0];
+        }
+
+        return HandlebarsHelpers.optional(element);
     }
 
     public static optionalList(list: string[] | Set<string>): string | object {
