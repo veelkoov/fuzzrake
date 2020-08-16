@@ -35,28 +35,43 @@
     <div class="col-sm-3 p-1">
         <h5>Produces</h5>
         <div class="small pb-2">
+            {{# if (has artisan.productionModelsComment) }}
+                {{ artisan.productionModelsComment }}
+            {{/ if }}
             {{ optionalList artisan.productionModels }}
         </div>
         <h5>Styles</h5>
         <div class="small">
+            {{# if (has artisan.stylesComment) }}
+                {{ artisan.stylesComment }}
+            {{/ if }}
             {{ optionalList artisan.allStyles }}
         </div>
     </div>
     <div class="col-sm-5 p-1">
         <h5>Types</h5>
         <div class="small">
+            {{# if (has artisan.orderTypesComment) }}
+                {{ artisan.orderTypesComment }}
+            {{/ if }}
             {{ optionalList artisan.allOrderTypes }}
         </div>
     </div>
     <div class="col-sm-4 p-1">
         <h5>Features</h5>
         <div class="small">
+            {{# if (has artisan.featuresComment) }}
+                {{ artisan.featuresComment }}
+            {{/ if }}
             {{ optionalList artisan.allFeatures }}
         </div>
     </div>
     <div class="col-sm-6 p-1">
         <h5>Species</h5>
         <div class="small" id="artisanSpecies">
+            {{# if (has artisan.speciesComment) }}
+                {{ artisan.speciesComment }} <br />
+            {{/ if }}
             {{# if (has artisan.speciesDoes) }}
                 <strong>Does</strong>: {{ commaSeparated artisan.speciesDoes }}
                 {{# if (has artisan.speciesDoesnt) }}<br />{{/ if }}
