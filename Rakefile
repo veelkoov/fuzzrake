@@ -8,7 +8,7 @@ def read_iu_submissions_s3_path # TODO: dotenv
 end
 
 IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
-FIXES_FILE_PATH = 'imports/import-fixes-v5.txt'
+FIXES_FILE_PATH = 'imports/import-fixes.txt'
 IU_SUBMISSIONS_S3_PATH = read_iu_submissions_s3_path
 
 DB_PATH = 'var/db.sqlite'
