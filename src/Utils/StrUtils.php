@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Entity\Artisan;
 use App\Twig\AppExtensions;
+use App\Utils\Artisan\Fields;
 use App\Utils\Regexp\Regexp;
 
 abstract class StrUtils
@@ -57,5 +58,14 @@ abstract class StrUtils
     public static function ucfirst(string $input): string
     {
         return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
+    }
+
+    public static function fixNewlines(Artisan $artisan): void
+    {
+        foreach (Fields::persisted() as $field) {
+            if (($value = $artisan->get($field)) && is_string($value)) {
+                $artisan->set($field, str_replace("\r\n", "\n", $value));
+            }
+        }
     }
 }

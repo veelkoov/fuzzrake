@@ -7,8 +7,8 @@ namespace App\Controller\Mx;
 use App\Entity\Artisan;
 use App\Form\ArtisanType;
 use App\Service\EnvironmentsService;
-use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
+use App\Utils\StrUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +42,7 @@ class ArtisansController extends AbstractController
                 $this->getDoctrine()->getManager()->remove($artisan);
             } else {
                 Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
-                $this->fixNewlines($artisan);
+                StrUtils::fixNewlines($artisan);
                 $this->restoreUnchangedPasscode($artisan, $originalPasscode);
 
                 $this->getDoctrine()->getManager()->persist($artisan);
@@ -63,15 +63,6 @@ class ArtisansController extends AbstractController
     {
         if (empty(trim($artisan->getPasscode()))) {
             $artisan->setPasscode($originalPasscode);
-        }
-    }
-
-    private function fixNewlines(Artisan $artisan): void
-    {
-        foreach (Fields::persisted() as $field) {
-            if (($value = $artisan->get($field)) && is_string($value)) {
-                $artisan->set($field, str_replace("\r\n", "\n", $value));
-            }
         }
     }
 }

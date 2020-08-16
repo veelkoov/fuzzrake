@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
 use App\Utils\IuSubmissions\IuSubmissionService;
+use App\Utils\StrUtils;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
@@ -40,6 +41,7 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         if ($form->isSubmitted() && $form->isValid() && $this->isReCaptchaTokenOk($request, 'iu_form_submit')) {
             $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
+            StrUtils::fixNewlines($artisan);
 
             if ($iuFormService->submit($artisan)) {
                 return $this->redirectToRoute('iu_form_confirmation');
