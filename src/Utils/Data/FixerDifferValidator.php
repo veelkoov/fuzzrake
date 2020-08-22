@@ -34,10 +34,7 @@ class FixerDifferValidator
         $this->validator = new Validator($speciesListValidator);
     }
 
-    /**
-     * @param Artisan|ArtisanFixWip $artisan
-     */
-    public function perform($artisan, int $flags = 0, Artisan $imported = null): ArtisanFixWip
+    public function perform(ArtisanFixWip $artisan, int $flags = 0, Artisan $imported = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
         $anyDifference = $this->hasAnyDifference($artisan);
@@ -66,8 +63,6 @@ class FixerDifferValidator
                 $artisan->getFixed()->set($field, $artisan->getOriginal()->get($field));
             }
         }
-
-        return $artisan;
     }
 
     private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, ?Artisan $imported): void
