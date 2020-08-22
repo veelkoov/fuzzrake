@@ -21,25 +21,13 @@ class IuSubmission implements FieldReadInterface
 {
     private DateTimeInterface $timestamp;
     private string $id;
-    private string $fileName;
     private array $data;
 
-    /**
-     * @throws JsonException|DataInputException
-     */
-
-    /** @noinspection PhpPossiblePolymorphicInvocationInspection TODO: What */
-    public function __construct(SplFileInfo $source)
+    public function __construct(DateTimeInterface $timestamp, string $id, array $data)
     {
-        $this->fileName = $source->getRelativePathname();
-        $this->setTimestamp($source->getRelativePathname());
-        $this->setId($source->getRelativePathname());
-        $this->data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()), $this->timestamp);
-    }
-
-    public function getFileName(): string
-    {
-        return $this->fileName;
+        $this->timestamp = $timestamp;
+        $this->id = $id;
+        $this->data = $data;
     }
 
     public function getId(): string
@@ -50,38 +38,6 @@ class IuSubmission implements FieldReadInterface
     public function getTimestamp(): DateTimeInterface
     {
         return $this->timestamp;
-    }
-
-    /**
-     * @throws DataInputException
-     */
-    private function setTimestamp(string $filePath): void
-    {
-        $dateTimeStr = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}:\d{2}:\d{2})_\d{4}\.json$')
-            ->replace($filePath)->first()->withReferences('$1-$2-$3 $4');
-
-        try {
-            $this->timestamp = DateTimeUtils::getUtcAt($dateTimeStr);
-        } catch (DateTimeException $e) {
-            throw new DataInputException('Couldn\'t parse the timestamp out of the I/U submission file path', 0, $e);
-        }
-    }
-
-    /**
-     * @throws DataInputException
-     */
-    private function setId(string $filePath)
-    {
-        $id = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
-            ->replace($filePath)->first()->withReferences('$1-$2-$3_$4$5$6_$7');
-
-        try {
-            $this->id = pattern('^\d{4}-\d{2}-\d{2}_\d{2}\d{2}\d{2}_\d{4}$')->match($id)->first(function (Match $match): string {
-                return $match->text();
-            });
-        } catch (SubjectNotMatchedException $e) {
-            throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path', 0, $e);
-        }
     }
 
     /**
@@ -100,5 +56,50 @@ class IuSubmission implements FieldReadInterface
         }
 
         return $field->isList() ? StringList::pack($value) : $value;
+    }
+
+    /**
+     * @throws JsonException|DataInputException
+     * @noinspection PhpPossiblePolymorphicInvocationInspection TODO: What
+     */
+    public static function fromFile(SplFileInfo $source): self
+    {
+        $timestamp = self::getTimestampFromFilePath($source->getRelativePathname());
+        $id = self::getIdFromFilePath($source->getRelativePathname());
+        $data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()), $timestamp);
+
+        return new self($timestamp, $id, $data);
+    }
+
+    /**
+     * @throws DataInputException
+     */
+    private static function getTimestampFromFilePath(string $filePath): DateTimeInterface
+    {
+        $dateTimeStr = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}:\d{2}:\d{2})_\d{4}\.json$')
+            ->replace($filePath)->first()->withReferences('$1-$2-$3 $4');
+
+        try {
+            return DateTimeUtils::getUtcAt($dateTimeStr);
+        } catch (DateTimeException $e) {
+            throw new DataInputException('Couldn\'t parse the timestamp out of the I/U submission file path', 0, $e);
+        }
+    }
+
+    /**
+     * @throws DataInputException
+     */
+    private static function getIdFromFilePath(string $filePath): string
+    {
+        $id = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
+            ->replace($filePath)->first()->withReferences('$1-$2-$3_$4$5$6_$7');
+
+        try {
+            return pattern('^\d{4}-\d{2}-\d{2}_\d{2}\d{2}\d{2}_\d{4}$')->match($id)->first(function (Match $match): string {
+                return $match->text();
+            });
+        } catch (SubjectNotMatchedException $e) {
+            throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path', 0, $e);
+        }
     }
 }

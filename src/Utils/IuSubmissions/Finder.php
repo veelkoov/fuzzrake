@@ -31,7 +31,7 @@ final class Finder
         $finder->files()->in($directoryPath);
 
         foreach ($finder as $file) {
-            $result[] = new IuSubmission($file);
+            $result[] = IuSubmission::fromFile($file);
         }
 
         return $result;

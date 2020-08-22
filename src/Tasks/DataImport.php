@@ -163,6 +163,15 @@ class DataImport
                     Utils::updateContact($artisan, $newValue);
                     break;
 
+                case Fields::URL_PHOTOS:
+                    if ($artisan->get($field) !== $source->get($field)) {
+                        $artisan->setMiniatureUrls('');
+                    }
+
+                    $artisan->set($field, $source->get($field));
+                    break;
+
+                case Fields::URL_MINIATURES:
                 case Fields::COMMISSIONS_STATUS:
                 case Fields::CST_LAST_CHECK:
                 case Fields::COMPLETENESS:

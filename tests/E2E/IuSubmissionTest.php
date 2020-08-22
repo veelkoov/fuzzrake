@@ -114,7 +114,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'URL_SCRITCH'               => 'https://scritch.es/value___VARIANT__.html',
         'URL_FURTRACK'              => 'https://www.furtrack.com/value___VARIANT__.html',
         'URL_PHOTOS'                => "https://scritchphotos.com/value___VARIANT__.html\nhttps://www.furtrack.com/value___VARIANT__.html",
-        'URL_MINIATURES'            => ['', 'URL_MINIATURE12', 'URL_MINIATURE12'],
+        'URL_MINIATURES'            => ['', 'URL_MINIATURE12', ''],
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
         'URL_CST'                   => 'https://cst.com/value___VARIANT__.html',
         'COMMISSIONS_STATUS'        => self::SKIP,
