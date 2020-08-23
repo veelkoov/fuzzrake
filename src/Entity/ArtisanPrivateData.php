@@ -25,7 +25,7 @@ class ArtisanPrivateData
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
-     * @ORM\JoinColumn(name="artisan_id", nullable=false)
+     * @ORM\JoinColumn(name="artisan_id", nullable=false, unique=true)
      */
     private ?Artisan $artisan;
 
