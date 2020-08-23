@@ -175,6 +175,7 @@ parameters:
         "Species with robotic/cybernetic, or otherwise mechanical appearance":
         "Things of an adult nature":
         "Unsafe creations":
+        "Ungulates (tests now)":
         "Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
 
     leave_unchanged:
