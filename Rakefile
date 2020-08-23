@@ -71,9 +71,13 @@ task :dbpush do
   exec_or_die('rm', DB_TMP_PATH)
 end
 
+def backup_private_data
+  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_PRV_COPY_PATH}", '.dump artisans_private_data')
+end
+
 task :dbpull do
   exec_or_die('scp', '-p', "getfursu.it:/var/www/prod/#{DB_PATH}", DB_TMP_PATH)
-  exec_or_die('sqlite3', DB_PATH, ".output #{DB_DUMP_PRV_COPY_PATH}", '.dump artisans_private_data')
+  backup_private_data
   exec_or_die('sqlite3', DB_TMP_PATH, 'DROP TABLE artisans_private_data;')
   exec_or_die('sqlite3', DB_TMP_PATH, ".read #{DB_DUMP_PRV_COPY_PATH}")
   exec_or_die('chmod', 'a+w', DB_TMP_PATH)
@@ -86,6 +90,8 @@ task :dbdump do
   IGNORED_TABLES.each do |table_name| # Sanity check
     raise "#{table_name} does not exist in the DB #{DB_PATH}" unless table_names.include?(table_name)
   end
+
+  backup_private_data
 
   table_names.each do |table_name|
     next if IGNORED_TABLES.include?(table_name)
