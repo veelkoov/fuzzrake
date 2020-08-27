@@ -36,7 +36,6 @@ class HealthCheckServiceTest extends TestCase
                 new DateTime('-12:20h', new DateTimeZone('UTC')))
         ;
 
-        /* @noinspection PhpParamsInspection */
         $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
 
         static::assertEquals('OK', $hcSrv->getStatus()['cstStatus']);
@@ -231,7 +230,6 @@ class HealthCheckServiceTest extends TestCase
     {
         $acsrMock = $this->createMock(ArtisanCommissionsStatusRepository::class);
 
-        /* @noinspection PhpParamsInspection */
         return new HealthCheckService($acsrMock, self::HC_VALUES);
     }
 }

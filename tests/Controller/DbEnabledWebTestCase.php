@@ -6,11 +6,10 @@ namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
+use App\Tests\TestUtils\SchemaTool;
 use App\Utils\DateTime\DateTimeUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -18,12 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 abstract class DbEnabledWebTestCase extends WebTestCase
 {
     protected static EntityManager $entityManager;
-    private static SchemaTool $schemaTool;
-
-    /**
-     * @var ClassMetadata[]
-     */
-    private static array $metadata;
 
     protected static function createClient(array $options = [], array $server = []): KernelBrowser
     {
@@ -38,10 +31,7 @@ abstract class DbEnabledWebTestCase extends WebTestCase
     {
         self::$entityManager = self::$kernel->getContainer()->get('doctrine.orm.default_entity_manager');
 
-        self::$metadata = self::$entityManager->getMetadataFactory()->getAllMetadata();
-        self::$schemaTool = new SchemaTool(self::$entityManager);
-        self::$schemaTool->dropSchema(self::$metadata);
-        self::$schemaTool->updateSchema(self::$metadata);
+        SchemaTool::resetOn(self::$entityManager);
     }
 
     protected static function addSimpleArtisan(): Artisan
