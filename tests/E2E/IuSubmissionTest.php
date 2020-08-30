@@ -254,7 +254,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
     private function getIuFormUrlForMakerId(string $urlMakerId): string
     {
-        return '/iu_form'.($urlMakerId ? '/'.$urlMakerId : '');
+        return '/iu_form/fill'.($urlMakerId ? '/'.$urlMakerId : '');
     }
 
     private function verifyGeneratedIuForm(Artisan $oldData, string $htmlBody): void

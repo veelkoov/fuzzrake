@@ -11,11 +11,11 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
         self::addSimpleArtisan();
 
-        $client->request('GET', '/iu_form/TEST');
+        $client->request('GET', '/iu_form/fill/TEST');
         static::assertEquals(404, $client->getResponse()->getStatusCode());
-        $client->request('GET', '/iu_form/TEST002');
+        $client->request('GET', '/iu_form/fill/TEST002');
         static::assertEquals(404, $client->getResponse()->getStatusCode());
-        $client->request('GET', '/iu_form/TEST000');
+        $client->request('GET', '/iu_form/fill/TEST000');
         static::assertEquals(200, $client->getResponse()->getStatusCode());
     }
 }
