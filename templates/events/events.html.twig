@@ -33,7 +33,11 @@
 
                 <div class="col-sm-10">
                     <p>
-                        {% if event.lostTrack %}
+                        {% if event.updates %}
+
+                            {{ eventDescription(event) }}
+
+                        {% elseif event.lostTrack %}
 
                             <b>{{ event.artisanName }}</b> commissions status is now
                             <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
@@ -47,6 +51,13 @@
 
                             {{ event.description|raw }}
 
+                        {% endif %}
+
+                        {% if event.gitCommits is not empty %}
+                            ({%- for hash in event.gitCommitsArray -%}
+                                <a href="https://github.com/veelkoov/fuzzrake-data/commit/{{ hash }}">git</a>
+                                {%- if not loop.last %}, {% endif %}
+                            {%- endfor -%})
                         {% endif %}
 
                         {% if isDevMachine() and event.editable %}

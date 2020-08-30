@@ -8,6 +8,7 @@ use App\Entity\Event;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,11 +28,25 @@ class EventType extends AbstractType
                 'time_widget' => 'single_text',
             ])
             ->add('description', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    Event::TYPE_GENERIC => Event::TYPE_GENERIC,
+                    Event::TYPE_DATA_UPDATED => Event::TYPE_DATA_UPDATED,
+                    Event::TYPE_GENERIC      => Event::TYPE_GENERIC,
                 ],
+                'expanded' => true,
+            ])
+            ->add('newMakersCount', NumberType::class, [
+            ])
+            ->add('updatedMakersCount', NumberType::class, [
+            ])
+            ->add('reportedUpdatedMakersCount', NumberType::class, [
+            ])
+            ->add('gitCommits', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
             ])
             ->add(self::BTN_SAVE, SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],

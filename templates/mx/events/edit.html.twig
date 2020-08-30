@@ -17,9 +17,27 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-4">
+                {{ form_label(form.newMakersCount) }}
+                {{ form_widget(form.newMakersCount) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.updatedMakersCount) }}
+                {{ form_widget(form.updatedMakersCount) }}
+            </div>
+            <div class="form-group col-md-4">
+                {{ form_label(form.reportedUpdatedMakersCount) }}
+                {{ form_widget(form.reportedUpdatedMakersCount) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
                 {{ form_label(form.description) }}
                 {{ form_widget(form.description) }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ form_label(form.gitCommits) }}
+                {{ form_widget(form.gitCommits) }}
             </div>
         </div>
 

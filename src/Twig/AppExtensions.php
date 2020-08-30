@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Entity\Artisan;
+use App\Entity\Event;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
@@ -19,6 +20,7 @@ use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
 use DateTimeInterface;
+use InvalidArgumentException;
 use JsonException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -58,6 +60,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('isDevMachine', [$this, 'isDevMachineFunction']),
             new TwigFunction('isProduction', [$this, 'isProductionFunction']),
             new TwigFunction('getCounter', [$this, 'getCounterFunction']),
+            new TwigFunction('eventDescription', [$this, 'eventDescriptionFunction']),
         ];
     }
 
@@ -150,5 +153,44 @@ class AppExtensions extends AbstractExtension
     public function filterFilterByQuery(string $input, DataQuery $query): string
     {
         return implode(', ', $query->filterList($input));
+    }
+
+    public function eventDescriptionFunction(Event $event): string
+    {
+        if (Event::TYPE_DATA_UPDATED !== $event->getType()) {
+            throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__FUNCTION__);
+        }
+
+        $n = $event->getNewMakersCount();
+        $u = $event->getUpdatedMakersCount();
+        $r = $event->getReportedUpdatedMakersCount();
+
+        $result = '';
+
+        if ($n) {
+            $s = $n > 1 ? 's' : '';
+            $result .= "{$n} new maker{$s}";
+        }
+
+        if ($n && $u) {
+            $result .= ' and ';
+        }
+
+        if ($u) {
+            $s = $u > 1 ? 's' : '';
+            $result .= "{$u} updated maker{$s}";
+        }
+
+        if ($n || $u) {
+            $s = $n + $u > 1 ? 's' : '';
+            $result .= " based on received I/U request{$s}.";
+        }
+
+        if ($r) {
+            $s = $r > 1 ? 's' : '';
+            $result .= " {$r} maker{$s} updated after report{$s} sent by a visitor(s). Thank you for your contribution!";
+        }
+
+        return trim($result);
     }
 }
