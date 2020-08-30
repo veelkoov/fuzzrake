@@ -52,9 +52,10 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
 
         return $this->render('iu_form/iu_form.html.twig', [
-            'form'      => $form->createView(),
-            'noindex'   => true,
-            'submitted' => $form->isSubmitted(),
+            'form'            => $form->createView(),
+            'noindex'         => true,
+            'submitted'       => $form->isSubmitted(),
+            'disableTracking' => true,
         ]);
     }
 
@@ -65,6 +66,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuFormConfirmation(): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
+            'disableTracking' => true,
         ]);
     }
 
