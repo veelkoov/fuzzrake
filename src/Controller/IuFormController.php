@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IuFormController extends AbstractRecaptchaBackedController
 {
     /**
-     * @Route("/iu_form/{makerId}", name="iu_form")
+     * @Route("/iu_form/fill/{makerId}", name="iu_form")
      * @Cache(maxage=0, public=false)
      *
      * @throws NotFoundHttpException
@@ -59,13 +59,22 @@ class IuFormController extends AbstractRecaptchaBackedController
     }
 
     /**
-     * @Route("/iu_form_confirmation", name="iu_form_confirmation")
+     * @Route("/iu_form/confirmation", name="iu_form_confirmation")
      * @Cache(maxage=0, public=false)
      */
     public function iuFormConfirmation(): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
         ]);
+    }
+
+    /**
+     * @Route("/iu_form/{makerId}")
+     * @Cache(maxage=0, public=false)
+     */
+    public function oldAddressRedirect(?string $makerId = null): Response
+    {
+        return $this->redirectToRoute('iu_form', ['makerId' => $makerId]);
     }
 
     private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface
