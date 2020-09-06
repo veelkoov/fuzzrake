@@ -4,7 +4,7 @@ ARG INSTALL_XDEBUG=no
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
