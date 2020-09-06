@@ -18,11 +18,6 @@ class EnvironmentsService
         return in_array($this->environment, ['dev', 'test']);
     }
 
-    public function isProduction(): bool
-    {
-        return 'prod' === $this->environment;
-    }
-
     public function isTesting(): bool
     {
         return 'test' === $this->environment;

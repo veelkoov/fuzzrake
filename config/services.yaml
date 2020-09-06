@@ -11,6 +11,7 @@ parameters:
     feedback_form_url:         'https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform' # Feature request/bug report/feedback form
     filter_suggest_form_url:   "https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform?usp=pp_url&entry.1805323921=I'd+like+to+be+able+to+filter+by:+___PLEASE___SPECIFY___HERE___" # The form above prefilled for suggesting a new filter
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    google_analytics_id:       '%env(default::GOOGLE_ANALYTICS_ID)%'
 
 services:
     # default configuration for services in *this* file
