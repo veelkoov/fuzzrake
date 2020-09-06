@@ -11,6 +11,8 @@ import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
 import {makerIdHashRegexp} from '../consts';
 
+declare var gtag;
+
 function init(): void {
     let callbacks: (() => void)[] = [
         loadFuzzrakeData,
@@ -58,6 +60,15 @@ function finalizeInit(): void {
     jQuery('#data-loading-message, #data-table-container').toggle();
 
     openArtisanByFragment(window.location.hash);
+
+    jQuery('.artisan-links a').on('click', function (evt) {
+        // console.log($(this));
+        // evt.preventDefault();
+        gtag('event', 'artisan-links', {
+            'category': 'datatable-right',
+            'label': $(this).attr('class'),
+        });
+    });
 }
 
 export {Artisan, init};
