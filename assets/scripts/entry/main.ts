@@ -1,8 +1,4 @@
 import Species from "../species/Species";
-
-require('../../styles/main.less');
-require('../../3rd-party/flag-icon-css/css/flag-icon.css');
-
 import * as DataTable from '../main/artisansTable';
 import * as DetailsPopUp from '../main/detailsPopUp';
 import * as AntiScamWarning from '../main/antiScamWarning';
@@ -10,8 +6,10 @@ import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
 import {makerIdHashRegexp} from '../consts';
+import Tracking from "../class/Tracking";
 
-declare var gtag;
+require('../../styles/main.less');
+require('../../3rd-party/flag-icon-css/css/flag-icon.css');
 
 function init(): void {
     let callbacks: (() => void)[] = [
@@ -57,18 +55,11 @@ function finalizeInit(): void {
         }
     }
 
+    Tracking.setupOnLinks('.artisan-links a', 'artisan-datatable-right');
+
     jQuery('#data-loading-message, #data-table-container').toggle();
 
     openArtisanByFragment(window.location.hash);
-
-    jQuery('.artisan-links a').on('click', function (evt) {
-        // console.log($(this));
-        // evt.preventDefault();
-        gtag('event', 'artisan-links', {
-            'category': 'datatable-right',
-            'label': $(this).attr('class'),
-        });
-    });
 }
 
 export {Artisan, init};

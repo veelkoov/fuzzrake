@@ -2,6 +2,7 @@ import * as Handlebars from "handlebars";
 import * as Utils from "./utils";
 import Artisan from "../class/Artisan";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
+import Tracking from "../class/Tracking";
 
 let detailsPopUpTpl: HandlebarsTemplateDelegate;
 let $detailsPopUp: JQuery<HTMLElement>;
@@ -12,6 +13,8 @@ function populatePopUpWithData(artisan: Artisan): void {
     }));
 
     Utils.updateUpdateRequestData('updateRequestFull', artisan);
+
+    Tracking.setupOnLinks('#artisanLinks a', 'artisan-modal');
 }
 
 function detailsPopUpShowCallback(event: any) {
