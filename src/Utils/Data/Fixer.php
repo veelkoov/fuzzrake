@@ -86,6 +86,8 @@ class Fixer
             case Fields::OTHER_STYLES:
             case Fields::URL_PHOTOS:
             case Fields::URL_MINIATURES:
+            case Fields::CURRENCIES_ACCEPTED:
+            case Fields::PAYMENT_METHODS:
                 return $this->freeListFixer;
 
             case Fields::URL_CST:

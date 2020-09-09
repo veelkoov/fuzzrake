@@ -31,6 +31,9 @@ parameters:
             Mustelids:
               Ferrets:
               Otters:
+            Primates:
+              Apes:
+              Monkeys:
             Rodents:
               Mice:
               Rats:
@@ -50,7 +53,6 @@ parameters:
             Elephants:
             Hyenas:
             Kangaroos:
-            Monkeys:
             Opossums:
             Pinnipeds:
             Rabbits:
@@ -60,8 +62,11 @@ parameters:
           Reptiles:
             Lizards:
 
+          Bugs:
+            Insects:
+            Spiders:
+
           Amphibians:
-          Insects:
 
         "Fantasy creatures":
           Robotic/cybernetic/mechanical:
@@ -159,6 +164,7 @@ parameters:
         "Most anything covered in fur":
         "Most furless/featherless species":
         "Most reptiles":
+        "No airbrushed / gradient markings on any species (all work is sewn)":
         "Only because I do not currently have the ability to do the electronic work on them":
         "Others":
         "Please inquire about fantasy creatures":
@@ -174,11 +180,11 @@ parameters:
         "Some scalies":
         "Specialises in mythical creatures/monsters":
         "Species with robotic/cybernetic, or otherwise mechanical appearance":
-        "Spiders":
         "Things of an adult nature":
         "Unsafe creations":
         "Ungulates (tests now)":
         "Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
+        "Will not work with sequin for characters":
 
     leave_unchanged:
       - 'Any animal and most mysticals (dragons*, serials, gryphons)'
