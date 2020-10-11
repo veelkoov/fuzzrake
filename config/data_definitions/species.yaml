@@ -147,6 +147,7 @@ parameters:
         "Any mythical or unique species":
         "Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
         "Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
+        "Ask for mechanic/electronic creatures":
         "Basic canines, vulpines, angel dragons. (Will consider if unique)":
         "Bugs": # Ambiguous
         "Cervidae/deer family species with large antlers":
@@ -157,6 +158,7 @@ parameters:
         "Dutch Angel Dragons (Tail, paws and feet paws ONLY)":
         "Etc.": # De hecc
         "Extremely intricate anything":
+        "Full robospecies":
         "Gem raptors":
         "Heavily complicated creatures":
         "I can also do velvet or minky skinned characters":
@@ -256,7 +258,7 @@ parameters:
       'Horses?':                                             'Horses'
       'Hybride?s?':                                          'Hybrids'
       'Hyenas?':                                             'Hyenas'
-      'K-9''s':                                              'Canines'
+      'K-?9''?s':                                            'Canines'
       'Lions?':                                              'Lions'
       'Mammals?( in general)?':                              'Mammals'
       'Mann?okits?':                                         'Manokits'
