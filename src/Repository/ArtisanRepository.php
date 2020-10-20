@@ -34,6 +34,26 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getAll(): array
     {
+        return $this->getArtisansQueryBuilder()
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getResult();
+    }
+
+    /**
+     * @return Artisan[]
+     */
+    public function getActive(): array
+    {
+        return $this->getArtisansQueryBuilder()
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function getArtisansQueryBuilder(): \Doctrine\ORM\QueryBuilder
+    {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 'cs')
             ->leftJoin('a.urls', 'u')
@@ -47,10 +67,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->addSelect('u')
             ->addSelect('us')
             ->addSelect('pd')
-            ->orderBy('a.name', 'ASC')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getResult();
+            ->orderBy('a.name', 'ASC');
     }
 
     /**
@@ -344,14 +361,5 @@ class ArtisanRepository extends ServiceEntityRepository
         } catch (NoResultException | NonUniqueResultException $e) {
             throw new RuntimeException($e);
         }
-    }
-
-    public function getActive(): array
-    {
-        return $this->createQueryBuilder('a')
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->getResult();
     }
 }
