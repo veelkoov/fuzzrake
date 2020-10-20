@@ -13,6 +13,7 @@ use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
 
@@ -52,7 +53,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    private function getArtisansQueryBuilder(): \Doctrine\ORM\QueryBuilder
+    private function getArtisansQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.commissionsStatus', 'cs')
