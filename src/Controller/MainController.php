@@ -35,7 +35,7 @@ class MainController extends AbstractController
 
         $response = $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
-            'activeArtisansCount' => $artisanRepository->getActiveCount(),
+            'activeArtisansCount' => $artisanRepository->countActive(),
             'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
             'filters'             => $filterService->getFiltersTplData(),

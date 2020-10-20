@@ -36,37 +36,44 @@ abstract class DbEnabledWebTestCase extends WebTestCase
 
     protected static function addSimpleArtisan(): Artisan
     {
-        $artisan = (new Artisan())
-            ->setName('Test artisan')
-            ->setMakerId('TEST000')
-            ->getCommissionsStatus()
-            ->setLastChecked(DateTimeUtils::getNowUtc())
-            ->getArtisan()
-        ;
+        $artisan = self::getArtisan();
 
-        try {
-            self::$entityManager->persist($artisan);
-            self::$entityManager->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+        self::persistAndFlush($artisan);
 
         return $artisan;
     }
 
     protected static function addSimpleGenericEvent(): Event
     {
-        $artisan = (new Event())
+        $event = (new Event())
             ->setDescription('Test event')
         ;
 
+        self::persistAndFlush($event);
+
+        return $event;
+    }
+
+    protected static function getArtisan(string $name = 'Test artisan', string $makerId = 'TEST000'): Artisan
+    {
+        return (new Artisan())
+            ->setName($name)
+            ->setMakerId($makerId)
+            ->getCommissionsStatus()
+            ->setLastChecked(DateTimeUtils::getNowUtc())
+            ->getArtisan();
+    }
+
+    protected static function persistAndFlush(object ...$entities): void
+    {
         try {
-            self::$entityManager->persist($artisan);
+            foreach ($entities as $entity) {
+                self::$entityManager->persist($entity);
+            }
+
             self::$entityManager->flush();
         } catch (ORMException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
-
-        return $artisan;
     }
 }

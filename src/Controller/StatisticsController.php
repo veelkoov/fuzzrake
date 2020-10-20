@@ -78,8 +78,8 @@ class StatisticsController extends AbstractController
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->getItems()),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
-            'completeness'     => $this->prepareCompletenessData($artisanRepository->getAll()),
-            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getAll()),
+            'completeness'     => $this->prepareCompletenessData($artisanRepository->getActive()),
+            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getActive()),
             'matchWords'       => self::MATCH_WORDS,
         ]);
     }

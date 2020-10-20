@@ -332,7 +332,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getActiveCount(): int
+    public function countActive(): int
     {
         try {
             return (int) $this->createQueryBuilder('a')
@@ -344,5 +344,14 @@ class ArtisanRepository extends ServiceEntityRepository
         } catch (NoResultException | NonUniqueResultException $e) {
             throw new RuntimeException($e);
         }
+    }
+
+    public function getActive(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
     }
 }
