@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Utils\Artisan;
 
 use App\Utils\Artisan\ValidationRegexps as VR;
+use App\Utils\Traits\UtilityClass;
 
 final class FieldsDefinitions
 {
+    use UtilityClass;
+
     public const FIELDS_ARRAY_DATA = [
         /*                                                                                    IS PUBLIC? ----------.
          *                                                                                SHOW IN STATS? -------.  |
@@ -122,8 +125,4 @@ final class FieldsDefinitions
         Fields::URL_MINIATURES,
         Fields::URL_OTHER,
     ];
-
-    private function __construct()
-    {
-    }
 }

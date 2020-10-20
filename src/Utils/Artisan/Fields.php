@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\Utils\Traits\Singleton;
 use InvalidArgumentException;
 
 final class Fields
 {
+    use Singleton;
+
     public const MAKER_ID = 'MAKER_ID';
     public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
 
@@ -172,10 +175,6 @@ final class Fields
         return array_filter(self::$fields, function (Field $field): bool {
             return in_array($field->name(), FieldsDefinitions::URLS);
         });
-    }
-
-    private function __construct()
-    {
     }
 }
 
