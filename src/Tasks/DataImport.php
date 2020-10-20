@@ -78,6 +78,7 @@ class DataImport
             $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
 
             if ($this->checkValidEmitWarnings($item)) {
+                $this->messaging->reportValid($item);
                 $this->commit($item);
             }
         }

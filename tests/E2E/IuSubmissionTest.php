@@ -166,7 +166,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         $this->emptyTestSubmissionsDir();
 
-        $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1, self::SET);
+        $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::SET);
         Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
 
         self::$entityManager->persist($oldArtisan1);
@@ -175,16 +175,16 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $repo = self::$entityManager->getRepository(Artisan::class);
         self::assertCount(1, $repo->findAll(), 'Single artisan in the DB before import');
 
-        $oldArtisan1 = $this->getArtisan(self::VARIANT_HALF_DATA_1, self::CHECK);
-        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getArtisan(self::VARIANT_HALF_DATA_2, self::SET));
-        $this->processIuForm($client, '', new Artisan(), $this->getArtisan(self::VARIANT_FULL_DATA, self::SET));
+        $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::CHECK);
+        $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::SET));
+        $this->processIuForm($client, '', new Artisan(), $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET));
 
         $this->performImport();
         self::$entityManager->flush();
         self::assertCount(2, $repo->findAll(), 'Expected two artisans in the DB after import');
 
-        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_HALF_DATA_2, self::CHECK));
-        $this->validateArtisanAfterImport($this->getArtisan(self::VARIANT_FULL_DATA, self::CHECK));
+        $this->validateArtisanAfterImport($this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::CHECK));
+        $this->validateArtisanAfterImport($this->getArtisanFor(self::VARIANT_FULL_DATA, self::CHECK));
 
         $this->emptyTestSubmissionsDir();
     }
@@ -207,7 +207,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         (new Filesystem())->remove(self::IMPORT_DATA_DIR);
     }
 
-    private function getArtisan(int $variant, string $purpose): Artisan
+    private function getArtisanFor(int $variant, string $purpose): Artisan
     {
         $result = new Artisan();
 
@@ -423,7 +423,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getManagerCorrectionsFileContents(): string
     {
-        $newMakerId = $this->getArtisan(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
+        $newMakerId = $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
         $result = "ack new:$newMakerId:\n";
 
         foreach ($this->getIuSubmissionsIds() as $hash) {
@@ -465,10 +465,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')
             ->remove($output)->all();
 
-        $header1 = StrUtils::artisanNamesSafeForCli($this->getArtisan(self::VARIANT_FULL_DATA, self::CHECK));
-        $header2 = StrUtils::artisanNamesSafeForCli($this->getArtisan(self::VARIANT_HALF_DATA_2, self::CHECK));
+        $header1 = StrUtils::artisanNamesSafeForCli($this->getArtisanFor(self::VARIANT_FULL_DATA, self::CHECK));
+        $header2 = StrUtils::artisanNamesSafeForCli($this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::CHECK));
 
         $output = str_replace([$header1, $header2], '', $output);
+
+        $output = str_replace('[OK] Accepted for import', '', $output, $count);
+        self::assertEquals(2, $count, 'Expected exactly two accepted imports');
 
         $output = trim($output);
 

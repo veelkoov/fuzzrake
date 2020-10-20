@@ -104,4 +104,11 @@ class Messaging
             .'/'.$item->getFixedEntity()->getContactAllowed()
             .' '.($item->getOriginalEntity()->getContactInfoOriginal() ?: '?'));
     }
+
+    public function reportValid(ImportItem $item): void
+    {
+        if ($item->getDiff()->hasAnythingChanged()) {
+            $this->printer->success('Accepted for import');
+        }
+    }
 }
