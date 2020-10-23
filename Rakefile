@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
-def read_iu_submissions_s3_path # TODO: dotenv
+def read_iu_submissions_s3_path
+  # TODO: dotenv
   result = `grep S3_COPIES_BUCKET_URL .env.local | cut -f2 -d'='`.strip!
   result += '/' unless result.end_with?('/')
 
   result
+end
+
+def create_link(file_path, link_path)
+  Dir.chdir(File.dirname(link_path)) do
+    link_name = File.basename(link_path)
+    add_dirs = '../' * link_path.count('/')
+
+    File.delete(link_name) if File.symlink?(link_name)
+    File.symlink(add_dirs + file_path, link_name)
+  end
 end
 
 IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
@@ -55,6 +66,11 @@ task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *ar
 task(:phpunit)       { |_t, args| docker('./bin/phpunit', *args) }
 task qa: ['php-cs-fixer', :phpunit]
 mtask(:cc, :console, 'cache:clear')
+
+task('fix-phpunit') do
+  create_link('vendor/symfony/phpunit-bridge/bin/simple-phpunit', 'bin/.phpunit/phpunit/bin/simple-phpunit')
+  create_link('vendor/symfony/phpunit-bridge', 'bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
+end
 
 #
 # DATABASE MANAGEMENT
