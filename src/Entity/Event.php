@@ -70,12 +70,20 @@ class Event
      * @ORM\Column(type="text", name="open_match")
      */
     private string $openMatchRepr = '';
+
+    /**
+     * @var StrContextInterface|null This comment is a workaround for NotNull() being added since updated symfony/validator (v5.1.5 => v5.1.7)?
+     */
     private ?StrContextInterface $openMatch = null;
 
     /**
      * @ORM\Column(type="text", name="closed_match")
      */
     private string $closedMatchRepr = '';
+
+    /**
+     * @var StrContextInterface|null This comment is a workaround for NotNull() being added since updated symfony/validator (v5.1.5 => v5.1.7)?
+     */
     private ?StrContextInterface $closedMatch = null;
 
     /**
