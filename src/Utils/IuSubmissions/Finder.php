@@ -28,7 +28,7 @@ final class Finder
         $result = [];
 
         $finder = new FileFinder();
-        $finder->files()->in($directoryPath);
+        $finder->files()->in($directoryPath)->sortByName();
 
         foreach ($finder as $file) {
             $result[] = IuSubmission::fromFile($file);
