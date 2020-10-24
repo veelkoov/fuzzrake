@@ -71,9 +71,6 @@ class Event
      */
     private string $openMatchRepr = '';
 
-    /**
-     * @var StrContextInterface|null This comment is a workaround for NotNull() being added since updated symfony/validator (v5.1.5 => v5.1.7)?
-     */
     private ?StrContextInterface $openMatch = null;
 
     /**
@@ -81,9 +78,6 @@ class Event
      */
     private string $closedMatchRepr = '';
 
-    /**
-     * @var StrContextInterface|null This comment is a workaround for NotNull() being added since updated symfony/validator (v5.1.5 => v5.1.7)?
-     */
     private ?StrContextInterface $closedMatch = null;
 
     /**
@@ -224,12 +218,12 @@ class Event
         return $this;
     }
 
-    public function getOpenMatch(): StrContextInterface
+    public function getOpenMatch(): ?StrContextInterface
     {
         return $this->openMatch = $this->openMatch ?? StrContextUtils::fromString($this->openMatchRepr);
     }
 
-    public function setOpenMatch(StrContextInterface $openMatch): self
+    public function setOpenMatch(?StrContextInterface $openMatch): self
     {
         $this->openMatch = $openMatch;
         $this->openMatchRepr = StrContextUtils::toStr($openMatch);
@@ -237,12 +231,12 @@ class Event
         return $this;
     }
 
-    public function getClosedMatch(): StrContextInterface
+    public function getClosedMatch(): ?StrContextInterface
     {
         return $this->closedMatch = $this->closedMatch ?? StrContextUtils::fromString($this->closedMatchRepr);
     }
 
-    public function setClosedMatch(StrContextInterface $closedMatch): self
+    public function setClosedMatch(?StrContextInterface $closedMatch): self
     {
         $this->closedMatch = $closedMatch;
         $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
