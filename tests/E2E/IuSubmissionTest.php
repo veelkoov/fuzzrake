@@ -7,7 +7,7 @@ namespace App\Tests\E2E;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
-use App\Tests\Controller\DbEnabledWebTestCase;
+use App\Tests\TestUtils\DbEnabledWebTestCase;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;

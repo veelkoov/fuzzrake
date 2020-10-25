@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\Artisan;
-use App\Tests\Controller\DbEnabledWebTestCase;
+use App\Tests\TestUtils\DbEnabledWebTestCase;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;

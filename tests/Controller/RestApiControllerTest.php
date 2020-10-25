@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Tests\TestUtils\DbEnabledWebTestCase;
 use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
 use DateTimeZone;

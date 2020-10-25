@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\TestUtils;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
-use App\Tests\TestUtils\SchemaTool;
 use App\Utils\DateTime\DateTimeUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;

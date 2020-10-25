@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Tests\TestUtils\DbEnabledWebTestCase;
+
 class IuFormControllerTest extends DbEnabledWebTestCase
 {
     public function testIuForm(): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Mx;
 
-use App\Tests\Controller\DbEnabledWebTestCase;
+use App\Tests\TestUtils\DbEnabledWebTestCase;
 
 class EventsControllerTest extends DbEnabledWebTestCase
 {
