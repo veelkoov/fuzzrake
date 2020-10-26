@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
-abstract class DbEnabledWebTestCase extends WebTestCase
+abstract class DbEnabledPantherTestCase extends PantherTestCase
 {
     use DbEnabledTestCaseTrait;
 
@@ -20,6 +20,7 @@ abstract class DbEnabledWebTestCase extends WebTestCase
 
         SchemaTool::resetOn(self::$entityManager);
 
+        /* @noinspection PhpIncompatibleReturnTypeInspection */
         return $result;
     }
 }

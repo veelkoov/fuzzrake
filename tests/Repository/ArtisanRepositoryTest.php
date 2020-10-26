@@ -6,6 +6,7 @@ namespace App\Tests\Repository;
 
 use App\Entity\Artisan;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\SchemaTool;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
@@ -22,7 +23,9 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
     public function testFindByMakerId(array $artisans, string $makerId, ?int $resultIdx): void
     {
         self::bootKernel();
-        self::setUpDb();
+        DbEnabledWebTestCase::$entityManager = DbEnabledWebTestCase::$container->get('doctrine.orm.default_entity_manager');
+
+        SchemaTool::resetOn(DbEnabledWebTestCase::$entityManager);
 
         foreach ($artisans as $key => $_) {
             $artisans[$key] = clone $artisans[$key]; // Don't mangle the tests

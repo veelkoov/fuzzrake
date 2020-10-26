@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Frontend;
 
+use App\Tests\TestUtils\DbEnabledPantherTestCase;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Symfony\Component\Panther\PantherTestCase;
 
-class BasicUiTest extends PantherTestCase
+class BasicUiTest extends DbEnabledPantherTestCase
 {
     /**
      * @throws WebDriverException
