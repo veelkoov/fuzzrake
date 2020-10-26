@@ -62,15 +62,18 @@ task(:console) { |_t, args| docker('./bin/console', *args) }
 
 task(:default)       { exec_or_die('rake', '--tasks', '--all') }
 task(:sg)            { exec_or_die('ansible/update_sg.yaml') }
-task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
-task(:phpunit)       { |_t, args| docker('./bin/phpunit', *args) }
-task qa: ['php-cs-fixer', :phpunit]
 mtask(:cc, :console, 'cache:clear')
 
+#
+# TESTING AND STUFF
+#
 task('fix-phpunit') do
   create_link('vendor/symfony/phpunit-bridge/bin/simple-phpunit', 'bin/.phpunit/phpunit/bin/simple-phpunit')
   create_link('vendor/symfony/phpunit-bridge', 'bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
 end
+task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
+task(:phpunit)       { |_t, args| docker('./bin/phpunit', *args) }
+task qa: ['php-cs-fixer', :phpunit]
 
 #
 # DATABASE MANAGEMENT
