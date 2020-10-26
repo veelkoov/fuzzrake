@@ -34,6 +34,7 @@
         "symfony/browser-kit": "*",
         "symfony/css-selector": "*",
         "symfony/maker-bundle": "^1.14",
+        "symfony/panther": "^0.8.0",
         "symfony/phpunit-bridge": "*",
         "symfony/profiler-pack": "^1.0"
     },

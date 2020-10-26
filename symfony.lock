@@ -110,6 +110,9 @@
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
     },
+    "php-webdriver/webdriver": {
+        "version": "1.8.3"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -303,6 +306,9 @@
     },
     "symfony/options-resolver": {
         "version": "v5.0.10"
+    },
+    "symfony/panther": {
+        "version": "v0.8.0"
     },
     "symfony/phpunit-bridge": {
         "version": "4.3",

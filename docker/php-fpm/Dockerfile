@@ -4,7 +4,7 @@ ARG INSTALL_XDEBUG=no
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -14,7 +14,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
 
 RUN pip3 install awscli
 
-RUN docker-php-ext-install -j$(nproc) intl opcache
+RUN docker-php-ext-install -j$(nproc) intl opcache zip
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
