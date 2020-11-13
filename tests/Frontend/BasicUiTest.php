@@ -21,7 +21,7 @@ class BasicUiTest extends DbEnabledPantherTestCase
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
         $client->waitForVisibility('#filtersTitle', 2);
 
-        self::assertNotEmpty("We are here, so whole scenario succeeded");
+        self::assertNotEmpty('We are here, so whole scenario succeeded');
     }
 
     public function testFilters(): void

@@ -1,6 +1,6 @@
 FROM php:7.4-fpm-alpine
 
-ARG INSTALL_XDEBUG=no
+ARG DEV_MACHINE=no
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
 
@@ -22,16 +22,22 @@ RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
         && rm /tmp/composer_installer
 
-RUN if [ "$INSTALL_XDEBUG" == "yes" ]; then \
-        echo "Setting up XDebug" \
+RUN if [ "$DEV_MACHINE" == "yes" ]; then \
+        echo "Setting up develop stuff" \
         && pecl install xdebug \
         && docker-php-ext-enable xdebug.so \
         && sed -r -i'' 's/set -e/set -e\ncd \/etc\nsed \/host.docker.internal\/d hosts > hosts.new\ncat hosts.new > hosts\nip r | grep "default via" | cut -f3 -d" " | tr -d "\\n" >> hosts\necho " host.docker.internal" >> hosts\ncd -\n/' /usr/local/bin/docker-php-entrypoint \
         && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+        && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && apk add --no-cache chromium chromium-chromedriver xvfb xvfb-run; \
     else \
-        echo "XDebug skipped"; \
+        echo "Skipped develop stuff"; \
     fi
+
+# It's OK for production image
+ENV PANTHER_CHROME_DRIVER_BINARY /usr/lib/chromium/chromedriver
+ENV PANTHER_NO_SANDBOX 1
+ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
 
 RUN apk del .build-deps
 

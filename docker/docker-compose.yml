@@ -21,7 +21,7 @@ services:
     build:
       context: php-fpm
       args:
-        INSTALL_XDEBUG: "yes"
+        DEV_MACHINE: "yes"
     restart: unless-stopped
     volumes:
       - ..:/var/www/html

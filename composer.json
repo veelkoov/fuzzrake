@@ -4,6 +4,7 @@
     "require": {
         "php": "7.4.*",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
