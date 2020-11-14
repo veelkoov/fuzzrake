@@ -23,7 +23,7 @@ class ArtisanUrlsController extends AbstractController
      */
     public function index(ArtisanUrlRepository $repository, EnvironmentsService $environments): Response
     {
-        if (!$environments->isDevMachine()) {
+        if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
         }
 

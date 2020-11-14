@@ -27,7 +27,7 @@ class ArtisansController extends AbstractController
      */
     public function edit(Request $request, ?Artisan $artisan, EnvironmentsService $environments): Response
     {
-        if (!$environments->isDevMachine()) {
+        if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
         }
 

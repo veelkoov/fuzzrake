@@ -7,6 +7,7 @@ namespace App\Tests\Frontend;
 use App\Tests\TestUtils\DbEnabledPantherTestCase;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
 
 class SmokeUiTest extends DbEnabledPantherTestCase
 {
@@ -16,6 +17,7 @@ class SmokeUiTest extends DbEnabledPantherTestCase
     public function testMainPageLoadsCorrectly(): void
     {
         $client = static::createPantherClient();
+        $client->manage()->window()->setSize(new WebDriverDimension(1600, 900));
         $client->request('GET', '/');
         $client->waitForVisibility('#scam-risk-warning', 5);
         $client->findElement(WebDriverBy::id('scam-risk-acknowledgement'))->click();

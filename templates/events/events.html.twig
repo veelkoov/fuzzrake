@@ -60,7 +60,7 @@
                             {%- endfor -%})
                         {% endif %}
 
-                        {% if isDevMachine() and event.editable %}
+                        {% if isDevOrTestEnv() and event.editable %}
                             <a href="{{ path('mx_event_edit', { id: event.id }) }}"><i class="fas fa-edit"></i></a>
                         {% endif %}
 

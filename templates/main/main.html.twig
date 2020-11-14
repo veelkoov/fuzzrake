@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    {% if not isDevMachine() %}
+    {% if not isDevEnv() %}
         <div id="scam-risk-warning" class="card bg-light mb-3">
             <h4 class="card-header">Don't get scammed!</h4>
             <div class="card-body">
@@ -68,7 +68,7 @@
         </ul>
     </div>
 
-    <div id="scam-risk-acknowledged" {% if not isDevMachine() %}style="display: none;"{% endif %}>
+    <div id="scam-risk-acknowledged" {% if not isDevEnv() %}style="display: none;"{% endif %}>
         <div id="data-table-container" style="display: none;">
             {% include 'main/table/body.html.twig' %}
         </div>

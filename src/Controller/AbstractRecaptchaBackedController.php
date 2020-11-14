@@ -22,7 +22,7 @@ class AbstractRecaptchaBackedController extends AbstractController
 
     protected function isReCaptchaTokenOk(Request $request, $action): bool
     {
-        if ($this->environments->isTesting()) {
+        if ($this->environments->isTest()) {
             return true;
         }
 

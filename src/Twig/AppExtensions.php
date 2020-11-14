@@ -57,15 +57,21 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
             new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
-            new TwigFunction('isDevMachine', [$this, 'isDevMachineFunction']),
+            new TwigFunction('isDevEnv', [$this, 'isDevEnvFunction']),
+            new TwigFunction('isDevOrTestEnv', [$this, 'isDevOrTestEnvFunction']),
             new TwigFunction('getCounter', [$this, 'getCounterFunction']),
             new TwigFunction('eventDescription', [$this, 'eventDescriptionFunction']),
         ];
     }
 
-    public function isDevMachineFunction(): bool
+    public function isDevEnvFunction(): bool
     {
-        return $this->environments->isDevMachine();
+        return $this->environments->isDev();
+    }
+
+    public function isDevOrTestEnvFunction(): bool
+    {
+        return $this->environments->isDevOrTest();
     }
 
     public function getLastDataUpdateTimeUtcStrFunction(): string

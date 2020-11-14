@@ -1,5 +1,5 @@
 <div class="btn-group artisan-links" role="group" aria-label="Dropdown with links to websites">
-    {% if isDevMachine() %}
+    {% if isDevOrTestEnv() %}
         <a class="btn btn-warning track-ignore" href="{{ path('mx_artisan_edit', { id: artisan.id }) }}"><i class="fas fa-edit"></i></a>
     {% endif %}
 

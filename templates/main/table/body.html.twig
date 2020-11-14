@@ -31,7 +31,7 @@
                         &nbsp;<span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>
                     {%- endif -%}
 
-                    {%- if isDevMachine() -%}
+                    {%- if isDevOrTestEnv() -%}
                         <small>
                             <strong> {{ artisan.id }}</strong>
                             {{ artisan.contactAllowed|slice(0, 4) }} {{ artisan.contactMethod }} {{ artisan.contactAddressPlain }}
