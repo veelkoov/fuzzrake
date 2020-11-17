@@ -35,11 +35,12 @@ trait DbEnabledTestCaseTrait
         return $event;
     }
 
-    protected static function getArtisan(string $name = 'Test artisan', string $makerId = 'TEST000'): Artisan
+    protected static function getArtisan(string $name = 'Test artisan', string $makerId = 'TEST000', string $country = 'CZ'): Artisan
     {
         return (new Artisan())
             ->setName($name)
             ->setMakerId($makerId)
+            ->setCountry($country)
             ->getCommissionsStatus()
             ->setLastChecked(DateTimeUtils::getNowUtc())
             ->getArtisan();
