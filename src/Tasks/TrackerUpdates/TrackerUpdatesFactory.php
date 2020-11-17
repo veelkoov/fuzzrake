@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks;
+namespace App\Tasks\TrackerUpdates;
 
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Tracking\CommissionsStatusParser;
@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class CommissionsStatusesUpdateFactory
+final class TrackerUpdatesFactory
 {
     private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;
@@ -28,9 +28,8 @@ final class CommissionsStatusesUpdateFactory
         $this->parser = new CommissionsStatusParser();
     }
 
-    public function get(SymfonyStyle $io, bool $refetch, bool $dryRun): CommissionsStatusesUpdate
+    public function get(SymfonyStyle $io, TrackerUpdatesConfig $config): TrackerUpdates
     {
-        return new CommissionsStatusesUpdate($this->logger, $this->entityManager, $this->webpageSnapshotManager, $io,
-            $refetch, $dryRun);
+        return new TrackerUpdates($this->logger, $this->entityManager, $this->webpageSnapshotManager, $io, $config);
     }
 }

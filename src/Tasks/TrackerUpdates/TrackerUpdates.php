@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks;
+namespace App\Tasks\TrackerUpdates;
 
 use App\Entity\Artisan;
+use App\Entity\ArtisanUrl;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
@@ -22,7 +23,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
-final class CommissionsStatusesUpdate
+final class TrackerUpdates
 {
     private LoggerInterface $logger;
     private ArtisanRepository $artisanRepository;
@@ -30,44 +31,35 @@ final class CommissionsStatusesUpdate
     private WebpageSnapshotManager $snapshots;
     private SymfonyStyle $io;
     private CommissionsStatusParser $parser;
-    private bool $refetch;
-    private bool $dryRun;
+    private TrackerUpdatesConfig $config;
 
-    public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $snapshots,
-        SymfonyStyle $io,
-        bool $refetch,
-        bool $dryRun
-    ) {
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, WebpageSnapshotManager $snapshots, SymfonyStyle $io, TrackerUpdatesConfig $config)
+    {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
         $this->snapshots = $snapshots;
+        $this->config = $config;
         $this->parser = new CommissionsStatusParser();
 
         $this->io = $io;
         $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
-
-        $this->refetch = $refetch;
-        $this->dryRun = $dryRun;
     }
 
     public function updateAll()
     {
         $urls = $this->getCstUrls($this->getTrackedArtisans());
 
-        $this->snapshots->prefetchUrls($urls, $this->refetch, $this->io);
+        $this->snapshots->prefetchUrls($urls, $this->config->isRefetch(), $this->io);
 
         foreach ($urls as $url) {
             $this->performUpdate($url);
         }
     }
 
-    private function performUpdate(Fetchable $url): void
+    private function performUpdate(ArtisanUrl $url): void
     {
         $artisan = $url->getArtisan();
 
@@ -75,7 +67,7 @@ final class CommissionsStatusesUpdate
 
         $this->reportStatusChange($artisan, $analysisResult);
 
-        if (!$this->dryRun) {
+        if (!$this->config->isDryRun()) {
             $artisan->getCommissionsStatus()
                 ->setStatus($analysisResult->getStatus())
                 ->setLastChecked($datetimeRetrieved);
@@ -150,10 +142,10 @@ final class CommissionsStatusesUpdate
     /**
      * @param Artisan[]
      *
-     * @return Fetchable[]
+     * @return ArtisanUrl[]
      */
     private function getCstUrls(array $artisans): array
     {
-        return array_map(fn (Artisan $artisan): Fetchable => $artisan->getSingleUrlObject(Fields::URL_CST), $artisans);
+        return array_map(fn (Artisan $artisan): ArtisanUrl => $artisan->getSingleUrlObject(Fields::URL_CST), $artisans);
     }
 }
