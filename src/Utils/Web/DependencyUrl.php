@@ -42,7 +42,7 @@ class DependencyUrl implements Fetchable
 
     public function __toString()
     {
-        return __CLASS__.":{$this->url}";
+        return self::class.":{$this->url}";
     }
 
     public function resetFetchResults(): void

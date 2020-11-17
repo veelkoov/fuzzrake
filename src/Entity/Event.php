@@ -103,7 +103,7 @@ class Event
 
     /**
      * @Assert\Length(max="256")
-     * @ORM\Column(type="string", length=256, options={"default": ""})
+     * @ORM\Column(type="string", length=256)
      */
     private string $gitCommits = '';
 
@@ -220,7 +220,7 @@ class Event
 
     public function getOpenMatch(): ?StrContextInterface
     {
-        return $this->openMatch = $this->openMatch ?? StrContextUtils::fromString($this->openMatchRepr);
+        return $this->openMatch ??= StrContextUtils::fromString($this->openMatchRepr);
     }
 
     public function setOpenMatch(?StrContextInterface $openMatch): self
@@ -233,7 +233,7 @@ class Event
 
     public function getClosedMatch(): ?StrContextInterface
     {
-        return $this->closedMatch = $this->closedMatch ?? StrContextUtils::fromString($this->closedMatchRepr);
+        return $this->closedMatch ??= StrContextUtils::fromString($this->closedMatchRepr);
     }
 
     public function setClosedMatch(?StrContextInterface $closedMatch): self

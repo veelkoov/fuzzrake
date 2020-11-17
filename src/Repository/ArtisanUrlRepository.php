@@ -37,9 +37,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             'state', ['id' => 's_id']);
 
         $whereClause = empty($excludedTypes) ? '' :
-            'WHERE u.type NOT IN ('.implode(',', array_map(function (string $item): string {
-                return $this->getEntityManager()->getConnection()->quote($item, ParameterType::STRING);
-            }, $excludedTypes)).')';
+            'WHERE u.type NOT IN ('.implode(',', array_map(fn (string $item): string => $this->getEntityManager()->getConnection()->quote($item, ParameterType::STRING), $excludedTypes)).')';
 
         return $this->getEntityManager()
             ->createNativeQuery("

@@ -17,9 +17,7 @@ class Factory
 
     public function createSet(array $originals, array $variants = []): array
     {
-        return array_map(function (string $key) use ($originals, $variants) {
-            return $this->create($key, $originals[$key], $variants);
-        }, array_keys($originals));
+        return array_map(fn (string $key) => $this->create($key, $originals[$key], $variants), array_keys($originals));
     }
 
     private function create(string $key, string $original, array $variants = []): TrackingRegexp

@@ -323,7 +323,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
     private function validateSinceFieldInGeneratedIuForm(Field $field, string $htmlBodyLc, $value)
     {
-        list($year, $month) = explode('-', $value);
+        [$year, $month] = explode('-', $value);
 
         $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $year);
         $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $month);
@@ -358,7 +358,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function setValuesInSinceField(string $value, array $fields): void
     {
-        list($year, $month) = explode('-', $value);
+        [$year, $month] = explode('-', $value);
 
         if (!($fields['year'] instanceof ChoiceFormField) || !($fields['month'] instanceof ChoiceFormField) || !($fields['day'] instanceof ChoiceFormField)) {
             throw new InvalidArgumentException('Expected array of '.ChoiceFormField::class);
@@ -438,9 +438,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getIuSubmissionsIds(): array
     {
-        return array_map(function (IuSubmission $submission): string {
-            return $submission->getId();
-        }, Finder::getFrom(self::IMPORT_DATA_DIR));
+        return array_map(fn (IuSubmission $submission): string => $submission->getId(), Finder::getFrom(self::IMPORT_DATA_DIR));
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void

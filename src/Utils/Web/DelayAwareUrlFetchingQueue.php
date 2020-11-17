@@ -59,9 +59,7 @@ class DelayAwareUrlFetchingQueue
         }
 
         $this->sortHosts();
-
-        reset($this->hosts);
-        $host = key($this->hosts);
+        $host = array_key_first($this->hosts);
         $this->lastHost = $host;
 
         $result = array_pop($this->hosts[$host][self::URLS]);

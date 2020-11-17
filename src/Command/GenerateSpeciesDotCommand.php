@@ -72,9 +72,7 @@ class GenerateSpeciesDotCommand extends Command
         $species = $this->species->getSpeciesFlat();
         foreach (self::GROUPS_WITH_ARTIFICIAL_PLACEMENT as $specieName) {
             $children = $species[$specieName]->getChildren();
-            usort($children, function (Specie $a, Specie $b): int {
-                return count($a->getDescendants()) - count($b->getDescendants());
-            });
+            usort($children, fn (Specie $a, Specie $b): int => count($a->getDescendants()) - count($b->getDescendants()));
 
             $childCount = count($children);
             $colNum = ceil(sqrt($childCount));

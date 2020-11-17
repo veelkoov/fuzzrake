@@ -18,9 +18,7 @@ class CrawlersController extends AbstractController
      */
     public function sitemap(): Response
     {
-        $urls = array_map(function (string $route): string {
-            return $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
-        }, [
+        $urls = array_map(fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL), [
             'main',
             'data_updates',
             'info',

@@ -145,23 +145,17 @@ class StatisticsController extends AbstractController
      */
     private function prepareCompletenessData(array $artisans): array
     {
-        $completeness = array_filter(array_map(function (Artisan $artisan) {
-            return $artisan->completeness();
-        }, $artisans));
+        $completeness = array_filter(array_map(fn (Artisan $artisan) => $artisan->completeness(), $artisans));
 
         $result = [];
 
         $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%'   => 0, ];
+                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
 
         foreach ($levels as $description => $level) {
-            $result[$description] = count(array_filter($completeness, function (int $percent) use ($level) {
-                return $percent >= $level;
-            }));
+            $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));
 
-            $completeness = array_filter($completeness, function (int $percent) use ($level) {
-                return $percent < $level;
-            });
+            $completeness = array_filter($completeness, fn (int $percent) => $percent < $level);
         }
 
         return $result;
@@ -172,9 +166,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach (Fields::inStats() as $field) {
-            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
-                return $carry + ('' !== $artisan->get($field) ? 1 : 0);
-            }, 0);
+            $result[$field->name()] = array_reduce($artisans, fn (int $carry, Artisan $artisan) => $carry + ('' !== $artisan->get($field) ? 1 : 0), 0);
         }
 
         arsort($result);

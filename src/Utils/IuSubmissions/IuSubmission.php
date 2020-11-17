@@ -95,9 +95,7 @@ class IuSubmission implements FieldReadInterface
             ->replace($filePath)->first()->withReferences('$1-$2-$3_$4$5$6_$7');
 
         try {
-            return pattern('^\d{4}-\d{2}-\d{2}_\d{2}\d{2}\d{2}_\d{4}$')->match($id)->first(function (Match $match): string {
-                return $match->text();
-            });
+            return pattern('^\d{4}-\d{2}-\d{2}_\d{2}\d{2}\d{2}_\d{4}$')->match($id)->first(fn (Match $match): string => $match->text());
         } catch (SubjectNotMatchedException $e) {
             throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path', 0, $e);
         }

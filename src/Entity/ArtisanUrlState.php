@@ -25,7 +25,7 @@ class ArtisanUrlState
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanUrl", inversedBy="state")
      * @ORM\JoinColumn(name="artisan_url_id", nullable=false)
      */
-    private ?ArtisanUrl $url;
+    private ?ArtisanUrl $url = null;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)

@@ -102,7 +102,7 @@ class WebpageSnapshot
      */
     public function getAllContents(): array
     {
-        return array_merge([$this->contents], ...array_map(function (WebpageSnapshot $snapshot) { return $snapshot->getAllContents(); }, $this->getChildren()));
+        return array_merge([$this->contents], ...array_map(fn (WebpageSnapshot $snapshot) => $snapshot->getAllContents(), $this->getChildren()));
     }
 
     public function getMetadata(): array

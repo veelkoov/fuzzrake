@@ -72,9 +72,10 @@ task('fix-phpunit') do
   create_link('vendor/symfony/phpunit-bridge', 'bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
 end
 task('docker-dev') { Dir.chdir('docker') { exec_or_die('docker-compose', 'up', '--detach', '--build') } }
+task(:rector)        { |_t, args| exec_or_die('./vendor/bin/rector', 'process', *args) } # FIXME: In Docker
 task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| docker('xvfb-run', './bin/phpunit', *args) }
-task qa: ['php-cs-fixer', :phpunit]
+task qa: [:rector, 'php-cs-fixer', :phpunit]
 
 #
 # DATABASE MANAGEMENT

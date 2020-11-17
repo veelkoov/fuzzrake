@@ -25,7 +25,7 @@ class ArtisanUrl implements Fetchable
      * @ORM\ManyToOne(targetEntity="App\Entity\Artisan", inversedBy="urls")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private ?Artisan $artisan;
+    private ?Artisan $artisan = null;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -141,6 +141,6 @@ class ArtisanUrl implements Fetchable
 
     public function __toString()
     {
-        return __CLASS__.":{$this->id}:{$this->url}";
+        return self::class.":{$this->id}:{$this->url}";
     }
 }

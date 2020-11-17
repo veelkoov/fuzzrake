@@ -123,7 +123,7 @@ class DataQuery
         return $this->filterListInternal($listInput, false);
     }
 
-    private function command($item): void
+    private function command(string $item): void
     {
         switch (strtoupper($item)) {
             case self::CMD_ONLY_FEEDBACK_YES:
@@ -167,6 +167,9 @@ class DataQuery
         return $result;
     }
 
+    /**
+     * @param string[] $list
+     */
     private function itemMatchesList(string $item, array $list): bool
     {
         foreach ($list as $blacklistedItem) {

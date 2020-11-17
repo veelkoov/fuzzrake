@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use App\Repository\ArtisanRepository;
+use RuntimeException;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Match;
 
 class Species
@@ -90,9 +92,15 @@ class Species
 
     private function splitSpecieFlagsName(string $specie): array
     {
-        return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)->findFirst(function (Match $match): array {
-            return [$match->group('flags')->text(), $match->group('specie')->text()];
-        })->orReturn(['', $specie]);
+        try {
+            return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)
+                ->findFirst(fn (Match $match): array => [
+                    $match->group('flags')->text(),
+                    $match->group('specie')->text(),
+                ])->orReturn(['', $specie]);
+        } catch (NonexistentGroupException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     private function flagged(string $flags, string $flag): bool
@@ -118,7 +126,7 @@ class Species
         $result = [];
 
         foreach ($species as $specie => $subspecies) {
-            list(, $specie) = $this->splitSpecieFlagsName($specie);
+            [, $specie] = $this->splitSpecieFlagsName($specie);
 
             $result[] = $specie;
 
@@ -135,7 +143,7 @@ class Species
         $result = [];
 
         foreach ($species as $specieName => $subspecies) {
-            list($flags, $specieName) = $this->splitSpecieFlagsName($specieName);
+            [$flags, $specieName] = $this->splitSpecieFlagsName($specieName);
 
             $this->validChoicesList[] = $specieName;
 

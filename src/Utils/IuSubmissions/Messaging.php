@@ -27,9 +27,7 @@ class Messaging
 
     public function reportMoreThanOneMatchedArtisans(Artisan $artisan, array $results): void
     {
-        $namesList = implode(', ', array_map(function (Artisan $artisan) {
-            return StrUtils::artisanNamesSafeForCli($artisan);
-        }, $results));
+        $namesList = implode(', ', array_map(fn (Artisan $artisan) => StrUtils::artisanNamesSafeForCli($artisan), $results));
 
         $this->printer->warning('Was looking for: '.StrUtils::artisanNamesSafeForCli($artisan).'. Found more than one: '.$namesList);
     }

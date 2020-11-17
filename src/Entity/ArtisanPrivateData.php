@@ -21,13 +21,13 @@ class ArtisanPrivateData
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
      * @ORM\JoinColumn(name="artisan_id", nullable=false, unique=true)
      */
-    private ?Artisan $artisan;
+    private ?Artisan $artisan = null;
 
     /**
      * @ORM\Column(type="string", length=512)

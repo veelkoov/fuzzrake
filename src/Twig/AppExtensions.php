@@ -134,9 +134,7 @@ class AppExtensions extends AbstractExtension
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
-        return array_filter($items, function (FilterItem $item) use ($matchWord) {
-            return Regexp::match("#$matchWord#i", $item->getLabel());
-        });
+        return array_filter($items, fn (FilterItem $item) => Regexp::match("#$matchWord#i", $item->getLabel()));
     }
 
     public function filterHumanFriendlyRegexp(string $input): string

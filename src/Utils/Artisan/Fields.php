@@ -85,8 +85,8 @@ final class Fields
     public const CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
     public const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
 
-    private static ?array $fields;
-    private static ?array $fieldsByModelName;
+    private static ?array $fields = null;
+    private static ?array $fieldsByModelName = null;
 
     public static function init()
     {
@@ -132,9 +132,7 @@ final class Fields
      */
     public static function persisted(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->isPersisted();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->isPersisted());
     }
 
     /**
@@ -142,9 +140,7 @@ final class Fields
      */
     public static function public(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->public();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->public());
     }
 
     /**
@@ -152,9 +148,7 @@ final class Fields
      */
     public static function inStats(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->inStats();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->inStats());
     }
 
     /**
@@ -162,9 +156,7 @@ final class Fields
      */
     public static function lists(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->isList();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->isList());
     }
 
     /**
@@ -172,9 +164,7 @@ final class Fields
      */
     public static function urls(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return in_array($field->name(), FieldsDefinitions::URLS);
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => in_array($field->name(), FieldsDefinitions::URLS));
     }
 }
 

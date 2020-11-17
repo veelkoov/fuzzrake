@@ -11,7 +11,7 @@ abstract class Utils
 {
     public static function updateContact(Artisan $artisan, string $newOriginalContactValue): void
     {
-        list($method, $address) = Contact::parse($newOriginalContactValue);
+        [$method, $address] = Contact::parse($newOriginalContactValue);
 
         switch ($method) {
             case Contact::INVALID:

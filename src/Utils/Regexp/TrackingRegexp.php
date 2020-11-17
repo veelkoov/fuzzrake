@@ -10,15 +10,15 @@ use SplObjectStorage;
 
 class TrackingRegexp
 {
-    const CONTEXT_LENGTH = 100;
+    private const CONTEXT_LENGTH = 100;
 
     private string $id;
     private string $original;
 
     /**
-     * @var string[] SplObjectStorage of strings
+     * @var SplObjectStorage|string[]
      */
-    private $compiled;
+    private SplObjectStorage $compiled;
 
     public function __construct(string $id, string $original, SplObjectStorage $compiled)
     {
@@ -68,6 +68,7 @@ class TrackingRegexp
             throw new RuntimeRegexpException('Regexp variant selection required');
         }
 
+        /* @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->compiled->current();
     }
 }

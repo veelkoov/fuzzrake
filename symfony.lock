@@ -38,7 +38,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "2.0",
-            "ref": "a9f2463b9f73efe74482f831f03a204a41328555"
+            "ref": "368794356c1fb634e58b38ad2addb36933f2e73e"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -95,14 +95,35 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "jean85/pretty-package-versions": {
+        "version": "1.5.1"
+    },
+    "migrify/migrify-kernel": {
+        "version": "0.4.2"
+    },
+    "migrify/php-config-printer": {
+        "version": "0.4.2"
+    },
     "monolog/monolog": {
         "version": "2.1.0"
+    },
+    "nette/finder": {
+        "version": "v2.5.2"
+    },
+    "nette/robot-loader": {
+        "version": "v3.3.1"
+    },
+    "nette/utils": {
+        "version": "v3.1.3"
     },
     "nikic/php-parser": {
         "version": "v4.6.0"
     },
     "ocramius/package-versions": {
         "version": "1.9.0"
+    },
+    "ondram/ci-detector": {
+        "version": "3.5.1"
     },
     "php": {
         "version": "7.4"
@@ -112,6 +133,15 @@
     },
     "php-webdriver/webdriver": {
         "version": "1.8.3"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "0.4.9"
+    },
+    "phpstan/phpstan": {
+        "version": "0.12.56"
+    },
+    "phpstan/phpstan-phpunit": {
+        "version": "0.12.16"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -125,8 +155,17 @@
     "psr/log": {
         "version": "1.1.3"
     },
+    "psr/simple-cache": {
+        "version": "1.0.1"
+    },
     "rawr/t-regx": {
         "version": "v0.9.9"
+    },
+    "rector/rector": {
+        "version": "0.8.56"
+    },
+    "sebastian/diff": {
+        "version": "4.0.4"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -245,7 +284,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "5.1",
-            "ref": "6ee1194b036378b21884e7f57b6a2ac721167f16"
+            "ref": "5f0d0fd82ffa3580fe0ce8e3b2d18506ebf37a0e"
         },
         "files": [
             "config/packages/cache.yaml",
@@ -453,10 +492,37 @@
     "symfony/yaml": {
         "version": "v5.0.10"
     },
+    "symplify/autowire-array-parameter": {
+        "version": "8.3.48"
+    },
+    "symplify/composer-json-manipulator": {
+        "version": "8.3.48"
+    },
+    "symplify/console-color-diff": {
+        "version": "8.3.48"
+    },
+    "symplify/easy-testing": {
+        "version": "8.3.48"
+    },
+    "symplify/package-builder": {
+        "version": "8.3.48"
+    },
+    "symplify/set-config-resolver": {
+        "version": "8.3.48"
+    },
+    "symplify/smart-file-system": {
+        "version": "8.3.48"
+    },
+    "symplify/symplify-kernel": {
+        "version": "8.3.48"
+    },
     "twig/extra-bundle": {
         "version": "v3.0.4"
     },
     "twig/twig": {
         "version": "v3.0.4"
+    },
+    "webmozart/assert": {
+        "version": "1.9.1"
     }
 }
