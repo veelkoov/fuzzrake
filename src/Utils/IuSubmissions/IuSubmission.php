@@ -14,8 +14,6 @@ use App\Utils\StringList;
 use DateTimeInterface;
 use JsonException;
 use SplFileInfo;
-use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
-use TRegx\CleanRegex\Match\Details\Match;
 
 class IuSubmission implements FieldReadInterface
 {
@@ -91,15 +89,12 @@ class IuSubmission implements FieldReadInterface
      */
     private static function getIdFromFilePath(string $filePath): string
     {
-        $id = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
-            ->replace($filePath)->first()->withReferences('$1-$2-$3_$4$5$6_$7');
-
-        try {
-            return pattern('^\d{4}-\d{2}-\d{2}_\d{2}\d{2}\d{2}_\d{4}$')->match($id)->first(function (Match $match): string {
-                return $match->text();
-            });
-        } catch (SubjectNotMatchedException $e) {
-            throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path', 0, $e);
-        }
+        return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
+            ->replace($filePath)
+            ->first()
+            ->otherwise(function () {
+                throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path', 0, $e);
+            })
+            ->withReferences('$1-$2-$3_$4$5$6_$7');
     }
 }
