@@ -70,13 +70,14 @@ final class Fields
     public const URL_PHOTOS = 'URL_PHOTOS';
     public const URL_MINIATURES = 'URL_MINIATURES';
     public const URL_OTHER = 'URL_OTHER';
-    public const URL_CST = 'URL_CST';
+    public const URL_COMMISSIONS = 'URL_CST'; // TODO: Rename
 
     public const NOTES = 'NOTES';
     public const INACTIVE_REASON = 'INACTIVE_REASON';
     public const PASSCODE = 'PASSCODE';
     public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
-    public const CST_LAST_CHECK = 'CST_LAST_CHECK';
+    public const CS_LAST_CHECK = 'CST_LAST_CHECK'; // TODO: Rename
+    public const BP_LAST_CHECK = 'BP_LAST_CHECK';
     public const COMPLETENESS = 'COMPLETENESS';
 
     public const CONTACT_ALLOWED = 'CONTACT_ALLOWED';

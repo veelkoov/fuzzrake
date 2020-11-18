@@ -948,14 +948,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getCstUrl(): string
+    public function getCommissionsUrl(): string
     {
-        return $this->getSingleUrl(Fields::URL_CST);
+        return $this->getSingleUrl(Fields::URL_COMMISSIONS);
     }
 
-    public function setCstUrl(string $cstUrl): self
+    public function setCommissionsUrl(string $cstUrl): self
     {
-        $this->setSingleUrl(Fields::URL_CST, $cstUrl);
+        $this->setSingleUrl(Fields::URL_COMMISSIONS, $cstUrl);
 
         return $this;
     }
@@ -1192,9 +1192,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
     {
         return array_map(function (Field $field) {
             switch ($field->name()) {
-                case Fields::CST_LAST_CHECK:
+                case Fields::CS_LAST_CHECK:
                     $lc = $this->getCommissionsStatus()->getLastChecked();
                     $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+                    break;
+
+                case Fields::BP_LAST_CHECK:
+                    return 'unknown'; // TODO
                     break;
 
                 case Fields::COMMISSIONS_STATUS:

@@ -90,7 +90,7 @@ class Fixer
             case Fields::PAYMENT_METHODS:
                 return $this->freeListFixer;
 
-            case Fields::URL_CST:
+            case Fields::URL_COMMISSIONS:
             case Fields::URL_DEVIANTART:
             case Fields::URL_FACEBOOK:
             case Fields::URL_FAQ:

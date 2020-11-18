@@ -95,7 +95,7 @@ final class TrackerUpdates
 
     private function canAutoUpdate(Artisan $artisan): bool
     {
-        return !empty($artisan->getCstUrl());
+        return !empty($artisan->getCommissionsUrl());
     }
 
     private function reportStatusChange(Artisan $artisan, AnalysisResult $analysisResult): void
@@ -104,9 +104,9 @@ final class TrackerUpdates
             $oldStatusText = Status::text($artisan->getCommissionsStatus()->getStatus());
             $newStatusText = Status::text($analysisResult->getStatus());
 
-            $this->io->caution("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}, $oldStatusText ---> $newStatusText");
+            $this->io->caution("{$artisan->getName()} ( {$artisan->getCommissionsUrl()} ): {$analysisResult->explanation()}, $oldStatusText ---> $newStatusText");
         } elseif ($analysisResult->hasFailed()) {
-            $this->io->note("{$artisan->getName()} ( {$artisan->getCstUrl()} ): {$analysisResult->explanation()}");
+            $this->io->note("{$artisan->getName()} ( {$artisan->getCommissionsUrl()} ): {$analysisResult->explanation()}");
         } else {
             return;
         }
@@ -126,7 +126,7 @@ final class TrackerUpdates
         }
 
         if ($artisan->getCommissionsStatus()->getStatus() !== $analysisResult->getStatus()) {
-            $this->entityManager->persist(new Event($artisan->getCstUrl(), $artisan->getName(),
+            $this->entityManager->persist(new Event($artisan->getCommissionsUrl(), $artisan->getName(),
                 $artisan->getCommissionsStatus()->getStatus(), $analysisResult));
         }
     }
@@ -146,6 +146,6 @@ final class TrackerUpdates
      */
     private function getCstUrls(array $artisans): array
     {
-        return array_map(fn (Artisan $artisan): ArtisanUrl => $artisan->getSingleUrlObject(Fields::URL_CST), $artisans);
+        return array_map(fn (Artisan $artisan): ArtisanUrl => $artisan->getSingleUrlObject(Fields::URL_COMMISSIONS), $artisans);
     }
 }

@@ -57,7 +57,8 @@ final class FieldsDefinitions
 
         Fields::URL_FURSUITREVIEW          => ['fursuitReviewUrl',         VR::FSR_URL,                   0, 1, 1, 1],
         Fields::URL_WEBSITE                => ['websiteUrl',               VR::GENERIC_URL,               0, 1, 1, 1],
-        Fields::URL_PRICES                 => ['pricesUrl',                VR::GENERIC_URL,               0, 1, 1, 1],
+        Fields::URL_PRICES                 => ['pricesUrl',                VR::GENERIC_URL_LIST,          1, 1, 1, 1],
+        Fields::URL_COMMISSIONS            => ['commissionsUrl',           VR::GENERIC_URL_LIST,          1, 1, 1, 1],
         Fields::URL_FAQ                    => ['faqUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::URL_FUR_AFFINITY           => ['furAffinityUrl',           VR::FA_URL,                    0, 1, 1, 1],
         Fields::URL_DEVIANTART             => ['deviantArtUrl',            VR::DA_URL,                    0, 1, 1, 1],
@@ -74,15 +75,15 @@ final class FieldsDefinitions
         Fields::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
         Fields::URL_FURTRACK               => ['furtrackUrl',              VR::FURTRACK_URL,              0, 1, 1, 1],
-        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URLS,                1, 1, 1, 1],
-        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URLS,            1, 1, 1, 1],
+        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URL_LIST,            1, 1, 1, 1],
+        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URL_LIST,        1, 1, 1, 1],
         Fields::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
 
         Fields::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
         Fields::INACTIVE_REASON            => ['inactiveReason',           VR::ANYTHING,                  0, 1, 1, 1],
-        Fields::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
-        Fields::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
+        Fields::CS_LAST_CHECK              => ['csLastCheck',              null,                          0, 0, 0, 1],
+        Fields::BP_LAST_CHECK              => ['bpLastCheck',              null,                          0, 0, 0, 1],
         Fields::COMPLETENESS               => ['completeness',             null,                          0, 0, 0, 1],
 
         Fields::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
@@ -116,7 +117,7 @@ final class FieldsDefinitions
         Fields::URL_PHOTOS,
         Fields::URL_MINIATURES,
         Fields::URL_OTHER,
-        Fields::URL_CST,
+        Fields::URL_COMMISSIONS,
     ];
 
     public const NON_INSPECTED_URLS = [

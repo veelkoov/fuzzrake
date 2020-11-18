@@ -174,7 +174,8 @@ class DataImport
 
                 case Fields::URL_MINIATURES:
                 case Fields::COMMISSIONS_STATUS:
-                case Fields::CST_LAST_CHECK:
+                case Fields::CS_LAST_CHECK:
+                case Fields::BP_LAST_CHECK:
                 case Fields::COMPLETENESS:
                 case Fields::CONTACT_METHOD:
                 case Fields::CONTACT_ADDRESS_PLAIN:

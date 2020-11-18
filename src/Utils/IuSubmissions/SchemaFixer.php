@@ -32,10 +32,17 @@ class SchemaFixer
         $data = self::assureVersionFieldExists($data, $timestamp);
 
         switch ($data[self::SCHEMA_VERSION]) {
+            /* @noinspection PhpMissingBreakStatementInspection */
             case self::SCHEMA_V6:
                 $data[Fields::URL_FURTRACK] = '';
                 $data[Fields::URL_MINIATURES] = $data['URL_SCRITCH_MINIATURE'];
                 $data[Fields::URL_PHOTOS] = $data['URL_SCRITCH_PHOTO'];
+                // Deliberate fall-through
+
+            case self::SCHEMA_V7:
+                $data[Fields::URL_PRICES] = [$data[Fields::URL_PRICES]];
+                $data[Fields::URL_COMMISSIONS] = [$data[Fields::URL_COMMISSIONS]];
+                $data[Fields::BP_LAST_CHECK] = 'unknown';
         }
 
         return $data;
