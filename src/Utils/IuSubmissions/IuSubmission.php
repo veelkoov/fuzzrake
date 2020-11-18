@@ -85,6 +85,7 @@ class IuSubmission implements FieldReadInterface
     }
 
     /**
+     * @noinspection PhpDocRedundantThrowsInspection
      * @throws DataInputException
      */
     private static function getIdFromFilePath(string $filePath): string
@@ -93,7 +94,7 @@ class IuSubmission implements FieldReadInterface
             ->replace($filePath)
             ->first()
             ->otherwise(function () {
-                throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path', 0, $e);
+                throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path');
             })
             ->withReferences('$1-$2-$3_$4$5$6_$7');
     }
