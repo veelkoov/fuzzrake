@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
-use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -719,8 +719,16 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     // ===== HELPER GETTERS AND SETTERS =====
 
-    public function set(Field $field, $newValue): self
+    /**
+     * @param Field|string $field
+     * @param mixed        $newValue
+     */
+    public function set($field, $newValue): self
     {
+        if (!($field instanceof Field)) {
+            $field = Fields::get((string) $field);
+        }
+
         $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $setter)) {
@@ -732,8 +740,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function get(Field $field)
+    /**
+     * @param Field|string $field
+     *
+     * @return mixed
+     */
+    public function get($field)
     {
+        if (!($field instanceof Field)) {
+            $field = Fields::get((string) $field);
+        }
+
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (!method_exists($this, $getter)) {
@@ -780,39 +797,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return array_filter(array_merge([$this->getName()], $this->getFormerlyArr()));
     }
 
-    public function completeness(): ?int
+    public function getCompleteness(): int
     {
-        return (new CompletenessCalc())
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
-            // Name not counted - makes no sense
-            // Formerly not counted - small minority has changed their names
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
-            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
-            ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
-                ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModels)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->orderTypes, $this->otherOrderTypes)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
-            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
-            // FursuitReview not checked, because we can force makers to force their customers to write reviews
-            // ... shame...
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->getPricesUrl())
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->getFaqUrl()) // it's optional, but nice to have
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->getWebsiteUrl(), $this->getDeviantArtUrl(),
-                $this->getFurAffinityUrl(), $this->getTwitterUrl(), $this->getFacebookUrl(),
-                $this->getTumblrUrl(), $this->getInstagramUrl(), $this->getYoutubeUrl())
-            // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->getQueueUrl()) // it's optional, but nice to have
-            // Other URLs not checked - we're not requiring unknown
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
-            // Notes are not supposed to be displayed, thus not counted
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
-            // CST last check does not depend on artisan input
-            ->result();
+        return CompletenessCalc::count($this);
     }
 
     public function allowsFeedback(): bool
@@ -1202,7 +1189,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                     break;
 
                 case Fields::COMPLETENESS:
-                    $value = $this->completeness();
+                    $value = $this->getCompleteness();
                     break;
 
                 default:

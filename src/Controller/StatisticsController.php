@@ -145,7 +145,7 @@ class StatisticsController extends AbstractController
      */
     private function prepareCompletenessData(array $artisans): array
     {
-        $completeness = array_filter(array_map(fn (Artisan $artisan) => $artisan->completeness(), $artisans));
+        $completeness = array_filter(array_map(fn (Artisan $artisan) => $artisan->getCompleteness(), $artisans));
 
         $result = [];
 
