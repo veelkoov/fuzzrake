@@ -69,7 +69,7 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('pricesUrl', UrlType::class, [
+            ->add('pricesUrl', TextareaType::class, [
                 'label'      => 'Do you keep a prices list somewhere online? Please copy+paste full link:',
                 'required'   => false,
                 'empty_data' => '',
@@ -249,7 +249,7 @@ class IuForm extends AbstractType
                 'empty_data' => '',
             ])
 
-            ->add('cstUrl', UrlType::class, [
+            ->add('commissionsUrl', TextareaType::class, [
                 'label'      => 'If you keep an eligible webpage up-to-date with commissions status, please copy+paste the full link to it:',
                 'required'   => false,
                 'empty_data' => '',

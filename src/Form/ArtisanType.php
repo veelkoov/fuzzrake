@@ -210,8 +210,8 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('cstUrl', UrlType::class, [
-                'label'      => 'CST URL',
+            ->add('commissionsUrl', UrlType::class, [
+                'label'      => 'Commissions URL',
                 'required'   => false,
                 'empty_data' => '',
             ])

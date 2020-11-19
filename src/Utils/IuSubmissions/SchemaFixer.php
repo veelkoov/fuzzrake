@@ -10,13 +10,13 @@ use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Traits\Singleton;
 use DateTimeInterface;
 
-class SchemaFixer
+final class SchemaFixer
 {
     use Singleton;
 
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const SCHEMA_V6 = 'SCHEMA_V6';
-    private const SCHEMA_V7 = 'SCHEMA_V7';
+    private const CURRENT_SCHEMA_VERSION = 8;
+
     private DateTimeInterface $v7releaseTimestamp;
 
     /**
@@ -33,13 +33,13 @@ class SchemaFixer
 
         switch ($data[self::SCHEMA_VERSION]) {
             /* @noinspection PhpMissingBreakStatementInspection */
-            case self::SCHEMA_V6:
+            case 6:
                 $data[Fields::URL_FURTRACK] = '';
                 $data[Fields::URL_MINIATURES] = $data['URL_SCRITCH_MINIATURE'];
                 $data[Fields::URL_PHOTOS] = $data['URL_SCRITCH_PHOTO'];
-                // Deliberate fall-through
+                // no break - deliberate fall-through
 
-            case self::SCHEMA_V7:
+            case 7:
                 $data[Fields::URL_PRICES] = [$data[Fields::URL_PRICES]];
                 $data[Fields::URL_COMMISSIONS] = [$data[Fields::URL_COMMISSIONS]];
                 $data[Fields::BP_LAST_CHECK] = 'unknown';
@@ -50,11 +50,16 @@ class SchemaFixer
 
     private function assureVersionFieldExists(array $data, DateTimeInterface $timestamp): array
     {
-        if ($timestamp < $this->v7releaseTimestamp) {
-            $data[self::SCHEMA_VERSION] = self::SCHEMA_V6;
-        } else {
-            $data[self::SCHEMA_VERSION] = self::SCHEMA_V7;
+        if (!array_key_exists(self::SCHEMA_VERSION, $data)) {
+            $data[self::SCHEMA_VERSION] = $timestamp < $this->v7releaseTimestamp ? 6 : 7;
         }
+
+        return $data;
+    }
+
+    public static function appendSchemaVersion(array $data): array
+    {
+        $data[self::SCHEMA_VERSION] = self::CURRENT_SCHEMA_VERSION;
 
         return $data;
     }

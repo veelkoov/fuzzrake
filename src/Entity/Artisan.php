@@ -1185,7 +1185,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                     break;
 
                 case Fields::BP_LAST_CHECK:
-                    return 'unknown'; // TODO
+                    $value = 'unknown'; // TODO
                     break;
 
                 case Fields::COMMISSIONS_STATUS:

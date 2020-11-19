@@ -63,7 +63,8 @@ export default class Artisan {
 
                 readonly fursuitReviewUrl: string,
                 readonly websiteUrl: string,
-                readonly pricesUrl: string,
+                readonly pricesUrl: string[],
+                readonly commissionsUrl: string[],
                 readonly faqUrl: string,
                 readonly furAffinityUrl: string,
                 readonly deviantArtUrl: string,
@@ -86,9 +87,9 @@ export default class Artisan {
 
                 readonly notes: string,
                 readonly inactiveReason: string,
-                readonly cstUrl: string,
                 readonly commissionsStatus: boolean,
-                readonly cstLastCheck: string,
+                readonly csLastCheck: string,
+                readonly bpLastCheck: string,
                 readonly completeness: number,
 
                 readonly contactAllowed: string,
