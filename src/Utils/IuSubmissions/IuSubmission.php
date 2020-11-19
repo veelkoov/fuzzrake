@@ -86,6 +86,7 @@ class IuSubmission implements FieldReadInterface
 
     /**
      * @noinspection PhpDocRedundantThrowsInspection
+     *
      * @throws DataInputException
      */
     private static function getIdFromFilePath(string $filePath): string
