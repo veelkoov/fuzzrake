@@ -1,6 +1,6 @@
 ---
 deployment_path: /var/www/prod
-branch: master
+branch: main
 
 php_fpm_container_port: "{{ prod_php_fpm_container_port }}"
 php_fpm_container_name: fuzzrake-prod

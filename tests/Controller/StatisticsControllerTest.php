@@ -34,7 +34,7 @@ class StatisticsControllerTest extends DbEnabledWebTestCase
             ->setCountry('CZ')
         ;
         $a2 = self::getArtisan('A2', 'AAAAAAA2')
-                ->setFeatures(Features::FOLLOW_ME_EYES)
+            ->setFeatures(Features::FOLLOW_ME_EYES)
             ->setOrderTypes(OrderTypes::FULL_DIGITIGRADE)
             ->setCountry('SK')
         ;
@@ -57,7 +57,8 @@ class StatisticsControllerTest extends DbEnabledWebTestCase
         static::assertRowValueEquals('2 (100.00%)', 'Total', $crawler->filterXPath('//h1[text()="Commission status"]')->nextAll()->first());
         static::assertRowValueEquals('2 (100.00%)', Fields::NAME, $crawler);
         static::assertRowValueEquals('1 (50.00% × 2 = 100.00%)', 'CZ, SK', $crawler);
-        static::assertRowValueEquals('2 (100.00%)', '40-49%', $crawler);
+        static::assertRowValueEquals('1 (50.00%)', '40-49%', $crawler);
+        static::assertRowValueEquals('1 (50.00%)', '50-59%', $crawler);
     }
 
     private static function assertRowValueEquals(string $expected, string $rowLabel, Crawler $crawler): void

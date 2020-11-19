@@ -145,7 +145,7 @@ def do_release(branch, environment)
 end
 
 task('release-beta') { do_release('beta', 'beta') }
-task('release-prod') { do_release('master', 'prod') }
+task('release-prod') { do_release('main', 'prod') }
 
 #
 # COMMISSIONS STATUS UPDATES
