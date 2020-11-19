@@ -199,6 +199,7 @@ parameters:
       - 'skullsuits...' # FIXME: How the heck am i supposed to interpret that
       - 'Some birds (unless its on another headbase then I''ll do it)'
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
+      - 'Complex species, as if the species has too many parts and details, I will say so during the quote.'
 
     replacements:
       '"([^"]+)"':                                                  '$1'
