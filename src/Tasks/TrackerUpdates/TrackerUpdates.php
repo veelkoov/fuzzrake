@@ -146,6 +146,6 @@ final class TrackerUpdates
      */
     private function getCstUrls(array $artisans): array
     {
-        return array_map(fn (Artisan $artisan): ArtisanUrl => $artisan->getSingleUrlObject(Fields::URL_COMMISSIONS), $artisans);
+        return array_map(fn (Artisan $artisan): ArtisanUrl => $artisan->getUrlObj(Fields::URL_COMMISSIONS), $artisans);
     }
 }
