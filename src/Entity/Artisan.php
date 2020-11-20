@@ -1128,9 +1128,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getUrlObj(string $urlFieldName): ?ArtisanUrl
+    /**
+     * @return ArtisanUrl[]
+     */
+    public function getUrlObjs(string $urlFieldName): array
     {
-        return UrlUtils::getUrlObj($this, $urlFieldName);
+        return UrlUtils::getUrlObjs($this, $urlFieldName);
     }
 
     private function getUrl(string $urlFieldName): string

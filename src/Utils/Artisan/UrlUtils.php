@@ -13,24 +13,17 @@ final class UrlUtils
 {
     use UtilityClass;
 
-    public static function getUrlObj(Artisan $artisan, string $urlFieldName): ?ArtisanUrl
+    /**
+     * @return ArtisanUrl[]
+     */
+    public static function getUrlObjs(Artisan $artisan, string $urlFieldName): array
     {
-        foreach ($artisan->getUrls() as $url) {
-            if ($url->getType() === $urlFieldName) {
-                return $url;
-            }
-        }
-
-        return null;
+        return array_filter($artisan->getUrls()->toArray(), fn (ArtisanUrl $url) => $url->getType() === $urlFieldName);
     }
 
     public static function getUrl(Artisan $artisan, string $urlFieldName): string
     {
-        if (($url = $artisan->getUrlObj($urlFieldName))) {
-            return $url->getUrl();
-        } else {
-            return '';
-        }
+        return StringList::pack(array_map(fn (ArtisanUrl $url) => $url->getUrl(), self::getUrlObjs($artisan, $urlFieldName)));
     }
 
     public static function setUrl(Artisan $artisan, string $urlFieldName, string $newUrl): void
