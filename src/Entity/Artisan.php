@@ -8,6 +8,7 @@ use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
+use App\Utils\Artisan\UrlUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1129,43 +1130,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function getSingleUrlObject(string $urlFieldName): ?ArtisanUrl
     {
-        foreach ($this->getUrls() as $url) {
-            if ($url->getType() === $urlFieldName) {
-                return $url;
-            }
-        }
-
-        return null;
+        return UrlUtils::getUrlObject($this, $urlFieldName);
     }
 
     private function getSingleUrl(string $urlFieldName): string
     {
-        if (($url = $this->getSingleUrlObject($urlFieldName))) {
-            return $url->getUrl();
-        } else {
-            return '';
-        }
+        return UrlUtils::getUrl($this, $urlFieldName);
     }
 
-    private function setSingleUrl(string $urlFieldName, string $newUrl): self
+    private function setSingleUrl(string $urlFieldName, string $newUrl): void
     {
-        foreach ($this->getUrls() as $url) {
-            if ($url->getType() === $urlFieldName) {
-                if ('' === $newUrl) {
-                    $this->removeUrl($url);
-                } else {
-                    $url->setUrl($newUrl);
-                }
-
-                return $this;
-            }
-        }
-
-        if ('' !== $newUrl) {
-            $this->addUrl((new ArtisanUrl())->setType($urlFieldName)->setUrl($newUrl));
-        }
-
-        return $this;
+        UrlUtils::setUrl($this, $urlFieldName, $newUrl);
     }
 
     //
