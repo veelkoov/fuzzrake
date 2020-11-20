@@ -989,6 +989,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getUrl(Fields::URL_PRICES);
     }
 
+    /**
+     * @return string[]
+     */
+    public function getPricesUrls(): array
+    {
+        return StringList::unpack($this->getUrl(Fields::URL_PRICES));
+    }
+
     public function setPricesUrl(string $pricesUrl): self
     {
         $this->setUrl(Fields::URL_PRICES, $pricesUrl);

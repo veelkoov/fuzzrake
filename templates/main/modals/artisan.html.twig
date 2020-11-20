@@ -109,9 +109,9 @@
             {{# if artisan.websiteUrl }}
                 <a class="btn btn-light m-1 track-website" href="#" data-href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {{/ if }}
-            {{# if artisan.pricesUrl }}
-                <a class="btn btn-light m-1 track-prices" href="#" data-href="{{ artisan.pricesUrl }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
-            {{/ if }}
+            {{# each artisan.pricesUrl }}
+                <a class="btn btn-light m-1 track-prices" href="#" data-href="{{ this }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+            {{/ each }}
             {{# if artisan.faqUrl }}
                 <a class="btn btn-light m-1 track-faq" href="#" data-href="{{ artisan.faqUrl }}" rel="nofollow" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             {{/ if }}
@@ -164,7 +164,7 @@
     </div>
     <div class="row p-1">
         <div class="col-sm">
-            <h5>Commissions status</h5>
+            <h5>Commissions status</h5> <!-- TODO -->
             <div class="small" id="artisanCommissionsStatus">
                 {{# if artisan.cstUrl }}
                     {{# if artisan.commissionsStatusKnown }}
