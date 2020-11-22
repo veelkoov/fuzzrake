@@ -89,14 +89,14 @@ export default class Artisan {
 
                 readonly notes: string,
                 readonly inactiveReason: string,
-                readonly commissionsStatus: boolean, // FIXME
+                readonly commissionsStatus: boolean,
                 readonly csLastCheck: string,
                 readonly bpLastCheck: string,
                 readonly completeness: number,
 
                 readonly contactAllowed: string,
                 readonly contactInfoObfuscated: string,
-    ) {
+    ) { // FIXME: Get rid of commissionsStatus
         this.languages = new Set<string>(languages);
         this.location = [state, city].filter(i => i).join(', ');
         this.lcCountry = country.toLowerCase();

@@ -20,7 +20,7 @@ class ArtisanFieldsTest extends TestCase
     {
         $modelSource = file_get_contents(__DIR__.'/../../assets/scripts/class/Artisan.ts');
 
-        static::assertTrue(Regexp::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
+        static::assertTrue(Regexp::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch), "Constructor declaration can't be processed by the test");
 
         static::assertGreaterThan(0, Regexp::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
 
