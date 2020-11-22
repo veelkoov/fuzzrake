@@ -4,11 +4,12 @@ import Artisan from "../class/Artisan";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
 import Tracking from "../class/Tracking";
 
-let detailsPopUpTpl: HandlebarsTemplateDelegate;
-let $detailsPopUp: JQuery<HTMLElement>;
+let template: HandlebarsTemplateDelegate;
+let $template: JQuery<HTMLElement>;
+let $contents: JQuery<HTMLElement>;
 
 function populatePopUpWithData(artisan: Artisan): void {
-    $detailsPopUp.html(detailsPopUpTpl({
+    $contents.html(template({
         'artisan': artisan,
     }));
 
@@ -24,21 +25,23 @@ function detailsPopUpShowCallback(event: any) {
 export function init(): (() => void)[] {
     return [
         () => {
-            $detailsPopUp = jQuery('#artisanDetailsModal');
+            $template = jQuery('#artisanDetailsTemplate');
+            $contents = jQuery('#artisanDetailsModalContent');
 
-            $detailsPopUp.find('a[data-href]').each((index: number, element: HTMLElement) => {
-                /* Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href */
-                element.setAttribute('href', element.getAttribute('data-href') || '');
-                element.removeAttribute('data-href');
-            });
-
-            $detailsPopUp.on('show.bs.modal', detailsPopUpShowCallback);
+            jQuery('#artisanDetailsModal').on('show.bs.modal', detailsPopUpShowCallback);
         },
         () => {
             Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister());
         },
         () => {
-            detailsPopUpTpl = Handlebars.compile($detailsPopUp.html(), {
+            $template.find('a[data-href]').each((index: number, element: HTMLElement) => {
+                /* Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href */
+                element.setAttribute('href', element.getAttribute('data-href') || '');
+                element.removeAttribute('data-href');
+            });
+        },
+        () => {
+            template = Handlebars.compile($template.html(), {
                 assumeObjects: true,
                 data: false,
                 knownHelpersOnly: true,

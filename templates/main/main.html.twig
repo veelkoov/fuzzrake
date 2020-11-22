@@ -19,12 +19,13 @@
     {% include 'main/parts/intro.html.twig' %}
     {% include 'main/modals/filters.html.twig' %}
     {% include 'main/modals/update_request.html.twig' %}
+    <script type="text/x-handlebars-template" id="artisanDetailsTemplate">
+        {% include 'main/modals/artisan.html.twig' %}
+    </script>
 
     <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-                {% include 'main/modals/artisan.html.twig' %}
-            </div>
+            <div class="modal-content" id="artisanDetailsModalContent"></div>
         </div>
     </div>
 
