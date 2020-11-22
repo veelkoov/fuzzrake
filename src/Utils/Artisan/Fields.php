@@ -78,6 +78,8 @@ final class Fields
     public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
     public const CS_LAST_CHECK = 'CS_LAST_CHECK';
     public const BP_LAST_CHECK = 'BP_LAST_CHECK';
+    public const OPEN_FOR = 'OPEN_FOR';
+    public const CLOSED_FOR = 'CLOSED_FOR';
     public const COMPLETENESS = 'COMPLETENESS';
 
     public const CONTACT_ALLOWED = 'CONTACT_ALLOWED';

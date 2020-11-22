@@ -58,6 +58,7 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->leftJoin('a.volatileData', 'vd')
             ->leftJoin('a.urls', 'u')
+            ->leftJoin('a.commissions', 'c')
             ->leftJoin('u.state', 'us')
             /*
              * Even if unneeded, we have to join the private data table, because of Doctrine's limitation (as of 2.7):
@@ -66,6 +67,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->leftJoin('a.privateData', 'pd')
             ->addSelect('vd')
             ->addSelect('u')
+            ->addSelect('c')
             ->addSelect('us')
             ->addSelect('pd')
             ->orderBy('a.name', 'ASC');

@@ -242,9 +242,15 @@ class Artisan implements JsonSerializable, FieldReadInterface
      */
     private Collection $urls;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", orphanRemoval=true)
+     */
+    private Collection $commissions;
+
     public function __construct()
     {
         $this->urls = new ArrayCollection();
+        $this->commissions = new ArrayCollection();
     }
 
     public function __clone()
@@ -718,6 +724,36 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
+    /**
+     * @return Collection|ArtisanCommissionsStatus[]
+     */
+    public function getCommissions(): Collection
+    {
+        return $this->commissions;
+    }
+
+    public function addCommission(ArtisanCommissionsStatus $commission): self
+    {
+        if (!$this->commissions->contains($commission)) {
+            $this->commissions[] = $commission;
+            $commission->setArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommission(ArtisanCommissionsStatus $commission): self
+    {
+        if ($this->commissions->removeElement($commission)) {
+            // set the owning side to null (unless already changed)
+            if ($commission->getArtisan() === $this) {
+                $commission->setArtisan(null);
+            }
+        }
+
+        return $this;
+    }
+
     // ===== HELPER GETTERS AND SETTERS =====
 
     /**
@@ -811,6 +847,33 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function allowsFeedback(): bool
     {
         return ContactPermit::FEEDBACK === $this->contactAllowed;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOpenFor(): array
+    {
+        return $this->getCommissionsStatusesMatching(true);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getClosedFor(): array
+    {
+        return $this->getCommissionsStatusesMatching(false);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getCommissionsStatusesMatching(bool $isOpen): array
+    {
+        return array_values($this->commissions
+            ->filter(fn (ArtisanCommissionsStatus $status) => $status->getIsOpen() === $isOpen)
+            ->map(fn (ArtisanCommissionsStatus $status)    => $status->getOffer())
+            ->toArray());
     }
 
     //
@@ -1192,7 +1255,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                     $value = $this->get($field);
             }
 
-            return $field->isList() ? StringList::unpack($value) : $value;
+            return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
         }, $fields);
     }
 

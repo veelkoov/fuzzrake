@@ -21,8 +21,6 @@ export default class Artisan {
     private speciesDoesFilters: Set<string>;
     private otherSpeciesDoesFilters: boolean = null; // Used by filters; FIXME: Proper accessors
 
-    readonly openFor: string[];
-    readonly closedFor: string[];
     readonly isStatusKnown: boolean;
 
     // noinspection OverlyComplexFunctionJS,JSUnusedGlobalSymbols
@@ -92,6 +90,8 @@ export default class Artisan {
                 readonly commissionsStatus: boolean,
                 readonly csLastCheck: string,
                 readonly bpLastCheck: string,
+                readonly openFor: string[],
+                readonly closedFor: string[],
                 readonly completeness: number,
 
                 readonly contactAllowed: string,
@@ -109,16 +109,6 @@ export default class Artisan {
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
         this.completenessComment = Artisan.getCompletenessComment(completeness);
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
-
-        this.openFor = [ // FIXME
-            'Fullsuits',
-            'Partials',
-        ];
-
-        this.closedFor = [ // FIXME
-            'Parts',
-        ];
-
         this.isStatusKnown = this.openFor.length + this.closedFor.length > 0;
     }
 
