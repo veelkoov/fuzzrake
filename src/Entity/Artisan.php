@@ -227,9 +227,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $contactInfoObfuscated = '';
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanCommissionsStatus", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="ArtisanVolatileData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private ?ArtisanCommissionsStatus $commissionsStatus = null;
+    private ?ArtisanVolatileData $volatileData = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
@@ -253,8 +253,8 @@ class Artisan implements JsonSerializable, FieldReadInterface
             $this->privateData = clone $this->privateData;
         }
 
-        if ($this->commissionsStatus) {
-            $this->commissionsStatus = clone $this->commissionsStatus;
+        if ($this->volatileData) {
+            $this->volatileData = clone $this->volatileData;
         }
 
         $urls = $this->urls;
@@ -656,17 +656,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getCommissionsStatus(): ArtisanCommissionsStatus
+    public function getVolatileData(): ArtisanVolatileData
     {
-        return $this->commissionsStatus ?? $this->commissionsStatus = (new ArtisanCommissionsStatus())->setArtisan($this);
+        return $this->volatileData ??= (new ArtisanVolatileData())->setArtisan($this);
     }
 
-    public function setCommissionsStatus(ArtisanCommissionsStatus $commissionsStatus): self
+    public function setVolatileData(ArtisanVolatileData $volatileData): self
     {
-        $this->commissionsStatus = $commissionsStatus;
+        $this->volatileData = $volatileData;
 
-        if ($this !== $commissionsStatus->getArtisan()) {
-            $commissionsStatus->setArtisan($this);
+        if ($this !== $volatileData->getArtisan()) {
+            $volatileData->setArtisan($this);
         }
 
         return $this;
@@ -674,7 +674,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function getPrivateData(): ArtisanPrivateData
     {
-        return $this->privateData ?? $this->privateData = (new ArtisanPrivateData())->setArtisan($this);
+        return $this->privateData ??= (new ArtisanPrivateData())->setArtisan($this);
     }
 
     public function setPrivateData(ArtisanPrivateData $privateData): self
@@ -801,6 +801,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function getCompleteness(): int
     {
         return CompletenessCalc::count($this);
+    }
+
+    public function getCommissionsStatus(): ?bool // FIXME
+    {
+        return $this->getVolatileData()->getStatus();
     }
 
     public function allowsFeedback(): bool
@@ -1166,16 +1171,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return array_map(function (Field $field) {
             switch ($field->name()) {
                 case Fields::CS_LAST_CHECK:
-                    $lc = $this->getCommissionsStatus()->getLastChecked();
+                    $lc = $this->getVolatileData()->getLastCsUpdate();
                     $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
                     break;
 
                 case Fields::BP_LAST_CHECK:
-                    $value = 'unknown'; // TODO
+                    $lc = $this->getVolatileData()->getLastBpUpdate();
+                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
                     break;
 
                 case Fields::COMMISSIONS_STATUS:
-                    $value = $this->getCommissionsStatus()->getStatus();
+                    $value = $this->getVolatileData()->getStatus();
                     break;
 
                 case Fields::COMPLETENESS:

@@ -8,13 +8,13 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArtisanCommissionsStatusRepository")
- * @ORM\Table(name="artisans_commissions_statues")
+ * @ORM\Entity(repositoryClass="App\Repository\ArtisanVolatileDataRepository")
+ * @ORM\Table(name="artisans_volatile_data")
  *
  * NOTE: Ephemeral information, can be recreated by running update command. Table should not be committed, as that
  *       would generate too much noise in the repo history
  */
-class ArtisanCommissionsStatus
+class ArtisanVolatileData
 {
     /**
      * @ORM\Id()
@@ -24,7 +24,7 @@ class ArtisanCommissionsStatus
     private ?int $id = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="commissionsStatus")
+     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="volatileData")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
     private ?Artisan $artisan = null;
@@ -37,12 +37,12 @@ class ArtisanCommissionsStatus
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $lastChecked = null;
+    private ?DateTimeInterface $lastCsUpdate = null;
 
     /**
-     * @ORM\Column(type="string", length=256)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private string $reason = '';
+    private ?DateTimeInterface $lastBpUpdate = null;
 
     public function getId(): ?int
     {
@@ -73,26 +73,26 @@ class ArtisanCommissionsStatus
         return $this;
     }
 
-    public function getLastChecked(): ?DateTimeInterface
+    public function getLastCsUpdate(): ?DateTimeInterface
     {
-        return $this->lastChecked;
+        return $this->lastCsUpdate;
     }
 
-    public function setLastChecked(?DateTimeInterface $lastChecked): self
+    public function setLastCsUpdate(?DateTimeInterface $lastCsUpdate): self
     {
-        $this->lastChecked = $lastChecked;
+        $this->lastCsUpdate = $lastCsUpdate;
 
         return $this;
     }
 
-    public function getReason(): string
+    public function getLastBpUpdate(): ?DateTimeInterface
     {
-        return $this->reason;
+        return $this->lastBpUpdate;
     }
 
-    public function setReason(string $reason): ArtisanCommissionsStatus
+    public function setLastBpUpdate(?DateTimeInterface $lastBpUpdate): self
     {
-        $this->reason = $reason;
+        $this->lastBpUpdate = $lastBpUpdate;
 
         return $this;
     }

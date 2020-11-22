@@ -27,8 +27,8 @@ final class CommissionsAnalysisResult implements AnalysisResultInterface
 
     public function report(SymfonyStyle $io): void
     {
-        if ($this->artisan->getCommissionsStatus()->getStatus() !== $this->getStatus()) {
-            $oldStatusText = Status::text($this->artisan->getCommissionsStatus()->getStatus());
+        if ($this->artisan->getVolatileData()->getStatus() !== $this->getStatus()) {
+            $oldStatusText = Status::text($this->artisan->getVolatileData()->getStatus());
             $newStatusText = Status::text($this->getStatus());
 
             $io->caution("{$this->artisan->getName()} ( {$this->artisan->getCommissionsUrl()} ): {$this->explanation()}, $oldStatusText ---> $newStatusText");
@@ -58,11 +58,11 @@ final class CommissionsAnalysisResult implements AnalysisResultInterface
      */
     public function getNewEntities(): array
     {
-        if ($this->artisan->getCommissionsStatus()->getStatus() !== $this->getStatus()) {
+        if ($this->artisan->getVolatileData()->getStatus() !== $this->getStatus()) {
             return [
-                $this->artisan->getCommissionsStatus(), // Could have been just created
+                $this->artisan->getVolatileData(), // Could have been just created
                 new Event($this->artisan->getCommissionsUrl(), $this->artisan->getName(),
-                $this->artisan->getCommissionsStatus()->getStatus(), $this),
+                $this->artisan->getVolatileData()->getStatus(), $this),
             ];
         } else {
             return [];

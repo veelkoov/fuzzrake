@@ -8,7 +8,7 @@ namespace App\Twig;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
-use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
@@ -28,12 +28,12 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    private ArtisanCommissionsStatusRepository $acsRepository;
+    private ArtisanVolatileDataRepository $avdRepository;
     private EnvironmentsService $environments;
 
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, EnvironmentsService $environments)
+    public function __construct(ArtisanVolatileDataRepository $avdRepository, EnvironmentsService $environments)
     {
-        $this->acsRepository = $acsRepository;
+        $this->avdRepository = $avdRepository;
         $this->environments = $environments;
     }
 
@@ -76,7 +76,7 @@ class AppExtensions extends AbstractExtension
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
     {
-        return $this->acsRepository->getLastCstUpdateTimeAsString();
+        return $this->avdRepository->getLastCsUpdateTimeAsString(); // TODO: CS&BP?
     }
 
     public function getCounterFunction(): Counter

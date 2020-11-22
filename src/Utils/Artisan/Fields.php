@@ -70,7 +70,7 @@ final class Fields
     public const URL_PHOTOS = 'URL_PHOTOS';
     public const URL_MINIATURES = 'URL_MINIATURES';
     public const URL_OTHER = 'URL_OTHER';
-    public const URL_COMMISSIONS = 'URL_COMMISSIONS'; // TODO: Rename data in the DB
+    public const URL_COMMISSIONS = 'URL_COMMISSIONS';
 
     public const NOTES = 'NOTES';
     public const INACTIVE_REASON = 'INACTIVE_REASON';

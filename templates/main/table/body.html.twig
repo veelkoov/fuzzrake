@@ -72,13 +72,13 @@
                     {%- endif -%}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {%- if artisan.commissionsStatus.status is not null -%}
+                    {# FIXME %- if artisan.commissionsStatus.status is not null -%}
                         {%- if artisan.commissionsStatus.status -%}
                             <i class="fas fa-check-circle"></i> Open
                         {%- else -%}
                             <i class="fas fa-times-circle"></i> Closed
                         {%- endif -%}
-                    {%- endif -%}
+                    {%- endif -%#}
                 </td>
                 <td class="links">
                     {% include 'main/table/links_dropdown.html.twig' %}

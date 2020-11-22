@@ -67,9 +67,9 @@ final class CommissionsUpdates implements UpdatesInterface
 
         [$datetimeRetrieved, $analysisResult] = $this->analyzeStatus($url);
 
-        $artisan->getCommissionsStatus()
+        $artisan->getVolatileData()
             ->setStatus($analysisResult->getStatus())
-            ->setLastChecked($datetimeRetrieved);
+            ->setLastCsUpdate($datetimeRetrieved);
 
         return $analysisResult;
     }

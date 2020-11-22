@@ -56,7 +56,7 @@ class ArtisanRepository extends ServiceEntityRepository
     private function getArtisansQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 'cs')
+            ->leftJoin('a.volatileData', 'vd')
             ->leftJoin('a.urls', 'u')
             ->leftJoin('u.state', 'us')
             /*
@@ -64,7 +64,7 @@ class ArtisanRepository extends ServiceEntityRepository
              * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
              */
             ->leftJoin('a.privateData', 'pd')
-            ->addSelect('cs')
+            ->addSelect('vd')
             ->addSelect('u')
             ->addSelect('us')
             ->addSelect('pd')
@@ -101,16 +101,16 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this
             ->getEntityManager()
             ->createNativeQuery('
-                SELECT SUM(acs.status = 1) AS open
-                    , SUM(acs.status = 0) AS closed
-                    , SUM(acs.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
+                SELECT SUM(avd.status = 1) AS open
+                    , SUM(avd.status = 0) AS closed
+                    , SUM(avd.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
                     , SUM(au_cst.url <> \'\') AS tracked
                     , SUM(1) AS total
                 FROM artisans AS a
-                LEFT JOIN artisans_commissions_statues AS acs
-                    ON a.id = acs.artisan_id
+                LEFT JOIN artisans_volatile_data AS avd
+                    ON a.id = avd.artisan_id
                 LEFT JOIN artisans_urls AS au_cst
-                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
+                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_COMMISSIONS\'
                 WHERE a.inactive_reason = \'\'
             ', $rsm)
             ->enableResultCache(3600)
@@ -170,11 +170,11 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getDistinctCommissionStatuses(): FilterItems
     {
         $rows = $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 's')
-            ->select("s.status, COUNT(COALESCE(s.status, 'null')) AS count")
+            ->leftJoin('a.volatileData', 'vd')
+            ->select("vd.status, COUNT(COALESCE(vd.status, 'null')) AS count")
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
-            ->groupBy('s.status')
+            ->groupBy('vd.status')
             ->getQuery()
             ->enableResultCache(3600)
             ->getArrayResult();
