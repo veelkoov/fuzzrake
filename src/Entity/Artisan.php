@@ -946,9 +946,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getUrl(Fields::URL_COMMISSIONS);
     }
 
-    public function setCommissionsUrl(string $cstUrl): self
+    public function setCommissionsUrl(string $commissionsUrl): self
     {
-        $this->setUrl(Fields::URL_COMMISSIONS, $cstUrl);
+        $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrl);
 
         return $this;
     }
