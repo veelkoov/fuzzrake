@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Tasks\TrackerUpdates\Commissions\CommissionsAnalysisResult;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrContext\StrContextInterface;
 use App\Utils\StrContext\StrContextUtils;
 use App\Utils\StringList;
-use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -107,7 +107,7 @@ class Event
      */
     private string $gitCommits = '';
 
-    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, AnalysisResult $analysisResult = null)
+    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, CommissionsAnalysisResult $analysisResult = null)
     {
         $this->timestamp = DateTimeUtils::getNowUtc();
         $this->checkedUrl = $checkedUrl;

@@ -38,12 +38,12 @@ class CommissionsStatusParser
         // $this->debugDumpRegexps(); // DEBUG
     }
 
-    /** @noinspection PhpDocRedundantThrowsInspection */
-
     /**
+     * @return MatchInterface[]
+     *
      * @throws TrackerException
      */
-    public function analyseStatus(WebpageSnapshot $snapshot): AnalysisResult
+    public function analyseStatus(WebpageSnapshot $snapshot): array
     {
         $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
@@ -53,7 +53,7 @@ class CommissionsStatusParser
         $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
         $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);
 
-        return new AnalysisResult($open, $closed);
+        return [$open, $closed];
     }
 
     /**

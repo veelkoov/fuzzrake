@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
+use App\Entity\Artisan;
+use App\Tasks\TrackerUpdates\Commissions\CommissionsAnalysisResult;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
@@ -29,7 +31,8 @@ class CommissionsStatusParserTest extends TestCase
      */
     public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
     {
-        $result = self::$csp->analyseStatus($snapshot);
+        [$openMatch, $closedMatch] = self::$csp->analyseStatus($snapshot);
+        $result = new CommissionsAnalysisResult(new Artisan(), $openMatch, $closedMatch); // FIXME
         $errorMsg = "Wrong result for '$webpageTextFileName'";
 
         if (!($cc = $result->getClosedStrContext())->empty()) {
