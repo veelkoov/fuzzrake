@@ -7,7 +7,7 @@ namespace App\Tests\Utils\Artisan;
 use App\Utils\Artisan\Fields;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Match;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 class FieldsTest extends TestCase
 {
@@ -24,7 +24,7 @@ class FieldsTest extends TestCase
         $modelSource = file_get_contents(self::FIELDS_CLASS_FILEPATH);
         $fields = Fields::getAll();
 
-        pattern(self::FIELD_NAME_REGEXP, 'i')->match($modelSource)->forEach(function (Match $match) use ($fields): void {
+        pattern(self::FIELD_NAME_REGEXP, 'i')->match($modelSource)->forEach(function (Detail $match) use ($fields): void {
             $name = $match->get('name');
 
             self::assertArrayHasKey($name, $fields);

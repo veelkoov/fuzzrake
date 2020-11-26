@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Regexp;
 
 use App\Utils\StrContext\StrContextUtils;
-use App\Utils\Tracking\Match;
+use App\Utils\Tracking\TrackingMatch;
 use SplObjectStorage;
 
 class TrackingRegexp
@@ -28,7 +28,7 @@ class TrackingRegexp
         $this->compiled->rewind();
     }
 
-    public function matches(string $subject, Variant $variant): ?Match
+    public function matches(string $subject, Variant $variant): ?TrackingMatch
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
@@ -36,7 +36,7 @@ class TrackingRegexp
             return null;
         }
 
-        return new Match($this, $variant, StrContextUtils::extractFrom($subject, $matches[0], self::CONTEXT_LENGTH));
+        return new TrackingMatch($this, $variant, StrContextUtils::extractFrom($subject, $matches[0], self::CONTEXT_LENGTH));
     }
 
     public function removeFrom(string $input, Variant $variant = null): string

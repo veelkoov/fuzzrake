@@ -11,7 +11,7 @@
         "doctrine/doctrine-bundle": "2.0.*",
         "doctrine/orm": "2.7.*",
         "google/recaptcha": "^1.2",
-        "rawr/t-regx": "^0.9.9",
+        "rawr/t-regx": "dev-develop",
         "sensio/framework-extra-bundle": "^5.5",
         "sensiolabs/security-checker": "^6.0",
         "symfony/apache-pack": "^1.0",
@@ -70,6 +70,12 @@
         "symfony/polyfill-php70": "*",
         "symfony/polyfill-php56": "*"
     },
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/T-Regx/T-Regx.git"
+        }
+    ],
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
