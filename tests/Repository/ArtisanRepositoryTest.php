@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\Artisan;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 
-class ArtisanRepositoryTest extends DbEnabledWebTestCase
+class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 {
     /**
      * @dataProvider findByMakerIdDataProvider

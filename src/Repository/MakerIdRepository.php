@@ -20,4 +20,29 @@ class MakerIdRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, MakerId::class);
     }
+
+    /**
+     * @return string[]
+     */
+    public function getOldToNewMakerIdsMap(): array
+    {
+        $rows = $this->createQueryBuilder('m')
+            ->join('m.artisan', 'a')
+            ->select('m.makerId AS former')
+            ->addSelect('a.makerId AS current')
+            ->where('a.makerId <> :empty')
+            ->andWhere('m.makerId <> a.makerId')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getArrayResult();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $result[$row['former']] = $row['current'];
+        }
+
+        return $result;
+    }
 }
