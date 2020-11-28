@@ -169,10 +169,10 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::SET);
         Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
 
-        self::$entityManager->persist($oldArtisan1);
-        self::$entityManager->flush();
+        self::getEM()->persist($oldArtisan1);
+        self::getEM()->flush();
 
-        $repo = self::$entityManager->getRepository(Artisan::class);
+        $repo = self::getEM()->getRepository(Artisan::class);
         self::assertCount(1, $repo->findAll(), 'Single artisan in the DB before import');
 
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::CHECK);
@@ -180,7 +180,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $this->processIuForm($client, '', new Artisan(), $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET));
 
         $this->performImport();
-        self::$entityManager->flush();
+        self::getEM()->flush();
         self::assertCount(2, $repo->findAll(), 'Expected two artisans in the DB after import');
 
         $this->validateArtisanAfterImport($this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::CHECK));
@@ -260,6 +260,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function verifyGeneratedIuForm(Artisan $oldData, string $htmlBody): void
     {
         $htmlBodyLc = $this->removeFalsePositivesFromLowercaseHtml(mb_strtolower($htmlBody));
+        /** @noinspection HtmlUnknownAttribute */
         $checked = pattern('<input type="(checkbox|radio)" [^>]*value="(?<value>[^"]+)" checked="checked"\s?/?>')
             ->match($htmlBodyLc)->groupBy('value')->texts();
 
@@ -288,6 +289,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function removeFalsePositivesFromLowercaseHtml(string $inputLowercaseHtml): string
     {
         $result = pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
+        /** @noinspection HtmlUnknownAttribute */
         $result = pattern('<select id="iu_form_since_day"[^>]*><option value="">day</option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>')
             ->remove($result)->first();
 
@@ -394,7 +396,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $output = new BufferedOutput();
 
         $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
-        $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
+        $import = new DataImport(self::getEM(), $this->getImportManager(), $printer,
             static::$container->get(FdvFactory::class)->create($printer), false);
 
         $import->import(Finder::getFrom(self::IMPORT_DATA_DIR));

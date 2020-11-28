@@ -6,19 +6,18 @@ namespace App\Tests\Doctrine\Listeners;
 
 use App\Entity\Artisan;
 use App\Entity\ArtisanUrl;
-use App\Tests\TestUtils\SchemaTool;
+use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Doctrine\ORM\ORMException;
 
-class ArtisanUrlListenerTest extends KernelTestCase
+class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
 {
+    /**
+     * @throws ORMException
+     */
     public function testChangingUrlResetsLastSuccessAndFailure(): void
     {
         self::bootKernel();
-        /** @var EntityManagerInterface $em */
-        $em = self::$container->get('doctrine.orm.default_entity_manager');
-        SchemaTool::resetOn($em);
 
         $lastFailure = new DateTime();
         $lastSuccess = new DateTime();
@@ -28,11 +27,11 @@ class ArtisanUrlListenerTest extends KernelTestCase
         $persistedArtisan = new Artisan();
         $persistedArtisan->addUrl((new ArtisanUrl())->getState()->setLastFailure($lastFailure)->setLastSuccess($lastSuccess)->setLastFailureCode($lastFailureCode)->setLastFailureReason($lastFailureReason)->getUrl());
 
-        $em->persist($persistedArtisan);
-        $em->flush();
+        self::getEM()->persist($persistedArtisan);
+        self::getEM()->flush();
 
         /** @var Artisan $retrievedArtisan */
-        $retrievedArtisan = $em->getRepository(Artisan::class)->findAll()[0];
+        $retrievedArtisan = self::getEM()->getRepository(Artisan::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];
 
         self::assertEquals($lastSuccess, $url->getState()->getLastSuccess());
@@ -42,9 +41,9 @@ class ArtisanUrlListenerTest extends KernelTestCase
 
         $url->setUrl('new url');
 
-        $em->flush();
+        self::getEM()->flush();
 
-        $retrievedArtisan = $em->getRepository(Artisan::class)->findAll()[0];
+        $retrievedArtisan = self::getEM()->getRepository(Artisan::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];
 
         self::assertNull($url->getState()->getLastSuccess());

@@ -38,11 +38,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $makerId = '';
 
     /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private string $formerMakerIds = '';
-
-    /**
      * @ORM\Column(type="string", length=128)
      * @Assert\Length(max="128", groups={"iu_form"})
      * @Assert\NotBlank(groups={"iu_form"})
@@ -238,12 +233,22 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     *
+     * @var Collection|ArtisanUrl[]
      */
     private Collection $urls;
+
+    /**
+     * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist"})
+     *
+     * @var Collection|MakerId[]
+     */
+    private Collection $makerIds;
 
     public function __construct()
     {
         $this->urls = new ArrayCollection();
+        $this->makerIds = new ArrayCollection();
     }
 
     public function __clone()
@@ -261,6 +266,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
         foreach ($urls as $url) {
             $this->addUrl(clone $url);
+        }
+
+        $makerIds = $this->makerIds;
+        $this->makerIds = new ArrayCollection();
+
+        foreach ($makerIds as $makerId) {
+            $this->addMakerId(clone $makerId);
         }
     }
 
@@ -280,17 +292,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     {
         $this->makerId = $makerId;
 
-        return $this;
-    }
-
-    public function getFormerMakerIds(): string
-    {
-        return $this->formerMakerIds;
-    }
-
-    public function setFormerMakerIds(string $formerMakerIds): self
-    {
-        $this->formerMakerIds = $formerMakerIds;
+        $this->addMakerId($makerId);
 
         return $this;
     }
@@ -717,6 +719,46 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
+    /**
+     * @return Collection|MakerId[]
+     */
+    public function getMakerIds(): Collection
+    {
+        return $this->makerIds;
+    }
+
+    /**
+     * @param MakerId|string $makerId
+     */
+    public function addMakerId($makerId): self
+    {
+        if (!($makerId instanceof MakerId)) {
+            if ($this->hasMakerId($makerId)) {
+                return $this;
+            }
+
+            $makerId = (new MakerId($makerId));
+        }
+
+        if (!$this->makerIds->contains($makerId)) {
+            $this->makerIds[] = $makerId;
+            $makerId->setArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMakerId(MakerId $makerId): self
+    {
+        if ($this->makerIds->removeElement($makerId)) {
+            if ($makerId->getArtisan() === $this) {
+                $makerId->setArtisan(null);
+            }
+        }
+
+        return $this;
+    }
+
     // ===== HELPER GETTERS AND SETTERS =====
 
     /**
@@ -765,12 +807,45 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getMakerId() ?: current($this->getFormerMakerIdsArr());
     }
 
+    public function hasMakerId(string $makerId): bool
+    {
+        return in_array($makerId, $this->makerIds
+            ->map(fn (MakerId $makerId): string => $makerId->getMakerId())
+            ->toArray());
+    }
+
+    public function getFormerMakerIds(): string
+    {
+        return StringList::pack($this->getFormerMakerIdsArr());
+    }
+
+    public function setFormerMakerIds(string $formerMakerIdsToSet): self
+    {
+        $formerMakerIdsToSet = StringList::unpack($formerMakerIdsToSet);
+        $allMakerIdsToSet = array_merge($formerMakerIdsToSet, [$this->makerId]);
+
+        foreach ($this->makerIds as $makerId) {
+            if (!in_array($makerId->getMakerId(), $allMakerIdsToSet)) {
+                $this->removeMakerId($makerId);
+            }
+        }
+
+        foreach ($formerMakerIdsToSet as $makerId) {
+            $this->addMakerId($makerId);
+        }
+
+        return $this;
+    }
+
     /**
      * @return string[]
      */
     public function getFormerMakerIdsArr(): array
     {
-        return StringList::unpack($this->formerMakerIds);
+        return $this->makerIds
+            ->map(fn (MakerId $makerId): string => $makerId->getMakerId())
+            ->filter(fn (string $makerId): bool => $makerId !== $this->makerId)
+            ->toArray();
     }
 
     /**

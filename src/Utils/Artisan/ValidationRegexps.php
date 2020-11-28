@@ -6,7 +6,9 @@ namespace App\Utils\Artisan;
 
 abstract class ValidationRegexps
 {
-    public const MAKER_ID = '#^([A-Z0-9]{7})?$#';
+    public const MAKER_ID = '^([A-Z0-9]{7})?$';
+    public const MAKER_ID_PREG = '#'.self::MAKER_ID.'#';
+
     public const GENERIC_URL = '#^(https?://[^/]+/.*)?$#'; // TODO: improve
     public const DA_URL = '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#';
     public const FACEBOOK_URL = '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#';
