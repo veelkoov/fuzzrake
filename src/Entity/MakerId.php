@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=MakerIdRepository::class)
+ * @ORM\Table(name="maker_ids")
  */
 class MakerId
 {
