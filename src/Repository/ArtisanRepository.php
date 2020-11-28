@@ -7,7 +7,7 @@ namespace App\Repository;
 use App\Entity\Artisan;
 use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItems;
-use App\Utils\Regexp\Regexp;
+use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
@@ -273,30 +273,26 @@ class ArtisanRepository extends ServiceEntityRepository
 
     /**
      * @throws NoResultException
-     * @throws NonUniqueResultException
      */
     public function findByMakerId(string $makerId): Artisan
     {
-        if (!Regexp::match(ValidationRegexps::MAKER_ID, $makerId)) {
+        if (pattern(ValidationRegexps::MAKER_ID)->fails($makerId)) {
             throw new NoResultException();
         }
 
-        return $this->createQueryBuilder('a')
-            ->where('
-                (a.makerId <> :empty AND a.makerId = :makerId)
-                OR a.formerMakerIds = :makerId
-                OR a.formerMakerIds LIKE :formerMakerIds1
-                OR a.formerMakerIds LIKE :formerMakerIds2
-            ')
-            ->setParameters([
-                'empty'           => '',
-                'makerId'         => $makerId,
-                'formerMakerIds1' => "%$makerId\n%",
-                'formerMakerIds2' => "%\n$makerId%",
-            ])
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getSingleResult();
+        try {
+            return $this->createQueryBuilder('a')
+                ->join('a.makerIds', 'm')
+                ->addSelect('m') // TODO: Make sure this is required and retrieved Artisan got all the MakerIds
+                ->join('a.makerIds', 'm_where')
+                ->where('m_where.makerId = :makerId')
+                ->setParameter('makerId', $makerId)
+                ->getQuery()
+                ->enableResultCache(3600)
+                ->getSingleResult();
+        } catch (NonUniqueResultException $e) {
+            throw new UnbelievableRuntimeException($e);
+        }
     }
 
     /**

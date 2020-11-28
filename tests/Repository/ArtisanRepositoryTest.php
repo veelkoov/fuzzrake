@@ -22,10 +22,12 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
      */
     public function testFindByMakerId(array $artisans, string $makerId, ?int $resultIdx): void
     {
-        self::bootKernel();
-        DbEnabledWebTestCase::$entityManager = DbEnabledWebTestCase::$container->get('doctrine.orm.default_entity_manager');
+        self::bootKernel(); // FIXME: Refactor-reuse
 
-        SchemaTool::resetOn(DbEnabledWebTestCase::$entityManager);
+        /* @noinspection PhpFieldAssignmentTypeMismatchInspection */
+        self::$entityManager = self::$container->get('doctrine.orm.default_entity_manager'); // FIXME: Refactor-reuse
+
+        SchemaTool::resetOn(DbEnabledWebTestCase::$entityManager); // FIXME: Refactor-reuse
 
         foreach ($artisans as $key => $_) {
             $artisans[$key] = clone $artisans[$key]; // Don't mangle the tests
@@ -35,8 +37,6 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
 
         if (null === $resultIdx) {
             $this->expectException(NoResultException::class);
-        } elseif (-1 === $resultIdx) {
-            $this->expectException(NonUniqueResultException::class);
         }
 
         $result = self::$entityManager->getRepository(Artisan::class)->findByMakerId($makerId);
@@ -46,27 +46,28 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
 
     public function findByMakerIdDataProvider(): array
     {
-        $m1 = (new Artisan())->setMakerId('MAKERI1');
-        $m2 = (new Artisan())->setMakerId('MAKERI2')->setFormerMakerIds('MAKERI1');
-        $m3 = (new Artisan())->setMakerId('MAKERI3')->setFormerMakerIds("FORMER2\nFORMER3\nFORMER4");
+        $m1 = (new Artisan())->setMakerId('MAKER11');
+        $m2 = (new Artisan())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');
+        $m3 = (new Artisan())->setMakerId('MAKER31')->setFormerMakerIds("MAKER32\nMAKER33");
 
         return [
-            [[$m1], 'MAKERI1', 0],
-            [[$m1], 'MAKERI2', null],
+            [[$m1], 'MAKER11', 0],
+            [[$m1], 'MAKER12', null],
             [[$m1], 'MAKER',   null],
 
-            [[$m2], 'MAKERI1', 0],
-            [[$m2], 'MAKERI2', 0],
+            [[$m2], 'MAKER21', 0],
+            [[$m2], 'MAKER22', 0],
             [[$m2], 'MAKER',   null],
 
             [[$m1, $m2], 'MAKER',   null],
-            [[$m1, $m2], 'MAKERI1', -1],
-            [[$m1, $m2], 'MAKERI2', 1],
+            [[$m1, $m2], 'MAKER11', 0],
+            [[$m1, $m2], 'MAKER21', 1],
+            [[$m1, $m2], 'MAKER22', 1],
 
-            [[$m3], 'FORMER',    null],
-            [[$m3], 'FORMER2',   0],
-            [[$m3], 'FORMER3',   0],
-            [[$m3], 'FORMER4',   0],
+            [[$m3], 'MAKER30',   null],
+            [[$m3], 'MAKER31',   0],
+            [[$m3], 'MAKER32',   0],
+            [[$m3], 'MAKER33',   0],
             [[$m3], "MER2\nFOR", null],
         ];
     }
