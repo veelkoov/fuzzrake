@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\Mapping\MappingException;
 
 class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 {
@@ -63,5 +64,27 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
             [[$m3], 'MAKER33',   0],
             [[$m3], "MER2\nFOR", null],
         ];
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws MappingException
+     */
+    public function testFindByMakerIdReturnsCompleteMakerIdsSet(): void
+    {
+        self::bootKernel();
+
+        $artisan = (new Artisan())->setMakerId('MAKRID1')->setFormerMakerIds("MAKRID2\nMAKRID3");
+
+        self::persistAndFlush($artisan);
+        self::getEM()->clear();
+
+        $retrieved1 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID1');
+
+        self::assertEquals($artisan->getMakerId(), $retrieved1->getMakerId());
+        self::assertEquals($artisan->getFormerMakerIds(), $retrieved1->getFormerMakerIds());
+
+        $retrieved2 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID2');
+        self::assertEquals($retrieved1, $retrieved2);
     }
 }

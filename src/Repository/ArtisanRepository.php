@@ -282,8 +282,6 @@ class ArtisanRepository extends ServiceEntityRepository
 
         try {
             return $this->createQueryBuilder('a')
-                ->join('a.makerIds', 'm')
-                ->addSelect('m') // TODO: Make sure this is required and retrieved Artisan got all the MakerIds
                 ->join('a.makerIds', 'm_where')
                 ->where('m_where.makerId = :makerId')
                 ->setParameter('makerId', $makerId)
