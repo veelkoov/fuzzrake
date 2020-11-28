@@ -6,8 +6,6 @@ namespace App\Tests\Repository;
 
 use App\Entity\Artisan;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Tests\TestUtils\SchemaTool;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 
@@ -22,24 +20,19 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
      */
     public function testFindByMakerId(array $artisans, string $makerId, ?int $resultIdx): void
     {
-        self::bootKernel(); // FIXME: Refactor-reuse
-
-        /* @noinspection PhpFieldAssignmentTypeMismatchInspection */
-        self::$entityManager = self::$container->get('doctrine.orm.default_entity_manager'); // FIXME: Refactor-reuse
-
-        SchemaTool::resetOn(DbEnabledWebTestCase::$entityManager); // FIXME: Refactor-reuse
+        self::bootKernel();
 
         foreach ($artisans as $key => $_) {
             $artisans[$key] = clone $artisans[$key]; // Don't mangle the tests
-            self::$entityManager->persist($artisans[$key]);
+            self::getEM()->persist($artisans[$key]);
         }
-        self::$entityManager->flush();
+        self::getEM()->flush();
 
         if (null === $resultIdx) {
             $this->expectException(NoResultException::class);
         }
 
-        $result = self::$entityManager->getRepository(Artisan::class)->findByMakerId($makerId);
+        $result = self::getEM()->getRepository(Artisan::class)->findByMakerId($makerId);
 
         static::assertEquals($artisans[$resultIdx], $result);
     }

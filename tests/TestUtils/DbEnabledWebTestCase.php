@@ -15,10 +15,7 @@ abstract class DbEnabledWebTestCase extends WebTestCase
     {
         $result = parent::createClient($options, $server);
 
-        /* @noinspection PhpFieldAssignmentTypeMismatchInspection */
-        self::$entityManager = self::$container->get('doctrine.orm.default_entity_manager');
-
-        SchemaTool::resetOn(self::$entityManager);
+        self::resetDB();
 
         return $result;
     }
