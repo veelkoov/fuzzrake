@@ -59,6 +59,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->leftJoin('a.commissionsStatus', 'cs')
             ->leftJoin('a.urls', 'u')
             ->leftJoin('u.state', 'us')
+            ->leftJoin('a.makerIds', 'mi')
             /*
              * Even if unneeded, we have to join the private data table, because of Doctrine's limitation (as of 2.7):
              * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
@@ -67,6 +68,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->addSelect('cs')
             ->addSelect('u')
             ->addSelect('us')
+            ->addSelect('mi')
             ->addSelect('pd')
             ->orderBy('a.name', 'ASC');
     }
