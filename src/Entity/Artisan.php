@@ -38,11 +38,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $makerId = '';
 
     /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private string $formerMakerIds = '';
-
-    /**
      * @ORM\Column(type="string", length=128)
      * @Assert\Length(max="128", groups={"iu_form"})
      * @Assert\NotBlank(groups={"iu_form"})
