@@ -87,4 +87,29 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
         $retrieved2 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID2');
         self::assertEquals($retrieved1, $retrieved2);
     }
+
+    public function testFindBestMatches(): void
+    {
+        self::bootKernel();
+
+        $a1 = (new Artisan())
+            ->setName('Maker 1')
+            ->setFormerly("Old maker A\nOlder maker A")
+            ->setMakerId('MAKER11')
+            ->setFormerMakerIds('MAKER12');
+        $a2 = (new Artisan())
+            ->setName('Maker 2')
+            ->setFormerly("Old maker B\nmaker A")
+            ->setMakerId('MAKER21')
+            ->setFormerMakerIds("MAKER22\nMAKER23");
+
+        self::persistAndFlush($a1, $a2);
+
+        $repo = self::getEM()->getRepository(Artisan::class);
+
+        self::assertEquals([$a1], $repo->findBestMatches(['Maker 1'], ['MAKER12'], null));
+        self::assertEquals([$a1], $repo->findBestMatches(['Old maker A'], ['NEWMKID'], null));
+        self::assertEquals([$a2], $repo->findBestMatches(['Anything'], [], 'Old maker B'));
+        self::assertEquals([$a2], $repo->findBestMatches([], ['MAKER23'], null));
+    }
 }

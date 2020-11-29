@@ -230,30 +230,29 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
     {
-        $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
-        $i = 0;
-
         if (null !== $matchedName) {
-            array_push($names, $matchedName);
+            $names[] = $matchedName;
         }
 
+        $builder = $this->createQueryBuilder('a')
+            ->leftJoin('a.makerIds', 'm');
+
+        $i = 0;
+
         foreach ($names as $name) {
-            $builder->orWhere("a.name = :eq$i OR (a.formerly <> :empty AND a.formerly LIKE :like$i)");
+            $builder->orWhere("a.name = :eq$i OR (a.formerly <> '' AND a.formerly LIKE :like$i)");
             $builder->setParameter("eq$i", $name);
             $builder->setParameter("like$i", "%$name%");
             ++$i;
         }
 
         foreach ($makerIds as $makerId) {
-            $builder->orWhere("a.makerId = :eq$i OR (a.formerMakerIds <> :empty AND a.formerMakerIds LIKE :like$i)");
+            $builder->orWhere("m.makerId = :eq$i");
             $builder->setParameter("eq$i", $makerId);
-            $builder->setParameter("like$i", "%$makerId%");
             ++$i;
         }
 
-        return $builder->getQuery()
-            ->enableResultCache(3600)
-            ->getResult();
+        return $builder->getQuery()->getResult();
     }
 
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
