@@ -181,6 +181,8 @@ class DataImport
                 case Fields::CONTACT_ADDRESS_PLAIN:
                 case Fields::CONTACT_INFO_OBFUSCATED:
                 case Fields::FORMER_MAKER_IDS:
+                case Fields::OPEN_FOR:
+                case Fields::CLOSED_FOR:
                     break;
 
                 default:

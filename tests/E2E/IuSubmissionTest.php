@@ -121,6 +121,8 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'CS_LAST_CHECK'             => self::SKIP,
         'BP_LAST_CHECK'             => self::SKIP,
         'COMPLETENESS'              => self::SKIP,
+        'OPEN_FOR'                  => self::SKIP,
+        'CLOSED_FOR'                => self::SKIP,
     ];
 
     private const VALUE_NOT_SHOWN_IN_FORM = [
@@ -138,6 +140,8 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'COMMISSIONS_STATUS',
         'CS_LAST_CHECK',
         'BP_LAST_CHECK',
+        'OPEN_FOR',
+        'CLOSED_FOR',
     ];
 
     private const EXPANDED = [
