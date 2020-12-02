@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
+use App\Repository\MakerIdRepository;
 use App\Service\HealthCheckService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -68,9 +69,9 @@ class RestApiController extends AbstractRecaptchaBackedController
      * @Route("/api/old_to_new_maker_ids_map.json", name="api_old_to_new_maker_ids_map")
      * @Cache(maxage=3600, public=true)
      */
-    public function oldToNewMakerIdsMap(ArtisanRepository $artisanRepository): JsonResponse
+    public function oldToNewMakerIdsMap(MakerIdRepository $makerIdRepository): JsonResponse
     {
-        return new JsonResponse($artisanRepository->getOldToNewMakerIdsMap());
+        return new JsonResponse($makerIdRepository->getOldToNewMakerIdsMap());
     }
 
     /**

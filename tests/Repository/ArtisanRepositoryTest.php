@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\Artisan;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Tests\TestUtils\SchemaTool;
-use Doctrine\ORM\NonUniqueResultException;
+use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\Mapping\MappingException;
 
-class ArtisanRepositoryTest extends DbEnabledWebTestCase
+class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 {
     /**
      * @dataProvider findByMakerIdDataProvider
@@ -23,51 +22,94 @@ class ArtisanRepositoryTest extends DbEnabledWebTestCase
     public function testFindByMakerId(array $artisans, string $makerId, ?int $resultIdx): void
     {
         self::bootKernel();
-        DbEnabledWebTestCase::$entityManager = DbEnabledWebTestCase::$container->get('doctrine.orm.default_entity_manager');
-
-        SchemaTool::resetOn(DbEnabledWebTestCase::$entityManager);
 
         foreach ($artisans as $key => $_) {
             $artisans[$key] = clone $artisans[$key]; // Don't mangle the tests
-            self::$entityManager->persist($artisans[$key]);
+            self::getEM()->persist($artisans[$key]);
         }
-        self::$entityManager->flush();
+        self::getEM()->flush();
 
         if (null === $resultIdx) {
             $this->expectException(NoResultException::class);
-        } elseif (-1 === $resultIdx) {
-            $this->expectException(NonUniqueResultException::class);
         }
 
-        $result = self::$entityManager->getRepository(Artisan::class)->findByMakerId($makerId);
+        $result = self::getEM()->getRepository(Artisan::class)->findByMakerId($makerId);
 
         static::assertEquals($artisans[$resultIdx], $result);
     }
 
     public function findByMakerIdDataProvider(): array
     {
-        $m1 = (new Artisan())->setMakerId('MAKERI1');
-        $m2 = (new Artisan())->setMakerId('MAKERI2')->setFormerMakerIds('MAKERI1');
-        $m3 = (new Artisan())->setMakerId('MAKERI3')->setFormerMakerIds("FORMER2\nFORMER3\nFORMER4");
+        $m1 = (new Artisan())->setMakerId('MAKER11');
+        $m2 = (new Artisan())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');
+        $m3 = (new Artisan())->setMakerId('MAKER31')->setFormerMakerIds("MAKER32\nMAKER33");
 
         return [
-            [[$m1], 'MAKERI1', 0],
-            [[$m1], 'MAKERI2', null],
+            [[$m1], 'MAKER11', 0],
+            [[$m1], 'MAKER12', null],
             [[$m1], 'MAKER',   null],
 
-            [[$m2], 'MAKERI1', 0],
-            [[$m2], 'MAKERI2', 0],
+            [[$m2], 'MAKER21', 0],
+            [[$m2], 'MAKER22', 0],
             [[$m2], 'MAKER',   null],
 
             [[$m1, $m2], 'MAKER',   null],
-            [[$m1, $m2], 'MAKERI1', -1],
-            [[$m1, $m2], 'MAKERI2', 1],
+            [[$m1, $m2], 'MAKER11', 0],
+            [[$m1, $m2], 'MAKER21', 1],
+            [[$m1, $m2], 'MAKER22', 1],
 
-            [[$m3], 'FORMER',    null],
-            [[$m3], 'FORMER2',   0],
-            [[$m3], 'FORMER3',   0],
-            [[$m3], 'FORMER4',   0],
+            [[$m3], 'MAKER30',   null],
+            [[$m3], 'MAKER31',   0],
+            [[$m3], 'MAKER32',   0],
+            [[$m3], 'MAKER33',   0],
             [[$m3], "MER2\nFOR", null],
         ];
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws MappingException
+     */
+    public function testFindByMakerIdReturnsCompleteMakerIdsSet(): void
+    {
+        self::bootKernel();
+
+        $artisan = (new Artisan())->setMakerId('MAKRID1')->setFormerMakerIds("MAKRID2\nMAKRID3");
+
+        self::persistAndFlush($artisan);
+        self::getEM()->clear();
+
+        $retrieved1 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID1');
+
+        self::assertEquals($artisan->getMakerId(), $retrieved1->getMakerId());
+        self::assertEquals($artisan->getFormerMakerIds(), $retrieved1->getFormerMakerIds());
+
+        $retrieved2 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID2');
+        self::assertEquals($retrieved1, $retrieved2);
+    }
+
+    public function testFindBestMatches(): void
+    {
+        self::bootKernel();
+
+        $a1 = (new Artisan())
+            ->setName('Maker 1')
+            ->setFormerly("Old maker A\nOlder maker A")
+            ->setMakerId('MAKER11')
+            ->setFormerMakerIds('MAKER12');
+        $a2 = (new Artisan())
+            ->setName('Maker 2')
+            ->setFormerly("Old maker B\nmaker A")
+            ->setMakerId('MAKER21')
+            ->setFormerMakerIds("MAKER22\nMAKER23");
+
+        self::persistAndFlush($a1, $a2);
+
+        $repo = self::getEM()->getRepository(Artisan::class);
+
+        self::assertEquals([$a1], $repo->findBestMatches(['Maker 1'], ['MAKER12'], null));
+        self::assertEquals([$a1], $repo->findBestMatches(['Old maker A'], ['NEWMKID'], null));
+        self::assertEquals([$a2], $repo->findBestMatches(['Anything'], [], 'Old maker B'));
+        self::assertEquals([$a2], $repo->findBestMatches([], ['MAKER23'], null));
     }
 }

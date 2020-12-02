@@ -18,7 +18,7 @@ final class FieldsDefinitions
          *                                                                                      IS LIST? -.  |  |  |
          * PRETTY_NAME                     => ['model name (artisan)',     'validation regexp',           V  V  V  V
          */
-        Fields::MAKER_ID                   => ['makerId',                  VR::MAKER_ID,                  0, 1, 1, 1],
+        Fields::MAKER_ID                   => ['makerId',                  VR::MAKER_ID_PREG,             0, 1, 1, 1],
         Fields::FORMER_MAKER_IDS           => ['formerMakerIds',           VR::FORMER_MAKER_IDS,          1, 1, 1, 1],
 
         Fields::NAME                       => ['name',                     VR::NON_EMPTY,                 0, 1, 1, 1],
