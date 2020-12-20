@@ -143,6 +143,7 @@ parameters:
       "i_To be fixed": # Just to silence the validator, to be fixed/approved later
         "*Extremely intricate dragons":
         "All species and all fur based characters":
+        "Ampwaves": # See protogens/robotic
         "Any animal and most mysticals (dragons*, serials, gryphons)":
         "Any mythical or unique species":
         "Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
@@ -153,14 +154,17 @@ parameters:
         "Cervidae/deer family species with large antlers":
         "Characters with overly complicated anatomy (3 mouths, 4 eyes, etc.)":
         "Complex hybrids":
+        "Complex species, as if the species has too many parts and details, I will say so during the quote.":
         "Critters":
         "Deer&similar":
         "Dutch Angel Dragons (Tail, paws and feet paws ONLY)":
         "Etc.": # De hecc
         "Extremely intricate anything":
+        "Fantasy / mythical creatures":
         "Full robospecies":
         "Gem raptors":
         "Heavily complicated creatures":
+        "Humanoids":
         "I can also do velvet or minky skinned characters":
         "I make exceptions on rare occasions":
         "Most anything covered in fur":
@@ -177,6 +181,7 @@ parameters:
         "Reptiles (not including dragons)":
         "Robotic stuff":
         "Robots":
+        "Sea creatures": # Aquatic?
         "Skullsuits":
         "Some birds (unless its on another headbase then I'll do it)":
         "Some scalies":
@@ -187,6 +192,7 @@ parameters:
         "Ungulates (tests now)":
         "Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
         "Will not work with sequin for characters":
+        "Your own specific species":
 
     leave_unchanged:
       - 'Any animal and most mysticals (dragons*, serials, gryphons)'
@@ -222,6 +228,7 @@ parameters:
       'I can craft any real life animal':                    'Real life animals'
 
       "AD's|(Ange?le? dragons?)":                            'Angel Dragons'
+      'Amphibians?':                                         'Amphibians'
       'Antelopes?':                                          'Antelopes'
       'Avians?':                                             'Birds'
       'Bats?':                                               'Bats'
@@ -235,6 +242,7 @@ parameters:
       'Caracles|Caracals?':                                  'Caracals'
       'Cats?( in general)?':                                 'Felines'
       'Canines?( in)? ?(\(?general\)?)?':                    'Canines'
+      'Cervines?':                                           'Cervines'
       'copyrighted characters?[ !]*':                        'Copyrighted characters'
       '(any )?Closed? species?':                             'Closed species'
       'Deers?':                                              'Deers'
@@ -259,6 +267,7 @@ parameters:
       'Horses?':                                             'Horses'
       'Hybride?s?':                                          'Hybrids'
       'Hyenas?':                                             'Hyenas'
+      'Humanoids?':                                          'Humanoids'
       'K-?9''?s':                                            'Canines'
       'Lions?':                                              'Lions'
       'Mammals?( in general)?':                              'Mammals'
