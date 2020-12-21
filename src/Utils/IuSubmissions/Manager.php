@@ -15,7 +15,7 @@ use App\Utils\StrUtils;
 use DateTimeInterface;
 use InvalidArgumentException;
 
-final class Manager
+class Manager // Not final for PHPUnit
 {
     public const CMD_ACK_NEW = 'ack new';
     public const CMD_REPLACE = 'replace';

@@ -20,12 +20,12 @@ class WebpageSnapshot
     /**
      * @var string[]
      */
-    private array $headers = [];
+    private array $headers;
     private string $url;
     private string $contents;
     private DateTime $retrievedAt;
     private string $ownerName;
-    private int $httpCode = 0;
+    private int $httpCode;
 
     public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName, int $httpCode,
         array $headers)

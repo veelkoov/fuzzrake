@@ -60,7 +60,7 @@ class WebpageSnapshotCache
         }
     }
 
-    private function getBaseDir(string $url)
+    private function getBaseDir(string $url): string
     {
         $hostName = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
 
