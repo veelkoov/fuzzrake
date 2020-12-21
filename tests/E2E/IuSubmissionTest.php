@@ -117,7 +117,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'URL_MINIATURES'            => ['', 'URL_MINIATURE12', ''],
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
         'URL_COMMISSIONS'           => 'https://cst.com/value___VARIANT__.html', // TODO: Test multiple
-        'COMMISSIONS_STATUS'        => self::SKIP,
         'CS_LAST_CHECK'             => self::SKIP,
         'BP_LAST_CHECK'             => self::SKIP,
         'COMPLETENESS'              => self::SKIP,
@@ -137,7 +136,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'CONTACT_ADDRESS_PLAIN',
         'INACTIVE_REASON',
         'COMPLETENESS',
-        'COMMISSIONS_STATUS',
         'CS_LAST_CHECK',
         'BP_LAST_CHECK',
         'OPEN_FOR',

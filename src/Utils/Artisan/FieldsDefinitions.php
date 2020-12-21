@@ -81,7 +81,6 @@ final class FieldsDefinitions
 
         Fields::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
         Fields::INACTIVE_REASON            => ['inactiveReason',           VR::ANYTHING,                  0, 1, 1, 1],
-        Fields::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
         Fields::CS_LAST_CHECK              => ['csLastCheck',              null,                          0, 0, 0, 1],
         Fields::BP_LAST_CHECK              => ['bpLastCheck',              null,                          0, 0, 0, 1],
         Fields::OPEN_FOR                   => ['openFor',                  null,                          1, 0, 0, 1],

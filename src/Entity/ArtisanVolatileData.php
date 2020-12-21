@@ -32,7 +32,7 @@ class ArtisanVolatileData
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $status = null;
+    private ?bool $status = null; // TODO: Remove
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -57,18 +57,6 @@ class ArtisanVolatileData
     public function setArtisan(Artisan $artisan): self
     {
         $this->artisan = $artisan;
-
-        return $this;
-    }
-
-    public function getStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?bool $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }

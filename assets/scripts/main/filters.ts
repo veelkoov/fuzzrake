@@ -56,7 +56,7 @@ export function initFilters(): void {
     filters.push(new SetFilterVis<string>('orderTypes', 'orderTypes', false, true));
     filters.push(new SetFilterVis<string>('productionModels', 'productionModels', false, false));
     filters.push(new SetFilterVis<string>('languages', 'languages', false, false));
-    filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus'));
+    // filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus')); // FIXME
     filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);

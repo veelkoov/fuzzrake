@@ -173,7 +173,6 @@ class DataImport
                     break;
 
                 case Fields::URL_MINIATURES:
-                case Fields::COMMISSIONS_STATUS:
                 case Fields::CS_LAST_CHECK:
                 case Fields::BP_LAST_CHECK:
                 case Fields::COMPLETENESS:

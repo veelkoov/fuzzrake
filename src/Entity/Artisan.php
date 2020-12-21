@@ -914,11 +914,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return CompletenessCalc::count($this);
     }
 
-    public function getCommissionsStatus(): ?bool // FIXME
-    {
-        return $this->getVolatileData()->getStatus();
-    }
-
     public function allowsFeedback(): bool
     {
         return ContactPermit::FEEDBACK === $this->contactAllowed;
@@ -1316,10 +1311,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
                 case Fields::BP_LAST_CHECK:
                     $lc = $this->getVolatileData()->getLastBpUpdate();
                     $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
-                    break;
-
-                case Fields::COMMISSIONS_STATUS:
-                    $value = $this->getVolatileData()->getStatus();
                     break;
 
                 case Fields::COMPLETENESS:
