@@ -18,7 +18,6 @@ use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use App\Utils\Tracking\Status;
 use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -44,7 +43,15 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('other', [$this, 'otherFilter']),
             new TwigFilter('nulldate', [$this, 'nulldateFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
-            new TwigFilter('status_text', [Status::class, 'text']),
+            new TwigFilter('status_text', function (?bool $status): string {
+                if (true === $status) {
+                    return 'OPEN';
+                } elseif (false === $status) {
+                    return 'CLOSED';
+                } else {
+                    return 'UNKNOWN';
+                }
+            }),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
             new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),

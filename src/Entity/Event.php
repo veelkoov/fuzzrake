@@ -115,10 +115,7 @@ class Event
         $this->oldStatus = $oldStatus;
 
         if (null !== $analysisResult) {
-            $this->type = self::TYPE_CS_UPDATED_WITH_DETAILS;
-            $this->newStatus = $analysisResult->getStatus();
-            $this->setClosedMatch($analysisResult->getClosedStrContext());
-            $this->setOpenMatch($analysisResult->getOpenStrContext());
+            // FIXME
         }
     }
 
