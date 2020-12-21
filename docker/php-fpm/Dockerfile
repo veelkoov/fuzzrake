@@ -27,8 +27,8 @@ RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         && pecl install xdebug \
         && docker-php-ext-enable xdebug.so \
         && sed -r -i'' 's/set -e/set -e\ncd \/etc\nsed \/host.docker.internal\/d hosts > hosts.new\ncat hosts.new > hosts\nip r | grep "default via" | cut -f3 -d" " | tr -d "\\n" >> hosts\necho " host.docker.internal" >> hosts\ncd -\n/' /usr/local/bin/docker-php-entrypoint \
-        && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
         && apk add --no-cache chromium chromium-chromedriver xvfb xvfb-run; \
     else \
         echo "Skipped develop stuff"; \
