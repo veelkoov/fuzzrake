@@ -41,7 +41,7 @@ final class SchemaFixer
 
             case 7:
                 $data[Fields::URL_PRICES] = [$data[Fields::URL_PRICES]];
-                $data[Fields::URL_COMMISSIONS] = [$data[Fields::URL_COMMISSIONS]];
+                $data[Fields::URL_COMMISSIONS] = [$data['URL_CST']];
                 $data[Fields::BP_LAST_CHECK] = 'unknown';
         }
 
