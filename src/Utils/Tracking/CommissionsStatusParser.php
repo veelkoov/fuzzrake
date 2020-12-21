@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
+use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Regexp\Factory;
 use App\Utils\Regexp\TrackingRegexp;
 use App\Utils\Regexp\Variant;
@@ -39,21 +40,20 @@ class CommissionsStatusParser
     }
 
     /**
-     * @return MatchInterface[]
-     *
-     * @throws TrackerException
+     * @return ArtisanCommissionsStatus[]
      */
     public function analyseStatus(WebpageSnapshot $snapshot): array
     {
-        $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
-        $artisanName = $snapshot->getOwnerName();
-
-        $inputTexts = array_map(fn (string $input) => $this->processInputText($artisanName, $additionalFilter, $input), $snapshot->getAllContents());
-
-        $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
-        $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);
-
-        return [$open, $closed];
+        return []; // TODO
+//        $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
+//        $artisanName = $snapshot->getOwnerName();
+//
+//        $inputTexts = array_map(fn (string $input) => $this->processInputText($artisanName, $additionalFilter, $input), $snapshot->getAllContents());
+//
+//        $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
+//        $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);
+//
+//        return [$open, $closed];
     }
 
     /**
