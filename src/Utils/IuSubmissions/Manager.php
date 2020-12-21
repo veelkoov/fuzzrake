@@ -12,11 +12,10 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
-use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
 
-class Manager
+final class Manager
 {
     public const CMD_ACK_NEW = 'ack new';
     public const CMD_REPLACE = 'replace';
@@ -29,6 +28,7 @@ class Manager
     public const CMD_SET_PIN = 'set pin';
     public const CMD_IGNORE_UNTIL = 'ignore until'; // Let's temporarily ignore request
     public const CMD_IGNORE_REST = 'ignore rest';
+    public const CMD_COMMENT = 'comment';
 
     private array $corrections = [];
     private array $acknowledgedNewItems = [];
@@ -108,7 +108,7 @@ class Manager
         return in_array($item->getId(), $this->rejectedItems);
     }
 
-    public function getIgnoredUntilDate(ImportItem $item): DateTime
+    public function getIgnoredUntilDate(ImportItem $item): DateTimeInterface
     {
         return $this->itemsIgnoreFinalTimes[$item->getId()];
     }
@@ -153,6 +153,11 @@ class Manager
         switch ($command) {
             case self::CMD_IGNORE_REST:
                 $buffer->flush();
+                break;
+
+            case self::CMD_COMMENT:
+                // Maker ID kept only informative
+                $buffer->readUntil("\n");
                 break;
 
             case self::CMD_ACK_NEW:
