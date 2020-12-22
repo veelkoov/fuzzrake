@@ -41,10 +41,6 @@ class HttpClient
             'headers' => $this->appendCookieToHeaders($additionalHeaders, $cookieJar, $url),
         ];
 
-        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
-            $options['headers']['cookie'] = $_ENV['FA_COOKIE']; // TODO: get rid of!
-        }
-
         return $this->client->request('GET', $url, $options);
     }
 
