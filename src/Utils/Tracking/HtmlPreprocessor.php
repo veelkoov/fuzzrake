@@ -9,6 +9,8 @@ use App\Utils\Regexp\Regexp;
 use App\Utils\Web\WebsiteInfo;
 use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 abstract class HtmlPreprocessor
 {
@@ -61,12 +63,17 @@ abstract class HtmlPreprocessor
         return $result;
     }
 
+    /**
+     * @throws HtmlPreprocessorException
+     */
     public static function guessFilterFromUrl(string $url): string
     {
-        if (Regexp::match('/#(?<profile>.+)$/', $url, $matches)) {
-            return $matches['profile'];
-        } else {
-            return '';
+        try {
+            return pattern('#(?<profile>.+)$')->match($url)
+                ->findFirst(fn (Detail $match): string => $match->group('profile')->text())
+                ->orReturn('');
+        } catch (NonexistentGroupException $e) {
+            throw new HtmlPreprocessorException('Regexp failed', 0, $e);
         }
     }
 

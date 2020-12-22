@@ -6,6 +6,8 @@ namespace App\Tests\Utils;
 
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\HtmlPreprocessor;
+use App\Utils\Tracking\HtmlPreprocessorException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
 use Exception;
@@ -51,5 +53,15 @@ class CommissionsStatusParserTest extends TestCase
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
         }, glob(__DIR__.'/../test_data/statuses/*/expected.json')));
+    }
+
+    /**
+     * @throws HtmlPreprocessorException
+     */
+    public function testGuessFilterFromUrl(): void
+    {
+        self::assertEquals('guessFilter', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl#guessFilter'));
+        self::assertEquals('', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl#'));
+        self::assertEquals('', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl'));
     }
 }

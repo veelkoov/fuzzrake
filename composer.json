@@ -11,7 +11,7 @@
         "doctrine/doctrine-bundle": "2.0.*",
         "doctrine/orm": "2.7.*",
         "google/recaptcha": "^1.2",
-        "rawr/t-regx": "^0.9.9",
+        "rawr/t-regx": "v0.9.13",
         "sensio/framework-extra-bundle": "^5.5",
         "sensiolabs/security-checker": "^6.0",
         "symfony/apache-pack": "^1.0",
