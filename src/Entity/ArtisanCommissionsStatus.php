@@ -30,14 +30,14 @@ class ArtisanCommissionsStatus
     /**
      * @ORM\Column(type="string", length=32)
      */
-    private ?string $offer = null;
+    private string $offer = '';
 
     private string $offerMatch = ''; // TODO
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private ?bool $isOpen = null;
+    private bool $isOpen = false;
 
     private string $isOpenMatch = ''; // TODO
 
@@ -58,7 +58,7 @@ class ArtisanCommissionsStatus
         return $this;
     }
 
-    public function getOffer(): ?string
+    public function getOffer(): string
     {
         return $this->offer;
     }
@@ -70,7 +70,7 @@ class ArtisanCommissionsStatus
         return $this;
     }
 
-    public function getIsOpen(): ?bool
+    public function getIsOpen(): bool
     {
         return $this->isOpen;
     }

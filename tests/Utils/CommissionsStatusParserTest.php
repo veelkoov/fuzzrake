@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Entity\Artisan;
-use App\Tasks\TrackerUpdates\Commissions\CommissionsAnalysisResult;
-use App\Utils\Regexp\Regexp;
+use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class CommissionsStatusParserTest extends TestCase
 {
-    const FILEPATH_PATTERN = '#/\d+_(?<status>open|closed|unknown)/metadata\.json$#';
-
     private static CommissionsStatusParser $csp;
 
     public static function setUpBeforeClass(): void
@@ -25,50 +21,35 @@ class CommissionsStatusParserTest extends TestCase
     }
 
     /**
-     * @dataProvider areCommissionsOpenDataProvider
-     *
-     * @throws TrackerException
+     * @dataProvider analyseStatusDataProvider
+     * @noinspection PhpUnusedParameterInspection
      */
-    public function testAreCommissionsOpen(string $webpageTextFileName, WebpageSnapshot $snapshot, ?bool $expectedResult)
+    public function testGetStatuses(string $testSetPath, WebpageSnapshot $snapshot, array $expectedResult): void
     {
-        [$openMatch, $closedMatch] = self::$csp->analyseStatus($snapshot);
-        $result = new CommissionsAnalysisResult(new Artisan(), $openMatch, $closedMatch); // FIXME
-        $errorMsg = "Wrong result for '$webpageTextFileName'";
+        $statuses = self::$csp->getStatuses($snapshot);
 
-        if (!($cc = $result->getClosedStrContext())->empty()) {
-            $errorMsg .= "\nCLOSED: \e[0;30;47m{$cc->getBefore()}\e[0;30;41m{$cc->getSubject()}\e[0;30;47m{$cc->getAfter()}\e[0m";
+        foreach ($statuses as $status) {
+            self::assertContains($status->getOffer(), array_keys($expectedResult), "Detected unwanted status {$status->getOffer()}: [{$status->getIsOpen()}]");
+
+            self::assertEquals($expectedResult[$status->getOffer()], $status->getIsOpen(), "Wrong status detected for {$status->getOffer()}");
+            unset($expectedResult[$status->getOffer()]);
         }
 
-        if (!($oc = $result->getOpenStrContext())->empty()) {
-            $errorMsg .= "\nOPEN: \e[0;30;47m{$oc->getBefore()}\e[0;30;42m{$oc->getSubject()}\e[0;30;47m{$oc->getAfter()}\e[0m";
+        foreach ($expectedResult as $offer => $isOpen) {
+            self::fail("Failed detecting status {$offer}: [{$isOpen}]");
         }
-
-        static::assertSame($expectedResult, $result->getStatus(), $errorMsg);
     }
 
-    public function areCommissionsOpenDataProvider()
+    /**
+     * @throws Exception
+     */
+    public function analyseStatusDataProvider(): array
     {
         return array_filter(array_map(function ($filepath) {
-            if (!Regexp::match(self::FILEPATH_PATTERN, $filepath, $matches)) {
-                echo "Invalid filepath: $filepath\n";
-
-                return false;
-            }
-
-            switch ($matches['status']) {
-                case 'open':
-                    $expectedResult = true;
-                    break;
-                case 'closed':
-                    $expectedResult = false;
-                    break;
-                default:
-                    $expectedResult = null;
-            }
-
+            $expectedResult = Json::decode(trim(file_get_contents($filepath)));
             $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../snapshots/*/*/metadata.json')));
+        }, glob(__DIR__.'/../test_data/statuses/*/expected.json')));
     }
 }

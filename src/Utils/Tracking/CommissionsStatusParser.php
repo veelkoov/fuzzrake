@@ -42,7 +42,7 @@ class CommissionsStatusParser
     /**
      * @return ArtisanCommissionsStatus[]
      */
-    public function analyseStatus(WebpageSnapshot $snapshot): array
+    public function getStatuses(WebpageSnapshot $snapshot): array
     {
         return []; // TODO
 //        $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());

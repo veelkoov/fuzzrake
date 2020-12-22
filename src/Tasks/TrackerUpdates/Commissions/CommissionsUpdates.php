@@ -88,7 +88,7 @@ final class CommissionsUpdates implements UpdatesInterface
         $webpageSnapshot = $this->snapshots->get($url, false, false);
         $result = [];
 
-        foreach ($this->parser->analyseStatus($webpageSnapshot) as $status) {
+        foreach ($this->parser->getStatuses($webpageSnapshot) as $status) {
             $result[] = $status->setArtisan($url->getArtisan());
         }
 
