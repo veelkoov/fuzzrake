@@ -65,4 +65,13 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/donate.html.twig', []);
     }
+
+    /**
+     * @Route("/rules.html", name="rules")
+     * @Cache(maxage=21600, public=true)
+     */
+    public function rules(): Response
+    {
+        return $this->render('pages/rules.html.twig', []);
+    }
 }
