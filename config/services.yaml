@@ -7,11 +7,11 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    iu_form_url:               'https://docs.google.com/forms/d/e/1FAIpQLSfByzcVJEwMVEfKp3dTolsI-f2s9w-dQZFeZQxP_OzqoZiLMQ/viewform' # Inclusion/data update form
     request_form_url:          'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform' # Guest update request form
     feedback_form_url:         'https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform' # Feature request/bug report/feedback form
     filter_suggest_form_url:   "https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform?usp=pp_url&entry.1805323921=I'd+like+to+be+able+to+filter+by:+___PLEASE___SPECIFY___HERE___" # The form above prefilled for suggesting a new filter
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    google_analytics_id:       '%env(default::GOOGLE_ANALYTICS_ID)%'
 
 services:
     # default configuration for services in *this* file
@@ -19,35 +19,43 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $contactEmail:         '%env(resolve:CONTACT_EMAIL)%'
-            $countries:            '%countries%'
-            $environment:          '%kernel.environment%'
-            $iuFormUrl:            '%iu_form_url%'
-            $languages:            '%languages%'
-            $lists:                '%lists%'
-            $projectDir:           '%kernel.project_dir%'
-            $snapshotCacheDirPath: '%kernel.project_dir%/var/snapshots'
-            $states:               '%states%'
-            $strings:              '%strings%'
+            $contactEmail:                    '%env(resolve:CONTACT_EMAIL)%'
+            $countries:                       '%countries%'
+            $environment:                     '%kernel.environment%'
+            $iuFormDataDirPath:               '%env(resolve:SUBMISSIONS_DIR_PATH)%'
+            $iuFormDataS3CopiesBucketUrl:     '%env(resolve:S3_COPIES_BUCKET_URL)%'
+            $languages:                       '%languages%'
+            $lists:                           '%lists%'
+            $notificationSnsTopicArn:         '%env(resolve:NOTIFICATIONS_TOPIC_ARN)%'
+            $projectDir:                      '%kernel.project_dir%'
+            $snapshotCacheDirPath:            '%kernel.project_dir%/var/snapshots'
+            $speciesDefinitions:              '%species_definitions%'
+            $states:                          '%states%'
+            $strings:                         '%strings%'
+            $urls:                            '%urls%'
 
             $healthCheckValues:
-                MEMORY_AVAILABLE_MIN_MIBS: '%env(resolve:MEMORY_AVAILABLE_MIN_MIBS)%'
-                DISK_FREE_MIN_MIBS:        '%env(resolve:DISK_FREE_MIN_MIBS)%'
-                DISK_USED_MAX_PERCENT:     '%env(resolve:DISK_USED_MAX_PERCENT)%'
-                LOAD_1M_MAX:               '%env(resolve:LOAD_1M_MAX)%'
-                LOAD_5M_MAX:               '%env(resolve:LOAD_5M_MAX)%'
-                LOAD_15M_MAX:              '%env(resolve:LOAD_15M_MAX)%'
+                MEMORY_AVAILABLE_MIN_MIBS: '%env(int:MEMORY_AVAILABLE_MIN_MIBS)%'
+                DISK_FREE_MIN_MIBS:        '%env(int:DISK_FREE_MIN_MIBS)%'
+                DISK_USED_MAX_PERCENT:     '%env(int:DISK_USED_MAX_PERCENT)%'
+                LOAD_1M_MAX:               '%env(float:LOAD_1M_MAX)%'
+                LOAD_5M_MAX:               '%env(float:LOAD_5M_MAX)%'
+                LOAD_15M_MAX:              '%env(float:LOAD_15M_MAX)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
-        resource: '../src/Controller'
+        resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
@@ -58,5 +66,9 @@ services:
         arguments:
             - "@doctrine.orm.default_result_cache"
 
-    App\Utils\Data\Definitions\Species:
-        arguments: [ '%species_definitions%' ]
+    App\Doctrine\Listeners\ArtisanUrlListener:
+        tags:
+            - name: 'doctrine.orm.entity_listener'
+              event: 'preUpdate'
+              entity: 'App\Entity\ArtisanUrl'
+              lazy: true

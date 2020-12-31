@@ -25,7 +25,7 @@ class QueryController extends AbstractController
      */
     public function query(Request $request, ArtisanRepository $artisanRepository, EnvironmentsService $environments): Response
     {
-        if (!$environments->isDevMachine()) {
+        if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
         }
 

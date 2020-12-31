@@ -23,11 +23,11 @@ class WebpageSnapshotManager
     private GentleHttpClient $httpClient;
     private LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger, WebpageSnapshotCache $cache)
+    public function __construct(GentleHttpClient $httpClient, WebpageSnapshotCache $cache, LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        $this->httpClient = $httpClient;
         $this->cache = $cache;
-        $this->httpClient = new GentleHttpClient();
+        $this->logger = $logger;
     }
 
     /**

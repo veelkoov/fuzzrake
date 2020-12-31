@@ -39,6 +39,17 @@ class FilterItems implements ArrayAccess
         $this->items[$key] = new FilterItem($value, $label, $count);
     }
 
+    public function hasComplexItem(): bool
+    {
+        foreach ($this->items as $item) {
+            if ($item->isComplex()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function incUnknownCount(int $number = 1): void
     {
         $this->unknownCount += $number;
@@ -74,9 +85,7 @@ class FilterItems implements ArrayAccess
 
     public function sort(): void
     {
-        uasort($this->items, function (FilterItem $a, FilterItem $b): int {
-            return strcmp($a->getLabel(), $b->getLabel());
-        });
+        uasort($this->items, fn (FilterItem $a, FilterItem $b): int => strcmp($a->getLabel(), $b->getLabel()));
     }
 
     public function __get(string $key): FilterItem

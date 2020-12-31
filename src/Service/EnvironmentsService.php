@@ -13,13 +13,18 @@ class EnvironmentsService
         $this->environment = $environment;
     }
 
-    public function isDevMachine(): bool
+    public function isDevOrTest(): bool
     {
         return in_array($this->environment, ['dev', 'test']);
     }
 
-    public function isProduction(): bool
+    public function isTest(): bool
     {
-        return 'prod' === $this->environment;
+        return 'test' === $this->environment;
+    }
+
+    public function isDev(): bool
+    {
+        return 'dev' === $this->environment;
     }
 }

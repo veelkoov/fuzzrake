@@ -1,0 +1,63 @@
+<fieldset class="species">
+    <div class="row">
+        <div class="col">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" name="species[]" type="checkbox" id="specieCheckBoxUnknown" value="?" data-label="Unknown" />
+                <label class="form-check-label" for="specieCheckBoxUnknown">
+                    <i class="fas fa-question-circle"></i> Unknown{# TODO <span class="count">({{ filters.species.unknownCount }})</span>#}
+                </label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" name="species[]" type="checkbox" id="specieCheckBoxOther" value="*" data-label="Other" />
+                <label class="form-check-label" for="specieCheckBoxOther">
+                    <i class="fas fa-asterisk"></i> Other{# TODO  <span class="count">({{ filters.species.otherCount }})</span>#}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    {% set counter = getCounter() %}
+
+    <div class="row">
+        <div class="col">
+            {% macro branch(species, counter) %}
+                {% for item in species.items %}
+                    {% set checkboxId = 'specieCheckBox' ~ counter.next() %}
+                    <div class="btn-group specie" role="group">
+                        <span class="btn btn-outline-secondary">
+                            <input name="species[]" type="checkbox" id="{{ checkboxId }}" value="{{ item.label }}" data-label="{{ item.label }}" />
+                            <label for="{{ checkboxId }}">
+                                {{ item.label }}{# TODO <span class="count">({{ item.count }})</span> #}
+                                <span class="descendants-indicator"><i class="fas fa-tasks"></i></span>
+                            </label>
+                        </span>
+
+                        {% if item.isComplex() %}
+                            <span class="btn btn-outline-secondary toggle">
+                                <i class="fas fa-caret-right"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if item.isComplex() %}
+                        <br />
+                        <fieldset class="subspecies">
+                            {{ _self.branch(item.value, counter) }}
+                        </fieldset>
+                    {% endif %}
+                {% endfor %}
+            {% endmacro %}
+
+            {% apply spaceless %}
+                {{ _self.branch(filters.species, counter) }}
+            {% endapply %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-right">
+            <a class="btn btn-secondary" href="#filters-top">Top</a>
+        </div>
+    </div>
+</fieldset>

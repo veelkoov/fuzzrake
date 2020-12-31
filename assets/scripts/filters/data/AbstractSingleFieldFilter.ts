@@ -1,15 +1,15 @@
 import AbstractBaseFilter from "./AbstractBaseFilter";
 import Artisan from "../../class/Artisan";
+import UnknownValue from "./special/UnknownValue";
 
 export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseFilter<T> {
-    private readonly UNKNOWN_VALUE: string = '?';
-
     protected readonly fieldName: string;
-    private unknownSelected: boolean = false;
+    private readonly unknown: UnknownValue;
 
     protected constructor(fieldName: string) {
         super();
         this.fieldName = fieldName;
+        this.unknown = new UnknownValue(fieldName);
     }
 
     public getStorageName(): string {
@@ -17,43 +17,37 @@ export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseF
     }
 
     protected matchesUnknown(artisan: Artisan): boolean {
-        return this.unknownSelected && this.isValueUnknown(artisan[this.fieldName]);
+        return this.unknown.matches(artisan);
     }
 
     public clear(): void {
         super.clear();
-        this.unknownSelected = false;
+        this.unknown.clear();
     }
 
     public isActive(): boolean {
-        return this.unknownSelected || super.isActive();
+        return this.unknown.isSelected() || super.isActive();
     }
 
-    protected isUnknownSelected(): boolean {
-        return this.unknownSelected;
+    public isUnknownSelected(): boolean {
+        return this.unknown.isSelected();
     }
 
     public select(value: string, label: string): void {
-        if (value === this.UNKNOWN_VALUE) {
-            this.unknownSelected = true;
-        } else {
+        this.unknown.select(value, label, () => {
             super.select(value, label);
-        }
+        });
     }
 
     public deselect(value: string, label: string): void {
-        if (value === this.UNKNOWN_VALUE) {
-            this.unknownSelected = false;
-        } else {
+        this.unknown.deselect(value, label, () => {
             super.deselect(value, label);
-        }
+        });
     }
 
     public isSelected(value: string): boolean {
-        if (value === this.UNKNOWN_VALUE) {
-            return this.unknownSelected;
-        } else {
+        return this.unknown.checkSelected(value, () => {
             return super.isSelected(value);
-        }
+        });
     }
 }

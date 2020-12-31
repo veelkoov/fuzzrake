@@ -27,7 +27,7 @@ class EventsController extends AbstractController
     {
         $event ??= new Event();
 
-        if (!$environments->isDevMachine() || !$event->isEditable()) {
+        if (!$environments->isDevOrTest() || !$event->isEditable()) {
             throw $this->createAccessDeniedException();
         }
 

@@ -25,7 +25,7 @@ abstract class Parse
             return $input;
         }
 
-        $input = $input ?? '';
+        $input ??= '';
 
         $result = (int) $input;
 
@@ -43,7 +43,7 @@ abstract class Parse
 
     public static function percentAsInt(?string $input): int
     {
-        $input = $input ?? '';
+        $input ??= '';
 
         $result = (int) substr($input, 0, -1);
 
@@ -61,7 +61,7 @@ abstract class Parse
 
     public static function float(?string $input): float
     {
-        $input = $input ?? '';
+        $input ??= '';
 
         $result = (float) $input;
 

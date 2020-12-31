@@ -11,6 +11,7 @@ parameters:
       "#^-$#i":                     ""
       "#[ \t]{2,}#":                " "
       "#(p)ose?able#i":             "$1oseable"
+      "#Tounges#":                  'Tongues'
       "#(^|\\s)LED($|\\s)#i":       "$1LED$2"
 
   lists:

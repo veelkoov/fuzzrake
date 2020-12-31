@@ -13,20 +13,21 @@ parameters:
       "germany":                                       "DE"
       "finland":                                       "FI"
       "france":                                        "FR"
-      "uk|england|united kingdom":                     "GB"
+      "(uk|england|united kingdom)":                   "GB"
       "hungary":                                       "HU"
       "ireland":                                       "IE"
-      "italia|italy":                                  "IT"
+      "(italia|italy)":                                "IT"
       "mexico":                                        "MX"
       "(the )?netherlands":                            "NL"
       "new zealand":                                   "NZ"
       "norway":                                        "NO"
       "russia":                                        "RU"
       "poland":                                        "PL"
+      "portugal":                                      "PT"
       "sweden":                                        "SE"
       "ukraine":                                       "UA"
       "united states( of america)?":                   "US"
-      "u\\.?s\\.?( of america)?|usa":                  "US"
+      "(u\\.?s\\.?( of america)?|usa)":                "US"
       "south africa":                                  "ZA"
 
   states:
@@ -37,6 +38,8 @@ parameters:
       'CA$|^California':                'California'
       'CO$|^Colorado':                  'Colorado'
       'FL$|^Florida':                   'Florida'
+      'ID$|^Idaho':                     'Idaho'
+      'MD$|^Maryland':                  'Maryland'
       'MN$|^Minnesota':                 'Minnesota'
       'NY$|^New York':                  'New York'
       'OH$|^Ohio':                      'Ohio'

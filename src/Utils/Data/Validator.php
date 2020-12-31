@@ -12,15 +12,8 @@ use App\Utils\Data\Validator\ValidatorInterface;
 
 class Validator
 {
-    /**
-     * @var SpeciesListValidator
-     */
-    private $speciesListValidator;
-
-    /**
-     * @var GenericValidator
-     */
-    private $genericValidator;
+    private SpeciesListValidator $speciesListValidator;
+    private GenericValidator $genericValidator;
 
     public function __construct(SpeciesListValidator $speciesListValidator)
     {

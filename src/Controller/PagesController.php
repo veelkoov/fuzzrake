@@ -7,6 +7,7 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PagesController extends AbstractController
@@ -44,7 +45,7 @@ class PagesController extends AbstractController
      */
     public function whoopsies(): Response
     {
-        return $this->render('pages/whoopsies.html.twig', []);
+        throw new GoneHttpException();
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanPrivateDataRepository")
@@ -20,28 +21,30 @@ class ArtisanPrivateData
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
-     * @ORM\JoinColumn(name="artisan_id", nullable=false)
+     * @ORM\JoinColumn(name="artisan_id", nullable=false, unique=true)
      */
-    private $artisan;
+    private ?Artisan $artisan = null;
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    private $contactAddress = '';
+    private string $contactAddress = '';
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(groups={"iu_form"}, message="Passcode is required")
+     * @Assert\Length(min=4, max=255, groups={"iu_form"}, minMessage="Passcode is not long enough")
      */
-    private $passcode = '';
+    private string $passcode = '';
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    private $originalContactInfo = '';
+    private string $originalContactInfo = '';
 
     public function getId(): ?int
     {

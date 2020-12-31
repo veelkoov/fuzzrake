@@ -11,12 +11,12 @@ use App\Utils\Artisan\Utils;
 use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Printer;
+use App\Utils\DataInputException;
 use App\Utils\FieldReadInterface;
-use App\Utils\DataInput\DataInputException;
-use App\Utils\DataInput\ImportItem;
-use App\Utils\DataInput\Manager;
-use App\Utils\DataInput\Messaging;
-use App\Utils\DataInput\RawImportItem;
+use App\Utils\IuSubmissions\ImportItem;
+use App\Utils\IuSubmissions\IuSubmission;
+use App\Utils\IuSubmissions\Manager;
+use App\Utils\IuSubmissions\Messaging;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -54,7 +54,7 @@ class DataImport
     }
 
     /**
-     * @param array[] $artisansData
+     * @param IuSubmission[] $artisansData
      *
      * @throws DataInputException
      */
@@ -78,13 +78,14 @@ class DataImport
             $this->fdv->perform($item->getEntity(), $flags, $item->getOriginalInput());
 
             if ($this->checkValidEmitWarnings($item)) {
+                $this->messaging->reportValid($item);
                 $this->commit($item);
             }
         }
     }
 
     /**
-     * @param array[] $artisansData
+     * @param IuSubmission[] $artisansData
      *
      * @return ImportItem[]
      *
@@ -121,11 +122,9 @@ class DataImport
     /**
      * @throws DataInputException
      */
-    private function createImportItem(array $artisanData): ImportItem
+    private function createImportItem(IuSubmission $submission): ImportItem
     {
-        $raw = new RawImportItem($artisanData);
-
-        $originalInput = $this->updateArtisanWithData(new Artisan(), $raw, false);
+        $originalInput = $this->updateArtisanWithData(new Artisan(), $submission, false);
 
         $input = new ArtisanFixWip($originalInput);
         $this->manager->correctArtisan($input->getFixed());
@@ -135,12 +134,12 @@ class DataImport
 
         $entity = new ArtisanFixWip($originalEntity);
 
-        return new ImportItem($raw, $input, $entity);
+        return new ImportItem($submission, $input, $entity);
     }
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan
     {
-        foreach (Fields::importedFromIuForm() as $field) {
+        foreach (Fields::getAll() as $field) {
             if ($skipPasscodeUpdate && $field->is(Fields::PASSCODE)) {
                 continue;
             }
@@ -155,7 +154,7 @@ class DataImport
                     }
                     break;
 
-                case Fields::CONTACT_INPUT_VIRTUAL:
+                case Fields::CONTACT_INFO_ORIGINAL:
                     $newValue = $source->get($field);
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
@@ -163,6 +162,24 @@ class DataImport
                     }
 
                     Utils::updateContact($artisan, $newValue);
+                    break;
+
+                case Fields::URL_PHOTOS:
+                    if ($artisan->get($field) !== $source->get($field)) {
+                        $artisan->setMiniatureUrls('');
+                    }
+
+                    $artisan->set($field, $source->get($field));
+                    break;
+
+                case Fields::URL_MINIATURES:
+                case Fields::COMMISSIONS_STATUS:
+                case Fields::CST_LAST_CHECK:
+                case Fields::COMPLETENESS:
+                case Fields::CONTACT_METHOD:
+                case Fields::CONTACT_ADDRESS_PLAIN:
+                case Fields::CONTACT_INFO_OBFUSCATED:
+                case Fields::FORMER_MAKER_IDS:
                     break;
 
                 default:

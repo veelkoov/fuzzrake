@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
+use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
 use App\Utils\Web\WebsiteInfo;
+use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
 
 abstract class HtmlPreprocessor
@@ -36,9 +38,9 @@ abstract class HtmlPreprocessor
             return $webpage;
         }
 
-        $result = json_decode($webpage, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
+        try {
+            $result = Json::decode($webpage);
+        } catch (JsonException $e) {
             return $webpage;
         }
 

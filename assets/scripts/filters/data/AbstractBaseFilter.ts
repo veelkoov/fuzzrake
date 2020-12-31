@@ -6,10 +6,14 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     protected selectedLabels: Set<string> = new Set<string>();
 
     public abstract matches(artisan: Artisan): boolean;
+
     public abstract getStorageName(): string;
+
+    public abstract getStatus(): string;
 
     public clear(): void {
         this.selectedValues.clear();
+        this.selectedLabels.clear();
     }
 
     public isActive(): boolean {
@@ -38,12 +42,6 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
         return this.selectedValues.has(this.mapValue(value));
     }
 
-    public abstract getStatus(): string;
-
-    protected isValueUnknown(value: any): boolean {
-        return value === null || value === '' || value instanceof Set && value.size === 0 || value instanceof Array && value.length === 0;
-    }
-
     private mapValue(value: string): T {
         if (value === '0') {
             return <T><unknown>false;
@@ -55,6 +53,6 @@ export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     }
 
     private static fixLabel(label: string): string {
-        return label.replace(/ \(.+?\)$/, '')
+        return label.replace(/ \(.+?\)$/, '') // FIXME: Need to get rid of this when explanation of items won't be done by appending it to the name of the item
     }
 }

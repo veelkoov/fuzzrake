@@ -5,7 +5,7 @@ import ClickEvent = JQuery.ClickEvent;
 
 export default abstract class AbstractBaseFilterVis implements FilterVisInterface {
     private readonly idPart: string;
-    private readonly $checkboxes: JQuery<HTMLInputElement>;
+    protected readonly $checkboxes: JQuery<HTMLInputElement>;
     private readonly $clearButton: JQuery<HTMLElement>;
     private readonly $statusDisplay: JQuery<HTMLElement>;
     private readonly filter: FilterInterface;
@@ -50,11 +50,17 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
 
     public saveChoices(): void {
         try {
-            localStorage[`filters/${this.filter.getStorageName()}/choices`] = this.$checkboxes.filter(':checked')
-                .map((_: number, element: HTMLInputElement): string => element.value).toArray().join('\n');
+            localStorage[`filters/${this.filter.getStorageName()}/choices`] = this.getSelectedChoices().join('\n');
         } catch (e) {
             // Not allowed? - I don't care then
         }
+    }
+
+    private getSelectedChoices(): Array<string> {
+        let nonUnique = this.$checkboxes.filter(':checked')
+            .map((_: number, element: HTMLInputElement): string => element.value).toArray();
+
+        return [...new Set<string>(nonUnique)];
     }
 
     public getFilterId(): string {
@@ -63,6 +69,11 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
 
     public isActive(): boolean {
         return this.filter.isActive();
+    }
+
+    protected refreshUi(): void {
+        this.$clearButton.toggle(this.filter.isActive());
+        this.$statusDisplay.text(this.filter.getStatus());
     }
 
     private setupCheckboxes(): void {
@@ -108,7 +119,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
     private setupAllNoneInvertLinks(): void {
         let _this = this;
 
-        jQuery(`${this.bodySelector} a`).each((_, element) => {
+        jQuery(`${this.bodySelector} .allNoneInvert a`).each((_, element) => {
             let $a = jQuery(element);
             let $checkboxes = $a.parents('fieldset').find('input:checkbox');
             let valueFunction: any = AbstractBaseFilterVis.getValueFunction($a.data('action'));
@@ -134,11 +145,6 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
             default:
                 throw new Error();
         }
-    }
-
-    private refreshUi(): void {
-        this.$clearButton.toggle(this.filter.isActive());
-        this.$statusDisplay.text(this.filter.getStatus());
     }
 
     private dataFromModelToUi(): void {

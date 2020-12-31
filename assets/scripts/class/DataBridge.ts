@@ -7,6 +7,7 @@ declare const ARTISANS: Artisan[];
 declare const MAKER_IDS_MAP: object;
 declare const API_BASE_URL: string;
 declare const GOOGLE_RECAPTCHA_SITE_KEY: string;
+declare const SPECIES: object;
 
 export default abstract class DataBridge {
     public static getMakerIdsMap(): object {
@@ -35,5 +36,9 @@ export default abstract class DataBridge {
 
     public static getGoogleRecaptchaSiteKey(): string {
         return GOOGLE_RECAPTCHA_SITE_KEY;
+    }
+
+    public static getSpecies(): object {
+        return SPECIES;
     }
 }

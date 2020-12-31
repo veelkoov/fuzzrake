@@ -48,9 +48,7 @@ class CommissionsStatusParser
         $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
 
-        $inputTexts = array_map(function (string $input) use ($artisanName, $additionalFilter) {
-            return $this->processInputText($artisanName, $additionalFilter, $input);
-        }, $snapshot->getAllContents());
+        $inputTexts = array_map(fn (string $input) => $this->processInputText($artisanName, $additionalFilter, $input), $snapshot->getAllContents());
 
         $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
         $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);

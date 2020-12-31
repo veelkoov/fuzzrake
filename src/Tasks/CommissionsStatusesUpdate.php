@@ -71,7 +71,7 @@ final class CommissionsStatusesUpdate
     {
         $artisan = $url->getArtisan();
 
-        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url);
+        [$datetimeRetrieved, $analysisResult] = $this->analyzeStatus($url);
 
         $this->reportStatusChange($artisan, $analysisResult);
 
@@ -144,9 +144,7 @@ final class CommissionsStatusesUpdate
      */
     private function getTrackedArtisans(): array
     {
-        return array_filter($this->artisanRepository->findAll(), function (Artisan $artisan): bool {
-            return $this->canAutoUpdate($artisan);
-        });
+        return array_filter($this->artisanRepository->findAll(), fn (Artisan $artisan): bool => $this->canAutoUpdate($artisan));
     }
 
     /**
@@ -156,8 +154,6 @@ final class CommissionsStatusesUpdate
      */
     private function getCstUrls(array $artisans): array
     {
-        return array_map(function (Artisan $artisan): Fetchable {
-            return $artisan->getSingleUrlObject(Fields::URL_CST);
-        }, $artisans);
+        return array_map(fn (Artisan $artisan): Fetchable => $artisan->getSingleUrlObject(Fields::URL_CST), $artisans);
     }
 }

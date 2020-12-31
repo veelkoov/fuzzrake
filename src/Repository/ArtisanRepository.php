@@ -7,12 +7,13 @@ namespace App\Repository;
 use App\Entity\Artisan;
 use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItems;
-use App\Utils\Regexp\Regexp;
+use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
 
@@ -34,17 +35,42 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getAll(): array
     {
-        return $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 'cs')
-            ->leftJoin('a.urls', 'u')
-            ->leftJoin('a.privateData', 'pd') // Even if unneded, we have to, because "Inverse side of x-to-one can never be lazy"
-            ->addSelect('cs')
-            ->addSelect('u')
-            ->addSelect('pd')
-            ->orderBy('a.name', 'ASC')
+        return $this->getArtisansQueryBuilder()
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();
+    }
+
+    /**
+     * @return Artisan[]
+     */
+    public function getActive(): array
+    {
+        return $this->getArtisansQueryBuilder()
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function getArtisansQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.commissionsStatus', 'cs')
+            ->leftJoin('a.urls', 'u')
+            ->leftJoin('u.state', 'us')
+            ->leftJoin('a.makerIds', 'mi')
+            /*
+             * Even if unneeded, we have to join the private data table, because of Doctrine's limitation (as of 2.7):
+             * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
+             */
+            ->leftJoin('a.privateData', 'pd')
+            ->addSelect('cs')
+            ->addSelect('u')
+            ->addSelect('us')
+            ->addSelect('mi')
+            ->addSelect('pd')
+            ->orderBy('a.name', 'ASC');
     }
 
     /**
@@ -204,30 +230,29 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
     {
-        $builder = $this->createQueryBuilder('a')->setParameter('empty', '');
-        $i = 0;
-
         if (null !== $matchedName) {
-            array_push($names, $matchedName);
+            $names[] = $matchedName;
         }
 
+        $builder = $this->createQueryBuilder('a')
+            ->leftJoin('a.makerIds', 'm');
+
+        $i = 0;
+
         foreach ($names as $name) {
-            $builder->orWhere("a.name = :eq$i OR (a.formerly <> :empty AND a.formerly LIKE :like$i)");
+            $builder->orWhere("a.name = :eq$i OR (a.formerly <> '' AND a.formerly LIKE :like$i)");
             $builder->setParameter("eq$i", $name);
             $builder->setParameter("like$i", "%$name%");
             ++$i;
         }
 
         foreach ($makerIds as $makerId) {
-            $builder->orWhere("a.makerId = :eq$i OR (a.formerMakerIds <> :empty AND a.formerMakerIds LIKE :like$i)");
+            $builder->orWhere("m.makerId = :eq$i");
             $builder->setParameter("eq$i", $makerId);
-            $builder->setParameter("like$i", "%$makerId%");
             ++$i;
         }
 
-        return $builder->getQuery()
-            ->enableResultCache(3600)
-            ->getResult();
+        return $builder->getQuery()->getResult();
     }
 
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
@@ -249,56 +274,24 @@ class ArtisanRepository extends ServiceEntityRepository
 
     /**
      * @throws NoResultException
-     * @throws NonUniqueResultException
      */
     public function findByMakerId(string $makerId): Artisan
     {
-        if (!Regexp::match(ValidationRegexps::MAKER_ID, $makerId)) {
+        if (pattern(ValidationRegexps::MAKER_ID)->fails($makerId)) {
             throw new NoResultException();
         }
 
-        return $this->createQueryBuilder('a')
-            ->where('
-                (a.makerId <> :empty AND a.makerId = :makerId)
-                OR a.formerMakerIds = :makerId
-                OR a.formerMakerIds LIKE :formerMakerIds1
-                OR a.formerMakerIds LIKE :formerMakerIds2
-            ')
-            ->setParameters([
-                'empty'           => '',
-                'makerId'         => $makerId,
-                'formerMakerIds1' => "%$makerId\n%",
-                'formerMakerIds2' => "%\n$makerId%",
-            ])
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getSingleResult();
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getOldToNewMakerIdsMap(): array
-    {
-        $rows = $this->createQueryBuilder('a')
-            ->select('a.makerId')
-            ->addSelect('a.formerMakerIds')
-            ->where('a.makerId <> :empty')
-            ->andWhere('a.formerMakerIds <> :empty')
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getArrayResult();
-
-        $result = [];
-
-        foreach ($rows as $row) {
-            foreach (explode("\n", $row['formerMakerIds']) as $formerMakerId) {
-                $result[$formerMakerId] = $row['makerId'];
-            }
+        try {
+            return $this->createQueryBuilder('a')
+                ->join('a.makerIds', 'm_where')
+                ->where('m_where.makerId = :makerId')
+                ->setParameter('makerId', $makerId)
+                ->getQuery()
+                ->enableResultCache(3600)
+                ->getSingleResult();
+        } catch (NonUniqueResultException $e) {
+            throw new UnbelievableRuntimeException($e);
         }
-
-        return $result;
     }
 
     /**
@@ -326,7 +319,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getActiveCount(): int
+    public function countActive(): int
     {
         try {
             return (int) $this->createQueryBuilder('a')

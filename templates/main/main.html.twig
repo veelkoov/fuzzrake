@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.js"></script>
+    <script src="//cdn.datatables.net/v/bs4/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/datatables.min.js"></script>
     {{ encore_entry_script_tags('main') }}
     <script>
         {% include 'main/parts/data.js.twig' %}
@@ -11,7 +11,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/datatables.min.css"/>
     {{ encore_entry_link_tags('main') }}
 {% endblock %}
 
@@ -21,14 +21,14 @@
     {% include 'main/modals/update_request.html.twig' %}
 
     <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="artisanName" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 {% include 'main/modals/artisan.html.twig' %}
             </div>
         </div>
     </div>
 
-    {% if not isDevMachine() %}
+    {% if not isDevEnv() %}
         <div id="scam-risk-warning" class="card bg-light mb-3">
             <h4 class="card-header">Don't get scammed!</h4>
             <div class="card-body">
@@ -68,7 +68,7 @@
         </ul>
     </div>
 
-    <div id="scam-risk-acknowledged" {% if not isDevMachine() %}style="display: none;"{% endif %}>
+    <div id="scam-risk-acknowledged" {% if not isDevEnv() %}style="display: none;"{% endif %}>
         <div id="data-table-container" style="display: none;">
             {% include 'main/table/body.html.twig' %}
         </div>

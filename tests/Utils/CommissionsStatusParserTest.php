@@ -66,6 +66,6 @@ class CommissionsStatusParserTest extends TestCase
             $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../snapshots/*/93_closed/metadata.json')));
+        }, glob(__DIR__.'/../snapshots/*/*/metadata.json')));
     }
 }

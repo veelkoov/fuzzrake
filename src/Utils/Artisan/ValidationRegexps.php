@@ -6,7 +6,9 @@ namespace App\Utils\Artisan;
 
 abstract class ValidationRegexps
 {
-    public const MAKER_ID = '#^([A-Z0-9]{7})?$#';
+    public const MAKER_ID = '^([A-Z0-9]{7})?$';
+    public const MAKER_ID_PREG = '#'.self::MAKER_ID.'#';
+
     public const GENERIC_URL = '#^(https?://[^/]+/.*)?$#'; // TODO: improve
     public const DA_URL = '#^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$#';
     public const FACEBOOK_URL = '#^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$#';
@@ -24,7 +26,8 @@ abstract class ValidationRegexps
     public const SINCE = '#^(\d{4}-\d{2})?$#';
     public const COUNTRY = '#^([A-Z]{2})?$#';
 
-    public const SCRITCH_PHOTO_URLS = self::ANYTHING; // FIXME
-    public const SCRITCH_MINIATURE_URLS = self::ANYTHING; // FIXME
+    public const PHOTO_URLS = self::ANYTHING; // FIXME
+    public const MINIATURE_URLS = self::ANYTHING; // FIXME
     public const SCRITCH_URL = self::ANYTHING; // FIXME
+    public const FURTRACK_URL = self::ANYTHING; // FIXME
 }

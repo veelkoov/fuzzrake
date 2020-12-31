@@ -36,12 +36,12 @@ class HealthCheckService
     {
         $this->artisanCommissionsStatusRepository = $acsr;
 
-        $this->memoryAvailableMinMibs = Parse::tInt($healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS]);
-        $this->diskFreeMinMibs = Parse::tInt($healthCheckValues[self::DISK_FREE_MIN_MIBS]);
-        $this->diskUsedMaxPercent = Parse::tInt($healthCheckValues[self::DISK_USED_MAX_PERCENT]);
-        $this->load1mMax = Parse::tFloat($healthCheckValues[self::LOAD_1M_MAX]);
-        $this->load5mMax = Parse::tFloat($healthCheckValues[self::LOAD_5M_MAX]);
-        $this->load15mMax = Parse::tFloat($healthCheckValues[self::LOAD_15M_MAX]);
+        $this->memoryAvailableMinMibs = $healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS];
+        $this->diskFreeMinMibs = $healthCheckValues[self::DISK_FREE_MIN_MIBS];
+        $this->diskUsedMaxPercent = $healthCheckValues[self::DISK_USED_MAX_PERCENT];
+        $this->load1mMax = $healthCheckValues[self::LOAD_1M_MAX];
+        $this->load5mMax = $healthCheckValues[self::LOAD_5M_MAX];
+        $this->load15mMax = $healthCheckValues[self::LOAD_15M_MAX];
     }
 
     public function getStatus(): array

@@ -64,8 +64,8 @@ class Fixer
     {
         switch ($field->name()) {
             case Fields::NAME:
+            case Fields::FORMERLY:
             case Fields::CITY:
-            case Fields::URL_OTHER:
             case Fields::PAYMENT_PLANS:
             case Fields::NOTES:
                 return $this->stringFixer;
@@ -84,8 +84,10 @@ class Fixer
             case Fields::OTHER_FEATURES:
             case Fields::OTHER_ORDER_TYPES:
             case Fields::OTHER_STYLES:
-            case Fields::URL_SCRITCH_PHOTO:
-            case Fields::URL_SCRITCH_MINIATURE:
+            case Fields::URL_PHOTOS:
+            case Fields::URL_MINIATURES:
+            case Fields::CURRENCIES_ACCEPTED:
+            case Fields::PAYMENT_METHODS:
                 return $this->freeListFixer;
 
             case Fields::URL_CST:
@@ -101,6 +103,7 @@ class Fixer
             case Fields::URL_YOUTUBE:
             case Fields::URL_WEBSITE:
             case Fields::URL_QUEUE:
+            case Fields::URL_OTHER:
                 return $this->urlFixer;
 
             case Fields::SINCE:

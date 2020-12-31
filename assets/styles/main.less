@@ -3,21 +3,41 @@ img[src="FurAffinity.svg"] {
 }
 
 #filters-parents {
-  fieldset {
-    font-size: 110%;
+  .species {
+    .specie {
+      margin: 0.5ex 0.5ex 0 0;
+
+      label {
+        margin: 0 0 0 1ex;
+      }
+
+      button.toggle {
+        padding-left: 2ex;
+        padding-right: 2ex;
+      }
+    }
+
+    .subspecies {
+      margin-left: 1.5em;
+      display: none;
+    }
+
+    .descendants-indicator {
+      display: none;
+    }
   }
 
   .allNoneInvert {
-    padding-left: 1em;
     font-size: 90%;
     font-weight: normal;
     color: #aaa;
   }
 
-  .allNoneInvertSingle {
-    font-size: 90%;
-    font-weight: normal;
-    color: #aaa;
+  .allNoneInvertCountries {
+    padding-left: 1em;
+  }
+
+  .allNoneInvertSimple {
     float: right;
   }
 
@@ -35,6 +55,20 @@ img[src="FurAffinity.svg"] {
   .count {
     font-size: 90%;
     color: #aaa;
+  }
+
+  .helphints-toggle {
+    margin-bottom: 1ex;
+  }
+
+  .helphints-contents {
+    margin-bottom: 1ex;
+    margin-top: -1ex;
+
+    ul {
+      padding-inline-start: 1em;
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -177,6 +211,15 @@ table#artisans {
         object-fit: cover;
       }
 
+      img[src$="#r90"] {
+        transform: rotate(90deg);
+      }
+
+      img[src$="#0050r90"] {
+        transform: rotate(90deg);
+        object-position: 0 50%;
+      }
+
       img[src$="#4550"] {
         object-position: 45% 50%;
       }
@@ -185,12 +228,24 @@ table#artisans {
         object-position: 50% 40%;
       }
 
+      img[src$="#5020"] {
+        object-position: 50% 20%;
+      }
+
+      img[src$="#7050"] {
+        object-position: 70% 50%;
+      }
+
       img[src$="#5040"] {
         object-position: 50% 40%;
       }
 
       img[src$="#4050"] {
         object-position: 40% 50%;
+      }
+
+      img[src$="#0050"] {
+        object-position: 0 50%;
       }
     }
   }

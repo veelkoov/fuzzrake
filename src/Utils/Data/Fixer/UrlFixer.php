@@ -5,75 +5,54 @@ declare(strict_types=1);
 namespace App\Utils\Data\Fixer;
 
 use App\Utils\Artisan\Fields;
-use App\Utils\Regexp\Regexp;
 
 class UrlFixer extends StringFixer
 {
+    private $replacements;
+    private $commonRegexPrefix;
+    private $commonRegexSuffix;
+
+    public function __construct(array $urls, array $strings)
+    {
+        parent::__construct($strings);
+
+        $this->replacements = $urls['replacements'];
+        $this->commonRegexPrefix = $urls['commonRegexPrefix'];
+        $this->commonRegexSuffix = $urls['commonRegexSuffix'];
+    }
+
     public function fix(string $fieldName, string $subject): string
     {
         $subject = parent::fix($fieldName, $subject);
+        $subject = $this->fixUrlWith($subject, $this->replacements['generic']);
 
         switch ($fieldName) {
             case Fields::URL_FUR_AFFINITY:
-                return $this->fixFurAffinityUrl($subject);
+                return $this->fixUrlWith($subject, $this->replacements['fur_affinity']);
 
             case Fields::URL_TWITTER:
-                return $this->fixTwitterUrl($subject);
+                return $this->fixUrlWith($subject, $this->replacements['twitter']);
 
             case Fields::URL_INSTAGRAM:
-                return $this->fixInstagramUrl($subject);
+                return $this->fixUrlWith($subject, $this->replacements['instagram']);
 
             case Fields::URL_FACEBOOK:
-                return $this->fixFacebookUrl($subject);
+                return $this->fixUrlWith($subject, $this->replacements['facebook']);
 
             case Fields::URL_YOUTUBE:
-                return $this->fixYoutubeUrl($subject);
+                return $this->fixUrlWith($subject, $this->replacements['youtube']);
 
             case Fields::URL_DEVIANTART:
-                return $this->fixDeviantArtUrl($subject);
+                return $this->fixUrlWith($subject, $this->replacements['deviantart']);
 
             default:
                 return $subject;
         }
     }
 
-    private function fixFurAffinityUrl(string $subject): string
+    private function fixUrlWith(string $subject, array $replacements)
     {
-        return Regexp::replace('#^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$#i',
-            'http://www.furaffinity.net/user/$1', $subject);
-    }
-
-    private function fixTwitterUrl(string $subject): string
-    {
-        return Regexp::replace('#^(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?$#i',
-            'https://twitter.com/$1', $subject);
-    }
-
-    private function fixInstagramUrl(string $subject): string
-    {
-        return Regexp::replace('#^(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?$#i',
-            'https://www.instagram.com/$1/', $subject);
-    }
-
-    private function fixFacebookUrl(string $subject): string
-    {
-        return Regexp::replace('#^(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(?:pg/)?([^/?]+)(?:/posts|/about)?/?(\?(?!id=)[a-z_]+=[a-z_0-9]+)?$#i',
-            'https://www.facebook.com/$1/', $subject);
-    }
-
-    private function fixYoutubeUrl(string $subject): string
-    {
-        return Regexp::replace('#^(?:https?://)?(?:www|m)\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured)?(/|\?view_as=subscriber)?$#',
-            'https://www.youtube.com/$1', $subject);
-    }
-
-    private function fixDeviantArtUrl(string $subject): string
-    {
-        $subject = Regexp::replace('#^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?$#i',
-            'https://www.deviantart.com/$1', $subject);
-        $subject = Regexp::replace('#^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$#i',
-            'https://$1.deviantart.com/', $subject);
-
-        return $subject;
+        return $this->fixWith($replacements, $subject, $this->commonRegexPrefix,
+            $this->commonRegexSuffix);
     }
 }

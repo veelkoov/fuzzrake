@@ -1,7 +1,7 @@
 import {makerIdRegexp} from "../consts";
 import DataBridge from "../class/DataBridge";
 import Artisan from "../class/Artisan";
-import {initFilters, applyFilters, restoreFilters, setRefreshCallback} from "./filters";
+import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
 const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`;
@@ -30,6 +30,8 @@ const dataTableOptions = {
     infoCallback: dataTableInfoCallback,
 };
 
+const columnsSetVersion: string = '1';
+
 /* $jqDataTable and $dtDataTable is the same object; i just don't know how to type hint it properly */
 let $jqDataTable: JQuery<HTMLElement>;
 let $dtDataTable: Api;
@@ -46,6 +48,29 @@ function highlightByMakerIdCallback(): void {
 
     if (makerId.match(makerIdRegexp)) {
         jQuery('#' + makerId.toUpperCase()).addClass('matched-maker-id');
+    }
+}
+
+function recordColumnsVisibilityCallback(event: object, settings: object, column: object, state: boolean, _: boolean): void {
+    try {
+        localStorage['columns/version'] = columnsSetVersion
+        // @ts-ignore ¯\_(ツ)_/¯
+        let colVis: Array<boolean> = $dtDataTable.columns().visible();
+        localStorage['columns/state'] = colVis.join(',');
+    } catch (e) {
+        // Not allowed? - I don't care then
+    }
+}
+
+function restoreColumns(): void {
+    let states: string = localStorage['columns/state'];
+
+    if (localStorage['columns/version'] === columnsSetVersion && states) {
+        let idx: number = 0;
+
+        for (let state of states.split(',')) {
+            $dtDataTable.columns(idx++).visible(state === 'true');
+        }
     }
 }
 
@@ -72,8 +97,12 @@ export function init(): (() => void)[] {
         () => {
             $dtDataTable = $jqDataTable.DataTable(dataTableOptions);
             $jqDataTable.on('search.dt', highlightByMakerIdCallback);
+            $jqDataTable.on('column-visibility.dt', recordColumnsVisibilityCallback);
             $jqDataTable.parents('.dataTables_wrapper').find('.dt-buttons').append(filtersButtonHtml);
             setRefreshCallback($dtDataTable.draw);
+        },
+        () => {
+            restoreColumns();
         },
         () => {
             initFilters();

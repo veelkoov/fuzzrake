@@ -21,15 +21,16 @@
 <div class="container p-5">
     <div class="jumbotron bg-light border-warning border">
         <div class="container-fluid">
-            <h1 class="display-4">Error 482{% if status_code != 404 %}<sup>*</sup>{% endif %} 🙀</h1>
+            <h1 class="display-4">Error 482{% if status_code >= 500 %}<sup>*</sup>{% endif %} 🙀</h1>
             <p class="lead">Somebody shot the server with a 12-gauge. Please contact your administrator.</p>
             <hr class="my-4">
-            <p>
+            <p class="text-danger">
                 {% if status_code == 404 %}
-                    No, but seriously, the page/resource you requested does not exist. Broken or outdated link? Typo in the address?
+                    No, but seriously, the page/resource you requested does not exist (404). Broken or outdated link? Typo in the address?
+                {% elseif status_code == 410 %}
+                    No, but seriously, the page/resource you requested is no longer served (410). Broken or outdated link? Typo in the address?
                 {% else %}
-                    No, but seriously, something went wrong. I probably already know about it.
-                    My apologies for the inconvenience!
+                    No, but seriously, something went wrong. My apologies for the inconvenience!
                 {% endif %}
             </p>
             <p class="mt-5 overflow-x-auto">

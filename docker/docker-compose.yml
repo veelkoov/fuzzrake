@@ -2,19 +2,26 @@
 #                          Generated on phpdocker.io                          #
 ###############################################################################
 
+# This docker-compose is for dev machines only!
+
 version: "3.1"
 services:
   webserver:
+    container_name: fuzzrake-nginx
     image: nginx:alpine
     restart: unless-stopped
     volumes:
       - ..:/var/www/html
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./dev-nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8080:80"
 
   php-fpm:
-    build: php-fpm
+    container_name: fuzzrake
+    build:
+      context: php-fpm
+      args:
+        DEV_MACHINE: "yes"
     restart: unless-stopped
     volumes:
       - ..:/var/www/html

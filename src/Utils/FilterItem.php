@@ -46,4 +46,9 @@ class FilterItem
     {
         $this->count += $number;
     }
+
+    public function isComplex(): bool
+    {
+        return $this->value instanceof FilterItems;
+    }
 }

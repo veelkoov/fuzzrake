@@ -20,9 +20,9 @@ abstract class StrContextUtils
             mb_substr($input, $index + mb_strlen($match), $contextLength));
     }
 
-    public static function toStr(StrContextInterface $strContext): string
+    public static function toStr(?StrContextInterface $strContext): string
     {
-        if ($strContext->empty()) {
+        if (null === $strContext || $strContext->empty()) {
             return '';
         }
 

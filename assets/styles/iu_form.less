@@ -1,0 +1,46 @@
+.form-group {
+  label {
+    font-weight: bold;
+  }
+
+  label.form-check-label {
+    font-weight: normal;
+  }
+}
+
+legend {
+  font-weight: bold;
+}
+
+.hint {
+  font-size: 80%;
+  font-weight: 400;
+
+  em {
+    margin: 0 0.3ex;
+    background-color: #efefef;
+    color: teal;
+  }
+}
+
+label.required:before, legend.required:before, .mandatory:before {
+  content: '(mandatory)';
+  color: #212529;
+  background-color: #ffc107;
+  border-radius: .25rem;
+  display: inline-block;
+  padding: 0.05ex 0.2ex;
+  font-weight: bold;
+  margin-right: 0.75ex;
+  font-size: 80%;
+}
+
+label.required.form-check-label:before {
+  display: none;
+}
+
+.passcode-confidentiality-warning {
+  color: #f00;
+  text-transform: uppercase;
+  font-weight: bold;
+}

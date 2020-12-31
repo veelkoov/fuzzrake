@@ -75,6 +75,12 @@ class Printer
         $this->io->warning($message);
     }
 
+    public function success(string $message): void
+    {
+        $this->showArtisanNameIfContextChanged();
+        $this->io->success($message);
+    }
+
     private function showArtisanNameIfContextChanged(): void
     {
         if ($this->lastContext !== $this->currentContext) {
