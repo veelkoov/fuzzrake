@@ -12,13 +12,13 @@ grecaptcha.ready((): void => {
                 jQuery('#iu_form_container').show().removeClass('d-none');
             },
             error: (jqXHR1: jqXHR, textStatus: ErrorTextStatus, errorThrown: string): void => {
-                alert(textStatus + ': ' + errorThrown);
+                alert('ERROR! Automatic captcha failed: ' + errorThrown);
             }
         });
     });
 });
 
-jQuery(($: JQueryStatic) => {
+jQuery((_$: JQueryStatic) => {
     // @ts-ignore
     window.iuFormRecaptchaValidationCallback = function(token: string): void {
         try {
