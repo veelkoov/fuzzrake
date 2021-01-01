@@ -3,20 +3,77 @@
 {% block title %}rules{% endblock %}
 
 {% block body %}
-    No "open" contact info is allowed (e.g. e-mail address, IM login, etc.). Such info belongs to your website.
+    <h1>Rules for makers/studios</h1>
 
-    At least one website/social media account is required. IM (Messenger, Telegram, etc.) and e-mail
-    are not substitutes and won't be accepted. Also, if a website requires logging in to be viewed,
-    it will not be included. {# are you sure? #}
+    <ul>
+        <li>
+            Makers without any fursuit-related portfolio won't be added. At least few completed creations
+            must be visible on the maker's website/social media.
+            <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-pf">More info</button>
 
-    "Work in progress" websites are not accepted. Some clients treat website-having makers as preferable, however if
-    you do not have a website yet, you'd better make sure you have any portfolio on DA/FA/social first. You can fit any
-    information, FAQ, TOS and other stuff there as well. Creating a website is time-consuming and/or expensive.
-    It's better to not have one than having one raising doubts/eyebrows.
+            <div class="alert alert-info mt-1 collapse" role="alert" id="rule-pf">
+                Consider your own fursuit or starting up with some pre-mades.
+                Unfortunately, yet obviously, art portfolio (pictures, badges, etc.) is not fursuit-related.
+            </div>
+        </li>
 
-    Any minor maker must clearly state on their website/account that they are minors. This information should be
-    clearly visible on the front page or equivalent.
+        <li>
+            At least one rules-compliant website or social media account is required for your studio to be listed.
+        </li>
 
-    Makers without any portfolio (meaning: they haven't posted any photos of their past works) won't be added.
-    At least few past creations must be presented. Consider ready-made offers or your own fursuit.
+        <li>
+            No "open"/instant messaging contact info is allowed (e.g. e-mail address, Telegram, Messenger, Discord,
+            Skype, etc.).
+            <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-im">More info</button>
+
+            <div class="alert alert-info mt-1 collapse" role="alert" id="rule-im">
+                Such info belongs to your website, and may (probably will) be removed from your submission.
+            </div>
+        </li>
+
+        <li>
+            Websites, which require logging in to view, may be not accepted (this <strong>includes</strong>
+            FurAffinity, assuming you configured your user page that way).
+        </li>
+
+        <li>
+            "Work in progress" websites (e.g websites missing most content, showing example pages, sample texts)
+            are not accepted.
+            <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-wip">More info</button>
+
+            <div class="alert alert-info mt-1 collapse" role="alert" id="rule-wip">
+                Some clients treat website-having makers as preferable and/or trustworthy, however if you do not have
+                a website yet, you'd better make sure you have some nice portfolio on DA/FA/social first. You can fit
+                any information, FAQ, TOS and other stuff there as well. Creating a website is time-consuming
+                and/or expensive. It's better to not have a website, than having one raising doubts/eyebrows.
+            </div>
+        </li>
+        <li>
+            Makers who are <strong>minors must clearly state that fact</strong> on their website/account.
+            This information must be <strong>clearly visible</strong> on the <strong>front page</strong> or equivalent.
+            {# See https://github.com/veelkoov/fuzzrake/issues/37 #}
+        </li>
+        <li>
+            All information submitted to getfursu.it must be in (simple) English only (bilingual is not allowed as well).
+            <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-en">More info</button>
+
+            <div class="alert alert-info mt-1 collapse" role="alert" id="rule-en">
+                Your website/social media doesn't have to be in English, however information here must be. If you don't
+                speak english, please ask someone for help with translation and make sure to clearly state that you
+                don't speak English in the dedicated section of the inclusion/update form.
+            </div>
+        </li>
+        <li>
+            This list of rules deliberately skips stuff covered by the common sense.
+            <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-cs">More info</button>
+
+            <div class="alert alert-info mt-1 collapse" role="alert" id="rule-cs">
+                For example, it should be obvious that you must not provide any false or misleading information or
+                claim somebody else's work.
+            </div>
+        </li>
+        <li>
+            This ruleset is not final. History of changes can be tracked using git.
+        </li>
+    </ul>
 {% endblock %}
