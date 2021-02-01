@@ -15,7 +15,6 @@ use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\IuSubmissions\IuSubmission;
 use App\Utils\IuSubmissions\Manager;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -425,22 +424,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getManagerCorrectionsFileContents(): string
     {
-        $newMakerId = $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
-        $result = "ack new:$newMakerId:\n";
+        $result = '';
 
-        foreach ($this->getIuSubmissionsIds() as $hash) {
-            $result .= "set pin::$hash:\n";
+        foreach (Finder::getFrom(self::IMPORT_DATA_DIR) as $submission) {
+            $result .= "with {$submission->getId()}: accept\n";
         }
 
         return $result;
-    }
-
-    /**
-     * @throws JsonException|DataInputException
-     */
-    private function getIuSubmissionsIds(): array
-    {
-        return array_map(fn (IuSubmission $submission): string => $submission->getId(), Finder::getFrom(self::IMPORT_DATA_DIR));
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void
@@ -459,7 +449,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function validateConsoleOutput(string $output): void
     {
         $output = str_replace("\r", "\n", $output);
-        $output = pattern('^(OLD |NEW |IMP |replace:)[^\n]+\n+', 'm')->remove($output)->all();
+        $output = pattern('^(OLD |NEW |IMP |set:)[^\n]+\n+', 'm')->remove($output)->all();
         $output = pattern('^-+\n+', 'm')->remove($output)->all();
 
         $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')

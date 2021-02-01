@@ -79,7 +79,7 @@ class FixerDifferValidator
 
             $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
 
-            $this->printer->writeln(Printer::formatFix(Manager::CMD_REPLACE.":$makerId:$fieldName:|:$originalVal|$proposedVal|"));
+            $this->printer->writeln(Printer::formatFix(Manager::CMD_SET.":$makerId:$fieldName:|:$originalVal|$proposedVal|")); // FIXME
         }
     }
 

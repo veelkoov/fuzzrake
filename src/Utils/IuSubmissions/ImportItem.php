@@ -84,6 +84,11 @@ class ImportItem
         return $this->input->getFixed()->getPasscode();
     }
 
+    public function getExpectedPasscode(): string
+    {
+        return $this->entity->getOriginal()->getPasscode();
+    }
+
     public function getDiff(): ?Diff
     {
         return $this->diff;
