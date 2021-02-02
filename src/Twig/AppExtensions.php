@@ -87,7 +87,7 @@ class AppExtensions extends AbstractExtension
     public function getLastSystemUpdateTimeUtcStrFunction(): string
     {
         try {
-            return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
+            return DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'))->format('Y-m-d H:i');
         } catch (DateTimeException $e) {
             return 'unknown/error';
         }
