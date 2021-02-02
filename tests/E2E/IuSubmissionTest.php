@@ -261,7 +261,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $htmlBodyLc = $this->removeFalsePositivesFromLowercaseHtml(mb_strtolower($htmlBody));
         /** @noinspection HtmlUnknownAttribute */
         $checked = pattern('<input type="(checkbox|radio)" [^>]*value="(?<value>[^"]+)" checked="checked"\s?/?>')
-            ->match($htmlBodyLc)->groupBy('value')->texts();
+            ->match($htmlBodyLc)->groupBy('value')->all();
 
         foreach (Fields::getAll() as $fieldName => $field) {
             if (self::SKIP === self::FIELDS[$fieldName] || '' === ($value = $oldData->get($field))) {
