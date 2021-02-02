@@ -19,6 +19,7 @@ class FixerDifferValidator
     public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
     public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
     public const SHOW_FIX_CMD_FOR_INVALID = 16;
+    public const USE_SET_FOR_FIX_CMD = 32;
 
     private Fixer $fixer;
     private Differ $differ;
@@ -56,7 +57,7 @@ class FixerDifferValidator
             if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
                 || !$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID
                 || $resetAndShowFixCommand) {
-                $this->printFixCommandOptionally($field, $artisan, $imported);
+                $this->printFixCommandOptionally($field, $artisan, $imported, $flags & self::USE_SET_FOR_FIX_CMD);
             }
 
             if ($resetAndShowFixCommand) {
@@ -65,12 +66,9 @@ class FixerDifferValidator
         }
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, ?Artisan $imported): void
+    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, ?Artisan $imported, $useSetForFixCmd): void
     {
         if (!$this->hideFixCommandFor($field)) {
-            $makerId = $artisan->getFixed()->getMakerId();
-            $fieldName = $field->name();
-
             $original = $imported ?? $artisan->getOriginal();
             $originalVal = StrUtils::strSafeForCli($original->get($field));
             if (!$this->validator->isValid($artisan, $field)) {
@@ -79,7 +77,13 @@ class FixerDifferValidator
 
             $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
 
-            $this->printer->writeln(Printer::formatFix(Manager::CMD_SET.":$makerId:$fieldName:|:$originalVal|$proposedVal|")); // FIXME
+            if ($useSetForFixCmd) {
+                $fixCmd = Manager::CMD_SET." {$field->name()} |{$proposedVal}|";
+            } else {
+                $fixCmd = Manager::CMD_REPLACE." {$field->name()} |{$originalVal}| |{$proposedVal}|";
+            }
+
+            $this->printer->writeln(Printer::formatFix("    $fixCmd"));
         }
     }
 

@@ -449,7 +449,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function validateConsoleOutput(string $output): void
     {
         $output = str_replace("\r", "\n", $output);
-        $output = pattern('^(OLD |NEW |IMP |set:)[^\n]+\n+', 'm')->remove($output)->all();
+        $output = pattern('^(OLD |NEW |IMP | *set )[^\n]+\n+', 'm')->remove($output)->all();
         $output = pattern('^-+\n+', 'm')->remove($output)->all();
 
         $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')
