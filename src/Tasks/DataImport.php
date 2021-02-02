@@ -60,14 +60,11 @@ class DataImport
      */
     public function import(array $artisansData): void
     {
-        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | FDV::USE_SET_FOR_FIX_CMD
+                | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
 
         foreach ($this->createImportItems($artisansData) as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
-
-            if ($this->manager->isNewPasscode($item)) {
-                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
-            }
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), $this->manager->isPasscodeIgnored($item));
 
             $item->calculateDiff();
             if ($item->getDiff()->hasAnythingChanged()) {
@@ -121,13 +118,14 @@ class DataImport
 
     /**
      * @throws DataInputException
+     * @noinspection PhpDocRedundantThrowsInspection FIXME: throws declaration on implementation instead of interface
      */
     private function createImportItem(IuSubmission $submission): ImportItem
     {
         $originalInput = $this->updateArtisanWithData(new Artisan(), $submission, false);
 
         $input = new ArtisanFixWip($originalInput);
-        $this->manager->correctArtisan($input->getFixed());
+        $this->manager->correctArtisan($input->getFixed(), $submission->getId());
         $this->fdv->perform($input, FDV::FIX);
 
         $originalEntity = $this->findBestMatchArtisan($input->getFixed()) ?: new Artisan();
@@ -211,8 +209,9 @@ class DataImport
     {
         $new = $item->getFixedEntity();
         $old = $item->getOriginalEntity();
+        $passcodeChanged = $item->getProvidedPasscode() !== $item->getExpectedPasscode();
 
-        if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
+        if (null === $old->getId() && !$this->manager->isAccepted($item)) {
             $this->messaging->reportNewMaker($item);
 
             return false;
@@ -222,14 +221,8 @@ class DataImport
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ('' === ($expectedPasscode = $new->getPrivateData()->getPasscode())) {
-            $this->messaging->reportNewPasscode($item);
-
-            return false;
-        }
-
-        if ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
-            $this->messaging->reportInvalidPasscode($item, $expectedPasscode);
+        if ($passcodeChanged && !$this->manager->isPasscodeIgnored($item) && !$this->manager->isAccepted($item)) {
+            $this->messaging->reportInvalidPasscode($item);
 
             return false;
         }
