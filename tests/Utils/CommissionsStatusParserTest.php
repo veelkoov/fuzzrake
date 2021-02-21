@@ -52,16 +52,11 @@ class CommissionsStatusParserTest extends TestCase
                 return false;
             }
 
-            switch ($matches['status']) {
-                case 'open':
-                    $expectedResult = true;
-                    break;
-                case 'closed':
-                    $expectedResult = false;
-                    break;
-                default:
-                    $expectedResult = null;
-            }
+            $expectedResult = match ($matches['status']) {
+                'open'   => true,
+                'closed' => false,
+                default  => null,
+            };
 
             $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
