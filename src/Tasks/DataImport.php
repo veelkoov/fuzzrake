@@ -23,34 +23,19 @@ use Doctrine\Persistence\ObjectRepository;
 
 class DataImport
 {
-    /**
-     * @var ObjectRepository|ArtisanRepository
-     */
-    private ObjectRepository $artisanRepository;
-
-    private EntityManagerInterface $objectManager;
-    private Manager $manager;
-    private Printer $printer;
+    private ObjectRepository | ArtisanRepository $artisanRepository;
     private Messaging $messaging;
-    private FDV $fdv;
-    private bool $showAllFixCmds;
 
     public function __construct(
-        EntityManagerInterface $objectManager,
-        Manager $importManager,
-        Printer $printer,
-        FDV $fdv,
-        bool $showAllFixCmds
+        private EntityManagerInterface $objectManager,
+        private Manager $manager,
+        private Printer $printer,
+        private FDV $fdv,
+        private bool $showAllFixCmds,
     ) {
-        $this->objectManager = $objectManager;
-        $this->manager = $importManager;
-        $this->printer = $printer;
-        $this->messaging = new Messaging($printer, $importManager);
+        $this->messaging = new Messaging($printer, $manager);
 
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
-
-        $this->fdv = $fdv;
-        $this->showAllFixCmds = $showAllFixCmds;
     }
 
     /**

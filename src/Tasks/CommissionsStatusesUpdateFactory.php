@@ -12,19 +12,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class CommissionsStatusesUpdateFactory
 {
-    private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
-    private WebpageSnapshotManager $webpageSnapshotManager;
     private CommissionsStatusParser $parser;
 
     public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $webpageSnapshotManager
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $webpageSnapshotManager,
     ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->webpageSnapshotManager = $webpageSnapshotManager;
         $this->parser = new CommissionsStatusParser();
     }
 

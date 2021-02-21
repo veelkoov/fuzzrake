@@ -10,15 +10,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ArtisanUrlInspectionFactory
 {
-    private WebpageSnapshotManager $webpageSnapshotManager;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $webpageSnapshotManager
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $webpageSnapshotManager,
     ) {
-        $this->entityManager = $entityManager;
-        $this->webpageSnapshotManager = $webpageSnapshotManager;
     }
 
     public function get(SymfonyStyle $io): ArtisanUrlInspection

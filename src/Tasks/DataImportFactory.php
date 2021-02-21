@@ -12,13 +12,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImportFactory
 {
-    private EntityManagerInterface $objectManager;
-    private FdvFactory $fdvFactory;
-
-    public function __construct(EntityManagerInterface $objectManager, FdvFactory $fdvFactory)
-    {
-        $this->objectManager = $objectManager;
-        $this->fdvFactory = $fdvFactory;
+    public function __construct(
+        private EntityManagerInterface $objectManager,
+        private FdvFactory $fdvFactory,
+    ) {
     }
 
     public function get(Manager $importManager, SymfonyStyle $io, $showAllFixCmds): DataImport
