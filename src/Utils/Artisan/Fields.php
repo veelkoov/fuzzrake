@@ -94,7 +94,8 @@ final class Fields
         self::$fieldsByModelName = [];
 
         foreach (FieldsDefinitions::FIELDS_ARRAY_DATA as $name => $fieldData) {
-            $field = new Field($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4], $fieldData[5]);
+            $field = new Field($name, $fieldData[0], $fieldData[1], (bool) $fieldData[2], (bool) $fieldData[3],
+                (bool) $fieldData[4], (bool) $fieldData[5]);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
