@@ -1,17 +1,22 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.30.2",
+        "@symfony/stimulus-bridge": "^2.0.0",
+        "@symfony/webpack-encore": "^1.0.0",
         "@types/bootstrap": "^4.5.0",
         "@types/datatables.net": "^1.10.19",
         "@types/datatables.net-buttons": "^1.4.3",
         "@types/grecaptcha": "^3.0.1",
         "@types/jquery": "^3.3.22",
+        "core-js": "^3.0.0",
+        "handlebars": "^4.7.7",
+        "handlebars-loader": "^1.7.0",
         "less": "^3.12.2",
-        "less-loader": "^4.1.0",
-        "regenerator-runtime": "^0.13.5",
-        "ts-loader": "^5.3.0",
+        "less-loader": "^7.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "stimulus": "^2.0.0",
+        "ts-loader": "^8.0.0",
         "typescript": "^3.9.7",
-        "webpack-notifier": "^1.8.0"
+        "webpack-notifier": "^1.6.0"
     },
     "license": "AGPL-3.0-only",
     "private": true,
@@ -20,10 +25,5 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
-    },
-    "dependencies": {
-        "core-js": "^3.6.5",
-        "handlebars": "^4.7.6",
-        "jquery": "^3.3.1"
     }
 }

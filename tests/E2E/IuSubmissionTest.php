@@ -271,16 +271,18 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             if (in_array($fieldName, self::VALUE_NOT_SHOWN_IN_FORM) || in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
                 self::assertEquals(0, substr_count($htmlBodyLc, mb_strtolower($value)),
                     "Field {$field->name()} value '$value' FOUND in the I/U form HTML code");
-            } else {
-                if (in_array($fieldName, self::EXPANDED)) {
-                    $this->validateListFieldInGeneratedIuForm($field, $checked, $value);
-                } else {
-                    if (Fields::SINCE == $fieldName) {
-                        $this->validateSinceFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
-                    } else {
-                        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
-                    }
+            } elseif (in_array($fieldName, self::EXPANDED)) {
+                foreach (StringList::unpack(mb_strtolower($value)) as $valueLc) {
+                    self::assertCount(1, $checked[$valueLc] ?? [],
+                        "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
                 }
+            } elseif (Fields::SINCE == $fieldName) {
+                [$year, $month] = explode('-', $value);
+
+                self::assertFormValue('#iu_form_container form', 'iu_form[since][year]', $year);
+                self::assertFormValue('#iu_form_container form', 'iu_form[since][month]', $month);
+            } else {
+                self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value);
             }
         }
     }
@@ -293,41 +295,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             ->remove($result)->first();
 
         return $result;
-    }
-
-    private function validateNonListFieldInGeneratedIuForm(Field $field, string $htmlBodyLowercase, string $value): void
-    {
-        // TODO: Try updating T-Regx and doing the Pattern::inject parameters according to the docs once again
-        $count = Pattern::inject('(<textarea[^>]*>\s*@\s*</textarea>)|("\s*@\s*")', [
-            mb_strtolower($value),
-            mb_strtolower($value),
-        ])->count($htmlBodyLowercase);
-
-        self::assertEquals(1, $count,
-            "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
-    }
-
-    /**
-     * @param array[] $checked
-     */
-    private function validateListFieldInGeneratedIuForm(Field $field, array $checked, string $value): void
-    {
-        $valuesLc = StringList::unpack(mb_strtolower($value));
-
-        foreach ($valuesLc as $valueLc) {
-            self::assertArrayHasKey($valueLc, $checked,
-                "Field {$field->name()} value '$value' NOT present in the I/U form HTML code");
-            self::assertCount(1, $checked[$valueLc],
-                "Field {$field->name()} value '$value' present more than once in the I/U form HTML code");
-        }
-    }
-
-    private function validateSinceFieldInGeneratedIuForm(Field $field, string $htmlBodyLc, $value)
-    {
-        [$year, $month] = explode('-', $value);
-
-        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $year);
-        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $month);
     }
 
     private function setValuesInForm(Form $form, Artisan $data): void
