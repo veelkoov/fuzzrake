@@ -13,7 +13,27 @@ use RuntimeException;
 
 trait DbEnabledTestCaseTrait
 {
-    protected static EntityManager $entityManager;
+    private static ?EntityManager $entityManager = null;
+
+    protected static function bootKernel(array $options = [])
+    {
+        $result = parent::bootKernel($options);
+
+        self::$entityManager = null;
+        self::resetDB();
+
+        return $result;
+    }
+
+    protected static function getEM(): EntityManager
+    {
+        return self::$entityManager ??= self::$container->get('doctrine.orm.default_entity_manager');
+    }
+
+    protected static function resetDB(): void
+    {
+        SchemaTool::resetOn(self::getEM());
+    }
 
     protected static function addSimpleArtisan(): Artisan
     {
@@ -50,10 +70,10 @@ trait DbEnabledTestCaseTrait
     {
         try {
             foreach ($entities as $entity) {
-                self::$entityManager->persist($entity);
+                self::getEM()->persist($entity);
             }
 
-            self::$entityManager->flush();
+            self::getEM()->flush();
         } catch (ORMException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }

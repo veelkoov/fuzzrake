@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
+use App\Repository\MakerIdRepository;
 use App\Service\FilterService;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -25,7 +26,7 @@ class MainController extends AbstractController
      *
      * @throws UnexpectedResultException|DateTimeException
      */
-    public function main(Request $request, ArtisanRepository $artisanRepository, FilterService $filterService, Species $species): Response
+    public function main(Request $request, ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species): Response
     {
         if ('hexometer' === $request->get('ref')) {
             return new Response('*Notices your scan* OwO what\'s this?', Response::HTTP_MISDIRECTED_REQUEST,
@@ -36,7 +37,7 @@ class MainController extends AbstractController
         $response = $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
             'activeArtisansCount' => $artisanRepository->countActive(),
-            'makerIdsMap'         => $artisanRepository->getOldToNewMakerIdsMap(),
+            'makerIdsMap'         => $makerIdRepository->getOldToNewMakerIdsMap(),
             'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
             'filters'             => $filterService->getFiltersTplData(),
             'species'             => $species->getSpeciesTree(),

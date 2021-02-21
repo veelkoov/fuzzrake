@@ -5,27 +5,25 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Utils\Artisan\Field;
-use App\Utils\Regexp\Regexp;
-use InvalidArgumentException;
 
 class ValueCorrection
 {
-    private string $makerId;
+    private string $subject;
     private Field $field;
-    private string $wrongValue;
+    private ?string $wrongValue;
     private string $correctedValue;
 
-    public function __construct(string $makerId, Field $field, string $wrongValue, string $correctedValue)
+    public function __construct(string $subject, Field $field, ?string $wrongValue, string $correctedValue)
     {
-        $this->validateAndSetMakerId($makerId);
+        $this->subject = $subject;
         $this->field = $field;
         $this->wrongValue = $wrongValue;
         $this->correctedValue = $correctedValue;
     }
 
-    public function getMakerId(): string
+    public function getSubject(): string
     {
-        return $this->makerId;
+        return $this->subject;
     }
 
     public function getField(): Field
@@ -43,22 +41,17 @@ class ValueCorrection
         return $this->correctedValue;
     }
 
-    public function apply($value)
+    public function apply($value): string
     {
-        return $value === $this->wrongValue ? $this->correctedValue : $value;
+        if (null === $this->wrongValue) {
+            return $this->correctedValue;
+        } else {
+            return $value === $this->wrongValue ? $this->correctedValue : $value;
+        }
     }
 
     public function __toString(): string
     {
-        return "{$this->makerId} {$this->field} {$this->wrongValue} {$this->correctedValue}";
-    }
-
-    private function validateAndSetMakerId(string $makerId): void
-    {
-        if (!Regexp::match('#^([A-Z0-9]{7}|\*)$#', $makerId)) {
-            throw new InvalidArgumentException("Invalid maker ID: '$makerId'");
-        }
-
-        $this->makerId = $makerId;
+        return "{$this->subject} {$this->field} '{$this->wrongValue}' '{$this->correctedValue}'";
     }
 }

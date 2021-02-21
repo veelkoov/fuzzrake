@@ -1,0 +1,10 @@
+[Unit]
+Description=txkillswitch
+
+[Service]
+Type=simple
+ExecStart=/opt/txkillswitch/main {{ primary_ethernet_interface }} {{ max_rate_bytes_per_second }} 5 60 12
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

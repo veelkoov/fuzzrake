@@ -1,11 +1,4 @@
 ---
-- name: remove packages
-  yum:
-    list: php72w-xml php72w-mysql php72w-fpm mod_php72w php72w-common php72w-intl php72w-gd php72w-pdo php72w-mbstring php72w-cli webtatic-release-7-3
-    state: absent
-  notify:
-    - restart apache
-
 - name: install packages
   yum:
     list: mod_http2 mod_fcgid yum-utils
@@ -24,21 +17,21 @@
     name: docker
     state: started
 
-- name: "update httpd.conf"
+- name: update httpd.conf
   template:
     src: httpd.j2.conf
     dest: /etc/httpd/conf/httpd.conf
   notify:
     - restart apache
 
-- name: "update httpd-le-ssl.conf"
+- name: update httpd-le-ssl.conf
   template:
     src: httpd-le-ssl.j2.conf
     dest: /etc/httpd/conf/httpd-le-ssl.conf
   notify:
     - restart apache
 
-- name: "update conf.d"
+- name: update conf.d
   template:
     src: "httpd_conf.d/{{ item }}"
     dest: "/etc/httpd/conf.d/{{ item|regex_replace('\\.j2\\.conf$', '.conf') }}"
@@ -49,7 +42,7 @@
     - restart apache
   tags: conf.d
 
-- name: "update conf.modules.d"
+- name: update conf.modules.d
   template:
     src: "httpd_conf.modules.d/{{ item }}"
     dest: "/etc/httpd/conf.modules.d/{{ item|regex_replace('\\.j2\\.conf$', '.conf') }}"
@@ -62,8 +55,27 @@
   notify:
     - restart apache
 
-- name: "update logrotate.d/httpd"
+- name: update logrotate.d/httpd
   template:
     src: logrotate.d/httpd.j2
     dest: /etc/logrotate.d/httpd
     backup: yes
+
+# TODO: Manage txkillswitch binary
+
+- name: create systemd unit for txkillswitch
+  template:
+    mode: 0644
+    src: txkillswitch.service.j2
+    dest: /etc/systemd/system/txkillswitch.service
+  notify:
+    - reload systemd
+    - restart txkillswitch
+  tags: txkillswitch
+
+- name: enable and start txkillswitch service
+  systemd:
+    name: txkillswitch
+    enabled: yes
+    state: started
+  tags: txkillswitch

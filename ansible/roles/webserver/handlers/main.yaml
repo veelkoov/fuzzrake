@@ -10,16 +10,22 @@
   become: yes
 
 - name: composer install
-  shell: docker exec -ti {{ php_fpm_container_name }} composer install
+  command: docker exec -ti {{ php_fpm_container_name|quote }} composer install
   args:
     chdir: "{{ deployment_path }}"
 
 - name: yarn install
-  shell: yarn install
+  command: yarn install
   args:
     chdir: "{{ deployment_path }}"
 
 - name: yarn encore production
-  shell: yarn encore production
+  command: yarn encore production
   args:
     chdir: "{{ deployment_path }}"
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart txkillswitch
+  command: systemctl restart txkillswitch

@@ -79,8 +79,7 @@ class DataImportTest extends TestCase
     private function getImportManagerMock(): Manager
     {
         $result = $this->createMock(Manager::class);
-        $result->expects(static::once())->method('isAcknowledged')->willReturn(true);
-        $result->expects(static::any())->method('isNewPasscode')->willReturn(true);
+        $result->expects(static::once())->method('isAccepted')->willReturn(true);
 
         return $result;
     }

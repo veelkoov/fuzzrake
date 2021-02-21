@@ -15,10 +15,7 @@ abstract class DbEnabledPantherTestCase extends PantherTestCase
     {
         $result = parent::createPantherClient($options, $kernelOptions, $managerOptions);
 
-        /* @noinspection PhpFieldAssignmentTypeMismatchInspection */
-        self::$entityManager = self::$container->get('doctrine.orm.default_entity_manager');
-
-        SchemaTool::resetOn(self::$entityManager);
+        self::resetDB();
 
         return $result;
     }

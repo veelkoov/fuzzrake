@@ -15,7 +15,6 @@ use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\IuSubmissions\IuSubmission;
 use App\Utils\IuSubmissions\Manager;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -169,10 +168,10 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::SET);
         Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
 
-        self::$entityManager->persist($oldArtisan1);
-        self::$entityManager->flush();
+        self::getEM()->persist($oldArtisan1);
+        self::getEM()->flush();
 
-        $repo = self::$entityManager->getRepository(Artisan::class);
+        $repo = self::getEM()->getRepository(Artisan::class);
         self::assertCount(1, $repo->findAll(), 'Single artisan in the DB before import');
 
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::CHECK);
@@ -180,7 +179,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $this->processIuForm($client, '', new Artisan(), $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET));
 
         $this->performImport();
-        self::$entityManager->flush();
+        self::getEM()->flush();
         self::assertCount(2, $repo->findAll(), 'Expected two artisans in the DB after import');
 
         $this->validateArtisanAfterImport($this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::CHECK));
@@ -260,8 +259,9 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function verifyGeneratedIuForm(Artisan $oldData, string $htmlBody): void
     {
         $htmlBodyLc = $this->removeFalsePositivesFromLowercaseHtml(mb_strtolower($htmlBody));
+        /** @noinspection HtmlUnknownAttribute */
         $checked = pattern('<input type="(checkbox|radio)" [^>]*value="(?<value>[^"]+)" checked="checked"\s?/?>')
-            ->match($htmlBodyLc)->groupBy('value')->texts();
+            ->match($htmlBodyLc)->groupBy('value')->all();
 
         foreach (Fields::getAll() as $fieldName => $field) {
             if (self::SKIP === self::FIELDS[$fieldName] || '' === ($value = $oldData->get($field))) {
@@ -271,16 +271,18 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             if (in_array($fieldName, self::VALUE_NOT_SHOWN_IN_FORM) || in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
                 self::assertEquals(0, substr_count($htmlBodyLc, mb_strtolower($value)),
                     "Field {$field->name()} value '$value' FOUND in the I/U form HTML code");
-            } else {
-                if (in_array($fieldName, self::EXPANDED)) {
-                    $this->validateListFieldInGeneratedIuForm($field, $checked, $value);
-                } else {
-                    if (Fields::SINCE == $fieldName) {
-                        $this->validateSinceFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
-                    } else {
-                        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
-                    }
+            } elseif (in_array($fieldName, self::EXPANDED)) {
+                foreach (StringList::unpack(mb_strtolower($value)) as $valueLc) {
+                    self::assertCount(1, $checked[$valueLc] ?? [],
+                        "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
                 }
+            } elseif (Fields::SINCE == $fieldName) {
+                [$year, $month] = explode('-', $value);
+
+                self::assertFormValue('#iu_form_container form', 'iu_form[since][year]', $year);
+                self::assertFormValue('#iu_form_container form', 'iu_form[since][month]', $month);
+            } else {
+                self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value);
             }
         }
     }
@@ -288,45 +290,11 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function removeFalsePositivesFromLowercaseHtml(string $inputLowercaseHtml): string
     {
         $result = pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
+        /** @noinspection HtmlUnknownAttribute */
         $result = pattern('<select id="iu_form_since_day"[^>]*><option value="">day</option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>')
             ->remove($result)->first();
 
         return $result;
-    }
-
-    private function validateNonListFieldInGeneratedIuForm(Field $field, string $htmlBodyLowercase, string $value): void
-    {
-        // TODO: Try updating T-Regx and doing the Pattern::inject parameters according to the docs once again
-        $count = Pattern::inject('(<textarea[^>]*>\s*@\s*</textarea>)|("\s*@\s*")', [
-            mb_strtolower($value),
-            mb_strtolower($value),
-        ])->count($htmlBodyLowercase);
-
-        self::assertEquals(1, $count,
-            "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
-    }
-
-    /**
-     * @param array[] $checked
-     */
-    private function validateListFieldInGeneratedIuForm(Field $field, array $checked, string $value): void
-    {
-        $valuesLc = StringList::unpack(mb_strtolower($value));
-
-        foreach ($valuesLc as $valueLc) {
-            self::assertArrayHasKey($valueLc, $checked,
-                "Field {$field->name()} value '$value' NOT present in the I/U form HTML code");
-            self::assertCount(1, $checked[$valueLc],
-                "Field {$field->name()} value '$value' present more than once in the I/U form HTML code");
-        }
-    }
-
-    private function validateSinceFieldInGeneratedIuForm(Field $field, string $htmlBodyLc, $value)
-    {
-        [$year, $month] = explode('-', $value);
-
-        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $year);
-        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $month);
     }
 
     private function setValuesInForm(Form $form, Artisan $data): void
@@ -394,7 +362,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $output = new BufferedOutput();
 
         $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
-        $import = new DataImport(self::$entityManager, $this->getImportManager(), $printer,
+        $import = new DataImport(self::getEM(), $this->getImportManager(), $printer,
             static::$container->get(FdvFactory::class)->create($printer), false);
 
         $import->import(Finder::getFrom(self::IMPORT_DATA_DIR));
@@ -423,22 +391,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getManagerCorrectionsFileContents(): string
     {
-        $newMakerId = $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
-        $result = "ack new:$newMakerId:\n";
+        $result = '';
 
-        foreach ($this->getIuSubmissionsIds() as $hash) {
-            $result .= "set pin::$hash:\n";
+        foreach (Finder::getFrom(self::IMPORT_DATA_DIR) as $submission) {
+            $result .= "with {$submission->getId()}: accept\n";
         }
 
         return $result;
-    }
-
-    /**
-     * @throws JsonException|DataInputException
-     */
-    private function getIuSubmissionsIds(): array
-    {
-        return array_map(fn (IuSubmission $submission): string => $submission->getId(), Finder::getFrom(self::IMPORT_DATA_DIR));
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void
@@ -457,7 +416,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function validateConsoleOutput(string $output): void
     {
         $output = str_replace("\r", "\n", $output);
-        $output = pattern('^(OLD |NEW |IMP |replace:)[^\n]+\n+', 'm')->remove($output)->all();
+        $output = pattern('^(OLD |NEW |IMP | *set )[^\n]+\n+', 'm')->remove($output)->all();
         $output = pattern('^-+\n+', 'm')->remove($output)->all();
 
         $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')

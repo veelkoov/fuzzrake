@@ -9,37 +9,36 @@ use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\ArtisanUrlInspection;
-use App\Tests\TestUtils\SchemaTool;
+use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\Snapshot\WebpageSnapshotCache;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class ArtisanUrlInspectionTest extends KernelTestCase
+class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
 {
+    /**
+     * @throws ORMException
+     */
     public function testInspect(): void
     {
         self::bootKernel();
-        /** @var EntityManagerInterface $em */
-        $em = self::$container->get('doctrine.orm.default_entity_manager');
-        SchemaTool::resetOn($em);
 
         $createdArtisan = $this->getTestArtisanWithArtisanUrl();
-        $em->persist($createdArtisan);
-        $em->flush();
+        self::getEM()->persist($createdArtisan);
+        self::getEM()->flush();
 
         self::assertCount(1, $createdArtisan->getUrls());
         self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastFailure());
         self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastSuccess());
 
-        $task = new ArtisanUrlInspection($em, $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
+        $task = new ArtisanUrlInspection(self::getEM(), $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
         $task->inspect(1);
-        $em->flush();
+        self::getEM()->flush();
 
-        $repo = $em->getRepository(Artisan::class);
+        $repo = self::getEM()->getRepository(Artisan::class);
         /** @var ArtisanRepository $repo */
         $retrievedArtisan = $repo->findAll()[0];
 
