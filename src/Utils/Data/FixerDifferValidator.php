@@ -7,7 +7,6 @@ namespace App\Utils\Data;
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
-use App\Utils\Data\Validator\SpeciesListValidator;
 use App\Utils\IuSubmissions\Manager;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
@@ -21,18 +20,14 @@ class FixerDifferValidator
     public const SHOW_FIX_CMD_FOR_INVALID = 16;
     public const USE_SET_FOR_FIX_CMD = 32;
 
-    private Fixer $fixer;
     private Differ $differ;
-    private Validator $validator;
-    private Printer $printer;
 
-    public function __construct(Fixer $fixer, SpeciesListValidator $speciesListValidator, Printer $printer)
-    {
-        $this->fixer = $fixer;
-        $this->printer = $printer;
-
+    public function __construct(
+        private Fixer $fixer,
+        private Validator $validator,
+        private Printer $printer,
+    ) {
         $this->differ = new Differ($this->printer);
-        $this->validator = new Validator($speciesListValidator);
     }
 
     public function perform(ArtisanFixWip $artisan, int $flags = 0, Artisan $imported = null): void
@@ -97,10 +92,7 @@ class FixerDifferValidator
         ]);
     }
 
-    /**
-     * @param Artisan|ArtisanFixWip $artisan
-     */
-    private function getArtisanFixWip($artisan): ArtisanFixWip
+    private function getArtisanFixWip(Artisan | ArtisanFixWip $artisan): ArtisanFixWip
     {
         if ($artisan instanceof Artisan) {
             $artisan = new ArtisanFixWip($artisan);

@@ -9,19 +9,19 @@ use App\Utils\StringList;
 
 class ListChange implements ChangeInterface
 {
-    private Field $field;
     private array $old;
     private array $new;
     private array $added;
     private array $removed;
-    private ?string $imported;
 
-    public function __construct(Field $field, string $old, string $new, ?string $imported)
-    {
-        $this->field = $field;
+    public function __construct(
+        private Field $field,
+        string $old,
+        string $new,
+        private ?string $imported,
+    ) {
         $this->old = StringList::unpack($old);
         $this->new = StringList::unpack($new);
-        $this->imported = $imported;
 
         $this->setCalculatedAddedRemoved();
     }

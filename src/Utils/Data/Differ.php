@@ -12,11 +12,9 @@ use App\Utils\StrUtils;
 
 class Differ
 {
-    private Printer $printer;
-
-    public function __construct(Printer $printer)
-    {
-        $this->printer = $printer;
+    public function __construct(
+        private Printer $printer,
+    ) {
     }
 
     public function showDiff(Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
@@ -56,7 +54,7 @@ class Differ
         }
 
         if ($impVal && $impVal !== $newVal) {
-            $impVal = StrUtils::strSafeForCli($impVal ?: '');
+            $impVal = StrUtils::strSafeForCli($impVal);
             $this->printer->writeln("IMP $fieldName: ".Printer::formatImported($impVal));
         }
 
@@ -70,7 +68,7 @@ class Differ
     private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
     {
         if ($impVal && $impVal !== $newVal && !$this->skipImpValue($fieldName)) {
-            $impVal = StrUtils::strSafeForCli($impVal ?: '');
+            $impVal = StrUtils::strSafeForCli($impVal);
             $this->printer->writeln("IMP $fieldName: ".Printer::formatImported($impVal));
         }
 
