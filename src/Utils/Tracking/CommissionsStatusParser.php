@@ -38,8 +38,6 @@ class CommissionsStatusParser
         // $this->debugDumpRegexps(); // DEBUG
     }
 
-    /** @noinspection PhpDocRedundantThrowsInspection */
-
     /**
      * @throws TrackerException
      */

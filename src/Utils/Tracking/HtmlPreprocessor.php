@@ -6,12 +6,15 @@ namespace App\Utils\Tracking;
 
 use App\Utils\Json;
 use App\Utils\Regexp\Regexp;
+use App\Utils\Traits\UtilityClass;
 use App\Utils\Web\WebsiteInfo;
 use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
 
-abstract class HtmlPreprocessor
+final class HtmlPreprocessor
 {
+    use UtilityClass;
+
     public static function processArtisansName(string $artisanName, string $inputText): string
     {
         $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
@@ -40,7 +43,7 @@ abstract class HtmlPreprocessor
 
         try {
             $result = Json::decode($webpage);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             return $webpage;
         }
 

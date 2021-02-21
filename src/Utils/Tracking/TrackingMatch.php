@@ -10,15 +10,11 @@ use App\Utils\StrContext\StrContextInterface;
 
 class TrackingMatch implements MatchInterface
 {
-    private TrackingRegexp $regexp;
-    private Variant $variant;
-    private StrContextInterface $strContext;
-
-    public function __construct(TrackingRegexp $regexp, Variant $variant, StrContextInterface $match)
-    {
-        $this->regexp = $regexp;
-        $this->variant = $variant;
-        $this->strContext = $match;
+    public function __construct(
+        private TrackingRegexp $regexp,
+        private Variant $variant,
+        private StrContextInterface $strContext,
+    ) {
     }
 
     public function getRegexp(): TrackingRegexp

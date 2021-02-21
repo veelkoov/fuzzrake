@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-class CommissionsStatusRegexps
+use App\Utils\Traits\UtilityClass;
+
+final class CommissionsStatusRegexps
 {
-    const HTML_CLEANER_REGEXPS = [
+    use UtilityClass;
+
+    public const HTML_CLEANER_REGEXPS = [
         '#</?(strong|b|i|span|center|a|em|font)[^>]*>#s' => '',
         '#(\s|&nbsp;|<br\s*/?>)+#s'                      => ' ',
         '#<style[^>]*>.*?</style>#s'                     => '',
@@ -16,7 +20,7 @@ class CommissionsStatusRegexps
         '# +data-[^>"]+ *= *"[^"]+" *#'                  => ' ',
     ];
 
-    const COMMON_REPLACEMENTS = [
+    public const COMMON_REPLACEMENTS = [
         'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?i?ons?((/| and | )(quotes|trades))?|comms)',
         'OPEN'              => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',
         'CLOSED'            => '(closed?|(not?|aren\'t|are not?|no longer|don\'t) (TIMESPAN )?(do commissions|open|accepting|seeking|taking( on)?|take( on)?)|can(\'| ?no)t open|on hold)',
@@ -31,7 +35,7 @@ class CommissionsStatusRegexps
         '<HTML_TAG>'        => '( ?<[^>]{1,200}> ?)',
     ];
 
-    const FALSE_POSITIVES_REGEXES = [
+    public const FALSE_POSITIVES_REGEXES = [
         'FP01' => '(once|when) ((WE_ARE|WE) STATUS( for)? COMMISSIONS|COMMISSIONS are STATUS)',
         'FP02' => 'will not be STATUS for COMMISSIONS',
         'FP03' => '(art|artwork|painted glass|illustrations?) COMMISSIONS( status:| are|:) STATUS',
@@ -41,7 +45,7 @@ class CommissionsStatusRegexps
         'FP07' => 'COMMISSIONS:? opens? (20[0-9]{2}|soon)',
     ];
 
-    const GENERIC_REGEXES = [
+    public const GENERIC_REGEXES = [
         'G01' => '((WE_ARE )?(?<!not )TIMESPAN|(TIMESPAN )?WE_ARE) \**STATUS\**( for)?( the| new| some| all| any more)?( fursuits)? (COMMISSIONS|projects|orders|work)( requests)?',
         'G02' => 'COMMISSIONS( status|:? are| have| info)?( TIMESPAN)?[-: ]+(&gt;)*STATUS(&lt;)*',
         'G03' => 'quotes? have TIMESPAN STATUS',
