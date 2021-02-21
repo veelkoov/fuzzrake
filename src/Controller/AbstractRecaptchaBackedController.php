@@ -12,15 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AbstractRecaptchaBackedController extends AbstractController
 {
-    private ReCaptcha $reCaptcha;
-    private EnvironmentsService $environments;
-    private LoggerInterface $logger;
-
-    public function __construct(ReCaptcha $reCaptcha, EnvironmentsService $environments, LoggerInterface $logger)
-    {
-        $this->reCaptcha = $reCaptcha;
-        $this->environments = $environments;
-        $this->logger = $logger;
+    public function __construct(
+        private ReCaptcha $reCaptcha,
+        private EnvironmentsService $environments,
+        private LoggerInterface $logger,
+    ) {
     }
 
     protected function isReCaptchaTokenOk(Request $request, $action): bool

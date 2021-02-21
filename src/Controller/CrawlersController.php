@@ -12,10 +12,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CrawlersController extends AbstractController
 {
-    /**
-     * @Route("/sitemap.txt", name="sitemap")
-     * @Cache(maxage=21600, public=true)
-     */
+    #[Route(path: '/sitemap.txt', name: 'sitemap')]
+    #[Cache(maxage: 21600, public: true)]
     public function sitemap(): Response
     {
         $urls = array_map(fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL), [
