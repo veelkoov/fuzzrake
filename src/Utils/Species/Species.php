@@ -39,11 +39,10 @@ class Species
      */
     private array $validChoicesList;
 
-    private ArtisanRepository $artisanRepository;
-
-    public function __construct(array $speciesDefinitions, ArtisanRepository $artisanRepository)
-    {
-        $this->artisanRepository = $artisanRepository;
+    public function __construct(
+        array $speciesDefinitions,
+        private ArtisanRepository $artisanRepository,
+    ) {
         $this->replacements = $speciesDefinitions['replacements'];
         $this->unsplittable = $speciesDefinitions['leave_unchanged'];
 
@@ -105,7 +104,7 @@ class Species
 
     private function flagged(string $flags, string $flag): bool
     {
-        return false !== strpos($flags, $flag);
+        return str_contains($flags, $flag);
     }
 
     private function initialize(array $species): void
