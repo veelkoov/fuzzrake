@@ -26,18 +26,15 @@ class DataSetScritchMiniaturesCommand extends Command
     private const PICTURE_URL_REGEXP = '#^https://scritch\.es/pictures/(?<picture_id>[a-z0-9-]{36})$#';
 
     protected static $defaultName = 'app:data:set-scritch-miniatures';
-
-    private ArtisanRepository $artisanRepository;
-    private EntityManagerInterface $entityManager;
     private CookieJar $cookieJar;
     private GentleHttpClient $httpClient;
 
-    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private ArtisanRepository $artisanRepository,
+        private EntityManagerInterface $entityManager,
+    ) {
         parent::__construct();
 
-        $this->artisanRepository = $artisanRepository;
-        $this->entityManager = $entityManager;
         $this->cookieJar = new CookieJar();
         $this->httpClient = new GentleHttpClient();
     }

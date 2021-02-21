@@ -24,19 +24,13 @@ class DataTidyCommand extends Command
 {
     protected static $defaultName = 'app:data:tidy';
 
-    /**
-     * @var ArtisanRepository|ObjectRepository
-     */
-    private ObjectRepository $artisanRepository;
+    private ObjectRepository | ArtisanRepository $artisanRepository;
 
-    private EntityManagerInterface $objectManager;
-    private FdvFactory $fdvFactory;
-
-    public function __construct(EntityManagerInterface $objectManager, FdvFactory $fdvFactory)
-    {
+    public function __construct(
+        private EntityManagerInterface $objectManager,
+        private FdvFactory $fdvFactory,
+    ) {
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
-        $this->objectManager = $objectManager;
-        $this->fdvFactory = $fdvFactory;
 
         parent::__construct();
     }

@@ -15,14 +15,10 @@ class UpdateCommissionsCommand extends Command
 {
     protected static $defaultName = 'app:update:commissions';
 
-    private CommissionsStatusesUpdateFactory $factory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager, CommissionsStatusesUpdateFactory $factory)
-    {
-        $this->factory = $factory;
-        $this->entityManager = $entityManager;
-
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private CommissionsStatusesUpdateFactory $factory,
+    ) {
         parent::__construct();
     }
 
