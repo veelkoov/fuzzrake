@@ -7,12 +7,13 @@ namespace App\Entity;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Web\Fetchable;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanUrlRepository")
  * @ORM\Table(name="artisans_urls")
  */
-class ArtisanUrl implements Fetchable
+class ArtisanUrl implements Fetchable, Stringable
 {
     /**
      * @ORM\Id()
@@ -139,7 +140,7 @@ class ArtisanUrl implements Fetchable
         return $this->artisan->getName();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class.":{$this->id}:{$this->url}";
     }
