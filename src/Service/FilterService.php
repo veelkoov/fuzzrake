@@ -52,7 +52,7 @@ class FilterService
         return $result;
     }
 
-    private function getSpeciesFilterItem(Specie $specie): FilterItems|string
+    private function getSpeciesFilterItem(Specie $specie): FilterItems | string
     {
         if ($specie->hasChildren()) {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
