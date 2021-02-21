@@ -17,15 +17,11 @@ use SplFileInfo;
 
 class IuSubmission implements FieldReadInterface
 {
-    private DateTimeInterface $timestamp;
-    private string $id;
-    private array $data;
-
-    public function __construct(DateTimeInterface $timestamp, string $id, array $data)
-    {
-        $this->timestamp = $timestamp;
-        $this->id = $id;
-        $this->data = $data;
+    public function __construct(
+        private DateTimeInterface $timestamp,
+        private string $id,
+        private array $data,
+    ) {
     }
 
     public function getId(): string
