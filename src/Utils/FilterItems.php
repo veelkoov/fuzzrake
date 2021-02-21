@@ -10,16 +10,15 @@ class FilterItems implements ArrayAccess
 {
     private int $unknownCount = 0;
     private int $otherCount = 0;
-    private bool $hasOther;
 
     /**
      * @var FilterItem[]
      */
     private array $items = [];
 
-    public function __construct(bool $hasOther)
-    {
-        $this->hasOther = $hasOther;
+    public function __construct(
+        private bool $hasOther,
+    ) {
     }
 
     public function addOrIncItem(string $key): void
@@ -31,10 +30,7 @@ class FilterItems implements ArrayAccess
         $this->items[$key]->incCount();
     }
 
-    /**
-     * @param int|string|FilterItems $value
-     */
-    public function addComplexItem(string $key, $value, string $label, int $count): void
+    public function addComplexItem(string $key, int | string | FilterItems $value, string $label, int $count): void
     {
         $this->items[$key] = new FilterItem($value, $label, $count);
     }

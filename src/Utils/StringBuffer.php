@@ -11,11 +11,9 @@ use UnexpectedValueException;
 
 class StringBuffer
 {
-    private string $buffer;
-
-    public function __construct(string $initialValue)
-    {
-        $this->buffer = $initialValue;
+    public function __construct(
+        private string $buffer,
+    ) {
     }
 
     public function readUntil(string $terminator, bool $trimWhitespaceAfterwards = true): string
