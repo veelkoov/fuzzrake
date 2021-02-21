@@ -12,19 +12,11 @@ class TrackingRegexp
 {
     private const CONTEXT_LENGTH = 100;
 
-    private string $id;
-    private string $original;
-
-    /**
-     * @var SplObjectStorage|string[]
-     */
-    private SplObjectStorage $compiled;
-
-    public function __construct(string $id, string $original, SplObjectStorage $compiled)
-    {
-        $this->id = $id;
-        $this->original = $original;
-        $this->compiled = $compiled;
+    public function __construct(
+        private string $id,
+        private string $original,
+        private SplObjectStorage $compiled,
+    ) {
         $this->compiled->rewind();
     }
 

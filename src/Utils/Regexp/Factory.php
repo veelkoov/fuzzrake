@@ -8,11 +8,9 @@ use SplObjectStorage;
 
 class Factory
 {
-    private array $commonReplacements;
-
-    public function __construct(array $commonReplacements)
-    {
-        $this->commonReplacements = $commonReplacements;
+    public function __construct(
+        private array $commonReplacements,
+    ) {
     }
 
     public function createSet(array $originals, array $variants = []): array
