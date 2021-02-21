@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3132f48b1d2e0b5b736db911b87ff219",
+    "content-hash": "02ef6a3e5a7e834ccf8e99827b247356",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1836,23 +1836,17 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "dev-develop",
+            "version": "v0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/T-Regx/T-Regx.git",
-                "reference": "91a9ff86f66930e0945e955ec120c5c706881f85"
+                "reference": "e1625a3dd3db2a515181524c42b479388eaf4fcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/91a9ff86f66930e0945e955ec120c5c706881f85",
-                "reference": "91a9ff86f66930e0945e955ec120c5c706881f85",
+                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/e1625a3dd3db2a515181524c42b479388eaf4fcf",
+                "reference": "e1625a3dd3db2a515181524c42b479388eaf4fcf",
                 "shasum": ""
-            },
-            "archive": {
-                "exclude": [
-                    "/test/**",
-                    "/test"
-                ]
             },
             "require": {
                 "ext-mbstring": "*",
@@ -1873,37 +1867,19 @@
                     "TRegx\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "classmap": [
-                    "test/"
-                ],
-                "psr-4": {
-                    "Test\\Feature\\TRegx\\": "test/Feature/",
-                    "Test\\Functional\\TRegx\\": "test/Functional/",
-                    "Test\\Interaction\\TRegx\\": "test/Interaction/",
-                    "Test\\Structure\\TRegx\\": "test/Structure/",
-                    "Test\\Unit\\TRegx\\": "test/Unit/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "cd vendor/phpunit && phpunit ../../test --no-coverage"
-                ],
-                "fqn": [
-                    "cd vendor/bin && fqn-check ../../src"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "The most advanced PHP regexp library. Clean, descriptive wrapper functions enhancing PCRE extension methods.",
             "keywords": [
+                "OOP",
+                "PCRE",
+                "TDD",
                 "automatic delimiters",
                 "clean",
                 "delimiters",
                 "expression",
-                "oop",
-                "pcre",
                 "php",
                 "preg",
                 "preg_match",
@@ -1915,20 +1891,19 @@
                 "regex",
                 "regexp",
                 "regular",
-                "t-regx",
-                "tdd"
+                "t-regx"
             ],
             "support": {
-                "source": "https://github.com/T-Regx/T-Regx/tree/develop",
-                "issues": "https://github.com/T-Regx/T-Regx/issues"
+                "issues": "https://github.com/T-Regx/T-Regx/issues",
+                "source": "https://github.com/T-Regx/T-Regx/tree/v0.10.1"
             },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/Danon"
+                    "url": "https://github.com/Danon",
+                    "type": "github"
                 }
             ],
-            "time": "2021-02-19T00:06:28+00:00"
+            "time": "2021-02-14T01:56:36+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -8669,9 +8644,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "rawr/t-regx": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
