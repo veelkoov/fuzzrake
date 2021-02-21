@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-abstract class ValidationRegexps
+use App\Utils\Traits\UtilityClass;
+
+final class ValidationRegexps
 {
+    use UtilityClass;
+
     public const MAKER_ID = '^([A-Z0-9]{7})?$';
     public const MAKER_ID_PREG = '#'.self::MAKER_ID.'#';
 

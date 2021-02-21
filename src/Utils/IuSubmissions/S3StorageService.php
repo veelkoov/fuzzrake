@@ -10,20 +10,14 @@ use Psr\Log\LoggerInterface;
 
 class S3StorageService
 {
-    private LoggerInterface $logger;
-    private LocalStorageService $local;
-    private AwsCliService $cli;
-    private string $s3CopiesBucketUrl;
-
-    public function __construct(LoggerInterface $logger, LocalStorageService $local, AwsCliService $cli, string $iuFormDataS3CopiesBucketUrl)
-    {
-        $this->logger = $logger;
-        $this->local = $local;
-        $this->cli = $cli;
-        $this->s3CopiesBucketUrl = $iuFormDataS3CopiesBucketUrl;
-
-        if (pattern('^(s3://[-.a-z0-9]+)?$', 'i')->fails($iuFormDataS3CopiesBucketUrl)) {
-            throw new InvalidArgumentException("$iuFormDataS3CopiesBucketUrl is not a valid S3 bucket URL");
+    public function __construct(
+        private LoggerInterface $logger,
+        private LocalStorageService $local,
+        private AwsCliService $cli,
+        private string $s3CopiesBucketUrl,
+    ) {
+        if (pattern('^(s3://[-.a-z0-9]+)?$', 'i')->fails($s3CopiesBucketUrl)) {
+            throw new InvalidArgumentException("$s3CopiesBucketUrl is not a valid S3 bucket URL");
         }
     }
 

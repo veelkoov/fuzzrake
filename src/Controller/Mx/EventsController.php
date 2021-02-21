@@ -13,16 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/events")
- */
+#[Route(path: '/mx/events')]
 class EventsController extends AbstractController
 {
-    /**
-     * @Route("/{id}/edit", name="mx_event_edit", methods={"GET", "POST"})
-     * @Route("/new", name="mx_event_new", methods={"GET", "POST"})
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/{id}/edit', name: 'mx_event_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/new', name: 'mx_event_new', methods: ['GET', 'POST'])]
+    #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?Event $event, EnvironmentsService $environments): Response
     {
         $event ??= new Event();

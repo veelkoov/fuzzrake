@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Utils\StrContext;
 
 use App\Utils\Json;
+use App\Utils\Traits\UtilityClass;
 use JsonException;
 
-abstract class StrContextUtils
+final class StrContextUtils
 {
+    use UtilityClass;
+
     public static function extractFrom(string $input, string $match, int $contextLength): StrContextInterface
     {
         $index = mb_strpos($input, $match);

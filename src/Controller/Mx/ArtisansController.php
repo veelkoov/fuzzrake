@@ -15,16 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/artisans")
- */
+#[Route(path: '/mx/artisans')]
 class ArtisansController extends AbstractController
 {
-    /**
-     * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET", "POST"})
-     * @Route("/new", name="mx_artisan_new", methods={"GET", "POST"})
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/{id}/edit', name: 'mx_artisan_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/new', name: 'mx_artisan_new', methods: ['GET', 'POST'])]
+    #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?Artisan $artisan, EnvironmentsService $environments): Response
     {
         if (!$environments->isDevOrTest()) {

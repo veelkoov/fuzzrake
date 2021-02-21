@@ -21,16 +21,11 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
 {
     protected static $defaultName = 'app:events:remove-tmp-tracking-failures';
 
-    private EntityManagerInterface $entityManager;
+    private ObjectRepository | EventRepository $eventRepository;
 
-    /**
-     * @var EventRepository|ObjectRepository
-     */
-    private ObjectRepository $eventRepository;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
         $this->eventRepository = $this->entityManager->getRepository(Event::class);
 
         parent::__construct();

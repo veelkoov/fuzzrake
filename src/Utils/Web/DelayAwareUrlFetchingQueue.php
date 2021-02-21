@@ -15,20 +15,18 @@ class DelayAwareUrlFetchingQueue
      * @var Fetchable[]
      */
     private array $hosts = [];
-
-    private int $millisecondsDelay;
     private ?string $lastHost = null;
 
     /**
      * @param Fetchable[] $urls
      */
-    public function __construct(array $urls = [], int $millisecondsDelay = 0)
-    {
+    public function __construct(
+        array $urls = [],
+        private int $millisecondsDelay = 0,
+    ) {
         foreach ($urls as $url) {
             $this->addUrl($url);
         }
-
-        $this->millisecondsDelay = $millisecondsDelay;
     }
 
     public function addUrl(Fetchable $url): void

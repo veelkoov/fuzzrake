@@ -11,13 +11,10 @@ use App\Utils\StrUtils;
 
 class Messaging
 {
-    private Printer $printer;
-    private Manager $manager;
-
-    public function __construct(Printer $printer, Manager $manager)
-    {
-        $this->printer = $printer;
-        $this->manager = $manager;
+    public function __construct(
+        private Printer $printer,
+        private Manager $manager,
+    ) {
     }
 
     public function reportIgnoredItem(ImportItem $item): void

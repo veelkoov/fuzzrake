@@ -10,13 +10,12 @@ use App\Utils\Artisan\Fields;
 
 class ArtisanFixWip
 {
-    private Artisan $original;
     private Artisan $fixed;
 
-    public function __construct(Artisan $fixSubject)
-    {
-        $this->original = $fixSubject;
-        $this->fixed = clone $fixSubject;
+    public function __construct(
+        private Artisan $original,
+    ) {
+        $this->fixed = clone $original;
     }
 
     public function getOriginal(): Artisan

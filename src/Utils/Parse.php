@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-abstract class Parse
+use App\Utils\Traits\UtilityClass;
+
+final class Parse
 {
+    use UtilityClass;
+
     public static function tInt($input): int
     {
         if (is_int($input)) {

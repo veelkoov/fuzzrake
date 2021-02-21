@@ -28,13 +28,10 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    private ArtisanCommissionsStatusRepository $acsRepository;
-    private EnvironmentsService $environments;
-
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, EnvironmentsService $environments)
-    {
-        $this->acsRepository = $acsRepository;
-        $this->environments = $environments;
+    public function __construct(
+        private ArtisanCommissionsStatusRepository $acsRepository,
+        private EnvironmentsService $environments,
+    ) {
     }
 
     public function getFilters()
@@ -88,7 +85,7 @@ class AppExtensions extends AbstractExtension
     {
         try {
             return DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'))->format('Y-m-d H:i');
-        } catch (DateTimeException $e) {
+        } catch (DateTimeException) {
             return 'unknown/error';
         }
     }

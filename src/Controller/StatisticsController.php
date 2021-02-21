@@ -16,9 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/")
- */
+#[Route(path: '/')]
 class StatisticsController extends AbstractController
 {
     const MATCH_WORDS = [
@@ -50,12 +48,11 @@ class StatisticsController extends AbstractController
     ];
 
     /**
-     * @Route("/statistics.html", name="statistics")
-     * @Cache(maxage=3600, public=true)
-     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Route(path: '/statistics.html', name: 'statistics')]
+    #[Cache(maxage: 3600, public: true)]
     public function statistics(ArtisanRepository $artisanRepository): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();

@@ -5,20 +5,16 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Utils\Artisan\Field;
+use Stringable;
 
-class ValueCorrection
+class ValueCorrection implements Stringable
 {
-    private string $subject;
-    private Field $field;
-    private ?string $wrongValue;
-    private string $correctedValue;
-
-    public function __construct(string $subject, Field $field, ?string $wrongValue, string $correctedValue)
-    {
-        $this->subject = $subject;
-        $this->field = $field;
-        $this->wrongValue = $wrongValue;
-        $this->correctedValue = $correctedValue;
+    public function __construct(
+        private string $subject,
+        private Field $field,
+        private ?string $wrongValue,
+        private string $correctedValue,
+    ) {
     }
 
     public function getSubject(): string

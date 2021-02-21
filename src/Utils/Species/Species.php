@@ -7,7 +7,7 @@ namespace App\Utils\Species;
 use App\Repository\ArtisanRepository;
 use RuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Match;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 class Species
 {
@@ -39,11 +39,10 @@ class Species
      */
     private array $validChoicesList;
 
-    private ArtisanRepository $artisanRepository;
-
-    public function __construct(array $speciesDefinitions, ArtisanRepository $artisanRepository)
-    {
-        $this->artisanRepository = $artisanRepository;
+    public function __construct(
+        array $speciesDefinitions,
+        private ArtisanRepository $artisanRepository,
+    ) {
         $this->replacements = $speciesDefinitions['replacements'];
         $this->unsplittable = $speciesDefinitions['leave_unchanged'];
 
@@ -94,7 +93,7 @@ class Species
     {
         try {
             return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)
-                ->findFirst(fn (Match $match): array => [
+                ->findFirst(fn (Detail $match): array => [
                     $match->group('flags')->text(),
                     $match->group('specie')->text(),
                 ])->orReturn(['', $specie]);
@@ -105,7 +104,7 @@ class Species
 
     private function flagged(string $flags, string $flag): bool
     {
-        return false !== strpos($flags, $flag);
+        return str_contains($flags, $flag);
     }
 
     private function initialize(array $species): void

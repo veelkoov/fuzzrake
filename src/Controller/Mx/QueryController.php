@@ -14,15 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/query")
- */
+#[Route(path: '/mx/query')]
 class QueryController extends AbstractController
 {
-    /**
-     * @Route("/", name="mx_query")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/', name: 'mx_query')]
+    #[Cache(maxage: 0, public: false)]
     public function query(Request $request, ArtisanRepository $artisanRepository, EnvironmentsService $environments): Response
     {
         if (!$environments->isDevOrTest()) {

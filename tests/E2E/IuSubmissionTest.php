@@ -228,7 +228,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
                 $value = $this->selectOddOrEvenItems($value, self::VARIANT_HALF_DATA_1 === $variant);
             }
 
-            $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
+            $result->set(Fields::get($fieldName), str_replace('__VARIANT__', (string) $variant, $value));
         }
 
         return $result;

@@ -15,13 +15,10 @@ use Symfony\Component\Filesystem\Exception\IOException;
 
 class WebpageSnapshotCache
 {
-    private LoggerInterface $logger;
-    private string $cacheDirPath;
-
-    public function __construct(LoggerInterface $logger, string $snapshotCacheDirPath)
-    {
-        $this->logger = $logger;
-        $this->cacheDirPath = $snapshotCacheDirPath;
+    public function __construct(
+        private LoggerInterface $logger,
+        private string $cacheDirPath,
+    ) {
     }
 
     public function has(Fetchable $url): bool
@@ -65,7 +62,7 @@ class WebpageSnapshotCache
         $hostName = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
 
         $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
-        if (0 === strpos($urlFsSafe, $hostName)) {
+        if (str_starts_with($urlFsSafe, $hostName)) {
             $urlFsSafe = substr($urlFsSafe, strlen($hostName));
         }
 

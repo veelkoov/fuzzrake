@@ -6,11 +6,9 @@ namespace App\Service;
 
 class EnvironmentsService
 {
-    private string $environment;
-
-    public function __construct(string $environment)
-    {
-        $this->environment = $environment;
+    public function __construct(
+        private string $environment,
+    ) {
     }
 
     public function isDevOrTest(): bool

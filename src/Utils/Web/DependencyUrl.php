@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-class DependencyUrl implements Fetchable
-{
-    private string $url;
-    private Fetchable $parent;
+use Stringable;
 
-    public function __construct(string $url, Fetchable $parent)
-    {
-        $this->url = $url;
-        $this->parent = $parent;
+class DependencyUrl implements Fetchable, Stringable
+{
+    public function __construct(
+        private string $url,
+        private Fetchable $parent,
+    ) {
     }
 
     public function getUrl(): string
@@ -40,7 +39,7 @@ class DependencyUrl implements Fetchable
         $this->parent->recordFailedFetch($code, $reason); // TODO: What if one child fails, and the other one succeeds?
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class.":{$this->url}";
     }
