@@ -19,6 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::PHP_72,
         SetList::PHP_73,
         SetList::PHP_74,
+        SetList::PHP_80,
     ]);
 
     $parameters->set(Option::SKIP, [
