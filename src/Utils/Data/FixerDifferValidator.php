@@ -7,7 +7,6 @@ namespace App\Utils\Data;
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
-use App\Utils\IuSubmissions\Manager;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 

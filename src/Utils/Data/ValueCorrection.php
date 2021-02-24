@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\IuSubmissions;
+namespace App\Utils\Data;
 
 use App\Utils\Artisan\Field;
 use Stringable;

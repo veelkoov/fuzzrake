@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Tasks\DataImportFactory;
+use App\Utils\Data\Manager;
 use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\IuSubmissions\Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use Symfony\Component\Console\Command\Command;

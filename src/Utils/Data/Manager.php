@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\IuSubmissions;
+namespace App\Utils\Data;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
@@ -10,6 +10,7 @@ use App\Utils\Artisan\Fields;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 use DateTimeInterface;
