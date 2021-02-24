@@ -66,9 +66,9 @@ class Manager
     /**
      * @throws DataInputException
      */
-    public function __construct(string $correctionDirectivesFilePath)
+    public function __construct(string $directives)
     {
-        $this->readDirectivesFromFile($correctionDirectivesFilePath);
+        $this->readDirectives($directives);
     }
 
     /**
@@ -80,7 +80,7 @@ class Manager
             throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
         }
 
-        return new Manager($correctionsFilePath);
+        return new Manager(file_get_contents($correctionsFilePath));
     }
 
     public function correctArtisan(Artisan $artisan, string $submissionId = null): void
@@ -128,9 +128,9 @@ class Manager
     /**
      * @throws DataInputException
      */
-    private function readDirectivesFromFile(string $filePath)
+    private function readDirectives(string $directives)
     {
-        $buffer = new StringBuffer(file_get_contents($filePath));
+        $buffer = new StringBuffer($directives);
 
         $buffer->skipWhitespace();
 
@@ -169,7 +169,7 @@ class Manager
                 break;
 
             case self::CMD_COMMENT:
-                $buffer->readUntil("\n");
+                $buffer->readUntilEolOrEof();
                 break;
 
             case self::CMD_ACCEPT:

@@ -375,29 +375,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getImportManager(): Manager
     {
-        $filesystem = new Filesystem();
-        $tmpFilePath = $filesystem->tempnam(sys_get_temp_dir(), 'import_manager');
-        $filesystem->dumpFile($tmpFilePath, $this->getManagerCorrectionsFileContents());
-
-        $result = new Manager($tmpFilePath);
-
-        $filesystem->remove($tmpFilePath);
-
-        return $result;
-    }
-
-    /**
-     * @throws DataInputException|JsonException
-     */
-    private function getManagerCorrectionsFileContents(): string
-    {
-        $result = '';
+        $corrections = '';
 
         foreach (Finder::getFrom(self::IMPORT_DATA_DIR) as $submission) {
-            $result .= "with {$submission->getId()}: accept\n";
+            $corrections .= "with {$submission->getId()}: accept\n";
         }
 
-        return $result;
+        return new Manager($corrections);
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void

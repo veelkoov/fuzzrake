@@ -21,6 +21,11 @@ class StringBuffer
         return $this->readUntilRegexp(preg::quote($terminator), $trimWhitespaceAfterwards);
     }
 
+    public function readUntilEolOrEof(): string
+    {
+        return $this->readUntilRegexp("\n|$");
+    }
+
     public function readUntilWhitespace(): string
     {
         return $this->readUntilRegexp("\s");
