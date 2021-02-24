@@ -14,6 +14,7 @@ class ArtisanFixWip
 
     public function __construct(
         private Artisan $original,
+        private ?string $submissionId = null,
     ) {
         $this->fixed = clone $original;
     }
@@ -26,6 +27,11 @@ class ArtisanFixWip
     public function getFixed(): Artisan
     {
         return $this->fixed;
+    }
+
+    public function getSubmissionId(): ?string
+    {
+        return $this->submissionId;
     }
 
     public function apply(): void
