@@ -8,17 +8,13 @@ use App\Utils\Regexp\TrackingRegexp;
 use App\Utils\Regexp\Variant;
 use App\Utils\StrContext\StrContextInterface;
 
-class Match implements MatchInterface
+class TrackingMatch implements MatchInterface
 {
-    private TrackingRegexp $regexp;
-    private Variant $variant;
-    private StrContextInterface $strContext;
-
-    public function __construct(TrackingRegexp $regexp, Variant $variant, StrContextInterface $match)
-    {
-        $this->regexp = $regexp;
-        $this->variant = $variant;
-        $this->strContext = $match;
+    public function __construct(
+        private TrackingRegexp $regexp,
+        private Variant $variant,
+        private StrContextInterface $strContext,
+    ) {
     }
 
     public function getRegexp(): TrackingRegexp

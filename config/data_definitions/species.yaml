@@ -182,7 +182,9 @@ parameters:
         "Robotic stuff":
         "Robots":
         "Sea creatures": # Aquatic?
+        "Skull": # Excuse me?
         "Skullsuits":
+        "Skull Creatures":
         "Some birds (unless its on another headbase then I'll do it)":
         "Some scalies":
         "Specialises in mythical creatures/monsters":
@@ -269,6 +271,7 @@ parameters:
       'Hyenas?':                                             'Hyenas'
       'Humanoids?':                                          'Humanoids'
       'K-?9''?s':                                            'Canines'
+      'Kangaroos?':                                          'Kangaroos'
       'Lions?':                                              'Lions'
       'Mammals?( in general)?':                              'Mammals'
       'Mann?okits?':                                         'Manokits'
@@ -284,8 +287,9 @@ parameters:
       'Primagens?':                                          'Primagens'
       'Protogens?':                                          'Protogens'
       'Protogens/primagens \(on a foam base\)':              "Protogens (on a foam base)\nPrimagens (on a foam base)"
-      'Rams?':                                               'Sheeps'
+      'Rabbits?':                                            'Rabbits'
       'Racc?oo?ns?':                                         'Raccoons'
+      'Rams?':                                               'Sheeps'
       'Rats?':                                               'Rats'
       'Rare/closed species':                                 "Rare species\nClosed species"
       'Red pandas?':                                         'Red pandas'

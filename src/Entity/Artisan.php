@@ -299,7 +299,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
     {
         $this->makerId = $makerId;
 
-        $this->addMakerId($makerId);
+        if ('' !== $makerId) {
+            $this->addMakerId($makerId);
+        }
 
         return $this;
     }

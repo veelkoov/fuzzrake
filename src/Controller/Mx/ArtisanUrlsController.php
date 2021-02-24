@@ -12,15 +12,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/artisan_urls")
- */
+#[Route(path: '/mx/artisan_urls')]
 class ArtisanUrlsController extends AbstractController
 {
-    /**
-     * @Route("/", name="mx_artisan_urls")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/', name: 'mx_artisan_urls')]
+    #[Cache(maxage: 0, public: false)]
     public function index(ArtisanUrlRepository $repository, EnvironmentsService $environments): Response
     {
         if (!$environments->isDevOrTest()) {

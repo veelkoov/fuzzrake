@@ -15,16 +15,13 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 final class ArtisanUrlInspection
 {
     private ArtisanUrlRepository $artisanUrlRepository;
-    private WebpageSnapshotManager $webpageSnapshotManager;
-    private EntityManagerInterface $entityManager;
-    private SymfonyStyle $io;
 
-    public function __construct(EntityManagerInterface $entityManager, WebpageSnapshotManager $webpageSnapshotManager, SymfonyStyle $io)
-    {
-        $this->entityManager = $entityManager;
-        $this->webpageSnapshotManager = $webpageSnapshotManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $webpageSnapshotManager,
+        private SymfonyStyle $io,
+    ) {
         $this->artisanUrlRepository = $entityManager->getRepository(ArtisanUrl::class);
-        $this->io = $io;
     }
 
     public function inspect(int $limit): void
@@ -36,7 +33,7 @@ final class ArtisanUrlInspection
         foreach ($urls as $url) {
             try {
                 $this->webpageSnapshotManager->get($url, true, false);
-            } catch (ExceptionInterface $e) {
+            } catch (ExceptionInterface) {
                 // Ignore - failure has been recorded
             }
 

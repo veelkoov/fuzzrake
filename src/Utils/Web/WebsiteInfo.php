@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Utils\Web;
 
 use App\Utils\Regexp\Regexp;
+use App\Utils\Traits\UtilityClass;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 
-abstract class WebsiteInfo
+final class WebsiteInfo
 {
+    use UtilityClass;
+
     private const FA_URL_SEARCH_STRING = 'furaffinity.net/';
     private const FA_CONTENTS_SEARCH_STRING = 'fur affinity [dot] net</title>';
     private const FA_JOUNRAL_CONTENTS_SEARCH_STRING = 'journal -- fur affinity [dot] net</title>';
@@ -124,7 +127,7 @@ abstract class WebsiteInfo
     public static function getLatentCode(string $url, string $content): ?int
     {
         if (self::isFurAffinity($url, $content)) {
-            if (false !== strpos($content, self::FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING)) {
+            if (str_contains($content, self::FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING)) {
                 return 410;
             } elseif (false !== stripos($content, self::FA_ACCOUNT_LOGIN_REQUIRED_CONTENTS_SEARCH_STRING)) {
                 return 401;

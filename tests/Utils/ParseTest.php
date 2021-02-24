@@ -21,13 +21,13 @@ class ParseTest extends TestCase
     {
         try {
             self::assertSame($expectedInt, Parse::int($input));
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             self::assertFalse($expectedInt);
         }
 
         try {
             self::assertSame($expectedTInt, Parse::tInt($input));
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             self::assertFalse($expectedTInt);
         }
     }
@@ -43,13 +43,13 @@ class ParseTest extends TestCase
     {
         try {
             self::assertSame($expectedFloat, Parse::float($input));
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             self::assertFalse($expectedFloat);
         }
 
         try {
             self::assertSame($expectedTFloat, Parse::tFloat($input));
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             self::assertFalse($expectedTFloat);
         }
     }
@@ -65,13 +65,13 @@ class ParseTest extends TestCase
     {
         try {
             self::assertSame($expectedPercentAsInt, Parse::percentAsInt($input));
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             self::assertFalse($expectedPercentAsInt);
         }
 
         try {
             self::assertSame($expectedTPercentAsInt, Parse::tPercentAsInt($input));
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             self::assertFalse($expectedTPercentAsInt);
         }
     }

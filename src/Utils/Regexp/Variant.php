@@ -6,17 +6,12 @@ namespace App\Utils\Regexp;
 
 class Variant
 {
-    /**
-     * @var string[]
-     */
-    private array $replacements;
-
-    /**
-     * @param string[] $replacements
-     */
-    public function __construct(array $replacements)
-    {
-        $this->replacements = $replacements;
+    public function __construct(
+        /*
+         * @var string[] FIXME: Type hint doesn't work
+         */
+        private array $replacements,
+    ) {
     }
 
     /**

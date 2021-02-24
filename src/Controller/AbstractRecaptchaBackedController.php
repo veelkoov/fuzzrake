@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\EnvironmentsService;
+use Psr\Log\LoggerInterface;
 use ReCaptcha\ReCaptcha;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class AbstractRecaptchaBackedController extends AbstractController
 {
-    private ReCaptcha $reCaptcha;
-    private EnvironmentsService $environments;
-
-    public function __construct(ReCaptcha $reCaptcha, EnvironmentsService $environments)
-    {
-        $this->reCaptcha = $reCaptcha;
-        $this->environments = $environments;
+    public function __construct(
+        private ReCaptcha $reCaptcha,
+        private EnvironmentsService $environments,
+        private LoggerInterface $logger,
+    ) {
     }
 
     protected function isReCaptchaTokenOk(Request $request, $action): bool
@@ -26,10 +25,16 @@ class AbstractRecaptchaBackedController extends AbstractController
             return true;
         }
 
-        return $this->reCaptcha
-            ->setExpectedHostname($request->getHttpHost())
+        $response = $this->reCaptcha
+            ->setExpectedHostname($request->getHost())
             ->setExpectedAction($action)
             ->setScoreThreshold($_ENV['GOOGLE_RECAPTCHA_SCORE_THRESHOLD'] ?: 0.8)
-            ->verify($request->get('token', 'missing-token'), $request->getClientIp())->isSuccess();
+            ->verify($request->get('token', 'missing-token'), $request->getClientIp());
+
+        if (!$response->isSuccess()) {
+            $this->logger->info('reCAPTCHA verification failed', [$response->toArray()]);
+        }
+
+        return $response->isSuccess();
     }
 }

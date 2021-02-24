@@ -36,14 +36,13 @@ class GenerateSpeciesDotCommand extends Command
 
     protected static $defaultName = 'app:data:generate-species-dot';
 
-    private Species $species;
     private Filesystem $fs;
 
-    public function __construct(Species $species)
-    {
+    public function __construct(
+        private Species $species,
+    ) {
         parent::__construct();
 
-        $this->species = $species;
         $this->fs = new Filesystem();
     }
 

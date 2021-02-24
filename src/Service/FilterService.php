@@ -11,18 +11,14 @@ use App\Utils\Species\Species;
 
 class FilterService
 {
-    private ArtisanRepository $artisanRepository;
-    private CountriesDataService $countriesDataService;
-    private Species $species;
-
-    public function __construct(ArtisanRepository $artisanRepository, CountriesDataService $countriesDataService, Species $species)
-    {
-        $this->artisanRepository = $artisanRepository;
-        $this->countriesDataService = $countriesDataService;
-        $this->species = $species;
+    public function __construct(
+        private ArtisanRepository $artisanRepository,
+        private CountriesDataService $countriesDataService,
+        private Species $species,
+    ) {
     }
 
-    public function getFiltersTplData()
+    public function getFiltersTplData(): array
     {
         return [
             'orderTypes'          => $this->artisanRepository->getDistinctOrderTypes(),
@@ -56,15 +52,12 @@ class FilterService
         return $result;
     }
 
-    /**
-     * @return FilterItems|string
-     */
-    private function getSpeciesFilterItem(Specie $specie)
+    private function getSpeciesFilterItem(Specie $specie): FilterItems | string
     {
         if ($specie->hasChildren()) {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
         } else {
-            return $specie;
+            return $specie->getName();
         }
     }
 }

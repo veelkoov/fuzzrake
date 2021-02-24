@@ -19,9 +19,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::PHP_72,
         SetList::PHP_73,
         SetList::PHP_74,
+        SetList::PHP_80,
     ]);
 
-    $parameters->set(Option::EXCLUDE_RECTORS, [
+    $parameters->set(Option::SKIP, [
         AddLiteralSeparatorToNumberRector::class,
         CountOnNullRector::class, // TODO: Reconsider
     ]);

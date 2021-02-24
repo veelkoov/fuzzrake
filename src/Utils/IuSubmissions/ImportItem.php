@@ -11,9 +11,6 @@ use App\Utils\StrUtils;
 
 class ImportItem
 {
-    private IuSubmission $iuSubmission;
-    private ArtisanFixWip $input;
-    private ArtisanFixWip $entity;
     private ?Diff $diff = null;
 
     /**
@@ -21,11 +18,11 @@ class ImportItem
      */
     private array $replaced = [];
 
-    public function __construct(IuSubmission $iuSubmission, ArtisanFixWip $input, ArtisanFixWip $entity)
-    {
-        $this->iuSubmission = $iuSubmission;
-        $this->input = $input;
-        $this->entity = $entity;
+    public function __construct(
+        private IuSubmission $iuSubmission,
+        private ArtisanFixWip $input,
+        private ArtisanFixWip $entity,
+    ) {
     }
 
     public function getOriginalInput(): Artisan
@@ -82,6 +79,11 @@ class ImportItem
     public function getProvidedPasscode(): string
     {
         return $this->input->getFixed()->getPasscode();
+    }
+
+    public function getExpectedPasscode(): string
+    {
+        return $this->entity->getOriginal()->getPasscode();
     }
 
     public function getDiff(): ?Diff

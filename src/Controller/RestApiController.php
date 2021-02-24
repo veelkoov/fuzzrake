@@ -15,19 +15,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RestApiController extends AbstractRecaptchaBackedController
 {
-    /**
-     * @Route("/api/", name="api")
-     * @Cache(maxage=3600, public=true)
-     */
+    #[Route(path: '/api/', name: 'api')]
+    #[Cache(maxage: 3600, public: true)]
     public function api(): Response
     {
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * @Route("/api/info/email.part.html")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/api/info/email.part.html')]
+    #[Cache(maxage: 0, public: false)]
     public function info_emailHtml(Request $request, string $contactEmail): Response
     {
         $ok = $this->isReCaptchaTokenOk($request, 'info_emailHtml');
@@ -41,10 +37,8 @@ class RestApiController extends AbstractRecaptchaBackedController
         }
     }
 
-    /**
-     * @Route("/api/iu_form/verify")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/api/iu_form/verify')]
+    #[Cache(maxage: 0, public: false)]
     public function iu_form_verify(Request $request): Response
     {
         $ok = $this->isReCaptchaTokenOk($request, 'iu_form_verify');
@@ -56,28 +50,22 @@ class RestApiController extends AbstractRecaptchaBackedController
         }
     }
 
-    /**
-     * @Route("/api/artisans.json", name="api_artisans")
-     * @Cache(maxage=3600, public=true)
-     */
+    #[Route(path: '/api/artisans.json', name: 'api_artisans')]
+    #[Cache(maxage: 3600, public: true)]
     public function artisans(ArtisanRepository $artisanRepository): JsonResponse
     {
         return new JsonResponse($artisanRepository->getAll());
     }
 
-    /**
-     * @Route("/api/old_to_new_maker_ids_map.json", name="api_old_to_new_maker_ids_map")
-     * @Cache(maxage=3600, public=true)
-     */
+    #[Route(path: '/api/old_to_new_maker_ids_map.json', name: 'api_old_to_new_maker_ids_map')]
+    #[Cache(maxage: 3600, public: true)]
     public function oldToNewMakerIdsMap(MakerIdRepository $makerIdRepository): JsonResponse
     {
         return new JsonResponse($makerIdRepository->getOldToNewMakerIdsMap());
     }
 
-    /**
-     * @Route("/health", name="health")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/health', name: 'health')]
+    #[Cache(maxage: 0, public: false)]
     public function healthcheck(HealthCheckService $healthCheckService): JsonResponse
     {
         return new JsonResponse($healthCheckService->getStatus());

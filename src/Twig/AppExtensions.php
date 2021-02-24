@@ -27,13 +27,10 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    private ArtisanVolatileDataRepository $avdRepository;
-    private EnvironmentsService $environments;
-
-    public function __construct(ArtisanVolatileDataRepository $avdRepository, EnvironmentsService $environments)
-    {
-        $this->avdRepository = $avdRepository;
-        $this->environments = $environments;
+    public function __construct(
+        private ArtisanVolatileDataRepository $avdRepository,
+        private EnvironmentsService $environments,
+    ) {
     }
 
     public function getFilters()
@@ -94,8 +91,8 @@ class AppExtensions extends AbstractExtension
     public function getLastSystemUpdateTimeUtcStrFunction(): string
     {
         try {
-            return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
-        } catch (DateTimeException $e) {
+            return DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'))->format('Y-m-d H:i');
+        } catch (DateTimeException) {
             return 'unknown/error';
         }
     }

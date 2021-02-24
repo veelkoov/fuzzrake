@@ -8,17 +8,12 @@ use App\Utils\Artisan\Field;
 
 class SimpleChange implements ChangeInterface
 {
-    private Field $field;
-    private string $old;
-    private string $new;
-    private ?string $imported;
-
-    public function __construct(Field $field, string $old, string $new, ?string $imported)
-    {
-        $this->field = $field;
-        $this->old = $old;
-        $this->new = $new;
-        $this->imported = $imported;
+    public function __construct(
+        private Field $field,
+        private string $old,
+        private string $new,
+        private ?string $imported,
+    ) {
     }
 
     public function getDescription(): string

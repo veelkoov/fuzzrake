@@ -2,10 +2,10 @@ var ARTISANS = null;
 var MAKER_IDS_MAP = null;
 var SPECIES = null;
 
-window.loadFuzzrakeData = function () {
+window.loadFuzzrakeData = function (ac) {
     ARTISANS = [
         {% for artisan in artisans %}
-            new fuzzrake.Artisan({{ artisan|jsonToArtisanParameters }}),
+            new ac({{ artisan|jsonToArtisanParameters }}),
         {% endfor %}
     ];
 
@@ -27,7 +27,3 @@ window.loadFuzzrakeData = function () {
         {{ _self.species_json(species) }}
     };
 }
-
-jQuery(function () {
-    fuzzrake.init();
-});

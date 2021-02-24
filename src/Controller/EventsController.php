@@ -14,14 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EventsController extends AbstractController
 {
     /**
-     * @Route("/events.html", name="events")
-     * @Cache(maxage=3600, public=true)
-     *
-     * @return Response
-     *
      * @throws DateTimeException
      */
-    public function events(EventRepository $eventRepository)
+    #[Route(path: '/events.html', name: 'events')]
+    #[Cache(maxage: 3600, public: true)]
+    public function events(EventRepository $eventRepository): Response
     {
         return $this->render('events/events.html.twig', [
             'events' => $eventRepository->getRecent(),

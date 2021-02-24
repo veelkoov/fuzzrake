@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Tasks\DataImportFactory;
+use App\Utils\Data\Manager;
 use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\IuSubmissions\Manager;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use Symfony\Component\Console\Command\Command;
@@ -20,15 +20,11 @@ class DataImportCommand extends Command
 {
     protected static $defaultName = 'app:data:import';
 
-    private DataImportFactory $dataImportFactory;
-    private EntityManagerInterface $objectManager;
-
-    public function __construct(DataImportFactory $factory, EntityManagerInterface $objectManager)
-    {
+    public function __construct(
+        private DataImportFactory $dataImportFactory,
+        private EntityManagerInterface $objectManager,
+    ) {
         parent::__construct();
-
-        $this->dataImportFactory = $factory;
-        $this->objectManager = $objectManager;
     }
 
     protected function configure()

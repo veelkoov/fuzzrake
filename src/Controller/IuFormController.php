@@ -21,17 +21,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class IuFormController extends AbstractRecaptchaBackedController
 {
     /**
-     * @Route("/iu_form/fill/{makerId}", name="iu_form")
-     * @Cache(maxage=0, public=false)
-     *
      * @throws NotFoundHttpException
      */
+    #[Route(path: '/iu_form/fill/{makerId}', name: 'iu_form')]
+    #[Cache(maxage: 0, public: false)]
     public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, ?string $makerId = null): Response
     {
         try {
             $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();
             $artisan->setPasscode(''); // Should never appear in the form
-        } catch (UnexpectedResultException $e) {
+        } catch (UnexpectedResultException) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
@@ -59,10 +58,8 @@ class IuFormController extends AbstractRecaptchaBackedController
         ]);
     }
 
-    /**
-     * @Route("/iu_form/confirmation", name="iu_form_confirmation")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/iu_form/confirmation', name: 'iu_form_confirmation')]
+    #[Cache(maxage: 0, public: false)]
     public function iuFormConfirmation(): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
@@ -70,10 +67,8 @@ class IuFormController extends AbstractRecaptchaBackedController
         ]);
     }
 
-    /**
-     * @Route("/iu_form/{makerId}")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/iu_form/{makerId}')]
+    #[Cache(maxage: 0, public: false)]
     public function oldAddressRedirect(?string $makerId = null): Response
     {
         return $this->redirectToRoute('iu_form', ['makerId' => $makerId]);

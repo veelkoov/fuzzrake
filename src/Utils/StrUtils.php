@@ -8,9 +8,12 @@ use App\Entity\Artisan;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\Fields;
 use App\Utils\Regexp\Regexp;
+use App\Utils\Traits\UtilityClass;
 
-abstract class StrUtils
+final class StrUtils
 {
+    use UtilityClass;
+
     public static function artisanNamesSafeForCli(Artisan ...$artisans): string
     {
         $names = $makerIds = [];

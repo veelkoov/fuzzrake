@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-class FreeUrl implements Fetchable
-{
-    private string $url;
+use Stringable;
 
-    public function __construct(string $url)
-    {
-        $this->url = $url;
+class FreeUrl implements Fetchable, Stringable
+{
+    public function __construct(
+        private string $url,
+    ) {
     }
 
     public function getUrl(): string
@@ -38,7 +38,7 @@ class FreeUrl implements Fetchable
         return 'N/A';
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class.":{$this->url}";
     }

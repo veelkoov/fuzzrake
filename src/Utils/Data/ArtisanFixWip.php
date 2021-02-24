@@ -10,13 +10,13 @@ use App\Utils\Artisan\Fields;
 
 class ArtisanFixWip
 {
-    private Artisan $original;
     private Artisan $fixed;
 
-    public function __construct(Artisan $fixSubject)
-    {
-        $this->original = $fixSubject;
-        $this->fixed = clone $fixSubject;
+    public function __construct(
+        private Artisan $original,
+        private ?string $submissionId = null,
+    ) {
+        $this->fixed = clone $original;
     }
 
     public function getOriginal(): Artisan
@@ -27,6 +27,11 @@ class ArtisanFixWip
     public function getFixed(): Artisan
     {
         return $this->fixed;
+    }
+
+    public function getSubmissionId(): ?string
+    {
+        return $this->submissionId;
     }
 
     public function apply(): void
