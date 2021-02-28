@@ -67,7 +67,7 @@ final class HtmlPreprocessor
     }
 
     /**
-     * @throws HtmlPreprocessorException
+     * @throws TrackerException
      */
     public static function guessFilterFromUrl(string $url): string
     {
@@ -76,7 +76,7 @@ final class HtmlPreprocessor
                 ->findFirst(fn (Detail $match): string => $match->group('profile')->text())
                 ->orReturn('');
         } catch (NonexistentGroupException $e) {
-            throw new HtmlPreprocessorException('Regexp failed', 0, $e);
+            throw new TrackerException('Regexp failed', exception: $e);
         }
     }
 

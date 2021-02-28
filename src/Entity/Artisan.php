@@ -237,7 +237,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
      *
      * @var Collection|ArtisanUrl[]
      */
-    private Collection $urls;
+    private Collection | array $urls;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", orphanRemoval=true)
@@ -249,7 +249,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
      *
      * @var Collection|MakerId[]
      */
-    private Collection $makerIds;
+    private Collection | array $makerIds;
 
     public function __construct()
     {
@@ -701,7 +701,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @return Collection|ArtisanUrl[]
      */
-    public function getUrls(): Collection
+    public function getUrls(): Collection | array
     {
         return $this->urls;
     }
@@ -731,15 +731,12 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @return Collection|MakerId[]
      */
-    public function getMakerIds(): Collection
+    public function getMakerIds(): Collection | array
     {
         return $this->makerIds;
     }
 
-    /**
-     * @param MakerId|string $makerId
-     */
-    public function addMakerId($makerId): self
+    public function addMakerId(MakerId | string $makerId): self
     {
         if (!($makerId instanceof MakerId)) {
             if ($this->hasMakerId($makerId)) {
@@ -800,11 +797,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     // ===== HELPER GETTERS AND SETTERS =====
 
-    /**
-     * @param Field|string $field
-     * @param mixed        $newValue
-     */
-    public function set($field, $newValue): self
+    public function set(Field | string $field, mixed $newValue): self
     {
         if (!($field instanceof Field)) {
             $field = Fields::get((string) $field);
@@ -821,12 +814,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    /**
-     * @param Field|string $field
-     *
-     * @return mixed
-     */
-    public function get($field)
+    public function get(Field | string $field): mixed
     {
         if (!($field instanceof Field)) {
             $field = Fields::get((string) $field);
@@ -1337,7 +1325,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getValuesForJson(Fields::getAll());
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->getPublicData();
     }
