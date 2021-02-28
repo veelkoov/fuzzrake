@@ -28,7 +28,7 @@ class LanguagesFixer extends StringFixer
     {
         $subject = parent::fix($fieldName, $subject);
 
-        $subject = Regexp::split('#[\n,;&]|[, ]and #', $subject);
+        $subject = pattern('[\n,;&]|[, ]and ')->split($subject);
         $subject = array_filter(array_map('trim', $subject));
         $subject = array_map(function (string $language): string {
             $language = Regexp::replaceAll($this->replacements, $language);

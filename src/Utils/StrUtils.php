@@ -7,7 +7,6 @@ namespace App\Utils;
 use App\Entity\Artisan;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\Fields;
-use App\Utils\Regexp\Regexp;
 use App\Utils\Traits\UtilityClass;
 
 final class StrUtils
@@ -46,8 +45,8 @@ final class StrUtils
      */
     public static function shortPrintUrl(string $originalUrl): string
     {
-        $url = Regexp::replace('#^https?://(www\.)?#', '', $originalUrl);
-        $url = Regexp::replace('/\/?(#profile)?$/', '', $url);
+        $url = pattern('^https?://(www\.)?')->remove($originalUrl)->all();
+        $url = pattern('/?(#profile)?$')->remove($url)->all();
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 

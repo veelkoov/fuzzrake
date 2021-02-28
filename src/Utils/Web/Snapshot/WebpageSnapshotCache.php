@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Utils\Web\Snapshot;
 
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\Regexp\Regexp;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\UrlUtils;
 use JsonException;
@@ -57,9 +56,9 @@ class WebpageSnapshotCache
         }
     }
 
-    private function getBaseDir(string $url)
+    private function getBaseDir(string $url): string
     {
-        $hostName = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
+        $hostName = pattern('^www\.')->remove(UrlUtils::hostFromUrl($url))->first();
 
         $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
         if (str_starts_with($urlFsSafe, $hostName)) {

@@ -13,6 +13,6 @@ class DefinedListFixer extends AbstractListFixer
 
     protected static function getSeparatorRegexp(): string
     {
-        return '#[;\n]#';
+        return '[;\n]';
     }
 }

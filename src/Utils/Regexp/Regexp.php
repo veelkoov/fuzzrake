@@ -67,15 +67,4 @@ abstract class Regexp
 
         return $result;
     }
-
-    public static function split(string $pattern, string $subject, string $debugInfo = ''): array
-    {
-        $result = preg_split($pattern, $subject);
-
-        if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
-        }
-
-        return $result;
-    }
 }

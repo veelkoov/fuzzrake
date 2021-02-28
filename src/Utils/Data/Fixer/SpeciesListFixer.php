@@ -33,7 +33,7 @@ class SpeciesListFixer extends AbstractListFixer
 
     protected static function getSeparatorRegexp(): string
     {
-        return "#[\n,.]#";
+        return "[\n,.]";
     }
 
     protected function getNonsplittable(): array

@@ -24,7 +24,7 @@ class StringListTest extends TestCase
     {
         return [
             [
-                'dog, wolf, fox, big and small cats, birds, bats, dragons, skullsuits...', "#[\n,.]#", ['skullsuits...'],
+                'dog, wolf, fox, big and small cats, birds, bats, dragons, skullsuits...', "[\n,.]", ['skullsuits...'],
                 ['dog', ' wolf', ' fox', ' big and small cats', ' birds', ' bats', ' dragons', ' skullsuits...'],
             ],
         ];
