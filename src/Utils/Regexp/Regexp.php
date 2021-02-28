@@ -38,15 +38,4 @@ abstract class Regexp
 
         return $result;
     }
-
-    public static function matchAll(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): int
-    {
-        $result = preg_match_all($pattern, $subject, $matches);
-
-        if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
-        }
-
-        return $result;
-    }
 }

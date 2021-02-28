@@ -6,7 +6,10 @@ namespace App\Utils\Web;
 
 use App\Utils\Regexp\Regexp;
 use App\Utils\Traits\UtilityClass;
+use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 final class WebsiteInfo
 {
@@ -25,7 +28,7 @@ final class WebsiteInfo
     private const INSTAGRAM_CONTENTS_REGEXP = '#Instagram photos and videos\s*</title>#si';
 
     private const TRELLO_BOARD_URL_REGEXP = '#^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/#';
-    private const WIXSITE_CHILDREN_REGEXP = "#<link[^>]* href=\"(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)\"[^>]*>#si";
+    private const WIXSITE_CHILDREN_REGEXP = '<link[^>]* href="(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>';
 
     public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
     {
@@ -103,11 +106,15 @@ final class WebsiteInfo
     {
         $result = [];
 
-        if (Regexp::matchAll(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, $webpageSnapshot->getContents(), $matches)) {
-            foreach ($matches['data_url'] as $dataUrl) {
-                $result[] = $dataUrl;
-            }
-        }
+        pattern(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, 'si')
+            ->match($webpageSnapshot->getContents())
+            ->forEach(function (Detail $detail): void {
+                try {
+                    $result[] = $detail->get('data_url');
+                } catch (NonexistentGroupException $e) {
+                    throw new UnbelievableRuntimeException($e);
+                }
+            });
 
         return $result;
     }

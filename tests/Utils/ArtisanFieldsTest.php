@@ -7,6 +7,8 @@ namespace App\Tests\Utils;
 use App\Utils\Artisan\Fields;
 use App\Utils\Regexp\Regexp;
 use PHPUnit\Framework\TestCase;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 /**
  * Don't judge, I'm having a lot of fun here!
@@ -14,25 +16,31 @@ use PHPUnit\Framework\TestCase;
 class ArtisanFieldsTest extends TestCase
 {
     private const REGEXP_CONSTRUCTOR = '#constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si';
-    private const REGEXP_CONSTRUCTOR_PARAMETER = '#(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)#i';
+    private const REGEXP_CONSTRUCTOR_PARAMETER = '(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)';
 
+    /**
+     * @throws NonexistentGroupException
+     */
     public function testArtisanTsModel(): void
     {
         $modelSource = file_get_contents(__DIR__.'/../../assets/scripts/class/Artisan.ts');
 
         static::assertTrue(Regexp::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
 
-        static::assertGreaterThan(0, Regexp::matchAll(self::REGEXP_CONSTRUCTOR_PARAMETER, $constructorMatch['parameters'], $parMatches));
+        $matches = pattern(self::REGEXP_CONSTRUCTOR_PARAMETER, 'i')
+            ->match($constructorMatch['parameters']);
+
+        static::assertGreaterThan(0, $matches->count());
 
         $fieldsInJson = Fields::public();
 
-        foreach ($parMatches[0] as $idx => $_) {
+        $matches->forEach(function (Detail $detail) use (&$fieldsInJson): void {
             $field = array_shift($fieldsInJson);
 
             static::assertNotNull($field);
-            static::assertEquals($field->modelName(), $parMatches['name'][$idx]);
-            static::assertEquals($field->isList(), !empty($parMatches['is_list'][$idx]), "{$field->modelName()} should be a list");
-        }
+            static::assertEquals($field->modelName(), $detail->get('name'));
+            static::assertEquals($field->isList(), $detail->matched('is_list'), "{$field->modelName()} should be a list");
+        });
 
         static::assertEmpty($fieldsInJson);
     }
