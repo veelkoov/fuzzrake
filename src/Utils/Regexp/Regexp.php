@@ -17,24 +17,6 @@ abstract class Regexp
         return 1 === $result;
     }
 
-    /**
-     * @throws RegexpMatchException
-     */
-    public static function requireMatch(string $pattern, string $subject, string $debugInfo = ''): array
-    {
-        $result = preg_match($pattern, $subject, $matches);
-
-        if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
-        }
-
-        if (0 === $result) {
-            throw new RegexpMatchException("Regexp '$pattern' didn't match ($debugInfo): $subject");
-        }
-
-        return $matches;
-    }
-
     public static function replace(string $pattern, string $replacement, string $subject, string $debugInfo = ''): string
     {
         $result = preg_replace($pattern, $replacement, $subject);
