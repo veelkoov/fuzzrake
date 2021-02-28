@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
+use App\Utils\Regexp\Replacements;
 use App\Utils\Species\Species;
 
 class SpeciesListFixer extends AbstractListFixer
@@ -13,10 +14,7 @@ class SpeciesListFixer extends AbstractListFixer
      */
     private array $unsplittable;
 
-    /**
-     * @var string[]
-     */
-    private array $replacements;
+    private Replacements $replacements;
 
     public function __construct(Species $species, array $strings, array $lists)
     {
@@ -41,7 +39,7 @@ class SpeciesListFixer extends AbstractListFixer
         return $this->unsplittable;
     }
 
-    protected function getReplacements(): array
+    protected function getReplacements(): Replacements
     {
         return $this->replacements;
     }

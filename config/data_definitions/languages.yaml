@@ -1,8 +1,10 @@
 parameters:
   languages:
+    commonRegexPrefix: '^'
+    commonRegexSuffix: '$'
     replacements:
-      '# with Google Translate#i': ' (with a translator)'
-      '# ?\(native\)#i':                ''
-      '#a small bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner#i': 'limited'
+      ' with Google Translate': ' (with a translator)'
+      ' ?\(native\)': ''
+      'a small bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner': 'limited'
 
     regexp: '(?<prefix>limited\s+)?(?<language>.+)(?<suffix>\s+\(limited\))?'

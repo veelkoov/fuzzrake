@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use App\Repository\ArtisanRepository;
+use App\Utils\Regexp\Replacements;
 use RuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
@@ -14,10 +15,7 @@ class Species
     private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
     private const FLAG_IGNORE_THIS_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
-    /**
-     * @return string[]
-     */
-    private array $replacements;
+    private Replacements $replacements;
 
     /**
      * @return string[]
@@ -43,7 +41,7 @@ class Species
         array $speciesDefinitions,
         private ArtisanRepository $artisanRepository,
     ) {
-        $this->replacements = $speciesDefinitions['replacements'];
+        $this->replacements = new Replacements($speciesDefinitions['replacements'], 'i', $speciesDefinitions['commonRegexPrefix'], $speciesDefinitions['commonRegexSuffix']);
         $this->unsplittable = $speciesDefinitions['leave_unchanged'];
 
         $this->initialize($speciesDefinitions['valid_choices']);
@@ -52,7 +50,7 @@ class Species
     /**
      * @return string[]
      */
-    public function getValidChoicesList()
+    public function getValidChoicesList(): array
     {
         return $this->validChoicesList;
     }
@@ -73,10 +71,7 @@ class Species
         return $this->speciesTree;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getListFixerReplacements(): array
+    public function getListFixerReplacements(): Replacements
     {
         return $this->replacements;
     }

@@ -209,6 +209,8 @@ parameters:
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
       - 'Complex species, as if the species has too many parts and details, I will say so during the quote.'
 
+    commonRegexPrefix: '(?<=^|\n)'
+    commonRegexSuffix: '(?=\n|$)'
     replacements:
       '"([^"]+)"':                                                  '$1'
 

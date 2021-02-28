@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
+use TRegx\SafeRegex\Exception\PregException;
+use TRegx\SafeRegex\preg;
+
 abstract class Regexp
 {
-    public static function match(string $pattern, string $subject, array &$matches = null, string $debugInfo = ''): bool
-    {
-        $result = preg_match($pattern, $subject, $matches);
-
-        if (false === $result) {
-            throw new RuntimeRegexpException("Regexp '$pattern' failed ($debugInfo); preg_last_error=".preg_last_error());
-        }
-
-        return 1 === $result;
-    }
-
     public static function replace(string $pattern, string $replacement, string $subject, string $debugInfo = ''): string
     {
         $result = preg_replace($pattern, $replacement, $subject);
@@ -33,7 +25,11 @@ abstract class Regexp
         $result = $subject;
 
         foreach ($replacements as $pattern => $replacement) {
-            $result = self::replace("$patternPrefix$pattern$patternSuffix", $replacement, $result);
+            try {
+                $result = preg::replace("$patternPrefix$pattern$patternSuffix", $replacement, $result);
+            } catch (PregException $e) {
+                throw new RuntimeRegexpException(previous: $e);
+            }
         }
 
         return $result;
