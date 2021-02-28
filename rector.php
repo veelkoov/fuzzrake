@@ -14,12 +14,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SETS, [
         SetList::SYMFONY_50,
         SetList::SYMFONY_50_TYPES,
+        SetList::SYMFONY_CODE_QUALITY,
         SetList::PHP_70,
         SetList::PHP_71,
         SetList::PHP_72,
         SetList::PHP_73,
         SetList::PHP_74,
         SetList::PHP_80,
+        SetList::PHPUNIT_70,
+        SetList::PHPUNIT_75,
+        SetList::PHPUNIT_80,
     ]);
 
     $parameters->set(Option::SKIP, [

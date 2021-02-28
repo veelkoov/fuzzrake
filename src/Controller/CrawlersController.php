@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CrawlersController extends AbstractController
 {
-    #[Route(path: '/sitemap.txt', name: 'sitemap')]
+    #[Route(path: '/sitemap.txt', name: RouteName::SITEMAP)]
     #[Cache(maxage: 21600, public: true)]
     public function sitemap(): Response
     {

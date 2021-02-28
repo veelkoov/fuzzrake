@@ -7,6 +7,7 @@ namespace App\Controller\Mx;
 use App\Entity\Event;
 use App\Form\EventType;
 use App\Service\EnvironmentsService;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/mx/events')]
 class EventsController extends AbstractController
 {
-    #[Route(path: '/{id}/edit', name: 'mx_event_edit', methods: ['GET', 'POST'])]
-    #[Route(path: '/new', name: 'mx_event_new', methods: ['GET', 'POST'])]
+    #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
+    #[Route(path: '/new', name: RouteName::MX_EVENT_NEW, methods: ['GET', 'POST'])]
     #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?Event $event, EnvironmentsService $environments): Response
     {
@@ -39,7 +40,7 @@ class EventsController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('events');
+            return $this->redirectToRoute(RouteName::EVENTS);
         }
 
         return $this->render('mx/events/edit.html.twig', [

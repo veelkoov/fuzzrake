@@ -9,6 +9,7 @@ use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\Utils\StrUtils;
+use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
@@ -23,7 +24,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     /**
      * @throws NotFoundHttpException
      */
-    #[Route(path: '/iu_form/fill/{makerId}', name: 'iu_form')]
+    #[Route(path: '/iu_form/fill/{makerId}', name: RouteName::IU_FORM)]
     #[Cache(maxage: 0, public: false)]
     public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, ?string $makerId = null): Response
     {
@@ -43,7 +44,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             StrUtils::fixNewlines($artisan);
 
             if ($iuFormService->submit($artisan)) {
-                return $this->redirectToRoute('iu_form_confirmation');
+                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form.'
                 .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
@@ -58,7 +59,7 @@ class IuFormController extends AbstractRecaptchaBackedController
         ]);
     }
 
-    #[Route(path: '/iu_form/confirmation', name: 'iu_form_confirmation')]
+    #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
     #[Cache(maxage: 0, public: false)]
     public function iuFormConfirmation(): Response
     {
@@ -71,7 +72,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     #[Cache(maxage: 0, public: false)]
     public function oldAddressRedirect(?string $makerId = null): Response
     {
-        return $this->redirectToRoute('iu_form', ['makerId' => $makerId]);
+        return $this->redirectToRoute(RouteName::IU_FORM, ['makerId' => $makerId]);
     }
 
     private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface

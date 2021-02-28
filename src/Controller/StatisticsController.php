@@ -9,8 +9,8 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use App\ValueObject\Routing\RouteName;
+use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/')]
 class StatisticsController extends AbstractController
 {
-    const MATCH_WORDS = [
+    private const MATCH_WORDS = [
         'accessor',
         'bases?|blanks?',
         'bendable|pose?able|lickable',
@@ -48,10 +48,9 @@ class StatisticsController extends AbstractController
     ];
 
     /**
-     * @throws NoResultException
-     * @throws NonUniqueResultException
+     * @throws UnexpectedResultException
      */
-    #[Route(path: '/statistics.html', name: 'statistics')]
+    #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
     public function statistics(ArtisanRepository $artisanRepository): Response
     {

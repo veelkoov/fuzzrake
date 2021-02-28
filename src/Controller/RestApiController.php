@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\HealthCheckService;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RestApiController extends AbstractRecaptchaBackedController
 {
-    #[Route(path: '/api/', name: 'api')]
+    #[Route(path: '/api/', name: RouteName::API)]
     #[Cache(maxage: 3600, public: true)]
     public function api(): Response
     {
@@ -50,21 +51,21 @@ class RestApiController extends AbstractRecaptchaBackedController
         }
     }
 
-    #[Route(path: '/api/artisans.json', name: 'api_artisans')]
+    #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
     public function artisans(ArtisanRepository $artisanRepository): JsonResponse
     {
         return new JsonResponse($artisanRepository->getAll());
     }
 
-    #[Route(path: '/api/old_to_new_maker_ids_map.json', name: 'api_old_to_new_maker_ids_map')]
+    #[Route(path: '/api/old_to_new_maker_ids_map.json', name: RouteName::API_OLD_TO_NEW_MAKER_IDS_MAP)]
     #[Cache(maxage: 3600, public: true)]
     public function oldToNewMakerIdsMap(MakerIdRepository $makerIdRepository): JsonResponse
     {
         return new JsonResponse($makerIdRepository->getOldToNewMakerIdsMap());
     }
 
-    #[Route(path: '/health', name: 'health')]
+    #[Route(path: '/health', name: RouteName::HEALTH)]
     #[Cache(maxage: 0, public: false)]
     public function healthcheck(HealthCheckService $healthCheckService): JsonResponse
     {

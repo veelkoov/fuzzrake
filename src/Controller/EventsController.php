@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\EventRepository;
 use App\Utils\DateTime\DateTimeException;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ class EventsController extends AbstractController
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/events.html', name: 'events')]
+    #[Route(path: '/events.html', name: RouteName::EVENTS)]
     #[Cache(maxage: 3600, public: true)]
     public function events(EventRepository $eventRepository): Response
     {
