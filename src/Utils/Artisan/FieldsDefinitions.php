@@ -74,8 +74,8 @@ final class FieldsDefinitions
         Fields::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
         Fields::URL_FURTRACK               => ['furtrackUrl',              VR::FURTRACK_URL,              0, 1, 1, 1],
-        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URLS,                1, 1, 1, 1],
-        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URLS,            1, 1, 1, 1],
+        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URL_LIST,            1, 1, 1, 1],
+        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URL_LIST,        1, 1, 1, 1],
         Fields::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
 
         Fields::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],

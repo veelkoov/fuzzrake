@@ -22,6 +22,8 @@ final class ValidationRegexps
     public const INSTAGRAM_URL = '#^(https://www\.instagram\.com/[^/]+/)?$#';
     public const TUMBLR_URL = '#^((https?://[^.]+\.tumblr\.com/)|(https://pupdates.matrices.net/))?$#'; // FIXME: Allow custom-domain exceptions
     public const TWITTER_URL = '#^(https://twitter\.com/[^/]+)?$#';
+    public const SCRITCH_URL = '#^(https://scritch\.es/(makers/)?[-a-zA-Z0-9]+)?$#';
+    public const FURTRACK_URL = '#^(https://www\.furtrack\.com/index/maker:[a-z0-9_]+)?$#';
 
     public const LIST_VALIDATION = '#^[-,&!.A-Za-z0-9+()/\n %:"\']*$#';
     public const FORMER_MAKER_IDS = '#^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$#';
@@ -30,8 +32,6 @@ final class ValidationRegexps
     public const SINCE = '#^(\d{4}-\d{2})?$#';
     public const COUNTRY = '#^([A-Z]{2})?$#';
 
-    public const PHOTO_URLS = self::ANYTHING; // FIXME
-    public const MINIATURE_URLS = self::ANYTHING; // FIXME
-    public const SCRITCH_URL = self::ANYTHING; // FIXME
-    public const FURTRACK_URL = self::ANYTHING; // FIXME
+    public const PHOTO_URL_LIST = '#^((https://scritch\.es/pictures/[-a-f0-9]{36}|https://www\.furtrack\.com/p/\d+)(\n(https://scritch\.es/pictures/[-a-f0-9]{36}|https://www\.furtrack\.com/p/\d+)){0,4})?$#';
+    public const MINIATURE_URL_LIST = self::ANYTHING; // TODO
 }
