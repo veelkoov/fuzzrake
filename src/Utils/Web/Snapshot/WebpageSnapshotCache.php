@@ -25,13 +25,6 @@ class WebpageSnapshotCache
         return is_dir($this->getBaseDir($url->getUrl()));
     }
 
-    public function getOK(Fetchable $url): ?WebpageSnapshot
-    {
-        $result = $this->get($url);
-
-        return $result && $result->isOK() ? $result : null;
-    }
-
     public function get(Fetchable $url): ?WebpageSnapshot
     {
         if (!$this->has($url)) {

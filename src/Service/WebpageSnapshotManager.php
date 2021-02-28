@@ -31,7 +31,7 @@ class WebpageSnapshotManager
      */
     public function get(Fetchable $url, bool $refetch, bool $throw): WebpageSnapshot
     {
-        if (!$refetch && (null !== ($result = $this->cache->getOK($url)))) {
+        if (!$refetch && (null !== ($result = $this->cache->get($url)))) {
             $this->logger->debug('Retrieved from cache: '.$url);
 
             return $result;
