@@ -7,7 +7,7 @@ let template: HandlebarsTemplateDelegate;
 let $template: JQuery<HTMLElement>;
 let $contents: JQuery<HTMLElement>;
 
-function detailsPopUpShowCallback(event: any) {
+function detailsPopUpShowCallback(event: any): void {
     $contents.html(template({
         'artisan': jQuery(event.relatedTarget).closest('tr').data('artisan'),
     }));
