@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\DateTime\DateTimeException;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
+use JsonException;
 use PHPUnit\Framework\TestCase;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 class CommissionsStatusParserTest extends TestCase
 {
-    const FILEPATH_PATTERN = '#/\d+_(?<status>open|closed|unknown)/metadata\.json$#';
-
     private static CommissionsStatusParser $csp;
 
     public static function setUpBeforeClass(): void
@@ -43,24 +44,24 @@ class CommissionsStatusParserTest extends TestCase
         static::assertSame($expectedResult, $result->getStatus(), $errorMsg);
     }
 
-    public function areCommissionsOpenDataProvider()
+    /**
+     * @throws DateTimeException|JsonException|NonexistentGroupException
+     */
+    public function areCommissionsOpenDataProvider(): array
     {
-        return array_filter(array_map(function ($filepath) {
-            if (!Regexp::match(self::FILEPATH_PATTERN, $filepath, $matches)) {
-                echo "Invalid filepath: $filepath\n";
+        $pattern = pattern('/\d+_(?<status>open|closed|unknown)/metadata\.json$');
 
-                return false;
-            }
+        return array_filter(array_map(fn (string $filepath): array => $pattern->match($filepath)
+            ->findFirst(function (Detail $detail) use ($filepath): array {
+                $expectedResult = match ($detail->get('status')) {
+                    'open'   => true,
+                    'closed' => false,
+                    default  => null,
+                };
 
-            $expectedResult = match ($matches['status']) {
-                'open'   => true,
-                'closed' => false,
-                default  => null,
-            };
+                $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
-            $snapshot = WebpageSnapshotJar::load(dirname($filepath));
-
-            return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../snapshots/*/*/metadata.json')));
+                return [basename(dirname($filepath)), $snapshot, $expectedResult];
+            })->orThrow(), glob(__DIR__.'/../snapshots/*/*/metadata.json')));
     }
 }

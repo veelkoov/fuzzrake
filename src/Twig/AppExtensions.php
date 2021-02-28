@@ -15,7 +15,6 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\Json;
-use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
@@ -34,7 +33,7 @@ class AppExtensions extends AbstractExtension
     ) {
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('list', [$this, 'listFilter']),
@@ -49,7 +48,7 @@ class AppExtensions extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
@@ -131,7 +130,9 @@ class AppExtensions extends AbstractExtension
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
-        return array_filter($items, fn (FilterItem $item) => Regexp::match("#$matchWord#i", $item->getLabel()));
+        $pattern = pattern($matchWord, 'i');
+
+        return array_filter($items, fn (FilterItem $item) => $pattern->test($item->getLabel()));
     }
 
     public function filterHumanFriendlyRegexp(string $input): string

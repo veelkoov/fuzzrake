@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Utils;
 
 use App\Utils\Artisan\Fields;
-use App\Utils\Regexp\Regexp;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
@@ -15,7 +14,7 @@ use TRegx\CleanRegex\Match\Details\Detail;
  */
 class ArtisanFieldsTest extends TestCase
 {
-    private const REGEXP_CONSTRUCTOR = '#constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)#si';
+    private const REGEXP_CONSTRUCTOR = 'constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)';
     private const REGEXP_CONSTRUCTOR_PARAMETER = '(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)';
 
     /**
@@ -25,10 +24,12 @@ class ArtisanFieldsTest extends TestCase
     {
         $modelSource = file_get_contents(__DIR__.'/../../assets/scripts/class/Artisan.ts');
 
-        static::assertTrue(Regexp::match(self::REGEXP_CONSTRUCTOR, $modelSource, $constructorMatch));
+        $parameters = pattern(self::REGEXP_CONSTRUCTOR, 'si')
+            ->match($modelSource)
+            ->findFirst(fn (Detail $detail): string => $detail->get('parameters'))
+            ->orThrow();
 
-        $matches = pattern(self::REGEXP_CONSTRUCTOR_PARAMETER, 'i')
-            ->match($constructorMatch['parameters']);
+        $matches = pattern(self::REGEXP_CONSTRUCTOR_PARAMETER, 'i')->match($parameters);
 
         static::assertGreaterThan(0, $matches->count());
 

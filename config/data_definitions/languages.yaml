@@ -5,4 +5,4 @@ parameters:
       '# ?\(native\)#i':                ''
       '#a small bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner#i': 'limited'
 
-    regexp: '#(?<prefix>limited\s+)?(?<language>.+)(?<suffix>\s+\(limited\))?#i'
+    regexp: '(?<prefix>limited\s+)?(?<language>.+)(?<suffix>\s+\(limited\))?'

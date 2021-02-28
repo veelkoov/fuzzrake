@@ -6,10 +6,14 @@ namespace App\Utils\Data\Fixer;
 
 use App\Utils\Regexp\Regexp;
 use App\Utils\StrUtils;
+use App\Utils\UnbelievableRuntimeException;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\PatternInterface;
 
 class LanguagesFixer extends StringFixer
 {
-    private string $regexp;
+    private PatternInterface $pattern;
 
     /**
      * @var string[]
@@ -20,7 +24,7 @@ class LanguagesFixer extends StringFixer
     {
         parent::__construct($strings);
 
-        $this->regexp = $languages['regexp'];
+        $this->pattern = pattern($languages['regexp'], 'i');
         $this->replacements = $languages['replacements'];
     }
 
@@ -33,14 +37,18 @@ class LanguagesFixer extends StringFixer
         $subject = array_map(function (string $language): string {
             $language = Regexp::replaceAll($this->replacements, $language);
 
-            Regexp::match($this->regexp, $language, $matches);
+            return $this->pattern->replace($language)->first()->callback(function (Detail $detail): string {
+                try {
+                    $language = $detail->get('language');
+                    $limited = $detail->matched('prefix') || $detail->matched('suffix');
+                } catch (NonexistentGroupException $e) {
+                    throw new UnbelievableRuntimeException($e);
+                }
 
-            $language = $matches['language'];
-            $suffix = $matches['prefix'] || ($matches['suffix'] ?? '') ? ' (limited)' : '';
+                $language = StrUtils::ucfirst($language);
 
-            $language = StrUtils::ucfirst($language);
-
-            return $language.$suffix;
+                return $language.($limited ? ' (limited)' : '');
+            });
         }, $subject);
 
         sort($subject);
