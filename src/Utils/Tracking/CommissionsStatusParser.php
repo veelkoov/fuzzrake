@@ -25,8 +25,9 @@ class CommissionsStatusParser
     private Variant $closed;
     private Variant $any;
 
-    public function __construct()
-    {
+    public function __construct(
+        private HtmlPreprocessor $htmlPreprocessor,
+    ) {
         $this->open = new Variant(['STATUS' => 'OPEN']);
         $this->closed = new Variant(['STATUS' => 'CLOSED']);
         $this->any = new Variant(['STATUS' => '(OPEN|CLOSED)']);
@@ -61,7 +62,7 @@ class CommissionsStatusParser
      */
     private function processInputText(string $artisanName, string $additionalFilter, string $inputText): string
     {
-        $inputText = HtmlPreprocessor::cleanHtml($inputText);
+        $inputText = $this->htmlPreprocessor->clean($inputText);
         $inputText = HtmlPreprocessor::processArtisansName($artisanName, $inputText);
         $inputText = $this->removeFalsePositives($inputText);
         $inputText = HtmlPreprocessor::applyFilters($inputText, $additionalFilter);

@@ -41,7 +41,11 @@ class TrackingRegexp
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        return Regexp::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
+        try {
+            return preg::replace($this->compiled[$variant], '', $input);
+        } catch (PregException $e) {
+            throw new RuntimeRegexpException(previous: $e);
+        }
     }
 
     public function getCompiled(Variant $variant = null): string

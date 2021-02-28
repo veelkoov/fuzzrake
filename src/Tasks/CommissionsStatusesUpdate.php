@@ -25,18 +25,17 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 final class CommissionsStatusesUpdate
 {
     private ArtisanRepository $artisanRepository;
-    private CommissionsStatusParser $parser;
 
     public function __construct(
         private LoggerInterface $logger,
         private EntityManagerInterface $entityManager,
         private WebpageSnapshotManager $snapshots,
+        private CommissionsStatusParser $commissionsStatusParser,
         private SymfonyStyle $io,
         private bool $refetch,
         private bool $dryRun,
     ) {
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
-        $this->parser = new CommissionsStatusParser();
         $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
@@ -77,7 +76,7 @@ final class CommissionsStatusesUpdate
             $webpageSnapshot = $this->snapshots->get($url, false, false);
 
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
-            $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
+            $analysisResult = $this->commissionsStatusParser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
         } catch (ExceptionInterface) {

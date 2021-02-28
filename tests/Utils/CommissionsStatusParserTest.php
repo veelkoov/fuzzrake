@@ -6,6 +6,7 @@ namespace App\Tests\Utils;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\HtmlPreprocessor;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
@@ -20,7 +21,7 @@ class CommissionsStatusParserTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$csp = new CommissionsStatusParser();
+        self::$csp = new CommissionsStatusParser(new HtmlPreprocessor());
     }
 
     /**
