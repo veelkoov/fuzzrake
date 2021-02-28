@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
+use App\Utils\Traits\UtilityClass;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 
-abstract class DateTimeUtils
+final class DateTimeUtils
 {
+    use UtilityClass;
+
     public static function getNowUtc(): DateTime
     {
         try {
