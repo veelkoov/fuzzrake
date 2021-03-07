@@ -54,7 +54,7 @@ class Event
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $newStatus;
+    private ?bool $newStatus = null;
 
     /**
      * @ORM\Column(type="string", length=256)

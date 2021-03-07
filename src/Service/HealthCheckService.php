@@ -78,7 +78,7 @@ class HealthCheckService
             try {
                 $mibsFree = Parse::tInt($disk[0]);
                 $percentUsed = Parse::tPercentAsInt($disk[1]);
-            } catch (ParseException $e) {
+            } catch (ParseException) {
                 return self::WARNING;
             }
 
@@ -96,7 +96,7 @@ class HealthCheckService
             $memoryAvailableMibs = Parse::tInt($rawData);
 
             return $memoryAvailableMibs > $this->memoryAvailableMinMibs ? self::OK : self::WARNING;
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             return self::WARNING;
         }
     }
@@ -114,7 +114,7 @@ class HealthCheckService
             $load1m = Parse::tFloat($loads[0]) / $cpuCount;
             $load5m = Parse::tFloat($loads[1]) / $cpuCount;
             $load15m = Parse::tFloat($loads[2]) / $cpuCount;
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             return self::WARNING;
         }
 
@@ -127,7 +127,7 @@ class HealthCheckService
     {
         try {
             return $this->getUpdatesStatus('-12 hours -15 minutes', $this->artisanVolatileDataRepository->getLastCsUpdateTime()); // TODO: How often
-        } catch (DateTimeException | UnexpectedResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException) {
             return self::WARNING;
         }
     }
@@ -136,7 +136,7 @@ class HealthCheckService
     {
         try {
             return $this->getUpdatesStatus('-7 days -15 minutes', $this->artisanVolatileDataRepository->getLastBpUpdateTime()); // TODO: How often
-        } catch (DateTimeException | UnexpectedResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException) {
             return self::WARNING;
         }
     }

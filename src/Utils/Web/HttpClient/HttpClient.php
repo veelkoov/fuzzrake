@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\HttpClient;
 
-use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\CurlHttpClient;

@@ -68,7 +68,7 @@ final class CommissionsUpdates implements UpdatesInterface
 
             try {
                 $result->addAcses($this->extractArtisanCommissionsStatuses($url));
-            } catch (ExceptionInterface $e) {
+            } catch (ExceptionInterface) {
                 // TODO: Handle partial?
             }
         }

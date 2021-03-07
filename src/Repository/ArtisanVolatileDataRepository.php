@@ -57,7 +57,7 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
     {
         try {
             return $this->getLastCsUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | UnexpectedResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException) {
             return 'unknown/error';
         }
     }
@@ -66,7 +66,7 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
     {
         try {
             return $this->getLastBpUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | UnexpectedResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException) {
             return 'unknown/error';
         }
     }
