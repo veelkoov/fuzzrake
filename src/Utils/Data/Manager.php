@@ -23,6 +23,7 @@ class Manager
     public const CMD_CLEAR = 'clear';
     public const CMD_IGNORE_PASSCODE = 'ignore-passcode';
     public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
+    public const CMD_MATCH_TO_NAME = 'match-to-name';
     public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
                                          * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
                                          * then I can't include your bare studio name on the list. No one else will be able
@@ -41,6 +42,11 @@ class Manager
      * @var string[] List of submission IDs which got accepted (new maker or changed password)
      */
     private array $acceptedItems = [];
+
+    /**
+     * @var string[] Associative list: submission ID => matched artisan name
+     */
+    private array $matchedNames = [];
 
     /**
      * @var string[] List of submission IDs which contain invalid passcodes, to be approved & imported
@@ -94,10 +100,9 @@ class Manager
         $this->applyCorrections($artisan, $corrections);
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
-    public function getMatchedName(string $makerId): ?string
+    public function getMatchedName(string $submissionId): ?string
     {
-        return null; // TODO: Implement if needed ever again GREP-CODE-CMD-MATCH-NAME
+        return $this->matchedNames[$submissionId] ?? null;
     }
 
     public function isAccepted(ImportItem $item): bool
@@ -186,6 +191,10 @@ class Manager
                 }
 
                 $this->itemsIgnoreFinalTimes[$this->getCurrentSubject()] = $parsedFinalTime;
+                break;
+
+            case self::CMD_MATCH_TO_NAME:
+                $this->matchedNames[$this->currentSubject] = $buffer->readToken();
                 break;
 
             case self::CMD_REJECT:
