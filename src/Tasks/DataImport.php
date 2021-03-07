@@ -113,7 +113,7 @@ class DataImport
         $this->manager->correctArtisan($input->getFixed(), $submission->getId());
         $this->fdv->perform($input, FDV::FIX);
 
-        $originalEntity = $this->findBestMatchArtisan($input->getFixed()) ?: new Artisan();
+        $originalEntity = $this->findBestMatchArtisan($input->getFixed(), $submission->getId()) ?: new Artisan();
 
         $entity = new ArtisanFixWip($originalEntity, $submission->getId());
 
@@ -175,12 +175,12 @@ class DataImport
         return $artisan;
     }
 
-    private function findBestMatchArtisan(Artisan $artisan): ?Artisan
+    private function findBestMatchArtisan(Artisan $artisan, string $submissionId): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
             $artisan->getAllNamesArr(),
             $artisan->getAllMakerIdsArr(),
-            $this->manager->getMatchedName($artisan->getMakerId())
+            $this->manager->getMatchedName($submissionId)
         );
 
         if (count($results) > 1) {

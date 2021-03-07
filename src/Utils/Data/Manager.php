@@ -23,6 +23,7 @@ class Manager
     public const CMD_CLEAR = 'clear';
     public const CMD_IGNORE_PASSCODE = 'ignore-passcode';
     public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
+    public const CMD_MATCH_TO_NAME = 'match-to-name';
     public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
                                          * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
                                          * then I can't include your bare studio name on the list. No one else will be able
@@ -41,6 +42,11 @@ class Manager
      * @var string[] List of submission IDs which got accepted (new maker or changed password)
      */
     private array $acceptedItems = [];
+
+    /**
+     * @var string[] Associative list: submission ID => matched artisan name
+     */
+    private array $matchedNames = [];
 
     /**
      * @var string[] List of submission IDs which contain invalid passcodes, to be approved & imported
@@ -94,10 +100,9 @@ class Manager
         $this->applyCorrections($artisan, $corrections);
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
-    public function getMatchedName(string $makerId): ?string
+    public function getMatchedName(string $submissionId): ?string
     {
-        return null; // TODO: Implement if needed ever again GREP-CODE-CMD-MATCH-NAME
+        return $this->matchedNames[$submissionId] ?? null;
     }
 
     public function isAccepted(ImportItem $item): bool
@@ -158,30 +163,22 @@ class Manager
         $buffer->skipWhitespace();
 
         switch ($command) {
-            case self::CMD_WITH:
-                $subject = $buffer->readUntil(':');
+            case self::CMD_ACCEPT:
+                $this->acceptedItems[] = $this->getCurrentSubject();
+                break;
 
-                if (pattern('^([A-Z0-9]{7}|\d{4}-\d{2}-\d{2}_\d{6}_\d{4})$')->fails($subject)) {
-                    throw new DataInputException("Invalid subject: '$subject'");
-                }
+            case self::CMD_CLEAR:
+                $fieldName = $buffer->readUntilWhitespace();
 
-                $this->currentSubject = $subject;
+                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
                 break;
 
             case self::CMD_COMMENT:
                 $buffer->readUntilEolOrEof();
                 break;
 
-            case self::CMD_ACCEPT:
-                $this->acceptedItems[] = $this->getCurrentSubject();
-                break;
-
             case self::CMD_IGNORE_PASSCODE:
                 $this->itemsWithPasscodeExceptions[] = $this->getCurrentSubject();
-                break;
-
-            case self::CMD_REJECT:
-                $this->rejectedItems[] = $this->getCurrentSubject();
                 break;
 
             case self::CMD_IGNORE_UNTIL:
@@ -196,12 +193,13 @@ class Manager
                 $this->itemsIgnoreFinalTimes[$this->getCurrentSubject()] = $parsedFinalTime;
                 break;
 
-            case self::CMD_SET:
-                $fieldName = $buffer->readUntilWhitespace();
-                $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
+            case self::CMD_MATCH_TO_NAME:
+                $this->matchedNames[$this->currentSubject] = $buffer->readToken();
+                break;
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
-            break;
+            case self::CMD_REJECT:
+                $this->rejectedItems[] = $this->getCurrentSubject();
+                break;
 
             case self::CMD_REPLACE:
                 $fieldName = $buffer->readUntilWhitespace();
@@ -209,13 +207,24 @@ class Manager
                 $correctedValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
                 $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), $wrongValue, $correctedValue);
-            break;
+                break;
 
-            case self::CMD_CLEAR:
+            case self::CMD_SET:
                 $fieldName = $buffer->readUntilWhitespace();
+                $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
-            break;
+                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
+                break;
+
+            case self::CMD_WITH:
+                $subject = $buffer->readUntil(':');
+
+                if (pattern('^([A-Z0-9]{7}|\d{4}-\d{2}-\d{2}_\d{6}_\d{4})$')->fails($subject)) {
+                    throw new DataInputException("Invalid subject: '$subject'");
+                }
+
+                $this->currentSubject = $subject;
+                break;
 
             default:
                 throw new DataInputException("Unknown command: '$command'");

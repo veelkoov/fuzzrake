@@ -34,11 +34,11 @@ class Messaging
     {
         $this->printer->warning("New maker: {$item->getNamesStrSafe()}");
         $this->printer->writeln([
-            // Manager::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:", // GREP-CODE-CMD-MATCH-NAME
             Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
             '    '.Manager::CMD_ACCEPT,
             '    '.Manager::CMD_REJECT,
             '    '.Manager::CMD_IGNORE_UNTIL.' '.DateTimeUtils::getMonthLaterYmd(),
+            '    '.Manager::CMD_MATCH_TO_NAME.' |ABCDEFGHIJ|',
         ]);
     }
 

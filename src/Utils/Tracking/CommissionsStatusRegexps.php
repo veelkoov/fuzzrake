@@ -10,16 +10,6 @@ final class CommissionsStatusRegexps
 {
     use UtilityClass;
 
-    public const HTML_CLEANER_REGEXPS = [
-        '#</?(strong|b|i|span|center|a|em|font)[^>]*>#s' => '',
-        '#(\s|&nbsp;|<br\s*/?>)+#s'                      => ' ',
-        '#<style[^>]*>.*?</style>#s'                     => '',
-        '# style="[^"]*"( (?=\>))?#s'                    => '',
-        '#’|&\#39;|&\#8217;#'                            => '\'',
-        '<!--.*?-->'                                     => '',
-        '# +data-[^>"]+ *= *"[^"]+" *#'                  => ' ',
-    ];
-
     public const COMMON_REPLACEMENTS = [
         'COMMISSIONS'       => '(quotes? reviews|everything|(quotes and )?comm?iss?i?ons?((/| and | )(quotes|trades))?|comms)',
         'OPEN'              => '(open(?!ing)|(?!not? (currently )?|aren\'t |are not? )(accepting|considering|taking)|WE_CAN take|live)',

@@ -7,6 +7,7 @@ namespace App\Controller\Mx;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\FieldsDefinitions;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/mx/artisan_urls')]
 class ArtisanUrlsController extends AbstractController
 {
-    #[Route(path: '/', name: 'mx_artisan_urls')]
+    #[Route(path: '/', name: RouteName::MX_ARTISAN_URLS)]
     #[Cache(maxage: 0, public: false)]
     public function index(ArtisanUrlRepository $repository, EnvironmentsService $environments): Response
     {

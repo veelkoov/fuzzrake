@@ -6,6 +6,6 @@ namespace App\Utils\Regexp;
 
 use RuntimeException;
 
-class RuntimeRegexpException extends RuntimeException
+class RuntimeRegexpException extends RuntimeException // FIXME: Remove
 {
 }

@@ -7,6 +7,8 @@ namespace App\Utils\Regexp;
 use App\Utils\StrContext\StrContextUtils;
 use App\Utils\Tracking\TrackingMatch;
 use SplObjectStorage;
+use TRegx\SafeRegex\Exception\PregException;
+use TRegx\SafeRegex\preg;
 
 class TrackingRegexp
 {
@@ -24,8 +26,12 @@ class TrackingRegexp
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        if (!Regexp::match($this->compiled[$variant], $subject, $matches, 'ID='.$this->id)) {
-            return null;
+        try {
+            if (!preg::match($this->compiled[$variant], $subject, $matches)) {
+                return null;
+            }
+        } catch (PregException $e) {
+            throw new RuntimeRegexpException(previous: $e);
         }
 
         return new TrackingMatch($this, $variant, StrContextUtils::extractFrom($subject, $matches[0], self::CONTEXT_LENGTH));
@@ -35,7 +41,11 @@ class TrackingRegexp
     {
         $variant = $this->useDefaultVariantWhenNull($variant);
 
-        return Regexp::replace($this->compiled[$variant], '', $input, 'ID='.$this->id);
+        try {
+            return preg::replace($this->compiled[$variant], '', $input);
+        } catch (PregException $e) {
+            throw new RuntimeRegexpException(previous: $e);
+        }
     }
 
     public function getCompiled(Variant $variant = null): string

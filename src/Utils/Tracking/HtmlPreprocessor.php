@@ -5,17 +5,31 @@ declare(strict_types=1);
 namespace App\Utils\Tracking;
 
 use App\Utils\Json;
-use App\Utils\Regexp\Regexp;
-use App\Utils\Traits\UtilityClass;
+use App\Utils\Regexp\Replacements;
 use App\Utils\Web\WebsiteInfo;
 use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 
-final class HtmlPreprocessor
+class HtmlPreprocessor
 {
-    use UtilityClass;
+    private const HTML_CLEANER_REGEXPS = [
+        '</?(strong|b|i|span|center|a|em|font)[^>]*>' => '',
+        '(\s|&nbsp;|<br\s*/?>)+'                      => ' ',
+        '<style[^>]*>.*?</style>'                     => '',
+        ' style="[^"]*"( (?=\>))?'                    => '',
+        '’|&\#39;|&\#8217;'                           => '\'',
+        '<!--.*?-->'                                  => '',
+        ' +data-[^>"]+ *= *"[^"]+" *'                 => ' ',
+    ];
+
+    private Replacements $cleanerReplacements;
+
+    public function __construct()
+    {
+        $this->cleanerReplacements = new Replacements(self::HTML_CLEANER_REGEXPS, 's', '', '');
+    }
 
     public static function processArtisansName(string $artisanName, string $inputText): string
     {
@@ -28,11 +42,11 @@ final class HtmlPreprocessor
         return $inputText;
     }
 
-    public static function cleanHtml(string $inputText): string
+    public function clean(string $inputText): string
     {
         $inputText = strtolower($inputText);
         $inputText = HtmlPreprocessor::extractFromJson($inputText);
-        $inputText = Regexp::replaceAll(CommissionsStatusRegexps::HTML_CLEANER_REGEXPS, $inputText);
+        $inputText = $this->cleanerReplacements->do($inputText);
 
         return $inputText;
     }

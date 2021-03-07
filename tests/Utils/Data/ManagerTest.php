@@ -37,4 +37,15 @@ class ManagerTest extends TestCase
 
         self::assertEquals('https://example.com/', $artisan->getWebsiteUrl());
     }
+
+    public function testDetectingDelimiter(): void
+    {
+        $manager = new Manager('with ABCDEFG: replace NAME |abcdef| "fedcba"');
+
+        $artisan = (new Artisan())->setMakerId('ABCDEFG')->setName('abcdef');
+
+        $manager->correctArtisan($artisan);
+
+        self::assertEquals('fedcba', $artisan->getName());
+    }
 }

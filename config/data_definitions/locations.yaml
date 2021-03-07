@@ -1,7 +1,7 @@
 parameters:
   countries:
-    commonRegexPrefix: '#^'
-    commonRegexSuffix: '$#i'
+    commonRegexPrefix: '^'
+    commonRegexSuffix: '$'
     replacements:
       "argentina":                                     "AR"
       "australia":                                     "AU"
@@ -10,7 +10,7 @@ parameters:
       "costa rica":                                    "CR"
       "czech( republic)?":                             "CZ"
       "d[ea]nmark":                                    "DK"
-      "germany":                                       "DE"
+      "(germany|Deutschland)":                         "DE"
       "finland":                                       "FI"
       "france":                                        "FR"
       "(uk|england|united kingdom)":                   "GB"
@@ -31,8 +31,8 @@ parameters:
       "south africa":                                  "ZA"
 
   states:
-    commonRegexPrefix: '#^'
-    commonRegexSuffix: '$#i'
+    commonRegexPrefix: '^'
+    commonRegexSuffix: '$'
     replacements:
       'AZ$|^Arizona':                   'Arizona'
       'CA$|^California':                'California'

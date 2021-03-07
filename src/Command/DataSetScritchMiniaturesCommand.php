@@ -6,9 +6,8 @@ namespace App\Command;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\Json;
-use App\Utils\Regexp\Regexp;
-use App\Utils\Regexp\RegexpMatchException;
 use App\Utils\StrUtils;
+use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
@@ -20,10 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
 class DataSetScritchMiniaturesCommand extends Command
 {
-    private const PICTURE_URL_REGEXP = '#^https://scritch\.es/pictures/(?<picture_id>[a-z0-9-]{36})$#';
+    private const PICTURE_URL_REGEXP = '^https://scritch\.es/pictures/(?<picture_id>[a-z0-9-]{36})$';
 
     protected static $defaultName = 'app:data:set-scritch-miniatures';
     private CookieJar $cookieJar;
@@ -69,7 +70,7 @@ class DataSetScritchMiniaturesCommand extends Command
 
             try {
                 $miniatureUrls = $this->retrieveMiniatureUrls($pictureUrls, $csrfToken);
-            } catch (ExceptionInterface | RegexpMatchException | JsonException | LogicException $e) {
+            } catch (ExceptionInterface | JsonException | LogicException $e) {
                 $io->error('Failed: '.$artisan->getLastMakerId().', '.$e->getMessage());
                 continue;
             }
@@ -94,13 +95,12 @@ class DataSetScritchMiniaturesCommand extends Command
      * @return string[]
      *
      * @throws JsonException
-     * @throws RegexpMatchException
      * @throws LogicException
      * @throws ExceptionInterface
      */
     private function retrieveMiniatureUrls(array $pictureUrls, string $csrfToken): array
     {
-        $pictureIds = $this->idsFromPicureUrls($pictureUrls);
+        $pictureIds = $this->idsFromPictureUrls($pictureUrls);
         $jsonPayloads = array_map([$this, 'getGraphQlJsonPayload'], $pictureIds);
         $result = [];
 
@@ -116,7 +116,7 @@ class DataSetScritchMiniaturesCommand extends Command
             $thumbnailUrl = Json::decode($response->getContent(true))['data']['medium']['thumbnail'] ?? '';
 
             if ('' === $thumbnailUrl) {
-                throw new LogicException("No thumbnail URL found in response: $response");
+                throw new LogicException('No thumbnail URL found in response');
             }
 
             $result[] = $thumbnailUrl;
@@ -129,15 +129,20 @@ class DataSetScritchMiniaturesCommand extends Command
      * @param string[] $pictureUrls
      *
      * @return string[]
-     *
-     * @throws RegexpMatchException From inside array_map
      */
-    private function idsFromPicureUrls(array $pictureUrls): array
+    private function idsFromPictureUrls(array $pictureUrls): array
     {
         $result = [];
 
         foreach ($pictureUrls as $pictureUrl) {
-            $result[] = Regexp::requireMatch(self::PICTURE_URL_REGEXP, $pictureUrl)['picture_id'];
+            $result[] = pattern(self::PICTURE_URL_REGEXP)->match($pictureUrl)
+                ->findFirst(function (Detail $detail): string {
+                    try {
+                        return $detail->get('picture_id');
+                    } catch (NonexistentGroupException $e) {
+                        throw new UnbelievableRuntimeException($e);
+                    }
+                })->orElse(throw new LogicException("Failed to match Scritch picture URL: $pictureUrl"));
         }
 
         return $result;

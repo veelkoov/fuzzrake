@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace App\Utils\Artisan;
 
 use Stringable;
+use TRegx\CleanRegex\PatternInterface;
 
 class Field implements Stringable
 {
+    private PatternInterface $validationPattern;
+
     public function __construct(
         private string $name,
         private ?string $modelName,
-        private ?string $validationRegexp,
+        ?string $validationRegexp,
         private bool $isList,
         private bool $isPersisted,
         private bool $inStats,
         private bool $public,
     ) {
+        $this->validationPattern = pattern($validationRegexp);
     }
 
     public function name(): string
@@ -29,9 +33,9 @@ class Field implements Stringable
         return $this->modelName;
     }
 
-    public function validationRegexp(): ?string
+    public function validationPattern(): PatternInterface
     {
-        return $this->validationRegexp;
+        return $this->validationPattern;
     }
 
     public function isList(): bool

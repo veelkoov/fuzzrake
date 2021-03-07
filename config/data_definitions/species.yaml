@@ -165,6 +165,7 @@ parameters:
         "Gem raptors":
         "Heavily complicated creatures":
         "Humanoids":
+        "Humans":
         "I can also do velvet or minky skinned characters":
         "I make exceptions on rare occasions":
         "Most anything covered in fur":
@@ -173,6 +174,7 @@ parameters:
         "No airbrushed / gradient markings on any species (all work is sewn)":
         "Only because I do not currently have the ability to do the electronic work on them":
         "Others":
+        "Own species":
         "Please inquire about fantasy creatures":
         "Pony": # Does it mean lil horse or MLP?
         "Protogens (for paws and tail ONLY)":
@@ -209,6 +211,8 @@ parameters:
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
       - 'Complex species, as if the species has too many parts and details, I will say so during the quote.'
 
+    commonRegexPrefix: '(?<=^|\n)'
+    commonRegexSuffix: '(?=\n|$)'
     replacements:
       '"([^"]+)"':                                                  '$1'
 

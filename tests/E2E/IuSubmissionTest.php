@@ -8,7 +8,6 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\Data\FdvFactory;
@@ -29,7 +28,6 @@ use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Filesystem\Filesystem;
-use TRegx\CleanRegex\Pattern;
 
 class IuSubmissionTest extends DbEnabledWebTestCase
 {
@@ -97,7 +95,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
         'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html', // TODO: Test multiple
         'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
-        'URL_FUR_AFFINITY'          => 'http://www.furaffinity.net/user/value___VARIANT__.html',
+        'URL_FUR_AFFINITY'          => 'https://www.furaffinity.net/user/value___VARIANT__/',
         'URL_DEVIANTART'            => 'https://www.deviantart.com/value___VARIANT__.html',
         'URL_TWITTER'               => 'https://twitter.com/value___VARIANT__.html',
         'URL_FACEBOOK'              => 'https://www.facebook.com/value___VARIANT__.html/',

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Regexp;
 
 use SplObjectStorage;
+use TRegx\SafeRegex\Exception\PregException;
+use TRegx\SafeRegex\preg;
 
 class Factory
 {
@@ -31,8 +33,14 @@ class Factory
 
     private function compileVariant(string $regexp, Variant $variant): string
     {
-        $result = Regexp::replaceAll(array_merge($variant->getReplacements(), $this->commonReplacements), $regexp, '#', '#');
+        foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $pattern => $replacement) {
+            try {
+                $regexp = preg::replace("#$pattern#", $replacement, $regexp);
+            } catch (PregException $e) {
+                throw new RuntimeRegexpException(previous: $e);
+            }
+        }
 
-        return "#$result#s";
+        return "#$regexp#s";
     }
 }

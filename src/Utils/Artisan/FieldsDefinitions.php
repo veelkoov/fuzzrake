@@ -18,7 +18,7 @@ final class FieldsDefinitions
          *                                                                                      IS LIST? -.  |  |  |
          * PRETTY_NAME                     => ['model name (artisan)',     'validation regexp',           V  V  V  V
          */
-        Fields::MAKER_ID                   => ['makerId',                  VR::MAKER_ID_PREG,             0, 1, 1, 1],
+        Fields::MAKER_ID                   => ['makerId',                  VR::MAKER_ID,                  0, 1, 1, 1],
         Fields::FORMER_MAKER_IDS           => ['formerMakerIds',           VR::FORMER_MAKER_IDS,          1, 1, 1, 1],
 
         Fields::NAME                       => ['name',                     VR::NON_EMPTY,                 0, 1, 1, 1],
@@ -81,19 +81,19 @@ final class FieldsDefinitions
 
         Fields::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
         Fields::INACTIVE_REASON            => ['inactiveReason',           VR::ANYTHING,                  0, 1, 1, 1],
-        Fields::CS_LAST_CHECK              => ['csLastCheck',              null,                          0, 0, 0, 1],
-        Fields::BP_LAST_CHECK              => ['bpLastCheck',              null,                          0, 0, 0, 1],
-        Fields::OPEN_FOR                   => ['openFor',                  null,                          1, 0, 0, 1],
-        Fields::CLOSED_FOR                 => ['closedFor',                null,                          1, 0, 0, 1],
-        Fields::COMPLETENESS               => ['completeness',             null,                          0, 0, 0, 1],
+        Fields::CS_LAST_CHECK              => ['csLastCheck',              VR::ANYTHING,                  0, 0, 0, 1],
+        Fields::BP_LAST_CHECK              => ['bpLastCheck',              VR::ANYTHING,                  0, 0, 0, 1],
+        Fields::OPEN_FOR                   => ['openFor',                  VR::ANYTHING,                  1, 0, 0, 1],
+        Fields::CLOSED_FOR                 => ['closedFor',                VR::ANYTHING,                  1, 0, 0, 1],
+        Fields::COMPLETENESS               => ['completeness',             VR::ANYTHING,                  0, 0, 0, 1],
 
-        Fields::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
-        Fields::CONTACT_METHOD             => ['contactMethod',            null,                          0, 1, 0, 0],
-        Fields::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      null,                          0, 1, 0, 0],
-        Fields::CONTACT_INFO_ORIGINAL      => ['contactInfoOriginal',      null,                          0, 1, 0, 0],
-        Fields::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    null,                          0, 1, 0, 1],
+        Fields::CONTACT_ALLOWED            => ['contactAllowed',           VR::ANYTHING,                  0, 1, 0, 1],
+        Fields::CONTACT_METHOD             => ['contactMethod',            VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::CONTACT_INFO_ORIGINAL      => ['contactInfoOriginal',      VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    VR::ANYTHING,                  0, 1, 0, 1],
 
-        Fields::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
+        Fields::PASSCODE                   => ['passcode',                 VR::ANYTHING,                  0, 1, 0, 0],
     ];
 
     public const URLS = [

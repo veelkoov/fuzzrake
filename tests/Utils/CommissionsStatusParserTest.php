@@ -7,7 +7,7 @@ namespace App\Tests\Utils;
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\HtmlPreprocessor;
-use App\Utils\Tracking\HtmlPreprocessorException;
+use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
 use Exception;
@@ -19,7 +19,7 @@ class CommissionsStatusParserTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$csp = new CommissionsStatusParser();
+        self::$csp = new CommissionsStatusParser(new HtmlPreprocessor());
     }
 
     /**
@@ -56,7 +56,7 @@ class CommissionsStatusParserTest extends TestCase
     }
 
     /**
-     * @throws HtmlPreprocessorException
+     * @throws TrackerException
      */
     public function testGuessFilterFromUrl(): void
     {
