@@ -158,30 +158,22 @@ class Manager
         $buffer->skipWhitespace();
 
         switch ($command) {
-            case self::CMD_WITH:
-                $subject = $buffer->readUntil(':');
+            case self::CMD_ACCEPT:
+                $this->acceptedItems[] = $this->getCurrentSubject();
+                break;
 
-                if (pattern('^([A-Z0-9]{7}|\d{4}-\d{2}-\d{2}_\d{6}_\d{4})$')->fails($subject)) {
-                    throw new DataInputException("Invalid subject: '$subject'");
-                }
+            case self::CMD_CLEAR:
+                $fieldName = $buffer->readUntilWhitespace();
 
-                $this->currentSubject = $subject;
+                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
                 break;
 
             case self::CMD_COMMENT:
                 $buffer->readUntilEolOrEof();
                 break;
 
-            case self::CMD_ACCEPT:
-                $this->acceptedItems[] = $this->getCurrentSubject();
-                break;
-
             case self::CMD_IGNORE_PASSCODE:
                 $this->itemsWithPasscodeExceptions[] = $this->getCurrentSubject();
-                break;
-
-            case self::CMD_REJECT:
-                $this->rejectedItems[] = $this->getCurrentSubject();
                 break;
 
             case self::CMD_IGNORE_UNTIL:
@@ -196,12 +188,9 @@ class Manager
                 $this->itemsIgnoreFinalTimes[$this->getCurrentSubject()] = $parsedFinalTime;
                 break;
 
-            case self::CMD_SET:
-                $fieldName = $buffer->readUntilWhitespace();
-                $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
-
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
-            break;
+            case self::CMD_REJECT:
+                $this->rejectedItems[] = $this->getCurrentSubject();
+                break;
 
             case self::CMD_REPLACE:
                 $fieldName = $buffer->readUntilWhitespace();
@@ -209,13 +198,24 @@ class Manager
                 $correctedValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
                 $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), $wrongValue, $correctedValue);
-            break;
+                break;
 
-            case self::CMD_CLEAR:
+            case self::CMD_SET:
                 $fieldName = $buffer->readUntilWhitespace();
+                $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
-            break;
+                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
+                break;
+
+            case self::CMD_WITH:
+                $subject = $buffer->readUntil(':');
+
+                if (pattern('^([A-Z0-9]{7}|\d{4}-\d{2}-\d{2}_\d{6}_\d{4})$')->fails($subject)) {
+                    throw new DataInputException("Invalid subject: '$subject'");
+                }
+
+                $this->currentSubject = $subject;
+                break;
 
             default:
                 throw new DataInputException("Unknown command: '$command'");
