@@ -10,7 +10,7 @@ parameters:
       "costa rica":                                    "CR"
       "czech( republic)?":                             "CZ"
       "d[ea]nmark":                                    "DK"
-      "germany":                                       "DE"
+      "(germany|Deutschland)":                         "DE"
       "finland":                                       "FI"
       "france":                                        "FR"
       "(uk|england|united kingdom)":                   "GB"
