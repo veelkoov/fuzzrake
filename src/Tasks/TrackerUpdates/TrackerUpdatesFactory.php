@@ -10,6 +10,7 @@ use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\BasePrices\BasePricesUpdates;
 use App\Tasks\TrackerUpdates\Commissions\CommissionsUpdates;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\HtmlPreprocessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -25,12 +26,13 @@ final class TrackerUpdatesFactory
     public function __construct(
         LoggerInterface $logger,
         EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $webpageSnapshotManager
+        WebpageSnapshotManager $webpageSnapshotManager,
+        HtmlPreprocessor $htmlPreprocessor,
     ) {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->webpageSnapshotManager = $webpageSnapshotManager;
-        $this->parser = new CommissionsStatusParser();
+        $this->parser = new CommissionsStatusParser($htmlPreprocessor);
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
     }
 
