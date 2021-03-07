@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils;
+namespace App\Tests\Utils\Tracking;
 
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
