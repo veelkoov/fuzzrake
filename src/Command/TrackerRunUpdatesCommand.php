@@ -21,14 +21,10 @@ class TrackerRunUpdatesCommand extends Command
 
     protected static $defaultName = 'app:tracker:run-updates';
 
-    private TrackerUpdatesFactory $factory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager, TrackerUpdatesFactory $factory)
-    {
-        $this->factory = $factory;
-        $this->entityManager = $entityManager;
-
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TrackerUpdatesFactory $factory,
+    ) {
         parent::__construct();
     }
 

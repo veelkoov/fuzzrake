@@ -12,30 +12,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class TrackerUpdates
 {
-    private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
-    private WebpageSnapshotManager $snapshots;
     private SymfonyStyle $io;
-    private TrackerUpdatesConfig $config;
-
-    /**
-     * @var UpdatesInterface[]
-     */
-    private array $updates;
 
     /**
      * @param UpdatesInterface[] $updates
      */
     public function __construct(
-        LoggerInterface $logger, EntityManagerInterface $entityManager, WebpageSnapshotManager $snapshots,
-        SymfonyStyle $io, TrackerUpdatesConfig $config, array $updates
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $snapshots,
+        private TrackerUpdatesConfig $config,
+        private array $updates,
+        SymfonyStyle $io,
     ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->snapshots = $snapshots;
-        $this->config = $config;
-        $this->updates = $updates;
-
         $this->setupIo($io);
     }
 

@@ -6,17 +6,12 @@ namespace App\Tasks\TrackerUpdates;
 
 final class TrackerUpdatesConfig
 {
-    private bool $refetch;
-    private bool $dryRun;
-    private bool $updateCommissions;
-    private bool $updateBasePrices;
-
-    public function __construct(bool $refetch, bool $dryRun, bool $updateCommissions, bool $updateBasePrices)
-    {
-        $this->refetch = $refetch;
-        $this->dryRun = $dryRun;
-        $this->updateCommissions = $updateCommissions;
-        $this->updateBasePrices = $updateBasePrices;
+    public function __construct(
+        private bool $refetch,
+        private bool $dryRun,
+        private bool $updateCommissions,
+        private bool $updateBasePrices,
+    ) {
     }
 
     public function isRefetch(): bool

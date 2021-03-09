@@ -14,31 +14,25 @@ use App\Tasks\TrackerUpdates\TrackerUpdatesConfig;
 use App\Tasks\TrackerUpdates\UpdatesInterface;
 use App\Utils\Artisan\Fields;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\TrackerException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 final class CommissionsUpdates implements UpdatesInterface
 {
-    private TrackerUpdatesConfig $config;
-    private ArtisanRepository $repository;
-    private LoggerInterface $logger;
-    private CommissionsStatusParser $parser;
-    private WebpageSnapshotManager $snapshots;
-
     /**
      * @var Artisan[]
      */
     private array $updated;
 
-    public function __construct(TrackerUpdatesConfig $config, ArtisanRepository $repository, LoggerInterface $logger, WebpageSnapshotManager $snapshots)
-    {
-        $this->repository = $repository;
-        $this->config = $config;
-        $this->logger = $logger;
-        $this->snapshots = $snapshots;
-        $this->parser = new CommissionsStatusParser();
-
-        $this->updated = array_filter($this->repository->findAll(), fn (Artisan $artisan): bool => !empty($artisan->getCommissionsUrl()));
+    public function __construct(
+        private TrackerUpdatesConfig $config,
+        private ArtisanRepository $repository,
+        private LoggerInterface $logger,
+        private WebpageSnapshotManager $snapshots,
+        private CommissionsStatusParser $parser,
+    ) {
+        $this->updated = array_filter($this->repository->findAll(), fn ($artisan) => !empty($artisan->getCommissionsUrl()));
     }
 
     /**
@@ -51,12 +45,17 @@ final class CommissionsUpdates implements UpdatesInterface
 
     /**
      * @return AnalysisResultInterface[]
+     *
+     * @throws TrackerException
      */
     public function perform(): array
     {
         return array_map(fn (Artisan $artisan) => $this->performOnArtisan($artisan), $this->updated);
     }
 
+    /**
+     * @throws TrackerException
+     */
     private function performOnArtisan(Artisan $artisan): AnalysisResultInterface
     {
         $result = new CommissionsAnalysisResult($artisan);
@@ -81,7 +80,7 @@ final class CommissionsUpdates implements UpdatesInterface
     /**
      * @return ArtisanCommissionsStatus[]
      *
-     * @throws ExceptionInterface
+     * @throws ExceptionInterface|TrackerException
      */
     private function extractArtisanCommissionsStatuses(ArtisanUrl $url): array
     {

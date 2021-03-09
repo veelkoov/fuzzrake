@@ -78,6 +78,8 @@ class CommissionsStatusParser
 
     /**
      * @return bool[] (string)offer => (bool)status
+     *
+     * @throws TrackerException
      */
     private function getStatusesFromString(string $inputText): array
     {

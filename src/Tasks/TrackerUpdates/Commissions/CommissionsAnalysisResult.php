@@ -6,7 +6,6 @@ namespace App\Tasks\TrackerUpdates\Commissions;
 
 use App\Entity\Artisan;
 use App\Entity\ArtisanCommissionsStatus;
-use App\Entity\Event;
 use App\Tasks\TrackerUpdates\AnalysisResultInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -17,11 +16,9 @@ final class CommissionsAnalysisResult implements AnalysisResultInterface
      */
     private array $acses;
 
-    private Artisan $artisan;
-
-    public function __construct(Artisan $artisan)
-    {
-        $this->artisan = $artisan;
+    public function __construct(
+        private Artisan $artisan,
+    ) {
         $this->acses = [];
     }
 

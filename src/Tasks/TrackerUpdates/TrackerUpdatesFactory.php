@@ -10,35 +10,26 @@ use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\BasePrices\BasePricesUpdates;
 use App\Tasks\TrackerUpdates\Commissions\CommissionsUpdates;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\HtmlPreprocessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class TrackerUpdatesFactory
 {
-    private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
-    private WebpageSnapshotManager $webpageSnapshotManager;
-    private CommissionsStatusParser $parser;
     private ArtisanRepository $artisanRepository;
 
     public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $webpageSnapshotManager,
-        HtmlPreprocessor $htmlPreprocessor,
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $webpageSnapshotManager,
+        private CommissionsStatusParser $parser,
     ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->webpageSnapshotManager = $webpageSnapshotManager;
-        $this->parser = new CommissionsStatusParser($htmlPreprocessor);
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
     }
 
     public function get(SymfonyStyle $io, TrackerUpdatesConfig $config): TrackerUpdates
     {
-        return new TrackerUpdates($this->logger, $this->entityManager, $this->webpageSnapshotManager, $io, $config, $this->getUpdatesObjects($config));
+        return new TrackerUpdates($this->logger, $this->entityManager, $this->webpageSnapshotManager, $config, $this->getUpdatesObjects($config), $io);
     }
 
     /**
@@ -53,7 +44,7 @@ final class TrackerUpdatesFactory
         }
 
         if ($config->isUpdateCommissions()) {
-            $updates[] = new CommissionsUpdates($config, $this->artisanRepository, $this->logger, $this->webpageSnapshotManager);
+            $updates[] = new CommissionsUpdates($config, $this->artisanRepository, $this->logger, $this->webpageSnapshotManager, $this->parser);
         }
 
         return $updates;

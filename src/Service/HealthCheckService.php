@@ -31,12 +31,10 @@ class HealthCheckService
     private float $load5mMax;
     private float $load15mMax;
 
-    private ArtisanVolatileDataRepository $artisanVolatileDataRepository;
-
-    public function __construct(ArtisanVolatileDataRepository $avdr, array $healthCheckValues)
-    {
-        $this->artisanVolatileDataRepository = $avdr;
-
+    public function __construct(
+        private ArtisanVolatileDataRepository $artisanVolatileDataRepository,
+        array $healthCheckValues,
+    ) {
         $this->memoryAvailableMinMibs = $healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS];
         $this->diskFreeMinMibs = $healthCheckValues[self::DISK_FREE_MIN_MIBS];
         $this->diskUsedMaxPercent = $healthCheckValues[self::DISK_USED_MAX_PERCENT];
