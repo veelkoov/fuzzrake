@@ -6,6 +6,7 @@ namespace App\Utils\Tracking;
 
 use App\Utils\Json;
 use App\Utils\Regexp\Replacements;
+use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\WebsiteInfo;
 use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -80,9 +81,6 @@ class HtmlPreprocessor
         return $result;
     }
 
-    /**
-     * @throws TrackerException
-     */
     public static function guessFilterFromUrl(string $url): string
     {
         try {
@@ -90,7 +88,7 @@ class HtmlPreprocessor
                 ->findFirst(fn (Detail $match): string => $match->group('profile')->text())
                 ->orReturn('');
         } catch (NonexistentGroupException $e) {
-            throw new TrackerException('Regexp failed', exception: $e);
+            throw new UnbelievableRuntimeException($e);
         }
     }
 

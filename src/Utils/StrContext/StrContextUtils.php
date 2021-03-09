@@ -36,7 +36,7 @@ final class StrContextUtils
                 $strContext->getAfter(),
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS);
         } catch (JsonException $e) {
-            throw new StrContextRuntimeException($e);
+            throw new StrContextRuntimeException(previous: $e);
         }
     }
 

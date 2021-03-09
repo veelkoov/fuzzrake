@@ -7,6 +7,7 @@ namespace App\Tests\Utils\Tracking;
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\HtmlPreprocessor;
+use App\Utils\Tracking\Patterns;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
@@ -19,16 +20,18 @@ class CommissionsStatusParserTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$csp = new CommissionsStatusParser(new HtmlPreprocessor());
+        self::$csp = new CommissionsStatusParser(new HtmlPreprocessor(), new Patterns());
     }
 
     /**
      * @dataProvider analyseStatusDataProvider
      * @noinspection PhpUnusedParameterInspection
+     *
+     * @throws TrackerException
      */
     public function testGetStatuses(string $testSetPath, WebpageSnapshot $snapshot, array $expectedResult): void
     {
-        $statuses = self::$csp->getStatuses($snapshot);
+        $statuses = self::$csp->getOfferStatusPatterns($snapshot);
 
         foreach ($statuses as $status) {
             self::assertContains($status->getOffer(), array_keys($expectedResult), "Detected unwanted status {$status->getOffer()}: [{$status->getIsOpen()}]");
@@ -52,12 +55,9 @@ class CommissionsStatusParserTest extends TestCase
             $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../test_data/statuses/*/expected.json')));
+        }, glob(__DIR__.'/../../test_data/statuses/*/expected.json')));
     }
 
-    /**
-     * @throws TrackerException
-     */
     public function testGuessFilterFromUrl(): void
     {
         self::assertEquals('guessFilter', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl#guessFilter'));
