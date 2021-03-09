@@ -11,8 +11,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class UpdateCommissionsCommand extends Command
+class TrackerRunUpdatesCommand extends Command
 {
+    private const O_REFETCH = 'refetch';
+    private const O_COMMIT = 'commit';
+
     protected static $defaultName = 'app:update:commissions';
 
     public function __construct(
@@ -24,20 +27,23 @@ class UpdateCommissionsCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('refetch', null, null, 'Refresh cache (re-fetch pages)');
-        $this->addOption('commit', null, null, 'Save changes in the database');
+        $this->addOption(self::O_REFETCH, null, null, 'Refresh cache (re-fetch pages)');
+        $this->addOption(self::O_COMMIT, null, null, 'Save changes in the database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $task = $this->factory->get($io, $input->getOption('refetch'), !$input->getOption('commit'));
-        $task->updateAll();
+        $task = $this->factory->get($io,
+            $input->getOption(self::O_REFETCH),
+            !$input->getOption(self::O_COMMIT),
+        );
 
+        $task->updateAll();
         $this->entityManager->flush();
 
-        if ($input->getOption('commit')) {
+        if ($input->getOption(self::O_COMMIT)) {
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');
