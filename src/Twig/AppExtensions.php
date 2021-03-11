@@ -79,7 +79,7 @@ class AppExtensions extends AbstractExtension
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
     {
-        return $this->avdRepository->getLastCsUpdateTimeAsString(); // TODO: CS&BP?
+        return $this->avdRepository->getLastCsUpdateTimeAsString(); // TODO: CS&BP? See #29
     }
 
     public function getCounterFunction(): Counter

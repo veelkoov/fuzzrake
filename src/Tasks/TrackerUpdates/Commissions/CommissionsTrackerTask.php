@@ -62,7 +62,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
             try {
                 $result->addAcses($this->extractArtisanCommissionsStatuses($url));
             } catch (ExceptionInterface | TrackerException) {
-                // TODO: Handle partial?
+                // TODO: Record information about failed webpage analysis. See #57
             }
         }
 
