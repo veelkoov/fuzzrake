@@ -48,9 +48,9 @@ class TrackerRunUpdatesCommand extends Command
         ));
 
         $task->updateAll();
-        $this->entityManager->flush();
 
         if ($input->getOption(self::O_COMMIT)) {
+            $this->entityManager->flush();
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');
