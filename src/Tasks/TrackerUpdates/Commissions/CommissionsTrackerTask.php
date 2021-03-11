@@ -9,16 +9,15 @@ use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\TrackerUpdates\AnalysisResultInterface;
-use App\Tasks\TrackerUpdates\TrackerUpdatesConfig;
-use App\Tasks\TrackerUpdates\UpdatesInterface;
+use App\Tasks\TrackerUpdates\ArtisanUpdatesInterface;
+use App\Tasks\TrackerUpdates\TrackerTaskInterface;
 use App\Utils\Artisan\Fields;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\TrackerException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
-final class CommissionsUpdates implements UpdatesInterface
+class CommissionsTrackerTask implements TrackerTaskInterface
 {
     /**
      * @var Artisan[]
@@ -26,7 +25,6 @@ final class CommissionsUpdates implements UpdatesInterface
     private array $updated;
 
     public function __construct(
-        private TrackerUpdatesConfig $config,
         private ArtisanRepository $repository,
         private LoggerInterface $logger,
         private WebpageSnapshotManager $snapshots,
@@ -44,21 +42,17 @@ final class CommissionsUpdates implements UpdatesInterface
     }
 
     /**
-     * @return AnalysisResultInterface[]
-     *
-     * @throws TrackerException
+     * @return ArtisanUpdatesInterface[]
      */
-    public function perform(): array
+    public function getUpdates(): array
     {
-        return array_map(fn (Artisan $artisan) => $this->performOnArtisan($artisan), $this->updated);
+        return array_map(fn (Artisan $artisan) => $this->getUpdatesFor($artisan), $this->updated);
     }
 
-    /**
-     * @throws TrackerException
-     */
-    private function performOnArtisan(Artisan $artisan): AnalysisResultInterface
+    private function getUpdatesFor(Artisan $artisan): ArtisanUpdatesInterface
     {
-        $result = new CommissionsAnalysisResult($artisan);
+        $result = new CommissionsArtisanUpdates($artisan);
+
         $lastCsUpdate = null;
 
         $urls = $artisan->getUrlObjs(Fields::URL_COMMISSIONS);
@@ -67,7 +61,7 @@ final class CommissionsUpdates implements UpdatesInterface
 
             try {
                 $result->addAcses($this->extractArtisanCommissionsStatuses($url));
-            } catch (ExceptionInterface) {
+            } catch (ExceptionInterface | TrackerException) {
                 // TODO: Handle partial?
             }
         }
@@ -80,16 +74,15 @@ final class CommissionsUpdates implements UpdatesInterface
     /**
      * @return ArtisanCommissionsStatus[]
      *
-     * @throws ExceptionInterface|TrackerException
+     * @throws TrackerException
+     * @throws ExceptionInterface
      */
     private function extractArtisanCommissionsStatuses(ArtisanUrl $url): array
     {
         $webpageSnapshot = $this->snapshots->get($url, false, false);
-        $result = [];
+        $result = $this->parser->getCommissionsStatuses($webpageSnapshot);
 
-        foreach ($this->parser->getOfferStatusPatterns($webpageSnapshot) as $status) {
-            $result[] = $status->setArtisan($url->getArtisan());
-        }
+        array_walk($result, fn (ArtisanCommissionsStatus $status) => $status->setArtisan($url->getArtisan()));
 
         return $result;
     }

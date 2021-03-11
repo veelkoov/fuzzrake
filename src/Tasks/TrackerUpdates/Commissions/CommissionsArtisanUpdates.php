@@ -6,10 +6,10 @@ namespace App\Tasks\TrackerUpdates\Commissions;
 
 use App\Entity\Artisan;
 use App\Entity\ArtisanCommissionsStatus;
-use App\Tasks\TrackerUpdates\AnalysisResultInterface;
+use App\Tasks\TrackerUpdates\ArtisanUpdatesInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class CommissionsAnalysisResult implements AnalysisResultInterface
+final class CommissionsArtisanUpdates implements ArtisanUpdatesInterface
 {
     /**
      * @var ArtisanCommissionsStatus[]
@@ -53,7 +53,7 @@ final class CommissionsAnalysisResult implements AnalysisResultInterface
     /**
      * @return object[]
      */
-    public function getNewEntities(): array
+    public function getCreatedEntities(): array
     {
         return [
             $this->artisan->getVolatileData(), // Could have been just created
@@ -63,18 +63,18 @@ final class CommissionsAnalysisResult implements AnalysisResultInterface
     }
 
     /**
+     * @return object[]
+     */
+    public function getRemovedEntities(): array
+    {
+        return $this->artisan->getCommissions()->toArray();
+    }
+
+    /**
      * @param ArtisanCommissionsStatus[] $acses
      */
     public function addAcses(array $acses): void
     {
         $this->acses = array_merge($this->acses, $acses);
-    }
-
-    /**
-     * @return ArtisanCommissionsStatus[]
-     */
-    public function getAcses(): array
-    {
-        return $this->acses;
     }
 }

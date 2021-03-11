@@ -34,7 +34,7 @@ class CommissionsStatusParser
      *
      * @throws TrackerException
      */
-    public function getOfferStatusPatterns(WebpageSnapshot $snapshot): array
+    public function getCommissionsStatuses(WebpageSnapshot $snapshot): array
     {
         $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
@@ -90,7 +90,7 @@ class CommissionsStatusParser
                 [$offer, $status] = $this->patternFactory->matchStatusAndOfferFrom($match);
 
                 if (array_key_exists($offer, $result)) {
-                    $status = null; // TODO: Better handling
+                    $status = false; // TODO: Better handling, use NULL for arrrgh
                 }
 
                 $result[$offer] = $status;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Tasks\TrackerUpdates\Commissions\CommissionsAnalysisResult;
+use App\Tasks\TrackerUpdates\Commissions\CommissionsArtisanUpdates;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrContext\StrContextInterface;
 use App\Utils\StrContext\StrContextUtils;
@@ -107,7 +107,7 @@ class Event
      */
     private string $gitCommits = '';
 
-    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, CommissionsAnalysisResult $analysisResult = null)
+    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, CommissionsArtisanUpdates $analysisResult = null)
     {
         $this->timestamp = DateTimeUtils::getNowUtc();
         $this->checkedUrl = $checkedUrl;

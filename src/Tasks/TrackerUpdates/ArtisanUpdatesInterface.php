@@ -6,12 +6,17 @@ namespace App\Tasks\TrackerUpdates;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-interface AnalysisResultInterface
+interface ArtisanUpdatesInterface
 {
     public function report(SymfonyStyle $io): void;
 
     /**
      * @return object[]
      */
-    public function getNewEntities(): array;
+    public function getCreatedEntities(): array;
+
+    /**
+     * @return object[]
+     */
+    public function getRemovedEntities(): array;
 }

@@ -5,46 +5,42 @@ declare(strict_types=1);
 namespace App\Tasks\TrackerUpdates;
 
 use App\Service\WebpageSnapshotManager;
+use App\Utils\Tracking\TrackerException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class TrackerUpdates
+class TrackerTaskRunner
 {
     private SymfonyStyle $io;
 
-    /**
-     * @param UpdatesInterface[] $updates
-     */
     public function __construct(
+        private TrackerTaskInterface $trackerTask,
         private LoggerInterface $logger,
         private EntityManagerInterface $entityManager,
         private WebpageSnapshotManager $snapshots,
-        private TrackerUpdatesConfig $config,
-        private array $updates,
+        private bool $refetch,
+        private bool $commit,
         SymfonyStyle $io,
     ) {
         $this->setupIo($io);
     }
 
-    public function updateAll()
+    /**
+     * @throws TrackerException
+     */
+    public function performUpdates()
     {
-        $this->prefetchUrls();
+        $this->snapshots->prefetchUrls($this->trackerTask->getUrlsToPrefetch(), $this->refetch, $this->io);
 
-        foreach ($this->updates as $update) {
-            $results = $update->perform();
+        $updates = $this->trackerTask->getUpdates();
 
-            $this->report($results);
-            $this->record($results);
+        $this->report($updates);
+
+        if ($this->commit) {
+            $this->replace($updates);
         }
-    }
-
-    private function prefetchUrls(): void
-    {
-        $urls = array_merge(...array_map(fn (UpdatesInterface $updates) => $updates->getUrlsToPrefetch(), $this->updates));
-
-        $this->snapshots->prefetchUrls($urls, $this->config->isRefetch(), $this->io);
     }
 
     private function setupIo(SymfonyStyle $io): void
@@ -56,7 +52,7 @@ final class TrackerUpdates
     }
 
     /**
-     * @param AnalysisResultInterface[] $results
+     * @param ArtisanUpdatesInterface[] $results
      */
     private function report(array $results): void
     {
@@ -66,13 +62,17 @@ final class TrackerUpdates
     }
 
     /**
-     * @param AnalysisResultInterface[] $results
+     * @param ArtisanUpdatesInterface[] $results
      */
-    private function record(array $results): void
+    private function replace(array $results): void
     {
         foreach ($results as $result) {
-            foreach ($result->getNewEntities() as $newEntity) {
-                $this->entityManager->persist($newEntity);
+            foreach ($result->getRemovedEntities() as $entity) {
+                $this->entityManager->remove($entity);
+            }
+
+            foreach ($result->getCreatedEntities() as $entity) {
+                $this->entityManager->persist($entity);
             }
         }
     }

@@ -7,7 +7,7 @@ namespace App\Tasks\TrackerUpdates;
 use App\Entity\ArtisanUrl;
 use App\Utils\Tracking\TrackerException;
 
-interface UpdatesInterface
+interface TrackerTaskInterface
 {
     /**
      * @return ArtisanUrl[]
@@ -15,9 +15,9 @@ interface UpdatesInterface
     public function getUrlsToPrefetch(): array;
 
     /**
-     * @return AnalysisResultInterface[]
+     * @return ArtisanUpdatesInterface[]
      *
      * @throws TrackerException
      */
-    public function perform(): array;
+    public function getUpdates(): array;
 }
