@@ -26,7 +26,7 @@ class BasePricesTrackerTask implements TrackerTaskInterface
      */
     public function getUrlsToPrefetch(): array
     {
-        return []; // TODO: Implement getUrlsToPrefetch() method.
+        return []; // TODO: Implement getUrlsToPrefetch() method. See #29
     }
 
     /**
@@ -38,6 +38,6 @@ class BasePricesTrackerTask implements TrackerTaskInterface
      */
     public function getUpdates(): array
     {
-        return []; // TODO: Implement perform() method.
+        return []; // TODO: Implement perform() method. See #29
     }
 }
