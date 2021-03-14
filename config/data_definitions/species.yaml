@@ -24,7 +24,7 @@ parameters:
                 Caracals:
                 Lions:
                 Lynxes:
-                Snow leopards:
+                # Snow leopards:
                 Tigers:
               "Small cats":
                 "Domestic cats":
@@ -38,8 +38,8 @@ parameters:
               Mice:
               Rats:
             Ungulates:
-              Antelopes:
-                Sable antelope:
+              # Antelopes:
+                # Sable antelope:
               Bovines:
                 Cows:
               Cervines:
@@ -77,7 +77,7 @@ parameters:
 
           "Angel Dragons":
           Crux:
-          Digimons:
+          # Digimons:
           Dragons:
           Drekkubuses:
           Dutchies:
@@ -124,7 +124,7 @@ parameters:
           Pancans:
 
         With antlers: # Fill
-          Antelopes:
+          # Antelopes:
           Cervines:
           Goats:
 
