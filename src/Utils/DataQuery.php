@@ -6,11 +6,10 @@ namespace App\Utils;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Regexp\Regexp;
 
 class DataQuery
 {
-    private const BLACKLIST_CHAR = '-';
+    private const EXCLUDE_CHAR = '-';
     private const CMD_START_CHAR = ':';
     private const CMD_ONLY_FEEDBACK_YES = ':YES';
 
@@ -27,7 +26,7 @@ class DataQuery
     /**
      * @var string[]
      */
-    private array $blacklistedItems = [];
+    private array $excludedItems = [];
 
     /**
      * @var string[] Associative: name = item, value = count
@@ -45,12 +44,12 @@ class DataQuery
 
     public function __construct(string $input)
     {
-        $items = array_filter(Regexp::split('#\s+#', $input));
+        $items = array_filter(pattern('\s+')->split($input));
 
         foreach ($items as $item) {
             switch ($item[0]) {
-                case self::BLACKLIST_CHAR:
-                    $this->blacklistedItems[] = substr($item, 1);
+                case self::EXCLUDE_CHAR:
+                    $this->excludedItems[] = substr($item, 1);
                     break;
 
                 case self::CMD_START_CHAR:
@@ -123,7 +122,7 @@ class DataQuery
         return $this->filterListInternal($listInput, false);
     }
 
-    private function command($item): void
+    private function command(string $item): void
     {
         switch (strtoupper($item)) {
             case self::CMD_ONLY_FEEDBACK_YES:
@@ -155,7 +154,7 @@ class DataQuery
         $result = [];
 
         foreach (StringList::unpack($listInput) as $item) {
-            if (!$this->itemMatchesList($item, $this->blacklistedItems) && $this->itemMatchesList($item, $this->searchedItems)) {
+            if (!$this->itemMatchesList($item, $this->excludedItems) && $this->itemMatchesList($item, $this->searchedItems)) {
                 $result[] = $item;
 
                 if ($addMatches && !in_array($item, $this->matchedItems)) {
@@ -167,10 +166,13 @@ class DataQuery
         return $result;
     }
 
+    /**
+     * @param string[] $list
+     */
     private function itemMatchesList(string $item, array $list): bool
     {
-        foreach ($list as $blacklistedItem) {
-            if (false !== stripos($item, $blacklistedItem)) {
+        foreach ($list as $listItem) {
+            if (false !== stripos($item, $listItem)) {
                 return true;
             }
         }

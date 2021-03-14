@@ -7,28 +7,27 @@ namespace App\Controller;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
-use App\Utils\Data\Definitions\Species;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use App\Utils\Species\Species;
+use App\ValueObject\Routing\RouteName;
+use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/")
- */
+#[Route(path: '/')]
 class StatisticsController extends AbstractController
 {
-    const MATCH_WORDS = [
+    private const MATCH_WORDS = [
         'accessor',
         'bases?|blanks?',
         'bendable|pose?able|lickable',
         'brush',
         'change?able|detach|remove?able',
         'claws?',
+        'cosplay',
         'details?',
         '(?<!g)ears?',
         'eyes?',
@@ -50,12 +49,10 @@ class StatisticsController extends AbstractController
     ];
 
     /**
-     * @Route("/statistics.html", name="statistics")
-     * @Cache(maxage=3600, public=true)
-     *
-     * @throws NoResultException
-     * @throws NonUniqueResultException
+     * @throws UnexpectedResultException
      */
+    #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
+    #[Cache(maxage: 3600, public: true)]
     public function statistics(ArtisanRepository $artisanRepository, Species $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
@@ -79,8 +76,8 @@ class StatisticsController extends AbstractController
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->getItems()),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
-            'completeness'     => $this->prepareCompletenessData($artisanRepository->getAll()),
-            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getAll()),
+            'completeness'     => $this->prepareCompletenessData($artisanRepository->getActive()),
+            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getActive()),
             'speciesStats'     => $speciesStats,
             'matchWords'       => self::MATCH_WORDS,
         ]);
@@ -147,9 +144,7 @@ class StatisticsController extends AbstractController
      */
     private function prepareCompletenessData(array $artisans): array
     {
-        $completeness = array_filter(array_map(function (Artisan $artisan) {
-            return $artisan->completeness();
-        }, $artisans));
+        $completeness = array_filter(array_map(fn (Artisan $artisan) => $artisan->getCompleteness(), $artisans));
 
         $result = [];
 
@@ -157,13 +152,9 @@ class StatisticsController extends AbstractController
                  '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%'   => 0, ];
 
         foreach ($levels as $description => $level) {
-            $result[$description] = count(array_filter($completeness, function (int $percent) use ($level) {
-                return $percent >= $level;
-            }));
+            $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));
 
-            $completeness = array_filter($completeness, function (int $percent) use ($level) {
-                return $percent < $level;
-            });
+            $completeness = array_filter($completeness, fn (int $percent) => $percent < $level);
         }
 
         return $result;
@@ -174,9 +165,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach (Fields::inStats() as $field) {
-            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field) {
-                return $carry + ('' !== $artisan->get($field) ? 1 : 0);
-            }, 0);
+            $result[$field->name()] = array_reduce($artisans, fn (int $carry, Artisan $artisan) => $carry + ('' !== $artisan->get($field) ? 1 : 0), 0);
         }
 
         arsort($result);

@@ -4,35 +4,23 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-class Field
-{
-    private string $name;
-    private ?string $modelName;
-    private ?string $validationRegexp;
-    private bool $isList;
-    private ?int $uiFormIndex;
-    private bool $isPersisted;
-    private bool $inJson;
-    private bool $inStats;
-    private ?string $iuFormRegexp;
-    private bool $importFromIuForm;
-    private bool $exportToIuForm;
+use Stringable;
+use TRegx\CleanRegex\PatternInterface;
 
-    public function __construct(string $name, ?string $modelName, ?string $validationRegexp,
-        int $isList, int $isPersisted, int $inStats, int $inJson,
-        ?int $uiFormIndex, ?string $iuFormRegexp, bool $importFromIuForm, bool $exportToIuForm)
-    {
-        $this->name = $name;
-        $this->modelName = $modelName;
-        $this->validationRegexp = $validationRegexp;
-        $this->isList = (bool) $isList;
-        $this->isPersisted = (bool) $isPersisted;
-        $this->inJson = (bool) $inJson;
-        $this->inStats = (bool) $inStats;
-        $this->uiFormIndex = $uiFormIndex;
-        $this->iuFormRegexp = $iuFormRegexp;
-        $this->importFromIuForm = $importFromIuForm;
-        $this->exportToIuForm = $exportToIuForm;
+class Field implements Stringable
+{
+    private PatternInterface $validationPattern;
+
+    public function __construct(
+        private string $name,
+        private ?string $modelName,
+        ?string $validationRegexp,
+        private bool $isList,
+        private bool $isPersisted,
+        private bool $inStats,
+        private bool $public,
+    ) {
+        $this->validationPattern = pattern($validationRegexp);
     }
 
     public function name(): string
@@ -45,9 +33,9 @@ class Field
         return $this->modelName;
     }
 
-    public function validationRegexp(): ?string
+    public function validationPattern(): PatternInterface
     {
-        return $this->validationRegexp;
+        return $this->validationPattern;
     }
 
     public function isList(): bool
@@ -60,9 +48,9 @@ class Field
         return $this->isPersisted;
     }
 
-    public function inJson(): bool
+    public function public(): bool
     {
-        return $this->inJson;
+        return $this->public;
     }
 
     public function inStats(): bool
@@ -70,34 +58,9 @@ class Field
         return $this->inStats;
     }
 
-    public function uiFormIndex(): ?int
-    {
-        return $this->uiFormIndex;
-    }
-
-    public function inIuForm(): bool
-    {
-        return null !== $this->uiFormIndex;
-    }
-
-    public function iuFormRegexp(): ?string
-    {
-        return $this->iuFormRegexp;
-    }
-
     public function is(string $name): bool
     {
         return $this->name === $name;
-    }
-
-    public function importFromIuForm(): bool
-    {
-        return $this->importFromIuForm;
-    }
-
-    public function exportToIuForm(): bool
-    {
-        return $this->exportToIuForm;
     }
 
     public function __toString(): string

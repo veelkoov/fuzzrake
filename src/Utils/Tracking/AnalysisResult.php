@@ -8,13 +8,10 @@ use App\Utils\StrContext\StrContextInterface;
 
 class AnalysisResult
 {
-    private MatchInterface $openMatch;
-    private MatchInterface $closedMatch;
-
-    public function __construct(MatchInterface $openMatch, MatchInterface $closedMatch)
-    {
-        $this->openMatch = $openMatch;
-        $this->closedMatch = $closedMatch;
+    public function __construct(
+        private MatchInterface $openMatch,
+        private MatchInterface $closedMatch,
+    ) {
     }
 
     public function getStatus(): ?bool

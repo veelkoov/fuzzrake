@@ -7,9 +7,11 @@ namespace App\Entity;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrContext\StrContextInterface;
 use App\Utils\StrContext\StrContextUtils;
+use App\Utils\StringList;
 use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -17,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
+    public const TYPE_DATA_UPDATED = 'DATA_UPDATED';
     public const TYPE_CS_UPDATED = 'CS_UPDATED';
     public const TYPE_CS_UPDATED_WITH_DETAILS = 'CS_UPDTD_DETLS';
     public const TYPE_GENERIC = 'GENERIC';
@@ -41,39 +44,68 @@ class Event
     /**
      * @ORM\Column(type="string", length=16)
      */
-    private string $type = self::TYPE_GENERIC;
+    private string $type = self::TYPE_DATA_UPDATED;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $oldStatus = null;
+    private ?bool $oldStatus;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $newStatus = null;
+    private ?bool $newStatus;
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private string $artisanName = '';
+    private string $artisanName;
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    private string $checkedUrl = '';
+    private string $checkedUrl;
 
     /**
      * @ORM\Column(type="text", name="open_match")
      */
     private string $openMatchRepr = '';
+
     private ?StrContextInterface $openMatch = null;
 
     /**
      * @ORM\Column(type="text", name="closed_match")
      */
     private string $closedMatchRepr = '';
+
     private ?StrContextInterface $closedMatch = null;
+
+    /**
+     * @Assert\GreaterThanOrEqual(value="0")
+     * @Assert\LessThan(value="500")
+     * @ORM\Column(type="integer")
+     */
+    private int $newMakersCount = 0;
+
+    /**
+     * @Assert\GreaterThanOrEqual(value="0")
+     * @Assert\LessThan(value="500")
+     * @ORM\Column(type="integer")
+     */
+    private int $updatedMakersCount = 0;
+
+    /**
+     * @Assert\GreaterThanOrEqual(value="0")
+     * @Assert\LessThan(value="500")
+     * @ORM\Column(type="integer")
+     */
+    private int $reportedUpdatedMakersCount = 0;
+
+    /**
+     * @Assert\Length(max="256")
+     * @ORM\Column(type="string", length=256)
+     */
+    private string $gitCommits = '';
 
     public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, AnalysisResult $analysisResult = null)
     {
@@ -186,6 +218,88 @@ class Event
         return $this;
     }
 
+    public function getOpenMatch(): ?StrContextInterface
+    {
+        return $this->openMatch ??= StrContextUtils::fromString($this->openMatchRepr);
+    }
+
+    public function setOpenMatch(?StrContextInterface $openMatch): self
+    {
+        $this->openMatch = $openMatch;
+        $this->openMatchRepr = StrContextUtils::toStr($openMatch);
+
+        return $this;
+    }
+
+    public function getClosedMatch(): ?StrContextInterface
+    {
+        return $this->closedMatch ??= StrContextUtils::fromString($this->closedMatchRepr);
+    }
+
+    public function setClosedMatch(?StrContextInterface $closedMatch): self
+    {
+        $this->closedMatch = $closedMatch;
+        $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
+
+        return $this;
+    }
+
+    public function getNewMakersCount(): int
+    {
+        return $this->newMakersCount;
+    }
+
+    public function setNewMakersCount(int $newMakersCount): Event
+    {
+        $this->newMakersCount = $newMakersCount;
+
+        return $this;
+    }
+
+    public function getUpdatedMakersCount(): int
+    {
+        return $this->updatedMakersCount;
+    }
+
+    public function setUpdatedMakersCount(int $updatedMakersCount): Event
+    {
+        $this->updatedMakersCount = $updatedMakersCount;
+
+        return $this;
+    }
+
+    public function getReportedUpdatedMakersCount(): int
+    {
+        return $this->reportedUpdatedMakersCount;
+    }
+
+    public function setReportedUpdatedMakersCount(int $reportedUpdatedMakersCount): Event
+    {
+        $this->reportedUpdatedMakersCount = $reportedUpdatedMakersCount;
+
+        return $this;
+    }
+
+    public function getGitCommits(): string
+    {
+        return $this->gitCommits;
+    }
+
+    public function setGitCommits(string $gitCommits): Event
+    {
+        $this->gitCommits = $gitCommits;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getGitCommitsArray(): array
+    {
+        return StringList::unpack($this->gitCommits);
+    }
+
     public function isLostTrack(): bool
     {
         return $this->isChangedStatus() && null === $this->newStatus;
@@ -196,39 +310,18 @@ class Event
         return in_array($this->type, [self::TYPE_CS_UPDATED, self::TYPE_CS_UPDATED_WITH_DETAILS]);
     }
 
+    public function isUpdates(): bool
+    {
+        return self::TYPE_DATA_UPDATED === $this->type;
+    }
+
     public function hasDetails(): bool
     {
         return self::TYPE_CS_UPDATED_WITH_DETAILS === $this->type;
     }
 
-    public function getOpenMatch(): StrContextInterface
-    {
-        return $this->openMatch = $this->openMatch ?? StrContextUtils::fromString($this->openMatchRepr);
-    }
-
-    public function setOpenMatch(StrContextInterface $openMatch): self
-    {
-        $this->openMatch = $openMatch;
-        $this->openMatchRepr = StrContextUtils::toStr($openMatch);
-
-        return $this;
-    }
-
-    public function getClosedMatch(): StrContextInterface
-    {
-        return $this->closedMatch = $this->closedMatch ?? StrContextUtils::fromString($this->closedMatchRepr);
-    }
-
-    public function setClosedMatch(StrContextInterface $closedMatch): self
-    {
-        $this->closedMatch = $closedMatch;
-        $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
-
-        return $this;
-    }
-
     public function isEditable(): bool
     {
-        return in_array($this->type, [self::TYPE_GENERIC]);
+        return in_array($this->type, [self::TYPE_GENERIC, self::TYPE_DATA_UPDATED]);
     }
 }

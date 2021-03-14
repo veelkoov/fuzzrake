@@ -1,10 +1,11 @@
 var ARTISANS = null;
 var MAKER_IDS_MAP = null;
+var SPECIES = null;
 
-window.loadFuzzrakeData = function () {
+window.loadFuzzrakeData = function (ac) {
     ARTISANS = [
         {% for artisan in artisans %}
-        new fuzzrake.Artisan({{ artisan.jsonArray|trim('[]')|raw }}),
+            new ac({{ artisan|jsonToArtisanParameters }}),
         {% endfor %}
     ];
 
@@ -13,8 +14,16 @@ window.loadFuzzrakeData = function () {
             '{{ old }}': '{{ new }}',
         {% endfor %}
     };
-}
 
-jQuery(function () {
-    fuzzrake.init();
-});
+    SPECIES = {
+        {% macro species_json(species) %}
+            {% for specie in species %}
+                '{{ specie.name }}': {
+                    {{ _self.species_json(specie.children) }}
+                }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        {% endmacro %}
+
+        {{ _self.species_json(species) }}
+    };
+}

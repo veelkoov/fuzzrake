@@ -24,36 +24,21 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 final class CommissionsStatusesUpdate
 {
-    private LoggerInterface $logger;
     private ArtisanRepository $artisanRepository;
-    private EntityManagerInterface $entityManager;
-    private WebpageSnapshotManager $snapshots;
-    private SymfonyStyle $io;
-    private CommissionsStatusParser $parser;
-    private bool $refetch;
-    private bool $dryRun;
 
     public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $snapshots,
-        SymfonyStyle $io,
-        bool $refetch,
-        bool $dryRun
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $snapshots,
+        private CommissionsStatusParser $commissionsStatusParser,
+        private SymfonyStyle $io,
+        private bool $refetch,
+        private bool $dryRun,
     ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
-        $this->snapshots = $snapshots;
-        $this->parser = new CommissionsStatusParser();
-
-        $this->io = $io;
         $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
-
-        $this->refetch = $refetch;
-        $this->dryRun = $dryRun;
     }
 
     public function updateAll()
@@ -71,7 +56,7 @@ final class CommissionsStatusesUpdate
     {
         $artisan = $url->getArtisan();
 
-        list($datetimeRetrieved, $analysisResult) = $this->analyzeStatus($url);
+        [$datetimeRetrieved, $analysisResult] = $this->analyzeStatus($url);
 
         $this->reportStatusChange($artisan, $analysisResult);
 
@@ -91,10 +76,10 @@ final class CommissionsStatusesUpdate
             $webpageSnapshot = $this->snapshots->get($url, false, false);
 
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
-            $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
+            $analysisResult = $this->commissionsStatusParser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
-        } catch (ExceptionInterface $exception) {
+        } catch (ExceptionInterface) {
             /* Was recorded & logged, proceed with "UNKNOWN" */
         }
 
@@ -144,9 +129,7 @@ final class CommissionsStatusesUpdate
      */
     private function getTrackedArtisans(): array
     {
-        return array_filter($this->artisanRepository->findAll(), function (Artisan $artisan): bool {
-            return $this->canAutoUpdate($artisan);
-        });
+        return array_filter($this->artisanRepository->findAll(), fn (Artisan $artisan): bool => $this->canAutoUpdate($artisan));
     }
 
     /**
@@ -156,8 +139,6 @@ final class CommissionsStatusesUpdate
      */
     private function getCstUrls(array $artisans): array
     {
-        return array_map(function (Artisan $artisan): Fetchable {
-            return $artisan->getSingleUrlObject(Fields::URL_CST);
-        }, $artisans);
+        return array_map(fn (Artisan $artisan): Fetchable => $artisan->getSingleUrlObject(Fields::URL_CST), $artisans);
     }
 }

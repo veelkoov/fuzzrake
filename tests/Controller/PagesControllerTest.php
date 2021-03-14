@@ -29,16 +29,6 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h1', 'Automatic tracking and status updates');
     }
 
-    public function testWhoopsies()
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/whoopsies.html');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Whoopsies!');
-    }
-
     public function testMakerIds()
     {
         $client = static::createClient();

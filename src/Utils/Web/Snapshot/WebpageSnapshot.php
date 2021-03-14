@@ -17,25 +17,17 @@ class WebpageSnapshot
      */
     private array $children = [];
 
-    /**
-     * @var string[]
-     */
-    private array $headers = [];
-    private string $url;
-    private string $contents;
-    private DateTime $retrievedAt;
-    private string $ownerName;
-    private int $httpCode = 0;
-
-    public function __construct(string $url, string $contents, DateTime $retrievedAt, string $ownerName, int $httpCode,
-        array $headers)
-    {
-        $this->url = $url;
-        $this->contents = $contents;
-        $this->retrievedAt = $retrievedAt;
-        $this->ownerName = $ownerName;
-        $this->httpCode = $httpCode;
-        $this->headers = $headers;
+    public function __construct(
+        private string $url,
+        private string $contents,
+        private DateTime $retrievedAt,
+        private string $ownerName,
+        private int $httpCode,
+        /*
+         * @var string[] FIXME: Type hinting not working
+         */
+        private array $headers,
+    ) {
     }
 
     public function addChild(WebpageSnapshot $children): void
@@ -102,7 +94,7 @@ class WebpageSnapshot
      */
     public function getAllContents(): array
     {
-        return array_merge([$this->contents], ...array_map(function (WebpageSnapshot $snapshot) { return $snapshot->getAllContents(); }, $this->getChildren()));
+        return array_merge([$this->contents], ...array_map(fn (WebpageSnapshot $snapshot) => $snapshot->getAllContents(), $this->getChildren()));
     }
 
     public function getMetadata(): array

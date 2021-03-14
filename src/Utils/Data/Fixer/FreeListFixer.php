@@ -13,6 +13,6 @@ class FreeListFixer extends AbstractListFixer
 
     protected static function getSeparatorRegexp(): string
     {
-        return "#\n#";
+        return "\n";
     }
 }

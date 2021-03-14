@@ -19,15 +19,11 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class WebpageSnapshotManager
 {
-    private WebpageSnapshotCache $cache;
-    private GentleHttpClient $httpClient;
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger, WebpageSnapshotCache $cache)
-    {
-        $this->logger = $logger;
-        $this->cache = $cache;
-        $this->httpClient = new GentleHttpClient();
+    public function __construct(
+        private GentleHttpClient $httpClient,
+        private WebpageSnapshotCache $cache,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -35,7 +31,7 @@ class WebpageSnapshotManager
      */
     public function get(Fetchable $url, bool $refetch, bool $throw): WebpageSnapshot
     {
-        if (!$refetch && (null !== ($result = $this->cache->getOK($url)))) {
+        if (!$refetch && (null !== ($result = $this->cache->get($url)))) {
             $this->logger->debug('Retrieved from cache: '.$url);
 
             return $result;
@@ -67,7 +63,7 @@ class WebpageSnapshotManager
         while (($url = $queue->pop())) {
             try {
                 $this->get($url, $refetch, false);
-            } catch (ExceptionInterface $exception) {
+            } catch (ExceptionInterface) {
                 // Prefetching = keep quiet, we'll retry
             }
 

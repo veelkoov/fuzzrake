@@ -13,13 +13,13 @@ use PHPUnit\Framework\TestCase;
 
 class HealthCheckServiceTest extends TestCase
 {
-    const HC_VALUES = [
-        'MEMORY_AVAILABLE_MIN_MIBS'  => '256',
-        'DISK_FREE_MIN_MIBS'         => '1024',
-        'DISK_USED_MAX_PERCENT'      => '90',
-        'LOAD_1M_MAX'                => '0.9',
-        'LOAD_5M_MAX'                => '0.5',
-        'LOAD_15M_MAX'               => '0.2',
+    private const HC_VALUES = [
+        'MEMORY_AVAILABLE_MIN_MIBS'  => 256,
+        'DISK_FREE_MIN_MIBS'         => 1024,
+        'DISK_USED_MAX_PERCENT'      => 90,
+        'LOAD_1M_MAX'                => 0.9,
+        'LOAD_5M_MAX'                => 0.5,
+        'LOAD_15M_MAX'               => 0.2,
     ];
 
     /**
@@ -36,7 +36,6 @@ class HealthCheckServiceTest extends TestCase
                 new DateTime('-12:20h', new DateTimeZone('UTC')))
         ;
 
-        /* @noinspection PhpParamsInspection */
         $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
 
         static::assertEquals('OK', $hcSrv->getStatus()['cstStatus']);
@@ -231,7 +230,6 @@ class HealthCheckServiceTest extends TestCase
     {
         $acsrMock = $this->createMock(ArtisanCommissionsStatusRepository::class);
 
-        /* @noinspection PhpParamsInspection */
         return new HealthCheckService($acsrMock, self::HC_VALUES);
     }
 }

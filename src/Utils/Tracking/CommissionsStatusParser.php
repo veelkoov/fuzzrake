@@ -25,8 +25,9 @@ class CommissionsStatusParser
     private Variant $closed;
     private Variant $any;
 
-    public function __construct()
-    {
+    public function __construct(
+        private HtmlPreprocessor $htmlPreprocessor,
+    ) {
         $this->open = new Variant(['STATUS' => 'OPEN']);
         $this->closed = new Variant(['STATUS' => 'CLOSED']);
         $this->any = new Variant(['STATUS' => '(OPEN|CLOSED)']);
@@ -38,8 +39,6 @@ class CommissionsStatusParser
         // $this->debugDumpRegexps(); // DEBUG
     }
 
-    /** @noinspection PhpDocRedundantThrowsInspection */
-
     /**
      * @throws TrackerException
      */
@@ -48,9 +47,7 @@ class CommissionsStatusParser
         $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
 
-        $inputTexts = array_map(function (string $input) use ($artisanName, $additionalFilter) {
-            return $this->processInputText($artisanName, $additionalFilter, $input);
-        }, $snapshot->getAllContents());
+        $inputTexts = array_map(fn (string $input) => $this->processInputText($artisanName, $additionalFilter, $input), $snapshot->getAllContents());
 
         $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
         $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);
@@ -65,7 +62,7 @@ class CommissionsStatusParser
      */
     private function processInputText(string $artisanName, string $additionalFilter, string $inputText): string
     {
-        $inputText = HtmlPreprocessor::cleanHtml($inputText);
+        $inputText = $this->htmlPreprocessor->clean($inputText);
         $inputText = HtmlPreprocessor::processArtisansName($artisanName, $inputText);
         $inputText = $this->removeFalsePositives($inputText);
         $inputText = HtmlPreprocessor::applyFilters($inputText, $additionalFilter);

@@ -10,16 +10,15 @@ class FilterItems implements ArrayAccess
 {
     private int $unknownCount = 0;
     private int $otherCount = 0;
-    private bool $hasOther;
 
     /**
      * @var FilterItem[]
      */
     private array $items = [];
 
-    public function __construct(bool $hasOther)
-    {
-        $this->hasOther = $hasOther;
+    public function __construct(
+        private bool $hasOther,
+    ) {
     }
 
     public function addOrIncItem(string $key): void
@@ -31,12 +30,20 @@ class FilterItems implements ArrayAccess
         $this->items[$key]->incCount();
     }
 
-    /**
-     * @param int|string|FilterItems $value
-     */
-    public function addComplexItem(string $key, $value, string $label, int $count): void
+    public function addComplexItem(string $key, int | string | FilterItems $value, string $label, int $count): void
     {
         $this->items[$key] = new FilterItem($value, $label, $count);
+    }
+
+    public function hasComplexItem(): bool
+    {
+        foreach ($this->items as $item) {
+            if ($item->isComplex()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function incUnknownCount(int $number = 1): void
@@ -74,9 +81,7 @@ class FilterItems implements ArrayAccess
 
     public function sort(): void
     {
-        uasort($this->items, function (FilterItem $a, FilterItem $b): int {
-            return strcmp($a->getLabel(), $b->getLabel());
-        });
+        uasort($this->items, fn (FilterItem $a, FilterItem $b): int => strcmp($a->getLabel(), $b->getLabel()));
     }
 
     public function __get(string $key): FilterItem

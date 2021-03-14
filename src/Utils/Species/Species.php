@@ -1,0 +1,182 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Utils\Species;
+
+use App\Repository\ArtisanRepository;
+use App\Utils\Regexp\Replacements;
+use RuntimeException;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
+
+class Species
+{
+    private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
+    private const FLAG_IGNORE_THIS_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
+
+    private Replacements $replacements;
+
+    /**
+     * @return string[]
+     */
+    private array $unsplittable;
+
+    /**
+     * @var Specie[] Associative: key = name, value = Specie object. Species fit for filtering
+     */
+    private array $speciesFlat;
+
+    /**
+     * @var Specie[] Species fit for filtering
+     */
+    private array $speciesTree;
+
+    /**
+     * @var string[] Names of species considered valid by the validator (list of all, not only fit for filtering)
+     */
+    private array $validChoicesList;
+
+    public function __construct(
+        array $speciesDefinitions,
+        private ArtisanRepository $artisanRepository,
+    ) {
+        $this->replacements = new Replacements($speciesDefinitions['replacements'], 'i', $speciesDefinitions['commonRegexPrefix'], $speciesDefinitions['commonRegexSuffix']);
+        $this->unsplittable = $speciesDefinitions['leave_unchanged'];
+
+        $this->initialize($speciesDefinitions['valid_choices']);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getValidChoicesList(): array
+    {
+        return $this->validChoicesList;
+    }
+
+    /**
+     * @return Specie[]
+     */
+    public function getSpeciesFlat(): array
+    {
+        return $this->speciesFlat;
+    }
+
+    /**
+     * @return Specie[]
+     */
+    public function getSpeciesTree(): array
+    {
+        return $this->speciesTree;
+    }
+
+    public function getListFixerReplacements(): Replacements
+    {
+        return $this->replacements;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getListFixerUnsplittable(): array
+    {
+        return $this->unsplittable;
+    }
+
+    public function getStats(): array
+    {
+        return (new StatsCalculator($this->artisanRepository->getAll(), $this->speciesFlat))->get();
+    }
+
+    private function splitSpecieFlagsName(string $specie): array
+    {
+        try {
+            return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)
+                ->findFirst(fn (Detail $match): array => [
+                    $match->group('flags')->text(),
+                    $match->group('specie')->text(),
+                ])->orReturn(['', $specie]);
+        } catch (NonexistentGroupException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    private function flagged(string $flags, string $flag): bool
+    {
+        return str_contains($flags, $flag);
+    }
+
+    private function initialize(array $species): void
+    {
+        $this->speciesFlat = [];
+        $this->speciesTree = $this->getTreeFor($species);
+
+        $this->validChoicesList = $this->gatherValidChoices($species);
+    }
+
+    /**
+     * @param array[]|string[] $species
+     *
+     * @return string[]
+     */
+    private function gatherValidChoices(array $species): array
+    {
+        $result = [];
+
+        foreach ($species as $specie => $subspecies) {
+            [, $specie] = $this->splitSpecieFlagsName($specie);
+
+            $result[] = $specie;
+
+            if (is_array($subspecies)) {
+                $result = array_merge($result, $this->gatherValidChoices($subspecies));
+            }
+        }
+
+        return $result;
+    }
+
+    private function getTreeFor(array $species, Specie $parent = null): array
+    {
+        $result = [];
+
+        foreach ($species as $specieName => $subspecies) {
+            [$flags, $specieName] = $this->splitSpecieFlagsName($specieName);
+
+            $this->validChoicesList[] = $specieName;
+
+            if ($this->flagged($flags, self::FLAG_IGNORE_THIS_FLAG)) {
+                continue;
+            }
+
+            $specie = $this->getUpdatedSpecie($specieName, $parent, $subspecies);
+
+            $result[$specieName] = $specie;
+        }
+
+        return $result;
+    }
+
+    private function getUpdatedSpecie(string $specieName, ?Specie $parent, ?array $subspecies): Specie
+    {
+        $specie = $this->getSpecie($specieName);
+
+        if (null !== $parent) {
+            $specie->addParent($parent);
+        }
+
+        if (!empty($subspecies)) {
+            foreach ($this->getTreeFor($subspecies, $specie) as $subspecie) {
+                $specie->addChild($subspecie);
+            }
+        }
+
+        return $specie;
+    }
+
+    private function getSpecie($specieName): Specie
+    {
+        return $this->speciesFlat[$specieName] ??= new Specie($specieName);
+    }
+}

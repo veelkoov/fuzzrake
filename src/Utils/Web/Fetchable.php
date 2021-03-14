@@ -16,5 +16,7 @@ interface Fetchable
 
     public function recordFailedFetch(int $code, string $reason): void;
 
+    public function resetFetchResults(): void;
+
     public function __toString();
 }

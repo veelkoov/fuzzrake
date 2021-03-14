@@ -23,36 +23,20 @@ use App\Utils\Data\Fixer\UrlFixer;
 
 class Fixer
 {
-    private StringFixer $stringFixer;
-    private DefinedListFixer $definedListFixer;
-    private FreeListFixer $freeListFixer;
-    private SpeciesListFixer $speciesListFixer;
-    private UrlFixer $urlFixer;
-    private ContactAllowedFixer $contactAllowedFixer;
-    private CountryFixer $countryFixer;
-    private LanguagesFixer $languagesFixer;
-    private SinceFixer $sinceFixer;
-    private NoopFixer $noopFixer;
-    private IntroFixer $introFixer;
-    private StateFixer $stateFixer;
-
-    public function __construct(SpeciesListFixer $speciesListFixer, LanguagesFixer $languagesFixer,
-        CountryFixer $countryFixer, StateFixer $stateFixer, StringFixer $stringFixer,
-        DefinedListFixer $definedListFixer, FreeListFixer $freeListFixer, UrlFixer $urlFixer, IntroFixer $introFixer)
-    {
-        $this->speciesListFixer = $speciesListFixer;
-        $this->languagesFixer = $languagesFixer;
-
-        $this->stringFixer = $stringFixer;
-        $this->definedListFixer = $definedListFixer;
-        $this->freeListFixer = $freeListFixer;
-        $this->urlFixer = $urlFixer;
-        $this->noopFixer = new NoopFixer();
-        $this->sinceFixer = new SinceFixer();
-        $this->countryFixer = $countryFixer;
-        $this->stateFixer = $stateFixer;
-        $this->introFixer = $introFixer;
-        $this->contactAllowedFixer = new ContactAllowedFixer();
+    public function __construct(
+        private StringFixer $stringFixer,
+        private DefinedListFixer $definedListFixer,
+        private FreeListFixer $freeListFixer,
+        private SpeciesListFixer $speciesListFixer,
+        private UrlFixer $urlFixer,
+        private ContactAllowedFixer $contactAllowedFixer,
+        private CountryFixer $countryFixer,
+        private LanguagesFixer $languagesFixer,
+        private SinceFixer $sinceFixer,
+        private NoopFixer $noopFixer,
+        private IntroFixer $introFixer,
+        private StateFixer $stateFixer,
+    ) {
     }
 
     public function fix(Artisan $artisan, Field $field): void
@@ -84,8 +68,10 @@ class Fixer
             case Fields::OTHER_FEATURES:
             case Fields::OTHER_ORDER_TYPES:
             case Fields::OTHER_STYLES:
-            case Fields::URL_SCRITCH_PHOTO:
-            case Fields::URL_SCRITCH_MINIATURE:
+            case Fields::URL_PHOTOS:
+            case Fields::URL_MINIATURES:
+            case Fields::CURRENCIES_ACCEPTED:
+            case Fields::PAYMENT_METHODS:
                 return $this->freeListFixer;
 
             case Fields::URL_CST:

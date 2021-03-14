@@ -10,15 +10,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Printer
 {
-    private SymfonyStyle $io;
-
     private ?ArtisanFixWip $lastContext = null;
     private ?ArtisanFixWip $currentContext = null;
 
-    public function __construct(SymfonyStyle $io)
-    {
-        $this->io = $io;
-
+    public function __construct(
+        private SymfonyStyle $io,
+    ) {
         $this->io->getFormatter()->setStyle('diff_added', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('diff_deleted', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('diff_imported', new OutputFormatterStyle('magenta'));
@@ -73,6 +70,12 @@ class Printer
     {
         $this->showArtisanNameIfContextChanged();
         $this->io->warning($message);
+    }
+
+    public function success(string $message): void
+    {
+        $this->showArtisanNameIfContextChanged();
+        $this->io->success($message);
     }
 
     private function showArtisanNameIfContextChanged(): void

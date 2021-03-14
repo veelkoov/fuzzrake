@@ -31,29 +31,45 @@
         <button data-target="#filter-body-commissionsStatus" class="btn btn-outline-secondary" data-toggle="collapse">Commissions status: <span class="status"></span></button>
         <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
     </div>
+    <div id="filter-ctrl-species" class="btn-group my-1" role="group">
+        <button data-target="#filter-body-species" class="btn btn-outline-secondary" data-toggle="collapse">Species: <span class="status"></span></button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    </div>
 
     <div id="filter-body-countries" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/countries.html.twig' %}
         {% include 'main/modals/filters/countries.html.twig' %}
     </div>
     <div id="filter-body-states" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/states.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'state', items: filters.states } %}
     </div>
     <div id="filter-body-languages" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/languages.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'lanugage', items: filters.languages } %}
     </div>
     <div id="filter-body-styles" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/styles.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'style', items: filters.styles } %}
     </div>
     <div id="filter-body-features" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/features.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'feature', items: filters.features } %}
     </div>
     <div id="filter-body-orderTypes" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/order_types.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'orderType', items: filters.orderTypes } %}
     </div>
     <div id="filter-body-productionModels" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/production_models.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'productionModel', items: filters.productionModels } %}
     </div>
     <div id="filter-body-commissionsStatus" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/commissions_status.html.twig' %}
         {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'commissionsStatuses', items: filters.commissionsStatuses } %}
+    </div>
+    <div id="filter-body-species" class="collapse" data-parent="#filters-parents">
+        {% include 'main/modals/filters/helphints/species.html.twig' %}
+        {% include 'main/modals/filters/species.html.twig' %}
     </div>
 </div>

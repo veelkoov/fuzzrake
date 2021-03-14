@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\Traits\UtilityClass;
 
-abstract class StringList
+final class StringList
 {
+    use UtilityClass;
+
     private const STD_SEPARATOR = "\n";
 
     /**
@@ -46,7 +48,7 @@ abstract class StringList
 
         $input = self::replaceNonsplittables($input, $nonsplittables);
 
-        $result = Regexp::split($separatorRegexp, $input);
+        $result = pattern($separatorRegexp)->split($input);
 
         $nonsplittables = array_flip($nonsplittables);
 

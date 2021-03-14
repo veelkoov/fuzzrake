@@ -9,8 +9,9 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\FixerDifferValidator as FDV;
+use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
-use App\Utils\DataInput\Manager;
+use App\Utils\DataInputException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
@@ -23,19 +24,13 @@ class DataTidyCommand extends Command
 {
     protected static $defaultName = 'app:data:tidy';
 
-    /**
-     * @var ArtisanRepository|ObjectRepository
-     */
-    private ObjectRepository $artisanRepository;
+    private ObjectRepository | ArtisanRepository $artisanRepository;
 
-    private EntityManagerInterface $objectManager;
-    private FdvFactory $fdvFactory;
-
-    public function __construct(EntityManagerInterface $objectManager, FdvFactory $fdvFactory)
-    {
+    public function __construct(
+        private EntityManagerInterface $objectManager,
+        private FdvFactory $fdvFactory,
+    ) {
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
-        $this->objectManager = $objectManager;
-        $this->fdvFactory = $fdvFactory;
 
         parent::__construct();
     }
@@ -46,6 +41,9 @@ class DataTidyCommand extends Command
         $this->addArgument('corrections-file', InputArgument::OPTIONAL, 'Corrections file path');
     }
 
+    /**
+     * @throws DataInputException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

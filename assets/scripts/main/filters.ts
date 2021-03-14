@@ -3,6 +3,8 @@ import SetFilterVis from "../filters/ui/SetFilterVis";
 import FilterVisInterface from "../filters/ui/FilterVisInterface";
 import DataBridge from "../class/DataBridge";
 import DataTablesFilterPlugin from "../filters/DataTablesFilterPlugin";
+import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
+import Species from "../species/Species";
 
 let filters: FilterVisInterface[] = [];
 let $filtersShowButton: JQuery<HTMLElement>;
@@ -27,6 +29,12 @@ function refreshFiltersShowButton(): void {
     $filtersShowButton.html(`Choose filters${badge}`);
 }
 
+function setupSpeciesFiltersToggleButtons(): void {
+    jQuery('#filtersModal .specie .toggle').on('click', function () {
+        jQuery(this).parents('.specie').nextAll('.subspecies').first().toggle(250);
+    });
+}
+
 export function setRefreshCallback(refreshCallback: () => void): void {
     refreshList = refreshCallback;
 }
@@ -49,11 +57,14 @@ export function initFilters(): void {
     filters.push(new SetFilterVis<string>('productionModels', 'productionModels', false, false));
     filters.push(new SetFilterVis<string>('languages', 'languages', false, false));
     filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus'));
+    filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);
     jQuery.fn.dataTable.ext.search.push(filterDtPlugin.getCallback());
     $filtersShowButton = jQuery('#filtersButton');
     jQuery('#filtersModal').on('hidden.bs.modal', applyFilters);
+
+    setupSpeciesFiltersToggleButtons();
 }
 
 export function restoreFilters(): void {

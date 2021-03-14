@@ -3,6 +3,8 @@ deployment_path: "{{ inventory_dir }}/../"
 
 php_fpm_container_port: 9555
 php_fpm_container_name: fuzzrake
+php_fpm_build_args:
+  DEV_MACHINE: "yes"
 
 sg_name: getfursu.it-backend
 sg_description: getfursu.it backend

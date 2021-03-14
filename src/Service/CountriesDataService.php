@@ -6,20 +6,23 @@ namespace App\Service;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\FilterItems;
+use App\Utils\Json;
+use JsonException;
 
 class CountriesDataService
 {
-    private ArtisanRepository $artisanRepository;
-
     /**
      * [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ].
      */
     private array $data;
 
-    public function __construct(ArtisanRepository $artisanRepository, string $projectDir)
-    {
-        $this->artisanRepository = $artisanRepository;
-
+    /**
+     * @throws JsonException
+     */
+    public function __construct(
+        private ArtisanRepository $artisanRepository,
+        string $projectDir,
+    ) {
         $this->loadCountriesData($projectDir);
     }
 
@@ -46,9 +49,7 @@ class CountriesDataService
 
     private function getRegionsFromCountries(array $countriesData): FilterItems
     {
-        $regionNames = array_unique(array_map(function (array $country): string {
-            return $country['region'];
-        }, $countriesData));
+        $regionNames = array_unique(array_map(fn (array $country): string => $country['region'], $countriesData));
 
         $result = new FilterItems(false);
 
@@ -59,9 +60,12 @@ class CountriesDataService
         return $result;
     }
 
+    /**
+     * @throws JsonException
+     */
     private function loadCountriesData(string $projectDir): void
     {
-        $dataNumberIndexes = json_decode(file_get_contents($projectDir.'/assets/countries.json'), true);
+        $dataNumberIndexes = Json::decode(file_get_contents($projectDir.'/assets/countries.json'));
         $dataCodeIndexes = [];
 
         foreach ($dataNumberIndexes as $country) {

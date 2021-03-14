@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,15 +13,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CrawlersController extends AbstractController
 {
-    /**
-     * @Route("/sitemap.txt", name="sitemap")
-     * @Cache(maxage=21600, public=true)
-     */
+    #[Route(path: '/sitemap.txt', name: RouteName::SITEMAP)]
+    #[Cache(maxage: 21600, public: true)]
     public function sitemap(): Response
     {
-        $urls = array_map(function (string $route): string {
-            return $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL);
-        }, [
+        $urls = array_map(fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL), [
             'main',
             'data_updates',
             'info',
@@ -28,7 +25,6 @@ class CrawlersController extends AbstractController
             'maker_ids',
             'statistics',
             'events',
-            'whoopsies',
             'donate',
         ]);
 

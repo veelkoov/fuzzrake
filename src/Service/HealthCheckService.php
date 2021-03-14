@@ -30,18 +30,16 @@ class HealthCheckService
     private float $load5mMax;
     private float $load15mMax;
 
-    private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository;
-
-    public function __construct(ArtisanCommissionsStatusRepository $acsr, array $healthCheckValues)
-    {
-        $this->artisanCommissionsStatusRepository = $acsr;
-
-        $this->memoryAvailableMinMibs = Parse::tInt($healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS]);
-        $this->diskFreeMinMibs = Parse::tInt($healthCheckValues[self::DISK_FREE_MIN_MIBS]);
-        $this->diskUsedMaxPercent = Parse::tInt($healthCheckValues[self::DISK_USED_MAX_PERCENT]);
-        $this->load1mMax = Parse::tFloat($healthCheckValues[self::LOAD_1M_MAX]);
-        $this->load5mMax = Parse::tFloat($healthCheckValues[self::LOAD_5M_MAX]);
-        $this->load15mMax = Parse::tFloat($healthCheckValues[self::LOAD_15M_MAX]);
+    public function __construct(
+        private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
+        array $healthCheckValues,
+    ) {
+        $this->memoryAvailableMinMibs = $healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS];
+        $this->diskFreeMinMibs = $healthCheckValues[self::DISK_FREE_MIN_MIBS];
+        $this->diskUsedMaxPercent = $healthCheckValues[self::DISK_USED_MAX_PERCENT];
+        $this->load1mMax = $healthCheckValues[self::LOAD_1M_MAX];
+        $this->load5mMax = $healthCheckValues[self::LOAD_5M_MAX];
+        $this->load15mMax = $healthCheckValues[self::LOAD_15M_MAX];
     }
 
     public function getStatus(): array
@@ -63,7 +61,7 @@ class HealthCheckService
             return $this->artisanCommissionsStatusRepository->getLastCstUpdateTime() < DateTimeUtils::getUtcAt('-12:15')
                 ? self::OK
                 : self::WARNING;
-        } catch (DateTimeException | UnexpectedResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException) {
             return self::WARNING;
         }
     }
@@ -96,7 +94,7 @@ class HealthCheckService
             try {
                 $mibsFree = Parse::tInt($disk[0]);
                 $percentUsed = Parse::tPercentAsInt($disk[1]);
-            } catch (ParseException $e) {
+            } catch (ParseException) {
                 return self::WARNING;
             }
 
@@ -114,7 +112,7 @@ class HealthCheckService
             $memoryAvailableMibs = Parse::tInt($rawData);
 
             return $memoryAvailableMibs > $this->memoryAvailableMinMibs ? self::OK : self::WARNING;
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             return self::WARNING;
         }
     }
@@ -132,7 +130,7 @@ class HealthCheckService
             $load1m = Parse::tFloat($loads[0]) / $cpuCount;
             $load5m = Parse::tFloat($loads[1]) / $cpuCount;
             $load15m = Parse::tFloat($loads[2]) / $cpuCount;
-        } catch (ParseException $e) {
+        } catch (ParseException) {
             return self::WARNING;
         }
 

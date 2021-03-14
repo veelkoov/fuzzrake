@@ -7,23 +7,20 @@ namespace App\Controller\Mx;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\FieldsDefinitions;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/artisan_urls")
- */
+#[Route(path: '/mx/artisan_urls')]
 class ArtisanUrlsController extends AbstractController
 {
-    /**
-     * @Route("/", name="mx_artisan_urls")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/', name: RouteName::MX_ARTISAN_URLS)]
+    #[Cache(maxage: 0, public: false)]
     public function index(ArtisanUrlRepository $repository, EnvironmentsService $environments): Response
     {
-        if (!$environments->isDevMachine()) {
+        if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
         }
 

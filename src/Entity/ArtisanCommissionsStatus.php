@@ -21,28 +21,28 @@ class ArtisanCommissionsStatus
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="commissionsStatus")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private $artisan;
+    private ?Artisan $artisan = null;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $status = null;
+    private ?bool $status = null;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $lastChecked = null;
+    private ?DateTimeInterface $lastChecked = null;
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private $reason = '';
+    private string $reason = '';
 
     public function getId(): ?int
     {

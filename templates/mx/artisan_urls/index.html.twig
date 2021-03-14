@@ -19,14 +19,14 @@
         </thead>
         <tbody>
             {% for url in urls %}
-                {% if url.lastSuccess is not null %}
-                    {% if url.lastFailure is not null and url.lastFailure > url.lastSuccess%}
+                {% if url.state.lastSuccess is not null %}
+                    {% if url.state.lastFailure is not null and url.state.lastFailure > url.state.lastSuccess %}
                         {% set class = 'table-danger' %}
                     {% else %}
                         {% set class = 'table-success' %}
                     {% endif %}
                 {% else %}
-                    {% if url.lastFailure is not null %}
+                    {% if url.state.lastFailure is not null %}
                         {% set class = 'table-danger' %}
                     {% else %}
                         {% set class = '' %}
@@ -44,16 +44,16 @@
                         <a href="{{ url.url }}">{{ url.url|event_url|nl2br }}</a>
                     </td>
                     <td class="text-nowrap">
-                        {{ url.lastSuccess|nulldate }}
+                        {{ url.state.lastSuccess|nulldate }}
                     </td>
                     <td class="text-nowrap">
-                        {{ url.lastFailure|nulldate }}
+                        {{ url.state.lastFailure|nulldate }}
                     </td>
                     <td>
-                        {{ url.lastFailureCode }}
+                        {{ url.state.lastFailureCode }}
                     </td>
                     <td class="text-break">
-                        {{ url.lastFailureReason }}
+                        {{ url.state.lastFailureReason }}
                     </td>
                 </tr>
             {% endfor %}

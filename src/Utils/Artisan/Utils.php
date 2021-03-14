@@ -6,26 +6,21 @@ namespace App\Utils\Artisan;
 
 use App\Entity\Artisan;
 use App\Utils\Contact;
+use App\Utils\Traits\UtilityClass;
 
-abstract class Utils
+final class Utils
 {
+    use UtilityClass;
+
     public static function updateContact(Artisan $artisan, string $newOriginalContactValue): void
     {
-        list($method, $address) = Contact::parse($newOriginalContactValue);
+        [$method, $address] = Contact::parse($newOriginalContactValue);
 
-        switch ($method) {
-            case Contact::INVALID:
-                $obfuscated = 'PLEASE CORRECT';
-                break;
-
-            case '':
-                $obfuscated = '';
-                break;
-
-            default:
-                $obfuscated = $method.': '.Contact::obscure($address);
-                break;
-        }
+        $obfuscated = match ($method) {
+            Contact::INVALID => 'PLEASE CORRECT',
+            ''               => '',
+            default          => $method.': '.Contact::obscure($address),
+        };
 
         $artisan->setContactMethod($method)
             ->setContactInfoObfuscated($obfuscated)

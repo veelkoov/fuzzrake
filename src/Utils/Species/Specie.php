@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use InvalidArgumentException;
+use Stringable;
 
-class Specie
+class Specie implements Stringable
 {
-    private string $name;
-
     /**
      * @var Specie[]
      */
@@ -20,9 +19,9 @@ class Specie
      */
     private array $children = [];
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
+    public function __construct(
+        private string $name,
+    ) {
     }
 
     /**
@@ -103,6 +102,11 @@ class Specie
     public function isLeaf(): bool
     {
         return empty($this->children);
+    }
+
+    public function hasChildren(): bool
+    {
+        return !$this->isLeaf();
     }
 
     public function __toString(): string

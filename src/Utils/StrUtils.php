@@ -6,10 +6,13 @@ namespace App\Utils;
 
 use App\Entity\Artisan;
 use App\Twig\AppExtensions;
-use App\Utils\Regexp\Regexp;
+use App\Utils\Artisan\Fields;
+use App\Utils\Traits\UtilityClass;
 
-abstract class StrUtils
+final class StrUtils
 {
+    use UtilityClass;
+
     public static function artisanNamesSafeForCli(Artisan ...$artisans): string
     {
         $names = $makerIds = [];
@@ -42,8 +45,8 @@ abstract class StrUtils
      */
     public static function shortPrintUrl(string $originalUrl): string
     {
-        $url = Regexp::replace('#^https?://(www\.)?#', '', $originalUrl);
-        $url = Regexp::replace('/\/?(#profile)?$/', '', $url);
+        $url = pattern('^https?://(www\.)?')->remove($originalUrl)->all();
+        $url = pattern('/?(#profile)?$')->remove($url)->all();
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 
@@ -57,5 +60,14 @@ abstract class StrUtils
     public static function ucfirst(string $input): string
     {
         return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
+    }
+
+    public static function fixNewlines(Artisan $artisan): void
+    {
+        foreach (Fields::persisted() as $field) {
+            if (($value = $artisan->get($field)) && is_string($value)) {
+                $artisan->set($field, str_replace("\r\n", "\n", $value));
+            }
+        }
     }
 }

@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace App\Utils\Regexp;
 
 use SplObjectStorage;
+use TRegx\SafeRegex\Exception\PregException;
+use TRegx\SafeRegex\preg;
 
 class Factory
 {
-    private array $commonReplacements;
-
-    public function __construct(array $commonReplacements)
-    {
-        $this->commonReplacements = $commonReplacements;
+    public function __construct(
+        private array $commonReplacements,
+    ) {
     }
 
     public function createSet(array $originals, array $variants = []): array
     {
-        return array_map(function (string $key) use ($originals, $variants) {
-            return $this->create($key, $originals[$key], $variants);
-        }, array_keys($originals));
+        return array_map(fn (string $key) => $this->create($key, $originals[$key], $variants), array_keys($originals));
     }
 
     private function create(string $key, string $original, array $variants = []): TrackingRegexp
@@ -35,8 +33,14 @@ class Factory
 
     private function compileVariant(string $regexp, Variant $variant): string
     {
-        $result = Regexp::replaceAll(array_merge($variant->getReplacements(), $this->commonReplacements), $regexp, '#', '#');
+        foreach (array_merge($variant->getReplacements(), $this->commonReplacements) as $pattern => $replacement) {
+            try {
+                $regexp = preg::replace("#$pattern#", $replacement, $regexp);
+            } catch (PregException $e) {
+                throw new RuntimeRegexpException(previous: $e);
+            }
+        }
 
-        return "#$result#s";
+        return "#$regexp#s";
     }
 }

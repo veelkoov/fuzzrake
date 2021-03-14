@@ -5,33 +5,29 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
+use App\Repository\MakerIdRepository;
 use App\Service\HealthCheckService;
-use ReCaptcha\ReCaptcha;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RestApiController extends AbstractController
+class RestApiController extends AbstractRecaptchaBackedController
 {
-    /**
-     * @Route("/api/", name="api")
-     * @Cache(maxage=3600, public=true)
-     */
+    #[Route(path: '/api/', name: RouteName::API)]
+    #[Cache(maxage: 3600, public: true)]
     public function api(): Response
     {
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * @Route("/api/info/email.part.html")
-     * @Cache(maxage=0, public=false)
-     */
-    public function info_emailHtml(Request $request, ReCaptcha $captcha, string $contactEmail): Response
+    #[Route(path: '/api/info/email.part.html')]
+    #[Cache(maxage: 0, public: false)]
+    public function info_emailHtml(Request $request, string $contactEmail): Response
     {
-        $ok = $this->isReCaptchaTokenOk($captcha, $request);
+        $ok = $this->isReCaptchaTokenOk($request, 'info_emailHtml');
 
         if ($ok) {
             $contactEmail = htmlspecialchars($contactEmail);
@@ -42,39 +38,37 @@ class RestApiController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/api/artisans.json", name="api_artisans")
-     * @Cache(maxage=3600, public=true)
-     */
+    #[Route(path: '/api/iu_form/verify')]
+    #[Cache(maxage: 0, public: false)]
+    public function iu_form_verify(Request $request): Response
+    {
+        $ok = $this->isReCaptchaTokenOk($request, 'iu_form_verify');
+
+        if ($ok) {
+            return new Response('', Response::HTTP_NO_CONTENT);
+        } else {
+            return new Response('', Response::HTTP_FORBIDDEN, ['X-Fuzzrake-Debug' => 'reCAPTCHA validation failed']);
+        }
+    }
+
+    #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
+    #[Cache(maxage: 3600, public: true)]
     public function artisans(ArtisanRepository $artisanRepository): JsonResponse
     {
         return new JsonResponse($artisanRepository->getAll());
     }
 
-    /**
-     * @Route("/api/old_to_new_maker_ids_map.json", name="api_old_to_new_maker_ids_map")
-     * @Cache(maxage=3600, public=true)
-     */
-    public function oldToNewMakerIdsMap(ArtisanRepository $artisanRepository): JsonResponse
+    #[Route(path: '/api/old_to_new_maker_ids_map.json', name: RouteName::API_OLD_TO_NEW_MAKER_IDS_MAP)]
+    #[Cache(maxage: 3600, public: true)]
+    public function oldToNewMakerIdsMap(MakerIdRepository $makerIdRepository): JsonResponse
     {
-        return new JsonResponse($artisanRepository->getOldToNewMakerIdsMap());
+        return new JsonResponse($makerIdRepository->getOldToNewMakerIdsMap());
     }
 
-    /**
-     * @Route("/health", name="health")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/health', name: RouteName::HEALTH)]
+    #[Cache(maxage: 0, public: false)]
     public function healthcheck(HealthCheckService $healthCheckService): JsonResponse
     {
         return new JsonResponse($healthCheckService->getStatus());
-    }
-
-    private function isReCaptchaTokenOk(ReCaptcha $captcha, Request $request): bool
-    {
-        return $captcha
-            ->setExpectedHostname($request->getHttpHost())
-            ->setExpectedAction('info_emailHtml')
-            ->setScoreThreshold($_ENV['GOOGLE_RECAPTCHA_SCORE_THRESHOLD'] ?: 0.8)
-            ->verify($request->get('token', 'missing-token'), $request->getClientIp())->isSuccess();
     }
 }

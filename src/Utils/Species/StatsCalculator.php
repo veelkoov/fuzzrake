@@ -36,7 +36,7 @@ class StatsCalculator
         $this->speciesFlat = $speciesFlat;
         $this->artisans = $artisans;
 
-        $this->InitializeSpeciesDoesAndNot();
+        $this->initializeSpeciesDoesAndNot();
         $this->initializeEmptyResult();
 
         foreach ($artisans as $artisan) {
@@ -60,6 +60,10 @@ class StatsCalculator
     private function appendSpeciesStats(array &$result, array $species, bool $does): void
     {
         foreach ($species as $specie) {
+            if (!array_key_exists($specie, $result)) {
+                return;
+            }
+
             ++$result[$specie][$does ? 'directDoesCount' : 'directDoesntCount'];
             ++$result[$specie]['directTotalCount'];
 
@@ -75,12 +79,16 @@ class StatsCalculator
      */
     private function getSpeciesAffectedInStats(string $specieName): array
     {
+        if (!array_key_exists($specieName, $this->speciesFlat)) {
+            return [];
+        }
+
         return array_map(function (Specie $specie): string { return $specie->getName(); }, array_merge(
             $this->speciesFlat[$specieName]->getAncestors()
         ));
     }
 
-    private function InitializeSpeciesDoesAndNot(): void
+    private function initializeSpeciesDoesAndNot(): void
     {
         $this->speciesDoes = array_map(function (Artisan $artisan): array {
             return StringList::unpack($artisan->getSpeciesDoes());

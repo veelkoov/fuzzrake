@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
-use App\Utils\CompletenessCalc;
 use App\Utils\FieldReadInterface;
-use App\Utils\Json;
 use App\Utils\StringList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
-use JsonException;
 use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
@@ -33,151 +32,179 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Regex(pattern="/^[A-Z0-9]{7}$/", message="Use only uppercase letters and/or digits (A-Z, 0-9).", groups={"iu_form"})
+     * @Assert\Length(min="7", max="7", groups={"iu_form"})
      */
     private string $makerId = '';
 
     /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private string $formerMakerIds = '';
-
-    /**
      * @ORM\Column(type="string", length=128)
+     * @Assert\Length(max="128", groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"})
      */
     private string $name = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $formerly = '';
 
     /**
      * @ORM\Column(type="string", length=512)
+     * @Assert\Length(max="512", groups={"iu_form"})
      */
     private string $intro = '';
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Length(max="16", groups={"iu_form"})
      */
     private string $since = '';
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Length(max="16", groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"})
      */
     private string $country = '';
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Assert\Length(max="32", groups={"iu_form"})
      */
     private string $state = '';
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Assert\Length(max="32", groups={"iu_form"})
      */
     private string $city = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $productionModelsComment = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $productionModels = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $stylesComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $styles = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $otherStyles = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $orderTypesComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $orderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $otherOrderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $featuresComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $features = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
+     * @Assert\Length(max="1024", groups={"iu_form"})
      */
     private string $otherFeatures = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $paymentPlans = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $paymentMethods = '';
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\Length(max="64", groups={"iu_form"})
      */
     private string $currenciesAccepted = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $speciesComment = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $speciesDoes = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $speciesDoesnt = '';
 
     /**
      * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max="256", groups={"iu_form"})
      */
     private string $languages = '';
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(max="4096", groups={"iu_form"})
      */
     private string $notes = '';
 
     /**
      * @ORM\Column(type="string", length=512)
+     * @Assert\Length(max="512", groups={"iu_form"})
      */
     private string $inactiveReason = '';
 
     /**
      * @ORM\Column(type="string", length=16)
+     * @Assert\Length(max="16", groups={"iu_form"})
+     * @Assert\NotBlank(groups={"iu_form"})
      */
     private string $contactAllowed = '';
 
@@ -188,6 +215,8 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\Column(type="string", length=128)
+     * @Assert\NotBlank(groups={"iu_form"})
+     * @Assert\Length(max=128, groups={"iu_form"})
      */
     private string $contactInfoObfuscated = '';
 
@@ -198,17 +227,28 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Assert\Valid(groups={"iu_form"})
      */
     private ?ArtisanPrivateData $privateData = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     *
+     * @var Collection|ArtisanUrl[]
      */
-    private Collection $urls;
+    private Collection | array $urls;
+
+    /**
+     * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist"})
+     *
+     * @var Collection|MakerId[]
+     */
+    private Collection | array $makerIds;
 
     public function __construct()
     {
         $this->urls = new ArrayCollection();
+        $this->makerIds = new ArrayCollection();
     }
 
     public function __clone()
@@ -226,6 +266,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
         foreach ($urls as $url) {
             $this->addUrl(clone $url);
+        }
+
+        $makerIds = $this->makerIds;
+        $this->makerIds = new ArrayCollection();
+
+        foreach ($makerIds as $makerId) {
+            $this->addMakerId(clone $makerId);
         }
     }
 
@@ -245,17 +292,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
     {
         $this->makerId = $makerId;
 
-        return $this;
-    }
-
-    public function getFormerMakerIds(): string
-    {
-        return $this->formerMakerIds;
-    }
-
-    public function setFormerMakerIds(string $formerMakerIds): self
-    {
-        $this->formerMakerIds = $formerMakerIds;
+        if ('' !== $makerId) {
+            $this->addMakerId($makerId);
+        }
 
         return $this;
     }
@@ -655,7 +694,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @return Collection|ArtisanUrl[]
      */
-    public function getUrls(): Collection
+    public function getUrls(): Collection | array
     {
         return $this->urls;
     }
@@ -682,14 +721,49 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
+    /**
+     * @return Collection|MakerId[]
+     */
+    public function getMakerIds(): Collection | array
+    {
+        return $this->makerIds;
+    }
+
+    public function addMakerId(MakerId | string $makerId): self
+    {
+        if (!($makerId instanceof MakerId)) {
+            if ($this->hasMakerId($makerId)) {
+                return $this;
+            }
+
+            $makerId = (new MakerId($makerId));
+        }
+
+        if (!$this->makerIds->contains($makerId)) {
+            $this->makerIds[] = $makerId;
+            $makerId->setArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMakerId(MakerId $makerId): self
+    {
+        if ($this->makerIds->removeElement($makerId)) {
+            if ($makerId->getArtisan() === $this) {
+                $makerId->setArtisan(null);
+            }
+        }
+
+        return $this;
+    }
+
     // ===== HELPER GETTERS AND SETTERS =====
 
-    public function set(Field $field, $newValue): self
+    public function set(Field | string $field, mixed $newValue): self
     {
-        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
-            $this->setContactInfoOriginal($newValue);
-
-            return $this;
+        if (!($field instanceof Field)) {
+            $field = Fields::get((string) $field);
         }
 
         $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
@@ -703,10 +777,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function get(Field $field)
+    public function get(Field | string $field): mixed
     {
-        if ($field->is(Fields::CONTACT_INPUT_VIRTUAL)) {
-            return $this->getContactInfoOriginal();
+        if (!($field instanceof Field)) {
+            $field = Fields::get((string) $field);
         }
 
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
@@ -723,12 +797,45 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this->getMakerId() ?: current($this->getFormerMakerIdsArr());
     }
 
+    public function hasMakerId(string $makerId): bool
+    {
+        return in_array($makerId, $this->makerIds
+            ->map(fn (MakerId $makerId): string => $makerId->getMakerId())
+            ->toArray());
+    }
+
+    public function getFormerMakerIds(): string
+    {
+        return StringList::pack($this->getFormerMakerIdsArr());
+    }
+
+    public function setFormerMakerIds(string $formerMakerIdsToSet): self
+    {
+        $formerMakerIdsToSet = StringList::unpack($formerMakerIdsToSet);
+        $allMakerIdsToSet = array_merge($formerMakerIdsToSet, [$this->makerId]);
+
+        foreach ($this->makerIds as $makerId) {
+            if (!in_array($makerId->getMakerId(), $allMakerIdsToSet)) {
+                $this->removeMakerId($makerId);
+            }
+        }
+
+        foreach ($formerMakerIdsToSet as $makerId) {
+            $this->addMakerId($makerId);
+        }
+
+        return $this;
+    }
+
     /**
      * @return string[]
      */
     public function getFormerMakerIdsArr(): array
     {
-        return StringList::unpack($this->formerMakerIds);
+        return $this->makerIds
+            ->map(fn (MakerId $makerId): string => $makerId->getMakerId())
+            ->filter(fn (string $makerId): bool => $makerId !== $this->makerId)
+            ->toArray();
     }
 
     /**
@@ -755,39 +862,9 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return array_filter(array_merge([$this->getName()], $this->getFormerlyArr()));
     }
 
-    public function completeness(): ?int
+    public function getCompleteness(): int
     {
-        return (new CompletenessCalc())
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->makerId) // "force" to update - mandatory field
-            // Name not counted - makes no sense
-            // Formerly not counted - small minority has changed their names
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->intro)
-            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->since)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->country)
-            ->anyNotEmpty(in_array($this->country, ['US', 'CA'])
-                ? CompletenessCalc::MINOR : CompletenessCalc::INSIGNIFICANT, $this->state)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->city)
-            ->anyNotEmpty(CompletenessCalc::IMPORTANT, $this->productionModels)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->styles, $this->otherStyles)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->orderTypes, $this->otherOrderTypes)
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->features, $this->otherFeatures)
-            ->anyNotEmpty(CompletenessCalc::AVERAGE, $this->paymentPlans)
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->speciesDoes, $this->speciesDoesnt)
-            // FursuitReview not checked, because we can force makers to force their customers to write reviews
-            // ... shame...
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->getPricesUrl())
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->getFaqUrl()) // it's optional, but nice to have
-            ->anyNotEmpty(CompletenessCalc::CRUCIAL, $this->getWebsiteUrl(), $this->getDeviantArtUrl(),
-                $this->getFurAffinityUrl(), $this->getTwitterUrl(), $this->getFacebookUrl(),
-                $this->getTumblrUrl(), $this->getInstagramUrl(), $this->getYoutubeUrl())
-            // Commissions/quotes check URL not checked - we'll check if the CST had a match instead
-            ->anyNotEmpty(CompletenessCalc::TRIVIAL, $this->getQueueUrl()) // it's optional, but nice to have
-            // Other URLs not checked - we're not requiring unknown
-            ->anyNotEmpty(CompletenessCalc::MINOR, $this->languages)
-            // Notes are not supposed to be displayed, thus not counted
-            ->anyNotNull(CompletenessCalc::IMPORTANT, $this->getCommissionsStatus()->getStatus())
-            // CST last check does not depend on artisan input
-            ->result();
+        return CompletenessCalc::count($this);
     }
 
     public function allowsFeedback(): bool
@@ -995,14 +1072,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getLinktreeUrl(): string
+    public function getLinklistUrl(): string
     {
-        return $this->getSingleUrl(Fields::URL_LINKTREE);
+        return $this->getSingleUrl(Fields::URL_LINKLIST);
     }
 
-    public function setLinktreeUrl(string $url): self
+    public function setLinklistUrl(string $url): self
     {
-        $this->setSingleUrl(Fields::URL_LINKTREE, $url);
+        $this->setSingleUrl(Fields::URL_LINKLIST, $url);
 
         return $this;
     }
@@ -1079,26 +1156,38 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getScritchPhotoUrls(): string
+    public function getFurtrackUrl(): string
     {
-        return $this->getSingleUrl(Fields::URL_SCRITCH_PHOTO);
+        return $this->getSingleUrl(Fields::URL_FURTRACK);
     }
 
-    public function setScritchPhotoUrls(string $scritchPhotoUrls): self
+    public function setFurtrackUrl(string $furtrackUrl): self
     {
-        $this->setSingleUrl(Fields::URL_SCRITCH_PHOTO, $scritchPhotoUrls);
+        $this->setSingleUrl(Fields::URL_FURTRACK, $furtrackUrl);
 
         return $this;
     }
 
-    public function getScritchMiniatureUrls(): string
+    public function getPhotoUrls(): string
     {
-        return $this->getSingleUrl(Fields::URL_SCRITCH_MINIATURE);
+        return $this->getSingleUrl(Fields::URL_PHOTOS);
     }
 
-    public function setScritchMiniatureUrls(string $scritchMiniatureUrls): self
+    public function setPhotoUrls(string $photoUrls): self
     {
-        $this->setSingleUrl(Fields::URL_SCRITCH_MINIATURE, $scritchMiniatureUrls);
+        $this->setSingleUrl(Fields::URL_PHOTOS, $photoUrls);
+
+        return $this;
+    }
+
+    public function getMiniatureUrls(): string
+    {
+        return $this->getSingleUrl(Fields::URL_MINIATURES);
+    }
+
+    public function setMiniatureUrls(string $scritchMiniatureUrls): self
+    {
+        $this->setSingleUrl(Fields::URL_MINIATURES, $scritchMiniatureUrls);
 
         return $this;
     }
@@ -1148,7 +1237,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
     // ===== JSON STUFF =====
     //
 
-    private function getValuesForJson(): array
+    /**
+     * @param Field[] $fields
+     */
+    private function getValuesForJson(array $fields): array
     {
         return array_map(function (Field $field) {
             switch ($field->name()) {
@@ -1162,7 +1254,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                     break;
 
                 case Fields::COMPLETENESS:
-                    $value = $this->completeness();
+                    $value = $this->getCompleteness();
                     break;
 
                 default:
@@ -1170,19 +1262,21 @@ class Artisan implements JsonSerializable, FieldReadInterface
             }
 
             return $field->isList() ? StringList::unpack($value) : $value;
-        }, Fields::inJson());
+        }, $fields);
+    }
+
+    public function getPublicData(): array
+    {
+        return $this->getValuesForJson(Fields::public());
+    }
+
+    public function getAllData(): array
+    {
+        return $this->getValuesForJson(Fields::getAll());
     }
 
     public function jsonSerialize(): array
     {
-        return $this->getValuesForJson();
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function getJsonArray(): string
-    {
-        return Json::encode(array_values($this->getValuesForJson()));
+        return $this->getPublicData();
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\Utils\Traits\Singleton;
 use InvalidArgumentException;
 
 final class Fields
 {
-    public const TIMESTAMP = 'TIMESTAMP';
-    public const VALIDATION_CHECKBOX = 'VALIDATION_CHECKBOX';
+    use Singleton;
 
     public const MAKER_ID = 'MAKER_ID';
     public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
@@ -59,15 +59,16 @@ final class Fields
     public const URL_TUMBLR = 'URL_TUMBLR';
     public const URL_INSTAGRAM = 'URL_INSTAGRAM';
     public const URL_YOUTUBE = 'URL_YOUTUBE';
-    public const URL_LINKTREE = 'URL_LINKTREE';
+    public const URL_LINKLIST = 'URL_LINKLIST';
     public const URL_FURRY_AMINO = 'URL_FURRY_AMINO';
     public const URL_ETSY = 'URL_ETSY';
     public const URL_THE_DEALERS_DEN = 'URL_THE_DEALERS_DEN';
     public const URL_OTHER_SHOP = 'URL_OTHER_SHOP';
     public const URL_QUEUE = 'URL_QUEUE';
     public const URL_SCRITCH = 'URL_SCRITCH';
-    public const URL_SCRITCH_PHOTO = 'URL_SCRITCH_PHOTO';
-    public const URL_SCRITCH_MINIATURE = 'URL_SCRITCH_MINIATURE';
+    public const URL_FURTRACK = 'URL_FURTRACK';
+    public const URL_PHOTOS = 'URL_PHOTOS';
+    public const URL_MINIATURES = 'URL_MINIATURES';
     public const URL_OTHER = 'URL_OTHER';
     public const URL_CST = 'URL_CST';
 
@@ -83,10 +84,9 @@ final class Fields
     public const CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
     public const CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
     public const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
-    public const CONTACT_INPUT_VIRTUAL = 'CONTACT_INPUT_VIRTUAL';
 
-    private static ?array $fields;
-    private static ?array $fieldsByModelName;
+    private static ?array $fields = null;
+    private static ?array $fieldsByModelName = null;
 
     public static function init()
     {
@@ -94,17 +94,20 @@ final class Fields
         self::$fieldsByModelName = [];
 
         foreach (FieldsDefinitions::FIELDS_ARRAY_DATA as $name => $fieldData) {
-            $uiFormIndex = self::getUiFormIndexByFieldName($name);
-            $iuFormRegexp = FieldsDefinitions::IU_FORM_FIELDS_ORDERED[$name][0] ?? null;
-            $importFromIuForm = (bool) (FieldsDefinitions::IU_FORM_FIELDS_ORDERED[$name][1] ?? false);
-            $exportFromIuForm = (bool) (FieldsDefinitions::IU_FORM_FIELDS_ORDERED[$name][2] ?? false);
-
-            $field = new Field($name, $fieldData[0], $fieldData[1], $fieldData[2], $fieldData[3], $fieldData[4],
-                $fieldData[5], $uiFormIndex, $iuFormRegexp, $importFromIuForm, $exportFromIuForm);
+            $field = new Field($name, $fieldData[0], $fieldData[1], (bool) $fieldData[2], (bool) $fieldData[3],
+                (bool) $fieldData[4], (bool) $fieldData[5]);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
         }
+    }
+
+    /**
+     * @return Field[] 'FIELD_NAME' => Field
+     */
+    public static function getAll(): array
+    {
+        return self::$fields;
     }
 
     public static function get(string $name): Field
@@ -125,100 +128,44 @@ final class Fields
         return self::$fieldsByModelName[$modelName];
     }
 
-    public static function uiFormIndex(string $name): int
-    {
-        return self::get($name)->uiFormIndex();
-    }
-
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function persisted(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->isPersisted();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->isPersisted());
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
-    public static function inJson(): array
+    public static function public(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->inJson();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->public());
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function inStats(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->inStats();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->inStats());
     }
 
     /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function lists(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->isList();
-        });
+        return array_filter(self::$fields, fn (Field $field): bool => $field->isList());
     }
 
     /**
-     * @return Field[]
-     */
-    public static function inIuForm(): array
-    {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->inIuForm();
-        });
-    }
-
-    /**
-     * @return Field[]
-     */
-    public static function exportedToIuForm(): array
-    {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->exportToIuForm();
-        });
-    }
-
-    /**
-     * @return Field[]
-     */
-    public static function importedFromIuForm(): array
-    {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return $field->importFromIuForm();
-        });
-    }
-
-    /**
-     * @return Field[]
+     * @return Field[] 'FIELD_NAME' => Field
      */
     public static function urls(): array
     {
-        return array_filter(self::$fields, function (Field $field): bool {
-            return in_array($field->name(), FieldsDefinitions::URLS);
-        });
-    }
-
-    private static function getUiFormIndexByFieldName(string $fieldName): ?int
-    {
-        $result = array_search($fieldName, array_keys(FieldsDefinitions::IU_FORM_FIELDS_ORDERED), true);
-
-        return false === $result ? null : $result;
-    }
-
-    private function __construct()
-    {
+        return array_filter(self::$fields, fn (Field $field): bool => in_array($field->name(), FieldsDefinitions::URLS));
     }
 }
 

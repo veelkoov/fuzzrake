@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Traits\UtilityClass;
 use JsonException;
 
-abstract class Json
+final class Json
 {
+    use UtilityClass;
+
     /**
      * @param mixed $input
      *

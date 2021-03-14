@@ -4,12 +4,33 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\Json;
+use App\Utils\Regexp\Replacements;
 use App\Utils\Web\WebsiteInfo;
+use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
-abstract class HtmlPreprocessor
+class HtmlPreprocessor
 {
+    private const HTML_CLEANER_REGEXPS = [
+        '</?(strong|b|i|span|center|a|em|font)[^>]*>' => '',
+        '(\s|&nbsp;|<br\s*/?>)+'                      => ' ',
+        '<style[^>]*>.*?</style>'                     => '',
+        ' style="[^"]*"( (?=\>))?'                    => '',
+        '’|&\#39;|&\#8217;'                           => '\'',
+        '<!--.*?-->'                                  => '',
+        ' +data-[^>"]+ *= *"[^"]+" *'                 => ' ',
+    ];
+
+    private Replacements $cleanerReplacements;
+
+    public function __construct()
+    {
+        $this->cleanerReplacements = new Replacements(self::HTML_CLEANER_REGEXPS, 's', '', '');
+    }
+
     public static function processArtisansName(string $artisanName, string $inputText): string
     {
         $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
@@ -21,11 +42,11 @@ abstract class HtmlPreprocessor
         return $inputText;
     }
 
-    public static function cleanHtml(string $inputText): string
+    public function clean(string $inputText): string
     {
         $inputText = strtolower($inputText);
         $inputText = HtmlPreprocessor::extractFromJson($inputText);
-        $inputText = Regexp::replaceAll(CommissionsStatusRegexps::HTML_CLEANER_REGEXPS, $inputText);
+        $inputText = $this->cleanerReplacements->do($inputText);
 
         return $inputText;
     }
@@ -36,9 +57,9 @@ abstract class HtmlPreprocessor
             return $webpage;
         }
 
-        $result = json_decode($webpage, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
+        try {
+            $result = Json::decode($webpage);
+        } catch (JsonException) {
             return $webpage;
         }
 
@@ -59,12 +80,17 @@ abstract class HtmlPreprocessor
         return $result;
     }
 
+    /**
+     * @throws TrackerException
+     */
     public static function guessFilterFromUrl(string $url): string
     {
-        if (Regexp::match('/#(?<profile>.+)$/', $url, $matches)) {
-            return $matches['profile'];
-        } else {
-            return '';
+        try {
+            return pattern('#(?<profile>.+)$')->match($url)
+                ->findFirst(fn (Detail $match): string => $match->group('profile')->text())
+                ->orReturn('');
+        } catch (NonexistentGroupException $e) {
+            throw new TrackerException('Regexp failed', exception: $e);
         }
     }
 

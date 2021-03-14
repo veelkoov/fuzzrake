@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-abstract class Parse
+use App\Utils\Traits\UtilityClass;
+
+final class Parse
 {
+    use UtilityClass;
+
     public static function tInt($input): int
     {
         if (is_int($input)) {
@@ -25,7 +29,7 @@ abstract class Parse
             return $input;
         }
 
-        $input = $input ?? '';
+        $input ??= '';
 
         $result = (int) $input;
 
@@ -43,7 +47,7 @@ abstract class Parse
 
     public static function percentAsInt(?string $input): int
     {
-        $input = $input ?? '';
+        $input ??= '';
 
         $result = (int) substr($input, 0, -1);
 
@@ -61,7 +65,7 @@ abstract class Parse
 
     public static function float(?string $input): float
     {
-        $input = $input ?? '';
+        $input ??= '';
 
         $result = (float) $input;
 

@@ -6,33 +6,34 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Entity\Artisan;
+use App\Entity\Event;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
-use App\Utils\Regexp\Regexp;
+use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
 use DateTimeInterface;
+use InvalidArgumentException;
+use JsonException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    private ArtisanCommissionsStatusRepository $acsRepository;
-    private EnvironmentsService $environments;
-
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, EnvironmentsService $environments)
-    {
-        $this->acsRepository = $acsRepository;
-        $this->environments = $environments;
+    public function __construct(
+        private ArtisanCommissionsStatusRepository $acsRepository,
+        private EnvironmentsService $environments,
+    ) {
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('list', [$this, 'listFilter']),
@@ -43,27 +44,30 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
             new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
+            new TwigFilter('jsonToArtisanParameters', [$this, 'jsonToArtisanParametersFilter'], ['is_safe' => ['js']]),
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
             new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
-            new TwigFunction('isDevMachine', [$this, 'isDevMachineFunction']),
-            new TwigFunction('isProduction', [$this, 'isProductionFunction']),
+            new TwigFunction('isDevEnv', [$this, 'isDevEnvFunction']),
+            new TwigFunction('isDevOrTestEnv', [$this, 'isDevOrTestEnvFunction']),
+            new TwigFunction('getCounter', [$this, 'getCounterFunction']),
+            new TwigFunction('eventDescription', [$this, 'eventDescriptionFunction']),
         ];
     }
 
-    public function isDevMachineFunction(): bool
+    public function isDevEnvFunction(): bool
     {
-        return $this->environments->isDevMachine();
+        return $this->environments->isDev();
     }
 
-    public function isProductionFunction(): bool
+    public function isDevOrTestEnvFunction(): bool
     {
-        return $this->environments->isProduction();
+        return $this->environments->isDevOrTest();
     }
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
@@ -71,11 +75,16 @@ class AppExtensions extends AbstractExtension
         return $this->acsRepository->getLastCstUpdateTimeAsString();
     }
 
+    public function getCounterFunction(): Counter
+    {
+        return new Counter();
+    }
+
     public function getLastSystemUpdateTimeUtcStrFunction(): string
     {
         try {
-            return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
-        } catch (DateTimeException $e) {
+            return DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'))->format('Y-m-d H:i');
+        } catch (DateTimeException) {
             return 'unknown/error';
         }
     }
@@ -100,6 +109,14 @@ class AppExtensions extends AbstractExtension
         return StringList::unpack($input);
     }
 
+    /**
+     * @throws JsonException
+     */
+    public function jsonToArtisanParametersFilter(Artisan $artisan): string
+    {
+        return trim(Json::encode(array_values($artisan->getPublicData())), '[]');
+    }
+
     public function nulldateFilter($input, string $format = 'Y-m-d H:i'): string
     {
         if (null === $input) {
@@ -113,18 +130,18 @@ class AppExtensions extends AbstractExtension
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
-        return array_filter($items, function (FilterItem $item) use ($matchWord) {
-            return Regexp::match("#$matchWord#i", $item->getLabel());
-        });
+        $pattern = pattern($matchWord, 'i');
+
+        return array_filter($items, fn (FilterItem $item) => $pattern->test($item->getLabel()));
     }
 
     public function filterHumanFriendlyRegexp(string $input): string
     {
-        $input = Regexp::replace('#\(\?<!.+?\)#', '', $input);
-        $input = Regexp::replace('#\(\?!.+?\)#', '', $input);
-        $input = Regexp::replace('#\([^a-z]+?\)#i', '', $input);
-        $input = Regexp::replace('#[()?]#', '', $input);
-        $input = Regexp::replace('#\[.+?\]#', '', $input);
+        $input = pattern('\(\?<!.+?\)', 'i')->remove($input)->all();
+        $input = pattern('\(\?!.+?\)', 'i')->remove($input)->all();
+        $input = pattern('\([^a-z]+?\)', 'i')->remove($input)->all();
+        $input = pattern('[()?]', 'i')->remove($input)->all();
+        $input = pattern('\[.+?\]', 'i')->remove($input)->all();
 
         return strtoupper($input);
     }
@@ -132,5 +149,44 @@ class AppExtensions extends AbstractExtension
     public function filterFilterByQuery(string $input, DataQuery $query): string
     {
         return implode(', ', $query->filterList($input));
+    }
+
+    public function eventDescriptionFunction(Event $event): string
+    {
+        if (Event::TYPE_DATA_UPDATED !== $event->getType()) {
+            throw new InvalidArgumentException('Only '.Event::TYPE_DATA_UPDATED.' event type is supported by '.__FUNCTION__);
+        }
+
+        $n = $event->getNewMakersCount();
+        $u = $event->getUpdatedMakersCount();
+        $r = $event->getReportedUpdatedMakersCount();
+
+        $result = '';
+
+        if ($n) {
+            $s = $n > 1 ? 's' : '';
+            $result .= "{$n} new maker{$s}";
+        }
+
+        if ($n && $u) {
+            $result .= ' and ';
+        }
+
+        if ($u) {
+            $s = $u > 1 ? 's' : '';
+            $result .= "{$u} updated maker{$s}";
+        }
+
+        if ($n || $u) {
+            $s = $n + $u > 1 ? 's' : '';
+            $result .= " based on received I/U request{$s}.";
+        }
+
+        if ($r) {
+            $s = $r > 1 ? 's' : '';
+            $result .= " {$r} maker{$s} updated after report{$s} sent by a visitor(s). Thank you for your contribution!";
+        }
+
+        return trim($result);
     }
 }

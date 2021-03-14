@@ -6,15 +6,14 @@ namespace App\Entity;
 
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Web\Fetchable;
-use DateTime;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanUrlRepository")
  * @ORM\Table(name="artisans_urls")
  */
-class ArtisanUrl implements Fetchable
+class ArtisanUrl implements Fetchable, Stringable
 {
     /**
      * @ORM\Id()
@@ -27,7 +26,7 @@ class ArtisanUrl implements Fetchable
      * @ORM\ManyToOne(targetEntity="App\Entity\Artisan", inversedBy="urls")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private ?Artisan $artisan;
+    private ?Artisan $artisan = null;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -40,24 +39,9 @@ class ArtisanUrl implements Fetchable
     private string $url = '';
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanUrlState", mappedBy="url", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private ?DateTimeInterface $lastSuccess = null;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private ?DateTimeInterface $lastFailure = null;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private int $lastFailureCode = 0;
-
-    /**
-     * @ORM\Column(type="string", length=512)
-     */
-    private string $lastFailureReason = '';
+    private ?ArtisanUrlState $state = null;
 
     public function getId(): ?int
     {
@@ -107,50 +91,18 @@ class ArtisanUrl implements Fetchable
         return $this;
     }
 
-    public function getLastSuccess(): ?DateTime
+    public function getState(): ArtisanUrlState
     {
-        return $this->lastSuccess;
+        return $this->state ?? $this->state = (new ArtisanUrlState())->setUrl($this);
     }
 
-    public function setLastSuccess(DateTime $lastSuccess): self
+    public function setState(ArtisanUrlState $state): self
     {
-        $this->lastSuccess = $lastSuccess;
+        $this->state = $state;
 
-        return $this;
-    }
-
-    public function getLastFailure(): ?DateTime
-    {
-        return $this->lastFailure;
-    }
-
-    public function setLastFailure(DateTime $lastFailure): self
-    {
-        $this->lastFailure = $lastFailure;
-
-        return $this;
-    }
-
-    public function getLastFailureCode(): int
-    {
-        return $this->lastFailureCode;
-    }
-
-    public function setLastFailureCode(int $lastFailureCode): self
-    {
-        $this->lastFailureCode = $lastFailureCode;
-
-        return $this;
-    }
-
-    public function getLastFailureReason(): string
-    {
-        return $this->lastFailureReason;
-    }
-
-    public function setLastFailureReason(string $lastFailureReason): self
-    {
-        $this->lastFailureReason = $lastFailureReason;
+        if ($this !== $state->getUrl()) {
+            $state->setUrl($this);
+        }
 
         return $this;
     }
@@ -162,14 +114,25 @@ class ArtisanUrl implements Fetchable
 
     public function recordSuccessfulFetch(): void
     {
-        $this->lastSuccess = DateTimeUtils::getNowUtc();
+        $this->getState()
+            ->setLastSuccess(DateTimeUtils::getNowUtc());
     }
 
     public function recordFailedFetch(int $code, string $reason): void
     {
-        $this->lastFailure = DateTimeUtils::getNowUtc();
-        $this->lastFailureCode = $code;
-        $this->lastFailureReason = $reason;
+        $this->getState()
+            ->setLastFailure(DateTimeUtils::getNowUtc())
+            ->setLastFailureCode($code)
+            ->setLastFailureReason($reason);
+    }
+
+    public function resetFetchResults(): void
+    {
+        $this->getState()
+            ->setLastFailure(null)
+            ->setLastSuccess(null)
+            ->setLastFailureReason('')
+            ->setLastFailureCode(0);
     }
 
     public function getOwnerName(): string
@@ -177,8 +140,8 @@ class ArtisanUrl implements Fetchable
         return $this->artisan->getName();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return __CLASS__.":{$this->id}:{$this->url}";
+        return self::class.":{$this->id}:{$this->url}";
     }
 }

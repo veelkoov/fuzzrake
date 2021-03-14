@@ -10,13 +10,17 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
-    <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+    {% if noindex|default(false) %}
+        <meta name="robots" content="noindex" />
+    {% else %}
+        <link rel="canonical" href="https://getfursu.it{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+    {% endif %}
 
     <script>
         var API_BASE_URL = '{{ url('api') }}';
         var DATA_UPDATES_URL = '{{ path('data_updates') }}';
         var GOOGLE_RECAPTCHA_SITE_KEY = '{{ google_recaptcha_site_key }}';
-        var IU_FORM_REDIRECT_URL = '{{ path('redirect_iu_form', { makerId: 'MAKER_ID' }) }}';
+        var IU_FORM_REDIRECT_URL = '{{ path('iu_form', { makerId: 'MAKER_ID' }) }}';
         var REQUEST_FORM_URL = '{{ request_form_url }}';
     </script>
 
@@ -26,8 +30,8 @@
 
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-    {% if isProduction() %}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120950547-1"></script>
+    {% if not disableTracking ?? false and google_analytics_id %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
 
@@ -36,7 +40,7 @@
             }
 
             gtag('js', new Date());
-            gtag('config', 'UA-120950547-1');
+            gtag('config', '{{ google_analytics_id }}');
         </script>
     {% endif %}
 </head>

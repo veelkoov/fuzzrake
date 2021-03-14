@@ -12,20 +12,11 @@ use App\Utils\Data\Validator\ValidatorInterface;
 
 class Validator
 {
-    /**
-     * @var SpeciesListValidator
-     */
-    private $speciesListValidator;
+    private GenericValidator $genericValidator;
 
-    /**
-     * @var GenericValidator
-     */
-    private $genericValidator;
-
-    public function __construct(SpeciesListValidator $speciesListValidator)
-    {
-        $this->speciesListValidator = $speciesListValidator;
-
+    public function __construct(
+        private SpeciesListValidator $speciesListValidator,
+    ) {
         $this->genericValidator = new GenericValidator();
     }
 

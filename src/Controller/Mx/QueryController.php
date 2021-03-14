@@ -8,24 +8,21 @@ use App\Form\QueryType;
 use App\Repository\ArtisanRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/query")
- */
+#[Route(path: '/mx/query')]
 class QueryController extends AbstractController
 {
-    /**
-     * @Route("/", name="mx_query")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/', name: RouteName::MX_QUERY)]
+    #[Cache(maxage: 0, public: false)]
     public function query(Request $request, ArtisanRepository $artisanRepository, EnvironmentsService $environments): Response
     {
-        if (!$environments->isDevMachine()) {
+        if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
         }
 

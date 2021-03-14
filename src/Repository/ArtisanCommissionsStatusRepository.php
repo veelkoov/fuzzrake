@@ -46,7 +46,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     {
         try {
             return $this->getLastCstUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | UnexpectedResultException $e) {
+        } catch (DateTimeException | UnexpectedResultException) {
             return 'unknown/error';
         }
     }

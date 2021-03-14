@@ -8,12 +8,8 @@ export default class AllOrOtherSetFilter<T> extends AbstractSingleFieldWithOther
     }
 
     public matches(artisan: Artisan): boolean {
-        if (!this.isActive() || this.matchesUnknown(artisan)) {
+        if (!this.isActive() || this.matchesUnknown(artisan) || this.matchesOther(artisan)) {
             return true;
-        }
-
-        if (this.notMatchesOther(artisan)) {
-            return false;
         }
 
         let target: Set<T> = artisan[this.fieldName];
