@@ -5,7 +5,7 @@ parameters:
     replacements:
       'no': ''
 
-      '(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?hl=[a-z]{2,3}(?:-[a-z]{2,3})?)?': 'https://www.instagram.com/$1/'
+      '(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?[a-z]{2,}.+?)?': 'https://www.instagram.com/$1/'
 
       '(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?': 'https://twitter.com/$1'
 

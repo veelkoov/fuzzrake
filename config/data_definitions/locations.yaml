@@ -41,6 +41,7 @@ parameters:
       'ID$|^Idaho':                     'Idaho'
       'MD$|^Maryland':                  'Maryland'
       'MN$|^Minnesota':                 'Minnesota'
+      'NH$|^New Hampshire':             'New Hampshire'
       'NY$|^New York':                  'New York'
       'OH$|^Ohio':                      'Ohio'
       'OK$|^Oklahoma':                  'Oklahoma'
