@@ -24,7 +24,7 @@ use TRegx\CleanRegex\Match\Details\Detail;
 
 class DataSetScritchMiniaturesCommand extends Command
 {
-    private const PICTURE_URL_REGEXP = '^https://scritch\.es/pictures/(?<picture_id>[a-z0-9-]{36})$';
+    private const PICTURE_URL_REGEXP = '^https://scritch\.es/pictures/(?<picture_id>[-a-f0-9]{36})$';
 
     protected static $defaultName = 'app:data:set-scritch-miniatures';
     private CookieJar $cookieJar;
@@ -142,7 +142,7 @@ class DataSetScritchMiniaturesCommand extends Command
                     } catch (NonexistentGroupException $e) {
                         throw new UnbelievableRuntimeException($e);
                     }
-                })->orElse(throw new LogicException("Failed to match Scritch picture URL: $pictureUrl"));
+                })->orElse(fn () => throw new LogicException("Failed to match Scritch picture URL: '$pictureUrl'"));
         }
 
         return $result;
