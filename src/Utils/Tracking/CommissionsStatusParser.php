@@ -14,19 +14,15 @@ class CommissionsStatusParser
     /**
      * @var PatternInterface[]
      */
-    private array $falsePositivePatterns;
-
-    /**
-     * @var PatternInterface[]
-     */
     private array $offerStatusPatterns;
 
+    private TextPreprocessor $preprocessor;
+
     public function __construct(
-        private HtmlPreprocessor $htmlPreprocessor,
-        private Patterns $patternFactory,
+        private Patterns $patterns,
     ) {
-        $this->falsePositivePatterns = $this->patternFactory->getFalsePositivePatterns();
-        $this->offerStatusPatterns = $this->patternFactory->getOfferStatusPatterns();
+        $this->offerStatusPatterns = $this->patterns->getOfferStatusPatterns();
+        $this->preprocessor = new TextPreprocessor($this->patterns->getFalsePositivePatterns());
     }
 
     /**
@@ -36,15 +32,15 @@ class CommissionsStatusParser
      */
     public function getCommissionsStatuses(WebpageSnapshot $snapshot): array
     {
-        $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
+        $additionalFilter = TextPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
 
-        $inputTexts = array_map(fn (string $input) => $this->preprocess($input, $artisanName, $additionalFilter), $snapshot->getAllContents());
+        $texts = array_map(fn (string $input): Text => $this->preprocess($input, $artisanName, $additionalFilter), $snapshot->getAllContents());
 
         $result = [];
 
-        foreach ($inputTexts as $inputText) {
-            foreach ($this->getStatusesFromString($inputText) as $offer => $status) {
+        foreach ($texts as $text) {
+            foreach ($this->getStatusesFromString($text) as $offer => $status) {
                 $result[] = (new ArtisanCommissionsStatus())
                     ->setOffer($offer)
                     ->setIsOpen($status);
@@ -57,23 +53,9 @@ class CommissionsStatusParser
     /**
      * @throws TrackerException
      */
-    private function preprocess(string $inputText, string $artisanName, string $additionalFilter): string
+    private function preprocess(string $inputText, string $artisanName, string $additionalFilter): Text
     {
-        $inputText = $this->htmlPreprocessor->clean($inputText);
-        $inputText = HtmlPreprocessor::processArtisansName($artisanName, $inputText);
-        $inputText = $this->removeFalsePositives($inputText);
-        $inputText = HtmlPreprocessor::applyFilters($inputText, $additionalFilter);
-
-        return $inputText;
-    }
-
-    private function removeFalsePositives(string $contents): string
-    {
-        foreach ($this->falsePositivePatterns as $pattern) {
-            $contents = $pattern->remove($contents);
-        }
-
-        return $contents;
+        return $this->preprocessor->getText($inputText, $artisanName, $additionalFilter);
     }
 
     /**
@@ -81,13 +63,13 @@ class CommissionsStatusParser
      *
      * @throws TrackerException
      */
-    private function getStatusesFromString(string $inputText): array
+    private function getStatusesFromString(Text $text): array
     {
         $result = [];
 
         foreach ($this->offerStatusPatterns as $statusPattern) {
-            $statusPattern->match($inputText)->forEach(function (Detail $match) use (&$result): void {
-                [$offer, $status] = $this->patternFactory->matchStatusAndOfferFrom($match);
+            $statusPattern->match($text->get())->forEach(function (Detail $match) use (&$result): void {
+                [$offer, $status] = $this->patterns->matchStatusAndOfferFrom($match);
 
                 if (array_key_exists($offer, $result)) {
                     $status = false; // TODO: Better handling, use NULL for arrrgh

@@ -6,7 +6,6 @@ namespace App\Tests\Utils\Tracking;
 
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\HtmlPreprocessor;
 use App\Utils\Tracking\Patterns;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
@@ -20,7 +19,7 @@ class CommissionsStatusParserTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$csp = new CommissionsStatusParser(new HtmlPreprocessor(), new Patterns());
+        self::$csp = new CommissionsStatusParser(new Patterns());
     }
 
     /**
@@ -56,12 +55,5 @@ class CommissionsStatusParserTest extends TestCase
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
         }, glob(__DIR__.'/../../test_data/statuses/*/expected.json')));
-    }
-
-    public function testGuessFilterFromUrl(): void
-    {
-        self::assertEquals('guessFilter', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl#guessFilter'));
-        self::assertEquals('', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl#'));
-        self::assertEquals('', HtmlPreprocessor::guessFilterFromUrl('AnyKindOfUrl'));
     }
 }
