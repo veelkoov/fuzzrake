@@ -28,6 +28,9 @@ parameters:
                 Tigers:
               "Small cats":
                 "Domestic cats":
+            Marsupials:
+              Kangaroos:
+              Opossums:
             Mustelids:
               Ferrets:
               Otters:
@@ -52,12 +55,11 @@ parameters:
             Bats:
             Elephants:
             Hyenas:
-            Kangaroos:
-            Opossums:
             Pinnipeds:
             Rabbits:
             Raccoons:
             Red pandas:
+            Sloths:
 
           Reptiles:
             Lizards:
@@ -155,6 +157,7 @@ parameters:
         "Characters with overly complicated anatomy (3 mouths, 4 eyes, etc.)":
         "Complex hybrids":
         "Complex species, as if the species has too many parts and details, I will say so during the quote.":
+        "Creatures that live solely in water":
         "Critters":
         "Deer&similar":
         "Dutch Angel Dragons (Tail, paws and feet paws ONLY)":
