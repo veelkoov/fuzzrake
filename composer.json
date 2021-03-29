@@ -25,7 +25,8 @@
         "symfony/proxy-manager-bridge": "*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
-        "symfony/webpack-encore-bundle": "^1.11"
+        "symfony/webpack-encore-bundle": "^1.11",
+        "symfony/yaml": "*"
     },
     "require-dev": {
         "symfony/maker-bundle": "*",
