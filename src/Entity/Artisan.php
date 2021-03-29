@@ -872,6 +872,13 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return ContactPermit::FEEDBACK === $this->contactAllowed;
     }
 
+    public function getCstLastCheck(): string
+    {
+        $lc = $this->getCommissionsStatus()->getLastChecked();
+
+        return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+    }
+
     //
     // ===== PRIVATE DATA GETTERS AND SETTERS =====
     //
@@ -1243,23 +1250,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private function getValuesForJson(array $fields): array
     {
         return array_map(function (Field $field) {
-            switch ($field->name()) {
-                case Fields::CST_LAST_CHECK:
-                    $lc = $this->getCommissionsStatus()->getLastChecked();
-                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
-                    break;
-
-                case Fields::COMMISSIONS_STATUS:
-                    $value = $this->getCommissionsStatus()->getStatus();
-                    break;
-
-                case Fields::COMPLETENESS:
-                    $value = $this->getCompleteness();
-                    break;
-
-                default:
-                    $value = $this->get($field);
-            }
+            $value = match ($field->name()) {
+                Fields::COMMISSIONS_STATUS => $this->getCommissionsStatus()->getStatus(),
+                Fields::COMPLETENESS       => $this->getCompleteness(),
+                default                    => $this->get($field),
+            };
 
             return $field->isList() ? StringList::unpack($value) : $value;
         }, $fields);
