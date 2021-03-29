@@ -4,7 +4,7 @@ ARG DEV_MACHINE=no
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -14,7 +14,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
 
 RUN pip3 install awscli
 
-RUN docker-php-ext-install -j$(nproc) intl opcache zip
+RUN docker-php-ext-install -j$(nproc) intl opcache zip gd
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
