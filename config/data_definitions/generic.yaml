@@ -3,15 +3,16 @@ parameters:
     commonRegexPrefix: ''
     commonRegexSuffix: ''
     replacements:
-      "’":                        "'"
-      "^-$":                      ""
-      "^Rather not say$":         ""
-      "^n/a$#":                   ""
-      "^n/a yet$":                ""
-      "[ \t]{2,}":                " "
-      "(p)ose?able":              "$1oseable"
-      "Tounges":                  'Tongues'
-      "(^|\\s)LED($|\\s)":        "$1LED$2"
+      '’':                        "'"
+      '^-$':                      ''
+      '^Rather not say$':         ''
+      '^n/a$#i':                  ''
+      '^no\.$#':                  ''
+      '^n/a yet$':                ''
+      '[ \t]{2,}':                ' '
+      '(p)ose?able':              '$1oseable'
+      'Tounges':                  'Tongues'
+      '(^|\\s)LED($|\\s)':        '$1LED$2'
 
   lists:
     commonRegexPrefix: '(?<=^|\n)'
