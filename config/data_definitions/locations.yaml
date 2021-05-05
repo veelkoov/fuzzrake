@@ -25,6 +25,7 @@ parameters:
       "poland":                                        "PL"
       "portugal":                                      "PT"
       "sweden":                                        "SE"
+      "switzerland":                                   "CH"
       "ukraine":                                       "UA"
       "united states( of america)?":                   "US"
       "(u\\.?s\\.?( of america)?|usa)":                "US"
