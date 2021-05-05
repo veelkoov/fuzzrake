@@ -35,6 +35,9 @@
     "doctrine/dbal": {
         "version": "2.10.2"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
@@ -78,12 +81,12 @@
         "version": "v4.13.0"
     },
     "friendsofphp/php-cs-fixer": {
-        "version": "2.2",
+        "version": "2.17",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "2.2",
-            "ref": "cc05ab6abf6894bddb9bbd6a252459010ebe040b"
+            "version": "2.17",
+            "ref": "f0d4b4ddb4e2bb73b227e3987b6ecc53cd8be431"
         },
         "files": [
             ".php_cs.dist"
@@ -220,6 +223,9 @@
     },
     "rector/rector-doctrine": {
         "version": "0.10.0"
+    },
+    "rector/rector-installer": {
+        "version": "0.10.1"
     },
     "rector/rector-laravel": {
         "version": "0.10.0"
@@ -451,9 +457,6 @@
     "symfony/polyfill-intl-normalizer": {
         "version": "v1.18.0"
     },
-    "symfony/polyfill-uuid": {
-        "version": "v1.22.1"
-    },
     "symfony/process": {
         "version": "v5.0.10"
     },
@@ -520,9 +523,6 @@
     },
     "symfony/twig-pack": {
         "version": "v1.0.0"
-    },
-    "symfony/uid": {
-        "version": "v5.2.6"
     },
     "symfony/validator": {
         "version": "4.3",
@@ -620,6 +620,9 @@
     },
     "symplify/symplify-kernel": {
         "version": "8.3.48"
+    },
+    "tracy/tracy": {
+        "version": "v2.8.4"
     },
     "twig/extra-bundle": {
         "version": "v3.0.4"
