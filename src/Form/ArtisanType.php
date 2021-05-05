@@ -22,8 +22,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArtisanType extends AbstractType
 {
-    const BTN_SAVE = 'save';
-    const BTN_DELETE = 'delete';
+    public const BTN_SAVE = 'save';
+    public const BTN_DELETE = 'delete';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
