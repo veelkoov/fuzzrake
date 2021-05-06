@@ -12,17 +12,12 @@ use Psr\Log\LoggerInterface;
 
 class IuSubmissionService
 {
-    private LoggerInterface $logger;
-    private LocalStorageService $local;
-    private S3StorageService $s3;
-    private SnsService $sns;
-
-    public function __construct(LoggerInterface $logger, LocalStorageService $local, S3StorageService $s3, SnsService $sns)
-    {
-        $this->logger = $logger;
-        $this->local = $local;
-        $this->s3 = $s3;
-        $this->sns = $sns;
+    public function __construct(
+        private LoggerInterface $logger,
+        private LocalStorageService $local,
+        private S3StorageService $s3,
+        private SnsService $sns,
+    ) {
     }
 
     public function submit(Artisan $data): bool

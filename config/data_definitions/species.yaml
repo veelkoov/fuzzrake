@@ -24,10 +24,13 @@ parameters:
                 Caracals:
                 Lions:
                 Lynxes:
-                Snow leopards:
+                # Snow leopards:
                 Tigers:
               "Small cats":
                 "Domestic cats":
+            Marsupials:
+              Kangaroos:
+              Opossums:
             Mustelids:
               Ferrets:
               Otters:
@@ -38,8 +41,8 @@ parameters:
               Mice:
               Rats:
             Ungulates:
-              Antelopes:
-                Sable antelope:
+              # Antelopes:
+                # Sable antelope:
               Bovines:
                 Cows:
               Cervines:
@@ -52,19 +55,19 @@ parameters:
             Bats:
             Elephants:
             Hyenas:
-            Kangaroos:
-            Opossums:
             Pinnipeds:
             Rabbits:
             Raccoons:
             Red pandas:
+            Sloths:
 
           Reptiles:
             Lizards:
 
           Bugs:
             Insects:
-            Spiders:
+            Arachnids:
+              Spiders:
 
           Amphibians:
 
@@ -77,7 +80,7 @@ parameters:
 
           "Angel Dragons":
           Crux:
-          Digimons:
+          # Digimons:
           Dragons:
           Drekkubuses:
           Dutchies:
@@ -124,7 +127,7 @@ parameters:
           Pancans:
 
         With antlers: # Fill
-          Antelopes:
+          # Antelopes:
           Cervines:
           Goats:
 
@@ -155,6 +158,7 @@ parameters:
         "Characters with overly complicated anatomy (3 mouths, 4 eyes, etc.)":
         "Complex hybrids":
         "Complex species, as if the species has too many parts and details, I will say so during the quote.":
+        "Creatures that live solely in water":
         "Critters":
         "Deer&similar":
         "Dutch Angel Dragons (Tail, paws and feet paws ONLY)":
@@ -165,14 +169,17 @@ parameters:
         "Gem raptors":
         "Heavily complicated creatures":
         "Humanoids":
+        "Humans":
         "I can also do velvet or minky skinned characters":
         "I make exceptions on rare occasions":
         "Most anything covered in fur":
+        "Most of author's species":
         "Most furless/featherless species":
         "Most reptiles":
         "No airbrushed / gradient markings on any species (all work is sewn)":
         "Only because I do not currently have the ability to do the electronic work on them":
         "Others":
+        "Own species":
         "Please inquire about fantasy creatures":
         "Pony": # Does it mean lil horse or MLP?
         "Protogens (for paws and tail ONLY)":
@@ -182,7 +189,10 @@ parameters:
         "Robotic stuff":
         "Robots":
         "Sea creatures": # Aquatic?
+        "Skull": # Excuse me?
         "Skullsuits":
+        "Skull Creatures":
+        "Skulldogs":
         "Some birds (unless its on another headbase then I'll do it)":
         "Some scalies":
         "Specialises in mythical creatures/monsters":
@@ -207,6 +217,8 @@ parameters:
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
       - 'Complex species, as if the species has too many parts and details, I will say so during the quote.'
 
+    commonRegexPrefix: '(?<=^|\n)'
+    commonRegexSuffix: '(?=\n|$)'
     replacements:
       '"([^"]+)"':                                                  '$1'
 
@@ -269,6 +281,7 @@ parameters:
       'Hyenas?':                                             'Hyenas'
       'Humanoids?':                                          'Humanoids'
       'K-?9''?s':                                            'Canines'
+      'Kangaroos?':                                          'Kangaroos'
       'Lions?':                                              'Lions'
       'Mammals?( in general)?':                              'Mammals'
       'Mann?okits?':                                         'Manokits'
@@ -284,8 +297,9 @@ parameters:
       'Primagens?':                                          'Primagens'
       'Protogens?':                                          'Protogens'
       'Protogens/primagens \(on a foam base\)':              "Protogens (on a foam base)\nPrimagens (on a foam base)"
-      'Rams?':                                               'Sheeps'
+      'Rabbits?':                                            'Rabbits'
       'Racc?oo?ns?':                                         'Raccoons'
+      'Rams?':                                               'Sheeps'
       'Rats?':                                               'Rats'
       'Rare/closed species':                                 "Rare species\nClosed species"
       'Red pandas?':                                         'Red pandas'

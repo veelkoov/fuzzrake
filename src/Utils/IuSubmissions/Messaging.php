@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Entity\Artisan;
+use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
 
 class Messaging
 {
-    private Printer $printer;
-    private Manager $manager;
-
-    public function __construct(Printer $printer, Manager $manager)
-    {
-        $this->printer = $printer;
-        $this->manager = $manager;
+    public function __construct(
+        private Printer $printer,
+        private Manager $manager,
+    ) {
     }
 
     public function reportIgnoredItem(ImportItem $item): void
@@ -34,15 +32,13 @@ class Messaging
 
     public function reportNewMaker(ImportItem $item): void
     {
-        $monthLater = DateTimeUtils::getMonthLaterYmd();
-        $makerId = $item->getMakerId();
-
         $this->printer->warning("New maker: {$item->getNamesStrSafe()}");
         $this->printer->writeln([
-            Manager::CMD_MATCH_NAME.":$makerId:ABCDEFGHIJ:",
-            Manager::CMD_ACK_NEW.":$makerId:",
-            Manager::CMD_REJECT.":$makerId:{$item->getId()}:",
-            Manager::CMD_IGNORE_UNTIL.":$makerId:{$item->getId()}:$monthLater:",
+            Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
+            '    '.Manager::CMD_ACCEPT,
+            '    '.Manager::CMD_REJECT,
+            '    '.Manager::CMD_IGNORE_UNTIL.' '.DateTimeUtils::getMonthLaterYmd(),
+            '    '.Manager::CMD_MATCH_TO_NAME.' |ABCDEFGHIJ|',
         ]);
     }
 
@@ -52,32 +48,16 @@ class Messaging
             .' to '.$item->getFixedEntity()->getMakerId());
     }
 
-    public function reportNewPasscode(ImportItem $item): void
+    public function reportInvalidPasscode(ImportItem $item): void
     {
-        $hash = $item->getId();
-        $makerId = $item->getMakerId();
+        $tomorrow = DateTimeUtils::getTomorrowYmd();
 
-        $this->printer->warning("{$item->getNamesStrSafe()} set new passcode: {$item->getProvidedPasscode()}");
+        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '{$item->getExpectedPasscode()}')");
         $this->printer->writeln([
-            Manager::CMD_SET_PIN.":$makerId:$hash:",
-            Manager::CMD_REJECT.":$makerId:$hash:",
-            '',
-        ]);
-        $this->emitDiffAndContactDetails($item);
-    }
-
-    public function reportInvalidPasscode(ImportItem $item, string $expectedPasscode): void
-    {
-        $weekLater = DateTimeUtils::getWeekLaterYmd();
-        $makerId = $item->getMakerId();
-        $hash = $item->getId();
-
-        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '$expectedPasscode')");
-        $this->printer->writeln([
-            Manager::CMD_IGNORE_PIN.":$makerId:$hash:",
-            Manager::CMD_REJECT.":$makerId:$hash:",
-            Manager::CMD_SET_PIN.":$makerId:$hash:",
-            Manager::CMD_IGNORE_UNTIL.":$makerId:$hash:$weekLater:",
+            Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
+            '    '.Manager::CMD_IGNORE_PASSCODE,
+            '    '.Manager::CMD_REJECT,
+            '    '.Manager::CMD_IGNORE_UNTIL." $tomorrow",
             '',
         ]);
         $this->emitDiffAndContactDetails($item);

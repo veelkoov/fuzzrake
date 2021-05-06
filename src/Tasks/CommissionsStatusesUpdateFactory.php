@@ -12,25 +12,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class CommissionsStatusesUpdateFactory
 {
-    private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
-    private WebpageSnapshotManager $webpageSnapshotManager;
-    private CommissionsStatusParser $parser;
-
     public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $webpageSnapshotManager
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $webpageSnapshotManager,
+        private CommissionsStatusParser $commissionsStatusParser,
     ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->webpageSnapshotManager = $webpageSnapshotManager;
-        $this->parser = new CommissionsStatusParser();
     }
 
     public function get(SymfonyStyle $io, bool $refetch, bool $dryRun): CommissionsStatusesUpdate
     {
-        return new CommissionsStatusesUpdate($this->logger, $this->entityManager, $this->webpageSnapshotManager, $io,
-            $refetch, $dryRun);
+        return new CommissionsStatusesUpdate($this->logger, $this->entityManager, $this->webpageSnapshotManager,
+            $this->commissionsStatusParser, $io, $refetch, $dryRun);
     }
 }

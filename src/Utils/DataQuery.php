@@ -6,7 +6,6 @@ namespace App\Utils;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Regexp\Regexp;
 
 class DataQuery
 {
@@ -45,7 +44,7 @@ class DataQuery
 
     public function __construct(string $input)
     {
-        $items = array_filter(Regexp::split('#\s+#', $input));
+        $items = array_filter(pattern('\s+')->split($input));
 
         foreach ($items as $item) {
             switch ($item[0]) {

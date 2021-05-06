@@ -6,15 +6,11 @@ namespace App\Utils\StrContext;
 
 class StrContext implements StrContextInterface
 {
-    private string $before;
-    private string $subject;
-    private string $after;
-
-    public function __construct(string $before, string $subject, string $after)
-    {
-        $this->before = $before;
-        $this->subject = $subject;
-        $this->after = $after;
+    public function __construct(
+        private string $before,
+        private string $subject,
+        private string $after,
+    ) {
     }
 
     public function getBefore(): string

@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\Traits\UtilityClass;
 
-abstract class UrlUtils
+final class UrlUtils
 {
-    private const REPLACED_UNSAFE_CHARACTERS = '#[^a-z0-9_.-]+#i';
-    private const REMOVED_BEGINNING_AND_END = '~^https?://(www\.)?|(\?|#).+$~';
+    use UtilityClass;
 
     public static function hostFromUrl(string $url): string
     {
-        return Regexp::replace('#^www\.#', '', parse_url($url, PHP_URL_HOST) ?: 'invalid_host');
+        return pattern('^www\.')->remove(parse_url($url, PHP_URL_HOST) ?: 'invalid_host')->first();
     }
 
     public static function safeFileNameFromUrl(string $url): string
     {
-        return trim(Regexp::replace(self::REPLACED_UNSAFE_CHARACTERS, '_',
-            Regexp::replace(self::REMOVED_BEGINNING_AND_END, '', $url)
-        ), '_');
+        $result = pattern('^https?://(www\.)?|(\?|#).+$', 'i')->remove($url)->all();
+        $result = pattern('[^a-z0-9_.-]+', 'i')->replace($result)->all()->with('_');
+
+        return trim($result, '_');
     }
 }

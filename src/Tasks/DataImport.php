@@ -10,12 +10,12 @@ use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\Data\ArtisanFixWip;
 use App\Utils\Data\FixerDifferValidator as FDV;
+use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\IuSubmissions\IuSubmission;
-use App\Utils\IuSubmissions\Manager;
 use App\Utils\IuSubmissions\Messaging;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,34 +23,19 @@ use Doctrine\Persistence\ObjectRepository;
 
 class DataImport
 {
-    /**
-     * @var ObjectRepository|ArtisanRepository
-     */
-    private ObjectRepository $artisanRepository;
-
-    private EntityManagerInterface $objectManager;
-    private Manager $manager;
-    private Printer $printer;
+    private ObjectRepository | ArtisanRepository $artisanRepository;
     private Messaging $messaging;
-    private FDV $fdv;
-    private bool $showAllFixCmds;
 
     public function __construct(
-        EntityManagerInterface $objectManager,
-        Manager $importManager,
-        Printer $printer,
-        FDV $fdv,
-        bool $showAllFixCmds
+        private EntityManagerInterface $objectManager,
+        private Manager $manager,
+        private Printer $printer,
+        private FDV $fdv,
+        private bool $showAllFixCmds,
     ) {
-        $this->objectManager = $objectManager;
-        $this->manager = $importManager;
-        $this->printer = $printer;
-        $this->messaging = new Messaging($printer, $importManager);
+        $this->messaging = new Messaging($printer, $manager);
 
         $this->artisanRepository = $objectManager->getRepository(Artisan::class);
-
-        $this->fdv = $fdv;
-        $this->showAllFixCmds = $showAllFixCmds;
     }
 
     /**
@@ -60,14 +45,11 @@ class DataImport
      */
     public function import(array $artisansData): void
     {
-        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | FDV::USE_SET_FOR_FIX_CMD
+                | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
 
         foreach ($this->createImportItems($artisansData) as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), true);
-
-            if ($this->manager->isNewPasscode($item)) {
-                $item->getFixedEntity()->setPasscode($item->getProvidedPasscode());
-            }
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), $this->manager->isPasscodeIgnored($item));
 
             $item->calculateDiff();
             if ($item->getDiff()->hasAnythingChanged()) {
@@ -121,18 +103,19 @@ class DataImport
 
     /**
      * @throws DataInputException
+     * @noinspection PhpDocRedundantThrowsInspection FIXME: throws declaration on implementation instead of interface
      */
     private function createImportItem(IuSubmission $submission): ImportItem
     {
         $originalInput = $this->updateArtisanWithData(new Artisan(), $submission, false);
 
-        $input = new ArtisanFixWip($originalInput);
-        $this->manager->correctArtisan($input->getFixed());
+        $input = new ArtisanFixWip($originalInput, $submission->getId());
+        $this->manager->correctArtisan($input->getFixed(), $submission->getId());
         $this->fdv->perform($input, FDV::FIX);
 
-        $originalEntity = $this->findBestMatchArtisan($input->getFixed()) ?: new Artisan();
+        $originalEntity = $this->findBestMatchArtisan($input->getFixed(), $submission->getId()) ?: new Artisan();
 
-        $entity = new ArtisanFixWip($originalEntity);
+        $entity = new ArtisanFixWip($originalEntity, $submission->getId());
 
         return new ImportItem($submission, $input, $entity);
     }
@@ -190,12 +173,12 @@ class DataImport
         return $artisan;
     }
 
-    private function findBestMatchArtisan(Artisan $artisan): ?Artisan
+    private function findBestMatchArtisan(Artisan $artisan, string $submissionId): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
             $artisan->getAllNamesArr(),
             $artisan->getAllMakerIdsArr(),
-            $this->manager->getMatchedName($artisan->getMakerId())
+            $this->manager->getMatchedName($submissionId)
         );
 
         if (count($results) > 1) {
@@ -211,8 +194,9 @@ class DataImport
     {
         $new = $item->getFixedEntity();
         $old = $item->getOriginalEntity();
+        $passcodeChanged = $item->getProvidedPasscode() !== $item->getExpectedPasscode();
 
-        if (null === $old->getId() && !$this->manager->isAcknowledged($item)) {
+        if (null === $old->getId() && !$this->manager->isAccepted($item)) {
             $this->messaging->reportNewMaker($item);
 
             return false;
@@ -222,14 +206,8 @@ class DataImport
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ('' === ($expectedPasscode = $new->getPrivateData()->getPasscode())) {
-            $this->messaging->reportNewPasscode($item);
-
-            return false;
-        }
-
-        if ($item->getProvidedPasscode() !== $expectedPasscode && !$this->manager->shouldIgnorePasscode($item)) {
-            $this->messaging->reportInvalidPasscode($item, $expectedPasscode);
+        if ($passcodeChanged && !$this->manager->isPasscodeIgnored($item) && !$this->manager->isAccepted($item)) {
+            $this->messaging->reportInvalidPasscode($item);
 
             return false;
         }

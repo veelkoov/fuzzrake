@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\Regexp\Replacements;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 
 abstract class AbstractListFixer extends StringFixer
 {
-    /**
-     * @var string[]
-     */
-    private array $replacements;
+    private Replacements $replacements;
 
     public function __construct(array $lists, array $strings)
     {
         parent::__construct($strings);
 
-        $this->replacements = $lists['replacements'];
+        $this->replacements = new Replacements($lists['replacements'], 'i', $lists['commonRegexPrefix'], $lists['commonRegexSuffix']);
     }
 
     public function fix(string $fieldName, string $subject): string
@@ -28,7 +25,7 @@ abstract class AbstractListFixer extends StringFixer
         $items = array_filter(array_map([$this, 'fixItem'], $items));
 
         $subject = StringList::pack($items);
-        $subject = Regexp::replaceAll($this->getReplacements(), $subject, "#(?<=^|\n)", "(?=\n|$)#i");
+        $subject = $this->getReplacements()->do($subject);
         $subject = parent::fix($fieldName, $subject);
         $subject = StringList::unpack($subject);
 
@@ -51,10 +48,7 @@ abstract class AbstractListFixer extends StringFixer
         return [];
     }
 
-    /**
-     * @return string[]
-     */
-    protected function getReplacements(): array
+    protected function getReplacements(): Replacements
     {
         return $this->replacements;
     }

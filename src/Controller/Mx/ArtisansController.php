@@ -9,22 +9,19 @@ use App\Form\ArtisanType;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\Utils;
 use App\Utils\StrUtils;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/mx/artisans")
- */
+#[Route(path: '/mx/artisans')]
 class ArtisansController extends AbstractController
 {
-    /**
-     * @Route("/{id}/edit", name="mx_artisan_edit", methods={"GET", "POST"})
-     * @Route("/new", name="mx_artisan_new", methods={"GET", "POST"})
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/{id}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
+    #[Route(path: '/new', name: RouteName::MX_ARTISAN_NEW, methods: ['GET', 'POST'])]
+    #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?Artisan $artisan, EnvironmentsService $environments): Response
     {
         if (!$environments->isDevOrTest()) {
@@ -50,7 +47,7 @@ class ArtisansController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('main');
+            return $this->redirectToRoute(RouteName::MAIN);
         }
 
         return $this->render('mx/artisans/edit.html.twig', [

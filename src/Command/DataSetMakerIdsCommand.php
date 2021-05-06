@@ -14,15 +14,11 @@ class DataSetMakerIdsCommand extends Command
 {
     protected static $defaultName = 'app:data:set-maker-ids';
 
-    private ArtisanRepository $artisanRepository;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(ArtisanRepository $artisanRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private ArtisanRepository $artisanRepository,
+        private EntityManagerInterface $entityManager,
+    ) {
         parent::__construct();
-
-        $this->artisanRepository = $artisanRepository;
-        $this->entityManager = $entityManager;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

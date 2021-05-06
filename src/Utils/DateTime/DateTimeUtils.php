@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
+use App\Utils\Traits\UtilityClass;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 
-abstract class DateTimeUtils
+final class DateTimeUtils
 {
+    use UtilityClass;
+
     public static function getNowUtc(): DateTime
     {
         try {
@@ -42,9 +45,14 @@ abstract class DateTimeUtils
         return date('Y-m-d', strtotime('+1 month'));
     }
 
-    public static function getWeekLaterYmd()
+    public static function getWeekLaterYmd(): string
     {
         return date('Y-m-d', strtotime('+1 week'));
+    }
+
+    public static function getTomorrowYmd(): string
+    {
+        return date('Y-m-d', strtotime('+1 day'));
     }
 
     public static function passed(DateTimeInterface $dateTime): bool

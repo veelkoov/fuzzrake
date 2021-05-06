@@ -12,11 +12,10 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\Data\FdvFactory;
+use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\IuSubmissions\IuSubmission;
-use App\Utils\IuSubmissions\Manager;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\ORMException;
@@ -98,7 +97,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
         'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html',
         'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
-        'URL_FUR_AFFINITY'          => 'http://www.furaffinity.net/user/value___VARIANT__.html',
+        'URL_FUR_AFFINITY'          => 'https://www.furaffinity.net/user/value___VARIANT__/',
         'URL_DEVIANTART'            => 'https://www.deviantart.com/value___VARIANT__.html',
         'URL_TWITTER'               => 'https://twitter.com/value___VARIANT__.html',
         'URL_FACEBOOK'              => 'https://www.facebook.com/value___VARIANT__.html/',
@@ -229,7 +228,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
                 $value = $this->selectOddOrEvenItems($value, self::VARIANT_HALF_DATA_1 === $variant);
             }
 
-            $result->set(Fields::get($fieldName), str_replace('__VARIANT__', $variant, $value));
+            $result->set(Fields::get($fieldName), str_replace('__VARIANT__', (string) $variant, $value));
         }
 
         return $result;
@@ -262,7 +261,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $htmlBodyLc = $this->removeFalsePositivesFromLowercaseHtml(mb_strtolower($htmlBody));
         /** @noinspection HtmlUnknownAttribute */
         $checked = pattern('<input type="(checkbox|radio)" [^>]*value="(?<value>[^"]+)" checked="checked"\s?/?>')
-            ->match($htmlBodyLc)->groupBy('value')->texts();
+            ->match($htmlBodyLc)->groupBy('value')->all();
 
         foreach (Fields::getAll() as $fieldName => $field) {
             if (self::SKIP === self::FIELDS[$fieldName] || '' === ($value = $oldData->get($field))) {
@@ -272,16 +271,18 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             if (in_array($fieldName, self::VALUE_NOT_SHOWN_IN_FORM) || in_array($fieldName, self::FIELD_NOT_IN_FORM)) {
                 self::assertEquals(0, substr_count($htmlBodyLc, mb_strtolower($value)),
                     "Field {$field->name()} value '$value' FOUND in the I/U form HTML code");
-            } else {
-                if (in_array($fieldName, self::EXPANDED)) {
-                    $this->validateListFieldInGeneratedIuForm($field, $checked, $value);
-                } else {
-                    if (Fields::SINCE == $fieldName) {
-                        $this->validateSinceFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
-                    } else {
-                        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $value);
-                    }
+            } elseif (in_array($fieldName, self::EXPANDED)) {
+                foreach (StringList::unpack(mb_strtolower($value)) as $valueLc) {
+                    self::assertCount(1, $checked[$valueLc] ?? [],
+                        "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
                 }
+            } elseif (Fields::SINCE == $fieldName) {
+                [$year, $month] = explode('-', $value);
+
+                self::assertFormValue('#iu_form_container form', 'iu_form[since][year]', $year);
+                self::assertFormValue('#iu_form_container form', 'iu_form[since][month]', $month);
+            } else {
+                self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value);
             }
         }
     }
@@ -294,41 +295,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             ->remove($result)->first();
 
         return $result;
-    }
-
-    private function validateNonListFieldInGeneratedIuForm(Field $field, string $htmlBodyLowercase, string $value): void
-    {
-        // TODO: Try updating T-Regx and doing the Pattern::inject parameters according to the docs once again
-        $count = Pattern::inject('(<textarea[^>]*>\s*@\s*</textarea>)|("\s*@\s*")', [
-            mb_strtolower($value),
-            mb_strtolower($value),
-        ])->count($htmlBodyLowercase);
-
-        self::assertEquals(1, $count,
-            "Field {$field->name()} value '$value' NOT present exactly once in the I/U form HTML code");
-    }
-
-    /**
-     * @param array[] $checked
-     */
-    private function validateListFieldInGeneratedIuForm(Field $field, array $checked, string $value): void
-    {
-        $valuesLc = StringList::unpack(mb_strtolower($value));
-
-        foreach ($valuesLc as $valueLc) {
-            self::assertArrayHasKey($valueLc, $checked,
-                "Field {$field->name()} value '$value' NOT present in the I/U form HTML code");
-            self::assertCount(1, $checked[$valueLc],
-                "Field {$field->name()} value '$value' present more than once in the I/U form HTML code");
-        }
-    }
-
-    private function validateSinceFieldInGeneratedIuForm(Field $field, string $htmlBodyLc, $value)
-    {
-        [$year, $month] = explode('-', $value);
-
-        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $year);
-        $this->validateNonListFieldInGeneratedIuForm($field, $htmlBodyLc, $month);
     }
 
     private function setValuesInForm(Form $form, Artisan $data): void
@@ -409,38 +375,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
      */
     private function getImportManager(): Manager
     {
-        $filesystem = new Filesystem();
-        $tmpFilePath = $filesystem->tempnam(sys_get_temp_dir(), 'import_manager');
-        $filesystem->dumpFile($tmpFilePath, $this->getManagerCorrectionsFileContents());
+        $corrections = '';
 
-        $result = new Manager($tmpFilePath);
-
-        $filesystem->remove($tmpFilePath);
-
-        return $result;
-    }
-
-    /**
-     * @throws DataInputException|JsonException
-     */
-    private function getManagerCorrectionsFileContents(): string
-    {
-        $newMakerId = $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET)->getMakerId();
-        $result = "ack new:$newMakerId:\n";
-
-        foreach ($this->getIuSubmissionsIds() as $hash) {
-            $result .= "set pin::$hash:\n";
+        foreach (Finder::getFrom(self::IMPORT_DATA_DIR) as $submission) {
+            $corrections .= "with {$submission->getId()}: accept\n";
         }
 
-        return $result;
-    }
-
-    /**
-     * @throws JsonException|DataInputException
-     */
-    private function getIuSubmissionsIds(): array
-    {
-        return array_map(fn (IuSubmission $submission): string => $submission->getId(), Finder::getFrom(self::IMPORT_DATA_DIR));
+        return new Manager($corrections);
     }
 
     private function validateArtisanAfterImport(Artisan $expected): void
@@ -459,7 +400,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function validateConsoleOutput(string $output): void
     {
         $output = str_replace("\r", "\n", $output);
-        $output = pattern('^(OLD |NEW |IMP |replace:)[^\n]+\n+', 'm')->remove($output)->all();
+        $output = pattern('^(OLD |NEW |IMP | *set )[^\n]+\n+', 'm')->remove($output)->all();
         $output = pattern('^-+\n+', 'm')->remove($output)->all();
 
         $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')

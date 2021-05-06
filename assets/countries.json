@@ -153,5 +153,10 @@
     "name": "South Africa",
     "code": "ZA",
     "region": "Africa & Asia"
+  },
+  {
+    "name": "Switzerland",
+    "code": "CH",
+    "region": "Europe"
   }
 ]

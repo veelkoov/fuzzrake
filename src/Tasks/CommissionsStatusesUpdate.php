@@ -24,36 +24,21 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 final class CommissionsStatusesUpdate
 {
-    private LoggerInterface $logger;
     private ArtisanRepository $artisanRepository;
-    private EntityManagerInterface $entityManager;
-    private WebpageSnapshotManager $snapshots;
-    private SymfonyStyle $io;
-    private CommissionsStatusParser $parser;
-    private bool $refetch;
-    private bool $dryRun;
 
     public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        WebpageSnapshotManager $snapshots,
-        SymfonyStyle $io,
-        bool $refetch,
-        bool $dryRun
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private WebpageSnapshotManager $snapshots,
+        private CommissionsStatusParser $commissionsStatusParser,
+        private SymfonyStyle $io,
+        private bool $refetch,
+        private bool $dryRun,
     ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
-        $this->snapshots = $snapshots;
-        $this->parser = new CommissionsStatusParser();
-
-        $this->io = $io;
         $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
         $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
-
-        $this->refetch = $refetch;
-        $this->dryRun = $dryRun;
     }
 
     public function updateAll()
@@ -91,10 +76,10 @@ final class CommissionsStatusesUpdate
             $webpageSnapshot = $this->snapshots->get($url, false, false);
 
             $datetimeRetrieved = $webpageSnapshot->getRetrievedAt();
-            $analysisResult = $this->parser->analyseStatus($webpageSnapshot);
+            $analysisResult = $this->commissionsStatusParser->analyseStatus($webpageSnapshot);
         } catch (TrackerException | InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
-        } catch (ExceptionInterface $exception) {
+        } catch (ExceptionInterface) {
             /* Was recorded & logged, proceed with "UNKNOWN" */
         }
 

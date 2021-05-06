@@ -10,11 +10,9 @@ use App\Utils\StringList;
 
 class SpeciesListValidator implements ValidatorInterface
 {
-    private Species $speciesService;
-
-    public function __construct(Species $speciesService)
-    {
-        $this->speciesService = $speciesService;
+    public function __construct(
+        private Species $speciesService,
+    ) {
     }
 
     public function isValid(Field $field, $subject): bool

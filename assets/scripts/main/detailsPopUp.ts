@@ -1,44 +1,41 @@
 import * as Handlebars from "handlebars";
 import * as Utils from "./utils";
-import Artisan from "../class/Artisan";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
 import Tracking from "../class/Tracking";
 
-let detailsPopUpTpl: HandlebarsTemplateDelegate;
-let $detailsPopUp: JQuery<HTMLElement>;
+let template: HandlebarsTemplateDelegate;
+let $template: JQuery<HTMLElement>;
+let $contents: JQuery<HTMLElement>;
 
-function populatePopUpWithData(artisan: Artisan): void {
-    $detailsPopUp.html(detailsPopUpTpl({
-        'artisan': artisan,
+function detailsPopUpShowCallback(event: any): void {
+    $contents.html(template({
+        'artisan': jQuery(event.relatedTarget).closest('tr').data('artisan'),
     }));
 
-    Utils.updateUpdateRequestData('updateRequestFull', artisan);
+    $contents.find('a[data-href]').each((index: number, element: HTMLElement) => {
+        /* Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href */
+        element.setAttribute('href', element.getAttribute('data-href') || '');
+        element.removeAttribute('data-href');
+    }); // TODO: Check if this weird workaround is still required when we're using the dedicated template node
+
+    Utils.updateUpdateRequestData('updateRequestFull', jQuery(event.relatedTarget).closest('tr').data('artisan'));
 
     Tracking.setupOnLinks('#artisanLinks a', 'artisan-modal');
-}
-
-function detailsPopUpShowCallback(event: any) {
-    populatePopUpWithData(jQuery(event.relatedTarget).closest('tr').data('artisan'));
 }
 
 export function init(): (() => void)[] {
     return [
         () => {
-            $detailsPopUp = jQuery('#artisanDetailsModal');
+            $template = jQuery('#artisanDetailsTemplate');
+            $contents = jQuery('#artisanDetailsModalContent');
 
-            $detailsPopUp.find('a[data-href]').each((index: number, element: HTMLElement) => {
-                /* Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href */
-                element.setAttribute('href', element.getAttribute('data-href') || '');
-                element.removeAttribute('data-href');
-            });
-
-            $detailsPopUp.on('show.bs.modal', detailsPopUpShowCallback);
+            jQuery('#artisanDetailsModal').on('show.bs.modal', detailsPopUpShowCallback);
         },
         () => {
             Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister());
         },
         () => {
-            detailsPopUpTpl = Handlebars.compile($detailsPopUp.html(), {
+            template = Handlebars.compile($template.html(), {
                 assumeObjects: true,
                 data: false,
                 knownHelpersOnly: true,

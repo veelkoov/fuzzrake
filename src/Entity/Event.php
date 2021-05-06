@@ -49,22 +49,22 @@ class Event
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $oldStatus = null;
+    private ?bool $oldStatus;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $newStatus = null;
+    private ?bool $newStatus;
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private string $artisanName = '';
+    private string $artisanName;
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    private string $checkedUrl = '';
+    private string $checkedUrl;
 
     /**
      * @ORM\Column(type="text", name="open_match")

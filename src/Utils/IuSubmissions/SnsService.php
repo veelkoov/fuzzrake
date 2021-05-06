@@ -13,16 +13,11 @@ use Psr\Log\LoggerInterface;
 
 class SnsService
 {
-    private AwsCliService $cli;
-    private string $notificationSnsTopicArn;
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger, AwsCliService $cli, string $notificationSnsTopicArn)
-    {
-        $this->logger = $logger;
-        $this->cli = $cli;
-        $this->notificationSnsTopicArn = $notificationSnsTopicArn;
-
+    public function __construct(
+        private LoggerInterface $logger,
+        private AwsCliService $cli,
+        private string $notificationSnsTopicArn,
+    ) {
         if (pattern('^(arn:aws:sns:[-a-z0-9]+:\d+:[-_a-z0-9]+)?$', 'i')->fails($notificationSnsTopicArn)) {
             throw new InvalidArgumentException("$notificationSnsTopicArn is not a valid SNS topic ARN");
         }

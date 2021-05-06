@@ -3,18 +3,20 @@ parameters:
     commonRegexPrefix: ''
     commonRegexSuffix: ''
     replacements:
-      "#’#":                        "'"
-      "#^-$#":                      ""
-      "#^Rather not say$#i":        ""
-      "#^n/a$#i":                   ""
-      "#^n/a yet$#i":               ""
-      "#^-$#i":                     ""
-      "#[ \t]{2,}#":                " "
-      "#(p)ose?able#i":             "$1oseable"
-      "#Tounges#":                  'Tongues'
-      "#(^|\\s)LED($|\\s)#i":       "$1LED$2"
+      '’':                        "'"
+      '^-$':                      ''
+      '^Rather not say$':         ''
+      '^n/a$#i':                  ''
+      '^no\.$#':                  ''
+      '^n/a yet$':                ''
+      '[ \t]{2,}':                ' '
+      '(p)ose?able':              '$1oseable'
+      'Tounges':                  'Tongues'
+      '(^|\\s)LED($|\\s)':        '$1LED$2'
 
   lists:
+    commonRegexPrefix: '(?<=^|\n)'
+    commonRegexSuffix: '(?=\n|$)'
     replacements:
       'Armsleeves|Arm Sleeves':                      'Arm sleeves'
       'backpacks':                                   'Backpacks'

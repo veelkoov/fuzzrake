@@ -11,15 +11,13 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class LocalStorageService
 {
-    private LoggerInterface $logger;
-    private string $dataDirPath;
     private Filesystem $filesystem;
 
-    public function __construct(LoggerInterface $logger, string $iuFormDataDirPath)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private LoggerInterface $logger,
+        private string $dataDirPath,
+    ) {
         $this->filesystem = new Filesystem();
-        $this->dataDirPath = $iuFormDataDirPath;
     }
 
     /**

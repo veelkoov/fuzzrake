@@ -1,10 +1,10 @@
-FROM php:7.4-fpm-alpine3.11
+FROM php:8.0.2-fpm-alpine3.13
 
 ARG DEV_MACHINE=no
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -14,7 +14,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
 
 RUN pip3 install awscli
 
-RUN docker-php-ext-install -j$(nproc) intl opcache zip
+RUN docker-php-ext-install -j$(nproc) intl opcache zip gd
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -27,8 +27,8 @@ RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         && pecl install xdebug \
         && docker-php-ext-enable xdebug.so \
         && sed -r -i'' 's/set -e/set -e\ncd \/etc\nsed \/host.docker.internal\/d hosts > hosts.new\ncat hosts.new > hosts\nip r | grep "default via" | cut -f3 -d" " | tr -d "\\n" >> hosts\necho " host.docker.internal" >> hosts\ncd -\n/' /usr/local/bin/docker-php-entrypoint \
-        && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
         && apk add --no-cache chromium chromium-chromedriver xvfb xvfb-run; \
     else \
         echo "Skipped develop stuff"; \

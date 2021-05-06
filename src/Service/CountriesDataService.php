@@ -11,8 +11,6 @@ use JsonException;
 
 class CountriesDataService
 {
-    private ArtisanRepository $artisanRepository;
-
     /**
      * [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ].
      */
@@ -21,10 +19,10 @@ class CountriesDataService
     /**
      * @throws JsonException
      */
-    public function __construct(ArtisanRepository $artisanRepository, string $projectDir)
-    {
-        $this->artisanRepository = $artisanRepository;
-
+    public function __construct(
+        private ArtisanRepository $artisanRepository,
+        string $projectDir,
+    ) {
         $this->loadCountriesData($projectDir);
     }
 

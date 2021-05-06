@@ -5,7 +5,6 @@
       path: "{{ deployment_path }}/docker/php-fpm"
       pull: yes
       args: "{{ php_fpm_build_args }}"
-      nocache: yes
     force_source: yes
     name: "{{ php_fpm_docker_image_name }}"
     source: build

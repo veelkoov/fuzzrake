@@ -10,6 +10,7 @@ use App\Service\FilterService;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Species\Species;
+use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,12 +21,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="main")
-     * @Route("/index.html")
-     * @Cache(public=true)
-     *
      * @throws UnexpectedResultException|DateTimeException
      */
+    #[Route(path: '/', name: RouteName::MAIN)]
+    #[Route(path: '/index.html')]
+    #[Cache(public: true)]
     public function main(Request $request, ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species): Response
     {
         if ('hexometer' === $request->get('ref')) {

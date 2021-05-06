@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Utils\Web\Snapshot;
 
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\Regexp\Regexp;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\UrlUtils;
 use JsonException;
@@ -15,25 +14,15 @@ use Symfony\Component\Filesystem\Exception\IOException;
 
 class WebpageSnapshotCache
 {
-    private LoggerInterface $logger;
-    private string $cacheDirPath;
-
-    public function __construct(LoggerInterface $logger, string $snapshotCacheDirPath)
-    {
-        $this->logger = $logger;
-        $this->cacheDirPath = $snapshotCacheDirPath;
+    public function __construct(
+        private LoggerInterface $logger,
+        private string $cacheDirPath,
+    ) {
     }
 
     public function has(Fetchable $url): bool
     {
         return is_dir($this->getBaseDir($url->getUrl()));
-    }
-
-    public function getOK(Fetchable $url): ?WebpageSnapshot
-    {
-        $result = $this->get($url);
-
-        return $result && $result->isOK() ? $result : null;
     }
 
     public function get(Fetchable $url): ?WebpageSnapshot
@@ -60,12 +49,12 @@ class WebpageSnapshotCache
         }
     }
 
-    private function getBaseDir(string $url)
+    private function getBaseDir(string $url): string
     {
-        $hostName = Regexp::replace('#^www\.#', '', UrlUtils::hostFromUrl($url));
+        $hostName = pattern('^www\.')->remove(UrlUtils::hostFromUrl($url))->first();
 
         $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
-        if (0 === strpos($urlFsSafe, $hostName)) {
+        if (str_starts_with($urlFsSafe, $hostName)) {
             $urlFsSafe = substr($urlFsSafe, strlen($hostName));
         }
 

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\EventRepository;
 use App\Utils\DateTime\DateTimeException;
+use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,14 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EventsController extends AbstractController
 {
     /**
-     * @Route("/events.html", name="events")
-     * @Cache(maxage=3600, public=true)
-     *
-     * @return Response
-     *
      * @throws DateTimeException
      */
-    public function events(EventRepository $eventRepository)
+    #[Route(path: '/events.html', name: RouteName::EVENTS)]
+    #[Cache(maxage: 3600, public: true)]
+    public function events(EventRepository $eventRepository): Response
     {
         return $this->render('events/events.html.twig', [
             'events' => $eventRepository->getRecent(),

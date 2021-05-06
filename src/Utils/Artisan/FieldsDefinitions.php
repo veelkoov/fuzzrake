@@ -18,7 +18,7 @@ final class FieldsDefinitions
          *                                                                                      IS LIST? -.  |  |  |
          * PRETTY_NAME                     => ['model name (artisan)',     'validation regexp',           V  V  V  V
          */
-        Fields::MAKER_ID                   => ['makerId',                  VR::MAKER_ID_PREG,             0, 1, 1, 1],
+        Fields::MAKER_ID                   => ['makerId',                  VR::MAKER_ID,                  0, 1, 1, 1],
         Fields::FORMER_MAKER_IDS           => ['formerMakerIds',           VR::FORMER_MAKER_IDS,          1, 1, 1, 1],
 
         Fields::NAME                       => ['name',                     VR::NON_EMPTY,                 0, 1, 1, 1],
@@ -74,24 +74,24 @@ final class FieldsDefinitions
         Fields::URL_QUEUE                  => ['queueUrl',                 VR::GENERIC_URL,               0, 1, 1, 1],
         Fields::URL_SCRITCH                => ['scritchUrl',               VR::SCRITCH_URL,               0, 1, 1, 1],
         Fields::URL_FURTRACK               => ['furtrackUrl',              VR::FURTRACK_URL,              0, 1, 1, 1],
-        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URLS,                1, 1, 1, 1],
-        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URLS,            1, 1, 1, 1],
+        Fields::URL_PHOTOS                 => ['photoUrls',                VR::PHOTO_URL_LIST,            1, 1, 1, 1],
+        Fields::URL_MINIATURES             => ['miniatureUrls',            VR::MINIATURE_URL_LIST,        1, 1, 1, 1],
         Fields::URL_OTHER                  => ['otherUrls',                VR::ANYTHING,                  0, 1, 1, 1],
 
         Fields::NOTES                      => ['notes',                    VR::ANYTHING,                  0, 1, 0, 1],
         Fields::INACTIVE_REASON            => ['inactiveReason',           VR::ANYTHING,                  0, 1, 1, 1],
         Fields::URL_CST                    => ['cstUrl',                   VR::GENERIC_URL,               0, 1, 1, 1],
-        Fields::COMMISSIONS_STATUS         => ['commissionsStatus',        null,                          0, 0, 0, 1],
-        Fields::CST_LAST_CHECK             => ['cstLastCheck',             null,                          0, 0, 0, 1],
-        Fields::COMPLETENESS               => ['completeness',             null,                          0, 0, 0, 1],
+        Fields::COMMISSIONS_STATUS         => ['commissionsStatus',        VR::ANYTHING,                  0, 0, 0, 1],
+        Fields::CST_LAST_CHECK             => ['cstLastCheck',             VR::ANYTHING,                  0, 0, 0, 1],
+        Fields::COMPLETENESS               => ['completeness',             VR::ANYTHING,                  0, 0, 0, 1],
 
-        Fields::CONTACT_ALLOWED            => ['contactAllowed',           null,                          0, 1, 0, 1],
-        Fields::CONTACT_METHOD             => ['contactMethod',            null,                          0, 1, 0, 0],
-        Fields::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      null,                          0, 1, 0, 0],
-        Fields::CONTACT_INFO_ORIGINAL      => ['contactInfoOriginal',      null,                          0, 1, 0, 0],
-        Fields::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    null,                          0, 1, 0, 1],
+        Fields::CONTACT_ALLOWED            => ['contactAllowed',           VR::ANYTHING,                  0, 1, 0, 1],
+        Fields::CONTACT_METHOD             => ['contactMethod',            VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::CONTACT_ADDRESS_PLAIN      => ['contactAddressPlain',      VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::CONTACT_INFO_ORIGINAL      => ['contactInfoOriginal',      VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    VR::ANYTHING,                  0, 1, 0, 1],
 
-        Fields::PASSCODE                   => ['passcode',                 null,                          0, 1, 0, 0],
+        Fields::PASSCODE                   => ['passcode',                 VR::ANYTHING,                  0, 1, 0, 0],
     ];
 
     public const URLS = [

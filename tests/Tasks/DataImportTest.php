@@ -9,10 +9,10 @@ use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\FixerDifferValidator;
+use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\IuSubmission;
-use App\Utils\IuSubmissions\Manager;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -79,8 +79,7 @@ class DataImportTest extends TestCase
     private function getImportManagerMock(): Manager
     {
         $result = $this->createMock(Manager::class);
-        $result->expects(static::once())->method('isAcknowledged')->willReturn(true);
-        $result->expects(static::any())->method('isNewPasscode')->willReturn(true);
+        $result->expects(static::once())->method('isAccepted')->willReturn(true);
 
         return $result;
     }

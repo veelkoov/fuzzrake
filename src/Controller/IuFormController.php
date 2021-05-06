@@ -9,6 +9,7 @@ use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\Utils\StrUtils;
+use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
@@ -21,17 +22,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class IuFormController extends AbstractRecaptchaBackedController
 {
     /**
-     * @Route("/iu_form/fill/{makerId}", name="iu_form")
-     * @Cache(maxage=0, public=false)
-     *
      * @throws NotFoundHttpException
      */
+    #[Route(path: '/iu_form/fill/{makerId}', name: RouteName::IU_FORM)]
+    #[Cache(maxage: 0, public: false)]
     public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, ?string $makerId = null): Response
     {
         try {
             $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();
             $artisan->setPasscode(''); // Should never appear in the form
-        } catch (UnexpectedResultException $e) {
+        } catch (UnexpectedResultException) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
@@ -44,7 +44,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             StrUtils::fixNewlines($artisan);
 
             if ($iuFormService->submit($artisan)) {
-                return $this->redirectToRoute('iu_form_confirmation');
+                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form.'
                 .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
@@ -59,10 +59,8 @@ class IuFormController extends AbstractRecaptchaBackedController
         ]);
     }
 
-    /**
-     * @Route("/iu_form/confirmation", name="iu_form_confirmation")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
+    #[Cache(maxage: 0, public: false)]
     public function iuFormConfirmation(): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
@@ -70,13 +68,11 @@ class IuFormController extends AbstractRecaptchaBackedController
         ]);
     }
 
-    /**
-     * @Route("/iu_form/{makerId}")
-     * @Cache(maxage=0, public=false)
-     */
+    #[Route(path: '/iu_form/{makerId}')]
+    #[Cache(maxage: 0, public: false)]
     public function oldAddressRedirect(?string $makerId = null): Response
     {
-        return $this->redirectToRoute('iu_form', ['makerId' => $makerId]);
+        return $this->redirectToRoute(RouteName::IU_FORM, ['makerId' => $makerId]);
     }
 
     private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface

@@ -4,14 +4,27 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Utils\Regexp\Regexp;
+use App\Utils\Traits\UtilityClass;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Match\Details\Detail;
 
-abstract class Contact
+final class Contact
 {
+    use UtilityClass;
+
     public const INVALID = 'INVALID';
     public const TWITTER = 'TWITTER';
     public const TELEGRAM = 'TELEGRAM';
     public const E_MAIL = 'E-MAIL';
+
+    private const PATTERNS = [
+        '(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])' => [self::E_MAIL,   ''],
+        'telegram *[:-]? ?[ @]([a-z0-9_]+)'                      => [self::TELEGRAM, '@'],
+        '@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram'         => [self::TELEGRAM, '@'],
+        '@?([a-z0-9_]+)( on|@) twitter'                          => [self::TWITTER,  '@'],
+        '^https://twitter.com/([a-z0-9_-]+)$'                    => [self::TWITTER,  ''],
+        'twitter[-:, ]* ?@?([a-z0-9_]+)'                         => [self::TWITTER,  '@'],
+    ];
 
     /**
      * @return string[]
@@ -24,28 +37,21 @@ abstract class Contact
             return ['', ''];
         }
 
-        if (Regexp::match('#(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])#i', $input, $matches)) {
-            return [self::E_MAIL, $matches[1]];
-        }
+        foreach (self::PATTERNS as $pattern => $template) {
+            $result = pattern($pattern, 'i')
+                ->match($input)
+                ->findFirst(function (Detail $detail) use ($template): array {
+                    try {
+                        return [$template[0], $template[1].$detail->group(1)];
+                    } catch (NonexistentGroupException $e) {
+                        throw new UnbelievableRuntimeException($e);
+                    }
+                })
+                ->orReturn(null);
 
-        if (Regexp::match('#telegram *[:-]? ?[ @]([a-z0-9_]+)#i', $input, $matches)) {
-            return [self::TELEGRAM, '@'.$matches[1]];
-        }
-
-        if (Regexp::match('#@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram#i', $input, $matches)) {
-            return [self::TELEGRAM, '@'.$matches[1]];
-        }
-
-        if (Regexp::match('#@?([a-z0-9_]+)( on|@) twitter#i', $input, $matches)) {
-            return [self::TWITTER, '@'.$matches[1]];
-        }
-
-        if (Regexp::match('#^https://twitter.com/([a-z0-9_-]+)$#i', $input, $matches)) {
-            return [self::TWITTER, $matches[1]];
-        }
-
-        if (Regexp::match('#twitter[-:, ]* ?@?([a-z0-9_]+)#i', $input, $matches)) {
-            return [self::TWITTER, '@'.$matches[1]];
+            if (null !== $result) {
+                return $result;
+            }
         }
 
         return [self::INVALID, ''];

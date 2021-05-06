@@ -10,11 +10,10 @@ final class CompletenessResult
 {
     private int $earned = 0;
     private int $total = 0;
-    private Artisan $artisan;
 
-    public function __construct(Artisan $artisan)
-    {
-        $this->artisan = $artisan;
+    public function __construct(
+        private Artisan $artisan,
+    ) {
     }
 
     public function result(): int

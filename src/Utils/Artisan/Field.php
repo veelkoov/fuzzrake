@@ -4,26 +4,23 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-class Field
-{
-    private string $name;
-    private ?string $modelName;
-    private ?string $validationRegexp;
-    private bool $isList;
-    private bool $isPersisted;
-    private bool $public;
-    private bool $inStats;
+use Stringable;
+use TRegx\CleanRegex\PatternInterface;
 
-    public function __construct(string $name, ?string $modelName, ?string $validationRegexp,
-        int $isList, int $isPersisted, int $inStats, int $public)
-    {
-        $this->name = $name;
-        $this->modelName = $modelName;
-        $this->validationRegexp = $validationRegexp;
-        $this->isList = (bool) $isList;
-        $this->isPersisted = (bool) $isPersisted;
-        $this->public = (bool) $public;
-        $this->inStats = (bool) $inStats;
+class Field implements Stringable
+{
+    private PatternInterface $validationPattern;
+
+    public function __construct(
+        private string $name,
+        private ?string $modelName,
+        ?string $validationRegexp,
+        private bool $isList,
+        private bool $isPersisted,
+        private bool $inStats,
+        private bool $public,
+    ) {
+        $this->validationPattern = pattern($validationRegexp);
     }
 
     public function name(): string
@@ -36,9 +33,9 @@ class Field
         return $this->modelName;
     }
 
-    public function validationRegexp(): ?string
+    public function validationPattern(): PatternInterface
     {
-        return $this->validationRegexp;
+        return $this->validationPattern;
     }
 
     public function isList(): bool

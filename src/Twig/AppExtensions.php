@@ -15,7 +15,6 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FilterItem;
 use App\Utils\Json;
-use App\Utils\Regexp\Regexp;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\Tracking\Status;
@@ -28,16 +27,13 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    private ArtisanCommissionsStatusRepository $acsRepository;
-    private EnvironmentsService $environments;
-
-    public function __construct(ArtisanCommissionsStatusRepository $acsRepository, EnvironmentsService $environments)
-    {
-        $this->acsRepository = $acsRepository;
-        $this->environments = $environments;
+    public function __construct(
+        private ArtisanCommissionsStatusRepository $acsRepository,
+        private EnvironmentsService $environments,
+    ) {
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('list', [$this, 'listFilter']),
@@ -52,7 +48,7 @@ class AppExtensions extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
@@ -87,8 +83,8 @@ class AppExtensions extends AbstractExtension
     public function getLastSystemUpdateTimeUtcStrFunction(): string
     {
         try {
-            return DateTimeUtils::getUtcAt(`TZ=UTC git log -n1 --format=%cd --date=local`)->format('Y-m-d H:i');
-        } catch (DateTimeException $e) {
+            return DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'))->format('Y-m-d H:i');
+        } catch (DateTimeException) {
             return 'unknown/error';
         }
     }
@@ -134,16 +130,18 @@ class AppExtensions extends AbstractExtension
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
-        return array_filter($items, fn (FilterItem $item) => Regexp::match("#$matchWord#i", $item->getLabel()));
+        $pattern = pattern($matchWord, 'i');
+
+        return array_filter($items, fn (FilterItem $item) => $pattern->test($item->getLabel()));
     }
 
     public function filterHumanFriendlyRegexp(string $input): string
     {
-        $input = Regexp::replace('#\(\?<!.+?\)#', '', $input);
-        $input = Regexp::replace('#\(\?!.+?\)#', '', $input);
-        $input = Regexp::replace('#\([^a-z]+?\)#i', '', $input);
-        $input = Regexp::replace('#[()?]#', '', $input);
-        $input = Regexp::replace('#\[.+?\]#', '', $input);
+        $input = pattern('\(\?<!.+?\)', 'i')->remove($input)->all();
+        $input = pattern('\(\?!.+?\)', 'i')->remove($input)->all();
+        $input = pattern('\([^a-z]+?\)', 'i')->remove($input)->all();
+        $input = pattern('[()?]', 'i')->remove($input)->all();
+        $input = pattern('\[.+?\]', 'i')->remove($input)->all();
 
         return strtoupper($input);
     }

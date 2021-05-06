@@ -20,15 +20,11 @@ class DataCheckUrlsCommand extends Command
 
     protected static $defaultName = 'app:data:check-urls';
 
-    private ArtisanUrlInspectionFactory $factory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(ArtisanUrlInspectionFactory $factory, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private ArtisanUrlInspectionFactory $factory,
+        private EntityManagerInterface $entityManager,
+    ) {
         parent::__construct();
-
-        $this->factory = $factory;
-        $this->entityManager = $entityManager;
     }
 
     protected function configure()

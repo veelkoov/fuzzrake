@@ -9,11 +9,9 @@ use Symfony\Component\Process\Process;
 
 class AwsCliService
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private LoggerInterface $logger,
+    ) {
     }
 
     public function execute(array $commandArgv, string $commandDescription): bool
