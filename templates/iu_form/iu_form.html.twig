@@ -520,29 +520,89 @@
 
     <h2>Contact, updates &amp; feedback</h2>
 
-    <p><strong>Please consider:</strong> getfursu.it is under development. Slow, but it is. This means two things:</p>
-    <ol>
-        <li>In the future, your studio information here will most probably become incomplete or outdated. This happens when new data gets introduced here. For example, when getfursu.it started, there wasn't info about production models, species, payment plans. Those who didn't make updates since then have incomplete info now.</li>
-        <li>I value makers' feedback because it lets me make changes and improvements properly (you know the business far better than I do). I'd love to get good advice or opinion from you.</li>
-    </ol>
-
-    <p class="small">Alternatives for Telegram users: If you want to receive ANNOUNCEMENTS through Telegram, join this channel: <a href="https://t.me/getfursuit" target="_blank">https://t.me/getfursuit</a> and select CORRECTIONS below. If you want to provide FEEDBACK through Telegram, consider joining this group instead: <a href="https://t.me/getfursuit_chat" target="_blank">https://t.me/getfursuit_chat</a> and selecting CORRECTIONS below. Want to be contacted individually through Telegram? Just select the proper option below without joining anywhere.</p>
+    <table class="table table-bordered table-condensed pros-cons-contact-options">
+        <tr>
+            <th>No contact allowed</th>
+            <th>Corrections</th>
+            <th>Announcements</th>
+            <th>Feedback</th>
+        </tr>
+        <tr>
+            <td>
+                <i class="fas fa-times-circle"></i>
+                Supplying invalid password or presence of any serious issue with your submission will result in
+                it being rejected without any notification.
+            </td>
+            <td colspan="3">
+                <i class="fas fa-check-square"></i>
+                You will get contacted when you supply wrong password or when there's an issue with your submission.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <i class="fas fa-times-circle"></i>
+                You will not be notified about important changes and new features, for example new filters.
+                That may push your studio into "Unknown" classification, skipped/rated lower by some users.
+            </td>
+            <td colspan="2">
+                <i class="fas fa-check-square"></i>
+                You will not miss an opportunity to better advertise your studio, provide more precise information
+                and target proper customers.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <i class="fas fa-times-circle"></i>
+                You will not be bothered by any surveys related to development of the website; your chances to
+                impact how this website works (to make it serve you better) will be limited.
+            </td>
+            <td>
+                <i class="fas fa-check-square"></i>
+                You may occasionally receive a survey to best understand your needs as a maker
+                and make this website suit you better. You are <strong>not</strong> obliged in any way to respond,
+                nor provide all and complete answers.
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="3"></td>
+            <td colspan="3">
+                <i class="fas fa-check-square"></i>
+                You can opt-out anytime, by simply replying, or sending an update using this form.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <i class="fas fa-check-square"></i>
+                Your contact info will never be shared with anyone.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <i class="fas fa-check-square"></i>
+                No 3rd party advertising. The only advertising which <strong>may</strong> appear in the future,
+                would be banners on the website.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td>
+                Alternatively you may select "Corrections" and join <a href="https://t.me/getfursuit_chat" target="_blank">this Telegram chat</a>.
+            </td>
+            <td>
+                Alternatively you may select "Corrections" and join <a href="https://t.me/getfursuit" target="_blank">this Telegram channel</a>.
+            </td>
+        </tr>
+    </table>
 
     <div class="form-group">
         {{ form_label(form.contactAllowed) }}
-        <ol class="hint">
-            <li>I explain "WHY" above</li>
-            <li>I don't flood</li>
-            <li>You can opt-out anytime</li>
-            <li>You are not obliged, in any way, to provide answer/respond/react</li>
-            <li>Your contact info will never be shared</li>
-        </ol>
+        <p class="hint">Explanation of choices in the table above.</p>
         {{ form_widget(form.contactAllowed) }}
     </div>
 
     <div class="form-group">
         {{ form_label(form.contactInfoObfuscated) }}
-        <p class="hint"><span class="badge badge-warning">PRIVATE</span> If you selected <em>NO</em> above, simply put <em>&mdash;</em> here. Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
+        <p class="hint"><span class="badge badge-warning">PRIVATE</span> If you selected <em>No contact allowed</em> above, simply put <em>&mdash;</em> here. Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
         {{ form_widget(form.contactInfoObfuscated) }}
     </div>
 
