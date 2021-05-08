@@ -5,6 +5,6 @@ parameters:
     replacements:
       ' with Google Translate': ' (with a translator)'
       ' ?\(native\)': ''
-      'a small bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner': 'limited'
+      'a small bit of|a bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner': 'limited'
 
     regexp: '(?<prefix>limited\s+)?(?<language>.+)(?<suffix>\s+\(limited\))?'

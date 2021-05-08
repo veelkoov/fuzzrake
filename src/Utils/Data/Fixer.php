@@ -87,7 +87,7 @@ class Fixer
             case Fields::URL_YOUTUBE:
             case Fields::URL_WEBSITE:
             case Fields::URL_QUEUE:
-            case Fields::URL_OTHER:
+            case Fields::URL_ETSY:
                 return $this->urlFixer;
 
             case Fields::SINCE:

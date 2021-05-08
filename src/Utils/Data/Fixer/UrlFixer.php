@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Artisan\Fields;
 use App\Utils\Regexp\Replacements;
 
 class UrlFixer extends StringFixer
@@ -21,10 +20,7 @@ class UrlFixer extends StringFixer
     public function fix(string $fieldName, string $subject): string
     {
         $result = parent::fix($fieldName, $subject);
-
-        if (Fields::URL_OTHER !== $fieldName) {
-            $result = $this->replacements->do($result);
-        }
+        $result = $this->replacements->do($result);
 
         return $result;
     }

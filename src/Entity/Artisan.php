@@ -909,6 +909,20 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return ContactPermit::FEEDBACK === $this->contactAllowed;
     }
 
+    public function getCsLastCheck(): string
+    {
+        $lc = $this->getVolatileData()->getLastCsUpdate();
+
+        return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+    }
+
+    public function getBpLastCheck(): string
+    {
+        $lc = $this->getVolatileData()->getLastBpUpdate();
+
+        return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+    }
+
     /**
      * @return string[]
      */
@@ -1292,24 +1306,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private function getValuesForJson(array $fields): array
     {
         return array_map(function (Field $field) {
-            switch ($field->name()) {
-                case Fields::CS_LAST_CHECK:
-                    $lc = $this->getVolatileData()->getLastCsUpdate();
-                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
-                    break;
-
-                case Fields::BP_LAST_CHECK:
-                    $lc = $this->getVolatileData()->getLastBpUpdate();
-                    $value = null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
-                    break;
-
-                case Fields::COMPLETENESS:
-                    $value = $this->getCompleteness();
-                    break;
-
-                default:
-                    $value = $this->get($field);
-            }
+            $value = match ($field->name()) {
+                Fields::COMPLETENESS       => $this->getCompleteness(),
+                default                    => $this->get($field),
+            };
 
             return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
         }, $fields);

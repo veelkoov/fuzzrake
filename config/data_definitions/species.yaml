@@ -66,7 +66,8 @@ parameters:
 
           Bugs:
             Insects:
-            Spiders:
+            Arachnids:
+              Spiders:
 
           Amphibians:
 
@@ -172,6 +173,7 @@ parameters:
         "I can also do velvet or minky skinned characters":
         "I make exceptions on rare occasions":
         "Most anything covered in fur":
+        "Most of author's species":
         "Most furless/featherless species":
         "Most reptiles":
         "No airbrushed / gradient markings on any species (all work is sewn)":
@@ -190,6 +192,7 @@ parameters:
         "Skull": # Excuse me?
         "Skullsuits":
         "Skull Creatures":
+        "Skulldogs":
         "Some birds (unless its on another headbase then I'll do it)":
         "Some scalies":
         "Specialises in mythical creatures/monsters":

@@ -5,7 +5,8 @@ parameters:
     replacements:
       'no': ''
 
-      '(?:(?:(?:https?://)?(?:www\.)?instagram(?:\.com)?/)|@)([^/?]+)/?(?:\?[a-z]{2,}.+?)?': 'https://www.instagram.com/$1/'
+      '(?:https?://)?(?:www\.)?instagram\.com/(.+)?': 'https://www.instagram.com/$1'
+      'https://www\.instagram\.com/([^?/]+)/?(?:\?.+)?': 'https://www.instagram.com/$1/'
 
       '(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?': 'https://twitter.com/$1'
 
@@ -18,3 +19,6 @@ parameters:
 
       '(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?': 'https://www.deviantart.com/$1'
       '(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?': 'https://$1.deviantart.com/'
+
+      '(?:https?://)?(?:www\.)?etsy\.com/people/([^?]+)(?:\?ref=[-a-z_]+)?': 'https://www.etsy.com/people/$1'
+      '(?:https?://)?(?:www\.)?etsy\.com/(?:uk/)?shop/([^?]+)(?:\?ref=[-a-z_]+)?': 'https://www.etsy.com/shop/$1'
