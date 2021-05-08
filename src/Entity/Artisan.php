@@ -1311,6 +1311,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                 default                    => $this->get($field),
             };
 
+            /** @noinspection PhpStrictTypeCheckingInspection FIXME */
             return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
         }, $fields);
     }
