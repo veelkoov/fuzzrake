@@ -5,52 +5,61 @@
 {% block body %}
     <h1>Rules for makers/studios</h1>
 
+    <h5>Terminology</h5>
+
     <ul>
         <li>
-            Makers without any fursuit-related portfolio won't be added. At least few completed creations
-            must be visible on the maker's website/social media.
+            <em>website/profile/account</em> - your website(s) or social media account(s)/profile(s) like DA/FA/Facebook/Twitter and others
+        </li>
+        <li>
+            <em>FA</em> - Fur Affinity, <em>DA</em> - DeviantArt
+        </li>
+    </ul>
+
+    <h5>Rules</h5>
+
+    <ul>
+        <li>
+            Example photos of your work are required on your <em>website/profile/account</em>.
             <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-pf">More info</button>
 
             <div class="alert alert-info mt-1 collapse" role="alert" id="rule-pf">
-                Consider your own fursuit or starting up with some pre-mades.
-                Unfortunately, yet obviously, art portfolio (pictures, badges, etc.) is not fursuit-related.
+                Consider your own fursuit or starting up with some pre-mades. Unfortunately, yet obviously, art like pictures, badges, etc., are not fursuit-related.
             </div>
         </li>
 
         <li>
-            At least one rules-compliant website or social media account is required for your studio to be listed.
+            At least one rules-compliant <em>website/profile/account</em> is required for your studio to be listed.
         </li>
 
         <li>
-            No "open"/instant messaging contact info is allowed (e.g. e-mail address, Telegram, Messenger, Discord,
-            Skype, etc.).
+            No "open"/instant messaging contact info is allowed (e.g. e-mail address, Telegram, Messenger, Discord, Skype, etc.).
             <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-im">More info</button>
 
             <div class="alert alert-info mt-1 collapse" role="alert" id="rule-im">
-                Such info belongs to your website, and may (probably will) be removed from your submission.
+                Such info belongs to your <em>website/profile/account</em>, and may (probably will) be removed from your submission.
             </div>
         </li>
 
         <li>
-            Websites, which require logging in to view, may be not accepted (this <strong>includes</strong>
-            FurAffinity, assuming you configured your user page that way).
+            <em>Websites/profiles/accounts</em> should not require your visitor to be logged in (this <strong>includes</strong> <em>FA</em>, assuming you configured your user page that way).
+            <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-nl">More info</button>
+
+            <div class="alert alert-info mt-1 collapse" role="alert" id="rule-nl">
+                A prompt encouraging to register is just annoying, but a "login or register" screen is unacceptable.
+            </div>
         </li>
 
         <li>
-            "Work in progress" websites (e.g websites missing most content, showing example pages, sample texts)
-            are not accepted.
+            "Work in progress" websites (e.g websites missing most content, showing example pages, sample texts) are not accepted.
             <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-wip">More info</button>
 
             <div class="alert alert-info mt-1 collapse" role="alert" id="rule-wip">
-                Some clients treat website-having makers as preferable and/or trustworthy, however if you do not have
-                a website yet, you'd better make sure you have some nice portfolio on DA/FA/social first. You can fit
-                any information, FAQ, TOS and other stuff there as well. Creating a website is time-consuming
-                and/or expensive. It's better to not have a website, than having one raising doubts/eyebrows.
+                Some clients treat website-having makers as preferable and/or trustworthy. However, if you do not have a website yet, you'd better make sure you have some nice portfolio on <em>DA</em>/<em>FA</em>/social first. You can fit any information, FAQ, TOS, and other stuff there as well. Creating a website is time-consuming and/or expensive. It's better to not have a website, than having one raising doubts/eyebrows.
             </div>
         </li>
         <li>
-            Makers who are <strong>minors must clearly state that fact</strong> on their website/account.
-            This information must be <strong>clearly visible</strong> on the <strong>front page</strong> or equivalent.
+            Makers who are <strong>minors must clearly state that fact</strong> on their <em>website/profile/account</em>. This information must be <strong>clearly visible</strong> on the <strong>front page</strong> or equivalent.
             {# See https://github.com/veelkoov/fuzzrake/issues/37 #}
         </li>
         <li>
@@ -58,22 +67,19 @@
             <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-en">More info</button>
 
             <div class="alert alert-info mt-1 collapse" role="alert" id="rule-en">
-                Your website/social media doesn't have to be in English, however information here must be. If you don't
-                speak english, please ask someone for help with translation and make sure to clearly state that you
-                don't speak English in the dedicated section of the inclusion/update form.
+                Your <em>website/profile/account</em> doesn't have to be in English. However, all information here must be. If you don't speak English, please ask someone for help with translation and make sure to clearly state that you don't speak English in the dedicated section of the inclusion/update form.
             </div>
         </li>
         <li>
-            This list of rules deliberately skips stuff covered by the common sense.
+            This list of rules deliberately skips stuff covered by common sense.
             <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#rule-cs">More info</button>
 
             <div class="alert alert-info mt-1 collapse" role="alert" id="rule-cs">
-                For example, it should be obvious that you must not provide any false or misleading information or
-                claim somebody else's work.
+                For example, it should be obvious that you must not provide any false or misleading information or claim somebody else's work.
             </div>
         </li>
         <li>
-            This ruleset is not final. History of changes can be tracked using git.
+            This ruleset is not final. History of changes can be <a href="https://github.com/veelkoov/fuzzrake/commits/develop/templates/pages/rules.html.twig" target="_blank">tracked using Git</a>.
         </li>
     </ul>
 {% endblock %}
