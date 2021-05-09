@@ -52,7 +52,7 @@ class Messaging
     {
         $tomorrow = DateTimeUtils::getTomorrowYmd();
 
-        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '{$item->getExpectedPasscode()}')");
+        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '{$item->getExpectedPasscode()}')"); // https://github.com/veelkoov/fuzzrake/issues/63
         $this->printer->writeln([
             Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
             '    '.Manager::CMD_IGNORE_PASSCODE,

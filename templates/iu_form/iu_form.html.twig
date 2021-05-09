@@ -607,6 +607,7 @@
     </div>
 
     <div class="form-group">
+        <!-- https://github.com/veelkoov/fuzzrake/issues/63 -->
         {{ form_label(form.passcode) }}
         <p class="hint"><span class="badge badge-warning">PRIVATE</span> Please provide some kind of passcode/password. Please use at least 6 characters. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form.  <span class="passcode-confidentiality-warning">Important: This passcode can be seen by the maintainer in the clear text!</span> <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
         {{ form_widget(form.passcode) }}
