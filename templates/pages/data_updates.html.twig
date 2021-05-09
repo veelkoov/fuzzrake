@@ -20,10 +20,10 @@
     <div class="card" id="START_HERE">
         <div class="card-body">
             <p class="card-text">
-                <strong class="badge badge-success">Start here!</strong> Are you the maker/studio member?
+                <strong class="badge badge-success">Start here!</strong> Are you the maker (studio member)?
             </p>
 
-            <a href="#I_AM_MAKER" class="btn btn-outline-primary">I am the maker/studio member</a>
+            <a href="#I_AM_MAKER" class="btn btn-outline-primary">I am the maker</a>
             <a href="#I_AM_VISITOR" class="btn btn-outline-primary">I'm a friend or customer or other/non-related</a>
         </div>
     </div>
@@ -31,28 +31,33 @@
     <div class="card mt-3" id="I_AM_MAKER">
         <div class="card-body">
             <p class="card-text">
-                Have you previously sent an inclusion/update request which seems not to have been processed yet?
+                Are you submitting for the first time or trying to update your information?
             </p>
 
-            <a href="#NEW_REQUEST" class="btn btn-outline-primary">I didn't send anything yet</a>
-            <a href="#NEW_REQUEST" class="btn btn-outline-primary">Everything I've sent in the past is already on-line</a>
-            <a href="#UPDATES_SENT" class="btn btn-outline-primary">I've sent updates and I don't see them on-line</a>
+            <a href="#DOUBLE_CHECK_NEW" class="btn btn-outline-primary">
+                I want to fill out the form to be included on the makers list
+            </a>
+            <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">
+                I'm already on the list but I want to update my information
+            </a>
+            <a href="#CONTACT" class="btn btn-outline-primary">
+                I sent in a form already but don't see the changes on the list
+            </a>
         </div>
     </div>
 
-    <div class="card mt-3" id="NEW_REQUEST">
+    <div class="card mt-3" id="DOUBLE_CHECK_NEW">
         <div class="card-body">
             <p class="card-text">
-                Are you/is your studio on the list already (please check old studio names/your own nicknames as well)?
+                You could already be on the list even if you haven't ever sent any form. Please also look for old names.
             </p>
 
-            <a href="#UPDATE" class="btn btn-outline-primary">I see my studio / myself on the list</a>
-            <a href="#UPDATE" class="btn btn-outline-primary">I see an old name on the list</a>
-            <a href="#NEW_MAKER" class="btn btn-outline-primary">My studio is not there / I am not there</a>
+            <a href="#INCLUSION_REQUEST" class="btn btn-outline-primary">I'm not there</a>
+            <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">Found it</a>
         </div>
     </div>
 
-    <div class="card mt-3" id="NEW_MAKER">
+    <div class="card mt-3" id="INCLUSION_REQUEST">
         <div class="card-body">
             <ol class="card-text">
                 <li>Please make sure you comply with the <a href="{{ path('rules') }}" target="_blank">rules/requirements</a>.</li>
@@ -60,11 +65,13 @@
                 <li>Submit the form and proceed with the next step (important if you want to be sure your updates got in).</li>
             </ol>
 
-            <a href="#UPDATES_SENT" class="btn btn-outline-primary">Next step (click <strong>after</strong> filling the form)</a>
+            <a href="#CONTACT" class="btn btn-outline-primary">
+                Next step (click <strong>after</strong> filling the form)
+            </a>
         </div>
     </div>
 
-    <div class="card mt-3" id="UPDATE">
+    <div class="card mt-3" id="UPDATE_REQUEST">
         <div class="card-body">
             <ol class="card-text">
                 <li>Please navigate to the <a href="{{ path('main') }}" target="_blank">main page</a>.</li>
@@ -75,19 +82,20 @@
                 <li>Send updates and proceed with the next step (important if you want to be sure your updates got in).</li>
             </ol>
 
-            <a href="#UPDATES_SENT" class="btn btn-outline-primary">Next step (click <strong>after</strong> filling the form)</a>
+            <a href="#UPDATE_REQUEST_SENT" class="btn btn-outline-primary">
+                Next step (click <strong>after</strong> filling the form)
+            </a>
         </div>
     </div>
 
-    <div class="card mt-3" id="UPDATES_SENT"> {# grep-iu-submission-updates-sent #}
+    <div class="card mt-3" id="UPDATE_REQUEST_SENT"> {# grep-iu-form-sent-next-step #}
         <div class="card-body">
             <p class="card-text">
-                Which statement best describes your situation?
+                Are you sure you provided the right passcode?
             </p>
 
-            <a href="#PASSCODE_OK" class="btn btn-outline-primary">I/my studio wasn't on the list already (this was an inclusion request)</a>
-            <a href="#PASSCODE_OK" class="btn btn-outline-primary">I am sure I provided correct passcode</a>
-            <a href="#PASSCODE_UNSURE" class="btn btn-outline-primary">Neither of those / I'm not sure</a>
+            <a href="#CONTACT" class="btn btn-outline-primary">Yes</a>
+            <a href="#PASSCODE_UNSURE" class="btn btn-outline-primary">No</a>
         </div>
     </div>
 
@@ -97,37 +105,33 @@
                 In the form, there's a question if the maintainer is allowed to contact you. Which statement best describes your situation?
             </p>
 
-            <a href="#CONTACT_MAINTAINER" class="btn btn-outline-primary">I've changed from <em>No contact allowed</em> to other value</a>
-            <a href="#CONTACT_MAINTAINER" class="btn btn-outline-primary">I've selected <em>No contact allowed</em></a>
-            <a href="#CONTACT_MAINTAINER" class="btn btn-outline-primary">I don't remember</a>
-            <a href="#PASSCODE_OK" class="btn btn-outline-primary">Neither of those</a>
+            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">
+                I've changed from <em>No contact allowed</em> to other value
+            </a>
+            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">
+                I've selected <em>No contact allowed</em>
+            </a>
+            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">
+                I don't remember
+            </a>
+            <a href="#CONTACT" class="btn btn-outline-primary">
+                Neither of those
+            </a>
         </div>
     </div>
 
-    <div class="card mt-3" id="PASSCODE_OK">
+    <div class="card mt-3" id="CONTACT"> {# grep-iu-form-sent-next-step #}
         <div class="card-body">
             <p class="card-text">
-                Which statement best describes your situation?
-            </p>
-
-            <a href="#CONTACT_MAINTAINER" class="btn btn-outline-primary">I prefer my updates being included as soon, as possible</a>
-            <a href="#CONTACT_MAINTAINER" class="btn btn-outline-primary">I have doubts/questions</a>
-            <a href="#WAIT_ONE_WEEK" class="btn btn-outline-primary">Neither of those</a>
-        </div>
-    </div>
-
-    <div class="card mt-3" id="WAIT_ONE_WEEK">
-        <div class="card-body">
-            <p class="card-text">
-                Please wait a few days. If you are waiting more than a week, and the updates are still not there, please contact this website's maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+                If you are waiting over a week already or if you prefer your changes to be on-line as soon, as possible, please contact the maintainer immediately using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>. Otherwise, please wait a few days. The updates are usually processed once a week on weekends.
             </p>
         </div>
     </div>
 
-    <div class="card mt-3" id="CONTACT_MAINTAINER">
+    <div class="card mt-3" id="CONTACT_IMMEDIATELY">
         <div class="card-body">
             <p class="card-text">
-                Please contact this website's maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+                Please contact the maintainer immediately using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
             </p>
         </div>
     </div>
@@ -135,7 +139,7 @@
     <div class="card mt-3" id="I_AM_VISITOR">
         <div class="card-body">
             <p class="card-text">
-                Please do not fill the inclusion/update form. It will get rejected. Please contact the fursuit maker/studio and ask them to do the updates. This is the link you should send them: <a href="{{ path('data_updates') }}">right-click or press&amp;hold then copy link address/URL</a>.
+                Do not fill the form. It will get rejected. Please contact the fursuit maker and ask them to do the updates. This is the link you should send them: <a href="{{ path('data_updates') }}">right-click or press&amp;hold then copy link address/URL</a>.
             </p>
         </div>
     </div>
