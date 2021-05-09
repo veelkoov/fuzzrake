@@ -12,9 +12,6 @@ use DateTimeZone;
 use JsonException;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
-/**
- * @group time-sensitive
- */
 class RestApiControllerTest extends DbEnabledWebTestCase
 {
     public function testArtisans()
@@ -33,6 +30,7 @@ class RestApiControllerTest extends DbEnabledWebTestCase
     public function testHealth()
     {
         ClockMock::register(DateTimeUtils::class);
+        ClockMock::register(RestApiControllerTest::class);
 
         $client = static::createClient();
         self::addSimpleArtisan();
