@@ -35,6 +35,8 @@ class IuFormController extends AbstractRecaptchaBackedController
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
+        $isNew = null === $artisan->getId();
+
         $form = $this->getIuForm($artisan, $makerId);
         $form->handleRequest($request);
         $this->validatePhotosCopyright($form, $artisan);
@@ -44,7 +46,9 @@ class IuFormController extends AbstractRecaptchaBackedController
             StrUtils::fixNewlines($artisan);
 
             if ($iuFormService->submit($artisan)) {
-                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION);
+                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
+                    'isNew' => $isNew ? 'yes' : 'no',
+                ]);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form.'
                 .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
@@ -61,10 +65,14 @@ class IuFormController extends AbstractRecaptchaBackedController
 
     #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
     #[Cache(maxage: 0, public: false)]
-    public function iuFormConfirmation(): Response
+    public function iuFormConfirmation(Request $request): Response
     {
+        $dataUpdatesFragment = 'yes' === $request->get('isNew', 'yes') // grep-iu-form-sent-next-step
+            ? 'CONTACT' : 'UPDATE_REQUEST_SENT';
+
         return $this->render('iu_form/confirmation.html.twig', [
-            'disableTracking' => true,
+            'disableTracking'       => true,
+            'data_updates_fragment' => $dataUpdatesFragment,
         ]);
     }
 

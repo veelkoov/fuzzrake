@@ -249,6 +249,9 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         self::assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
         self::assertSelectorTextContains('p', 'You submission has been recorded.');
+
+        $expectedFragment = '' === $urlMakerId ? 'CONTACT' : 'UPDATE_REQUEST_SENT'; // grep-iu-form-sent-next-step
+        self::assertCount(1, $client->getCrawler()->filter('p a[href$="#'.$expectedFragment.'"]'));
     }
 
     private function getIuFormUrlForMakerId(string $urlMakerId): string

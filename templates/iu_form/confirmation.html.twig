@@ -18,9 +18,7 @@
         <h4 class="alert-heading">It's done!</h4>
 
         <p>
-            You submission has been recorded. Please follow
-            <a href="{{ path('data_updates', { '_fragment': 'UPDATES_SENT' }) }}">this
-                link</a> {# grep-iu-submission-updates-sent #} to figure out next steps.
+            You submission has been recorded. Please follow <a href="{{ path('data_updates', { '_fragment': data_updates_fragment }) }}">this link</a> to figure out next steps.
         </p>
     </div>
 {% endblock %}
