@@ -28,8 +28,8 @@ final class RouteName
     public const MX_EVENT_EDIT = 'mx_event_edit';
     public const MX_EVENT_NEW = 'mx_event_new';
     public const MX_QUERY = 'mx_query';
+    public const RULES = 'rules';
     public const SITEMAP = 'sitemap';
     public const STATISTICS = 'statistics';
     public const TRACKING = 'tracking';
-    public const WHOOPSIES = 'whoopsies';
 }

@@ -18,14 +18,15 @@ class CrawlersController extends AbstractController
     public function sitemap(): Response
     {
         $urls = array_map(fn (string $route): string => $this->generateUrl($route, [], UrlGeneratorInterface::ABSOLUTE_URL), [
-            'main',
-            'data_updates',
-            'info',
-            'tracking',
-            'maker_ids',
-            'statistics',
-            'events',
-            'donate',
+            RouteName::DATA_UPDATES,
+            RouteName::DONATE,
+            RouteName::EVENTS,
+            RouteName::INFO,
+            RouteName::MAIN,
+            RouteName::MAKER_IDS,
+            RouteName::RULES,
+            RouteName::STATISTICS,
+            RouteName::TRACKING,
         ]);
 
         return $this->render('crawlers/sitemap.txt.twig', [
