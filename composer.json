@@ -30,10 +30,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "*",
-        "rector/rector": "0.10.*",
-        "rector/rector-symfony": "0.10.*",
-        "rector/rector-doctrine": "0.10.*",
-        "rector/rector-phpunit": "0.10.*",
+        "rector/rector": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
         "symfony/maker-bundle": "*",
