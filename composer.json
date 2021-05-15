@@ -14,6 +14,8 @@
         "google/recaptcha": "^1.2",
         "phpoffice/phpspreadsheet": "^1.17",
         "rawr/t-regx": "^v0.10.1",
+        "rector/rector-doctrine": "^0.11.2",
+        "rector/rector-phpunit": "^0.11.1",
         "sensio/framework-extra-bundle": "*",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "*",
@@ -29,16 +31,17 @@
         "symfony/yaml": "*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "*",
         "friendsofphp/php-cs-fixer": "*",
         "rector/rector": "*",
-        "symfony/phpunit-bridge": "*",
+        "rector/rector-symfony": "^0.11.2",
+        "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
-        "symfony/stopwatch": "*",
-        "symfony/web-profiler-bundle": "*",
-        "symfony/var-dumper": "*",
+        "symfony/maker-bundle": "*",
         "symfony/panther": "*",
-        "symfony/css-selector": "*"
+        "symfony/phpunit-bridge": "*",
+        "symfony/stopwatch": "*",
+        "symfony/var-dumper": "*",
+        "symfony/web-profiler-bundle": "*"
     },
     "config": {
         "preferred-install": {
