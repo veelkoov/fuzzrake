@@ -305,6 +305,9 @@ class IuForm extends AbstractType
                 'label'      => 'Updates passcode',
                 'required'   => true,
                 'empty_data' => '',
+                'attr'       => [
+                    'autocomplete' => 'section-iuform current-password',
+                ],
             ])
             ->add('contactAllowed', ChoiceType::class, [
                 'label'      => 'Contact allowed?',

@@ -39,7 +39,7 @@ class ArtisanPrivateData
      * @Assert\NotBlank(groups={"iu_form"}, message="Passcode is required")
      * @Assert\Length(min=4, max=255, groups={"iu_form"}, minMessage="Passcode is not long enough")
      */
-    private string $passcode = ''; // https://github.com/veelkoov/fuzzrake/issues/63
+    private string $passcode = '';
 
     /**
      * @ORM\Column(type="string", length=512)

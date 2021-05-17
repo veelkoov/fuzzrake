@@ -595,16 +595,30 @@
         {{ form_widget(form.contactAllowed) }}
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="contact_info">
         {{ form_label(form.contactInfoObfuscated) }}
-        <p class="hint"><span class="badge badge-warning">PRIVATE</span> If you selected <em>No contact allowed</em> above, simply put <em>&mdash;</em> here. Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
+        <p class="hint"> <!-- FIXME: Just hide the field If selected <em>No contact allowed</em> -->
+            Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is.
+            <span class="badge badge-warning">PRIVATE</span> Your address will never be shared with anyone without your permission.
+        </p>
         {{ form_widget(form.contactInfoObfuscated) }}
     </div>
 
     <div class="form-group">
-        <!-- https://github.com/veelkoov/fuzzrake/issues/63 -->
         {{ form_label(form.passcode) }}
-        <p class="hint"><span class="badge badge-warning">PRIVATE</span> Please provide some kind of passcode/password. Please use at least 6 characters. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form.  <span class="passcode-confidentiality-warning">Important: This passcode can be seen by the maintainer in the clear text!</span> <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
+        <p class="hint">
+            {% if is_update %}
+                <label for="forgotten_password"><input type="checkbox" id="forgotten_password" /> I don't remember my password</label>
+                <br />
+                <span id="forgotten_password_instructions" class="d-none">
+                    Please choose a <strong>new</strong> password you would like to use from now on (simply put it in the field below). Use at least 6 characters (the more, the merrier). You will see further instructions on the next page, after submitting this form - <strong>please</strong> make sure read the message and follow any instructions!
+                </span>
+            {% else %}
+                Please choose some kind of password, which will be used to make sure it was you, who posted the updates in the future. Use at least 6 characters (the more, the merrier).
+            {% endif %}
+            <strong>Please do not use any password you use anywhere else.</strong>
+            <span class="badge badge-warning">PRIVATE</span> Your password will be kept in a secure way and never shared.
+        </p>
         {{ form_widget(form.passcode) }}
     </div>
 

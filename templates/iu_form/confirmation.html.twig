@@ -14,11 +14,41 @@
 {% endblock %}
 
 {% block body %}
-    <div class="alert alert-success my-5" role="alert">
-        <h4 class="alert-heading">It's done!</h4>
+    {% if password_ok %}
 
-        <p>
-            You submission has been recorded. Please follow <a href="{{ path('data_updates', { '_fragment': data_updates_fragment }) }}">this link</a> to figure out next steps.
-        </p>
-    </div>
+        <div class="alert alert-success my-5" role="alert">
+            <h4 class="alert-heading">
+                Your submission has been recorded!
+            </h4>
+
+            <p>
+                Submissions are typically processed once a week, during the weekend. If you don't see your changes on-line after 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+            </p>
+        </div>
+
+    {% elseif contact_allowed %}
+
+        <div class="alert alert-warning my-5" role="alert">
+            <h4 class="alert-heading">
+                Your submission has been recorded, but...
+            </h4>
+
+            <p>
+                The password you provided didn't match, so expect to be contacted by the maintainer to confirm your changes. Submissions are typically processed once a week, during the weekend. If nothing happens within 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+            </p>
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-danger my-5" role="alert">
+            <h4 class="alert-heading">
+                Your submission has been recorded, but...
+            </h4>
+
+            <p>
+                The password you provided didn't match, and you {% if no_selected_previously %}previously{% endif %} didn't agree to be contacted, so <strong>you must contact the maintainer</strong> to confirm the changes, or your submission will be rejected. Please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+            </p>
+        </div>
+
+    {% endif %}
 {% endblock %}
