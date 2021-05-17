@@ -248,10 +248,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         self::assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
-        self::assertSelectorTextContains('p', 'You submission has been recorded.');
-
-        $expectedFragment = '' === $urlMakerId ? 'CONTACT' : 'UPDATE_REQUEST_SENT'; // grep-iu-form-sent-next-step
-        self::assertCount(1, $client->getCrawler()->filter('p a[href$="#'.$expectedFragment.'"]'));
+        self::assertSelectorTextContains('h4', 'Your submission has been recorded');
     }
 
     private function getIuFormUrlForMakerId(string $urlMakerId): string
@@ -394,7 +391,12 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         self::assertNotNull($actual);
 
         foreach (Fields::getAll() as $fieldName => $field) {
-            if (self::SKIP !== self::FIELDS[$fieldName]) {
+            /* @noinspection PhpStatementHasEmptyBodyInspection */
+            if (self::SKIP === self::FIELDS[$fieldName]) {
+                // Skip checking value
+            } elseif (Fields::PASSCODE === $fieldName) {
+                self::assertTrue(password_verify($expected->get($field), $actual->get($field)), 'Password differs');
+            } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field {$fieldName} differs");
             }
         }

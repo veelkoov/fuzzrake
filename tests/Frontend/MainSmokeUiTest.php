@@ -9,7 +9,7 @@ use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
 
-class SmokeUiTest extends DbEnabledPantherTestCase
+class MainSmokeUiTest extends DbEnabledPantherTestCase
 {
     /**
      * @throws WebDriverException
@@ -17,7 +17,7 @@ class SmokeUiTest extends DbEnabledPantherTestCase
     public function testMainPage(): void
     {
         $client = static::createPantherClient();
-        $client->manage()->window()->setSize(new WebDriverDimension(1600, 900));
+        self::setWindowSize($client, 1600, 900);
 
         self::persistAndFlush(
             self::getArtisan('Test artisan 1', 'TEST001', 'CZ'),

@@ -40,7 +40,9 @@ function set_day() {
 
 function display_password_change_hint_if_checked_forgot() {
     jQuery('#forgotten_password').on('change', (evt) => {
-        jQuery('#forgotten_password_instructions').toggle($(evt.target).is(':checked'));
+        jQuery('#forgotten_password_instructions')
+            .removeClass('d-none')
+            .toggle($(evt.target).is(':checked'));
     });
 }
 
