@@ -76,11 +76,11 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
 
         return $this->render('iu_form/iu_form.html.twig', [
-            'form'            => $form->createView(),
-            'noindex'         => true,
-            'submitted'       => $form->isSubmitted(),
-            'disableTracking' => true,
-            'is_update'       => !$isNew,
+            'form'             => $form->createView(),
+            'noindex'          => true,
+            'submitted'        => $form->isSubmitted(),
+            'disable_tracking' => true,
+            'is_update'        => !$isNew,
         ]);
     }
 
@@ -89,7 +89,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuFormConfirmation(Request $request): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
-            'disableTracking'        => true,
+            'disable_tracking'       => true,
             'password_ok'            => 'yes' === $request->get('passwordOk', 'no'),
             'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
             'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),
