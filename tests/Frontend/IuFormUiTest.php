@@ -22,9 +22,35 @@ class IuFormUiTest extends DbEnabledPantherTestCase
 
         $client->request('GET', '/iu_form/fill/MAKERID');
         $client->waitForVisibility('#forgotten_password', 5);
-        $client->waitForInvisibility('#forgotten_password_instructions', 1);
+
+        self::assertSelectorIsNotVisible('#forgotten_password_instructions');
         $client->findElement(WebDriverBy::id('forgotten_password'))->click();
-        $client->waitForVisibility('#forgotten_password_instructions', 1);
-        self::assertTrue(true); // If we are here, everything worked as expected
+        self::assertSelectorIsVisible('#forgotten_password_instructions');
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    public function testContactMethodNotRequiredAndHiddenWhenContactNotAllowed(): void
+    {
+        $client = static::createPantherClient();
+        self::setWindowSize($client, 1600, 900);
+
+        $client->request('GET', '/iu_form/fill');
+        $client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[contactAllowed]' => 'FEEDBACK',
+        ]);
+
+        self::assertSelectorIsVisible('#iu_form_contactInfoObfuscated');
+        self::assertSelectorExists('#iu_form_contactInfoObfuscated[required]');
+
+        $form->setValues([
+            'iu_form[contactAllowed]' => 'NO',
+        ]);
+
+        self::assertSelectorIsNotVisible('#iu_form_contactInfoObfuscated');
+        self::assertSelectorExists('#iu_form_contactInfoObfuscated:not([required])');
     }
 }
