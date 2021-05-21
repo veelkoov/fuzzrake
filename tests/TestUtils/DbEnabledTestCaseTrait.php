@@ -6,6 +6,7 @@ namespace App\Tests\TestUtils;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
+use App\Repository\ArtisanRepository;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManager;
@@ -34,6 +35,11 @@ trait DbEnabledTestCaseTrait
     protected static function resetDB(): void
     {
         SchemaTool::resetOn(self::getEM());
+    }
+
+    protected static function findArtisanByMakerId(string $makerId): Artisan
+    {
+        return static::$container->get(ArtisanRepository::class)->findOneBy(['makerId' => $makerId]);
     }
 
     protected static function addSimpleArtisan(): Artisan

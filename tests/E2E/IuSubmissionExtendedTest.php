@@ -5,33 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\Entity\Artisan;
-use App\Repository\ArtisanRepository;
-use App\Tasks\DataImport;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
-use App\Utils\Data\FdvFactory;
-use App\Utils\Data\Manager;
-use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
-use App\Utils\IuSubmissions\Finder;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
-use Symfony\Component\Filesystem\Filesystem;
-use TRegx\CleanRegex\Pattern;
 
-class IuSubmissionTest extends DbEnabledWebTestCase
+class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
 {
     private const VARIANT_FULL_DATA = 0;
     private const VARIANT_HALF_DATA_1 = 1;
@@ -93,7 +80,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'SPECIES_DOESNT'            => 'SPECIES_DOESNT___VARIANT__',
         'NOTES'                     => 'NOTES___VARIANT__',
         'INACTIVE_REASON'           => ['', 'INACTIVE_REASON12', 'INACTIVE_REASON12'],
-        'URL_FURSUITREVIEW'         => 'http://fursuitreview.com/value___VARIANT__.html',
+        'URL_FURSUITREVIEW'         => 'https://fursuitreview.com/value___VARIANT__.html',
         'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
         'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html',
         'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
@@ -144,8 +131,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         'ORDER_TYPES',
     ];
 
-    private const IMPORT_DATA_DIR = __DIR__.'/../../var/testIuFormData'; // TODO: This path should be coming from the container
-
     /**
      * Purpose of this test is to make sure:
      * - all fields, which values should be displayed in the I/U form, are,
@@ -163,8 +148,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
 
         $this->checkFieldsArrayCompleteness(); // Test self-test
 
-        $this->emptyTestSubmissionsDir();
-
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::SET);
         Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
 
@@ -178,14 +161,13 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         $this->processIuForm($client, $oldArtisan1->getMakerId(), $oldArtisan1, $this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::SET));
         $this->processIuForm($client, '', new Artisan(), $this->getArtisanFor(self::VARIANT_FULL_DATA, self::SET));
 
-        $this->performImport();
+        $output = $this->performImport(true);
+        $this->validateConsoleOutput($output->fetch());
         self::getEM()->flush();
         self::assertCount(2, $repo->findAll(), 'Expected two artisans in the DB after import');
 
         $this->validateArtisanAfterImport($this->getArtisanFor(self::VARIANT_HALF_DATA_2, self::CHECK));
         $this->validateArtisanAfterImport($this->getArtisanFor(self::VARIANT_FULL_DATA, self::CHECK));
-
-        $this->emptyTestSubmissionsDir();
     }
 
     private function checkFieldsArrayCompleteness(): void
@@ -199,11 +181,6 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         foreach (array_merge(array_keys(self::FIELDS), self::EXPANDED, self::FIELD_NOT_IN_FORM, self::VALUE_NOT_SHOWN_IN_FORM) as $fieldName) {
             self::assertArrayHasKey($fieldName, $fields);
         }
-    }
-
-    private function emptyTestSubmissionsDir(): void
-    {
-        (new Filesystem())->remove(self::IMPORT_DATA_DIR);
     }
 
     private function getArtisanFor(int $variant, string $purpose): Artisan
@@ -290,11 +267,11 @@ class IuSubmissionTest extends DbEnabledWebTestCase
     private function removeFalsePositivesFromLowercaseHtml(string $inputLowercaseHtml): string
     {
         $result = pattern('(<label[^>]*>[^<]+</label>)')->remove($inputLowercaseHtml)->all();
-        /** @noinspection HtmlUnknownAttribute */
-        $result = pattern('<select id="iu_form_since_day"[^>]*><option value="">day</option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>')
-            ->remove($result)->first();
 
-        return $result;
+        /** @noinspection HtmlUnknownAttribute */
+        $regex = '<select id="iu_form_since_day"[^>]*><option value="">day</option>(<option value="\d{1,2}"( selected="selected")?>\d{2}</option>)+</select>';
+
+        return pattern($regex)->remove($result)->first();
     }
 
     private function setValuesInForm(Form $form, Artisan $data): void
@@ -354,39 +331,9 @@ class IuSubmissionTest extends DbEnabledWebTestCase
         }
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
-    private function performImport(): void
-    {
-        $output = new BufferedOutput();
-
-        $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
-        $import = new DataImport(self::getEM(), $this->getImportManager(), $printer,
-            static::$container->get(FdvFactory::class)->create($printer), false);
-
-        $import->import(Finder::getFrom(self::IMPORT_DATA_DIR));
-
-        $this->validateConsoleOutput($output->fetch());
-    }
-
-    /**
-     * @throws DataInputException|JsonException
-     */
-    private function getImportManager(): Manager
-    {
-        $corrections = '';
-
-        foreach (Finder::getFrom(self::IMPORT_DATA_DIR) as $submission) {
-            $corrections .= "with {$submission->getId()}: accept\n";
-        }
-
-        return new Manager($corrections);
-    }
-
     private function validateArtisanAfterImport(Artisan $expected): void
     {
-        $actual = static::$container->get(ArtisanRepository::class)->findOneBy(['makerId' => $expected->getMakerId()]);
+        $actual = self::findArtisanByMakerId($expected->getMakerId());
 
         self::assertNotNull($actual);
 
@@ -397,7 +344,7 @@ class IuSubmissionTest extends DbEnabledWebTestCase
             } elseif (Fields::PASSCODE === $fieldName) {
                 self::assertTrue(password_verify($expected->get($field), $actual->get($field)), 'Password differs');
             } else {
-                self::assertEquals($expected->get($field), $actual->get($field), "Field {$fieldName} differs");
+                self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs");
             }
         }
     }
