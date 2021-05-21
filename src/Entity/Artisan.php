@@ -1279,8 +1279,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
     // ===== NON-TRIVIAL VALIDATION =====
     //
 
-    // TODO: Validate this working
-
     #[Assert\Callback(groups: ['iu_form'])]
     public function validate(ExecutionContextInterface $context, $payload): void
     {
