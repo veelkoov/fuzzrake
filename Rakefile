@@ -84,7 +84,7 @@ task qa: [:rector, 'php-cs-fixer', :phpunit]
 task :dbpush do
   exec_or_die('cp', DB_PATH, DB_TMP_PATH)
 
-  exec_or_die('sqlite3', DB_TMP_PATH, 'DELETE FROM artisans_private_data;')
+  exec_or_die('sqlite3', DB_TMP_PATH, "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';")
 
   exec_or_die('scp', '-p', DB_TMP_PATH, "getfursu.it:/var/www/prod/#{DB_PATH}")
   exec_or_die('scp', '-p', DB_TMP_PATH, "getfursu.it:/var/www/beta/#{DB_PATH}")
