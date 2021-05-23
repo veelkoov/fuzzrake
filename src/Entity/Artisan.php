@@ -907,14 +907,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getPasscode(): string
+    public function getPassword(): string
     {
-        return $this->getPrivateData()->getPasscode();
+        return $this->getPrivateData()->getPassword();
     }
 
-    public function setPasscode(string $passcode): self
+    public function setPassword(string $password): self
     {
-        $this->getPrivateData()->setPasscode($passcode);
+        $this->getPrivateData()->setPassword($password);
 
         return $this;
     }

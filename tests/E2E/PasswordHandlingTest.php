@@ -24,7 +24,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
             'iu_form[country]'        => 'FI',
             'iu_form[makerId]'        => 'MAKERID',
             'iu_form[contactAllowed]' => 'NO',
-            'iu_form[passcode]'       => 'some-password',
+            'iu_form[password]'       => 'some-password',
         ]);
         $client->submit($form);
         $client->followRedirect();
@@ -36,7 +36,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
         self::getEM()->clear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
-        self::assertTrue(password_verify('some-password', $artisan->getPasscode())); // Fails on plaintext
+        self::assertTrue(password_verify('some-password', $artisan->getPassword())); // Fails on plaintext
     }
 
     /**
@@ -48,13 +48,13 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
 
         $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO');
         self::persistAndFlush($artisan);
-        $oldHash = $artisan->getPasscode();
+        $oldHash = $artisan->getPassword();
         unset($artisan);
 
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
-            'iu_form[passcode]' => 'known-password',
+            'iu_form[password]' => 'known-password',
         ]);
         $client->submit($form);
         $client->followRedirect();
@@ -66,7 +66,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
         self::getEM()->clear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
-        self::assertEquals($oldHash, $artisan->getPasscode(), 'The password hash has changed'); // Fails on plaintext
+        self::assertEquals($oldHash, $artisan->getPassword(), 'The password hash has changed'); // Fails on plaintext
         self::assertEquals('New name', $artisan->getName(), 'The update did not actually happen');
     }
 
@@ -79,13 +79,13 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
 
         $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO');
         self::persistAndFlush($artisan);
-        $oldHash = $artisan->getPasscode();
+        $oldHash = $artisan->getPassword();
         unset($artisan);
 
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
-            'iu_form[passcode]' => 'new-password',
+            'iu_form[password]' => 'new-password',
         ]);
         $client->submit($form);
         $client->followRedirect();
@@ -97,9 +97,9 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
         self::getEM()->clear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
-        self::assertNotEquals($oldHash, $artisan->getPasscode(), 'The password was not changed');
+        self::assertNotEquals($oldHash, $artisan->getPassword(), 'The password was not changed');
         self::assertEquals('New name', $artisan->getName(), 'The update did not actually happen');
-        self::assertTrue(password_verify('new-password', $artisan->getPasscode()), 'Updated password fails');
+        self::assertTrue(password_verify('new-password', $artisan->getPassword()), 'Updated password fails');
     }
 
     /**
@@ -111,13 +111,13 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
 
         $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO');
         self::persistAndFlush($artisan);
-        $oldHash = $artisan->getPasscode();
+        $oldHash = $artisan->getPassword();
         unset($artisan);
 
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
-            'iu_form[passcode]' => 'new-password',
+            'iu_form[password]' => 'new-password',
         ]);
         $client->submit($form);
         $client->followRedirect();
@@ -129,7 +129,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
         self::getEM()->clear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
-        self::assertEquals($oldHash, $artisan->getPasscode(), 'The password was actually changed');
+        self::assertEquals($oldHash, $artisan->getPassword(), 'The password was actually changed');
         self::assertEquals('Old name', $artisan->getName(), 'The update actually happened');
     }
 }

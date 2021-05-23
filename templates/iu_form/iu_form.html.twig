@@ -605,7 +605,7 @@
     </div>
 
     <div class="form-group">
-        {{ form_label(form.passcode) }}
+        {{ form_label(form.password) }}
         <p class="hint">
             {% if is_update %}
                 <label for="forgotten_password"><input type="checkbox" id="forgotten_password" /> I don't remember my password</label>
@@ -619,7 +619,7 @@
             <strong>Please do not use any password you use anywhere else.</strong>
             <span class="badge badge-warning">PRIVATE</span> Your password will be kept in a secure way and never shared.
         </p>
-        {{ form_widget(form.passcode) }}
+        {{ form_widget(form.password) }}
     </div>
 
     {{ form_rest(form) }}

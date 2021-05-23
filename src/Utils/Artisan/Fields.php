@@ -74,7 +74,7 @@ final class Fields
 
     public const NOTES = 'NOTES';
     public const INACTIVE_REASON = 'INACTIVE_REASON';
-    public const PASSCODE = 'PASSCODE';
+    public const PASSWORD = 'PASSWORD';
     public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
     public const CST_LAST_CHECK = 'CST_LAST_CHECK';
     public const COMPLETENESS = 'COMPLETENESS';

@@ -37,7 +37,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         ],
         'NAME'                      => ['Maker name 0', 'Maker name old', 'Maker name new'],
         'FORMERLY'                  => ['Formerly 0', 'Formerly old', "Formerly old\nMaker name old"],
-        'PASSCODE'                  => 'Passcode __VARIANT__',
+        'PASSWORD'                  => 'Password __VARIANT__',
         'CONTACT_INFO_OBFUSCATED'   => [
             [self::SET => 'E-mail: email@e.mail', self::CHECK => 'E-MAIL: e***l@e****l'],
             [self::SET => self::SKIP, self::CHECK => 'TELEGRAM: @te*****am'],
@@ -109,7 +109,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
     ];
 
     private const VALUE_NOT_SHOWN_IN_FORM = [
-        'PASSCODE',
+        'PASSWORD',
     ];
 
     private const FIELD_NOT_IN_FORM = [
@@ -341,7 +341,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
             /* @noinspection PhpStatementHasEmptyBodyInspection */
             if (self::SKIP === self::FIELDS[$fieldName]) {
                 // Skip checking value
-            } elseif (Fields::PASSCODE === $fieldName) {
+            } elseif (Fields::PASSWORD === $fieldName) {
                 self::assertTrue(password_verify($expected->get($field), $actual->get($field)), 'Password differs');
             } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs");

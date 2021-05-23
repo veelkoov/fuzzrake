@@ -78,7 +78,7 @@ trait DbEnabledTestCaseTrait
             ->getArtisan();
 
         if ('' !== $password) {
-            $result->setPasscode($password);
+            $result->setPassword($password);
             Password::encryptOn($result);
         }
 

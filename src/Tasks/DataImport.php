@@ -49,7 +49,7 @@ class DataImport
                 | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
 
         foreach ($this->createImportItems($artisansData) as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), $this->manager->isPasscodeIgnored($item));
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), $this->manager->isPasswordIgnored($item));
 
             $item->calculateDiff();
             if ($item->getDiff()->hasAnythingChanged()) {
@@ -120,10 +120,10 @@ class DataImport
         return new ImportItem($submission, $input, $entity);
     }
 
-    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan
+    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasswordUpdate): Artisan
     {
         foreach (Fields::getAll() as $field) {
-            if ($skipPasscodeUpdate && $field->is(Fields::PASSCODE)) {
+            if ($skipPasswordUpdate && $field->is(Fields::PASSWORD)) {
                 continue;
             }
 
@@ -194,7 +194,7 @@ class DataImport
     {
         $new = $item->getFixedEntity();
         $old = $item->getOriginalEntity();
-        $passcodeChanged = $item->getProvidedPasscode() !== $item->getExpectedPasscode();
+        $passwordChanged = $item->getProvidedPassword() !== $item->getExpectedPassword();
 
         if (null === $old->getId() && !$this->manager->isAccepted($item)) {
             $this->messaging->reportNewMaker($item);
@@ -206,8 +206,8 @@ class DataImport
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ($passcodeChanged && !$this->manager->isPasscodeIgnored($item) && !$this->manager->isAccepted($item)) {
-            $this->messaging->reportInvalidPasscode($item);
+        if ($passwordChanged && !$this->manager->isPasswordIgnored($item) && !$this->manager->isAccepted($item)) {
+            $this->messaging->reportInvalidPassword($item);
 
             return false;
         }

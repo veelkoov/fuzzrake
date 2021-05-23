@@ -301,8 +301,8 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('passcode', PasswordType::class, [
-                'label'      => 'Updates passcode',
+            ->add('password', PasswordType::class, [
+                'label'      => 'Updates password',
                 'required'   => true,
                 'empty_data' => '',
                 'attr'       => [
@@ -343,7 +343,7 @@ class IuForm extends AbstractType
             'data_class'        => Artisan::class,
             'validation_groups' => ['iu_form'],
             'error_mapping'     => [
-                'privateData.passcode'            => 'passcode',
+                'privateData.password'            => 'password',
             ],
             self::PHOTOS_COPYRIGHT_OK => false,
         ]);

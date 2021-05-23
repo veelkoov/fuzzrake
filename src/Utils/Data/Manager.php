@@ -21,7 +21,7 @@ class Manager
     public const CMD_COMMENT = '//';
     public const CMD_ACCEPT = 'accept';
     public const CMD_CLEAR = 'clear';
-    public const CMD_IGNORE_PASSCODE = 'ignore-passcode';
+    public const CMD_IGNORE_PASSWORD = 'ignore-password';
     public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
     public const CMD_MATCH_TO_NAME = 'match-to-name';
     public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
@@ -49,9 +49,9 @@ class Manager
     private array $matchedNames = [];
 
     /**
-     * @var string[] List of submission IDs which contain invalid passcodes, to be approved & imported
+     * @var string[] List of submission IDs which contain invalid passwordss, to be approved & imported
      */
-    private array $itemsWithPasscodeExceptions = [];
+    private array $itemsWithPasswordExceptions = [];
 
     /**
      * @var string[] List of submission IDs which got rejected
@@ -115,9 +115,9 @@ class Manager
         return in_array($item->getId(), $this->rejectedItems);
     }
 
-    public function isPasscodeIgnored(ImportItem $item): bool
+    public function isPasswordIgnored(ImportItem $item): bool
     {
-        return in_array($item->getId(), $this->itemsWithPasscodeExceptions);
+        return in_array($item->getId(), $this->itemsWithPasswordExceptions);
     }
 
     public function getIgnoredUntilDate(ImportItem $item): DateTimeInterface
@@ -177,8 +177,8 @@ class Manager
                 $buffer->readUntilEolOrEof();
                 break;
 
-            case self::CMD_IGNORE_PASSCODE:
-                $this->itemsWithPasscodeExceptions[] = $this->getCurrentSubject();
+            case self::CMD_IGNORE_PASSWORD: // TODO: Remove
+                $this->itemsWithPasswordExceptions[] = $this->getCurrentSubject();
                 break;
 
             case self::CMD_IGNORE_UNTIL:

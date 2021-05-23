@@ -37,10 +37,10 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
 
         $isNew = null === $artisan->getId();
-        $previousPassword = $artisan->getPasscode();
+        $previousPassword = $artisan->getPassword();
         $wasContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
 
-        $artisan->setPasscode(''); // Should never appear in the form
+        $artisan->setPassword(''); // Should never appear in the form
 
         $form = $this->getIuForm($artisan, $makerId);
         $form->handleRequest($request);
@@ -53,9 +53,9 @@ class IuFormController extends AbstractRecaptchaBackedController
             if ($isNew) {
                 $passwordOk = true;
                 Password::encryptOn($artisan);
-            } elseif (password_verify($artisan->getPasscode(), $previousPassword)) {
+            } elseif (password_verify($artisan->getPassword(), $previousPassword)) {
                 $passwordOk = true;
-                $artisan->setPasscode($previousPassword); // Was already hashed; use old hash - must not appear changed
+                $artisan->setPassword($previousPassword); // Was already hashed; use old hash - must not appear changed
             } else {
                 $passwordOk = false;
                 Password::encryptOn($artisan); // Will become new password if confirmed with maintainer

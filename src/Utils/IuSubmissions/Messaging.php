@@ -48,14 +48,14 @@ class Messaging
             .' to '.$item->getFixedEntity()->getMakerId());
     }
 
-    public function reportInvalidPasscode(ImportItem $item): void
+    public function reportInvalidPassword(ImportItem $item): void
     {
         $tomorrow = DateTimeUtils::getTomorrowYmd();
 
-        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid passcode '{$item->getProvidedPasscode()}' (expected: '{$item->getExpectedPasscode()}')"); // https://github.com/veelkoov/fuzzrake/issues/63
+        $this->printer->warning("{$item->getNamesStrSafe()} provided invalid password '{$item->getProvidedPassword()}' (expected: '{$item->getExpectedPassword()}')"); // https://github.com/veelkoov/fuzzrake/issues/63
         $this->printer->writeln([
             Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
-            '    '.Manager::CMD_IGNORE_PASSCODE,
+            '    '.Manager::CMD_IGNORE_PASSWORD,
             '    '.Manager::CMD_REJECT,
             '    '.Manager::CMD_IGNORE_UNTIL." $tomorrow",
             '',

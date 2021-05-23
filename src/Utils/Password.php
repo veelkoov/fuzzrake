@@ -13,8 +13,8 @@ final class Password
 
     public static function encryptOn(Artisan $artisan): void
     {
-        $artisan->setPasscode(password_hash(
-            $artisan->getPasscode(),
+        $artisan->setPassword(password_hash(
+            $artisan->getPassword(),
             PASSWORD_DEFAULT,
             ['cost' => 12],
         ));

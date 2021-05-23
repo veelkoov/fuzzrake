@@ -275,8 +275,8 @@ class ArtisanType extends AbstractType
                 'choices'    => ContactPermit::getKeyKeyMap(),
                 'empty_data' => ContactPermit::NO,
             ])
-            ->add('passcode', PasswordType::class, [
-                'label'      => 'New passcode',
+            ->add('password', PasswordType::class, [
+                'label'      => 'New password',
                 'required'   => false,
                 'empty_data' => '',
             ])

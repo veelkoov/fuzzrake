@@ -33,14 +33,14 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form->get('iu_form[country]')->setValue('Finland');
         $form->get('iu_form[makerId]')->setValue('MAKERID');
         $form->get('iu_form[contactAllowed]')->setValue('FEEDBACK');
-        $form->get('iu_form[passcode]')->setValue('why-so-serious');
+        $form->get('iu_form[password]')->setValue('why-so-serious');
 
         $client->submit($form);
         self::assertSelectorTextContains('label[for="iu_form_contactInfoObfuscated"] .form-error-message', 'This value should not be blank.');
 
         $form = $client->getCrawler()->selectButton('Submit')->form();
         $form->get('iu_form[contactInfoObfuscated]')->setValue('email@address');
-        $form->get('iu_form[passcode]')->setValue('why-so-serious');
+        $form->get('iu_form[password]')->setValue('why-so-serious');
 
         $client->submit($form);
         $client->followRedirect();
@@ -60,7 +60,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form->get('iu_form[country]')->setValue('Finland');
         $form->get('iu_form[makerId]')->setValue('MAKERID');
         $form->get('iu_form[contactAllowed]')->setValue('NO');
-        $form->get('iu_form[passcode]')->setValue('why-so-serious');
+        $form->get('iu_form[password]')->setValue('why-so-serious');
 
         $client->submit($form);
         $client->followRedirect();
@@ -82,7 +82,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
-        $form->get('iu_form[passcode]')->setValue('password-555');
+        $form->get('iu_form[password]')->setValue('password-555');
 
         $client->submit($form);
         $client->followRedirect();
@@ -104,7 +104,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
-        $form->get('iu_form[passcode]')->setValue('password-554');
+        $form->get('iu_form[password]')->setValue('password-554');
         $form->get('iu_form[contactInfoObfuscated]')->setValue('email@address');
 
         $client->submit($form);
@@ -127,7 +127,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
-        $form->get('iu_form[passcode]')->setValue('password-554');
+        $form->get('iu_form[password]')->setValue('password-554');
         $form->get('iu_form[contactAllowed]')->setValue('ANNOUNCEMENTS');
         $form->get('iu_form[contactInfoObfuscated]')->setValue('email@address');
 
@@ -151,7 +151,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client->request('GET', '/iu_form/fill/MAKERID');
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
-        $form->get('iu_form[passcode]')->setValue('password-554');
+        $form->get('iu_form[password]')->setValue('password-554');
         $form->get('iu_form[contactAllowed]')->setValue('NO');
 
         $client->submit($form);

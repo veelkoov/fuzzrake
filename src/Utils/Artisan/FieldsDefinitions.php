@@ -91,7 +91,7 @@ final class FieldsDefinitions
         Fields::CONTACT_INFO_ORIGINAL      => ['contactInfoOriginal',      VR::ANYTHING,                  0, 1, 0, 0],
         Fields::CONTACT_INFO_OBFUSCATED    => ['contactInfoObfuscated',    VR::ANYTHING,                  0, 1, 0, 1],
 
-        Fields::PASSCODE                   => ['passcode',                 VR::ANYTHING,                  0, 1, 0, 0],
+        Fields::PASSWORD                   => ['password',                 VR::ANYTHING,                  0, 1, 0, 0],
     ];
 
     public const URLS = [
