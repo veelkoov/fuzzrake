@@ -49,7 +49,7 @@ class DataImport
                 | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
 
         foreach ($this->createImportItems($artisansData) as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), $this->manager->isPasswordIgnored($item));
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput());
 
             $item->calculateDiff();
             if ($item->getDiff()->hasAnythingChanged()) {
@@ -107,7 +107,7 @@ class DataImport
      */
     private function createImportItem(IuSubmission $submission): ImportItem
     {
-        $originalInput = $this->updateArtisanWithData(new Artisan(), $submission, false);
+        $originalInput = $this->updateArtisanWithData(new Artisan(), $submission);
 
         $input = new ArtisanFixWip($originalInput, $submission->getId());
         $this->manager->correctArtisan($input->getFixed(), $submission->getId());
@@ -120,13 +120,9 @@ class DataImport
         return new ImportItem($submission, $input, $entity);
     }
 
-    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasswordUpdate): Artisan
+    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
         foreach (Fields::getAll() as $field) {
-            if ($skipPasswordUpdate && $field->is(Fields::PASSWORD)) {
-                continue;
-            }
-
             switch ($field->name()) {
                 case Fields::MAKER_ID:
                     $newValue = $source->get($field);
@@ -206,7 +202,7 @@ class DataImport
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ($passwordChanged && !$this->manager->isPasswordIgnored($item) && !$this->manager->isAccepted($item)) {
+        if ($passwordChanged && !$this->manager->isAccepted($item)) {
             $this->messaging->reportInvalidPassword($item);
 
             return false;
