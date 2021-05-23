@@ -35,7 +35,7 @@ class ArtisanPrivateData
     private string $contactAddress = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, name="passcode") # TODO: Revert
      * @Assert\NotBlank(groups={"iu_form"}, message="Password is required")
      * @Assert\Length(min=8, max=255, groups={"iu_form"}, minMessage="Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!")
      * grep-password-length

@@ -169,6 +169,7 @@ class Manager
 
             case self::CMD_CLEAR:
                 $fieldName = $buffer->readUntilWhitespace();
+                $fieldName = str_replace('PASSCODE', 'PASSWORD', $fieldName); // TODO: workaround, remove
 
                 $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
                 break;
@@ -211,6 +212,7 @@ class Manager
 
             case self::CMD_SET:
                 $fieldName = $buffer->readUntilWhitespace();
+                $fieldName = str_replace('PASSCODE', 'PASSWORD', $fieldName); // TODO: workaround, remove
                 $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
                 $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
