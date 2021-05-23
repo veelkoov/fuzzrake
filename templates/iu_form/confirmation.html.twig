@@ -22,8 +22,13 @@
             </h4>
 
             <p>
-                Submissions are typically processed once a week, during the weekend. If you don't see your changes on-line after 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+                Submissions are typically processed once a week, during the weekend. <i class="fas fa-hand-point-right"></i> If you don't see your changes on-line after 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
             </p>
+
+            <hr />
+
+            <p>
+                <i class="fas fa-hand-point-right"></i> If for any reason you need your submission processed as soon as possible, do not hesitate to <a href="{{ path('info', { _fragment: 'contact'}) }}">contact the maintainer</a> immediately, we'll see, what can be done about this.
         </div>
 
     {% elseif contact_allowed %}
@@ -34,7 +39,17 @@
             </h4>
 
             <p>
-                The password you provided didn't match, so expect to be contacted by the maintainer to confirm your changes. Please warn other makers in the studio about this if you are not working alone! Submissions are typically processed once a week, during the weekend. If nothing happens within 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+                The password you provided didn't match, so expect to be contacted by the maintainer to confirm your changes. <i class="fas fa-exclamation-triangle text-danger"></i> Please warn other makers in the studio about this if you are not working alone!
+            </p>
+
+            <p>
+                Submissions are typically processed once a week, during the weekend. <i class="fas fa-hand-point-right"></i> If nothing happens within 7 days, please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+            </p>
+
+            <hr />
+
+            <p>
+                <i class="fas fa-hand-point-right"></i> If for any reason you need your submission processed as soon as possible, do not hesitate to <a href="{{ path('info', { _fragment: 'contact'}) }}">contact the maintainer</a> immediately, we'll see, what can be done about this.
             </p>
         </div>
 
@@ -46,7 +61,7 @@
             </h4>
 
             <p>
-                The password you provided didn't match, and you {% if no_selected_previously %}previously{% endif %} didn't agree to be contacted, so <strong>you must contact the maintainer</strong> to confirm the changes, or your submission will be rejected. Please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+                The password you provided didn't match, and you {% if no_selected_previously %}previously{% endif %} didn't agree to be contacted, so <i class="fas fa-exclamation-triangle text-danger"></i> <strong>you must contact the maintainer</strong> to confirm the changes, otherwise your submission will be rejected! Please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
             </p>
         </div>
 
