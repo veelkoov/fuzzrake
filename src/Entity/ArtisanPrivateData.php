@@ -37,9 +37,10 @@ class ArtisanPrivateData
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"iu_form"}, message="Password is required")
-     * @Assert\Length(min=4, max=255, groups={"iu_form"}, minMessage="Password is not long enough")
+     * @Assert\Length(min=8, max=255, groups={"iu_form"}, minMessage="Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!")
+     * grep-password-length
      */
-    private string $password = ''; // TODO: Length
+    private string $password = '';
 
     /**
      * @ORM\Column(type="string", length=512)

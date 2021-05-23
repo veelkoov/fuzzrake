@@ -608,13 +608,13 @@
         {{ form_label(form.password) }}
         <p class="hint">
             {% if is_update %}
-                <label for="forgotten_password"><input type="checkbox" id="forgotten_password" /> I don't remember my password</label>
+                <label for="forgotten_password"><input type="checkbox" id="forgotten_password" /> I don't remember my password / I want to change my password</label>
                 <br />
                 <span id="forgotten_password_instructions" class="d-none text-info">
-                    Please choose a <strong>new</strong> password you would like to use from now on (simply put it in the field below). Use at least 6 characters (the more, the merrier). You will see further instructions on the next page, after submitting this form - <strong>please</strong> make sure read the message and follow any instructions!<br />
+                    Please choose a <strong>new</strong> password you would like to use from now on (simply put it in the field below). Use at least 8 {# grep-password-length #} characters (the more, the merrier). You will see further instructions on the next page, after submitting this form - <strong>please</strong> make sure read the message and follow any instructions!<br />
                 </span>
             {% else %}
-                Please choose some kind of password, which will be used to make sure it was you, who posted the updates in the future. Use at least 6 characters (the more, the merrier).
+                Please choose some kind of password, which will be used to make sure it was you, who posted the updates in the future. Use at least 8 {# grep-password-length #} characters (the more, the merrier).
             {% endif %}
             <strong>Please do not use any password you use anywhere else.</strong>
             <span class="badge badge-warning">PRIVATE</span> Your password will be kept in a secure way and never shared.
