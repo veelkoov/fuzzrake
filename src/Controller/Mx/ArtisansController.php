@@ -29,7 +29,6 @@ class ArtisansController extends AbstractController
         }
 
         $artisan ??= new Artisan();
-        $originalPassword = $artisan->getPassword(); // TODO: Verify password handling in this form
 
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
@@ -40,7 +39,6 @@ class ArtisansController extends AbstractController
             } else {
                 Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
                 StrUtils::fixNewlines($artisan);
-                $this->restoreUnchangedPassword($artisan, $originalPassword);
 
                 $this->getDoctrine()->getManager()->persist($artisan);
             }
@@ -54,12 +52,5 @@ class ArtisansController extends AbstractController
             'artisan' => $artisan,
             'form'    => $form->createView(),
         ]);
-    }
-
-    private function restoreUnchangedPassword(Artisan $artisan, string $originalPassword): void
-    {
-        if (empty(trim($artisan->getPassword()))) {
-            $artisan->setPassword($originalPassword);
-        }
     }
 }

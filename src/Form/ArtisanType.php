@@ -12,7 +12,6 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -274,11 +273,6 @@ class ArtisanType extends AbstractType
                 'label'      => 'Contact allowed?',
                 'choices'    => ContactPermit::getKeyKeyMap(),
                 'empty_data' => ContactPermit::NO,
-            ])
-            ->add('password', PasswordType::class, [
-                'label'      => 'New password',
-                'required'   => false,
-                'empty_data' => '',
             ])
             ->add(self::BTN_SAVE, SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
