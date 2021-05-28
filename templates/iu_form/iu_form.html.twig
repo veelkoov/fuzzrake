@@ -113,7 +113,7 @@
     </div> <!-- id="iu_form_instructions_container" -->
 
     {# Hide the form initially, so in case automatic captcha fails from the start, the user won't waste time on the form they won't be able to submit #}
-    <div id="iu_form_container" class="d-none">
+    <div id="iu_form_container" {% if not isTestEnv() %}class="d-none"{% endif %}> {# FIXME: https://github.com/veelkoov/fuzzrake/issues/69 #}
 
     {{ form_start(form) }}
 
