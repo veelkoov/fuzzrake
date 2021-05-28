@@ -76,14 +76,14 @@ class ImportItem
         return $this->iuSubmission->getId();
     }
 
-    public function getProvidedPasscode(): string
+    public function getProvidedPassword(): string
     {
-        return $this->input->getFixed()->getPasscode();
+        return $this->input->getFixed()->getPassword();
     }
 
-    public function getExpectedPasscode(): string
+    public function getExpectedPassword(): string
     {
-        return $this->entity->getOriginal()->getPasscode();
+        return $this->entity->getOriginal()->getPassword();
     }
 
     public function getDiff(): ?Diff

@@ -37,7 +37,7 @@
             <a href="#DOUBLE_CHECK_NEW" class="btn btn-outline-primary">
                 I want to fill out the form to be included on the makers list
             </a>
-            <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">
+            <a href="#IS_ALL_PROCESSED_ALREADY" class="btn btn-outline-primary">
                 I'm already on the list but I want to update my information
             </a>
             <a href="#CONTACT" class="btn btn-outline-primary">
@@ -57,17 +57,36 @@
         </div>
     </div>
 
+    <div class="card mt-3" id="IS_ALL_PROCESSED_ALREADY">
+        <div class="card-body">
+            <p class="card-text">
+                Are all your previous submissions already processed (changes are on-line)?
+            </p>
+
+            <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">I haven't send anything previously</a>
+            <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">Everything is already on-line</a>
+            <a href="#AVOID_OVERWRITING" class="btn btn-outline-primary">I sent a request recently and changes are not on-line yet</a>
+        </div>
+    </div>
+
+    <div class="card mt-3" id="AVOID_OVERWRITING">
+        <div class="card-body">
+            <p class="card-text">
+                If you've recently sent another form, and that previous submission has not been processed yet, sending a new one would cancel the previous one (all changes in that earlier form would get lost).
+            </p>
+
+            <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">My previous submission can be cancelled</a>
+            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">I don't want to lose my changes</a>
+        </div>
+    </div>
+
     <div class="card mt-3" id="INCLUSION_REQUEST">
         <div class="card-body">
             <ol class="card-text">
                 <li>Please make sure you comply with the <a href="{{ path('rules') }}" target="_blank">rules/requirements</a>.</li>
                 <li>Click <a href="{{ path('iu_form') }}" target="_blank">here</a> to fill the inclusion/update form. <strong>Please</strong>, be sure to read all the intro information in the form.</li>
-                <li>Submit the form and proceed with the next step (important if you want to be sure your updates got in).</li>
+                <li>After sending the form be sure to follow any instructions which will appear on the confirmation page.</li>
             </ol>
-
-            <a href="#CONTACT" class="btn btn-outline-primary">
-                Next step (click <strong>after</strong> filling the form)
-            </a>
         </div>
     </div>
 
@@ -79,48 +98,12 @@
                 <li>Click on the name - a details pop-up should show up.</li>
                 <li>Look at the bottom of the pop-up. There should be a link to the inclusion/update form.</li>
                 <li>Click the link. A form should appear, pre-filled with your old information. <strong>Please</strong>, be sure to read all the intro information in the form.</li>
-                <li>Send updates and proceed with the next step (important if you want to be sure your updates got in).</li>
+                <li>After sending the form be sure to follow any instructions which will appear on the confirmation page.</li>
             </ol>
-
-            <a href="#UPDATE_REQUEST_SENT" class="btn btn-outline-primary">
-                Next step (click <strong>after</strong> filling the form)
-            </a>
         </div>
     </div>
 
-    <div class="card mt-3" id="UPDATE_REQUEST_SENT"> {# grep-iu-form-sent-next-step #}
-        <div class="card-body">
-            <p class="card-text">
-                Are you sure you provided the right passcode?
-            </p>
-
-            <a href="#CONTACT" class="btn btn-outline-primary">Yes</a>
-            <a href="#PASSCODE_UNSURE" class="btn btn-outline-primary">No</a>
-        </div>
-    </div>
-
-    <div class="card mt-3" id="PASSCODE_UNSURE">
-        <div class="card-body">
-            <p class="card-text">
-                In the form, there's a question if the maintainer is allowed to contact you. Which statement best describes your situation?
-            </p>
-
-            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">
-                I've changed from <em>No contact allowed</em> to other value
-            </a>
-            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">
-                I've selected <em>No contact allowed</em>
-            </a>
-            <a href="#CONTACT_IMMEDIATELY" class="btn btn-outline-primary">
-                I don't remember
-            </a>
-            <a href="#CONTACT" class="btn btn-outline-primary">
-                Neither of those
-            </a>
-        </div>
-    </div>
-
-    <div class="card mt-3" id="CONTACT"> {# grep-iu-form-sent-next-step #}
+    <div class="card mt-3" id="CONTACT">
         <div class="card-body">
             <p class="card-text">
                 If you are waiting over a week already or if you prefer your changes to be on-line as soon as possible, please contact the maintainer immediately using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>. Otherwise, please wait a few days. The updates are usually processed once a week on weekends.
@@ -131,7 +114,7 @@
     <div class="card mt-3" id="CONTACT_IMMEDIATELY">
         <div class="card-body">
             <p class="card-text">
-                Please contact the maintainer immediately using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
+                Please contact the maintainer using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>.
             </p>
         </div>
     </div>

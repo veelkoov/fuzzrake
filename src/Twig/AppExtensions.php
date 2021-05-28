@@ -55,6 +55,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
             new TwigFunction('isDevEnv', [$this, 'isDevEnvFunction']),
             new TwigFunction('isDevOrTestEnv', [$this, 'isDevOrTestEnvFunction']),
+            new TwigFunction('isTestEnv', [$this, 'isTestEnvFunction']),
             new TwigFunction('getCounter', [$this, 'getCounterFunction']),
             new TwigFunction('eventDescription', [$this, 'eventDescriptionFunction']),
         ];
@@ -68,6 +69,11 @@ class AppExtensions extends AbstractExtension
     public function isDevOrTestEnvFunction(): bool
     {
         return $this->environments->isDevOrTest();
+    }
+
+    public function isTestEnvFunction(): bool
+    {
+        return $this->environments->isTest();
     }
 
     public function getLastDataUpdateTimeUtcStrFunction(): string

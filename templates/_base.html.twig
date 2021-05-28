@@ -30,7 +30,7 @@
 
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-    {% if not disableTracking ?? false and google_analytics_id %}
+    {% if not disable_tracking ?? false and google_analytics_id %}
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];

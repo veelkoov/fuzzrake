@@ -28,7 +28,7 @@ class DataImportTest extends TestCase
     {
         $artisan = $this->getBasicArtisan([
             Fields::MAKER_ID       => 'MAKERID',
-            Fields::PASSCODE       => 'PASSCODE',
+            Fields::PASSWORD       => 'PASSWORD',
             Fields::URL_PHOTOS     => $initialUrlPhotos,
             Fields::URL_MINIATURES => $initialMiniatures,
         ]);
