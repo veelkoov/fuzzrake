@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\StrContext\StrContextInterface;
-use App\Utils\StrContext\StrContextUtils;
 use App\Utils\StringList;
 use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
@@ -21,7 +19,6 @@ class Event
 {
     public const TYPE_DATA_UPDATED = 'DATA_UPDATED';
     public const TYPE_CS_UPDATED = 'CS_UPDATED';
-    public const TYPE_CS_UPDATED_WITH_DETAILS = 'CS_UPDTD_DETLS';
     public const TYPE_GENERIC = 'GENERIC';
 
     /**
@@ -67,20 +64,6 @@ class Event
     private string $checkedUrl;
 
     /**
-     * @ORM\Column(type="text", name="open_match")
-     */
-    private string $openMatchRepr = '';
-
-    private ?StrContextInterface $openMatch = null;
-
-    /**
-     * @ORM\Column(type="text", name="closed_match")
-     */
-    private string $closedMatchRepr = '';
-
-    private ?StrContextInterface $closedMatch = null;
-
-    /**
      * @Assert\GreaterThanOrEqual(value="0")
      * @Assert\LessThan(value="500")
      * @ORM\Column(type="integer")
@@ -115,10 +98,8 @@ class Event
         $this->oldStatus = $oldStatus;
 
         if (null !== $analysisResult) {
-            $this->type = self::TYPE_CS_UPDATED_WITH_DETAILS;
+            $this->type = self::TYPE_CS_UPDATED;
             $this->newStatus = $analysisResult->getStatus();
-            $this->setClosedMatch($analysisResult->getClosedStrContext());
-            $this->setOpenMatch($analysisResult->getOpenStrContext());
         }
     }
 
@@ -218,32 +199,6 @@ class Event
         return $this;
     }
 
-    public function getOpenMatch(): ?StrContextInterface
-    {
-        return $this->openMatch ??= StrContextUtils::fromString($this->openMatchRepr);
-    }
-
-    public function setOpenMatch(?StrContextInterface $openMatch): self
-    {
-        $this->openMatch = $openMatch;
-        $this->openMatchRepr = StrContextUtils::toStr($openMatch);
-
-        return $this;
-    }
-
-    public function getClosedMatch(): ?StrContextInterface
-    {
-        return $this->closedMatch ??= StrContextUtils::fromString($this->closedMatchRepr);
-    }
-
-    public function setClosedMatch(?StrContextInterface $closedMatch): self
-    {
-        $this->closedMatch = $closedMatch;
-        $this->closedMatchRepr = StrContextUtils::toStr($closedMatch);
-
-        return $this;
-    }
-
     public function getNewMakersCount(): int
     {
         return $this->newMakersCount;
@@ -307,17 +262,12 @@ class Event
 
     public function isChangedStatus(): bool
     {
-        return in_array($this->type, [self::TYPE_CS_UPDATED, self::TYPE_CS_UPDATED_WITH_DETAILS]);
+        return self::TYPE_CS_UPDATED == $this->type;
     }
 
     public function isUpdates(): bool
     {
         return self::TYPE_DATA_UPDATED === $this->type;
-    }
-
-    public function hasDetails(): bool
-    {
-        return self::TYPE_CS_UPDATED_WITH_DETAILS === $this->type;
     }
 
     public function isEditable(): bool
