@@ -33,9 +33,9 @@ class CommissionsStatusParserTest extends TestCase
         $statuses = self::$csp->getCommissionsStatuses($snapshot);
 
         foreach ($statuses as $status) {
-            self::assertContains($status->getOffer(), array_keys($expectedResult), "Detected unwanted status {$status->getOffer()}: [{$status->getIsOpen()}]");
+            self::assertContains($status->getOffer(), array_keys($expectedResult), "Detected unwanted status {$status->getOffer()}: [{$status->getStatus()}]");
 
-            self::assertEquals($expectedResult[$status->getOffer()], $status->getIsOpen(), "Wrong status detected for {$status->getOffer()}");
+            self::assertEquals($expectedResult[$status->getOffer()], $status->getStatus(), "Wrong status detected for {$status->getOffer()}");
             unset($expectedResult[$status->getOffer()]);
         }
 

@@ -13,6 +13,7 @@ use App\Tasks\TrackerUpdates\ArtisanUpdatesInterface;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
 use App\Utils\Artisan\Fields;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\OfferStatus;
 use App\Utils\Tracking\TrackerException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -80,10 +81,12 @@ class CommissionsTrackerTask implements TrackerTaskInterface
     private function extractArtisanCommissionsStatuses(ArtisanUrl $url): array
     {
         $webpageSnapshot = $this->snapshots->get($url, false, false);
-        $result = $this->parser->getCommissionsStatuses($webpageSnapshot);
 
-        array_walk($result, fn (ArtisanCommissionsStatus $status) => $status->setArtisan($url->getArtisan()));
-
-        return $result;
+        return array_map(function (OfferStatus $match) use ($url): ArtisanCommissionsStatus {
+            return (new ArtisanCommissionsStatus())
+                ->setIsOpen($match->getStatus())
+                ->setOffer($match->getOffer())
+                ->setArtisan($url->getArtisan());
+        }, $this->parser->getCommissionsStatuses($webpageSnapshot));
     }
 }

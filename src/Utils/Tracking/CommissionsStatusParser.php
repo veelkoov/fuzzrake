@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\PatternInterface;
@@ -26,7 +25,7 @@ class CommissionsStatusParser
     }
 
     /**
-     * @return ArtisanCommissionsStatus[]
+     * @return OfferStatus[]
      *
      * @throws TrackerException
      */
@@ -35,17 +34,15 @@ class CommissionsStatusParser
         $additionalFilter = TextPreprocessor::guessFilterFromUrl($snapshot->getUrl());
         $artisanName = $snapshot->getOwnerName();
 
-        $texts = array_map(fn (string $input): Text => $this->preprocess($input, $artisanName, $additionalFilter), $snapshot->getAllContents());
+        $texts = $this->preprocessAll($artisanName, $additionalFilter, $snapshot);
 
         $result = [];
 
         foreach ($texts as $text) {
-            foreach ($this->getStatusesFromString($text) as $offer => $status) {
-                $result[] = (new ArtisanCommissionsStatus())
-                    ->setOffer($offer)
-                    ->setIsOpen($status);
-            }
+            array_push($result, ...$this->getOfferStatusesFrom($text));
         }
+
+        // TODO: Handle duplicates with different statuses
 
         return $result;
     }
@@ -53,29 +50,24 @@ class CommissionsStatusParser
     /**
      * @throws TrackerException
      */
-    private function preprocess(string $inputText, string $artisanName, string $additionalFilter): Text
+    private function preprocessAll(string $artisanName, string $additionalFilter, WebpageSnapshot $snapshot): array
     {
-        return $this->preprocessor->getText($inputText, $artisanName, $additionalFilter);
+        return array_map(fn (string $input): Text => $this->preprocessor->getText($input, $artisanName, $additionalFilter), $snapshot->getAllContents());
     }
 
     /**
-     * @return bool[] (string)offer => (bool)status
+     * @return OfferStatus[]
      *
      * @throws TrackerException
      */
-    private function getStatusesFromString(Text $text): array
+    private function getOfferStatusesFrom(Text $text): array
     {
         $result = [];
 
         foreach ($this->offerStatusPatterns as $statusPattern) {
+
             $statusPattern->match($text->get())->forEach(function (Detail $match) use (&$result): void {
-                [$offer, $status] = $this->patterns->matchStatusAndOfferFrom($match);
-
-                if (array_key_exists($offer, $result)) {
-                    $status = false; // TODO: Better handling, use NULL for arrrgh
-                }
-
-                $result[$offer] = $status;
+                $result[] = $this->patterns->matchStatusAndOfferFrom($match);
             });
         }
 

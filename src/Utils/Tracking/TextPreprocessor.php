@@ -17,14 +17,15 @@ use TRegx\CleanRegex\PatternInterface;
 class TextPreprocessor
 {
     private const REMOVABLE_REGEXPS = [
-        '</?(strong|b|i|span|center|a|em|font)[^>]*>',
-        '&nbsp;',
-        '<br\s*/?>',
+        '&nbsp;', // FIXME
+        '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])',
+        '(?<=return|delete) (?=this)',
+        '<script[^>]*>[^ ]+</script>', // No spaces means no sentences (nbsp and other weird whitespace should be normalized at this point)
+        '<br ?/?>',
         '<style[^>]*>.*?</style>',
-        ' style="[^"]*"( (?=\>))?',
         '<!--.*?-->',
-        ' +data-[^>"]+ *= *"[^"]+" *',
-        '[a-z0-9_-]{16,}', // Probability of existing 16+ letter word in English is very unlikely
+        '</?(?:strong|b|i|span|center|a|em|font)[^>]*>',
+//        '[a-z0-9_-]{16,}', // Probability of existing 16+ letter word in English is very unlikely
     ];
 
     // TODO: ’ &#39; &#8217;

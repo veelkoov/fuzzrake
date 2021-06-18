@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
-use App\Utils\StrContext\StrContextInterface;
-use App\Utils\StrContext\StrContextUtils;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,14 +30,10 @@ class ArtisanCommissionsStatus
      */
     private string $offer = '';
 
-    private string $offerMatch = ''; // TODO
-
     /**
      * @ORM\Column(type="boolean")
      */
     private bool $isOpen = false;
-
-    private string $isOpenMatch = ''; // TODO
 
     public function getId(): ?int
     {
@@ -78,30 +72,6 @@ class ArtisanCommissionsStatus
     public function setIsOpen(bool $isOpen): self
     {
         $this->isOpen = $isOpen;
-
-        return $this;
-    }
-
-    public function getOfferMatch(): StrContextInterface
-    {
-        return StrContextUtils::fromString($this->offerMatch);
-    }
-
-    public function setOfferMatch(StrContextInterface $offerMatch): self
-    {
-        $this->offerMatch = StrContextUtils::toStr($offerMatch);
-
-        return $this;
-    }
-
-    public function getIsOpenMatch(): StrContextInterface
-    {
-        return StrContextUtils::fromString($this->isOpenMatch);
-    }
-
-    public function setIsOpenMatch(StrContextInterface $isOpenMatch): self
-    {
-        $this->isOpenMatch = StrContextUtils::toStr($isOpenMatch);
 
         return $this;
     }
