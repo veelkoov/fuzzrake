@@ -16,27 +16,21 @@ use TRegx\CleanRegex\PatternInterface;
 
 class TextPreprocessor
 {
-    private const REMOVABLE_REGEXPS = [
-        '&nbsp;', // FIXME
-        '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])',
-        '(?<=return|delete) (?=this)',
-        '<script[^>]*>[^ ]+</script>', // No spaces means no sentences (nbsp and other weird whitespace should be normalized at this point)
-        '<br ?/?>',
-        '<style[^>]*>.*?</style>',
-        '<!--.*?-->',
-        '</?(?:strong|b|i|span|center|a|em|font)[^>]*>',
-//        '[a-z0-9_-]{16,}', // Probability of existing 16+ letter word in English is very unlikely
-    ];
+    private const REPLACEMENTS = [
+        '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])' => '_',
+        '(?<=return|delete) (?=this)'                                           => '_',
+        '<script[^>]*>[^ ]+</script>'                                           => ' ',
 
-    // TODO: ’ &#39; &#8217;
+        '&nbsp;'                                        => ' ',
+        '<style[^>]*>.*?</style>'                       => ' ',
+        '<!--.*?-->'                                    => ' ',
+        '</?(?:strong|b|i|span|center|a|em|font)[^>]*>' => ' ',
 
-    private const WHITESPACE_REDUCTION_REGEXPS = [
         '  +'   => ' ',
         "\n\n+" => "\n",
     ];
 
-    private array $removables;
-    private Replacements $wsReduction;
+    private Replacements $replacements;
 
     /**
      * @param PatternInterface[] $falsePositivePatterns
@@ -44,9 +38,7 @@ class TextPreprocessor
     public function __construct(
         private array $falsePositivePatterns,
     ) {
-        $this->removables = array_map(fn (string $pattern): PatternInterface => pattern($pattern, 's'), self::REMOVABLE_REGEXPS);
-
-        $this->wsReduction = new Replacements(self::WHITESPACE_REDUCTION_REGEXPS, '', '', '');
+        $this->replacements = new Replacements(self::REPLACEMENTS, '', '', '');
     }
 
     /**
@@ -54,14 +46,14 @@ class TextPreprocessor
      */
     public function getText(string $inputText, string $artisanName, string $additionalFilter): Text
     {
-        $contents = strtolower($inputText);
-        $contents = $this->extractFromJson($contents);
-        $contents = $this->applyRemovables($contents);
+        $contents = $this->extractFromJson($inputText);
+        $contents = strtolower($contents);
+        $contents = $this->applyReplacements($contents);
         $contents = self::replaceArtisanName($artisanName, $contents);
         $contents = $this->removeFalsePositives($contents);
         $contents = $this->applyFilters($contents, $additionalFilter); // TODO: Should take place at the beginning maybe?
 
-        return new Text($inputText, $contents, $this->reduceWhitespace($contents));
+        return new Text($inputText, $contents);
     }
 
     public static function guessFilterFromUrl(string $url): string
@@ -85,11 +77,6 @@ class TextPreprocessor
         }
 
         return $inputText;
-    }
-
-    private function reduceWhitespace(string $contents): string
-    {
-        return $this->wsReduction->do($contents);
     }
 
     private function extractFromJson(string $webpage): string
@@ -177,16 +164,8 @@ class TextPreprocessor
         return $contents;
     }
 
-    private function applyRemovables(string $contents): string
+    private function applyReplacements(string $contents): string
     {
-        $result = $contents;
-
-        foreach ($this->removables as $removable) {
-            $result = $removable->replace($result)->all()->callback(function (Detail $match): string {
-                return str_repeat(' ', $match->textByteLength());
-            });
-        }
-
-        return $result;
+        return $this->replacements->do($contents);
     }
 }

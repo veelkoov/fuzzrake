@@ -9,13 +9,7 @@ class Text
     public function __construct(
         private string $original,
         private string $cleaned,
-        private string $optimized,
     ) {
-    }
-
-    public function get(): string
-    {
-        return $this->optimized;
     }
 
     public function getOriginal(): string
