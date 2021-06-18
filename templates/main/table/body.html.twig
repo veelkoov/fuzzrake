@@ -76,7 +76,7 @@
                         <ul>
                             {%- for offer in artisan.commissions -%}
                                 {%- set class = offer.isOpen ? 'yes' : 'no' -%}
-                                {%- set symbol = offer.isOpen ? 'fa-check-circle' : 'fa-times-circle' -%}
+                                {%- set symbol = offer.isOpen ? 'fa-check-square' : 'fa-times-circle' -%}
                                 <li class="{{ class }}"><i class="fas {{ symbol }}"></i>&nbsp;{{ offer.offer }}</li>
                             {%- endfor -%}
                         </ul>
