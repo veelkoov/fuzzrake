@@ -51,7 +51,7 @@ def exec_or_die(*args)
 end
 
 def docker(*args)
-  user_and_group=`echo -n $(id -u):$(id -g)`
+  user_and_group = `echo -n $(id -u):$(id -g)`
 
   exec_or_die('docker', 'exec', '--user', user_and_group, '-ti', 'fuzzrake', *args)
 end
