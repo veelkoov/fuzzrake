@@ -125,27 +125,29 @@ table#artisans {
       text-align: left;
     }
 
-    td.features, td.types, td.styles, td.production-models, td.languages, td.species {
+    td.features, td.types, td.styles, td.production-models, td.languages, td.species, td.commissions {
       text-align: left;
       display: table-cell;
       font-size: 75%;
     }
 
-    td.species ul {
-      list-style: none;
-      padding: 0;
+    td.species, td.commissions {
+      ul {
+        list-style: none;
+        padding: 0;
 
-      li {
-        display: inline-block;
-        margin-right: 1ex;
-      }
+        li {
+          display: inline-block;
+          margin-right: 1ex;
+        }
 
-      li.yes i {
-        color: #4cae4c;
-      }
+        li.yes i {
+          color: #4cae4c;
+        }
 
-      li.no i {
-        color: #f20600;
+        li.no i {
+          color: #f20600;
+        }
       }
     }
 
