@@ -149,6 +149,12 @@ end
 task('release-beta') { do_release('beta', 'beta') }
 task('release-prod') { do_release('main', 'prod') }
 
+task(:composer_upgrade) { docker('composer', '--no-cache', 'upgrade') } # No cache in the container
+task(:yarn_upgrade) { exec_or_die('yarn', 'upgrade') }
+task(:yarn_encore_production) { exec_or_die('yarn', 'encore', 'production') }
+task 'update-deps': %i[composer_upgrade yarn_upgrade yarn_encore_production phpunit]
+task('commit-deps') { exec_or_die('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
+
 #
 # COMMISSIONS STATUS UPDATES
 #
