@@ -75,9 +75,12 @@ task('fix-phpunit') do
 end
 task('docker-dev') { Dir.chdir('docker') { exec_or_die('docker-compose', 'up', '--detach', '--build') } }
 task(:rector)        { |_t, args| docker('./vendor/bin/rector', 'process', *args) }
-task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
+task(:php_cs_fixer)  { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| docker('xvfb-run', './bin/phpunit', *args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
+
+task pcf: [:php_cs_fixer]
+task pu: [:phpunit]
 
 #
 # DATABASE MANAGEMENT
@@ -154,6 +157,8 @@ task(:yarn_upgrade) { exec_or_die('yarn', 'upgrade') }
 task(:yarn_encore_production) { exec_or_die('yarn', 'encore', 'production') }
 task 'update-deps': %i[composer_upgrade yarn_upgrade yarn_encore_production phpunit]
 task('commit-deps') { exec_or_die('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
+
+task yep: [:yarn_encore_production]
 
 #
 # COMMISSIONS STATUS UPDATES
