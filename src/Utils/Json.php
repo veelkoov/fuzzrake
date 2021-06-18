@@ -12,22 +12,18 @@ final class Json
     use UtilityClass;
 
     /**
-     * @param mixed $input
-     *
      * @throws JsonException
      */
-    public static function encode($input, int $options = 0): string
+    public static function encode(mixed $input, int $options = 0): string
     {
         return json_encode($input, $options | JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @return mixed
-     *
      * @throws JsonException
      */
-    public static function decode(string $input)
+    public static function decode(string $input): mixed
     {
-        return json_decode($input, true, 521, JSON_THROW_ON_ERROR);
+        return json_decode($input, true, flags: JSON_THROW_ON_ERROR);
     }
 }
