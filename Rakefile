@@ -51,7 +51,9 @@ def exec_or_die(*args)
 end
 
 def docker(*args)
-  exec_or_die('docker', 'exec', '-ti', 'fuzzrake', *args)
+  user_and_group=`echo -n $(id -u):$(id -g)`
+
+  exec_or_die('docker', 'exec', '--user', user_and_group, '-ti', 'fuzzrake', *args)
 end
 
 task(:console) { |_t, args| docker('./bin/console', *args) }
@@ -72,7 +74,7 @@ task('fix-phpunit') do
   create_link('vendor/symfony/phpunit-bridge', 'bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
 end
 task('docker-dev') { Dir.chdir('docker') { exec_or_die('docker-compose', 'up', '--detach', '--build') } }
-task(:rector)        { |_t, args| exec_or_die('./vendor/bin/rector', 'process', *args) } # FIXME: In Docker
+task(:rector)        { |_t, args| docker('./vendor/bin/rector', 'process', *args) }
 task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| docker('xvfb-run', './bin/phpunit', *args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
