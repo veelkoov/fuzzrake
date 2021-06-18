@@ -110,12 +110,6 @@
     "laminas/laminas-code": {
         "version": "4.0.0"
     },
-    "laminas/laminas-eventmanager": {
-        "version": "3.3.0"
-    },
-    "laminas/laminas-zendframework-bridge": {
-        "version": "1.1.1"
-    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -405,6 +399,9 @@
     },
     "symfony/polyfill-intl-normalizer": {
         "version": "v1.18.0"
+    },
+    "symfony/polyfill-php81": {
+        "version": "v1.23.0"
     },
     "symfony/process": {
         "version": "v5.0.10"
