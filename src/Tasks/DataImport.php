@@ -49,7 +49,7 @@ class DataImport
                 | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
 
         foreach ($this->createImportItems($artisansData) as $item) {
-            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput(), $this->manager->isPasscodeIgnored($item));
+            $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput());
 
             $item->calculateDiff();
             if ($item->getDiff()->hasAnythingChanged()) {
@@ -107,7 +107,7 @@ class DataImport
      */
     private function createImportItem(IuSubmission $submission): ImportItem
     {
-        $originalInput = $this->updateArtisanWithData(new Artisan(), $submission, false);
+        $originalInput = $this->updateArtisanWithData(new Artisan(), $submission);
 
         $input = new ArtisanFixWip($originalInput, $submission->getId());
         $this->manager->correctArtisan($input->getFixed(), $submission->getId());
@@ -120,13 +120,9 @@ class DataImport
         return new ImportItem($submission, $input, $entity);
     }
 
-    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source, bool $skipPasscodeUpdate): Artisan
+    private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
         foreach (Fields::getAll() as $field) {
-            if ($skipPasscodeUpdate && $field->is(Fields::PASSCODE)) {
-                continue;
-            }
-
             switch ($field->name()) {
                 case Fields::MAKER_ID:
                     $newValue = $source->get($field);
@@ -196,7 +192,7 @@ class DataImport
     {
         $new = $item->getFixedEntity();
         $old = $item->getOriginalEntity();
-        $passcodeChanged = $item->getProvidedPasscode() !== $item->getExpectedPasscode();
+        $passwordChanged = $item->getProvidedPassword() !== $item->getExpectedPassword();
 
         if (null === $old->getId() && !$this->manager->isAccepted($item)) {
             $this->messaging->reportNewMaker($item);
@@ -208,8 +204,8 @@ class DataImport
             $this->messaging->reportChangedMakerId($item);
         }
 
-        if ($passcodeChanged && !$this->manager->isPasscodeIgnored($item) && !$this->manager->isAccepted($item)) {
-            $this->messaging->reportInvalidPasscode($item);
+        if ($passwordChanged && !$this->manager->isAccepted($item)) {
+            $this->messaging->reportInvalidPassword($item);
 
             return false;
         }

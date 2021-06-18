@@ -24,6 +24,7 @@ parameters:
       "russia":                                        "RU"
       "poland":                                        "PL"
       "portugal":                                      "PT"
+      "slovakia":                                      "SK"
       "sweden":                                        "SE"
       "switzerland":                                   "CH"
       "ukraine":                                       "UA"
@@ -42,6 +43,7 @@ parameters:
       'ID$|^Idaho':                     'Idaho'
       'MD$|^Maryland':                  'Maryland'
       'MN$|^Minnesota':                 'Minnesota'
+      'NC$|^North Carolina':            'North Carolina'
       'NH$|^New Hampshire':             'New Hampshire'
       'NY$|^New York':                  'New York'
       'OH$|^Ohio':                      'Ohio'

@@ -36,10 +36,11 @@ class ArtisanPrivateData
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"iu_form"}, message="Passcode is required")
-     * @Assert\Length(min=4, max=255, groups={"iu_form"}, minMessage="Passcode is not long enough")
+     * @Assert\NotBlank(groups={"iu_form"}, message="Password is required")
+     * @Assert\Length(min=8, max=255, groups={"iu_form"}, minMessage="Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!")
+     * grep-password-length
      */
-    private string $passcode = '';
+    private string $password = '';
 
     /**
      * @ORM\Column(type="string", length=512)
@@ -75,14 +76,14 @@ class ArtisanPrivateData
         return $this;
     }
 
-    public function getPasscode(): string
+    public function getPassword(): string
     {
-        return $this->passcode;
+        return $this->password;
     }
 
-    public function setPasscode(string $passcode): self
+    public function setPassword(string $password): self
     {
-        $this->passcode = $passcode;
+        $this->password = $password;
 
         return $this;
     }

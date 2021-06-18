@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
@@ -216,7 +217,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Assert\NotBlank(groups={"iu_form"})
      * @Assert\Length(max=128, groups={"iu_form"})
      */
     private string $contactInfoObfuscated = '';
@@ -978,14 +978,14 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    public function getPasscode(): string
+    public function getPassword(): string
     {
-        return $this->getPrivateData()->getPasscode();
+        return $this->getPrivateData()->getPassword();
     }
 
-    public function setPasscode(string $passcode): self
+    public function setPassword(string $password): self
     {
-        $this->getPrivateData()->setPasscode($passcode);
+        $this->getPrivateData()->setPassword($password);
 
         return $this;
     }
@@ -1311,7 +1311,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
                 default                    => $this->get($field),
             };
 
-            /** @noinspection PhpStrictTypeCheckingInspection FIXME */
+            /* @noinspection PhpStrictTypeCheckingInspection FIXME */
             return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
         }, $fields);
     }
@@ -1329,5 +1329,20 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function jsonSerialize(): array
     {
         return $this->getPublicData();
+    }
+
+    //
+    // ===== NON-TRIVIAL VALIDATION =====
+    //
+
+    #[Assert\Callback(groups: ['iu_form'])]
+    public function validate(ExecutionContextInterface $context, $payload): void
+    {
+        if (ContactPermit::NO !== $this->getContactAllowed() && '' === $this->getContactInfoObfuscated()) {
+            $context
+                ->buildViolation('This value should not be blank.')
+                ->atPath(Fields::get(Fields::CONTACT_INFO_OBFUSCATED)->modelName())
+                ->addViolation();
+        }
     }
 }

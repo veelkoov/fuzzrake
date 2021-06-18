@@ -51,7 +51,9 @@ def exec_or_die(*args)
 end
 
 def docker(*args)
-  exec_or_die('docker', 'exec', '-ti', 'fuzzrake', *args)
+  user_and_group = `echo -n $(id -u):$(id -g)`
+
+  exec_or_die('docker', 'exec', '--user', user_and_group, '-ti', 'fuzzrake', *args)
 end
 
 task(:console) { |_t, args| docker('./bin/console', *args) }
@@ -72,7 +74,7 @@ task('fix-phpunit') do
   create_link('vendor/symfony/phpunit-bridge', 'bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
 end
 task('docker-dev') { Dir.chdir('docker') { exec_or_die('docker-compose', 'up', '--detach', '--build') } }
-task(:rector)        { |_t, args| exec_or_die('./vendor/bin/rector', 'process', *args) } # FIXME: In Docker
+task(:rector)        { |_t, args| docker('./vendor/bin/rector', 'process', *args) }
 task('php-cs-fixer') { |_t, args| docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| docker('xvfb-run', './bin/phpunit', *args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
@@ -84,7 +86,7 @@ task qa: [:rector, 'php-cs-fixer', :phpunit]
 task :dbpush do
   exec_or_die('cp', DB_PATH, DB_TMP_PATH)
 
-  exec_or_die('sqlite3', DB_TMP_PATH, 'DELETE FROM artisans_private_data;')
+  exec_or_die('sqlite3', DB_TMP_PATH, "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';")
 
   exec_or_die('scp', '-p', DB_TMP_PATH, "getfursu.it:/var/www/prod/#{DB_PATH}")
   exec_or_die('scp', '-p', DB_TMP_PATH, "getfursu.it:/var/www/beta/#{DB_PATH}")
@@ -146,6 +148,12 @@ end
 
 task('release-beta') { do_release('beta', 'beta') }
 task('release-prod') { do_release('main', 'prod') }
+
+task(:composer_upgrade) { docker('composer', '--no-cache', 'upgrade') } # No cache in the container
+task(:yarn_upgrade) { exec_or_die('yarn', 'upgrade') }
+task(:yarn_encore_production) { exec_or_die('yarn', 'encore', 'production') }
+task 'update-deps': %i[composer_upgrade yarn_upgrade yarn_encore_production phpunit]
+task('commit-deps') { exec_or_die('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
 
 #
 # COMMISSIONS STATUS UPDATES

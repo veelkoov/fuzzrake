@@ -8,7 +8,6 @@ use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PagesController extends AbstractController
@@ -34,13 +33,6 @@ class PagesController extends AbstractController
         return $this->render('pages/tracking.html.twig', []);
     }
 
-    #[Route(path: '/whoopsies.html', name: RouteName::WHOOPSIES)]
-    #[Cache(maxage: 21600, public: true)]
-    public function whoopsies(): Response
-    {
-        throw new GoneHttpException();
-    }
-
     #[Route(path: '/maker_ids.html', name: RouteName::MAKER_IDS)]
     #[Cache(maxage: 21600, public: true)]
     public function makerIds(): Response
@@ -53,5 +45,12 @@ class PagesController extends AbstractController
     public function donate(): Response
     {
         return $this->render('pages/donate.html.twig', []);
+    }
+
+    #[Route('/rules.html', name: RouteName::RULES)]
+    #[Cache(maxage: 21600, public: true)]
+    public function rules(): Response
+    {
+        return $this->render('pages/rules.html.twig', []);
     }
 }

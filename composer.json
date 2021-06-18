@@ -29,16 +29,16 @@
         "symfony/yaml": "*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "*",
         "friendsofphp/php-cs-fixer": "*",
         "rector/rector": "*",
-        "symfony/phpunit-bridge": "*",
+        "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
-        "symfony/stopwatch": "*",
-        "symfony/web-profiler-bundle": "*",
-        "symfony/var-dumper": "*",
+        "symfony/maker-bundle": "*",
         "symfony/panther": "*",
-        "symfony/css-selector": "*"
+        "symfony/phpunit-bridge": "*",
+        "symfony/stopwatch": "*",
+        "symfony/var-dumper": "*",
+        "symfony/web-profiler-bundle": "*"
     },
     "config": {
         "preferred-install": {

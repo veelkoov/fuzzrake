@@ -15,7 +15,7 @@ final class ValidationRegexps
     public const GENERIC_URL = '^(https?://[^/]+/.*)?$'; // TODO: improve
     public const DA_URL = '^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$';
     public const FACEBOOK_URL = '^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$';
-    public const FSR_URL = '^(http://fursuitreview.com/maker/[^/]+/)?$';
+    public const FSR_URL = '^(https://fursuitreview.com/m/[^/]+/)?$';
     public const FA_URL = '^(https://www\.furaffinity\.net/user/[^/]+/)?$';
     public const YOUTUBE_URL = '^(https://www\.youtube\.com/((channel|user|c)/)?[^/?]+)?$';
     public const INSTAGRAM_URL = '^(https://www\.instagram\.com/[^/]+/)?$';
