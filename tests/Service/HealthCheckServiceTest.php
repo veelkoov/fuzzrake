@@ -6,10 +6,12 @@ namespace App\Tests\Service;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Service\HealthCheckService;
+use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
 use DateTimeZone;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 class HealthCheckServiceTest extends TestCase
 {
@@ -21,6 +23,30 @@ class HealthCheckServiceTest extends TestCase
         'LOAD_5M_MAX'                => 0.5,
         'LOAD_15M_MAX'               => 0.2,
     ];
+
+    public static function setUpBeforeClass(): void
+    {
+        ClockMock::register(DateTimeUtils::class);
+    }
+
+    public function testTimes(): void
+    {
+        ClockMock::withClockMock(true);
+
+        $acsrMock = $this->createPartialMock(ArtisanCommissionsStatusRepository::class, ['getLastCstUpdateTime']);
+        $acsrMock
+            ->expects(self::exactly(2))
+            ->method('getLastCstUpdateTime')
+            ->willReturn(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+
+        $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
+        $data = $hcSrv->getStatus();
+
+        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data['serverTimeUtc']);
+        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastCstRunUtc']);
+
+        ClockMock::withClockMock(false);
+    }
 
     /**
      * @throws Exception
