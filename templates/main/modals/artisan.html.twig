@@ -174,10 +174,10 @@
             {{# if artisan.isStatusKnown }}
                 <table class="table table-condensed table-striped">
                     {{# each artisan.openFor }}
-                        <tr> <td>{{ this }}</td><td>open</td> </tr>
+                        <tr> <td>{{ this }}</td><td><i class="fas fa-check-square"></i>&nbsp;Open</td> </tr>
                     {{/ each }}
                     {{# each artisan.closedFor }}
-                        <tr> <td>{{ this }}</td><td>closed</td> </tr>
+                        <tr> <td>{{ this }}</td><td><i class="fas fa-times-circle"></i>&nbsp;Closed</td> </tr>
                     {{/ each }}
                 </table>
             {{ else }}
