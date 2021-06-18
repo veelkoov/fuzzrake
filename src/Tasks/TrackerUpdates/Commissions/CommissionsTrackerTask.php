@@ -85,7 +85,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         return array_map(function (OfferStatus $match) use ($url): ArtisanCommissionsStatus {
             return (new ArtisanCommissionsStatus())
                 ->setIsOpen($match->getStatus())
-                ->setOffer($match->getOffer())
+                ->setOffer(ucfirst(strtolower($match->getOffer())))
                 ->setArtisan($url->getArtisan());
         }, $this->parser->getCommissionsStatuses($webpageSnapshot));
     }
