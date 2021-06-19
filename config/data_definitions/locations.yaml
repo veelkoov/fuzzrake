@@ -49,4 +49,5 @@ parameters:
       'OH$|^Ohio':                      'Ohio'
       'OK$|^Oklahoma':                  'Oklahoma'
       'VA$|^Virginia':                  'Virginia'
+      'WA$|^Washington':                'Washington'
       'Quebec':                         'Québec'
