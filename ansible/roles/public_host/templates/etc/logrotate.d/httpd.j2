@@ -1,9 +1,10 @@
 # {{ ansible_managed }}
-# TODO: Migrate to the new role
 
 /var/log/httpd/*log {
-    weekly
-    rotate 54
+    daily
+    rotate 365
+    dateext
+    dateformat .%Y-%m-%d
     missingok
     notifempty
     sharedscripts

@@ -75,3 +75,9 @@
     - "conf.modules.d/00-mpm.j2.conf"
   notify:
     - restart Apache
+
+- name: update logrotate.d/httpd
+  template:
+    src:    "etc/logrotate.d/httpd.j2"
+    dest:   "/etc/logrotate.d/httpd"
+    backup: yes
