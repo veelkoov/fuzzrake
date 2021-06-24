@@ -6,7 +6,6 @@
     owner: root
     path:  "{{ deployment_path }}"
     state: directory
-  when: "'dev_env' not in group_names"
 
 - name: checkout sources
   git:
@@ -14,4 +13,11 @@
     force: yes
     repo: https://github.com/veelkoov/fuzzrake.git
     version: "{{ branch }}"
-  when: "'dev_env' not in group_names"
+
+- name: assure var directory is writable
+  file:
+    group: root
+    mode:  0777
+    owner: root
+    path:  "{{ deployment_path }}/var"
+    state: directory
