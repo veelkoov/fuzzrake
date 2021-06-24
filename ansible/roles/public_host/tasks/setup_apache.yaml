@@ -65,6 +65,7 @@
   with_items:
     - "conf/httpd.j2.conf"
     - "conf.d/autoindex.j2.conf"
+    - "conf.d/getfursu.it.j2.conf"
     - "conf.d/welcome.j2.conf"
     - "conf.modules.d/00-base.j2.conf"
     - "conf.modules.d/00-brotli.j2.conf"

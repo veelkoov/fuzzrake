@@ -30,3 +30,11 @@
       - rust
       - yarn
     state: installed
+
+- name: disable SELinux
+  lineinfile:
+    line:  "SELINUX=disabled"
+    path:  "/etc/selinux/config"
+    regex: "^SELINUX="
+  notify:
+    - reboot system

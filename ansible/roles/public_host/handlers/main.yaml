@@ -14,3 +14,6 @@
   service:
     name: txkillswitch
     state: restarted
+
+- name: reboot system
+  reboot:
