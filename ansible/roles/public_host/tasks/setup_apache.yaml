@@ -2,7 +2,10 @@
 - name: install packages
   yum:
     name:
+      - brotli
+      - brotli-devel
       - httpd
+      - httpd-devel
     state: installed
 
 - name: enable Apache
@@ -37,6 +40,24 @@
     mode: 0644
     owner: root
 
+- name: create /opt/mod_brotli directory
+  file:
+    group: root
+    mode:  0755
+    owner: root
+    path:  "/opt/mod_brotli"
+    state: directory
+
+- name: get mod_brotli.c
+  get_url:
+    dest: "/opt/mod_brotli/mod_brotli.c"
+    url:  "https://raw.githubusercontent.com/apache/httpd/2.4.x/modules/filters/mod_brotli.c"
+
+- name: compile & install mod_brotli
+  command: apxs -i -c -l brotlienc mod_brotli.c
+  args:
+    chdir: "/opt/mod_brotli"
+
 - name: update Apache configuration
   template:
     src: "etc/httpd/{{ item }}"
@@ -46,6 +67,7 @@
     - "conf.d/autoindex.j2.conf"
     - "conf.d/welcome.j2.conf"
     - "conf.modules.d/00-base.j2.conf"
+    - "conf.modules.d/00-brotli.j2.conf"
     - "conf.modules.d/00-dav.j2.conf"
     - "conf.modules.d/00-lua.j2.conf"
     - "conf.modules.d/00-mpm.j2.conf"
