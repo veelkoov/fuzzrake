@@ -1,16 +1,14 @@
 ---
-# TODO: Migrate to the new role
-
 - name: build PHP-FPM Docker image
   docker_image:
     build:
       path: "{{ deployment_path }}/docker/php-fpm"
       pull: yes
-      args: "{{ php_fpm_build_args }}"
     force_source: yes
     name: "{{ php_fpm_docker_image_name }}"
     source: build
     state: present
+  run_once: yes # This obviously will fail if envs were on separate machines
 
 - name: setup PHP-FPM Docker container
   docker_container:

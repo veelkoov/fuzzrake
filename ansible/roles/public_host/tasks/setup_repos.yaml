@@ -1,6 +1,0 @@
----
-- name: enable EPEL repository
-  yum:
-    name:
-      - epel-release
-    state: installed

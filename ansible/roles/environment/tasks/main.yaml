@@ -1,0 +1,12 @@
+---
+- import_tasks: checkout_sources.yaml
+  tags: sources
+
+- import_tasks: setup_docker_container.yaml
+  tags: docker
+
+- import_tasks: clear_cache.yaml
+  tags: cache
+
+- import_tasks: build.yaml
+  tags: build

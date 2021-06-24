@@ -1,0 +1,17 @@
+---
+- name: assure directory exists
+  file:
+    group: root
+    mode:  0755
+    owner: root
+    path:  "{{ deployment_path }}"
+    state: directory
+  when: "'dev_env' not in group_names"
+
+- name: checkout sources
+  git:
+    dest: "{{ deployment_path }}"
+    force: yes
+    repo: https://github.com/veelkoov/fuzzrake.git
+    version: "{{ branch }}"
+  when: "'dev_env' not in group_names"

@@ -1,0 +1,6 @@
+#!ansible/run.sh
+---
+- hosts: public_envs
+  become: yes
+  roles:
+    - name: environment

@@ -4,4 +4,3 @@ branch: beta
 
 php_fpm_container_port: "{{ beta_php_fpm_container_port }}"
 php_fpm_container_name: fuzzrake-beta
-php_fpm_build_args: {}
