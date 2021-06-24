@@ -1,0 +1,36 @@
+---
+- name: remove distro Docker packages
+  yum:
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+    state: absent
+
+- name: setup Docker repository
+  yum_repository:
+    baseurl:     "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
+    description: "Docker CE Stable - $basearch"
+    enabled:     "1"
+    gpgcheck:    "1"
+    gpgkey:      "https://download.docker.com/linux/centos/gpg"
+    name:        "docker-ce-stable"
+
+- name: install Docker packages
+  yum:
+    update_cache: yes
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+- name: start Docker
+  service:
+    enabled: yes
+    name: docker
+    state: started

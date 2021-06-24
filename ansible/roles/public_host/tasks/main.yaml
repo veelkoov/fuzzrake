@@ -1,0 +1,12 @@
+---
+- import_tasks: setup_repos.yaml
+  tags: repos
+
+- import_tasks: setup_sshd.yaml
+  tags: sshd
+
+- import_tasks: setup_apache.yaml
+  tags: apache
+
+- import_tasks: setup_docker.yaml
+  tags: docker

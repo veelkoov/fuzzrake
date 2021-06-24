@@ -1,6 +1,5 @@
 ---
-- name: restart apache
-  shell: apachectl configtest && apachectl graceful
+# TODO: Migrate to the new role
 
 - name: clear cache
   shell: rm -rf var/cache/*

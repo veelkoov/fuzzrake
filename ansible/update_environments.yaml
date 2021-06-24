@@ -1,4 +1,5 @@
 #!ansible/run.sh
+# TODO: Migrate to the new role
 ---
 - hosts: dev, beta, prod
   tasks:

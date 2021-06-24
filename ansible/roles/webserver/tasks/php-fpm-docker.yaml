@@ -1,4 +1,6 @@
 ---
+# TODO: Migrate to the new role
+
 - name: build PHP-FPM Docker image
   docker_image:
     build:

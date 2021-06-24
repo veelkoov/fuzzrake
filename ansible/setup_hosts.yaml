@@ -1,0 +1,6 @@
+#!ansible/run.sh
+---
+- hosts: public_hosts
+  become: yes
+  roles:
+    - name: public_host

@@ -1,4 +1,6 @@
 ---
+# TODO: Migrate to the new role
+
 - name: checkout sources
   git:
     dest: "{{ deployment_path }}"

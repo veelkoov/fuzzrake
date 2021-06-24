@@ -1,28 +1,5 @@
 ---
-- name: install packages
-  yum:
-    list: mod_http2 mod_fcgid yum-utils
-    state: installed
-  notify:
-    - restart apache
-
-- name: install Docker
-  shell: amazon-linux-extras install docker -y
-  args:
-    creates: /usr/bin/dockerd
-
-- name: start docker
-  service:
-    enabled: yes
-    name: docker
-    state: started
-
-- name: update httpd.conf
-  template:
-    src: httpd.j2.conf
-    dest: /etc/httpd/conf/httpd.conf
-  notify:
-    - restart apache
+# TODO: Migrate to the new role
 
 - name: update httpd-le-ssl.conf
   template:
@@ -37,7 +14,6 @@
     dest: "/etc/httpd/conf.d/{{ item|regex_replace('\\.j2\\.conf$', '.conf') }}"
   with_items:
     - "getfursu.it.j2.conf"
-    - "autoindex.j2.conf"
   notify:
     - restart apache
   tags: conf.d
@@ -47,11 +23,7 @@
     src: "httpd_conf.modules.d/{{ item }}"
     dest: "/etc/httpd/conf.modules.d/{{ item|regex_replace('\\.j2\\.conf$', '.conf') }}"
   with_items:
-    - "00-mpm.j2.conf"
     - "00-brotli.j2.conf"
-    - "00-dav.j2.conf"
-    - "00-base.j2.conf"
-    - "00-lua.j2.conf"
   notify:
     - restart apache
 

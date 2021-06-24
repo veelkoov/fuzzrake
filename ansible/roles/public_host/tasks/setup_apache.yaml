@@ -1,0 +1,53 @@
+---
+- name: install packages
+  yum:
+    name:
+      - httpd
+    state: installed
+
+- name: enable Apache
+  service:
+    enabled: yes
+    name: httpd
+    state: started
+
+- name: setup firewalld for Apache
+  firewalld:
+    immediate: yes
+    permanent: yes
+    service: "{{ item }}"
+    state: enabled
+  loop:
+    - http
+    - https
+
+- name: create empty WWW dir
+  file:
+    group: root
+    mode: 0755
+    owner: root
+    path: "/var/www/empty"
+    state: directory
+
+- name: create empty WWW index.html
+  copy:
+    content: ""
+    dest: "/var/www/empty/index.html"
+    group: root
+    mode: 0644
+    owner: root
+
+- name: update Apache configuration
+  template:
+    src: "etc/httpd/{{ item }}"
+    dest: "/etc/httpd/{{ item|regex_replace('\\.j2\\.conf$', '.conf') }}"
+  with_items:
+    - "conf/httpd.j2.conf"
+    - "conf.d/autoindex.j2.conf"
+    - "conf.d/welcome.j2.conf"
+    - "conf.modules.d/00-base.j2.conf"
+    - "conf.modules.d/00-dav.j2.conf"
+    - "conf.modules.d/00-lua.j2.conf"
+    - "conf.modules.d/00-mpm.j2.conf"
+  notify:
+    - restart Apache

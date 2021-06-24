@@ -1,0 +1,8 @@
+---
+- name: reload sshd
+  service:
+    name: sshd
+    state: reloaded
+
+- name: restart Apache
+  shell: apachectl configtest && apachectl graceful
