@@ -6,3 +6,11 @@
 
 - name: restart Apache
   shell: apachectl configtest && apachectl graceful
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart txkillswitch
+  service:
+    name: txkillswitch
+    state: restarted

@@ -32,22 +32,3 @@
     src: logrotate.d/httpd.j2
     dest: /etc/logrotate.d/httpd
     backup: yes
-
-# TODO: Manage txkillswitch binary
-
-- name: create systemd unit for txkillswitch
-  template:
-    mode: 0644
-    src: txkillswitch.service.j2
-    dest: /etc/systemd/system/txkillswitch.service
-  notify:
-    - reload systemd
-    - restart txkillswitch
-  tags: txkillswitch
-
-- name: enable and start txkillswitch service
-  systemd:
-    name: txkillswitch
-    enabled: yes
-    state: started
-  tags: txkillswitch

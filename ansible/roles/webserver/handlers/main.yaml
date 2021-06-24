@@ -1,8 +1,0 @@
----
-# TODO: Migrate to the new role
-
-- name: reload systemd
-  command: systemctl daemon-reload
-
-- name: restart txkillswitch
-  command: systemctl restart txkillswitch

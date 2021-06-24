@@ -23,8 +23,10 @@
 - name: install required packages
   yum:
     name:
+      - cargo
       - git
-      - python-docker-py
       - nodejs
+      - python-docker-py
+      - rust
       - yarn
     state: installed
