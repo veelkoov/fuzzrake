@@ -1,6 +1,0 @@
-#!ansible/run.sh
----
-- hosts: dev
-  gather_facts: no
-  roles:
-    - { name: "manager", mode: "update_sg_ssh_allowlist_ip" }
