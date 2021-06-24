@@ -3,13 +3,16 @@
   command: docker exec -ti {{ php_fpm_container_name|quote }} composer install
   args:
     chdir: "{{ deployment_path }}"
+  # TODO: changed_when
 
 - name: yarn install
   command: yarn --cache-folder "{{ deployment_path }}/var/yarn-cache" install
   args:
     chdir: "{{ deployment_path }}"
+  # TODO: changed_when
 
 - name: yarn encore production
   command: yarn --cache-folder "{{ deployment_path }}/var/yarn-cache" encore production
   args:
     chdir: "{{ deployment_path }}"
+  # TODO: changed_when (if possible)

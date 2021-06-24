@@ -5,6 +5,9 @@
 - import_tasks: setup_docker_container.yaml
   tags: docker
 
+- import_tasks: setup_apache_vhost.yaml
+  tags: vhost
+
 - import_tasks: clear_cache.yaml
   tags: cache
 

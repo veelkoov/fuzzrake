@@ -57,6 +57,7 @@
   command: apxs -i -c -l brotlienc mod_brotli.c
   args:
     chdir: "/opt/mod_brotli"
+  # TODO: changed_when
 
 - name: update Apache configuration
   template:
@@ -65,7 +66,7 @@
   with_items:
     - "conf/httpd.j2.conf"
     - "conf.d/autoindex.j2.conf"
-    - "conf.d/getfursu.it.j2.conf"
+    - "conf.d/fuzzrake.j2.conf"
     - "conf.d/welcome.j2.conf"
     - "conf.modules.d/00-base.j2.conf"
     - "conf.modules.d/00-brotli.j2.conf"
