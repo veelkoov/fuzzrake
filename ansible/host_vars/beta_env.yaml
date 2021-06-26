@@ -1,7 +1,0 @@
----
-deployment_path: "{{ beta_deployment_path }}"
-branch: beta
-server_name: "beta.getfursu.it"
-
-php_fpm_container_port: "{{ beta_php_fpm_container_port }}"
-php_fpm_container_name: fuzzrake-beta

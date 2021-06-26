@@ -1,0 +1,9 @@
+---
+deployment_path: "/var/www/prod"
+
+branch:      "main"
+app_env:     "prod"
+server_name: "getfursu.it"
+
+php_fpm_container_port: 9557
+php_fpm_container_name: "fuzzrake-prod"

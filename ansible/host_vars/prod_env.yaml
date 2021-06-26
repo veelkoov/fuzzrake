@@ -1,7 +1,0 @@
----
-deployment_path: "{{ prod_deployment_path }}"
-branch: main
-server_name: "getfursu.it"
-
-php_fpm_container_port: "{{ prod_php_fpm_container_port }}"
-php_fpm_container_name: fuzzrake-prod

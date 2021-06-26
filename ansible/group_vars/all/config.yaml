@@ -1,8 +1,0 @@
----
-php_fpm_docker_image_name: fuzzrake/php-fpm:latest
-
-beta_php_fpm_container_port: 9556
-beta_deployment_path:        "/var/www/beta"
-
-prod_php_fpm_container_port: 9557
-prod_deployment_path:        "/var/www/prod"

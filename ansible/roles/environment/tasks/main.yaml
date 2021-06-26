@@ -1,6 +1,6 @@
 ---
-- import_tasks: checkout_sources.yaml
-  tags: sources
+- import_tasks: update_files.yaml
+  tags: files
 
 - import_tasks: setup_docker_container.yaml
   tags: docker

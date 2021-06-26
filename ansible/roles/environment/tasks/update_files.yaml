@@ -21,3 +21,11 @@
     owner: root
     path:  "{{ deployment_path }}/var"
     state: directory
+
+- name: update .env.local
+  template:
+    dest: "{{ deployment_path }}/.env.local"
+    group: root
+    mode: 0644
+    owner: root
+    src: ".env.local.j2"
