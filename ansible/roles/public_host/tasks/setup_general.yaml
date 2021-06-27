@@ -28,6 +28,7 @@
       - nodejs
       - python-docker-py
       - rust
+      - snapd
       - yarn
     state: installed
 
@@ -36,5 +37,19 @@
     line:  "SELINUX=disabled"
     path:  "/etc/selinux/config"
     regex: "^SELINUX="
+  notify:
+    - reboot system
+
+- name: enable snapd
+  service:
+    enabled: yes
+    name:    "snapd.socket"
+    state:   started
+
+- name: enable classic snap support
+  file:
+    path:  "/snap"
+    src:   "/var/lib/snapd/snap"
+    state: link
   notify:
     - reboot system

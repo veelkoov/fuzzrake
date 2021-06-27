@@ -81,3 +81,14 @@
     src:    "etc/logrotate.d/httpd.j2"
     dest:   "/etc/logrotate.d/httpd"
     backup: yes
+
+- name: install certbot
+  snap:
+    name:    "certbot"
+    classic: yes
+
+- name: link certbot in $PATH
+  file:
+    path:  "/usr/bin/certbot"
+    src:   "/snap/bin/certbot"
+    state: link
