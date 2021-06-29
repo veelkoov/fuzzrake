@@ -30,6 +30,7 @@
       - rust
       - snapd
       - yarn
+      - vim
     state: installed
 
 - name: disable SELinux
@@ -53,3 +54,8 @@
     state: link
   notify:
     - reboot system
+
+- name: setup hostname
+  hostname:
+    name: "{{ fqdn }}"
+    use:  systemd
