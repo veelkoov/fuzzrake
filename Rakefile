@@ -155,7 +155,7 @@ def do_release(branch, environment)
   run_shell('git', 'checkout', 'develop')
   run_shell('git', 'merge', branch)
   run_shell('git', 'push')
-  run_shell('ansible/update_environments.yaml', '--limit', environment)
+  run_shell('ansible/setup_envs.yaml', '--limit', environment)
 end
 
 task('release-beta') { do_release('beta', 'beta') }
