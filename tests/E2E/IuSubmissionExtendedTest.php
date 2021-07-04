@@ -104,7 +104,9 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
         'URL_COMMISSIONS'           => 'https://cst.com/value___VARIANT__.html', // TODO: Test multiple
         'CS_LAST_CHECK'             => self::SKIP,
+        'CS_TRACKER_ISSUE'          => self::SKIP,
         'BP_LAST_CHECK'             => self::SKIP,
+        'BP_TRACKER_ISSUE'          => self::SKIP,
         'COMPLETENESS'              => self::SKIP,
         'OPEN_FOR'                  => self::SKIP,
         'CLOSED_FOR'                => self::SKIP,
@@ -123,7 +125,9 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'INACTIVE_REASON',
         'COMPLETENESS',
         'CS_LAST_CHECK',
+        'CS_TRACKER_ISSUE',
         'BP_LAST_CHECK',
+        'BP_TRACKER_ISSUE',
         'OPEN_FOR',
         'CLOSED_FOR',
     ];

@@ -39,9 +39,9 @@ class IuSubmission implements FieldReadInterface
      */
     public function get(Field $field)
     {
-        $value = $this->data[$field->name()] ?? false;
+        $value = $this->data[$field->name()] ?? null;
 
-        if (false === $value) {
+        if (null === $value) {
             throw new DataInputException("Submission {$this->id} is missing {$field->name()}");
         }
 

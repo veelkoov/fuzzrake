@@ -30,19 +30,24 @@ class ArtisanVolatileData
     private ?Artisan $artisan = null;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private ?bool $status = null; // TODO: Remove
-
-    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTimeInterface $lastCsUpdate = null;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private bool $csTrackerIssue = false;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTimeInterface $lastBpUpdate = null;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private bool $bpTrackerIssue = false;
 
     public function getId(): ?int
     {
@@ -73,6 +78,18 @@ class ArtisanVolatileData
         return $this;
     }
 
+    public function getCsTrackerIssue(): bool
+    {
+        return $this->csTrackerIssue;
+    }
+
+    public function setCsTrackerIssue(bool $csTrackerIssue): self
+    {
+        $this->csTrackerIssue = $csTrackerIssue;
+
+        return $this;
+    }
+
     public function getLastBpUpdate(): ?DateTimeInterface
     {
         return $this->lastBpUpdate;
@@ -81,6 +98,18 @@ class ArtisanVolatileData
     public function setLastBpUpdate(?DateTimeInterface $lastBpUpdate): self
     {
         $this->lastBpUpdate = $lastBpUpdate;
+
+        return $this;
+    }
+
+    public function getBpTrackerIssue(): bool
+    {
+        return $this->bpTrackerIssue;
+    }
+
+    public function setBpTrackerIssue(bool $bpTrackerIssue): self
+    {
+        $this->bpTrackerIssue = $bpTrackerIssue;
 
         return $this;
     }

@@ -916,11 +916,35 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
     }
 
+    public function getCsTrackerIssue(): bool
+    {
+        return $this->getVolatileData()->getCsTrackerIssue();
+    }
+
+    public function setCsTrackerIssue(bool $csTrackerIssue): self
+    {
+        $this->getVolatileData()->setCsTrackerIssue($csTrackerIssue);
+
+        return $this;
+    }
+
     public function getBpLastCheck(): string
     {
         $lc = $this->getVolatileData()->getLastBpUpdate();
 
         return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+    }
+
+    public function getBpTrackerIssue(): bool
+    {
+        return $this->getVolatileData()->getBpTrackerIssue();
+    }
+
+    public function setBpTrackerIssue(bool $bpTrackerIssue): self
+    {
+        $this->getVolatileData()->setBpTrackerIssue($bpTrackerIssue);
+
+        return $this;
     }
 
     /**
@@ -1311,7 +1335,6 @@ class Artisan implements JsonSerializable, FieldReadInterface
                 default                    => $this->get($field),
             };
 
-            /* @noinspection PhpStrictTypeCheckingInspection FIXME */
             return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
         }, $fields);
     }

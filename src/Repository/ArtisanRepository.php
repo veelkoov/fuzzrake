@@ -103,11 +103,11 @@ class ArtisanRepository extends ServiceEntityRepository
         $rsm->addScalarResult('total', 'total', 'integer');
 
         return $this
-            ->getEntityManager()
+            ->getEntityManager() // FIXME
             ->createNativeQuery('
-                SELECT SUM(avd.status = 1) AS open
-                    , SUM(avd.status = 0) AS closed
-                    , SUM(avd.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
+                SELECT 0 AS open
+                    , 0 AS closed
+                    , 0 AS successfully_tracked
                     , SUM(au_cst.url <> \'\') AS tracked
                     , SUM(1) AS total
                 FROM artisans AS a
@@ -171,29 +171,29 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
-    public function getDistinctCommissionStatuses(): FilterItems
+    public function getDistinctCommissionStatuses(): FilterItems // FIXME
     {
-        $rows = $this->createQueryBuilder('a')
-            ->leftJoin('a.volatileData', 'vd')
-            ->select("vd.status, COUNT(COALESCE(vd.status, 'null')) AS count")
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->groupBy('vd.status')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getArrayResult();
+//        $rows = $this->createQueryBuilder('a')
+//            ->leftJoin('a.volatileData', 'vd')
+//            ->select("vd.status, COUNT(COALESCE(vd.status, 'null')) AS count")
+//            ->where('a.inactiveReason = :empty')
+//            ->setParameter('empty', '')
+//            ->groupBy('vd.status')
+//            ->getQuery()
+//            ->enableResultCache(3600)
+//            ->getArrayResult();
 
         $result = new FilterItems(false);
         $result->addComplexItem('1', '1', 'Open', 0);
         $result->addComplexItem('0', '0', 'Closed', 0);
 
-        foreach ($rows as $row) {
-            if (null === $row['status']) {
-                $result->incUnknownCount((int) $row['count']);
-            } else {
-                $result[(int) $row['status']]->incCount((int) $row['count']);
-            }
-        }
+//        foreach ($rows as $row) {
+//            if (null === $row['status']) {
+//                $result->incUnknownCount((int) $row['count']);
+//            } else {
+//                $result[(int) $row['status']]->incCount((int) $row['count']);
+//            }
+//        }
 
         return $result;
     }

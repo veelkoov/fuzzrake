@@ -76,7 +76,9 @@ final class Fields
     public const INACTIVE_REASON = 'INACTIVE_REASON';
     public const PASSWORD = 'PASSWORD';
     public const CS_LAST_CHECK = 'CS_LAST_CHECK';
+    public const CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
     public const BP_LAST_CHECK = 'BP_LAST_CHECK';
+    public const BP_TRACKER_ISSUE = 'BP_TRACKER_ISSUE';
     public const OPEN_FOR = 'OPEN_FOR';
     public const CLOSED_FOR = 'CLOSED_FOR';
     public const COMPLETENESS = 'COMPLETENESS';
