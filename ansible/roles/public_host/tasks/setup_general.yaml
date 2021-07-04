@@ -1,0 +1,61 @@
+---
+# TODO: Try setting up Python 3 instead of the default 2
+
+- name: enable EPEL repository
+  yum:
+    name:
+      - epel-release
+    state: installed
+
+- name: setup Node.js repository
+  yum:
+    name: "https://rpm.nodesource.com/pub_14.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm"
+
+- name: setup Yarn repository
+  yum_repository:
+    baseurl:     "https://dl.yarnpkg.com/rpm/"
+    description: "Yarn Repository"
+    enabled:     "1"
+    gpgcheck:    "1"
+    gpgkey:      "https://dl.yarnpkg.com/rpm/pubkey.gpg"
+    name:        "yarn"
+
+- name: install required packages
+  yum:
+    name:
+      - cargo
+      - git
+      - nodejs
+      - python-docker-py
+      - rust
+      - snapd
+      - yarn
+      - vim
+    state: installed
+
+- name: disable SELinux
+  lineinfile:
+    line:  "SELINUX=disabled"
+    path:  "/etc/selinux/config"
+    regex: "^SELINUX="
+  notify:
+    - reboot system
+
+- name: enable snapd
+  service:
+    enabled: yes
+    name:    "snapd.socket"
+    state:   started
+
+- name: enable classic snap support
+  file:
+    path:  "/snap"
+    src:   "/var/lib/snapd/snap"
+    state: link
+  notify:
+    - reboot system
+
+- name: setup hostname
+  hostname:
+    name: "{{ fqdn }}"
+    use:  systemd

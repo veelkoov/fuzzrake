@@ -1,0 +1,34 @@
+---
+- name: disable root login
+  lineinfile:
+    line: "PermitRootLogin no"
+    path: "/etc/ssh/sshd_config"
+    regexp: "^PermitRootLogin"
+    state: present
+  notify: reload sshd
+  when: ansible_ssh_user != 'root'
+
+- name: disable login by password
+  lineinfile:
+    line: "PasswordAuthentication no"
+    path: "/etc/ssh/sshd_config"
+    regexp: "^PasswordAuthentication"
+    state: present
+  notify: reload sshd
+
+- name: disable X11 forwarding
+  lineinfile:
+    line: "X11Forwarding no"
+    path: "/etc/ssh/sshd_config"
+    regexp: "^X11Forwarding"
+    state: present
+  notify: reload sshd
+
+- name: remove default-port SSH service from firewalld
+  firewalld:
+    immediate: yes
+    permanent: yes
+    service: ssh
+    state: disabled
+    zone: public
+  when: ansible_ssh_port != 22

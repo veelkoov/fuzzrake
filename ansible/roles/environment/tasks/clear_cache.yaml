@@ -1,0 +1,6 @@
+---
+- name: clear cache
+  shell: rm -rf var/cache/*
+  args:
+    chdir: "{{ deployment_path }}"
+    warn: no

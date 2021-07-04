@@ -63,7 +63,6 @@ task(:console) { |_t, args| docker('./bin/console', *args) }
 #
 
 task(:default)       { exec_or_die('rake', '--tasks', '--all') }
-task(:sg)            { exec_or_die('ansible/update_sg.yaml') }
 mtask(:cc, :console, 'cache:clear')
 
 #
