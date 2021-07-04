@@ -158,8 +158,8 @@ def do_release(branch, environment)
   run_shell('ansible/setup_envs.yaml', '--limit', environment)
 end
 
-task('release-beta') { do_release('beta', 'beta') }
-task('release-prod') { do_release('main', 'prod') }
+task('release-beta') { do_release('beta', 'beta_env') }
+task('release-prod') { do_release('main', 'prod_env') }
 
 task(:composer_upgrade) { run_docker('composer', '--no-cache', 'upgrade') } # No cache in the container
 task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
