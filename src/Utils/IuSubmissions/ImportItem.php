@@ -19,7 +19,7 @@ class ImportItem
     private array $replaced = [];
 
     public function __construct(
-        private IuSubmission   $iuSubmission,
+        private IuSubmission $iuSubmission,
         private ArtisanChanges $input,
         private ArtisanChanges $entity,
     ) {
@@ -93,7 +93,7 @@ class ImportItem
 
     public function calculateDiff(): void
     {
-        $this->diff = new Diff($this->getOriginalEntity(), $this->getFixedEntity(), $this->getFixedInput());
+        $this->diff = new Diff($this->getOriginalEntity(), $this->getFixedEntity());
     }
 
     public function addReplaced(ImportItem $replaced): void

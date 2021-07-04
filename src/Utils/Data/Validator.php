@@ -22,18 +22,16 @@ class Validator
 
     public function isValid(ArtisanChanges $artisan, Field $field): bool
     {
-        return $this->getValidator($field)->isValid($field, $artisan->getChanged()->get($field));
+        $value = $artisan->getChanged()->get($field);
+
+        return is_bool($value) || $this->getValidator($field)->isValid($field, $value);
     }
 
     private function getValidator(Field $field): ValidatorInterface
     {
-        switch ($field->name()) {
-            case Fields::SPECIES_DOES:
-            case Fields::SPECIES_DOESNT:
-                return $this->speciesListValidator;
-
-            default:
-                return $this->genericValidator;
-        }
+        return match ($field->name()) {
+            Fields::SPECIES_DOES, Fields::SPECIES_DOESNT => $this->speciesListValidator,
+            default => $this->genericValidator,
+        };
     }
 }

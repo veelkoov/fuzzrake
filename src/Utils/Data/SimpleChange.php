@@ -10,17 +10,16 @@ class SimpleChange implements ChangeInterface
 {
     public function __construct(
         private Field $field,
-        private string $old,
-        private string $new,
-        private ?string $imported,
+        private string | bool $old,
+        private string | bool $new,
     ) {
     }
 
     public function getDescription(): string
     {
         $name = $this->field->name();
-        $old = $this->old;
-        $new = $this->new;
+        $old = $this->asString($this->old);
+        $new = $this->asString($this->new);
 
         if ($old === $new) {
             return $name.': '.'no changes';
@@ -40,5 +39,14 @@ class SimpleChange implements ChangeInterface
     public function isActuallyAChange(): bool
     {
         return $this->old !== $this->new;
+    }
+
+    private function asString(bool | string $value): string
+    {
+        if (is_bool($value)) {
+            $value = $value ? 'True' : 'False';
+        }
+
+        return $value;
     }
 }

@@ -16,6 +16,7 @@ class TrackerTaskRunner
 {
     private SymfonyStyle $io;
 
+    /** @noinspection PhpPropertyOnlyWrittenInspection */
     public function __construct(
         private TrackerTaskInterface $trackerTask,
         private LoggerInterface $logger,
@@ -26,6 +27,14 @@ class TrackerTaskRunner
         SymfonyStyle $io,
     ) {
         $this->setupIo($io);
+    }
+
+    private function setupIo(SymfonyStyle $io): void
+    {
+        $this->io = $io;
+        $this->io->getFormatter()->setStyle('open', new OutputFormatterStyle('green'));
+        $this->io->getFormatter()->setStyle('closed', new OutputFormatterStyle('red'));
+        $this->io->getFormatter()->setStyle('context', new OutputFormatterStyle('blue'));
     }
 
     /**

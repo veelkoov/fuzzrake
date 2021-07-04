@@ -72,8 +72,11 @@
                     {%- endif -%}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {%- if artisan.commissions is not empty -%}
+                    {%- if artisan.commissions is not empty or artisan.csTrackerIssue -%}
                         <ul>
+                            {%- if artisan.csTrackerIssue -%}
+                                <li class="inaccurate"><i class="fas fa-exclamation-triangle"></i>&nbsp;Tracking issues</li>
+                            {%- endif -%}
                             {%- for offer in artisan.commissions -%}
                                 {%- set class = offer.isOpen ? 'yes' : 'no' -%}
                                 {%- set symbol = offer.isOpen ? 'fa-check-square' : 'fa-times-circle' -%}

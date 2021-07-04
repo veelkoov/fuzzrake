@@ -9,7 +9,6 @@ use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\TrackerUpdates\ArtisanUpdatesInterface;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
 use App\Utils\Artisan\Fields;
 use App\Utils\Data\ArtisanChanges;
@@ -24,7 +23,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
     /**
      * @var Artisan[]
      */
-    private array $updated;
+    private array $artisans;
 
     public function __construct(
         private ArtisanRepository $repository,
@@ -32,7 +31,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         private WebpageSnapshotManager $snapshots,
         private CommissionsStatusParser $parser,
     ) {
-        $this->updated = array_filter($this->repository->findAll(), fn ($artisan) => !empty($artisan->getCommissionsUrl()));
+        $this->artisans = $this->repository->findAll();
     }
 
     /**
@@ -40,35 +39,73 @@ class CommissionsTrackerTask implements TrackerTaskInterface
      */
     public function getUrlsToPrefetch(): array
     {
-        return array_merge(...array_map(fn (Artisan $artisan): array => $artisan->getUrlObjs(Fields::URL_COMMISSIONS), $this->updated));
+        return array_merge(...array_map(fn (Artisan $artisan): array => $artisan->getUrlObjs(Fields::URL_COMMISSIONS), $this->artisans));
     }
 
     /**
-     * @return ArtisanUpdatesInterface[]
+     * @return ArtisanChanges[]
      */
     public function getUpdates(): array
     {
-        return array_map(fn (Artisan $artisan) => $this->getUpdatesFor($artisan), $this->updated);
+        return array_map(fn (Artisan $artisan) => $this->getUpdatesFor($artisan), $this->artisans);
     }
 
-    private function getUpdatesFor(Artisan $artisan): ArtisanUpdatesInterface
+    private function getUpdatesFor(Artisan $artisan): ArtisanChanges
     {
-        $result = new CommissionsArtisanUpdates($artisan);
+        $result = new ArtisanChanges($artisan);
+        $result->getChanged()->getCommissions()->clear();
+        $result->getChanged()->getVolatileData()->setCsTrackerIssue(false);
+        $hasUrls = false;
 
-        $lastCsUpdate = null;
+        /* @var $newItems ArtisanCommissionsStatus[] */
+        $newItems = [];
 
-        $urls = $artisan->getUrlObjs(Fields::URL_COMMISSIONS);
-        foreach ($urls as $url) {
-            $lastCsUpdate = $url->getState()->getLastRequest();
+        foreach ($artisan->getUrlObjs(Fields::URL_COMMISSIONS) as $url) {
+            $result->getChanged()->getVolatileData()->setLastCsUpdate($url->getState()->getLastRequest());
+            $hasUrls = true;
 
             try {
-                $result->addAcses($this->extractArtisanCommissionsStatuses($url));
+                array_push($newItems, ...$this->extractArtisanCommissionsStatuses($url));
             } catch (ExceptionInterface | TrackerException) {
-                // TODO: Record information about failed webpage analysis. See #57
+                $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
+                // TODO: Log some information
             }
         }
 
-        $artisan->getVolatileData()->setLastCsUpdate($lastCsUpdate);
+        if ($hasUrls && 0 === count($newItems)) {
+            $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
+            // TODO: Log some information
+        }
+
+        /* @var $statuses ArtisanCommissionsStatus[] */
+        $statuses = [];
+
+        foreach ($newItems as $status) {
+            if (!array_key_exists($status->getOffer(), $statuses)) {
+                // This is a status for an offer we didn't have previously
+                $result->getChanged()->getCommissions()->add($status);
+                $statuses[$status->getOffer()] = $status;
+                continue;
+            }
+
+            // We have at best a duplicated offer
+            $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
+
+            $previousStatus = $statuses[$status->getOffer()];
+
+            if (null === $previousStatus) {
+                // We have a 3rd+ offer with different statuses
+                // TODO: Log some information
+                continue;
+            }
+
+            if ($previousStatus->getIsOpen() != $status->getIsOpen()) {
+                // We have a 2nd offer and the status differs
+                // TODO: Log some information
+                $result->getChanged()->getCommissions()->removeElement($previousStatus);
+                $statuses[$status->getOffer()] = null;
+            }
+        }
 
         return $result;
     }
