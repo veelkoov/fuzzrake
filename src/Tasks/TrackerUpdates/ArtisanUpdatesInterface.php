@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates;
 
+use App\Utils\Data\ArtisanChanges;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 interface ArtisanUpdatesInterface
@@ -11,12 +12,7 @@ interface ArtisanUpdatesInterface
     public function report(SymfonyStyle $io): void;
 
     /**
-     * @return object[]
+     * @return ArtisanChanges[]
      */
-    public function getCreatedEntities(): array;
-
-    /**
-     * @return object[]
-     */
-    public function getRemovedEntities(): array;
+    public function getChanges(): array;
 }

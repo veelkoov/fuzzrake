@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Entity\Artisan;
-use App\Utils\Data\ArtisanFixWip;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\Diff;
 use App\Utils\StrUtils;
 
@@ -19,38 +19,38 @@ class ImportItem
     private array $replaced = [];
 
     public function __construct(
-        private IuSubmission $iuSubmission,
-        private ArtisanFixWip $input,
-        private ArtisanFixWip $entity,
+        private IuSubmission   $iuSubmission,
+        private ArtisanChanges $input,
+        private ArtisanChanges $entity,
     ) {
     }
 
     public function getOriginalInput(): Artisan
     {
-        return $this->input->getOriginal();
+        return $this->input->getSubject();
     }
 
     public function getFixedInput(): Artisan
     {
-        return $this->input->getFixed();
+        return $this->input->getChanged();
     }
 
     public function getFixedEntity(): Artisan
     {
-        return $this->entity->getFixed();
+        return $this->entity->getChanged();
     }
 
     public function getOriginalEntity(): Artisan
     {
-        return $this->entity->getOriginal();
+        return $this->entity->getSubject();
     }
 
-    public function getInput(): ArtisanFixWip
+    public function getInput(): ArtisanChanges
     {
         return $this->input;
     }
 
-    public function getEntity(): ArtisanFixWip
+    public function getEntity(): ArtisanChanges
     {
         return $this->entity;
     }
@@ -68,7 +68,7 @@ class ImportItem
 
     public function getMakerId(): string
     {
-        return $this->entity->getFixed()->getMakerId();
+        return $this->entity->getChanged()->getMakerId();
     }
 
     public function getId(): string
@@ -78,12 +78,12 @@ class ImportItem
 
     public function getProvidedPassword(): string
     {
-        return $this->input->getFixed()->getPassword();
+        return $this->input->getChanged()->getPassword();
     }
 
     public function getExpectedPassword(): string
     {
-        return $this->entity->getOriginal()->getPassword();
+        return $this->entity->getSubject()->getPassword();
     }
 
     public function getDiff(): ?Diff

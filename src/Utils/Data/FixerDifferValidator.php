@@ -29,7 +29,7 @@ class FixerDifferValidator
         $this->differ = new Differ($this->printer);
     }
 
-    public function perform(ArtisanFixWip $artisan, int $flags = 0, Artisan $imported = null): void
+    public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
         $anyDifference = $this->hasAnyDifference($artisan);
@@ -38,11 +38,11 @@ class FixerDifferValidator
             $this->printer->setCurrentContext($artisan);
 
             if ($flags & self::FIX) {
-                $this->fixer->fix($artisan->getFixed(), $field);
+                $this->fixer->fix($artisan->getChanged(), $field);
             }
 
             if ($flags & self::SHOW_DIFF) {
-                $this->differ->showDiff($field, $artisan->getOriginal(), $artisan->getFixed(), $imported);
+                $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged(), $imported);
             }
 
             $isValid = $this->validator->isValid($artisan, $field);
@@ -55,21 +55,21 @@ class FixerDifferValidator
             }
 
             if ($resetAndShowFixCommand) {
-                $artisan->getFixed()->set($field, $artisan->getOriginal()->get($field));
+                $artisan->getChanged()->set($field, $artisan->getSubject()->get($field));
             }
         }
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, ?Artisan $imported, $useSetForFixCmd): void
+    private function printFixCommandOptionally(Field $field, ArtisanChanges $artisan, ?Artisan $imported, $useSetForFixCmd): void
     {
         if (!$this->hideFixCommandFor($field)) {
-            $original = $imported ?? $artisan->getOriginal();
+            $original = $imported ?? $artisan->getSubject();
             $originalVal = StrUtils::strSafeForCli($original->get($field));
             if (!$this->validator->isValid($artisan, $field)) {
                 $originalVal = Printer::formatInvalid($originalVal);
             }
 
-            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
+            $proposedVal = StrUtils::strSafeForCli($artisan->getChanged()->get($field)) ?: 'NEW_VALUE';
 
             if ($useSetForFixCmd) {
                 $fixCmd = Manager::CMD_SET." {$field->name()} |{$proposedVal}|";
@@ -91,21 +91,21 @@ class FixerDifferValidator
         ]);
     }
 
-    private function getArtisanFixWip(Artisan | ArtisanFixWip $artisan): ArtisanFixWip
+    private function getArtisanFixWip(Artisan | ArtisanChanges $artisan): ArtisanChanges
     {
         if ($artisan instanceof Artisan) {
-            $artisan = new ArtisanFixWip($artisan);
-        } elseif (!($artisan instanceof ArtisanFixWip)) {
+            $artisan = new ArtisanChanges($artisan);
+        } elseif (!($artisan instanceof ArtisanChanges)) {
             throw new InvalidArgumentException();
         }
 
         return $artisan;
     }
 
-    private function hasAnyDifference(ArtisanFixWip $artisan): bool
+    private function hasAnyDifference(ArtisanChanges $artisan): bool
     {
         foreach (Fields::persisted() as $field) {
-            if ($artisan->getOriginal()->get($field) != $artisan->getFixed()->get($field)) {
+            if ($artisan->getSubject()->get($field) != $artisan->getChanged()->get($field)) {
                 return true;
             }
         }

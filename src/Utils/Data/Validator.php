@@ -20,9 +20,9 @@ class Validator
         $this->genericValidator = new GenericValidator();
     }
 
-    public function isValid(ArtisanFixWip $artisan, Field $field): bool
+    public function isValid(ArtisanChanges $artisan, Field $field): bool
     {
-        return $this->getValidator($field)->isValid($field, $artisan->getFixed()->get($field));
+        return $this->getValidator($field)->isValid($field, $artisan->getChanged()->get($field));
     }
 
     private function getValidator(Field $field): ValidatorInterface

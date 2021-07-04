@@ -8,7 +8,7 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
-use App\Utils\Data\ArtisanFixWip;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -109,13 +109,13 @@ class DataImport
     {
         $originalInput = $this->updateArtisanWithData(new Artisan(), $submission);
 
-        $input = new ArtisanFixWip($originalInput, $submission->getId());
-        $this->manager->correctArtisan($input->getFixed(), $submission->getId());
+        $input = new ArtisanChanges($originalInput, $submission->getId());
+        $this->manager->correctArtisan($input->getChanged(), $submission->getId());
         $this->fdv->perform($input, FDV::FIX);
 
-        $originalEntity = $this->findBestMatchArtisan($input->getFixed(), $submission->getId()) ?: new Artisan();
+        $originalEntity = $this->findBestMatchArtisan($input->getChanged(), $submission->getId()) ?: new Artisan();
 
-        $entity = new ArtisanFixWip($originalEntity, $submission->getId());
+        $entity = new ArtisanChanges($originalEntity, $submission->getId());
 
         return new ImportItem($submission, $input, $entity);
     }

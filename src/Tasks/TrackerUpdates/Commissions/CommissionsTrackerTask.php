@@ -12,6 +12,7 @@ use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\ArtisanUpdatesInterface;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
 use App\Utils\Artisan\Fields;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\OfferStatus;
 use App\Utils\Tracking\TrackerException;

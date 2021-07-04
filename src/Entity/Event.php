@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Tasks\TrackerUpdates\Commissions\CommissionsArtisanUpdates;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StringList;
 use DateTimeInterface;
@@ -90,14 +90,14 @@ class Event
      */
     private string $gitCommits = '';
 
-    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, CommissionsArtisanUpdates $analysisResult = null)
+    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, ArtisanChanges $changes = null)
     {
         $this->timestamp = DateTimeUtils::getNowUtc();
         $this->checkedUrl = $checkedUrl;
         $this->artisanName = $artisanName;
         $this->oldStatus = $oldStatus;
 
-        if (null !== $analysisResult) {
+        if (null !== $changes) {
             // FIXME
         }
     }
