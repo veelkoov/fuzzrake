@@ -122,7 +122,7 @@ class DataImport
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
-        foreach (Fields::getAll() as $field) {
+        foreach (Fields::inUiForm() as $field) {
             switch ($field->name()) {
                 case Fields::MAKER_ID:
                     $newValue = $source->get($field);
@@ -133,8 +133,8 @@ class DataImport
                     }
                     break;
 
-                case Fields::CONTACT_INFO_ORIGINAL:
-                    $newValue = $source->get($field);
+                case Fields::CONTACT_INFO_OBFUSCATED:
+                    $newValue = $source->get(Fields::get(Fields::CONTACT_INFO_ORIGINAL));
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
                         break; // No updates
@@ -149,18 +149,6 @@ class DataImport
                     }
 
                     $artisan->set($field, $source->get($field));
-                    break;
-
-                case Fields::URL_MINIATURES:
-                case Fields::CS_LAST_CHECK:
-                case Fields::BP_LAST_CHECK:
-                case Fields::COMPLETENESS:
-                case Fields::CONTACT_METHOD:
-                case Fields::CONTACT_ADDRESS_PLAIN:
-                case Fields::CONTACT_INFO_OBFUSCATED:
-                case Fields::FORMER_MAKER_IDS:
-                case Fields::OPEN_FOR:
-                case Fields::CLOSED_FOR:
                     break;
 
                 default:

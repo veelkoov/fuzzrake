@@ -98,8 +98,8 @@ final class Fields
         self::$fieldsByModelName = [];
 
         foreach (FieldsDefinitions::FIELDS_ARRAY_DATA as $name => $fieldData) {
-            $field = new Field($name, $fieldData[4], $fieldData[5], (bool) $fieldData[0], (bool) $fieldData[1],
-                (bool) $fieldData[2], (bool) $fieldData[3]);
+            $field = new Field($name, $fieldData[5], $fieldData[6], (bool) $fieldData[0], (bool) $fieldData[1],
+                (bool) $fieldData[2], (bool) $fieldData[3], (bool) $fieldData[4]);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
@@ -146,6 +146,14 @@ final class Fields
     public static function public(): array
     {
         return array_filter(self::$fields, fn (Field $field): bool => $field->public());
+    }
+
+    /**
+     * @return Field[] 'FIELD_NAME' => Field
+     */
+    public static function inUiForm(): array
+    {
+        return array_filter(self::$fields, fn (Field $field): bool => $field->isInUiForm());
     }
 
     /**

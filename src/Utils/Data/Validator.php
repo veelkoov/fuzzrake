@@ -22,9 +22,7 @@ class Validator
 
     public function isValid(ArtisanChanges $artisan, Field $field): bool
     {
-        $value = $artisan->getChanged()->get($field);
-
-        return is_bool($value) || $this->getValidator($field)->isValid($field, $value);
+        return $this->getValidator($field)->isValid($field, $artisan->getChanged()->get($field));
     }
 
     private function getValidator(Field $field): ValidatorInterface

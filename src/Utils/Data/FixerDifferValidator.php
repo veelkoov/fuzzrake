@@ -45,7 +45,7 @@ class FixerDifferValidator
                 $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged(), $imported);
             }
 
-            $isValid = $this->validator->isValid($artisan, $field);
+            $isValid = !$field->isValidated() || $this->validator->isValid($artisan, $field);
             $resetAndShowFixCommand = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$isValid;
 
             if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
