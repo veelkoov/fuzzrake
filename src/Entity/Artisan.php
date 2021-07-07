@@ -241,8 +241,10 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist"})
+     *
+     * @var Collection|ArtisanCommissionsStatus[]
      */
-    private Collection $commissions;
+    private Collection | array $commissions;
 
     /**
      * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist"})
@@ -261,25 +263,32 @@ class Artisan implements JsonSerializable, FieldReadInterface
     public function __clone()
     {
         if ($this->privateData) {
-            $this->privateData = clone $this->privateData;
+            $this->setPrivateData(clone $this->privateData);
         }
 
         if ($this->volatileData) {
-            $this->volatileData = clone $this->volatileData;
+            $this->setVolatileData(clone $this->volatileData);
         }
 
-        $urls = $this->urls;
+        $urlsToClone = $this->urls;
         $this->urls = new ArrayCollection();
 
-        foreach ($urls as $url) {
+        foreach ($urlsToClone as $url) {
             $this->addUrl(clone $url);
         }
 
-        $makerIds = $this->makerIds;
+        $makerIdsToClone = $this->makerIds;
         $this->makerIds = new ArrayCollection();
 
-        foreach ($makerIds as $makerId) {
+        foreach ($makerIdsToClone as $makerId) {
             $this->addMakerId(clone $makerId);
+        }
+
+        $commissionsToClone = $this->commissions;
+        $this->commissions = new ArrayCollection();
+
+        foreach ($commissionsToClone as $commission) {
+            $this->addCommission(clone $commission);
         }
     }
 

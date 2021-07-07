@@ -55,26 +55,26 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         $result = new ArtisanChanges($artisan);
         $result->getChanged()->getCommissions()->clear();
         $result->getChanged()->getVolatileData()->setCsTrackerIssue(false);
-        $hasUrls = false;
 
         /* @var $newItems ArtisanCommissionsStatus[] */
         $newItems = [];
 
         foreach ($artisan->getUrlObjs(Fields::URL_COMMISSIONS) as $url) {
             $result->getChanged()->getVolatileData()->setLastCsUpdate($url->getState()->getLastRequest());
-            $hasUrls = true;
 
             try {
-                array_push($newItems, ...$this->extractArtisanCommissionsStatuses($url));
+                $statuses = $this->extractArtisanCommissionsStatuses($url);
+
+                if (0 === count($statuses)) {
+                    $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
+                    // TODO: Log some information
+                }
+
+                array_push($newItems, ...$statuses);
             } catch (ExceptionInterface | TrackerException) {
                 $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
                 // TODO: Log some information
             }
-        }
-
-        if ($hasUrls && 0 === count($newItems)) {
-            $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
-            // TODO: Log some information
         }
 
         /* @var $statuses ArtisanCommissionsStatus[] */
