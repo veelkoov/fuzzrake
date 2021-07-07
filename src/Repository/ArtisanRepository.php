@@ -9,10 +9,8 @@ use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItems;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
@@ -87,38 +85,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    public function getCommissionsStats(): array
-    {
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('open', 'open', 'integer');
-        $rsm->addScalarResult('closed', 'closed', 'integer');
-        $rsm->addScalarResult('tracked', 'tracked', 'integer');
-        $rsm->addScalarResult('successfully_tracked', 'successfully_tracked', 'integer');
-        $rsm->addScalarResult('total', 'total', 'integer');
-
-        return $this
-            ->getEntityManager() // FIXME
-            ->createNativeQuery('
-                SELECT 0 AS open
-                    , 0 AS closed
-                    , 0 AS successfully_tracked
-                    , SUM(au_cst.url <> \'\') AS tracked
-                    , SUM(1) AS total
-                FROM artisans AS a
-                LEFT JOIN artisans_volatile_data AS avd
-                    ON a.id = avd.artisan_id
-                LEFT JOIN artisans_urls AS au_cst
-                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_COMMISSIONS\'
-                WHERE a.inactive_reason = \'\'
-            ', $rsm)
-            ->enableResultCache(3600)
-            ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
     public function getDistinctCountriesToCountAssoc(): FilterItems
