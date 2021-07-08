@@ -9,6 +9,7 @@
         <a href="#styles">styles</a> (<a href="#other_styles">other</a>) &bull;
         <a href="#order_types">order types</a> (<a href="#other_order_types">other</a>) &bull;
         <a href="#features">features</a> (<a href="#other_features">other</a>) &bull;
+        <a href="#species">species</a> &bull;
         <a href="#data_statistics">data statistics</a>
     </p>
 
@@ -75,6 +76,35 @@
 
     <h2 id="other_features">Other features</h2>
     {% include 'statistics/_item_pills.html.twig' with { items: otherFeatures } %}
+
+    <h1 id="species">Species</h1>
+
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>Specie/group</th>
+            <th>Direct "does" count</th>
+            <th>Direct "doesn't" count</th>
+            <th>Total direct count</th>
+            <th>Indirect "does" count</th>
+            <th>Indirect "doesn't" count</th>
+            <th>Total indirect count</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for specie, specieStats in speciesStats %}
+            <tr>
+                <td>{{ specie }}</td>
+                <td>{{ specieStats.directDoesCount }}</td>
+                <td>{{ specieStats.directDoesntCount }}</td>
+                <td>{{ specieStats.directDoesCount + specieStats.directDoesntCount }}</td>
+                <td>{{ specieStats.indirectDoesCount }}</td>
+                <td>{{ specieStats.indirectDoesntCount }}</td>
+                <td>{{ specieStats.indirectDoesCount + specieStats.indirectDoesntCount }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     <h1 id="data_statistics">Data statistics</h1>
     {% include 'statistics/_data_table.html.twig' with { data: completeness, name: 'Data completeness', total: commissionsStats.Total } %}

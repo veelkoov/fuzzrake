@@ -9,6 +9,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\FilterItem;
 use App\Utils\FilterItems;
+use App\Utils\Species\Species;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -52,7 +53,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(ArtisanRepository $artisanRepository): Response
+    public function statistics(ArtisanRepository $artisanRepository, Species $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
@@ -63,6 +64,7 @@ class StatisticsController extends AbstractController
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $artisanRepository->getCommissionsStats();
+        $speciesStats = $species->getStats();
 
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
@@ -76,6 +78,7 @@ class StatisticsController extends AbstractController
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness'     => $this->prepareCompletenessData($artisanRepository->getActive()),
             'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getActive()),
+            'speciesStats'     => $speciesStats,
             'matchWords'       => self::MATCH_WORDS,
         ]);
     }
@@ -146,7 +149,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
+                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%'   => 0, ];
 
         foreach ($levels as $description => $level) {
             $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));

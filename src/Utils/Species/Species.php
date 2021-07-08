@@ -84,6 +84,11 @@ class Species
         return $this->unsplittable;
     }
 
+    public function getStats(): array
+    {
+        return (new StatsCalculator($this->artisanRepository->getAll(), $this->speciesFlat))->get();
+    }
+
     private function splitSpecieFlagsName(string $specie): array
     {
         try {
