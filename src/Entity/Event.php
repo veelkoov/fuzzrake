@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StringList;
-use App\Utils\Tracking\AnalysisResult;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -51,7 +51,7 @@ class Event
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private ?bool $newStatus;
+    private ?bool $newStatus = null;
 
     /**
      * @ORM\Column(type="string", length=256)
@@ -90,16 +90,15 @@ class Event
      */
     private string $gitCommits = '';
 
-    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, AnalysisResult $analysisResult = null)
+    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, ArtisanChanges $changes = null)
     {
         $this->timestamp = DateTimeUtils::getNowUtc();
         $this->checkedUrl = $checkedUrl;
         $this->artisanName = $artisanName;
         $this->oldStatus = $oldStatus;
 
-        if (null !== $analysisResult) {
-            $this->type = self::TYPE_CS_UPDATED;
-            $this->newStatus = $analysisResult->getStatus();
+        if (null !== $changes) {
+            // FIXME
         }
     }
 

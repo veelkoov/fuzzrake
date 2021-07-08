@@ -58,11 +58,11 @@ class ArtisanUrlRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('u')
             ->join('u.artisan', 'a')
-            ->join('a.commissionsStatus', 'acs')
+            ->join('a.volatileData', 'avd')
             ->join('a.privateData', 'apd')
             ->leftJoin('u.state', 'us')
             ->addSelect('a')
-            ->addSelect('acs')
+            ->addSelect('avd')
             ->addSelect('apd')
             ->addSelect('us')
             ->orderBy('us.lastSuccess', 'ASC')

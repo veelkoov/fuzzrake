@@ -9,10 +9,8 @@ use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItems;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
@@ -56,8 +54,9 @@ class ArtisanRepository extends ServiceEntityRepository
     private function getArtisansQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 'cs')
+            ->leftJoin('a.volatileData', 'vd')
             ->leftJoin('a.urls', 'u')
+            ->leftJoin('a.commissions', 'c')
             ->leftJoin('u.state', 'us')
             ->leftJoin('a.makerIds', 'mi')
             /*
@@ -65,8 +64,9 @@ class ArtisanRepository extends ServiceEntityRepository
              * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
              */
             ->leftJoin('a.privateData', 'pd')
-            ->addSelect('cs')
+            ->addSelect('vd')
             ->addSelect('u')
+            ->addSelect('c')
             ->addSelect('us')
             ->addSelect('mi')
             ->addSelect('pd')
@@ -85,38 +85,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    public function getCommissionsStats(): array
-    {
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('open', 'open', 'integer');
-        $rsm->addScalarResult('closed', 'closed', 'integer');
-        $rsm->addScalarResult('tracked', 'tracked', 'integer');
-        $rsm->addScalarResult('successfully_tracked', 'successfully_tracked', 'integer');
-        $rsm->addScalarResult('total', 'total', 'integer');
-
-        return $this
-            ->getEntityManager()
-            ->createNativeQuery('
-                SELECT SUM(acs.status = 1) AS open
-                    , SUM(acs.status = 0) AS closed
-                    , SUM(acs.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
-                    , SUM(au_cst.url <> \'\') AS tracked
-                    , SUM(1) AS total
-                FROM artisans AS a
-                LEFT JOIN artisans_commissions_statues AS acs
-                    ON a.id = acs.artisan_id
-                LEFT JOIN artisans_urls AS au_cst
-                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
-                WHERE a.inactive_reason = \'\'
-            ', $rsm)
-            ->enableResultCache(3600)
-            ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
     }
 
     public function getDistinctCountriesToCountAssoc(): FilterItems
@@ -169,29 +137,29 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
-    public function getDistinctCommissionStatuses(): FilterItems
+    public function getDistinctCommissionStatuses(): FilterItems // FIXME
     {
-        $rows = $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 's')
-            ->select("s.status, COUNT(COALESCE(s.status, 'null')) AS count")
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->groupBy('s.status')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getArrayResult();
+//        $rows = $this->createQueryBuilder('a')
+//            ->leftJoin('a.volatileData', 'vd')
+//            ->select("vd.status, COUNT(COALESCE(vd.status, 'null')) AS count")
+//            ->where('a.inactiveReason = :empty')
+//            ->setParameter('empty', '')
+//            ->groupBy('vd.status')
+//            ->getQuery()
+//            ->enableResultCache(3600)
+//            ->getArrayResult();
 
         $result = new FilterItems(false);
         $result->addComplexItem('1', '1', 'Open', 0);
         $result->addComplexItem('0', '0', 'Closed', 0);
 
-        foreach ($rows as $row) {
-            if (null === $row['status']) {
-                $result->incUnknownCount((int) $row['count']);
-            } else {
-                $result[(int) $row['status']]->incCount((int) $row['count']);
-            }
-        }
+//        foreach ($rows as $row) {
+//            if (null === $row['status']) {
+//                $result->incUnknownCount((int) $row['count']);
+//            } else {
+//                $result[(int) $row['status']]->incCount((int) $row['count']);
+//            }
+//        }
 
         return $result;
     }

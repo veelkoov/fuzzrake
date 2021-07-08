@@ -10,8 +10,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Printer
 {
-    private ?ArtisanFixWip $lastContext = null;
-    private ?ArtisanFixWip $currentContext = null;
+    private ?ArtisanChanges $lastContext = null;
+    private ?ArtisanChanges $currentContext = null;
 
     public function __construct(
         private SymfonyStyle $io,
@@ -49,7 +49,7 @@ class Printer
         return "<fix>$item</>";
     }
 
-    public function setCurrentContext(ArtisanFixWip $artisan)
+    public function setCurrentContext(ArtisanChanges $artisan)
     {
         $this->currentContext = $artisan;
     }
@@ -82,8 +82,8 @@ class Printer
     {
         if ($this->lastContext !== $this->currentContext) {
             $this->io->section(StrUtils::artisanNamesSafeForCli(
-                $this->currentContext->getOriginal(),
-                $this->currentContext->getFixed()
+                $this->currentContext->getSubject(),
+                $this->currentContext->getChanged()
             ));
         }
 

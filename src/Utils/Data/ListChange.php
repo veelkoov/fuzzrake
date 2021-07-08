@@ -18,7 +18,6 @@ class ListChange implements ChangeInterface
         private Field $field,
         string $old,
         string $new,
-        private ?string $imported,
     ) {
         $this->old = StringList::unpack($old);
         $this->new = StringList::unpack($new);

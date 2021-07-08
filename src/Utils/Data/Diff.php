@@ -16,10 +16,10 @@ class Diff
      */
     private array $changes = [];
 
-    public function __construct(Artisan $old, Artisan $new, ?Artisan $imported)
+    public function __construct(Artisan $old, Artisan $new)
     {
         foreach (Fields::persisted() as $field) {
-            $this->addChange(...$this->getField($field, $old, $new, $imported));
+            $this->addChange(...$this->getField($field, $old, $new));
         }
     }
 
@@ -35,17 +35,17 @@ class Diff
         return !empty($this->changes);
     }
 
-    private function getField(Field $field, Artisan $old, Artisan $new, ?Artisan $imported)
+    private function getField(Field $field, Artisan $old, Artisan $new): array
     {
-        return [$field, $old->get($field), $new->get($field), $imported ? $imported->get($field) : null];
+        return [$field, $old->get($field), $new->get($field)];
     }
 
-    private function addChange(Field $field, string $old, string $new, ?string $imported): void
+    private function addChange(Field $field, string | bool $old, string | bool $new): void
     {
         if ($field->isList()) {
-            $change = new ListChange($field, $old, $new, $imported);
+            $change = new ListChange($field, $old, $new);
         } else {
-            $change = new SimpleChange($field, $old, $new, $imported);
+            $change = new SimpleChange($field, $old, $new);
         }
 
         if ($change->isActuallyAChange()) {

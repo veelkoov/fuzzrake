@@ -91,6 +91,9 @@ task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix',
 task(:phpunit)       { |_t, args| phpunit(args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
 
+task pcf: [:php_cs_fixer]
+task pu: [:phpunit]
+
 #
 # DATABASE MANAGEMENT
 #
@@ -170,6 +173,8 @@ task 'update-deps': [:composer_upgrade, :yarn_upgrade, :yarn_encore_production, 
 end
 task('commit-deps') { run_shell('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
 
+task yep: [:yarn_encore_production]
+
 #
 # COMMISSIONS STATUS UPDATES
 #
@@ -179,7 +184,7 @@ task 'get-snapshots' do
             'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-mtask(:cst, :console, 'app:update:commissions')
+mtask(:cst, :console, 'app:tracker:run-updates', 'commissions')
 mtask(:cstc, :cst, '--commit')
 mtask(:cstr, :cst, '--refetch')
 

@@ -118,4 +118,20 @@ class ArtisanUrlState
 
         return $this;
     }
+
+    public function getLastRequest(): ?DateTimeInterface
+    {
+        $r1 = $this->lastFailure;
+        $r2 = $this->lastSuccess;
+
+        if (null === $r1) {
+            return $r2;
+        }
+
+        if (null === $r2) {
+            return $r1;
+        }
+
+        return $r1 > $r2 ? $r1 : $r2;
+    }
 }

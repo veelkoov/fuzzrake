@@ -82,7 +82,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'INACTIVE_REASON'           => ['', 'INACTIVE_REASON12', 'INACTIVE_REASON12'],
         'URL_FURSUITREVIEW'         => 'https://fursuitreview.com/value___VARIANT__.html',
         'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
-        'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html',
+        'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html', // TODO: Test multiple
         'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
         'URL_FUR_AFFINITY'          => 'https://www.furaffinity.net/user/value___VARIANT__/',
         'URL_DEVIANTART'            => 'https://www.deviantart.com/value___VARIANT__.html',
@@ -99,13 +99,17 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'URL_QUEUE'                 => 'https://queue.com/value___VARIANT__.html',
         'URL_SCRITCH'               => 'https://scritch.es/value___VARIANT__.html',
         'URL_FURTRACK'              => 'https://www.furtrack.com/value___VARIANT__.html',
-        'URL_PHOTOS'                => "https://scritchphotos.com/value___VARIANT__.html\nhttps://www.furtrack.com/value___VARIANT__.html",
+        'URL_PHOTOS'                => 'https://scritchphotos.com/value___VARIANT__.html', // \nhttps://www.furtrack.com/value___VARIANT__.html
         'URL_MINIATURES'            => ['', 'URL_MINIATURE12', ''],
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
-        'URL_CST'                   => 'https://cst.com/value___VARIANT__.html',
-        'COMMISSIONS_STATUS'        => self::SKIP,
-        'CST_LAST_CHECK'            => self::SKIP,
+        'URL_COMMISSIONS'           => 'https://cst.com/value___VARIANT__.html', // TODO: Test multiple
+        'CS_LAST_CHECK'             => self::SKIP,
+        'CS_TRACKER_ISSUE'          => self::SKIP,
+        'BP_LAST_CHECK'             => self::SKIP,
+        'BP_TRACKER_ISSUE'          => self::SKIP,
         'COMPLETENESS'              => self::SKIP,
+        'OPEN_FOR'                  => self::SKIP,
+        'CLOSED_FOR'                => self::SKIP,
     ];
 
     private const VALUE_NOT_SHOWN_IN_FORM = [
@@ -120,8 +124,12 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'CONTACT_ADDRESS_PLAIN',
         'INACTIVE_REASON',
         'COMPLETENESS',
-        'COMMISSIONS_STATUS',
-        'CST_LAST_CHECK',
+        'CS_LAST_CHECK',
+        'CS_TRACKER_ISSUE',
+        'BP_LAST_CHECK',
+        'BP_TRACKER_ISSUE',
+        'OPEN_FOR',
+        'CLOSED_FOR',
     ];
 
     private const EXPANDED = [

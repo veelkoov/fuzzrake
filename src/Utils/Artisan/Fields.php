@@ -70,13 +70,17 @@ final class Fields
     public const URL_PHOTOS = 'URL_PHOTOS';
     public const URL_MINIATURES = 'URL_MINIATURES';
     public const URL_OTHER = 'URL_OTHER';
-    public const URL_CST = 'URL_CST';
+    public const URL_COMMISSIONS = 'URL_COMMISSIONS';
 
     public const NOTES = 'NOTES';
     public const INACTIVE_REASON = 'INACTIVE_REASON';
     public const PASSWORD = 'PASSWORD';
-    public const COMMISSIONS_STATUS = 'COMMISSIONS_STATUS';
-    public const CST_LAST_CHECK = 'CST_LAST_CHECK';
+    public const CS_LAST_CHECK = 'CS_LAST_CHECK';
+    public const CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
+    public const BP_LAST_CHECK = 'BP_LAST_CHECK';
+    public const BP_TRACKER_ISSUE = 'BP_TRACKER_ISSUE';
+    public const OPEN_FOR = 'OPEN_FOR';
+    public const CLOSED_FOR = 'CLOSED_FOR';
     public const COMPLETENESS = 'COMPLETENESS';
 
     public const CONTACT_ALLOWED = 'CONTACT_ALLOWED';
@@ -94,8 +98,8 @@ final class Fields
         self::$fieldsByModelName = [];
 
         foreach (FieldsDefinitions::FIELDS_ARRAY_DATA as $name => $fieldData) {
-            $field = new Field($name, $fieldData[0], $fieldData[1], (bool) $fieldData[2], (bool) $fieldData[3],
-                (bool) $fieldData[4], (bool) $fieldData[5]);
+            $field = new Field($name, $fieldData[5], $fieldData[6], (bool) $fieldData[0], (bool) $fieldData[1],
+                (bool) $fieldData[2], (bool) $fieldData[3], (bool) $fieldData[4]);
 
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
@@ -142,6 +146,14 @@ final class Fields
     public static function public(): array
     {
         return array_filter(self::$fields, fn (Field $field): bool => $field->public());
+    }
+
+    /**
+     * @return Field[] 'FIELD_NAME' => Field
+     */
+    public static function inUiForm(): array
+    {
+        return array_filter(self::$fields, fn (Field $field): bool => $field->isInUiForm());
     }
 
     /**

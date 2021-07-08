@@ -73,8 +73,9 @@ trait DbEnabledTestCaseTrait
             ->setName($name)
             ->setMakerId($makerId)
             ->setCountry($country)
-            ->getCommissionsStatus()
-            ->setLastChecked(DateTimeUtils::getNowUtc())
+            ->getVolatileData()
+            ->setLastCsUpdate(DateTimeUtils::getNowUtc())
+            ->setLastBpUpdate(DateTimeUtils::getNowUtc())
             ->getArtisan();
 
         if ('' !== $password) {

@@ -9,7 +9,7 @@ use TRegx\CleanRegex\PatternInterface;
 
 class Field implements Stringable
 {
-    private PatternInterface $validationPattern;
+    private ?PatternInterface $validationPattern;
 
     public function __construct(
         private string $name,
@@ -19,8 +19,9 @@ class Field implements Stringable
         private bool $isPersisted,
         private bool $inStats,
         private bool $public,
+        private bool $isInIuForm,
     ) {
-        $this->validationPattern = pattern($validationRegexp);
+        $this->validationPattern = null !== $validationRegexp ? pattern($validationRegexp) : null;
     }
 
     public function name(): string
@@ -33,7 +34,7 @@ class Field implements Stringable
         return $this->modelName;
     }
 
-    public function validationPattern(): PatternInterface
+    public function validationPattern(): ?PatternInterface
     {
         return $this->validationPattern;
     }
@@ -46,6 +47,16 @@ class Field implements Stringable
     public function isPersisted(): bool
     {
         return $this->isPersisted;
+    }
+
+    public function isValidated(): bool
+    {
+        return null !== $this->validationPattern;
+    }
+
+    public function isInUiForm(): bool
+    {
+        return $this->isInIuForm;
     }
 
     public function public(): bool

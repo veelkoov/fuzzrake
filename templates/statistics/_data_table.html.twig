@@ -13,12 +13,12 @@
             <tr>
                 <td>{{ a }}</td>
                 <td>
-                    {{ b }} (
+                    {{ b }} {% if total %}(
                     {{- (b / total * 100)|number_format("2") }}%
                     {%- if show_merged %}
                         &times; {{ count }} = {{ (count * b / total * 100)|number_format("2") }}%
                     {%- endif -%}
-                    )
+                    ){% endif %}
                 </td>
             </tr>
         {% endfor %}

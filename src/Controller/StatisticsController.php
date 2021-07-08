@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Artisan;
+use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
 use App\Utils\FilterItem;
@@ -52,7 +53,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(ArtisanRepository $artisanRepository): Response
+    public function statistics(ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
@@ -62,7 +63,7 @@ class StatisticsController extends AbstractController
         $features = $artisanRepository->getDistinctFeatures();
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
-        $commissionsStats = $artisanRepository->getCommissionsStats();
+        $commissionsStats = $commissionsStatusRepository->getCommissionsStats();
 
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
@@ -128,11 +129,14 @@ class StatisticsController extends AbstractController
     private function prepareCommissionsStatsTableData(array $commissionsStats): array
     {
         return [
-            'Open'                        => $commissionsStats['open'],
-            'Closed'                      => $commissionsStats['closed'],
-            'Status tracked'              => $commissionsStats['tracked'],
-            'Status successfully tracked' => $commissionsStats['successfully_tracked'],
-            'Total'                       => $commissionsStats['total'],
+            'Open for anything'              => $commissionsStats['open_for_anything'],
+            'Closed for anything'            => $commissionsStats['closed_for_anything'],
+            'Status successfully tracked'    => $commissionsStats['successfully_tracked'],
+            'Partially successfully tracked' => $commissionsStats['partially_tracked'],
+            'Tracking failed completely'     => $commissionsStats['tracking_failed'],
+            'Tracking issues'                => $commissionsStats['tracking_issues'],
+            'Status tracked'                 => $commissionsStats['tracked'],
+            'Total'                          => $commissionsStats['total'],
         ];
     }
 

@@ -72,12 +72,17 @@
                     {%- endif -%}
                 </td>
                 <td class="commissions" data-toggle="modal" data-target="#artisanDetailsModal">
-                    {%- if artisan.commissionsStatus.status is not null -%}
-                        {%- if artisan.commissionsStatus.status -%}
-                            <i class="fas fa-check-circle"></i> Open
-                        {%- else -%}
-                            <i class="fas fa-times-circle"></i> Closed
-                        {%- endif -%}
+                    {%- if artisan.commissions is not empty or artisan.csTrackerIssue -%}
+                        <ul>
+                            {%- if artisan.csTrackerIssue -%}
+                                <li class="inaccurate"><i class="fas fa-exclamation-triangle"></i>&nbsp;Tracking issues</li>
+                            {%- endif -%}
+                            {%- for offer in artisan.commissions -%}
+                                {%- set class = offer.isOpen ? 'yes' : 'no' -%}
+                                {%- set symbol = offer.isOpen ? 'fa-check-square' : 'fa-times-circle' -%}
+                                <li class="{{ class }}"><i class="fas {{ symbol }}"></i>&nbsp;{{ offer.offer }}</li>
+                            {%- endfor -%}
+                        </ul>
                     {%- endif -%}
                 </td>
                 <td class="links">

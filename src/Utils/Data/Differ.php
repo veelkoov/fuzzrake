@@ -21,7 +21,7 @@ class Differ
     {
         $newVal = $new->get($field) ?: '';
         $oldVal = $old->get($field) ?: '';
-        $impVal = $imported ? $imported->get($field) : null;
+        $impVal = $imported?->get($field);
 
         if ($oldVal !== $newVal) {
             if ($field->isList()) {

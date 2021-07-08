@@ -41,11 +41,16 @@ class Fixer
 
     public function fix(Artisan $artisan, Field $field): void
     {
-        $artisan->set($field, $this->getFixer($field)->fix($field->name(), $artisan->get($field)));
+        $value = $artisan->get($field);
+
+        if (!is_bool($value)) {
+            $artisan->set($field, $this->getFixer($field)->fix($field->name(), $value));
+        }
     }
 
     private function getFixer(Field $field): FixerInterface
     {
+        /* @noinspection PhpSwitchCanBeReplacedWithMatchExpressionInspection */
         switch ($field->name()) {
             case Fields::NAME:
             case Fields::FORMERLY:
@@ -74,7 +79,7 @@ class Fixer
             case Fields::PAYMENT_METHODS:
                 return $this->freeListFixer;
 
-            case Fields::URL_CST:
+            case Fields::URL_COMMISSIONS:
             case Fields::URL_DEVIANTART:
             case Fields::URL_FACEBOOK:
             case Fields::URL_FAQ:

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\HttpClient;
 
-use App\Utils\Web\WebsiteInfo;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\CurlHttpClient;
@@ -40,10 +39,6 @@ class HttpClient
         $options = [
             'headers' => $this->appendCookieToHeaders($additionalHeaders, $cookieJar, $url),
         ];
-
-        if (WebsiteInfo::isFurAffinity($url, null) && !empty($_ENV['FA_COOKIE'])) {
-            $options['headers']['cookie'] = $_ENV['FA_COOKIE']; // TODO: get rid of!
-        }
 
         return $this->client->request('GET', $url, $options);
     }
