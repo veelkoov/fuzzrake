@@ -21,10 +21,10 @@ class TextPreprocessor
         '(?<=return|delete) (?=this)'                                           => '_',
         '<script[^>]*>[^ ]+</script>'                                           => ' ',
 
-        '&nbsp;'                                        => ' ',
-        '<style[^>]*>.*?</style>'                       => ' ',
-        '<!--.*?-->'                                    => ' ',
-        '</?(?:strong|b|i|span|center|a|em|font)[^>]*>' => ' ',
+        '&nbsp;'                                          => ' ',
+        '<style[^>]*>.*?</style>'                         => ' ',
+        '<!--.*?-->'                                      => ' ',
+        '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => ' ',
 
         '  +'   => ' ',
         "\n\n+" => "\n",
@@ -38,7 +38,7 @@ class TextPreprocessor
     public function __construct(
         private array $falsePositivePatterns,
     ) {
-        $this->replacements = new Replacements(self::REPLACEMENTS, '', '', '');
+        $this->replacements = new Replacements(self::REPLACEMENTS, 's', '', '');
     }
 
     /**

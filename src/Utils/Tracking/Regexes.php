@@ -22,13 +22,16 @@ final class Regexes
     ];
 
     public const OFFER_REGEXES = [
-        'COMMISSIONS' => 'commissions?',
-        'TRADES'      => 'trades?',
+        'PARTS'            => 'parts? commissions?',
+        'COMMISSIONS'      => 'commissions?|custom slots?',
+        'TRADES'           => 'trades?',
+        'PRE-MADES'        => 'pre-made designs?',
+        'ARTISTIC LIBERTY' => 'artistic liberty',
     ];
 
     public const COMMON_REGEXES = [
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
-        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:COMMISSIONS)|(?:TRADES))',
+        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY))',
     ];
 
     public const FALSE_POSITIVES_REGEXES = [
