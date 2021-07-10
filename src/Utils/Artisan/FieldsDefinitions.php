@@ -14,12 +14,12 @@ final class FieldsDefinitions
 
     public const FIELDS_ARRAY_DATA = [
     //
-    //                     IS IN I/U FORM -------------.
-    //                         IS PUBLIC? ----------.  |
-    //                     SHOW IN STATS? -------.  |  |
-    //                      IS PERSISTED? ----.  |  |  |
-    //                           IS LIST? -.  |  |  |  |
-    //  PRETTY_NAME                        V  V  V  V  V   odel name (artisan)        validation regexp
+    //                    IS IN I/U FORM -------------.
+    //                        IS PUBLIC? ----------.  |
+    //                    SHOW IN STATS? -------.  |  |
+    //                     IS PERSISTED? ----.  |  |  |
+    //                          IS LIST? -.  |  |  |  |
+    //  PRETTY_NAME                       V  V  V  V  V  model name (artisan)        validation regexp
     //
         F::MAKER_ID                   => [0, 1, 1, 1, 1, 'makerId',                  V::MAKER_ID],
         F::FORMER_MAKER_IDS           => [1, 1, 1, 1, 0, 'formerMakerIds',           V::FORMER_MAKER_IDS],
