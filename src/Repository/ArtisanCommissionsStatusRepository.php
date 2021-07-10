@@ -71,7 +71,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
                                  ON a.id = avd.artisan_id
                        LEFT JOIN artisans_urls AS au_cst
                                  ON a.id = au_cst.artisan_id AND au_cst.type = :url_type
-                       LEFT JOIN artisan_commissions_status AS acs
+                       LEFT JOIN artisans_commissions_statuses AS acs
                                  ON a.id = acs.artisan_id
               WHERE a.inactive_reason = \'\'
               GROUP BY a.id

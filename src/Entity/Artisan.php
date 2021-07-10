@@ -240,7 +240,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private Collection | array $urls;
 
     /**
-     * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist", "remove"})
      *
      * @var Collection|ArtisanCommissionsStatus[]
      */
@@ -777,7 +777,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
     /**
      * @return Collection|ArtisanCommissionsStatus[]
      */
-    public function getCommissions(): Collection
+    public function getCommissions(): Collection | array
     {
         return $this->commissions;
     }
