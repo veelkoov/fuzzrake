@@ -82,7 +82,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'INACTIVE_REASON'           => ['', 'INACTIVE_REASON12', 'INACTIVE_REASON12'],
         'URL_FURSUITREVIEW'         => 'https://fursuitreview.com/value___VARIANT__.html',
         'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
-        'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html', // TODO: Test multiple
+        'URL_PRICES'                => "https://mywebsite.com/prices___VARIANT__.html\nhttps://mywebsite.com/prices-more___VARIANT__.html",
         'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
         'URL_FUR_AFFINITY'          => 'https://www.furaffinity.net/user/value___VARIANT__/',
         'URL_DEVIANTART'            => 'https://www.deviantart.com/value___VARIANT__.html',
@@ -99,10 +99,10 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'URL_QUEUE'                 => 'https://queue.com/value___VARIANT__.html',
         'URL_SCRITCH'               => 'https://scritch.es/value___VARIANT__.html',
         'URL_FURTRACK'              => 'https://www.furtrack.com/value___VARIANT__.html',
-        'URL_PHOTOS'                => 'https://scritchphotos.com/value___VARIANT__.html', // \nhttps://www.furtrack.com/value___VARIANT__.html
+        'URL_PHOTOS'                => "https://scritchphotos.com/value___VARIANT__.html\nhttps://www.furtrack.com/value___VARIANT__.html",
         'URL_MINIATURES'            => ['', 'URL_MINIATURE12', ''],
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
-        'URL_COMMISSIONS'           => 'https://cst.com/value___VARIANT__.html', // TODO: Test multiple
+        'URL_COMMISSIONS'           => "https://cst.com/value___VARIANT__.html\nhttps://cst2.com/value2___VARIANT__.html",
         'CS_LAST_CHECK'             => self::SKIP,
         'CS_TRACKER_ISSUE'          => self::SKIP,
         'BP_LAST_CHECK'             => self::SKIP,
