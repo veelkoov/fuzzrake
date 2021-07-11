@@ -124,7 +124,7 @@ class HealthCheckService
     private function getCsUpdatesStatus(): string
     {
         try {
-            return $this->getUpdatesStatus('-12 hours -15 minutes', $this->artisanVolatileDataRepository->getLastCsUpdateTime()); // TODO: How often
+            return $this->getUpdatesStatus('-12 hours -15 minutes', $this->artisanVolatileDataRepository->getLastCsUpdateTime()); // grep-tracking-frequency
         } catch (DateTimeException | UnexpectedResultException) {
             return self::WARNING;
         }
@@ -133,7 +133,7 @@ class HealthCheckService
     private function getBpUpdatesStatus(): string
     {
         try {
-            return $this->getUpdatesStatus('-7 days -15 minutes', $this->artisanVolatileDataRepository->getLastBpUpdateTime()); // TODO: How often
+            return $this->getUpdatesStatus('-7 days -15 minutes', $this->artisanVolatileDataRepository->getLastBpUpdateTime()); // grep-tracking-frequency
         } catch (DateTimeException | UnexpectedResultException) {
             return self::WARNING;
         }
