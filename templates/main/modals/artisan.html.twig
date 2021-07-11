@@ -163,15 +163,22 @@
         </div>
     </div>
 
-    {{# if artisan.commissionsUrl }}
-        {{# if artisan.isStatusKnown }}
-            <div class="col-sm-12">
-                <h5>Commissions status</h5>
-            </div>
-        {{/ if }}
+    <div class="col-sm-12 p-1">
+        <h5>Commissions status</h5>
+    </div>
 
+    {{# unless artisan.commissionsUrl }}
+        <div class="col-sm-12 p-1">
+            <p>Commissions status is not being tracked.</p>
+
+            <p><a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a></p>
+        </div>
+    {{ else }}
         <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-8{{/ if }} p-1">
             {{# if artisan.isStatusKnown }}
+                {{# if artisan.csTrackerIssue }}
+                    <p><strong>Note:</strong> the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/incomplete.</p>
+                {{/ if }}
                 <table class="table table-condensed table-striped">
                     {{# each artisan.openFor }}
                         <tr> <td>{{ this }}</td><td><i class="fas fa-check-square"></i>&nbsp;Open</td> </tr>
@@ -181,8 +188,6 @@
                     {{/ each }}
                 </table>
             {{ else }}
-                <h5>Commissions status</h5>
-
                 <p>
                     Failed to automatically determine commissions status. It should be tracked and updated automatically based on the contents of:
                     {{# each artisan.commissionsUrl }}
@@ -210,15 +215,7 @@
                 {% endverbatim %}<img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid tracking-failed" alt="">{% verbatim %}
             {{/ if }}
         </div>
-    {{ else }}
-        <div class="col-sm-12 p-1">
-            <h5>Commissions status</h5>
-
-            <p>Commissions status is not being tracked.</p>
-
-            <p><a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a></p>
-        </div>
-    {{/ if }}
+    {{/ unless }}
 
     <div class="col-sm-12 p-1 pt-3">
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
