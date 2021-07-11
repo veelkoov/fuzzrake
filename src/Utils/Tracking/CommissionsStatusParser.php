@@ -42,8 +42,6 @@ class CommissionsStatusParser
             array_push($result, ...$this->getOfferStatusesFrom($text));
         }
 
-        // TODO: Handle duplicates with different statuses
-
         return $result;
     }
 
