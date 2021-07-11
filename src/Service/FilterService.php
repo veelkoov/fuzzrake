@@ -65,7 +65,7 @@ class FilterService
 
     private function getCommissionsStatuses(): FilterItems
     {
-        $result = new FilterItems(false);
+        $result = new FilterItems(false, false);
 
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
             $result->addComplexItem($offer, $offer, $offer, (int) $openCount);

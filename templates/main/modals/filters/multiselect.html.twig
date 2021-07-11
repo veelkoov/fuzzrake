@@ -7,12 +7,14 @@
                 &bull; <a data-action="invert" href="">invert</a>
             </span>
 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value="?" data-label="Unknown" />
-                <label class="form-check-label" for="{{ itemName ~ 'CheckBoxUnknown' }}">
-                    <i class="fas fa-question-circle"></i> Unknown <span class="count">({{ items.unknownCount }})</span>
-                </label>
-            </div>
+            {% if items.isHasUnknown %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value="?" data-label="Unknown" />
+                    <label class="form-check-label" for="{{ itemName ~ 'CheckBoxUnknown' }}">
+                        <i class="fas fa-question-circle"></i> Unknown <span class="count">({{ items.unknownCount }})</span>
+                    </label>
+                </div>
+            {% endif %}
 
             {% if items.isHasOther %}
                 <div class="form-check form-check-inline">

@@ -1,8 +1,8 @@
-import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
+import AbstractSingleFieldUnFilter from "./AbstractSingleFieldUnFilter";
 import Artisan from "../../class/Artisan";
 import StatusWriter from "../StatusWriter";
 
-export default class ValueFilter<T> extends AbstractSingleFieldFilter<T> {
+export default class ValueUnFilter<T> extends AbstractSingleFieldUnFilter<T> {
     public constructor(fieldName: string) {
         super(fieldName);
     }

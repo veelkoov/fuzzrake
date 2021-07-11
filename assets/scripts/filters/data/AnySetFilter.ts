@@ -2,13 +2,13 @@ import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
 import Artisan from "../../class/Artisan";
 import StatusWriter from "../StatusWriter";
 
-export default class AnyNoOthersSetFilter<T> extends AbstractSingleFieldFilter<T> {
+export default class AnySetFilter<T> extends AbstractSingleFieldFilter<T> {
     public constructor(fieldName: string) {
         super(fieldName);
     }
 
     public matches(artisan: Artisan): boolean {
-        if (!this.isActive() || this.matchesUnknown(artisan)) {
+        if (!this.isActive()) {
             return true;
         }
 
@@ -24,6 +24,6 @@ export default class AnyNoOthersSetFilter<T> extends AbstractSingleFieldFilter<T
     }
 
     public getStatus(): string {
-        return StatusWriter.get(this.isActive(), this.isUnknownSelected(), 'any of', this.selectedLabels);
+        return StatusWriter.get(this.isActive(), false, 'any of', this.selectedLabels);
     }
 }

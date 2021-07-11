@@ -18,6 +18,7 @@ class FilterItems implements ArrayAccess
 
     public function __construct(
         private bool $hasOther,
+        private bool $hasUnknown = true,
     ) {
     }
 
@@ -69,6 +70,11 @@ class FilterItems implements ArrayAccess
     public function isHasOther(): bool
     {
         return $this->hasOther;
+    }
+
+    public function isHasUnknown(): bool
+    {
+        return $this->hasUnknown;
     }
 
     /**

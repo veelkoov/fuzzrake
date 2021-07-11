@@ -1,8 +1,8 @@
-import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
+import AbstractSingleFieldUnFilter from "./AbstractSingleFieldUnFilter";
 import Artisan from "../../class/Artisan";
 import OtherValue from "./special/OtherValue";
 
-export default abstract class AbstractSingleFieldWithOthersFilter<T> extends AbstractSingleFieldFilter<T> {
+export default abstract class AbstractSingleFieldUnOtFilter<T> extends AbstractSingleFieldUnFilter<T> {
     private readonly other: OtherValue
 
     protected constructor(fieldName: string) {

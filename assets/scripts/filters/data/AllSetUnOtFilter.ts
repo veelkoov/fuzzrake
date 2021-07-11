@@ -1,8 +1,8 @@
+import AbstractSingleFieldUnOtFilter from "./AbstractSingleFieldUnOtFilter";
 import Artisan from "../../class/Artisan";
-import AbstractSingleFieldWithOthersFilter from "./AbstractSingleFieldWithOthersFilter";
 import StatusWriter from "../StatusWriter";
 
-export default class AllOrOtherSetFilter<T> extends AbstractSingleFieldWithOthersFilter<T> {
+export default class AllSetUnOtFilter<T> extends AbstractSingleFieldUnOtFilter<T> {
     public constructor(fieldName: string) {
         super(fieldName);
     }
@@ -10,6 +10,10 @@ export default class AllOrOtherSetFilter<T> extends AbstractSingleFieldWithOther
     public matches(artisan: Artisan): boolean {
         if (!this.isActive() || this.matchesUnknown(artisan) || this.matchesOther(artisan)) {
             return true;
+        }
+
+        if ((this.isUnknownSelected() || this.isOtherSelected()) && 0 === this.selectedValues.size) {
+            return false;
         }
 
         let target: Set<T> = artisan[this.fieldName];

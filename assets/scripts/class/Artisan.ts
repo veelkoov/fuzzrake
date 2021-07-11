@@ -16,6 +16,7 @@ export default class Artisan {
     readonly allFeatures: string[];
     readonly completenessComment: string;
     readonly completenessGood: boolean;
+    readonly openFor: Set<string>;
 
     private speciesDoesntFilters: Set<string>;
     private speciesDoesFilters: Set<string>;
@@ -91,7 +92,7 @@ export default class Artisan {
                 readonly csTrackerIssue: boolean,
                 readonly bpLastCheck: string,
                 readonly bpTrackerIssue: boolean,
-                readonly openFor: string[],
+                openFor: string[],
                 readonly closedFor: string[],
                 readonly completeness: number,
 
@@ -110,7 +111,8 @@ export default class Artisan {
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
         this.completenessComment = Artisan.getCompletenessComment(completeness);
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
-        this.isStatusKnown = this.openFor.length + this.closedFor.length > 0;
+        this.openFor = new Set<string>(openFor);
+        this.isStatusKnown = this.openFor.size + this.closedFor.length > 0;
     }
 
     public getLastMakerId(): string {

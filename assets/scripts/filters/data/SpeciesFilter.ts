@@ -1,28 +1,28 @@
-import Artisan from "../../class/Artisan";
-import AnyOrOtherSetFilter from "./AnyOrOtherSetFilter";
-import AllOrOtherSetFilter from "./AllOrOtherSetFilter";
 import AbstractBaseFilter from "./AbstractBaseFilter";
-import StatusWriter from "../StatusWriter";
-import AbstractSingleFieldWithOthersFilter from "./AbstractSingleFieldWithOthersFilter";
-import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
+import AbstractSingleFieldUnFilter from "./AbstractSingleFieldUnFilter";
+import AbstractSingleFieldUnOtFilter from "./AbstractSingleFieldUnOtFilter";
 import AbstractUnknownValue from "./special/AbstractUnknownValue";
+import AllSetUnOtFilter from "./AllSetUnOtFilter";
+import AnySetUnOtFilter from "./AnySetUnOtFilter";
+import Artisan from "../../class/Artisan";
+import FilterInterface from "./FilterInterface";
 import OtherValue from "./special/OtherValue";
-import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
 import Specie from "../../species/Specie";
 import Species from "../../species/Species";
-import FilterInterface from "./FilterInterface";
+import StatusWriter from "../StatusWriter";
+import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
 
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
-    private inFilter: AbstractSingleFieldWithOthersFilter<string>;
-    private outFilter: AbstractSingleFieldFilter<string>;
+    private inFilter: AbstractSingleFieldUnOtFilter<string>;
+    private outFilter: AbstractSingleFieldUnFilter<string>;
     private unknown: AbstractUnknownValue;
     private other: OtherValue;
     private recalculationRequired = true;
 
     public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string, private readonly species: Species) {
         super();
-        this.inFilter = new AnyOrOtherSetFilter<string>(fieldNameIn);
-        this.outFilter = new AllOrOtherSetFilter<string>(fieldNameOut);
+        this.inFilter = new AnySetUnOtFilter<string>(fieldNameIn);
+        this.outFilter = new AllSetUnOtFilter<string>(fieldNameOut);
         this.unknown = new UnknownValueTwoFields(fieldNameIn, fieldNameOut);
         this.other = new OtherValue(fieldNameIn);
     }
