@@ -223,32 +223,32 @@ class Artisan implements JsonSerializable, FieldReadInterface
     private string $contactInfoObfuscated = '';
 
     /**
-     * @ORM\OneToOne(targetEntity="ArtisanVolatileData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=ArtisanVolatileData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private ?ArtisanVolatileData $volatileData = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanPrivateData", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=ArtisanPrivateData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid(groups={"iu_form"})
      */
     private ?ArtisanPrivateData $privateData = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ArtisanUrl", mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ArtisanUrl::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
      * @var Collection|ArtisanUrl[]
      */
     private Collection | array $urls;
 
     /**
-     * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
      * @var Collection|ArtisanCommissionsStatus[]
      */
     private Collection | array $commissions;
 
     /**
-     * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
      * @var Collection|MakerId[]
      */
@@ -728,8 +728,7 @@ class Artisan implements JsonSerializable, FieldReadInterface
 
     public function removeUrl(ArtisanUrl $artisanUrl): self
     {
-        if ($this->urls->contains($artisanUrl)) {
-            $this->urls->removeElement($artisanUrl);
+        if ($this->urls->removeElement($artisanUrl)) {
             if ($artisanUrl->getArtisan() === $this) {
                 $artisanUrl->setArtisan(null);
             }
