@@ -137,33 +137,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
-    public function getDistinctCommissionStatuses(): FilterItems // FIXME
-    {
-//        $rows = $this->createQueryBuilder('a')
-//            ->leftJoin('a.volatileData', 'vd')
-//            ->select("vd.status, COUNT(COALESCE(vd.status, 'null')) AS count")
-//            ->where('a.inactiveReason = :empty')
-//            ->setParameter('empty', '')
-//            ->groupBy('vd.status')
-//            ->getQuery()
-//            ->enableResultCache(3600)
-//            ->getArrayResult();
-
-        $result = new FilterItems(false);
-        $result->addComplexItem('1', '1', 'Open', 0);
-        $result->addComplexItem('0', '0', 'Closed', 0);
-
-//        foreach ($rows as $row) {
-//            if (null === $row['status']) {
-//                $result->incUnknownCount((int) $row['count']);
-//            } else {
-//                $result[(int) $row['status']]->incCount((int) $row['count']);
-//            }
-//        }
-
-        return $result;
-    }
-
     private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterItems
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\ArtisanCommissionsStatus;
+use App\Utils\Arrays;
 use App\Utils\Artisan\Fields;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
@@ -87,5 +88,15 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ])
             ->enableResultCache(3600)
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
+    }
+
+    public function getDistinctWithOpenCount(): array
+    {
+        return Arrays::assoc($this->createQueryBuilder('acs')
+            ->select('acs.offer')
+            ->addSelect('SUM(acs.isOpen) AS openCount')
+            ->groupBy('acs.offer')
+            ->getQuery()
+            ->getArrayResult(), 'offer', 'openCount');
     }
 }

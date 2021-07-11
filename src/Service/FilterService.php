@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Utils\FilterItems;
 use App\Utils\Species\Specie;
@@ -13,6 +14,7 @@ class FilterService
 {
     public function __construct(
         private ArtisanRepository $artisanRepository,
+        private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
         private CountriesDataService $countriesDataService,
         private Species $species,
     ) {
@@ -25,7 +27,7 @@ class FilterService
             'styles'              => $this->artisanRepository->getDistinctStyles(),
             'features'            => $this->artisanRepository->getDistinctFeatures(),
             'productionModels'    => $this->artisanRepository->getDistinctProductionModels(),
-            'commissionsStatuses' => $this->artisanRepository->getDistinctCommissionStatuses(),
+            'commissionsStatuses' => $this->getCommissionsStatuses(),
             'languages'           => $this->artisanRepository->getDistinctLanguages(),
             'countries'           => $this->countriesDataService->getFilterData(),
             'states'              => $this->artisanRepository->getDistinctStatesToCountAssoc(),
@@ -59,5 +61,16 @@ class FilterService
         } else {
             return $specie->getName();
         }
+    }
+
+    private function getCommissionsStatuses(): FilterItems
+    {
+        $result = new FilterItems(false);
+
+        foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
+            $result->addComplexItem($offer, $offer, $offer, (int) $openCount);
+        }
+
+        return $result;
     }
 }
