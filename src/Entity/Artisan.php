@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -24,7 +25,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
  * @ORM\Table(name="artisans")
  */
-class Artisan implements JsonSerializable, FieldReadInterface
+class Artisan implements JsonSerializable, FieldReadInterface, Stringable
 {
     /**
      * @ORM\Id()
@@ -291,6 +292,11 @@ class Artisan implements JsonSerializable, FieldReadInterface
         foreach ($commissionsToClone as $commission) {
             $this->addCommission(clone $commission);
         }
+    }
+
+    public function __toString(): string
+    {
+        return self::class.":$this->id:$this->makerId";
     }
 
     // ===== LEGITIMATE GETTERS AND SETTERS =====

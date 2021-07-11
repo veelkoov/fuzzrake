@@ -142,6 +142,6 @@ class ArtisanUrl implements Fetchable, Stringable
 
     public function __toString(): string
     {
-        return self::class.":{$this->id}:{$this->url}";
+        return self::class.":$this->id:$this->url";
     }
 }

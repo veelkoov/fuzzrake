@@ -66,14 +66,23 @@ class CommissionsTrackerTask implements TrackerTaskInterface
                 $statuses = $this->extractArtisanCommissionsStatuses($url);
 
                 if (0 === count($statuses)) {
+                    $this->logger->notice('No statuses detected in URL', [
+                        'artisan' => (string) $artisan,
+                        'url'     => (string) $url,
+                    ]);
+
                     $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
-                    // TODO: Log some information
                 }
 
                 array_push($newItems, ...$statuses);
-            } catch (ExceptionInterface | TrackerException) {
+            } catch (ExceptionInterface | TrackerException $exception) {
+                $this->logger->notice('Exception caught while detecting statuses in URL', [
+                    'artisan'   => (string) $artisan,
+                    'url'       => (string) $url,
+                    'exception' => $exception,
+                ]);
+
                 $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
-                // TODO: Log some information
             }
         }
 
@@ -89,19 +98,35 @@ class CommissionsTrackerTask implements TrackerTaskInterface
             }
 
             // We have at best a duplicated offer
+
+            $this->logger->notice('Duplicated status detected', [
+                'artisan' => (string) $artisan,
+                'offer'   => $status->getOffer(),
+            ]);
+
             $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
 
             $previousStatus = $statuses[$status->getOffer()];
 
             if (null === $previousStatus) {
                 // We have a 3rd+ offer with different statuses
-                // TODO: Log some information
+
+                $this->logger->notice('Contradicting statuses detected (more than once)', [
+                    'artisan' => (string) $artisan,
+                    'offer'   => $status->getOffer(),
+                ]);
+
                 continue;
             }
 
             if ($previousStatus->getIsOpen() != $status->getIsOpen()) {
                 // We have a 2nd offer and the status differs
-                // TODO: Log some information
+
+                $this->logger->notice('Contradicting statuses detected', [
+                    'artisan' => (string) $artisan,
+                    'offer'   => $status->getOffer(),
+                ]);
+
                 $result->getChanged()->getCommissions()->removeElement($previousStatus);
                 $statuses[$status->getOffer()] = null;
             }
