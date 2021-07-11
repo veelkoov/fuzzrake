@@ -58,8 +58,9 @@ end
 #
 
 task(:default) { run_shell('rake', '--tasks', '--all') }
-task(:console) { |_t, args| run_console(args) }
+task(:console) { |_t, args| run_console(*args) }
 task(:cc)      { clear_cache }
+task(:cl)      { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
 
 #
 # TESTING AND DEV
@@ -88,8 +89,11 @@ task('fix-phpunit')  { fix_phpunit }
 task('docker-dev')   { Dir.chdir('docker') { run_shell('docker-compose', 'up', '--detach', '--build') } }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
-task(:phpunit)       { |_t, args| phpunit(args) }
+task(:phpunit)       { |_t, args| phpunit(*args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
+
+task pcf: ['php-cs-fixer']
+task pu: [:phpunit]
 
 #
 # DATABASE MANAGEMENT
@@ -169,6 +173,8 @@ task 'update-deps': [:composer_upgrade, :yarn_upgrade, :yarn_encore_production, 
   phpunit
 end
 task('commit-deps') { run_shell('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
+
+task yep: [:yarn_encore_production]
 
 #
 # COMMISSIONS STATUS UPDATES
