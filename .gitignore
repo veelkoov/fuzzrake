@@ -2,9 +2,6 @@
 *.nocommit
 *.iml
 /.idea/
-# TODO: Get rid of those
-/tests/snapshots/*
-!/tests/snapshots/.gitkeep
 /db_dump/*
 !/db_dump/.gitkeep
 
