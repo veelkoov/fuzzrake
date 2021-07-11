@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Utils\Accessors\Commission;
+use App\Utils\Accessors\Url;
 use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
-use App\Utils\Artisan\UrlUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -956,31 +957,28 @@ class Artisan implements JsonSerializable, FieldReadInterface
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getOpenFor(): array
+    public function getOpenFor(): string
     {
-        return $this->getCommissionsStatusesMatching(true);
+        return Commission::get($this, true);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getClosedFor(): array
+    public function setOpenFor(string $openFor): self
     {
-        return $this->getCommissionsStatusesMatching(false);
+        Commission::set($this, true, $openFor);
+
+        return $this;
     }
 
-    /**
-     * @return string[]
-     */
-    private function getCommissionsStatusesMatching(bool $isOpen): array
+    public function getClosedFor(): string
     {
-        return array_values($this->commissions
-            ->filter(fn (ArtisanCommissionsStatus $status) => $status->getIsOpen() === $isOpen)
-            ->map(fn (ArtisanCommissionsStatus $status)    => $status->getOffer())
-            ->toArray());
+        return Commission::get($this, false);
+    }
+
+    public function setClosedFor(string $closedFor): self
+    {
+        Commission::set($this, false, $closedFor);
+
+        return $this;
     }
 
     //
@@ -1316,17 +1314,17 @@ class Artisan implements JsonSerializable, FieldReadInterface
      */
     public function getUrlObjs(string $urlFieldName): array
     {
-        return UrlUtils::getUrlObjs($this, $urlFieldName);
+        return Url::getObjs($this, $urlFieldName);
     }
 
     private function getUrl(string $urlFieldName): string
     {
-        return UrlUtils::getUrl($this, $urlFieldName);
+        return Url::get($this, $urlFieldName);
     }
 
     private function setUrl(string $urlFieldName, string $newUrl): void
     {
-        UrlUtils::setUrl($this, $urlFieldName, $newUrl);
+        Url::set($this, $urlFieldName, $newUrl);
     }
 
     //
