@@ -6,15 +6,18 @@ namespace App\Service;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanVolatileDataRepository;
 use App\Utils\FilterItems;
 use App\Utils\Species\Specie;
 use App\Utils\Species\Species;
+use Doctrine\ORM\UnexpectedResultException;
 
 class FilterService
 {
     public function __construct(
         private ArtisanRepository $artisanRepository,
         private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
+        private ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private CountriesDataService $countriesDataService,
         private Species $species,
     ) {
@@ -63,13 +66,24 @@ class FilterService
         }
     }
 
+    /**
+     * @throws UnexpectedResultException
+     */
     private function getCommissionsStatuses(): FilterItems
     {
         $result = new FilterItems(false, false);
 
+        $trackedCount = $this->artisanRepository->getCsTrackedCount();
+        $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
+        $activeCount = $this->artisanRepository->countActive();
+        $nonTrackedCount = $activeCount - $trackedCount;
+
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
-            $result->addComplexItem($offer, $offer, $offer, (int) $openCount);
+            $result->addComplexItem('commissionsStatus', $offer, $offer, (int) $openCount);
         }
+
+        $result->addComplexItem('commissionsStatus', '?', 'Tracking issues', $issuesCount);
+        $result->addComplexItem('commissionsStatus', '-', 'Not tracked', $nonTrackedCount);
 
         return $result;
     }

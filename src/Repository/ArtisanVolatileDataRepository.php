@@ -70,4 +70,18 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             return 'unknown/error';
         }
     }
+
+    /**
+     * @throws UnexpectedResultException
+     */
+    public function getCsTrackingIssuesCount(): int
+    {
+        return (int) $this->createQueryBuilder('avd')
+            ->select('COUNT(avd.id)')
+            ->where('avd.csTrackerIssue = :true')
+            ->setParameter('true', true)
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleScalarResult();
+    }
 }

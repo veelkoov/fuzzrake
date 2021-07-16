@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
+use App\Utils\Arrays;
+use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\FilterItems;
 use App\Utils\UnbelievableRuntimeException;
@@ -12,6 +14,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
 
@@ -274,5 +277,24 @@ class ArtisanRepository extends ServiceEntityRepository
         } catch (NoResultException | NonUniqueResultException $e) {
             throw new RuntimeException($e);
         }
+    }
+
+    /**
+     * @throws UnexpectedResultException
+     */
+    public function getCsTrackedCount(): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->leftJoin('a.urls', 'au')
+            ->select('COUNT(DISTINCT a.id)')
+            ->where('au.type = :type')
+            ->andWhere('a.inactiveReason = :empty')
+            ->setParameters([
+                'type' => Fields::URL_COMMISSIONS,
+                'empty' => '',
+            ])
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleScalarResult();
     }
 }
