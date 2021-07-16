@@ -257,6 +257,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->andWhere('a.inactiveReason = :empty')
             ->setParameters($parameters)
             ->getQuery()
+            ->enableResultCache(3600)
             ->getResult();
     }
 
@@ -268,6 +269,7 @@ class ArtisanRepository extends ServiceEntityRepository
                 ->where('a.inactiveReason = :empty')
                 ->setParameter('empty', '')
                 ->getQuery()
+                ->enableResultCache(3600)
                 ->getSingleScalarResult();
         } catch (NoResultException | NonUniqueResultException $e) {
             throw new RuntimeException($e);

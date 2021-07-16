@@ -97,6 +97,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->addSelect('SUM(acs.isOpen) AS openCount')
             ->groupBy('acs.offer')
             ->getQuery()
+            ->enableResultCache(3600)
             ->getArrayResult(), 'offer', 'openCount');
     }
 }
