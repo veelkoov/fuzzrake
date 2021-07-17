@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Filters;
 
-class FilterItem
+class Item
 {
     public function __construct(
-        private int | string | FilterItems $value,
+        private string | Set $value,
         private string $label = '',
         private int $count = 0,
     ) {
@@ -19,7 +19,7 @@ class FilterItem
         return $this->label;
     }
 
-    public function getValue(): int | string | FilterItems
+    public function getValue(): string | Set
     {
         return $this->value;
     }
@@ -36,6 +36,6 @@ class FilterItem
 
     public function isComplex(): bool
     {
-        return $this->value instanceof FilterItems;
+        return $this->value instanceof Set;
     }
 }

@@ -7,7 +7,8 @@ namespace App\Service;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
-use App\Utils\FilterItems;
+use App\Utils\Filters\FilterData;
+use App\Utils\Filters\Set;
 use App\Utils\Species\Specie;
 use App\Utils\Species\Species;
 use Doctrine\ORM\UnexpectedResultException;
@@ -23,6 +24,9 @@ class FilterService
     ) {
     }
 
+    /**
+     * @throws UnexpectedResultException
+     */
     public function getFiltersTplData(): array
     {
         return [
@@ -38,7 +42,7 @@ class FilterService
         ];
     }
 
-    private function getSpeciesFilterItems(): FilterItems
+    private function getSpeciesFilterItems(): Set
     {
         return $this->getSpeciesFilterItemsFromArray($this->species->getSpeciesTree());
     }
@@ -46,9 +50,9 @@ class FilterService
     /**
      * @param Specie[] $species
      */
-    private function getSpeciesFilterItemsFromArray(array $species): FilterItems
+    private function getSpeciesFilterItemsFromArray(array $species): Set
     {
-        $result = new FilterItems(true);
+        $result = new Set();
 
         foreach ($species as $specie) {
             $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO: count
@@ -57,7 +61,7 @@ class FilterService
         return $result;
     }
 
-    private function getSpeciesFilterItem(Specie $specie): FilterItems | string
+    private function getSpeciesFilterItem(Specie $specie): Set | string
     {
         if ($specie->hasChildren()) {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
@@ -69,9 +73,9 @@ class FilterService
     /**
      * @throws UnexpectedResultException
      */
-    private function getCommissionsStatuses(): FilterItems
+    private function getCommissionsStatuses(): FilterData
     {
-        $result = new FilterItems(false, false);
+        $result = new FilterData(false, false);
 
         $trackedCount = $this->artisanRepository->getCsTrackedCount();
         $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
@@ -79,11 +83,11 @@ class FilterService
         $nonTrackedCount = $activeCount - $trackedCount;
 
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
-            $result->addComplexItem('commissionsStatus', $offer, $offer, (int) $openCount);
+            $result->getItems()->addComplexItem('commissionsStatus', $offer, $offer, (int) $openCount);
         }
 
-        $result->addComplexItem('commissionsStatus', '?', 'Tracking issues', $issuesCount);
-        $result->addComplexItem('commissionsStatus', '-', 'Not tracked', $nonTrackedCount);
+        $result->getItems()->addComplexItem('commissionsStatus', '?', 'Tracking issues', $issuesCount);
+        $result->getItems()->addComplexItem('commissionsStatus', '-', 'Not tracked', $nonTrackedCount);
 
         return $result;
     }

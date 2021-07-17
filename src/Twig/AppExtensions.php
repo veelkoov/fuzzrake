@@ -13,7 +13,7 @@ use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\FilterItem;
+use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -145,7 +145,7 @@ class AppExtensions extends AbstractExtension
     {
         $pattern = pattern($matchWord, 'i');
 
-        return array_filter($items, fn (FilterItem $item) => $pattern->test($item->getLabel()));
+        return array_filter($items, fn (Item $item) => $pattern->test($item->getLabel()));
     }
 
     public function filterHumanFriendlyRegexp(string $input): string

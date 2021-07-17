@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Artisan;
-use App\Utils\Arrays;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\ValidationRegexps;
-use App\Utils\FilterItems;
+use App\Utils\Filters\FilterData;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -90,68 +89,68 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getDistinctCountriesToCountAssoc(): FilterItems
+    public function getDistinctCountriesToCountAssoc(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
     }
 
-    public function getDistinctStatesToCountAssoc(): FilterItems
+    public function getDistinctStatesToCountAssoc(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('state');
     }
 
-    public function getDistinctOrderTypes(): FilterItems
+    public function getDistinctOrderTypes(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
     }
 
-    public function getDistinctOtherOrderTypes(): FilterItems
+    public function getDistinctOtherOrderTypes(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
     }
 
-    public function getDistinctStyles(): FilterItems
+    public function getDistinctStyles(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('styles', true);
     }
 
-    public function getDistinctOtherStyles(): FilterItems
+    public function getDistinctOtherStyles(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('otherStyles');
     }
 
-    public function getDistinctFeatures(): FilterItems
+    public function getDistinctFeatures(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('features', true);
     }
 
-    public function getDistinctOtherFeatures(): FilterItems
+    public function getDistinctOtherFeatures(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
     }
 
-    public function getDistinctProductionModels(): FilterItems
+    public function getDistinctProductionModels(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
-    public function getDistinctLanguages(): FilterItems
+    public function getDistinctLanguages(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterItems
+    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);
 
-        $result = new FilterItems($countOther);
+        $result = new FilterData($countOther);
 
         foreach ($rows as $row) {
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
                 if (($item = trim($item))) {
-                    $result->addOrIncItem($item);
+                    $result->getItems()->addOrIncItem($item);
                 }
             }
 
@@ -164,7 +163,7 @@ class ArtisanRepository extends ServiceEntityRepository
             }
         }
 
-        $result->sort();
+        $result->getItems()->sort();
 
         return $result;
     }
@@ -290,7 +289,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('au.type = :type')
             ->andWhere('a.inactiveReason = :empty')
             ->setParameters([
-                'type' => Fields::URL_COMMISSIONS,
+                'type'  => Fields::URL_COMMISSIONS,
                 'empty' => '',
             ])
             ->getQuery()

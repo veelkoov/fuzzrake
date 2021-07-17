@@ -8,8 +8,9 @@ use App\Entity\Artisan;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\Fields;
-use App\Utils\FilterItem;
-use App\Utils\FilterItems;
+use App\Utils\Filters\FilterData;
+use App\Utils\Filters\Item;
+use App\Utils\Filters\Set;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -81,7 +82,7 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    private function prepareTableData(FilterItems $input): array
+    private function prepareTableData(FilterData $input): array
     {
         $result = [];
 
@@ -109,13 +110,13 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @param FilterItem[] $items
-     *
-     * @return FilterItem[]
+     * @return Item[]
      */
-    private function prepareListData(array $items): array
+    private function prepareListData(Set $items): array
     {
-        uksort($items, function ($keyA, $keyB) use ($items) {
+        $result = $items->getItems();
+
+        uksort($result, function ($keyA, $keyB) use ($items) {
             if ($items[$keyA]->getCount() !== $items[$keyB]->getCount()) {
                 return $items[$keyB]->getCount() - $items[$keyA]->getCount();
             }
@@ -123,7 +124,7 @@ class StatisticsController extends AbstractController
             return strcmp($items[$keyA]->getLabel(), $items[$keyB]->getLabel());
         });
 
-        return $items;
+        return $result;
     }
 
     private function prepareCommissionsStatsTableData(array $commissionsStats): array

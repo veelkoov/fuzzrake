@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Repository\ArtisanRepository;
-use App\Utils\FilterItems;
+use App\Utils\Filters\FilterData;
+use App\Utils\Filters\Set;
 use App\Utils\Json;
 use JsonException;
 
@@ -26,7 +27,7 @@ class CountriesDataService
         $this->loadCountriesData($projectDir);
     }
 
-    public function getFilterData(): FilterItems
+    public function getFilterData(): FilterData
     {
         $artisansCountries = $this->artisanRepository->getDistinctCountriesToCountAssoc();
 
@@ -37,8 +38,8 @@ class CountriesDataService
             $code = $country->getValue();
             $region = $this->data[$code]['region'];
 
-            $result[$region]->incCount($country->getCount());
-            $result[$region]->getValue()->addComplexItem($code, $code, $this->data[$code]['name'],
+            $result->getItems()[$region]->incCount($country->getCount());
+            $result->getItems()[$region]->getValue()->addComplexItem($code, $code, $this->data[$code]['name'],
                 $country->getCount());
         }
 
@@ -47,14 +48,14 @@ class CountriesDataService
         return $result;
     }
 
-    private function getRegionsFromCountries(array $countriesData): FilterItems
+    private function getRegionsFromCountries(array $countriesData): FilterData
     {
         $regionNames = array_unique(array_map(fn (array $country): string => $country['region'], $countriesData));
 
-        $result = new FilterItems(false);
+        $result = new FilterData(false);
 
         foreach ($regionNames as $regionName) {
-            $result->addComplexItem($regionName, new FilterItems(false), $regionName, 0);
+            $result->getItems()->addComplexItem($regionName, new Set(), $regionName, 0);
         }
 
         return $result;
@@ -75,7 +76,7 @@ class CountriesDataService
         $this->data = $dataCodeIndexes;
     }
 
-    private function sortInRegions(FilterItems $result): void
+    private function sortInRegions(FilterData $result): void
     {
         foreach ($result->getItems() as $item) {
             $item->getValue()->sort();
