@@ -42,31 +42,31 @@
     </div>
     <div id="filter-body-states" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/states.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'state', items: filters.states } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'state', filter_data: filters.states } %}
     </div>
     <div id="filter-body-languages" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/languages.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'lanugage', items: filters.languages } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'lanugage', filter_data: filters.languages } %}
     </div>
     <div id="filter-body-styles" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/styles.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'style', items: filters.styles } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'style', filter_data: filters.styles } %}
     </div>
     <div id="filter-body-features" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/features.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'feature', items: filters.features } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'feature', filter_data: filters.features } %}
     </div>
     <div id="filter-body-orderTypes" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/order_types.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'orderType', items: filters.orderTypes } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'orderType', filter_data: filters.orderTypes } %}
     </div>
     <div id="filter-body-productionModels" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/production_models.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'productionModel', items: filters.productionModels } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'productionModel', filter_data: filters.productionModels } %}
     </div>
     <div id="filter-body-commissionsStatus" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/commissions_status.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { itemName: 'commissionsStatuses', items: filters.commissionsStatuses } %}
+        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'commissionsStatuses', filter_data: filters.commissionsStatuses } %}
     </div>
     <div id="filter-body-species" class="collapse" data-parent="#filters-parents">
         {% include 'main/modals/filters/helphints/species.html.twig' %}

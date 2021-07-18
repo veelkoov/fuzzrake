@@ -1,0 +1,17 @@
+{% macro filter_checkbox(group_name, id_part, value, label, count, label_html_prefix = '') %}
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="{{ group_name }}CheckBox{{ id_part }}"
+               value="{{ value }}" data-label="{{ label }}" />
+        <label class="form-check-label" for="{{ group_name }}CheckBox{{ id_part }}">
+            {{ label_html_prefix|raw }} {{ label }} <span class="count">({{ count }})</span>
+        </label>
+    </div>
+{% endmacro %}
+
+{% macro fitler_all_none_invert(class) %}
+    <span class="allNoneInvert {{ class }}" aria-hidden="true">
+        select: <a data-action="all" href="">all</a>
+        &bull; <a data-action="none" href="">none</a>
+        &bull; <a data-action="invert" href="">invert</a>
+    </span>
+{% endmacro %}
