@@ -12,7 +12,7 @@ final class SpecialItems
 
     public static function newUnknown(int $initialValue = 0): SpecialItem
     {
-        $result = new SpecialItem('_u', '?', 'Unknown', 'fas fa-question-circle');
+        $result = new SpecialItem('_u', '?', 'Unknown', 'fas fa-question-circle'); // grep-special-value-unknown
         $result->incCount($initialValue);
 
         return $result;
@@ -20,12 +20,12 @@ final class SpecialItems
 
     public static function newOther(): SpecialItem
     {
-        return new SpecialItem('_o', '*', 'Other', 'fas fa-asterisk');
+        return new SpecialItem('_o', '*', 'Other', 'fas fa-asterisk'); // grep-special-value-other
     }
 
     public static function newTrackingIssues(int $initialValue): SpecialItem
     {
-        $result = new SpecialItem('_ti', '!', 'Tracking issues', 'fa fa-exclamation-triangle');
+        $result = new SpecialItem('_ti', '!', 'Tracking issues', 'fa fa-exclamation-triangle'); // grep-special-value-tracking-issues
         $result->incCount($initialValue);
 
         return $result;
@@ -33,7 +33,7 @@ final class SpecialItems
 
     public static function newNotTracked(int $initialValue): SpecialItem
     {
-        $result = new SpecialItem('_nt', '', 'Not tracked', 'fas fa-question-circle');
+        $result = new SpecialItem('_nt', '-', 'Not tracked', 'fas fa-question-circle'); // grep-special-value-not-tracked
         $result->incCount($initialValue);
 
         return $result;

@@ -113,7 +113,7 @@ class FilterService
         $result = new FilterData($trackingIssues, $notTracked);
 
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
-            $result->getItems()->addComplexItem('commissionsStatus', $offer, $offer, (int) $openCount);
+            $result->getItems()->addComplexItem($offer, $offer, $offer, (int) $openCount);
         }
 
         return $result;

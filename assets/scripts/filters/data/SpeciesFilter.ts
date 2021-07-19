@@ -1,7 +1,6 @@
 import AbstractBaseFilter from "./AbstractBaseFilter";
 import AbstractSingleFieldUnFilter from "./AbstractSingleFieldUnFilter";
 import AbstractSingleFieldUnOtFilter from "./AbstractSingleFieldUnOtFilter";
-import AbstractUnknownValue from "./special/AbstractUnknownValue";
 import AllSetUnOtFilter from "./AllSetUnOtFilter";
 import AnySetUnOtFilter from "./AnySetUnOtFilter";
 import Artisan from "../../class/Artisan";
@@ -15,7 +14,7 @@ import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private inFilter: AbstractSingleFieldUnOtFilter<string>;
     private outFilter: AbstractSingleFieldUnFilter<string>;
-    private unknown: AbstractUnknownValue;
+    private unknown: UnknownValueTwoFields;
     private other: OtherValue;
     private recalculationRequired = true;
 

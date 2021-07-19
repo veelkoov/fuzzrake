@@ -1,14 +1,14 @@
-import FilterVisInterface from "../filters/ui/FilterVisInterface";
-import DataBridge from "../class/DataBridge";
-import DataTablesFilterPlugin from "../filters/DataTablesFilterPlugin";
-import GenericFilterVis from "../filters/ui/GenericFilterVis";
-import ValueUnFilter from "../filters/data/ValueUnFilter";
-import AnySetUnOtFilter from "../filters/data/AnySetUnOtFilter";
 import AllSetUnOtFilter from "../filters/data/AllSetUnOtFilter";
 import AnySetUnFilter from "../filters/data/AnySetUnFilter";
-import AnySetFilter from "../filters/data/AnySetFilter";
-import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
+import AnySetUnOtFilter from "../filters/data/AnySetUnOtFilter";
+import DataBridge from "../class/DataBridge";
+import DataTablesFilterPlugin from "../filters/DataTablesFilterPlugin";
+import FilterVisInterface from "../filters/ui/FilterVisInterface";
+import GenericFilterVis from "../filters/ui/GenericFilterVis";
+import OpenForFilter from "../filters/data/OpenForFilter";
 import Species from "../species/Species";
+import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
+import ValueUnFilter from "../filters/data/ValueUnFilter";
 
 let filters: FilterVisInterface[] = [];
 let $filtersShowButton: JQuery<HTMLElement>;
@@ -60,7 +60,7 @@ export function initFilters(): void {
     filters.push(new GenericFilterVis<string>('orderTypes', new AnySetUnOtFilter('orderTypes')));
     filters.push(new GenericFilterVis<string>('productionModels', new AnySetUnFilter('productionModels')));
     filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
-    filters.push(new GenericFilterVis<boolean>('commissionsStatus', new AnySetFilter('openFor')));
+    filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
     filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);
