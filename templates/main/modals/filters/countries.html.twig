@@ -3,9 +3,7 @@
 <fieldset class="region">
     <div class="row">
         <div class="col-sm-12">
-            {% for item in filters.countries.specialItems %}
-                {{ macros.filter_checkbox('country', item.idPart, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
-            {% endfor %}
+            {{ macros.filter_special_items(filters.countries, 'country') }}
         </div>
     </div>
 </fieldset>
@@ -16,7 +14,7 @@
             <legend>
                 {{ region.label }} <span class="count">({{ region.count }})</span>
 
-                {{  macros.fitler_all_none_invert('countries') }}
+                {{  macros.filter_all_none_invert('countries') }}
             </legend>
 
             <div class="row">

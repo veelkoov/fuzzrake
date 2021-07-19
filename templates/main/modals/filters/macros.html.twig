@@ -8,7 +8,13 @@
     </div>
 {% endmacro %}
 
-{% macro fitler_all_none_invert(class) %}
+{% macro filter_special_items(filter_data, group_name) %}
+    {% for item in filter_data.specialItems %}
+        {{ _self.filter_checkbox(group_name, item.idPart, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro filter_all_none_invert(class) %}
     <span class="allNoneInvert {{ class }}" aria-hidden="true">
         select: <a data-action="all" href="">all</a>
         &bull; <a data-action="none" href="">none</a>

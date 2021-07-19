@@ -3,11 +3,9 @@
 <fieldset>
     <div class="row">
         <div class="col-sm-12">
-            {{  macros.fitler_all_none_invert('simple') }}
+            {{ macros.filter_all_none_invert('simple') }}
 
-            {% for item in filter_data.specialItems %}
-                {{ macros.filter_checkbox(group_name, item.idPart, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
-            {% endfor %}
+            {{ macros.filter_special_items(filter_data, group_name) }}
         </div>
     </div>
 
