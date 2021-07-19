@@ -5,13 +5,9 @@
         <div class="col-sm-12">
             {{  macros.fitler_all_none_invert('simple') }}
 
-            {% if filter_data.isHasUnknown %}
-                {{ macros.filter_checkbox(group_name, '_u', '?', 'Unknown', filter_data.unknownCount, '<i class="fas fa-question-circle"></i>') }}
-            {% endif %}
-
-            {% if filter_data.isHasOther %}
-                {{ macros.filter_checkbox(group_name, '_o', '*', 'Other', filter_data.otherCount, '<i class="fas fa-asterisk"></i>') }}
-            {% endif %}
+            {% for item in filter_data.specialItems %}
+                {{ macros.filter_checkbox(group_name, item.idPart, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
+            {% endfor %}
         </div>
     </div>
 

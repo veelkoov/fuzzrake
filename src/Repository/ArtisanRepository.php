@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\Filters\FilterData;
+use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -143,7 +144,15 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);
 
-        $result = new FilterData($countOther);
+        $unknown = SpecialItems::newUnknown();
+        $special = [$unknown];
+
+        if ($countOther) {
+            $other = SpecialItems::newOther();
+            $special[] = $other;
+        }
+
+        $result = new FilterData(...$special);
 
         foreach ($rows as $row) {
             $items = explode("\n", $row['items']);
@@ -155,11 +164,11 @@ class ArtisanRepository extends ServiceEntityRepository
             }
 
             if ($countOther && !empty($row['otherItems'])) {
-                $result->incOtherCount();
+                $other->incCount();
             }
 
             if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {
-                $result->incUnknownCount();
+                $unknown->incCount();
             }
         }
 

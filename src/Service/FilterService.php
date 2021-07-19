@@ -9,6 +9,7 @@ use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\Set;
+use App\Utils\Filters\SpecialItems;
 use App\Utils\Species\Specie;
 use App\Utils\Species\Species;
 use Doctrine\ORM\UnexpectedResultException;
@@ -36,10 +37,37 @@ class FilterService
             'productionModels'    => $this->artisanRepository->getDistinctProductionModels(),
             'commissionsStatuses' => $this->getCommissionsStatuses(),
             'languages'           => $this->artisanRepository->getDistinctLanguages(),
-            'countries'           => $this->countriesDataService->getFilterData(),
+            'countries'           => $this->getCountriesFilterData(),
             'states'              => $this->artisanRepository->getDistinctStatesToCountAssoc(),
             'species'             => $this->getSpeciesFilterItems(),
         ];
+    }
+
+    private function getCountriesFilterData(): FilterData
+    {
+        $artisansCountries = $this->artisanRepository->getDistinctCountriesToCountAssoc();
+
+        $unknown = SpecialItems::newUnknown($artisansCountries->getSpecialItems()[0]->getCount()); // FIXME: Ugly hack [0]
+        $result = new FilterData($unknown);
+
+        foreach ($this->countriesDataService->getRegions() as $regionName) {
+            $result->getItems()->addComplexItem($regionName, new Set(), $regionName, 0);
+        }
+
+        foreach ($artisansCountries->getItems() as $country) {
+            $code = $country->getValue();
+            $region = $this->countriesDataService->getRegionFrom($code);
+            $name = $this->countriesDataService->getNameFor($code);
+
+            $result->getItems()[$region]->incCount($country->getCount());
+            $result->getItems()[$region]->getValue()->addComplexItem($code, $code, $name, $country->getCount());
+        }
+
+        foreach ($result->getItems() as $item) {
+            $item->getValue()->sort();
+        }
+
+        return $result;
     }
 
     private function getSpeciesFilterItems(): Set
@@ -75,19 +103,18 @@ class FilterService
      */
     private function getCommissionsStatuses(): FilterData
     {
-        $result = new FilterData(false, false);
-
         $trackedCount = $this->artisanRepository->getCsTrackedCount();
         $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
         $activeCount = $this->artisanRepository->countActive();
         $nonTrackedCount = $activeCount - $trackedCount;
 
+        $trackingIssues = SpecialItems::newTrackingIssues($issuesCount);
+        $notTracked = SpecialItems::newNotTracked($nonTrackedCount);
+        $result = new FilterData($trackingIssues, $notTracked);
+
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
             $result->getItems()->addComplexItem('commissionsStatus', $offer, $offer, (int) $openCount);
         }
-
-        $result->getItems()->addComplexItem('commissionsStatus', '?', 'Tracking issues', $issuesCount);
-        $result->getItems()->addComplexItem('commissionsStatus', '-', 'Not tracked', $nonTrackedCount);
 
         return $result;
     }

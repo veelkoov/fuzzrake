@@ -101,10 +101,9 @@ class StatisticsController extends AbstractController
         $result = array_flip($result);
         arsort($result);
 
-        if ($input->isHasOther()) {
-            $result['Other'] = $input->getOtherCount();
+        foreach ($input->getSpecialItems() as $item) {
+            $result[$item->getLabel()] = $item->getCount();
         }
-        $result['Unknown'] = $input->getUnknownCount();
 
         return $result;
     }

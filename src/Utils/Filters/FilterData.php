@@ -6,49 +6,26 @@ namespace App\Utils\Filters;
 
 class FilterData
 {
-    private int $unknownCount = 0;
-    private int $otherCount = 0;
     private Set $items;
+    private array $specialItems;
 
     public function __construct(
-        private bool $hasOther,
-        private bool $hasUnknown = true,
+        SpecialItem ...$specialItems,
     ) {
         $this->items = new Set();
-    }
-
-    public function incUnknownCount(int $number = 1): void
-    {
-        $this->unknownCount += $number;
-    }
-
-    public function incOtherCount(): void
-    {
-        ++$this->otherCount;
-    }
-
-    public function getUnknownCount(): int
-    {
-        return $this->unknownCount;
-    }
-
-    public function getOtherCount(): int
-    {
-        return $this->otherCount;
-    }
-
-    public function isHasOther(): bool
-    {
-        return $this->hasOther;
-    }
-
-    public function isHasUnknown(): bool
-    {
-        return $this->hasUnknown;
+        $this->specialItems = $specialItems;
     }
 
     public function getItems(): Set
     {
         return $this->items;
+    }
+
+    /**
+     * @return SpecialItem[]
+     */
+    public function getSpecialItems(): array
+    {
+        return $this->specialItems;
     }
 }
