@@ -4,14 +4,14 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="specieCheckBoxUnknown" value="?" data-label="Unknown" />
                 <label class="form-check-label" for="specieCheckBoxUnknown">
-                    <i class="fas fa-question-circle"></i> Unknown{# TODO <span class="count">({{ filters.species.unknownCount }})</span>#}
+                    <i class="fas fa-question-circle"></i> Unknown {# TODO: #76 Species count #}
                 </label>
             </div>
 
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="specieCheckBoxOther" value="*" data-label="Other" />
                 <label class="form-check-label" for="specieCheckBoxOther">
-                    <i class="fas fa-asterisk"></i> Other{# TODO  <span class="count">({{ filters.species.otherCount }})</span>#}
+                    <i class="fas fa-asterisk"></i> Other {# TODO: #76 Species count #}
                 </label>
             </div>
         </div>
@@ -28,7 +28,7 @@
                         <span class="btn btn-outline-secondary">
                             <input type="checkbox" id="{{ checkboxId }}" value="{{ item.label }}" data-label="{{ item.label }}" />
                             <label for="{{ checkboxId }}">
-                                {{ item.label }}{# TODO <span class="count">({{ item.count }})</span> #}
+                                {{ item.label }} {# TODO: #76 Species count #}
                                 <span class="descendants-indicator"><i class="fas fa-tasks"></i></span>
                             </label>
                         </span>

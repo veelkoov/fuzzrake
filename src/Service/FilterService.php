@@ -83,7 +83,7 @@ class FilterService
         $result = new Set();
 
         foreach ($species as $specie) {
-            $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO: count
+            $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO: #76 Species count
         }
 
         return $result;
