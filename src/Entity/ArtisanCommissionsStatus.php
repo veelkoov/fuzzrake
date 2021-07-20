@@ -10,12 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ArtisanCommissionsStatusRepository::class)
  * @ORM\Table(name="artisans_commissions_statuses")
+ *
+ * NOTE: Ephemeral information, can be recreated by running update command. Table should not be committed, as that
+ *       would generate too much noise in the repo history
  */
 class ArtisanCommissionsStatus
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private ?int $id = null;
