@@ -967,6 +967,14 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
         return Commission::get($this, true);
     }
 
+    /**
+     * @return string[]
+     */
+    public function getOpenForArray(): array
+    {
+        return Commission::getList($this, true);
+    }
+
     public function setOpenFor(string $openFor): self
     {
         Commission::set($this, true, $openFor);
@@ -977,6 +985,14 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
     public function getClosedFor(): string
     {
         return Commission::get($this, false);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getClosedForArray(): array
+    {
+        return Commission::getList($this, false);
     }
 
     public function setClosedFor(string $closedFor): self

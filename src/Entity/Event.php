@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Utils\Data\ArtisanChanges;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StringList;
 use DateTimeInterface;
@@ -44,24 +43,29 @@ class Event
     private string $type = self::TYPE_DATA_UPDATED;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=256)
      */
-    private ?bool $oldStatus;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private ?bool $newStatus = null;
+    private string $noLongerOpenFor = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    private string $artisanName;
+    private string $nowOpenFor = '';
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $hadTrackingIssues = false;
+
+    /**
+     * @ORM\Column(type="string", length=256)
+     */
+    private string $artisanName = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    private string $checkedUrl;
+    private string $checkedUrls = '';
 
     /**
      * @Assert\GreaterThanOrEqual(value="0")
@@ -90,16 +94,9 @@ class Event
      */
     private string $gitCommits = '';
 
-    public function __construct(string $checkedUrl = '', string $artisanName = '', ?bool $oldStatus = null, ArtisanChanges $changes = null)
+    public function __construct()
     {
         $this->timestamp = DateTimeUtils::getNowUtc();
-        $this->checkedUrl = $checkedUrl;
-        $this->artisanName = $artisanName;
-        $this->oldStatus = $oldStatus;
-
-        if (null !== $changes) {
-            // FIXME
-        }
     }
 
     public function getId(): ?int
@@ -138,6 +135,58 @@ class Event
         return $this;
     }
 
+    public function getNoLongerOpenFor(): string
+    {
+        return $this->noLongerOpenFor;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNoLongerOpenForArray(): array
+    {
+        return StringList::unpack($this->noLongerOpenFor);
+    }
+
+    public function setNoLongerOpenFor(string $noLongerOpenFor): self
+    {
+        $this->noLongerOpenFor = $noLongerOpenFor;
+
+        return $this;
+    }
+
+    public function getNowOpenFor(): string
+    {
+        return $this->nowOpenFor;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNowOpenForArray(): array
+    {
+        return StringList::unpack($this->nowOpenFor);
+    }
+
+    public function setNowOpenFor(string $nowOpenFor): self
+    {
+        $this->nowOpenFor = $nowOpenFor;
+
+        return $this;
+    }
+
+    public function getHadTrackingIssues(): bool
+    {
+        return $this->hadTrackingIssues;
+    }
+
+    public function setHadTrackingIssues(bool $hadTrackingIssues): self
+    {
+        $this->hadTrackingIssues = $hadTrackingIssues;
+
+        return $this;
+    }
+
     public function getType(): string
     {
         return $this->type;
@@ -146,30 +195,6 @@ class Event
     public function setType(string $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getOldStatus(): ?bool
-    {
-        return $this->oldStatus;
-    }
-
-    public function setOldStatus(?bool $oldStatus): self
-    {
-        $this->oldStatus = $oldStatus;
-
-        return $this;
-    }
-
-    public function getNewStatus(): ?bool
-    {
-        return $this->newStatus;
-    }
-
-    public function setNewStatus(?bool $newStatus): self
-    {
-        $this->newStatus = $newStatus;
 
         return $this;
     }
@@ -186,14 +211,22 @@ class Event
         return $this;
     }
 
-    public function getCheckedUrl(): string
+    public function getCheckedUrls(): string
     {
-        return $this->checkedUrl;
+        return $this->checkedUrls;
     }
 
-    public function setCheckedUrl(string $checkedUrl): self
+    /**
+     * @return string[]
+     */
+    public function getCheckedUrlsArray(): array
     {
-        $this->checkedUrl = $checkedUrl;
+        return StringList::unpack($this->checkedUrls);
+    }
+
+    public function setCheckedUrls(string $checkedUrls): self
+    {
+        $this->checkedUrls = $checkedUrls;
 
         return $this;
     }
@@ -203,7 +236,7 @@ class Event
         return $this->newMakersCount;
     }
 
-    public function setNewMakersCount(int $newMakersCount): Event
+    public function setNewMakersCount(int $newMakersCount): self
     {
         $this->newMakersCount = $newMakersCount;
 
@@ -215,7 +248,7 @@ class Event
         return $this->updatedMakersCount;
     }
 
-    public function setUpdatedMakersCount(int $updatedMakersCount): Event
+    public function setUpdatedMakersCount(int $updatedMakersCount): self
     {
         $this->updatedMakersCount = $updatedMakersCount;
 
@@ -227,7 +260,7 @@ class Event
         return $this->reportedUpdatedMakersCount;
     }
 
-    public function setReportedUpdatedMakersCount(int $reportedUpdatedMakersCount): Event
+    public function setReportedUpdatedMakersCount(int $reportedUpdatedMakersCount): self
     {
         $this->reportedUpdatedMakersCount = $reportedUpdatedMakersCount;
 
@@ -239,7 +272,7 @@ class Event
         return $this->gitCommits;
     }
 
-    public function setGitCommits(string $gitCommits): Event
+    public function setGitCommits(string $gitCommits): self
     {
         $this->gitCommits = $gitCommits;
 
@@ -252,11 +285,6 @@ class Event
     public function getGitCommitsArray(): array
     {
         return StringList::unpack($this->gitCommits);
-    }
-
-    public function isLostTrack(): bool
-    {
-        return $this->isChangedStatus() && null === $this->newStatus;
     }
 
     public function isChangedStatus(): bool
