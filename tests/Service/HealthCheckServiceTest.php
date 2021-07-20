@@ -67,7 +67,6 @@ class HealthCheckServiceTest extends TestCase
             ->willReturn(...$subsequentRepoReturnedDateTimes)
         ;
 
-        /** @noinspection PhpParamsInspection */
         $hcSrv = new HealthCheckService($avdrMock, self::HC_VALUES);
 
         static::assertEquals(array_shift($hcSubsequentExpectedResultCheckedValue), $hcSrv->getStatus()[$hcServiceResultCheckedKey]);
@@ -77,7 +76,7 @@ class HealthCheckServiceTest extends TestCase
     /**
      * @throws Exception
      */
-    public function getXyzUpdatesStatusDataProvider(): array
+    public function getXyzUpdatesStatusDataProvider(): array // grep-tracking-frequency
     {
         $utc = new DateTimeZone('UTC');
 
@@ -290,7 +289,6 @@ class HealthCheckServiceTest extends TestCase
     {
         $acsrMock = $this->createMock(ArtisanVolatileDataRepository::class);
 
-        /* @noinspection PhpParamsInspection */
         return new HealthCheckService($acsrMock, self::HC_VALUES);
     }
 }
