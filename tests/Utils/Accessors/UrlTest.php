@@ -2,16 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Artisan;
+namespace App\Tests\Utils\Accessors;
 
 use App\Entity\Artisan;
 use App\Entity\ArtisanUrl;
+use App\Utils\Accessors\AbstractAccessor;
+use App\Utils\Accessors\Url;
 use App\Utils\Artisan\Fields;
+use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 
-class UrlUtilsTest extends TestCase
+/**
+ * @see AbstractAccessor
+ * @see ArtisanChanges
+ * @see Url
+ */
+class UrlTest extends TestCase
 {
-    public function testSetUrl(): void
+    public function testSet(): void
     {
         $artisan = new Artisan();
         $artisan->setWebsiteUrl('website')
@@ -53,15 +61,7 @@ class UrlUtilsTest extends TestCase
         ], $this->getUrlArray($artisan));
     }
 
-    private function getUrlArray(Artisan $artisan): array
-    {
-        $result = array_map(fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl(), $artisan->getUrls()->toArray());
-        sort($result);
-
-        return $result;
-    }
-
-    public function testGetUrl(): void
+    public function testGet(): void
     {
         $artisan = new Artisan();
         $artisan->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
@@ -72,7 +72,7 @@ class UrlUtilsTest extends TestCase
         self::assertEquals("PRICE1\nCOST2", $artisan->getPricesUrl());
     }
 
-    public function testGetUrlObjs(): void
+    public function testGetObjs(): void
     {
         $url1 = $this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES);
         $url2 = $this->getNewArtisanUrl('COST2', Fields::URL_PRICES);
@@ -83,6 +83,14 @@ class UrlUtilsTest extends TestCase
 
         self::assertEquals([$url1, $url2], array_values($artisan->getUrlObjs(Fields::URL_PRICES)));
         self::assertEquals([$url3], array_values($artisan->getUrlObjs(Fields::URL_WEBSITE)));
+    }
+
+    private function getUrlArray(Artisan $artisan): array
+    {
+        $result = array_map(fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl(), $artisan->getUrls()->toArray());
+        sort($result);
+
+        return $result;
     }
 
     private function getNewArtisanUrl(string $url, string $type): ArtisanUrl
