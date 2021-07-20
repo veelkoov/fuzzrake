@@ -65,6 +65,6 @@ export default class OpenForFilter<T> extends AbstractSingleFieldFilter<T> {
     }
 
     public getStatus(): string {
-        return StatusWriter.get(this.isActive(), false, 'any of', this.selectedLabels); // FIXME: Not tracked & Tracking issues
+        return StatusWriter.get(this.isActive(), 'any of', this.selectedLabels, this.trackingIssues.isSelected() ? 'tracking issues' : undefined, this.notTracked.isSelected() ? 'not tracked' : undefined);
     }
 }

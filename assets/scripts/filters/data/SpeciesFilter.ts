@@ -31,7 +31,7 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     }
 
     public getStatus(): string {
-        return StatusWriter.get(this.isActive(), this.unknown.isSelected(), 'any of', this.selectedLabels, this.other.isSelected() ? 'Other' : undefined);
+        return StatusWriter.get(this.isActive(), 'any of', this.selectedLabels, this.unknown.isSelected() ? 'unknown' : undefined, this.other.isSelected() ? 'Other' : undefined);
     }
 
     public matches(artisan: Artisan): boolean {
