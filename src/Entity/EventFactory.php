@@ -12,7 +12,7 @@ class EventFactory
 {
     use UtilityClass;
 
-    public static function fromArtisanChanges(ArtisanChanges $changes): Event
+    public static function forCsTracker(ArtisanChanges $changes): Event
     {
         $original = $changes->getSubject();
         $changed = $changes->getChanged();
@@ -21,6 +21,8 @@ class EventFactory
         $nowOpenFor = array_diff($changed->getOpenForArray(), $original->getOpenForArray());
 
         return (new Event())
+            ->setType(Event::TYPE_CS_UPDATED)
+            ->setCheckedUrls($changed->getCommissionsUrl())
             ->setArtisanName($changed->getName())
             ->setTrackingIssues($changed->getCsTrackerIssue())
             ->setNoLongerOpenFor(StringList::pack($noLongerOpenFor))

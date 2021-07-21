@@ -63,7 +63,7 @@ class TrackerTaskRunner
 
         foreach ($updates as $update) {
             if ($update->differs()) {
-                $event = EventFactory::fromArtisanChanges($update);
+                $event = EventFactory::forCsTracker($update);
                 $this->entityManager->persist($event);
 
                 $update->apply();

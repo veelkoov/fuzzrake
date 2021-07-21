@@ -287,12 +287,12 @@ class Event
         return StringList::unpack($this->gitCommits);
     }
 
-    public function isChangedStatus(): bool
+    public function isTypeCsUpdated(): bool
     {
         return self::TYPE_CS_UPDATED == $this->type;
     }
 
-    public function isUpdates(): bool
+    public function isTypeDataUpdated(): bool
     {
         return self::TYPE_DATA_UPDATED === $this->type;
     }

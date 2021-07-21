@@ -16,16 +16,19 @@ class EventFactoryTest extends TestCase
      *
      * @param string[] $expectedNoLongerOpenFor
      * @param string[] $expectedNowOpenFor
+     * @param string[] $expectedCheckedUrls
      */
-    public function testFromArtisanChanges(ArtisanChanges $inputArtisanChanges, bool $expectedHadTrackerIssues,
-    string $expectedArtisanName, array $expectedNoLongerOpenFor, array $expectedNowOpenFor): void
+    public function testForCsTracker(ArtisanChanges $inputArtisanChanges, bool $expectedHadTrackerIssues,
+    string $expectedArtisanName, array $expectedNoLongerOpenFor, array $expectedNowOpenFor, array $expectedCheckedUrls): void
     {
-        $result = EventFactory::fromArtisanChanges($inputArtisanChanges);
+        $result = EventFactory::forCsTracker($inputArtisanChanges);
 
+        self::assertEquals('CS_UPDATED', $result->getType());
         self::assertEquals($expectedHadTrackerIssues, $result->getTrackingIssues());
         self::assertEquals($expectedArtisanName, $result->getArtisanName());
         self::assertEquals($expectedNoLongerOpenFor, $result->getNoLongerOpenForArray());
         self::assertEquals($expectedNowOpenFor, $result->getNowOpenForArray());
+        self::assertEquals($expectedCheckedUrls, $result->getCheckedUrlsArray());
     }
 
     public function fromArtisanChangesDataProvider(): array
@@ -34,6 +37,7 @@ class EventFactoryTest extends TestCase
             ->setName('Artisan name 1')
             ->setOpenFor("Commissions\nPre-mades")
             ->setCsTrackerIssue(false)
+            ->setCommissionsUrl("abc1\ndef1")
         ;
         $changes1 = new ArtisanChanges($artisan1);
         $changes1->getChanged()
@@ -45,6 +49,7 @@ class EventFactoryTest extends TestCase
             ->setName('Artisan name 2')
             ->setOpenFor('')
             ->setCsTrackerIssue(true)
+            ->setCommissionsUrl('def2')
         ;
         $changes2 = new ArtisanChanges($artisan2);
         $changes2->getChanged()
@@ -56,6 +61,7 @@ class EventFactoryTest extends TestCase
             ->setName('Artisan name 3')
             ->setOpenFor('Old stuff')
             ->setCsTrackerIssue(false)
+            ->setCommissionsUrl("abc3\ndef3\nghi3")
         ;
         $changes3 = new ArtisanChanges($artisan3);
         $changes3->getChanged()
@@ -64,9 +70,9 @@ class EventFactoryTest extends TestCase
         ;
 
         return [
-            [$changes1, true, 'Artisan name 1', ['Commissions'], ['Artistic liberty']],
-            [$changes2, false, 'Artisan name 2', [], ['New stuff']],
-            [$changes3, false, 'Artisan name 3', ['Old stuff'], []],
+            [$changes1, true, 'Artisan name 1', ['Commissions'], ['Artistic liberty'], ['abc1', 'def1']],
+            [$changes2, false, 'Artisan name 2', [], ['New stuff'], ['def2']],
+            [$changes3, false, 'Artisan name 3', ['Old stuff'], [], ['abc3', 'def3', 'ghi3']],
         ];
     }
 }

@@ -39,15 +39,6 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('other', [$this, 'otherFilter']),
             new TwigFilter('nulldate', [$this, 'nulldateFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
-            new TwigFilter('status_text', function (?bool $status): string {
-                if (true === $status) {
-                    return 'OPEN';
-                } elseif (false === $status) {
-                    return 'CLOSED';
-                } else {
-                    return 'UNKNOWN';
-                }
-            }),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
             new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
