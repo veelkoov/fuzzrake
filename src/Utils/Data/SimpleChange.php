@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\Utils\Artisan\Field;
+use App\Utils\StrUtils;
 
 class SimpleChange implements ChangeInterface
 {
@@ -18,8 +19,8 @@ class SimpleChange implements ChangeInterface
     public function getDescription(): string
     {
         $name = $this->field->name();
-        $old = $this->asString($this->old);
-        $new = $this->asString($this->new);
+        $old = StrUtils::asStr($this->old);
+        $new = StrUtils::asStr($this->new);
 
         if ($old === $new) {
             return $name.': '.'no changes';
@@ -39,14 +40,5 @@ class SimpleChange implements ChangeInterface
     public function isActuallyAChange(): bool
     {
         return $this->old !== $this->new;
-    }
-
-    private function asString(bool | string $value): string
-    {
-        if (is_bool($value)) {
-            $value = $value ? 'True' : 'False';
-        }
-
-        return $value;
     }
 }

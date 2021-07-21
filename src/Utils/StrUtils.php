@@ -70,4 +70,13 @@ final class StrUtils
             }
         }
     }
+
+    public static function asStr(bool | string $value): string
+    {
+        if (is_bool($value)) {
+            $value = $value ? 'True' : 'False';
+        }
+
+        return $value;
+    }
 }

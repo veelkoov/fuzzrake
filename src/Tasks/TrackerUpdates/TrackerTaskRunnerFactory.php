@@ -9,6 +9,8 @@ use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\BasePrices\BasePricesTrackerTask;
 use App\Tasks\TrackerUpdates\Commissions\CommissionsTrackerTask;
+use App\Utils\Data\FdvFactory;
+use App\Utils\Data\Printer;
 use App\Utils\Tracking\CommissionsStatusParser;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -27,6 +29,7 @@ class TrackerTaskRunnerFactory
         private EntityManagerInterface $entityManager,
         private WebpageSnapshotManager $webpageSnapshotManager,
         private CommissionsStatusParser $parser,
+        private FdvFactory $fdvFactory,
     ) {
         $this->artisanRepository = $entityManager->getRepository(Artisan::class);
     }
@@ -38,6 +41,7 @@ class TrackerTaskRunnerFactory
             $this->logger,
             $this->entityManager,
             $this->webpageSnapshotManager,
+            $this->fdvFactory->create(new Printer($io)),
             $refetch,
             $commit,
             $io,

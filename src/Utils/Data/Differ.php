@@ -19,9 +19,9 @@ class Differ
 
     public function showDiff(Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
-        $newVal = $new->get($field) ?: '';
-        $oldVal = $old->get($field) ?: '';
-        $impVal = $imported?->get($field);
+        $newVal = StrUtils::asStr($new->get($field) ?? '');
+        $oldVal = StrUtils::asStr($old->get($field) ?? '');
+        $impVal = StrUtils::asStr($imported?->get($field) ?? '');
 
         if ($oldVal !== $newVal) {
             if ($field->isList()) {
