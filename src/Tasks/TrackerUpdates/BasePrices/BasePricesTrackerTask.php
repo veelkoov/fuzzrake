@@ -7,8 +7,8 @@ namespace App\Tasks\TrackerUpdates\BasePrices;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\TrackerUpdates\ArtisanUpdatesInterface;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\Tracking\TrackerException;
 use Psr\Log\LoggerInterface;
 
@@ -32,7 +32,7 @@ class BasePricesTrackerTask implements TrackerTaskInterface
     /**
      * @noinspection PhpDocRedundantThrowsInspection
      *
-     * @return ArtisanUpdatesInterface[]
+     * @return ArtisanChanges[]
      *
      * @throws TrackerException
      */
