@@ -32,7 +32,7 @@ class FixerDifferValidator
     public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
-        $anyDifference = $this->hasAnyDifference($artisan);
+        $anyDifference = $artisan->differs();
 
         foreach (Fields::persisted() as $field) {
             $this->printer->setCurrentContext($artisan);
@@ -100,16 +100,5 @@ class FixerDifferValidator
         }
 
         return $artisan;
-    }
-
-    private function hasAnyDifference(ArtisanChanges $artisan): bool
-    {
-        foreach (Fields::persisted() as $field) {
-            if ($artisan->getSubject()->get($field) != $artisan->getChanged()->get($field)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

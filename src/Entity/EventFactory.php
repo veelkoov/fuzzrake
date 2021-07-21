@@ -22,7 +22,7 @@ class EventFactory
 
         return (new Event())
             ->setArtisanName($changed->getName())
-            ->setHadTrackingIssues($changed->getCsTrackerIssue())
+            ->setTrackingIssues($changed->getCsTrackerIssue())
             ->setNoLongerOpenFor(StringList::pack($noLongerOpenFor))
             ->setNowOpenFor(StringList::pack($nowOpenFor));
     }

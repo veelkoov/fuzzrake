@@ -55,7 +55,7 @@ class Event
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $hadTrackingIssues = false;
+    private bool $trackingIssues = false;
 
     /**
      * @ORM\Column(type="string", length=256)
@@ -175,14 +175,14 @@ class Event
         return $this;
     }
 
-    public function getHadTrackingIssues(): bool
+    public function getTrackingIssues(): bool
     {
-        return $this->hadTrackingIssues;
+        return $this->trackingIssues;
     }
 
-    public function setHadTrackingIssues(bool $hadTrackingIssues): self
+    public function setTrackingIssues(bool $trackingIssues): self
     {
-        $this->hadTrackingIssues = $hadTrackingIssues;
+        $this->trackingIssues = $trackingIssues;
 
         return $this;
     }

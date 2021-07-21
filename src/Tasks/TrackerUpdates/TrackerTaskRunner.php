@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates;
 
+use App\Entity\EventFactory;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator;
@@ -39,9 +40,7 @@ class TrackerTaskRunner
         $this->report($updates);
 
         if ($this->commit) {
-            foreach ($updates as $update) {
-                $update->apply();
-            }
+            $this->apply($updates);
         }
     }
 
@@ -53,5 +52,26 @@ class TrackerTaskRunner
         foreach ($updates as $update) {
             $this->fdv->perform($update, FixerDifferValidator::SHOW_DIFF);
         }
+    }
+
+    /**
+     * @param ArtisanChanges[] $updates
+     */
+    private function apply(array $updates): void
+    {
+        $this->io->progressStart(count($updates));
+
+        foreach ($updates as $update) {
+            if ($update->differs()) {
+                $event = EventFactory::fromArtisanChanges($update);
+                $this->entityManager->persist($event);
+
+                $update->apply();
+            }
+
+            $this->io->progressAdvance();
+        }
+
+        $this->io->progressFinish();
     }
 }

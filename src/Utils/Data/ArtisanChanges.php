@@ -39,4 +39,15 @@ class ArtisanChanges
             $this->subject->set($field, $this->changed->get($field));
         }
     }
+
+    public function differs(): bool
+    {
+        foreach (Fields::persisted() as $field) {
+            if ($this->getSubject()->get($field) != $this->getChanged()->get($field)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -22,7 +22,7 @@ class EventFactoryTest extends TestCase
     {
         $result = EventFactory::fromArtisanChanges($inputArtisanChanges);
 
-        self::assertEquals($expectedHadTrackerIssues, $result->getHadTrackingIssues());
+        self::assertEquals($expectedHadTrackerIssues, $result->getTrackingIssues());
         self::assertEquals($expectedArtisanName, $result->getArtisanName());
         self::assertEquals($expectedNoLongerOpenFor, $result->getNoLongerOpenForArray());
         self::assertEquals($expectedNowOpenFor, $result->getNowOpenForArray());
