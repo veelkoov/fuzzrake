@@ -12,6 +12,8 @@ use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
+use App\Utils\StrUtils;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -924,11 +926,14 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
         return ContactPermit::FEEDBACK === $this->contactAllowed;
     }
 
-    public function getCsLastCheck(): string
+    public function getCsLastCheck(): ?DateTimeInterface
     {
-        $lc = $this->getVolatileData()->getLastCsUpdate();
+        return $this->getVolatileData()->getLastCsUpdate();
+    }
 
-        return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+    public function setCsLastCheck(?DateTimeInterface $csLastCheck): void
+    {
+        $this->getVolatileData()->setLastCsUpdate($csLastCheck);
     }
 
     public function getCsTrackerIssue(): bool
@@ -943,11 +948,14 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
         return $this;
     }
 
-    public function getBpLastCheck(): string
+    public function getBpLastCheck(): ?DateTimeInterface
     {
-        $lc = $this->getVolatileData()->getLastBpUpdate();
+        return $this->getVolatileData()->getLastBpUpdate();
+    }
 
-        return null === $lc ? 'unknown' : $lc->format('Y-m-d H:i:s');
+    public function setBpLastCheck(?DateTimeInterface $bpLastCheck): void
+    {
+        $this->getVolatileData()->setLastBpUpdate($bpLastCheck);
     }
 
     public function getBpTrackerIssue(): bool
@@ -1360,6 +1368,8 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
         return array_map(function (Field $field) {
             $value = match ($field->name()) {
                 Fields::COMPLETENESS       => $this->getCompleteness(),
+                Fields::CS_LAST_CHECK      => StrUtils::asStr($this->getCsLastCheck()),
+                Fields::BP_LAST_CHECK      => StrUtils::asStr($this->getBpLastCheck()),
                 default                    => $this->get($field),
             };
 

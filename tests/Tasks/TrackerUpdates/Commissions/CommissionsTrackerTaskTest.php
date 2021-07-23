@@ -14,18 +14,22 @@ use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\OfferStatus;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
+use DateTime;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class CommissionsTrackerTaskTest extends TestCase
 {
-    public function testNoCommissionsUrlResetsErrorAndOffers(): void
+    public function testNoCommissionsUrlResetsEverything(): void
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(true) // We had error marker before
             ->addCommission(new ArtisanCommissionsStatus()) // There was some status
             ->setCommissionsUrl(''); // Artisan removed tracking
+        $inputArtisan->getVolatileData()
+            ->setLastCsUpdate(new DateTime('1 day ago')); // We had some check previously
 
         $testSubject = $this->getTestSubject($inputArtisan, []);
         $testResult = $testSubject->getUpdates();
@@ -34,6 +38,23 @@ class CommissionsTrackerTaskTest extends TestCase
 
         self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error marker is removed
         self::assertOfferStatuses([], $changedArtisan); // Offers got cleared
+        self::assertNull($changedArtisan->getCsLastCheck()); // Last CS check reset to null
+    }
+
+    public function testCheckSetsLastCsTimestamp(): void
+    {
+        $inputArtisan = (new Artisan())
+            ->setCommissionsUrl('one-url'); // There is a single URL to check
+
+        $testSubject = $this->getTestSubject($inputArtisan, [
+            [], // We get empty analysis result (should not matter for the timestamp)
+        ]);
+        $testResult = $testSubject->getUpdates();
+
+        $changedArtisan = $this->getChangedArtisan($testResult);
+
+        self::assertNotNull($changedArtisan->getCsLastCheck()); // The last CS timestamp got set
+        self::assertInstanceOf(DateTimeInterface::class, $changedArtisan->getCsLastCheck());
     }
 
     public function testSuccessfulCheckResetsErrorState(): void
@@ -162,7 +183,11 @@ class CommissionsTrackerTaskTest extends TestCase
 
         $loggerMock = self::createMock(LoggerInterface::class);
 
-        $dummyWebpageSnapshot = new WebpageSnapshot('', '', DateTimeUtils::getNowUtc(), '', Response::HTTP_OK, []);
+        $urlsFetchDateTime = DateTimeUtils::getNowUtc();
+        $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, []);
+        foreach ($artisan->getUrls() as $url) {
+            $url->getState()->setLastSuccess($urlsFetchDateTime);
+        }
 
         $snapshotsMock = self::createMock(WebpageSnapshotManager::class);
         $snapshotsMock

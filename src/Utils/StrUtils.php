@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\Fields;
 use App\Utils\Traits\UtilityClass;
+use DateTimeInterface;
 
 final class StrUtils
 {
@@ -71,9 +72,13 @@ final class StrUtils
         }
     }
 
-    public static function asStr(bool | string $value): string
+    public static function asStr(DateTimeInterface | bool | string | null $value): string
     {
-        if (is_bool($value)) {
+        if (null === $value) {
+            return 'unknown';
+        } elseif ($value instanceof DateTimeInterface) {
+            return $value->format('Y-m-d H:i:s');
+        } elseif (is_bool($value)) {
             $value = $value ? 'True' : 'False';
         }
 

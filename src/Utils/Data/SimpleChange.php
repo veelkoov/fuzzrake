@@ -6,13 +6,14 @@ namespace App\Utils\Data;
 
 use App\Utils\Artisan\Field;
 use App\Utils\StrUtils;
+use DateTimeInterface;
 
 class SimpleChange implements ChangeInterface
 {
     public function __construct(
         private Field $field,
-        private string | bool $old,
-        private string | bool $new,
+        private DateTimeInterface | string | bool | null $old,
+        private DateTimeInterface | string | bool | null $new,
     ) {
     }
 

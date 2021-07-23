@@ -43,7 +43,7 @@ class Fixer
     {
         $value = $artisan->get($field);
 
-        if (!is_bool($value)) {
+        if (is_string($value)) {
             $artisan->set($field, $this->getFixer($field)->fix($field->name(), $value));
         }
     }

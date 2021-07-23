@@ -8,6 +8,7 @@ use App\Entity\Artisan;
 use App\Utils\Artisan\Field;
 use App\Utils\Artisan\Fields;
 use App\Utils\StrUtils;
+use DateTimeInterface;
 
 class Diff
 {
@@ -40,7 +41,7 @@ class Diff
         return [$field, $old->get($field), $new->get($field)];
     }
 
-    private function addChange(Field $field, string | bool $old, string | bool $new): void
+    private function addChange(Field $field, DateTimeInterface | string | bool | null $old, DateTimeInterface | string | bool | null $new): void
     {
         if ($field->isList()) {
             $change = new ListChange($field, $old, $new);

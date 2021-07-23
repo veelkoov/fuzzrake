@@ -55,6 +55,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         $result = new ArtisanChanges($artisan);
         $result->getChanged()->getCommissions()->clear();
         $result->getChanged()->getVolatileData()->setCsTrackerIssue(false);
+        $result->getChanged()->getVolatileData()->setLastCsUpdate(null);
 
         /* @var $newItems ArtisanCommissionsStatus[] */
         $newItems = [];
