@@ -39,10 +39,12 @@ final class Regexes
 
     public const FALSE_POSITIVES_REGEXES = [
         'next commissions? opening estimated',
+        '(?:if|when|while) commissions are STATUS',
     ];
 
     public const OFFER_STATUS_REGEXES = [
         'OFFER(?: status)? ?:? STATUS',
+        'OFFER are (?:(?:currently|now) )?STATUS',
         'STATUS for OFFER',
     ];
 }
