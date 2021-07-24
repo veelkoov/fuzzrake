@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
+use App\DataDefinitions\FieldsDefinitions;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\EnvironmentsService;
-use App\Utils\Artisan\FieldsDefinitions;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

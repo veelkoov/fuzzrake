@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
+use App\DataDefinitions\FieldsList;
 use App\Utils\Accessors\Commission;
 use App\Utils\Accessors\Url;
 use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\ContactPermit;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -1360,10 +1361,7 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
     // ===== JSON STUFF =====
     //
 
-    /**
-     * @param Field[] $fields
-     */
-    private function getValuesForJson(array $fields): array
+    private function getValuesForJson(FieldsList $fields): array
     {
         return array_map(function (Field $field) {
             $value = match ($field->name()) {
@@ -1374,7 +1372,7 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
             };
 
             return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
-        }, $fields);
+        }, $fields->asArray());
     }
 
     public function getPublicData(): array

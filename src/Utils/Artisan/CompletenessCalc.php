@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\DataDefinitions\Fields as F;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Fields as F;
 use App\Utils\Traits\UtilityClass;
 
 final class CompletenessCalc

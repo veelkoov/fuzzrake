@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 

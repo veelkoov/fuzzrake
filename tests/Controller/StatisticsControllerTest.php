@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\DataDefinitions\Fields;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
 use App\Utils\Artisan\Features;
-use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
 use Symfony\Component\DomCrawler\Crawler;

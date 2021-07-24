@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\DataDefinitions\Fields;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Arrays;
-use App\Utils\Artisan\Fields;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMapping;

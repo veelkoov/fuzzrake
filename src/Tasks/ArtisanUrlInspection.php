@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
+use App\DataDefinitions\FieldsDefinitions;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Utils\Artisan\FieldsDefinitions;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;

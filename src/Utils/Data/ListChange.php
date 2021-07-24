@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Utils\Artisan\Field;
+use App\DataDefinitions\Field;
 use App\Utils\StringList;
 
 class ListChange implements ChangeInterface

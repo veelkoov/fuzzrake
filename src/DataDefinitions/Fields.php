@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Artisan;
+namespace App\DataDefinitions;
 
-use App\Utils\Traits\Singleton;
+use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 
 final class Fields
 {
-    use Singleton;
+    use UtilityClass;
 
     public const MAKER_ID = 'MAKER_ID';
     public const FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
@@ -92,6 +92,14 @@ final class Fields
     private static ?array $fields = null;
     private static ?array $fieldsByModelName = null;
 
+    public static ?FieldsList $all = null;
+    public static ?FieldsList $persisted = null;
+    public static ?FieldsList $public = null;
+    public static ?FieldsList $inIuForm = null;
+    public static ?FieldsList $inStats = null;
+    public static ?FieldsList $lists = null;
+    public static ?FieldsList $urls = null;
+
     public static function init()
     {
         self::$fields = [];
@@ -104,14 +112,6 @@ final class Fields
             self::$fields[$field->name()] = $field;
             self::$fieldsByModelName[$field->modelName()] = $field;
         }
-    }
-
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function getAll(): array
-    {
-        return self::$fields;
     }
 
     public static function get(string $name): Field
@@ -132,52 +132,39 @@ final class Fields
         return self::$fieldsByModelName[$modelName];
     }
 
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function persisted(): array
+    public static function getAll(): FieldsList
     {
-        return array_filter(self::$fields, fn (Field $field): bool => $field->isPersisted());
+        return self::$all ??= new FieldsList(self::$fields);
     }
 
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function public(): array
+    public static function persisted(): FieldsList
     {
-        return array_filter(self::$fields, fn (Field $field): bool => $field->public());
+        return self::$persisted ??= self::getAll()->filtered(fn (Field $field): bool => $field->isPersisted());
     }
 
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function inUiForm(): array
+    public static function public(): FieldsList
     {
-        return array_filter(self::$fields, fn (Field $field): bool => $field->isInUiForm());
+        return self::$public ??= self::getAll()->filtered(fn (Field $field): bool => $field->public());
     }
 
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function inStats(): array
+    public static function inIuForm(): FieldsList
     {
-        return array_filter(self::$fields, fn (Field $field): bool => $field->inStats());
+        return self::$inIuForm ??= self::getAll()->filtered(fn (Field $field): bool => $field->isInIuForm());
     }
 
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function lists(): array
+    public static function inStats(): FieldsList
     {
-        return array_filter(self::$fields, fn (Field $field): bool => $field->isList());
+        return self::$inStats ??= self::getAll()->filtered(fn (Field $field): bool => $field->inStats());
     }
 
-    /**
-     * @return Field[] 'FIELD_NAME' => Field
-     */
-    public static function urls(): array
+    public static function lists(): FieldsList
     {
-        return array_filter(self::$fields, fn (Field $field): bool => in_array($field->name(), FieldsDefinitions::URLS));
+        return self::$lists ??= self::getAll()->filtered(fn (Field $field): bool => $field->isList());
+    }
+
+    public static function urls(): FieldsList
+    {
+        return self::$urls ??= self::getAll()->filtered(fn (Field $field): bool => in_array($field->name(), FieldsDefinitions::URLS));
     }
 }
 

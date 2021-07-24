@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\Fields;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\Item;
 use App\Utils\Filters\Set;

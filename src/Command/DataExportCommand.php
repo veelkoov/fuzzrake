@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\DataDefinitions\Fields;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\Fields;
 use App\Utils\Tracking\Status;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -43,10 +43,9 @@ class DataExportCommand extends Command
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        $fields = array_values(Fields::public());
-
-        foreach ($fields as $idx => $field) {
-            $sheet->getCellByColumnAndRow($idx + 1, 1)
+        $idx = 1;
+        foreach (Fields::public() as $field) {
+            $sheet->getCellByColumnAndRow($idx++, 1)
                 ->setValue($field->name());
         }
 

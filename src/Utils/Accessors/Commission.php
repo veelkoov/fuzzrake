@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Accessors;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Entity\ArtisanCommissionsStatus;
-use App\Utils\Artisan\Fields;
 use Closure;
 
 final class Commission extends AbstractAccessor

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Artisan;
+namespace App\DataDefinitions;
 
-use App\Utils\Artisan\Fields as F;
-use App\Utils\Artisan\ValidationRegexps as V;
+use App\DataDefinitions\Fields as F;
+use App\DataDefinitions\ValidationRegexps as V;
 use App\Utils\Traits\UtilityClass;
 
 final class FieldsDefinitions

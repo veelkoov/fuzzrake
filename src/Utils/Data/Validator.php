@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
 use App\Utils\Data\Validator\GenericValidator;
 use App\Utils\Data\Validator\SpeciesListValidator;
 use App\Utils\Data\Validator\ValidatorInterface;

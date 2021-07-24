@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\Utils\Artisan\Fields;
+use App\DataDefinitions\Fields;
 use App\Utils\Traits\Singleton;
 use DateTimeInterface;
 

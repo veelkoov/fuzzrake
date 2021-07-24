@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\DataDefinitions\Fields;
+use App\DataDefinitions\ValidationRegexps;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Fields;
-use App\Utils\Artisan\ValidationRegexps;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;

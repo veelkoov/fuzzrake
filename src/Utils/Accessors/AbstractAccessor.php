@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Accessors;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Fields;
 use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
 use Closure;

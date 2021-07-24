@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\DataInputException;
 use App\Utils\StringList;
@@ -187,7 +187,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         }
 
         foreach (array_merge(array_keys(self::FIELDS), self::EXPANDED, self::FIELD_NOT_IN_FORM, self::VALUE_NOT_SHOWN_IN_FORM) as $fieldName) {
-            self::assertArrayHasKey($fieldName, $fields);
+            self::assertArrayHasKey($fieldName, $fields->asArray());
         }
     }
 

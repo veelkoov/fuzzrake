@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Artisan;
+namespace App\DataDefinitions;
 
 use Stringable;
 use TRegx\CleanRegex\PatternInterface;
@@ -54,7 +54,7 @@ class Field implements Stringable
         return null !== $this->validationPattern;
     }
 
-    public function isInUiForm(): bool
+    public function isInIuForm(): bool
     {
         return $this->isInIuForm;
     }

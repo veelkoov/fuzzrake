@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates\Commissions;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
-use App\Utils\Artisan\Fields;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\OfferStatus;

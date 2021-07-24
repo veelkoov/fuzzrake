@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator as FDV;
@@ -122,7 +122,7 @@ class DataImport
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
-        foreach (Fields::inUiForm() as $field) {
+        foreach (Fields::inIuForm() as $field) {
             switch ($field->name()) {
                 case Fields::MAKER_ID:
                     $newValue = $source->get($field);
