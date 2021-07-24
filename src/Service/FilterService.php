@@ -47,7 +47,7 @@ class FilterService
     {
         $artisansCountries = $this->artisanRepository->getDistinctCountriesToCountAssoc();
 
-        $unknown = SpecialItems::newUnknown($artisansCountries->getSpecialItems()[0]->getCount()); // FIXME: Ugly hack [0]
+        $unknown = SpecialItems::newUnknown($artisansCountries->getSpecialItems()[0]->getCount()); // FIXME: Refactor filters/stats #80 - ugly hack [0]
         $result = new FilterData($unknown);
 
         foreach ($this->countriesDataService->getRegions() as $regionName) {
