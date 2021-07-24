@@ -22,9 +22,11 @@ final class Regexes
     ];
 
     public const OFFER_REGEXES = [
-        'COMMISSIONS&QUOTES' => 'commissions? &amp; quotes?',
-        'PARTS'              => 'parts? commissions?',
-        'COMMISSIONS'        => 'comm?iss?ions?|custom slots?',
+        'HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS' => 'handpaws AND sockpaws C___S',
+
+        'COMMISSIONS&QUOTES' => 'C___S AND quotes?',
+        'PARTS'              => 'parts? C___S',
+        'COMMISSIONS'        => 'C___S|custom slots?',
         'TRADES'             => 'trades?',
         'PRE-MADES'          => 'pre-made designs?',
         'ARTISTIC LIBERTY'   => 'artistic liberty',
@@ -33,8 +35,10 @@ final class Regexes
     ];
 
     public const COMMON_REGEXES = [
+        'AND'    => '(?:and|&amp;)',
+        'C___S'  => '(?:comm?iss?ions?)',
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
-        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:COMMISSIONS&QUOTES)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:CUSTOM ORDERS))',
+        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS)|(?:COMMISSIONS&QUOTES)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:CUSTOM ORDERS))',
     ];
 
     public const FALSE_POSITIVES_REGEXES = [
@@ -44,6 +48,7 @@ final class Regexes
 
     public const OFFER_STATUS_REGEXES = [
         'OFFER(?: status)? ?:? STATUS',
+        'OFFER[-_]STATUS', // attributes
         'OFFER are (?:(?:currently|now) )?STATUS',
         'STATUS for OFFER',
     ];
