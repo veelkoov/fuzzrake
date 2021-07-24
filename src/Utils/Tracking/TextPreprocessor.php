@@ -158,7 +158,7 @@ class TextPreprocessor
     private function removeFalsePositives(string $contents): string
     {
         foreach ($this->falsePositivePatterns as $pattern) {
-            $contents = $pattern->remove($contents);
+            $contents = $pattern->remove($contents)->all();
         }
 
         return $contents;

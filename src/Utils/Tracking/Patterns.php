@@ -52,9 +52,11 @@ class Patterns
     }
 
     /**
+     * @return OfferStatus[]
+     *
      * @throws TrackerException
      */
-    public function matchStatusAndOfferFrom(Detail $match): OfferStatus
+    public function matchStatusAndOfferFrom(Detail $match): array
     {
         try {
             $offer = $match->get(Regexes::GRP_OFFER);
@@ -63,7 +65,7 @@ class Patterns
             $offer = $this->offerMatcher->getKeyOfPatternMatching($offer);
             $status = Regexes::KEY_OPEN === $this->statusMatcher->getKeyOfPatternMatching($status);
 
-            return new OfferStatus($offer, $status);
+            return array_map(fn ($item) => new OfferStatus($item, $status), explode('&', $offer));
         } catch (NonexistentGroupException $e) {
             throw new UnbelievableRuntimeException($e);
         }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\DataDefinitions\Fields;
-use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;

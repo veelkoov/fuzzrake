@@ -18,27 +18,31 @@ final class Regexes
 
     public const STATUS_REGEXES = [
         self::KEY_OPEN   => 'open',
-        self::KEY_CLOSED => 'closed',
+        self::KEY_CLOSED => 'closed?',
     ];
 
     public const OFFER_REGEXES = [
-        'PARTS'            => 'parts? commissions?',
-        'COMMISSIONS'      => 'commissions?|custom slots?',
-        'TRADES'           => 'trades?',
-        'PRE-MADES'        => 'pre-made designs?',
-        'ARTISTIC LIBERTY' => 'artistic liberty',
+        'COMMISSIONS&QUOTES' => 'commissions? &amp; quotes?',
+        'PARTS'              => 'parts? commissions?',
+        'COMMISSIONS'        => 'comm?iss?ions?|custom slots?',
+        'TRADES'             => 'trades?',
+        'PRE-MADES'          => 'pre-made designs?',
+        'ARTISTIC LIBERTY'   => 'artistic liberty',
+        'QUOTES'             => 'quotes?',
+        'CUSTOM ORDERS'      => 'custom orders?',
     ];
 
     public const COMMON_REGEXES = [
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
-        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY))',
+        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:COMMISSIONS&QUOTES)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:CUSTOM ORDERS))',
     ];
 
     public const FALSE_POSITIVES_REGEXES = [
-        // TODO
+        'next commissions? opening estimated',
     ];
 
     public const OFFER_STATUS_REGEXES = [
         'OFFER(?: status)?:? STATUS',
+        'STATUS for OFFER',
     ];
 }

@@ -6,6 +6,7 @@ namespace App\Tests\Utils\Tracking;
 
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
+use App\Utils\Tracking\OfferStatus;
 use App\Utils\Tracking\Patterns;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
@@ -30,18 +31,15 @@ class CommissionsStatusParserTest extends TestCase
      */
     public function testGetStatuses(string $testSetPath, WebpageSnapshot $snapshot, array $expectedResult): void
     {
-        $statuses = self::$csp->getCommissionsStatuses($snapshot);
+        $actual = array_map(function (OfferStatus $offerStatus): string {
+            return "{$offerStatus->getOffer()}: ".($offerStatus->getStatus() ? 'OPEN' : 'CLOSED');
+        }, self::$csp->getCommissionsStatuses($snapshot));
 
-        foreach ($statuses as $status) {
-            self::assertContains($status->getOffer(), array_keys($expectedResult), "Detected unwanted status {$status->getOffer()}: [{$status->getStatus()}]");
+        $expected = array_map(function (array $offerStatus): string {
+            return "$offerStatus[0]: ".($offerStatus[1] ? 'OPEN' : 'CLOSED');
+        }, $expectedResult);
 
-            self::assertEquals($expectedResult[$status->getOffer()], $status->getStatus(), "Wrong status detected for {$status->getOffer()}");
-            unset($expectedResult[$status->getOffer()]);
-        }
-
-        foreach ($expectedResult as $offer => $isOpen) {
-            self::fail("Failed detecting status {$offer}: [{$isOpen}]");
-        }
+        self::assertEquals($expected, $actual);
     }
 
     /**
