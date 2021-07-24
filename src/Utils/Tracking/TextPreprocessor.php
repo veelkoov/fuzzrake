@@ -110,15 +110,17 @@ class TextPreprocessor
 
     /**
      * @throws TrackerException
+     * @noinspection PhpUnusedParameterInspection TODO: Better handling of FA statuses #81
      */
     private function applyFilters(string $inputText, string $additionalFilter): string
     {
         if (WebsiteInfo::isFurAffinity(null, $inputText)) {
             if (WebsiteInfo::isFurAffinityUserProfile(null, $inputText)) {
-                $additionalFilter = 'profile' === $additionalFilter ? 'td[width="80%"][align="left"]' : '';
+                // $additionalFilter = 'profile' === $additionalFilter ? 'td[width="80%"][align="left"]' : '';
+                $additionalFilter = ''; // TODO: Better handling of FA statuses #81
 
                 $crawler = new Crawler($inputText);
-                $filtered = $crawler->filter('#page-userpage > tr:first-child > td:first-child > table.maintable > tr:first-child > td:first-child > table.maintable '.$additionalFilter);
+                $filtered = $crawler->filter('#page-userpage div.userpage-profile '.$additionalFilter);
 
                 if (1 !== $filtered->count()) {
                     throw new TrackerException('Failed to filter FA profile, nodes count: '.$filtered->count());

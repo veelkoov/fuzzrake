@@ -42,7 +42,7 @@ final class Regexes
     ];
 
     public const OFFER_STATUS_REGEXES = [
-        'OFFER(?: status)?:? STATUS',
+        'OFFER(?: status)? ?:? STATUS',
         'STATUS for OFFER',
     ];
 }
