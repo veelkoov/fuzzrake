@@ -7,7 +7,6 @@ namespace App\Command;
 use App\DataDefinitions\Fields;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
-use App\Utils\Tracking\Status;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -43,23 +42,21 @@ class DataExportCommand extends Command
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        $idx = 1;
+        $col = 1;
         foreach (Fields::public() as $field) {
-            $sheet->getCellByColumnAndRow($idx++, 1)
+            $sheet->getCellByColumnAndRow($col++, 1)
                 ->setValue($field->name());
         }
 
         $row = 2;
 
         foreach ($this->artisans->getActive() as $artisan) {
-            foreach ($fields as $idx => $field) {
+            $col = 1;
+
+            foreach (Fields::public() as $field) {
                 $value = $artisan->get($field);
 
-                if ($value instanceof ArtisanCommissionsStatus) {
-                    $value = Status::text($value->getStatus());
-                }
-
-                $sheet->getCellByColumnAndRow($idx + 1, $row)
+                $sheet->getCellByColumnAndRow($col++, $row)
                     ->setValue($value);
             }
 
