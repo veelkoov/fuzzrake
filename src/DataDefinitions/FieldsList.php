@@ -11,9 +11,17 @@ use Traversable;
 
 class FieldsList implements IteratorAggregate
 {
+    private array $fields = [];
+
+    /**
+     * @param Field[] $fields
+     */
     public function __construct(
-        private array $fields
+        array $fields,
     ) {
+        foreach ($fields as $field) {
+            $this->fields[$field->name()] = $field;
+        }
     }
 
     public function filtered(Closure $filter): FieldsList
@@ -32,5 +40,10 @@ class FieldsList implements IteratorAggregate
     public function asArray(): array
     {
         return $this->fields;
+    }
+
+    public function has(Field $field): bool
+    {
+        return array_key_exists($field->name(), $this->fields);
     }
 }

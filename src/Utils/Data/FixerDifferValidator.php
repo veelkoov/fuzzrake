@@ -6,6 +6,7 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Field;
 use App\DataDefinitions\Fields;
+use App\DataDefinitions\FieldsList;
 use App\Entity\Artisan;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
@@ -29,10 +30,11 @@ class FixerDifferValidator
         $this->differ = new Differ($this->printer);
     }
 
-    public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null): void
+    public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null, FieldsList $skipDiffFor = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
         $anyDifference = $artisan->differs();
+        $skipDiffFor ??= Fields::none();
 
         foreach (Fields::persisted() as $field) {
             $this->printer->setCurrentContext($artisan);
@@ -41,7 +43,7 @@ class FixerDifferValidator
                 $this->fixer->fix($artisan->getChanged(), $field);
             }
 
-            if ($flags & self::SHOW_DIFF) {
+            if ($flags & self::SHOW_DIFF && !$skipDiffFor->has($field)) {
                 $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged(), $imported);
             }
 

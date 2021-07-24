@@ -99,6 +99,7 @@ final class Fields
     public static ?FieldsList $inStats = null;
     public static ?FieldsList $lists = null;
     public static ?FieldsList $urls = null;
+    public static ?FieldsList $none = null;
 
     public static function init()
     {
@@ -165,6 +166,11 @@ final class Fields
     public static function urls(): FieldsList
     {
         return self::$urls ??= self::getAll()->filtered(fn (Field $field): bool => in_array($field->name(), FieldsDefinitions::URLS));
+    }
+
+    public static function none(): FieldsList
+    {
+        return self::$none ??= new FieldsList([]);
     }
 }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates;
 
+use App\DataDefinitions\Fields;
+use App\DataDefinitions\FieldsList;
 use App\Entity\EventFactory;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Data\ArtisanChanges;
@@ -15,6 +17,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class TrackerTaskRunner
 {
+    private FieldsList $eventCreatingFields;
+    private FieldsList $skipDiffForFields;
+
     /** @noinspection PhpPropertyOnlyWrittenInspection */
     public function __construct(
         private TrackerTaskInterface $trackerTask,
@@ -26,6 +31,8 @@ class TrackerTaskRunner
         private bool $commit,
         private SymfonyStyle $io,
     ) {
+        $this->eventCreatingFields = new FieldsList([Fields::get(Fields::OPEN_FOR)]);
+        $this->skipDiffForFields = new FieldsList([Fields::get(Fields::CS_LAST_CHECK)]);
     }
 
     /**
@@ -50,7 +57,7 @@ class TrackerTaskRunner
     private function report(array $updates): void
     {
         foreach ($updates as $update) {
-            $this->fdv->perform($update, FixerDifferValidator::SHOW_DIFF);
+            $this->fdv->perform($update, FixerDifferValidator::SHOW_DIFF, skipDiffFor: $this->skipDiffForFields);
         }
     }
 
@@ -62,13 +69,12 @@ class TrackerTaskRunner
         $this->io->progressStart(count($updates));
 
         foreach ($updates as $update) {
-            if ($update->differs()) {
+            if ($update->differs($this->eventCreatingFields)) {
                 $event = EventFactory::forCsTracker($update);
                 $this->entityManager->persist($event);
-
-                $update->apply();
             }
 
+            $update->apply();
             $this->io->progressAdvance();
         }
 

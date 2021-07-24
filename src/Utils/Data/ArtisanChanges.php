@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields;
+use App\DataDefinitions\FieldsList;
 use App\Entity\Artisan;
 
 class ArtisanChanges
@@ -40,9 +41,9 @@ class ArtisanChanges
         }
     }
 
-    public function differs(): bool
+    public function differs(FieldsList $fields = null): bool
     {
-        foreach (Fields::persisted() as $field) {
+        foreach ($fields ?? Fields::persisted() as $field) {
             if ($this->getSubject()->get($field) != $this->getChanged()->get($field)) {
                 return true;
             }
