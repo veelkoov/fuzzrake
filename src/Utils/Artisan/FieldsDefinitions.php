@@ -29,7 +29,7 @@ final class FieldsDefinitions
 
         Fields::LANGUAGES                  => ['languages',                VR::ANYTHING,                  1, 1, 1, 1],
         Fields::COUNTRY                    => ['country',                  VR::COUNTRY,                   0, 1, 1, 1],
-        Fields::STATE                      => ['state',                    VR::ANYTHING,                  0, 1, 1, 1],
+        Fields::STATE                      => ['state',                    VR::STATE,                     0, 1, 1, 1],
         Fields::CITY                       => ['city',                     VR::ANYTHING,                  0, 1, 1, 1],
 
         Fields::PRODUCTION_MODELS_COMMENT  => ['productionModelsComment',  VR::ANYTHING,                  0, 1, 0, 1],
