@@ -141,10 +141,9 @@
                 <li>
                     Blog entries, posts, journals, tweets, etc. - unpinned. <small class="text-muted">If you post new stuff and the original post/entry/etc. will move to the second page, this will fail. If you unpin the original and pin another post/message/journal/etc. this will fail. This <strong>may</strong> work if you only edit the pinned item, but not unpin and pin another.</small>
                 </li>
-                <li>
-                    Fur Affinity :( <small class="text-muted">I am sorry to list it here, but as long as the DDoS protection will affect getfursu.it, I cannot recommend this.</small>
-                </li>
                 <li>Patreon. <small class="text-muted">Unfortunately, getfursu.it is blocked by them (CloudFlare to be precise).</small></li>
+                <li>Instagram. <small class="text-muted">They currently require visitors to be logged in. getfursu.it will not gain such ability.</small></li>
+                <li>Facebook. <small class="text-muted">It's unpredictable regarding when it requires to log in. Can't guarantee getfursu.it will be able to check your page.</small></li>
             </ul>
         </div>
     </div>
@@ -155,10 +154,11 @@
         </div>
         <div class="col-sm">
             <ul>
+                <li>
+                    Fur Affinity (best option is to use the profile info, while avoiding journals, etc.) <small class="text-muted">There were issues with accessing FA in the past, but stuff seems to be working fine now.</small>
+                </li>
                 <li>Most of generic websites</li>
                 <li>Twitter profile info</li>
-                <li>Instagram profile info</li> {# FIXME: Not working #}
-                <li>Facebook "about" pages</li> {# FIXME: Verify #}
                 <li>Trello <strong>sometimes</strong> works</li>
                 <li>DeviantArt profile info <strong>should</strong> work (untested)</li>
             </ul>
@@ -211,7 +211,7 @@
     <h1 id="tracking_how_to_enroll" class="mt-4">How to enroll</h1>
 
     <p>
-        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('data_updates') }}">send the inclusion/update form</a>, providing the website's address in correct field. Make sure the status is visible immediately when you navigate to the address of your choice (no link clicks/actions required; scrolling is OK).
+        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('data_updates') }}">send the inclusion/update form</a>, providing the website's address in correct field. Please remember that you need to provide precise address - no clicking should be required to see the status (scrolling is OK). For example, if you created a webpage with the address like https://example.com/ and you post the commissions status on a subpage like https://example.com/commissions , then you should use the latter address. Of course, don't forget to <a href="{{ path('data_updates') }}">update your data</a> here, whenever you move commissions information between pages/subpages.
     </p>
 
     <p>
