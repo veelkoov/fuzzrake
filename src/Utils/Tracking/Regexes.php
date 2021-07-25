@@ -30,7 +30,7 @@ final class Regexes
         'PARTIAL COMMISSIONS'  => 'partial C___S',
         'HEAD COMMISSIONS'     => 'head C___S',
         'PARTS'                => '(?:fursuit )?parts? C___S',
-        'COMMISSIONS'          => '(?:fursuit )?C___S|custom slots?|fursuits?',
+        'COMMISSIONS'          => '(?:fursuit )?C___S|custom slots?|fursuits?|comms',
         'TRADES'               => 'trades?',
         'REFURBISHMENTS'       => 'refurbishments?',
         'PRE-MADES'            => 'pre-made designs?',
@@ -42,7 +42,7 @@ final class Regexes
     public const COMMON_REGEXES = [
         'AND'    => '(?:and|&amp;)',
         'NOW'    => '(?:currently|now|always)',
-        'C___S'  => '(?:comm?iss?ions?)',
+        'C___S'  => '(?:comm?iss?ions?)', // Not including "comms"
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
         'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS)|(?:PARTS&REFURBISHMENTS)|(?:COMMISSIONS&QUOTES)|(?:FULLSUIT COMMISSIONS)|(?:PARTIAL COMMISSIONS)|(?:HEAD COMMISSIONS)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:CUSTOM ORDERS))',
     ];
@@ -52,6 +52,7 @@ final class Regexes
         '(?:if|when|while) C___S are STATUS',
         'when (?:i\'m|i|we\'re|we) open for C___S',
         'C___S open in',
+        'slots are open in',
         '(?:>| )art C___S(?: are:?| ?:) STATUS',
     ];
 
@@ -61,6 +62,7 @@ final class Regexes
         'OFFER (?:are:?|basically) (?:NOW:? )?STATUS(?! for)',
         'STATUS for OFFER',
         '<h2[^>]*> ?OFFER \| STATUS ?</h2>',
+        '<h2[^>]*> ?OFFER(?:(?: status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS', // No closing </h2> for any comments
         'NOW (?:is|are|am) STATUS new OFFER',
     ];
 }
