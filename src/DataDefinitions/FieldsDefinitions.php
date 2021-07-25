@@ -29,7 +29,7 @@ final class FieldsDefinitions
         F::SINCE                      => [0, 1, 1, 1, 1, 'since',                    V::SINCE],
         F::LANGUAGES                  => [1, 1, 1, 1, 1, 'languages',                null],
         F::COUNTRY                    => [0, 1, 1, 1, 1, 'country',                  V::COUNTRY],
-        F::STATE                      => [0, 1, 1, 1, 1, 'state',                    null],
+        F::STATE                      => [0, 1, 1, 1, 1, 'state',                    V::STATE],
         F::CITY                       => [0, 1, 1, 1, 1, 'city',                     null],
         F::PRODUCTION_MODELS_COMMENT  => [0, 1, 0, 1, 1, 'productionModelsComment',  null],
         F::PRODUCTION_MODELS          => [1, 1, 1, 1, 1, 'productionModels',         V::LIST_VALIDATION],
