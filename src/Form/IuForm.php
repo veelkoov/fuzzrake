@@ -319,7 +319,7 @@ class IuForm extends AbstractType
             ->add('contactInfoObfuscated', TextType::class, [
                 'label'      => 'How can I contact you',
                 'attr'       => [
-                    'placeholder' => 'E-MAIL: e-mail@address TELEGRAM: @username TWITTER: @username',
+                    'placeholder' => 'E-MAIL: e-mail@address',
                 ],
                 'required'   => true,
                 'empty_data' => '',
