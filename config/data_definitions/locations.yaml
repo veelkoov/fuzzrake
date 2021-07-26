@@ -7,6 +7,7 @@ parameters:
       "australia":                                     "AU"
       "belgium":                                       "BE"
       "canada":                                        "CA"
+      "chile":                                         "CL"
       "costa rica":                                    "CR"
       "czech( republic)?":                             "CZ"
       "d[ea]nmark":                                    "DK"

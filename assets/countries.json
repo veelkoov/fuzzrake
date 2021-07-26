@@ -30,6 +30,11 @@
     "region": "America"
   },
   {
+    "name": "Chile",
+    "code": "CL",
+    "region": "America"
+  },
+  {
     "name": "China",
     "code": "CN",
     "region": "Africa & Asia"
