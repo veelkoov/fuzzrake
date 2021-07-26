@@ -17,30 +17,30 @@ final class Regexes
     public const KEY_CLOSED = 'CLOSED';
 
     public const STATUS_REGEXES = [
-        self::KEY_OPEN   => 'open',
+        self::KEY_OPEN   => '(?:open|only making)',
         self::KEY_CLOSED => '(?:closed?|not accepting)',
     ];
 
     public const OFFER_REGEXES = [
-        'HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS' => 'handpaws AND sockpaws C___S',
+        'HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS' => 'handpaws_AND_sockpaws C___S',
 
-        'PARTS&REFURBISHMENTS' => 'small/single parts AND refurbishments C___S',
-        'COMMISSIONS&QUOTES'   => 'C___S AND quotes?',
+        'PARTS&REFURBISHMENTS' => 'small/single parts_AND_refurbishments C___S',
+        'COMMISSIONS&QUOTES'   => 'C___S_AND_quotes?',
         'FULLSUIT COMMISSIONS' => 'fullsuit C___S',
         'PARTIAL COMMISSIONS'  => 'partial C___S',
         'HEAD COMMISSIONS'     => 'head C___S',
         'PARTS'                => '(?:fursuit )?parts? C___S',
-        'COMMISSIONS'          => '(?:fursuit )?C___S|custom slots?|fursuits?|comms',
+        'COMMISSIONS'          => '(?:fursuit )?C___S|(?:custom )?slots?|fursuits?(?: queue)?|comms',
         'TRADES'               => 'trades?',
         'REFURBISHMENTS'       => 'refurbishments?',
-        'PRE-MADES'            => 'pre-made designs?',
+        'PRE-MADES'            => 'pre-?mades?(?: designs?)?',
         'ARTISTIC LIBERTY'     => 'artistic liberty',
         'QUOTES'               => 'quotes?',
         'CUSTOM ORDERS'        => 'custom orders?',
     ];
 
     public const COMMON_REGEXES = [
-        'AND'    => '(?:and|&amp;)',
+        '_AND_'  => '(?: and | ?(?:&amp;|/) ?)',
         'NOW'    => '(?:currently|now|always)',
         'C___S'  => '(?:comm?iss?ions?)', // Not including "comms"
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
@@ -53,6 +53,7 @@ final class Regexes
         'when (?:i\'m|i|we\'re|we) open for C___S',
         'C___S open in',
         'slots are open in',
+        'as slots open',
         '(?:>| )art C___S(?: are:?| ?:) STATUS',
     ];
 
@@ -60,9 +61,13 @@ final class Regexes
         'OFFER(?: status)? ?[:-]? STATUS(?! for)',
         'OFFER[-_]STATUS', // attributes
         'OFFER (?:are:?|basically) (?:NOW:? )?STATUS(?! for)',
+        'OFFER NOW ?[:-]? STATUS(?! for)',
+
         'STATUS for OFFER',
+        'NOW (?:is|are|am) STATUS new OFFER',
+        'NOW STATUS OFFER',
+
         '<h2[^>]*> ?OFFER \| STATUS ?</h2>',
         '<h2[^>]*> ?OFFER(?:(?: status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS', // No closing </h2> for any comments
-        'NOW (?:is|are|am) STATUS new OFFER',
     ];
 }
