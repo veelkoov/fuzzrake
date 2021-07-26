@@ -39,6 +39,12 @@ class CommissionsStatusParserTest extends TestCase
             return "$offerStatus[0]: ".($offerStatus[1] ? 'OPEN' : 'CLOSED');
         }, $expectedResult);
 
+        sort($actual);
+        sort($expected);
+
+        $actual = "\n".implode("\n", $actual)."\n";
+        $expected = "\n".implode("\n", $expected)."\n";
+
         self::assertEquals($expected, $actual);
     }
 
