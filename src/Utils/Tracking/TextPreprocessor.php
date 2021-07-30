@@ -26,7 +26,7 @@ class TextPreprocessor
         "\u{00A0}"                                        => ' ', // NBSP
         '<style[^>]*>.*?</style>'                         => ' ',
         '<!--.*?-->'                                      => ' ',
-        '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => ' ',
+        '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
         '\*\*\*OPEN\*\*\*'                                => 'open',
 
         '  +'   => ' ',
