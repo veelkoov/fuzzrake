@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection HtmlUnknownAttribute */
+
 declare(strict_types=1);
 
 namespace App\Utils\Tracking;
@@ -127,6 +129,10 @@ class TextPreprocessor
                 $filtered = $crawler->filter('#page-userpage div.userpage-profile '.$additionalFilter);
 
                 if (1 !== $filtered->count()) {
+                    if (str_contains($inputText, 'the owner of this page has elected to make it available to registered users only.')) {
+                        throw new TrackerException('FA profile configured to allow logged-in users only.');
+                    }
+
                     throw new TrackerException('Failed to filter FA profile, nodes count: '.$filtered->count());
                 }
 
