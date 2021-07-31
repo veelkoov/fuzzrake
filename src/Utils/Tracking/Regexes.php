@@ -36,7 +36,7 @@ final class Regexes
         'PRE-MADES'            => 'pre-?mades?(?: designs?)?',
         'ARTISTIC LIBERTY'     => 'artistic liberty',
         'QUOTES'               => 'quotes?',
-        'CUSTOM ORDERS'        => 'custom orders?',
+        'ORDERS'               => '(?:custom )?orders?',
     ];
 
     public const COMMON_REGEXES = [
@@ -44,17 +44,19 @@ final class Regexes
         'NOW'    => '(?:currently|now|always)',
         'C___S'  => '(?:comm?iss?ions?)', // Not including "comms"
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
-        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS)|(?:PARTS&REFURBISHMENTS)|(?:COMMISSIONS&QUOTES)|(?:FULLSUIT COMMISSIONS)|(?:PARTIAL COMMISSIONS)|(?:HEAD COMMISSIONS)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:CUSTOM ORDERS))',
+        'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS)|(?:PARTS&REFURBISHMENTS)|(?:COMMISSIONS&QUOTES)|(?:FULLSUIT COMMISSIONS)|(?:PARTIAL COMMISSIONS)|(?:HEAD COMMISSIONS)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:ORDERS))',
     ];
 
     public const FALSE_POSITIVES_REGEXES = [
         'next C___S opening (?:estimated|will)',
-        '(?:if|when|while) (?:C___S|quotes) are STATUS',
-        'when (?:i\'m|i|we\'re|we) open for C___S',
+        '(?:if|when|while) OFFER (?:are )?STATUS',
+        'when (?:i(?:\'m| am| will)?|we(?:\'re| are| will)?) open for (?:new )?OFFER',
+        'when will you start taking new C___S',
+        'even though you\'re closed for C___S',
         'C___S open in',
         'slots are open in',
         'as slots open',
-        '(?:>| )art C___S(?: are:?| ?:) STATUS',
+        '(?:>| )art C___S(?: are:?| ?:)', // "art commissions"
     ];
 
     public const OFFER_STATUS_REGEXES = [

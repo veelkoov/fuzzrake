@@ -32,7 +32,7 @@ class TextPreprocessor
         '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
         '\*\*\*OPEN\*\*\*'                                => 'open',
 
-        '&#39;' => "'",
+        '&#(39|8217);'                                    => "'",
 
         '  +'   => ' ',
         "\n\n+" => "\n",
