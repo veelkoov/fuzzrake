@@ -17,8 +17,8 @@ final class Regexes
     public const KEY_CLOSED = 'CLOSED';
 
     public const STATUS_REGEXES = [
-        self::KEY_OPEN   => '(?:open(?!ing)|only making)',
-        self::KEY_CLOSED => '(?:closed?|not accepting)',
+        self::KEY_OPEN   => '(?:open(?!ing)|only making|taking)',
+        self::KEY_CLOSED => '(?:closed?|not accepting|don\'t take|don\'t provide)',
     ];
 
     public const OFFER_REGEXES = [
@@ -30,7 +30,7 @@ final class Regexes
         'PARTIAL COMMISSIONS'  => 'partial C___S',
         'HEAD COMMISSIONS'     => 'head C___S',
         'PARTS'                => '(?:fursuit )?parts? C___S',
-        'COMMISSIONS'          => '(?:fursuit )?C___S|(?:custom )?slots?|fursuits?(?: queue)?|comms|current mode', // "current mode" - test case 052
+        'COMMISSIONS'          => '(?:fursuit )?C___S|(?:custom )?slots?|fursuits?(?: queue)?|comms|current mode|projects', // "current mode" - test case 052
         'TRADES'               => 'trades?',
         'REFURBISHMENTS'       => 'refurbishments?',
         'PRE-MADES'            => 'pre-?mades?(?: designs?)?',
@@ -64,7 +64,9 @@ final class Regexes
         'OFFER\s+(?:are:?|basically)\s+(?:NOW:?\s+)?STATUS',
 
         'NOW (?:is|are|am) STATUS new OFFER',
-        'NOW STATUS OFFER',
+        'NOW\s+STATUS\s+(?:new\s+|for\s+)?OFFER',
+
+        'we STATUS OFFER',
 
         '\[ OFFER[. ]+STATUS \]', // Test case 045
 
