@@ -63,7 +63,9 @@ class CommissionsStatusParser
         $result = [];
 
         foreach ($this->offerStatusPatterns as $statusPattern) {
-            $statusPattern->match($text->getCleaned())->forEach(function (Detail $match) use (&$result): void {
+            $statusPattern->match($text->getUnused())->forEach(function (Detail $match) use (&$result, $text): void {
+                $text->use($match->byteOffset(), $match->byteTail());
+
                 array_push($result, ...$this->patterns->matchStatusAndOfferFrom($match));
             });
         }

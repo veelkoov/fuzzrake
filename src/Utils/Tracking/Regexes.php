@@ -25,12 +25,12 @@ final class Regexes
         'HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS' => 'handpaws_AND_sockpaws C___S',
 
         'PARTS&REFURBISHMENTS' => 'small/single parts_AND_refurbishments C___S',
-        'COMMISSIONS&QUOTES'   => 'C___S_AND_quotes?',
+        'COMMISSIONS&QUOTES'   => '(?:C___S_AND_quotes?)|(?:quotes?_AND_C___S)',
         'FULLSUIT COMMISSIONS' => 'fullsuit C___S',
         'PARTIAL COMMISSIONS'  => 'partial C___S',
         'HEAD COMMISSIONS'     => 'head C___S',
         'PARTS'                => '(?:fursuit )?parts? C___S',
-        'COMMISSIONS'          => '(?:fursuit )?C___S|(?:custom )?slots?|fursuits?(?: queue)?|comms',
+        'COMMISSIONS'          => '(?:fursuit )?C___S|(?:custom )?slots?|fursuits?(?: queue)?|comms|current mode', // "current mode" - test case 052
         'TRADES'               => 'trades?',
         'REFURBISHMENTS'       => 'refurbishments?',
         'PRE-MADES'            => 'pre-?mades?(?: designs?)?',
@@ -49,7 +49,7 @@ final class Regexes
 
     public const FALSE_POSITIVES_REGEXES = [
         'next C___S opening (?:estimated|will)',
-        '(?:if|when|while) C___S are STATUS',
+        '(?:if|when|while) (?:C___S|quotes) are STATUS',
         'when (?:i\'m|i|we\'re|we) open for C___S',
         'C___S open in',
         'slots are open in',
@@ -58,11 +58,11 @@ final class Regexes
     ];
 
     public const OFFER_STATUS_REGEXES = [
-        'OFFER(?: status)?(?: | ?[:_-] ?)STATUS(?! for)', // - and _ should work for attributes as well
-        'OFFER\s+(?:are:?|basically)\s+(?:NOW:?\s+)?STATUS(?!\s+for)',
-        'OFFER NOW ?[:-]? STATUS(?! for)',
+        '(?:C___S\s*[:-]\s*)?STATUS for (?:new )?OFFER',
 
-        'STATUS for OFFER',
+        'OFFER(?: status| NOW)?(?: | ?[:_-]\s*?)STATUS', // - and _ should work for attributes as well
+        'OFFER\s+(?:are:?|basically)\s+(?:NOW:?\s+)?STATUS',
+
         'NOW (?:is|are|am) STATUS new OFFER',
         'NOW STATUS OFFER',
 
@@ -70,5 +70,6 @@ final class Regexes
 
         '<h2[^>]*> ?OFFER \| STATUS ?</h2>',
         '<h2[^>]*> ?OFFER(?:(?: status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS', // No closing </h2> for any comments
+        '<p[^>]*> ?OFFER(?:(?: status:?| ?:)) ?</p>\s*<p[^>]*> ?NOW STATUS', // No closing </p> for any comments
     ];
 }

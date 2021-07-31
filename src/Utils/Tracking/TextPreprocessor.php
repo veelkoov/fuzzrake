@@ -20,10 +20,11 @@ class TextPreprocessor
         '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])' => '_',
         '(?<=return|delete) (?=this)'                                           => '_',
         '<script[^>]*>[^ ]+</script>'                                           => ' ',
-        '<meta property="(og:)?description"[^>]+>'                              => ' ', // Seems to duplicate primary content
+        '<meta (itemprop|property)="(og:|twitter:)?description"[^>]+>'          => ' ', // Seems to duplicate primary content
 
         '&nbsp;'                                          => ' ',
         "\u{00A0}"                                        => ' ', // NBSP
+        '<br */?>'                                        => "\n",
         '<style[^>]*>.*?</style>'                         => ' ',
         '<!--.*?-->'                                      => ' ',
         '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
