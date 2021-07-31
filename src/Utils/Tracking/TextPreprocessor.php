@@ -32,6 +32,8 @@ class TextPreprocessor
         '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
         '\*\*\*OPEN\*\*\*'                                => 'open',
 
+        '&#39;' => "'",
+
         '  +'   => ' ',
         "\n\n+" => "\n",
     ];

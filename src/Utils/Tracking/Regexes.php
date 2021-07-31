@@ -17,8 +17,8 @@ final class Regexes
     public const KEY_CLOSED = 'CLOSED';
 
     public const STATUS_REGEXES = [
+        self::KEY_CLOSED => '(?:closed?|not currently taking on|not accepting|don\'t (?:do|take|provide))', // "not currently taking on" - test case 058
         self::KEY_OPEN   => '(?:open(?!ing)|only making|taking)',
-        self::KEY_CLOSED => '(?:closed?|not accepting|don\'t take|don\'t provide)',
     ];
 
     public const OFFER_REGEXES = [
@@ -61,9 +61,10 @@ final class Regexes
         '(?:C___S\s*[:-]\s*)?STATUS for (?:new )?OFFER',
 
         'OFFER(?: status| NOW)?(?: | ?[:_-]\s*?)STATUS', // - and _ should work for attributes as well
-        'OFFER\s+(?:are:?|basically)\s+(?:NOW:?\s+)?STATUS',
+        'OFFER\s+(?:are:?|basically)\s+(?:NOW:?\s+)?(?:&gt;&gt;)?STATUS', // "(?:&gt;&gt;)?" - test case 057
 
-        'NOW (?:is|are|am) STATUS new OFFER',
+        'STATUS new OFFER',
+        'NOW we are STATUS for a handful of OFFER',
         'NOW\s+STATUS\s+(?:new\s+|for\s+)?OFFER',
 
         'we STATUS OFFER',
