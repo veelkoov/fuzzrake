@@ -20,7 +20,8 @@ DB_DUMP_PRV_COPY_PATH = "#{DB_DUMP_DIR_PATH}/artisans_private_data-#{Time.now.ge
 
 # Volatile information, easily reproducible
 IGNORED_TABLES = %w[
-  artisans_commissions_statues
+  artisans_commissions_statuses
+  artisans_volatile_data
   artisans_urls_states
 ].freeze
 

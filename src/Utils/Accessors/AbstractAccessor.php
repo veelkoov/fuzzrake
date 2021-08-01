@@ -19,7 +19,7 @@ abstract class AbstractAccessor
         if (Fields::get(static::getFieldNameFor($subset))->isList()) {
             $newValues = StringList::unpack($newValue);
         } else {
-            $newValues = [$newValue];
+            $newValues = '' === $newValue ? [] : [$newValue];
         }
 
         $existingValues = array_filter(static::getExistingItems($artisan), static::getItemsFilter($subset));
