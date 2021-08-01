@@ -22,6 +22,8 @@ final class SchemaFixer
         switch ($data[self::SCHEMA_VERSION]) {
             case 8:
                 $data[Fields::BP_LAST_CHECK] = 'unknown';
+                $data[Fields::URL_PRICES] = [$data[Fields::URL_PRICES]];
+                $data[Fields::URL_COMMISSIONS] = [$data['URL_CST']];
         }
 
         return $data;
