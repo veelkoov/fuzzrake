@@ -445,11 +445,11 @@
     </div>
 
     <h2>Automatic commissions status tracking (open/closed)</h2>
-    <p>I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. You can <a href="{{ path('tracking') }}" target="_blank">read here</a> how the tracking works. I'll be happy to help if you need assistance.</p>
+    <p>I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. <a href="{{ path('tracking') }}" target="_blank">You can read here about how the tracking works.</a> I'll be happy to help if you need assistance.</p>
 
     <div class="form-group">
         {{ form_label(form.commissionsUrl) }}
-        <p class="hint">Note: Putting <em>open</em> here will not work, sorry. Please read about tracking by clicking the link above. If you keep statuses for multiple offers on different pages, you can paste multiple addresses here, each one in a separate line.</p>
+        <p class="hint">Simply writing "open" in this field will not work, only accepted values are URLs (addresses). If you keep statuses for multiple offers on different pages, you can paste multiple addresses here, each one in a separate line. Please remember that you need to provide precise address - <strong>no clicking/tapping</strong> to see the status text is allowed (scrolling is OK). For example, if you created a webpage with the address like <em>https://example.com/</em> and you post the commissions status on a subpage like <em>https://example.com/commissions</em>, then you should use the latter address.</p>
         {{ form_widget(form.commissionsUrl) }}
     </div>
 
