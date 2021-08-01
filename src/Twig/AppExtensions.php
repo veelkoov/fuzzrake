@@ -8,16 +8,15 @@ namespace App\Twig;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
-use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\FilterItem;
+use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use App\Utils\Tracking\Status;
 use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -28,7 +27,7 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     public function __construct(
-        private ArtisanCommissionsStatusRepository $acsRepository,
+        private ArtisanVolatileDataRepository $avdRepository,
         private EnvironmentsService $environments,
     ) {
     }
@@ -40,7 +39,6 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('other', [$this, 'otherFilter']),
             new TwigFilter('nulldate', [$this, 'nulldateFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
-            new TwigFilter('status_text', [Status::class, 'text']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
             new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
@@ -78,7 +76,7 @@ class AppExtensions extends AbstractExtension
 
     public function getLastDataUpdateTimeUtcStrFunction(): string
     {
-        return $this->acsRepository->getLastCstUpdateTimeAsString();
+        return $this->avdRepository->getLastCsUpdateTimeAsString(); // TODO: CS&BP? See #29
     }
 
     public function getCounterFunction(): Counter
@@ -138,7 +136,7 @@ class AppExtensions extends AbstractExtension
     {
         $pattern = pattern($matchWord, 'i');
 
-        return array_filter($items, fn (FilterItem $item) => $pattern->test($item->getLabel()));
+        return array_filter($items, fn (Item $item) => $pattern->test($item->getLabel()));
     }
 
     public function filterHumanFriendlyRegexp(string $input): string

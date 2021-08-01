@@ -2,8 +2,6 @@
 *.nocommit
 *.iml
 /.idea/
-/tests/snapshots/*
-!/tests/snapshots/.gitkeep
 /db_dump/*
 !/db_dump/.gitkeep
 

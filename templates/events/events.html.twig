@@ -33,24 +33,32 @@
 
                 <div class="col-sm-10">
                     <p>
-                        {% if event.updates %}
+                        {% if event.typeDataUpdated %}
 
                             {{ eventDescription(event) }}
 
-                        {% elseif event.lostTrack %}
+                        {% elseif event.typeCsUpdated %}
 
-                            <b>{{ event.artisanName }}</b> commissions status is now
-                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }})
+                            <strong>{{ event.artisanName }}</strong> commissions status changed.
 
-                            - failed to interpret contents of
-                            <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                            {% if event.noLongerOpenFor %}
+                                No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.
+                            {% endif %}
 
-                        {% elseif event.changedStatus %}
+                            {% if event.nowOpenFor %}
+                                <strong>Now open for: {{ event.nowOpenForArray|join(', ') }}.</strong>
+                            {% endif %}
 
-                            <b>{{ event.artisanName }}</b> commissions status is now
-                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }})
+                            {% if event.trackingIssues %}
+                                Encountered apparent difficulties during status analysis.
+                            {% endif %}
 
-                            - based on the contents of <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
+                            Checked contents of:
+
+                            {% for url in event.checkedUrlsArray %}
+                                <a href="{{ url }}" target="_blank">{{ url|event_url }}</a>
+                                {%- if loop.last %}.{% else %},{% endif %}
+                            {% endfor %}
 
                         {% else %}
 

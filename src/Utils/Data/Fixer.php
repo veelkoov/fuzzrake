@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\Data\Fixer\ContactAllowedFixer;
 use App\Utils\Data\Fixer\CountryFixer;
 use App\Utils\Data\Fixer\DefinedListFixer;
@@ -41,11 +41,16 @@ class Fixer
 
     public function fix(Artisan $artisan, Field $field): void
     {
-        $artisan->set($field, $this->getFixer($field)->fix($field->name(), $artisan->get($field)));
+        $value = $artisan->get($field);
+
+        if (is_string($value)) {
+            $artisan->set($field, $this->getFixer($field)->fix($field->name(), $value));
+        }
     }
 
     private function getFixer(Field $field): FixerInterface
     {
+        /* @noinspection PhpSwitchCanBeReplacedWithMatchExpressionInspection */
         switch ($field->name()) {
             case Fields::NAME:
             case Fields::FORMERLY:
@@ -74,7 +79,7 @@ class Fixer
             case Fields::PAYMENT_METHODS:
                 return $this->freeListFixer;
 
-            case Fields::URL_CST:
+            case Fields::URL_COMMISSIONS:
             case Fields::URL_DEVIANTART:
             case Fields::URL_FACEBOOK:
             case Fields::URL_FAQ:

@@ -33,11 +33,11 @@ img[src="FurAffinity.svg"] {
     color: #aaa;
   }
 
-  .allNoneInvertCountries {
+  .allNoneInvert.countries {
     padding-left: 1em;
   }
 
-  .allNoneInvertSimple {
+  .allNoneInvert.simple {
     float: right;
   }
 
@@ -125,27 +125,33 @@ table#artisans {
       text-align: left;
     }
 
-    td.features, td.types, td.styles, td.production-models, td.languages, td.species {
+    td.features, td.types, td.styles, td.production-models, td.languages, td.species, td.commissions {
       text-align: left;
       display: table-cell;
       font-size: 75%;
     }
 
-    td.species ul {
-      list-style: none;
-      padding: 0;
+    td.species, td.commissions {
+      ul {
+        list-style: none;
+        padding: 0;
 
-      li {
-        display: inline-block;
-        margin-right: 1ex;
-      }
+        li {
+          display: inline-block;
+          margin-right: 1ex;
+        }
 
-      li.yes i {
-        color: #4cae4c;
-      }
+        li.yes i {
+          color: #4cae4c;
+        }
 
-      li.no i {
-        color: #f20600;
+        li.inaccurate i {
+          color: #ffc107;
+        }
+
+        li.no i {
+          color: #f20600;
+        }
       }
     }
 
@@ -193,6 +199,10 @@ table#artisans {
 }
 
 #artisanDetailsModal {
+  img.tracking-failed {
+    max-height: 10em;
+  }
+
   div.imgs-container {
     width: 100%;
     display: table-row;

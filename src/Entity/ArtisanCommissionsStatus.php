@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTimeInterface;
+use App\Repository\ArtisanCommissionsStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArtisanCommissionsStatusRepository")
- * @ORM\Table(name="artisans_commissions_statues")
+ * @ORM\Entity(repositoryClass=ArtisanCommissionsStatusRepository::class)
+ * @ORM\Table(name="artisans_commissions_statuses")
  *
  * NOTE: Ephemeral information, can be recreated by running update command. Table should not be committed, as that
  *       would generate too much noise in the repo history
@@ -24,25 +24,20 @@ class ArtisanCommissionsStatus
     private ?int $id = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="commissionsStatus")
-     * @ORM\JoinColumn(name="artisan_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity=Artisan::class, inversedBy="commissions")
+     * @ORM\JoinColumn(nullable=false)
      */
     private ?Artisan $artisan = null;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=32)
      */
-    private ?bool $status = null;
+    private string $offer = '';
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private ?DateTimeInterface $lastChecked = null;
-
-    /**
-     * @ORM\Column(type="string", length=256)
-     */
-    private string $reason = '';
+    private bool $isOpen = false;
 
     public function getId(): ?int
     {
@@ -54,45 +49,33 @@ class ArtisanCommissionsStatus
         return $this->artisan;
     }
 
-    public function setArtisan(Artisan $artisan): self
+    public function setArtisan(?Artisan $artisan): self
     {
         $this->artisan = $artisan;
 
         return $this;
     }
 
-    public function getStatus(): ?bool
+    public function getOffer(): string
     {
-        return $this->status;
+        return $this->offer;
     }
 
-    public function setStatus(?bool $status): self
+    public function setOffer(string $offer): self
     {
-        $this->status = $status;
+        $this->offer = $offer;
 
         return $this;
     }
 
-    public function getLastChecked(): ?DateTimeInterface
+    public function getIsOpen(): bool
     {
-        return $this->lastChecked;
+        return $this->isOpen;
     }
 
-    public function setLastChecked(?DateTimeInterface $lastChecked): self
+    public function setIsOpen(bool $isOpen): self
     {
-        $this->lastChecked = $lastChecked;
-
-        return $this;
-    }
-
-    public function getReason(): string
-    {
-        return $this->reason;
-    }
-
-    public function setReason(string $reason): ArtisanCommissionsStatus
-    {
-        $this->reason = $reason;
+        $this->isOpen = $isOpen;
 
         return $this;
     }

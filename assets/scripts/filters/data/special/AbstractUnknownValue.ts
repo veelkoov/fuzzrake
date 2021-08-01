@@ -2,7 +2,7 @@ import SpecialValue from "./SpecialValue";
 import Artisan from "../../../class/Artisan";
 
 export default abstract class AbstractUnknownValue extends SpecialValue {
-    public static readonly VALUE: string = '?';
+    public static readonly VALUE: string = '?'; // grep-special-value-unknown
 
     protected constructor() {
         super(AbstractUnknownValue.VALUE);

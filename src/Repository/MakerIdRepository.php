@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\MakerId;
+use App\Utils\Arrays;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,12 +38,6 @@ class MakerIdRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getArrayResult();
 
-        $result = [];
-
-        foreach ($rows as $row) {
-            $result[$row['former']] = $row['current'];
-        }
-
-        return $result;
+        return Arrays::assoc($rows, 'former', 'current');
     }
 }

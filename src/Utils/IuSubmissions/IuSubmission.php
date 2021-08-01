@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\Utils\Artisan\Field;
+use App\DataDefinitions\Field;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -39,9 +39,9 @@ class IuSubmission implements FieldReadInterface
      */
     public function get(Field $field)
     {
-        $value = $this->data[$field->name()] ?? false;
+        $value = $this->data[$field->name()] ?? null;
 
-        if (false === $value) {
+        if (null === $value) {
             throw new DataInputException("Submission {$this->id} is missing {$field->name()}");
         }
 

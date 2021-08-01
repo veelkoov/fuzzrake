@@ -1,37 +1,39 @@
 export default abstract class StatusWriter {
-    public static get(isActive: boolean, isUnknownSelected, relation: string, selectedLabels: Set<string>, additionalLabel?: string): string {
+    private static readonly MAX_LABELS = 3;
+
+    public static get(isActive: boolean, relation: string, selectedLabels: Set<string>, importantLabel?: string, additionalLabel?: string): string {
         if (!isActive) {
             return 'any';
         }
 
         let parts: string[] = [];
 
-        if (isUnknownSelected) {
-            parts.push('Unknown');
+        if (importantLabel) {
+            parts.push(importantLabel);
+        }
+
+        let labels = Array.from(selectedLabels);
+
+        if (additionalLabel) {
+            labels.unshift(additionalLabel);
         }
 
         if (selectedLabels.size > 0 || additionalLabel !== undefined) {
-            parts.push(StatusWriter.getLabels(selectedLabels, relation, 3, additionalLabel));
+            parts.push(StatusWriter.formatLabels(labels, relation));
         }
 
         return parts.join(' or ');
     }
 
-    protected static getLabels(selectedLabels: Set<string>, prefix: string, max: number, additionalLabel?: string): string {
-        let selected = Array.from(selectedLabels);
-
-        if (additionalLabel !== undefined) {
-            selected.unshift(additionalLabel);
+    protected static formatLabels(labels: string[], prefix_when_not_single: string): string {
+        if (labels.length === 1) {
+            return labels[0];
         }
 
-        if (selected.length === 1) {
-            return selected[0];
-        }
-
-        if (selected.length > max) {
-            return prefix + ' ' + selected.length + ' selected';
+        if (labels.length > this.MAX_LABELS) {
+            return prefix_when_not_single + ' ' + labels.length + ' selected';
         } else {
-            return prefix + ': ' + selected.join(', ');
+            return prefix_when_not_single + ': ' + labels.join(', ');
         }
     }
 }

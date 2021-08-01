@@ -20,7 +20,8 @@ DB_DUMP_PRV_COPY_PATH = "#{DB_DUMP_DIR_PATH}/artisans_private_data-#{Time.now.ge
 
 # Volatile information, easily reproducible
 IGNORED_TABLES = %w[
-  artisans_commissions_statues
+  artisans_commissions_statuses
+  artisans_volatile_data
   artisans_urls_states
 ].freeze
 
@@ -77,7 +78,7 @@ def create_link(file_path, link_path)
 end
 
 def phpunit(*additional_args)
-  run_docker('xvfb-run', './bin/phpunit', *additional_args)
+  run_docker('xvfb-run', './bin/phpunit', '--testdox', *additional_args)
 end
 
 def fix_phpunit
@@ -185,7 +186,7 @@ task 'get-snapshots' do
             'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-mtask(:cst, :console, 'app:update:commissions')
+mtask(:cst, :console, 'app:tracker:run-updates', 'commissions')
 mtask(:cstc, :cst, '--commit')
 mtask(:cstr, :cst, '--refetch')
 

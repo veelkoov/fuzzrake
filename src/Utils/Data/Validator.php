@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
 use App\Utils\Data\Validator\GenericValidator;
 use App\Utils\Data\Validator\SpeciesListValidator;
 use App\Utils\Data\Validator\ValidatorInterface;
@@ -20,20 +20,16 @@ class Validator
         $this->genericValidator = new GenericValidator();
     }
 
-    public function isValid(ArtisanFixWip $artisan, Field $field): bool
+    public function isValid(ArtisanChanges $artisan, Field $field): bool
     {
-        return $this->getValidator($field)->isValid($field, $artisan->getFixed()->get($field));
+        return $this->getValidator($field)->isValid($field, $artisan->getChanged()->get($field));
     }
 
     private function getValidator(Field $field): ValidatorInterface
     {
-        switch ($field->name()) {
-            case Fields::SPECIES_DOES:
-            case Fields::SPECIES_DOESNT:
-                return $this->speciesListValidator;
-
-            default:
-                return $this->genericValidator;
-        }
+        return match ($field->name()) {
+            Fields::SPECIES_DOES, Fields::SPECIES_DOESNT => $this->speciesListValidator,
+            default => $this->genericValidator,
+        };
     }
 }

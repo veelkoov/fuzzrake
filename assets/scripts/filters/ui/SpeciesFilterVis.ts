@@ -10,18 +10,18 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
         super(idPart, new SpeciesFilter(fieldNameIn, fieldNameOut, species));
 
         this.markersByDescendantSpecie = this.getMarkersByDescendantSpecies();
-        this.markers = this.grabMarkers(idPart);
+        this.markers = this.grabMarkers();
 
         this.$checkboxes.on('change', (event) => {
             this.refreshCheckedAttributes(event.target);
-            this.refreshDescentantsMarkers();
+            this.refreshDescendantsMarkers();
         });
     }
 
     protected refreshUi(): void {
         super.refreshUi();
 
-        this.refreshDescentantsMarkers();
+        this.refreshDescendantsMarkers();
     }
 
     private refreshCheckedAttributes(changed: HTMLInputElement): void {
@@ -32,7 +32,7 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
         });
     }
 
-    private refreshDescentantsMarkers(): void {
+    private refreshDescendantsMarkers(): void {
         if (this.markers) {
             this.markers.hide();
 
@@ -42,7 +42,7 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
         }
     }
 
-    private grabMarkers(idPart: string): JQuery<HTMLSpanElement> {
+    private grabMarkers(): JQuery<HTMLSpanElement> {
         return jQuery(`${this.bodySelector} span.descendants-indicator`);
     }
 

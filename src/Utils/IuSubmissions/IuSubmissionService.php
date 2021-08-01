@@ -20,17 +20,17 @@ class IuSubmissionService
     ) {
     }
 
-    public function submit(Artisan $data): bool
+    public function submit(Artisan $submission): bool
     {
         try {
-            $relativeFilePath = $this->local->saveOnDiskGetRelativePath($this->formatDataIntoJson($data));
+            $relativeFilePath = $this->local->saveOnDiskGetRelativePath($this->submissionToJson($submission));
 
             if (($s3SendingOk = $this->s3->sendCopyToS3($relativeFilePath))) {
                 /* If successfully pushed data to S3, remove local copy. It's safer in S3 */
                 $this->local->removeLocalCopy($relativeFilePath);
             }
 
-            $this->sns->notifyAboutSubmission($data, $s3SendingOk); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
+            $this->sns->notifyAboutSubmission($submission, $s3SendingOk); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
 
             return true;
         } catch (Exception $exception) {
@@ -43,8 +43,8 @@ class IuSubmissionService
     /**
      * @throws JsonException
      */
-    private function formatDataIntoJson(Artisan $data): string
+    private function submissionToJson(Artisan $submission): string
     {
-        return Json::encode($data->getAllData(), JSON_PRETTY_PRINT);
+        return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()), JSON_PRETTY_PRINT);
     }
 }

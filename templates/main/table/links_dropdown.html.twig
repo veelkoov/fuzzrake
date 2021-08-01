@@ -24,9 +24,9 @@
             {%- if artisan.websiteUrl -%}
                 <a class="dropdown-item track-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {%- endif -%}
-            {%- if artisan.pricesUrl -%}
-                <a class="dropdown-item track-prices" href="{{ artisan.pricesUrl }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
-            {%- endif -%}
+            {%- for url in artisan.pricesUrls -%}
+                <a class="dropdown-item track-prices" href="{{ url }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+            {%- endfor -%}
             {%- if artisan.faqUrl -%}
                 <a class="dropdown-item track-faq" href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             {%- endif -%}

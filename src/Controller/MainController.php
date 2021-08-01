@@ -55,7 +55,7 @@ class MainController extends AbstractController
     {
         $now = DateTimeUtils::getNowUtc();
 
-        $nextExpiresCandidates = [ // TODO: Move to configuration, make somehow connected to the Cron job; make safer assumptions (e.g. max 4-6h)?
+        $nextExpiresCandidates = [ // TODO: Move to configuration, make somehow connected to the Cron job; make safer assumptions (e.g. max 4-6h)? grep-tracking-frequency
             DateTimeUtils::getUtcAt('6:10'),
             DateTimeUtils::getUtcAt('18:10'),
             DateTimeUtils::getUtcAt('tomorrow 6:10'),

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Tasks;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
-use App\Utils\Artisan\Fields;
 use App\Utils\Data\FixerDifferValidator;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;

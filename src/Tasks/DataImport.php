@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
-use App\Utils\Data\ArtisanFixWip;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -109,20 +109,20 @@ class DataImport
     {
         $originalInput = $this->updateArtisanWithData(new Artisan(), $submission);
 
-        $input = new ArtisanFixWip($originalInput, $submission->getId());
-        $this->manager->correctArtisan($input->getFixed(), $submission->getId());
+        $input = new ArtisanChanges($originalInput, $submission->getId());
+        $this->manager->correctArtisan($input->getChanged(), $submission->getId());
         $this->fdv->perform($input, FDV::FIX);
 
-        $originalEntity = $this->findBestMatchArtisan($input->getFixed(), $submission->getId()) ?: new Artisan();
+        $originalEntity = $this->findBestMatchArtisan($input->getChanged(), $submission->getId()) ?: new Artisan();
 
-        $entity = new ArtisanFixWip($originalEntity, $submission->getId());
+        $entity = new ArtisanChanges($originalEntity, $submission->getId());
 
         return new ImportItem($submission, $input, $entity);
     }
 
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
-        foreach (Fields::getAll() as $field) {
+        foreach (Fields::inIuForm() as $field) {
             switch ($field->name()) {
                 case Fields::MAKER_ID:
                     $newValue = $source->get($field);
@@ -133,8 +133,8 @@ class DataImport
                     }
                     break;
 
-                case Fields::CONTACT_INFO_ORIGINAL:
-                    $newValue = $source->get($field);
+                case Fields::CONTACT_INFO_OBFUSCATED:
+                    $newValue = $source->get(Fields::get(Fields::CONTACT_INFO_ORIGINAL));
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
                         break; // No updates
@@ -149,16 +149,6 @@ class DataImport
                     }
 
                     $artisan->set($field, $source->get($field));
-                    break;
-
-                case Fields::URL_MINIATURES:
-                case Fields::COMMISSIONS_STATUS:
-                case Fields::CST_LAST_CHECK:
-                case Fields::COMPLETENESS:
-                case Fields::CONTACT_METHOD:
-                case Fields::CONTACT_ADDRESS_PLAIN:
-                case Fields::CONTACT_INFO_OBFUSCATED:
-                case Fields::FORMER_MAKER_IDS:
                     break;
 
                 default:

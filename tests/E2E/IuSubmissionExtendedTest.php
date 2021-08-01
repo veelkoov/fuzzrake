@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Fields;
 use App\Utils\Artisan\Utils;
 use App\Utils\DataInputException;
 use App\Utils\StringList;
@@ -82,7 +82,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'INACTIVE_REASON'           => ['', 'INACTIVE_REASON12', 'INACTIVE_REASON12'],
         'URL_FURSUITREVIEW'         => 'https://fursuitreview.com/value___VARIANT__.html',
         'URL_WEBSITE'               => 'https://mywebsite.com/value___VARIANT__.html',
-        'URL_PRICES'                => 'https://mywebsite.com/prices___VARIANT__.html',
+        'URL_PRICES'                => "https://mywebsite.com/prices___VARIANT__.html\nhttps://mywebsite.com/prices-more___VARIANT__.html",
         'URL_FAQ'                   => 'https://mywebsite.com/faq___VARIANT__.html',
         'URL_FUR_AFFINITY'          => 'https://www.furaffinity.net/user/value___VARIANT__/',
         'URL_DEVIANTART'            => 'https://www.deviantart.com/value___VARIANT__.html',
@@ -102,10 +102,14 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'URL_PHOTOS'                => "https://scritchphotos.com/value___VARIANT__.html\nhttps://www.furtrack.com/value___VARIANT__.html",
         'URL_MINIATURES'            => ['', 'URL_MINIATURE12', ''],
         'URL_OTHER'                 => 'https://other.com/value___VARIANT__.html',
-        'URL_CST'                   => 'https://cst.com/value___VARIANT__.html',
-        'COMMISSIONS_STATUS'        => self::SKIP,
-        'CST_LAST_CHECK'            => self::SKIP,
+        'URL_COMMISSIONS'           => "https://cst.com/value___VARIANT__.html\nhttps://cst2.com/value2___VARIANT__.html",
+        'CS_LAST_CHECK'             => self::SKIP,
+        'CS_TRACKER_ISSUE'          => self::SKIP,
+        'BP_LAST_CHECK'             => self::SKIP,
+        'BP_TRACKER_ISSUE'          => self::SKIP,
         'COMPLETENESS'              => self::SKIP,
+        'OPEN_FOR'                  => self::SKIP,
+        'CLOSED_FOR'                => self::SKIP,
     ];
 
     private const VALUE_NOT_SHOWN_IN_FORM = [
@@ -120,8 +124,12 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         'CONTACT_ADDRESS_PLAIN',
         'INACTIVE_REASON',
         'COMPLETENESS',
-        'COMMISSIONS_STATUS',
-        'CST_LAST_CHECK',
+        'CS_LAST_CHECK',
+        'CS_TRACKER_ISSUE',
+        'BP_LAST_CHECK',
+        'BP_TRACKER_ISSUE',
+        'OPEN_FOR',
+        'CLOSED_FOR',
     ];
 
     private const EXPANDED = [
@@ -179,7 +187,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         }
 
         foreach (array_merge(array_keys(self::FIELDS), self::EXPANDED, self::FIELD_NOT_IN_FORM, self::VALUE_NOT_SHOWN_IN_FORM) as $fieldName) {
-            self::assertArrayHasKey($fieldName, $fields);
+            self::assertArrayHasKey($fieldName, $fields->asArray());
         }
     }
 

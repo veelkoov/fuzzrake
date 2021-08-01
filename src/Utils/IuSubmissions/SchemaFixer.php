@@ -4,18 +4,41 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
+use App\DataDefinitions\Fields;
 use App\Utils\Traits\Singleton;
 use DateTimeInterface;
 
-class SchemaFixer
+final class SchemaFixer
 {
     use Singleton;
 
+    private const SCHEMA_VERSION = 'SCHEMA_VERSION';
+    private const CURRENT_SCHEMA_VERSION = 9;
+
     public function fix(array $data, DateTimeInterface $timestamp): array
     {
-        // Current schema version: 8
+        $data = self::assureVersionFieldExists($data);
 
-        // No fixes required at the moment, only schema v8 supported
+        switch ($data[self::SCHEMA_VERSION]) {
+            case 8:
+                $data[Fields::BP_LAST_CHECK] = 'unknown';
+        }
+
+        return $data;
+    }
+
+    private function assureVersionFieldExists(array $data): array
+    {
+        if (!array_key_exists(self::SCHEMA_VERSION, $data)) {
+            $data[self::SCHEMA_VERSION] = 8;
+        }
+
+        return $data;
+    }
+
+    public static function appendSchemaVersion(array $data): array
+    {
+        $data[self::SCHEMA_VERSION] = self::CURRENT_SCHEMA_VERSION;
 
         return $data;
     }

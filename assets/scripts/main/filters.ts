@@ -1,10 +1,14 @@
-import ValueFilterVis from "../filters/ui/ValueFilterVis";
-import SetFilterVis from "../filters/ui/SetFilterVis";
-import FilterVisInterface from "../filters/ui/FilterVisInterface";
+import AllSetUnOtFilter from "../filters/data/AllSetUnOtFilter";
+import AnySetUnFilter from "../filters/data/AnySetUnFilter";
+import AnySetUnOtFilter from "../filters/data/AnySetUnOtFilter";
 import DataBridge from "../class/DataBridge";
 import DataTablesFilterPlugin from "../filters/DataTablesFilterPlugin";
-import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
+import FilterVisInterface from "../filters/ui/FilterVisInterface";
+import GenericFilterVis from "../filters/ui/GenericFilterVis";
+import OpenForFilter from "../filters/data/OpenForFilter";
 import Species from "../species/Species";
+import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
+import ValueUnFilter from "../filters/data/ValueUnFilter";
 
 let filters: FilterVisInterface[] = [];
 let $filtersShowButton: JQuery<HTMLElement>;
@@ -49,14 +53,14 @@ export function applyFilters(): void {
 }
 
 export function initFilters(): void {
-    filters.push(new ValueFilterVis<string>('countries', 'country'));
-    filters.push(new ValueFilterVis<string>('states', 'state'));
-    filters.push(new SetFilterVis<string>('styles', 'styles', false, true));
-    filters.push(new SetFilterVis<string>('features', 'features', true, true));
-    filters.push(new SetFilterVis<string>('orderTypes', 'orderTypes', false, true));
-    filters.push(new SetFilterVis<string>('productionModels', 'productionModels', false, false));
-    filters.push(new SetFilterVis<string>('languages', 'languages', false, false));
-    filters.push(new ValueFilterVis<boolean>('commissionsStatus', 'commissionsStatus'));
+    filters.push(new GenericFilterVis<string>('countries', new ValueUnFilter('country')));
+    filters.push(new GenericFilterVis<string>('states', new ValueUnFilter('state')));
+    filters.push(new GenericFilterVis<string>('styles', new AnySetUnOtFilter('styles')));
+    filters.push(new GenericFilterVis<string>('features', new AllSetUnOtFilter('features')));
+    filters.push(new GenericFilterVis<string>('orderTypes', new AnySetUnOtFilter('orderTypes')));
+    filters.push(new GenericFilterVis<string>('productionModels', new AnySetUnFilter('productionModels')));
+    filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
+    filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
     filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);

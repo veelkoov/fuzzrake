@@ -32,7 +32,7 @@ class MainSmokeUiTest extends DbEnabledPantherTestCase
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
         $client->waitForVisibility('#filtersTitle', 2);
         $client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
-        $client->waitForVisibility('#countryCheckBoxCZ', 2);
+        $client->waitForVisibility('input[type=checkbox][value=CZ]', 2);
         $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[@data-action="all"]'))->click();
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
         $client->waitFor('//div[@id="artisans_info"]/p[contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 1);

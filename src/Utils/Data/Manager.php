@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -134,8 +133,10 @@ class Manager
         }
     }
 
-    private function addCorrection(string $submissionId, Field $field, ?string $wrongValue, string $correctedValue): void
+    private function addCorrection(string $submissionId, string $fieldName, ?string $wrongValue, string $correctedValue): void
     {
+        $field = Fields::get($fieldName);
+
         if (!array_key_exists($submissionId, $this->corrections)) {
             $this->corrections[$submissionId] = [];
         }
@@ -159,7 +160,7 @@ class Manager
             case self::CMD_CLEAR:
                 $fieldName = $buffer->readUntilWhitespace();
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
+                $this->addCorrection($this->getCurrentSubject(), $fieldName, null, '');
                 break;
 
             case self::CMD_COMMENT:
@@ -191,14 +192,14 @@ class Manager
                 $wrongValue = StrUtils::undoStrSafeForCli($buffer->readToken());
                 $correctedValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), $wrongValue, $correctedValue);
+                $this->addCorrection($this->getCurrentSubject(), $fieldName, $wrongValue, $correctedValue);
                 break;
 
             case self::CMD_SET:
                 $fieldName = $buffer->readUntilWhitespace();
                 $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
+                $this->addCorrection($this->getCurrentSubject(), $fieldName, null, $newValue);
                 break;
 
             case self::CMD_WITH:

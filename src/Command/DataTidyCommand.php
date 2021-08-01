@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Data\ArtisanFixWip;
+use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
@@ -52,9 +52,9 @@ class DataTidyCommand extends Command
         $manager = Manager::createFromFile($input->getArgument('corrections-file') ?: '/dev/null');
 
         foreach ($this->artisanRepository->findAll() as $artisan) {
-            $artisanFixWip = new ArtisanFixWip($artisan);
+            $artisanFixWip = new ArtisanChanges($artisan);
 
-            $manager->correctArtisan($artisanFixWip->getFixed());
+            $manager->correctArtisan($artisanFixWip->getChanged());
 
             $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF | FDV::RESET_INVALID_PLUS_SHOW_FIX_CMD);
             $artisanFixWip->apply();

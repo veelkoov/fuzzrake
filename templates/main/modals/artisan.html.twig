@@ -109,9 +109,9 @@
             {{# if artisan.websiteUrl }}
                 <a class="btn btn-light m-1 track-website" href="#" data-href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {{/ if }}
-            {{# if artisan.pricesUrl }}
-                <a class="btn btn-light m-1 track-prices" href="#" data-href="{{ artisan.pricesUrl }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
-            {{/ if }}
+            {{# each artisan.pricesUrl }}
+                <a class="btn btn-light m-1 track-prices" href="#" data-href="{{ this }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+            {{/ each }}
             {{# if artisan.faqUrl }}
                 <a class="btn btn-light m-1 track-faq" href="#" data-href="{{ artisan.faqUrl }}" rel="nofollow" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             {{/ if }}
@@ -162,43 +162,61 @@
             {{/ if }}
         </div>
     </div>
-    <div class="row p-1">
-        <div class="col-sm">
-            <h5>Commissions status</h5>
-            <div class="small" id="artisanCommissionsStatus">
-                {{# if artisan.cstUrl }}
-                    {{# if artisan.commissionsStatusKnown }}
-                        Commissions are <strong>{{ artisan.commissionsStatusText }}</strong>.
 
-                        Status is tracked and updated automatically from this web page:
-                        <a href="#" data-href="{{ artisan.cstUrl }}" rel="nofollow" target="_blank">{{ artisan.cstUrl }}</a>.
-
-                        Last time checked on {{ artisan.cstLastCheck }} UTC.
-                    {{ else }}
-                        Commissions status is <strong>{{ artisan.commissionsStatusText }}</strong>.
-
-                        It should be tracked and updated automatically from this web page:
-                        <a href="#" data-href="{{ artisan.cstUrl }}" rel="nofollow" target="_blank">{{ artisan.cstUrl }}</a>,
-                        however the software failed to "understand" the status based on the page contents.
-
-                        Last time it tried on {{ artisan.cstLastCheck }} UTC.
-                    {{/ if }}
-                {{ else }}
-                    Commissions are <strong>{{ artisan.commissionsStatusText }}</strong>.
-
-                    Status is not automatically tracked and updated.
-                {{/ if }}
-                <a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a>
-            </div>
-        </div>
-        {{# if artisan.cstUrl }}
-            {{# unless artisan.commissionsStatusKnown }}
-                <div class="col-sm-4">
-                    <img src="{% endverbatim %}{{ asset('images/parsing_failed.webp') }}{% verbatim %}" class="img-fluid" alt="">
-                </div>
-            {{/ unless }}
-        {{/ if }}
+    <div class="col-sm-12 p-1">
+        <h5>Commissions status</h5>
     </div>
+
+    {{# unless artisan.commissionsUrl }}
+        <div class="col-sm-12 p-1">
+            <p>Commissions status is not being tracked.</p>
+
+            <p><a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a></p>
+        </div>
+    {{ else }}
+        <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-8{{/ if }} p-1">
+            {{# if artisan.isStatusKnown }}
+                {{# if artisan.csTrackerIssue }}
+                    <p><strong>Note:</strong> the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/incomplete.</p>
+                {{/ if }}
+                <table class="table table-condensed table-striped">
+                    {{# each artisan.openFor }}
+                        <tr> <td>{{ this }}</td><td><i class="fas fa-check-square"></i>&nbsp;Open</td> </tr>
+                    {{/ each }}
+                    {{# each artisan.closedFor }}
+                        <tr> <td>{{ this }}</td><td><i class="fas fa-times-circle"></i>&nbsp;Closed</td> </tr>
+                    {{/ each }}
+                </table>
+            {{ else }}
+                <p>
+                    Failed to automatically determine commissions status. It should be tracked and updated automatically based on the contents of:
+                    {{# each artisan.commissionsUrl }}
+                        <a href="#" data-href="{{ this }}" rel="nofollow" target="_blank">{{ this }}</a>
+                    {{/ each }}, however the software failed to "understand" the contents.
+                    Last time tried on {{ artisan.csLastCheck }} UTC.
+                </p>
+
+                <p><a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a></p>
+            {{/ if }}
+        </div>
+        <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-4 text-right{{/ if }} p-1">
+            {{# if artisan.isStatusKnown }}
+                <p>
+                    Status is tracked and updated automatically based on the contents of:
+                    {{# each artisan.commissionsUrl }}
+                        <a href="#" data-href="{{ this }}" rel="nofollow" target="_blank">{{ this }}</a>
+                    {{/ each }}
+                    <br />
+                    Last time checked on {{ artisan.csLastCheck }} UTC.
+                </p>
+
+                <p><a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a></p>
+            {{ else }}
+                {% endverbatim %}<img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid tracking-failed" alt="">{% verbatim %}
+            {{/ if }}
+        </div>
+    {{/ unless }}
+
     <div class="col-sm-12 p-1 pt-3">
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
         <p class="small">
