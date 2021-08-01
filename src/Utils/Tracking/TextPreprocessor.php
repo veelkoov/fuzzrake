@@ -59,7 +59,7 @@ class TextPreprocessor
         $contents = $this->applyReplacements($contents);
         $contents = self::replaceArtisanName($artisanName, $contents);
         $contents = $this->removeFalsePositives($contents);
-        $contents = $this->applyFilters($contents, $additionalFilter); // TODO: Should take place at the beginning maybe?
+        $contents = $this->applyFilters($contents, $additionalFilter);
 
         return new Text($inputText, $contents);
     }
