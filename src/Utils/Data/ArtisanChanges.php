@@ -44,7 +44,7 @@ class ArtisanChanges
     public function differs(FieldsList $fields = null): bool
     {
         foreach ($fields ?? Fields::persisted() as $field) {
-            if ($this->getSubject()->get($field) != $this->getChanged()->get($field)) {
+            if ($this->getSubject()->get($field) !== $this->getChanged()->get($field)) {
                 return true;
             }
         }
