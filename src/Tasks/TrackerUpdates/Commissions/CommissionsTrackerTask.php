@@ -6,12 +6,13 @@ namespace App\Tasks\TrackerUpdates\Commissions;
 
 use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
+use App\Utils\Accessors\Commission;
 use App\Utils\Data\ArtisanChanges;
+use App\Utils\StringList;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\OfferStatus;
 use App\Utils\Tracking\TrackerException;
@@ -53,20 +54,19 @@ class CommissionsTrackerTask implements TrackerTaskInterface
     private function getUpdatesFor(Artisan $artisan): ArtisanChanges
     {
         $result = new ArtisanChanges($artisan);
-        $result->getChanged()->getCommissions()->clear();
         $result->getChanged()->getVolatileData()->setCsTrackerIssue(false);
         $result->getChanged()->getVolatileData()->setLastCsUpdate(null);
 
-        /* @var $newItems ArtisanCommissionsStatus[] */
+        /* @var $newItems OfferStatus[] */
         $newItems = [];
 
         foreach ($artisan->getUrlObjs(Fields::URL_COMMISSIONS) as $url) {
             $result->getChanged()->getVolatileData()->setLastCsUpdate($url->getState()->getLastRequest());
 
             try {
-                $statuses = $this->extractArtisanCommissionsStatuses($url);
+                $allOfferStatuses = $this->extractOfferStatuses($url);
 
-                if (0 === count($statuses)) {
+                if (0 === count($allOfferStatuses)) {
                     $this->logger->notice('No statuses detected in URL', [
                         'artisan' => (string) $artisan,
                         'url'     => (string) $url,
@@ -75,7 +75,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
                     $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
                 }
 
-                array_push($newItems, ...$statuses);
+                array_push($newItems, ...$allOfferStatuses);
             } catch (ExceptionInterface | TrackerException $exception) {
                 $this->logger->notice('Exception caught while detecting statuses in URL', [
                     'artisan'   => (string) $artisan,
@@ -87,14 +87,13 @@ class CommissionsTrackerTask implements TrackerTaskInterface
             }
         }
 
-        /* @var $statuses ArtisanCommissionsStatus[] */
-        $statuses = [];
+        /* @var $offerStatuses OfferStatus[] */
+        $offerStatuses = [];
 
         foreach ($newItems as $status) {
-            if (!array_key_exists($status->getOffer(), $statuses)) {
+            if (!array_key_exists($status->getOffer(), $offerStatuses)) {
                 // This is a status for an offer we didn't have previously
-                $result->getChanged()->getCommissions()->add($status);
-                $statuses[$status->getOffer()] = $status;
+                $offerStatuses[$status->getOffer()] = $status;
                 continue;
             }
 
@@ -107,7 +106,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
 
             $result->getChanged()->getVolatileData()->setCsTrackerIssue(true);
 
-            $previousStatus = $statuses[$status->getOffer()];
+            $previousStatus = $offerStatuses[$status->getOffer()];
 
             if (null === $previousStatus) {
                 // We have a 3rd+ offer with different statuses
@@ -120,7 +119,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
                 continue;
             }
 
-            if ($previousStatus->getIsOpen() != $status->getIsOpen()) {
+            if ($previousStatus->getStatus() != $status->getStatus()) {
                 // We have a 2nd offer and the status differs
 
                 $this->logger->notice('Contradicting statuses detected', [
@@ -128,29 +127,27 @@ class CommissionsTrackerTask implements TrackerTaskInterface
                     'offer'   => $status->getOffer(),
                 ]);
 
-                $result->getChanged()->getCommissions()->removeElement($previousStatus);
-                $statuses[$status->getOffer()] = null;
+                $offerStatuses[$status->getOffer()] = null;
             }
+        }
+
+        foreach ([true, false] as $status) {
+            Commission::set($result->getChanged(), $status, StringList::pack(array_map(fn (string $item): string => ucfirst(strtolower($item)), array_keys(array_filter($offerStatuses, fn (?OfferStatus $item): bool => $item?->getStatus() === $status)))));
         }
 
         return $result;
     }
 
     /**
-     * @return ArtisanCommissionsStatus[]
+     * @return OfferStatus[]
      *
      * @throws TrackerException
      * @throws ExceptionInterface
      */
-    private function extractArtisanCommissionsStatuses(ArtisanUrl $url): array
+    private function extractOfferStatuses(ArtisanUrl $url): array
     {
         $webpageSnapshot = $this->snapshots->get($url, false, false);
 
-        return array_map(function (OfferStatus $match) use ($url): ArtisanCommissionsStatus {
-            return (new ArtisanCommissionsStatus())
-                ->setIsOpen($match->getStatus())
-                ->setOffer(ucfirst(strtolower($match->getOffer())))
-                ->setArtisan($url->getArtisan());
-        }, $this->parser->getCommissionsStatuses($webpageSnapshot));
+        return $this->parser->getCommissionsStatuses($webpageSnapshot);
     }
 }
