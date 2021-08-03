@@ -13,7 +13,7 @@
         "doctrine/orm": "*",
         "google/recaptcha": "^1.2",
         "phpoffice/phpspreadsheet": "^1.17",
-        "rawr/t-regx": "^v0.10.1",
+        "rawr/t-regx": "v0.13.0",
         "sensio/framework-extra-bundle": "*",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "*",

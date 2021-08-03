@@ -11,11 +11,11 @@ use LogicException;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 abstract class AbstractMiniatures
 {
-    protected PatternInterface $pattern;
+    protected Pattern $pattern;
 
     public function __construct(
         protected GentleHttpClient $httpClient,

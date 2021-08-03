@@ -46,8 +46,8 @@ final class StrUtils
      */
     public static function shortPrintUrl(string $originalUrl): string
     {
-        $url = pattern('^https?://(www\.)?')->remove($originalUrl)->all();
-        $url = pattern('/?(#profile)?$')->remove($url)->all();
+        $url = pattern('^https?://(www\.)?')->prune($originalUrl);
+        $url = pattern('/?(#profile)?$')->prune($url);
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 

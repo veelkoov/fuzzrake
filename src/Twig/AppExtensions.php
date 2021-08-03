@@ -141,11 +141,11 @@ class AppExtensions extends AbstractExtension
 
     public function filterHumanFriendlyRegexp(string $input): string
     {
-        $input = pattern('\(\?<!.+?\)', 'i')->remove($input)->all();
-        $input = pattern('\(\?!.+?\)', 'i')->remove($input)->all();
-        $input = pattern('\([^a-z]+?\)', 'i')->remove($input)->all();
-        $input = pattern('[()?]', 'i')->remove($input)->all();
-        $input = pattern('\[.+?\]', 'i')->remove($input)->all();
+        $input = pattern('\(\?<!.+?\)', 'i')->prune($input);
+        $input = pattern('\(\?!.+?\)', 'i')->prune($input);
+        $input = pattern('\([^a-z]+?\)', 'i')->prune($input);
+        $input = pattern('[()?]', 'i')->prune($input);
+        $input = pattern('\[.+?\]', 'i')->prune($input);
 
         return strtoupper($input);
     }

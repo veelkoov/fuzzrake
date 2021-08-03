@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class Matcher
 {
     /**
-     * @param PatternInterface[] $patterns KEY => pattern
+     * @param Pattern[] $patterns KEY => pattern
      */
     public function __construct(
         private array $patterns,

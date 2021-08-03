@@ -14,7 +14,7 @@ use JsonException;
 use Symfony\Component\DomCrawler\Crawler;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class TextPreprocessor
 {
@@ -41,7 +41,7 @@ class TextPreprocessor
     private Replacements $replacements;
 
     /**
-     * @param PatternInterface[] $falsePositivePatterns
+     * @param Pattern[] $falsePositivePatterns
      */
     public function __construct(
         private array $falsePositivePatterns,
@@ -172,7 +172,7 @@ class TextPreprocessor
     private function removeFalsePositives(string $contents): string
     {
         foreach ($this->falsePositivePatterns as $pattern) {
-            $contents = $pattern->remove($contents)->all();
+            $contents = $pattern->prune($contents);
         }
 
         return $contents;

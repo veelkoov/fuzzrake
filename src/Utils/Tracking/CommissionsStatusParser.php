@@ -6,12 +6,12 @@ namespace App\Utils\Tracking;
 
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use TRegx\CleanRegex\Match\Details\Detail;
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class CommissionsStatusParser
 {
     /**
-     * @var PatternInterface[]
+     * @var Pattern[]
      */
     private array $offerStatusPatterns;
 

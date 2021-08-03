@@ -9,11 +9,11 @@ use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class LanguagesFixer extends StringFixer
 {
-    private PatternInterface $pattern;
+    private Pattern $pattern;
     private Replacements $replacements;
 
     public function __construct(array $languages, array $strings)

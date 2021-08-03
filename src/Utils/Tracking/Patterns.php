@@ -7,17 +7,17 @@ namespace App\Utils\Tracking;
 use App\Utils\UnbelievableRuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class Patterns
 {
     /**
-     * @var PatternInterface[]
+     * @var Pattern[]
      */
     private array $falsePositivePatterns;
 
     /**
-     * @var PatternInterface[]
+     * @var Pattern[]
      */
     private array $offerStatusPatterns;
 
@@ -36,7 +36,7 @@ class Patterns
     }
 
     /**
-     * @return PatternInterface[]
+     * @return Pattern[]
      */
     public function getFalsePositivePatterns(): array
     {
@@ -44,7 +44,7 @@ class Patterns
     }
 
     /**
-     * @return PatternInterface[]
+     * @return Pattern[]
      */
     public function getOfferStatusPatterns(): array
     {

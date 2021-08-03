@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e41f904875eb046ae01d5471e822439c",
+    "content-hash": "562d3d1d5f9bfd80dbbb0feeb489ad15",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -2411,16 +2411,16 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "v0.10.2",
+            "version": "v0.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/T-Regx/T-Regx.git",
-                "reference": "310779ad7d9039caeb6c57a81d5a19a35f6b3723"
+                "reference": "8b7ff6dac6fee3e642b03c3ddb48297f0c366822"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/310779ad7d9039caeb6c57a81d5a19a35f6b3723",
-                "reference": "310779ad7d9039caeb6c57a81d5a19a35f6b3723",
+                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/8b7ff6dac6fee3e642b03c3ddb48297f0c366822",
+                "reference": "8b7ff6dac6fee3e642b03c3ddb48297f0c366822",
                 "shasum": ""
             },
             "require": {
@@ -2428,6 +2428,7 @@
                 "php": "~8.0.0 | >=7.1.0"
             },
             "require-dev": {
+                "ext-json": "*",
                 "php-coveralls/php-coveralls": "^2.0",
                 "phpunit/phpunit": "^9.0 || ^8.0 || ^7.5",
                 "rawr/cross-data-providers": "^2.3.0",
@@ -2470,7 +2471,7 @@
             ],
             "support": {
                 "issues": "https://github.com/T-Regx/T-Regx/issues",
-                "source": "https://github.com/T-Regx/T-Regx/tree/v0.10.2"
+                "source": "https://github.com/T-Regx/T-Regx/tree/v0.13.0"
             },
             "funding": [
                 {
@@ -2478,7 +2479,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-06T20:41:34+00:00"
+            "time": "2021-07-28T22:42:01+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",

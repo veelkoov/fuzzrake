@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\DataDefinitions;
 
 use Stringable;
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class Field implements Stringable
 {
-    private ?PatternInterface $validationPattern;
+    private ?Pattern $validationPattern;
 
     public function __construct(
         private string $name,
@@ -34,7 +34,7 @@ class Field implements Stringable
         return $this->modelName;
     }
 
-    public function validationPattern(): ?PatternInterface
+    public function validationPattern(): ?Pattern
     {
         return $this->validationPattern;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class PatternsFactory
 {
@@ -21,7 +21,7 @@ class PatternsFactory
     /**
      * @param string[] $regexes
      *
-     * @return PatternInterface[]
+     * @return Pattern[]
      */
     public function generateFrom(array $regexes): array
     {
