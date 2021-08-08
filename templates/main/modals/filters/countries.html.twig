@@ -10,6 +10,8 @@
 
 {% for region in filters.countries.items %}
     {% apply spaceless %}
+        {% set region_loop = loop %}
+
         <fieldset class="region">
             <legend>
                 {{ region.label }} <span class="count">({{ region.count }})</span>
@@ -20,7 +22,7 @@
             <div class="row">
                 {% for country in region.value.items %}
                     <div class="col-sm-6 col-lg-3">
-                        {{ macros.filter_checkbox('country', loop.index, country.value, country.label, country.count, '<span class="flag-icon flag-icon-' ~ country.value|lower ~ '"></span>') }}
+                        {{ macros.filter_checkbox('country' ~ region_loop.index, loop.index, country.value, country.label, country.count, '<span class="flag-icon flag-icon-' ~ country.value|lower ~ '"></span>') }}
                     </div>
                 {% endfor %}
             </div>
