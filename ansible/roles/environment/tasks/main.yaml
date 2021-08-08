@@ -13,3 +13,7 @@
 
 - import_tasks: build.yaml
   tags: build
+
+- import_tasks: setup_cronjobs.yaml
+  tags: cronjobs
+  when: "setup_cronjobs|default(false)"

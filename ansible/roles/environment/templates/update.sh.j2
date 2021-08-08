@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+date -u
+
+# TODO: Path from group vars
+docker exec fuzzrake-prod /var/www/html/bin/console app:tracker:run-updates commissions --refetch --commit
+
+date -u
