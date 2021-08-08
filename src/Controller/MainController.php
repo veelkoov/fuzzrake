@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\FilterService;
+use App\Service\Statistics\StatisticsService;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Species\Species;
@@ -26,7 +27,7 @@ class MainController extends AbstractController
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Route(path: '/index.html')]
     #[Cache(public: true)]
-    public function main(Request $request, ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species): Response
+    public function main(Request $request, ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species, StatisticsService $statistics): Response
     {
         if ('hexometer' === $request->get('ref')) {
             return new Response('*Notices your scan* OwO what\'s this?', Response::HTTP_MISDIRECTED_REQUEST,
@@ -36,9 +37,8 @@ class MainController extends AbstractController
 
         $response = $this->render('main/main.html.twig', [
             'artisans'            => $artisanRepository->getAll(),
-            'activeArtisansCount' => $artisanRepository->countActive(),
             'makerIdsMap'         => $makerIdRepository->getOldToNewMakerIdsMap(),
-            'countryCount'        => $artisanRepository->getDistinctCountriesCount(),
+            'stats'               => $statistics->getMainPageStats(),
             'filters'             => $filterService->getFiltersTplData(),
             'species'             => $species->getSpeciesTree(),
         ]);

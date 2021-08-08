@@ -8,6 +8,7 @@ use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\HealthCheckService;
 use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -58,19 +59,18 @@ class HealthCheckServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function testGetXyzUpdatesStatus(string $repoMethodName, array $subsequentRepoReturnedDateTimes, string $hcServiceResultCheckedKey, array $hcSubsequentExpectedResultCheckedValue): void
+    public function testGetXyzUpdatesStatus(string $repoMethodName, string $hcStatusResultKey, DateTimeInterface $returnedDateTime, string $expectedResult): void
     {
         $avdrMock = $this->createMock(ArtisanVolatileDataRepository::class);
         $avdrMock
-            ->expects(self::exactly(count($subsequentRepoReturnedDateTimes)))
+            ->expects(self::exactly(2))
             ->method($repoMethodName)
-            ->willReturn(...$subsequentRepoReturnedDateTimes)
+            ->willReturn($returnedDateTime)
         ;
 
         $hcSrv = new HealthCheckService($avdrMock, self::HC_VALUES);
 
-        static::assertEquals(array_shift($hcSubsequentExpectedResultCheckedValue), $hcSrv->getStatus()[$hcServiceResultCheckedKey]);
-        static::assertEquals(array_shift($hcSubsequentExpectedResultCheckedValue), $hcSrv->getStatus()[$hcServiceResultCheckedKey]);
+        static::assertEquals($expectedResult, $hcSrv->getStatus()[$hcStatusResultKey]);
     }
 
     /**
@@ -81,23 +81,10 @@ class HealthCheckServiceTest extends TestCase
         $utc = new DateTimeZone('UTC');
 
         return [
-            [
-                'getLastCsUpdateTime',
-                [
-                    new DateTime('-12 hours -10 minutes', $utc),
-                    new DateTime('-12 hours -20 minutes', $utc),
-                ],
-                'csUpdatesStatus',
-                ['OK', 'WARNING'],
-            ], [
-                'getLastBpUpdateTime',
-                [
-                    new DateTime('-7 days -10 minutes', $utc),
-                    new DateTime('-7 days -20 minutes', $utc),
-                ],
-                'bpUpdatesStatus',
-                ['OK', 'WARNING'],
-            ],
+            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTime('-12 hours -10 minutes', $utc), 'OK'],
+            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTime('-12 hours -20 minutes', $utc), 'WARNING'],
+            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTime('-7 days -10 minutes', $utc), 'OK'],
+            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTime('-7 days -20 minutes', $utc), 'WARNING'],
         ];
     }
 

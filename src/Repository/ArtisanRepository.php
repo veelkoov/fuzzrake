@@ -16,7 +16,6 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @method Artisan|null find($id, $lockMode = null, $lockVersion = null)
@@ -272,19 +271,19 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function countActive(): int
     {
-        try {
-            return (int) $this->createQueryBuilder('a')
-                ->select('COUNT(a)')
-                ->where('a.inactiveReason = :empty')
-                ->setParameter('empty', '')
-                ->getQuery()
-                ->enableResultCache(3600)
-                ->getSingleScalarResult();
-        } catch (NoResultException | NonUniqueResultException $e) {
-            throw new RuntimeException($e);
-        }
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a)')
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleScalarResult();
     }
 
     /**

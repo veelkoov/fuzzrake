@@ -8,16 +8,13 @@ namespace App\Twig;
 
 use App\Entity\Artisan;
 use App\Entity\Event;
-use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\DateTimeFormat;
 use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
 use Twig\Extension\AbstractExtension;
@@ -27,7 +24,6 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     public function __construct(
-        private ArtisanVolatileDataRepository $avdRepository,
         private EnvironmentsService $environments,
     ) {
     }
@@ -35,9 +31,11 @@ class AppExtensions extends AbstractExtension
     public function getFilters(): array
     {
         return [
+            new TwigFilter('fragile_int', fn (...$args): string => $this->fragileIntFilter(...$args)),
+            new TwigFilter('fragile_date', fn (...$args): string => DateTimeFormat::fragile(...$args)),
+            new TwigFilter('nullable_date', fn (...$args): string => DateTimeFormat::nullable(...$args)),
             new TwigFilter('list', [$this, 'listFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
-            new TwigFilter('nulldate', [$this, 'nulldateFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
             new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
             new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
@@ -46,11 +44,18 @@ class AppExtensions extends AbstractExtension
         ];
     }
 
+    private function fragileIntFilter($input): string
+    {
+        if (is_int($input)) {
+            return (string) $input;
+        } else {
+            return 'unknown/error';
+        }
+    }
+
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('getLastSystemUpdateTimeUtcStr', [$this, 'getLastSystemUpdateTimeUtcStrFunction']),
-            new TwigFunction('getLastDataUpdateTimeUtcStr', [$this, 'getLastDataUpdateTimeUtcStrFunction']),
             new TwigFunction('isDevEnv', [$this, 'isDevEnvFunction']),
             new TwigFunction('isDevOrTestEnv', [$this, 'isDevOrTestEnvFunction']),
             new TwigFunction('isTestEnv', [$this, 'isTestEnvFunction']),
@@ -74,23 +79,9 @@ class AppExtensions extends AbstractExtension
         return $this->environments->isTest();
     }
 
-    public function getLastDataUpdateTimeUtcStrFunction(): string
-    {
-        return $this->avdRepository->getLastCsUpdateTimeAsString(); // TODO: CS&BP? See #29
-    }
-
     public function getCounterFunction(): Counter
     {
         return new Counter();
-    }
-
-    public function getLastSystemUpdateTimeUtcStrFunction(): string
-    {
-        try {
-            return DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'))->format('Y-m-d H:i');
-        } catch (DateTimeException) {
-            return 'unknown/error';
-        }
     }
 
     public function otherFilter($primaryList, $otherList): string
@@ -119,17 +110,6 @@ class AppExtensions extends AbstractExtension
     public function jsonToArtisanParametersFilter(Artisan $artisan): string
     {
         return trim(Json::encode(array_values($artisan->getPublicData())), '[]');
-    }
-
-    public function nulldateFilter($input, string $format = 'Y-m-d H:i'): string
-    {
-        if (null === $input) {
-            return 'never';
-        } elseif ($input instanceof DateTimeInterface) {
-            return $input->format($format);
-        } else {
-            return 'unknown/error';
-        }
     }
 
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
@@ -169,7 +149,7 @@ class AppExtensions extends AbstractExtension
 
         if ($n) {
             $s = $n > 1 ? 's' : '';
-            $result .= "{$n} new maker{$s}";
+            $result .= "$n new maker$s";
         }
 
         if ($n && $u) {
@@ -178,17 +158,17 @@ class AppExtensions extends AbstractExtension
 
         if ($u) {
             $s = $u > 1 ? 's' : '';
-            $result .= "{$u} updated maker{$s}";
+            $result .= "$u updated maker$s";
         }
 
         if ($n || $u) {
             $s = $n + $u > 1 ? 's' : '';
-            $result .= " based on received I/U request{$s}.";
+            $result .= " based on received I/U request$s.";
         }
 
         if ($r) {
             $s = $r > 1 ? 's' : '';
-            $result .= " {$r} maker{$s} updated after report{$s} sent by a visitor(s). Thank you for your contribution!";
+            $result .= " $r maker$s updated after report$s sent by a visitor(s). Thank you for your contribution!";
         }
 
         return trim($result);

@@ -8,13 +8,13 @@
             <h4>Fursuit makers database</h4>
 
             <p>
-                Welcome to the spawnbase of the furries! Currently {{ activeArtisansCount }}&nbsp;makers from
-                {{ countryCount }}&nbsp;countries are listed here. Do you know one missing from here? - let them know!
+                Welcome to the spawnbase of the furries! Currently {{ stats.activeArtisansCount|fragile_int }}&nbsp;makers from
+                {{ stats.countryCount|fragile_int }}&nbsp;countries are listed here. Do you know one missing from here? - let them know!
             </p>
 
             <p class="small">
-                Last update: {{ getLastDataUpdateTimeUtcStr() }} UTC (data)
-                / {{ getLastSystemUpdateTimeUtcStr() }} UTC (system).
+                Last update: {{ stats.lastDataUpdateTimeUtc|fragile_date }} UTC (data)
+                / {{ stats.lastSystemUpdateTimeUtc|fragile_date }} UTC (system).
             </p>
 
             <p>
