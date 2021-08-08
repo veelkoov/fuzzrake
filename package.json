@@ -2,11 +2,11 @@
     "devDependencies": {
         "@symfony/stimulus-bridge": "^2.0.0",
         "@symfony/webpack-encore": "^1.0.0",
-        "@types/bootstrap": "^4.5.0",
+        "@types/bootstrap": "^5.1.0",
         "@types/datatables.net": "^1.10.19",
         "@types/datatables.net-buttons": "^1.4.3",
         "@types/grecaptcha": "^3.0.1",
-        "@types/jquery": "^3.3.22",
+        "@types/jquery": "^3.5.6",
         "core-js": "^3.0.0",
         "handlebars": "^4.7.7",
         "handlebars-loader": "^1.7.0",
