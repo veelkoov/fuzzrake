@@ -24,8 +24,8 @@
             {% set last_timestamp = event.timestamp %}
 
             <li class="events-item row" id="event{{ event.id }}">
-                <div class="col-sm-2 pb-1 text-right small {% if day_changed %}border-top{% endif %}">
-                    <a href="#event{{ event.id }}">
+                <div class="col-sm-2 pb-1 text-end small {% if day_changed %}border-top{% endif %}">
+                    <a href="#event{{ event.id }}" class="text-decoration-none">
                         {% if day_changed %} {{ event.timestamp|date('jS M Y') }}, {% endif %}
                         {% if time_changed %} {{ event.timestamp|date('H:i') }} {% endif %}
                     </a>
