@@ -19,7 +19,7 @@
     {{ form_errors(form) }}
 
     {% if submitted %}
-        <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#iu_form_instructions_container">Toggle instructions</button>
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#iu_form_instructions_container">Toggle instructions</button>
     {% endif %}
 
     <div id="iu_form_instructions_container" {% if submitted %}class="collapse"{% endif %}>
@@ -105,7 +105,7 @@
         <div class="card-body">
             <h5 class="card-title text-danger">Privacy</h5>
             <p class="card-text">
-                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge badge-warning">PRIVATE</span>
+                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge bg-warning text-dark">PRIVATE</span>
             </p>
         </div>
     </div>
@@ -521,7 +521,7 @@
 
     <table class="table table-bordered table-condensed pros-cons-contact-options">
         <tr>
-            <th class="text-right">Options available:</th>
+            <th class="text-end">Options available:</th>
             <th>No&nbsp;contact allowed</th>
             <th>Corrections</th>
             <th>Announcements</th>
@@ -577,15 +577,6 @@
             <td><i class="fas fa-check-square"></i></td>
             <td><i class="fas fa-check-square"></i></td>
         </tr>
-        <tr>
-            <td colspan="3"></td>
-            <td class="small">
-                Alternatively choose "Corrections" and join <a href="https://t.me/getfursuit_chat" target="_blank">this Telegram chat</a>.
-            </td>
-            <td class="small">
-                Alternatively choose "Corrections" and join <a href="https://t.me/getfursuit" target="_blank">this Telegram channel</a>.
-            </td>
-        </tr>
     </table>
 
     <div class="form-group">
@@ -598,7 +589,7 @@
         {{ form_label(form.contactInfoObfuscated) }}
         <p class="hint">
             Please provide your e-mail address. No other possibilities, sorry! If you are updating your data and you see asterisks here, but the e-mail address looks OK, and you don't want to change it - just leave it as it is.
-            <span class="badge badge-warning">PRIVATE</span> Your address will never be shared with anyone without your permission.
+            <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.
         </p>
         {{ form_widget(form.contactInfoObfuscated) }}
     </div>
@@ -616,14 +607,14 @@
                 Please choose some kind of password, which will be used to make sure it was you, who posted the updates in the future. Use at least 8 {# grep-password-length #} characters (the more, the merrier).
             {% endif %}
             <strong>Please do not use any password you use anywhere else.</strong>
-            <span class="badge badge-warning">PRIVATE</span> Your password will be kept in a secure way and never shared.
+            <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.
         </p>
         {{ form_widget(form.password) }}
     </div>
 
     {{ form_rest(form) }}
     <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
-    <div class="text-right">
+    <div class="text-end">
         <button class="btn btn-primary btn-lg g-recaptcha"
                 data-sitekey="{{ google_recaptcha_site_key }}"
                 data-callback="iuFormRecaptchaValidationCallback"
