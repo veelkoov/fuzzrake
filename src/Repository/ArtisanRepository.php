@@ -84,6 +84,7 @@ class ArtisanRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('a')
             ->select('COUNT (DISTINCT a.country)')
             ->where('a.country != \'\'')
+            ->andWhere('a.country != \'EU\'') // grep-country-eu
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();

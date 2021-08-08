@@ -57,7 +57,8 @@
   {
     "name": "EU (unspecified)",
     "code": "EU",
-    "region": "Europe"
+    "region": "Europe",
+    "comment": "grep-country-eu"
   },
   {
     "name": "Finland",
