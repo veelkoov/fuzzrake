@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeFormat;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Parse;
 use App\Utils\ParseException;
@@ -80,7 +81,7 @@ class HealthCheckService
                 return self::WARNING;
             }
 
-            if ((int) $mibsFree < $this->diskFreeMinMibs && $percentUsed > $this->diskUsedMaxPercent) {
+            if ($mibsFree < $this->diskFreeMinMibs && $percentUsed > $this->diskUsedMaxPercent) {
                 return self::WARNING;
             }
         }
@@ -153,12 +154,24 @@ class HealthCheckService
 
     private function getLastCsUpdateUtc(): string
     {
-        return $this->artisanVolatileDataRepository->getLastCsUpdateTimeAsString();
+        try {
+            $result = $this->artisanVolatileDataRepository->getLastCsUpdateTime();
+        } catch (DateTimeException | UnexpectedResultException) {
+            $result = null;
+        }
+
+        return DateTimeFormat::fragile($result);
     }
 
     private function getLastBpUpdateUtc(): string
     {
-        return $this->artisanVolatileDataRepository->getLastBpUpdateTimeAsString();
+        try {
+            $result = $this->artisanVolatileDataRepository->getLastBpUpdateTime();
+        } catch (DateTimeException | UnexpectedResultException) {
+            $result = null;
+        }
+
+        return DateTimeFormat::fragile($result);
     }
 
     private function getServerTimeUtc(): string

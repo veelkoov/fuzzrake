@@ -8,7 +8,7 @@ use App\Tests\TestUtils\DbEnabledWebTestCase;
 
 class MainControllerTest extends DbEnabledWebTestCase
 {
-    public function testMain(): void
+    public function testMainPageLoads(): void
     {
         $client = static::createClient();
         self::addSimpleArtisan();

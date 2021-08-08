@@ -53,24 +53,6 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             ->getSingleScalarResult());
     }
 
-    public function getLastCsUpdateTimeAsString(): string
-    {
-        try {
-            return $this->getLastCsUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | UnexpectedResultException) {
-            return 'unknown/error';
-        }
-    }
-
-    public function getLastBpUpdateTimeAsString(): string
-    {
-        try {
-            return $this->getLastBpUpdateTime()->format('Y-m-d H:i');
-        } catch (DateTimeException | UnexpectedResultException) {
-            return 'unknown/error';
-        }
-    }
-
     /**
      * @throws UnexpectedResultException
      */
