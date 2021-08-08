@@ -47,23 +47,7 @@
 <body class="{% block body_class %}{% endblock %}">
 
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span> <span aria-hidden="true">Menu</span>
-        </button>
-
-        {% set page = app.request.attributes.get('_route') %}
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                {% include '_menu.html.twig' %}
-            </ul>
-        </div>
-        <ul class="navbar-nav">
-            {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">🥌</span>️ Donate' } %}
-        </ul>
-    </nav>
+    {% include '_menu.html.twig' %}
 
     {% block body %}{% endblock %}
 
