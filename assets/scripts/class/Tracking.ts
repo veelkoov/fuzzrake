@@ -6,7 +6,7 @@ export default class Tracking {
 
     private static trackLinkClick($link: JQuery<HTMLElement>, category: string): void {
         let label = $link.attr('class').split(' ')
-            .filter(value => value.startsWith('track-')).pop()
+            .filter(value => value.startsWith('track-')).pop() // grep-track-link-classes
             .replace(/^track-/, '') || 'missing-label';
 
         if (label !== 'ignore') {
