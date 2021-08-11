@@ -75,8 +75,8 @@ class IuFormController extends AbstractRecaptchaBackedController
             }
         }
 
-        return $this->render('iu_form/iu_form.html.twig', [
-            'form'             => $form->createView(),
+        return $this->renderForm('iu_form/iu_form.html.twig', [
+            'form'             => $form,
             'noindex'          => true,
             'submitted'        => $form->isSubmitted(),
             'disable_tracking' => true,
