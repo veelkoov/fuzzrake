@@ -1,75 +1,25 @@
-<div id="filters-parents">{# FIXME #}
-    <div id="filter-ctrl-countries" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-countries" class="btn btn-outline-secondary" data-bs-toggle="collapse">Countries: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-states" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-states" class="btn btn-outline-secondary" data-bs-toggle="collapse">States: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-languages" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-languages" class="btn btn-outline-secondary" data-bs-toggle="collapse">Languages: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-styles" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-styles" class="btn btn-outline-secondary" data-bs-toggle="collapse">Styles: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-features" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-features" class="btn btn-outline-secondary" data-bs-toggle="collapse">Features: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-orderTypes" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-orderTypes" class="btn btn-outline-secondary" data-bs-toggle="collapse">Order types: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-productionModels" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-productionModels" class="btn btn-outline-secondary" data-bs-toggle="collapse">Production models: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-commissionsStatus" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-commissionsStatus" class="btn btn-outline-secondary" data-bs-toggle="collapse">Open for: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div id="filter-ctrl-species" class="btn-group my-1" role="group">
-        <button data-bs-target="#filter-body-species" class="btn btn-outline-secondary" data-bs-toggle="collapse">Species: <span class="status"></span></button>
-        <button type="button" class="filter-ctrl-remove btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
-    </div>
+{% import "main/modals/filters/macros.html.twig" as macros %}
 
-    <div id="filter-body-countries" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/countries.html.twig' %}
-        {% include 'main/modals/filters/countries.html.twig' %}
-    </div>
-    <div id="filter-body-states" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/states.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'state', filter_data: filters.states } %}
-    </div>
-    <div id="filter-body-languages" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/languages.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'lanugage', filter_data: filters.languages } %}
-    </div>
-    <div id="filter-body-styles" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/styles.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'style', filter_data: filters.styles } %}
-    </div>
-    <div id="filter-body-features" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/features.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'feature', filter_data: filters.features } %}
-    </div>
-    <div id="filter-body-orderTypes" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/order_types.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'orderType', filter_data: filters.orderTypes } %}
-    </div>
-    <div id="filter-body-productionModels" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/production_models.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'productionModel', filter_data: filters.productionModels } %}
-    </div>
-    <div id="filter-body-commissionsStatus" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/commissions_status.html.twig' %}
-        {% include 'main/modals/filters/multiselect.html.twig' with { group_name: 'commissionsStatuses', filter_data: filters.commissionsStatuses } %}
-    </div>
-    <div id="filter-body-species" class="collapse" data-bs-parent="#filters-parents">
-        {% include 'main/modals/filters/helphints/species.html.twig' %}
-        {% include 'main/modals/filters/species.html.twig' %}
+<div class="row">
+    <div class="col">
+        {{ macros.ctrl_button('countries',         'Countries') }}
+        {{ macros.ctrl_button('states',            'States') }}
+        {{ macros.ctrl_button('languages',         'Languages') }}
+        {{ macros.ctrl_button('styles',            'Styles') }}
+        {{ macros.ctrl_button('features',          'Features') }}
+        {{ macros.ctrl_button('orderTypes',        'Order types') }}
+        {{ macros.ctrl_button('productionModels',  'Production models') }}
+        {{ macros.ctrl_button('commissionsStatus', 'Open for') }}
+        {{ macros.ctrl_button('species',           'Species') }}
     </div>
 </div>
+
+{{ macros.body_other('countries',               'helphints/countries.html.twig',          'countries.html.twig', filters) }}
+{{ macros.body_multiselect('states',            'helphints/states.html.twig',             filters.states, 'state') }}
+{{ macros.body_multiselect('languages',         'helphints/languages.html.twig',          filters.languages, 'language') }}
+{{ macros.body_multiselect('styles',            'helphints/styles.html.twig',             filters.styles, 'style') }}
+{{ macros.body_multiselect('features',          'helphints/features.html.twig',           filters.features, 'feature') }}
+{{ macros.body_multiselect('orderTypes',        'helphints/order_types.html.twig',        filters.orderTypes, 'orderType') }}
+{{ macros.body_multiselect('productionModels',  'helphints/production_models.html.twig',  filters.productionModels, 'productionModel') }}
+{{ macros.body_multiselect('commissionsStatus', 'helphints/commissions_status.html.twig', filters.commissionsStatuses, 'commissionStatus') }}
+{{ macros.body_other('species', 'helphints/species.html.twig', 'species.html.twig', filters) }}
