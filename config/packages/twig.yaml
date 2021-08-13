@@ -6,3 +6,7 @@ twig:
         filter_suggest_form_url: '%filter_suggest_form_url%'
         google_analytics_id:     '%google_analytics_id%'
         request_form_url:        '%request_form_url%'
+
+when@test:
+    twig:
+        strict_variables: true
