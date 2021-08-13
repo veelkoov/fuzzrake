@@ -21,10 +21,10 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         self::persistAndFlush(self::getArtisan(makerId: 'MAKERID'));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
-        $client->waitForVisibility('#forgotten_password', 5);
+        $client->waitForVisibility('#iu_form_changePassword', 5);
 
         self::assertSelectorIsNotVisible('#forgotten_password_instructions');
-        $client->findElement(WebDriverBy::id('forgotten_password'))->click();
+        $client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
         self::assertSelectorIsVisible('#forgotten_password_instructions');
     }
 

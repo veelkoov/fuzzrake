@@ -36,7 +36,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form->get('iu_form[password]')->setValue('why-so-serious');
 
         $client->submit($form);
-        self::assertSelectorTextContains('label[for="iu_form_contactInfoObfuscated"] .form-error-message', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_contactInfoObfuscated_help + div.invalid-feedback', 'This value should not be blank.');
 
         $form = $client->getCrawler()->selectButton('Submit')->form();
         $form->get('iu_form[contactInfoObfuscated]')->setValue('email@address');
