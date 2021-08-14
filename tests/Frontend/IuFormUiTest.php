@@ -17,7 +17,7 @@ class IuFormUiTest extends DbEnabledPantherTestCase
      */
     public function testIForgotPasswordShowsHelp(): void
     {
-        $client = static::createPantherClient();
+        $client = static::createPantherClient(['hostname' => 'fuzzrake']);
         self::setWindowSize($client, 1600, 900);
 
         self::persistAndFlush(self::getArtisan(makerId: 'MAKERID'));
@@ -40,7 +40,7 @@ class IuFormUiTest extends DbEnabledPantherTestCase
      */
     public function testContactMethodNotRequiredAndHiddenWhenContactNotAllowed(): void
     {
-        $client = static::createPantherClient();
+        $client = static::createPantherClient(['hostname' => 'fuzzrake']);
         self::setWindowSize($client, 1600, 900);
 
         $client->request('GET', '/iu_form/fill');
