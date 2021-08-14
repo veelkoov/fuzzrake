@@ -25,7 +25,7 @@ class EventsControllerTest extends DbEnabledWebTestCase
         static::assertResponseStatusCodeSame(200);
         static::assertSelectorTextContains('#events-list p', '2 new makers based on received I/U requests.');
 
-        $client->click($client->getCrawler()->filter('i.fa-edit')->parents()->link());
+        $client->click($client->getCrawler()->filter('i.fa-edit')->ancestors()->link());
         static::assertResponseStatusCodeSame(200);
 
         $client->submitForm('Save', [
