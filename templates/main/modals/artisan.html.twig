@@ -3,7 +3,7 @@
     <h5 class="modal-title">
         {{# if artisan.makerId }}
             {{! Grep code for WORKAROUND_PLACEHOLDERS_CREATING_FAKE_404S: data-href ---> href }}
-            <a id="makerId" href="#" data-href="#{{ artisan.makerId }}" rel="nofollow"><i class="fas fa-link"></i> {{ artisan.makerId }}</a>
+            <a id="makerId" href="#" data-href="#{{ artisan.makerId }}" rel="nofollow"><span class="badge bg-secondary"><i class="fas fa-link"></i> {{ artisan.makerId }}</span></a>
         {{/ if }}
 
         <span id="artisanName">{{ artisan.name }}</span>{{# if artisan.country }}&nbsp;<span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>{{/ if }}
@@ -16,9 +16,8 @@
             {{/ if }}
         </small>
     </h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body row px-4 py-2">
     {{# if artisan.inactiveReason }}
@@ -99,66 +98,66 @@
     </div>
     <div class="col-sm-12 p-1">
         <h5>Links</h5>
-        <p class="small">
+        <p class="small mb-1">
             If you're going to contact the studio/maker, <u>please let them know you found them here{{# unless artisan.completenessGood }} and that their data could use some updates{{/ unless }}</u>! This&nbsp;will help us all a lot. Thank you!
         </p>
-        <div id="artisanLinks">
+        <div id="artisanLinks"> {{! for the track-website, track-* see grep-track-link-classes }}
             {{# if artisan.fursuitReviewUrl }}
-                <a class="btn btn-light m-1 track-fsr" href="#" data-href="{{ artisan.fursuitReviewUrl }}" rel="nofollow" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
+                <a class="btn btn-light track-fsr" href="#" data-href="{{ artisan.fursuitReviewUrl }}" rel="nofollow" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
             {{/ if }}
             {{# if artisan.websiteUrl }}
-                <a class="btn btn-light m-1 track-website" href="#" data-href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
+                <a class="btn btn-light track-website" href="#" data-href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {{/ if }}
             {{# each artisan.pricesUrl }}
-                <a class="btn btn-light m-1 track-prices" href="#" data-href="{{ this }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
+                <a class="btn btn-light track-prices" href="#" data-href="{{ this }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
             {{/ each }}
             {{# if artisan.faqUrl }}
-                <a class="btn btn-light m-1 track-faq" href="#" data-href="{{ artisan.faqUrl }}" rel="nofollow" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
+                <a class="btn btn-light track-faq" href="#" data-href="{{ artisan.faqUrl }}" rel="nofollow" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             {{/ if }}
             {{# if artisan.queueUrl }}
-                <a class="btn btn-light m-1 track-queue" href="#" data-href="{{ artisan.queueUrl }}" rel="nofollow" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
+                <a class="btn btn-light track-queue" href="#" data-href="{{ artisan.queueUrl }}" rel="nofollow" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
             {{/ if }}
             {{# if artisan.furAffinityUrl }}
-                <a class="btn btn-light m-1 track-fa" href="#" data-href="{{ artisan.furAffinityUrl }}" rel="nofollow" target="_blank"><i class="fas fa-image"></i> FurAffinity</a>
+                <a class="btn btn-light track-fa" href="#" data-href="{{ artisan.furAffinityUrl }}" rel="nofollow" target="_blank"><i class="fas fa-image"></i> FurAffinity</a>
             {{/ if }}
             {{# if artisan.deviantArtUrl }}
-                <a class="btn btn-light m-1 track-da" href="#" data-href="{{ artisan.deviantArtUrl }}" rel="nofollow" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
+                <a class="btn btn-light track-da" href="#" data-href="{{ artisan.deviantArtUrl }}" rel="nofollow" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
             {{/ if }}
             {{# if artisan.twitterUrl }}
-                <a class="btn btn-light m-1 track-twitter" href="#" data-href="{{ artisan.twitterUrl }}" rel="nofollow" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                <a class="btn btn-light track-twitter" href="#" data-href="{{ artisan.twitterUrl }}" rel="nofollow" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
             {{/ if }}
             {{# if artisan.facebookUrl }}
-                <a class="btn btn-light m-1 track-facebook" href="#" data-href="{{ artisan.facebookUrl }}" rel="nofollow" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                <a class="btn btn-light track-facebook" href="#" data-href="{{ artisan.facebookUrl }}" rel="nofollow" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
             {{/ if }}
             {{# if artisan.tumblrUrl }}
-                <a class="btn btn-light m-1 track-tumblr" href="#" data-href="{{ artisan.tumblrUrl }}" rel="nofollow" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
+                <a class="btn btn-light track-tumblr" href="#" data-href="{{ artisan.tumblrUrl }}" rel="nofollow" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
             {{/ if }}
             {{# if artisan.youtubeUrl }}
-                <a class="btn btn-light m-1 track-youtube" href="#" data-href="{{ artisan.youtubeUrl }}" rel="nofollow" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                <a class="btn btn-light track-youtube" href="#" data-href="{{ artisan.youtubeUrl }}" rel="nofollow" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
             {{/ if }}
             {{# if artisan.instagramUrl }}
-                <a class="btn btn-light m-1 track-instagram" href="#" data-href="{{ artisan.instagramUrl }}" rel="nofollow" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a class="btn btn-light track-instagram" href="#" data-href="{{ artisan.instagramUrl }}" rel="nofollow" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
             {{/ if }}
             {{# if artisan.etsyUrl }}
-                <a class="btn btn-light m-1 track-etsy" href="#" data-href="{{ artisan.etsyUrl }}" rel="nofollow" target="_blank"><i class="fab fa-etsy"></i> Etsy</a>
+                <a class="btn btn-light track-etsy" href="#" data-href="{{ artisan.etsyUrl }}" rel="nofollow" target="_blank"><i class="fab fa-etsy"></i> Etsy</a>
             {{/ if }}
             {{# if artisan.theDealersDenUrl }}
-                <a class="btn btn-light m-1 track-tdd" href="#" data-href="{{ artisan.theDealersDenUrl }}" rel="nofollow" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a>
+                <a class="btn btn-light track-tdd" href="#" data-href="{{ artisan.theDealersDenUrl }}" rel="nofollow" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a>
             {{/ if }}
             {{# if artisan.otherShopUrl }}
-                <a class="btn btn-light m-1 track-shop" href="#" data-href="{{ artisan.otherShopUrl }}" rel="nofollow" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a>
+                <a class="btn btn-light track-shop" href="#" data-href="{{ artisan.otherShopUrl }}" rel="nofollow" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a>
             {{/ if }}
             {{# if artisan.furryAminoUrl }}
-                <a class="btn btn-light m-1 track-amino" href="#" data-href="{{ artisan.furryAminoUrl }}" rel="nofollow" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a>
+                <a class="btn btn-light track-amino" href="#" data-href="{{ artisan.furryAminoUrl }}" rel="nofollow" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a>
             {{/ if }}
             {{# if artisan.scritchUrl }}
-                <a class="btn btn-light m-1 track-scritch" href="#" data-href="{{ artisan.scritchUrl }}" rel="nofollow" target="_blank"><i class="fas fa-camera"></i> Scritch</a>
+                <a class="btn btn-light track-scritch" href="#" data-href="{{ artisan.scritchUrl }}" rel="nofollow" target="_blank"><i class="fas fa-camera"></i> Scritch</a>
             {{/ if }}
             {{# if artisan.furtrackUrl }}
-                <a class="btn btn-light m-1 track-furtrack" href="#" data-href="{{ artisan.furtrackUrl }}" rel="nofollow" target="_blank"><i class="fas fa-camera"></i> Furtrack</a>
+                <a class="btn btn-light track-furtrack" href="#" data-href="{{ artisan.furtrackUrl }}" rel="nofollow" target="_blank"><i class="fas fa-camera"></i> Furtrack</a>
             {{/ if }}
             {{# if artisan.linklistUrl }}
-                <a class="btn btn-light m-1 track-links" href="#" data-href="{{ artisan.linklistUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> List of links</a>
+                <a class="btn btn-light track-links" href="#" data-href="{{ artisan.linklistUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> List of links</a>
             {{/ if }}
         </div>
     </div>
@@ -179,7 +178,7 @@
                 {{# if artisan.csTrackerIssue }}
                     <p><strong>Note:</strong> the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/incomplete.</p>
                 {{/ if }}
-                <table class="table table-condensed table-striped">
+                <table class="table table-sm table-striped table-borderless">
                     {{# each artisan.openFor }}
                         <tr> <td>{{ this }}</td><td><i class="fas fa-check-square"></i>&nbsp;Open</td> </tr>
                     {{/ each }}
@@ -199,7 +198,7 @@
                 <p><a href="{% endverbatim %}{{ path('tracking') }}{% verbatim %}" target="_blank">Learn more</a></p>
             {{/ if }}
         </div>
-        <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-4 text-right{{/ if }} p-1">
+        <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-4 text-end{{/ if }} p-1">
             {{# if artisan.isStatusKnown }}
                 <p>
                     Status is tracked and updated automatically based on the contents of:
@@ -227,6 +226,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 </div>
 {% endverbatim %}

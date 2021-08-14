@@ -21,3 +21,28 @@
         &bull; <a data-action="invert" href="">invert</a>
     </span>
 {% endmacro %}
+
+{% macro ctrl_button(id_part, label) %}
+    <div id="filter-ctrl-{{ id_part }}" class="btn-group my-1" role="group">
+        <button data-bs-target="#filter-body-{{ id_part }}" class="btn btn-outline-secondary" data-bs-toggle="collapse">
+            {{ label }}: <span class="status"></span>
+        </button>
+        <button type="button" class="filter-ctrl-remove btn btn-outline-danger">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+{% endmacro %}
+
+{% macro body_other(id_part, helphints_tpl, body_tpl, filters) %}
+    <div id="filter-body-{{ id_part }}" class="collapse" data-bs-parent="#filters-parents">
+        {{ include('main/modals/filters/' ~ helphints_tpl) }}
+        {{ include('main/modals/filters/' ~ body_tpl, { filters: filters }) }}
+    </div>
+{% endmacro %}
+
+{% macro body_multiselect(id_part, helphints_tpl, filter_data, group_name) %}
+    <div id="filter-body-{{ id_part }}" class="collapse" data-bs-parent="#filters-parents">
+        {{ include('main/modals/filters/' ~ helphints_tpl) }}
+        {{ include('main/modals/filters/multiselect.html.twig') }}
+    </div>
+{% endmacro %}

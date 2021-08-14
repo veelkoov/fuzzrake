@@ -1,13 +1,29 @@
-{% include '_menu_item.html.twig' with {'name': 'main', 'pretty_name': '<i class="fas fa-home"></i> Home' } %}
-{% include '_menu_item.html.twig' with {'name': 'data_updates', 'pretty_name': '<i class="fas fa-user-plus"></i> Add/update' } %}
-{% include '_menu_item.html.twig' with {'name': 'info', 'pretty_name': '<i class="fas fa-question-circle"></i> Info' } %}
-{% include '_menu_item.html.twig' with {'name': 'tracking', 'pretty_name': '<i class="far fa-eye"></i> Tracking' } %}
-{% include '_menu_item.html.twig' with {'name': 'maker_ids', 'pretty_name': '<i class="fas fa-id-badge"></i> Maker IDs' } %}
-{% include '_menu_item.html.twig' with {'name': 'statistics', 'pretty_name': '<i class="fas fa-chart-pie"></i> Stats' } %}
-{% include '_menu_item.html.twig' with {'name': 'events', 'pretty_name': '<i class="fas fa-history"></i> Changes' } %}
-{% if isDevOrTestEnv() %}
-    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'pretty_name': '<i class="fas fa-plus"></i> New maker' } %}
-    {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'pretty_name': '<i class="fas fa-plus"></i> New event' } %}
-    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_urls', 'pretty_name': '<i class="fas fa-link"></i> URLs' } %}
-    {% include '_menu_item.html.twig' with {'name': 'mx_query', 'pretty_name': '<i class="fas fa-filter"></i> Query' } %}
-{% endif %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span> <span aria-hidden="true">Menu</span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% include '_menu_item.html.twig' with {'name': 'main', 'pretty_name': '<i class="fas fa-home"></i> Home' } %}
+                {% include '_menu_item.html.twig' with {'name': 'data_updates', 'pretty_name': '<i class="fas fa-user-plus"></i> Add/update' } %}
+                {% include '_menu_item.html.twig' with {'name': 'info', 'pretty_name': '<i class="fas fa-question-circle"></i> Info' } %}
+                {% include '_menu_item.html.twig' with {'name': 'tracking', 'pretty_name': '<i class="far fa-eye"></i> Tracking' } %}
+                {% include '_menu_item.html.twig' with {'name': 'maker_ids', 'pretty_name': '<i class="fas fa-id-badge"></i> Maker IDs' } %}
+                {% include '_menu_item.html.twig' with {'name': 'statistics', 'pretty_name': '<i class="fas fa-chart-pie"></i> Stats' } %}
+                {% include '_menu_item.html.twig' with {'name': 'events', 'pretty_name': '<i class="fas fa-history"></i> Changes' } %}
+                {% if isDevEnv() %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'pretty_name': '<i class="fas fa-plus"></i> New maker' } %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'pretty_name': '<i class="fas fa-plus"></i> New event' } %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_urls', 'pretty_name': '<i class="fas fa-link"></i> URLs' } %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_query', 'pretty_name': '<i class="fas fa-filter"></i> Query' } %}
+                {% endif %}
+            </ul>
+        </div>
+
+        <ul class="navbar-nav d-flex">
+            {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">🥌</span>️ Donate' } %}
+        </ul>
+    </div>
+</nav>

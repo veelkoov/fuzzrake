@@ -1,5 +1,5 @@
-<div class="modal fade" id="filtersModal" tabindex="-1" role="dialog" aria-labelledby="filtersTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-lg-fzr" role="document">
+<div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content" id="filters-top">
             <div class="modal-header">
                 <h5 class="modal-title" id="filtersTitle">
@@ -7,11 +7,11 @@
                 </h5>
                 <span>
                     <a class="btn btn-secondary" href="{{ filter_suggest_form_url }}" target="_blank">Suggest new</a>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Apply</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
                 </span>
             </div>
-            <div class="modal-body">
-                {%  include 'main/modals/filters/body.html.twig' %}
+            <div class="modal-body" id="filters-parents">
+                {% include 'main/modals/filters/body.html.twig' %}
             </div>
         </div>
     </div>

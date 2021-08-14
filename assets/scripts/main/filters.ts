@@ -28,7 +28,7 @@ function countActiveFilters(): number {
 
 function refreshFiltersShowButton(): void {
     let count = countActiveFilters();
-    let badge = count > 0 ? ` <span class="badge badge-pill badge-light">${count}</span>` : '';
+    let badge = count > 0 ? ` <span class="badge rounded-pill bg-light text-dark">${count}</span>` : '';
 
     $filtersShowButton.html(`Choose filters${badge}`);
 }

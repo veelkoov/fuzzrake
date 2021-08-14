@@ -1,12 +1,11 @@
-<div class="container">
-    <table class="table table-sm">
-        <thead>
+<table class="table table-sm">
+    <thead>
         <tr>
             <th>{{ name }}</th>
             <th># of makers</th>
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
         {% for a, b in data %}
             {% set count = a|split(',')|length %}
             {% set show_merged = count > 1 and merge_row_percents|default(false) %}
@@ -22,6 +21,5 @@
                 </td>
             </tr>
         {% endfor %}
-        </tbody>
-    </table>
-</div>
+    </tbody>
+</table>

@@ -36,8 +36,8 @@ class QueryController extends AbstractController
             $query = new DataQuery('');
         }
 
-        return $this->render('mx/query/index.html.twig', [
-            'form'   => $form->createView(),
+        return $this->renderForm('mx/query/index.html.twig', [
+            'form'   => $form,
             'query'  => $query,
         ]);
     }

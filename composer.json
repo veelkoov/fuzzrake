@@ -23,6 +23,7 @@
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "^3.6",
         "symfony/proxy-manager-bridge": "*",
+        "symfony/runtime": "5.3.*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
         "symfony/webpack-encore-bundle": "^1.11",
@@ -83,7 +84,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.3.*"
         }
     }
 }

@@ -47,9 +47,9 @@ class ArtisansController extends AbstractFormController
             return $this->redirectToRoute(RouteName::MAIN);
         }
 
-        return $this->render('mx/artisans/edit.html.twig', [
+        return $this->renderForm('mx/artisans/edit.html.twig', [
             'artisan' => $artisan,
-            'form'    => $form->createView(),
+            'form'    => $form,
         ]);
     }
 }

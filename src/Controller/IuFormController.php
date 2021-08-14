@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 class IuFormController extends AbstractRecaptchaBackedController
 {
@@ -28,7 +29,7 @@ class IuFormController extends AbstractRecaptchaBackedController
      */
     #[Route(path: '/iu_form/fill/{makerId}', name: RouteName::IU_FORM)]
     #[Cache(maxage: 0, public: false)]
-    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, ?string $makerId = null): Response
+    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, RouterInterface $router, ?string $makerId = null): Response
     {
         try {
             $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();
@@ -42,7 +43,7 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         $artisan->setPassword(''); // Should never appear in the form
 
-        $form = $this->getIuForm($artisan, $makerId);
+        $form = $this->getIuForm($router, $artisan, $makerId);
         $form->handleRequest($request);
         $this->validatePhotosCopyright($form, $artisan);
 
@@ -75,8 +76,8 @@ class IuFormController extends AbstractRecaptchaBackedController
             }
         }
 
-        return $this->render('iu_form/iu_form.html.twig', [
-            'form'             => $form->createView(),
+        return $this->renderForm('iu_form/iu_form.html.twig', [
+            'form'             => $form,
             'noindex'          => true,
             'submitted'        => $form->isSubmitted(),
             'disable_tracking' => true,
@@ -103,10 +104,11 @@ class IuFormController extends AbstractRecaptchaBackedController
         return $this->redirectToRoute(RouteName::IU_FORM, ['makerId' => $makerId]);
     }
 
-    private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface
+    private function getIuForm(RouterInterface $router, Artisan $artisan, ?string $makerId): FormInterface
     {
         return $this->createForm(IuForm::class, $artisan, [
             IuForm::PHOTOS_COPYRIGHT_OK => '' !== $makerId && '' !== $artisan->getPhotoUrls(),
+            IuForm::OPT_ROUTER          => $router,
         ]);
     }
 

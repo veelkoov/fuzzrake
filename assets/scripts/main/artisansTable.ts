@@ -4,7 +4,7 @@ import Artisan from "../class/Artisan";
 import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
-const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#filtersModal">Choose filters</button>`;
+const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal">Choose filters</button>`;
 
 const dataTableOptions = {
     dom:
@@ -77,7 +77,7 @@ function restoreColumns(): void {
 // noinspection OverlyComplexFunctionJS - DataTable's fault
 function dataTableInfoCallback(settings: object, start: number, end: number, max: number, total: number, _: any) {
     return `<p class="small">Displaying ${total} out of ${max} fursuit makers in the database. &nbsp;
-                <a href="${DataBridge.getDataUpdatesUrl()}"><span class="badge badge-warning">Studio missing?</span></a>
+                <a href="${DataBridge.getDataUpdatesUrl()}"><span class="badge bg-warning text-dark">Studio missing?</span></a>
             </p>`;
 }
 
