@@ -166,7 +166,21 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach (Fields::inStats() as $field) {
-            $result[$field->name()] = array_reduce($artisans, fn (int $carry, Artisan $artisan) => $carry + ('' !== $artisan->get($field) ? 1 : 0), 0);
+            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
+                if ($field->is(Fields::FORMER_MAKER_IDS)) {
+                    /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
+                     * so we can rely on Artisan::getLastMakerId() etc. Those IDs are "M000000", where the digits part
+                     * is zero-padded artisan database ID. */
+
+                    $placeholder = sprintf('M%06d', $artisan->getId());
+
+                    if ($artisan->get(Fields::FORMER_MAKER_IDS) === $placeholder) {
+                        return $carry; // Fake former maker ID - don't add to the result
+                    }
+                }
+
+                return $carry + ('' !== $artisan->get($field) ? 1 : 0);
+            }, 0);
         }
 
         arsort($result);
