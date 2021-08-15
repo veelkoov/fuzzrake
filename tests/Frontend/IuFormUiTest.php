@@ -25,7 +25,6 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $client->request('GET', '/iu_form/fill/MAKERID');
         $client->waitForVisibility('#iu_form_changePassword', 5);
 
-
         $client->getKeyboard()->pressKey(WebDriverKeys::END)->pressKey(WebDriverKeys::PAGE_UP)
             ->pressKey(WebDriverKeys::DOWN); // grep-ugly-tests-workarounds Workaround for element not visible bug
         usleep(100000); // grep-ugly-tests-workarounds Workaround for element not visible bug
