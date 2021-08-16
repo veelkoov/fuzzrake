@@ -25,4 +25,20 @@ class EventsController extends AbstractController
             'events' => $eventRepository->getRecent(),
         ]);
     }
+
+    /**
+     * @throws DateTimeException
+     */
+    #[Route(path: '/events-atom.xml', name: RouteName::EVENTS_ATOM)]
+    #[Cache(maxage: 3600, public: true)]
+    public function events_atom(EventRepository $eventRepository): Response
+    {
+        $result = new Response($this->renderView('events/events-atom.xml.twig', [
+            'events' => $eventRepository->getRecent(),
+        ]));
+
+        $result->headers->set('Content-Type', 'application/atom+xml; charset=UTF-8');
+
+        return $result;
+    }
 }

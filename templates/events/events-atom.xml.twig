@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>{{ url('events_atom') }}</id>
+    <title>getfursu.it updates</title>
+    <subtitle>Tracker updates, data updates and generic announcements</subtitle>
+    <updated>{{ (events|first).timestamp|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}</updated>
+    <link rel="self" href="{{ url('events_atom') }}" />
+
+    {% for event in events %}
+        <entry>
+            <title>
+                {%- if event.typeDataUpdated -%}
+                    Data updates
+                {%- elseif event.typeCsUpdated -%}
+                    {{ event.artisanName }} commissions status changed
+                {%- else -%}
+                    Generic update
+                {%- endif -%}
+            </title>
+            <link href="{{ url('events', { _fragment: 'event' ~ event.id }) }}" />
+            <id>{{ url('events', { _fragment: 'event' ~ event.id }) }}</id>
+            <updated>{{ event.timestamp|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}</updated>
+            <summary type="xhtml">
+                <div xmlns="http://www.w3.org/1999/xhtml">
+                    {%- if event.typeDataUpdated -%}
+
+                        {{ eventDescription(event) }}
+
+                    {%- elseif event.typeCsUpdated -%}
+                        {% if event.noLongerOpenFor %}
+                            No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.
+                        {% endif %}
+
+                        {% if event.nowOpenFor %}
+                            <strong>Now open for: {{ event.nowOpenForArray|join(', ') }}.</strong>
+                        {% endif %}
+
+                        {% if event.trackingIssues %}
+                            Encountered apparent difficulties during status analysis.
+                        {% endif %}
+
+                        Checked contents of:
+
+                        {% for url in event.checkedUrlsArray %}
+                            <a href="{{ url }}" target="_blank">{{ url|event_url }}</a>
+                            {%- if loop.last %}.{% else %},{% endif %}
+                        {% endfor %}
+
+                    {%- else -%}
+
+                        {{ event.description|raw }}
+
+                    {%- endif -%}
+                </div>
+            </summary>
+            <author>
+                <name>
+                    {%- if event.typeDataUpdated -%}
+                        Maintainer
+                    {%- elseif event.typeCsUpdated -%}
+                        Tracker (automated)
+                    {%- else -%}
+                        Maintainer
+                    {%- endif -%}
+                </name>
+            </author>
+        </entry>
+    {% endfor %}
+</feed>

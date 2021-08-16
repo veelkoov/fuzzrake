@@ -12,6 +12,10 @@
     {{ encore_entry_link_tags('events') }}
 {% endblock %}
 
+{% block add_meta %}
+    <link rel="alternate" type="application/atom+xml" href="{{ url('events_atom') }}" title="All updates" />
+{% endblock %}
+
 {% block body %}
     <p class="small">All times are UTC</p>
 

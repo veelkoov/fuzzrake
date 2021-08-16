@@ -16,6 +16,7 @@ final class RouteName
     public const DATA_UPDATES = 'data_updates';
     public const DONATE = 'donate';
     public const EVENTS = 'events';
+    public const EVENTS_ATOM = 'events_atom';
     public const HEALTH = 'health';
     public const INFO = 'info';
     public const IU_FORM = 'iu_form';
