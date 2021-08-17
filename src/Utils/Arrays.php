@@ -20,4 +20,17 @@ final class Arrays
 
         return $result;
     }
+
+    public static function intersect(array $a1, array $a2): array
+    {
+        $result = $a1;
+
+        foreach ($result as $key => $value) {
+            if (!in_array($value, $a2, true)) {
+                unset($result[$key]);
+            }
+        }
+
+        return $result;
+    }
 }
