@@ -83,4 +83,13 @@ class EventsControllerTest extends DbEnabledWebTestCase
             ],
         ];
     }
+
+    public function testAtomFeedLoadsWithoutAnyEvents(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/events-atom.xml');
+
+        self::assertEquals(200, $client->getResponse()->getStatusCode());
+    }
 }

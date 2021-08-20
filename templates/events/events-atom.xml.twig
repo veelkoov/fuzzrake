@@ -3,14 +3,15 @@
     <id>{{ url('events_atom') }}</id>
     <title>getfursu.it updates</title>
     <subtitle>Tracker updates, data updates and generic announcements</subtitle>
-    <updated>{{ (events|first).timestamp|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}</updated>
+    {% set last_timestamp = events is not empty ? (events|first).timestamp : 'now' %}
+    <updated>{{ last_timestamp|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}</updated>
     <link rel="self" href="{{ url('events_atom') }}" />
 
     {% for event in events %}
         <entry>
             <title>
                 {%- if event.typeDataUpdated -%}
-                    Data updates
+                    Data update
                 {%- elseif event.typeCsUpdated -%}
                     {{ event.artisanName }} commissions status changed
                 {%- else -%}
@@ -55,9 +56,7 @@
             </summary>
             <author>
                 <name>
-                    {%- if event.typeDataUpdated -%}
-                        Maintainer
-                    {%- elseif event.typeCsUpdated -%}
+                    {%- if event.typeCsUpdated -%}
                         Tracker (automated)
                     {%- else -%}
                         Maintainer
