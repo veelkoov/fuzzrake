@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,10 +38,9 @@ class ArtisanPrivateData
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"iu_form"}, message="Password is required")
-     * @Assert\Length(min=8, max=255, groups={"iu_form"}, minMessage="Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!")
-     * grep-password-length
      */
+    #[NotBlank(message: 'Password is required', groups: ['iu_form'])]
+    #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: ['iu_form'])]
     private string $password = '';
 
     /**

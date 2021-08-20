@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThan;
+use Symfony\Component\Validator\Constraints\Length;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StringList;
 use DateTimeInterface;
@@ -68,30 +71,30 @@ class Event
     private string $checkedUrls = '';
 
     /**
-     * @Assert\GreaterThanOrEqual(value="0")
-     * @Assert\LessThan(value="500")
      * @ORM\Column(type="integer")
      */
+    #[GreaterThanOrEqual(value: 0)]
+    #[LessThan(value: 500)]
     private int $newMakersCount = 0;
 
     /**
-     * @Assert\GreaterThanOrEqual(value="0")
-     * @Assert\LessThan(value="500")
      * @ORM\Column(type="integer")
      */
+    #[GreaterThanOrEqual(value: 0)]
+    #[LessThan(value: 500)]
     private int $updatedMakersCount = 0;
 
     /**
-     * @Assert\GreaterThanOrEqual(value="0")
-     * @Assert\LessThan(value="500")
      * @ORM\Column(type="integer")
      */
+    #[GreaterThanOrEqual(value: 0)]
+    #[LessThan(value: 500)]
     private int $reportedUpdatedMakersCount = 0;
 
     /**
-     * @Assert\Length(max="256")
      * @ORM\Column(type="string", length=256)
      */
+    #[Length(max: 256)]
     private string $gitCommits = '';
 
     public function __construct()
