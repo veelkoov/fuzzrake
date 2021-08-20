@@ -13,7 +13,9 @@
 {% endblock %}
 
 {% block add_meta %}
-    <link rel="alternate" type="application/atom+xml" href="{{ url('events_atom') }}" title="All updates" />
+    {% for title, href in feeds %}
+        <link rel="alternate" type="application/atom+xml" href="{{ href }}" title="{{ title }}" />
+    {% endfor %}
 {% endblock %}
 
 {% block body %}

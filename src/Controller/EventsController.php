@@ -26,6 +26,11 @@ class EventsController extends AbstractController
     {
         return $this->render('events/events.html.twig', [
             'events' => $eventRepository->getRecent(),
+            'feeds'  => [
+                'All updates'              => $this->generateUrl(RouteName::EVENTS_ATOM),
+                'Status updates'           => $this->generateUrl(RouteName::EVENTS_ATOM, ['types' => Event::TYPE_CS_UPDATED]),
+                'Generic and data updates' => $this->generateUrl(RouteName::EVENTS_ATOM, ['types' => Event::TYPE_DATA_UPDATED.','.Event::TYPE_GENERIC]),
+            ],
         ]);
     }
 
