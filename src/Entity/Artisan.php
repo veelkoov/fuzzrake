@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Valid;
 use App\DataDefinitions\Field;
 use App\DataDefinitions\Fields;
 use App\DataDefinitions\FieldsList;
@@ -25,7 +21,11 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
@@ -1398,7 +1398,7 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
     // ===== NON-TRIVIAL VALIDATION =====
     //
 
-    #[Assert\Callback(groups: ['iu_form'])]
+    #[Callback(groups: ['iu_form'])]
     public function validate(ExecutionContextInterface $context, $payload): void
     {
         if (ContactPermit::NO !== $this->getContactAllowed() && '' === $this->getContactInfoObfuscated()) {
