@@ -82,8 +82,7 @@ def phpunit(*additional_args)
 end
 
 def fix_phpunit
-  create_link('vendor/symfony/phpunit-bridge/bin/simple-phpunit', 'bin/.phpunit/phpunit/bin/simple-phpunit')
-  create_link('vendor/symfony/phpunit-bridge', 'bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
+  create_link('vendor/symfony/phpunit-bridge', 'vendor/bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
 end
 
 task('fix-phpunit')  { fix_phpunit }

@@ -54,11 +54,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
-        },
-        "classmap": [
-            "bin/.phpunit/phpunit/src"
-        ]
+            "App\\Tests\\": "tests/",
+            "PHPUnit\\": "vendor/bin/.phpunit/phpunit/src/"
+        }
     },
     "replace": {
         "paragonie/random_compat": "2.*",
