@@ -110,6 +110,26 @@
         </div>
     </div>
 
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Information: required, important, recommended, optional</h5>
+            <div class="card-text">
+                <div class="mandatory d-inline-block">
+                    Fields marked like this must be filled in.
+                </div>
+                <div class="important d-inline-block">
+                    Avoid skipping fields marked like this.
+                </div>
+                <div class="recommended d-inline-block">
+                    It's recommended to fill fields marked this way.
+                </div>
+                <div class="d-inline-block">
+                    Other fields are 100% optional.
+                </div>
+            </div>
+        </div>
+    </div>
+
     </div> <!-- id="iu_form_instructions_container" -->
 
     {# Hide the form initially, so in case automatic captcha fails from the start, the user won't waste time on the form they won't be able to submit #}
@@ -121,11 +141,17 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.name) }}
-            {{ form_row(form.formerly) }}
+            <div class="mandatory">
+                {{ form_row(form.name) }}
+            </div>
+            <div class="important">
+                {{ form_row(form.formerly) }}
+            </div>
         </div>
         <div class="col-lg-6">
-            {{ form_row(form.since) }}
+            <div class="recommended">
+                {{ form_row(form.since) }}
+            </div>
         </div>
     </div>
 
@@ -134,13 +160,19 @@
 
     <div class="row">
         <div class="col-lg-4">
-            {{ form_row(form.country) }}
+            <div class="mandatory">
+                {{ form_row(form.country) }}
+            </div>
         </div>
         <div class="col-lg-4">
-            {{ form_row(form.state) }}
+            <div class="recommended">
+                {{ form_row(form.state) }}
+            </div>
         </div>
         <div class="col-lg-4">
-            {{ form_row(form.city) }}
+            <div class="recommended">
+                {{ form_row(form.city) }}
+            </div>
         </div>
     </div>
 
@@ -149,11 +181,15 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.paymentPlans) }}
-            {{ form_row(form.pricesUrl) }}
+            <div class="recommended">
+                {{ form_row(form.paymentPlans) }}
+            </div>
+            {{ form_row(form.paymentMethods) }}
         </div>
         <div class="col-lg-6">
-            {{ form_row(form.paymentMethods) }}
+            <div class="recommended">
+                {{ form_row(form.pricesUrl) }}
+            </div>
             {{ form_row(form.currenciesAccepted) }}
         </div>
     </div>
@@ -163,7 +199,9 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.productionModels) }}
+            <div class="important">
+                {{ form_row(form.productionModels) }}
+            </div>
         </div>
         <div class="col-lg-6">
             {{ form_row(form.productionModelsComment) }}
@@ -175,7 +213,9 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.styles) }}
+            <div class="important">
+                {{ form_row(form.styles) }}
+            </div>
         </div>
         <div class="col-lg-6">
             {{ form_row(form.otherStyles) }}
@@ -188,7 +228,9 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.orderTypes) }}
+            <div class="important">
+                {{ form_row(form.orderTypes) }}
+            </div>
         </div>
         <div class="col-lg-6">
             {{ form_row(form.otherOrderTypes) }}
@@ -201,7 +243,9 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.features) }}
+            <div class="important">
+                {{ form_row(form.features) }}
+            </div>
         </div>
         <div class="col-lg-6">
             {{ form_row(form.otherFeatures) }}
@@ -214,7 +258,9 @@
 
     <div class="row">
         <div class="col-lg-12">
-            {{ form_row(form.speciesDoes) }}
+            <div class="important">
+                {{ form_row(form.speciesDoes) }}
+            </div>
             {{ form_row(form.speciesDoesnt) }}
             {{ form_row(form.speciesComment) }}
         </div>
@@ -223,17 +269,21 @@
     <hr class="mt-4" />
     <h2>Links to websites</h2>
 
-    <ol>
-        <li><span class="mandatory"></span>You must provide at least one link to a website/social media.</li>
-        <li>Instant messaging (i.a. Telegram, Messenger), e-mail addresses, and other direct contact measures are not allowed anywhere here. getfursu.it can only link to websites, on which you can post such information.</li>
-        <li>Work-in-progress websites are not accepted (keep in mind, that any portfolio is more important than an empty website; if you don't have one, start with Fur Affinity, or similar).</li>
-        <li>Adding links to empty accounts/websites will only make your visitors frustrated. Consider adding links when content will already be there.</li>
-        <li>All links put here must not require the visitor to click anything to view your content (scrolling is OK). E.g. if you keep FAQ on your website, then you should link the precise link to the FAQ, instead of the one to the homepage.</li>
-    </ol>
+    <div class="mandatory">
+        <ol>
+            <li>You must provide at least one link to a website/social media.</li>
+            <li>Instant messaging (i.a. Telegram, Messenger), e-mail addresses, and other direct contact measures are not allowed anywhere here. getfursu.it can only link to websites, on which you can post such information.</li>
+            <li>Work-in-progress websites are not accepted (keep in mind, that any portfolio is more important than an empty website; if you don't have one, start with Fur Affinity, or similar).</li>
+            <li>Adding links to empty accounts/websites will only make your visitors frustrated. Consider adding links when content will already be there.</li>
+            <li>All links put here must not require the visitor to click anything to view your content (scrolling is OK). E.g. if you keep FAQ on your website, then you should link the precise link to the FAQ, instead of the one to the homepage.</li>
+        </ol>
+    </div>
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.fursuitReviewUrl) }}
+            <div class="important">
+                {{ form_row(form.fursuitReviewUrl) }}
+            </div>
         </div>
         <div class="col-lg-6">
             {{ form_row(form.websiteUrl) }}
@@ -312,33 +362,37 @@
     <hr class="mt-4" />
     <h2>Automatic commissions status tracking (open/closed)</h2>
 
-    <p>I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. <a href="{{ path('tracking') }}" target="_blank">You can read here about how the tracking works.</a> I'll be happy to help if you need assistance.</p>
+    <div class="recommended">
+        <p class="small">I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. <a href="{{ path('tracking') }}" target="_blank">You can read here about how the tracking works.</a> I'll be happy to help if you need assistance.</p>
 
-    <div class="row">
-        <div class="col-lg-12">
-        {{ form_row(form.commissionsUrl) }}
+        <div class="row">
+            <div class="col-lg-12">
+            {{ form_row(form.commissionsUrl) }}
+            </div>
         </div>
     </div>
 
     <hr class="mt-4" />
     <h2>Photos of your creations - Scritch &amp; Furtrack</h2>
 
-    <p class="small">Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners. The whole community can take part in tagging ("I know this fursuiter, here goes a tag!"). Makers keep their pages with links to their websites &amp; social media and a list of the photos of their creations. Fursuiters have easy access to all their photos. It's far better than tagging on Facebook or Twitter or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
+    <div class="recommended">
+        <p class="small">Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners. The whole community can take part in tagging ("I know this fursuiter, here goes a tag!"). Makers keep their pages with links to their websites &amp; social media and a list of the photos of their creations. Fursuiters have easy access to all their photos. It's far better than tagging on Facebook or Twitter or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
 
-    <div class="row">
-        <div class="col-lg-6">
-            {{ form_row(form.scritchUrl) }}
+        <div class="row">
+            <div class="col-lg-6">
+                {{ form_row(form.scritchUrl) }}
+            </div>
+            <div class="col-lg-6">
+                {{ form_row(form.furtrackUrl) }}
+            </div>
         </div>
-        <div class="col-lg-6">
-            {{ form_row(form.furtrackUrl) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            {{ form_row(form.photoUrls) }}
-        </div>
-        <div class="col-lg-6">
-            {{ form_row(form.photosCopyright) }}
+        <div class="row">
+            <div class="col-lg-6">
+                {{ form_row(form.photoUrls) }}
+            </div>
+            <div class="col-lg-6">
+                {{ form_row(form.photosCopyright) }}
+            </div>
         </div>
     </div>
 
@@ -347,9 +401,13 @@
 
     <div class="row">
         <div class="col-lg-12">
-            {{ form_row(form.languages) }}
+            <div class="recommended">
+                {{ form_row(form.languages) }}
+            </div>
 
-            {{ form_row(form.makerId) }}
+            <div class="mandatory">
+                {{ form_row(form.makerId) }}
+            </div>
 
             {{ form_row(form.intro) }}
 
@@ -421,10 +479,13 @@
     </table>
 
     <div class="row">
-        <div class="col-lg-12">
-            {{ form_row(form.contactAllowed) }}
-
-            <div id="contact_info">
+        <div class="col-lg-6">
+            <div class="mandatory">
+                {{ form_row(form.contactAllowed) }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="contact_info" class="mandatory">
                 {{ form_row(form.contactInfoObfuscated) }}
             </div>
         </div>
@@ -432,7 +493,9 @@
 
     <div class="row">
         <div class="col-lg-8">
-            {{ form_row(form.password) }}
+            <div class="mandatory">
+                {{ form_row(form.password) }}
+            </div>
         </div>
         <div class="col-lg-4">
             <div class="card">
