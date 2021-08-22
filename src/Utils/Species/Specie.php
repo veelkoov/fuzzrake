@@ -35,7 +35,7 @@ class Specie implements Stringable
     public function addParent(Specie $parent): Specie
     {
         if ($parent === $this) {
-            throw new InvalidArgumentException("Recursion in specie: {$this->name}");
+            throw new InvalidArgumentException("Recursion in specie: $this->name");
         }
 
         $this->parents[] = $parent;
@@ -54,7 +54,7 @@ class Specie implements Stringable
     public function addChild(Specie $child): Specie
     {
         if ($child === $this) {
-            throw new InvalidArgumentException("Recursion in specie: {$this->name}");
+            throw new InvalidArgumentException("Recursion in specie: $this->name");
         }
         $this->children[] = $child;
 
@@ -114,7 +114,7 @@ class Specie implements Stringable
         return $this->name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -126,7 +126,7 @@ class Specie implements Stringable
     {
         foreach ($specie->getParents() as $parent) {
             if ($parent === $this) {
-                throw new InvalidArgumentException("Recursion in specie: {$this->name}");
+                throw new InvalidArgumentException("Recursion in specie: $this->name");
             }
 
             if (!in_array($parent, $result)) {
@@ -143,7 +143,7 @@ class Specie implements Stringable
     {
         foreach ($specie->getChildren() as $child) {
             if ($child === $this) {
-                throw new InvalidArgumentException("Recursion in specie: {$this->name}");
+                throw new InvalidArgumentException("Recursion in specie: $this->name");
             }
 
             if (!in_array($child, $result)) {
