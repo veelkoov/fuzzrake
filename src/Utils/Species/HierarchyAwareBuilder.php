@@ -33,7 +33,8 @@ class HierarchyAwareBuilder
         $this->flat = [];
         $this->tree = $this->getTreeFor($species);
 
-        $this->validNames = $this->gatherValidChoices($species);
+        $this->validNames = [];
+        $this->addValidNamesFrom($species);
     }
 
     public function getFlat(): array
@@ -56,24 +57,20 @@ class HierarchyAwareBuilder
 
     /**
      * @param array[]|string[] $species
-     *
-     * @return string[]
      */
-    private function gatherValidChoices(array $species): array
+    private function addValidNamesFrom(array $species): void
     {
-        $result = [];
-
         foreach ($species as $specie => $subspecies) {
-            [, $specie] = $this->splitSpecieFlagsName($specie);
+            [, $specie] = self::splitSpecieFlagsName($specie);
 
-            $result[] = $specie;
+            if (!in_array($specie, $this->validNames)) {
+                $this->validNames[] = $specie;
+            }
 
             if (is_array($subspecies)) {
-                $result = array_merge($result, $this->gatherValidChoices($subspecies));
+                $this->addValidNamesFrom($subspecies);
             }
         }
-
-        return $result;
     }
 
     private function getTreeFor(array $species, Specie $parent = null): array
@@ -81,11 +78,11 @@ class HierarchyAwareBuilder
         $result = [];
 
         foreach ($species as $specieName => $subspecies) {
-            [$flags, $specieName] = $this->splitSpecieFlagsName($specieName);
+            [$flags, $specieName] = self::splitSpecieFlagsName($specieName);
 
             $this->validNames[] = $specieName;
 
-            if ($this->flagged($flags, self::FLAG_IGNORE_THIS_FLAG)) {
+            if (self::hasIgnoreFlag($flags)) {
                 continue;
             }
 
@@ -114,7 +111,7 @@ class HierarchyAwareBuilder
         return $specie;
     }
 
-    private function splitSpecieFlagsName(string $specie): array
+    private static function splitSpecieFlagsName(string $specie): array
     {
         try {
             return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)
@@ -127,8 +124,13 @@ class HierarchyAwareBuilder
         }
     }
 
+    private static function hasIgnoreFlag(string $flags): bool
+    {
+        return self::flagged($flags, self::FLAG_IGNORE_THIS_FLAG);
+    }
+
     /** @noinspection PhpSameParameterValueInspection */
-    private function flagged(string $flags, string $flag): bool
+    private static function flagged(string $flags, string $flag): bool
     {
         return str_contains($flags, $flag);
     }
