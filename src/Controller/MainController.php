@@ -40,7 +40,7 @@ class MainController extends AbstractController
             'makerIdsMap'         => $makerIdRepository->getOldToNewMakerIdsMap(),
             'stats'               => $statistics->getMainPageStats(),
             'filters'             => $filterService->getFiltersTplData(),
-            'species'             => $species->getSpeciesTree(),
+            'species'             => $species->getTree(),
         ]);
 
         self::setExpires($response);

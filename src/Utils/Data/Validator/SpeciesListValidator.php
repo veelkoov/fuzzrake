@@ -18,7 +18,7 @@ class SpeciesListValidator implements ValidatorInterface
     public function isValid(Field $field, $subject): bool
     {
         foreach (StringList::unpack($subject) as $specie) {
-            if (!in_array($specie, $this->speciesService->getValidChoicesList())) {
+            if (!in_array($specie, $this->speciesService->getValidNames())) {
                 return false;
             }
         }

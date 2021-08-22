@@ -72,7 +72,7 @@ class FilterService
 
     private function getSpeciesFilterItems(): Set
     {
-        return $this->getSpeciesFilterItemsFromArray($this->species->getSpeciesTree());
+        return $this->getSpeciesFilterItemsFromArray($this->species->getTree());
     }
 
     /**

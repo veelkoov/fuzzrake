@@ -18,17 +18,17 @@ class Species
     /**
      * @var Specie[] Associative: key = name, value = Specie object. Species fit for filtering
      */
-    private array $speciesFlat;
+    private array $flat;
 
     /**
      * @var Specie[] Species fit for filtering
      */
-    private array $speciesTree;
+    private array $tree;
 
     /**
      * @var string[] Names of species considered valid by the validator (list of all, not only fit for filtering)
      */
-    private array $validChoicesList;
+    private array $validNames;
 
     public function __construct(
         array $speciesDefinitions
@@ -37,33 +37,33 @@ class Species
         $this->unsplittable = $speciesDefinitions['leave_unchanged'];
 
         $builder = new HierarchyAwareBuilder($speciesDefinitions['valid_choices']);
-        $this->speciesFlat = $builder->getFlat();
-        $this->speciesTree = $builder->getTree();
-        $this->validChoicesList = $builder->getValidNames();
+        $this->flat = $builder->getFlat();
+        $this->tree = $builder->getTree();
+        $this->validNames = $builder->getValidNames();
     }
 
     /**
      * @return string[]
      */
-    public function getValidChoicesList(): array
+    public function getValidNames(): array
     {
-        return $this->validChoicesList;
+        return $this->validNames;
     }
 
     /**
      * @return Specie[]
      */
-    public function getSpeciesFlat(): array
+    public function getFlat(): array
     {
-        return $this->speciesFlat;
+        return $this->flat;
     }
 
     /**
      * @return Specie[]
      */
-    public function getSpeciesTree(): array
+    public function getTree(): array
     {
-        return $this->speciesTree;
+        return $this->tree;
     }
 
     public function getListFixerReplacements(): Replacements
