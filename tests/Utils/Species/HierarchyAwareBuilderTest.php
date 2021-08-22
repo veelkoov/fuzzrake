@@ -44,4 +44,18 @@ class HierarchyAwareBuilderTest extends TestCase
             ],
         ];
     }
+
+    public function testDeepNestedDoesntCauseFatalError(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        $subject = new HierarchyAwareBuilder(['a' => ['b' => ['c' => ['d' => ['e' => [
+            'f'  => ['g' => ['h' => ['i' => ['j' => ['k' => ['l' => ['m' => ['n' => []]]]]]]]],
+            'f2' => ['g2' => ['h2' => ['i2' => ['j2' => ['k2' => ['l2' => ['m2' => ['n2' => []]]]]]]]],
+        ]]]]]]);
+
+        $species = $subject->getFlat();
+        $species['a']->getDescendants();
+        $species['n2']->isDescendantOf($species['a']);
+    }
 }

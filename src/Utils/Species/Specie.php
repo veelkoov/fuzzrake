@@ -77,7 +77,7 @@ class Specie implements Stringable
 
     public function isDescendantOf(Specie $ancestor): bool
     {
-        return in_array($ancestor, $this->getAncestors());
+        return in_array($ancestor, $this->getAncestors(), true);
     }
 
     /**
@@ -129,7 +129,7 @@ class Specie implements Stringable
                 throw new InvalidArgumentException("Recursion in specie: $this->name");
             }
 
-            if (!in_array($parent, $result)) {
+            if (!in_array($parent, $result, true)) {
                 $result[] = $parent;
                 $this->getAncestorsRecursionSafely($parent, $result);
             }
@@ -146,7 +146,7 @@ class Specie implements Stringable
                 throw new InvalidArgumentException("Recursion in specie: $this->name");
             }
 
-            if (!in_array($child, $result)) {
+            if (!in_array($child, $result, true)) {
                 $result[] = $child;
                 $this->getDescendantsRecursionSafely($child, $result);
             }
