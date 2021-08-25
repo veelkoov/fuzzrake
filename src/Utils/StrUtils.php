@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Twig\AppExtensions;
-use App\Utils\Artisan\Fields;
 use App\Utils\Traits\UtilityClass;
+use DateTimeInterface;
 
 final class StrUtils
 {
@@ -45,8 +46,8 @@ final class StrUtils
      */
     public static function shortPrintUrl(string $originalUrl): string
     {
-        $url = pattern('^https?://(www\.)?')->remove($originalUrl)->all();
-        $url = pattern('/?(#profile)?$')->remove($url)->all();
+        $url = pattern('^https?://(www\.)?')->prune($originalUrl);
+        $url = pattern('/?(#profile)?$')->prune($url);
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 
@@ -69,5 +70,18 @@ final class StrUtils
                 $artisan->set($field, str_replace("\r\n", "\n", $value));
             }
         }
+    }
+
+    public static function asStr(DateTimeInterface | bool | string | null $value): string
+    {
+        if (null === $value) {
+            return 'unknown';
+        } elseif ($value instanceof DateTimeInterface) {
+            return $value->format('Y-m-d H:i:s');
+        } elseif (is_bool($value)) {
+            $value = $value ? 'True' : 'False';
+        }
+
+        return $value;
     }
 }

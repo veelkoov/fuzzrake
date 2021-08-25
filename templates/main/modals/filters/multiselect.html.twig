@@ -1,40 +1,19 @@
+{% import "main/modals/filters/macros.html.twig" as macros %}
+
 <fieldset>
     <div class="row">
         <div class="col-sm-12">
-            <span class="allNoneInvert allNoneInvertSimple" aria-hidden="true">
-                select: <a data-action="all" href="">all</a>
-                &bull; <a data-action="none" href="">none</a>
-                &bull; <a data-action="invert" href="">invert</a>
-            </span>
+            {{ macros.filter_all_none_invert('simple') }}
 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxUnknown' }}" value="?" data-label="Unknown" />
-                <label class="form-check-label" for="{{ itemName ~ 'CheckBoxUnknown' }}">
-                    <i class="fas fa-question-circle"></i> Unknown <span class="count">({{ items.unknownCount }})</span>
-                </label>
-            </div>
-
-            {% if items.isHasOther %}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="{{ itemName ~ 's[]' }}" type="checkbox" id="{{ itemName ~ 'CheckBoxOther' }}" value="*" data-label="Other" />
-                    <label class="form-check-label" for="{{ itemName ~ 'CheckBoxOther' }}">
-                        <i class="fas fa-asterisk"></i> Other <span class="count">({{ items.otherCount }})</span>
-                    </label>
-                </div>
-            {% endif %}
+            {{ macros.filter_special_items(filter_data, group_name) }}
         </div>
     </div>
 
     <div class="row">
         {% apply spaceless %}
-            {% for item in items.items %}
-                {% set checkboxId = itemName ~ 'CheckBox' ~ loop.index %}
-
+            {% for item in filter_data.items %}
                 <div class="col-sm-6 col-lg-3">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="{{ item.value ~ 's[]' }}" type="checkbox" id="{{ checkboxId }}" value="{{ item.value }}" data-label="{{ item.label }}" />
-                        <label class="form-check-label" for="{{ checkboxId }}">{{ item.label }} <span class="count">({{ item.count }})</span></label>
-                    </div>
+                    {{ macros.filter_checkbox(group_name, loop.index, item.value, item.label, item.count) }}
                 </div>
             {% endfor %}
         {% endapply %}

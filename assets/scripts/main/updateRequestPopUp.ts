@@ -9,8 +9,11 @@ function updateRequestUpdateModalWithRowData(artisan: Artisan): void {
 
 function initRequestUpdateModal(): void {
     jQuery('#updateRequestModal').on('show.bs.modal', function (event) {
-        if (event.relatedTarget instanceof HTMLElement) {
-            updateRequestUpdateModalWithRowData(jQuery(event.relatedTarget)
+        // @ts-ignore
+        let relatedTarget = event.relatedTarget;
+
+        if (relatedTarget instanceof HTMLElement) {
+            updateRequestUpdateModalWithRowData(jQuery(relatedTarget)
                 .closest('tr').data('artisan'));
         }
     });

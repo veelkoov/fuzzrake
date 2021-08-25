@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
+use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\Fields;
-use App\Utils\FilterItem;
-use App\Utils\FilterItems;
+use App\Utils\Filters\FilterData;
+use App\Utils\Filters\Item;
+use App\Utils\Filters\Set;
 use App\Utils\Species\Species;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -53,7 +55,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(ArtisanRepository $artisanRepository, Species $species): Response
+    public function statistics(ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, Species $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
@@ -63,7 +65,7 @@ class StatisticsController extends AbstractController
         $features = $artisanRepository->getDistinctFeatures();
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
-        $commissionsStats = $artisanRepository->getCommissionsStats();
+        $commissionsStats = $commissionsStatusRepository->getCommissionsStats();
         $speciesStats = $species->getStats();
 
         return $this->render('statistics/statistics.html.twig', [
@@ -83,7 +85,7 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    private function prepareTableData(FilterItems $input): array
+    private function prepareTableData(FilterData $input): array
     {
         $result = [];
 
@@ -102,22 +104,21 @@ class StatisticsController extends AbstractController
         $result = array_flip($result);
         arsort($result);
 
-        if ($input->isHasOther()) {
-            $result['Other'] = $input->getOtherCount();
+        foreach ($input->getSpecialItems() as $item) {
+            $result[$item->getLabel()] = $item->getCount();
         }
-        $result['Unknown'] = $input->getUnknownCount();
 
         return $result;
     }
 
     /**
-     * @param FilterItem[] $items
-     *
-     * @return FilterItem[]
+     * @return Item[]
      */
-    private function prepareListData(array $items): array
+    private function prepareListData(Set $items): array
     {
-        uksort($items, function ($keyA, $keyB) use ($items) {
+        $result = $items->getItems();
+
+        uksort($result, function ($keyA, $keyB) use ($items) {
             if ($items[$keyA]->getCount() !== $items[$keyB]->getCount()) {
                 return $items[$keyB]->getCount() - $items[$keyA]->getCount();
             }
@@ -125,17 +126,20 @@ class StatisticsController extends AbstractController
             return strcmp($items[$keyA]->getLabel(), $items[$keyB]->getLabel());
         });
 
-        return $items;
+        return $result;
     }
 
     private function prepareCommissionsStatsTableData(array $commissionsStats): array
     {
         return [
-            'Open'                        => $commissionsStats['open'],
-            'Closed'                      => $commissionsStats['closed'],
-            'Status tracked'              => $commissionsStats['tracked'],
-            'Status successfully tracked' => $commissionsStats['successfully_tracked'],
-            'Total'                       => $commissionsStats['total'],
+            'Open for anything'              => $commissionsStats['open_for_anything'],
+            'Closed for anything'            => $commissionsStats['closed_for_anything'],
+            'Status successfully tracked'    => $commissionsStats['successfully_tracked'],
+            'Partially successfully tracked' => $commissionsStats['partially_tracked'],
+            'Tracking failed completely'     => $commissionsStats['tracking_failed'],
+            'Tracking issues'                => $commissionsStats['tracking_issues'],
+            'Status tracked'                 => $commissionsStats['tracked'],
+            'Total'                          => $commissionsStats['total'],
         ];
     }
 
@@ -149,7 +153,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%'   => 0, ];
+                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
 
         foreach ($levels as $description => $level) {
             $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));
@@ -165,7 +169,21 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach (Fields::inStats() as $field) {
-            $result[$field->name()] = array_reduce($artisans, fn (int $carry, Artisan $artisan) => $carry + ('' !== $artisan->get($field) ? 1 : 0), 0);
+            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
+                if ($field->is(Fields::FORMER_MAKER_IDS)) {
+                    /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
+                     * so we can rely on Artisan::getLastMakerId() etc. Those IDs are "M000000", where the digits part
+                     * is zero-padded artisan database ID. */
+
+                    $placeholder = sprintf('M%06d', $artisan->getId());
+
+                    if ($artisan->get(Fields::FORMER_MAKER_IDS) === $placeholder) {
+                        return $carry; // Fake former maker ID - don't add to the result
+                    }
+                }
+
+                return $carry + ('' !== $artisan->get($field) ? 1 : 0);
+            }, 0);
         }
 
         arsort($result);

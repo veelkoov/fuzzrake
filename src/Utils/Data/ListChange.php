@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Utils\Artisan\Field;
+use App\DataDefinitions\Field;
 use App\Utils\StringList;
 
 class ListChange implements ChangeInterface
@@ -18,7 +18,6 @@ class ListChange implements ChangeInterface
         private Field $field,
         string $old,
         string $new,
-        private ?string $imported,
     ) {
         $this->old = StringList::unpack($old);
         $this->new = StringList::unpack($new);

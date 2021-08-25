@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 
@@ -19,9 +19,9 @@ class Differ
 
     public function showDiff(Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
     {
-        $newVal = $new->get($field) ?: '';
-        $oldVal = $old->get($field) ?: '';
-        $impVal = $imported ? $imported->get($field) : null;
+        $newVal = StrUtils::asStr($new->get($field) ?? '');
+        $oldVal = StrUtils::asStr($old->get($field) ?? '');
+        $impVal = StrUtils::asStr($imported?->get($field) ?? '');
 
         if ($oldVal !== $newVal) {
             if ($field->isList()) {

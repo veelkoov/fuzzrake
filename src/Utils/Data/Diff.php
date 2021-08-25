@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\StrUtils;
+use DateTimeInterface;
 
 class Diff
 {
@@ -16,10 +17,10 @@ class Diff
      */
     private array $changes = [];
 
-    public function __construct(Artisan $old, Artisan $new, ?Artisan $imported)
+    public function __construct(Artisan $old, Artisan $new)
     {
         foreach (Fields::persisted() as $field) {
-            $this->addChange(...$this->getField($field, $old, $new, $imported));
+            $this->addChange(...$this->getField($field, $old, $new));
         }
     }
 
@@ -35,17 +36,17 @@ class Diff
         return !empty($this->changes);
     }
 
-    private function getField(Field $field, Artisan $old, Artisan $new, ?Artisan $imported)
+    private function getField(Field $field, Artisan $old, Artisan $new): array
     {
-        return [$field, $old->get($field), $new->get($field), $imported ? $imported->get($field) : null];
+        return [$field, $old->get($field), $new->get($field)];
     }
 
-    private function addChange(Field $field, string $old, string $new, ?string $imported): void
+    private function addChange(Field $field, DateTimeInterface | string | bool | null $old, DateTimeInterface | string | bool | null $new): void
     {
         if ($field->isList()) {
-            $change = new ListChange($field, $old, $new, $imported);
+            $change = new ListChange($field, $old, $new);
         } else {
-            $change = new SimpleChange($field, $old, $new, $imported);
+            $change = new SimpleChange($field, $old, $new);
         }
 
         if ($change->isActuallyAChange()) {

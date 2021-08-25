@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\Artisan\Fields;
+use App\DataDefinitions\Fields;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
@@ -33,7 +33,7 @@ class ArtisanFieldsTest extends TestCase
 
         static::assertGreaterThan(0, $matches->count());
 
-        $fieldsInJson = Fields::public();
+        $fieldsInJson = Fields::public()->asArray();
 
         $matches->forEach(function (Detail $detail) use (&$fieldsInJson): void {
             $field = array_shift($fieldsInJson);

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Repository\ArtisanVolatileDataRepository;
 use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeFormat;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Parse;
 use App\Utils\ParseException;
+use DateTimeInterface;
 use Doctrine\ORM\UnexpectedResultException;
 
 class HealthCheckService
@@ -31,7 +33,7 @@ class HealthCheckService
     private float $load15mMax;
 
     public function __construct(
-        private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
+        private ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         array $healthCheckValues,
     ) {
         $this->memoryAvailableMinMibs = $healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS];
@@ -45,35 +47,16 @@ class HealthCheckService
     public function getStatus(): array
     {
         return [
-            'status'        => self::OK,
-            'cstStatus'     => $this->getCstStatus(),
-            'lastCstRunUtc' => $this->getLastCstRunUtc(),
-            'serverTimeUtc' => $this->getServerTimeUtc(),
-            'disk'          => $this->getDiskStatus(HealthCheckService::getDfRawOutput()),
-            'memory'        => $this->getMemoryStatus(HealthCheckService::getMemoryAvailableRawOutput()),
-            'load'          => $this->getLoadStatus($this->getCpuCountRawOutput(), HealthCheckService::getProcLoadAvgRawOutput()),
+            'status'          => self::OK,
+            'csUpdatesStatus' => $this->getCsUpdatesStatus(),
+            'bpUpdatesStatus' => $this->getBpUpdatesStatus(),
+            'lastCsUpdateUtc' => $this->getLastCsUpdateUtc(),
+            'lastBpUpdateUtc' => $this->getLastBpUpdateUtc(),
+            'serverTimeUtc'   => $this->getServerTimeUtc(),
+            'disk'            => $this->getDiskStatus(HealthCheckService::getDfRawOutput()),
+            'memory'          => $this->getMemoryStatus(HealthCheckService::getMemoryAvailableRawOutput()),
+            'load'            => $this->getLoadStatus($this->getCpuCountRawOutput(), HealthCheckService::getProcLoadAvgRawOutput()),
         ];
-    }
-
-    private function getCstStatus(): string
-    {
-        try {
-            return $this->artisanCommissionsStatusRepository->getLastCstUpdateTime() < DateTimeUtils::getUtcAt('-12:15')
-                ? self::OK
-                : self::WARNING;
-        } catch (DateTimeException | UnexpectedResultException) {
-            return self::WARNING;
-        }
-    }
-
-    private function getLastCstRunUtc(): string
-    {
-        return $this->artisanCommissionsStatusRepository->getLastCstUpdateTimeAsString();
-    }
-
-    private function getServerTimeUtc(): string
-    {
-        return DateTimeUtils::getNowUtc()->format('Y-m-d H:i:s');
     }
 
     public function getDiskStatus(string $rawData): string
@@ -98,7 +81,7 @@ class HealthCheckService
                 return self::WARNING;
             }
 
-            if ((int) $mibsFree < $this->diskFreeMinMibs && $percentUsed > $this->diskUsedMaxPercent) {
+            if ($mibsFree < $this->diskFreeMinMibs && $percentUsed > $this->diskUsedMaxPercent) {
                 return self::WARNING;
             }
         }
@@ -137,6 +120,63 @@ class HealthCheckService
         return $load1m < $this->load1mMax && $load5m < $this->load5mMax && $load15m < $this->load15mMax
             ? self::OK
             : self::WARNING;
+    }
+
+    private function getCsUpdatesStatus(): string
+    {
+        try {
+            return $this->getUpdatesStatus('-12 hours -15 minutes', $this->artisanVolatileDataRepository->getLastCsUpdateTime()); // grep-tracking-frequency
+        } catch (DateTimeException | UnexpectedResultException) {
+            return self::WARNING;
+        }
+    }
+
+    private function getBpUpdatesStatus(): string
+    {
+        try {
+            return $this->getUpdatesStatus('-7 days -15 minutes', $this->artisanVolatileDataRepository->getLastBpUpdateTime()); // grep-tracking-frequency
+        } catch (DateTimeException | UnexpectedResultException) {
+            return self::WARNING;
+        }
+    }
+
+    /**
+     * @throws DateTimeException
+     */
+    private function getUpdatesStatus(string $oldestAllowedCheck, DateTimeInterface $actualLastCheck): string
+    {
+        /* Need to format as string, because PHP doesn't allow comparing the mock object returned by PHPUnit from the repo mock (I guess) */
+        $actual = $actualLastCheck->format(DATE_ISO8601);
+        $oldestAllowed = DateTimeUtils::getUtcAt($oldestAllowedCheck)->format(DATE_ISO8601);
+
+        return $actual > $oldestAllowed ? self::OK : self::WARNING;
+    }
+
+    private function getLastCsUpdateUtc(): string
+    {
+        try {
+            $result = $this->artisanVolatileDataRepository->getLastCsUpdateTime();
+        } catch (DateTimeException | UnexpectedResultException) {
+            $result = null;
+        }
+
+        return DateTimeFormat::fragile($result);
+    }
+
+    private function getLastBpUpdateUtc(): string
+    {
+        try {
+            $result = $this->artisanVolatileDataRepository->getLastBpUpdateTime();
+        } catch (DateTimeException | UnexpectedResultException) {
+            $result = null;
+        }
+
+        return DateTimeFormat::fragile($result);
+    }
+
+    private function getServerTimeUtc(): string
+    {
+        return DateTimeUtils::getNowUtc()->format('Y-m-d H:i:s');
     }
 
     private function getCpuCountRawOutput(): string

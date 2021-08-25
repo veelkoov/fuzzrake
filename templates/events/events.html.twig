@@ -12,6 +12,12 @@
     {{ encore_entry_link_tags('events') }}
 {% endblock %}
 
+{% block add_meta %}
+    {% for title, href in feeds %}
+        <link rel="alternate" type="application/atom+xml" href="{{ href }}" title="{{ title }}" />
+    {% endfor %}
+{% endblock %}
+
 {% block body %}
     <p class="small">All times are UTC</p>
 
@@ -24,8 +30,8 @@
             {% set last_timestamp = event.timestamp %}
 
             <li class="events-item row" id="event{{ event.id }}">
-                <div class="col-sm-2 pb-1 text-right small {% if day_changed %}border-top{% endif %}">
-                    <a href="#event{{ event.id }}">
+                <div class="col-sm-2 pb-1 text-end small {% if day_changed %}border-top{% endif %}">
+                    <a href="#event{{ event.id }}" class="text-decoration-none">
                         {% if day_changed %} {{ event.timestamp|date('jS M Y') }}, {% endif %}
                         {% if time_changed %} {{ event.timestamp|date('H:i') }} {% endif %}
                     </a>
@@ -33,19 +39,32 @@
 
                 <div class="col-sm-10">
                     <p>
-                        {% if event.updates %}
+                        {% if event.typeDataUpdated %}
 
                             {{ eventDescription(event) }}
 
-                        {% elseif event.lostTrack %}
+                        {% elseif event.typeCsUpdated %}
 
-                            <b>{{ event.artisanName }}</b> commissions status is now
-                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                            <strong>{{ event.artisanName }}</strong> commissions status changed.
 
-                        {% elseif event.changedStatus %}
+                            {% if event.noLongerOpenFor %}
+                                No longer open for: {{ event.noLongerOpenForArray|join(', ') }}.
+                            {% endif %}
 
-                            <b>{{ event.artisanName }}</b> commissions status is now
-                            <b>{{ event.newStatus|status_text }}</b> (was {{ event.oldStatus|status_text }}).
+                            {% if event.nowOpenFor %}
+                                <strong>Now open for: {{ event.nowOpenForArray|join(', ') }}.</strong>
+                            {% endif %}
+
+                            {% if event.trackingIssues %}
+                                Encountered apparent difficulties during status analysis.
+                            {% endif %}
+
+                            Checked contents of:
+
+                            {% for url in event.checkedUrlsArray %}
+                                <a href="{{ url }}" target="_blank">{{ url|event_url }}</a>
+                                {%- if loop.last %}.{% else %},{% endif %}
+                            {% endfor %}
 
                         {% else %}
 
@@ -63,53 +82,7 @@
                         {% if isDevOrTestEnv() and event.editable %}
                             <a href="{{ path('mx_event_edit', { id: event.id }) }}"><i class="fas fa-edit"></i></a>
                         {% endif %}
-
-                        {% if event.details %}
-                            <a href="#" class="toggle-details btn btn-sm btn-outline-secondary">Toggle details</a>
-                        {% endif %}
                     </p>
-
-                    {% if event.details %}
-                        <div class="event-details pl-4">
-                            {% if event.lostTrack %}
-                                <p>
-                                    Failed to interpret commission status based on the contents of
-                                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
-                                </p>
-                            {% elseif event.changedStatus %}
-                                <p>
-                                    The status is based on the contents of
-                                    <a href="{{ event.checkedUrl }}" target="_blank">{{ event.checkedUrl|event_url }}</a>.
-                                </p>
-                            {% endif %}
-
-                            {% if not event.closedMatch.empty %}
-                                <blockquote class="blockquote">
-                                    <strong>Closed match:</strong>
-                                    {% apply spaceless %}
-                                        <span class="text-secondary">{{ event.closedMatch.before }}</span>
-                                        <span class="bg-danger">{{ event.closedMatch.subject }}</span>
-                                        <span class="text-secondary">{{ event.closedMatch.after }}</span>
-                                    {% endapply %}
-                                </blockquote>
-                            {% endif %}
-
-                            {% if not event.openMatch.empty %}
-                                <blockquote class="blockquote">
-                                    <strong>Open match:</strong>
-                                    {% apply spaceless %}
-                                        <span class="text-secondary">{{ event.openMatch.before }}</span>
-                                        <span class="bg-success">{{ event.openMatch.subject }}</span>
-                                        <span class="text-secondary">{{ event.openMatch.after }}</span>
-                                    {% endapply %}
-                                </blockquote>
-                            {% endif %}
-
-                            {% if event.closedMatch.empty and event.openMatch.empty %}
-                                <p>Couldn't match neither open nor closed status message</p>
-                            {% endif %}
-                        </div>
-                    {% endif %}
                 </div>
             </li>
         {% endfor %}

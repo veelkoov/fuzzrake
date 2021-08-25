@@ -1,0 +1,20 @@
+---
+- name: reload sshd
+  service:
+    name: sshd
+    state: reloaded
+
+- name: restart Apache # grep-restart-apache-handler TODO: deduplicate?
+  shell: apachectl configtest && apachectl graceful
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart txkillswitch
+  service:
+    name: txkillswitch
+    state: restarted
+  when: not suppress_txkillswitch
+
+- name: reboot system
+  reboot:

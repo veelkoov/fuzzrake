@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanPrivateDataRepository")
@@ -36,10 +37,10 @@ class ArtisanPrivateData
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"iu_form"}, message="Passcode is required")
-     * @Assert\Length(min=4, max=255, groups={"iu_form"}, minMessage="Passcode is not long enough")
      */
-    private string $passcode = '';
+    #[NotBlank(message: 'Password is required', groups: ['iu_form'])]
+    #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: ['iu_form'])]
+    private string $password = '';
 
     /**
      * @ORM\Column(type="string", length=512)
@@ -75,14 +76,14 @@ class ArtisanPrivateData
         return $this;
     }
 
-    public function getPasscode(): string
+    public function getPassword(): string
     {
-        return $this->passcode;
+        return $this->password;
     }
 
-    public function setPasscode(string $passcode): self
+    public function setPassword(string $password): self
     {
-        $this->passcode = $passcode;
+        $this->password = $password;
 
         return $this;
     }

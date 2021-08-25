@@ -7,7 +7,9 @@ namespace App\Controller;
 use App\Entity\Artisan;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
+use App\Utils\Artisan\ContactPermit;
 use App\Utils\IuSubmissions\IuSubmissionService;
+use App\Utils\Password;
 use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -18,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 class IuFormController extends AbstractRecaptchaBackedController
 {
@@ -26,16 +29,21 @@ class IuFormController extends AbstractRecaptchaBackedController
      */
     #[Route(path: '/iu_form/fill/{makerId}', name: RouteName::IU_FORM)]
     #[Cache(maxage: 0, public: false)]
-    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, ?string $makerId = null): Response
+    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, RouterInterface $router, ?string $makerId = null): Response
     {
         try {
             $artisan = $makerId ? $artisanRepository->findByMakerId($makerId) : new Artisan();
-            $artisan->setPasscode(''); // Should never appear in the form
         } catch (UnexpectedResultException) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
 
-        $form = $this->getIuForm($artisan, $makerId);
+        $isNew = null === $artisan->getId();
+        $previousPassword = $artisan->getPassword();
+        $wasContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
+
+        $artisan->setPassword(''); // Should never appear in the form
+
+        $form = $this->getIuForm($router, $artisan, $makerId);
         $form->handleRequest($request);
         $this->validatePhotosCopyright($form, $artisan);
 
@@ -43,28 +51,49 @@ class IuFormController extends AbstractRecaptchaBackedController
             $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
             StrUtils::fixNewlines($artisan);
 
+            if ($isNew) {
+                $passwordOk = true;
+                Password::encryptOn($artisan);
+            } elseif (password_verify($artisan->getPassword(), $previousPassword)) {
+                $passwordOk = true;
+                $artisan->setPassword($previousPassword); // Was already hashed; use old hash - must not appear changed
+            } else {
+                $passwordOk = false;
+                Password::encryptOn($artisan); // Will become new password if confirmed with maintainer
+            }
+
+            $isContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
+
             if ($iuFormService->submit($artisan)) {
-                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION);
+                return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
+                    'isNew'          => $isNew ? 'yes' : 'no',
+                    'passwordOk'     => $passwordOk ? 'yes' : 'no',
+                    'contactAllowed' => $isContactAllowed ? ($wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                ]);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form.'
                 .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
             }
         }
 
-        return $this->render('iu_form/iu_form.html.twig', [
-            'form'            => $form->createView(),
-            'noindex'         => true,
-            'submitted'       => $form->isSubmitted(),
-            'disableTracking' => true,
+        return $this->renderForm('iu_form/iu_form.html.twig', [
+            'form'             => $form,
+            'noindex'          => true,
+            'submitted'        => $form->isSubmitted(),
+            'disable_tracking' => true,
+            'is_update'        => !$isNew,
         ]);
     }
 
     #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
     #[Cache(maxage: 0, public: false)]
-    public function iuFormConfirmation(): Response
+    public function iuFormConfirmation(Request $request): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
-            'disableTracking' => true,
+            'disable_tracking'       => true,
+            'password_ok'            => 'yes' === $request->get('passwordOk', 'no'),
+            'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
+            'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),
         ]);
     }
 
@@ -75,10 +104,11 @@ class IuFormController extends AbstractRecaptchaBackedController
         return $this->redirectToRoute(RouteName::IU_FORM, ['makerId' => $makerId]);
     }
 
-    private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface
+    private function getIuForm(RouterInterface $router, Artisan $artisan, ?string $makerId): FormInterface
     {
         return $this->createForm(IuForm::class, $artisan, [
             IuForm::PHOTOS_COPYRIGHT_OK => '' !== $makerId && '' !== $artisan->getPhotoUrls(),
+            IuForm::OPT_ROUTER          => $router,
         ]);
     }
 

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\DataDefinitions\Fields;
+use App\DataDefinitions\ValidationRegexps;
 use App\Entity\Artisan;
-use App\Utils\Artisan\ValidationRegexps;
-use App\Utils\FilterItems;
+use App\Utils\Filters\FilterData;
+use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @method Artisan|null find($id, $lockMode = null, $lockVersion = null)
@@ -56,8 +56,9 @@ class ArtisanRepository extends ServiceEntityRepository
     private function getArtisansQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 'cs')
+            ->leftJoin('a.volatileData', 'vd')
             ->leftJoin('a.urls', 'u')
+            ->leftJoin('a.commissions', 'c')
             ->leftJoin('u.state', 'us')
             ->leftJoin('a.makerIds', 'mi')
             /*
@@ -65,8 +66,9 @@ class ArtisanRepository extends ServiceEntityRepository
              * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
              */
             ->leftJoin('a.privateData', 'pd')
-            ->addSelect('cs')
+            ->addSelect('vd')
             ->addSelect('u')
+            ->addSelect('c')
             ->addSelect('us')
             ->addSelect('mi')
             ->addSelect('pd')
@@ -82,145 +84,95 @@ class ArtisanRepository extends ServiceEntityRepository
         return (int) $this->createQueryBuilder('a')
             ->select('COUNT (DISTINCT a.country)')
             ->where('a.country != \'\'')
+            ->andWhere('a.country != \'EU\'') // grep-country-eu
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    public function getCommissionsStats(): array
-    {
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('open', 'open', 'integer');
-        $rsm->addScalarResult('closed', 'closed', 'integer');
-        $rsm->addScalarResult('tracked', 'tracked', 'integer');
-        $rsm->addScalarResult('successfully_tracked', 'successfully_tracked', 'integer');
-        $rsm->addScalarResult('total', 'total', 'integer');
-
-        return $this
-            ->getEntityManager()
-            ->createNativeQuery('
-                SELECT SUM(acs.status = 1) AS open
-                    , SUM(acs.status = 0) AS closed
-                    , SUM(acs.status IS NOT NULL AND au_cst.url <> \'\') AS successfully_tracked
-                    , SUM(au_cst.url <> \'\') AS tracked
-                    , SUM(1) AS total
-                FROM artisans AS a
-                LEFT JOIN artisans_commissions_statues AS acs
-                    ON a.id = acs.artisan_id
-                LEFT JOIN artisans_urls AS au_cst
-                    ON a.id = au_cst.artisan_id AND au_cst.type = \'URL_CST\'
-                WHERE a.inactive_reason = \'\'
-            ', $rsm)
-            ->enableResultCache(3600)
-            ->getSingleResult(NativeQuery::HYDRATE_ARRAY);
-    }
-
-    public function getDistinctCountriesToCountAssoc(): FilterItems
+    public function getDistinctCountriesToCountAssoc(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
     }
 
-    public function getDistinctStatesToCountAssoc(): FilterItems
+    public function getDistinctStatesToCountAssoc(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('state');
     }
 
-    public function getDistinctOrderTypes(): FilterItems
+    public function getDistinctOrderTypes(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
     }
 
-    public function getDistinctOtherOrderTypes(): FilterItems
+    public function getDistinctOtherOrderTypes(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
     }
 
-    public function getDistinctStyles(): FilterItems
+    public function getDistinctStyles(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('styles', true);
     }
 
-    public function getDistinctOtherStyles(): FilterItems
+    public function getDistinctOtherStyles(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('otherStyles');
     }
 
-    public function getDistinctFeatures(): FilterItems
+    public function getDistinctFeatures(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('features', true);
     }
 
-    public function getDistinctOtherFeatures(): FilterItems
+    public function getDistinctOtherFeatures(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
     }
 
-    public function getDistinctProductionModels(): FilterItems
+    public function getDistinctProductionModels(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
     }
 
-    public function getDistinctLanguages(): FilterItems
+    public function getDistinctLanguages(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
-    public function getDistinctCommissionStatuses(): FilterItems
-    {
-        $rows = $this->createQueryBuilder('a')
-            ->leftJoin('a.commissionsStatus', 's')
-            ->select("s.status, COUNT(COALESCE(s.status, 'null')) AS count")
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->groupBy('s.status')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getArrayResult();
-
-        $result = new FilterItems(false);
-        $result->addComplexItem('1', '1', 'Open', 0);
-        $result->addComplexItem('0', '0', 'Closed', 0);
-
-        foreach ($rows as $row) {
-            if (null === $row['status']) {
-                $result->incUnknownCount((int) $row['count']);
-            } else {
-                $result[(int) $row['status']]->incCount((int) $row['count']);
-            }
-        }
-
-        return $result;
-    }
-
-    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterItems
+    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);
 
-        $result = new FilterItems($countOther);
+        $unknown = SpecialItems::newUnknown();
+        $special = [$unknown];
+
+        if ($countOther) {
+            $other = SpecialItems::newOther();
+            $special[] = $other;
+        }
+
+        $result = new FilterData(...$special);
 
         foreach ($rows as $row) {
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
                 if (($item = trim($item))) {
-                    $result->addOrIncItem($item);
+                    $result->getItems()->addOrIncItem($item);
                 }
             }
 
             if ($countOther && !empty($row['otherItems'])) {
-                $result->incOtherCount();
+                $other->incCount();
             }
 
             if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {
-                $result->incUnknownCount();
+                $unknown->incCount();
             }
         }
 
-        $result->sort();
+        $result->getItems()->sort();
 
         return $result;
     }
@@ -316,20 +268,41 @@ class ArtisanRepository extends ServiceEntityRepository
             ->andWhere('a.inactiveReason = :empty')
             ->setParameters($parameters)
             ->getQuery()
+            ->enableResultCache(3600)
             ->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function countActive(): int
     {
-        try {
-            return (int) $this->createQueryBuilder('a')
-                ->select('COUNT(a)')
-                ->where('a.inactiveReason = :empty')
-                ->setParameter('empty', '')
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NoResultException | NonUniqueResultException $e) {
-            throw new RuntimeException($e);
-        }
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a)')
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @throws UnexpectedResultException
+     */
+    public function getCsTrackedCount(): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->leftJoin('a.urls', 'au')
+            ->select('COUNT(DISTINCT a.id)')
+            ->where('au.type = :type')
+            ->andWhere('a.inactiveReason = :empty')
+            ->setParameters([
+                'type'  => Fields::URL_COMMISSIONS,
+                'empty' => '',
+            ])
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleScalarResult();
     }
 }

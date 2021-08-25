@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -21,7 +20,6 @@ class Manager
     public const CMD_COMMENT = '//';
     public const CMD_ACCEPT = 'accept';
     public const CMD_CLEAR = 'clear';
-    public const CMD_IGNORE_PASSCODE = 'ignore-passcode';
     public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
     public const CMD_MATCH_TO_NAME = 'match-to-name';
     public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
@@ -47,11 +45,6 @@ class Manager
      * @var string[] Associative list: submission ID => matched artisan name
      */
     private array $matchedNames = [];
-
-    /**
-     * @var string[] List of submission IDs which contain invalid passcodes, to be approved & imported
-     */
-    private array $itemsWithPasscodeExceptions = [];
 
     /**
      * @var string[] List of submission IDs which got rejected
@@ -115,11 +108,6 @@ class Manager
         return in_array($item->getId(), $this->rejectedItems);
     }
 
-    public function isPasscodeIgnored(ImportItem $item): bool
-    {
-        return in_array($item->getId(), $this->itemsWithPasscodeExceptions);
-    }
-
     public function getIgnoredUntilDate(ImportItem $item): DateTimeInterface
     {
         return $this->itemsIgnoreFinalTimes[$item->getId()];
@@ -145,8 +133,10 @@ class Manager
         }
     }
 
-    private function addCorrection(string $submissionId, Field $field, ?string $wrongValue, string $correctedValue): void
+    private function addCorrection(string $submissionId, string $fieldName, ?string $wrongValue, string $correctedValue): void
     {
+        $field = Fields::get($fieldName);
+
         if (!array_key_exists($submissionId, $this->corrections)) {
             $this->corrections[$submissionId] = [];
         }
@@ -170,15 +160,11 @@ class Manager
             case self::CMD_CLEAR:
                 $fieldName = $buffer->readUntilWhitespace();
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, '');
+                $this->addCorrection($this->getCurrentSubject(), $fieldName, null, '');
                 break;
 
             case self::CMD_COMMENT:
                 $buffer->readUntilEolOrEof();
-                break;
-
-            case self::CMD_IGNORE_PASSCODE:
-                $this->itemsWithPasscodeExceptions[] = $this->getCurrentSubject();
                 break;
 
             case self::CMD_IGNORE_UNTIL:
@@ -206,14 +192,14 @@ class Manager
                 $wrongValue = StrUtils::undoStrSafeForCli($buffer->readToken());
                 $correctedValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), $wrongValue, $correctedValue);
+                $this->addCorrection($this->getCurrentSubject(), $fieldName, $wrongValue, $correctedValue);
                 break;
 
             case self::CMD_SET:
                 $fieldName = $buffer->readUntilWhitespace();
                 $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($this->getCurrentSubject(), Fields::get($fieldName), null, $newValue);
+                $this->addCorrection($this->getCurrentSubject(), $fieldName, null, $newValue);
                 break;
 
             case self::CMD_WITH:

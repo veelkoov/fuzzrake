@@ -11,13 +11,12 @@ use App\Utils\Artisan\Utils;
 use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/artisans')]
-class ArtisansController extends AbstractController
+class ArtisansController extends AbstractFormController
 {
     #[Route(path: '/{id}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_ARTISAN_NEW, methods: ['GET', 'POST'])]
@@ -29,18 +28,16 @@ class ArtisansController extends AbstractController
         }
 
         $artisan ??= new Artisan();
-        $originalPasscode = $artisan->getPasscode();
 
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (null !== $artisan->getId() && $form->get(ArtisanType::BTN_DELETE)->isClicked()) {
+            if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
                 $this->getDoctrine()->getManager()->remove($artisan);
             } else {
                 Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
                 StrUtils::fixNewlines($artisan);
-                $this->restoreUnchangedPasscode($artisan, $originalPasscode);
 
                 $this->getDoctrine()->getManager()->persist($artisan);
             }
@@ -50,16 +47,9 @@ class ArtisansController extends AbstractController
             return $this->redirectToRoute(RouteName::MAIN);
         }
 
-        return $this->render('mx/artisans/edit.html.twig', [
+        return $this->renderForm('mx/artisans/edit.html.twig', [
             'artisan' => $artisan,
-            'form'    => $form->createView(),
+            'form'    => $form,
         ]);
-    }
-
-    private function restoreUnchangedPasscode(Artisan $artisan, string $originalPasscode): void
-    {
-        if (empty(trim($artisan->getPasscode()))) {
-            $artisan->setPasscode($originalPasscode);
-        }
     }
 }

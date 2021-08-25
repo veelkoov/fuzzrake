@@ -12,7 +12,6 @@ use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\Styles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,8 +21,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArtisanType extends AbstractType
 {
-    const BTN_SAVE = 'save';
-    const BTN_DELETE = 'delete';
+    public const BTN_SAVE = 'save';
+    public const BTN_DELETE = 'delete';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -160,7 +159,7 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('pricesUrl', UrlType::class, [
+            ->add('pricesUrl', TextareaType::class, [
                 'label'      => 'Prices URL',
                 'required'   => false,
                 'empty_data' => '',
@@ -210,8 +209,8 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('cstUrl', UrlType::class, [
-                'label'      => 'CST URL',
+            ->add('commissionsUrl', TextareaType::class, [
+                'label'      => 'Commissions URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -274,11 +273,6 @@ class ArtisanType extends AbstractType
                 'label'      => 'Contact allowed?',
                 'choices'    => ContactPermit::getKeyKeyMap(),
                 'empty_data' => ContactPermit::NO,
-            ])
-            ->add('passcode', PasswordType::class, [
-                'label'      => 'New passcode',
-                'required'   => false,
-                'empty_data' => '',
             ])
             ->add(self::BTN_SAVE, SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],

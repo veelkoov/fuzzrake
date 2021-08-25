@@ -64,11 +64,11 @@ class GenerateSpeciesDotCommand extends Command
 
     private function getDotFileContents(): string
     {
-        $res = 'graph SPECIES {';
+        $res = "graph SPECIES {\n";
 
         $hidden = '[style = invis]';
 
-        $species = $this->species->getSpeciesFlat();
+        $species = $this->species->getFlat();
         foreach (self::GROUPS_WITH_ARTIFICIAL_PLACEMENT as $specieName) {
             $children = $species[$specieName]->getChildren();
             usort($children, fn (Specie $a, Specie $b): int => count($a->getDescendants()) - count($b->getDescendants()));
@@ -83,11 +83,11 @@ class GenerateSpeciesDotCommand extends Command
                     $res .= '"'.$children[$ci]->getName().'"; ';
                 }
 
-                $res .= '}';
+                $res .= "}\n";
             }
 
             for ($ci = $colNum; $ci < $childCount; ++$ci) {
-                $res .= '"'.$children[$ci - $colNum]->getName().'" -- "'.$children[$ci]->getName().'" '.$hidden;
+                $res .= '"'.$children[$ci - $colNum]->getName().'" -- "'.$children[$ci]->getName().'" '.$hidden."\n";
             }
         }
 
@@ -97,7 +97,7 @@ class GenerateSpeciesDotCommand extends Command
             }
 
             if (in_array($specie->getName(), self::BOLD_GROUPS)) {
-                $res .= "\"{$specie->getName()}\" [penwidth=5]";
+                $res .= "\"{$specie->getName()}\" [penwidth=5]\n";
             }
 
             $res .= "\"{$specie->getName()}\"";
@@ -107,7 +107,7 @@ class GenerateSpeciesDotCommand extends Command
                 $res .= " -- { \"$children\" }";
             }
 
-            $res .= '';
+            $res .= "\n";
         }
 
         $res .= '}';

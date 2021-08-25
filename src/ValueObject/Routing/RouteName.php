@@ -16,6 +16,7 @@ final class RouteName
     public const DATA_UPDATES = 'data_updates';
     public const DONATE = 'donate';
     public const EVENTS = 'events';
+    public const EVENTS_ATOM = 'events_atom';
     public const HEALTH = 'health';
     public const INFO = 'info';
     public const IU_FORM = 'iu_form';
@@ -28,8 +29,8 @@ final class RouteName
     public const MX_EVENT_EDIT = 'mx_event_edit';
     public const MX_EVENT_NEW = 'mx_event_new';
     public const MX_QUERY = 'mx_query';
+    public const RULES = 'rules';
     public const SITEMAP = 'sitemap';
     public const STATISTICS = 'statistics';
     public const TRACKING = 'tracking';
-    public const WHOOPSIES = 'whoopsies';
 }

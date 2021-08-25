@@ -3,27 +3,27 @@ parameters:
     commonRegexPrefix: ''
     commonRegexSuffix: ''
     replacements:
-      "’":                        "'"
-      "^-$":                      ""
-      "^Rather not say$":         ""
-      "^n/a$#":                   ""
-      "^n/a yet$":                ""
-      "[ \t]{2,}":                " "
-      "(p)ose?able":              "$1oseable"
-      "Tounges":                  'Tongues'
-      "(^|\\s)LED($|\\s)":        "$1LED$2"
+      '’':                        "'"
+      '^-$':                      ''
+      '^Rather not say$':         ''
+      '^n/a$#i':                  ''
+      '^no\.$#':                  ''
+      '^n/a yet$':                ''
+      '[ \t]{2,}':                ' '
+      '(p)ose?able':              '$1oseable'
+      'Tounges':                  'Tongues'
+      '(^|\\s)LED($|\\s)':        '$1LED$2'
 
   lists:
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
     replacements:
-      'Armsleeves|Arm Sleeves':                      'Arm sleeves'
+      'Arm ?sleeves':                                'Arm sleeves'
       'backpacks':                                   'Backpacks'
       'Bandannas':                                   'Bandanas'
       '(.+)changable(.+)':                           '$1changeable$2'
       'claws':                                       'Claws'
       'Dry brushing':                                'Drybrushing'
-      'Excellent vision &(amp;)? breathability':     "Excellent vision\nExcellent breathability"
       'Femme Suits':                                 'Femme suits'
       'Foam Bases':                                  'Foam bases'
       'Fursuit Props':                               'Fursuit props'

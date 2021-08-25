@@ -112,16 +112,16 @@
 
     <ul>
         <li>
-            <strong>Updates are delayed</strong>: getfursu.it updates statuses twice a day, so it may even take 12 hours for the updates done by a maker to be reflected here. Take this into account if you are waiting for your beloved maker to open. You'd better follow their social media or other stuff.
-        </li>
-        <li>
-            getfursu.it is able to track only one, overall status ("we're open/closed"). It's unable to properly handle e.g. websites displaying <em>open for parts; closed for fullsuits</em>.
+            <strong>Updates are delayed</strong>: getfursu.it updates statuses twice a day, so it may even take 12 hours for the updates done by a maker to be reflected here. Take this into account if you are waiting for your beloved maker to open. You'd better follow their social media or other stuff. {# grep-tracking-frequency #}
         </li>
         <li>
             Some websites are not supported (see below).
         </li>
         <li>
-            The software will not "click" any links, buttons, etc. Please, for tracking provide exact address of where the status is.
+            Pages requiring to be registered&amp;logged in are not supported.
+        </li>
+        <li>
+            The software will not "click" any links, buttons, etc. Please, provide the exact address of where the status is for tracking.
         </li>
         <li>
             Only simple English language is supported.
@@ -145,9 +145,8 @@
                     Blog entries, posts, journals, tweets, etc. - unpinned. <small class="text-muted">If you post new stuff and the original post/entry/etc. will move to the second page, this will fail. If you unpin the original and pin another post/message/journal/etc. this will fail. This <strong>may</strong> work if you only edit the pinned item, but not unpin and pin another.</small>
                 </li>
                 <li>
-                    Fur Affinity :( <small class="text-muted">I am sorry to list it here, but as long as the DDoS protection will affect getfursu.it, I cannot recommend this.</small>
+                    Facebook. <small class="text-muted">I don't recommend using it for tracking. It's unpredictable regarding when it requires to log in. Can't guarantee getfursu.it will be able to check your page. If you want to use it either way (at your own risk), I recommend putting the commissions info into your "about" page and tracking it.</small>
                 </li>
-                <li>Patreon. <small class="text-muted">Unfortunately, getfursu.it is blocked by them (CloudFlare to be precise).</small></li>
             </ul>
         </div>
     </div>
@@ -158,12 +157,14 @@
         </div>
         <div class="col-sm">
             <ul>
-                <li>Most of generic websites</li>
-                <li>Twitter profile info</li>
-                <li>Instagram profile info</li>
-                <li>Facebook "about" pages</li>
-                <li>Trello <strong>sometimes</strong> works</li>
-                <li>DeviantArt profile info <strong>should</strong> work (untested)</li>
+                <li>
+                    Fur Affinity (best option is to use the profile info, while avoiding journals, etc.). <small class="text-muted"><strong>NOTE 1</strong>: Your user profile must be publicly visible, log-in requirement will break tracking! <strong>NOTE 2</strong>: "Accepting Commissions" user setting is deliberately ignored by default, because most FA users, which are being tracked getfursu.it, don't pay attention to keeping that in sync with what they put in their profile description. If you need getfursu.it to track your "Accepting Commissions" setting, please state that clearly in the notes! If you only put your status as text in your profile, you are good to go. <strong>NOTE 3</strong>: There were issues with accessing FA in the past, but stuff seems to be working fine now.</small>
+                </li>
+                <li>Most of generic websites.</li>
+                <li>Twitter profile info.</li>
+                <li>Instagram profile info <strong>should</strong> work. <small class="text-muted">They seem to do some shenanigans around the requirement to be logged in. I move this between "supported" and "unsupported" from time to time, it's real fun. Use Instagram at your own risk.</small></li>
+                <li>Trello <strong>sometimes</strong> works.</li>
+                <li>DeviantArt profile info <strong>should</strong> work (untested).</li>
             </ul>
         </div>
     </div>
@@ -183,9 +184,6 @@
                     <em>cOwOmissions open! :)</em> <small class="text-muted">No fancy wording, please. getfursu.it "gets" simple English only.</small>
                 </li>
                 <li>
-                    <em>Partials: open, fullsuits: close</em> <small class="text-muted">Sorry, getfursu.it can track only one "overall" status. You will be listed only if all stuff is open or all stuff is closed.</small>
-                </li>
-                <li>
                     <em>Commissions open in February!</em> <small class="text-muted">Better solution below.</small>
                 </li>
                 <li>
@@ -200,15 +198,19 @@
             <img src="{{ asset('images/tracking/do.webp') }}" alt="These statuses are clear and OK" class="img-fluid">
         </div>
         <div class="col-sm">
+            <p>Examples of status descriptions getfursu.it is able to track:</p>
             <ul>
                 <li>
                     <em>Commissions: open</em> / <em>We're open</em> / etc.
                 </li>
                 <li>
-                    <em>Commissions closed, opening in February!</em>
+                    <em>Commissions are closed, quotes are open!</em>
                 </li>
                 <li>
-                    <em>Commissions open, 3 slots left!</em>
+                    <em>Commissions closed, opening in February!</em> <small class="text-muted">This works, because it contains the clear message "commissions closed"</small>
+                </li>
+                <li>
+                    <em>Commissions open, 3 slots left!</em> <small class="text-muted">This works, because it contains the clear message "commissions open"</small>
                 </li>
             </ul>
         </div>
@@ -217,7 +219,7 @@
     <h1 id="tracking_how_to_enroll" class="mt-4">How to enroll</h1>
 
     <p>
-        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('data_updates') }}">send the inclusion/update form</a>, providing the website's address in correct field. Make sure the status is visible immediately when you navigate to the address of your choice (no link clicks/actions required; scrolling is OK).
+        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('data_updates') }}">send the inclusion/update form</a>, providing the website's address in correct field. Of course, don't forget to update your data on getfursu.it, whenever you move commissions information between pages/subpages.
     </p>
 
     <p>

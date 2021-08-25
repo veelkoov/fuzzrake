@@ -3,7 +3,7 @@ import Artisan from "../../../class/Artisan";
 import AbstractUnknownValue from "./AbstractUnknownValue";
 
 export default class OtherValue extends SpecialValue {
-    public static readonly VALUE: string = '*';
+    public static readonly VALUE: string = '*'; // grep-special-value-other
     private readonly otherFieldName: string;
 
     public constructor(fieldName: string) {

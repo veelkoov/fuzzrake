@@ -4,50 +4,43 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\Utils\Artisan\Fields;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\DataDefinitions\Fields;
 use App\Utils\Traits\Singleton;
 use DateTimeInterface;
 
-class SchemaFixer
+final class SchemaFixer
 {
     use Singleton;
 
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const SCHEMA_V6 = 'SCHEMA_V6';
-    private const SCHEMA_V7 = 'SCHEMA_V7';
-    private DateTimeInterface $v7releaseTimestamp;
-
-    /**
-     * @throws DateTimeException
-     */
-    private function __construct()
-    {
-        $this->v7releaseTimestamp = DateTimeUtils::getUtcAt('2020-08-15 00:00:00');
-    }
+    private const CURRENT_SCHEMA_VERSION = 9;
 
     public function fix(array $data, DateTimeInterface $timestamp): array
     {
-        $data = self::assureVersionFieldExists($data, $timestamp);
+        $data = self::assureVersionFieldExists($data);
 
         switch ($data[self::SCHEMA_VERSION]) {
-            case self::SCHEMA_V6:
-                $data[Fields::URL_FURTRACK] = '';
-                $data[Fields::URL_MINIATURES] = $data['URL_SCRITCH_MINIATURE'];
-                $data[Fields::URL_PHOTOS] = $data['URL_SCRITCH_PHOTO'];
+            case 8:
+                $data[Fields::BP_LAST_CHECK] = 'unknown';
+                $data[Fields::URL_PRICES] = [$data[Fields::URL_PRICES]];
+                $data[Fields::URL_COMMISSIONS] = [$data['URL_CST']];
         }
 
         return $data;
     }
 
-    private function assureVersionFieldExists(array $data, DateTimeInterface $timestamp): array
+    private function assureVersionFieldExists(array $data): array
     {
-        if ($timestamp < $this->v7releaseTimestamp) {
-            $data[self::SCHEMA_VERSION] = self::SCHEMA_V6;
-        } else {
-            $data[self::SCHEMA_VERSION] = self::SCHEMA_V7;
+        if (!array_key_exists(self::SCHEMA_VERSION, $data)) {
+            $data[self::SCHEMA_VERSION] = 8;
         }
+
+        return $data;
+    }
+
+    public static function appendSchemaVersion(array $data): array
+    {
+        $data[self::SCHEMA_VERSION] = self::CURRENT_SCHEMA_VERSION;
 
         return $data;
     }

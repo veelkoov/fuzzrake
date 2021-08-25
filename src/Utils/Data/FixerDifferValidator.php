@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields;
+use App\DataDefinitions\FieldsList;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Field;
-use App\Utils\Artisan\Fields;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 
@@ -29,23 +30,24 @@ class FixerDifferValidator
         $this->differ = new Differ($this->printer);
     }
 
-    public function perform(ArtisanFixWip $artisan, int $flags = 0, Artisan $imported = null): void
+    public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null, FieldsList $skipDiffFor = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
-        $anyDifference = $this->hasAnyDifference($artisan);
+        $anyDifference = $artisan->differs();
+        $skipDiffFor ??= Fields::none();
 
         foreach (Fields::persisted() as $field) {
             $this->printer->setCurrentContext($artisan);
 
             if ($flags & self::FIX) {
-                $this->fixer->fix($artisan->getFixed(), $field);
+                $this->fixer->fix($artisan->getChanged(), $field);
             }
 
-            if ($flags & self::SHOW_DIFF) {
-                $this->differ->showDiff($field, $artisan->getOriginal(), $artisan->getFixed(), $imported);
+            if ($flags & self::SHOW_DIFF && !$skipDiffFor->has($field)) {
+                $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged(), $imported);
             }
 
-            $isValid = $this->validator->isValid($artisan, $field);
+            $isValid = !$field->isValidated() || $this->validator->isValid($artisan, $field);
             $resetAndShowFixCommand = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$isValid;
 
             if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
@@ -55,26 +57,26 @@ class FixerDifferValidator
             }
 
             if ($resetAndShowFixCommand) {
-                $artisan->getFixed()->set($field, $artisan->getOriginal()->get($field));
+                $artisan->getChanged()->set($field, $artisan->getSubject()->get($field));
             }
         }
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanFixWip $artisan, ?Artisan $imported, $useSetForFixCmd): void
+    private function printFixCommandOptionally(Field $field, ArtisanChanges $artisan, ?Artisan $imported, $useSetForFixCmd): void
     {
         if (!$this->hideFixCommandFor($field)) {
-            $original = $imported ?? $artisan->getOriginal();
+            $original = $imported ?? $artisan->getSubject();
             $originalVal = StrUtils::strSafeForCli($original->get($field));
             if (!$this->validator->isValid($artisan, $field)) {
                 $originalVal = Printer::formatInvalid($originalVal);
             }
 
-            $proposedVal = StrUtils::strSafeForCli($artisan->getFixed()->get($field)) ?: 'NEW_VALUE';
+            $proposedVal = StrUtils::strSafeForCli($artisan->getChanged()->get($field)) ?: 'NEW_VALUE';
 
             if ($useSetForFixCmd) {
-                $fixCmd = Manager::CMD_SET." {$field->name()} |{$proposedVal}|";
+                $fixCmd = Manager::CMD_SET." {$field->name()} |$proposedVal|";
             } else {
-                $fixCmd = Manager::CMD_REPLACE." {$field->name()} |{$originalVal}| |{$proposedVal}|";
+                $fixCmd = Manager::CMD_REPLACE." {$field->name()} |$originalVal| |$proposedVal|";
             }
 
             $this->printer->writeln(Printer::formatFix("    $fixCmd"));
@@ -91,25 +93,14 @@ class FixerDifferValidator
         ]);
     }
 
-    private function getArtisanFixWip(Artisan | ArtisanFixWip $artisan): ArtisanFixWip
+    private function getArtisanFixWip(Artisan | ArtisanChanges $artisan): ArtisanChanges
     {
         if ($artisan instanceof Artisan) {
-            $artisan = new ArtisanFixWip($artisan);
-        } elseif (!($artisan instanceof ArtisanFixWip)) {
+            $artisan = new ArtisanChanges($artisan);
+        } elseif (!($artisan instanceof ArtisanChanges)) {
             throw new InvalidArgumentException();
         }
 
         return $artisan;
-    }
-
-    private function hasAnyDifference(ArtisanFixWip $artisan): bool
-    {
-        foreach (Fields::persisted() as $field) {
-            if ($artisan->getOriginal()->get($field) != $artisan->getFixed()->get($field)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

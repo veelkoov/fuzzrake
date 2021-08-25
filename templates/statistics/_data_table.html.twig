@@ -1,27 +1,25 @@
-<div class="container">
-    <table class="table table-sm">
-        <thead>
+<table class="table table-sm">
+    <thead>
         <tr>
             <th>{{ name }}</th>
             <th># of makers</th>
         </tr>
-        </thead>
-        <tbody>
+    </thead>
+    <tbody>
         {% for a, b in data %}
             {% set count = a|split(',')|length %}
             {% set show_merged = count > 1 and merge_row_percents|default(false) %}
             <tr>
                 <td>{{ a }}</td>
                 <td>
-                    {{ b }} (
+                    {{ b }} {% if total %}(
                     {{- (b / total * 100)|number_format("2") }}%
                     {%- if show_merged %}
                         &times; {{ count }} = {{ (count * b / total * 100)|number_format("2") }}%
                     {%- endif -%}
-                    )
+                    ){% endif %}
                 </td>
             </tr>
         {% endfor %}
-        </tbody>
-    </table>
-</div>
+    </tbody>
+</table>

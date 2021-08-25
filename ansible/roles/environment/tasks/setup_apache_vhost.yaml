@@ -1,0 +1,7 @@
+---
+- name: update Apache vhost configuration
+  template:
+    src: "vhost.j2.conf"
+    dest: "/etc/httpd/conf.d/{{ server_name }}.conf"
+  notify:
+    - restart Apache

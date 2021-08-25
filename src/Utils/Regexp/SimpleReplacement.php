@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Utils\Regexp;
 
-use TRegx\CleanRegex\PatternInterface;
+use TRegx\CleanRegex\Pattern;
 
 class SimpleReplacement implements ReplacementInterface
 {
-    private PatternInterface $pattern;
+    private Pattern $pattern;
 
     public function __construct(
         string $pattern,

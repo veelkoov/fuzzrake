@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>getfursu.it - {% block title %}list of fursuit makers. Find your maker!{% endblock %}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    {% block add_meta %}{% endblock %}
 
     {% if noindex|default(false) %}
         <meta name="robots" content="noindex" />
@@ -30,7 +31,7 @@
 
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-    {% if not disableTracking ?? false and google_analytics_id %}
+    {% if not disable_tracking ?? false and google_analytics_id %}
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -44,39 +45,23 @@
         </script>
     {% endif %}
 </head>
-<body>
+
+<body class="{% block body_class %}{% endblock %}">
+
+{% include '_menu.html.twig' %}
+
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span> <span aria-hidden="true">Menu</span>
-        </button>
-
-        {% set page = app.request.attributes.get('_route') %}
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                {% include '_menu.html.twig' %}
-            </ul>
-        </div>
-        <ul class="navbar-nav">
-            {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">🥌</span>️ Donate' } %}
-        </ul>
-    </nav>
-
     {% block body %}{% endblock %}
 
     <hr class="my-5" />
 
     {% include '_legal.html.twig' %}
 </div>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
         crossorigin="anonymous"></script>
 {% block javascripts %}
     {{ encore_entry_script_tags('general') }}

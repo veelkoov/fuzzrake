@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Utils\Artisan\Field;
+use App\DataDefinitions\Field;
 
 interface FieldReadInterface
 {

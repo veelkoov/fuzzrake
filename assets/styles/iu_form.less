@@ -1,46 +1,59 @@
-.form-group {
-  label {
-    font-weight: bold;
-  }
+label {
+  font-weight: bold;
+}
 
-  label.form-check-label {
-    font-weight: normal;
-  }
+label.form-check-label {
+  font-weight: normal;
 }
 
 legend {
   font-weight: bold;
 }
 
-.hint {
-  font-size: 80%;
-  font-weight: 400;
-
-  em {
-    margin: 0 0.3ex;
-    background-color: #efefef;
-    color: teal;
-  }
-}
-
-label.required:before, legend.required:before, .mandatory:before {
-  content: '(mandatory)';
-  color: #212529;
-  background-color: #ffc107;
-  border-radius: .25rem;
-  display: inline-block;
-  padding: 0.05ex 0.2ex;
-  font-weight: bold;
-  margin-right: 0.75ex;
-  font-size: 80%;
+p.form-text.help-text em {
+  margin: 0 0.3ex;
+  background-color: #efefef;
+  color: teal;
 }
 
 label.required.form-check-label:before {
   display: none;
 }
 
-.passcode-confidentiality-warning {
-  color: #f00;
-  text-transform: uppercase;
-  font-weight: bold;
+.pros-cons-contact-options {
+  .fa-check-square {
+    color: #28a745 !important;
+  }
+
+  .fa-times-circle {
+    color: #dc3545 !important;
+  }
+}
+
+div.mandatory, div.important, div.recommended, div.optional {
+  border-width: 5px 1px 1px 5px;
+  border-style: solid;
+  border-radius: .25rem;
+  padding: .5ex;
+  margin-bottom: 1rem;
+
+  > div, > fieldset { /* "Fixing" Symfony's Bootstrap 5 style */
+    margin-bottom: 0 !important;
+  }
+
+  > fieldset > legend { /* "Fixing" Symfony's Bootstrap 5 style */
+    padding-top: 0;
+  }
+}
+
+div.mandatory {
+  border-color: rgb(220, 53, 69, .75);
+}
+
+div.important {
+  border-color: rgba(255, 193, 7, .75);
+}
+
+div.recommended {
+  border-color: rgba(25, 135, 84, .75);
 }

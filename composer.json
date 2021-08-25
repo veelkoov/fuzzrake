@@ -8,35 +8,38 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "symfony/flex": "*",
-        "symfony/framework-bundle": "*",
-        "sensio/framework-extra-bundle": "*",
-        "symfony/monolog-bundle": "^3.6",
-        "symfony/apache-pack": "^1.0",
-        "symfony/console": "*",
+        "composer/package-versions-deprecated": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
-        "composer/package-versions-deprecated": "*",
-        "symfony/proxy-manager-bridge": "*",
         "google/recaptcha": "^1.2",
-        "rawr/t-regx": "^v0.10.1",
-        "symfony/webpack-encore-bundle": "^1.11",
-        "symfony/twig-bundle": "*",
+        "phpoffice/phpspreadsheet": "^1.17",
+        "rawr/t-regx": "v0.13.0",
+        "sensio/framework-extra-bundle": "*",
+        "symfony/apache-pack": "^1.0",
+        "symfony/console": "*",
         "symfony/dotenv": "*",
+        "symfony/flex": "*",
         "symfony/form": "*",
-        "symfony/validator": "*"
+        "symfony/framework-bundle": "*",
+        "symfony/monolog-bundle": "^3.6",
+        "symfony/proxy-manager-bridge": "*",
+        "symfony/runtime": "5.3.*",
+        "symfony/twig-bundle": "*",
+        "symfony/validator": "*",
+        "symfony/webpack-encore-bundle": "^1.11",
+        "symfony/yaml": "*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "*",
         "friendsofphp/php-cs-fixer": "*",
         "rector/rector": "*",
-        "symfony/phpunit-bridge": "*",
+        "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
-        "symfony/stopwatch": "*",
-        "symfony/web-profiler-bundle": "*",
-        "symfony/var-dumper": "*",
+        "symfony/maker-bundle": "*",
         "symfony/panther": "*",
-        "symfony/css-selector": "*"
+        "symfony/phpunit-bridge": "*",
+        "symfony/stopwatch": "*",
+        "symfony/var-dumper": "*",
+        "symfony/web-profiler-bundle": "*"
     },
     "config": {
         "preferred-install": {
@@ -51,7 +54,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/",
+            "PHPUnit\\": "vendor/bin/.phpunit/phpunit/src/"
         }
     },
     "replace": {
@@ -81,7 +85,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.3.*"
         }
     }
 }

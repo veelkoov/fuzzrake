@@ -9,13 +9,12 @@ use App\Form\EventType;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/events')]
-class EventsController extends AbstractController
+class EventsController extends AbstractFormController
 {
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_EVENT_NEW, methods: ['GET', 'POST'])]
@@ -32,7 +31,7 @@ class EventsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (null !== $event->getId() && $form->get(EventType::BTN_DELETE)->isClicked()) {
+            if (null !== $event->getId() && self::clicked($form, EventType::BTN_DELETE)) {
                 $this->getDoctrine()->getManager()->remove($event);
             } else {
                 $this->getDoctrine()->getManager()->persist($event);
@@ -43,9 +42,9 @@ class EventsController extends AbstractController
             return $this->redirectToRoute(RouteName::EVENTS);
         }
 
-        return $this->render('mx/events/edit.html.twig', [
+        return $this->renderForm('mx/events/edit.html.twig', [
             'event'   => $event,
-            'form'    => $form->createView(),
+            'form'    => $form,
         ]);
     }
 }

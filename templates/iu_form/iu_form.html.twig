@@ -19,7 +19,7 @@
     {{ form_errors(form) }}
 
     {% if submitted %}
-        <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#iu_form_instructions_container">Toggle instructions</button>
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#iu_form_instructions_container">Toggle instructions</button>
     {% endif %}
 
     <div id="iu_form_instructions_container" {% if submitted %}class="collapse"{% endif %}>
@@ -105,456 +105,418 @@
         <div class="card-body">
             <h5 class="card-title text-danger">Privacy</h5>
             <p class="card-text">
-                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge badge-warning">PRIVATE</span>
+                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge bg-warning text-dark">PRIVATE</span>
             </p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Information: required, important, recommended, optional</h5>
+            <div class="card-text">
+                <div class="mandatory d-inline-block">
+                    Fields marked like this must be filled in.
+                </div>
+                <div class="important d-inline-block">
+                    Avoid skipping fields marked like this.
+                </div>
+                <div class="recommended d-inline-block">
+                    It's recommended to fill fields marked this way.
+                </div>
+                <div class="d-inline-block">
+                    Other fields are 100% optional.
+                </div>
+            </div>
         </div>
     </div>
 
     </div> <!-- id="iu_form_instructions_container" -->
 
     {# Hide the form initially, so in case automatic captcha fails from the start, the user won't waste time on the form they won't be able to submit #}
-    <div id="iu_form_container" class="d-none">
+    <div id="iu_form_container" {% if not isTestEnv() %}class="d-none"{% endif %}> {# FIXME: https://github.com/veelkoov/fuzzrake/issues/69 #}
 
     {{ form_start(form) }}
 
     <h2 class="mt-4">General info</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.name) }}
-                {{ form_widget(form.name) }}
+        <div class="col-lg-6">
+            <div class="mandatory">
+                {{ form_row(form.name) }}
             </div>
-            <div class="form-group">
-                {{ form_label(form.formerly) }}
-                <p class="hint">If your studio changed its name in the past, what was it? You can keep any old names here. Please: each name on a separate line.</p>
-                {{ form_widget(form.formerly) }}
+            <div class="important">
+                {{ form_row(form.formerly) }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.since) }}
-                <p class="hint">If your studio has more than one maker, please provide information on the experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)</p>
-                {{ form_widget(form.since) }}
+        <div class="col-lg-6">
+            <div class="recommended">
+                {{ form_row(form.since) }}
             </div>
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Location of the studio</h2>
 
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                {{ form_label(form.country) }}
-                <p class="hint">Type full name or two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO 3166 code</a> (but not both).</p>
-                {{ form_widget(form.country) }}
+        <div class="col-lg-4">
+            <div class="mandatory">
+                {{ form_row(form.country) }}
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                {{ form_label(form.state) }}
-                <p class="hint">Only for the US and Canada, otherwise please leave empty.</p>
-                {{ form_widget(form.state) }}
+        <div class="col-lg-4">
+            <div class="recommended">
+                {{ form_row(form.state) }}
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                {{ form_label(form.city) }}
-                {{ form_widget(form.city) }}
+        <div class="col-lg-4">
+            <div class="recommended">
+                {{ form_row(form.city) }}
             </div>
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Payments</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.paymentPlans) }}
-                <p class="hint">Please provide a precise description. If you leave this empty, getfursu.it will treat this information as missing! (see the first example). Examples: <em>None/100% upfront</em>, <em>40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months</em>, <em>50% upfront to reserve a slot, 10% each next month</em>, <em>50% upfront for slot reservation, 100$ each next month until fully paid</em>.</p>
-                {{ form_widget(form.paymentPlans) }}
+        <div class="col-lg-6">
+            <div class="recommended">
+                {{ form_row(form.paymentPlans) }}
             </div>
-            <div class="form-group">
-                {{ form_label(form.pricesUrl) }}
-                <p class="hint">Please supply a <strong>precise</strong> link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid images, social media.</p>
-                {{ form_widget(form.pricesUrl) }}
-            </div>
+            {{ form_row(form.paymentMethods) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.paymentMethods) }}
-                <p class="hint">Examples: <em>Bank transfers</em>, <em>Debit cards</em>, on-line payments (please mention the services names, e.g. <em>PayPal</em>), <em>Cash</em>. Each in a separate line.</p>
-                {{ form_widget(form.paymentMethods) }}
+        <div class="col-lg-6">
+            <div class="recommended">
+                {{ form_row(form.pricesUrl) }}
             </div>
-            <div class="form-group">
-                {{ form_label(form.currenciesAccepted) }}
-                <p class="hint">Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please.</p>
-                {{ form_widget(form.currenciesAccepted) }}
-            </div>
+            {{ form_row(form.currenciesAccepted) }}
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Production models</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.productionModels) }}
-                {{ form_widget(form.productionModels) }}
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.productionModels) }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.productionModelsComment) }}
-                <p class="hint">Example: <em>I usually work with pre-mades, but I'm willing to do an interesting commission</em>.</p>
-                {{ form_widget(form.productionModelsComment) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.productionModelsComment) }}
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Styles</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.styles) }}
-                {{ form_widget(form.styles) }}
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.styles) }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.otherStyles) }}
-                <p class="hint">You can check what other makers listed <a href="{{ path('statistics', { _fragment: 'other_styles' }) }}" target="_blank">here</a>. Please: one item = one line.</p>
-                {{ form_widget(form.otherStyles) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.stylesComment) }}
-                <p class="hint">Example: <em>Realistic are my speciality</em>.</p>
-                {{ form_widget(form.stylesComment) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.otherStyles) }}
+            {{ form_row(form.stylesComment) }}
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Order types</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.orderTypes) }}
-                {{ form_widget(form.orderTypes) }}
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.orderTypes) }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.otherOrderTypes) }}
-                <p class="hint">You can check what other makers listed <a href="{{ path('statistics', { _fragment: 'other_order_types' }) }}" target="_blank">here</a>. Please: one item = one line.</p>
-                {{ form_widget(form.otherOrderTypes) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.orderTypesComment) }}
-                <p class="hint">Example: <em>Especially pumped to do digitigrades because I have too much foam stacked, and I want to get rid of it.</em></p>
-                {{ form_widget(form.orderTypesComment) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.otherOrderTypes) }}
+            {{ form_row(form.orderTypesComment) }}
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Features</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.features) }}
-                {{ form_widget(form.features) }}
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.features) }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.otherFeatures) }}
-                <p class="hint">You can check what other makers listed <a href="{{ path('statistics', { _fragment: 'other_features' }) }}" target="_blank">here</a>. Please: one item = one line.</p>
-                {{ form_widget(form.otherFeatures) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.featuresComment) }}
-                <p class="hint">Example: <em>Prefer not doing follow-me eyes, because I don't like being observed while in the workshop.</em></p>
-                {{ form_widget(form.featuresComment) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.otherFeatures) }}
+            {{ form_row(form.featuresComment) }}
         </div>
     </div>
 
-    <hr />
+    <hr class="mt-4" />
     <h2>Species</h2>
 
-    <p></p>
-
-    <div class="form-group">
-        {{ form_label(form.speciesDoes) }}
-        <p class="hint">Examples: <em>Most species</em> (+ more specific in the "will not do" field), but you may list only some groups here, e.g. <em>Scalies</em>, <em>Fantasy creatures</em>, or even particular species, e.g. <em>Lions</em>, <em>Tigers</em>. Just keep in mind that if you specify a wider group (<em>Most species</em> or <em>Felines</em>), then listing particular species is redundant (e.g. <em>Lions</em>). Don't put any comments here, e.g. <em>willing to try XYZ</em> or <em>most experience with XYZ</em> should be placed in the separate comments field instead. Please: one specie (group) = one line.</p>
-        {{ form_widget(form.speciesDoes) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.speciesDoesnt) }}
-        <p class="hint">Please: one specie (group) = one line.</p>
-        {{ form_widget(form.speciesDoesnt) }}
-    </div>
-    <div class="form-group">
-        {{ form_label(form.speciesComment) }}
-        <p class="hint">Examples: <em>Most experienced in canines</em>, <em>I especially enjoy dragons (and scalies in general)</em>, <em>Willing to try anything</em>, <em>Just ask!</em></p>
-        {{ form_widget(form.speciesComment) }}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="important">
+                {{ form_row(form.speciesDoes) }}
+            </div>
+            {{ form_row(form.speciesDoesnt) }}
+            {{ form_row(form.speciesComment) }}
+        </div>
     </div>
 
+    <hr class="mt-4" />
     <h2>Links to websites</h2>
 
-    <ol>
-        <li><span class="mandatory"></span>You must provide at least one link to a website/social media.</li>
-        <li>Instant messaging (i.a. Telegram, Messenger), e-mail addresses, and other direct contact measures are not allowed anywhere here. getfursu.it can only link to websites, on which you can post such information.</li>
-        <li>Work-in-progress websites are not accepted (keep in mind, that any portfolio is more important than an empty website; if you don't have one, start with Fur Affinity, or similar).</li>
-        <li>Adding links to empty accounts/websites will only make your visitors frustrated. Consider adding links when content will already be there.</li>
-        <li>All links put here must not require the visitor to click anything to view your content (scrolling is OK). E.g. if you keep FAQ on your website, then you should link the precise link to the FAQ, instead of the one to the homepage.</li>
-    </ol>
+    <div class="mandatory">
+        <ol>
+            <li>You must provide at least one link to a website/social media.</li>
+            <li>Instant messaging (i.a. Telegram, Messenger), e-mail addresses, and other direct contact measures are not allowed anywhere here. getfursu.it can only link to websites, on which you can post such information.</li>
+            <li>Work-in-progress websites are not accepted (keep in mind, that any portfolio is more important than an empty website; if you don't have one, start with Fur Affinity, or similar).</li>
+            <li>Adding links to empty accounts/websites will only make your visitors frustrated. Consider adding links when content will already be there.</li>
+            <li>All links put here must not require the visitor to click anything to view your content (scrolling is OK). E.g. if you keep FAQ on your website, then you should link the precise link to the FAQ, instead of the one to the homepage.</li>
+        </ol>
+    </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.fursuitReviewUrl) }}
-                <p class="hint"><a href="http://fursuitreview.com/makers" target="_blank">Check here</a>. This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!</p>
-                {{ form_widget(form.fursuitReviewUrl) }}
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.fursuitReviewUrl) }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.websiteUrl) }}
-                {{ form_widget(form.websiteUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.websiteUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.faqUrl) }}
-                {{ form_widget(form.faqUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.faqUrl) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.queueUrl) }}
-                {{ form_widget(form.queueUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.queueUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.furAffinityUrl) }}
-                {{ form_widget(form.furAffinityUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.furAffinityUrl) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.deviantArtUrl) }}
-                {{ form_widget(form.deviantArtUrl) }}
-            </div>
-         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.twitterUrl) }}
-                {{ form_widget(form.twitterUrl) }}
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.facebookUrl) }}
-                {{ form_widget(form.facebookUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.deviantArtUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.tumblrUrl) }}
-                {{ form_widget(form.tumblrUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.twitterUrl) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.instagramUrl) }}
-                {{ form_widget(form.instagramUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.facebookUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.youtubeUrl) }}
-                {{ form_widget(form.youtubeUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.tumblrUrl) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.etsyUrl) }}
-                {{ form_widget(form.etsyUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.instagramUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.theDealersDenUrl) }}
-                {{ form_widget(form.theDealersDenUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.youtubeUrl) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.furryAminoUrl) }}
-                {{ form_widget(form.furryAminoUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.etsyUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.otherShopUrl) }}
-                {{ form_widget(form.otherShopUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.theDealersDenUrl) }}
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.linklistUrl) }}
-                {{ form_widget(form.linklistUrl) }}
-            </div>
+        <div class="col-lg-6">
+            {{ form_row(form.furryAminoUrl) }}
         </div>
     </div>
 
-    <div class="form-group">
-        {{ form_label(form.otherUrls) }}
-        <p class="hint">Please note that they will <strong>not</strong> be visible on the website, but if I see a significant number of links to one portal, I might add support for it in the future. Please: one address = one line.</p>
-        {{ form_widget(form.otherUrls) }}
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.otherShopUrl) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.linklistUrl) }}
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-12">
+            {{ form_row(form.otherUrls) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
     <h2>Automatic commissions status tracking (open/closed)</h2>
-    <p>I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. You can <a href="{{ path('tracking') }}" target="_blank">read here</a> how the tracking works. I'll be happy to help if you need assistance.</p>
 
-    <div class="form-group">
-        {{ form_label(form.cstUrl) }}
-        <p class="hint">Note: Putting <em>open</em> here will not work, sorry. Please read about tracking by clicking the link above.</p>
-        {{ form_widget(form.cstUrl) }}
-    </div>
+    <div class="recommended">
+        <p class="small">I highly encourage you to take advantage of this feature, as according to the stats I get from search engines, the information if a maker is open or not is one of the most important ones. <a href="{{ path('tracking') }}" target="_blank">You can read here about how the tracking works.</a> I'll be happy to help if you need assistance.</p>
 
-    <h2>Scritch &amp; Furtrack - photos of your creations</h2>
-    <p class="small">Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners. The whole community can take part in tagging ("I know this fursuiter, here goes a tag!"). Makers keep their pages with links to their websites &amp; social media and a list of the photos of their creations. Fursuiters have easy access to all their photos. It's far better than tagging on Facebook or Twitter or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.scritchUrl) }}
-                <p class="hint"><strong>You may already have one created for you.</strong> Go claim your page already if it's there.</p>
-                {{ form_widget(form.scritchUrl) }}
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.furtrackUrl) }}
-                <p class="hint"><strong>Someone may have already created one for you.</strong> Go there check for photos tagged with your studio's name already.</p>
-                {{ form_widget(form.furtrackUrl) }}
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.photoUrls) }}
-                <p class="hint">
-                    You can use photos hosted on either Scritch or Furtrack or both (mixed). To copy a link from <strong>Scritch</strong>, open the photo and click "Get link" on the upper-right of the pop-up. You should end up with something similar to this: <em>https://scritch.es/pictures/25ae6f07-9855-445f-9c1d-a8c78166b81b</em>. To copy a link from <strong>Furtrack</strong>, open the photo and click the link on the upper-right corner of the pop-up. You should end up with something similar to this: <em>https://www.furtrack.com/p/49767</em>. Kindly place each photo link in a single line.
-                </p>
-                {{ form_widget(form.photoUrls) }}
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form_label(form.photosCopyright) }}
-                <p class="hint">Fact of the photos being published on Scritch or Furtrack <strong>doesn't necessarily mean the photographers agreed to repost/reuse it elsewhere</strong>, including getfursu.it. Please make sure you are allowed to link those photos here.</p>
-                {{ form_widget(form.photosCopyright) }}
+        <div class="row">
+            <div class="col-lg-12">
+            {{ form_row(form.commissionsUrl) }}
             </div>
         </div>
     </div>
 
+    <hr class="mt-4" />
+    <h2>Photos of your creations - Scritch &amp; Furtrack</h2>
+
+    <div class="recommended">
+        <p class="small">Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners. The whole community can take part in tagging ("I know this fursuiter, here goes a tag!"). Makers keep their pages with links to their websites &amp; social media and a list of the photos of their creations. Fursuiters have easy access to all their photos. It's far better than tagging on Facebook or Twitter or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
+
+        <div class="row">
+            <div class="col-lg-6">
+                {{ form_row(form.scritchUrl) }}
+            </div>
+            <div class="col-lg-6">
+                {{ form_row(form.furtrackUrl) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                {{ form_row(form.photoUrls) }}
+            </div>
+            <div class="col-lg-6">
+                {{ form_row(form.photosCopyright) }}
+            </div>
+        </div>
+    </div>
+
+    <hr class="mt-4" />
     <h2>Other/remarks/additional information</h2>
 
-    <div class="form-group">
-        {{ form_label(form.languages) }}
-        <p class="hint">Each one in a separate line, please. Examples: <em>English</em>, <em>English (limited)</em>.</p>
-        {{ form_widget(form.languages) }}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="recommended">
+                {{ form_row(form.languages) }}
+            </div>
+
+            <div class="mandatory">
+                {{ form_row(form.makerId) }}
+            </div>
+
+            {{ form_row(form.intro) }}
+
+            {{ form_row(form.notes) }}
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form_label(form.makerId) }}
-        <p class="hint">This will be your <strong>Maker ID</strong>, a short identification thingy. Please <a href="{{ path('maker_ids') }}" target="_blank">read about it here</a>. 7 characters, uppercase letters and/or digits. Here are some possible examples: <em>SILVENA</em>, <em>2STFURS</em>, <em>DIRECRTS</em>, <em>DHCACTI</em>, <em>NUKECTS</em>, <em>GOFURIT</em>, <em>ALPHADG</em>. You might use abbreviations, state or country codes, etc.</p>
-        {{ form_widget(form.makerId) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(form.intro) }}
-        <p class="hint">Feel free to put here any "welcome" or "who are we/am I" or "what makes me/us special" text that'll be displayed on top of your details pop-up. Max 500 characters!</p>
-        {{ form_widget(form.intro) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(form.notes) }}
-        <p class="small"><strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments for getfursu.it maintainer or some additional information which might be added to the website in the future.</p>
-        {{ form_widget(form.notes) }}
-    </div>
-
+    <hr class="mt-4" />
     <h2>Contact, updates &amp; feedback</h2>
 
-    <p><strong>Please consider:</strong> getfursu.it is under development. Slow, but it is. This means two things:</p>
-    <ol>
-        <li>In the future, your studio information here will most probably become incomplete or outdated. This happens when new data gets introduced here. For example, when getfursu.it started, there wasn't info about production models, species, payment plans. Those who didn't make updates since then have incomplete info now.</li>
-        <li>I value makers' feedback because it lets me make changes and improvements properly (you know the business far better than I do). I'd love to get good advice or opinion from you.</li>
-    </ol>
+    <table class="table table-bordered table-condensed pros-cons-contact-options">
+        <tr>
+            <th class="text-end">Options available:</th>
+            <th>No&nbsp;contact allowed</th>
+            <th>Corrections</th>
+            <th>Announcements</th>
+            <th>Feedback</th>
+        </tr>
+        <tr>
+            <td>
+                <i class="fas fa-check-square"></i>
+                Get contacted when there's an issue with your submission (e.g. wrong password).<br />
+                <i class="fas fa-times-circle"></i>
+                Any serious issue makes you submission rejected without a notice.
+            </td>
+            <td><i class="fas fa-times-circle"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+        </tr>
+        <tr>
+            <td>
+                <i class="fas fa-check-square"></i>
+                Get notified about new features available to better advertise your studio.<br />
+                <i class="fas fa-times-circle"></i>
+                You may miss important changes and new features, e.g. filters. That may push your studio into "Unknown" classification, skipped/rated lower by some users.
+            </td>
+            <td><i class="fas fa-times-circle"></i></td>
+            <td><i class="fas fa-times-circle"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+        </tr>
+        <tr>
+            <td>
+                <i class="fas fa-check-square"></i>
+                You may occasionally receive a survey to best understand your needs as a maker and make this website suit you better. You are <strong>not</strong> obliged in any way to respond, nor provide all and complete answers.<br />
+                <i class="fas fa-times-circle"></i>
+                Your chances to impact how this website works will be limited.
+            </td>
+            <td><i class="fas fa-times-circle"></i></td>
+            <td><i class="fas fa-times-circle"></i></td>
+            <td><i class="fas fa-times-circle"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+        </tr>
+        <tr>
+            <td>
+                <i class="fas fa-check-square"></i>
+                Opt-out anytime, by simply replying, or sending an update here.<br />
+                <i class="fas fa-check-square"></i>
+                Your contact info will never be shared with anyone.<br />
+                <i class="fas fa-check-square"></i>
+                No 3rd party advertising. The only advertising which <strong>may</strong> appear in the future, would be banners on the website.<br />
+            </td>
+            <td></td>
+            <td><i class="fas fa-check-square"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+            <td><i class="fas fa-check-square"></i></td>
+        </tr>
+    </table>
 
-    <p class="small">Alternatives for Telegram users: If you want to receive ANNOUNCEMENTS through Telegram, join this channel: <a href="https://t.me/getfursuit" target="_blank">https://t.me/getfursuit</a> and select CORRECTIONS below. If you want to provide FEEDBACK through Telegram, consider joining this group instead: <a href="https://t.me/getfursuit_chat" target="_blank">https://t.me/getfursuit_chat</a> and selecting CORRECTIONS below. Want to be contacted individually through Telegram? Just select the proper option below without joining anywhere.</p>
-
-    <div class="form-group">
-        {{ form_label(form.contactAllowed) }}
-        <ol class="hint">
-            <li>I explain "WHY" above</li>
-            <li>I don't flood</li>
-            <li>You can opt-out anytime</li>
-            <li>You are not obliged, in any way, to provide answer/respond/react</li>
-            <li>Your contact info will never be shared</li>
-        </ol>
-        {{ form_widget(form.contactAllowed) }}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="mandatory">
+                {{ form_row(form.contactAllowed) }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="contact_info" class="mandatory">
+                {{ form_row(form.contactInfoObfuscated) }}
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form_label(form.contactInfoObfuscated) }}
-        <p class="hint"><span class="badge badge-warning">PRIVATE</span> If you selected <em>NO</em> above, simply put <em>&mdash;</em> here. Please provide <em>E-MAIL: e-mail@address</em> (<strong>preferred</strong>) or <em>TELEGRAM: @username</em> or <em>TWITTER: @username</em> (or all of them, when possible). No other possibilities in this case, sorry! If you are updating your data and you see asterisks here, but the address looks OK, and you don't want to change it - just leave it as it is. <strong>Private</strong>: Your address will never be shared by the maintainer with anyone without your permission.</p>
-        {{ form_widget(form.contactInfoObfuscated) }}
-    </div>
-
-    <div class="form-group">
-        {{ form_label(form.passcode) }}
-        <p class="hint"><span class="badge badge-warning">PRIVATE</span> Please provide some kind of passcode/password. Please use at least 6 characters. <span class="passcode-confidentiality-warning">Important: do not use any passcode you use anywhere else!</span> Write it down, and provide it whenever you send updates in the future. If you lost the passcode, please put <em>I forgot</em>, or something like that. Whenever you send updates with invalid or missing passcode, I will reach up to you, unless you select <em>NO</em> below, or had it selected in a previous submission (in that case you need to <a href="{{ path('info', { '_fragment': 'contact' }) }}" target="_blank">contact me first</a>). This is needed to make sure it was you, who posted the updates. There are reasons it is done this particular way, and the explanation is too long for this form.  <span class="passcode-confidentiality-warning">Important: This passcode can be seen by the maintainer in the clear text!</span> <strong>Private</strong>: this is provided for maintainer only, obviously.</p>
-        {{ form_widget(form.passcode) }}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="mandatory">
+                {{ form_row(form.password) }}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_widget(form.changePassword) }}
+                </div>
+                <div class="card-body d-none" id="forgotten_password_instructions">
+                    <ol class="card-text">
+                        <li>Please choose a <strong>new</strong> password you want to use and type it in the password field.</li>
+                        <li>Submit the form.</li>
+                        <li>Follow the instructions on the next page.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{ form_rest(form) }}
+
     <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
-    <div class="text-right">
+    <div class="text-end mt-2">
         <button class="btn btn-primary btn-lg g-recaptcha"
                 data-sitekey="{{ google_recaptcha_site_key }}"
                 data-callback="iuFormRecaptchaValidationCallback"

@@ -51,7 +51,7 @@ class WebpageSnapshotCache
 
     private function getBaseDir(string $url): string
     {
-        $hostName = pattern('^www\.')->remove(UrlUtils::hostFromUrl($url))->first();
+        $hostName = pattern('^www\.')->prune(UrlUtils::hostFromUrl($url));
 
         $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
         if (str_starts_with($urlFsSafe, $hostName)) {

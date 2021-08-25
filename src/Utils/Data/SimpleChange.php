@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\Utils\Artisan\Field;
+use App\DataDefinitions\Field;
+use App\Utils\StrUtils;
+use DateTimeInterface;
 
 class SimpleChange implements ChangeInterface
 {
     public function __construct(
         private Field $field,
-        private string $old,
-        private string $new,
-        private ?string $imported,
+        private DateTimeInterface | string | bool | null $old,
+        private DateTimeInterface | string | bool | null $new,
     ) {
     }
 
     public function getDescription(): string
     {
         $name = $this->field->name();
-        $old = $this->old;
-        $new = $this->new;
+        $old = StrUtils::asStr($this->old);
+        $new = StrUtils::asStr($this->new);
 
         if ($old === $new) {
             return $name.': '.'no changes';

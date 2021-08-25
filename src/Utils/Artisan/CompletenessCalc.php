@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\DataDefinitions\Fields as F;
 use App\Entity\Artisan;
-use App\Utils\Artisan\Fields as F;
 use App\Utils\Traits\UtilityClass;
 
 final class CompletenessCalc
@@ -54,7 +54,7 @@ final class CompletenessCalc
             ->anyNotEmpty(self::TRIVIAL, F::URL_QUEUE)
             ->anyNotEmpty(self::MINOR, F::LANGUAGES)
             ->anyNotEmpty(self::IMPORTANT, F::URL_MINIATURES)
-            ->anyNotNull(self::IMPORTANT, F::COMMISSIONS_STATUS)
+            ->anyNotEmpty(self::IMPORTANT, F::OPEN_FOR, F::CLOSED_FOR)
             ->result();
     }
 }

@@ -1,0 +1,10 @@
+[Unit]
+Description=txkillswitch
+
+[Service]
+Type=simple
+ExecStart=/opt/txkillswitch/target/release/txkillswitch -i {{ ansible_default_ipv4.interface }} -l {{ txkillswitch_max_rate_bytes_per_second }} -c 5 -r 60 -e 12  --tx --rx
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

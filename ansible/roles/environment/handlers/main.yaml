@@ -1,0 +1,3 @@
+---
+- name: restart Apache # grep-restart-apache-handler TODO: deduplicate?
+  shell: apachectl configtest && apachectl graceful

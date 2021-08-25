@@ -4,110 +4,72 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
-use App\Utils\Regexp\Factory;
-use App\Utils\Regexp\TrackingRegexp;
-use App\Utils\Regexp\Variant;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
+use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Pattern;
 
 class CommissionsStatusParser
 {
     /**
-     * @var TrackingRegexp[]
+     * @var Pattern[]
      */
-    private array $falsePositivesRegexps;
+    private array $offerStatusPatterns;
 
-    /**
-     * @var TrackingRegexp[]
-     */
-    private array $statusRegexps;
-
-    private Variant $open;
-    private Variant $closed;
-    private Variant $any;
+    private TextPreprocessor $preprocessor;
 
     public function __construct(
-        private HtmlPreprocessor $htmlPreprocessor,
+        private Patterns $patterns,
     ) {
-        $this->open = new Variant(['STATUS' => 'OPEN']);
-        $this->closed = new Variant(['STATUS' => 'CLOSED']);
-        $this->any = new Variant(['STATUS' => '(OPEN|CLOSED)']);
-
-        $rf = new Factory(CommissionsStatusRegexps::COMMON_REPLACEMENTS);
-        $this->falsePositivesRegexps = $rf->createSet(CommissionsStatusRegexps::FALSE_POSITIVES_REGEXES, [$this->any]);
-        $this->statusRegexps = $rf->createSet(CommissionsStatusRegexps::GENERIC_REGEXES, [$this->open, $this->closed]);
-
-        // $this->debugDumpRegexps(); // DEBUG
+        $this->offerStatusPatterns = $this->patterns->getOfferStatusPatterns();
+        $this->preprocessor = new TextPreprocessor($this->patterns->getFalsePositivePatterns());
     }
 
     /**
-     * @throws TrackerException
-     */
-    public function analyseStatus(WebpageSnapshot $snapshot): AnalysisResult
-    {
-        $additionalFilter = HtmlPreprocessor::guessFilterFromUrl($snapshot->getUrl());
-        $artisanName = $snapshot->getOwnerName();
-
-        $inputTexts = array_map(fn (string $input) => $this->processInputText($artisanName, $additionalFilter, $input), $snapshot->getAllContents());
-
-        $open = $this->findMatch($inputTexts, $this->statusRegexps, $this->open);
-        $closed = $this->findMatch($inputTexts, $this->statusRegexps, $this->closed);
-
-        return new AnalysisResult($open, $closed);
-    }
-
-    /**
-     * TODO: Move into HtmlPreprocessor.
+     * @return OfferStatus[]
      *
      * @throws TrackerException
      */
-    private function processInputText(string $artisanName, string $additionalFilter, string $inputText): string
+    public function getCommissionsStatuses(WebpageSnapshot $snapshot): array
     {
-        $inputText = $this->htmlPreprocessor->clean($inputText);
-        $inputText = HtmlPreprocessor::processArtisansName($artisanName, $inputText);
-        $inputText = $this->removeFalsePositives($inputText);
-        $inputText = HtmlPreprocessor::applyFilters($inputText, $additionalFilter);
+        $additionalFilter = TextPreprocessor::guessFilterFromUrl($snapshot->getUrl());
+        $artisanName = $snapshot->getOwnerName();
 
-        return $inputText;
-    }
+        $texts = $this->preprocessAll($artisanName, $additionalFilter, $snapshot);
 
-    private function removeFalsePositives(string $inputText): string
-    {
-        foreach ($this->falsePositivesRegexps as $regexp) {
-            $inputText = $regexp->removeFrom($inputText);
+        $result = [];
+
+        foreach ($texts as $text) {
+            array_push($result, ...$this->getOfferStatusesFrom($text));
         }
 
-        return $inputText;
-    }
-
-    private function findMatch(array $testedStrings, array $regexpSet, Variant $variant): MatchInterface
-    {
-        foreach ($testedStrings as $testedString) {
-            foreach ($regexpSet as $regexp) {
-                if (($result = $regexp->matches($testedString, $variant))) {
-                    return $result;
-                }
-            }
-        }
-
-        return NullMatch::get();
+        return $result;
     }
 
     /**
-     * @noinspection PhpUnusedPrivateMethodInspection - saved for debugging
+     * @throws TrackerException
      */
-    private function debugDumpRegexps(): void
+    private function preprocessAll(string $artisanName, string $additionalFilter, WebpageSnapshot $snapshot): array
     {
-        echo "FALSE-POSITIVES =========================================\n";
-        foreach ($this->falsePositivesRegexps as $regexp) {
-            echo "{$regexp->getCompiled()}\n";
+        return array_map(fn (string $input): Text => $this->preprocessor->getText($input, $artisanName, $additionalFilter), $snapshot->getAllContents());
+    }
+
+    /**
+     * @return OfferStatus[]
+     *
+     * @throws TrackerException
+     */
+    private function getOfferStatusesFrom(Text $text): array
+    {
+        $result = [];
+
+        foreach ($this->offerStatusPatterns as $statusPattern) {
+            $statusPattern->match($text->getUnused())->forEach(function (Detail $match) use (&$result, $text): void {
+                $text->use($match->byteOffset(), $match->byteTail());
+
+                array_push($result, ...$this->patterns->matchStatusAndOfferFrom($match));
+            });
         }
-        echo "OPEN ====================================================\n";
-        foreach ($this->statusRegexps as $regexp) {
-            echo "{$regexp->getCompiled($this->open)}\n";
-        }
-        echo "CLOSED ==================================================\n";
-        foreach ($this->statusRegexps as $regexp) {
-            echo "{$regexp->getCompiled($this->closed)}\n";
-        }
+
+        return $result;
     }
 }

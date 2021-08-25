@@ -22,7 +22,7 @@ abstract class AbstractListFixer extends StringFixer
     public function fix(string $fieldName, string $subject): string
     {
         $items = StringList::split($subject, static::getSeparatorRegexp(), static::getNonsplittable());
-        $items = array_filter(array_map([$this, 'fixItem'], $items));
+        $items = array_filter(array_map(fn (string $item): string => $this->fixItem($item), $items));
 
         $subject = StringList::pack($items);
         $subject = $this->getReplacements()->do($subject);
@@ -57,7 +57,7 @@ abstract class AbstractListFixer extends StringFixer
     {
         $subject = trim($subject);
 
-        if ('http' !== substr($subject, 0, 4)) {
+        if (!str_starts_with($subject, 'http')) {
             $subject = StrUtils::ucfirst($subject);
         }
 

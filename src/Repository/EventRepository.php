@@ -55,16 +55,26 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string[] $types
+     *
      * @return Event[]
      *
      * @throws DateTimeException
      */
-    public function getRecent(): array
+    public function getRecent(array $types = []): array
     {
-        return $this->createQueryBuilder('e')
+        $query = $this->createQueryBuilder('e')
             ->where('e.timestamp >= :oldest')
             ->orderBy('e.timestamp', 'DESC')
-            ->setParameter('oldest', DateTimeUtils::getUtcAt('-31 days'))
+            ->setParameter('oldest', DateTimeUtils::getUtcAt('-31 days'));
+
+        if ([] !== $types) {
+            $query
+                ->andWhere('e.type IN (:types)')
+                ->setParameter('types', $types);
+        }
+
+        return $query
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();

@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="//cdn.datatables.net/v/bs4/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/datatables.min.js"></script>
     {{ encore_entry_script_tags('main') }}
     <script>
         {% include 'main/parts/data.js.twig' %}
@@ -11,47 +11,49 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/v/bs4/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/datatables.min.css" />
     {{ encore_entry_link_tags('main') }}
 {% endblock %}
 
 {% block body %}
-    {% include 'main/parts/intro.html.twig' %}
     {% include 'main/modals/filters.html.twig' %}
     {% include 'main/modals/update_request.html.twig' %}
     <script type="text/x-handlebars-template" id="artisanDetailsTemplate">
         {% include 'main/modals/artisan.html.twig' %}
     </script>
-
-    <div class="modal fade" id="artisanDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+    <div class="modal fade" id="artisanDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content" id="artisanDetailsModalContent"></div>
         </div>
     </div>
 
+    {% include 'main/parts/intro.html.twig' %}
+
     {% if not isDevEnv() %}
         <div id="scam-risk-warning" class="card bg-light mb-3">
-            <h4 class="card-header">Don't get scammed!</h4>
+            <div class="card-header">
+                Don't get scammed!
+            </div>
             <div class="card-body">
                 <h5 class="card-title">
                     Fursuit stuff isn't cheap and you don't want to lose the precious money you've been saving
                 </h5>
                 <p class="card-text">
-                    This tool serves for finding a maker which will best match your expectations. It can save
+                    This tool serves for finding a maker/<wbr>studio which will best match your expectations. It can save
                     you some time on searching. What it can't do for you - <strong>which means you must do that
-                        yourself</strong> - is to verify the legitimacy of the studio/maker you want to commission.
-                    When you decide on the maker/studio, <strong>PLEASE</strong>:
+                        yourself</strong> - is to verify the legitimacy of the maker/<wbr>studio you want to commission.
+                    When you decide on the maker/<wbr>studio, <strong>PLEASE</strong>:
                 </p>
-                <ul>
-                    <li>Ask on social media/groups/forums if someone had prior experience working with the maker/studio</li>
-                    <li>Check if they have any reviews on <a href="http://fursuitreview.com/" target="_blank">FursuitReview</a></li>
+                <ul class="card-text">
+                    <li>Ask on social media/<wbr>groups/<wbr>forums if someone had prior experience working with the maker/<wbr>studio</li>
+                    <li>Check if they have any reviews on <a href="https://fursuitreview.com/" target="_blank">FursuitReview</a></li>
                     <li>Check if they've been listed on <a href="https://artistsbeware.info/" target="_blank">Artists Beware</a></li>
                 </ul>
                 <p class="card-text">
-                    You can to read a bit more on the topic under <i>Buying a custom fursuit carries a substantial risk</i>
-                    section of this article: <a href="http://fursuitreview.com/blog/2017/12/04/how-to-buy-a-fursuit/" target="_blank">How To Buy A Fursuit</a>
+                    You can read a bit more on the topic under <i>Buying a custom fursuit carries a substantial risk</i>
+                    section of this article: <a href="https://fursuitreview.com/blog/buying-a-fursuit-is-a-fursuit-right-for-you/" target="_blank">Buying a Fursuit: Is a Fursuit Right For You?</a>
                 </p>
-                <p class="card-text text-right">
+                <p class="card-text text-end">
                     <a href="#" id="scam-risk-acknowledgement" class="btn btn-danger">I'll be careful, I promise!</a>
                 </p>
             </div>

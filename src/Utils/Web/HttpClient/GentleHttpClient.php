@@ -34,9 +34,30 @@ class GentleHttpClient extends HttpClient
     /**
      * @throws TransportExceptionInterface
      */
+    public function post(string $url, string $payload, CookieJar $cookieJar, array $additionalHeaders = []): ResponseInterface
+    {
+        $this->delayForHost($url);
+
+        return $this->postImmediately($url, $payload, $cookieJar, $additionalHeaders);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function getImmediately(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
     {
         $result = parent::get($url, $cookieJar, $additionalHeaders);
+        $this->updateLastHostCall($url);
+
+        return $result;
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function postImmediately(string $url, string $payload, CookieJar $cookieJar, array $additionalHeaders = []): ResponseInterface
+    {
+        $result = parent::post($url, $payload, $cookieJar, $additionalHeaders);
         $this->updateLastHostCall($url);
 
         return $result;

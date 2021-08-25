@@ -19,4 +19,14 @@ abstract class DbEnabledWebTestCase extends WebTestCase
 
         return $result;
     }
+
+    protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
+    {
+        $pattern = pattern('\s+');
+
+        $expectedHtml = trim($pattern->replace($expectedHtml)->all()->with(' '));
+        $actualHtml = trim($pattern->replace($actualHtml)->all()->with(' '));
+
+        self::assertEquals($expectedHtml, $actualHtml);
+    }
 }

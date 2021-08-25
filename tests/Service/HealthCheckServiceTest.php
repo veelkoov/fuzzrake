@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Service;
 
-use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\HealthCheckService;
+use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 class HealthCheckServiceTest extends TestCase
 {
@@ -22,24 +25,67 @@ class HealthCheckServiceTest extends TestCase
         'LOAD_15M_MAX'               => 0.2,
     ];
 
+    public static function setUpBeforeClass(): void
+    {
+        ClockMock::register(DateTimeUtils::class);
+    }
+
+    public function testTimes(): void
+    {
+        ClockMock::withClockMock(true);
+
+        $acsrMock = $this->createPartialMock(ArtisanVolatileDataRepository::class, ['getLastCsUpdateTime', 'getLastBpUpdateTime']);
+        $acsrMock
+            ->expects(self::exactly(2))
+            ->method('getLastCsUpdateTime')
+            ->willReturn(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+        $acsrMock
+            ->expects(self::exactly(2))
+            ->method('getLastBpUpdateTime')
+            ->willReturn(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+
+        $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
+        $data = $hcSrv->getStatus();
+
+        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data['serverTimeUtc']);
+        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastCsUpdateUtc']);
+        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastBpUpdateUtc']);
+
+        ClockMock::withClockMock(false);
+    }
+
+    /**
+     * @dataProvider getXyzUpdatesStatusDataProvider
+     *
+     * @throws Exception
+     */
+    public function testGetXyzUpdatesStatus(string $repoMethodName, string $hcStatusResultKey, DateTimeInterface $returnedDateTime, string $expectedResult): void
+    {
+        $avdrMock = $this->createMock(ArtisanVolatileDataRepository::class);
+        $avdrMock
+            ->expects(self::exactly(2))
+            ->method($repoMethodName)
+            ->willReturn($returnedDateTime)
+        ;
+
+        $hcSrv = new HealthCheckService($avdrMock, self::HC_VALUES);
+
+        static::assertEquals($expectedResult, $hcSrv->getStatus()[$hcStatusResultKey]);
+    }
+
     /**
      * @throws Exception
      */
-    public function testCstStatus(): void
+    public function getXyzUpdatesStatusDataProvider(): array // grep-tracking-frequency
     {
-        $acsrMock = $this->createMock(ArtisanCommissionsStatusRepository::class);
-        $acsrMock
-            ->expects(self::exactly(2))
-            ->method('getLastCstUpdateTime')
-            ->willReturn(
-                new DateTime('-12:10h', new DateTimeZone('UTC')),
-                new DateTime('-12:20h', new DateTimeZone('UTC')))
-        ;
+        $utc = new DateTimeZone('UTC');
 
-        $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
-
-        static::assertEquals('OK', $hcSrv->getStatus()['cstStatus']);
-        static::assertEquals('WARNING', $hcSrv->getStatus()['cstStatus']);
+        return [
+            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTime('-12 hours -10 minutes', $utc), 'OK'],
+            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTime('-12 hours -20 minutes', $utc), 'WARNING'],
+            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTime('-7 days -10 minutes', $utc), 'OK'],
+            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTime('-7 days -20 minutes', $utc), 'WARNING'],
+        ];
     }
 
     /**
@@ -228,7 +274,7 @@ class HealthCheckServiceTest extends TestCase
 
     private function getHcService(): HealthCheckService
     {
-        $acsrMock = $this->createMock(ArtisanCommissionsStatusRepository::class);
+        $acsrMock = $this->createMock(ArtisanVolatileDataRepository::class);
 
         return new HealthCheckService($acsrMock, self::HC_VALUES);
     }
