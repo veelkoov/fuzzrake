@@ -148,10 +148,12 @@ parameters:
         "All species and all fur based characters":
         "Ampwaves": # See protogens/robotic
         "Any animal and most mysticals (dragons*, serials, gryphons)":
+        "Any mechanical/inorganic species":
         "Any mythical or unique species":
         "Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
         "Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
         "Ask for mechanic/electronic creatures":
+        "Axolotls":
         "Basic canines, vulpines, angel dragons. (Will consider if unique)":
         "Bugs": # Ambiguous
         "Cervidae/deer family species with large antlers":
@@ -160,19 +162,26 @@ parameters:
         "Complex species, as if the species has too many parts and details, I will say so during the quote.":
         "Creatures that live solely in water":
         "Critters":
+        'Cyborgs':
         "Deer&similar":
+        "Dinosaurs":
         "Dutch Angel Dragons (Tail, paws and feet paws ONLY)":
         "Etc.": # De hecc
         "Extremely intricate anything":
         "Fantasy / mythical creatures":
         "Full robospecies":
+        "Furbies":
         "Gem raptors":
         "Heavily complicated creatures":
         "Humanoids":
         "Humans":
         "I can also do velvet or minky skinned characters":
         "I make exceptions on rare occasions":
+        "I won't do closed species without the permission from the maker itself (some artists don't want their species made into a fursuit!)":
+        "Invertibrates":
         "Most anything covered in fur":
+        "Most Mammals":
+        "Most Scalies":
         "Most of author's species":
         "Most furless/featherless species":
         "Most reptiles":
@@ -185,6 +194,7 @@ parameters:
         "Protogens (for paws and tail ONLY)":
         "Raptor masks":
         "Rare species":
+        "Real creatures":
         "Reptiles (not including dragons)":
         "Robotic stuff":
         "Robots":
@@ -197,7 +207,10 @@ parameters:
         "Some scalies":
         "Specialises in mythical creatures/monsters":
         "Species with robotic/cybernetic, or otherwise mechanical appearance":
+        "Species with horizontal pupils":
+        "Synths":
         "Things of an adult nature":
+        "Uncommon species":
         "Unsafe creations":
         "Ungulates (tests now)":
         "Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
@@ -297,6 +310,7 @@ parameters:
       'Primagens?':                                          'Primagens'
       'Protogens?':                                          'Protogens'
       'Protogens/primagens \(on a foam base\)':              "Protogens (on a foam base)\nPrimagens (on a foam base)"
+      'Protogens/primagens':                                 "Protogens\nPrimagens"
       'Rabbits?':                                            'Rabbits'
       'Racc?oo?ns?':                                         'Raccoons'
       'Rams?':                                               'Sheeps'

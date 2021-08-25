@@ -96,5 +96,5 @@ parameters:
       'NS$|^Nova Scotia':               'Nova Scotia'
       'ON$|^Ontario':                   'Ontario'
       'PE$|^Prince Edward Island':      'Prince Edward Island'
-      'QC$|^Qu[eé]bec':                 'Quebec'
+      'QC$|^Qu[eé]bec':                 'Québec'
       'SK$|^Saskatchewan':              'Saskatchewan'

@@ -18,13 +18,12 @@ parameters:
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
     replacements:
-      'Armsleeves|Arm Sleeves':                      'Arm sleeves'
+      'Arm ?sleeves':                                'Arm sleeves'
       'backpacks':                                   'Backpacks'
       'Bandannas':                                   'Bandanas'
       '(.+)changable(.+)':                           '$1changeable$2'
       'claws':                                       'Claws'
       'Dry brushing':                                'Drybrushing'
-      'Excellent vision &(amp;)? breathability':     "Excellent vision\nExcellent breathability"
       'Femme Suits':                                 'Femme suits'
       'Foam Bases':                                  'Foam bases'
       'Fursuit Props':                               'Fursuit props'
