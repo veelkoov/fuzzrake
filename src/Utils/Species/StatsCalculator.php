@@ -4,72 +4,64 @@ declare(strict_types=1);
 
 namespace App\Utils\Species;
 
+use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Utils\StringList;
 
 class StatsCalculator
 {
-    private array $result = [];
+    /**
+     * @var SpecieStats[] 'Specie name' => SpecieStats
+     */
+    private array $result;
 
     /**
      * @var Specie[]
      */
     private array $speciesFlat;
 
-    /**
-     * @var string[]
-     */
-    private array $speciesDoesnt;
-
-    /**
-     * @var string[]
-     */
-    private array $speciesDoes;
-
-    /**
-     * @var Artisan[]
-     */
-    private array $artisans;
-
     public function __construct(array $artisans, array $speciesFlat)
     {
         $this->speciesFlat = $speciesFlat;
-        $this->artisans = $artisans;
 
-        $this->initializeSpeciesDoesAndNot();
-        $this->initializeEmptyResult();
+        $allDoesNames = self::extractSpecieNamesWithRepetitions($artisans, Fields::SPECIES_DOES);
+        $allDoesntNames = self::extractSpecieNamesWithRepetitions($artisans, Fields::SPECIES_DOESNT);
 
-        foreach ($artisans as $artisan) {
-            $this->appendSpeciesStats($this->result, StringList::unpack($artisan->getSpeciesDoes()), true);
-            $this->appendSpeciesStats($this->result, StringList::unpack($artisan->getSpeciesDoesnt()), false);
-        }
+        $this->result = self::createEmptyResult($allDoesNames, $allDoesntNames);
 
-        uasort($this->result, function (array $a, array $b): int {
-            return $b['directTotalCount'] - $a['directTotalCount'];
-        });
+        $this->appendSpeciesStats($this->result, $allDoesNames, true);
+        $this->appendSpeciesStats($this->result, $allDoesntNames, false);
+
+        uasort($this->result, fn (SpecieStats $a, SpecieStats $b) => self::compare($a, $b));
     }
 
+    /**
+     * @return SpecieStats[] 'Specie name' => SpecieStats
+     */
     public function get(): array
     {
         return $this->result;
     }
 
     /**
-     * @param string[] $species
+     * @param SpecieStats[] $result  'Specie name' => SpecieStats
+     * @param string[]      $species
      */
-    private function appendSpeciesStats(array &$result, array $species, bool $does): void
+    private function appendSpeciesStats(array $result, array $species, bool $does): void
     {
         foreach ($species as $specie) {
-            if (!array_key_exists($specie, $result)) {
-                return;
-            }
+            if ($does) {
+                $result[$specie]->incDirectDoesCount();
 
-            ++$result[$specie][$does ? 'directDoesCount' : 'directDoesntCount'];
-            ++$result[$specie]['directTotalCount'];
+                foreach ($this->getSpeciesAffectedInStats($specie) as $affectedSpecie) {
+                    $result[$affectedSpecie]->incIndirectDoesCount();
+                }
+            } else {
+                $result[$specie]->incDirectDoesntCount();
 
-            foreach ($this->getSpeciesAffectedInStats($specie) as $affectedSpecie) {
-                ++$result[$affectedSpecie][$does ? 'indirectDoesCount' : 'indirectDoesntCount'];
-                ++$result[$affectedSpecie]['indirectTotalCount'];
+                foreach ($this->getSpeciesAffectedInStats($specie) as $affectedSpecie) {
+                    $result[$affectedSpecie]->incIndirectDoesntCount();
+                }
             }
         }
     }
@@ -83,35 +75,52 @@ class StatsCalculator
             return [];
         }
 
-        return array_map(function (Specie $specie): string { return $specie->getName(); }, array_merge(
-            $this->speciesFlat[$specieName]->getAncestors()
-        ));
+        return array_map(fn (Specie $specie): string => $specie->getName(), $this->speciesFlat[$specieName]->getAncestors());
     }
 
-    private function initializeSpeciesDoesAndNot(): void
+    private static function compare(SpecieStats $a, SpecieStats $b): int
     {
-        $this->speciesDoes = array_map(function (Artisan $artisan): array {
-            return StringList::unpack($artisan->getSpeciesDoes());
-        }, $this->artisans);
+        $res = $b->getTotalCount() - $a->getTotalCount();
 
-        $this->speciesDoesnt = array_map(function (Artisan $artisan): array {
-            return StringList::unpack($artisan->getSpeciesDoesnt());
-        }, $this->artisans);
+        if (0 !== $res) {
+            return $res;
+        }
+
+        return $b->getDirectTotalCount() - $a->getDirectTotalCount();
     }
 
-    private function initializeEmptyResult()
+    /**
+     * @param string[] $allDoesNames
+     * @param string[] $allDoesntNames
+     *
+     * @return SpecieStats[] 'Specie name' => SpecieStats
+     */
+    private function createEmptyResult(array $allDoesNames, array $allDoesntNames): array
     {
-        foreach (array_merge($this->speciesDoes, $this->speciesDoesnt, [array_keys($this->speciesFlat)]) as $species) {
-            foreach ($species as $specie) {
-                $this->result[$specie] = [
-                    'directDoesCount'     => 0,
-                    'directDoesntCount'   => 0,
-                    'directTotalCount'    => 0,
-                    'indirectDoesCount'   => 0,
-                    'indirectDoesntCount' => 0,
-                    'indirectTotalCount'  => 0,
-                ];
+        $result = [];
+
+        foreach (array_merge($allDoesNames, $allDoesntNames, array_keys($this->speciesFlat)) as $specieName) {
+            if (!array_key_exists($specieName, $result)) {
+                $result[$specieName] = new SpecieStats($this->speciesFlat[$specieName] ?? new Specie($specieName, false)); // FIXME: new
             }
         }
+
+        return $result;
+    }
+
+    /**
+     * @param Artisan[] $artisans
+     *
+     * @return string[]
+     */
+    private static function extractSpecieNamesWithRepetitions(array $artisans, string $fieldName): array
+    {
+        $result = [];
+
+        foreach ($artisans as $artisan) {
+            array_push($result, ...StringList::unpack($artisan->get($fieldName)));
+        }
+
+        return $result;
     }
 }

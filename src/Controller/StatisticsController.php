@@ -66,8 +66,6 @@ class StatisticsController extends AbstractController
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $commissionsStatusRepository->getCommissionsStats();
-        $speciesStats = $species->getStats();
-
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
             'productionModels' => $this->prepareTableData($productionModels),
@@ -80,7 +78,7 @@ class StatisticsController extends AbstractController
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness'     => $this->prepareCompletenessData($artisanRepository->getActive()),
             'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getActive()),
-            'speciesStats'     => $speciesStats,
+            'speciesStats'     => $species->getStats(),
             'matchWords'       => self::MATCH_WORDS,
         ]);
     }

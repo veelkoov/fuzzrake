@@ -81,8 +81,11 @@ class Species
         return $this->unsplittable;
     }
 
+    /**
+     * @return SpecieStats[]
+     */
     public function getStats(): array
     {
-        return (new StatsCalculator($this->artisanRepository->getAll(), $this->speciesFlat))->get();
+        return (new StatsCalculator($this->artisanRepository->getActive(), $this->flat))->get();
     }
 }

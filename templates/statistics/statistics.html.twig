@@ -97,25 +97,39 @@
     <table class="table table-sm">
         <thead>
         <tr>
-            <th>Specie/group</th>
+            <th>
+                Specie/group
+                <span class="text-success">+total "does" count</span>
+                <span class="text-danger">-total "doesn't" count</span>
+            </th>
+            <th>Total count</th>
+            <th>Direct total count</th>
+            <th>Indirect total count</th>
             <th>Direct "does" count</th>
             <th>Direct "doesn't" count</th>
-            <th>Total direct count</th>
             <th>Indirect "does" count</th>
             <th>Indirect "doesn't" count</th>
-            <th>Total indirect count</th>
         </tr>
         </thead>
         <tbody>
-        {% for specie, specieStats in speciesStats %}
+        {% for specieStats in speciesStats %}
             <tr>
-                <td>{{ specie }}</td>
+                <td>
+                    {{ specieStats.specie.name }}
+                    {% if 0 != specieStats.totalDoesCount %}
+                        <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
+                    {% endif %}
+                    {% if 0 != specieStats.totalDoesntCount %}
+                        <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ specieStats.totalCount }}</td>
+                <td>{{ specieStats.directTotalCount }}</td>
+                <td>{{ specieStats.indirectTotalCount }}</td>
                 <td>{{ specieStats.directDoesCount }}</td>
                 <td>{{ specieStats.directDoesntCount }}</td>
-                <td>{{ specieStats.directDoesCount + specieStats.directDoesntCount }}</td>
                 <td>{{ specieStats.indirectDoesCount }}</td>
                 <td>{{ specieStats.indirectDoesntCount }}</td>
-                <td>{{ specieStats.indirectDoesCount + specieStats.indirectDoesntCount }}</td>
             </tr>
         {% endfor %}
         </tbody>

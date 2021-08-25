@@ -21,6 +21,7 @@ class Specie implements Stringable
 
     public function __construct(
         private string $name,
+        private bool $showInFilter,
     ) {
     }
 
@@ -117,6 +118,11 @@ class Specie implements Stringable
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function showInFilter(): bool
+    {
+        return $this->showInFilter;
     }
 
     /**
