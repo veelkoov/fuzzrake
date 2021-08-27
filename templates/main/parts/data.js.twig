@@ -18,7 +18,7 @@ window.loadFuzzrakeData = function (ac) {
     SPECIES = {
         {% macro species_json(species) %}
             {% for specie in species %}
-                {% if specie.showInFilter %} {# FIXME: Name does not fit. Consider introducing some kind of mapping of hidden to parent species #}
+                {% if not specie.ignored %}
                     '{{ specie.name }}': {
                         {{ _self.species_json(specie.children) }}
                     }{% if not loop.last %},{% endif %}

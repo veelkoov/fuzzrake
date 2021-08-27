@@ -16,6 +16,7 @@ use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -55,7 +56,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, Species $species): Response
+    public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, Species $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
@@ -66,6 +67,7 @@ class StatisticsController extends AbstractController
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $commissionsStatusRepository->getCommissionsStats();
+
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
             'productionModels' => $this->prepareTableData($productionModels),
@@ -80,6 +82,7 @@ class StatisticsController extends AbstractController
             'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getActive()),
             'speciesStats'     => $species->getStats(),
             'matchWords'       => self::MATCH_WORDS,
+            'showIgnored'      => filter_var($request->get('showIgnored', 0), FILTER_VALIDATE_BOOL),
         ]);
     }
 

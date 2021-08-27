@@ -101,7 +101,7 @@ class StatsCalculator
 
         foreach (array_merge($allDoesNames, $allDoesntNames, array_keys($this->speciesFlat)) as $specieName) {
             if (!array_key_exists($specieName, $result)) {
-                $result[$specieName] = new SpecieStats($this->speciesFlat[$specieName] ?? new Specie($specieName, false)); // FIXME: new
+                $result[$specieName] = new SpecieStats($this->speciesFlat[$specieName] ?? new Specie($specieName, true));
             }
         }
 

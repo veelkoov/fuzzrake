@@ -21,7 +21,7 @@ class Specie implements Stringable
 
     public function __construct(
         private string $name,
-        private bool $showInFilter,
+        private bool $ignored,
     ) {
     }
 
@@ -120,9 +120,9 @@ class Specie implements Stringable
         return $this->name;
     }
 
-    public function showInFilter(): bool
+    public function isIgnored(): bool
     {
-        return $this->showInFilter;
+        return $this->ignored;
     }
 
     /**

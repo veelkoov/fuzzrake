@@ -80,16 +80,20 @@ class HierarchyAwareBuilder
         foreach ($species as $specieName => $subspecies) {
             [$flags, $specieName] = self::splitSpecieFlagsName($specieName);
 
-            $result[$specieName] = $this->getUpdatedSpecie($specieName, !self::hasIgnoreFlag($flags), $parent, $subspecies);
+            $result[$specieName] = $this->getUpdatedSpecie($specieName, self::hasIgnoreFlag($flags), $parent, $subspecies);
             $this->validNames[] = $specieName;
         }
 
         return $result;
     }
 
-    private function getUpdatedSpecie(string $specieName, bool $showInFilter, ?Specie $parent, ?array $subspecies): Specie
+    private function getUpdatedSpecie(string $specieName, bool $ignored, ?Specie $parent, ?array $subspecies): Specie
     {
-        $specie = $this->flat[$specieName] ??= new Specie($specieName, $showInFilter);
+        if (null !== $parent && $parent->isIgnored()) {
+            $ignored = true;
+        }
+
+        $specie = $this->flat[$specieName] ??= new Specie($specieName, $ignored);
 
         if (null !== $parent) {
             $specie->addParent($parent);

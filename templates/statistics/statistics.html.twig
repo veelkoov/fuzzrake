@@ -113,24 +113,28 @@
         </thead>
         <tbody>
         {% for specieStats in speciesStats %}
-            <tr>
-                <td>
-                    {{ specieStats.specie.name }}
-                    {% if 0 != specieStats.totalDoesCount %}
-                        <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
-                    {% endif %}
-                    {% if 0 != specieStats.totalDoesntCount %}
-                        <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
-                    {% endif %}
-                </td>
-                <td>{{ specieStats.totalCount }}</td>
-                <td>{{ specieStats.directTotalCount }}</td>
-                <td>{{ specieStats.indirectTotalCount }}</td>
-                <td>{{ specieStats.directDoesCount }}</td>
-                <td>{{ specieStats.directDoesntCount }}</td>
-                <td>{{ specieStats.indirectDoesCount }}</td>
-                <td>{{ specieStats.indirectDoesntCount }}</td>
-            </tr>
+            {% if showIgnored or not specieStats.specie.ignored %}
+                <tr {% if specieStats.specie.ignored %}class="bg-opacity-25 bg-secondary"{% endif %}>
+                    <td>
+                        {{ specieStats.specie.name }}
+
+                        {% if 0 != specieStats.totalDoesCount %}
+                            <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
+                        {% endif %}
+
+                        {% if 0 != specieStats.totalDoesntCount %}
+                            <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ specieStats.totalCount }}</td>
+                    <td>{{ specieStats.directTotalCount }}</td>
+                    <td>{{ specieStats.indirectTotalCount }}</td>
+                    <td>{{ specieStats.directDoesCount }}</td>
+                    <td>{{ specieStats.directDoesntCount }}</td>
+                    <td>{{ specieStats.indirectDoesCount }}</td>
+                    <td>{{ specieStats.indirectDoesntCount }}</td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
