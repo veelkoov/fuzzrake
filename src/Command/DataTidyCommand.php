@@ -13,7 +13,6 @@ use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,23 +21,28 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataTidyCommand extends Command
 {
+    private const OPT_COMMIT = 'commit';
+    private const OPT_WITH_INACTIVE = 'with-inactive';
+    private const ARG_CORRECTIONS_FILE = 'corrections-file';
+
     protected static $defaultName = 'app:data:tidy';
 
-    private ObjectRepository | ArtisanRepository $artisanRepository;
+    private ArtisanRepository $artisanRepo;
 
     public function __construct(
         private EntityManagerInterface $objectManager,
         private FdvFactory $fdvFactory,
     ) {
-        $this->artisanRepository = $objectManager->getRepository(Artisan::class);
+        $this->artisanRepo = $objectManager->getRepository(Artisan::class);
 
         parent::__construct();
     }
 
     protected function configure()
     {
-        $this->addOption('commit', null, null, 'Save changes in the database');
-        $this->addArgument('corrections-file', InputArgument::OPTIONAL, 'Corrections file path');
+        $this->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database');
+        $this->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include inactive artisans');
+        $this->addArgument(self::ARG_CORRECTIONS_FILE, InputArgument::OPTIONAL, 'Corrections file path');
     }
 
     /**
@@ -49,9 +53,11 @@ class DataTidyCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $manager = Manager::createFromFile($input->getArgument('corrections-file') ?: '/dev/null');
+        $manager = Manager::createFromFile($input->getArgument(self::ARG_CORRECTIONS_FILE) ?: '/dev/null');
 
-        foreach ($this->artisanRepository->findAll() as $artisan) {
+        $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
+
+        foreach ($artisans as $artisan) {
             $artisanFixWip = new ArtisanChanges($artisan);
 
             $manager->correctArtisan($artisanFixWip->getChanged());
@@ -60,7 +66,7 @@ class DataTidyCommand extends Command
             $artisanFixWip->apply();
         }
 
-        if ($input->getOption('commit')) {
+        if ($input->getOption(self::OPT_COMMIT)) {
             $this->objectManager->flush();
             $io->success('Finished and saved');
         } else {
