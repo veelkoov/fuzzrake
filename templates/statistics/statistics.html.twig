@@ -9,6 +9,7 @@
         <a href="#styles">styles</a> (<a href="#other_styles">other</a>) &bull;
         <a href="#order_types">order types</a> (<a href="#other_order_types">other</a>) &bull;
         <a href="#features">features</a> (<a href="#other_features">other</a>) &bull;
+        <a href="#species">species</a> &bull;
         <a href="#data_statistics">data statistics</a>
     </p>
 
@@ -90,6 +91,53 @@
 
     <h2 id="other_features">Other features</h2>
     {% include 'statistics/_item_pills.html.twig' with { items: otherFeatures } %}
+
+    <h1 id="species">Species</h1>
+
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>
+                Specie/group
+                <span class="text-success">+total "does" count</span>
+                <span class="text-danger">-total "doesn't" count</span>
+            </th>
+            <th>Total count</th>
+            <th>Direct total count</th>
+            <th>Indirect total count</th>
+            <th>Direct "does" count</th>
+            <th>Direct "doesn't" count</th>
+            <th>Indirect "does" count</th>
+            <th>Indirect "doesn't" count</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for specieStats in speciesStats %}
+            {% if showIgnored or not specieStats.specie.ignored %}
+                <tr {% if specieStats.specie.ignored %}class="bg-opacity-25 bg-secondary"{% endif %}>
+                    <td>
+                        {{ specieStats.specie.name }}
+
+                        {% if 0 != specieStats.totalDoesCount %}
+                            <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
+                        {% endif %}
+
+                        {% if 0 != specieStats.totalDoesntCount %}
+                            <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ specieStats.totalCount }}</td>
+                    <td>{{ specieStats.directTotalCount }}</td>
+                    <td>{{ specieStats.indirectTotalCount }}</td>
+                    <td>{{ specieStats.directDoesCount }}</td>
+                    <td>{{ specieStats.directDoesntCount }}</td>
+                    <td>{{ specieStats.indirectDoesCount }}</td>
+                    <td>{{ specieStats.indirectDoesntCount }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
 
     <h1 id="data_statistics">Data statistics</h1>
     {% include 'statistics/_data_table.html.twig' with { data: completeness, name: 'Data completeness', total: commissionsStats.Total } %}

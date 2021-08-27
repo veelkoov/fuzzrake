@@ -18,9 +18,11 @@ window.loadFuzzrakeData = function (ac) {
     SPECIES = {
         {% macro species_json(species) %}
             {% for specie in species %}
-                '{{ specie.name }}': {
-                    {{ _self.species_json(specie.children) }}
-                }{% if not loop.last %},{% endif %}
+                {% if not specie.ignored %}
+                    '{{ specie.name }}': {
+                        {{ _self.species_json(specie.children) }}
+                    }{% if not loop.last %},{% endif %}
+                {% endif %}
             {% endfor %}
         {% endmacro %}
 

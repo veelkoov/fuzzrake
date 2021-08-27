@@ -21,6 +21,7 @@ class Specie implements Stringable
 
     public function __construct(
         private string $name,
+        private bool $ignored,
     ) {
     }
 
@@ -117,6 +118,11 @@ class Specie implements Stringable
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function isIgnored(): bool
+    {
+        return $this->ignored;
     }
 
     /**

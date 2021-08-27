@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Species;
 
+use App\Repository\ArtisanRepository;
 use App\Utils\Regexp\Replacements;
 
 class Species
@@ -31,7 +32,8 @@ class Species
     private array $validNames;
 
     public function __construct(
-        array $speciesDefinitions
+        array $speciesDefinitions,
+        private ArtisanRepository $artisanRepository,
     ) {
         $this->replacements = new Replacements($speciesDefinitions['replacements'], 'i', $speciesDefinitions['commonRegexPrefix'], $speciesDefinitions['commonRegexSuffix']);
         $this->unsplittable = $speciesDefinitions['leave_unchanged'];
@@ -77,5 +79,13 @@ class Species
     public function getListFixerUnsplittable(): array
     {
         return $this->unsplittable;
+    }
+
+    /**
+     * @return SpecieStats[]
+     */
+    public function getStats(): array
+    {
+        return (new StatsCalculator($this->artisanRepository->getActive(), $this->flat))->get();
     }
 }
