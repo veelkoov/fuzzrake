@@ -21,9 +21,9 @@ class StatisticsService
     public function getMainPageStats(): MainPageStats
     {
         try {
-            $lastSystemUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
+            $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
         } catch (UnexpectedResultException|DateTimeException) {
-            $lastSystemUpdateTimeUtc = null;
+            $lastDataUpdateTimeUtc = null;
         }
 
         try {
@@ -39,9 +39,9 @@ class StatisticsService
         }
 
         try {
-            $lastDataUpdateTimeUtc = DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'));
+            $lastSystemUpdateTimeUtc = DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'));
         } catch (DateTimeException) {
-            $lastDataUpdateTimeUtc = null;
+            $lastSystemUpdateTimeUtc = null;
         }
 
         return new MainPageStats(
