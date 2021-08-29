@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanEntity;
 use App\Form\ArtisanType;
 use App\Service\EnvironmentsService;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\Utils;
 use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
@@ -21,25 +22,25 @@ class ArtisansController extends AbstractFormController
     #[Route(path: '/{id}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_ARTISAN_NEW, methods: ['GET', 'POST'])]
     #[Cache(maxage: 0, public: false)]
-    public function edit(Request $request, ?Artisan $artisan, EnvironmentsService $environments): Response
+    public function edit(Request $request, ?ArtisanEntity $entity, EnvironmentsService $environments): Response
     {
         if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
         }
 
-        $artisan ??= new Artisan();
+        $artisan = new Artisan($entity ??= new ArtisanEntity());
 
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
-                $this->getDoctrine()->getManager()->remove($artisan);
+                $this->getDoctrine()->getManager()->remove($entity);
             } else {
                 Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
                 StrUtils::fixNewlines($artisan);
 
-                $this->getDoctrine()->getManager()->persist($artisan);
+                $this->getDoctrine()->getManager()->persist($entity);
             }
 
             $this->getDoctrine()->getManager()->flush();

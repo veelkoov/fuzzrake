@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Service\EnvironmentsService;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
 use App\Utils\DateTime\DateTimeFormat;
 use App\Utils\Filters\Item;

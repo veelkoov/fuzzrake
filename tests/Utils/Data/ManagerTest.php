@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Data;
 
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Manager;
 use App\Utils\DataInputException;
 use PHPUnit\Framework\TestCase;

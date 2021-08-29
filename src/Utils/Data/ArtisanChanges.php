@@ -6,7 +6,7 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields;
 use App\DataDefinitions\FieldsList;
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class ArtisanChanges
 {

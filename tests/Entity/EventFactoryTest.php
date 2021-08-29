@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
-use App\Entity\Artisan;
 use App\Entity\EventFactory;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 

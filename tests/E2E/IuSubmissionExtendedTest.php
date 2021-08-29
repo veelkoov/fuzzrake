@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\Utils;
 use App\Utils\DataInputException;
 use App\Utils\StringList;
@@ -162,7 +162,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         self::getEM()->persist($oldArtisan1);
         self::getEM()->flush();
 
-        $repo = self::getEM()->getRepository(Artisan::class);
+        $repo = self::getArtisanRepository();
         self::assertCount(1, $repo->findAll(), 'Single artisan in the DB before import');
 
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::CHECK);

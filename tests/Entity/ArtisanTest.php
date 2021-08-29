@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 
 class ArtisanTest extends TestCase

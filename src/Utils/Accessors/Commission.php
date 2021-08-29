@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Accessors;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
 use App\Entity\ArtisanCommissionsStatus;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
 final class Commission extends AbstractAccessor
@@ -36,7 +36,7 @@ final class Commission extends AbstractAccessor
 
     protected static function getExistingItems(Artisan $artisan): array
     {
-        return $artisan->getCommissions()->toArray();
+        return $artisan->getArtisan()->getCommissions()->toArray();
     }
 
     protected static function getItemsFilter($subset): Closure
@@ -54,7 +54,7 @@ final class Commission extends AbstractAccessor
 
     protected static function removeItem(Artisan $artisan, $existingItem): void
     {
-        $artisan->removeCommission($existingItem);
+        $artisan->getArtisan()->removeCommission($existingItem);
     }
 
     protected static function getValueCallback(): Closure
@@ -64,7 +64,7 @@ final class Commission extends AbstractAccessor
 
     protected static function addItem(Artisan $artisan, $subset, string $newValue): void
     {
-        $artisan->addCommission((new ArtisanCommissionsStatus())->setIsOpen($subset)->setOffer($newValue));
+        $artisan->getArtisan()->addCommission((new ArtisanCommissionsStatus())->setIsOpen($subset)->setOffer($newValue));
     }
 
     protected static function getFieldNameFor($subset): string

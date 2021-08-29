@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Tasks\TrackerUpdates\Commissions;
 
-use App\Entity\Artisan;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\Commissions\CommissionsTrackerTask;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Tracking\CommissionsStatusParser;

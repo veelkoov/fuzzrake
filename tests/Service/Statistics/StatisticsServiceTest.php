@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Service\Statistics;
 
-use App\Entity\Artisan;
-use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\Statistics\StatisticsService;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class StatisticsServiceTest extends DbEnabledKernelTestCase
 {
@@ -21,10 +20,9 @@ class StatisticsServiceTest extends DbEnabledKernelTestCase
         self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
 
-        $artisanRepository = self::getEM()->getRepository(Artisan::class);
+        $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
 
-        self::assertInstanceOf(ArtisanRepository::class, $artisanRepository);
         $subject = new StatisticsService($artisanRepository, $avdRepositoryMock);
         $result = $subject->getMainPageStats();
 
@@ -40,10 +38,9 @@ class StatisticsServiceTest extends DbEnabledKernelTestCase
         self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
 
-        $artisanRepository = self::getEM()->getRepository(Artisan::class);
+        $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
 
-        self::assertInstanceOf(ArtisanRepository::class, $artisanRepository);
         $subject = new StatisticsService($artisanRepository, $avdRepositoryMock);
         $result = $subject->getMainPageStats();
 

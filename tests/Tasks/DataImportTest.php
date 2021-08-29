@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
+use App\Utils\Artisan\SmartAccessDecorator as Smart;
 use App\Utils\Data\FixerDifferValidator;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -43,7 +44,7 @@ class DataImportTest extends TestCase
             Fields::URL_PHOTOS => [$newUrlPhotos],
         ])]);
 
-        static::assertEquals($expectedMiniatures, $artisan->getMiniatureUrls());
+        static::assertEquals($expectedMiniatures, Smart::wrap($artisan)->getMiniatureUrls());
     }
 
     public function imagesUpdateShouldResetMiniaturesDataProvider(): array
@@ -67,10 +68,10 @@ class DataImportTest extends TestCase
 
     private function getBasicArtisan(array $initialData): Artisan
     {
-        $result = new Artisan();
+        $smart = Smart::wrap($result = new Artisan());
 
         foreach ($initialData as $fieldName => $value) {
-            $result->set(Fields::get($fieldName), $value);
+            $smart->set(Fields::get($fieldName), $value);
         }
 
         return $result;
@@ -97,7 +98,7 @@ class DataImportTest extends TestCase
 
     private function getIuSubmission(Artisan $artisan, array $data): IuSubmission
     {
-        $allData = $artisan->getAllData();
+        $allData = Smart::wrap($artisan)->getAllData();
         $allData = array_merge($allData, $data);
 
         return new IuSubmission(new DateTimeImmutable(), 'test_id', $allData);

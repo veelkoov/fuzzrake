@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
 use App\Service\AwsCliService;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;

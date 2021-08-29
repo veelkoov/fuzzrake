@@ -6,6 +6,7 @@ namespace App\Tests\Repository;
 
 use App\Entity\Artisan;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Utils\Artisan\SmartAccessDecorator as Smart;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\Mapping\MappingException;
@@ -40,9 +41,9 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 
     public function findByMakerIdDataProvider(): array
     {
-        $m1 = (new Artisan())->setMakerId('MAKER11');
-        $m2 = (new Artisan())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');
-        $m3 = (new Artisan())->setMakerId('MAKER31')->setFormerMakerIds("MAKER32\nMAKER33");
+        Smart::wrap($m1 = new Artisan())->setMakerId('MAKER11');
+        Smart::wrap($m2 = new Artisan())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');
+        Smart::wrap($m3 = new Artisan())->setMakerId('MAKER31')->setFormerMakerIds("MAKER32\nMAKER33");
 
         return [
             [[$m1], 'MAKER11', 0],
@@ -74,7 +75,7 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
     {
         self::bootKernel();
 
-        $artisan = (new Artisan())->setMakerId('MAKRID1')->setFormerMakerIds("MAKRID2\nMAKRID3");
+        $accessor = Smart::wrap($artisan = new Artisan())->setMakerId('MAKRID1')->setFormerMakerIds("MAKRID2\nMAKRID3");
 
         self::persistAndFlush($artisan);
         self::getEM()->clear();
@@ -82,7 +83,7 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
         $retrieved1 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID1');
 
         self::assertEquals($artisan->getMakerId(), $retrieved1->getMakerId());
-        self::assertEquals($artisan->getFormerMakerIds(), $retrieved1->getFormerMakerIds());
+        self::assertEquals($accessor->getFormerMakerIds(), Smart::wrap($retrieved1)->getFormerMakerIds());
 
         $retrieved2 = self::getEM()->getRepository(Artisan::class)->findByMakerId('MAKRID2');
         self::assertEquals($retrieved1, $retrieved2);
@@ -92,12 +93,12 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
     {
         self::bootKernel();
 
-        $a1 = (new Artisan())
+        Smart::wrap($a1 = new Artisan())
             ->setName('Maker 1')
             ->setFormerly("Old maker A\nOlder maker A")
             ->setMakerId('MAKER11')
             ->setFormerMakerIds('MAKER12');
-        $a2 = (new Artisan())
+        Smart::wrap($a2 = new Artisan())
             ->setName('Maker 2')
             ->setFormerly("Old maker B\nmaker A")
             ->setMakerId('MAKER21')
@@ -105,7 +106,7 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 
         self::persistAndFlush($a1, $a2);
 
-        $repo = self::getEM()->getRepository(Artisan::class);
+        $repo = self::getArtisanRepository();
 
         self::assertEquals([$a1], $repo->findBestMatches(['Maker 1'], ['MAKER12'], null));
         self::assertEquals([$a1], $repo->findBestMatches(['Old maker A'], ['NEWMKID'], null));

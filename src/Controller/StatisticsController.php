@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\Item;
 use App\Utils\Filters\Set;
@@ -68,6 +68,8 @@ class StatisticsController extends AbstractController
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
         $commissionsStats = $commissionsStatusRepository->getCommissionsStats();
 
+        $artisans = Artisan::wrapAll($artisanRepository->getActive());
+
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
             'productionModels' => $this->prepareTableData($productionModels),
@@ -78,8 +80,8 @@ class StatisticsController extends AbstractController
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->getItems()),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
-            'completeness'     => $this->prepareCompletenessData($artisanRepository->getActive()),
-            'providedInfo'     => $this->prepareProvidedInfoData($artisanRepository->getActive()),
+            'completeness'     => $this->prepareCompletenessData($artisans),
+            'providedInfo'     => $this->prepareProvidedInfoData($artisans),
             'speciesStats'     => $species->getStats(),
             'matchWords'       => self::MATCH_WORDS,
             'showIgnored'      => filter_var($request->get('showIgnored', 0), FILTER_VALIDATE_BOOL),
@@ -165,6 +167,9 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
+    /**
+     * @param Artisan[] $artisans
+     */
     private function prepareProvidedInfoData(array $artisans): array
     {
         $result = [];
@@ -173,7 +178,7 @@ class StatisticsController extends AbstractController
             $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
                 if ($field->is(Fields::FORMER_MAKER_IDS)) {
                     /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
-                     * so we can rely on Artisan::getLastMakerId() etc. Those IDs are "M000000", where the digits part
+                     * so we can rely on Accessor::getLastMakerId() etc. Those IDs are "M000000", where the digits part
                      * is zero-padded artisan database ID. */
 
                     $placeholder = sprintf('M%06d', $artisan->getId());

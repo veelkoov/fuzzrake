@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
 
 final class Password
