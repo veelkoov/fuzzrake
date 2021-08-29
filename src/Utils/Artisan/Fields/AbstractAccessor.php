@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Accessors;
+namespace App\Utils\Artisan\Fields;
 
 use App\DataDefinitions\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

@@ -13,8 +13,8 @@ use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\MakerId;
-use App\Utils\Accessors\Commission;
-use App\Utils\Accessors\Url;
+use App\Utils\Artisan\Fields\CommissionAccessor;
+use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -244,7 +244,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getOpenFor(): string
     {
-        return Commission::get($this, true);
+        return CommissionAccessor::get($this, true);
     }
 
     /**
@@ -252,19 +252,19 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getOpenForArray(): array
     {
-        return Commission::getList($this, true);
+        return CommissionAccessor::getList($this, true);
     }
 
     public function setOpenFor(string $openFor): self
     {
-        Commission::set($this, true, $openFor);
+        CommissionAccessor::set($this, true, $openFor);
 
         return $this;
     }
 
     public function getClosedFor(): string
     {
-        return Commission::get($this, false);
+        return CommissionAccessor::get($this, false);
     }
 
     /**
@@ -272,12 +272,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getClosedForArray(): array
     {
-        return Commission::getList($this, false);
+        return CommissionAccessor::getList($this, false);
     }
 
     public function setClosedFor(string $closedFor): self
     {
-        Commission::set($this, false, $closedFor);
+        CommissionAccessor::set($this, false, $closedFor);
 
         return $this;
     }
@@ -615,17 +615,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getUrlObjs(string $urlFieldName): array
     {
-        return Url::getObjs($this, $urlFieldName);
+        return UrlAccessor::getObjs($this, $urlFieldName);
     }
 
     private function getUrl(string $urlFieldName): string
     {
-        return Url::get($this, $urlFieldName);
+        return UrlAccessor::get($this, $urlFieldName);
     }
 
     private function setUrl(string $urlFieldName, string $newUrl): void
     {
-        Url::set($this, $urlFieldName, $newUrl);
+        UrlAccessor::set($this, $urlFieldName, $newUrl);
     }
 
     //

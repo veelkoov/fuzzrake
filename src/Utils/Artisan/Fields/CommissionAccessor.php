@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Accessors;
+namespace App\Utils\Artisan\Fields;
 
 use App\DataDefinitions\Fields;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
-final class Commission extends AbstractAccessor
+final class CommissionAccessor extends AbstractAccessor
 {
     public static function set(Artisan $artisan, bool $isOpen, string $newValue): void
     {

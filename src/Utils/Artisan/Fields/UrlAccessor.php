@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Accessors;
+namespace App\Utils\Artisan\Fields;
 
 use App\Entity\ArtisanUrl;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
-final class Url extends AbstractAccessor
+final class UrlAccessor extends AbstractAccessor
 {
     public static function set(Artisan $artisan, string $urlFieldName, string $newValue): void
     {

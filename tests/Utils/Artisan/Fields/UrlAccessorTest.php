@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Accessors;
+namespace App\Tests\Utils\Artisan\Fields;
 
 use App\DataDefinitions\Fields;
 use App\Entity\Artisan;
 use App\Entity\ArtisanUrl;
-use App\Utils\Accessors\AbstractAccessor;
-use App\Utils\Accessors\Url;
 use App\Utils\Artisan\SmartAccessDecorator as Smart;
 use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
@@ -16,9 +14,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * @see AbstractAccessor
  * @see ArtisanChanges
- * @see Url
+ * @see UrlAccessor
  */
-class UrlTest extends TestCase
+class UrlAccessorTest extends TestCase
 {
     public function testSet(): void
     {
