@@ -44,7 +44,7 @@ final class Url extends AbstractAccessor
     }
 
     /**
-     * @param $existingItem ArtisanUrl
+     * @param ArtisanUrl $existingItem
      */
     protected static function getValue($existingItem): string
     {

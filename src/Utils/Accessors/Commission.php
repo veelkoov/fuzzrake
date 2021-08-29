@@ -45,7 +45,7 @@ final class Commission extends AbstractAccessor
     }
 
     /**
-     * @param $existingItem ArtisanCommissionsStatus
+     * @param ArtisanCommissionsStatus $existingItem
      */
     protected static function getValue($existingItem): string
     {
