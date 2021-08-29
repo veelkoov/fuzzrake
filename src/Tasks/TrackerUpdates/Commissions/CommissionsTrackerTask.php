@@ -9,7 +9,6 @@ use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
-use App\Utils\Artisan\Fields\CommissionAccessor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\StringList;
@@ -177,7 +176,11 @@ class CommissionsTrackerTask implements TrackerTaskInterface
 
             $newValue = StringList::pack(array_map(fn (OfferStatus $item): string => ucfirst(strtolower($item->getOffer())), $offersMatchingStatus));
 
-            CommissionAccessor::set($result->getChanged(), $status, $newValue);
+            if ($status) {
+                $result->getChanged()->setOpenFor($newValue);
+            } else {
+                $result->getChanged()->setClosedFor($newValue);
+            }
         }
 
         return $result;
