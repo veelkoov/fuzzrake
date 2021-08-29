@@ -20,11 +20,10 @@ use App\Utils\IuSubmissions\IuSubmission;
 use App\Utils\IuSubmissions\Messaging;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 
 class DataImport
 {
-    private ObjectRepository | ArtisanRepository $artisanRepository;
+    private ArtisanRepository $artisanRepository;
     private Messaging $messaging;
 
     public function __construct(

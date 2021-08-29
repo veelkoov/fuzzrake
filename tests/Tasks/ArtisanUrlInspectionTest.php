@@ -12,16 +12,12 @@ use App\Tasks\ArtisanUrlInspection;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\Snapshot\WebpageSnapshotCache;
-use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
 {
-    /**
-     * @throws ORMException
-     */
     public function testInspect(): void
     {
         self::bootKernel();

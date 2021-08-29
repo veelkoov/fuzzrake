@@ -10,7 +10,6 @@ use App\Utils\Artisan\Utils;
 use App\Utils\DataInputException;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -148,7 +147,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
      *
      * Two tested artisans: an updated one, and a new one.
      *
-     * @throws ORMException|JsonException|DataInputException
+     * @throws JsonException|DataInputException
      */
     public function testIuSubmissionAndImportFlow(): void
     {

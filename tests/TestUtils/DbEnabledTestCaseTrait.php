@@ -10,8 +10,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
-use RuntimeException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait DbEnabledTestCaseTrait
@@ -100,14 +98,10 @@ trait DbEnabledTestCaseTrait
 
     protected static function persistAndFlush(object ...$entities): void
     {
-        try {
-            foreach ($entities as $entity) {
-                self::getEM()->persist($entity);
-            }
-
-            self::getEM()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        foreach ($entities as $entity) {
+            self::getEM()->persist($entity);
         }
+
+        self::getEM()->flush();
     }
 }

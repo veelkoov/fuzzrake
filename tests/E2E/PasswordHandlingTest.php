@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\Utils\DataInputException;
-use Doctrine\ORM\ORMException;
-use Doctrine\Persistence\Mapping\MappingException;
 use JsonException;
 
 class PasswordHandlingTest extends IuSubmissionAbstractTest
 {
     /**
-     * @throws DataInputException|JsonException|ORMException|MappingException
+     * @throws DataInputException|JsonException
      */
     public function testNewMakerPasswordIsHashed(): void
     {
@@ -40,7 +38,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
     }
 
     /**
-     * @throws MappingException|ORMException|DataInputException|JsonException
+     * @throws DataInputException|JsonException
      */
     public function testMakerUpdatedWithCorrectPasswordHasUnchangedHash(): void
     {
@@ -71,7 +69,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
     }
 
     /**
-     * @throws MappingException|ORMException|DataInputException|JsonException
+     * @throws DataInputException|JsonException
      */
     public function testMakerUpdatedWithPasswordChangeHasUpdatedHash(): void
     {
@@ -103,7 +101,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
     }
 
     /**
-     * @throws MappingException|ORMException|DataInputException|JsonException
+     * @throws DataInputException|JsonException
      */
     public function testNotAcceptedMakerWithWrongPasswordDoesntGetUpdated(): void
     {

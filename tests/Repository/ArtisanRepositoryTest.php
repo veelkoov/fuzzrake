@@ -9,7 +9,6 @@ use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Smart;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
-use Doctrine\Persistence\Mapping\MappingException;
 
 class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 {
@@ -69,7 +68,6 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 
     /**
      * @throws NoResultException
-     * @throws MappingException
      */
     public function testFindByMakerIdReturnsCompleteMakerIdsSet(): void
     {

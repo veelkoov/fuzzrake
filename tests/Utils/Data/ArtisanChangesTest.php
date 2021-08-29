@@ -10,15 +10,9 @@ use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
-use Doctrine\ORM\ORMException;
-use Doctrine\Persistence\Mapping\MappingException;
 
 class ArtisanChangesTest extends DbEnabledKernelTestCase
 {
-    /**
-     * @throws MappingException
-     * @throws ORMException
-     */
     public function testApply(): void
     {
         self::bootKernel();

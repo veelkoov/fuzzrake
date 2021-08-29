@@ -8,13 +8,9 @@ use App\Entity\Artisan;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use DateTime;
-use Doctrine\ORM\ORMException;
 
 class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
 {
-    /**
-     * @throws ORMException
-     */
     public function testChangingUrlResetsLastSuccessAndFailure(): void
     {
         self::bootKernel();

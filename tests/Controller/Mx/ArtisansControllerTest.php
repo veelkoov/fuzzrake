@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\DbEnabledWebTestCase;
-use Doctrine\Persistence\Mapping\MappingException;
 
 class ArtisansControllerTest extends DbEnabledWebTestCase
 {
@@ -18,9 +17,6 @@ class ArtisansControllerTest extends DbEnabledWebTestCase
         static::assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @throws MappingException
-     */
     public function testEditArtisan()
     {
         $client = static::createClient();
