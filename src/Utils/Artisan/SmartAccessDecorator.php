@@ -108,7 +108,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return call_user_func([$this, $getter]);
     }
 
-    // ===== HELPER GETTERS AND SETTERS =====
+    //
+    // ===== MAKER ID HELPERS =====
+    //
 
     public function getLastMakerId(): string
     {
@@ -163,6 +165,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     {
         return array_filter(array_merge([$this->artisan->getMakerId()], $this->getFormerMakerIdsArr()));
     }
+
+    //
+    // ===== VARIOUS HELPERS =====
+    //
 
     /**
      * @return string[]
@@ -461,14 +467,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function getPricesUrl(): string
     {
         return $this->getUrl(Fields::URL_PRICES);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getPricesUrls(): array
-    {
-        return StringList::unpack($this->getUrl(Fields::URL_PRICES));
     }
 
     public function setPricesUrl(string $pricesUrl): self
