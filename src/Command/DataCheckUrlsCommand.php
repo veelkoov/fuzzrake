@@ -18,8 +18,6 @@ class DataCheckUrlsCommand extends Command
     private const DEFAULT_LIMIT = 10;
     private const OPT_LIMIT = 'limit';
 
-    protected static $defaultName = 'app:data:check-urls';
-
     public function __construct(
         private ArtisanUrlInspectionFactory $factory,
         private EntityManagerInterface $entityManager,
@@ -29,7 +27,10 @@ class DataCheckUrlsCommand extends Command
 
     protected function configure()
     {
-        $this->addOption(self::OPT_LIMIT, '', InputOption::VALUE_REQUIRED, 'Number of URLs to check', self::DEFAULT_LIMIT);
+        $this
+            ->setName('app:data:check-urls')
+            ->addOption(self::OPT_LIMIT, '', InputOption::VALUE_REQUIRED, 'Number of URLs to check', self::DEFAULT_LIMIT)
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

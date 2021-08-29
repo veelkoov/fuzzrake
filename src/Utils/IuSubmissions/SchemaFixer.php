@@ -6,7 +6,6 @@ namespace App\Utils\IuSubmissions;
 
 use App\DataDefinitions\Fields;
 use App\Utils\Traits\Singleton;
-use DateTimeInterface;
 
 final class SchemaFixer
 {
@@ -15,7 +14,7 @@ final class SchemaFixer
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
     private const CURRENT_SCHEMA_VERSION = 9;
 
-    public function fix(array $data, DateTimeInterface $timestamp): array
+    public function fix(array $data): array
     {
         $data = self::assureVersionFieldExists($data);
 

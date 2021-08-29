@@ -16,7 +16,7 @@ class AbstractFormController extends AbstractController
         $button = $form->get($buttonId);
 
         if (!($button instanceof SubmitButton)) {
-            throw new UnexpectedValueException("{$buttonId} is not a button, I feel betrayed :(");
+            throw new UnexpectedValueException("$buttonId is not a button, I feel betrayed :(");
         }
 
         return $button->isClicked();

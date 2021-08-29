@@ -61,7 +61,7 @@ class StringBuffer
         }
 
         if (count($parts) < 2) {
-            throw new UnexpectedValueException("Unable to find '{$terminator}' in the remaining buffer '{$this->buffer}'");
+            throw new UnexpectedValueException("Unable to find '$terminator' in the remaining buffer '$this->buffer'");
         }
 
         $this->buffer = new UnicodeString($parts[1]);

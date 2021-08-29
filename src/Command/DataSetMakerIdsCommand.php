@@ -12,13 +12,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DataSetMakerIdsCommand extends Command
 {
-    protected static $defaultName = 'app:data:set-maker-ids';
-
     public function __construct(
         private ArtisanRepository $artisanRepository,
         private EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('app:data:set-maker-ids')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

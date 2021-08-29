@@ -40,7 +40,7 @@ class FreeUrl implements Fetchable, Stringable
 
     public function __toString(): string
     {
-        return self::class.":{$this->url}";
+        return self::class.":$this->url";
     }
 
     public function resetFetchResults(): void

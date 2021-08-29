@@ -51,7 +51,7 @@ final class Parse
 
         $result = (int) substr($input, 0, -1);
 
-        if ((string) $result.'%' !== $input) {
+        if ("$result%" !== $input) {
             throw new ParseException("'$input' is not a valid percent integer");
         }
 
@@ -69,7 +69,7 @@ final class Parse
 
         $result = (float) $input;
 
-        if ('-' === substr($input, 0, 1)) {
+        if (str_starts_with($input, '-')) {
             $input = substr($input, 1);
         }
 

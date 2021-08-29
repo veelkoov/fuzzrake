@@ -11,6 +11,7 @@ class SinceTransformer implements DataTransformerInterface
 {
     use Singleton;
 
+    /** @noinspection PhpMissingReturnTypeInspection Overridden */
     public function transform($value)
     {
         return pattern('^\d{4}-\d{2}$')->test($value) ? $value.'-01' : '';

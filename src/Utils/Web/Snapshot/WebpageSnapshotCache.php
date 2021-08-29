@@ -60,6 +60,6 @@ class WebpageSnapshotCache
 
         $urlHash = hash('sha224', $url);
 
-        return "{$this->cacheDirPath}/{$hostName}/{$urlFsSafe}-{$urlHash}";
+        return "$this->cacheDirPath/$hostName/$urlFsSafe-$urlHash";
     }
 }

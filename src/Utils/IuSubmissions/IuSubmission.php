@@ -42,11 +42,11 @@ class IuSubmission implements FieldReadInterface
         $value = $this->data[$field->name()] ?? null;
 
         if (null === $value) {
-            throw new DataInputException("Submission {$this->id} is missing {$field->name()}");
+            throw new DataInputException("Submission $this->id is missing {$field->name()}");
         }
 
         if ($field->isList() && !is_array($value)) {
-            throw new DataInputException("Expected an array for {$field->name()}, got '$value' instead in {$this->id}");
+            throw new DataInputException("Expected an array for {$field->name()}, got '$value' instead in $this->id");
         }
 
         return $field->isList() ? StringList::pack($value) : $value;
@@ -60,7 +60,7 @@ class IuSubmission implements FieldReadInterface
     {
         $timestamp = self::getTimestampFromFilePath($source->getRelativePathname());
         $id = self::getIdFromFilePath($source->getRelativePathname());
-        $data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()), $timestamp);
+        $data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()));
 
         return new self($timestamp, $id, $data);
     }

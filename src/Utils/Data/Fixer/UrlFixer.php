@@ -20,8 +20,7 @@ class UrlFixer extends StringFixer
     public function fix(string $fieldName, string $subject): string
     {
         $result = parent::fix($fieldName, $subject);
-        $result = $this->replacements->do($result);
 
-        return $result;
+        return $this->replacements->do($result);
     }
 }

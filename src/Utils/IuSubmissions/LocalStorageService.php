@@ -6,7 +6,6 @@ namespace App\Utils\IuSubmissions;
 
 use App\Utils\DateTime\DateTimeUtils;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LocalStorageService
@@ -14,7 +13,6 @@ class LocalStorageService
     private Filesystem $filesystem;
 
     public function __construct(
-        private LoggerInterface $logger,
         private string $dataDirPath,
     ) {
         $this->filesystem = new Filesystem();

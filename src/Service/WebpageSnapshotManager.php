@@ -128,10 +128,10 @@ class WebpageSnapshotManager
             $url->recordSuccessfulFetch();
         } else {
             $code = $exception ? $exception->getCode() : $snapshot->getHttpCode();
-            $message = $exception ? $exception->getMessage() : "HTTP {$code} returned for \"{$url->getUrl()}\"";
+            $message = $exception ? $exception->getMessage() : "HTTP $code returned for \"{$url->getUrl()}\"";
 
             $url->recordFailedFetch($code, $message);
-            $this->logger->debug("Failed fetching: {$url} {$message}");
+            $this->logger->debug("Failed fetching: '$url' ($message)");
         }
     }
 }

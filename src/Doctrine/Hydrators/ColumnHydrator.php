@@ -14,6 +14,7 @@ class ColumnHydrator extends AbstractHydrator
 {
     public const COLUMN_HYDRATOR = 'COLUMN_HYDRATOR';
 
+    /** @noinspection PhpMissingReturnTypeInspection Overridden */
     protected function hydrateAllData()
     {
         return $this->_stmt->fetchAll(PDO::FETCH_COLUMN);

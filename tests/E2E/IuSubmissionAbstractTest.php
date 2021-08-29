@@ -58,7 +58,7 @@ abstract class IuSubmissionAbstractTest extends DbEnabledWebTestCase
 
         $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
         $import = new DataImport(self::getEM(), $this->getImportManager($acceptAll), $printer,
-            static::$container->get(FdvFactory::class)->create($printer), false);
+            static::getContainer()->get(FdvFactory::class)->create($printer), false);
 
         $import->import(Finder::getFrom(self::IMPORT_DATA_DIR));
 

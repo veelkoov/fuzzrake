@@ -23,8 +23,8 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
     {
         self::bootKernel();
 
-        foreach ($artisans as $key => $_) {
-            $artisans[$key] = clone $artisans[$key]; // Don't mangle the tests
+        foreach ($artisans as $key => $artisan) {
+            $artisans[$key] = clone $artisan; // Don't mangle the tests
             self::getEM()->persist($artisans[$key]);
         }
         self::getEM()->flush();

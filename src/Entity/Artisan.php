@@ -1398,6 +1398,7 @@ class Artisan implements JsonSerializable, FieldReadInterface, Stringable
     // ===== NON-TRIVIAL VALIDATION =====
     //
 
+    /** @noinspection PhpUnusedParameterInspection Constraint signature expectation */
     #[Callback(groups: ['iu_form'])]
     public function validate(ExecutionContextInterface $context, $payload): void
     {

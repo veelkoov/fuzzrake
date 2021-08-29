@@ -18,8 +18,6 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class DataSetMiniaturesCommand extends Command
 {
-    protected static $defaultName = 'app:data:set-miniatures';
-
     public function __construct(
         private ArtisanRepository $artisanRepository,
         private EntityManagerInterface $entityManager,
@@ -31,7 +29,10 @@ class DataSetMiniaturesCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('commit', null, null, 'Save changes in the database');
+        $this
+            ->setName('app:data:set-miniatures')
+            ->addOption('commit', null, null, 'Save changes in the database')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

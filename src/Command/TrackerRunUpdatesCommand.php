@@ -19,8 +19,6 @@ class TrackerRunUpdatesCommand extends Command
     private const OPT_COMMIT = 'commit';
     private const ARG_MODE = 'mode';
 
-    protected static $defaultName = 'app:tracker:run-updates';
-
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TrackerTaskRunnerFactory $factory,
@@ -30,9 +28,12 @@ class TrackerRunUpdatesCommand extends Command
 
     protected function configure()
     {
-        $this->addOption(self::OPT_REFETCH, null, null, 'Refresh cache (re-fetch pages)');
-        $this->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database');
-        $this->addArgument(self::ARG_MODE, InputArgument::REQUIRED, 'Mode of work');
+        $this
+            ->setName('app:tracker:run-updates')
+            ->addOption(self::OPT_REFETCH, null, null, 'Refresh cache (re-fetch pages)')
+            ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
+            ->addArgument(self::ARG_MODE, InputArgument::REQUIRED, 'Mode of work')
+        ;
     }
 
     /**

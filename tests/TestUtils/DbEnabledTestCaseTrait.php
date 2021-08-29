@@ -12,12 +12,13 @@ use App\Utils\Password;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use RuntimeException;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 trait DbEnabledTestCaseTrait
 {
     private static ?EntityManager $entityManager = null;
 
-    protected static function bootKernel(array $options = [])
+    protected static function bootKernel(array $options = []): KernelInterface
     {
         $result = parent::bootKernel($options);
 
@@ -29,7 +30,7 @@ trait DbEnabledTestCaseTrait
 
     protected static function getEM(): EntityManager
     {
-        return self::$entityManager ??= self::$container->get('doctrine.orm.default_entity_manager');
+        return self::$entityManager ??= self::getContainer()->get('doctrine.orm.default_entity_manager');
     }
 
     protected static function resetDB(): void
@@ -39,7 +40,7 @@ trait DbEnabledTestCaseTrait
 
     protected static function findArtisanByMakerId(string $makerId): Artisan
     {
-        return static::$container->get(ArtisanRepository::class)->findOneBy(['makerId' => $makerId]);
+        return static::getContainer()->get(ArtisanRepository::class)->findOneBy(['makerId' => $makerId]);
     }
 
     protected static function addSimpleArtisan(): Artisan

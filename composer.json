@@ -8,6 +8,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "ext-pdo": "*",
         "composer/package-versions-deprecated": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",

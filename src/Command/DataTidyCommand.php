@@ -25,8 +25,6 @@ class DataTidyCommand extends Command
     private const OPT_WITH_INACTIVE = 'with-inactive';
     private const ARG_CORRECTIONS_FILE = 'corrections-file';
 
-    protected static $defaultName = 'app:data:tidy';
-
     private ArtisanRepository $artisanRepo;
 
     public function __construct(
@@ -40,9 +38,12 @@ class DataTidyCommand extends Command
 
     protected function configure()
     {
-        $this->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database');
-        $this->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include inactive artisans');
-        $this->addArgument(self::ARG_CORRECTIONS_FILE, InputArgument::OPTIONAL, 'Corrections file path');
+        $this
+            ->setName('app:data:tidy')
+            ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
+            ->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include inactive artisans')
+            ->addArgument(self::ARG_CORRECTIONS_FILE, InputArgument::OPTIONAL, 'Corrections file path')
+        ;
     }
 
     /**

@@ -34,6 +34,7 @@ class SnsService
         $optionalWarning = $s3SendingOk ? '' : "WARNING: S3 sending failed!\n\n";
 
         $names = StrUtils::artisanNamesSafeForCli($data);
+        /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection Readability */
         $message = <<<MESSAGE
             {$optionalWarning}{$names}
             From: {$data->getCountry()}

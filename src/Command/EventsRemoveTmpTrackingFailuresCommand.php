@@ -19,8 +19,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class EventsRemoveTmpTrackingFailuresCommand extends Command
 {
-    protected static $defaultName = 'app:events:remove-tmp-tracking-failures';
-
     private ObjectRepository | EventRepository $eventRepository;
 
     public function __construct(
@@ -34,10 +32,12 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command
     protected function configure()
     {
         $this
+            ->setName('app:events:remove-tmp-tracking-failures')
             ->setDescription('Get rid of X -> unknown -> x state changes between two given dates')
             ->addArgument('date1', InputArgument::REQUIRED, 'Date when failures occurred')
             ->addArgument('date2', InputArgument::REQUIRED, 'Date when failures were corrected')
-            ->addOption('commit', null, InputOption::VALUE_NONE, 'Save changes in the database');
+            ->addOption('commit', null, InputOption::VALUE_NONE, 'Save changes in the database')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

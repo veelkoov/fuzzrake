@@ -49,7 +49,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
                         COALESCE(us.last_failure, '2020-01-01 00:00:00'),
                         COALESCE(us.last_success, '2020-01-01 00:00:00')
                     ) ASC
-                    LIMIT {$limit}
+                    LIMIT $limit
                 ", $rsm)
             ->execute();
     }

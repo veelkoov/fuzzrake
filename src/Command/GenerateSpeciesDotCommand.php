@@ -34,8 +34,6 @@ class GenerateSpeciesDotCommand extends Command
         'Real life animals',
     ];
 
-    protected static $defaultName = 'app:data:generate-species-dot';
-
     private Filesystem $fs;
 
     public function __construct(
@@ -44,6 +42,13 @@ class GenerateSpeciesDotCommand extends Command
         parent::__construct();
 
         $this->fs = new Filesystem();
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('app:data:generate-species-dot')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

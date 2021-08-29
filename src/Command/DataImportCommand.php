@@ -18,8 +18,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataImportCommand extends Command
 {
-    protected static $defaultName = 'app:data:import';
-
     public function __construct(
         private DataImportFactory $dataImportFactory,
         private EntityManagerInterface $objectManager,
@@ -29,10 +27,13 @@ class DataImportCommand extends Command
 
     protected function configure()
     {
-        $this->addOption('commit', null, null, 'Save changes in the database');
-        $this->addOption('fix-mode', null, null, 'Show import command for fixes');
-        $this->addArgument('import-dir', InputArgument::REQUIRED, 'Import directory path');
-        $this->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path');
+        $this
+            ->setName('app:data:import')
+            ->addOption('commit', null, null, 'Save changes in the database')
+            ->addOption('fix-mode', null, null, 'Show import command for fixes')
+            ->addArgument('import-dir', InputArgument::REQUIRED, 'Import directory path')
+            ->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path')
+        ;
     }
 
     /**

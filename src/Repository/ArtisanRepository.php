@@ -260,7 +260,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
         foreach ($items as $i => $item) {
             $ORs[] = "a.otherOrderTypes LIKE :par$i OR a.otherStyles LIKE :par$i OR a.otherFeatures LIKE :par$i";
-            $parameters["par$i"] = "%{$items[$i]}%";
+            $parameters["par$i"] = "%$item%";
         }
 
         return $this->createQueryBuilder('a')

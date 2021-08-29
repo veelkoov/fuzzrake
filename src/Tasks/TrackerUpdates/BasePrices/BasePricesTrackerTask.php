@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 
 class BasePricesTrackerTask implements TrackerTaskInterface
 {
+    /** @noinspection PhpPropertyOnlyWrittenInspection */
     public function __construct(
         private ArtisanRepository $repository,
         private LoggerInterface $logger,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Doctrine\Dql;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Subselect;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\QueryException;
@@ -12,9 +13,9 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class DateFunction extends FunctionNode
 {
-    public $stringExpression;
+    public Subselect|string $stringExpression;
 
-    public function getSql(SqlWalker $sqlWalker)
+    public function getSql(SqlWalker $sqlWalker): string
     {
         return 'DATE('.$sqlWalker->walkStringPrimary($this->stringExpression).')';
     }

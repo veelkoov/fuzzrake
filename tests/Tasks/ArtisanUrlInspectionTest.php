@@ -34,7 +34,7 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
         self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastFailure());
         self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastSuccess());
 
-        $task = new ArtisanUrlInspection(self::getEM(), $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
+        $task = new ArtisanUrlInspection(self::getEM()->getRepository(ArtisanUrl::class), $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
         $task->inspect(1);
         self::getEM()->flush();
 

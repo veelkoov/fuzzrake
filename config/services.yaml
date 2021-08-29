@@ -66,7 +66,6 @@ services:
 
     App\Utils\IuSubmissions\LocalStorageService:
         arguments:
-            - '@logger'
             - '%env(resolve:SUBMISSIONS_DIR_PATH)%'
 
     App\Utils\IuSubmissions\S3StorageService:
