@@ -40,6 +40,11 @@
     "region": "Africa & Asia"
   },
   {
+    "name": "Croatia",
+    "code": "HR",
+    "region": "Europe"
+  },
+  {
     "name": "Costa Rica",
     "code": "CR",
     "region": "America"
