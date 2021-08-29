@@ -21,7 +21,7 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
             ->setName('Artisan 1')
             ->setCity('Varkaus')
             ->setFaqUrl('https://some-faq-address/')
-            ->setCommissionsUrl('https://some-commissions-address/')
+            ->setCommissionsUrls('https://some-commissions-address/')
             ->setOpenFor('Pancakes')
             ->setClosedFor('Maple syrup')
         ;

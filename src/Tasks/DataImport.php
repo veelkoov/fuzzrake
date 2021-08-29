@@ -8,7 +8,6 @@ use App\DataDefinitions\Fields;
 use App\Entity\Artisan as ArtisanEntity;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Artisan\Utils;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
@@ -140,7 +139,7 @@ class DataImport
                         break; // No updates
                     }
 
-                    Utils::updateContact($artisan, $newValue);
+                    $artisan->updateContact($newValue);
                     break;
 
                 case Fields::URL_PHOTOS:

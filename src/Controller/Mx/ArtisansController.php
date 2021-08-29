@@ -8,7 +8,6 @@ use App\Entity\Artisan as ArtisanEntity;
 use App\Form\ArtisanType;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Artisan\Utils;
 use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -37,7 +36,7 @@ class ArtisansController extends AbstractFormController
             if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
                 $this->getDoctrine()->getManager()->remove($entity);
             } else {
-                Utils::updateContact($artisan, $artisan->getContactInfoOriginal());
+                $artisan->updateContact($artisan->getContactInfoOriginal());
                 StrUtils::fixNewlines($artisan);
 
                 $this->getDoctrine()->getManager()->persist($entity);

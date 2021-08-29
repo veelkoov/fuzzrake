@@ -159,8 +159,8 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('pricesUrl', TextareaType::class, [
-                'label'      => 'Prices URL',
+            ->add('pricesUrls', TextareaType::class, [
+                'label'      => 'Prices URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -209,8 +209,8 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('commissionsUrl', TextareaType::class, [
-                'label'      => 'Commissions URL',
+            ->add('commissionsUrls', TextareaType::class, [
+                'label'      => 'Commissions URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])

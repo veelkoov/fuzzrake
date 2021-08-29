@@ -6,7 +6,6 @@ namespace App\Tests\E2E;
 
 use App\DataDefinitions\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Artisan\Utils;
 use App\Utils\DataInputException;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -156,7 +155,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         $this->checkFieldsArrayCompleteness(); // Test self-test
 
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::SET);
-        Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
+        $oldArtisan1->updateContact($oldArtisan1->getContactInfoOriginal());
 
         self::getEM()->persist($oldArtisan1);
         self::getEM()->flush();

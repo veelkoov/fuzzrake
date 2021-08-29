@@ -22,12 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommissionsTrackerTaskTest extends TestCase
 {
-    public function testNoCommissionsUrlResetsEverything(): void
+    public function testNoCommissionsUrlsResetsEverything(): void
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(true) // We had error marker before
             ->addCommission(new ArtisanCommissionsStatus()) // There was some status
-            ->setCommissionsUrl(''); // Artisan removed tracking
+            ->setCommissionsUrls(''); // Artisan removed tracking
         $inputArtisan->getVolatileData()
             ->setLastCsUpdate(new DateTime('1 day ago')); // We had some check previously
 
@@ -44,7 +44,7 @@ class CommissionsTrackerTaskTest extends TestCase
     public function testCheckSetsLastCsTimestamp(): void
     {
         $inputArtisan = (new Artisan())
-            ->setCommissionsUrl('one-url'); // There is a single URL to check
+            ->setCommissionsUrls('one-url'); // There is a single URL to check
 
         $testSubject = $this->getTestSubject($inputArtisan, [
             [], // We get empty analysis result (should not matter for the timestamp)
@@ -61,7 +61,7 @@ class CommissionsTrackerTaskTest extends TestCase
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(true) // There was an error marker
-            ->setCommissionsUrl('one-url'); // There is a single URL to check
+            ->setCommissionsUrls('one-url'); // There is a single URL to check
 
         $os1 = new OfferStatus('Some-offer', true);
 
@@ -80,7 +80,7 @@ class CommissionsTrackerTaskTest extends TestCase
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(false) // There was no error marker before
-            ->setCommissionsUrl('one-url'); // We check a single URL
+            ->setCommissionsUrls('one-url'); // We check a single URL
 
         $testSubject = $this->getTestSubject($inputArtisan, [
             [], // We get empty analysis result
@@ -97,7 +97,7 @@ class CommissionsTrackerTaskTest extends TestCase
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(false) // There was no error marker before
-            ->setCommissionsUrl("one-url\nsecond-url"); // There are two tracked URLs
+            ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
         $testSubject = $this->getTestSubject($inputArtisan, [
             [new OfferStatus('Some-offer', true)], // First URL brought some results
@@ -115,7 +115,7 @@ class CommissionsTrackerTaskTest extends TestCase
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(true) // There was an error marker before
-            ->setCommissionsUrl("one-url\nsecond-url"); // There are two tracked URLs
+            ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
         $os1 = new OfferStatus('Some-offer', true);
         $os2 = new OfferStatus('Another-offer', true);
@@ -136,7 +136,7 @@ class CommissionsTrackerTaskTest extends TestCase
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(false) // There was no error marker before
-            ->setCommissionsUrl("one-url\nsecond-url"); // There are two tracked URLs
+            ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
         $os1 = new OfferStatus('Some-offer', true);
         $os2 = new OfferStatus('Another-offer', true);
@@ -157,7 +157,7 @@ class CommissionsTrackerTaskTest extends TestCase
     {
         $inputArtisan = (new Artisan())
             ->setCsTrackerIssue(false) // There was no error marker before
-            ->setCommissionsUrl("one-url\nsecond-url"); // There are two tracked URLs
+            ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
         $os1 = new OfferStatus('Some-offer', true);
         $os2 = new OfferStatus('Another-offer', false);

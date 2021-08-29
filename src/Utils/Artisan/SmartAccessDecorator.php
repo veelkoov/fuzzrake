@@ -15,6 +15,7 @@ use App\Entity\ArtisanVolatileData;
 use App\Entity\MakerId;
 use App\Utils\Artisan\Fields\CommissionAccessor;
 use App\Utils\Artisan\Fields\UrlAccessor;
+use App\Utils\Contact;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -194,6 +195,23 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function allowsFeedback(): bool
     {
         return ContactPermit::FEEDBACK === $this->artisan->getContactAllowed();
+    }
+
+    public function updateContact(string $newOriginalContactValue): void
+    {
+        [$method, $address] = Contact::parse($newOriginalContactValue);
+
+        $obfuscated = match ($method) {
+            Contact::INVALID => 'PLEASE CORRECT',
+            ''               => '',
+            default          => $method.': '.Contact::obscure($address),
+        };
+
+        $this->setContactMethod($method)
+            ->setContactInfoObfuscated($obfuscated)
+            ->getPrivateData()
+            ->setOriginalContactInfo($newOriginalContactValue)
+            ->setContactAddress($address);
     }
 
     //
@@ -416,14 +434,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getCommissionsUrl(): string
+    public function getCommissionsUrls(): string
     {
         return $this->getUrl(Fields::URL_COMMISSIONS);
     }
 
-    public function setCommissionsUrl(string $commissionsUrl): self
+    public function setCommissionsUrls(string $commissionsUrls): self
     {
-        $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrl);
+        $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrls);
 
         return $this;
     }
@@ -464,14 +482,22 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getPricesUrl(): string
+    public function getPricesUrls(): string
     {
         return $this->getUrl(Fields::URL_PRICES);
     }
 
-    public function setPricesUrl(string $pricesUrl): self
+    /**
+     * @return string[]
+     */
+    public function getPricesUrlsArray(): array
     {
-        $this->setUrl(Fields::URL_PRICES, $pricesUrl);
+        return StringList::unpack($this->getUrl(Fields::URL_PRICES));
+    }
+
+    public function setPricesUrls(string $pricesUrls): self
+    {
+        $this->setUrl(Fields::URL_PRICES, $pricesUrls);
 
         return $this;
     }

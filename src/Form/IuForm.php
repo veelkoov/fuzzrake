@@ -90,7 +90,7 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('pricesUrl', TextareaType::class, [
+            ->add('pricesUrls', TextareaType::class, [
                 'label'      => 'Do you keep a prices list somewhere online? Please copy+paste full link:',
                 'help'       => 'Please supply a <strong>precise</strong> link, not one to e.g. the homepage. Preferred: typical webpages, FurAffinity. Avoid images, social media. If you keep prices for multiple offers on different pages, you can paste multiple addresses here, each one in a separate line.',
                 'help_html'  => true,
@@ -297,7 +297,7 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('commissionsUrl', TextareaType::class, [
+            ->add('commissionsUrls', TextareaType::class, [
                 'label'      => 'Where do you publish your commissions/quotes status? Put the address here:',
                 'help'       => 'Simply writing "open" in this field will not work, only accepted values are URLs (addresses). Please remember that you need to provide precise address - <strong>no clicking/tapping</strong> to see the status text is allowed (scrolling is OK). For example, if you created a webpage with the address like <em>https://example.com/</em> and you post the commissions status on a subpage like <em>https://example.com/commissions</em>, then you should use the latter address.', // Not mentioning possibility to track multiple pages at once, as it may be taken as suggestion to list different pages/social DUPLICATING the information
                 'help_html'  => true,

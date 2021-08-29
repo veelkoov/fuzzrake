@@ -22,7 +22,7 @@ class EventFactory
 
         return (new Event())
             ->setType(Event::TYPE_CS_UPDATED)
-            ->setCheckedUrls($changed->getCommissionsUrl())
+            ->setCheckedUrls($changed->getCommissionsUrls())
             ->setArtisanName($changed->getName())
             ->setTrackingIssues($changed->getCsTrackerIssue())
             ->setNoLongerOpenFor(StringList::pack($noLongerOpenFor))

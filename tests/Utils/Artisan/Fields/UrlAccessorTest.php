@@ -25,8 +25,8 @@ class UrlAccessorTest extends TestCase
 
         $smart->setWebsiteUrl('website')
             ->setOtherUrls("other\nanother")
-            ->setPricesUrl("price1\ncost2")
-            ->setCommissionsUrl('commissions1');
+            ->setPricesUrls("price1\ncost2")
+            ->setCommissionsUrls('commissions1');
 
         self::assertEquals([
             'URL_COMMISSIONS commissions1',
@@ -38,8 +38,8 @@ class UrlAccessorTest extends TestCase
 
         $smart->setWebsiteUrl('websiteChanged')
             ->setOtherUrls('other')
-            ->setPricesUrl("price1\nanother")
-            ->setCommissionsUrl("commissions1\ncomm2addr");
+            ->setPricesUrls("price1\nanother")
+            ->setCommissionsUrls("commissions1\ncomm2addr");
 
         self::assertEquals([
             'URL_COMMISSIONS comm2addr',
@@ -50,7 +50,7 @@ class UrlAccessorTest extends TestCase
             'URL_WEBSITE websiteChanged',
         ], $this->getUrlArray($artisan));
 
-        $smart->setCommissionsUrl('')
+        $smart->setCommissionsUrls('')
             ->setFaqUrl("question\nwhy_new_line");
 
         self::assertEquals([
@@ -72,7 +72,7 @@ class UrlAccessorTest extends TestCase
             ->addUrl($this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE));
 
         self::assertEquals('WEBSITE', $smart->getWebsiteUrl());
-        self::assertEquals("PRICE1\nCOST2", $smart->getPricesUrl());
+        self::assertEquals("PRICE1\nCOST2", $smart->getPricesUrls());
     }
 
     public function testGetObjs(): void
