@@ -169,6 +169,7 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
+     * @see SmartAccessDecorator::getLastMakerId()
      */
     private function prepareProvidedInfoData(array $artisans): array
     {
@@ -178,8 +179,8 @@ class StatisticsController extends AbstractController
             $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
                 if ($field->is(Fields::FORMER_MAKER_IDS)) {
                     /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
-                     * so we can rely on Accessor::getLastMakerId() etc. Those IDs are "M000000", where the digits part
-                     * is zero-padded artisan database ID. */
+                     * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part
+                     * where the digits is zero-padded artisan database ID. */
 
                     $placeholder = sprintf('M%06d', $artisan->getId());
 
