@@ -32,7 +32,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         private WebpageSnapshotManager $snapshots,
         private CommissionsStatusParser $parser,
     ) {
-        $this->artisans = $this->repository->findAll();
+        $this->artisans = Artisan::wrapAll($this->repository->findAll());
     }
 
     /**

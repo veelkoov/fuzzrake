@@ -179,7 +179,7 @@ class CommissionsTrackerTaskTest extends TestCase
         $mockedUrlsCount = count($mockReturnedOfferStatuses);
 
         $artisanRepoMock = self::createMock(ArtisanRepository::class);
-        $artisanRepoMock->expects(self::once())->method('findAll')->willReturn([$artisan]);
+        $artisanRepoMock->expects(self::once())->method('findAll')->willReturn([$artisan->getArtisan()]);
 
         $loggerMock = self::createMock(LoggerInterface::class);
 
