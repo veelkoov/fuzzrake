@@ -68,10 +68,10 @@ class DataImportTest extends TestCase
 
     private function getBasicArtisan(array $initialData): ArtisanE
     {
-        $smart = Artisan::wrap($result = new ArtisanE());
+        $artisan = Artisan::wrap($result = new ArtisanE());
 
         foreach ($initialData as $fieldName => $value) {
-            $smart->set(Fields::get($fieldName), $value);
+            $artisan->set(Fields::get($fieldName), $value);
         }
 
         return $result;

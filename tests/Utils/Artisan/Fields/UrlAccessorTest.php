@@ -20,9 +20,9 @@ class UrlAccessorTest extends TestCase
 {
     public function testSet(): void
     {
-        $smart = Artisan::wrap($artisan = new ArtisanE());
+        $artisan = Artisan::wrap($entity = new ArtisanE());
 
-        $smart->setWebsiteUrl('website')
+        $artisan->setWebsiteUrl('website')
             ->setOtherUrls("other\nanother")
             ->setPricesUrls("price1\ncost2")
             ->setCommissionsUrls('commissions1');
@@ -33,9 +33,9 @@ class UrlAccessorTest extends TestCase
             'URL_PRICES cost2',
             'URL_PRICES price1',
             'URL_WEBSITE website',
-        ], $this->getUrlArray($artisan));
+        ], $this->getUrlArray($entity));
 
-        $smart->setWebsiteUrl('websiteChanged')
+        $artisan->setWebsiteUrl('websiteChanged')
             ->setOtherUrls('other')
             ->setPricesUrls("price1\nanother")
             ->setCommissionsUrls("commissions1\ncomm2addr");
@@ -47,9 +47,9 @@ class UrlAccessorTest extends TestCase
             'URL_PRICES another',
             'URL_PRICES price1',
             'URL_WEBSITE websiteChanged',
-        ], $this->getUrlArray($artisan));
+        ], $this->getUrlArray($entity));
 
-        $smart->setCommissionsUrls('')
+        $artisan->setCommissionsUrls('')
             ->setFaqUrl("question\nwhy_new_line");
 
         self::assertEquals([
@@ -58,19 +58,19 @@ class UrlAccessorTest extends TestCase
             'URL_PRICES another',
             'URL_PRICES price1',
             'URL_WEBSITE websiteChanged',
-        ], $this->getUrlArray($artisan));
+        ], $this->getUrlArray($entity));
     }
 
     public function testGet(): void
     {
-        $smart = Artisan::wrap($artisan = new ArtisanE());
+        $artisan = Artisan::wrap($entity = new ArtisanE());
 
-        $artisan->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
+        $entity->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
             ->addUrl($this->getNewArtisanUrl('COST2', Fields::URL_PRICES))
             ->addUrl($this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE));
 
-        self::assertEquals('WEBSITE', $smart->getWebsiteUrl());
-        self::assertEquals("PRICE1\nCOST2", $smart->getPricesUrls());
+        self::assertEquals('WEBSITE', $artisan->getWebsiteUrl());
+        self::assertEquals("PRICE1\nCOST2", $artisan->getPricesUrls());
     }
 
     public function testGetObjs(): void
@@ -79,11 +79,11 @@ class UrlAccessorTest extends TestCase
         $url2 = $this->getNewArtisanUrl('COST2', Fields::URL_PRICES);
         $url3 = $this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE);
 
-        $smart = Artisan::wrap($artisan = new ArtisanE());
-        $artisan->addUrl($url1)->addUrl($url2)->addUrl($url3);
+        $artisan = Artisan::wrap($entity = new ArtisanE());
+        $entity->addUrl($url1)->addUrl($url2)->addUrl($url3);
 
-        self::assertEquals([$url1, $url2], array_values($smart->getUrlObjs(Fields::URL_PRICES)));
-        self::assertEquals([$url3], array_values($smart->getUrlObjs(Fields::URL_WEBSITE)));
+        self::assertEquals([$url1, $url2], array_values($artisan->getUrlObjs(Fields::URL_PRICES)));
+        self::assertEquals([$url3], array_values($artisan->getUrlObjs(Fields::URL_WEBSITE)));
     }
 
     private function getUrlArray(ArtisanE $artisan): array
