@@ -8,7 +8,7 @@ use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\FilterService;
 use App\Service\Statistics\StatisticsService;
-use App\Utils\Artisan\SmartAccessDecorator as Smart;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Species\Species;
@@ -37,7 +37,7 @@ class MainController extends AbstractController
         }
 
         $response = $this->render('main/main.html.twig', [
-            'artisans'            => Smart::wrapAll($artisanRepository->getAll()),
+            'artisans'            => Artisan::wrapAll($artisanRepository->getAll()),
             'makerIdsMap'         => $makerIdRepository->getOldToNewMakerIdsMap(),
             'stats'               => $statistics->getMainPageStats(),
             'filters'             => $filterService->getFiltersTplData(),

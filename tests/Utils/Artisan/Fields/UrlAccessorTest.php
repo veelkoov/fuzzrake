@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Artisan\Fields;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
-use App\Utils\Artisan\SmartAccessDecorator as Smart;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 
@@ -20,8 +20,7 @@ class UrlAccessorTest extends TestCase
 {
     public function testSet(): void
     {
-        $artisan = new Artisan();
-        $smart = Smart::wrap($artisan);
+        $smart = Artisan::wrap($artisan = new ArtisanE());
 
         $smart->setWebsiteUrl('website')
             ->setOtherUrls("other\nanother")
@@ -64,8 +63,7 @@ class UrlAccessorTest extends TestCase
 
     public function testGet(): void
     {
-        $artisan = new Artisan();
-        $smart = Smart::wrap($artisan);
+        $smart = Artisan::wrap($artisan = new ArtisanE());
 
         $artisan->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
             ->addUrl($this->getNewArtisanUrl('COST2', Fields::URL_PRICES))
@@ -81,15 +79,14 @@ class UrlAccessorTest extends TestCase
         $url2 = $this->getNewArtisanUrl('COST2', Fields::URL_PRICES);
         $url3 = $this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE);
 
-        $artisan = new Artisan();
-        $smart = Smart::wrap($artisan);
+        $smart = Artisan::wrap($artisan = new ArtisanE());
         $artisan->addUrl($url1)->addUrl($url2)->addUrl($url3);
 
         self::assertEquals([$url1, $url2], array_values($smart->getUrlObjs(Fields::URL_PRICES)));
         self::assertEquals([$url3], array_values($smart->getUrlObjs(Fields::URL_WEBSITE)));
     }
 
-    private function getUrlArray(Artisan $artisan): array
+    private function getUrlArray(ArtisanE $artisan): array
     {
         $result = array_map(fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl(), $artisan->getUrls()->toArray());
         sort($result);

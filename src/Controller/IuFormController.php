@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Artisan as ArtisanEntity;
+use App\Entity\Artisan as ArtisanE;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\ContactPermit;
@@ -33,7 +33,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, RouterInterface $router, ?string $makerId = null): Response
     {
         try {
-            $artisan = Artisan::wrap($makerId ? $artisanRepository->findByMakerId($makerId) : new ArtisanEntity());
+            $artisan = Artisan::wrap($makerId ? $artisanRepository->findByMakerId($makerId) : new ArtisanE());
         } catch (UnexpectedResultException) {
             throw $this->createNotFoundException('Failed to find a maker with given ID');
         }

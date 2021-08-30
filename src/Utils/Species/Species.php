@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Smart;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Regexp\Replacements;
 
 class Species
@@ -87,6 +87,6 @@ class Species
      */
     public function getStats(): array
     {
-        return (new StatsCalculator(Smart::wrapAll($this->artisanRepository->getActive()), $this->flat))->get();
+        return (new StatsCalculator(Artisan::wrapAll($this->artisanRepository->getActive()), $this->flat))->get();
     }
 }

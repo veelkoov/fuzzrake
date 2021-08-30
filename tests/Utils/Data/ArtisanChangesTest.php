@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Data;
 
-use App\Entity\Artisan as ArtisanEntity;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
@@ -65,8 +65,8 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
 
         unset($artisan1, $artisan2);
 
-        $artisan1 = $em->find(ArtisanEntity::class, $id1);
-        $artisan2 = $em->find(ArtisanEntity::class, $id2);
+        $artisan1 = $em->find(ArtisanE::class, $id1);
+        $artisan2 = $em->find(ArtisanE::class, $id2);
 
         self::assertEquals('Artisan 1', $artisan1->getName());
         self::assertEquals('Tampere', $artisan1->getCity());

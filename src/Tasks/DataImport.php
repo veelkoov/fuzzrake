@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tasks;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan as ArtisanEntity;
+use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
@@ -34,7 +34,7 @@ class DataImport
     ) {
         $this->messaging = new Messaging($printer, $manager);
 
-        $this->artisanRepository = $objectManager->getRepository(ArtisanEntity::class);
+        $this->artisanRepository = $objectManager->getRepository(ArtisanE::class);
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Tasks;
 
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
@@ -34,7 +34,7 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
         $task->inspect(1);
         self::getEM()->flush();
 
-        $repo = self::getEM()->getRepository(Artisan::class);
+        $repo = self::getEM()->getRepository(ArtisanE::class);
         /** @var ArtisanRepository $repo */
         $retrievedArtisan = $repo->findAll()[0];
 
@@ -53,9 +53,9 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
         return new WebpageSnapshotManager($this->getTestGentleHttpClient(), $this->getTestWebpageSnapshotCache(), $this->getTestLogger());
     }
 
-    private function getTestArtisanWithArtisanUrl(): Artisan
+    private function getTestArtisanWithArtisanUrl(): ArtisanE
     {
-        $result = new Artisan();
+        $result = new ArtisanE();
         $result->addUrl(new ArtisanUrl());
 
         return $result;

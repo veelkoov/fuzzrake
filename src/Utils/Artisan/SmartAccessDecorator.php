@@ -7,7 +7,7 @@ namespace App\Utils\Artisan;
 use App\DataDefinitions\Field;
 use App\DataDefinitions\Fields;
 use App\DataDefinitions\FieldsList;
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;
@@ -32,10 +32,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 {
     public function __construct(
         #[Valid]
-        private ?Artisan $artisan = null,
+        private ?ArtisanE $artisan = null,
     ) {
         if (null === $this->artisan) {
-            $this->artisan = new Artisan();
+            $this->artisan = new ArtisanE();
         }
     }
 
@@ -50,21 +50,21 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @param Artisan[] $artisans
+     * @param ArtisanE[] $artisans
      *
      * @return SmartAccessDecorator[]
      */
     public static function wrapAll(array $artisans): array
     {
-        return array_map(fn (Artisan $artisan): SmartAccessDecorator => self::wrap($artisan), $artisans);
+        return array_map(fn (ArtisanE $artisan): SmartAccessDecorator => self::wrap($artisan), $artisans);
     }
 
-    public static function wrap(Artisan $artisan): self
+    public static function wrap(ArtisanE $artisan): self
     {
         return new self($artisan);
     }
 
-    public function getArtisan(): Artisan
+    public function getArtisan(): ArtisanE
     {
         return $this->artisan;
     }

@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\DataDefinitions\Fields;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Smart;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -49,7 +49,7 @@ class DataExportCommand extends Command
 
         $row = 2;
 
-        foreach (Smart::wrapAll($this->artisans->getActive()) as $artisan) {
+        foreach (Artisan::wrapAll($this->artisans->getActive()) as $artisan) {
             $col = 1;
 
             foreach (Fields::public() as $field) {

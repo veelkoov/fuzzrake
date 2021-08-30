@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Smart;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\FixerDifferValidator as FDV;
@@ -26,14 +25,11 @@ class DataTidyCommand extends Command
     private const OPT_WITH_INACTIVE = 'with-inactive';
     private const ARG_CORRECTIONS_FILE = 'corrections-file';
 
-    private ArtisanRepository $artisanRepo;
-
     public function __construct(
         private EntityManagerInterface $objectManager,
+        private ArtisanRepository $artisanRepo,
         private FdvFactory $fdvFactory,
     ) {
-        $this->artisanRepo = $objectManager->getRepository(Artisan::class);
-
         parent::__construct();
     }
 
@@ -60,7 +56,7 @@ class DataTidyCommand extends Command
         $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
 
         foreach ($artisans as $artisan) {
-            $artisanFixWip = new ArtisanChanges(Smart::wrap($artisan));
+            $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
 
             $manager->correctArtisan($artisanFixWip->getChanged());
 
