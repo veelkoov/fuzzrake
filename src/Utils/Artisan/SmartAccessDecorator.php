@@ -69,7 +69,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->artisan;
     }
 
-    public function set(Field | string $field, mixed $newValue): self
+    public function set(Field|string $field, mixed $newValue): self
     {
         if (!($field instanceof Field)) {
             $field = Fields::get((string) $field);
@@ -90,7 +90,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function get(Field | string $field): mixed
+    public function get(Field|string $field): mixed
     {
         if (!($field instanceof Field)) {
             $field = Fields::get((string) $field);

@@ -169,6 +169,7 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
+     *
      * @see SmartAccessDecorator::getLastMakerId()
      */
     private function prepareProvidedInfoData(array $artisans): array

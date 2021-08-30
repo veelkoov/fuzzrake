@@ -231,21 +231,21 @@ class Artisan implements Stringable
      *
      * @var Collection|ArtisanUrl[]
      */
-    private Collection | array $urls;
+    private Collection|array $urls;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
      * @var Collection|ArtisanCommissionsStatus[]
      */
-    private Collection | array $commissions;
+    private Collection|array $commissions;
 
     /**
      * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
      * @var Collection|MakerId[]
      */
-    private Collection | array $makerIds;
+    private Collection|array $makerIds;
 
     public function __construct()
     {
