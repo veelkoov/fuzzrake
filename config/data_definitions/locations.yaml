@@ -9,6 +9,7 @@ parameters:
       "canada":                                        "CA"
       "chile":                                         "CL"
       "costa rica":                                    "CR"
+      "croatia":                                       "HR"
       "czech( republic)?":                             "CZ"
       "d[ea]nmark":                                    "DK"
       "(germany|Deutschland)":                         "DE"
