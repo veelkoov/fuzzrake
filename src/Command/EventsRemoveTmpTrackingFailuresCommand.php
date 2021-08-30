@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\Event;
 use App\Repository\EventRepository;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,15 +15,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class EventsRemoveTmpTrackingFailuresCommand extends Command
+class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
 {
-    private ObjectRepository | EventRepository $eventRepository;
-
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private EventRepository $eventRepository,
     ) {
-        $this->eventRepository = $this->entityManager->getRepository(Event::class);
-
         parent::__construct();
     }
 

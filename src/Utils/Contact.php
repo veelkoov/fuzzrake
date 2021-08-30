@@ -42,7 +42,7 @@ final class Contact
                 ->match($input)
                 ->findFirst(function (Detail $detail) use ($template): array {
                     try {
-                        return [$template[0], $template[1].$detail->group(1)];
+                        return [$template[0], $template[1].$detail->group(1)->text()];
                     } catch (NonexistentGroupException $e) {
                         throw new UnbelievableRuntimeException($e);
                     }

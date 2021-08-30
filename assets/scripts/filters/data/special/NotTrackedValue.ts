@@ -9,6 +9,6 @@ export default class NotTrackedValue extends SpecialValue {
     }
 
     public matches(artisan: Artisan): boolean {
-        return this.selected && 0 === artisan.commissionsUrl.length;
+        return this.selected && 0 === artisan.commissionsUrls.length;
     }
 }

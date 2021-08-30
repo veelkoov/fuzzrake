@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
-use App\Entity\Artisan;
 use App\Entity\EventFactory;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 
@@ -37,7 +37,7 @@ class EventFactoryTest extends TestCase
             ->setName('Artisan name 1')
             ->setOpenFor("Commissions\nPre-mades")
             ->setCsTrackerIssue(false)
-            ->setCommissionsUrl("abc1\ndef1")
+            ->setCommissionsUrls("abc1\ndef1")
         ;
         $changes1 = new ArtisanChanges($artisan1);
         $changes1->getChanged()
@@ -49,7 +49,7 @@ class EventFactoryTest extends TestCase
             ->setName('Artisan name 2')
             ->setOpenFor('')
             ->setCsTrackerIssue(true)
-            ->setCommissionsUrl('def2')
+            ->setCommissionsUrls('def2')
         ;
         $changes2 = new ArtisanChanges($artisan2);
         $changes2->getChanged()
@@ -61,7 +61,7 @@ class EventFactoryTest extends TestCase
             ->setName('Artisan name 3')
             ->setOpenFor('Old stuff')
             ->setCsTrackerIssue(false)
-            ->setCommissionsUrl("abc3\ndef3\nghi3")
+            ->setCommissionsUrls("abc3\ndef3\nghi3")
         ;
         $changes3 = new ArtisanChanges($artisan3);
         $changes3->getChanged()

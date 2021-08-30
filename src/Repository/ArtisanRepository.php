@@ -164,7 +164,7 @@ class ArtisanRepository extends ServiceEntityRepository
             }
 
             if ($countOther && !empty($row['otherItems'])) {
-                $other->incCount();
+                $other->incCount(); // @phpstan-ignore-line if $countOther guarantees the variable being defined
             }
 
             if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {

@@ -6,7 +6,7 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Field;
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer\ContactAllowedFixer;
 use App\Utils\Data\Fixer\CountryFixer;
 use App\Utils\Data\Fixer\DefinedListFixer;

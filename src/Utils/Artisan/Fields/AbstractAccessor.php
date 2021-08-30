@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Accessors;
+namespace App\Utils\Artisan\Fields;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
 use Closure;

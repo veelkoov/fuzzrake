@@ -108,7 +108,7 @@
             {{# if artisan.websiteUrl }}
                 <a class="btn btn-light track-website" href="#" data-href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {{/ if }}
-            {{# each artisan.pricesUrl }}
+            {{# each artisan.pricesUrls }}
                 <a class="btn btn-light track-prices" href="#" data-href="{{ this }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
             {{/ each }}
             {{# if artisan.faqUrl }}
@@ -166,7 +166,7 @@
         <h5>Commissions status</h5>
     </div>
 
-    {{# unless artisan.commissionsUrl }}
+    {{# unless artisan.commissionsUrls }}
         <div class="col-sm-12 p-1">
             <p>Commissions status is not being tracked.</p>
 
@@ -189,7 +189,7 @@
             {{ else }}
                 <p>
                     Failed to automatically determine commissions status. It should be tracked and updated automatically based on the contents of:
-                    {{# each artisan.commissionsUrl }}
+                    {{# each artisan.commissionsUrls }}
                         <a href="#" data-href="{{ this }}" rel="nofollow" target="_blank">{{ this }}</a>
                     {{/ each }}, however the software failed to "understand" the contents.
                     Last time tried on {{ artisan.csLastCheck }} UTC.
@@ -202,7 +202,7 @@
             {{# if artisan.isStatusKnown }}
                 <p>
                     Status is tracked and updated automatically based on the contents of:
-                    {{# each artisan.commissionsUrl }}
+                    {{# each artisan.commissionsUrls }}
                         <a href="#" data-href="{{ this }}" rel="nofollow" target="_blank">{{ this }}</a>
                     {{/ each }}
                     <br />

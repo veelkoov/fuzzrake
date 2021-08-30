@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Data;
 
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
-use Doctrine\ORM\ORMException;
-use Doctrine\Persistence\Mapping\MappingException;
 
 class ArtisanChangesTest extends DbEnabledKernelTestCase
 {
-    /**
-     * @throws MappingException
-     * @throws ORMException
-     */
     public function testApply(): void
     {
         self::bootKernel();
@@ -26,7 +21,7 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
             ->setName('Artisan 1')
             ->setCity('Varkaus')
             ->setFaqUrl('https://some-faq-address/')
-            ->setCommissionsUrl('https://some-commissions-address/')
+            ->setCommissionsUrls('https://some-commissions-address/')
             ->setOpenFor('Pancakes')
             ->setClosedFor('Maple syrup')
         ;
@@ -70,8 +65,8 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
 
         unset($artisan1, $artisan2);
 
-        $artisan1 = $em->find(Artisan::class, $id1);
-        $artisan2 = $em->find(Artisan::class, $id2);
+        $artisan1 = $em->find(ArtisanE::class, $id1);
+        $artisan2 = $em->find(ArtisanE::class, $id2);
 
         self::assertEquals('Artisan 1', $artisan1->getName());
         self::assertEquals('Tampere', $artisan1->getCity());

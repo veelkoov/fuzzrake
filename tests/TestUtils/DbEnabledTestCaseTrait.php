@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils;
 
-use App\Entity\Artisan;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Password;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
-use RuntimeException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait DbEnabledTestCaseTrait
 {
-    private static ?EntityManager $entityManager = null;
+    private static ?EntityManagerInterface $entityManager = null;
 
     protected static function bootKernel(array $options = []): KernelInterface
     {
@@ -28,7 +26,7 @@ trait DbEnabledTestCaseTrait
         return $result;
     }
 
-    protected static function getEM(): EntityManager
+    protected static function getEM(): EntityManagerInterface
     {
         return self::$entityManager ??= self::getContainer()->get('doctrine.orm.default_entity_manager');
     }
@@ -38,9 +36,14 @@ trait DbEnabledTestCaseTrait
         SchemaTool::resetOn(self::getEM());
     }
 
+    protected static function getArtisanRepository(): ArtisanRepository
+    {
+        return static::getContainer()->get(ArtisanRepository::class);
+    }
+
     protected static function findArtisanByMakerId(string $makerId): Artisan
     {
-        return static::getContainer()->get(ArtisanRepository::class)->findOneBy(['makerId' => $makerId]);
+        return Artisan::wrap(self::getArtisanRepository()->findOneBy(['makerId' => $makerId]));
     }
 
     protected static function addSimpleArtisan(): Artisan
@@ -73,7 +76,9 @@ trait DbEnabledTestCaseTrait
         $result = (new Artisan())
             ->setName($name)
             ->setMakerId($makerId)
-            ->setCountry($country)
+            ->setCountry($country);
+
+        $result
             ->getVolatileData()
             ->setLastCsUpdate(DateTimeUtils::getNowUtc())
             ->setLastBpUpdate(DateTimeUtils::getNowUtc())
@@ -93,14 +98,10 @@ trait DbEnabledTestCaseTrait
 
     protected static function persistAndFlush(object ...$entities): void
     {
-        try {
-            foreach ($entities as $entity) {
-                self::getEM()->persist($entity);
-            }
-
-            self::getEM()->flush();
-        } catch (ORMException $e) {
-            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        foreach ($entities as $entity) {
+            self::getEM()->persist($entity);
         }
+
+        self::getEM()->flush();
     }
 }

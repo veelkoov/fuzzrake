@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Accessors;
+namespace App\Utils\Artisan\Fields;
 
-use App\Entity\Artisan;
 use App\Entity\ArtisanUrl;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
-final class Url extends AbstractAccessor
+final class UrlAccessor extends AbstractAccessor
 {
     public static function set(Artisan $artisan, string $urlFieldName, string $newValue): void
     {
@@ -35,7 +35,7 @@ final class Url extends AbstractAccessor
 
     protected static function getExistingItems(Artisan $artisan): array
     {
-        return $artisan->getUrls()->toArray();
+        return $artisan->getArtisan()->getUrls()->toArray();
     }
 
     protected static function getItemsFilter($subset): Closure
@@ -44,7 +44,7 @@ final class Url extends AbstractAccessor
     }
 
     /**
-     * @param $existingItem ArtisanUrl
+     * @param ArtisanUrl $existingItem
      */
     protected static function getValue($existingItem): string
     {
@@ -53,7 +53,7 @@ final class Url extends AbstractAccessor
 
     protected static function removeItem(Artisan $artisan, mixed $existingItem): void
     {
-        $artisan->removeUrl($existingItem);
+        $artisan->getArtisan()->removeUrl($existingItem);
     }
 
     protected static function getValueCallback(): Closure
@@ -63,7 +63,7 @@ final class Url extends AbstractAccessor
 
     protected static function addItem(Artisan $artisan, $subset, string $newValue): void
     {
-        $artisan->addUrl((new ArtisanUrl())->setType($subset)->setUrl($newValue));
+        $artisan->getArtisan()->addUrl((new ArtisanUrl())->setType($subset)->setUrl($newValue));
     }
 
     protected static function getFieldNameFor($subset): string

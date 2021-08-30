@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Artisan;
 use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\Features;
 use App\Utils\Artisan\OrderTypes;
 use App\Utils\Artisan\ProductionModels;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\Styles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -159,8 +159,8 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('pricesUrl', TextareaType::class, [
-                'label'      => 'Prices URL',
+            ->add('pricesUrls', TextareaType::class, [
+                'label'      => 'Prices URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -209,8 +209,8 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('commissionsUrl', TextareaType::class, [
-                'label'      => 'Commissions URL',
+            ->add('commissionsUrls', TextareaType::class, [
+                'label'      => 'Commissions URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])

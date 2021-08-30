@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;

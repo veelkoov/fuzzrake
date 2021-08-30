@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Tasks\TrackerUpdates\Commissions;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
-use App\Utils\Accessors\Commission;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\StringList;
 use App\Utils\Tracking\CommissionsStatusParser;
@@ -33,7 +32,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         private WebpageSnapshotManager $snapshots,
         private CommissionsStatusParser $parser,
     ) {
-        $this->artisans = $this->repository->findAll();
+        $this->artisans = Artisan::wrapAll($this->repository->findAll());
     }
 
     /**
@@ -177,7 +176,11 @@ class CommissionsTrackerTask implements TrackerTaskInterface
 
             $newValue = StringList::pack(array_map(fn (OfferStatus $item): string => ucfirst(strtolower($item->getOffer())), $offersMatchingStatus));
 
-            Commission::set($result->getChanged(), $status, $newValue);
+            if ($status) {
+                $result->getChanged()->setOpenFor($newValue);
+            } else {
+                $result->getChanged()->setClosedFor($newValue);
+            }
         }
 
         return $result;

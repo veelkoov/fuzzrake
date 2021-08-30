@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class DataQuery
 {
@@ -68,7 +68,7 @@ class DataQuery
         $this->result = [];
         $this->matchedItems = [];
 
-        foreach ($artisanRepository->getOthersLike($this->searchedItems) as $artisan) {
+        foreach (Artisan::wrapAll($artisanRepository->getOthersLike($this->searchedItems)) as $artisan) {
             if ($this->artisanMatches($artisan)) {
                 $this->result[] = $artisan;
             }

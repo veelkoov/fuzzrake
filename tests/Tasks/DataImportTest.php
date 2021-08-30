@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Tasks;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\FixerDifferValidator;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -43,7 +44,7 @@ class DataImportTest extends TestCase
             Fields::URL_PHOTOS => [$newUrlPhotos],
         ])]);
 
-        static::assertEquals($expectedMiniatures, $artisan->getMiniatureUrls());
+        static::assertEquals($expectedMiniatures, Artisan::wrap($artisan)->getMiniatureUrls());
     }
 
     public function imagesUpdateShouldResetMiniaturesDataProvider(): array
@@ -57,7 +58,7 @@ class DataImportTest extends TestCase
         ];
     }
 
-    private function getObjectManagerMock(Artisan $artisan): EntityManagerInterface
+    private function getObjectManagerMock(ArtisanE $artisan): EntityManagerInterface
     {
         $result = $this->createMock(EntityManagerInterface::class);
         $result->expects(self::once())->method('getRepository')->willReturn($this->getArtisanRepositoryMock($artisan));
@@ -65,12 +66,12 @@ class DataImportTest extends TestCase
         return $result;
     }
 
-    private function getBasicArtisan(array $initialData): Artisan
+    private function getBasicArtisan(array $initialData): ArtisanE
     {
-        $result = new Artisan();
+        $artisan = Artisan::wrap($result = new ArtisanE());
 
         foreach ($initialData as $fieldName => $value) {
-            $result->set(Fields::get($fieldName), $value);
+            $artisan->set(Fields::get($fieldName), $value);
         }
 
         return $result;
@@ -95,15 +96,15 @@ class DataImportTest extends TestCase
         return $this->createMock(FixerDifferValidator::class);
     }
 
-    private function getIuSubmission(Artisan $artisan, array $data): IuSubmission
+    private function getIuSubmission(ArtisanE $artisan, array $data): IuSubmission
     {
-        $allData = $artisan->getAllData();
+        $allData = Artisan::wrap($artisan)->getAllData();
         $allData = array_merge($allData, $data);
 
         return new IuSubmission(new DateTimeImmutable(), 'test_id', $allData);
     }
 
-    private function getArtisanRepositoryMock(Artisan $artisan): ArtisanRepository
+    private function getArtisanRepositoryMock(ArtisanE $artisan): ArtisanRepository
     {
         $result = $this->createMock(ArtisanRepository::class);
         $result->expects(self::once())->method('findBestMatches')->willReturn([$artisan]);

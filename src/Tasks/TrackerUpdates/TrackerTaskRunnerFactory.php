@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates;
 
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\BasePrices\BasePricesTrackerTask;
@@ -31,7 +31,7 @@ class TrackerTaskRunnerFactory
         private CommissionsStatusParser $parser,
         private FdvFactory $fdvFactory,
     ) {
-        $this->artisanRepository = $entityManager->getRepository(Artisan::class);
+        $this->artisanRepository = $entityManager->getRepository(ArtisanE::class);
     }
 
     public function get(string $mode, bool $refetch, bool $commit, SymfonyStyle $io): TrackerTaskRunner

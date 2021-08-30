@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Accessors;
+namespace App\Tests\Utils\Artisan\Fields;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
-use App\Utils\Accessors\AbstractAccessor;
-use App\Utils\Accessors\Url;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @see AbstractAccessor
  * @see ArtisanChanges
- * @see Url
+ * @see UrlAccessor
  */
-class UrlTest extends TestCase
+class UrlAccessorTest extends TestCase
 {
     public function testSet(): void
     {
-        $artisan = new Artisan();
+        $artisan = Artisan::wrap($entity = new ArtisanE());
+
         $artisan->setWebsiteUrl('website')
             ->setOtherUrls("other\nanother")
-            ->setPricesUrl("price1\ncost2")
-            ->setCommissionsUrl('commissions1');
+            ->setPricesUrls("price1\ncost2")
+            ->setCommissionsUrls('commissions1');
 
         self::assertEquals([
             'URL_COMMISSIONS commissions1',
@@ -33,12 +33,12 @@ class UrlTest extends TestCase
             'URL_PRICES cost2',
             'URL_PRICES price1',
             'URL_WEBSITE website',
-        ], $this->getUrlArray($artisan));
+        ], $this->getUrlArray($entity));
 
         $artisan->setWebsiteUrl('websiteChanged')
             ->setOtherUrls('other')
-            ->setPricesUrl("price1\nanother")
-            ->setCommissionsUrl("commissions1\ncomm2addr");
+            ->setPricesUrls("price1\nanother")
+            ->setCommissionsUrls("commissions1\ncomm2addr");
 
         self::assertEquals([
             'URL_COMMISSIONS comm2addr',
@@ -47,9 +47,9 @@ class UrlTest extends TestCase
             'URL_PRICES another',
             'URL_PRICES price1',
             'URL_WEBSITE websiteChanged',
-        ], $this->getUrlArray($artisan));
+        ], $this->getUrlArray($entity));
 
-        $artisan->setCommissionsUrl('')
+        $artisan->setCommissionsUrls('')
             ->setFaqUrl("question\nwhy_new_line");
 
         self::assertEquals([
@@ -58,18 +58,19 @@ class UrlTest extends TestCase
             'URL_PRICES another',
             'URL_PRICES price1',
             'URL_WEBSITE websiteChanged',
-        ], $this->getUrlArray($artisan));
+        ], $this->getUrlArray($entity));
     }
 
     public function testGet(): void
     {
-        $artisan = new Artisan();
-        $artisan->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
+        $artisan = Artisan::wrap($entity = new ArtisanE());
+
+        $entity->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
             ->addUrl($this->getNewArtisanUrl('COST2', Fields::URL_PRICES))
             ->addUrl($this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE));
 
         self::assertEquals('WEBSITE', $artisan->getWebsiteUrl());
-        self::assertEquals("PRICE1\nCOST2", $artisan->getPricesUrl());
+        self::assertEquals("PRICE1\nCOST2", $artisan->getPricesUrls());
     }
 
     public function testGetObjs(): void
@@ -78,14 +79,14 @@ class UrlTest extends TestCase
         $url2 = $this->getNewArtisanUrl('COST2', Fields::URL_PRICES);
         $url3 = $this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE);
 
-        $artisan = new Artisan();
-        $artisan->addUrl($url1)->addUrl($url2)->addUrl($url3);
+        $artisan = Artisan::wrap($entity = new ArtisanE());
+        $entity->addUrl($url1)->addUrl($url2)->addUrl($url3);
 
         self::assertEquals([$url1, $url2], array_values($artisan->getUrlObjs(Fields::URL_PRICES)));
         self::assertEquals([$url3], array_values($artisan->getUrlObjs(Fields::URL_WEBSITE)));
     }
 
-    private function getUrlArray(Artisan $artisan): array
+    private function getUrlArray(ArtisanE $artisan): array
     {
         $result = array_map(fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl(), $artisan->getUrls()->toArray());
         sort($result);

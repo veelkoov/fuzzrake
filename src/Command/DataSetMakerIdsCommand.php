@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Repository\ArtisanRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +29,7 @@ class DataSetMakerIdsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        foreach ($this->artisanRepository->findAll() as $artisan) {
+        foreach (Artisan::wrapAll($this->artisanRepository->findAll()) as $artisan) {
             if (empty($artisan->getAllMakerIdsArr())) {
                 $artisan->setFormerMakerIds('M'.str_pad((string) $artisan->getId(), 6, '0', STR_PAD_LEFT));
             }

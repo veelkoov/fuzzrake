@@ -32,7 +32,7 @@ class EventRepository extends ServiceEntityRepository
     /**
      * @return Event[]
      */
-    public function selectTrackingTmpFailures(DateTimeInterface $date1, DateTimeInterface $date2): array
+    public function selectTrackingTmpFailures(DateTimeInterface $date1, DateTimeInterface $date2): array // FIXME #93
     {
         $ids = $this->createQueryBuilder('en')
             ->join(Event::class, 'eo', Join::WITH, new Andx([

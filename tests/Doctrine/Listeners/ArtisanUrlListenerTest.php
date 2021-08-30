@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Doctrine\Listeners;
 
-use App\Entity\Artisan;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use DateTime;
-use Doctrine\ORM\ORMException;
 
 class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
 {
-    /**
-     * @throws ORMException
-     */
     public function testChangingUrlResetsLastSuccessAndFailure(): void
     {
         self::bootKernel();
@@ -24,14 +20,14 @@ class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
         $lastFailureCode = 404;
         $lastFailureReason = 'test reason';
 
-        $persistedArtisan = new Artisan();
+        $persistedArtisan = new ArtisanE();
         $persistedArtisan->addUrl((new ArtisanUrl())->getState()->setLastFailure($lastFailure)->setLastSuccess($lastSuccess)->setLastFailureCode($lastFailureCode)->setLastFailureReason($lastFailureReason)->getUrl());
 
         self::getEM()->persist($persistedArtisan);
         self::getEM()->flush();
 
-        /** @var Artisan $retrievedArtisan */
-        $retrievedArtisan = self::getEM()->getRepository(Artisan::class)->findAll()[0];
+        /** @var ArtisanE $retrievedArtisan */
+        $retrievedArtisan = self::getEM()->getRepository(ArtisanE::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];
 
         self::assertEquals($lastSuccess, $url->getState()->getLastSuccess());
@@ -43,7 +39,7 @@ class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
 
         self::getEM()->flush();
 
-        $retrievedArtisan = self::getEM()->getRepository(Artisan::class)->findAll()[0];
+        $retrievedArtisan = self::getEM()->getRepository(ArtisanE::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];
 
         self::assertNull($url->getState()->getLastSuccess());

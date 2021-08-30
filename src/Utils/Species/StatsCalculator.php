@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 
 class StatsCalculator
@@ -20,6 +20,10 @@ class StatsCalculator
      */
     private array $speciesFlat;
 
+    /**
+     * @param Artisan[] $artisans
+     * @param Specie[]  $speciesFlat
+     */
     public function __construct(array $artisans, array $speciesFlat)
     {
         $this->speciesFlat = $speciesFlat;

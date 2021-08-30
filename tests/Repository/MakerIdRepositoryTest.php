@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Repository;
 
-use App\Entity\Artisan;
 use App\Entity\MakerId;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class MakerIdRepositoryTest extends DbEnabledKernelTestCase
 {

@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\DataDefinitions\Fields;
-use App\Entity\Artisan;
-use App\Utils\Artisan\Utils;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use Doctrine\ORM\ORMException;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -148,7 +146,7 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
      *
      * Two tested artisans: an updated one, and a new one.
      *
-     * @throws ORMException|JsonException|DataInputException
+     * @throws JsonException|DataInputException
      */
     public function testIuSubmissionAndImportFlow(): void
     {
@@ -157,12 +155,12 @@ class IuSubmissionExtendedTest extends IuSubmissionAbstractTest
         $this->checkFieldsArrayCompleteness(); // Test self-test
 
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::SET);
-        Utils::updateContact($oldArtisan1, $oldArtisan1->getContactInfoOriginal());
+        $oldArtisan1->updateContact($oldArtisan1->getContactInfoOriginal());
 
         self::getEM()->persist($oldArtisan1);
         self::getEM()->flush();
 
-        $repo = self::getEM()->getRepository(Artisan::class);
+        $repo = self::getArtisanRepository();
         self::assertCount(1, $repo->findAll(), 'Single artisan in the DB before import');
 
         $oldArtisan1 = $this->getArtisanFor(self::VARIANT_HALF_DATA_1, self::CHECK);

@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Repository\ArtisanRepository;
 use App\Tasks\Miniatures\FurtrackMiniatures;
 use App\Tasks\Miniatures\ScritchMiniatures;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use LogicException;
@@ -39,7 +40,7 @@ class DataSetMiniaturesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($this->artisanRepository->getAll() as $artisan) {
+        foreach (Artisan::wrapAll($this->artisanRepository->getAll()) as $artisan) {
             $pictureUrls = array_filter(explode("\n", $artisan->getPhotoUrls()));
 
             if (empty($pictureUrls)) {

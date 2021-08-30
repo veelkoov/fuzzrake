@@ -64,6 +64,9 @@ services:
               entity: 'App\Entity\ArtisanUrl'
               lazy: true
 
+    App\Doctrine\EntityManagerDecorator:
+        decorates: 'doctrine.orm.default_entity_manager'
+
     App\Utils\IuSubmissions\LocalStorageService:
         arguments:
             - '%env(resolve:SUBMISSIONS_DIR_PATH)%'
