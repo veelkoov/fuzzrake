@@ -357,9 +357,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setFursuitReviewUrl(string $fursuitReviewUrl): self
     {
-        $this->setUrl(Fields::URL_FURSUITREVIEW, $fursuitReviewUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_FURSUITREVIEW, $fursuitReviewUrl);
     }
 
     public function getFurAffinityUrl(): string
@@ -369,9 +367,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setFurAffinityUrl(string $furAffinityUrl): self
     {
-        $this->setUrl(Fields::URL_FUR_AFFINITY, $furAffinityUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_FUR_AFFINITY, $furAffinityUrl);
     }
 
     public function getDeviantArtUrl(): string
@@ -381,9 +377,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setDeviantArtUrl(string $deviantArtUrl): self
     {
-        $this->setUrl(Fields::URL_DEVIANTART, $deviantArtUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_DEVIANTART, $deviantArtUrl);
     }
 
     public function getWebsiteUrl(): string
@@ -393,9 +387,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setWebsiteUrl(string $websiteUrl): self
     {
-        $this->setUrl(Fields::URL_WEBSITE, $websiteUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_WEBSITE, $websiteUrl);
     }
 
     public function getFacebookUrl(): string
@@ -405,9 +397,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setFacebookUrl(string $facebookUrl): self
     {
-        $this->setUrl(Fields::URL_FACEBOOK, $facebookUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_FACEBOOK, $facebookUrl);
     }
 
     public function getTwitterUrl(): string
@@ -417,9 +407,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setTwitterUrl(string $twitterUrl): self
     {
-        $this->setUrl(Fields::URL_TWITTER, $twitterUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_TWITTER, $twitterUrl);
     }
 
     public function getTumblrUrl(): string
@@ -429,9 +417,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setTumblrUrl(string $tumblrUrl): self
     {
-        $this->setUrl(Fields::URL_TUMBLR, $tumblrUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_TUMBLR, $tumblrUrl);
     }
 
     public function getCommissionsUrls(): string
@@ -441,9 +427,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setCommissionsUrls(string $commissionsUrls): self
     {
-        $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrls);
-
-        return $this;
+        return $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrls);
     }
 
     public function getQueueUrl(): string
@@ -453,9 +437,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setQueueUrl(string $queueUrl): self
     {
-        $this->setUrl(Fields::URL_QUEUE, $queueUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_QUEUE, $queueUrl);
     }
 
     public function getInstagramUrl(): string
@@ -465,9 +447,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setInstagramUrl(string $instagramUrl): self
     {
-        $this->setUrl(Fields::URL_INSTAGRAM, $instagramUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_INSTAGRAM, $instagramUrl);
     }
 
     public function getYoutubeUrl(): string
@@ -477,9 +457,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setYoutubeUrl(string $youtubeUrl): self
     {
-        $this->setUrl(Fields::URL_YOUTUBE, $youtubeUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_YOUTUBE, $youtubeUrl);
     }
 
     public function getPricesUrls(): string
@@ -497,9 +475,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setPricesUrls(string $pricesUrls): self
     {
-        $this->setUrl(Fields::URL_PRICES, $pricesUrls);
-
-        return $this;
+        return $this->setUrl(Fields::URL_PRICES, $pricesUrls);
     }
 
     public function getFaqUrl(): string
@@ -509,9 +485,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setFaqUrl(string $faqUrl): self
     {
-        $this->setUrl(Fields::URL_FAQ, $faqUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_FAQ, $faqUrl);
     }
 
     public function getLinklistUrl(): string
@@ -521,9 +495,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setLinklistUrl(string $url): self
     {
-        $this->setUrl(Fields::URL_LINKLIST, $url);
-
-        return $this;
+        return $this->setUrl(Fields::URL_LINKLIST, $url);
     }
 
     public function getFurryAminoUrl(): string
@@ -533,9 +505,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setFurryAminoUrl(string $url): self
     {
-        $this->setUrl(Fields::URL_FURRY_AMINO, $url);
-
-        return $this;
+        return $this->setUrl(Fields::URL_FURRY_AMINO, $url);
     }
 
     public function getEtsyUrl(): string
@@ -545,9 +515,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setEtsyUrl(string $url): self
     {
-        $this->setUrl(Fields::URL_ETSY, $url);
-
-        return $this;
+        return $this->setUrl(Fields::URL_ETSY, $url);
     }
 
     public function getTheDealersDenUrl(): string
@@ -557,9 +525,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setTheDealersDenUrl(string $url): self
     {
-        $this->setUrl(Fields::URL_THE_DEALERS_DEN, $url);
-
-        return $this;
+        return $this->setUrl(Fields::URL_THE_DEALERS_DEN, $url);
     }
 
     public function getOtherShopUrl(): string
@@ -569,9 +535,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setOtherShopUrl(string $url): self
     {
-        $this->setUrl(Fields::URL_OTHER_SHOP, $url);
-
-        return $this;
+        return $this->setUrl(Fields::URL_OTHER_SHOP, $url);
     }
 
     public function getOtherUrls(): string
@@ -581,9 +545,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setOtherUrls($otherUrls): self
     {
-        $this->setUrl(Fields::URL_OTHER, $otherUrls);
-
-        return $this;
+        return $this->setUrl(Fields::URL_OTHER, $otherUrls);
     }
 
     public function getScritchUrl(): string
@@ -593,9 +555,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setScritchUrl(string $scritchUrl): self
     {
-        $this->setUrl(Fields::URL_SCRITCH, $scritchUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_SCRITCH, $scritchUrl);
     }
 
     public function getFurtrackUrl(): string
@@ -605,9 +565,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setFurtrackUrl(string $furtrackUrl): self
     {
-        $this->setUrl(Fields::URL_FURTRACK, $furtrackUrl);
-
-        return $this;
+        return $this->setUrl(Fields::URL_FURTRACK, $furtrackUrl);
     }
 
     public function getPhotoUrls(): string
@@ -617,9 +575,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setPhotoUrls(string $photoUrls): self
     {
-        $this->setUrl(Fields::URL_PHOTOS, $photoUrls);
-
-        return $this;
+        return $this->setUrl(Fields::URL_PHOTOS, $photoUrls);
     }
 
     public function getMiniatureUrls(): string
@@ -629,9 +585,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function setMiniatureUrls(string $scritchMiniatureUrls): self
     {
-        $this->setUrl(Fields::URL_MINIATURES, $scritchMiniatureUrls);
-
-        return $this;
+        return $this->setUrl(Fields::URL_MINIATURES, $scritchMiniatureUrls);
     }
 
     /**
@@ -647,9 +601,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return UrlAccessor::get($this, $urlFieldName);
     }
 
-    private function setUrl(string $urlFieldName, string $newUrl): void
+    private function setUrl(string $urlFieldName, string $newUrl): self
     {
         UrlAccessor::set($this, $urlFieldName, $newUrl);
+
+        return $this;
     }
 
     //
