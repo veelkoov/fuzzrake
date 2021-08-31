@@ -24,3 +24,5 @@ parameters:
       '(?:https?://)?(?:www\.)?etsy\.com/(?:uk/)?shop/([^?]+)(?:\?ref=[-a-z_]+)?': 'https://www.etsy.com/shop/$1'
 
       '(?:https?://)?(?:www\.)?fursuitreview\.com/maker/([^/]+)/': 'https://fursuitreview.com/m/$1/'
+
+      '(?:https?://)?(?:www\.)?furtrack\.com/user/([^/]+)(?:/uploads|/)?': 'https://www.furtrack.com/user/$1'

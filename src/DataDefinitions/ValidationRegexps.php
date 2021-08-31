@@ -22,7 +22,7 @@ final class ValidationRegexps
     public const TUMBLR_URL = '^((https?://[^.]+\.tumblr\.com/)|(https://pupdates.matrices.net/))?$'; // FIXME: Allow custom-domain exceptions. Improve URL validation regexps #79
     public const TWITTER_URL = '^(https://twitter\.com/[^/]+)?$';
     public const SCRITCH_URL = '^(https://scritch\.es/(makers/)?[-a-zA-Z0-9]+)?$';
-    public const FURTRACK_URL = '^(https://www\.furtrack\.com/index/maker:[a-z0-9_]+)?$';
+    public const FURTRACK_URL = '^(https://www\.furtrack\.com/(index/maker:|user/)[a-zA-Z0-9_]+)?$';
 
     public const LIST_VALIDATION = '^[-,&!.A-Za-z0-9+()/\n %:"\'@]*$'; // TODO: Be more specific, separate lists?
     public const FORMER_MAKER_IDS = '^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$';

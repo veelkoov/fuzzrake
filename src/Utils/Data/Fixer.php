@@ -93,6 +93,7 @@ class Fixer
             case Fields::URL_WEBSITE:
             case Fields::URL_QUEUE:
             case Fields::URL_ETSY:
+            case Fields::URL_FURTRACK:
                 return $this->urlFixer;
 
             case Fields::SINCE:

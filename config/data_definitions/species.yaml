@@ -124,6 +124,7 @@ parameters:
           "i_Pony": # Does it mean lil horse or MLP?
 
         Hybrids:
+          "i_All hybrids":
           "i_Complex hybrids":
           "i_Hybrids of these":
           "i_Mixed species":
@@ -241,24 +242,7 @@ parameters:
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
     replacements:
-      '"([^"]+)"':                                                  '$1'
-
-      '(((Any and )?All ?|Anything|Any|all) ?(species?|creatures?|kind|really)( (are )?welcome)?)':    'Most species'
-      '(Will(ing)? (to )?(try|craft|do) Any(thing| species)?)':                                        'Most species'
-      '((I will do just about|We are okay with|Happy to do) any species!?)':                           'Most species'
-      '(I''m (willing|open) to (take on any species|consider anything))':                              'Most species'
-      '(Everything and anything|Anything!?|any ?!?|all ?!?)':                                          'Most species'
-
-      '(Almost everything\. Just ask|Almost (all|Any)(thing| species?| animals?)?)':                   'Most species'
-      '(All species for the most part|Open to most species|Most animals OK|Most species considered)':  'Most species'
-      '(Basically anything! Except what''s stated below|Almost any :\)|Most/Any)':                     'Most species'
-      '(Pretty much anything|Just ask|Most common species)':                                           'Most species'
-      '^(Any species|Most species)$':                                                                  'Most species'
-
-      '^(None|Nope|no)$':                                    ''
-      '(\s|^)(and|or)':                                      '' # FIXME
-
-      'I can craft any real life animal':                    'Real life animals'
+      '^(any|all|most) species$':                            'Most species'
 
       "AD's|(Ange?le? dragons?)":                            'Angel Dragons'
       'Amphibians?':                                         'Amphibians'
