@@ -11,12 +11,14 @@ use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;
+use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\MakerId;
 use App\Utils\Artisan\Fields\CommissionAccessor;
 use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\Contact;
 use App\Utils\FieldReadInterface;
+use App\Utils\Parse;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use DateTimeInterface;
@@ -170,6 +172,26 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
     // ===== VARIOUS HELPERS =====
     //
+
+    public function getIsMinor(): ?bool
+    {
+        return $this->getBoolValue(Fields::IS_MINOR);
+    }
+
+    public function setIsMinor(?bool $isMinor): self
+    {
+        return $this->setBoolValue(Fields::IS_MINOR, $isMinor);
+    }
+
+    public function getWorksWithMinors(): ?bool
+    {
+        return $this->getBoolValue(Fields::WORKS_WITH_MINORS);
+    }
+
+    public function setWorksWithMinors(?bool $worksWithMinors): self
+    {
+        return $this->setBoolValue(Fields::WORKS_WITH_MINORS, $worksWithMinors);
+    }
 
     /**
      * @return string[]
@@ -1143,6 +1165,34 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function removeMakerId(MakerId $makerId): self
     {
         $this->artisan->removeMakerId($makerId);
+
+        return $this;
+    }
+
+    private function getBoolValue(string $fieldName): ?bool
+    {
+        foreach ($this->artisan->getValues() as $value) {
+            if ($value->getFieldName() === $fieldName) {
+                return Parse::nBool($value->getValue());
+            }
+        }
+
+        return null;
+    }
+
+    private function setBoolValue(string $fieldName, bool $newValue): self
+    {
+        $newValue = StrUtils::asStr($newValue);
+
+        foreach ($this->artisan->getValues() as $value) {
+            if ($value->getFieldName() === $fieldName) {
+                $value->setValue($newValue);
+
+                return $this;
+            }
+        }
+
+        $this->artisan->addValue((new ArtisanValue())->setFieldName($fieldName)->setValue($newValue));
 
         return $this;
     }

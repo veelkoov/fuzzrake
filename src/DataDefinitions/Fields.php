@@ -48,6 +48,9 @@ final class Fields
     public const SPECIES_DOES = 'SPECIES_DOES';
     public const SPECIES_DOESNT = 'SPECIES_DOESNT';
 
+    public const IS_MINOR = 'IS_MINOR';
+    public const WORKS_WITH_MINORS = 'WORKS_WITH_MINORS';
+
     public const URL_FURSUITREVIEW = 'URL_FURSUITREVIEW';
     public const URL_WEBSITE = 'URL_WEBSITE';
     public const URL_PRICES = 'URL_PRICES';
