@@ -8,10 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArtisanRepository")
@@ -29,179 +25,146 @@ class Artisan implements Stringable
     /**
      * @ORM\Column(type="string", length=16)
      */
-    #[Regex(pattern: '/^[A-Z0-9]{7}$/', message: 'Use only uppercase letters and/or digits (A-Z, 0-9).', groups: ['iu_form'])]
-    #[Length(min: 7, max: 7, groups: ['iu_form'])]
     private string $makerId = '';
 
     /**
      * @ORM\Column(type="string", length=128)
      */
-    #[Length(max: 128, groups: ['iu_form'])]
-    #[NotBlank(groups: ['iu_form'])]
     private string $name = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $formerly = '';
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    #[Length(max: 512, groups: ['iu_form'])]
     private string $intro = '';
 
     /**
      * @ORM\Column(type="string", length=16)
      */
-    #[Length(max: 16, groups: ['iu_form'])]
     private string $since = '';
 
     /**
      * @ORM\Column(type="string", length=16)
      */
-    #[Length(max: 16, groups: ['iu_form'])]
-    #[NotBlank(groups: ['iu_form'])]
     private string $country = '';
 
     /**
      * @ORM\Column(type="string", length=32)
      */
-    #[Length(max: 32, groups: ['iu_form'])]
     private string $state = '';
 
     /**
      * @ORM\Column(type="string", length=32)
      */
-    #[Length(max: 32, groups: ['iu_form'])]
     private string $city = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $productionModelsComment = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $productionModels = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $stylesComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Length(max: 1024, groups: ['iu_form'])]
     private string $styles = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Length(max: 1024, groups: ['iu_form'])]
     private string $otherStyles = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $orderTypesComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Length(max: 1024, groups: ['iu_form'])]
     private string $orderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Length(max: 1024, groups: ['iu_form'])]
     private string $otherOrderTypes = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $featuresComment = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Length(max: 1024, groups: ['iu_form'])]
     private string $features = '';
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Length(max: 1024, groups: ['iu_form'])]
     private string $otherFeatures = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $paymentPlans = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $paymentMethods = '';
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    #[Length(max: 64, groups: ['iu_form'])]
     private string $currenciesAccepted = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $speciesComment = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $speciesDoes = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $speciesDoesnt = '';
 
     /**
      * @ORM\Column(type="string", length=256)
      */
-    #[Length(max: 256, groups: ['iu_form'])]
     private string $languages = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    #[Length(max: 4096, groups: ['iu_form'])]
     private string $notes = '';
 
     /**
      * @ORM\Column(type="string", length=512)
      */
-    #[Length(max: 512, groups: ['iu_form'])]
     private string $inactiveReason = '';
 
     /**
      * @ORM\Column(type="string", length=16)
      */
-    #[Length(max: 16, groups: ['iu_form'])]
-    #[NotBlank(groups: ['iu_form'])]
     private string $contactAllowed = '';
 
     /**
@@ -212,7 +175,6 @@ class Artisan implements Stringable
     /**
      * @ORM\Column(type="string", length=128)
      */
-    #[Length(max: 128, groups: ['iu_form'])]
     private string $contactInfoObfuscated = '';
 
     /**
@@ -223,7 +185,6 @@ class Artisan implements Stringable
     /**
      * @ORM\OneToOne(targetEntity=ArtisanPrivateData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    #[Valid(groups: ['iu_form'])]
     private ?ArtisanPrivateData $privateData = null;
 
     /**
