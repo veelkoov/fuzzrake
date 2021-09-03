@@ -23,7 +23,7 @@ abstract class IuSubmissionAbstractTest extends DbEnabledWebTestCase
 
     protected function setUp(): void
     {
-        parent::tearDown();
+        parent::setUp();
         $this->emptyTestSubmissionsDir();
     }
 
