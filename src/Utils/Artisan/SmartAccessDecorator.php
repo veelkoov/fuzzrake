@@ -27,13 +27,15 @@ use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
 use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
     public function __construct(
-        #[Valid]
         private ?ArtisanE $artisan = null,
     ) {
         if (null === $this->artisan) {
@@ -372,6 +374,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== URLS GETTERS AND SETTERS =====
     //
 
+    #[Length(max: 1024)]
     public function getFursuitReviewUrl(): string
     {
         return $this->getUrl(Fields::URL_FURSUITREVIEW);
@@ -382,6 +385,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_FURSUITREVIEW, $fursuitReviewUrl);
     }
 
+    #[Length(max: 1024)]
     public function getFurAffinityUrl(): string
     {
         return $this->getUrl(Fields::URL_FUR_AFFINITY);
@@ -392,6 +396,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_FUR_AFFINITY, $furAffinityUrl);
     }
 
+    #[Length(max: 1024)]
     public function getDeviantArtUrl(): string
     {
         return $this->getUrl(Fields::URL_DEVIANTART);
@@ -402,6 +407,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_DEVIANTART, $deviantArtUrl);
     }
 
+    #[Length(max: 1024)]
     public function getWebsiteUrl(): string
     {
         return $this->getUrl(Fields::URL_WEBSITE);
@@ -412,6 +418,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_WEBSITE, $websiteUrl);
     }
 
+    #[Length(max: 1024)]
     public function getFacebookUrl(): string
     {
         return $this->getUrl(Fields::URL_FACEBOOK);
@@ -422,6 +429,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_FACEBOOK, $facebookUrl);
     }
 
+    #[Length(max: 1024)]
     public function getTwitterUrl(): string
     {
         return $this->getUrl(Fields::URL_TWITTER);
@@ -432,6 +440,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_TWITTER, $twitterUrl);
     }
 
+    #[Length(max: 1024)]
     public function getTumblrUrl(): string
     {
         return $this->getUrl(Fields::URL_TUMBLR);
@@ -442,6 +451,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_TUMBLR, $tumblrUrl);
     }
 
+    #[Length(max: 1024)]
     public function getCommissionsUrls(): string
     {
         return $this->getUrl(Fields::URL_COMMISSIONS);
@@ -452,6 +462,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrls);
     }
 
+    #[Length(max: 1024)]
     public function getQueueUrl(): string
     {
         return $this->getUrl(Fields::URL_QUEUE);
@@ -462,6 +473,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_QUEUE, $queueUrl);
     }
 
+    #[Length(max: 1024)]
     public function getInstagramUrl(): string
     {
         return $this->getUrl(Fields::URL_INSTAGRAM);
@@ -472,6 +484,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_INSTAGRAM, $instagramUrl);
     }
 
+    #[Length(max: 1024)]
     public function getYoutubeUrl(): string
     {
         return $this->getUrl(Fields::URL_YOUTUBE);
@@ -482,6 +495,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_YOUTUBE, $youtubeUrl);
     }
 
+    #[Length(max: 1024)]
     public function getPricesUrls(): string
     {
         return $this->getUrl(Fields::URL_PRICES);
@@ -500,6 +514,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_PRICES, $pricesUrls);
     }
 
+    #[Length(max: 1024)]
     public function getFaqUrl(): string
     {
         return $this->getUrl(Fields::URL_FAQ);
@@ -510,6 +525,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_FAQ, $faqUrl);
     }
 
+    #[Length(max: 1024)]
     public function getLinklistUrl(): string
     {
         return $this->getUrl(Fields::URL_LINKLIST);
@@ -520,6 +536,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_LINKLIST, $url);
     }
 
+    #[Length(max: 1024)]
     public function getFurryAminoUrl(): string
     {
         return $this->getUrl(Fields::URL_FURRY_AMINO);
@@ -530,6 +547,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_FURRY_AMINO, $url);
     }
 
+    #[Length(max: 1024)]
     public function getEtsyUrl(): string
     {
         return $this->getUrl(Fields::URL_ETSY);
@@ -540,6 +558,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_ETSY, $url);
     }
 
+    #[Length(max: 1024)]
     public function getTheDealersDenUrl(): string
     {
         return $this->getUrl(Fields::URL_THE_DEALERS_DEN);
@@ -550,6 +569,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_THE_DEALERS_DEN, $url);
     }
 
+    #[Length(max: 1024)]
     public function getOtherShopUrl(): string
     {
         return $this->getUrl(Fields::URL_OTHER_SHOP);
@@ -560,6 +580,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_OTHER_SHOP, $url);
     }
 
+    #[Length(max: 1024)]
     public function getOtherUrls(): string
     {
         return $this->getUrl(Fields::URL_OTHER);
@@ -570,6 +591,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_OTHER, $otherUrls);
     }
 
+    #[Length(max: 1024)]
     public function getScritchUrl(): string
     {
         return $this->getUrl(Fields::URL_SCRITCH);
@@ -580,6 +602,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_SCRITCH, $scritchUrl);
     }
 
+    #[Length(max: 1024)]
     public function getFurtrackUrl(): string
     {
         return $this->getUrl(Fields::URL_FURTRACK);
@@ -590,6 +613,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_FURTRACK, $furtrackUrl);
     }
 
+    #[Length(max: 1024)]
     public function getPhotoUrls(): string
     {
         return $this->getUrl(Fields::URL_PHOTOS);
@@ -600,6 +624,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Fields::URL_PHOTOS, $photoUrls);
     }
 
+    #[Length(max: 1024)]
     public function getMiniatureUrls(): string
     {
         return $this->getUrl(Fields::URL_MINIATURES);
@@ -696,6 +721,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->artisan->getId();
     }
 
+    #[Regex(pattern: '/^[A-Z0-9]*$/', message: 'Use only uppercase letters and/or digits (A-Z, 0-9).')]
+    #[Regex(pattern: '/^(.{7})?$/', message: 'Use exactly 7 characters.')]
+    #[NotBlank(groups: ['iu_form'])]
     public function getMakerId(): string
     {
         return $this->artisan->getMakerId();
@@ -712,6 +740,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 128)]
+    #[NotBlank]
     public function getName(): string
     {
         return $this->artisan->getName();
@@ -724,6 +754,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getFormerly(): string
     {
         return $this->artisan->getFormerly();
@@ -736,6 +767,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 512)]
     public function getIntro(): string
     {
         return $this->artisan->getIntro();
@@ -748,6 +780,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 16)]
     public function getSince(): string
     {
         return $this->artisan->getSince();
@@ -760,6 +793,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 16)]
+    #[NotBlank(groups: ['iu_form'])]
     public function getCountry(): string
     {
         return $this->artisan->getCountry();
@@ -772,6 +807,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 32)]
     public function getState(): string
     {
         return $this->artisan->getState();
@@ -784,6 +820,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 32)]
     public function getCity(): string
     {
         return $this->artisan->getCity();
@@ -796,6 +833,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getProductionModelsComment(): string
     {
         return $this->artisan->getProductionModelsComment();
@@ -808,6 +846,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getProductionModels(): string
     {
         return $this->artisan->getProductionModels();
@@ -820,6 +859,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getStylesComment(): string
     {
         return $this->artisan->getStylesComment();
@@ -832,6 +872,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 1024)]
     public function getStyles(): string
     {
         return $this->artisan->getStyles();
@@ -844,6 +885,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 1024)]
     public function getOtherStyles(): string
     {
         return $this->artisan->getOtherStyles();
@@ -856,6 +898,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getOrderTypesComment(): string
     {
         return $this->artisan->getOrderTypesComment();
@@ -868,6 +911,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 1024)]
     public function getOrderTypes(): string
     {
         return $this->artisan->getOrderTypes();
@@ -880,6 +924,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 1024)]
     public function getOtherOrderTypes(): string
     {
         return $this->artisan->getOtherOrderTypes();
@@ -892,6 +937,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getFeaturesComment(): string
     {
         return $this->artisan->getFeaturesComment();
@@ -904,6 +950,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 1024)]
     public function getFeatures(): string
     {
         return $this->artisan->getFeatures();
@@ -916,6 +963,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 1024)]
     public function getOtherFeatures(): string
     {
         return $this->artisan->getOtherFeatures();
@@ -928,6 +976,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getPaymentPlans(): string
     {
         return $this->artisan->getPaymentPlans();
@@ -940,6 +989,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getPaymentMethods(): string
     {
         return $this->artisan->getPaymentMethods();
@@ -952,6 +1002,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 64)]
     public function getCurrenciesAccepted(): string
     {
         return $this->artisan->getCurrenciesAccepted();
@@ -964,6 +1015,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getSpeciesComment(): string
     {
         return $this->artisan->getSpeciesComment();
@@ -976,6 +1028,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getSpeciesDoes(): string
     {
         return $this->artisan->getSpeciesDoes();
@@ -988,6 +1041,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getSpeciesDoesnt(): string
     {
         return $this->artisan->getSpeciesDoesnt();
@@ -1000,6 +1054,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 256)]
     public function getLanguages(): string
     {
         return $this->artisan->getLanguages();
@@ -1012,6 +1067,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 4096)]
     public function getNotes(): string
     {
         return $this->artisan->getNotes();
@@ -1024,6 +1080,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 512)]
     public function getInactiveReason(): string
     {
         return $this->artisan->getInactiveReason();
@@ -1036,6 +1093,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 16)]
+    #[NotBlank(groups: ['iu_form'])]
     public function getContactAllowed(): string
     {
         return $this->artisan->getContactAllowed();
@@ -1048,6 +1107,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 32)]
     public function getContactMethod(): string
     {
         return $this->artisan->getContactMethod();
@@ -1060,6 +1120,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Length(max: 128)]
     public function getContactInfoObfuscated(): string
     {
         return $this->artisan->getContactInfoObfuscated();
@@ -1088,6 +1149,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Valid]
     public function getPrivateData(): ArtisanPrivateData
     {
         if (null === ($res = $this->artisan->getPrivateData())) {

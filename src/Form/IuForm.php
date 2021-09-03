@@ -413,7 +413,7 @@ class IuForm extends AbstractType
 
         $resolver->setDefaults([
             'data_class'        => Artisan::class,
-            'validation_groups' => ['iu_form'],
+            'validation_groups' => ['Default', 'iu_form'],
             'error_mapping'     => [
                 'privateData.password' => 'password',
             ],
