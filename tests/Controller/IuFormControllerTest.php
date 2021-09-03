@@ -9,7 +9,7 @@ use App\Utils\Artisan\ContactPermit;
 
 class IuFormControllerTest extends DbEnabledWebTestCase
 {
-    public function testIuForm(): void
+    public function testIuFormLoadsForExistingMakers(): void
     {
         $client = static::createClient();
         self::addSimpleArtisan();
@@ -20,6 +20,17 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         static::assertEquals(404, $client->getResponse()->getStatusCode());
         $client->request('GET', '/iu_form/fill/TEST000');
         static::assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testSubmittingEmptyDoesnt500(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/iu_form/fill');
+        $form = $client->getCrawler()->selectButton('Submit')->form();
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
     }
 
     public function testContactMethodNotRequiredWhenContactNotAllowed(): void

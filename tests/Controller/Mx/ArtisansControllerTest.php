@@ -27,7 +27,7 @@ class ArtisansControllerTest extends DbEnabledWebTestCase
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match');
 
         $crawler = $client->request('GET', "/mx/artisans/{$artisan->getId()}/edit");
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeSame(200);
 
         $form = $crawler->selectButton('Save')->form([
             'artisan[makerId]' => 'MAKERID',
@@ -41,5 +41,16 @@ class ArtisansControllerTest extends DbEnabledWebTestCase
 
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Password has changed');
+    }
+
+    public function testSubmittingEmptyDoesnt500(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/mx/artisans/new');
+        $form = $client->getCrawler()->selectButton('Save')->form();
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
     }
 }
