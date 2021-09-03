@@ -37,7 +37,10 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('name')
+            ->add('name', TextType::class, [
+                'required'   => true,
+                'empty_data' => '',
+            ])
             ->add('formerly', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
