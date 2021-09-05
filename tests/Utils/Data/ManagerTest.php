@@ -12,11 +12,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ManagerTest extends TestCase
 {
-    public function testCommentWithoutNewline(): void
+    public function testCommentWithoutNewlineAtTheEndOfTheBuffer(): void
     {
-        $manager = new Manager('// Test comment without trailing \n');
+        self::expectNotToPerformAssertions();
 
-        self::assertNotNull($manager); // Already passed
+        new Manager('// Test comment without trailing \n');
+    }
+
+    public function testAcceptWithoutNewlineAtTheEndOfTheBuffer(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        new Manager('with MAKERID: accept');
     }
 
     /**
