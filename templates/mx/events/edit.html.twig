@@ -6,44 +6,37 @@
     <h1>{{ block('title') }}</h1>
 
     {{ form_start(form) }}
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.timestamp) }}
-                {{ form_widget(form.timestamp) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.timestamp) }}
             </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.type) }}
-                {{ form_widget(form.type) }}
+            <div class="col-md-6">
+                {{ form_row(form.type) }}
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {{ form_label(form.newMakersCount) }}
-                {{ form_widget(form.newMakersCount) }}
+        <div class="row">
+            <div class="col-md-4">
+                {{ form_row(form.newMakersCount) }}
             </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.updatedMakersCount) }}
-                {{ form_widget(form.updatedMakersCount) }}
+            <div class="col-md-4">
+                {{ form_row(form.updatedMakersCount) }}
             </div>
-            <div class="form-group col-md-4">
-                {{ form_label(form.reportedUpdatedMakersCount) }}
-                {{ form_widget(form.reportedUpdatedMakersCount) }}
+            <div class="col-md-4">
+                {{ form_row(form.reportedUpdatedMakersCount) }}
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {{ form_label(form.description) }}
-                {{ form_widget(form.description) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.description) }}
             </div>
-            <div class="form-group col-md-6">
-                {{ form_label(form.gitCommits) }}
-                {{ form_widget(form.gitCommits) }}
+            <div class="col-md-6">
+                {{ form_row(form.gitCommits) }}
             </div>
         </div>
 
-        {{ form_widget(form.save) }}
+        {{ form_row(form.save) }}
         {% if event.id is not null %}
-            {{ form_widget(form.delete) }}
+            {{ form_row(form.delete) }}
         {% endif %}
 
         {{ form_rest(form) }}
