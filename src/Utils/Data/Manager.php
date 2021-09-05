@@ -149,7 +149,7 @@ class Manager
      */
     private function readCommand(StringBuffer $buffer): void
     {
-        $command = $buffer->readUntilWhitespace();
+        $command = $buffer->readUntilWhitespaceOrEof();
         $buffer->skipWhitespace();
 
         switch ($command) {
@@ -158,7 +158,7 @@ class Manager
                 break;
 
             case self::CMD_CLEAR:
-                $fieldName = $buffer->readUntilWhitespace();
+                $fieldName = $buffer->readUntilWhitespaceOrEof();
 
                 $this->addCorrection($this->getCurrentSubject(), $fieldName, null, '');
                 break;
@@ -168,7 +168,7 @@ class Manager
                 break;
 
             case self::CMD_IGNORE_UNTIL:
-                $readFinalTime = $buffer->readUntilWhitespace();
+                $readFinalTime = $buffer->readUntilWhitespaceOrEof();
 
                 try {
                     $parsedFinalTime = DateTimeUtils::getUtcAt($readFinalTime);

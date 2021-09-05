@@ -30,6 +30,11 @@ class StringBuffer
         return $this->readUntilRegexp("\n|$");
     }
 
+    public function readUntilWhitespaceOrEof(): string
+    {
+        return $this->readUntilRegexp("\s|$");
+    }
+
     public function readUntilWhitespace(): string
     {
         return $this->readUntilRegexp("\s");
