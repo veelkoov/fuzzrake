@@ -38,7 +38,7 @@ class ArtisanPrivateData
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[NotBlank(message: 'Password is required', groups: ['iu_form'])]
+    #[NotBlank(message: 'Password is required.', groups: ['iu_form'])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: ['iu_form'])]
     private string $password = '';
 
