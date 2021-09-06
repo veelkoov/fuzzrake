@@ -33,6 +33,25 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         self::assertResponseStatusCodeSame(422);
     }
 
+    public function testErrorMessagesForRequiredFields(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/iu_form/fill');
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[contactAllowed]' => 'CORRECTIONS',
+        ]);
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+
+        self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_password + .help-text + .invalid-feedback', 'Password is required.');
+    }
+
     public function testContactMethodNotRequiredWhenContactNotAllowed(): void
     {
         $client = static::createClient();
