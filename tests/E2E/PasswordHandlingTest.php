@@ -18,11 +18,13 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
 
         $client->request('GET', '/iu_form/fill');
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'           => 'Maker',
-            'iu_form[country]'        => 'FI',
-            'iu_form[makerId]'        => 'MAKERID',
-            'iu_form[contactAllowed]' => 'NO',
-            'iu_form[password]'       => 'some-password',
+            'iu_form[name]'            => 'Maker',
+            'iu_form[country]'         => 'FI',
+            'iu_form[isMinor]'         => 'NO',
+            'iu_form[worksWithMinors]' => 'NO',
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[contactAllowed]'  => 'NO',
+            'iu_form[password]'        => 'some-password',
         ]);
         $client->submit($form);
         $client->followRedirect();
@@ -44,7 +46,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO');
+        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO', isMinor: false, worksWithMinors: true);
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -75,7 +77,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO');
+        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', isMinor: false, worksWithMinors: true);
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -107,7 +109,7 @@ class PasswordHandlingTest extends IuSubmissionAbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO');
+        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', isMinor: false, worksWithMinors: true);
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);

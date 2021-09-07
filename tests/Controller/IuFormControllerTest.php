@@ -6,6 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\DbEnabledWebTestCase;
 use App\Utils\Artisan\ContactPermit;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 
 class IuFormControllerTest extends DbEnabledWebTestCase
 {
@@ -47,6 +48,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_isMinor + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_password + .help-text + .invalid-feedback', 'Password is required.');
@@ -57,13 +60,15 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/fill');
-        $form = $client->getCrawler()->selectButton('Submit')->form();
-
-        $form->get('iu_form[name]')->setValue('test-maker-555');
-        $form->get('iu_form[country]')->setValue('Finland');
-        $form->get('iu_form[makerId]')->setValue('MAKERID');
-        $form->get('iu_form[contactAllowed]')->setValue('FEEDBACK');
-        $form->get('iu_form[password]')->setValue('why-so-serious');
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[name]'            => 'test-maker-555',
+            'iu_form[country]'         => 'Finland',
+            'iu_form[isMinor]'         => 'NO',
+            'iu_form[worksWithMinors]' => 'NO',
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[contactAllowed]'  => 'FEEDBACK',
+            'iu_form[password]'        => 'why-so-serious',
+        ]);
 
         $client->submit($form);
         self::assertSelectorTextContains('#iu_form_contactInfoObfuscated_help + div.invalid-feedback', 'This value should not be blank.');
@@ -84,13 +89,15 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/fill');
-        $form = $client->getCrawler()->selectButton('Submit')->form();
-
-        $form->get('iu_form[name]')->setValue('test-maker-555');
-        $form->get('iu_form[country]')->setValue('Finland');
-        $form->get('iu_form[makerId]')->setValue('MAKERID');
-        $form->get('iu_form[contactAllowed]')->setValue('NO');
-        $form->get('iu_form[password]')->setValue('why-so-serious');
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[name]'            => 'test-maker-555',
+            'iu_form[country]'         => 'Finland',
+            'iu_form[isMinor]'         => 'NO',
+            'iu_form[worksWithMinors]' => 'NO',
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[contactAllowed]'  => 'NO',
+            'iu_form[password]'        => 'why-so-serious',
+        ]);
 
         $client->submit($form);
         $client->followRedirect();
@@ -107,6 +114,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
+            isMinor: false,
+            worksWithMinors: true,
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
@@ -129,6 +138,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'CORRECTIONS',
+            isMinor: false,
+            worksWithMinors: true,
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
@@ -152,6 +163,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
+            isMinor: false,
+            worksWithMinors: true,
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
@@ -176,6 +189,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: ContactPermit::CORRECTIONS,
+            isMinor: false,
+            worksWithMinors: true,
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');

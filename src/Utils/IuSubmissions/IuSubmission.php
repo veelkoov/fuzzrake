@@ -39,14 +39,16 @@ class IuSubmission implements FieldReadInterface
      */
     public function get(Field $field)
     {
-        $value = $this->data[$field->name()] ?? null;
+        $fieldName = $field->name();
 
-        if (null === $value) {
-            throw new DataInputException("Submission $this->id is missing {$field->name()}");
+        if (!array_key_exists($fieldName, $this->data)) {
+            throw new DataInputException("Submission $this->id is missing $fieldName");
         }
 
+        $value = $this->data[$fieldName];
+
         if ($field->isList() && !is_array($value)) {
-            throw new DataInputException("Expected an array for {$field->name()}, got '$value' instead in $this->id");
+            throw new DataInputException("Expected an array for $fieldName, got '$value' instead in $this->id");
         }
 
         return $field->isList() ? StringList::pack($value) : $value;

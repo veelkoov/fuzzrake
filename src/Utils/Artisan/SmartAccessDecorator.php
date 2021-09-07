@@ -29,6 +29,7 @@ use Stringable;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -175,6 +176,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VARIOUS HELPERS =====
     //
 
+    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
     public function getIsMinor(): ?bool
     {
         return $this->getBoolValue(Fields::IS_MINOR);
@@ -185,6 +187,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Fields::IS_MINOR, $isMinor);
     }
 
+    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
     public function getWorksWithMinors(): ?bool
     {
         return $this->getBoolValue(Fields::WORKS_WITH_MINORS);
@@ -1242,7 +1245,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return null;
     }
 
-    private function setBoolValue(string $fieldName, bool $newValue): self
+    private function setBoolValue(string $fieldName, ?bool $newValue): self
     {
         $newValue = StrUtils::asStr($newValue);
 
