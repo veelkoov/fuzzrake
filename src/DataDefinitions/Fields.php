@@ -95,14 +95,14 @@ final class Fields
     private static ?array $fields = null;
     private static ?array $fieldsByModelName = null;
 
-    public static ?FieldsList $all = null;
-    public static ?FieldsList $persisted = null;
-    public static ?FieldsList $public = null;
-    public static ?FieldsList $inIuForm = null;
-    public static ?FieldsList $inStats = null;
-    public static ?FieldsList $lists = null;
-    public static ?FieldsList $urls = null;
-    public static ?FieldsList $none = null;
+    private static ?FieldsList $all = null;
+    private static ?FieldsList $persisted = null;
+    private static ?FieldsList $public = null;
+    private static ?FieldsList $inIuForm = null;
+    private static ?FieldsList $inStats = null;
+    private static ?FieldsList $lists = null;
+    private static ?FieldsList $urls = null;
+    private static ?FieldsList $none = null;
 
     public static function init()
     {
