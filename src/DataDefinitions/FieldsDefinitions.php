@@ -48,6 +48,8 @@ final class FieldsDefinitions
         F::SPECIES_COMMENT            => [0, 1, 1, 1, 1, 'speciesComment',           null],
         F::SPECIES_DOES               => [1, 1, 1, 1, 1, 'speciesDoes',              ''],
         F::SPECIES_DOESNT             => [1, 1, 1, 1, 1, 'speciesDoesnt',            ''],
+        F::IS_MINOR                   => [0, 1, 1, 1, 1, 'isMinor',                  null],
+        F::WORKS_WITH_MINORS          => [0, 1, 1, 1, 1, 'worksWithMinors',          null],
         F::URL_FURSUITREVIEW          => [0, 1, 1, 1, 1, 'fursuitReviewUrl',         V::FSR_URL],
         F::URL_WEBSITE                => [0, 1, 1, 1, 1, 'websiteUrl',               V::GENERIC_URL],
         F::URL_PRICES                 => [1, 1, 1, 1, 1, 'pricesUrls',               V::GENERIC_URL_LIST],

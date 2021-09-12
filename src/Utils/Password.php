@@ -13,6 +13,7 @@ final class Password
 
     public static function encryptOn(Artisan $artisan): void
     {
+        // grep-password-algorithms
         $artisan->setPassword(password_hash(
             $artisan->getPassword(),
             PASSWORD_DEFAULT,

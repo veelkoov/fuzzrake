@@ -17,14 +17,14 @@ class ArtisansControllerTest extends DbEnabledWebTestCase
         static::assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    public function testEditArtisan()
+    public function testEditArtisan(): void
     {
         $client = static::createClient();
 
         $artisan = self::getArtisan(password: 'password-555');
         self::persistAndFlush($artisan);
 
-        self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match');
+        self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match.');
 
         $crawler = $client->request('GET', "/mx/artisans/{$artisan->getId()}/edit");
         self::assertResponseStatusCodeSame(200);
@@ -40,7 +40,9 @@ class ArtisansControllerTest extends DbEnabledWebTestCase
         self::getEM()->clear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
-        self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Password has changed');
+        self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Password has changed.');
+        self::assertNull($artisan->getWorksWithMinors(), 'Works with minors has changed.');
+        self::assertNull($artisan->getIsMinor(), 'Is minor has changed.');
     }
 
     public function testSubmittingEmptyDoesnt500(): void

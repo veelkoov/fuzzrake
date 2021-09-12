@@ -208,11 +208,19 @@ class Artisan implements Stringable
      */
     private Collection|array $makerIds;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ArtisanValue::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     *
+     * @var Collection|ArtisanValue[]
+     */
+    private Collection|array $values;
+
     public function __construct()
     {
         $this->urls = new ArrayCollection();
         $this->commissions = new ArrayCollection();
         $this->makerIds = new ArrayCollection();
+        $this->values = new ArrayCollection();
     }
 
     public function __clone()
@@ -244,6 +252,13 @@ class Artisan implements Stringable
 
         foreach ($commissionsToClone as $commission) {
             $this->addCommission(clone $commission);
+        }
+
+        $valuesToClone = $this->values;
+        $this->values = new ArrayCollection();
+
+        foreach ($valuesToClone as $value) {
+            $this->addValue(clone $value);
         }
     }
 
@@ -757,6 +772,36 @@ class Artisan implements Stringable
             // set the owning side to null (unless already changed)
             if ($makerId->getArtisan() === $this) {
                 $makerId->setArtisan(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ArtisanValue[]
+     */
+    public function getValues(): Collection|array
+    {
+        return $this->values;
+    }
+
+    public function addValue(ArtisanValue $value): self
+    {
+        if (!$this->values->contains($value)) {
+            $this->values[] = $value;
+            $value->setArtisan($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValue(ArtisanValue $value): self
+    {
+        if ($this->values->removeElement($value)) {
+            // set the owning side to null (unless already changed)
+            if ($value->getArtisan() === $this) {
+                $value->setArtisan(null);
             }
         }
 

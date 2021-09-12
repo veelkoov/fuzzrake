@@ -83,6 +83,18 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('isMinor', ChoiceType::class, [
+                'label'    => 'What is your age?',
+                'required' => true,
+                'choices'  => ['I am at least 18 years old' => 'NO', 'I am a minor/underage' => 'YES'],
+                'expanded' => true,
+            ])
+            ->add('worksWithMinors', ChoiceType::class, [
+                'label'    => 'Do you accept commissions from minors/underage clients?',
+                'required' => true,
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
+                'expanded' => true,
+            ])
             ->add('paymentPlans', TextareaType::class, [
                 'label'      => 'What payment plans do you support?',
                 'help'       => 'Please provide a precise description. If you leave this empty, getfursu.it will treat this information as missing! (see the first example). Examples: <em>None/100% upfront</em>, <em>40% upfront to reserve a slot, 40% after 2 months, 20% after next 2 months</em>, <em>50% upfront to reserve a slot, 10% each next month</em>, <em>50% upfront for slot reservation, 100$ each next month until fully paid</em>.',
@@ -402,7 +414,8 @@ class IuForm extends AbstractType
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
 
-        $builder->get('contactAllowed')->addModelTransformer(NullToEmptyStringTransformer::getInstance());
+        $builder->get('isMinor')->addModelTransformer(BooleanTransformer::getInstance());
+        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
     }
 

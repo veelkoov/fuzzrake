@@ -10,6 +10,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait DbEnabledTestCaseTrait
@@ -33,7 +34,11 @@ trait DbEnabledTestCaseTrait
 
     protected static function resetDB(): void
     {
-        SchemaTool::resetOn(self::getEM());
+        $metadata = self::getEM()->getMetadataFactory()->getAllMetadata();
+
+        $schemaTool = new OrmSchemaTool(self::getEM());
+        $schemaTool->dropSchema($metadata);
+        $schemaTool->updateSchema($metadata);
     }
 
     protected static function getArtisanRepository(): ArtisanRepository
@@ -72,6 +77,8 @@ trait DbEnabledTestCaseTrait
         string $country = 'CZ',
         string $password = '',
         string $contactAllowed = '',
+        ?bool $isMinor = null,
+        ?bool $worksWithMinors = null,
     ): Artisan {
         $result = (new Artisan())
             ->setName($name)
@@ -91,6 +98,14 @@ trait DbEnabledTestCaseTrait
 
         if ('' !== $contactAllowed) {
             $result->setContactAllowed($contactAllowed);
+        }
+
+        if (null !== $isMinor) {
+            $result->setIsMinor($isMinor);
+        }
+
+        if (null !== $worksWithMinors) {
+            $result->setWorksWithMinors($worksWithMinors);
         }
 
         return $result;
