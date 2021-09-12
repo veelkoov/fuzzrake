@@ -6,7 +6,6 @@ namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\DbEnabledWebTestCase;
 use App\Utils\Artisan\ContactPermit;
-use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 
 class IuFormControllerTest extends DbEnabledWebTestCase
 {

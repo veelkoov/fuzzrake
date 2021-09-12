@@ -414,7 +414,6 @@ class IuForm extends AbstractType
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
 
-        $builder->get('contactAllowed')->addModelTransformer(NullToEmptyStringTransformer::getInstance());
         $builder->get('isMinor')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
