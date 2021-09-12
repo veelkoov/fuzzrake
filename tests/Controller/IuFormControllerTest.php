@@ -47,7 +47,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
-        self::assertSelectorTextContains('#iu_form_isMinor + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_isMinor + .help-text + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
