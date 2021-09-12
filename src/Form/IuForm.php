@@ -42,6 +42,7 @@ class IuForm extends AbstractType
         $otherOrderTypesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types'], UrlGeneratorInterface::ABSOLUTE_PATH);
         $otherFeaturesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features'], UrlGeneratorInterface::ABSOLUTE_PATH);
         $makerIdPagePath = $router->generate(RouteName::MAKER_IDS, referenceType: UrlGeneratorInterface::ABSOLUTE_PATH);
+        $rulesPagePath = $router->generate(RouteName::RULES, referenceType: UrlGeneratorInterface::ABSOLUTE_PATH);
 
         $builder
             ->add('name', TextType::class, [
@@ -84,10 +85,12 @@ class IuForm extends AbstractType
                 'empty_data' => '',
             ])
             ->add('isMinor', ChoiceType::class, [
-                'label'    => 'What is your age?',
-                'required' => true,
-                'choices'  => ['I am at least 18 years old' => 'NO', 'I am a minor/underage' => 'YES'],
-                'expanded' => true,
+                'label'      => 'What is your age?',
+                'required'   => true,
+                'choices'    => ['I am at least 18 years old' => 'NO', 'I am a minor/underage' => 'YES'],
+                'expanded'   => true,
+                'help'       => '<strong>NOTE:</strong> minors are currently still required to state their age on their website as well, <a href="'.$rulesPagePath.'" target="_blank">as per rules</a>.', // grep-state-age-on-website-until-filters-are-in-place
+                'help_html'  => true,
             ])
             ->add('worksWithMinors', ChoiceType::class, [
                 'label'    => 'Do you accept commissions from minors/underage clients?',
