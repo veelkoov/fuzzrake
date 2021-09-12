@@ -8,14 +8,6 @@
     {{ form_start(form) }}
     {{ form_errors(form) }}
         <div class="row">
-            <div class="col-md-4">
-                {{ form_row(form.contactAllowed) }}
-            </div>
-            <div class="col-md-8">
-                {{ form_row(form.contactInfoOriginal) }}
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-2">
                 {{ form_row(form.makerId) }}
             </div>
@@ -41,6 +33,28 @@
             </div>
             <div class="col-md-4">
                 {{ form_row(form.city) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                {{ form_row(form.isMinor) }}
+            </div>
+            <div class="col-md-2">
+                {{ form_row(form.worksWithMinors) }}
+            </div>
+            <div class="col-md-4">
+                {{ form_row(form.notes) }}
+            </div>
+            <div class="col-md-4">
+                {{ form_row(form.inactiveReason) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {{ form_row(form.contactAllowed) }}
+            </div>
+            <div class="col-md-8">
+                {{ form_row(form.contactInfoOriginal) }}
             </div>
         </div>
         <div class="row">
@@ -113,11 +127,7 @@
             <div class="col-md-4">
                 {{ form_row(form.languages) }}
             </div>
-            <div class="col-md-4">
-                {{ form_row(form.notes) }}
-            </div>
-            <div class="col-md-4">
-                {{ form_row(form.inactiveReason) }}
+            <div class="col-md-8">
             </div>
         </div>
         <div class="row">

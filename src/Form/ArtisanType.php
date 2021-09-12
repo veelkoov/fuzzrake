@@ -144,6 +144,18 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('isMinor', ChoiceType::class, [
+                'label'    => 'Age',
+                'required' => true,
+                'choices'  => ['Adult' => 'NO', 'Underage' => 'YES', 'Unknown' => null],
+                'expanded' => true,
+            ])
+            ->add('worksWithMinors', ChoiceType::class, [
+                'label'    => 'Works with minors?',
+                'required' => true,
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
+                'expanded' => true,
+            ])
             ->add('notes', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
@@ -294,6 +306,8 @@ class ArtisanType extends AbstractType
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
+        $builder->get('isMinor')->addModelTransformer(BooleanTransformer::getInstance());
+        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
     }
 
     public function configureOptions(OptionsResolver $resolver)
