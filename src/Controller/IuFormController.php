@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\DataDefinitions\ContactPermit;
 use App\Entity\Artisan as ArtisanE;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\ContactPermit;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\Utils\Password;

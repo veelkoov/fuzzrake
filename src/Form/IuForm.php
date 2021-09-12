@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Utils\Artisan\ContactPermit;
-use App\Utils\Artisan\Features;
-use App\Utils\Artisan\OrderTypes;
-use App\Utils\Artisan\ProductionModels;
+use App\DataDefinitions\ContactPermit;
+use App\DataDefinitions\Features;
+use App\DataDefinitions\OrderTypes;
+use App\DataDefinitions\ProductionModels;
+use App\DataDefinitions\Styles;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Artisan\Styles;
 use App\ValueObject\Routing\RouteName;
 use InvalidArgumentException;
 use Symfony\Component\Form\AbstractType;

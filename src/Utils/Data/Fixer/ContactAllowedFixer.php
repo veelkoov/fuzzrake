@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use App\Utils\Artisan\ContactPermit;
+use App\DataDefinitions\ContactPermit;
 
 class ContactAllowedFixer implements FixerInterface
 {

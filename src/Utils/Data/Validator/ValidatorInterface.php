@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Validator;
 
-use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields\Field;
 
 interface ValidatorInterface
 {

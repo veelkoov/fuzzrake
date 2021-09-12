@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataDefinitions;
+namespace App\DataDefinitions\Fields;
 
 use ArrayIterator;
 use Closure;

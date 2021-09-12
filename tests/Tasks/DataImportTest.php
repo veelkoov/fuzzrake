@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Tasks;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;

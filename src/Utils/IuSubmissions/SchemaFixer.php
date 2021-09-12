@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Utils\Traits\Singleton;
 
 final class SchemaFixer

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\DataDefinitions\Field;
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Field;
+use App\DataDefinitions\Fields\Fields;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;

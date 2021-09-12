@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\DataDefinitions\Field;
+use App\DataDefinitions\Fields\Field;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;

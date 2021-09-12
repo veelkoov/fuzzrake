@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Artisan\Fields;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

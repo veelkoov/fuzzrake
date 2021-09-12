@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates\Commissions;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;

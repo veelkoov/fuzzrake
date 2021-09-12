@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan\Fields;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\DataDefinitions;
+namespace App\DataDefinitions\Fields;
 
-use App\DataDefinitions\Fields as F;
-use App\DataDefinitions\ValidationRegexps as V;
+use App\DataDefinitions\Fields\Fields as F;
+use App\DataDefinitions\Fields\ValidationRegexps as V;
 use App\Utils\Traits\UtilityClass;
 
 final class FieldsDefinitions

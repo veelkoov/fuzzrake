@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\DataDefinitions;
+namespace App\Tests\DataDefinitions\Fields;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Artisan;
+namespace App\DataDefinitions;
 
 class Styles extends Dictionary
 {

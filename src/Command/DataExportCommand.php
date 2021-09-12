@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PhpOffice\PhpSpreadsheet\Exception;

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Features;
+use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\OrderTypes;
+use App\DataDefinitions\ProductionModels;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Utils\Artisan\Features;
-use App\Utils\Artisan\OrderTypes;
-use App\Utils\Artisan\ProductionModels;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\DomCrawler\Crawler;
 

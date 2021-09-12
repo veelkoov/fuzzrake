@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DataDefinitions\Fields;
+use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DataDefinitions\Fields;
-use App\DataDefinitions\ValidationRegexps;
+use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\ValidationRegexps;
 use App\Entity\Artisan;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;

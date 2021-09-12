@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Utils\Artisan\ContactPermit;
 
 class IuFormControllerTest extends DbEnabledWebTestCase
 {

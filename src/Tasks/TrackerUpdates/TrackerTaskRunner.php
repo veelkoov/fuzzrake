@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates;
 
-use App\DataDefinitions\Fields;
-use App\DataDefinitions\FieldsList;
+use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\EventFactory;
 use App\Service\WebpageSnapshotManager;
 use App\Utils\Data\ArtisanChanges;
