@@ -75,6 +75,7 @@ final class Regexes
 
         '<h2[^>]*> ?OFFER \| STATUS ?</h2>',
         '<h2[^>]*> ?OFFER(?:(?: status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS', // No closing </h2> for any comments
+        '<h4[^>]*> ?OFFER(?:(?: status:?| ?:))? ?</h4>\s*<h4[^>]*> ?STATUS', // No closing </h4> for any comments
         '<p[^>]*> ?OFFER(?:(?: status:?| ?:)) ?</p>\s*<p[^>]*> ?NOW STATUS', // No closing </p> for any comments
     ];
 }
