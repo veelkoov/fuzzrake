@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\E2E;
+namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
@@ -17,9 +17,9 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class IuSubmissionAbstractTest extends DbEnabledWebTestCase
+abstract class AbstractTest extends DbEnabledWebTestCase
 {
-    protected const IMPORT_DATA_DIR = __DIR__.'/../../var/testIuFormData'; // TODO: This path should be coming from the container
+    protected const IMPORT_DATA_DIR = __DIR__.'/../../../var/testIuFormData'; // TODO: This path should be coming from the container
 
     protected function setUp(): void
     {

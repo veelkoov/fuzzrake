@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\E2E;
+namespace App\Tests\E2E\IuSubmissions;
 
 use App\Utils\DataInputException;
 use JsonException;
 
-class PasswordHandlingTest extends IuSubmissionAbstractTest
+class PasswordHandlingTest extends AbstractTest
 {
     /**
      * @throws DataInputException|JsonException
