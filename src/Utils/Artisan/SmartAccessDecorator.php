@@ -1248,17 +1248,24 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     private function setBoolValue(string $fieldName, ?bool $newValue): self
     {
-        $newValue = StrUtils::asStr($newValue);
-
         foreach ($this->artisan->getValues() as $value) {
             if ($value->getFieldName() === $fieldName) {
-                $value->setValue($newValue);
+                if (null === $newValue) {
+                    $this->artisan->getValues()->removeElement($value);
+                } else {
+                    $value->setValue(StrUtils::asStr($newValue));
+                }
 
                 return $this;
             }
         }
 
-        $this->artisan->addValue((new ArtisanValue())->setFieldName($fieldName)->setValue($newValue));
+        if (null !== $newValue) {
+            $newEntity = (new ArtisanValue())
+                ->setFieldName($fieldName)
+                ->setValue(StrUtils::asStr($newValue));
+            $this->artisan->addValue($newEntity);
+        }
 
         return $this;
     }
