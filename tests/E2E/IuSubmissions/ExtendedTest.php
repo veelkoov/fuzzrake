@@ -127,7 +127,7 @@ class ExtendedTest extends AbstractTest
         $output = $this->performImport(true);
         self::validateConsoleOutput($output->fetch(), $expectedArtisans);
 
-        self::getEM()->flush();
+        self::flush();
         self::assertCount(4, $repo->findAll(), 'Expected three artisans in the DB after import');
 
         foreach ($expectedArtisans as $expectedArtisan) {

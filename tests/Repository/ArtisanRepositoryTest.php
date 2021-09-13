@@ -27,7 +27,7 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
             $artisans[$key] = clone $artisan; // Don't mangle the tests
             self::getEM()->persist($artisans[$key]);
         }
-        self::getEM()->flush();
+        self::flush();
 
         if (null === $resultIdx) {
             $this->expectException(NoResultException::class);
@@ -76,7 +76,7 @@ class ArtisanRepositoryTest extends DbEnabledKernelTestCase
         $accessor = Artisan::wrap($artisan = new ArtisanE())->setMakerId('MAKRID1')->setFormerMakerIds("MAKRID2\nMAKRID3");
 
         self::persistAndFlush($artisan);
-        self::getEM()->clear();
+        self::clear();
 
         $retrieved1 = self::getEM()->getRepository(ArtisanE::class)->findByMakerId('MAKRID1');
 

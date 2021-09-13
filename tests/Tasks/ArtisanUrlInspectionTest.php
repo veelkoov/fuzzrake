@@ -24,7 +24,7 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
 
         $createdArtisan = $this->getTestArtisanWithArtisanUrl();
         self::getEM()->persist($createdArtisan);
-        self::getEM()->flush();
+        self::flush();
 
         self::assertCount(1, $createdArtisan->getUrls());
         self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastFailure());
@@ -32,7 +32,7 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
 
         $task = new ArtisanUrlInspection(self::getEM()->getRepository(ArtisanUrl::class), $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
         $task->inspect(1);
-        self::getEM()->flush();
+        self::flush();
 
         $repo = self::getEM()->getRepository(ArtisanE::class);
         /** @var ArtisanRepository $repo */

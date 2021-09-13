@@ -117,6 +117,22 @@ trait DbEnabledTestCaseTrait
             self::getEM()->persist($entity);
         }
 
+        self::flush();
+    }
+
+    protected static function flush(): void
+    {
         self::getEM()->flush();
+    }
+
+    protected static function clear(): void
+    {
+        self::getEM()->clear();
+    }
+
+    protected static function flushAndClear(): void
+    {
+        self::flush();
+        self::clear();
     }
 }

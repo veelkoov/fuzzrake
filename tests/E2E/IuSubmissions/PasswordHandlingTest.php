@@ -32,8 +32,7 @@ class PasswordHandlingTest extends AbstractTest
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
         self::performImport(true);
-        self::getEM()->flush();
-        self::getEM()->clear();
+        self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertTrue(password_verify('some-password', $artisan->getPassword())); // Fails on plaintext
@@ -62,8 +61,7 @@ class PasswordHandlingTest extends AbstractTest
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
         self::performImport(true);
-        self::getEM()->flush();
-        self::getEM()->clear();
+        self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertEquals($oldHash, $artisan->getPassword(), 'The password hash has changed'); // Fails on plaintext
@@ -93,8 +91,7 @@ class PasswordHandlingTest extends AbstractTest
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
         self::performImport(true);
-        self::getEM()->flush();
-        self::getEM()->clear();
+        self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertNotEquals($oldHash, $artisan->getPassword(), 'The password was not changed');
@@ -125,8 +122,7 @@ class PasswordHandlingTest extends AbstractTest
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
         self::performImport(false);
-        self::getEM()->flush();
-        self::getEM()->clear();
+        self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertEquals($oldHash, $artisan->getPassword(), 'The password was actually changed');

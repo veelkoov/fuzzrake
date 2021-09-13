@@ -23,8 +23,7 @@ class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
         $persistedArtisan = new ArtisanE();
         $persistedArtisan->addUrl((new ArtisanUrl())->getState()->setLastFailure($lastFailure)->setLastSuccess($lastSuccess)->setLastFailureCode($lastFailureCode)->setLastFailureReason($lastFailureReason)->getUrl());
 
-        self::getEM()->persist($persistedArtisan);
-        self::getEM()->flush();
+        self::persistAndFlush($persistedArtisan);
 
         /** @var ArtisanE $retrievedArtisan */
         $retrievedArtisan = self::getEM()->getRepository(ArtisanE::class)->findAll()[0];
@@ -37,7 +36,7 @@ class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
 
         $url->setUrl('new url');
 
-        self::getEM()->flush();
+        self::flush();
 
         $retrievedArtisan = self::getEM()->getRepository(ArtisanE::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];

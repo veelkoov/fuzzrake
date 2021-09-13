@@ -37,7 +37,7 @@ class ArtisansControllerTest extends DbEnabledWebTestCase
         $client->followRedirect();
 
         unset($artisan);
-        self::getEM()->clear();
+        self::clear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Password has changed.');
