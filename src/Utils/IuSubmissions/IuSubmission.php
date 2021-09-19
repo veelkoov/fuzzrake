@@ -13,7 +13,7 @@ use App\Utils\Json;
 use App\Utils\StringList;
 use DateTimeInterface;
 use JsonException;
-use SplFileInfo;
+use Symfony\Component\Finder\SplFileInfo;
 
 class IuSubmission implements FieldReadInterface
 {
@@ -56,7 +56,6 @@ class IuSubmission implements FieldReadInterface
 
     /**
      * @throws JsonException|DataInputException
-     * @noinspection PhpPossiblePolymorphicInvocationInspection TODO: What
      */
     public static function fromFile(SplFileInfo $source): self
     {
