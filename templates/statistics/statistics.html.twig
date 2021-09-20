@@ -98,50 +98,52 @@
         "Indirect" values, and so the "total" values as well, are calculated in a different way, than how the way of operation of the filters on the main page would suggest. The values below rather show how many times a group or the group's descendant has been listed (note that "Most species" has a total count far bigger than the number of makers in the database).
     </p>
 
-    <table class="table table-sm">
-        <thead>
-        <tr>
-            <th>
-                Specie/group
-                <span class="text-success">+total "does" count</span>
-                <span class="text-danger">-total "doesn't" count</span>
-            </th>
-            <th>Total count</th>
-            <th>Direct total count</th>
-            <th>Indirect total count</th>
-            <th>Direct "does" count</th>
-            <th>Direct "doesn't" count</th>
-            <th>Indirect "does" count</th>
-            <th>Indirect "doesn't" count</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for specieStats in speciesStats %}
-            {% if showIgnored or not specieStats.specie.ignored %}
-                <tr {% if specieStats.specie.ignored %}class="bg-opacity-25 bg-secondary"{% endif %}>
-                    <td>
-                        {{ specieStats.specie.name }}
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>
+                    Specie/group
+                    <span class="text-success">+total "does" count</span>
+                    <span class="text-danger">-total "doesn't" count</span>
+                </th>
+                <th>Total count</th>
+                <th>Direct total count</th>
+                <th>Indirect total count</th>
+                <th>Direct "does" count</th>
+                <th>Direct "doesn't" count</th>
+                <th>Indirect "does" count</th>
+                <th>Indirect "doesn't" count</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for specieStats in speciesStats %}
+                {% if showIgnored or not specieStats.specie.ignored %}
+                    <tr {% if specieStats.specie.ignored %}class="bg-opacity-25 bg-secondary"{% endif %}>
+                        <td>
+                            {{ specieStats.specie.name }}
 
-                        {% if 0 != specieStats.totalDoesCount %}
-                            <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
-                        {% endif %}
+                            {% if 0 != specieStats.totalDoesCount %}
+                                <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
+                            {% endif %}
 
-                        {% if 0 != specieStats.totalDoesntCount %}
-                            <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ specieStats.totalCount }}</td>
-                    <td>{{ specieStats.directTotalCount }}</td>
-                    <td>{{ specieStats.indirectTotalCount }}</td>
-                    <td>{{ specieStats.directDoesCount }}</td>
-                    <td>{{ specieStats.directDoesntCount }}</td>
-                    <td>{{ specieStats.indirectDoesCount }}</td>
-                    <td>{{ specieStats.indirectDoesntCount }}</td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
+                            {% if 0 != specieStats.totalDoesntCount %}
+                                <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ specieStats.totalCount }}</td>
+                        <td>{{ specieStats.directTotalCount }}</td>
+                        <td>{{ specieStats.indirectTotalCount }}</td>
+                        <td>{{ specieStats.directDoesCount }}</td>
+                        <td>{{ specieStats.directDoesntCount }}</td>
+                        <td>{{ specieStats.indirectDoesCount }}</td>
+                        <td>{{ specieStats.indirectDoesntCount }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <h1 id="data_statistics">Data statistics</h1>
     {% include 'statistics/_data_table.html.twig' with { data: completeness, name: 'Data completeness', total: commissionsStats.Total } %}
