@@ -143,7 +143,8 @@ class DataImport
                     break;
 
                 case Fields::URL_PHOTOS:
-                    if ($artisan->get($field) !== $source->get($field)) {
+                    // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
+                    if (!StringList::sameElements($artisan->get($field), $source->get($field))) {
                         $artisan->setMiniatureUrls('');
                     }
 

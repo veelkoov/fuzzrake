@@ -12,6 +12,17 @@ final class StringList
 
     private const STD_SEPARATOR = "\n";
 
+    public static function sameElements(string $input1, string $input2): bool
+    {
+        $arr1 = self::unpack($input1);
+        $arr2 = self::unpack($input2);
+
+        sort($arr1);
+        sort($arr2);
+
+        return $arr1 === $arr2;
+    }
+
     /**
      * @return string[]
      */
