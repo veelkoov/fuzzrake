@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\HealthCheckService;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +56,7 @@ class RestApiController extends AbstractRecaptchaBackedController
     #[Cache(maxage: 3600, public: true)]
     public function artisans(ArtisanRepository $artisanRepository): JsonResponse
     {
-        return new JsonResponse($artisanRepository->getAll());
+        return new JsonResponse(Artisan::wrapAll($artisanRepository->getAll()));
     }
 
     #[Route(path: '/api/old_to_new_maker_ids_map.json', name: RouteName::API_OLD_TO_NEW_MAKER_IDS_MAP)]

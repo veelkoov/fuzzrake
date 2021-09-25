@@ -10,28 +10,32 @@ use JsonException;
 
 class RestApiControllerTest extends DbEnabledWebTestCase
 {
-    public function testArtisans()
+    public function testArtisans(): void
     {
         $client = static::createClient();
-        self::addSimpleArtisan();
+        self::persistAndFlush(self::getArtisan('API testing artisan', 'APIARTS', 'FI'));
 
         $client->request('GET', '/api/artisans.json');
+        self::assertResponseStatusCodeSame(200);
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        $text = $client->getResponse()->getContent();
+        self::assertStringContainsString('"API testing artisan"', $text);
+        self::assertStringContainsString('"APIARTS"', $text);
+        self::assertStringContainsString('"FI"', $text);
     }
 
     /**
      * @throws JsonException
      */
-    public function testHealth()
+    public function testHealth(): void
     {
         $client = static::createClient();
         self::addSimpleArtisan();
 
         $client->request('GET', '/health');
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        self::assertResponseStatusCodeSame(200);
 
         $data = Json::decode($client->getResponse()->getContent());
-        static::assertEquals('OK', $data['status']);
+        self::assertEquals('OK', $data['status']);
     }
 }
