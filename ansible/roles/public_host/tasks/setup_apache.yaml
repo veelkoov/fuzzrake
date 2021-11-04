@@ -41,6 +41,14 @@
     mode: 0644
     owner: root
 
+- name: create bewares dir
+  file:
+    group: root
+    mode:  0755
+    owner: root
+    path:  "{{ bewares_path }}"
+    state: directory
+
 - name: create /opt/mod_brotli directory
   file:
     group: root
@@ -67,6 +75,7 @@
   with_items:
     - "conf/httpd.j2.conf"
     - "conf.d/autoindex.j2.conf"
+    - "conf.d/bewares.j2.conf"
     - "conf.d/fuzzrake.j2.conf"
     - "conf.d/welcome.j2.conf"
     - "conf.modules.d/00-base.j2.conf"
