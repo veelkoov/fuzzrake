@@ -11,8 +11,5 @@
 - import_tasks: setup_docker.yaml
   tags: docker
 
-- import_tasks: setup_txkillswitch.yaml
-  tags: txkillswitch
-
 - import_tasks: setup_ipv6.yaml
   tags: ipv6

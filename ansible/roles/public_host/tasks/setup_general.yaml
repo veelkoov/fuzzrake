@@ -23,11 +23,9 @@
 - name: install required packages
   yum:
     name:
-      - cargo
       - git
       - nodejs
       - python-docker-py
-      - rust
       - snapd
       - yarn
       - vim
