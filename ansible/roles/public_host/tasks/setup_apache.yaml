@@ -43,8 +43,8 @@
 
 - name: create bewares dir
   file:
-    group: root
-    mode:  0755
+    group: centos
+    mode:  0775
     owner: root
     path:  "{{ bewares_path }}"
     state: directory
