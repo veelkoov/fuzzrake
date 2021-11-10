@@ -66,12 +66,12 @@ class FixerDifferValidator
     {
         if (!$this->hideFixCommandFor($field)) {
             $original = $imported ?? $artisan->getSubject();
-            $originalVal = StrUtils::strSafeForCli($original->get($field));
+            $originalVal = StrUtils::strSafeForCli(StrUtils::asStr($original->get($field)));
             if (!$this->validator->isValid($artisan, $field)) {
                 $originalVal = Printer::formatInvalid($originalVal);
             }
 
-            $proposedVal = StrUtils::strSafeForCli($artisan->getChanged()->get($field)) ?: 'NEW_VALUE';
+            $proposedVal = StrUtils::strSafeForCli(StrUtils::asStr($artisan->getChanged()->get($field))) ?: 'NEW_VALUE';
 
             if ($useSetForFixCmd) {
                 $fixCmd = Manager::CMD_SET." {$field->name()} |$proposedVal|";
@@ -85,11 +85,9 @@ class FixerDifferValidator
 
     private function hideFixCommandFor(Field $field): bool
     {
-        return in_array($field->name(), [
-            Fields::CONTACT_ALLOWED,
-            Fields::CONTACT_METHOD,
-            Fields::CONTACT_INFO_OBFUSCATED,
+        return !$field->isInIuForm() || in_array($field->name(), [
             Fields::CONTACT_ADDRESS_PLAIN,
+            Fields::PASSWORD,
         ]);
     }
 
