@@ -31,6 +31,7 @@ class TextPreprocessor
         '<!--.*?-->'                                      => ' ',
         '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
         '\*\*\*OPEN\*\*\*'                                => 'open',
+        '(<[^>]+ )style="[^"]*"([^>]*>)'                  => '$1$2',
 
         '&#(39|8217);'                                    => "'",
 

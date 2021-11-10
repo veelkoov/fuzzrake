@@ -43,6 +43,7 @@ final class Regexes
         '_AND_'  => '(?: and | ?(?:&amp;|/) ?)',
         'NOW'    => '(?:currently|now|always)',
         'C___S'  => '(?:comm?iss?ions?)', // Not including "comms"
+        'MONTHS' => '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)',
         'STATUS' => '(?<'.self::GRP_STATUS.'>(?:OPEN)|(?:CLOSED))',
         'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS)|(?:PARTS&REFURBISHMENTS)|(?:COMMISSIONS&QUOTES)|(?:FULLSUIT COMMISSIONS)|(?:PARTIAL COMMISSIONS)|(?:HEAD COMMISSIONS)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:ORDERS))',
     ];
@@ -57,6 +58,7 @@ final class Regexes
         'slots are open in',
         'as slots open',
         '(?:>| )art C___S(?: are:?| ?:)', // "art commissions"
+        'OFFER status: STATUS ?</h1>\s*<h1[^>]*> ?MONTHS',
     ];
 
     public const OFFER_STATUS_REGEXES = [
