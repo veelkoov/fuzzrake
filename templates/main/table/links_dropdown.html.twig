@@ -7,6 +7,8 @@
         <a class="btn btn-secondary track-fsr" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
     {%- endif -%}
 
+    <a class="btn btn-secondary track-ab" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank">AB</a>
+
     {%- if artisan.websiteUrl -%}
         <a class="btn btn-secondary track-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
     {%- endif -%}
@@ -18,6 +20,7 @@
         </button>
 
         <ul class="dropdown-menu" aria-labelledby="{{ btnGroupDropLinksId }}">
+            <li><a class="dropdown-item track-ab" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank">Check Artists Beware records</a></li>
             {%- if artisan.fursuitReviewUrl -%}
                 <li><a class="dropdown-item track-fsr" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a></li>
             {%- endif -%}

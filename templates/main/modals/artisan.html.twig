@@ -102,6 +102,7 @@
             If you're going to contact the studio/maker, <u>please let them know you found them here{{# unless artisan.completenessGood }} and that their data could use some updates{{/ unless }}</u>! This&nbsp;will help us all a lot. Thank you!
         </p>
         <div id="artisanLinks"> {{! for the track-website, track-* see grep-track-link-classes }}
+            <a class="btn btn-light track-ab border border-danger" href="#" data-href="https://bewares.getfursu.it/#search:{{ artisan.abSearchJson }}" target="_blank">Check Artists Beware records</a>
             {{# if artisan.fursuitReviewUrl }}
                 <a class="btn btn-light track-fsr" href="#" data-href="{{ artisan.fursuitReviewUrl }}" rel="nofollow" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
             {{/ if }}

@@ -14,6 +14,7 @@ export default class Artisan {
     readonly allOrderTypes: string[];
     readonly features: Set<string>;
     readonly allFeatures: string[];
+    readonly abSearchJson: string;
     readonly completenessComment: string;
     readonly completenessGood: boolean;
     readonly openFor: Set<string>;
@@ -116,6 +117,7 @@ export default class Artisan {
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
         this.openFor = new Set<string>(openFor);
         this.isStatusKnown = this.openFor.size + this.closedFor.length > 0;
+        this.abSearchJson = this.getAbSearchJson();
     }
 
     public getLastMakerId(): string {
@@ -148,6 +150,13 @@ export default class Artisan {
 
     public getSpeciesDoesFilters(): Set<string> {
         return this.speciesDoesFilters;
+    }
+
+    public getAbSearchJson(): string {
+        let names = [this.name];
+        names.push(...this.formerly);
+
+        return JSON.stringify(names)
     }
 
     private static makeAllList(list: string[], other: string[]): string[] {
