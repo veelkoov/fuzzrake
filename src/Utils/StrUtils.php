@@ -67,7 +67,9 @@ final class StrUtils
     {
         foreach (Fields::persisted() as $field) {
             if (($value = $artisan->get($field)) && is_string($value)) {
-                $artisan->set($field, str_replace("\r\n", "\n", $value));
+                $newValue = rtrim(str_replace("\r\n", "\n", $value), "\r");
+
+                $artisan->set($field, $newValue);
             }
         }
     }
