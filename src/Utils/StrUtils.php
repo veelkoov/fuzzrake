@@ -74,7 +74,7 @@ final class StrUtils
         }
     }
 
-    public static function asStr(DateTimeInterface | bool | string | null $value): string
+    public static function asStr(DateTimeInterface|bool|string|null $value): string
     {
         if (null === $value) {
             return 'unknown';
