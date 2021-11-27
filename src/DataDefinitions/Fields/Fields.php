@@ -93,7 +93,6 @@ final class Fields
     public const CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
 
     private static ?array $fields = null;
-    private static ?array $fieldsByModelName = null;
 
     private static ?FieldsList $all = null;
     private static ?FieldsList $persisted = null;
@@ -107,14 +106,12 @@ final class Fields
     public static function init()
     {
         self::$fields = [];
-        self::$fieldsByModelName = [];
 
         foreach (FieldsDefinitions::FIELDS_ARRAY_DATA as $name => $fieldData) {
             $field = new Field($name, $fieldData[5], $fieldData[6], (bool) $fieldData[0], (bool) $fieldData[1],
                 (bool) $fieldData[2], (bool) $fieldData[3], (bool) $fieldData[4]);
 
             self::$fields[$field->name()] = $field;
-            self::$fieldsByModelName[$field->modelName()] = $field;
         }
     }
 
