@@ -127,15 +127,6 @@ final class Fields
         return self::$fields[$name];
     }
 
-    public static function getByModelName(string $modelName): Field
-    {
-        if (!array_key_exists($modelName, self::$fieldsByModelName)) {
-            throw new InvalidArgumentException("No field with such model name exists: $modelName");
-        }
-
-        return self::$fieldsByModelName[$modelName];
-    }
-
     public static function getAll(): FieldsList
     {
         return self::$all ??= new FieldsList(self::$fields);
