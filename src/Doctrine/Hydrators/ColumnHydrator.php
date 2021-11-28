@@ -15,10 +15,9 @@ class ColumnHydrator extends AbstractHydrator
     public const COLUMN_HYDRATOR = 'COLUMN_HYDRATOR';
 
     /**
-     * @noinspection PhpMissingReturnTypeInspection - Overridden
      * @throws Exception
      */
-    protected function hydrateAllData()
+    protected function hydrateAllData(): array
     {
         return $this->_stmt->fetchFirstColumn();
     }

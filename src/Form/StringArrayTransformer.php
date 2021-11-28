@@ -11,14 +11,16 @@ class StringArrayTransformer implements DataTransformerInterface
 {
     use Singleton;
 
-    public function transform($value)
+    /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
+    public function transform($value): mixed
     {
         $value = str_replace("\r\n", "\n", $value);
 
         return array_filter(explode("\n", $value ?? ''));
     }
 
-    public function reverseTransform($value)
+    /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
+    public function reverseTransform($value): mixed
     {
         return implode("\n", array_filter($value));
     }

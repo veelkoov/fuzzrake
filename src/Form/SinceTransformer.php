@@ -11,13 +11,14 @@ class SinceTransformer implements DataTransformerInterface
 {
     use Singleton;
 
-    /** @noinspection PhpMissingReturnTypeInspection Overridden */
-    public function transform($value)
+    /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
+    public function transform($value): mixed
     {
         return pattern('^\d{4}-\d{2}$')->test($value) ? $value.'-01' : '';
     }
 
-    public function reverseTransform($value)
+    /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
+    public function reverseTransform($value): mixed
     {
         return substr($value, 0, 7);
     }

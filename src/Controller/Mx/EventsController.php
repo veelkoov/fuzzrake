@@ -8,6 +8,7 @@ use App\Entity\Event;
 use App\Form\EventType;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ class EventsController extends AbstractFormController
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_EVENT_NEW, methods: ['GET', 'POST'])]
     #[Cache(maxage: 0, public: false)]
-    public function edit(Request $request, ?Event $event, EnvironmentsService $environments): Response
+    public function edit(Request $request, ?Event $event, EnvironmentsService $environments, EntityManagerInterface $manager): Response
     {
         $event ??= new Event();
 
@@ -32,12 +33,12 @@ class EventsController extends AbstractFormController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (null !== $event->getId() && self::clicked($form, EventType::BTN_DELETE)) {
-                $this->getDoctrine()->getManager()->remove($event);
+                $manager->remove($event);
             } else {
-                $this->getDoctrine()->getManager()->persist($event);
+                $manager->persist($event);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $manager->flush();
 
             return $this->redirectToRoute(RouteName::EVENTS);
         }

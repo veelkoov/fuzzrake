@@ -9,7 +9,7 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator as DoctrineEntityManagerDecora
 
 class EntityManagerDecorator extends DoctrineEntityManagerDecorator
 {
-    public function persist($object)
+    public function persist($object): void
     {
         if ($object instanceof SmartAccessDecorator) {
             $object = $object->getArtisan();
