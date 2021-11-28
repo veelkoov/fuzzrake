@@ -64,6 +64,7 @@ export default class Artisan {
                 readonly speciesDoesnt: string[],
 
                 readonly isMinor: boolean,
+                readonly ages: string,
                 readonly worksWithMinors: boolean,
 
                 readonly fursuitReviewUrl: string,

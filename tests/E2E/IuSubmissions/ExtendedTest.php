@@ -38,9 +38,11 @@ class ExtendedTest extends AbstractTest
         Field::BP_TRACKER_ISSUE,
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
+        Field::IS_MINOR, // TODO: Remove
     ];
 
     private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
+        Field::IS_MINOR, // TODO: Remove
         Field::FORMER_MAKER_IDS,
         Field::URL_MINIATURES,
         Field::CONTACT_INFO_ORIGINAL,
@@ -63,8 +65,11 @@ class ExtendedTest extends AbstractTest
         Field::ORDER_TYPES,
     ];
 
+    private const EXPANDED_SELECTS = [ // Choice (enum) fields in the form of multiple radios
+        Field::AGES,
+    ];
+
     private const BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
-        Field::IS_MINOR,
         Field::WORKS_WITH_MINORS,
     ];
 
@@ -85,6 +90,8 @@ class ExtendedTest extends AbstractTest
      */
     public function testIuSubmissionAndImportFlow(): void
     {
+        self::sanityChecks();
+
         $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
         $repo = self::getArtisanRepository();
 
@@ -129,6 +136,17 @@ class ExtendedTest extends AbstractTest
 
         foreach ($expectedArtisans as $expectedArtisan) {
             self::validateArtisanAfterImport($expectedArtisan);
+        }
+    }
+
+    private static function sanityChecks(): void
+    {
+        foreach (self::EXPANDED as $field) {
+            self::assertNotContains($field, self::EXPANDED_SELECTS);
+        }
+
+        foreach (self::EXPANDED_SELECTS as $field) {
+            self::assertNotContains($field, self::EXPANDED);
         }
     }
 
@@ -199,7 +217,7 @@ class ExtendedTest extends AbstractTest
 
     private static function assertFieldIsPresentWithValue(mixed $value, Field $field, string $htmlBody): void
     {
-        if (in_array($field, self::EXPANDED)) {
+        if (in_array($field, self::EXPANDED) || in_array($field, self::EXPANDED_SELECTS)) {
             self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
             self::assertSinceFieldIsPresentWithValue($value, $htmlBody);
@@ -208,13 +226,21 @@ class ExtendedTest extends AbstractTest
         } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue($value, $field, $htmlBody);
         } else {
-            self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value);
+            self::assertNotNull($value, "Field $field->name should not be expected to be null");
+            self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
         }
     }
 
-    private static function assertExpandedFieldIsPresentWithValue(string $value, Field $field, string $htmlBody): void
+    private static function assertExpandedFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
     {
-        $selected = pattern('<input[^>]*name="iu_form\['.$field->modelName().']\[]"[^>]*value="(?<value>[^"]+)"[^>]*>')
+        if (in_array($field, self::EXPANDED)) {
+            $array = '\[]';
+            self::assertNotNull($value);
+        } else {
+            $array = '';
+        }
+
+        $selected = pattern('<input[^>]*name="iu_form\['.$field->modelName().']'.$array.'"[^>]*value="(?<value>[^"]+)"[^>]*>')
             ->match($htmlBody)->map(function (Detail $detail): array {
                 return [$detail->group('value')->text(), str_contains($detail->text(), 'checked="checked"')];
             });

@@ -53,7 +53,8 @@ final class FieldsData
         'SPECIES_COMMENT'           => ['    S P F speciesComment',          null],
         'SPECIES_DOES'              => ['L   S P F speciesDoes',             ''],
         'SPECIES_DOESNT'            => ['L   S P F speciesDoesnt',           ''],
-        'IS_MINOR'                  => ['    S P F isMinor',                 null],
+        'IS_MINOR'                  => ['    S P F isMinor',                 null], // TODO: Remove
+        'AGES'                      => ['    S P F ages',                    null],
         'WORKS_WITH_MINORS'         => ['    S P F worksWithMinors',         null],
         'URL_FURSUITREVIEW'         => ['    S P F fursuitReviewUrl',        V::FSR_URL],
         'URL_WEBSITE'               => ['    S P F websiteUrl',              V::GENERIC_URL],

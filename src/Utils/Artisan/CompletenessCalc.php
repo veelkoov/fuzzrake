@@ -56,7 +56,7 @@ final class CompletenessCalc
             ->anyNotEmpty(self::IMPORTANT, F::URL_MINIATURES)
             ->anyNotEmpty(self::IMPORTANT, F::OPEN_FOR, F::CLOSED_FOR)
             ->anyNotNull(self::CRUCIAL, F::WORKS_WITH_MINORS)
-            ->anyNotNull(self::CRUCIAL, F::IS_MINOR)
+            ->anyNotNull(self::CRUCIAL, F::AGES)
             ->result();
     }
 }

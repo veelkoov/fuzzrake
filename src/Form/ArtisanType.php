@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Features;
 use App\DataDefinitions\OrderTypes;
@@ -144,10 +145,10 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('isMinor', ChoiceType::class, [
+            ->add('ages', ChoiceType::class, [
                 'label'    => 'Age',
                 'required' => true,
-                'choices'  => ['Adult' => 'NO', 'Underage' => 'YES', 'Unknown' => null],
+                'choices'  => Ages::getChoices(true),
                 'expanded' => true,
             ])
             ->add('worksWithMinors', ChoiceType::class, [
@@ -306,7 +307,6 @@ class ArtisanType extends AbstractType
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
-        $builder->get('isMinor')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
     }
 

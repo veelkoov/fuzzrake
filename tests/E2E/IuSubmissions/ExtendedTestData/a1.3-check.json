@@ -3,7 +3,7 @@
     "FORMER_MAKER_IDS": "MAKERI0\nOLDMKR0",
     "NAME": "Name mkr1 after update",
     "FORMERLY": "Name mkr1 before update\nFormerly mkr1 before update",
-    "IS_MINOR": false,
+    "AGES": "MIXED",
     "WORKS_WITH_MINORS": true,
     "PASSWORD": "Password changed 1",
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-*************after@e****l",
