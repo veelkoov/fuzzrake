@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan\Fields;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
@@ -69,6 +69,6 @@ final class CommissionAccessor extends AbstractAccessor
 
     protected static function getFieldNameFor($subset): string
     {
-        return $subset ? Fields::OPEN_FOR : Fields::CLOSED_FOR;
+        return $subset ? Field::OPEN_FOR->name : Field::CLOSED_FOR->name;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Tasks;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
@@ -28,10 +28,10 @@ class DataImportTest extends TestCase
     public function testImagesUpdateShouldResetMiniatures(string $initialUrlPhotos, string $initialMiniatures, string $newUrlPhotos, string $expectedMiniatures): void
     {
         $artisan = $this->getBasicArtisan([
-            Fields::MAKER_ID       => 'MAKERID',
-            Fields::PASSWORD       => 'PASSWORD',
-            Fields::URL_PHOTOS     => $initialUrlPhotos,
-            Fields::URL_MINIATURES => $initialMiniatures,
+            Field::MAKER_ID->name       => 'MAKERID',
+            Field::PASSWORD->name       => 'PASSWORD',
+            Field::URL_PHOTOS->name     => $initialUrlPhotos,
+            Field::URL_MINIATURES->name => $initialMiniatures,
         ]);
 
         $objectManager = $this->getObjectManagerMock($artisan);
@@ -41,7 +41,7 @@ class DataImportTest extends TestCase
 
         $dataImport = new DataImport($objectManager, $importManager, $printer, $fdv, false);
         $dataImport->import([$this->getIuSubmission($artisan, [
-            Fields::URL_PHOTOS => [$newUrlPhotos],
+            Field::URL_PHOTOS->name => [$newUrlPhotos],
         ])]);
 
         static::assertEquals($expectedMiniatures, Artisan::wrap($artisan)->getMiniatureUrls());
@@ -71,7 +71,7 @@ class DataImportTest extends TestCase
         $artisan = Artisan::wrap($result = new ArtisanE());
 
         foreach ($initialData as $fieldName => $value) {
-            $artisan->set(Fields::get($fieldName), $value);
+            $artisan->set(Field::from($fieldName), $value);
         }
 
         return $result;

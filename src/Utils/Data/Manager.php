@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
@@ -135,7 +135,7 @@ class Manager
 
     private function addCorrection(string $submissionId, string $fieldName, ?string $wrongValue, string $correctedValue): void
     {
-        $field = Fields::get($fieldName);
+        $field = Field::from($fieldName);
 
         if (!array_key_exists($submissionId, $this->corrections)) {
             $this->corrections[$submissionId] = [];

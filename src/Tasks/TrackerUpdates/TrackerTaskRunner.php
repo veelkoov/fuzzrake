@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\EventFactory;
 use App\Service\WebpageSnapshotManager;
@@ -31,8 +31,8 @@ class TrackerTaskRunner
         private bool $commit,
         private SymfonyStyle $io,
     ) {
-        $this->eventCreatingFields = new FieldsList([Fields::get(Fields::OPEN_FOR)]);
-        $this->skipDiffForFields = new FieldsList([Fields::get(Fields::CS_LAST_CHECK)]);
+        $this->eventCreatingFields = new FieldsList([Field::OPEN_FOR]);
+        $this->skipDiffForFields = new FieldsList([Field::CS_LAST_CHECK]);
     }
 
     /**

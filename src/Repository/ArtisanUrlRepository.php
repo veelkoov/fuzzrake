@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\DataDefinitions\Fields\Field;
+use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanUrlState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -25,19 +27,17 @@ class ArtisanUrlRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $excludedTypes
-     *
      * @return ArtisanUrl[]
      */
-    public function getLeastRecentFetched(int $limit, array $excludedTypes): array
+    public function getLeastRecentFetched(int $limit, FieldsList $excluded): array
     {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(ArtisanUrl::class, 'u');
         $rsm->addJoinedEntityFromClassMetadata(ArtisanUrlState::class, 'us', 'u',
             'state', ['id' => 's_id']);
 
-        $whereClause = empty($excludedTypes) ? '' :
-            'WHERE u.type NOT IN ('.implode(',', array_map(fn (string $item): string => $this->getEntityManager()->getConnection()->quote($item, ParameterType::STRING), $excludedTypes)).')';
+        $whereClause = $excluded->empty() ? '' :
+            'WHERE u.type NOT IN ('.implode(',', array_map(fn (Field $type): string => $this->getEntityManager()->getConnection()->quote($type->name, ParameterType::STRING), $excluded->names())).')';
 
         return $this->getEntityManager()
             ->createNativeQuery("
@@ -54,7 +54,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function getOrderedBySuccessDate(array $excludedTypes): array
+    public function getOrderedBySuccessDate(FieldsList $excluded): array
     {
         $builder = $this->createQueryBuilder('u')
             ->join('u.artisan', 'a')
@@ -68,10 +68,10 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->orderBy('us.lastSuccess', 'ASC')
             ->addOrderBy('us.lastFailure', 'ASC');
 
-        if (!empty($excludedTypes)) {
+        if (!$excluded->empty()) {
             $builder
                 ->where('u.type NOT IN (:excluded)')
-                ->setParameter('excluded', $excludedTypes);
+                ->setParameter('excluded', $excluded->names());
         }
 
         return $builder->getQuery()->execute();

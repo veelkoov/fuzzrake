@@ -1,4 +1,4 @@
-FROM php:8.0.7-fpm-alpine3.13
+FROM php:8.1.0RC6-fpm-alpine3.13
 
 ARG DEV_MACHINE=no
 

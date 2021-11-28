@@ -12,7 +12,7 @@ class BooleanTransformer implements DataTransformerInterface
 {
     use Singleton;
 
-    public function transform($value)
+    public function transform($value): ?string
     {
         return null === $value ? null : ($value ? 'YES' : 'NO');
     }

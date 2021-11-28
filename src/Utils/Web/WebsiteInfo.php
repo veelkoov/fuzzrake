@@ -105,6 +105,7 @@ final class WebsiteInfo
             ->match($webpageSnapshot->getContents())
             ->forEach(function (Detail $detail) use ($result): void {
                 try {
+                    /* @noinspection PhpArrayUsedOnlyForWriteInspection - False positive */
                     $result[] = $detail->get('data_url');
                 } catch (NonexistentGroupException $e) {
                     throw new UnbelievableRuntimeException($e);

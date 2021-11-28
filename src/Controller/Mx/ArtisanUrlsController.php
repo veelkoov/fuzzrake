@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\DataDefinitions\Fields\FieldsDefinitions;
+use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\FieldsData;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
@@ -24,7 +25,7 @@ class ArtisanUrlsController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $urls = $repository->getOrderedBySuccessDate(FieldsDefinitions::NON_INSPECTED_URLS);
+        $urls = $repository->getOrderedBySuccessDate(Fields::nonInspectedUrls());
 
         return $this->render('mx/artisan_urls/index.html.twig', [
             'urls' => $urls,

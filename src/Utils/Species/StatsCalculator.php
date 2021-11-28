@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Species;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 
@@ -28,8 +28,8 @@ class StatsCalculator
     {
         $this->speciesFlat = $speciesFlat;
 
-        $allDoesNames = self::extractSpecieNamesWithRepetitions($artisans, Fields::SPECIES_DOES);
-        $allDoesntNames = self::extractSpecieNamesWithRepetitions($artisans, Fields::SPECIES_DOESNT);
+        $allDoesNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOES);
+        $allDoesntNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOESNT);
 
         $this->result = self::createEmptyResult($allDoesNames, $allDoesntNames);
 
@@ -117,12 +117,12 @@ class StatsCalculator
      *
      * @return string[]
      */
-    private static function extractSpecieNamesWithRepetitions(array $artisans, string $fieldName): array
+    private static function extractSpecieNamesWithRepetitions(array $artisans, Field $field): array
     {
         $result = [];
 
         foreach ($artisans as $artisan) {
-            array_push($result, ...StringList::unpack($artisan->get($fieldName)));
+            array_push($result, ...StringList::unpack($artisan->get($field)));
         }
 
         return $result;

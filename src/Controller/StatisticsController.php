@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
@@ -177,10 +178,10 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach (Fields::inStats() as $field) {
-            $result[$field->name()] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
+            $result[$field->name] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
                 $value = $artisan->get($field);
 
-                if ($field->is(Fields::FORMER_MAKER_IDS)) {
+                if (Field::FORMER_MAKER_IDS === $field) {
                     /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
                      * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part
                      * where the digits is zero-padded artisan database ID. */

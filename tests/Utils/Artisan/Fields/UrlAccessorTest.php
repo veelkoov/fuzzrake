@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Artisan\Fields;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -65,9 +65,9 @@ class UrlAccessorTest extends TestCase
     {
         $artisan = Artisan::wrap($entity = new ArtisanE());
 
-        $entity->addUrl($this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES))
-            ->addUrl($this->getNewArtisanUrl('COST2', Fields::URL_PRICES))
-            ->addUrl($this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE));
+        $entity->addUrl($this->getNewArtisanUrl('PRICE1', Field::URL_PRICES))
+            ->addUrl($this->getNewArtisanUrl('COST2', Field::URL_PRICES))
+            ->addUrl($this->getNewArtisanUrl('WEBSITE', Field::URL_WEBSITE));
 
         self::assertEquals('WEBSITE', $artisan->getWebsiteUrl());
         self::assertEquals("PRICE1\nCOST2", $artisan->getPricesUrls());
@@ -75,15 +75,15 @@ class UrlAccessorTest extends TestCase
 
     public function testGetObjs(): void
     {
-        $url1 = $this->getNewArtisanUrl('PRICE1', Fields::URL_PRICES);
-        $url2 = $this->getNewArtisanUrl('COST2', Fields::URL_PRICES);
-        $url3 = $this->getNewArtisanUrl('WEBSITE', Fields::URL_WEBSITE);
+        $url1 = $this->getNewArtisanUrl('PRICE1', Field::URL_PRICES);
+        $url2 = $this->getNewArtisanUrl('COST2', Field::URL_PRICES);
+        $url3 = $this->getNewArtisanUrl('WEBSITE', Field::URL_WEBSITE);
 
         $artisan = Artisan::wrap($entity = new ArtisanE());
         $entity->addUrl($url1)->addUrl($url2)->addUrl($url3);
 
-        self::assertEquals([$url1, $url2], array_values($artisan->getUrlObjs(Fields::URL_PRICES)));
-        self::assertEquals([$url3], array_values($artisan->getUrlObjs(Fields::URL_WEBSITE)));
+        self::assertEquals([$url1, $url2], array_values($artisan->getUrlObjs(Field::URL_PRICES)));
+        self::assertEquals([$url3], array_values($artisan->getUrlObjs(Field::URL_WEBSITE)));
     }
 
     private function getUrlArray(ArtisanE $artisan): array
@@ -94,8 +94,8 @@ class UrlAccessorTest extends TestCase
         return $result;
     }
 
-    private function getNewArtisanUrl(string $url, string $type): ArtisanUrl
+    private function getNewArtisanUrl(string $url, Field $type): ArtisanUrl
     {
-        return (new ArtisanUrl())->setUrl($url)->setType($type);
+        return (new ArtisanUrl())->setUrl($url)->setType($type->name);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Utils\Traits\Singleton;
 
 final class SchemaFixer
@@ -20,14 +20,14 @@ final class SchemaFixer
 
         switch ($data[self::SCHEMA_VERSION]) {
             case 8:
-                $data[Fields::BP_LAST_CHECK] = 'unknown';
-                $data[Fields::URL_PRICES] = [$data[Fields::URL_PRICES]];
-                $data[Fields::URL_COMMISSIONS] = [$data['URL_CST']];
+                $data[Field::BP_LAST_CHECK->name] = 'unknown';
+                $data[Field::URL_PRICES->name] = [$data[Field::URL_PRICES->name]];
+                $data[Field::URL_COMMISSIONS->name] = [$data['URL_CST']];
                 // no break
 
             case 9:
-                $data[Fields::IS_MINOR] = null;
-                $data[Fields::WORKS_WITH_MINORS] = null;
+                $data[Field::IS_MINOR->name] = null;
+                $data[Field::WORKS_WITH_MINORS->name] = null;
         }
 
         return $data;

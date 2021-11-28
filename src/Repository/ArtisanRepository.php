@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\ValidationRegexps;
 use App\Entity\Artisan;
 use App\Utils\Filters\FilterData;
@@ -300,7 +300,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('au.type = :type')
             ->andWhere('a.inactiveReason = :empty')
             ->setParameters([
-                'type'  => Fields::URL_COMMISSIONS,
+                'type'  => Field::URL_COMMISSIONS->name,
                 'empty' => '',
             ])
             ->getQuery()

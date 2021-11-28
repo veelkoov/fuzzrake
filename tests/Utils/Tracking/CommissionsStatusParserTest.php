@@ -25,7 +25,6 @@ class CommissionsStatusParserTest extends TestCase
 
     /**
      * @dataProvider analyseStatusDataProvider
-     * @noinspection PhpUnusedParameterInspection
      *
      * @throws TrackerException
      */
