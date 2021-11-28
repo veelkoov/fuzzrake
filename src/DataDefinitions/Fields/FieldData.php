@@ -14,7 +14,7 @@ class FieldData
     public function __construct(
         public readonly string $name,
         public readonly ?string $modelName,
-        public readonly ?string $validationRegexp, // FIXME: not public, not readonly
+        ?string $validationRegexp,
         public readonly bool $isList,
         public readonly bool $isPersisted,
         public readonly bool $inStats,

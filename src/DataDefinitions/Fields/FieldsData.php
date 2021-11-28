@@ -12,7 +12,13 @@ final class FieldsData
 {
     use UtilityClass;
 
-    private const DATA = [
+    public const MARK_LIST = 'L';
+    public const MARK_DYNAMIC = 'D';
+    public const MARK_STATS = 'S';
+    public const MARK_PUBLIC = 'P';
+    public const MARK_FORM = 'F';
+
+    public const DATA = [
     //
     //                   is in I/U Form ---------F
     //                       is Public? -------P
@@ -110,11 +116,11 @@ final class FieldsData
                 $field->name,
                 substr($data, 10),
                 $validationRegexp,
-                'L' === $data[0],
-                'D' !== $data[2],
-                'S' === $data[4],
-                'P' === $data[6],
-                'F' === $data[8],
+                self::MARK_LIST === $data[0],
+                self::MARK_DYNAMIC !== $data[2],
+                self::MARK_STATS === $data[4],
+                self::MARK_PUBLIC === $data[6],
+                self::MARK_FORM === $data[8],
             );
         }
     }
