@@ -126,7 +126,7 @@ class HealthCheckService
     {
         try {
             return $this->getUpdatesStatus('-12 hours -15 minutes', $this->artisanVolatileDataRepository->getLastCsUpdateTime()); // grep-tracking-frequency
-        } catch (DateTimeException | UnexpectedResultException) {
+        } catch (DateTimeException|UnexpectedResultException) {
             return self::WARNING;
         }
     }
@@ -135,7 +135,7 @@ class HealthCheckService
     {
         try {
             return $this->getUpdatesStatus('-7 days -15 minutes', $this->artisanVolatileDataRepository->getLastBpUpdateTime()); // grep-tracking-frequency
-        } catch (DateTimeException | UnexpectedResultException) {
+        } catch (DateTimeException|UnexpectedResultException) {
             return self::WARNING;
         }
     }
@@ -156,7 +156,7 @@ class HealthCheckService
     {
         try {
             $result = $this->artisanVolatileDataRepository->getLastCsUpdateTime();
-        } catch (DateTimeException | UnexpectedResultException) {
+        } catch (DateTimeException|UnexpectedResultException) {
             $result = null;
         }
 
@@ -167,7 +167,7 @@ class HealthCheckService
     {
         try {
             $result = $this->artisanVolatileDataRepository->getLastBpUpdateTime();
-        } catch (DateTimeException | UnexpectedResultException) {
+        } catch (DateTimeException|UnexpectedResultException) {
             $result = null;
         }
 

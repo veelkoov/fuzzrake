@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Mx;
 
 use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\FieldsData;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;

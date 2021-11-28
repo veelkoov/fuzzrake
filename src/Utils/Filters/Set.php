@@ -25,7 +25,7 @@ class Set implements IteratorAggregate, ArrayAccess
         $this->items[$key]->incCount();
     }
 
-    public function addComplexItem(string $key, string | Set $value, string $label, int $count): void
+    public function addComplexItem(string $key, string|Set $value, string $label, int $count): void
     {
         $this->items[$key] = new Item($value, $label, $count);
     }

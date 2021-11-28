@@ -74,9 +74,9 @@ class FixerDifferValidator
             $proposedVal = StrUtils::strSafeForCli(StrUtils::asStr($artisan->getChanged()->get($field))) ?: 'NEW_VALUE';
 
             if ($useSetForFixCmd) {
-                $fixCmd = Manager::CMD_SET." {$field->name} |$proposedVal|";
+                $fixCmd = Manager::CMD_SET." $field->name |$proposedVal|";
             } else {
-                $fixCmd = Manager::CMD_REPLACE." {$field->name} |$originalVal| |$proposedVal|";
+                $fixCmd = Manager::CMD_REPLACE." $field->name |$originalVal| |$proposedVal|";
             }
 
             $this->printer->writeln(Printer::formatFix("    $fixCmd"));

@@ -91,7 +91,7 @@ class FilterService
         return $result;
     }
 
-    private function getSpeciesFilterItem(Specie $specie): Set | string
+    private function getSpeciesFilterItem(Specie $specie): Set|string
     {
         if ($specie->hasChildren()) {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());

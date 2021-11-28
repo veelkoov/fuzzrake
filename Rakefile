@@ -50,6 +50,10 @@ def run_console(*args)
   run_docker('./bin/console', *args)
 end
 
+def run_composer(*args)
+  run_docker('composer', *args)
+end
+
 def clear_cache
   run_shell('sudo', 'rm', '-rf', 'var/cache/dev', 'var/cache/test')
 end
@@ -58,10 +62,11 @@ end
 # MISCELLANEOUS TASKS
 #
 
-task(:default) { run_shell('rake', '--tasks', '--all') }
-task(:console) { |_t, args| run_console(*args) }
-task(:cc)      { clear_cache }
-task(:cl)      { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
+task(:default)  { run_shell('rake', '--tasks', '--all') }
+task(:console)  { |_t, args| run_console(*args) }
+task(:cc)       { clear_cache }
+task(:cl)       { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
+task(:composer) { |_t, args| run_composer(*args) }
 
 #
 # TESTING AND DEV

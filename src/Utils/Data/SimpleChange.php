@@ -12,8 +12,8 @@ class SimpleChange implements ChangeInterface
 {
     public function __construct(
         private Field $field,
-        private DateTimeInterface | string | bool | null $old,
-        private DateTimeInterface | string | bool | null $new,
+        private DateTimeInterface|string|bool|null $old,
+        private DateTimeInterface|string|bool|null $new,
     ) {
     }
 
