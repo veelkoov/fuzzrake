@@ -84,7 +84,6 @@
     "conflict": {
         "symfony/symfony": "*"
     },
-    "minimum-stability": "RC",
     "extra": {
         "symfony": {
             "allow-contrib": false,
