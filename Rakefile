@@ -83,7 +83,7 @@ def create_link(file_path, link_path)
 end
 
 def phpunit(*additional_args)
-  run_docker('xvfb-run', './bin/phpunit', '--testdox', *additional_args)
+  run_docker('./bin/phpunit', '--testdox', *additional_args)
 end
 
 def fix_phpunit

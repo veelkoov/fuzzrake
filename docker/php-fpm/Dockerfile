@@ -1,4 +1,4 @@
-FROM php:8.1.0RC6-fpm-alpine3.13
+FROM php:8.1.0-fpm-alpine3.15
 
 ARG DEV_MACHINE=no
 
@@ -29,7 +29,7 @@ RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         && sed -r -i'' 's/set -e/set -e\ncd \/etc\nsed \/host.docker.internal\/d hosts > hosts.new\ncat hosts.new > hosts\nip r | grep "default via" | cut -f3 -d" " | tr -d "\\n" >> hosts\necho " host.docker.internal" >> hosts\ncd -\n/' /usr/local/bin/docker-php-entrypoint \
         && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
         && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && apk add --no-cache chromium chromium-chromedriver xvfb xvfb-run; \
+        && apk add --no-cache chromium chromium-chromedriver; \
     else \
         echo "Skipped develop stuff"; \
     fi
