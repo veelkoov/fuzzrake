@@ -14,6 +14,9 @@ abstract class DbEnabledPantherTestCase extends PantherTestCase
 
     protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): PantherClient
     {
+        $options['hostname'] ??= 'fuzzrake';
+        $options['webServerDir'] ??= __DIR__.'/../../public/'; // Workaround PantherTestCase::$webServerDir access before initialization
+
         $result = parent::createPantherClient($options, $kernelOptions, $managerOptions);
 
         self::resetDB();

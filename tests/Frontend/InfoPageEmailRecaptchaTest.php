@@ -14,7 +14,7 @@ class InfoPageEmailRecaptchaTest extends DbEnabledPantherTestCase
      */
     public function testRecaptchaWorksAndEmailAddressAppears(): void
     {
-        $client = static::createPantherClient(['hostname' => 'fuzzrake']);
+        $client = static::createPantherClient();
         $client->request('GET', '/index.php/info.html');
 
         $client->waitForVisibility('a[href^="mailto:"]', 5);
