@@ -23,7 +23,6 @@
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "^3.6",
-        "symfony/proxy-manager-bridge": "*",
         "symfony/runtime": "*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
