@@ -12,14 +12,14 @@ class SimpleChange implements ChangeInterface
 {
     public function __construct(
         private Field $field,
-        private DateTimeInterface | string | bool | null $old,
-        private DateTimeInterface | string | bool | null $new,
+        private DateTimeInterface|string|bool|null $old,
+        private DateTimeInterface|string|bool|null $new,
     ) {
     }
 
     public function getDescription(): string
     {
-        $name = $this->field->name();
+        $name = $this->field->name;
         $old = StrUtils::asStr($this->old);
         $new = StrUtils::asStr($this->new);
 

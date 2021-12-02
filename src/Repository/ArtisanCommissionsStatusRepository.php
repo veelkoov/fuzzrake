@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Arrays;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -84,7 +84,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->setParameters([
                 'false'    => false,
                 'true'     => true,
-                'url_type' => Fields::URL_COMMISSIONS,
+                'url_type' => Field::URL_COMMISSIONS->name,
             ])
             ->enableResultCache(3600)
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);

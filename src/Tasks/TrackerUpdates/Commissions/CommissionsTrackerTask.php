@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\TrackerUpdates\Commissions;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
@@ -40,7 +40,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
      */
     public function getUrlsToPrefetch(): array
     {
-        return array_merge(...array_map(fn (Artisan $artisan): array => $artisan->getUrlObjs(Fields::URL_COMMISSIONS), $this->artisans));
+        return array_merge(...array_map(fn (Artisan $artisan): array => $artisan->getUrlObjs(Field::URL_COMMISSIONS), $this->artisans));
     }
 
     /**
@@ -82,7 +82,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
     {
         $result = [];
 
-        foreach ($artisan->getUrlObjs(Fields::URL_COMMISSIONS) as $url) {
+        foreach ($artisan->getUrlObjs(Field::URL_COMMISSIONS) as $url) {
             $lastCsUpdate = $url->getState()->getLastRequest();
 
             try {
@@ -98,7 +98,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
                 }
 
                 array_push($result, ...$allOfferStatuses);
-            } catch (ExceptionInterface | TrackerException $exception) {
+            } catch (ExceptionInterface|TrackerException $exception) {
                 $this->logger->notice('Exception caught while detecting statuses in URL', [
                     'artisan'   => (string) $artisan,
                     'url'       => (string) $url,

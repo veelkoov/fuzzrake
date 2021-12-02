@@ -15,7 +15,7 @@ class MainSmokeUiTest extends DbEnabledPantherTestCase
      */
     public function testMainPage(): void
     {
-        $client = static::createPantherClient();
+        $client = static::createPantherClient(['hostname' => 'fuzzrake']);
         self::setWindowSize($client, 1600, 900);
 
         self::persistAndFlush(

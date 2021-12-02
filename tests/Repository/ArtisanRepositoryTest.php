@@ -7,8 +7,8 @@ namespace App\Tests\Repository;
 use App\Entity\Artisan as ArtisanE;
 use App\Tests\TestUtils\DbEnabledKernelTestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\ORMException;
 
 class ArtisanRepositoryTest extends DbEnabledKernelTestCase
 {

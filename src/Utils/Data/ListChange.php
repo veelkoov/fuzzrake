@@ -27,7 +27,7 @@ class ListChange implements ChangeInterface
 
     public function getDescription(): string
     {
-        $name = $this->field->name();
+        $name = $this->field->name;
         $added = $this->added;
         $removed = $this->removed;
 

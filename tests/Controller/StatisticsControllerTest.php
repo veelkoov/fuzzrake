@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\DataDefinitions\Features;
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\OrderTypes;
 use App\DataDefinitions\ProductionModels;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
@@ -56,7 +56,7 @@ class StatisticsControllerTest extends DbEnabledWebTestCase
         static::assertRowValueEquals('1 (50.00%)', OrderTypes::FULL_DIGITIGRADE, $crawler);
         static::assertRowValueEquals('2 (100.00%)', 'Unknown', $crawler->filterXPath('//h1[text()="Styles"]')->nextAll()->first());
         static::assertRowValueEquals('2 (100.00%)', 'Total', $crawler->filterXPath('//h1[text()="Commission status"]')->nextAll()->first());
-        static::assertRowValueEquals('2 (100.00%)', Fields::NAME, $crawler);
+        static::assertRowValueEquals('2 (100.00%)', Field::NAME->name, $crawler);
         static::assertRowValueEquals('1 (50.00% × 2 = 100.00%)', 'CZ, SK', $crawler);
         // https://github.com/veelkoov/fuzzrake/issues/74
         // static::assertRowValueEquals('1 (50.00%)', '40-49%', $crawler);

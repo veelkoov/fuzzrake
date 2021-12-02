@@ -15,7 +15,6 @@ use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
 use InvalidArgumentException;
 use JsonException;
-use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
@@ -26,47 +25,47 @@ use TRegx\CleanRegex\Match\Details\Detail;
 class ExtendedTest extends AbstractTest
 {
     private const VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
-        'CONTACT_INFO_ORIGINAL',
-        'CONTACT_ADDRESS_PLAIN',
-        'PASSWORD',
+        Field::CONTACT_INFO_ORIGINAL,
+        Field::CONTACT_ADDRESS_PLAIN,
+        Field::PASSWORD,
     ];
 
     private const NOT_IN_TEST_DATA = [ // Fields which are not loaded from JSON, they are not impacted by import
-        'COMPLETENESS',
-        'CS_LAST_CHECK',
-        'CS_TRACKER_ISSUE',
-        'BP_LAST_CHECK',
-        'BP_TRACKER_ISSUE',
-        'OPEN_FOR',
-        'CLOSED_FOR',
+        Field::COMPLETENESS,
+        Field::CS_LAST_CHECK,
+        Field::CS_TRACKER_ISSUE,
+        Field::BP_LAST_CHECK,
+        Field::BP_TRACKER_ISSUE,
+        Field::OPEN_FOR,
+        Field::CLOSED_FOR,
     ];
 
     private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        'FORMER_MAKER_IDS',
-        'URL_MINIATURES',
-        'CONTACT_INFO_ORIGINAL',
-        'CONTACT_METHOD',
-        'CONTACT_ADDRESS_PLAIN',
-        'INACTIVE_REASON',
-        'COMPLETENESS',
-        'CS_LAST_CHECK',
-        'CS_TRACKER_ISSUE',
-        'BP_LAST_CHECK',
-        'BP_TRACKER_ISSUE',
-        'OPEN_FOR',
-        'CLOSED_FOR',
+        Field::FORMER_MAKER_IDS,
+        Field::URL_MINIATURES,
+        Field::CONTACT_INFO_ORIGINAL,
+        Field::CONTACT_METHOD,
+        Field::CONTACT_ADDRESS_PLAIN,
+        Field::INACTIVE_REASON,
+        Field::COMPLETENESS,
+        Field::CS_LAST_CHECK,
+        Field::CS_TRACKER_ISSUE,
+        Field::BP_LAST_CHECK,
+        Field::BP_TRACKER_ISSUE,
+        Field::OPEN_FOR,
+        Field::CLOSED_FOR,
     ];
 
     private const EXPANDED = [ // List fields in the form of multiple checkboxes
-        'PRODUCTION_MODELS',
-        'FEATURES',
-        'STYLES',
-        'ORDER_TYPES',
+        Field::PRODUCTION_MODELS,
+        Field::FEATURES,
+        Field::STYLES,
+        Field::ORDER_TYPES,
     ];
 
     private const BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
-        'IS_MINOR',
-        'WORKS_WITH_MINORS',
+        Field::IS_MINOR,
+        Field::WORKS_WITH_MINORS,
     ];
 
     /**
@@ -86,8 +85,6 @@ class ExtendedTest extends AbstractTest
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        self::sanityCheck();
-
         $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
         $repo = self::getArtisanRepository();
 
@@ -136,20 +133,6 @@ class ExtendedTest extends AbstractTest
     }
 
     /**
-     * Make sure all the fields list in this test class are OK: no typos in names, no removed (legacy) fields, etc.
-     */
-    private static function sanityCheck(): void
-    {
-        foreach ((new ReflectionClass(__CLASS__))->getConstants() as $array) {
-            if (is_array($array)) {
-                foreach ($array as $value) {
-                    self::assertArrayHasKey($value, Fields::getAll()->asArray());
-                }
-            }
-        }
-    }
-
-    /**
      * @throws JsonException
      */
     private static function getArtisanData(string $variant): Artisan
@@ -158,13 +141,13 @@ class ExtendedTest extends AbstractTest
 
         $data = Json::readFile(__DIR__."/ExtendedTestData/$variant.json");
 
-        foreach (Fields::getAll() as $fieldName => $field) {
-            if (in_array($fieldName, self::NOT_IN_TEST_DATA)) {
+        foreach (Fields::all() as $fieldName => $field) {
+            if (in_array($field, self::NOT_IN_TEST_DATA)) {
                 continue;
             }
 
             self::assertArrayHasKey($fieldName, $data);
-            $result->set(Fields::get($fieldName), $data[$fieldName]);
+            $result->set(Field::from($fieldName), $data[$fieldName]);
 
             unset($data[$fieldName]);
         }
@@ -198,15 +181,15 @@ class ExtendedTest extends AbstractTest
 
     private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody): void
     {
-        foreach (Fields::getAll() as $fieldName => $field) {
-            if (in_array($fieldName, self::NOT_IN_FORM)) {
+        foreach (Fields::all() as $field) {
+            if (in_array($field, self::NOT_IN_FORM)) {
                 self::assertFieldIsNotPresentInForm($field, $htmlBody);
                 continue;
             }
 
             $value = $oldData->get($field);
 
-            if (in_array($fieldName, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM)) {
+            if (in_array($field, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM)) {
                 self::assertValueIsNotPresentInForm($value, $field, $htmlBody);
             } else {
                 self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
@@ -216,13 +199,13 @@ class ExtendedTest extends AbstractTest
 
     private static function assertFieldIsPresentWithValue(mixed $value, Field $field, string $htmlBody): void
     {
-        if (in_array($field->name(), self::EXPANDED)) {
+        if (in_array($field, self::EXPANDED)) {
             self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
-        } elseif ('SINCE' === $field->name()) {
+        } elseif (Field::SINCE === $field) {
             self::assertSinceFieldIsPresentWithValue($value, $htmlBody);
-        } elseif (in_array($field->name(), self::BOOLEAN)) {
+        } elseif (in_array($field, self::BOOLEAN)) {
             self::assertYesNoFieldIsPresentWithValue($value, $field, $htmlBody);
-        } elseif ('CONTACT_ALLOWED' === $field->name()) {
+        } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue($value, $field, $htmlBody);
         } else {
             self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value);
@@ -296,22 +279,22 @@ class ExtendedTest extends AbstractTest
         self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
     }
 
-    /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
     private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody)
     {
-        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for {$field->name()}.");
+        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->name.");
 
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
+            /* @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
             $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
-            self::assertTrue(pattern($regexp)->test($htmlBody), "{$field->name()} radio field was not present or (not) selected.");
+            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->name radio field was not present or (not) selected.");
         }
     }
 
     private static function assertValueIsNotPresentInForm(mixed $value, Field $field, string $htmlBody): void
     {
-        if ($field->is('PASSWORD')) { // paranoid show off, and you missed some possibility, did you?
+        if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
             $match = pattern('<input[^>]+name="iu_form\[password]"[^>]*>')->match($htmlBody);
             self::assertCount(1, $match);
 
@@ -335,8 +318,8 @@ class ExtendedTest extends AbstractTest
 
     private static function setValuesInForm(Form $form, Artisan $data): void
     {
-        foreach (Fields::getAll() as $fieldName => $field) {
-            if (in_array($fieldName, self::NOT_IN_FORM)) {
+        foreach (Fields::all() as $field) {
+            if (in_array($field, self::NOT_IN_FORM)) {
                 continue;
             }
 
@@ -347,9 +330,9 @@ class ExtendedTest extends AbstractTest
 
             $fields = $form["iu_form[{$field->modelName()}]"];
 
-            if (Fields::SINCE === $fieldName) {
+            if (Field::SINCE === $field) {
                 self::setValuesInSinceField($value, $fields);
-            } elseif (in_array($fieldName, self::EXPANDED)) {
+            } elseif (in_array($field, self::EXPANDED)) {
                 self::setValuesInExpandedField($value, $fields);
             } else {
                 $fields->setValue($value);
@@ -404,8 +387,8 @@ class ExtendedTest extends AbstractTest
 
         self::assertNotNull($actual);
 
-        foreach (Fields::getAll() as $fieldName => $field) {
-            if (Fields::PASSWORD === $fieldName) {
+        foreach (Fields::all() as $fieldName => $field) {
+            if (Field::PASSWORD === $field) {
                 self::assertTrue(password_verify($expected->get($field), $actual->get($field)), 'Password differs.');
             } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getMakerId()}.");

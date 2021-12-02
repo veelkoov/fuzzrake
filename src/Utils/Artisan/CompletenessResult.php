@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 final class CompletenessResult
@@ -37,7 +38,7 @@ final class CompletenessResult
         return $this;
     }
 
-    public function anyNotEmpty(int $weight, ...$fields): CompletenessResult
+    public function anyNotEmpty(int $weight, Field ...$fields): CompletenessResult
     {
         $this->total += $weight;
 

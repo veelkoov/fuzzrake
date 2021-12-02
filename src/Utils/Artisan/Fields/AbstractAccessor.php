@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan\Fields;
 
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
@@ -16,7 +16,7 @@ abstract class AbstractAccessor
 
     public static function _set(Artisan $artisan, $subset, string $newValue): void
     {
-        if (Fields::get(static::getFieldNameFor($subset))->isList()) {
+        if (Field::from(static::getFieldNameFor($subset))->isList()) {
             $newValues = StringList::unpack($newValue);
         } else {
             $newValues = '' === $newValue ? [] : [$newValue];

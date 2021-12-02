@@ -74,9 +74,9 @@ class FixerDifferValidator
             $proposedVal = StrUtils::strSafeForCli(StrUtils::asStr($artisan->getChanged()->get($field))) ?: 'NEW_VALUE';
 
             if ($useSetForFixCmd) {
-                $fixCmd = Manager::CMD_SET." {$field->name()} |$proposedVal|";
+                $fixCmd = Manager::CMD_SET." $field->name |$proposedVal|";
             } else {
-                $fixCmd = Manager::CMD_REPLACE." {$field->name()} |$originalVal| |$proposedVal|";
+                $fixCmd = Manager::CMD_REPLACE." $field->name |$originalVal| |$proposedVal|";
             }
 
             $this->printer->writeln(Printer::formatFix("    $fixCmd"));
@@ -85,13 +85,13 @@ class FixerDifferValidator
 
     private function hideFixCommandFor(Field $field): bool
     {
-        return !$field->isInIuForm() || in_array($field->name(), [
-            Fields::CONTACT_ADDRESS_PLAIN,
-            Fields::PASSWORD,
+        return !$field->isInIuForm() || in_array($field, [
+            Field::CONTACT_ADDRESS_PLAIN,
+            Field::PASSWORD,
         ]);
     }
 
-    private function getArtisanFixWip(Artisan | ArtisanChanges $artisan): ArtisanChanges
+    private function getArtisanFixWip(Artisan|ArtisanChanges $artisan): ArtisanChanges
     {
         if ($artisan instanceof Artisan) {
             $artisan = new ArtisanChanges($artisan);

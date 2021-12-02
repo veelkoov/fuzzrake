@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
-use App\DataDefinitions\Fields\FieldsDefinitions;
+use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -21,7 +21,7 @@ final class ArtisanUrlInspection
 
     public function inspect(int $limit): void
     {
-        $urls = $this->artisanUrlRepository->getLeastRecentFetched($limit, FieldsDefinitions::NON_INSPECTED_URLS);
+        $urls = $this->artisanUrlRepository->getLeastRecentFetched($limit, Fields::nonInspectedUrls());
 
         $this->io->progressStart(count($urls));
 

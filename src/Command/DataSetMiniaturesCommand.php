@@ -60,7 +60,7 @@ class DataSetMiniaturesCommand extends Command
 
             try {
                 $miniatureUrls = $this->retrieveMiniatureUrls($pictureUrls);
-            } catch (ExceptionInterface | JsonException | LogicException $e) {
+            } catch (ExceptionInterface|JsonException|LogicException $e) {
                 $io->error('Failed: '.$artisan->getLastMakerId().', '.$e->getMessage());
                 continue;
             }

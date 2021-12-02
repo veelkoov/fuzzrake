@@ -7,7 +7,7 @@ namespace App\Utils\Filters;
 class Item
 {
     public function __construct(
-        private string | Set $value,
+        private string|Set $value,
         private string $label = '',
         private int $count = 0,
     ) {
@@ -19,7 +19,7 @@ class Item
         return $this->label;
     }
 
-    public function getValue(): string | Set
+    public function getValue(): string|Set
     {
         return $this->value;
     }

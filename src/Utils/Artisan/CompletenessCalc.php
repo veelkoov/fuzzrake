@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use App\DataDefinitions\Fields\Fields as F;
+use App\DataDefinitions\Fields\Field as F;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
 

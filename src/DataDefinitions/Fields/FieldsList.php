@@ -20,7 +20,7 @@ class FieldsList implements IteratorAggregate
         array $fields,
     ) {
         foreach ($fields as $field) {
-            $this->fields[$field->name()] = $field;
+            $this->fields[$field->name] = $field;
         }
     }
 
@@ -35,15 +35,28 @@ class FieldsList implements IteratorAggregate
     }
 
     /**
-     * @return Field[] 'FIELD_NAME' => Field
+     * @return Field[] ['FIELD_NAME' => Field, ...]
      */
     public function asArray(): array
     {
         return $this->fields;
     }
 
+    /**
+     * @return string[] ['FIELD_NAME', ...]
+     */
+    public function names(): array
+    {
+        return array_keys($this->fields);
+    }
+
     public function has(Field $field): bool
     {
-        return array_key_exists($field->name(), $this->fields);
+        return array_key_exists($field->name, $this->fields);
+    }
+
+    public function empty(): bool
+    {
+        return 0 !== count($this->fields);
     }
 }

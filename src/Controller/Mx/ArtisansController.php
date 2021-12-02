@@ -10,6 +10,7 @@ use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ class ArtisansController extends AbstractFormController
     #[Route(path: '/{id}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_ARTISAN_NEW, methods: ['GET', 'POST'])]
     #[Cache(maxage: 0, public: false)]
-    public function edit(Request $request, ?ArtisanE $entity, EnvironmentsService $environments): Response
+    public function edit(Request $request, ?ArtisanE $entity, EnvironmentsService $environments, EntityManagerInterface $manager): Response
     {
         if (!$environments->isDevOrTest()) {
             throw $this->createAccessDeniedException();
@@ -34,15 +35,15 @@ class ArtisansController extends AbstractFormController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
-                $this->getDoctrine()->getManager()->remove($entity);
+                $manager->remove($entity);
             } else {
                 $artisan->updateContact($artisan->getContactInfoOriginal());
                 StrUtils::fixNewlines($artisan);
 
-                $this->getDoctrine()->getManager()->persist($entity);
+                $manager->persist($entity);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $manager->flush();
 
             return $this->redirectToRoute(RouteName::MAIN);
         }

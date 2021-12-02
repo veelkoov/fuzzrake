@@ -33,7 +33,7 @@ class WebpageSnapshotCache
 
         try {
             return WebpageSnapshotJar::load($this->getBaseDir($url->getUrl()));
-        } catch (JsonException | DateTimeException | InvalidArgumentException $e) {
+        } catch (JsonException|DateTimeException|InvalidArgumentException $e) {
             $this->logger->warning('Failed reading snapshot from cache', ['url' => $url, 'exception' => $e]);
 
             return null;
@@ -44,7 +44,7 @@ class WebpageSnapshotCache
     {
         try {
             WebpageSnapshotJar::dump($this->getBaseDir($url->getUrl()), $snapshot);
-        } catch (JsonException | IOException $e) {
+        } catch (JsonException|IOException $e) {
             $this->logger->warning('Failed saving snapshot into cache', ['url' => $url, 'exception' => $e]);
         }
     }

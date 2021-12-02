@@ -19,7 +19,7 @@ final class DateTimeUtils
         try {
             return DateTime::createFromFormat('U', (string) time(), self::getUtc());
         } catch (Exception $e) {
-            throw new RuntimeDateTimeException($e);
+            throw new RuntimeDateTimeException(previous: $e);
         }
     }
 

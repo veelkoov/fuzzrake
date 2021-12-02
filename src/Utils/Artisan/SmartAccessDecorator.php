@@ -75,12 +75,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->artisan;
     }
 
-    public function set(Field|string $field, mixed $newValue): self
+    public function set(Field $field, mixed $newValue): self
     {
-        if (!($field instanceof Field)) {
-            $field = Fields::get((string) $field);
-        }
-
         $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (method_exists($this->artisan, $setter)) {
@@ -88,7 +84,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         if (!method_exists($this, $setter)) {
-            throw new InvalidArgumentException("Setter for {$field->name()} does not exist");
+            throw new InvalidArgumentException("Setter for $field->name does not exist");
         }
 
         call_user_func([$this, $setter], $newValue);
@@ -96,12 +92,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function get(Field|string $field): mixed
+    public function get(Field $field): mixed
     {
-        if (!($field instanceof Field)) {
-            $field = Fields::get((string) $field);
-        }
-
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
 
         if (method_exists($this->artisan, $getter)) {
@@ -109,7 +101,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         if (!method_exists($this, $getter)) {
-            throw new InvalidArgumentException("Getter for {$field->name()} does not exist");
+            throw new InvalidArgumentException("Getter for $field->name does not exist");
         }
 
         return call_user_func([$this, $getter]);
@@ -180,23 +172,23 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
     public function getIsMinor(): ?bool
     {
-        return $this->getBoolValue(Fields::IS_MINOR);
+        return $this->getBoolValue(Field::IS_MINOR);
     }
 
     public function setIsMinor(?bool $isMinor): self
     {
-        return $this->setBoolValue(Fields::IS_MINOR, $isMinor);
+        return $this->setBoolValue(Field::IS_MINOR, $isMinor);
     }
 
     #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
     public function getWorksWithMinors(): ?bool
     {
-        return $this->getBoolValue(Fields::WORKS_WITH_MINORS);
+        return $this->getBoolValue(Field::WORKS_WITH_MINORS);
     }
 
     public function setWorksWithMinors(?bool $worksWithMinors): self
     {
-        return $this->setBoolValue(Fields::WORKS_WITH_MINORS, $worksWithMinors);
+        return $this->setBoolValue(Field::WORKS_WITH_MINORS, $worksWithMinors);
     }
 
     /**
@@ -381,128 +373,128 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[Length(max: 1024)]
     public function getFursuitReviewUrl(): string
     {
-        return $this->getUrl(Fields::URL_FURSUITREVIEW);
+        return $this->getUrl(Field::URL_FURSUITREVIEW);
     }
 
     public function setFursuitReviewUrl(string $fursuitReviewUrl): self
     {
-        return $this->setUrl(Fields::URL_FURSUITREVIEW, $fursuitReviewUrl);
+        return $this->setUrl(Field::URL_FURSUITREVIEW, $fursuitReviewUrl);
     }
 
     #[Length(max: 1024)]
     public function getFurAffinityUrl(): string
     {
-        return $this->getUrl(Fields::URL_FUR_AFFINITY);
+        return $this->getUrl(Field::URL_FUR_AFFINITY);
     }
 
     public function setFurAffinityUrl(string $furAffinityUrl): self
     {
-        return $this->setUrl(Fields::URL_FUR_AFFINITY, $furAffinityUrl);
+        return $this->setUrl(Field::URL_FUR_AFFINITY, $furAffinityUrl);
     }
 
     #[Length(max: 1024)]
     public function getDeviantArtUrl(): string
     {
-        return $this->getUrl(Fields::URL_DEVIANTART);
+        return $this->getUrl(Field::URL_DEVIANTART);
     }
 
     public function setDeviantArtUrl(string $deviantArtUrl): self
     {
-        return $this->setUrl(Fields::URL_DEVIANTART, $deviantArtUrl);
+        return $this->setUrl(Field::URL_DEVIANTART, $deviantArtUrl);
     }
 
     #[Length(max: 1024)]
     public function getWebsiteUrl(): string
     {
-        return $this->getUrl(Fields::URL_WEBSITE);
+        return $this->getUrl(Field::URL_WEBSITE);
     }
 
     public function setWebsiteUrl(string $websiteUrl): self
     {
-        return $this->setUrl(Fields::URL_WEBSITE, $websiteUrl);
+        return $this->setUrl(Field::URL_WEBSITE, $websiteUrl);
     }
 
     #[Length(max: 1024)]
     public function getFacebookUrl(): string
     {
-        return $this->getUrl(Fields::URL_FACEBOOK);
+        return $this->getUrl(Field::URL_FACEBOOK);
     }
 
     public function setFacebookUrl(string $facebookUrl): self
     {
-        return $this->setUrl(Fields::URL_FACEBOOK, $facebookUrl);
+        return $this->setUrl(Field::URL_FACEBOOK, $facebookUrl);
     }
 
     #[Length(max: 1024)]
     public function getTwitterUrl(): string
     {
-        return $this->getUrl(Fields::URL_TWITTER);
+        return $this->getUrl(Field::URL_TWITTER);
     }
 
     public function setTwitterUrl(string $twitterUrl): self
     {
-        return $this->setUrl(Fields::URL_TWITTER, $twitterUrl);
+        return $this->setUrl(Field::URL_TWITTER, $twitterUrl);
     }
 
     #[Length(max: 1024)]
     public function getTumblrUrl(): string
     {
-        return $this->getUrl(Fields::URL_TUMBLR);
+        return $this->getUrl(Field::URL_TUMBLR);
     }
 
     public function setTumblrUrl(string $tumblrUrl): self
     {
-        return $this->setUrl(Fields::URL_TUMBLR, $tumblrUrl);
+        return $this->setUrl(Field::URL_TUMBLR, $tumblrUrl);
     }
 
     #[Length(max: 1024)]
     public function getCommissionsUrls(): string
     {
-        return $this->getUrl(Fields::URL_COMMISSIONS);
+        return $this->getUrl(Field::URL_COMMISSIONS);
     }
 
     public function setCommissionsUrls(string $commissionsUrls): self
     {
-        return $this->setUrl(Fields::URL_COMMISSIONS, $commissionsUrls);
+        return $this->setUrl(Field::URL_COMMISSIONS, $commissionsUrls);
     }
 
     #[Length(max: 1024)]
     public function getQueueUrl(): string
     {
-        return $this->getUrl(Fields::URL_QUEUE);
+        return $this->getUrl(Field::URL_QUEUE);
     }
 
     public function setQueueUrl(string $queueUrl): self
     {
-        return $this->setUrl(Fields::URL_QUEUE, $queueUrl);
+        return $this->setUrl(Field::URL_QUEUE, $queueUrl);
     }
 
     #[Length(max: 1024)]
     public function getInstagramUrl(): string
     {
-        return $this->getUrl(Fields::URL_INSTAGRAM);
+        return $this->getUrl(Field::URL_INSTAGRAM);
     }
 
     public function setInstagramUrl(string $instagramUrl): self
     {
-        return $this->setUrl(Fields::URL_INSTAGRAM, $instagramUrl);
+        return $this->setUrl(Field::URL_INSTAGRAM, $instagramUrl);
     }
 
     #[Length(max: 1024)]
     public function getYoutubeUrl(): string
     {
-        return $this->getUrl(Fields::URL_YOUTUBE);
+        return $this->getUrl(Field::URL_YOUTUBE);
     }
 
     public function setYoutubeUrl(string $youtubeUrl): self
     {
-        return $this->setUrl(Fields::URL_YOUTUBE, $youtubeUrl);
+        return $this->setUrl(Field::URL_YOUTUBE, $youtubeUrl);
     }
 
     #[Length(max: 1024)]
     public function getPricesUrls(): string
     {
-        return $this->getUrl(Fields::URL_PRICES);
+        return $this->getUrl(Field::URL_PRICES);
     }
 
     /**
@@ -510,151 +502,151 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getPricesUrlsArray(): array
     {
-        return StringList::unpack($this->getUrl(Fields::URL_PRICES));
+        return StringList::unpack($this->getUrl(Field::URL_PRICES));
     }
 
     public function setPricesUrls(string $pricesUrls): self
     {
-        return $this->setUrl(Fields::URL_PRICES, $pricesUrls);
+        return $this->setUrl(Field::URL_PRICES, $pricesUrls);
     }
 
     #[Length(max: 1024)]
     public function getFaqUrl(): string
     {
-        return $this->getUrl(Fields::URL_FAQ);
+        return $this->getUrl(Field::URL_FAQ);
     }
 
     public function setFaqUrl(string $faqUrl): self
     {
-        return $this->setUrl(Fields::URL_FAQ, $faqUrl);
+        return $this->setUrl(Field::URL_FAQ, $faqUrl);
     }
 
     #[Length(max: 1024)]
     public function getLinklistUrl(): string
     {
-        return $this->getUrl(Fields::URL_LINKLIST);
+        return $this->getUrl(Field::URL_LINKLIST);
     }
 
     public function setLinklistUrl(string $url): self
     {
-        return $this->setUrl(Fields::URL_LINKLIST, $url);
+        return $this->setUrl(Field::URL_LINKLIST, $url);
     }
 
     #[Length(max: 1024)]
     public function getFurryAminoUrl(): string
     {
-        return $this->getUrl(Fields::URL_FURRY_AMINO);
+        return $this->getUrl(Field::URL_FURRY_AMINO);
     }
 
     public function setFurryAminoUrl(string $url): self
     {
-        return $this->setUrl(Fields::URL_FURRY_AMINO, $url);
+        return $this->setUrl(Field::URL_FURRY_AMINO, $url);
     }
 
     #[Length(max: 1024)]
     public function getEtsyUrl(): string
     {
-        return $this->getUrl(Fields::URL_ETSY);
+        return $this->getUrl(Field::URL_ETSY);
     }
 
     public function setEtsyUrl(string $url): self
     {
-        return $this->setUrl(Fields::URL_ETSY, $url);
+        return $this->setUrl(Field::URL_ETSY, $url);
     }
 
     #[Length(max: 1024)]
     public function getTheDealersDenUrl(): string
     {
-        return $this->getUrl(Fields::URL_THE_DEALERS_DEN);
+        return $this->getUrl(Field::URL_THE_DEALERS_DEN);
     }
 
     public function setTheDealersDenUrl(string $url): self
     {
-        return $this->setUrl(Fields::URL_THE_DEALERS_DEN, $url);
+        return $this->setUrl(Field::URL_THE_DEALERS_DEN, $url);
     }
 
     #[Length(max: 1024)]
     public function getOtherShopUrl(): string
     {
-        return $this->getUrl(Fields::URL_OTHER_SHOP);
+        return $this->getUrl(Field::URL_OTHER_SHOP);
     }
 
     public function setOtherShopUrl(string $url): self
     {
-        return $this->setUrl(Fields::URL_OTHER_SHOP, $url);
+        return $this->setUrl(Field::URL_OTHER_SHOP, $url);
     }
 
     #[Length(max: 1024)]
     public function getOtherUrls(): string
     {
-        return $this->getUrl(Fields::URL_OTHER);
+        return $this->getUrl(Field::URL_OTHER);
     }
 
     public function setOtherUrls($otherUrls): self
     {
-        return $this->setUrl(Fields::URL_OTHER, $otherUrls);
+        return $this->setUrl(Field::URL_OTHER, $otherUrls);
     }
 
     #[Length(max: 1024)]
     public function getScritchUrl(): string
     {
-        return $this->getUrl(Fields::URL_SCRITCH);
+        return $this->getUrl(Field::URL_SCRITCH);
     }
 
     public function setScritchUrl(string $scritchUrl): self
     {
-        return $this->setUrl(Fields::URL_SCRITCH, $scritchUrl);
+        return $this->setUrl(Field::URL_SCRITCH, $scritchUrl);
     }
 
     #[Length(max: 1024)]
     public function getFurtrackUrl(): string
     {
-        return $this->getUrl(Fields::URL_FURTRACK);
+        return $this->getUrl(Field::URL_FURTRACK);
     }
 
     public function setFurtrackUrl(string $furtrackUrl): self
     {
-        return $this->setUrl(Fields::URL_FURTRACK, $furtrackUrl);
+        return $this->setUrl(Field::URL_FURTRACK, $furtrackUrl);
     }
 
     #[Length(max: 1024)]
     public function getPhotoUrls(): string
     {
-        return $this->getUrl(Fields::URL_PHOTOS);
+        return $this->getUrl(Field::URL_PHOTOS);
     }
 
     public function setPhotoUrls(string $photoUrls): self
     {
-        return $this->setUrl(Fields::URL_PHOTOS, $photoUrls);
+        return $this->setUrl(Field::URL_PHOTOS, $photoUrls);
     }
 
     #[Length(max: 1024)]
     public function getMiniatureUrls(): string
     {
-        return $this->getUrl(Fields::URL_MINIATURES);
+        return $this->getUrl(Field::URL_MINIATURES);
     }
 
     public function setMiniatureUrls(string $scritchMiniatureUrls): self
     {
-        return $this->setUrl(Fields::URL_MINIATURES, $scritchMiniatureUrls);
+        return $this->setUrl(Field::URL_MINIATURES, $scritchMiniatureUrls);
     }
 
     /**
      * @return ArtisanUrl[]
      */
-    public function getUrlObjs(string $urlFieldName): array
+    public function getUrlObjs(Field $urlField): array
     {
-        return UrlAccessor::getObjs($this, $urlFieldName);
+        return UrlAccessor::getObjs($this, $urlField->name);
     }
 
-    private function getUrl(string $urlFieldName): string
+    private function getUrl(Field $urlField): string
     {
-        return UrlAccessor::get($this, $urlFieldName);
+        return UrlAccessor::get($this, $urlField->name);
     }
 
-    private function setUrl(string $urlFieldName, string $newUrl): self
+    private function setUrl(Field $urlField, string $newUrl): self
     {
-        UrlAccessor::set($this, $urlFieldName, $newUrl);
+        UrlAccessor::set($this, $urlField->name, $newUrl);
 
         return $this;
     }
@@ -666,11 +658,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function getValuesForJson(FieldsList $fields): array
     {
         return array_map(function (Field $field) {
-            $value = match ($field->name()) {
-                Fields::COMPLETENESS       => $this->getCompleteness(),
-                Fields::CS_LAST_CHECK      => StrUtils::asStr($this->getCsLastCheck()),
-                Fields::BP_LAST_CHECK      => StrUtils::asStr($this->getBpLastCheck()),
-                default                    => $this->get($field),
+            $value = match ($field) {
+                Field::COMPLETENESS       => $this->getCompleteness(),
+                Field::CS_LAST_CHECK      => StrUtils::asStr($this->getCsLastCheck()),
+                Field::BP_LAST_CHECK      => StrUtils::asStr($this->getBpLastCheck()),
+                default                   => $this->get($field),
             };
 
             return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
@@ -684,7 +676,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getAllData(): array
     {
-        return $this->getValuesForJson(Fields::getAll());
+        return $this->getValuesForJson(Fields::all());
     }
 
     public function jsonSerialize(): array
@@ -703,7 +695,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         if (ContactPermit::NO !== $this->artisan->getContactAllowed() && '' === $this->artisan->getContactInfoObfuscated()) {
             $context
                 ->buildViolation('This value should not be blank.')
-                ->atPath(Fields::get(Fields::CONTACT_INFO_OBFUSCATED)->modelName())
+                ->atPath(Field::CONTACT_INFO_OBFUSCATED->modelName())
                 ->addViolation();
         }
     }
@@ -1235,10 +1227,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    private function getBoolValue(string $fieldName): ?bool
+    private function getBoolValue(Field $field): ?bool
     {
         foreach ($this->artisan->getValues() as $value) {
-            if ($value->getFieldName() === $fieldName) {
+            if ($value->getFieldName() === $field->name) {
                 return Parse::nBool($value->getValue());
             }
         }
@@ -1246,10 +1238,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return null;
     }
 
-    private function setBoolValue(string $fieldName, ?bool $newValue): self
+    private function setBoolValue(Field $field, ?bool $newValue): self
     {
         foreach ($this->artisan->getValues() as $value) {
-            if ($value->getFieldName() === $fieldName) {
+            if ($value->getFieldName() === $field->name) {
                 if (null === $newValue) {
                     $this->artisan->getValues()->removeElement($value);
                 } else {
@@ -1262,7 +1254,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
         if (null !== $newValue) {
             $newEntity = (new ArtisanValue())
-                ->setFieldName($fieldName)
+                ->setFieldName($field->name)
                 ->setValue(StrUtils::asStr($newValue));
             $this->artisan->addValue($newEntity);
         }

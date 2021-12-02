@@ -44,8 +44,7 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $client->request('GET', '/iu_form/fill');
         $client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
 
-        $client->getKeyboard()->pressKey(WebDriverKeys::END)->pressKey(WebDriverKeys::PAGE_UP)
-            ->pressKey(WebDriverKeys::DOWN); // grep-ugly-tests-workarounds Workaround for element not visible bug
+        $client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug
         usleep(100000); // grep-ugly-tests-workarounds Workaround for element not visible bug
 
         $form = $client->getCrawler()->selectButton('Submit')->form([

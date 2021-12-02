@@ -5,16 +5,23 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\FieldsList;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 
 class Differ
 {
+    private readonly FieldsList $skipImpValue;
+
     public function __construct(
         private Printer $printer,
     ) {
+        $this->skipImpValue = new FieldsList([
+            Field::CONTACT_ALLOWED,
+            Field::CONTACT_METHOD,
+            Field::CONTACT_INFO_OBFUSCATED,
+        ]);
     }
 
     public function showDiff(Field $field, Artisan $old, Artisan $new, ?Artisan $imported): void
@@ -25,9 +32,9 @@ class Differ
 
         if ($oldVal !== $newVal) {
             if ($field->isList()) {
-                $this->showListDiff($field->name(), $oldVal, $newVal, $impVal);
+                $this->showListDiff($field->name, $oldVal, $newVal, $impVal);
             } else {
-                $this->showSingleValueDiff($field->name(), $oldVal, $newVal, $impVal);
+                $this->showSingleValueDiff($field, $oldVal, $newVal, $impVal);
             }
         }
     }
@@ -65,26 +72,21 @@ class Differ
         $this->printer->writeln("NEW $fieldName: ".implode('|', $newValItems));
     }
 
-    private function showSingleValueDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
+    private function showSingleValueDiff(Field $field, $oldVal, $newVal, $impVal = null): void
     {
-        if ($impVal && $impVal !== $newVal && !$this->skipImpValue($fieldName)) {
+        if ($impVal && $impVal !== $newVal && !$this->skipImpValue->has($field)) {
             $impVal = StrUtils::strSafeForCli($impVal);
-            $this->printer->writeln("IMP $fieldName: ".Printer::formatImported($impVal));
+            $this->printer->writeln("IMP $field->name: ".Printer::formatImported($impVal));
         }
 
         if ($oldVal) {
             $oldVal = StrUtils::strSafeForCli($oldVal);
-            $this->printer->writeln("OLD $fieldName: ".Printer::formatDeleted($oldVal));
+            $this->printer->writeln("OLD $field->name: ".Printer::formatDeleted($oldVal));
         }
 
         if ($newVal) {
             $newVal = StrUtils::strSafeForCli($newVal);
-            $this->printer->writeln("NEW $fieldName: ".Printer::formatAdded($newVal));
+            $this->printer->writeln("NEW $field->name: ".Printer::formatAdded($newVal));
         }
-    }
-
-    private function skipImpValue(string $fieldName): bool
-    {
-        return in_array($fieldName, [Fields::CONTACT_ALLOWED, Fields::CONTACT_METHOD, Fields::CONTACT_INFO_OBFUSCATED]);
     }
 }

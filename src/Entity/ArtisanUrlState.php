@@ -132,6 +132,6 @@ class ArtisanUrlState
             return $r1;
         }
 
-        return $r1 > $r2 ? $r1 : $r2;
+        return max($r1, $r2);
     }
 }

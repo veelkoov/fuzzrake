@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
+use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
@@ -122,8 +123,8 @@ class DataImport
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
         foreach (Fields::inIuForm() as $field) {
-            switch ($field->name()) {
-                case Fields::MAKER_ID:
+            switch ($field) {
+                case Field::MAKER_ID:
                     $newValue = $source->get($field);
 
                     if ($newValue !== $artisan->getMakerId()) {
@@ -132,8 +133,8 @@ class DataImport
                     }
                     break;
 
-                case Fields::CONTACT_INFO_OBFUSCATED:
-                    $newValue = $source->get(Fields::get(Fields::CONTACT_INFO_ORIGINAL));
+                case Field::CONTACT_INFO_OBFUSCATED:
+                    $newValue = $source->get(Field::CONTACT_INFO_ORIGINAL);
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
                         break; // No updates
@@ -142,7 +143,7 @@ class DataImport
                     $artisan->updateContact($newValue);
                     break;
 
-                case Fields::URL_PHOTOS:
+                case Field::URL_PHOTOS:
                     // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
                     if (!StringList::sameElements($artisan->get($field), $source->get($field))) {
                         $artisan->setMiniatureUrls('');
