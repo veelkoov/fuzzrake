@@ -1,8 +1,10 @@
 import Artisan from "./Artisan";
 
 declare const DATA_UPDATES_URL: string;
+declare const TRACKING_URL: string;
 declare const IU_FORM_REDIRECT_URL: string;
 declare const REQUEST_FORM_URL: string;
+declare const TRACKING_FAILED_IMG_SRC: string;
 declare const ARTISANS: Artisan[];
 declare const MAKER_IDS_MAP: object;
 declare const API_BASE_URL: string;
@@ -22,12 +24,20 @@ export default abstract class DataBridge {
         return DATA_UPDATES_URL;
     }
 
+    public static getTrackingUrl(): string {
+        return TRACKING_URL;
+    }
+
     public static getIuFormRedirectUrl(): string {
         return IU_FORM_REDIRECT_URL;
     }
 
     public static getRequestFormUrl(): string {
         return REQUEST_FORM_URL;
+    }
+
+    public static getTrackingFailedImgSrc(): string {
+        return TRACKING_FAILED_IMG_SRC;
     }
 
     public static getApiUrl(path: string): string {

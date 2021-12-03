@@ -1,4 +1,4 @@
-import * as Handlebars from "handlebars";
+import * as Handlebars from "handlebars/runtime";
 
 const escape = Handlebars.Utils.escapeExpression;
 
