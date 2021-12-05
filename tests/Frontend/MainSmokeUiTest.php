@@ -30,8 +30,6 @@ class MainSmokeUiTest extends DbEnabledPantherTestCase
         $client->waitForVisibility('#artisans', 5);
         self::assertStringContainsString('Displaying 3 out of 3 fursuit makers in the database.', $client->getCrawler()->findElement(WebDriverBy::id('artisans_info'))->getText());
 
-        usleep(100000); // grep-ugly-tests-workarounds Ugly workaround for the... something?
-
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
         $client->waitForVisibility('#filtersTitle', 2);
         $client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
