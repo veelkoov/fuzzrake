@@ -17,6 +17,7 @@
 
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
+
 <div class="modal-body row px-4 py-2">
     {{# if artisan.inactiveReason }}
         <div class="col-sm-12 p-1 alert alert-warning" role="alert">
@@ -218,12 +219,14 @@
     <div class="col-sm-12 p-1 pt-3">
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
         <p class="small">
-            This maker/studio has {{ artisan.completeness }}% data completeness.
-            {{ artisan.completenessComment }}
+            This maker/studio has {{ artisan.completeness }}% data completeness. {{ artisan.completenessComment }}
+            Click the button below to check update options.
         </p>
-        {% include 'main/parts/update_request_contents.html.twig' with { 'id': 'updateRequestFull' }%} <!-- FIXME -->
     </div>
 </div>
+
 <div class="modal-footer">
+    <button type="button" class="btn btn-light border border-warning" data-bs-target="#artisanUpdatesModal"
+            data-bs-toggle="modal">Data outdated/inaccurate?</button> {{! grep-updates-button }}
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 </div>

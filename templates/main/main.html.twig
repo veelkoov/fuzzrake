@@ -17,11 +17,16 @@
 
 {% block body %}
     {% include 'main/modals/filters.html.twig' %}
-    {% include 'main/modals/update_request.html.twig' %}
+
+    <div class="modal fade" id="artisanUpdatesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="artisanUpdatesModalContent"></div>
+        </div>
+    </div>
 
     <div class="modal fade" id="artisanDetailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl">
-            <div class="modal-content" id="artisanDetailsModalContent"></div>
+            <div class="modal-content artisan-data" id="artisanDetailsModalContent"></div>
         </div>
     </div>
 

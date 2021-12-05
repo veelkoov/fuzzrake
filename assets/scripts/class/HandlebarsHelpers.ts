@@ -45,6 +45,15 @@ export default class HandlebarsHelpers {
         };
     }
 
+    public static tplCfg(): {} {
+        return {
+            assumeObjects: true,
+            data: false,
+            knownHelpersOnly: true,
+            knownHelpers: HandlebarsHelpers.getKnownHelpersObject(),
+        };
+    }
+
     public static commaSeparated(list: string[] | Set<string>): string {
         if (list instanceof Set) {
             list = Array.from(list);

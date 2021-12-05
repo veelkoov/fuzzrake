@@ -1,25 +1,21 @@
-import * as Handlebars from "handlebars/runtime";
-import * as Utils from "./utils";
+import DataBridge from "../class/DataBridge";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
 import Tracking from "../class/Tracking";
-import DataBridge from "../class/DataBridge";
+import {getArtisanFromRelated} from "./utils";
 
 const template = require('../templates/artisan.handlebars');
 let $contents: JQuery<HTMLElement>;
 
 function detailsPopUpShowCallback(event: any): void {
+    let artisan = getArtisanFromRelated(event);
+
     $contents.html(template({
-        'artisan': jQuery(event.relatedTarget).closest('tr').data('artisan'),
+        'artisan': artisan,
         'trackingUrl': DataBridge.getTrackingUrl(),
         'trackingFailedImgSrc': DataBridge.getTrackingFailedImgSrc(),
-    }, {
-        assumeObjects: true,
-        data: false,
-        knownHelpersOnly: true,
-        knownHelpers: HandlebarsHelpers.getKnownHelpersObject(),
-    }));
+    }, HandlebarsHelpers.tplCfg()));
 
-    Utils.updateUpdateRequestData('updateRequestFull', jQuery(event.relatedTarget).closest('tr').data('artisan'));
+    $contents.data('artisan', artisan);
 
     Tracking.setupOnLinks('#artisanLinks a', 'artisan-modal');
 }
@@ -30,9 +26,6 @@ export function init(): (() => void)[] {
             $contents = jQuery('#artisanDetailsModalContent');
 
             jQuery('#artisanDetailsModal').on('show.bs.modal', detailsPopUpShowCallback);
-        },
-        () => {
-            Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister());
         },
     ];
 }
