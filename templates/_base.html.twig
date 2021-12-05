@@ -18,13 +18,15 @@
     {% endif %}
 
     <script>
-        var API_BASE_URL = '{{ url('api') }}';
-        var DATA_UPDATES_URL = '{{ path('data_updates') }}';
-        var TRACKING_URL = '{{ path('tracking') }}';
-        var GOOGLE_RECAPTCHA_SITE_KEY = '{{ google_recaptcha_site_key }}';
-        var IU_FORM_REDIRECT_URL = '{{ path('iu_form', { makerId: 'MAKER_ID' }) }}';
-        var REQUEST_FORM_URL = '{{ request_form_url }}';
-        var TRACKING_FAILED_IMG_SRC = '{{ asset('images/parsing_failed.webp') }}';
+        const DATA_BRIDGE = {
+            apiBaseUrl: '{{ url('api')|escape('js') }}',
+            dataUpdatesUrl: '{{ path('data_updates')|escape('js') }}',
+            trackingUrl: '{{ path('tracking')|escape('js') }}',
+            googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
+            iuFormRedirectUrl: '{{ path('iu_form', { makerId: 'MAKER_ID' })|escape('js') }}',
+            requestFormUrl: '{{ request_form_url|escape('js') }}',
+            trackingFailedImgSrc: '{{ asset('images/parsing_failed.webp')|escape('js') }}',
+        };
     </script>
 
     {% block stylesheets %}
