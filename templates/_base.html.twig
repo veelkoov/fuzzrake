@@ -24,7 +24,7 @@
             trackingUrl: '{{ path('tracking')|escape('js') }}',
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
             iuFormRedirectUrl: '{{ path('iu_form', { makerId: 'MAKER_ID' })|escape('js') }}',
-            requestFormUrl: '{{ request_form_url|escape('js') }}',
+            reportFormUrl: '{{ report_form_url|escape('js') }}',
             trackingFailedImgSrc: '{{ asset('images/parsing_failed.webp')|escape('js') }}',
         };
     </script>

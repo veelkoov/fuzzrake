@@ -19,8 +19,8 @@ export default abstract class DataBridge {
         return DATA_BRIDGE.iuFormRedirectUrl;
     }
 
-    public static getRequestFormUrl(): string {
-        return DATA_BRIDGE.requestFormUrl;
+    public static getReportFormUrl(): string {
+        return DATA_BRIDGE.reportFormUrl;
     }
 
     public static getTrackingFailedImgSrc(): string {
