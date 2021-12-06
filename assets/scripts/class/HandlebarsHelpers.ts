@@ -1,4 +1,4 @@
-import * as Handlebars from "handlebars";
+import * as Handlebars from "handlebars/runtime";
 
 const escape = Handlebars.Utils.escapeExpression;
 
@@ -42,6 +42,15 @@ export default class HandlebarsHelpers {
             'photos': true,
             'has': true,
             'since': true,
+        };
+    }
+
+    public static tplCfg(): {} {
+        return {
+            assumeObjects: true,
+            data: false,
+            knownHelpersOnly: true,
+            knownHelpers: HandlebarsHelpers.getKnownHelpersObject(),
         };
     }
 

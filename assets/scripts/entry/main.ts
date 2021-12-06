@@ -7,6 +7,8 @@ import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
 import {makerIdHashRegexp} from '../consts';
 import Tracking from "../class/Tracking";
+import * as Handlebars from "handlebars/runtime";
+import HandlebarsHelpers from "../class/HandlebarsHelpers";
 
 require('../../styles/main.less');
 require('../../3rd-party/flag-icon-css/css/flag-icon.css');
@@ -53,6 +55,7 @@ jQuery(function () {
         loadFuzzrakeData,
     ];
     callbacks.push(...Species.initWithArtisansUpdate()); // FIXME: Artisans should be completely initialized in one step
+    callbacks.push(() => Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister()))
     callbacks.push(...UpdateRequestPopUp.init());
     callbacks.push(...AntiScamWarning.init());
     callbacks.push(...DataTable.init());
