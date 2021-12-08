@@ -202,9 +202,11 @@ class ExtendedTest extends AbstractTest
         foreach (Fields::all() as $field) {
             if (in_array($field, self::NOT_IN_FORM)) {
                 self::assertFieldIsNotPresentInForm($field, $htmlBody);
+                self::assertFalse($field->isInIuForm());
                 continue;
             }
 
+            self::assertTrue($field->isInIuForm());
             $value = $oldData->get($field);
 
             if (in_array($field, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM)) {
