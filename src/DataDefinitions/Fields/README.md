@@ -12,3 +12,4 @@
 6. E2E test (should fail on its own when new field is added)
 7. Completeness calculator
 8. Statistics page
+9. SchemaFixer class

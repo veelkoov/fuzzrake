@@ -12,7 +12,7 @@ final class SchemaFixer
     use Singleton;
 
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const CURRENT_SCHEMA_VERSION = 10;
+    private const CURRENT_SCHEMA_VERSION = 11;
 
     public function fix(array $data): array
     {
@@ -28,6 +28,10 @@ final class SchemaFixer
             case 9:
                 $data[Field::IS_MINOR->name] = null;
                 $data[Field::WORKS_WITH_MINORS->name] = null;
+                // no break
+
+            case 10:
+                $data[Field::AGES->name] = null;
         }
 
         return $data;
