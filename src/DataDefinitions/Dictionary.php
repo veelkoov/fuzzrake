@@ -25,14 +25,4 @@ abstract class Dictionary
     {
         return self::$valueKeyMap ?? self::$valueKeyMap = array_flip(static::getValues());
     }
-
-    public static function getValuesAsString(): string
-    {
-        return implode("\n", static::getValues());
-    }
-
-    public static function count(): int
-    {
-        return count(static::getValues());
-    }
 }

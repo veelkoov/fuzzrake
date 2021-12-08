@@ -77,7 +77,7 @@ trait DbEnabledTestCaseTrait
         string $country = 'CZ',
         string $password = '',
         string $contactAllowed = '',
-        ?bool $isMinor = null,
+        ?string $ages = null,
         ?bool $worksWithMinors = null,
     ): Artisan {
         $result = (new Artisan())
@@ -100,8 +100,8 @@ trait DbEnabledTestCaseTrait
             $result->setContactAllowed($contactAllowed);
         }
 
-        if (null !== $isMinor) {
-            $result->setIsMinor($isMinor);
+        if (null !== $ages) {
+            $result->setAges($ages);
         }
 
         if (null !== $worksWithMinors) {

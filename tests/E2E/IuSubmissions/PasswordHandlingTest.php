@@ -20,7 +20,7 @@ class PasswordHandlingTest extends AbstractTest
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'            => 'Maker',
             'iu_form[country]'         => 'FI',
-            'iu_form[isMinor]'         => 'NO',
+            'iu_form[ages]'            => 'ADULTS',
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'NO',
@@ -45,7 +45,7 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO', isMinor: false, worksWithMinors: true);
+        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -75,7 +75,7 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', isMinor: false, worksWithMinors: true);
+        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -106,7 +106,7 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', isMinor: false, worksWithMinors: true);
+        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);

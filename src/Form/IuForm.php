@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Features;
 use App\DataDefinitions\OrderTypes;
@@ -84,10 +85,10 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('isMinor', ChoiceType::class, [
+            ->add('ages', ChoiceType::class, [
                 'label'      => 'What is your age?',
                 'required'   => true,
-                'choices'    => ['I am at least 18 years old' => 'NO', 'I am a minor/underage' => 'YES'],
+                'choices'    => Ages::getChoices(false),
                 'expanded'   => true,
                 'help'       => '<strong>NOTE:</strong> minors are currently still required to state their age on their website as well, <a href="'.$rulesPagePath.'" target="_blank">as per rules</a>.', // grep-state-age-on-website-until-filters-are-in-place
                 'help_html'  => true,
@@ -417,7 +418,6 @@ class IuForm extends AbstractType
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
 
-        $builder->get('isMinor')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
     }

@@ -47,7 +47,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
-        self::assertSelectorTextContains('#iu_form_isMinor + .help-text + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_ages + .help-text + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
@@ -62,7 +62,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
-            'iu_form[isMinor]'         => 'NO',
+            'iu_form[ages]'            => 'ADULTS',
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'FEEDBACK',
@@ -91,7 +91,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
-            'iu_form[isMinor]'         => 'NO',
+            'iu_form[ages]'            => 'ADULTS',
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'NO',
@@ -113,7 +113,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
-            isMinor: false,
+            ages: 'MIXED',
             worksWithMinors: true,
         ));
 
@@ -137,7 +137,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'CORRECTIONS',
-            isMinor: false,
+            ages: 'ADULTS',
             worksWithMinors: true,
         ));
 
@@ -162,7 +162,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
-            isMinor: false,
+            ages: 'ADULTS',
             worksWithMinors: true,
         ));
 
@@ -188,7 +188,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: ContactPermit::CORRECTIONS,
-            isMinor: false,
+            ages: 'MINORS',
             worksWithMinors: true,
         ));
 

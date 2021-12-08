@@ -169,7 +169,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VARIOUS HELPERS =====
     //
 
-    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
     public function getIsMinor(): ?bool
     {
         return $this->getBoolValue(Field::IS_MINOR);
@@ -178,6 +177,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setIsMinor(?bool $isMinor): self
     {
         return $this->setBoolValue(Field::IS_MINOR, $isMinor);
+    }
+
+    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
+    public function getAges(): ?string
+    {
+        return $this->getStringValue(Field::AGES);
+    }
+
+    public function setAges(?string $ages): self
+    {
+        return $this->setStringValue(Field::AGES, $ages);
     }
 
     #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
@@ -1229,23 +1239,39 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     private function getBoolValue(Field $field): ?bool
     {
+        $value = $this->getStringValue($field);
+
+        return null !== $value ? Parse::nBool($value) : null;
+    }
+
+    private function setBoolValue(Field $field, ?bool $newValue): self
+    {
+        if (null !== $newValue) {
+            $newValue = StrUtils::asStr($newValue);
+        }
+
+        return $this->setStringValue($field, $newValue);
+    }
+
+    private function getStringValue(Field $field): ?string
+    {
         foreach ($this->artisan->getValues() as $value) {
             if ($value->getFieldName() === $field->name) {
-                return Parse::nBool($value->getValue());
+                return $value->getValue();
             }
         }
 
         return null;
     }
 
-    private function setBoolValue(Field $field, ?bool $newValue): self
+    private function setStringValue(Field $field, ?string $newValue): self
     {
         foreach ($this->artisan->getValues() as $value) {
             if ($value->getFieldName() === $field->name) {
                 if (null === $newValue) {
                     $this->artisan->getValues()->removeElement($value);
                 } else {
-                    $value->setValue(StrUtils::asStr($newValue));
+                    $value->setValue($newValue);
                 }
 
                 return $this;
@@ -1255,7 +1281,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         if (null !== $newValue) {
             $newEntity = (new ArtisanValue())
                 ->setFieldName($field->name)
-                ->setValue(StrUtils::asStr($newValue));
+                ->setValue($newValue);
             $this->artisan->addValue($newEntity);
         }
 
