@@ -35,7 +35,7 @@ enum Field: string
     case SPECIES_COMMENT           = 'SPECIES_COMMENT';
     case SPECIES_DOES              = 'SPECIES_DOES';
     case SPECIES_DOESNT            = 'SPECIES_DOESNT';
-    case IS_MINOR                  = 'IS_MINOR'; // TODO: Remove
+    case IS_MINOR                  = 'IS_MINOR'; // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/103
     case AGES                      = 'AGES';
     case WORKS_WITH_MINORS         = 'WORKS_WITH_MINORS';
     case URL_FURSUITREVIEW         = 'URL_FURSUITREVIEW';

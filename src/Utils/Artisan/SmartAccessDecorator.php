@@ -169,12 +169,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VARIOUS HELPERS =====
     //
 
-    public function getIsMinor(): ?bool // TODO: Remove
+    public function getIsMinor(): ?bool
     {
         return $this->getBoolValue(Field::IS_MINOR);
     }
 
-    public function setIsMinor(?bool $isMinor): self // TODO: Remove
+    public function setIsMinor(?bool $isMinor): self
     {
         return $this->setBoolValue(Field::IS_MINOR, $isMinor);
     }

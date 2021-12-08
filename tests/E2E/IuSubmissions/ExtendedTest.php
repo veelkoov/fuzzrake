@@ -38,11 +38,11 @@ class ExtendedTest extends AbstractTest
         Field::BP_TRACKER_ISSUE,
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
-        Field::IS_MINOR, // TODO: Remove
+        Field::IS_MINOR,
     ];
 
     private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        Field::IS_MINOR, // TODO: Remove
+        Field::IS_MINOR,
         Field::FORMER_MAKER_IDS,
         Field::URL_MINIATURES,
         Field::CONTACT_INFO_ORIGINAL,
