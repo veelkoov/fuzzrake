@@ -33,7 +33,7 @@ abstract class DbEnabledPantherTestCase extends PantherTestCase
     {
         $somekindoftrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, limit: 1);
 
-        $class = str_replace('\\', '/', $somekindoftrace[0]['class']);
+        $class = str_replace('\\', '/', static::class);
         $class = pattern('^App/Tests/')->prune($class);
 
         $line = $somekindoftrace[0]['line'];
