@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
+use App\DataDefinitions\Ages;
 use App\Utils\DataInputException;
 use JsonException;
 
@@ -20,7 +21,9 @@ class PasswordHandlingTest extends AbstractTest
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'            => 'Maker',
             'iu_form[country]'         => 'FI',
-            'iu_form[ages]'            => 'ADULTS',
+            'iu_form[ages]'            => 'MIXED',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'NO',
@@ -45,7 +48,16 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
+        $artisan = self::getArtisan(
+            name: 'Old name',
+            makerId: 'MAKERID',
+            password: 'known-password',
+            contactAllowed: 'NO',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            worksWithMinors: true,
+        );
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -75,7 +87,16 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
+        $artisan = self::getArtisan(
+            name: 'Old name',
+            makerId: 'MAKERID',
+            password: 'old-password',
+            contactAllowed: 'NO',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            worksWithMinors: true,
+        );
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -106,7 +127,16 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
+        $artisan = self::getArtisan(
+            name: 'Old name',
+            makerId: 'MAKERID',
+            password: 'old-password',
+            contactAllowed: 'NO',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            worksWithMinors: true,
+        );
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);

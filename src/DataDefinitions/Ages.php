@@ -10,7 +10,7 @@ enum Ages: string
 {
     case MINORS = 'MINORS';
     case MIXED = 'MIXED';
-    case ADULTS = 'ADULTS';
+    case ADULTS = 'ADULTS'; // grep-ages-adults
 
     public function getLabel(): string
     {
@@ -30,5 +30,10 @@ enum Ages: string
         }
 
         return $result;
+    }
+
+    public static function get(?string $value): ?Ages
+    {
+        return null === $value ? null : Ages::from($value);
     }
 }

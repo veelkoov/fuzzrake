@@ -93,9 +93,27 @@ class IuForm extends AbstractType
                 'help'       => '<strong>NOTE:</strong> minors are currently still required to state their age on their website as well, <a href="'.$rulesPagePath.'" target="_blank">as per rules</a>.', // grep-state-age-on-website-until-filters-are-in-place
                 'help_html'  => true,
             ])
+            ->add('nsfwWebsite', ChoiceType::class, [
+                'label'      => 'My (our) websites linked above may contain stuff targeted at the adult audience (including, but not limited to, non-family-friendly content, <u>suggestive</u> stuff, gore, etc.), <u>collectively referred to as <em>NSFW</em> below</u>',
+                'label_html' => true,
+                'required'   => true,
+                'choices'    => ['Yes / possibly' => 'YES', 'No, all of them are, and will remain 100% safe for everyone' => 'NO'],
+                'expanded'   => true,
+            ])
+            ->add('nsfwSocial', ChoiceType::class, [
+                'label'      => '<em>NSFW</em> may be <u>liked</u>/shared/commented/posted using social media linked above (if any)',
+                'label_html' => true,
+                'required'   => true,
+                'choices'    => ['Yes / possibly' => 'YES', 'No, all of them are, and will remain 100% safe for everyone' => 'NO'],
+                'expanded'   => true,
+            ])
+            ->add('doesNsfw', ChoiceType::class, [
+                'label'    => 'I am offering fursuit features intended for adult use',
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
+                'expanded' => true,
+            ])
             ->add('worksWithMinors', ChoiceType::class, [
                 'label'    => 'Do you accept commissions from minors/underage clients?',
-                'required' => true,
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
                 'expanded' => true,
             ])
@@ -418,8 +436,12 @@ class IuForm extends AbstractType
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
 
-        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
+        $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
+        $builder->get('nsfwWebsite')->addModelTransformer(BooleanTransformer::getInstance());
+        $builder->get('nsfwSocial')->addModelTransformer(BooleanTransformer::getInstance());
+        $builder->get('doesNsfw')->addModelTransformer(BooleanTransformer::getInstance());
+        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
     }
 
     public function configureOptions(OptionsResolver $resolver)

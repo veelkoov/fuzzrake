@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
 
@@ -48,10 +49,107 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_ages + .help-text + .invalid-feedback', 'You must answer this question.');
-        self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_nsfwWebsite + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_nsfwSocial + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_password + .help-text + .invalid-feedback', 'Password is required.');
+    }
+
+    /**
+     * @dataProvider ageStuffFieldsDataProvider
+     */
+    public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/iu_form/fill');
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[name]'            => 'test-maker-555',
+            'iu_form[country]'         => 'Finland',
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[contactAllowed]'  => 'NO',
+            'iu_form[password]'        => 'why-so-serious',
+            'iu_form[ages]'            => $ages,
+            'iu_form[nsfwWebsite]'     => $nsfwWebsite,
+            'iu_form[nsfwSocial]'      => $nsfwSocial,
+        ]);
+
+        if (null !== $doesNsfw) {
+            $form->setValues(['iu_form[doesNsfw]' => $doesNsfw]);
+        }
+
+        if (null !== $worksWithMinors) {
+            $form->setValues(['iu_form[worksWithMinors]' => $worksWithMinors]);
+        }
+
+        $client->submit($form);
+
+        if ([] === $expectedErrors) {
+            $client->followRedirect();
+
+            self::assertSelectorTextContains('.alert-success h4', 'Your submission has been recorded!');
+        } else {
+            self::assertNotEmpty($expectedErrors, 'Should not have successfully process the form.');
+
+            foreach ($expectedErrors as $selector => $message) {
+                self::assertSelectorTextContains($selector, $message);
+            }
+        }
+    }
+
+    public function ageStuffFieldsDataProvider(): array
+    {
+        return [
+            // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
+            //         WEB.   SOCIAL  NSFW   W/MINORS  ERRORS
+            ['MINORS', 'NO',  'NO',   null,  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+            ]],
+            ['MINORS', 'NO',  'NO',   null,  'NO',     []],
+            ['MINORS', 'NO',  'YES',  null,  null,     []],
+            ['MINORS', 'YES', 'NO',   null,  null,     []],
+            ['MINORS', 'YES', 'YES',  null,  null,     []],
+
+            ['MIXED',  'NO',  'NO',   null,  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+            ]],
+            ['MIXED',  'NO',  'NO',   null,  'NO',     []],
+            ['MIXED',  'NO',  'YES',  null,  null,     []],
+            ['MIXED',  'YES', 'NO',   null,  null,     []],
+            ['MIXED',  'YES', 'YES',  null,  null,     []],
+
+            ['ADULTS', 'NO',  'NO',   null,  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'NO',  'NO',   'NO',  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'NO',  'NO',   'NO',  'NO',     []],
+            ['ADULTS', 'NO',  'NO',   'NO',  'YES',    []],
+            ['ADULTS', 'NO',  'NO',   'YES', null,     []],
+
+            ['ADULTS', 'NO',  'YES',  null,  null,     [
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'NO',  'YES',  'NO',  null,     []],
+            ['ADULTS', 'NO',  'YES',  'YES', null,     []],
+
+            ['ADULTS', 'YES', 'NO',   null,  null,     [
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'YES', 'NO',   'NO',  null,     []],
+            ['ADULTS', 'YES', 'NO',   'YES', null,     []],
+
+            ['ADULTS', 'YES', 'YES',  null,  null,     [
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'YES', 'YES',  'NO',  null,     []],
+            ['ADULTS', 'YES', 'YES',  'NO',  null,     []],
+            ['ADULTS', 'YES', 'YES',  'YES', null,     []],
+            ['ADULTS', 'YES', 'YES',  'YES', null,     []],
+        ];
     }
 
     public function testContactMethodNotRequiredWhenContactNotAllowed(): void
@@ -64,6 +162,9 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             'iu_form[country]'         => 'Finland',
             'iu_form[ages]'            => 'ADULTS',
             'iu_form[worksWithMinors]' => 'NO',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[doesNsfw]'        => 'NO',
             'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'FEEDBACK',
             'iu_form[password]'        => 'why-so-serious',
@@ -92,6 +193,9 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
             'iu_form[ages]'            => 'ADULTS',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[doesNsfw]'        => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'NO',
@@ -113,7 +217,9 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
-            ages: 'MIXED',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -137,7 +243,9 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'CORRECTIONS',
-            ages: 'ADULTS',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -162,7 +270,9 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
-            ages: 'ADULTS',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -188,7 +298,9 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: ContactPermit::CORRECTIONS,
-            ages: 'MINORS',
+            ages: Ages::MINORS,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 

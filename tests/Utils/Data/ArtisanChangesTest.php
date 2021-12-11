@@ -25,8 +25,8 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
             ->setCommissionsUrls('https://some-commissions-address/')
             ->setOpenFor('Pancakes')
             ->setClosedFor('Maple syrup')
-            ->setIsMinor(true)
-            ->setWorksWithMinors(false)
+            ->setNsfwWebsite(true)
+            ->setNsfwSocial(false)
         ;
 
         $artisan2 = (new Artisan())
@@ -35,8 +35,8 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
             ->setWebsiteUrl('https://some-website-address/')
             ->setTwitterUrl('https://some-twitter-address/')
             ->setOpenFor("Cheese\nSitruuna")
-            ->setIsMinor(false)
-            ->setWorksWithMinors(true)
+            ->setNsfwWebsite(false)
+            ->setNsfwSocial(true)
         ;
 
         self::persistAndFlush($artisan1, $artisan2);
@@ -53,16 +53,16 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
             ->setEtsyUrl('https://some-etsy-address/')
             ->setOpenFor('Popcorn')
             ->setClosedFor("Maple syrup\nTortillas")
-            ->setIsMinor(false)
-            ->setWorksWithMinors(true)
+            ->setNsfwWebsite(false)
+            ->setNsfwSocial(true)
         ;
         $changes2->getChanged()
             ->setCity('Kouvola')
             ->setWebsiteUrl('')
             ->setFurryAminoUrl('https://some-furry-amino-address/')
             ->setOpenFor("Sitruuna\nOmena")
-            ->setIsMinor(true)
-            ->setWorksWithMinors(false)
+            ->setNsfwWebsite(true)
+            ->setNsfwSocial(false)
         ;
 
         $changes1->apply();
@@ -121,7 +121,7 @@ class ArtisanChangesTest extends DbEnabledKernelTestCase
         self::assertEquals(['Maple syrup' => false, 'Tortillas' => false, 'Popcorn' => true], $comms1);
         self::assertEquals(['Cheese' => true, 'Sitruuna' => true], $comms2);
 
-        self::assertEquals(['IS_MINOR' => 'False', 'WORKS_WITH_MINORS' => 'True'], $vals1);
-        self::assertEquals(['IS_MINOR' => 'False', 'WORKS_WITH_MINORS' => 'True'], $vals2);
+        self::assertEquals(['NSFW_WEBSITE' => 'False', 'NSFW_SOCIAL' => 'True'], $vals1);
+        self::assertEquals(['NSFW_WEBSITE' => 'False', 'NSFW_SOCIAL' => 'True'], $vals2);
     }
 }

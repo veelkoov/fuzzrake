@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
@@ -49,6 +50,10 @@ class IuSubmission implements FieldReadInterface
 
         if ($field->isList() && !is_array($value)) {
             throw new DataInputException("Expected an array for $fieldName, got '$value' instead in $this->id");
+        }
+
+        if (Field::AGES === $field) {
+            $value = Ages::get($value);
         }
 
         return $field->isList() ? StringList::pack($value) : $value;

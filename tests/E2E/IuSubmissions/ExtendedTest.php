@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Arrays;
@@ -165,7 +166,13 @@ class ExtendedTest extends AbstractTest
             }
 
             self::assertArrayHasKey($fieldName, $data);
-            $result->set(Field::from($fieldName), $data[$fieldName]);
+
+            $value = $data[$fieldName];
+            if (Field::AGES === $field) {
+                $value = Ages::get($value);
+            }
+
+            $result->set(Field::from($fieldName), $value);
 
             unset($data[$fieldName]);
         }

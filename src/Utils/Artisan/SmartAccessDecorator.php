@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
@@ -180,20 +181,71 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
-    public function getAges(): ?string
+    public function getAges(): ?Ages
     {
-        return $this->getStringValue(Field::AGES);
+        return Ages::get($this->getStringValue(Field::AGES));
     }
 
-    public function setAges(?string $ages): self
+    public function setAges(?Ages $ages): self
     {
-        return $this->setStringValue(Field::AGES, $ages);
+        return $this->setStringValue(Field::AGES, $ages?->value);
     }
 
     #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
+    public function getNsfwWebsite(): ?bool
+    {
+        return $this->getBoolValue(Field::NSFW_WEBSITE);
+    }
+
+    public function setNsfwWebsite(?bool $nsfwWebsite): self
+    {
+        return $this->setBoolValue(Field::NSFW_WEBSITE, $nsfwWebsite);
+    }
+
+    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
+    public function getNsfwSocial(): ?bool
+    {
+        return $this->getBoolValue(Field::NSFW_SOCIAL);
+    }
+
+    public function setNsfwSocial(?bool $nsfwSocial): self
+    {
+        return $this->setBoolValue(Field::NSFW_SOCIAL, $nsfwSocial);
+    }
+
+    public function isAllowedToDoNsfw(): bool
+    {
+        return Ages::ADULTS === $this->getAges();
+    }
+
+    public function getDoesNsfw(): ?bool
+    {
+        return $this->getBoolValue(Field::DOES_NSFW);
+    }
+
+    public function getSafeDoesNsfw(): bool
+    {
+        return true === $this->getDoesNsfw() && $this->isAllowedToDoNsfw();
+    }
+
+    public function setDoesNsfw(?bool $doesNsfw): self
+    {
+        return $this->setBoolValue(Field::DOES_NSFW, $doesNsfw);
+    }
+
+    public function isAllowedToWorkWithMinors(): bool
+    {
+        return false === $this->getNsfwWebsite() && false === $this->getNsfwSocial() && false === $this->getSafeDoesNsfw();
+    }
+
     public function getWorksWithMinors(): ?bool
     {
         return $this->getBoolValue(Field::WORKS_WITH_MINORS);
+    }
+
+    public function getSafeWorksWithMinors(): bool
+    {
+        return $this->getWorksWithMinors() && $this->isAllowedToWorkWithMinors();
     }
 
     public function setWorksWithMinors(?bool $worksWithMinors): self
@@ -706,6 +758,20 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             $context
                 ->buildViolation('This value should not be blank.')
                 ->atPath(Field::CONTACT_INFO_OBFUSCATED->modelName())
+                ->addViolation();
+        }
+
+        if (null === $this->getDoesNsfw() && $this->isAllowedToDoNsfw()) {
+            $context
+                ->buildViolation('You must answer this question.')
+                ->atPath(Field::DOES_NSFW->modelName())
+                ->addViolation();
+        }
+
+        if (null === $this->getWorksWithMinors() && $this->isAllowedToWorkWithMinors()) {
+            $context
+                ->buildViolation('You must answer this question.')
+                ->atPath(Field::WORKS_WITH_MINORS->modelName())
                 ->addViolation();
         }
     }

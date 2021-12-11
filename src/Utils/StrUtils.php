@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Fields;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
+use BackedEnum;
 use DateTimeInterface;
 
 final class StrUtils
@@ -74,12 +75,14 @@ final class StrUtils
         }
     }
 
-    public static function asStr(DateTimeInterface|bool|string|null $value): string
+    public static function asStr(BackedEnum|DateTimeInterface|bool|string|null $value): string
     {
         if (null === $value) {
             return 'unknown';
         } elseif ($value instanceof DateTimeInterface) {
             return $value->format('Y-m-d H:i:s');
+        } elseif ($value instanceof BackedEnum) {
+            return (string) $value->value;
         } elseif (is_bool($value)) {
             $value = $value ? 'True' : 'False';
         }

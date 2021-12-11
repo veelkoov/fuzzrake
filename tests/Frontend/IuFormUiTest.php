@@ -46,10 +46,13 @@ class IuFormUiTest extends DbEnabledPantherTestCase
 
         $client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug
         usleep(100000); // grep-ugly-tests-workarounds Workaround for element not visible bug
+        $this->screenshot($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
+        $client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
+        $this->screenshot($client);
 
         self::assertSelectorIsVisible('#iu_form_contactInfoObfuscated');
         self::assertSelectorExists('#iu_form_contactInfoObfuscated[required]');
@@ -57,6 +60,8 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
+        $client->waitForInvisibility('#iu_form_contactInfoObfuscated', 5);
+        $this->screenshot($client);
 
         self::assertSelectorIsNotVisible('#iu_form_contactInfoObfuscated');
         self::assertSelectorExists('#iu_form_contactInfoObfuscated:not([required])');
