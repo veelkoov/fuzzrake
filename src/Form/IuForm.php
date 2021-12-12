@@ -94,7 +94,7 @@ class IuForm extends AbstractType
                 'help_html'  => true,
             ])
             ->add('nsfwWebsite', ChoiceType::class, [
-                'label'      => 'My (our) websites linked above may contain stuff targeted at the adult audience (including, but not limited to, non-family-friendly content, <u>suggestive</u> stuff, gore, etc.), <u>collectively referred to as <em>NSFW</em> below</u>',
+                'label'      => 'My (our) websites linked above may contain stuff targeted at the adult audience (including, but not limited to, "non-family-friendly content", explicit or <u>suggestive</u> stuff, gore, triggering or controversial content, etc.), <u>collectively referred to as <em>NSFW</em> below</u>',
                 'label_html' => true,
                 'required'   => true,
                 'choices'    => ['Yes / possibly' => 'YES', 'No, all of them are, and will remain 100% safe for everyone' => 'NO'],
@@ -438,10 +438,10 @@ class IuForm extends AbstractType
 
         $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
         $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
-        $builder->get('nsfwWebsite')->addModelTransformer(BooleanTransformer::getInstance());
-        $builder->get('nsfwSocial')->addModelTransformer(BooleanTransformer::getInstance());
-        $builder->get('doesNsfw')->addModelTransformer(BooleanTransformer::getInstance());
-        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
+
+        foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors'] as $field) {
+            $builder->get($field)->addModelTransformer(BooleanTransformer::getInstance());
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
