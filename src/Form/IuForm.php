@@ -94,26 +94,26 @@ class IuForm extends AbstractType
                 'help_html'  => true,
             ])
             ->add('nsfwWebsite', ChoiceType::class, [
-                'label'      => 'My (our) websites linked above may contain stuff targeted at the adult audience (including, but not limited to, "non-family-friendly content", explicit or <u>suggestive</u> stuff, gore, triggering or controversial content, etc.), <u>collectively referred to as <em>NSFW</em> below</u>',
+                'label'      => 'The websites linked above may contain "non-family-friendly" (or <em>NSFW</em>) content, such as, but not limited to:<br />&bull; <u>suggestive</u> or explicit adult content<br />&bull; triggering or controversial content<br />&bull; content not suitable for those under 18',
                 'label_html' => true,
                 'required'   => true,
-                'choices'    => ['Yes / possibly' => 'YES', 'No, all of them are, and will remain 100% safe for everyone' => 'NO'],
+                'choices'    => ['Yes / Possibly' => 'YES', 'No, all content is, and forever will be, safe for everyone to view' => 'NO'],
                 'expanded'   => true,
             ])
             ->add('nsfwSocial', ChoiceType::class, [
-                'label'      => '<em>NSFW</em> may be <u>liked</u>/shared/commented/posted using social media linked above (if any)',
+                'label'      => 'Is there a possibility of <em>NSFW</em> (or the type of content listed above) being <u>liked</u>/shared/posted/commented on by your social media account?',
                 'label_html' => true,
                 'required'   => true,
-                'choices'    => ['Yes / possibly' => 'YES', 'No, all of them are, and will remain 100% safe for everyone' => 'NO'],
+                'choices'    => ['Yes / Possibly' => 'YES', 'No, all content is, and forever will be, safe for everyone to view' => 'NO'],
                 'expanded'   => true,
             ])
             ->add('doesNsfw', ChoiceType::class, [
-                'label'    => 'I am offering fursuit features intended for adult use',
+                'label'    => 'Do you offer fursuit features intended for adult use?',
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
                 'expanded' => true,
             ])
             ->add('worksWithMinors', ChoiceType::class, [
-                'label'    => 'Do you accept commissions from minors/underage clients?',
+                'label'    => 'Do you accept commissions from minors or people under 18?',
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
                 'expanded' => true,
             ])
