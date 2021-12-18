@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
+use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Service\AwsCliService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -41,9 +42,9 @@ class SnsService
             
             MESSAGE;
 
-        foreach (Fields::urls() as $url) {
+        foreach (Fields::urls() as /* @var Field $url */ $url) {
             if (($val = $data->get($url))) {
-                $message .= $url->name().': '.$val."\n";
+                $message .= $url->name.': '.$val."\n";
             }
         }
 
