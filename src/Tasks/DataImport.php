@@ -92,7 +92,11 @@ class DataImport
             $makerId = $item->getOriginalEntity()->getMakerId() ?: $item->getFixedInput()->getMakerId();
 
             if (array_key_exists($makerId, $result)) {
-                $item->addReplaced($result[$makerId]);
+                $item->addReplaced($result[$makerId]->getIdStrSafe());
+
+                foreach ($result[$makerId]->getReplaced() as $previous) {
+                    $item->addReplaced($previous);
+                }
             }
 
             $result[$makerId] = $item;

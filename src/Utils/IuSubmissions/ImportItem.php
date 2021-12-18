@@ -96,9 +96,9 @@ class ImportItem
         $this->diff = new Diff($this->getOriginalEntity(), $this->getFixedEntity());
     }
 
-    public function addReplaced(ImportItem $replaced): void
+    public function addReplaced(string $replaced): void
     {
-        $this->replaced[] = $replaced->getIdStrSafe();
+        $this->replaced[] = $replaced;
     }
 
     /**
