@@ -11,7 +11,7 @@ use App\Utils\StringList;
 class SpeciesListValidator implements ValidatorInterface
 {
     public function __construct(
-        private Species $speciesService,
+        private readonly Species $speciesService,
     ) {
     }
 

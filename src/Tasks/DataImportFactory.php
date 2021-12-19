@@ -13,8 +13,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DataImportFactory
 {
     public function __construct(
-        private EntityManagerInterface $objectManager,
-        private FdvFactory $fdvFactory,
+        private readonly EntityManagerInterface $objectManager,
+        private readonly FdvFactory $fdvFactory,
     ) {
     }
 

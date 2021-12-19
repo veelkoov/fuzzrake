@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ScritchMiniatures extends AbstractMiniatures
 {
-    private CookieJar $cookieJar;
+    private readonly CookieJar $cookieJar;
     private ?string $csrfToken = null;
 
     public function __construct(

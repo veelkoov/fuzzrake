@@ -12,7 +12,7 @@ class Matcher
      * @param Pattern[] $patterns KEY => pattern
      */
     public function __construct(
-        private array $patterns,
+        private readonly array $patterns,
     ) {
     }
 

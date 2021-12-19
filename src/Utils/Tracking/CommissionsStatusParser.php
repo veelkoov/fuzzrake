@@ -13,12 +13,12 @@ class CommissionsStatusParser
     /**
      * @var Pattern[]
      */
-    private array $offerStatusPatterns;
+    private readonly array $offerStatusPatterns;
 
-    private TextPreprocessor $preprocessor;
+    private readonly TextPreprocessor $preprocessor;
 
     public function __construct(
-        private Patterns $patterns,
+        private readonly Patterns $patterns,
     ) {
         $this->offerStatusPatterns = $this->patterns->getOfferStatusPatterns();
         $this->preprocessor = new TextPreprocessor($this->patterns->getFalsePositivePatterns());

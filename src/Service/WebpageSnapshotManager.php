@@ -20,9 +20,9 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 class WebpageSnapshotManager
 {
     public function __construct(
-        private GentleHttpClient $httpClient,
-        private WebpageSnapshotCache $cache,
-        private LoggerInterface $logger,
+        private readonly GentleHttpClient $httpClient,
+        private readonly WebpageSnapshotCache $cache,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

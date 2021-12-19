@@ -12,7 +12,7 @@ use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
  */
 class ColumnHydrator extends AbstractHydrator
 {
-    public const COLUMN_HYDRATOR = 'COLUMN_HYDRATOR';
+    final public const COLUMN_HYDRATOR = 'COLUMN_HYDRATOR';
 
     /**
      * @throws Exception

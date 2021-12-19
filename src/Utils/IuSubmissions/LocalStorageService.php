@@ -10,10 +10,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class LocalStorageService
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
 
     public function __construct(
-        private string $dataDirPath,
+        private readonly string $dataDirPath,
     ) {
         $this->filesystem = new Filesystem();
     }

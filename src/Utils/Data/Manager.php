@@ -17,18 +17,18 @@ use InvalidArgumentException;
 
 class Manager
 {
-    public const CMD_COMMENT = '//';
-    public const CMD_ACCEPT = 'accept';
-    public const CMD_CLEAR = 'clear';
-    public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
-    public const CMD_MATCH_TO_NAME = 'match-to-name';
-    public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
+    final public const CMD_COMMENT = '//';
+    final public const CMD_ACCEPT = 'accept';
+    final public const CMD_CLEAR = 'clear';
+    final public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
+    final public const CMD_MATCH_TO_NAME = 'match-to-name';
+    final public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
                                          * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
                                          * then I can't include your bare studio name on the list. No one else will be able
                                          * to find you anyway. */
-    public const CMD_REPLACE = 'replace';
-    public const CMD_SET = 'set';
-    public const CMD_WITH = 'with';
+    final public const CMD_REPLACE = 'replace';
+    final public const CMD_SET = 'set';
+    final public const CMD_WITH = 'with';
 
     /**
      * @var ValueCorrection[][] Associative list of corrections to be applied

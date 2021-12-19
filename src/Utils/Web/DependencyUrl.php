@@ -9,8 +9,8 @@ use Stringable;
 class DependencyUrl implements Fetchable, Stringable
 {
     public function __construct(
-        private string $url,
-        private Fetchable $parent,
+        private readonly string $url,
+        private readonly Fetchable $parent,
     ) {
     }
 

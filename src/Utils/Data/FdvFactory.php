@@ -7,8 +7,8 @@ namespace App\Utils\Data;
 class FdvFactory
 {
     public function __construct(
-        private Fixer $fixer,
-        private Validator $validator,
+        private readonly Fixer $fixer,
+        private readonly Validator $validator,
     ) {
     }
 

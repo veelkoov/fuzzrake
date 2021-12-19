@@ -17,8 +17,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataExportCommand extends Command
 {
+    protected static $defaultName = 'app:data:export';
+
     public function __construct(
-        private ArtisanRepository $artisans,
+        private readonly ArtisanRepository $artisans,
     ) {
         parent::__construct();
     }
@@ -26,7 +28,6 @@ class DataExportCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('app:data:export')
             ->setDescription('Export data to XLSX')
         ;
     }

@@ -8,7 +8,7 @@ class StateFixer extends AbstractStringFixer
 {
     public function __construct(
         array $states,
-        private StringFixer $stringFixer,
+        private readonly StringFixer $stringFixer,
     ) {
         parent::__construct($states);
     }

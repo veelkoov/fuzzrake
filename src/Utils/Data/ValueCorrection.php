@@ -10,10 +10,10 @@ use Stringable;
 class ValueCorrection implements Stringable
 {
     public function __construct(
-        private string $subject,
-        private Field $field,
-        private ?string $wrongValue,
-        private string $correctedValue,
+        private readonly string $subject,
+        private readonly Field $field,
+        private readonly ?string $wrongValue,
+        private readonly string $correctedValue,
     ) {
     }
 

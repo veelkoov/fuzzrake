@@ -18,7 +18,7 @@ class StatsCalculator
     /**
      * @var Specie[]
      */
-    private array $speciesFlat;
+    private readonly array $speciesFlat;
 
     /**
      * @param Artisan[] $artisans

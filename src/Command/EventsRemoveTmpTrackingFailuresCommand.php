@@ -17,9 +17,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
 {
+    protected static $defaultName = 'app:events:remove-tmp-tracking-failures';
+
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private EventRepository $eventRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly EventRepository $eventRepository,
     ) {
         parent::__construct();
     }
@@ -27,7 +29,6 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
     protected function configure()
     {
         $this
-            ->setName('app:events:remove-tmp-tracking-failures')
             ->setDescription('Get rid of X -> unknown -> x state changes between two given dates')
             ->addArgument('date1', InputArgument::REQUIRED, 'Date when failures occurred')
             ->addArgument('date2', InputArgument::REQUIRED, 'Date when failures were corrected')

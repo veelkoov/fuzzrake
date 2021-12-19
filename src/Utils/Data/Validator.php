@@ -11,10 +11,10 @@ use App\Utils\Data\Validator\ValidatorInterface;
 
 class Validator
 {
-    private GenericValidator $genericValidator;
+    private readonly GenericValidator $genericValidator;
 
     public function __construct(
-        private SpeciesListValidator $speciesListValidator,
+        private readonly SpeciesListValidator $speciesListValidator,
     ) {
         $this->genericValidator = new GenericValidator();
     }

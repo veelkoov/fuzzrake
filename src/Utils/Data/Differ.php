@@ -15,7 +15,7 @@ class Differ
     private readonly FieldsList $skipImpValue;
 
     public function __construct(
-        private Printer $printer,
+        private readonly Printer $printer,
     ) {
         $this->skipImpValue = new FieldsList([
             Field::CONTACT_ALLOWED,

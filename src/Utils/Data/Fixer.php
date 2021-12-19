@@ -23,18 +23,18 @@ use App\Utils\Data\Fixer\UrlFixer;
 class Fixer
 {
     public function __construct(
-        private StringFixer $stringFixer,
-        private DefinedListFixer $definedListFixer,
-        private FreeListFixer $freeListFixer,
-        private SpeciesListFixer $speciesListFixer,
-        private UrlFixer $urlFixer,
-        private ContactAllowedFixer $contactAllowedFixer,
-        private CountryFixer $countryFixer,
-        private LanguagesFixer $languagesFixer,
-        private SinceFixer $sinceFixer,
-        private NoopFixer $noopFixer,
-        private IntroFixer $introFixer,
-        private StateFixer $stateFixer,
+        private readonly StringFixer $stringFixer,
+        private readonly DefinedListFixer $definedListFixer,
+        private readonly FreeListFixer $freeListFixer,
+        private readonly SpeciesListFixer $speciesListFixer,
+        private readonly UrlFixer $urlFixer,
+        private readonly ContactAllowedFixer $contactAllowedFixer,
+        private readonly CountryFixer $countryFixer,
+        private readonly LanguagesFixer $languagesFixer,
+        private readonly SinceFixer $sinceFixer,
+        private readonly NoopFixer $noopFixer,
+        private readonly IntroFixer $introFixer,
+        private readonly StateFixer $stateFixer,
     ) {
     }
 
@@ -49,72 +49,25 @@ class Fixer
 
     private function getFixer(Field $field): FixerInterface
     {
-        /* @noinspection PhpSwitchCanBeReplacedWithMatchExpressionInspection */
-        switch ($field) {
-            case Field::NAME:
-            case Field::FORMERLY:
-            case Field::CITY:
-            case Field::PAYMENT_PLANS:
-            case Field::NOTES:
-                return $this->stringFixer;
+        return match ($field) {
+            Field::NAME, Field::FORMERLY, Field::CITY, Field::PAYMENT_PLANS, Field::NOTES => $this->stringFixer,
 
-            case Field::SPECIES_DOES:
-            case Field::SPECIES_DOESNT:
-                return $this->speciesListFixer;
+            Field::SPECIES_DOES, Field::SPECIES_DOESNT => $this->speciesListFixer,
 
-            case Field::PRODUCTION_MODELS:
-            case Field::FEATURES:
-            case Field::STYLES:
-            case Field::ORDER_TYPES:
-                return $this->definedListFixer;
+            Field::PRODUCTION_MODELS, Field::FEATURES, Field::STYLES, Field::ORDER_TYPES => $this->definedListFixer,
 
-            case Field::FORMER_MAKER_IDS:
-            case Field::OTHER_FEATURES:
-            case Field::OTHER_ORDER_TYPES:
-            case Field::OTHER_STYLES:
-            case Field::URL_PHOTOS:
-            case Field::URL_MINIATURES:
-            case Field::CURRENCIES_ACCEPTED:
-            case Field::PAYMENT_METHODS:
-                return $this->freeListFixer;
+            Field::FORMER_MAKER_IDS, Field::OTHER_FEATURES, Field::OTHER_ORDER_TYPES, Field::OTHER_STYLES, Field::URL_PHOTOS, Field::URL_MINIATURES, Field::CURRENCIES_ACCEPTED, Field::PAYMENT_METHODS => $this->freeListFixer,
 
-            case Field::URL_COMMISSIONS:
-            case Field::URL_DEVIANTART:
-            case Field::URL_FACEBOOK:
-            case Field::URL_FAQ:
-            case Field::URL_FUR_AFFINITY:
-            case Field::URL_FURSUITREVIEW:
-            case Field::URL_INSTAGRAM:
-            case Field::URL_PRICES:
-            case Field::URL_TUMBLR:
-            case Field::URL_TWITTER:
-            case Field::URL_YOUTUBE:
-            case Field::URL_WEBSITE:
-            case Field::URL_QUEUE:
-            case Field::URL_ETSY:
-            case Field::URL_FURTRACK:
-                return $this->urlFixer;
+            Field::URL_COMMISSIONS, Field::URL_DEVIANTART, Field::URL_FACEBOOK, Field::URL_FAQ, Field::URL_FUR_AFFINITY, Field::URL_FURSUITREVIEW, Field::URL_INSTAGRAM, Field::URL_PRICES, Field::URL_TUMBLR, Field::URL_TWITTER, Field::URL_YOUTUBE, Field::URL_WEBSITE, Field::URL_QUEUE, Field::URL_ETSY, Field::URL_FURTRACK => $this->urlFixer,
 
-            case Field::SINCE:
-                return $this->sinceFixer;
+            Field::SINCE           => $this->sinceFixer,
+            Field::COUNTRY         => $this->countryFixer,
+            Field::STATE           => $this->stateFixer,
+            Field::INTRO           => $this->introFixer,
+            Field::LANGUAGES       => $this->languagesFixer,
+            Field::CONTACT_ALLOWED => $this->contactAllowedFixer,
 
-            case Field::COUNTRY:
-                return $this->countryFixer;
-
-            case Field::STATE:
-                return $this->stateFixer;
-
-            case Field::INTRO:
-                return $this->introFixer;
-
-            case Field::LANGUAGES:
-                return $this->languagesFixer;
-
-            case Field::CONTACT_ALLOWED:
-                return $this->contactAllowedFixer;
-
-            default:
-                return $this->noopFixer;
-        }
+            default                => $this->noopFixer,
+        };
     }
 }

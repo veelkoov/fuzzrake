@@ -8,12 +8,12 @@ use TRegx\CleanRegex\Pattern;
 
 class SimpleReplacement implements ReplacementInterface
 {
-    private Pattern $pattern;
+    private readonly Pattern $pattern;
 
     public function __construct(
         string $pattern,
         string $flags,
-        private string $replacement,
+        private readonly string $replacement,
     ) {
         $this->pattern = pattern($pattern, $flags);
     }

@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\IuSubmissions\NotificationsGenerator as Generator;
 use App\Utils\Json;
 use App\Utils\Notifications\SnsService;
 use Exception;
 use JsonException;
 use Psr\Log\LoggerInterface;
-use App\Utils\IuSubmissions\NotificationsGenerator as Generator;
 
 class IuSubmissionService
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private LocalStorageService $local,
-        private S3StorageService $s3,
-        private SnsService $sns,
+        private readonly LoggerInterface $logger,
+        private readonly LocalStorageService $local,
+        private readonly S3StorageService $s3,
+        private readonly SnsService $sns,
     ) {
     }
 

@@ -6,16 +6,16 @@ namespace App\DataDefinitions;
 
 class OrderTypes extends Dictionary
 {
-    public const HEAD = 'Head (as parts/separate)';
-    public const MINI_PARTIAL = 'Mini partial (head + handpaws + tail)';
-    public const PARTIAL = 'Partial (head + handpaws + tail + feetpaws)';
-    public const FULL_PLANTIGRADE = 'Full plantigrade';
-    public const FULL_DIGITIGRADE = 'Full digitigrade';
-    public const TAILS = 'Tails (as parts/separate)';
-    public const HANDPAWS = 'Handpaws (as parts/separate)';
-    public const FEETPAWS = 'Feetpaws (as parts/separate)';
-    public const THREE_FOURTH = 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)';
-    public const BODYSUITS = 'Bodysuits (as parts/separate)';
+    final public const HEAD = 'Head (as parts/separate)';
+    final public const MINI_PARTIAL = 'Mini partial (head + handpaws + tail)';
+    final public const PARTIAL = 'Partial (head + handpaws + tail + feetpaws)';
+    final public const FULL_PLANTIGRADE = 'Full plantigrade';
+    final public const FULL_DIGITIGRADE = 'Full digitigrade';
+    final public const TAILS = 'Tails (as parts/separate)';
+    final public const HANDPAWS = 'Handpaws (as parts/separate)';
+    final public const FEETPAWS = 'Feetpaws (as parts/separate)';
+    final public const THREE_FOURTH = 'Three-fourth (head + handpaws + tail + legs/pants + feetpaws)';
+    final public const BODYSUITS = 'Bodysuits (as parts/separate)';
 
     public static function getValues(): array
     {

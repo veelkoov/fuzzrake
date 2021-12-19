@@ -11,7 +11,7 @@ use Doctrine\ORM\Events;
 class PostFlushSubscriber implements EventSubscriber
 {
     public function __construct(
-        private CacheProvider $cacheProvider,
+        private readonly CacheProvider $cacheProvider,
     ) {
     }
 

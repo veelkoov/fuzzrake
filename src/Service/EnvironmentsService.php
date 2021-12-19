@@ -7,7 +7,7 @@ namespace App\Service;
 class EnvironmentsService
 {
     public function __construct(
-        private string $environment,
+        private readonly string $environment,
     ) {
     }
 

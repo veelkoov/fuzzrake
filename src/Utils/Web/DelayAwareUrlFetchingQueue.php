@@ -22,7 +22,7 @@ class DelayAwareUrlFetchingQueue
      */
     public function __construct(
         array $urls = [],
-        private int $millisecondsDelay = 0,
+        private readonly int $millisecondsDelay = 0,
     ) {
         foreach ($urls as $url) {
             $this->addUrl($url);

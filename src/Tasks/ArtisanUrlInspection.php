@@ -13,9 +13,9 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 final class ArtisanUrlInspection
 {
     public function __construct(
-        private ArtisanUrlRepository $artisanUrlRepository,
-        private WebpageSnapshotManager $webpageSnapshotManager,
-        private SymfonyStyle $io,
+        private readonly ArtisanUrlRepository $artisanUrlRepository,
+        private readonly WebpageSnapshotManager $webpageSnapshotManager,
+        private readonly SymfonyStyle $io,
     ) {
     }
 

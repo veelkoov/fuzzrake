@@ -9,8 +9,8 @@ class Text
     private string $unused;
 
     public function __construct(
-        private string $original,
-        private string $cleaned,
+        private readonly string $original,
+        private readonly string $cleaned,
     ) {
         $this->unused = $this->cleaned;
     }

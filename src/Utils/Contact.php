@@ -12,10 +12,10 @@ final class Contact
 {
     use UtilityClass;
 
-    public const INVALID = 'INVALID';
-    public const TWITTER = 'TWITTER';
-    public const TELEGRAM = 'TELEGRAM';
-    public const E_MAIL = 'E-MAIL';
+    final public const INVALID = 'INVALID';
+    final public const TWITTER = 'TWITTER';
+    final public const TELEGRAM = 'TELEGRAM';
+    final public const E_MAIL = 'E-MAIL';
 
     private const PATTERNS = [
         '(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])' => [self::E_MAIL,   ''],

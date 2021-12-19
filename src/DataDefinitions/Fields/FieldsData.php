@@ -12,13 +12,13 @@ final class FieldsData
 {
     use UtilityClass;
 
-    public const MARK_LIST = 'L';
-    public const MARK_DYNAMIC = 'D';
-    public const MARK_STATS = 'S';
-    public const MARK_PUBLIC = 'P';
-    public const MARK_FORM = 'F';
+    final public const MARK_LIST = 'L';
+    final public const MARK_DYNAMIC = 'D';
+    final public const MARK_STATS = 'S';
+    final public const MARK_PUBLIC = 'P';
+    final public const MARK_FORM = 'F';
 
-    public const DATA = [
+    final public const DATA = [
     //
     //                   is in I/U Form ---------F
     //                       is Public? -------P
@@ -96,7 +96,7 @@ final class FieldsData
         'CONTACT_INFO_ORIGINAL'     => ['          contactInfoOriginal',     null],
     ];
 
-    public const NON_INSPECTED_URLS = [
+    final public const NON_INSPECTED_URLS = [
         F::URL_FURTRACK,
         F::URL_SCRITCH,
         F::URL_PHOTOS,
@@ -111,7 +111,7 @@ final class FieldsData
         self::$fields = [];
 
         foreach (Field::cases() as $field) {
-            list($data, $validationRegexp) = self::DATA[$field->name];
+            [$data, $validationRegexp] = self::DATA[$field->name];
 
             self::$fields[$field->name] = new FieldData(
                 $field->name,

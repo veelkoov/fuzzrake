@@ -16,8 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractType
 {
-    public const BTN_SAVE = 'save';
-    public const BTN_DELETE = 'delete';
+    final public const BTN_SAVE = 'save';
+    final public const BTN_DELETE = 'delete';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

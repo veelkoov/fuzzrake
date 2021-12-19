@@ -13,9 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 class AbstractRecaptchaBackedController extends AbstractController
 {
     public function __construct(
-        private ReCaptcha $reCaptcha,
-        private EnvironmentsService $environments,
-        private LoggerInterface $logger,
+        private readonly ReCaptcha $reCaptcha,
+        private readonly EnvironmentsService $environments,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

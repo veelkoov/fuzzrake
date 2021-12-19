@@ -39,13 +39,13 @@ class TextPreprocessor
         "\n\n+" => "\n",
     ];
 
-    private Replacements $replacements;
+    private readonly Replacements $replacements;
 
     /**
      * @param Pattern[] $falsePositivePatterns
      */
     public function __construct(
-        private array $falsePositivePatterns,
+        private readonly array $falsePositivePatterns,
     ) {
         $this->replacements = new Replacements(self::REPLACEMENTS, 's', '', '');
     }

@@ -8,7 +8,7 @@ use App\Utils\Regexp\Replacements;
 
 class AbstractStringFixer implements FixerInterface
 {
-    private Replacements $replacements;
+    private readonly Replacements $replacements;
 
     public function __construct(array $regexes)
     {

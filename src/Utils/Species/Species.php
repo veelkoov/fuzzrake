@@ -10,31 +10,31 @@ use App\Utils\Regexp\Replacements;
 
 class Species
 {
-    private Replacements $replacements;
+    private readonly Replacements $replacements;
 
     /**
      * @return string[]
      */
-    private array $unsplittable;
+    private readonly array $unsplittable;
 
     /**
      * @var Specie[] Associative: key = name, value = Specie object. Species fit for filtering
      */
-    private array $flat;
+    private readonly array $flat;
 
     /**
      * @var Specie[] Species fit for filtering
      */
-    private array $tree;
+    private readonly array $tree;
 
     /**
      * @var string[] Names of species considered valid by the validator (list of all, not only fit for filtering)
      */
-    private array $validNames;
+    private readonly array $validNames;
 
     public function __construct(
         array $speciesDefinitions,
-        private ArtisanRepository $artisanRepository,
+        private readonly ArtisanRepository $artisanRepository,
     ) {
         $this->replacements = new Replacements($speciesDefinitions['replacements'], 'i', $speciesDefinitions['commonRegexPrefix'], $speciesDefinitions['commonRegexSuffix']);
         $this->unsplittable = $speciesDefinitions['leave_unchanged'];

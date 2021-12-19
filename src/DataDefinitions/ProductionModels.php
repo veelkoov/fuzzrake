@@ -6,9 +6,9 @@ namespace App\DataDefinitions;
 
 class ProductionModels extends Dictionary
 {
-    public const STANDARD_COMMISSIONS = 'Standard commissions';
-    public const ARTISTIC_LIBERTY_COMMISSIONS = 'Artistic liberty commissions';
-    public const PREMADES = 'Premades';
+    final public const STANDARD_COMMISSIONS = 'Standard commissions';
+    final public const ARTISTIC_LIBERTY_COMMISSIONS = 'Artistic liberty commissions';
+    final public const PREMADES = 'Premades';
 
     public static function getValues(): array
     {

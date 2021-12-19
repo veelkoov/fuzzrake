@@ -11,9 +11,9 @@ use DateTimeInterface;
 class SimpleChange implements ChangeInterface
 {
     public function __construct(
-        private Field $field,
-        private DateTimeInterface|string|bool|null $old,
-        private DateTimeInterface|string|bool|null $new,
+        private readonly Field $field,
+        private readonly DateTimeInterface|string|bool|null $old,
+        private readonly DateTimeInterface|string|bool|null $new,
     ) {
     }
 

@@ -24,7 +24,7 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     public function __construct(
-        private EnvironmentsService $environments,
+        private readonly EnvironmentsService $environments,
     ) {
     }
 

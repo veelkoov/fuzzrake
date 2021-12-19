@@ -19,17 +19,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class TrackerTaskRunnerFactory
 {
-    public const COMMISSIONS = 'commissions';
-    public const BASE_PRICES = 'base-prices';
+    final public const COMMISSIONS = 'commissions';
+    final public const BASE_PRICES = 'base-prices';
 
-    private ArtisanRepository $artisanRepository;
+    private readonly ArtisanRepository $artisanRepository;
 
     public function __construct(
-        private LoggerInterface $logger,
-        private EntityManagerInterface $entityManager,
-        private WebpageSnapshotManager $webpageSnapshotManager,
-        private CommissionsStatusParser $parser,
-        private FdvFactory $fdvFactory,
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly WebpageSnapshotManager $webpageSnapshotManager,
+        private readonly CommissionsStatusParser $parser,
+        private readonly FdvFactory $fdvFactory,
     ) {
         $this->artisanRepository = $entityManager->getRepository(ArtisanE::class);
     }

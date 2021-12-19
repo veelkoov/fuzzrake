@@ -9,7 +9,7 @@ use Stringable;
 class FreeUrl implements Fetchable, Stringable
 {
     public function __construct(
-        private string $url,
+        private readonly string $url,
     ) {
     }
 

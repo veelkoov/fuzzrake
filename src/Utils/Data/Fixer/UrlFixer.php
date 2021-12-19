@@ -8,7 +8,7 @@ use App\Utils\Regexp\Replacements;
 
 class UrlFixer extends StringFixer
 {
-    private Replacements $replacements;
+    private readonly Replacements $replacements;
 
     public function __construct(array $urls, array $strings)
     {

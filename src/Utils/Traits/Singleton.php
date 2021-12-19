@@ -8,7 +8,7 @@ trait Singleton
 {
     private static ?self $INSTANCE = null;
 
-    final private function __construct()
+    private function __construct()
     {
     }
 

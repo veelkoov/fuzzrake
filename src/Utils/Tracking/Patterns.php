@@ -14,16 +14,16 @@ class Patterns
     /**
      * @var Pattern[]
      */
-    private array $falsePositivePatterns;
+    private readonly array $falsePositivePatterns;
 
     /**
      * @var Pattern[]
      */
-    private array $offerStatusPatterns;
+    private readonly array $offerStatusPatterns;
 
-    private Matcher $statusMatcher;
+    private readonly Matcher $statusMatcher;
 
-    private Matcher $offerMatcher;
+    private readonly Matcher $offerMatcher;
 
     public function __construct()
     {

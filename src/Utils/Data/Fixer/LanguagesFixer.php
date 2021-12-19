@@ -13,8 +13,8 @@ use TRegx\CleanRegex\Pattern;
 
 class LanguagesFixer extends StringFixer
 {
-    private Pattern $pattern;
-    private Replacements $replacements;
+    private readonly Pattern $pattern;
+    private readonly Replacements $replacements;
 
     public function __construct(array $languages, array $strings)
     {

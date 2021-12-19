@@ -11,9 +11,9 @@ use Psr\Log\LoggerInterface;
 class SnsService
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private AwsCliService $cli,
-        private string $notificationSnsTopicArn,
+        private readonly LoggerInterface $logger,
+        private readonly AwsCliService $cli,
+        private readonly string $notificationSnsTopicArn,
     ) {
         if (pattern('^(arn:aws:sns:[-a-z0-9]+:\d+:[-_a-z0-9]+)?$', 'i')->fails($notificationSnsTopicArn)) {
             throw new InvalidArgumentException("$notificationSnsTopicArn is not a valid SNS topic ARN");

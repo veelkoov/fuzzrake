@@ -77,7 +77,8 @@ enum Field: string
     case CONTACT_INFO_OBFUSCATED   = 'CONTACT_INFO_OBFUSCATED';
     case CONTACT_INFO_ORIGINAL     = 'CONTACT_INFO_ORIGINAL';
 
-    public function getData(): FieldData {
+    public function getData(): FieldData
+    {
         return FieldsData::get($this);
     }
 

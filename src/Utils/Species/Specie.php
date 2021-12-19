@@ -20,8 +20,8 @@ class Specie implements Stringable
     private array $children = [];
 
     public function __construct(
-        private string $name,
-        private bool $ignored,
+        private readonly string $name,
+        private readonly bool $ignored,
     ) {
     }
 

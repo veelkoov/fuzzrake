@@ -6,8 +6,8 @@ namespace App\Utils\Filters;
 
 class FilterData
 {
-    private Set $items;
-    private array $specialItems;
+    private readonly Set $items;
+    private readonly array $specialItems;
 
     public function __construct(
         SpecialItem ...$specialItems,

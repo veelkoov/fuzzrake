@@ -6,10 +6,10 @@ namespace App\DataDefinitions;
 
 class ContactPermit extends Dictionary
 {
-    public const NO = 'NO'; // grep-no-contact-allowed
-    public const CORRECTIONS = 'CORRECTIONS';
-    public const ANNOUNCEMENTS = 'ANNOUNCEMENTS';
-    public const FEEDBACK = 'FEEDBACK';
+    final public const NO = 'NO'; // grep-no-contact-allowed
+    final public const CORRECTIONS = 'CORRECTIONS';
+    final public const ANNOUNCEMENTS = 'ANNOUNCEMENTS';
+    final public const FEEDBACK = 'FEEDBACK';
 
     public static function getValues(): array
     {

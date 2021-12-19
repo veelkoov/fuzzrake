@@ -14,7 +14,7 @@ class Printer
     private ?ArtisanChanges $currentContext = null;
 
     public function __construct(
-        private SymfonyStyle $io,
+        private readonly SymfonyStyle $io,
     ) {
         $this->io->getFormatter()->setStyle('diff_added', new OutputFormatterStyle('green'));
         $this->io->getFormatter()->setStyle('diff_deleted', new OutputFormatterStyle('red'));

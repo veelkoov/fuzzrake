@@ -13,19 +13,19 @@ use InvalidArgumentException;
 
 class FixerDifferValidator
 {
-    public const FIX = 1;
-    public const SHOW_DIFF = 2;
-    public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
-    public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
-    public const SHOW_FIX_CMD_FOR_INVALID = 16;
-    public const USE_SET_FOR_FIX_CMD = 32;
+    final public const FIX = 1;
+    final public const SHOW_DIFF = 2;
+    final public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
+    final public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
+    final public const SHOW_FIX_CMD_FOR_INVALID = 16;
+    final public const USE_SET_FOR_FIX_CMD = 32;
 
-    private Differ $differ;
+    private readonly Differ $differ;
 
     public function __construct(
-        private Fixer $fixer,
-        private Validator $validator,
-        private Printer $printer,
+        private readonly Fixer $fixer,
+        private readonly Validator $validator,
+        private readonly Printer $printer,
     ) {
         $this->differ = new Differ($this->printer);
     }

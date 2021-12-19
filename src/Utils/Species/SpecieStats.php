@@ -17,7 +17,7 @@ class SpecieStats
     private int $totalCount = 0;
 
     public function __construct(
-        private Specie $specie,
+        private readonly Specie $specie,
     ) {
     }
 

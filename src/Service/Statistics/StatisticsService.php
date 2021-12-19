@@ -13,8 +13,8 @@ use Doctrine\ORM\UnexpectedResultException;
 class StatisticsService
 {
     public function __construct(
-        private ArtisanRepository $artisanRepository,
-        private ArtisanVolatileDataRepository $avdRepository,
+        private readonly ArtisanRepository $artisanRepository,
+        private readonly ArtisanVolatileDataRepository $avdRepository,
     ) {
     }
 

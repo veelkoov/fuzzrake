@@ -9,10 +9,10 @@ use DateTimeInterface;
 class MainPageStats
 {
     public function __construct(
-        private ?int $activeArtisansCount,
-        private ?int $countryCount,
-        private ?DateTimeInterface $lastDataUpdateTimeUtc,
-        private ?DateTimeInterface $lastSystemUpdateTimeUtc,
+        private readonly ?int $activeArtisansCount,
+        private readonly ?int $countryCount,
+        private readonly ?DateTimeInterface $lastDataUpdateTimeUtc,
+        private readonly ?DateTimeInterface $lastSystemUpdateTimeUtc,
     ) {
     }
 

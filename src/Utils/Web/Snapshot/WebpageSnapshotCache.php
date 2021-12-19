@@ -15,8 +15,8 @@ use Symfony\Component\Filesystem\Exception\IOException;
 class WebpageSnapshotCache
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private string $cacheDirPath,
+        private readonly LoggerInterface $logger,
+        private readonly string $cacheDirPath,
     ) {
     }
 

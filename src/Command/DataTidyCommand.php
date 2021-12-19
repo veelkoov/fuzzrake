@@ -21,14 +21,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataTidyCommand extends Command
 {
+    protected static $defaultName = 'app:data:tidy';
+
     private const OPT_COMMIT = 'commit';
     private const OPT_WITH_INACTIVE = 'with-inactive';
     private const ARG_CORRECTIONS_FILE = 'corrections-file';
 
     public function __construct(
-        private EntityManagerInterface $objectManager,
-        private ArtisanRepository $artisanRepo,
-        private FdvFactory $fdvFactory,
+        private readonly EntityManagerInterface $objectManager,
+        private readonly ArtisanRepository $artisanRepo,
+        private readonly FdvFactory $fdvFactory,
     ) {
         parent::__construct();
     }
@@ -36,7 +38,6 @@ class DataTidyCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:data:tidy')
             ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
             ->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include inactive artisans')
             ->addArgument(self::ARG_CORRECTIONS_FILE, InputArgument::OPTIONAL, 'Corrections file path')

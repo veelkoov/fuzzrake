@@ -18,9 +18,9 @@ use Symfony\Component\Finder\SplFileInfo;
 class IuSubmission implements FieldReadInterface
 {
     public function __construct(
-        private DateTimeInterface $timestamp,
-        private string $id,
-        private array $data,
+        private readonly DateTimeInterface $timestamp,
+        private readonly string $id,
+        private readonly array $data,
     ) {
     }
 
@@ -91,7 +91,7 @@ class IuSubmission implements FieldReadInterface
         return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
             ->replace($filePath)
             ->first()
-            ->otherwise(function () {
+            ->otherwise(function (): never {
                 throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path');
             })
             ->withReferences('$1-$2-$3_$4$5$6_$7');

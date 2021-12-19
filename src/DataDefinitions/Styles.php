@@ -6,13 +6,13 @@ namespace App\DataDefinitions;
 
 class Styles extends Dictionary
 {
-    public const TOONY = 'Toony';
-    public const SEMI_TOONY = 'Semi Toony';
-    public const SEMI_REALISTIC = 'Semi Realistic';
-    public const REALISTIC = 'Realistic';
-    public const KEMONO = 'Kemono';
-    public const KIGURUMI = 'Kigurumi';
-    public const ANIME = 'Anime';
+    final public const TOONY = 'Toony';
+    final public const SEMI_TOONY = 'Semi Toony';
+    final public const SEMI_REALISTIC = 'Semi Realistic';
+    final public const REALISTIC = 'Realistic';
+    final public const KEMONO = 'Kemono';
+    final public const KIGURUMI = 'Kigurumi';
+    final public const ANIME = 'Anime';
 
     public static function getValues(): array
     {

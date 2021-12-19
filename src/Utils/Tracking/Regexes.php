@@ -10,18 +10,18 @@ final class Regexes
 {
     use UtilityClass;
 
-    public const GRP_STATUS = 'status';
-    public const GRP_OFFER = 'offer';
+    final public const GRP_STATUS = 'status';
+    final public const GRP_OFFER = 'offer';
 
-    public const KEY_OPEN = 'OPEN';
-    public const KEY_CLOSED = 'CLOSED';
+    final public const KEY_OPEN = 'OPEN';
+    final public const KEY_CLOSED = 'CLOSED';
 
-    public const STATUS_REGEXES = [
+    final public const STATUS_REGEXES = [
         self::KEY_CLOSED => '(?:closed?|not currently taking on|not accepting|don\'t (?:do|take|provide))', // "not currently taking on" - test case 058
         self::KEY_OPEN   => '(?:open(?!ing)|only making|taking)',
     ];
 
-    public const OFFER_REGEXES = [
+    final public const OFFER_REGEXES = [
         'HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS' => 'handpaws_AND_sockpaws C___S',
 
         'PARTS&REFURBISHMENTS' => 'small/single parts_AND_refurbishments C___S',
@@ -39,7 +39,7 @@ final class Regexes
         'ORDERS'               => '(?:custom )?orders?',
     ];
 
-    public const COMMON_REGEXES = [
+    final public const COMMON_REGEXES = [
         '_AND_'  => '(?: and | ?(?:&amp;|/) ?)',
         'NOW'    => '(?:currently|now|always)',
         'C___S'  => '(?:comm?iss?ions?)', // Not including "comms"
@@ -48,7 +48,7 @@ final class Regexes
         'OFFER'  => '(?<'.self::GRP_OFFER.'>(?:HANDPAWS COMMISSIONS&SOCKPAWS COMMISSIONS)|(?:PARTS&REFURBISHMENTS)|(?:COMMISSIONS&QUOTES)|(?:FULLSUIT COMMISSIONS)|(?:PARTIAL COMMISSIONS)|(?:HEAD COMMISSIONS)|(?:PARTS)|(?:COMMISSIONS)|(?:TRADES)|(?:PRE-MADES)|(?:ARTISTIC LIBERTY)|(?:QUOTES)|(?:ORDERS))',
     ];
 
-    public const FALSE_POSITIVES_REGEXES = [
+    final public const FALSE_POSITIVES_REGEXES = [
         'next C___S opening (?:estimated|will)',
         '(?:if|when|while) OFFER (?:are )?STATUS',
         'when (?:i(?:\'m| am| will)?|we(?:\'re| are| will)?) open for (?:new )?OFFER',
@@ -61,7 +61,7 @@ final class Regexes
         'OFFER status: STATUS ?</h1>\s*<h1[^>]*> ?MONTHS',
     ];
 
-    public const OFFER_STATUS_REGEXES = [
+    final public const OFFER_STATUS_REGEXES = [
         '(?:C___S\s*[:-]\s*)?STATUS for (?:new )?OFFER',
 
         'OFFER(?: status| NOW)?(?: | ?[:_-]\s*?)STATUS', // - and _ should work for attributes as well

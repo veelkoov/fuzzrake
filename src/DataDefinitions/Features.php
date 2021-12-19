@@ -6,24 +6,24 @@ namespace App\DataDefinitions;
 
 class Features extends Dictionary
 {
-    public const FOLLOW_ME_EYES = 'Follow-me eyes';
-    public const OUTDOOR_FEET = 'Outdoor feet';
-    public const INDOOR_FEET = 'Indoor feet';
-    public const ATTACHED_TAIL = 'Attached tail';
-    public const EXCHANGEABLE_TONGUES = 'Exchangeable tongues';
-    public const REMOVABLE_EYELIDS = 'Removable eyelids';
-    public const MOVABLE_JAW = 'Movable jaw';
-    public const ATTACHED_HANDPAWS_AND_FEETPAWS = 'Attached handpaws and feetpaws';
-    public const IN_HEAD_FANS = 'In-head fans';
-    public const LED_EYES = 'LED eyes';
-    public const EXCHANGEABLE_HAIRS = 'Exchangeable hairs';
-    public const REMOVABLE_HORNS_ANTLERS = 'Removable horns/antlers';
-    public const WASHABLE_HEADS = 'Washable heads';
-    public const LED_EL_LIGHTS = 'LED/EL lights';
-    public const ADJUSTABLE_WIGGLE_EARS = 'Adjustable/wiggle ears';
-    public const ADJUSTABLE_EYEBROWS = 'Adjustable eyebrows';
-    public const ELECTRONICS_ANIMATRONICS = 'Electronics/animatronics';
-    public const REMOVABLE_BLUSH = 'Removable blush';
+    final public const FOLLOW_ME_EYES = 'Follow-me eyes';
+    final public const OUTDOOR_FEET = 'Outdoor feet';
+    final public const INDOOR_FEET = 'Indoor feet';
+    final public const ATTACHED_TAIL = 'Attached tail';
+    final public const EXCHANGEABLE_TONGUES = 'Exchangeable tongues';
+    final public const REMOVABLE_EYELIDS = 'Removable eyelids';
+    final public const MOVABLE_JAW = 'Movable jaw';
+    final public const ATTACHED_HANDPAWS_AND_FEETPAWS = 'Attached handpaws and feetpaws';
+    final public const IN_HEAD_FANS = 'In-head fans';
+    final public const LED_EYES = 'LED eyes';
+    final public const EXCHANGEABLE_HAIRS = 'Exchangeable hairs';
+    final public const REMOVABLE_HORNS_ANTLERS = 'Removable horns/antlers';
+    final public const WASHABLE_HEADS = 'Washable heads';
+    final public const LED_EL_LIGHTS = 'LED/EL lights';
+    final public const ADJUSTABLE_WIGGLE_EARS = 'Adjustable/wiggle ears';
+    final public const ADJUSTABLE_EYEBROWS = 'Adjustable eyebrows';
+    final public const ELECTRONICS_ANIMATRONICS = 'Electronics/animatronics';
+    final public const REMOVABLE_BLUSH = 'Removable blush';
 
     public static function getValues(): array
     {

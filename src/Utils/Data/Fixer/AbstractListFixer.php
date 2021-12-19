@@ -10,7 +10,7 @@ use App\Utils\StrUtils;
 
 abstract class AbstractListFixer extends StringFixer
 {
-    private Replacements $replacements;
+    private readonly Replacements $replacements;
 
     public function __construct(array $lists, array $strings)
     {

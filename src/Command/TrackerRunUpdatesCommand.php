@@ -15,13 +15,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class TrackerRunUpdatesCommand extends Command
 {
+    protected static $defaultName = 'app:tracker:run-updates';
+
     private const OPT_REFETCH = 'refetch';
     private const OPT_COMMIT = 'commit';
     private const ARG_MODE = 'mode';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TrackerTaskRunnerFactory $factory,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TrackerTaskRunnerFactory $factory,
     ) {
         parent::__construct();
     }
@@ -29,7 +31,6 @@ class TrackerRunUpdatesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:tracker:run-updates')
             ->addOption(self::OPT_REFETCH, null, null, 'Refresh cache (re-fetch pages)')
             ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
             ->addArgument(self::ARG_MODE, InputArgument::REQUIRED, 'Mode of work')

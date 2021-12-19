@@ -7,8 +7,8 @@ namespace App\Utils\Tracking;
 class OfferStatus
 {
     public function __construct(
-        private string $offer,
-        private bool $status,
+        private readonly string $offer,
+        private readonly bool $status,
     ) {
     }
 

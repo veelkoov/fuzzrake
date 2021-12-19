@@ -13,7 +13,7 @@ final class CompletenessResult
     private int $total = 0;
 
     public function __construct(
-        private Artisan $artisan,
+        private readonly Artisan $artisan,
     ) {
     }
 

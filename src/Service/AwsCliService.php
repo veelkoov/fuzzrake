@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 class AwsCliService
 {
     public function __construct(
-        private LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

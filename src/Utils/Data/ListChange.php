@@ -9,13 +9,13 @@ use App\Utils\StringList;
 
 class ListChange implements ChangeInterface
 {
-    private array $old;
-    private array $new;
+    private readonly array $old;
+    private readonly array $new;
     private array $added;
     private array $removed;
 
     public function __construct(
-        private Field $field,
+        private readonly Field $field,
         string $old,
         string $new,
     ) {

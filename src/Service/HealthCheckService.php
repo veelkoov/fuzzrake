@@ -18,22 +18,22 @@ class HealthCheckService
     private const WARNING = 'WARNING';
     private const OK = 'OK';
 
-    public const MEMORY_AVAILABLE_MIN_MIBS = 'MEMORY_AVAILABLE_MIN_MIBS';
-    public const DISK_FREE_MIN_MIBS = 'DISK_FREE_MIN_MIBS';
-    public const DISK_USED_MAX_PERCENT = 'DISK_USED_MAX_PERCENT';
-    public const LOAD_1M_MAX = 'LOAD_1M_MAX';
-    public const LOAD_5M_MAX = 'LOAD_5M_MAX';
-    public const LOAD_15M_MAX = 'LOAD_15M_MAX';
+    final public const MEMORY_AVAILABLE_MIN_MIBS = 'MEMORY_AVAILABLE_MIN_MIBS';
+    final public const DISK_FREE_MIN_MIBS = 'DISK_FREE_MIN_MIBS';
+    final public const DISK_USED_MAX_PERCENT = 'DISK_USED_MAX_PERCENT';
+    final public const LOAD_1M_MAX = 'LOAD_1M_MAX';
+    final public const LOAD_5M_MAX = 'LOAD_5M_MAX';
+    final public const LOAD_15M_MAX = 'LOAD_15M_MAX';
 
-    private int $memoryAvailableMinMibs;
-    private int $diskFreeMinMibs;
-    private int $diskUsedMaxPercent;
-    private float $load1mMax;
-    private float $load5mMax;
-    private float $load15mMax;
+    private readonly int $memoryAvailableMinMibs;
+    private readonly int $diskFreeMinMibs;
+    private readonly int $diskUsedMaxPercent;
+    private readonly float $load1mMax;
+    private readonly float $load5mMax;
+    private readonly float $load15mMax;
 
     public function __construct(
-        private ArtisanVolatileDataRepository $artisanVolatileDataRepository,
+        private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         array $healthCheckValues,
     ) {
         $this->memoryAvailableMinMibs = $healthCheckValues[self::MEMORY_AVAILABLE_MIN_MIBS];

@@ -17,7 +17,7 @@ class HttpClient
 
     private const USER_AGENT = 'Mozilla/5.0 (compatible; GetFursuitBot/0.8; Symfony HttpClient/Curl; +https://getfursu.it/)';
 
-    private CurlHttpClient $client;
+    private readonly CurlHttpClient $client;
 
     public function __construct()
     {

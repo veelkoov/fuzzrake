@@ -11,10 +11,10 @@ use Psr\Log\LoggerInterface;
 class S3StorageService
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private LocalStorageService $local,
-        private AwsCliService $cli,
-        private string $s3CopiesBucketUrl,
+        private readonly LoggerInterface $logger,
+        private readonly LocalStorageService $local,
+        private readonly AwsCliService $cli,
+        private readonly string $s3CopiesBucketUrl,
     ) {
         if (pattern('^(s3://[-.a-z0-9]+)?$', 'i')->fails($s3CopiesBucketUrl)) {
             throw new InvalidArgumentException("$s3CopiesBucketUrl is not a valid S3 bucket URL");

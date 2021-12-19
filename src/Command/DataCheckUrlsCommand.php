@@ -15,12 +15,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DataCheckUrlsCommand extends Command
 {
+    protected static $defaultName = 'app:data:check-urls';
+
     private const DEFAULT_LIMIT = 10;
     private const OPT_LIMIT = 'limit';
 
     public function __construct(
-        private ArtisanUrlInspectionFactory $factory,
-        private EntityManagerInterface $entityManager,
+        private readonly ArtisanUrlInspectionFactory $factory,
+        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
@@ -28,7 +30,6 @@ class DataCheckUrlsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:data:check-urls')
             ->addOption(self::OPT_LIMIT, '', InputOption::VALUE_REQUIRED, 'Number of URLs to check', self::DEFAULT_LIMIT)
         ;
     }

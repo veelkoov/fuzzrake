@@ -6,9 +6,11 @@ namespace App\Utils\Filters;
 
 class Item
 {
+    private readonly string $label;
+
     public function __construct(
-        private string|Set $value,
-        private string $label = '',
+        private readonly string|Set $value,
+        string $label = '',
         private int $count = 0,
     ) {
         $this->label = $label ?: (string) $value;

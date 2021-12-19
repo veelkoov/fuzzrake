@@ -16,9 +16,9 @@ class BasePricesTrackerTask implements TrackerTaskInterface
 {
     /** @noinspection PhpPropertyOnlyWrittenInspection */
     public function __construct(
-        private ArtisanRepository $repository,
-        private LoggerInterface $logger,
-        private WebpageSnapshotManager $snapshots,
+        private readonly ArtisanRepository $repository,
+        private readonly LoggerInterface $logger,
+        private readonly WebpageSnapshotManager $snapshots,
     ) {
     }
 

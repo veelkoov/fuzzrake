@@ -17,19 +17,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class TrackerTaskRunner
 {
-    private FieldsList $eventCreatingFields;
-    private FieldsList $skipDiffForFields;
+    private readonly FieldsList $eventCreatingFields;
+    private readonly FieldsList $skipDiffForFields;
 
     /** @noinspection PhpPropertyOnlyWrittenInspection */
     public function __construct(
-        private TrackerTaskInterface $trackerTask,
-        private LoggerInterface $logger,
-        private EntityManagerInterface $entityManager,
-        private WebpageSnapshotManager $snapshots,
-        private FixerDifferValidator $fdv,
-        private bool $refetch,
-        private bool $commit,
-        private SymfonyStyle $io,
+        private readonly TrackerTaskInterface $trackerTask,
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly WebpageSnapshotManager $snapshots,
+        private readonly FixerDifferValidator $fdv,
+        private readonly bool $refetch,
+        private readonly bool $commit,
+        private readonly SymfonyStyle $io,
     ) {
         $this->eventCreatingFields = new FieldsList([Field::OPEN_FOR]);
         $this->skipDiffForFields = new FieldsList([Field::CS_LAST_CHECK]);

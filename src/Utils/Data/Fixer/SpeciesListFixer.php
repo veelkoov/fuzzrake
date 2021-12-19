@@ -12,9 +12,9 @@ class SpeciesListFixer extends AbstractListFixer
     /**
      * @var string[]
      */
-    private array $unsplittable;
+    private readonly array $unsplittable;
 
-    private Replacements $replacements;
+    private readonly Replacements $replacements;
 
     public function __construct(Species $species, array $strings, array $lists)
     {

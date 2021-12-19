@@ -11,8 +11,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class ArtisanUrlInspectionFactory
 {
     public function __construct(
-        private ArtisanUrlRepository $artisanUrlRepository,
-        private WebpageSnapshotManager $webpageSnapshotManager,
+        private readonly ArtisanUrlRepository $artisanUrlRepository,
+        private readonly WebpageSnapshotManager $webpageSnapshotManager,
     ) {
     }
 

@@ -28,10 +28,10 @@ use Symfony\Component\Routing\RouterInterface;
 
 class IuForm extends AbstractType
 {
-    public const OPT_ROUTER = 'router';
-    public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    public const FLD_CHANGE_PASSWORD = 'changePassword';
-    public const PHOTOS_COPYRIGHT_OK = 'PHOTOS_COPYRIGHT_OK';
+    final public const OPT_ROUTER = 'router';
+    final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
+    final public const FLD_CHANGE_PASSWORD = 'changePassword';
+    final public const PHOTOS_COPYRIGHT_OK = 'PHOTOS_COPYRIGHT_OK';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

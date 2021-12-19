@@ -19,9 +19,9 @@ class ImportItem
     private array $replaced = [];
 
     public function __construct(
-        private IuSubmission $iuSubmission,
-        private ArtisanChanges $input,
-        private ArtisanChanges $entity,
+        private readonly IuSubmission $iuSubmission,
+        private readonly ArtisanChanges $input,
+        private readonly ArtisanChanges $entity,
     ) {
     }
 

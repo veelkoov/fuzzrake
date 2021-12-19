@@ -11,7 +11,7 @@ class PatternsFactory
     /**
      * @var string[] PLACEHOLDER => Replacement
      */
-    private array $regexPlaceholderReplacements;
+    private readonly array $regexPlaceholderReplacements;
 
     public function __construct(...$regexPlaceholderReplacements)
     {

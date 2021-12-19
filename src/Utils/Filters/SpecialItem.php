@@ -9,10 +9,10 @@ class SpecialItem
     private int $count = 0;
 
     public function __construct(
-        private string $idPart,
-        private string $value,
-        private string $label,
-        private string $faIcon,
+        private readonly string $idPart,
+        private readonly string $value,
+        private readonly string $label,
+        private readonly string $faIcon,
     ) {
     }
 

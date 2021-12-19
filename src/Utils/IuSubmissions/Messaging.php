@@ -13,8 +13,8 @@ use App\Utils\StrUtils;
 class Messaging
 {
     public function __construct(
-        private Printer $printer,
-        private Manager $manager,
+        private readonly Printer $printer,
+        private readonly Manager $manager,
     ) {
     }
 

@@ -15,6 +15,8 @@ use Symfony\Component\Process\Process;
 
 class GenerateSpeciesDotCommand extends Command
 {
+    protected static $defaultName = 'app:data:generate-species-dot';
+
     private const DOT_FILE_PATH = 'species.dot';
 
     private const GROUPS_WITH_ARTIFICIAL_PLACEMENT = [
@@ -34,21 +36,14 @@ class GenerateSpeciesDotCommand extends Command
         'Real life animals',
     ];
 
-    private Filesystem $fs;
+    private readonly Filesystem $fs;
 
     public function __construct(
-        private Species $species,
+        private readonly Species $species,
     ) {
         parent::__construct();
 
         $this->fs = new Filesystem();
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:data:generate-species-dot')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

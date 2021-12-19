@@ -18,15 +18,15 @@ class WebpageSnapshot
     private array $children = [];
 
     public function __construct(
-        private string $url,
-        private string $contents,
-        private DateTime $retrievedAt,
-        private string $ownerName,
-        private int $httpCode,
+        private readonly string $url,
+        private readonly string $contents,
+        private readonly DateTime $retrievedAt,
+        private readonly string $ownerName,
+        private readonly int $httpCode,
         /*
          * @var string[] FIXME: Type hinting not working
          */
-        private array $headers,
+        private readonly array $headers,
     ) {
     }
 

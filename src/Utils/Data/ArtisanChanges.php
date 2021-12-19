@@ -10,11 +10,11 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class ArtisanChanges
 {
-    private Artisan $changed;
+    private readonly Artisan $changed;
 
     public function __construct(
-        private Artisan $subject,
-        private ?string $submissionId = null,
+        private readonly Artisan $subject,
+        private readonly ?string $submissionId = null,
     ) {
         $this->changed = clone $subject;
     }

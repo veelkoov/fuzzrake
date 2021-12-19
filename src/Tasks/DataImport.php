@@ -23,15 +23,15 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DataImport
 {
-    private ArtisanRepository $artisanRepository;
-    private Messaging $messaging;
+    private readonly ArtisanRepository $artisanRepository;
+    private readonly Messaging $messaging;
 
     public function __construct(
-        private EntityManagerInterface $objectManager,
-        private Manager $manager,
-        private Printer $printer,
-        private FDV $fdv,
-        private bool $showAllFixCmds,
+        private readonly EntityManagerInterface $objectManager,
+        private readonly Manager $manager,
+        private readonly Printer $printer,
+        private readonly FDV $fdv,
+        private readonly bool $showAllFixCmds,
     ) {
         $this->messaging = new Messaging($printer, $manager);
 

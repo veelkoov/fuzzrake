@@ -17,11 +17,11 @@ use Doctrine\ORM\UnexpectedResultException;
 class FilterService
 {
     public function __construct(
-        private ArtisanRepository $artisanRepository,
-        private ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
-        private ArtisanVolatileDataRepository $artisanVolatileDataRepository,
-        private CountriesDataService $countriesDataService,
-        private Species $species,
+        private readonly ArtisanRepository $artisanRepository,
+        private readonly ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
+        private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
+        private readonly CountriesDataService $countriesDataService,
+        private readonly Species $species,
     ) {
     }
 

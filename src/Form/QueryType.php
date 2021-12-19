@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class QueryType extends AbstractType
 {
-    public const ITEM_QUERY = 'ITEM_QUERY';
+    final public const ITEM_QUERY = 'ITEM_QUERY';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

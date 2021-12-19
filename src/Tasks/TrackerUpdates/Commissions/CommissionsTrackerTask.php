@@ -24,13 +24,13 @@ class CommissionsTrackerTask implements TrackerTaskInterface
     /**
      * @var Artisan[]
      */
-    private array $artisans;
+    private readonly array $artisans;
 
     public function __construct(
-        private ArtisanRepository $repository,
-        private LoggerInterface $logger,
-        private WebpageSnapshotManager $snapshots,
-        private CommissionsStatusParser $parser,
+        private readonly ArtisanRepository $repository,
+        private readonly LoggerInterface $logger,
+        private readonly WebpageSnapshotManager $snapshots,
+        private readonly CommissionsStatusParser $parser,
     ) {
         $this->artisans = Artisan::wrapAll($this->repository->findAll());
     }

@@ -30,13 +30,9 @@ class CommissionsStatusParserTest extends TestCase
      */
     public function testGetStatuses(string $testSetPath, WebpageSnapshot $snapshot, array $expectedResult): void
     {
-        $actual = array_map(function (OfferStatus $offerStatus): string {
-            return "{$offerStatus->getOffer()}: ".($offerStatus->getStatus() ? 'OPEN' : 'CLOSED');
-        }, self::$csp->getCommissionsStatuses($snapshot));
+        $actual = array_map(fn (OfferStatus $offerStatus): string => "{$offerStatus->getOffer()}: ".($offerStatus->getStatus() ? 'OPEN' : 'CLOSED'), self::$csp->getCommissionsStatuses($snapshot));
 
-        $expected = array_map(function (array $offerStatus): string {
-            return "$offerStatus[0]: ".($offerStatus[1] ? 'OPEN' : 'CLOSED');
-        }, $expectedResult);
+        $expected = array_map(fn (array $offerStatus): string => "$offerStatus[0]: ".($offerStatus[1] ? 'OPEN' : 'CLOSED'), $expectedResult);
 
         sort($actual);
         sort($expected);
