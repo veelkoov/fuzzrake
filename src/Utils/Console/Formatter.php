@@ -32,31 +32,36 @@ final class Formatter
 
     public static function invalid(string $item): string
     {
-        return '<'.self::INVALID.">$item</>";
+        return self::formatted(self::INVALID, $item);
     }
 
     public static function imported(string $item): string
     {
-        return '<'.self::IMPORTED.">$item</>";
+        return self::formatted(self::IMPORTED, $item);
     }
 
     public static function deleted(string $item): string
     {
-        return '<'.self::DELETED.">$item</>";
+        return self::formatted(self::DELETED, $item);
     }
 
     public static function added(string $item): string
     {
-        return '<'.self::ADDED.">$item</>";
+        return self::formatted(self::ADDED, $item);
     }
 
     public static function fix(string $item): string
     {
-        return '<'.self::FIX.">$item</>";
+        return self::formatted(self::FIX, $item);
     }
 
     public static function shy(string $item): string
     {
-        return '<'.self::SEP.">$item</>";
+        return self::formatted(self::SEP, $item);
+    }
+
+    private static function formatted(string $style, string $input): string
+    {
+        return '' === $input ? '' : '<'.$style.">$input</>";
     }
 }

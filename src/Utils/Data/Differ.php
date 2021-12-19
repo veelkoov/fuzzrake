@@ -63,33 +63,38 @@ class Differ
             $item = StrUtils::strSafeForCli($item);
         }
 
+        $q = Formatter::shy('"');
+        $n = Formatter::shy('\n');
+
         if ($impVal && $impVal !== $newVal) {
             $impVal = StrUtils::strSafeForCli($impVal);
-            $this->printer->writeln("IMP $fieldName: ".Formatter::imported($impVal));
+            $this->printer->writeln("IMP $fieldName $q".Formatter::imported($impVal).$q);
         }
 
         if ($oldVal) { // In case order changed or duplicates got removed, etc.
-            $this->printer->writeln("OLD $fieldName: ".implode(Formatter::shy('\n'), $oldValItems));
+            $this->printer->writeln("OLD $fieldName $q".implode($n, $oldValItems).$q);
         }
 
-        $this->printer->writeln("NEW $fieldName: ".implode(Formatter::shy('\n'), $newValItems));
+        $this->printer->writeln("NEW $fieldName $q".implode($n, $newValItems).$q);
     }
 
     private function showSingleValueDiff(Field $field, $oldVal, $newVal, $impVal = null): void
     {
+        $q = Formatter::shy('"');
+
         if ($impVal && $impVal !== $newVal && !$this->skipImpValue->has($field)) {
             $impVal = StrUtils::strSafeForCli($impVal);
-            $this->printer->writeln("IMP $field->name: ".Formatter::imported($impVal));
+            $this->printer->writeln("IMP $field->name $q".Formatter::imported($impVal).$q);
         }
 
         if ($oldVal) {
             $oldVal = StrUtils::strSafeForCli($oldVal);
-            $this->printer->writeln("OLD $field->name: ".Formatter::deleted($oldVal));
+            $this->printer->writeln("OLD $field->name $q".Formatter::deleted($oldVal).$q);
         }
 
         if ($newVal) {
             $newVal = StrUtils::strSafeForCli($newVal);
-            $this->printer->writeln("NEW $field->name: ".Formatter::added($newVal));
+            $this->printer->writeln("NEW $field->name $q".Formatter::added($newVal).$q);
         }
     }
 }
