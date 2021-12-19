@@ -27,7 +27,7 @@ final class NotificationsGenerator
             
             MESSAGE;
 
-        foreach (Fields::urls() as /* @var Field $url */ $url) {
+        foreach (Fields::urls() as $url) {
             if (($val = $data->get($url))) {
                 $message .= $url->name.': '.$val."\n";
             }

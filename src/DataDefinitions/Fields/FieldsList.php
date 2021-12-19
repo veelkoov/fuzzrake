@@ -29,6 +29,10 @@ class FieldsList implements IteratorAggregate
         return new FieldsList(array_filter($this->fields, $filter));
     }
 
+    /**
+     * @return Field[]
+     * @noinspection PhpDocSignatureInspection - Workaround for generics
+     */
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->fields);
