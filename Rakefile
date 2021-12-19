@@ -94,6 +94,7 @@ end
 task('fix-phpunit')  { fix_phpunit }
 task('docker-dev')   { Dir.chdir('docker') { run_shell('docker-compose', 'up', '--detach', '--build') } }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
+task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| phpunit(*args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
