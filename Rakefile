@@ -66,6 +66,7 @@ task(:default)  { run_shell('rake', '--tasks', '--all') }
 task(:console)  { |_t, args| run_console(*args) }
 task(:cc)       { clear_cache }
 task(:cl)       { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
+task('cc-prod') { run_shell('ssh', 'getfursu.it', 'sudo rm -rf /var/www/prod/var/cache/prod') }
 task(:composer) { |_t, args| run_composer(*args) }
 
 #
