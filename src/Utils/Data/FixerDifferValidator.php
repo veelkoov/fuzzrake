@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\FieldsList;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Console\Formatter;
 use App\Utils\StrUtils;
 use InvalidArgumentException;
 
@@ -68,7 +69,7 @@ class FixerDifferValidator
             $original = $imported ?? $artisan->getSubject();
             $originalVal = StrUtils::strSafeForCli(StrUtils::asStr($original->get($field)));
             if (!$this->validator->isValid($artisan, $field)) {
-                $originalVal = Printer::formatInvalid($originalVal);
+                $originalVal = Formatter::invalid($originalVal);
             }
 
             $proposedVal = StrUtils::strSafeForCli(StrUtils::asStr($artisan->getChanged()->get($field))) ?: 'NEW_VALUE';
@@ -79,7 +80,7 @@ class FixerDifferValidator
                 $fixCmd = Manager::CMD_REPLACE." $field->name |$originalVal| |$proposedVal|";
             }
 
-            $this->printer->writeln(Printer::formatFix("    $fixCmd"));
+            $this->printer->writeln(Formatter::fix("    $fixCmd"));
         }
     }
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\Utils\Console\Formatter;
 use App\Utils\StrUtils;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Printer
@@ -16,37 +16,7 @@ class Printer
     public function __construct(
         private readonly SymfonyStyle $io,
     ) {
-        $this->io->getFormatter()->setStyle('diff_added', new OutputFormatterStyle('green'));
-        $this->io->getFormatter()->setStyle('diff_deleted', new OutputFormatterStyle('red'));
-        $this->io->getFormatter()->setStyle('diff_imported', new OutputFormatterStyle('magenta'));
-
-        $this->io->getFormatter()->setStyle('invalid', new OutputFormatterStyle('red'));
-        $this->io->getFormatter()->setStyle('fix', new OutputFormatterStyle('blue'));
-    }
-
-    public static function formatImported(string $item): string
-    {
-        return "<diff_imported>$item</>";
-    }
-
-    public static function formatDeleted(string $item): string
-    {
-        return "<diff_deleted>$item</>";
-    }
-
-    public static function formatAdded(string $item): string
-    {
-        return "<diff_added>$item</>";
-    }
-
-    public static function formatInvalid(string $item): string
-    {
-        return "<invalid>$item</>";
-    }
-
-    public static function formatFix(string $item): string
-    {
-        return "<fix>$item</>";
+        Formatter::setup($io->getFormatter());
     }
 
     public function setCurrentContext(ArtisanChanges $artisan)
