@@ -6,9 +6,11 @@ namespace App\Utils\IuSubmissions;
 
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Json;
+use App\Utils\Notifications\SnsService;
 use Exception;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use App\Utils\IuSubmissions\NotificationsGenerator as Generator;
 
 class IuSubmissionService
 {
@@ -30,7 +32,7 @@ class IuSubmissionService
                 $this->local->removeLocalCopy($relativeFilePath);
             }
 
-            $this->sns->notifyAboutSubmission($submission, $s3SendingOk); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
+            $this->sns->send(Generator::getMessage($submission, $s3SendingOk)); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
 
             return true;
         } catch (Exception $exception) {
