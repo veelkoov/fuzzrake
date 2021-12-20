@@ -26,6 +26,7 @@ services:
             $lists:                           '%lists%'
             $notificationSnsTopicArn:         '%env(resolve:NOTIFICATIONS_TOPIC_ARN)%'
             $projectDir:                      '%kernel.project_dir%'
+            $noPayPlans:                      '%noPayPlans%'
             $speciesDefinitions:              '%species_definitions%'
             $states:                          '%states%'
             $strings:                         '%strings%'

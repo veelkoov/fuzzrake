@@ -1,0 +1,12 @@
+parameters:
+  noPayPlans:
+    commonRegexPrefix: '^'
+    commonRegexSuffix: '$'
+    replacements:
+      'None/100% up ?front':                'None'
+      '"None, 100% upfront"':               'None'
+      'None':                               'None'
+      'No payment plans/100% upfront':      'None'
+      '100% upfront every part':            'None'
+      '100% Up ?Front\.?':                  'None'
+      '1 complete payment':                 'None'
