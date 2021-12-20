@@ -60,7 +60,7 @@ final class FieldsData
         'DOES_NSFW'                 => ['        F doesNsfw',                null],
         'SAFE_DOES_NSFW'            => ['  D   P   safeDoesNsfw',            null],
         'WORKS_WITH_MINORS'         => ['        F worksWithMinors',         null],
-        'SAFE_WORKS_WITH_MINORS'    => ['  D S P   safeWorksWithMinors',     null],
+        'SAFE_WORKS_WITH_MINORS'    => ['  D   P   safeWorksWithMinors',     null],
         'URL_FURSUITREVIEW'         => ['    S P F fursuitReviewUrl',        V::FSR_URL],
         'URL_WEBSITE'               => ['    S P F websiteUrl',              V::GENERIC_URL],
         'URL_PRICES'                => ['L   S P F pricesUrls',              V::GENERIC_URL_LIST],
