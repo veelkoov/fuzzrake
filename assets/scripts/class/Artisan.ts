@@ -1,5 +1,3 @@
-import UnknownValue from "../filters/data/special/UnknownValue";
-
 export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_PERFECT = 100;
     public static readonly DATA_COMPLETE_LEVEL_GREAT = 90;
@@ -190,11 +188,11 @@ export default class Artisan {
 
     private getFilterPayPlans(): string {
         if ('' === this.paymentPlans) {
-            return UnknownValue.VALUE;
+            return '';
         } else if ('None' === this.paymentPlans) { // grep-payment-plans-none
-            return this.paymentPlans;
+            return 'Not supported';  // grep-payment-plans-none-label
         } else {
-            return 'Any'; // grep-payment-plans-any
+            return 'Supported'; // grep-payment-plans-any-label
         }
     }
 }

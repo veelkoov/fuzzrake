@@ -131,9 +131,9 @@ class FilterService
             if ('' === $paymentPlan) {
                 $unknown->incCount();
             } elseif ('None' === $paymentPlan) { // grep-payment-plans-none
-                $result->getItems()->addOrIncItem($paymentPlan);
+                $result->getItems()->addOrIncItem('Not supported'); // grep-payment-plans-none-label
             } else {
-                $result->getItems()->addOrIncItem('Any'); // grep-payment-plans-any
+                $result->getItems()->addOrIncItem('Supported'); // grep-payment-plans-any-label
             }
         }
 
