@@ -1,3 +1,5 @@
+import UnknownValue from "../filters/data/special/UnknownValue";
+
 export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_PERFECT = 100;
     public static readonly DATA_COMPLETE_LEVEL_GREAT = 90;
@@ -18,6 +20,7 @@ export default class Artisan {
     readonly completenessComment: string;
     readonly completenessGood: boolean;
     readonly openFor: Set<string>;
+    readonly filterPayPlans: string;
 
     private speciesDoesntFilters: Set<string>;
     private speciesDoesFilters: Set<string>;
@@ -119,6 +122,7 @@ export default class Artisan {
         this.openFor = new Set<string>(openFor);
         this.isStatusKnown = this.openFor.size + this.closedFor.length > 0;
         this.abSearchJson = this.getAbSearchJson();
+        this.filterPayPlans = this.getFilterPayPlans();
     }
 
     public getLastMakerId(): string {
@@ -153,7 +157,7 @@ export default class Artisan {
         return this.speciesDoesFilters;
     }
 
-    public getAbSearchJson(): string {
+    private getAbSearchJson(): string {
         let names = [this.name];
         names.push(...this.formerly);
 
@@ -181,6 +185,16 @@ export default class Artisan {
             return 'Some updates might be helpful...';
         } else {
             return 'Yikes! :( Updates needed!';
+        }
+    }
+
+    private getFilterPayPlans(): string {
+        if ('' === this.paymentPlans) {
+            return UnknownValue.VALUE;
+        } else if ('None' === this.paymentPlans) { // grep-payment-plans-none
+            return this.paymentPlans;
+        } else {
+            return 'Any'; // grep-payment-plans-any
         }
     }
 }

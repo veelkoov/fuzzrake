@@ -11,6 +11,7 @@
         {{ macros.ctrl_button('productionModels',  'Production models') }}
         {{ macros.ctrl_button('commissionsStatus', 'Open for') }}
         {{ macros.ctrl_button('species',           'Species') }}
+        {{ macros.ctrl_button('paymentPlans',      'Payment plans') }}
     </div>
 </div>
 
@@ -23,3 +24,4 @@
 {{ macros.body_multiselect('productionModels',  'helphints/production_models.html.twig',  filters.productionModels, 'productionModel') }}
 {{ macros.body_multiselect('commissionsStatus', 'helphints/commissions_status.html.twig', filters.commissionsStatuses, 'commissionStatus') }}
 {{ macros.body_other('species', 'helphints/species.html.twig', 'species.html.twig', filters) }}
+{{ macros.body_multiselect('paymentPlans',      'helphints/payment_plans.html.twig',      filters.paymentPlans, 'paymentPlan') }}

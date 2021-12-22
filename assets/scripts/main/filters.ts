@@ -55,6 +55,7 @@ export function applyFilters(): void {
 export function initFilters(): void {
     filters.push(new GenericFilterVis<string>('countries', new ValueUnFilter('country')));
     filters.push(new GenericFilterVis<string>('states', new ValueUnFilter('state')));
+    filters.push(new GenericFilterVis<string>('paymentPlans', new ValueUnFilter('filterPayPlans')));
     filters.push(new GenericFilterVis<string>('styles', new AnySetUnOtFilter('styles')));
     filters.push(new GenericFilterVis<string>('features', new AllSetUnOtFilter('features')));
     filters.push(new GenericFilterVis<string>('orderTypes', new AnySetUnOtFilter('orderTypes')));
