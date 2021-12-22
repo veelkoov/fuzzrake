@@ -159,18 +159,24 @@ end
 # RELEASES MANAGEMENT
 #
 
-def do_release(branch, environment)
-  run_shell('git', 'checkout', branch)
+task('release-beta') do
+  run_shell('git', 'branch', '-D', 'beta')
+  run_shell('git', 'checkout', '-b', 'beta')
+  run_shell('git', 'push', '--force', 'origin', 'beta')
+  run_shell('ansible/setup_envs.yaml', '--limit', 'beta_env')
+
+  print("Make sure to return to the previous branch\n") # FIXME: This stupid limitation
+end
+
+task('release-prod') do
+  run_shell('git', 'checkout', 'main')
   run_shell('git', 'merge', '--no-edit', 'develop')
   run_shell('git', 'push')
   run_shell('git', 'checkout', 'develop')
-  run_shell('git', 'merge', branch)
+  run_shell('git', 'merge', 'main')
   run_shell('git', 'push')
-  run_shell('ansible/setup_envs.yaml', '--limit', environment)
+  run_shell('ansible/setup_envs.yaml', '--limit', 'prod_env')
 end
-
-task('release-beta') { do_release('beta', 'beta_env') }
-task('release-prod') { do_release('main', 'prod_env') }
 
 task(:composer_upgrade) { run_docker('composer', '--no-cache', 'upgrade') } # No cache in the container
 task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
