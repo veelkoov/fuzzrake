@@ -18,6 +18,7 @@ export default class Artisan {
     readonly completenessComment: string;
     readonly completenessGood: boolean;
     readonly openFor: Set<string>;
+    readonly filterPayPlans: string;
 
     private speciesDoesntFilters: Set<string>;
     private speciesDoesFilters: Set<string>;
@@ -119,6 +120,7 @@ export default class Artisan {
         this.openFor = new Set<string>(openFor);
         this.isStatusKnown = this.openFor.size + this.closedFor.length > 0;
         this.abSearchJson = this.getAbSearchJson();
+        this.filterPayPlans = this.getFilterPayPlans();
     }
 
     public getLastMakerId(): string {
@@ -153,7 +155,7 @@ export default class Artisan {
         return this.speciesDoesFilters;
     }
 
-    public getAbSearchJson(): string {
+    private getAbSearchJson(): string {
         let names = [this.name];
         names.push(...this.formerly);
 
@@ -181,6 +183,16 @@ export default class Artisan {
             return 'Some updates might be helpful...';
         } else {
             return 'Yikes! :( Updates needed!';
+        }
+    }
+
+    private getFilterPayPlans(): string {
+        if ('' === this.paymentPlans) {
+            return '';
+        } else if ('None' === this.paymentPlans) { // grep-payment-plans-none
+            return 'Not supported';  // grep-payment-plans-none-label
+        } else {
+            return 'Supported'; // grep-payment-plans-any-label
         }
     }
 }

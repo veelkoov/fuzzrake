@@ -142,6 +142,21 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
+    /**
+     * @return string[]
+     */
+    public function getPaymentPlans(): array
+    {
+        return array_map(fn (array $row) => $row['paymentPlans'],
+            $this->createQueryBuilder('a')
+                ->select('a.paymentPlans AS paymentPlans')
+                ->where('a.inactiveReason = :empty')
+                ->setParameter('empty', '')
+                ->getQuery()
+                ->enableResultCache(3600)
+                ->getArrayResult());
+    }
+
     private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);

@@ -33,6 +33,7 @@ class FilterService
         return [
             'orderTypes'          => $this->artisanRepository->getDistinctOrderTypes(),
             'styles'              => $this->artisanRepository->getDistinctStyles(),
+            'paymentPlans'        => $this->getPaymentPlans(),
             'features'            => $this->artisanRepository->getDistinctFeatures(),
             'productionModels'    => $this->artisanRepository->getDistinctProductionModels(),
             'commissionsStatuses' => $this->getCommissionsStatuses(),
@@ -116,6 +117,24 @@ class FilterService
 
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
             $result->getItems()->addComplexItem($offer, $offer, $offer, (int) $openCount);
+        }
+
+        return $result;
+    }
+
+    private function getPaymentPlans(): FilterData
+    {
+        $unknown = SpecialItems::newUnknown();
+        $result = new FilterData($unknown);
+
+        foreach ($this->artisanRepository->getPaymentPlans() as $paymentPlan) {
+            if ('' === $paymentPlan) {
+                $unknown->incCount();
+            } elseif ('None' === $paymentPlan) { // grep-payment-plans-none
+                $result->getItems()->addOrIncItem('Not supported'); // grep-payment-plans-none-label
+            } else {
+                $result->getItems()->addOrIncItem('Supported'); // grep-payment-plans-any-label
+            }
         }
 
         return $result;

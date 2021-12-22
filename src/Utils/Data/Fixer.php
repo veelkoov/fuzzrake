@@ -14,6 +14,7 @@ use App\Utils\Data\Fixer\FreeListFixer;
 use App\Utils\Data\Fixer\IntroFixer;
 use App\Utils\Data\Fixer\LanguagesFixer;
 use App\Utils\Data\Fixer\NoopFixer;
+use App\Utils\Data\Fixer\PayPlanFixer;
 use App\Utils\Data\Fixer\SinceFixer;
 use App\Utils\Data\Fixer\SpeciesListFixer;
 use App\Utils\Data\Fixer\StateFixer;
@@ -35,6 +36,7 @@ class Fixer
         private readonly NoopFixer $noopFixer,
         private readonly IntroFixer $introFixer,
         private readonly StateFixer $stateFixer,
+        private readonly PayPlanFixer $payPlanFixer,
     ) {
     }
 
@@ -50,7 +52,7 @@ class Fixer
     private function getFixer(Field $field): FixerInterface
     {
         return match ($field) {
-            Field::NAME, Field::FORMERLY, Field::CITY, Field::PAYMENT_PLANS, Field::NOTES => $this->stringFixer,
+            Field::NAME, Field::FORMERLY, Field::CITY, Field::NOTES => $this->stringFixer,
 
             Field::SPECIES_DOES, Field::SPECIES_DOESNT => $this->speciesListFixer,
 
@@ -66,6 +68,7 @@ class Fixer
             Field::INTRO           => $this->introFixer,
             Field::LANGUAGES       => $this->languagesFixer,
             Field::CONTACT_ALLOWED => $this->contactAllowedFixer,
+            Field::PAYMENT_PLANS   => $this->payPlanFixer,
 
             default                => $this->noopFixer,
         };
