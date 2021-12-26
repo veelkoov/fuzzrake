@@ -24,6 +24,7 @@
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "^3.6",
         "symfony/runtime": "*",
+        "symfony/security-csrf": "5.4.*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
         "symfony/webpack-encore-bundle": "^1.11",
@@ -45,7 +46,12 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
     },
     "autoload": {
         "psr-4": {

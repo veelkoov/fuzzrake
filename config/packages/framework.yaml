@@ -1,15 +1,15 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
-    #csrf_protection: true
+    csrf_protection: true
     http_method_override: false
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: null
-        cookie_secure: auto
-        cookie_samesite: lax
+        cookie_secure: true # Auto doesn't seem to work in our config
+        cookie_samesite: strict
         storage_factory_id: session.storage.factory.native
 
     #esi: true
@@ -21,4 +21,10 @@ when@test:
     framework:
         test: true
         session:
+            cookie_secure: false
             storage_factory_id: session.storage.factory.mock_file
+
+when@dev:
+    framework:
+        session:
+            cookie_secure: false
