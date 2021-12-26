@@ -24,7 +24,7 @@
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "^3.6",
         "symfony/runtime": "*",
-        "symfony/security-csrf": "5.4.*",
+        "symfony/security-csrf": "*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
         "symfony/webpack-encore-bundle": "^1.11",
