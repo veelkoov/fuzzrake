@@ -18,11 +18,15 @@ class IuFormUiTest extends DbEnabledPantherTestCase
     public function testIForgotPasswordShowsHelp(): void
     {
         $client = static::createPantherClient();
+        $client->getCookieJar()->clear();
         self::setWindowSize($client, 1600, 900);
 
         self::persistAndFlush(self::getArtisan(makerId: 'MAKERID'));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
+        $client->waitForVisibility('button.g-recaptcha', 5);
+
+        $client->findElement(WebDriverBy::cssSelector('button.g-recaptcha'))->click();
         $client->waitForVisibility('#iu_form_changePassword', 5);
 
         $client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug
@@ -39,9 +43,13 @@ class IuFormUiTest extends DbEnabledPantherTestCase
     public function testContactMethodNotRequiredAndHiddenWhenContactNotAllowed(): void
     {
         $client = static::createPantherClient();
+        $client->getCookieJar()->clear();
         self::setWindowSize($client, 1600, 900);
 
         $client->request('GET', '/iu_form/fill');
+        $client->waitForVisibility('button.g-recaptcha', 5);
+
+        $client->findElement(WebDriverBy::cssSelector('button.g-recaptcha'))->click();
         $client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
 
         $client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug

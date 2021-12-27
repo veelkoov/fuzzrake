@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Controller\IuFormUtils\Steps;
 use App\DataDefinitions\ContactPermit;
 use App\Entity\Artisan as ArtisanE;
 use App\Form\IuForm;
 use App\Repository\ArtisanRepository;
+use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\Utils\Password;
 use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
+use Psr\Log\LoggerInterface;
+use ReCaptcha\ReCaptcha;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -25,30 +29,47 @@ use Symfony\Component\Routing\RouterInterface;
 
 class IuFormController extends AbstractRecaptchaBackedController
 {
+    public function __construct(
+        ReCaptcha $reCaptcha,
+        EnvironmentsService $environments,
+        LoggerInterface $logger,
+        private readonly IuSubmissionService $iuFormService,
+        private readonly RouterInterface $router,
+        private readonly ArtisanRepository $artisanRepository,
+    ) {
+        parent::__construct($reCaptcha, $environments, $logger);
+    }
+
     /**
      * @throws NotFoundHttpException
      */
     #[Route(path: '/iu_form/fill/{makerId}', name: RouteName::IU_FORM)]
     #[Cache(maxage: 0, public: false)]
-    public function iuForm(Request $request, ArtisanRepository $artisanRepository, IuSubmissionService $iuFormService, RouterInterface $router, ?string $makerId = null): Response
+    public function iuForm(Request $request, ?string $makerId = null): Response
     {
-        try {
-            $artisan = Artisan::wrap($makerId ? $artisanRepository->findByMakerId($makerId) : new ArtisanE());
-        } catch (UnexpectedResultException) {
-            throw $this->createNotFoundException('Failed to find a maker with given ID');
+        $artisan = $this->getArtisanByMakerIdOrThrow404($makerId);
+        $steps = new Steps($request->getSession());
+
+        if (!$steps->captchaDone() && null !== ($result = $this->stepCaptcha($request, $steps, $makerId))) {
+            return $result;
         }
 
+        return $this->stepDataForm($request, $steps, $makerId, $artisan);
+    }
+
+    private function stepDataForm(Request $request, Steps $steps, ?string $makerId, Artisan $artisan): Response
+    {
         $isNew = null === $artisan->getId();
         $previousPassword = $artisan->getPassword();
         $wasContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
 
         $artisan->setPassword(''); // Should never appear in the form
 
-        $form = $this->getIuForm($router, $artisan, $makerId);
+        $form = $this->getIuForm($artisan, $makerId);
         $form->handleRequest($request);
         $this->validatePhotosCopyright($form, $artisan);
 
-        if ($form->isSubmitted() && $form->isValid() && $this->isReCaptchaTokenOk($request, 'iu_form_submit')) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $artisan->setContactInfoOriginal($artisan->getContactInfoObfuscated());
             StrUtils::fixNewlines($artisan);
 
@@ -65,7 +86,9 @@ class IuFormController extends AbstractRecaptchaBackedController
 
             $isContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
 
-            if ($iuFormService->submit($artisan)) {
+            if ($this->iuFormService->submit($artisan)) {
+                $steps->reset();
+
                 return $this->redirectToRoute(RouteName::IU_FORM_CONFIRMATION, [
                     'isNew'          => $isNew ? 'yes' : 'no',
                     'passwordOk'     => $passwordOk ? 'yes' : 'no',
@@ -73,7 +96,7 @@ class IuFormController extends AbstractRecaptchaBackedController
                 ]);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form.'
-                .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
+                    .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
             }
         }
 
@@ -83,6 +106,21 @@ class IuFormController extends AbstractRecaptchaBackedController
             'submitted'        => $form->isSubmitted(),
             'disable_tracking' => true,
             'is_update'        => !$isNew,
+        ]);
+    }
+
+    private function stepCaptcha(Request $request, Steps $steps, ?string $makerId): ?Response
+    {
+        if ($request->isMethod('POST') && $this->isReCaptchaTokenOk($request, 'iu_form_captcha')) {
+            $steps->markCaptchaDone();
+
+            return null;
+        }
+
+        // TODO: Warn about failed captcha, provide suggestions
+
+        return $this->render('iu_form/captcha_and_rules.html.twig', [
+            'next_step_url' => $this->generateUrl(RouteName::IU_FORM, ['makerId' => $makerId]),
         ]);
     }
 
@@ -105,11 +143,11 @@ class IuFormController extends AbstractRecaptchaBackedController
         return $this->redirectToRoute(RouteName::IU_FORM, ['makerId' => $makerId]);
     }
 
-    private function getIuForm(RouterInterface $router, Artisan $artisan, ?string $makerId): FormInterface
+    private function getIuForm(Artisan $artisan, ?string $makerId): FormInterface
     {
         return $this->createForm(IuForm::class, $artisan, [
             IuForm::PHOTOS_COPYRIGHT_OK => '' !== $makerId && '' !== $artisan->getPhotoUrls(),
-            IuForm::OPT_ROUTER          => $router,
+            IuForm::OPT_ROUTER          => $this->router,
         ]);
     }
 
@@ -119,6 +157,15 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         if ('' !== $artisan->getPhotoUrls() && 'OK' !== ($field->getData()[0] ?? null)) {
             $field->addError(new FormError('Permission to use the photos is required'));
+        }
+    }
+
+    private function getArtisanByMakerIdOrThrow404(?string $makerId): Artisan
+    {
+        try {
+            return Artisan::wrap($makerId ? $this->artisanRepository->findByMakerId($makerId) : new ArtisanE());
+        } catch (UnexpectedResultException) {
+            throw $this->createNotFoundException('Failed to find a maker with given ID');
         }
     }
 }

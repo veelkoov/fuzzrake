@@ -6,9 +6,12 @@ namespace App\Tests\Controller;
 
 use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\IuFormTrait;
 
 class IuFormControllerTest extends DbEnabledWebTestCase
 {
+    use IuFormTrait;
+
     public function testIuFormLoadsForExistingMakers(): void
     {
         $client = static::createClient();
@@ -27,6 +30,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/fill');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form();
         $client->submit($form);
 
@@ -38,6 +43,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/fill');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'CORRECTIONS',
         ]);
@@ -59,6 +66,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/fill');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
@@ -88,6 +97,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/iu_form/fill');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'            => 'test-maker-555',
             'iu_form[country]'         => 'Finland',
@@ -118,6 +129,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
         $form->get('iu_form[password]')->setValue('password-555');
@@ -142,6 +155,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
         $form->get('iu_form[password]')->setValue('password-554');
@@ -167,6 +182,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
         $form->get('iu_form[password]')->setValue('password-554');
@@ -193,6 +210,8 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         ));
 
         $client->request('GET', '/iu_form/fill/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
         $form = $client->getCrawler()->selectButton('Submit')->form();
 
         $form->get('iu_form[password]')->setValue('password-554');

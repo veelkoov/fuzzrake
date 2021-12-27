@@ -6,6 +6,7 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
+use App\Tests\TestUtils\IuFormTrait;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
@@ -24,6 +25,8 @@ use TRegx\CleanRegex\Match\Details\Detail;
 
 class ExtendedTest extends AbstractTest
 {
+    use IuFormTrait;
+
     private const VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
         Field::CONTACT_INFO_ORIGINAL,
         Field::CONTACT_ADDRESS_PLAIN,
@@ -178,8 +181,7 @@ class ExtendedTest extends AbstractTest
     private static function validateIuFormOldDataSubmitNew(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
     {
         $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
-
-        self::assertResponseStatusCodeSame(200);
+        self::skipRulesAndCaptcha($client);
 
         self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent());
 
@@ -229,7 +231,7 @@ class ExtendedTest extends AbstractTest
             self::assertContactValueFieldIsPresentWithValue($value, $field, $htmlBody);
         } else {
             self::assertNotNull($value, "Field $field->name should not be expected to be null");
-            self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
+            self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
         }
     }
 

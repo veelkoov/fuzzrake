@@ -1,23 +1,6 @@
-import DataBridge from "../class/DataBridge";
-import SuccessTextStatus = JQuery.Ajax.SuccessTextStatus;
-import jqXHR = JQuery.jqXHR;
-import ErrorTextStatus = JQuery.Ajax.ErrorTextStatus;
 import {NO_CONTACT_ALLOWED} from "../consts";
 
 require('../../styles/iu_form.less');
-
-grecaptcha.ready((): void => {
-    grecaptcha.execute(DataBridge.getGoogleRecaptchaSiteKey(), { action: 'iu_form_verify' }).then((token: string): void => {
-        jQuery.ajax(DataBridge.getApiUrl('iu_form/verify?token=' + token), {
-            success: (data: any, status: SuccessTextStatus, _: jqXHR): void => {
-                jQuery('#iu_form_container').show().removeClass('d-none');
-            },
-            error: (jqXHR1: jqXHR, textStatus: ErrorTextStatus, errorThrown: string): void => {
-                alert('ERROR! Automatic captcha failed: ' + errorThrown);
-            }
-        });
-    });
-});
 
 jQuery((_$: JQueryStatic) => {
     // @ts-ignore
