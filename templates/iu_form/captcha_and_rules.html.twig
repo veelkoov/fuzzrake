@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block body %}
-    <!-- TODO: Put rules here -->
+    {% include 'shared_parts/rules.html.twig' %}
 
     <form action="{{ next_step_url }}" method="post">
         <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
