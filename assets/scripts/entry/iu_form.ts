@@ -1,4 +1,6 @@
 import {NO_CONTACT_ALLOWED} from "../consts";
+import {Radio} from "../class/Radio";
+import {toggle} from "../jQueryUtils";
 
 require('../../styles/iu_form.less');
 
@@ -21,7 +23,7 @@ function set_day() {
     day.val(month.val() && year.val() ? '1' : ''); // grep-default-auto-since-day-01
 }
 
-function display_password_change_hint_if_checked_forgot() {
+function display_password_change_hint_if_checked_forgot(): void {
     jQuery('#iu_form_changePassword').on('change', (evt) => {
         jQuery('#forgotten_password_instructions')
             .removeClass('d-none')
@@ -29,13 +31,20 @@ function display_password_change_hint_if_checked_forgot() {
     }).trigger('change');
 }
 
-function hide_contact_form_part_if_no_contact_allowed() {
-    jQuery('input[type=radio][name="iu_form[contactAllowed]"]').on('change', (evt) => {
-        let is_contact_allowed = NO_CONTACT_ALLOWED !== jQuery(evt.target).val();
+function hide_contact_form_part_if_no_contact_allowed(): void {
+    const $contactInfoContainer = jQuery('#contact_info');
+    const $contactInfoObfuscatedField = jQuery('#iu_form_contactInfoObfuscated');
 
-        jQuery('#contact_info').toggle(is_contact_allowed);
-        jQuery('#iu_form_contactInfoObfuscated').prop('required', is_contact_allowed);
-    });
+    const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
+
+    function refresh(): void {
+        let requireContactInfo = contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED);
+
+        $contactInfoObfuscatedField.prop('required', requireContactInfo);
+        toggle($contactInfoContainer, requireContactInfo);
+    }
+
+    refresh();
 }
 
 let day = jQuery('#iu_form_since_day').hide();
