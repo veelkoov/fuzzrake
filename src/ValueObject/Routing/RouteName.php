@@ -19,7 +19,9 @@ final class RouteName
     final public const EVENTS_ATOM = 'events_atom';
     final public const HEALTH = 'health';
     final public const INFO = 'info';
-    final public const IU_FORM = 'iu_form';
+    final public const IU_FORM_START = 'route_iu_form_step_start';
+    final public const IU_FORM_DATA = 'route_iu_form_step_data';
+    final public const IU_FORM_CONTACT_AND_PASSWORD = 'route_iu_form_step_contact_and_password';
     final public const IU_FORM_CONFIRMATION = 'iu_form_confirmation';
     final public const MAIN = 'main';
     final public const MAKER_IDS = 'maker_ids';

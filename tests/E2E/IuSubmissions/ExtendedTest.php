@@ -76,6 +76,12 @@ class ExtendedTest extends AbstractTest
         Field::WORKS_WITH_MINORS,
     ];
 
+    private const SECOND_PAGE = [ // These fields are on the "contact + password" page (the second one)
+        Field::PASSWORD,
+        Field::CONTACT_ALLOWED,
+        Field::CONTACT_INFO_OBFUSCATED,
+    ];
+
     /**
      * Purpose of this test is to make sure:
      * - all fields, which should be updatable by I/U form, are available and get updated after,
@@ -183,25 +189,33 @@ class ExtendedTest extends AbstractTest
         $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
         self::skipRulesAndCaptcha($client);
 
-        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent());
+        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), false);
 
         $form = $client->getCrawler()->selectButton('Submit')->form();
-        self::setValuesInForm($form, $newData);
-        $client->submit($form);
+        self::setValuesInForm($form, $newData, false);
+        self::submitValid($client, $form);
 
-        self::assertResponseStatusCodeSame(302);
-        $client->followRedirect();
+        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), true);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form();
+        self::setValuesInForm($form, $newData, true);
+        self::submitValid($client, $form);
+
         self::assertSelectorTextContains('h4', 'Your submission has been recorded');
     }
 
     private static function getIuFormUrlForMakerId(string $urlMakerId): string
     {
-        return '/iu_form/fill'.($urlMakerId ? '/'.$urlMakerId : '');
+        return '/iu_form/start'.($urlMakerId ? '/'.$urlMakerId : '');
     }
 
-    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody): void
+    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody, bool $secondPage): void
     {
         foreach (Fields::all() as $field) {
+            if (in_array($field, self::SECOND_PAGE) !== $secondPage) {
+                continue;
+            }
+
             if (in_array($field, self::NOT_IN_FORM)) {
                 self::assertFieldIsNotPresentInForm($field, $htmlBody);
                 self::assertFalse($field->isInIuForm());
@@ -344,9 +358,13 @@ class ExtendedTest extends AbstractTest
         }
     }
 
-    private static function setValuesInForm(Form $form, Artisan $data): void
+    private static function setValuesInForm(Form $form, Artisan $data, bool $secondPage): void
     {
         foreach (Fields::all() as $field) {
+            if (in_array($field, self::SECOND_PAGE) !== $secondPage) {
+                continue;
+            }
+
             if (in_array($field, self::NOT_IN_FORM)) {
                 continue;
             }
@@ -367,9 +385,11 @@ class ExtendedTest extends AbstractTest
             }
         }
 
-        $field = $form['iu_form[photosCopyright]'][0];
-        /* @var ChoiceFormField $field */
-        $field->tick();
+        if (false === $secondPage) {
+            $field = $form['iu_form[photosCopyright]'][0];
+            /* @var ChoiceFormField $field */
+            $field->tick();
+        }
     }
 
     /**

@@ -6,6 +6,7 @@ namespace App\Tests\TestUtils;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Form;
 
 abstract class DbEnabledWebTestCase extends WebTestCase
 {
@@ -28,5 +29,30 @@ abstract class DbEnabledWebTestCase extends WebTestCase
         $actualHtml = trim($pattern->replace($actualHtml)->all()->with(' '));
 
         self::assertEquals($expectedHtml, $actualHtml);
+    }
+
+    protected static function submitValid(KernelBrowser $client, Form $form): void
+    {
+        $crawler = $client->submit($form);
+
+        if ($client->getResponse()->isRedirect()) {
+            $client->followRedirect();
+
+            return;
+        }
+
+        $fields = [];
+        foreach ($crawler->filter('input.is-invalid') as $field) {
+            $fields[] = $field->getAttribute('name');
+        }
+
+        self::fail('Form validation failed for: '.implode(', ', array_unique($fields)));
+    }
+
+    protected static function submitInvalid(KernelBrowser $client, Form $form): void
+    {
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
     }
 }

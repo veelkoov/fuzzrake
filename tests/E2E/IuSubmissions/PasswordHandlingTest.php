@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\IuFormTrait;
+use App\Utils\Artisan\SmartAccessDecorator;
 use App\Utils\DataInputException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -21,26 +22,22 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $client->request('GET', '/iu_form/fill');
+        $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
+        self::skipData($client, true);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'            => 'Maker',
-            'iu_form[country]'         => 'FI',
-            'iu_form[ages]'            => 'ADULTS',
-            'iu_form[worksWithMinors]' => 'NO',
-            'iu_form[makerId]'         => 'MAKERID',
             'iu_form[contactAllowed]'  => 'NO',
             'iu_form[password]'        => 'some-password',
         ]);
-        $this->submitValid($client, $form);
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
         self::performImport(true);
         self::flushAndClear();
 
-        $artisan = self::findArtisanByMakerId('MAKERID');
+        $artisan = self::findArtisanByMakerId('TESTMID');
         self::assertTrue(password_verify('some-password', $artisan->getPassword())); // Fails on plaintext
     }
 
@@ -56,14 +53,18 @@ class PasswordHandlingTest extends AbstractTest
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
+        $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
+        ]);
+        $this::submitValid($client, $form);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]' => 'known-password',
         ]);
-        $this->submitValid($client, $form);
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
@@ -87,14 +88,18 @@ class PasswordHandlingTest extends AbstractTest
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
+        $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
+        ]);
+        $this::submitValid($client, $form);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]' => 'new-password',
         ]);
-        $this->submitValid($client, $form);
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
@@ -119,14 +124,18 @@ class PasswordHandlingTest extends AbstractTest
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
+        $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[name]'     => 'New name',
+        ]);
+        $this::submitValid($client, $form);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]' => 'new-password',
         ]);
-        $this->submitValid($client, $form);
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
@@ -136,23 +145,5 @@ class PasswordHandlingTest extends AbstractTest
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertEquals($oldHash, $artisan->getPassword(), 'The password was actually changed');
         self::assertEquals('Old name', $artisan->getName(), 'The update actually happened');
-    }
-
-    private function submitValid(KernelBrowser $client, Form $form): void
-    {
-        $crawler = $client->submit($form);
-
-        if ($client->getResponse()->isRedirect()) {
-            $client->followRedirect();
-
-            return;
-        }
-
-        $fields = [];
-        foreach ($crawler->filter('input.is-invalid') as $field) {
-            $fields[] = $field->getAttribute('name');
-        }
-
-        self::fail('Form validation failed for: '.implode(', ', array_unique($fields)));
     }
 }

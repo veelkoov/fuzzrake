@@ -21,16 +21,19 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $client->getCookieJar()->clear();
         self::setWindowSize($client, 1600, 900);
 
-        self::persistAndFlush(self::getArtisan(makerId: 'MAKERID'));
+        self::persistAndFlush(self::getArtisan(makerId: 'MAKERID', ages: 'ADULTS', worksWithMinors: true));
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
+        $client->request('GET', '/iu_form/start/MAKERID');
         $client->waitForVisibility('button.g-recaptcha', 5);
 
         $client->findElement(WebDriverBy::cssSelector('button.g-recaptcha'))->click();
-        $client->waitForVisibility('#iu_form_changePassword', 5);
+        $client->waitForVisibility('#iu_form_name', 5);
 
         $client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug
-        usleep(100000); // grep-ugly-tests-workarounds Workaround for element not visible bug
+        $this->screenshot($client); // grep-ugly-tests-workarounds Workaround for element not visible bug
+
+        $client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
+        $client->waitForVisibility('#iu_form_changePassword', 5);
 
         self::assertSelectorIsNotVisible('#forgotten_password_instructions');
         $client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
@@ -46,18 +49,25 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $client->getCookieJar()->clear();
         self::setWindowSize($client, 1600, 900);
 
-        $client->request('GET', '/iu_form/fill');
+        self::persistAndFlush(self::getArtisan(makerId: 'MAKERID', ages: 'ADULTS', worksWithMinors: true));
+
+        $client->request('GET', '/iu_form/start/MAKERID');
         $client->waitForVisibility('button.g-recaptcha', 5);
 
         $client->findElement(WebDriverBy::cssSelector('button.g-recaptcha'))->click();
-        $client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
+        $client->waitForVisibility('#iu_form_name', 5);
+        $this->screenshot($client);
 
         $client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug
-        usleep(100000); // grep-ugly-tests-workarounds Workaround for element not visible bug
+        $this->screenshot($client); // grep-ugly-tests-workarounds Workaround for element not visible bug
+
+        $client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
+        $client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
+        $this->screenshot($client);
 
         self::assertSelectorIsVisible('#iu_form_contactInfoObfuscated');
         self::assertSelectorExists('#iu_form_contactInfoObfuscated[required]');
@@ -65,6 +75,7 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
+        $this->screenshot($client);
 
         self::assertSelectorIsNotVisible('#iu_form_contactInfoObfuscated');
         self::assertSelectorExists('#iu_form_contactInfoObfuscated:not([required])');

@@ -2,22 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\InclusionUpdate;
 
 use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Features;
+use App\DataDefinitions\Fields\Validation;
 use App\DataDefinitions\OrderTypes;
 use App\DataDefinitions\ProductionModels;
 use App\DataDefinitions\Styles;
+use App\Form\BooleanTransformer;
+use App\Form\SinceTransformer;
+use App\Form\StringArrayTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use InvalidArgumentException;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -26,11 +27,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class IuForm extends AbstractType
+class Data extends AbstractType
 {
     final public const OPT_ROUTER = 'router';
     final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    final public const FLD_CHANGE_PASSWORD = 'changePassword';
     final public const PHOTOS_COPYRIGHT_OK = 'PHOTOS_COPYRIGHT_OK';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -379,39 +379,6 @@ class IuForm extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('password', PasswordType::class, [
-                'label'      => 'Updates password',
-                'help'       => 'Please choose some kind of password, which will be later used to make sure it was you, who\'s posting updates. Use at least 8 characters (the more, the merrier). <strong>Please do not use any password you use anywhere else.</strong> <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
-                'help_html'  => true,
-                'required'   => true,
-                'empty_data' => '',
-                'attr'       => [
-                    'autocomplete' => 'section-iuform current-password',
-                ],
-            ])
-            ->add(self::FLD_CHANGE_PASSWORD, CheckboxType::class, [
-                'label'     => 'I want to change my password / I forgot my password',
-                'required'  => false,
-                'mapped'    => false,
-            ])
-            ->add('contactAllowed', ChoiceType::class, [
-                'label'      => 'Contact allowed?',
-                'help'       => 'Explanation of choices in the table above.',
-                'required'   => true,
-                'choices'    => ContactPermit::getValueKeyMap(),
-                'empty_data' => ContactPermit::NO,
-                'expanded'   => true,
-            ])
-            ->add('contactInfoObfuscated', TextType::class, [
-                'label'     => 'How can I contact you',
-                'help'      => 'Please provide your e-mail address. No other possibilities, sorry! If you are updating your data and you see asterisks here, but the e-mail address looks OK, and you don\'t want to change it - just leave it as it is. <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.',
-                'help_html' => true,
-                'attr'      => [
-                    'placeholder' => 'E-MAIL: e-mail@address',
-                ],
-                'required'   => true,
-                'empty_data' => '',
-            ])
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
@@ -428,15 +395,17 @@ class IuForm extends AbstractType
         $resolver->addAllowedTypes(self::PHOTOS_COPYRIGHT_OK, 'boolean');
 
         $resolver->setDefaults([
-            'data_class'        => Artisan::class,
-            'validation_groups' => ['Default', 'iu_form'],
-            'error_mapping'     => [
-                'privateData.password' => 'password',
-            ],
+            'data_class'              => Artisan::class,
+            'validation_groups'       => ['Default', Validation::GRP_DATA],
             self::PHOTOS_COPYRIGHT_OK => false,
         ]);
 
         $resolver->define(self::OPT_ROUTER)->required()->allowedTypes(RouterInterface::class);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'iu_form';
     }
 
     /**

@@ -147,6 +147,15 @@
     "php-webdriver/webdriver": {
         "version": "1.12.0"
     },
+    "phpdocumentor/reflection-common": {
+        "version": "2.2.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "5.3.0"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.5.1"
+    },
     "phpoffice/phpspreadsheet": {
         "version": "1.20.0"
     },
@@ -531,5 +540,8 @@
     },
     "twig/twig": {
         "version": "v3.3.4"
+    },
+    "webmozart/assert": {
+        "version": "1.10.0"
     }
 }
