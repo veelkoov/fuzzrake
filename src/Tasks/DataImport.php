@@ -137,7 +137,7 @@ class DataImport
                     }
                     break;
 
-                case Field::CONTACT_INFO_OBFUSCATED:
+                case Field::CONTACT_INFO_OBFUSCATED: // grep-contact-updates-magic
                     $newValue = $source->get(Field::CONTACT_INFO_ORIGINAL);
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {

@@ -121,7 +121,7 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         if ($form->isSubmitted() && $form->isValid()) {
             StrUtils::fixNewlines($state->artisan);
-            $state->artisan->setContactInfoOriginal($state->artisan->getContactInfoObfuscated()); // TODO: Check how this is handled during import
+            $state->artisan->setContactInfoOriginal($state->artisan->getContactInfoObfuscated()); // grep-contact-updates-magic
 
             $submittedPasswordOk = $this->handlePassword($state);
 
