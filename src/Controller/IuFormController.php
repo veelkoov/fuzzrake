@@ -59,10 +59,9 @@ class IuFormController extends AbstractRecaptchaBackedController
             return $this->redirectToRoute(RouteName::IU_FORM_DATA, ['makerId' => $state->makerId]);
         }
 
-        // TODO: Warn about failed captcha, provide suggestions
-
         return $this->render('iu_form/captcha_and_rules.html.twig', [
-            'next_step_url' => $this->generateUrl(RouteName::IU_FORM_START, ['makerId' => $state->makerId]),
+            'next_step_url'     => $this->generateUrl(RouteName::IU_FORM_START, ['makerId' => $state->makerId]),
+            'big_error_message' => $request->isMethod('POST') ? 'Automatic captcha failed. Please try again. If it fails once more, try different browser, different device or different network.' : '',
         ]);
     }
 
