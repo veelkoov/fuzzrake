@@ -48,10 +48,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     #[Cache(maxage: 0, public: false)]
     public function iuFormStart(Request $request, ?string $makerId = null): Response
     {
-        $artisan = $this->getArtisanByMakerIdOrThrow404($makerId);
-        $state = new IuState($request->getSession(), $makerId, $artisan);
-        $state->restore(); // TODO: Report any errors in $result
-        $artisan->setPassword(''); // Should never appear in the form
+        $state = $this->prepareState($makerId, $request);
 
         if ($request->isMethod('POST') && $this->isReCaptchaTokenOk($request, 'iu_form_captcha')) {
             $state->markCaptchaDone();
@@ -72,10 +69,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     #[Cache(maxage: 0, public: false)]
     public function iuFormData(Request $request, ?string $makerId = null): Response
     {
-        $artisan = $this->getArtisanByMakerIdOrThrow404($makerId);
-        $state = new IuState($request->getSession(), $makerId, $artisan);
-        $state->restore(); // TODO: Report any errors in $result
-        $artisan->setPassword(''); // Should never appear in the form
+        $state = $this->prepareState($makerId, $request);
 
         $form = $this->createForm(Data::class, $state->artisan, [
             Data::PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
@@ -83,6 +77,7 @@ class IuFormController extends AbstractRecaptchaBackedController
         ]);
 
         $form->handleRequest($request);
+        $this->indicateAnyRestoreErrors($state, $form);
         $this->validatePhotosCopyright($form, $state->artisan);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -109,14 +104,12 @@ class IuFormController extends AbstractRecaptchaBackedController
     #[Cache(maxage: 0, public: false)]
     public function iuFormContactAndPassword(Request $request, ?string $makerId = null): Response
     {
-        $artisan = $this->getArtisanByMakerIdOrThrow404($makerId);
-        $state = new IuState($request->getSession(), $makerId, $artisan);
-        $state->restore(); // TODO: Report any errors in $result
-        $artisan->setPassword(''); // Should never appear in the form
+        $state = $this->prepareState($makerId, $request);
 
         $form = $this->createForm(ContactAndPassword::class, $state->artisan);
 
         $form->handleRequest($request);
+        $this->indicateAnyRestoreErrors($state, $form);
 
         if ($form->isSubmitted() && $form->isValid()) {
             StrUtils::fixNewlines($state->artisan);
@@ -135,8 +128,7 @@ class IuFormController extends AbstractRecaptchaBackedController
                     'contactAllowed' => $isContactAllowed ? ($state->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
                 ]);
             } else {
-                $form->addError(new FormError('There was an error while trying to submit the form.'
-                    .' Please contact the website maintainer. I am terribly sorry for this inconvenience!'));
+                $form->addError(new FormError('There was an error while trying to submit the form. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
             }
         }
 
@@ -200,6 +192,22 @@ class IuFormController extends AbstractRecaptchaBackedController
         } else {
             Password::encryptOn($data->artisan); // Will become new password if confirmed with maintainer
             return false;
+        }
+    }
+
+    private function prepareState(?string $makerId, Request $request): IuState
+    {
+        $state = new IuState($this->logger, $request->getSession(), $makerId, $this->getArtisanByMakerIdOrThrow404($makerId));
+
+        $state->artisan->setPassword(''); // Must never appear in the form
+
+        return $state;
+    }
+
+    private function indicateAnyRestoreErrors(IuState $state, FormInterface $form): void
+    {
+        if ($state->hasRestoreErrors()) {
+            $form->addError(new FormError('There were some issues while handling the information you entered. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
         }
     }
 }

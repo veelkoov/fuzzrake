@@ -26,6 +26,7 @@
         "symfony/runtime": "*",
         "symfony/security-csrf": "*",
         "symfony/twig-bundle": "*",
+        "symfony/uid": "5.4.*",
         "symfony/validator": "*",
         "symfony/webpack-encore-bundle": "^1.11",
         "symfony/yaml": "*"

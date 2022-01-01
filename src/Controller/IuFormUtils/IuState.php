@@ -7,10 +7,9 @@ namespace App\Controller\IuFormUtils;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\SafeArrayRead;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use TypeError;
 
 class IuState
 {
@@ -21,8 +20,10 @@ class IuState
     public readonly bool $wasContactAllowed;
 
     private readonly IuSession $session;
+    private bool $hasRestoreErrors = false;
 
     public function __construct(
+        private readonly LoggerInterface $logger,
         SessionInterface $session,
         public readonly ?string $makerId,
         public readonly Artisan $artisan,
@@ -30,6 +31,8 @@ class IuState
         $this->session = new IuSession($session);
         $this->previousPassword = $artisan->getPassword();
         $this->wasContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
+
+        $this->restoreState();
     }
 
     public function isNew(): bool
@@ -67,14 +70,34 @@ class IuState
         $this->session->save($this->artisan->getAllData());
     }
 
-    public function restore(): ?SafeArrayRead
+    public function hasRestoreErrors(): bool
+    {
+        return $this->hasRestoreErrors;
+    }
+
+    private function restoreState(): void
     {
         $saved = $this->session->getSaved();
 
         if (null === $saved) {
-            return null;
+            $this->logger->info('No data to restore.', $this->getLogContext());
+            return;
         }
 
-        return SafeArrayRead::copy($saved, $this->artisan, Fields::inIuForm());
+        $result = new SafeArrayRead($saved, $this->artisan, Fields::inIuForm());
+
+        if ([] !== $result->getErrors()) {
+            $this->hasRestoreErrors = true;
+            $this->logger->info('Tried to restore data in given context.', $this->getLogContext(['savedData' => $this->session->getSaved()]));
+        }
+
+        foreach ($result->getErrors() as $error) {
+            $this->logger->error("Restore error: $error", $this->getLogContext());
+        }
+    }
+
+    private function getLogContext(array $additionalContext = []): array
+    {
+        return array_merge(['iu_session' => $this->session->getId()], $additionalContext);
     }
 }

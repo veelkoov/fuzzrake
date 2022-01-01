@@ -15,7 +15,7 @@ class AbstractRecaptchaBackedController extends AbstractController
     public function __construct(
         private readonly ReCaptcha $reCaptcha,
         private readonly EnvironmentsService $environments,
-        private readonly LoggerInterface $logger,
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
