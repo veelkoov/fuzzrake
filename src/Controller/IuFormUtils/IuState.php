@@ -75,6 +75,6 @@ class IuState
             return null;
         }
 
-        return SafeArrayRead::copy($saved, $this->artisan);
+        return SafeArrayRead::copy($saved, $this->artisan, Fields::inIuForm());
     }
 }

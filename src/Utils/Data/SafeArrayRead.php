@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\FieldsList;
 use App\Utils\Artisan\SmartAccessDecorator;
 use App\Utils\StringList;
 use TypeError;
@@ -30,9 +30,10 @@ class SafeArrayRead
         $this->errors[] = $message;
     }
 
-    public static function copy(mixed $source, SmartAccessDecorator $target): self
+    public static function copy(mixed $source, SmartAccessDecorator $target, FieldsList $fields): self
     {
         $result = new self();
+        $notCopiedYet = $fields->asArray();
 
         if (!is_array($source)) {
             $result->addError('Input data is not an array.');
@@ -46,7 +47,7 @@ class SafeArrayRead
                 continue;
             }
 
-            if (!$field->isInIuForm()) { // TODO: Somehow make czpcz
+            if (!$fields->has($field)) {
                 continue;
             }
 
@@ -62,13 +63,17 @@ class SafeArrayRead
                 $value = StringList::pack($value);
             }
 
+            unset($notCopiedYet[$fieldName]);
+
             try {
                 $target->set($field, $value);
             } catch (TypeError) {
                 $result->addError("Field '$fieldName' contained a value of unexpected type.");
             }
+        }
 
-            // TODO: Should report missing?
+        if ([] !== $notCopiedYet) {
+            $result->addError('The following fields were not provided with a value: '.implode(', ', array_map(fn ($field) => "'$field->value'", $notCopiedYet)));
         }
 
         return $result;
