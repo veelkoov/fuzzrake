@@ -64,6 +64,7 @@ class SafeArrayRead
 
         if (null === $field) {
             $this->addError("Unknown field: '$fieldName'.");
+
             return;
         }
 

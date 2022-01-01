@@ -81,6 +81,7 @@ class IuState
 
         if (null === $saved) {
             $this->logger->info('No data to restore.', $this->getLogContext());
+
             return;
         }
 

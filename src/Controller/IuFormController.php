@@ -70,6 +70,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuFormData(Request $request, ?string $makerId = null): Response
     {
         $state = $this->prepareState($makerId, $request);
+        // TODO: step back if previous step not finished
 
         $form = $this->createForm(Data::class, $state->artisan, [
             Data::PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
@@ -105,6 +106,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuFormContactAndPassword(Request $request, ?string $makerId = null): Response
     {
         $state = $this->prepareState($makerId, $request);
+        // TODO: step back if previous step not finished
 
         $form = $this->createForm(ContactAndPassword::class, $state->artisan);
 
@@ -185,12 +187,15 @@ class IuFormController extends AbstractRecaptchaBackedController
     {
         if ($data->isNew()) {
             Password::encryptOn($data->artisan);
+
             return true;
         } elseif (password_verify($data->artisan->getPassword(), $data->previousPassword)) {
             $data->artisan->setPassword($data->previousPassword); // Was already hashed; use old hash - must not appear changed
+
             return true;
         } else {
             Password::encryptOn($data->artisan); // Will become new password if confirmed with maintainer
+
             return false;
         }
     }

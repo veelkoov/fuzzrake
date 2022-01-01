@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\IuFormTrait;
-use App\Utils\Artisan\SmartAccessDecorator;
 use App\Utils\DataInputException;
 use JsonException;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\DomCrawler\Form;
 
 class PasswordHandlingTest extends AbstractTest
 {
