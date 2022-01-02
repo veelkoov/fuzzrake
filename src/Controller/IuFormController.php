@@ -90,7 +90,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             return $this->redirectToRoute(RouteName::IU_FORM_CONTACT_AND_PASSWORD, ['makerId' => $state->makerId]);
         }
 
-        return $this->renderForm('iu_form/iu_form.html.twig', [
+        return $this->renderForm('iu_form/data.html.twig', [
             'form'             => $form,
             'noindex'          => true,
             'submitted'        => $form->isSubmitted(),
