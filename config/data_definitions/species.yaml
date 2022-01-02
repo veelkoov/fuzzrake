@@ -10,6 +10,8 @@ parameters:
           Birds:
             Ducks:
 
+          'i_Existing species': {}
+
           Fishes:
             Sharks:
 
@@ -23,6 +25,11 @@ parameters:
               Vulpines:
                 Foxes:
               Dogs:
+                'Domestic dogs':
+                  'Border collies': {}
+                  'Welsh corgis': {}
+              Coyotes: {}
+              Jackals: {}
             Felines:
               "Big cats":
                 Caracals:
@@ -37,6 +44,7 @@ parameters:
             Mustelids:
               Ferrets:
               Otters:
+              Weasels: {}
             Primates:
               Apes:
               Monkeys:
@@ -46,10 +54,13 @@ parameters:
             Ungulates:
               "i_Ungulates (tests now)":
               Bovines:
+                Antelopes: {}
                 Cows:
               Cervines:
                 Deers:
+                  Caribous: {}
               Equines: # Avoid?
+                Donkeys: {}
                 Horses:
               Goats:
               Rhinos:
@@ -70,29 +81,36 @@ parameters:
             "i_Reptiles (not including dragons)": # FIXME: Change to doesn't Reptiles does Dragons after making sure the filters work DOES - DOESN'T - DOES, not DOES - DOESN'T - DOESN'T - see #88
 
           Bugs:
-            Insects:
             Arachnids:
-              Spiders:
+              Spiders: {}
+            'i_Caterpillars': {}
+            Insects: {}
 
           Amphibians:
 
         "Fantasy creatures":
+          'i_Avalis': {}
+          'i_Demon cats': {}
+          'i_Fantasy': {}
           "i_Fantasy / mythical creatures":
+          'i_Mythical': {}
+          Dragons:
+            "Angel Dragons":
+              "Dutch Angel Dragons": {}
+            "i_*Extremely intricate dragons": {}
           Robotic/cybernetic/mechanical:
             Ampwaves:
             "i_Any mechanical/inorganic species":
+            'i_Anything electronic': {}
             "i_Ask for mechanic/electronic creatures":
             'i_Cyborgs':
             "i_Full robospecies":
+            'i_Mechanical species (protogens and the like)': {}
             Primagens:
             Protogens:
             "i_Robots":
             Synths:
             "i_Species with robotic/cybernetic, or otherwise mechanical appearance":
-          Dragons:
-            "Angel Dragons":
-              "Dutch Angel Dragons":
-            "i_*Extremely intricate dragons":
           Crux:
           Drekkubuses:
           "Ghost Bones Dragon":
@@ -168,6 +186,7 @@ parameters:
           "Fantasy/original species":
           "Any mythical or unique species":
           "Any animal and most mysticals (dragons*, serials, gryphons)":
+          'Any design that does not use faux fur': {}
           "Rare species":
 
           "i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)": # FIXME: Moving this under "DADs" causes the filter subcategory arrow-button to show up and do nothing, see also #89
@@ -175,6 +194,7 @@ parameters:
 
           "Some video game characters":
           "Most any species": # ?!
+          'Most common': {}
 
           "Anything cultural appropriation":
           "Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
@@ -192,6 +212,7 @@ parameters:
           "Fur-covered":
             "All species and all fur based characters":
             "Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
+            'I am willing to do all types of furry species at the moment': {}
             "I'm happy to make most species as long as they're covered in fur":
             "Most anything covered in fur":
 
@@ -202,7 +223,7 @@ parameters:
           "I can also do velvet or minky skinned characters":
           "I make exceptions on rare occasions":
           "Invertibrates":
-
+          'I will not do anything representing satanism': {}
           "Most furless/featherless species":
           "No airbrushed / gradient markings on any species (all work is sewn)":
           "Only because I do not currently have the ability to do the electronic work on them": # This should have been a comment
@@ -211,6 +232,7 @@ parameters:
 
           "Raptor masks":
 
+          'Saber-toothed tiger': {}
           "Skull-*":
             "Skull": # Excuse me?
             "Skullsuits":
@@ -259,13 +281,17 @@ parameters:
       'Caracles|Caracals?':                                  'Caracals'
       'Cats?( in general)?':                                 'Felines'
       'Canines?( in)? ?(\(?general\)?)?':                    'Canines'
+      'Caribous?':                                           'Caribous'
       'Cervines?':                                           'Cervines'
       'copyrighted characters?[ !]*':                        'Copyrighted characters'
       '(any )?Closed? species?':                             'Closed species'
+      'Coyotes?':                                            'Coyotes'
+      'Cows?':                                               'Cows'
       'Deers?':                                              'Deers'
       'Dinosaurs?':                                          'Dinosaurs'
       'Dogs?':                                               'Dogs'
       'Domestic Cats?':                                      'Domestic cats'
+      'Donkeys?':                                            'Donkeys'
       'Dragons?':                                            'Dragons'
       'Dre[ck]{2}ubus(es)?':                                 'Drekkubuses'
       'Dutch Angel Dragons/Angel Dragons':                   "Dutch Angel Dragons\nAngel Dragons"
@@ -279,14 +305,17 @@ parameters:
       'Fox(es)?':                                            'Foxes'
       'Gem Raptors?':                                        'Gem raptors'
       'Goats?':                                              'Goats'
-      'Griff[io]ns?':                                        'Gryphons'
+      'Griff[io]ns?|Gryphons?':                              'Gryphons'
       'Horses?':                                             'Horses'
       'Hybride?s?':                                          'Hybrids'
       'Hyenas?':                                             'Hyenas'
       'Humanoids?':                                          'Humanoids'
+      'Humans?':                                             'Humans'
+      'Jackals?':                                            'Jackals'
       'K-?9''?s':                                            'Canines'
       'Kangaroos?':                                          'Kangaroos'
       'Lions?':                                              'Lions'
+      'Lynx(es)?':                                           'Lynxes'
       'Mammals?( in general)?':                              'Mammals'
       'Mann?okits?':                                         'Manokits'
       'Monkeys?( in general)?':                              'Monkeys'
@@ -318,6 +347,7 @@ parameters:
       'Skull Animals?':                                      'Skull animals'
       'Small felines?':                                      'Small cats'
       'Snow leopards?':                                      'Snow leopards'
+      'Weasels?':                                            'Weasels'
       'Wicker ?beas?ts?':                                    'Wickerbeasts'
       'Wolf':                                                'Wolves'
       'Ungulates?(( in)? \(?general\)?)?':                   'Ungulates'
