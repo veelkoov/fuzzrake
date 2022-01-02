@@ -215,4 +215,28 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         self::assertSelectorTextContains('.alert-danger h4', 'Your submission has been recorded, but...');
         self::assertSelectorTextContains('.alert-danger', 'The password you provided didn\'t match, and you didn\'t agree to be contacted');
     }
+
+    /**
+     * @dataProvider cannotSkipUnfinishedSteps
+     */
+    public function testCannotSkipUnfinishedSteps(string $step, string $slashedMakerId): void
+    {
+        $client = static::createClient();
+        $client->followRedirects(true);
+
+        self::persistAndFlush(self::getArtisan(makerId: 'REDIREC'));
+
+        $crawler = $client->request('GET', "/iu_form/$step$slashedMakerId");
+        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
+    }
+
+    public function cannotSkipUnfinishedSteps()
+    {
+        return [
+            'New maker, pass+cont'      => ['contact_and_password', ''],
+            'New maker, data'           => ['data', ''],
+            'Existing maker, pass+cont' => ['contact_and_password', '/REDIREC'],
+            'Existing maker, data'      => ['data', '/REDIREC'],
+        ];
+    }
 }

@@ -22,6 +22,7 @@ use ReCaptcha\ReCaptcha;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,15 +71,15 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuFormData(Request $request, ?string $makerId = null): Response
     {
         $state = $this->prepareState($makerId, $request);
-        // TODO: step back if previous step not finished
 
-        $form = $this->createForm(Data::class, $state->artisan, [
+        if (null !== ($redirection = $this->redirectionToUnfinishedStep($state, RouteName::IU_FORM_DATA))) {
+            return $redirection;
+        }
+
+        $form = $this->handleForm($request, $state, Data::class, [
             Data::PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
             Data::OPT_ROUTER          => $this->router,
         ]);
-
-        $form->handleRequest($request);
-        $this->indicateAnyRestoreErrors($state, $form);
         $this->validatePhotosCopyright($form, $state->artisan);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -106,12 +107,12 @@ class IuFormController extends AbstractRecaptchaBackedController
     public function iuFormContactAndPassword(Request $request, ?string $makerId = null): Response
     {
         $state = $this->prepareState($makerId, $request);
-        // TODO: step back if previous step not finished
 
-        $form = $this->createForm(ContactAndPassword::class, $state->artisan);
+        if (null !== ($redirection = $this->redirectionToUnfinishedStep($state, RouteName::IU_FORM_CONTACT_AND_PASSWORD))) {
+            return $redirection;
+        }
 
-        $form->handleRequest($request);
-        $this->indicateAnyRestoreErrors($state, $form);
+        $form = $this->handleForm($request, $state, ContactAndPassword::class, []);
 
         if ($form->isSubmitted() && $form->isValid()) {
             StrUtils::fixNewlines($state->artisan);
@@ -214,5 +215,28 @@ class IuFormController extends AbstractRecaptchaBackedController
         if ($state->hasRestoreErrors()) {
             $form->addError(new FormError('There were some issues while handling the information you entered. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
         }
+    }
+
+    private function redirectionToUnfinishedStep(IuState $state, string $currentRoute): ?RedirectResponse
+    {
+        if (!$state->captchaDone() && RouteName::IU_FORM_START !== $currentRoute) {
+            return $this->redirectToRoute(RouteName::IU_FORM_START, ['makerId' => $state->makerId]);
+        }
+
+        if (!$state->dataDone() && !in_array($currentRoute, [RouteName::IU_FORM_START, RouteName::IU_FORM_DATA])) {
+            return $this->redirectToRoute(RouteName::IU_FORM_DATA, ['makerId' => $state->makerId]);
+        }
+
+        return null;
+    }
+
+    private function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface
+    {
+        $result = $this->createForm($type, $state->artisan, $options);
+
+        $result->handleRequest($request);
+        $this->indicateAnyRestoreErrors($state, $result);
+
+        return $result;
     }
 }
