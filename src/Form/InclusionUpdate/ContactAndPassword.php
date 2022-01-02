@@ -24,8 +24,7 @@ class ContactAndPassword extends AbstractType
     {
         $builder
             ->add('contactAllowed', ChoiceType::class, [
-                'label'      => 'Contact allowed?',
-                'help'       => 'Explanation of choices in the table above.',
+                'label'      => 'When is contact allowed?',
                 'required'   => true,
                 'choices'    => ContactPermit::getValueKeyMap(),
                 'empty_data' => ContactPermit::NO,

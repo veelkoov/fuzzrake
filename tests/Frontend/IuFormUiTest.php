@@ -32,6 +32,7 @@ class IuFormUiTest extends DbEnabledPantherTestCase
     public function testIForgotPasswordShowsHelp(): void
     {
         $this->getToLastPage();
+        usleep(1000000); // Let all the animations end
 
         self::assertSelectorIsNotVisible('#forgotten_password_instructions');
         $this->client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
@@ -48,18 +49,55 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
-        $this->screenshot($this->client);
 
+        $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
         self::assertSelectorIsVisible('#iu_form_contactInfoObfuscated');
         self::assertSelectorExists('#iu_form_contactInfoObfuscated[required]');
 
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
-        $this->screenshot($this->client);
 
+        $this->client->waitForInvisibility('#iu_form_contactInfoObfuscated', 5);
         self::assertSelectorIsNotVisible('#iu_form_contactInfoObfuscated');
         self::assertSelectorExists('#iu_form_contactInfoObfuscated:not([required])');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testContactAllowanceProsConsAreToggling(): void
+    {
+        $this->getToLastPage();
+        $form = $this->client->getCrawler()->selectButton('Submit')->form();
+
+        $noSelectionYet = '.pros-cons-contact-options[data-min-level="-1"][data-max-level="-1"]';
+        $neverOnly = '.pros-cons-contact-options[data-min-level="0"][data-max-level="0"]';
+        $feedbackOnly = '.pros-cons-contact-options[data-min-level="3"][data-max-level="3"]';
+        $anythingButFeedback = '.pros-cons-contact-options[data-min-level="0"][data-max-level="2"]';
+
+        $this->client->waitForVisibility($noSelectionYet, 5);
+        $this->client->waitForInvisibility($neverOnly, 5);
+        $this->client->waitForInvisibility($anythingButFeedback, 5);
+        $this->client->waitForInvisibility($feedbackOnly, 5);
+
+        $form->setValues([
+            'iu_form[contactAllowed]' => 'NO',
+        ]);
+
+        $this->client->waitForInvisibility($noSelectionYet, 5);
+        $this->client->waitForVisibility($neverOnly, 5);
+        $this->client->waitForVisibility($anythingButFeedback, 5);
+        self::assertSelectorIsNotVisible($feedbackOnly);
+
+        $form->setValues([
+            'iu_form[contactAllowed]' => 'FEEDBACK',
+        ]);
+
+        self::assertSelectorIsNotVisible($noSelectionYet);
+        $this->client->waitForInvisibility($neverOnly, 5);
+        $this->client->waitForInvisibility($anythingButFeedback, 5);
+        $this->client->waitForVisibility($feedbackOnly, 5);
     }
 
     /**

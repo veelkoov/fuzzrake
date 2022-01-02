@@ -27,4 +27,8 @@ export class Radio {
     public isAnySelected(): boolean {
         return null !== this.val();
     }
+
+    public selectedIdx(): number {
+        return this.$elems.index(this.$elems.filter(':checked'));
+    }
 }

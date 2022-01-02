@@ -15,7 +15,7 @@ jQuery((_$: JQueryStatic) => {
     }
 
     display_password_change_hint_if_checked_forgot();
-    hide_contact_form_part_if_no_contact_allowed();
+    react_to_contact_allowance_changes();
 });
 
 function set_day() {
@@ -31,7 +31,8 @@ function display_password_change_hint_if_checked_forgot(): void {
     }).trigger('change');
 }
 
-function hide_contact_form_part_if_no_contact_allowed(): void {
+function react_to_contact_allowance_changes(): void {
+    const $prosCons = jQuery('.pros-cons-contact-options');
     const $contactInfoContainer = jQuery('#contact_info');
     const $contactInfoObfuscatedField = jQuery('#iu_form_contactInfoObfuscated');
 
@@ -42,6 +43,10 @@ function hide_contact_form_part_if_no_contact_allowed(): void {
 
         $contactInfoObfuscatedField.prop('required', requireContactInfo);
         toggle($contactInfoContainer, requireContactInfo);
+
+        let level = contactAllowed.selectedIdx();
+
+        toggle($prosCons, (idx, el) => $(el).data('min-level') <= level && $(el).data('max-level') >= level);
     }
 
     refresh();

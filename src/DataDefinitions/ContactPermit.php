@@ -14,7 +14,7 @@ class ContactPermit extends Dictionary
     public static function getValues(): array
     {
         return [
-            self::NO            => 'No contact allowed',
+            self::NO            => 'Never',
             self::CORRECTIONS   => 'Corrections',
             self::ANNOUNCEMENTS => 'Announcements',
             self::FEEDBACK      => 'Feedback',
