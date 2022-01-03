@@ -24,8 +24,8 @@ class PasswordHandlingTest extends AbstractTest
         self::skipData($client, true);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]'  => 'NO',
-            'iu_form[password]'        => 'some-password',
+            'iu_form[contactAllowed]' => 'NO',
+            'iu_form[password]'       => 'some-password',
         ]);
         $this::submitValid($client, $form);
 
@@ -54,7 +54,7 @@ class PasswordHandlingTest extends AbstractTest
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'     => 'New name',
+            'iu_form[name]' => 'New name',
         ]);
         $this::submitValid($client, $form);
 
