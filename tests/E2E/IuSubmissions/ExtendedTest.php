@@ -328,7 +328,6 @@ class ExtendedTest extends AbstractTest
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
-            /* @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
             $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
             self::assertTrue(pattern($regexp)->test($htmlBody), "$field->name radio field was not present or (not) selected.");
         }
