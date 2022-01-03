@@ -28,7 +28,7 @@ class IuState
         public readonly ?string $makerId,
         public readonly Artisan $artisan,
     ) {
-        $this->session = new IuSession($session);
+        $this->session = new IuSession($session, $makerId ?? '');
         $this->previousPassword = $artisan->getPassword();
         $this->wasContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed();
 
