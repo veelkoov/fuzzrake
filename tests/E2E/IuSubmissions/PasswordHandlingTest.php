@@ -89,12 +89,13 @@ class PasswordHandlingTest extends AbstractTest
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'     => 'New name',
+            'iu_form[name]' => 'New name',
         ]);
         $this::submitValid($client, $form);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]' => 'new-password',
+            'iu_form[password]'       => 'new-password',
+            'iu_form[changePassword]' => '1',
         ]);
         $this::submitValid($client, $form);
 
@@ -125,12 +126,13 @@ class PasswordHandlingTest extends AbstractTest
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'     => 'New name',
+            'iu_form[name]' => 'New name',
         ]);
         $this::submitValid($client, $form);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]' => 'new-password',
+            'iu_form[password]'       => 'new-password',
+            'iu_form[changePassword]' => '1',
         ]);
         $this::submitValid($client, $form);
 

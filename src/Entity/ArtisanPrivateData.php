@@ -41,7 +41,7 @@ class ArtisanPrivateData
      */
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    private string $password = '';
+    private string $password = ''; // TODO: Move to a table kept on-line
 
     /**
      * @ORM\Column(type="string", length=512)

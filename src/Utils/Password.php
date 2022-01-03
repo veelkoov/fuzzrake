@@ -20,4 +20,9 @@ final class Password
             ['cost' => 12],
         ));
     }
+
+    public static function verify(Artisan $artisan, string $hash): bool
+    {
+        return strlen($hash) > 0 && password_verify($artisan->getPassword(), $hash);
+    }
 }

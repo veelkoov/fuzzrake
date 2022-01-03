@@ -156,6 +156,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]'              => 'password-554',
             'iu_form[contactInfoObfuscated]' => 'email@address',
+            'iu_form[changePassword]'        => '1',
         ]);
         self::submitValid($client, $form);
 
@@ -183,6 +184,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             'iu_form[password]'              => 'password-554',
             'iu_form[contactAllowed]'        => 'ANNOUNCEMENTS',
             'iu_form[contactInfoObfuscated]' => 'email@address',
+            'iu_form[changePassword]'        => '1',
         ]);
         self::submitValid($client, $form);
 
@@ -209,6 +211,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]'       => 'password-554',
             'iu_form[contactAllowed]' => 'NO',
+            'iu_form[changePassword]' => '1',
         ]);
         self::submitValid($client, $form);
 
@@ -238,5 +241,36 @@ class IuFormControllerTest extends DbEnabledWebTestCase
             'Existing maker, pass+cont' => ['contact_and_password', '/REDIREC'],
             'Existing maker, data'      => ['data', '/REDIREC'],
         ];
+    }
+
+    public function testPasswordChangeRequiredWhenProvidingDifferentOne(): void
+    {
+        $client = static::createClient();
+
+        self::persistAndFlush(self::getArtisan(
+            makerId: 'MAKERID',
+            password: 'password-555',
+            contactAllowed: 'CORRECTIONS',
+            ages: 'ADULTS',
+            worksWithMinors: true,
+        ));
+
+        $client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($client);
+        self::skipData($client, false);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[password]'              => 'password-554',
+            'iu_form[contactInfoObfuscated]' => 'email@address',
+        ]);
+        self::submitInvalid($client, $form);
+
+        self::assertSelectorTextContains('div.invalid-feedback', 'Invalid password supplied.');
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[password]'       => 'password-554',
+            'iu_form[changePassword]' => '1',
+        ]);
+        self::submitValid($client, $form);
     }
 }

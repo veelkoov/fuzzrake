@@ -19,6 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContactAndPassword extends AbstractType
 {
     final public const FLD_CHANGE_PASSWORD = 'changePassword';
+    final public const FLD_PASSWORD = 'password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -40,9 +41,9 @@ class ContactAndPassword extends AbstractType
                 'required'   => true,
                 'empty_data' => '',
             ])
-            ->add('password', PasswordType::class, [
+            ->add(self::FLD_PASSWORD, PasswordType::class, [
                 'label'      => 'Updates password',
-                'help'       => 'Please choose some kind of password, which will be later used to make sure it was you, who\'s posting updates. Use at least 8 characters (the more, the merrier). <strong>Please do not use any password you use anywhere else.</strong> <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
+                'help'       => '8 or more characters. <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
                 'help_html'  => true,
                 'required'   => true,
                 'empty_data' => '',

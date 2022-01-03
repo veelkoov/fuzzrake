@@ -29,6 +29,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
+// TODO: Reset/abort
+// TODO: Step back
 class IuFormController extends AbstractRecaptchaBackedController
 {
     public function __construct(
@@ -113,6 +115,7 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
 
         $form = $this->handleForm($request, $state, ContactAndPassword::class, []);
+        $this->validatePassword($form, $state);
 
         if ($form->isSubmitted() && $form->isValid()) {
             StrUtils::fixNewlines($state->artisan);
@@ -168,7 +171,21 @@ class IuFormController extends AbstractRecaptchaBackedController
         $field = $form->get(Data::FLD_PHOTOS_COPYRIGHT);
 
         if ('' !== $artisan->getPhotoUrls() && 'OK' !== ($field->getData()[0] ?? null)) {
-            $field->addError(new FormError('Permission to use the photos is required'));
+            $field->addError(new FormError('You must not use any photos without permission from the photographer.'));
+        }
+    }
+
+    private function validatePassword(FormInterface $form, IuState $state): void
+    {
+        if (!$form->isSubmitted() || $state->isNew()) {
+            return;
+        }
+
+        $changePassword = $form->get(ContactAndPassword::FLD_CHANGE_PASSWORD);
+        $password = $form->get(ContactAndPassword::FLD_PASSWORD);
+
+        if (!($changePassword->getData() ?? false) && !(Password::verify($state->artisan, $state->previousPassword))) {
+            $password->addError(new FormError('Invalid password supplied.'));
         }
     }
 
@@ -190,7 +207,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             Password::encryptOn($data->artisan);
 
             return true;
-        } elseif (password_verify($data->artisan->getPassword(), $data->previousPassword)) {
+        } elseif (Password::verify($data->artisan, $data->previousPassword)) {
             $data->artisan->setPassword($data->previousPassword); // Was already hashed; use old hash - must not appear changed
 
             return true;

@@ -385,7 +385,9 @@ class ExtendedTest extends AbstractTest
             }
         }
 
-        if (false === $secondPage) {
+        if ($secondPage) {
+            $form['iu_form[changePassword]']->setValue('1'); // Eagerly
+        } else {
             $field = $form['iu_form[photosCopyright]'][0];
             /* @var ChoiceFormField $field */
             $field->tick();
