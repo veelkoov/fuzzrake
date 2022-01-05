@@ -6,23 +6,22 @@ namespace App\Form\InclusionUpdate;
 
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Validation;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContactAndPassword extends AbstractType
+class ContactAndPassword extends BaseForm
 {
     final public const FLD_CHANGE_PASSWORD = 'changePassword';
     final public const FLD_PASSWORD = 'password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         $builder
             ->add('contactAllowed', ChoiceType::class, [
                 'label'      => 'When is contact allowed?',
@@ -56,25 +55,14 @@ class ContactAndPassword extends AbstractType
                 'required'  => false,
                 'mapped'    => false,
             ])
-            ->add('notes', TextareaType::class, [
-                'label'      => 'Anything else? ("notes")',
-                'help'       => '<strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments for getfursu.it maintainer or some additional information which might be added to the website in the future.',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
-            ])
         ;
-    }
-
-    public function getBlockPrefix(): string
-    {
-        return 'iu_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'data_class'        => Artisan::class,
             'validation_groups' => ['Default', Validation::GRP_CONTACT_AND_PASSWORD],
             'error_mapping'     => [
                 'privateData.password' => 'password',

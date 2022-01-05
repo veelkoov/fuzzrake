@@ -13,10 +13,8 @@ use App\DataDefinitions\Styles;
 use App\Form\BooleanTransformer;
 use App\Form\SinceTransformer;
 use App\Form\StringArrayTransformer;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use InvalidArgumentException;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -27,7 +25,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class Data extends AbstractType
+class Data extends BaseForm
 {
     final public const OPT_ROUTER = 'router';
     final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
@@ -35,6 +33,8 @@ class Data extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         if (!(($router = $options[self::OPT_ROUTER]) instanceof RouterInterface)) {
             throw new InvalidArgumentException('I wanted a router.');
         }
@@ -372,13 +372,6 @@ class Data extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('notes', TextareaType::class, [
-                'label'      => 'Anything else? ("notes")',
-                'help'       => '<strong>WARNING!</strong> This is information 1) will <strong>NOT</strong> be visible on getfursu.it, yet it 2) <strong>WILL</strong> however be public. Treat this as place for comments for getfursu.it maintainer or some additional information which might be added to the website in the future.',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
-            ])
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
@@ -391,21 +384,17 @@ class Data extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefined(self::PHOTOS_COPYRIGHT_OK);
         $resolver->addAllowedTypes(self::PHOTOS_COPYRIGHT_OK, 'boolean');
 
         $resolver->setDefaults([
-            'data_class'              => Artisan::class,
             'validation_groups'       => ['Default', Validation::GRP_DATA],
             self::PHOTOS_COPYRIGHT_OK => false,
         ]);
 
         $resolver->define(self::OPT_ROUTER)->required()->allowedTypes(RouterInterface::class);
-    }
-
-    public function getBlockPrefix(): string
-    {
-        return 'iu_form';
     }
 
     /**
