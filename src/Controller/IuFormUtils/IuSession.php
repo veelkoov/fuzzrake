@@ -33,6 +33,8 @@ class IuSession
 
             $this->session->set($this->keySessionId, $this->uuid->toRfc4122());
         }
+
+        $this->assureFreshLifetime();
     }
 
     public function isDone(string $key): bool
@@ -69,5 +71,15 @@ class IuSession
     public function getId(): string
     {
         return $this->uuid->toRfc4122();
+    }
+
+    private function assureFreshLifetime(): void
+    {
+        $refreshThreshold = (int) ($this->session->getMetadataBag()->getLifetime() / 24);
+
+        if (time() > $this->session->getMetadataBag()->getCreated() + $refreshThreshold) {
+            $this->session->getMetadataBag()->stampNew(); // Refresh "get created" timestamp
+            $this->session->migrate(); // This sends a new cookie, possibly there's a better way?
+        }
     }
 }
