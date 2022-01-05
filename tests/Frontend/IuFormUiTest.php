@@ -111,9 +111,6 @@ class IuFormUiTest extends DbEnabledPantherTestCase
         $this->client->findElement(WebDriverBy::cssSelector('button.g-recaptcha'))->click();
         $this->client->waitForVisibility('#iu_form_name', 5);
 
-        $this->client->getKeyboard()->pressKey(WebDriverKeys::END); // grep-ugly-tests-workarounds Workaround for element not visible bug
-        $this->screenshot($this->client); // grep-ugly-tests-workarounds Workaround for element not visible bug
-
         $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
         $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
     }
