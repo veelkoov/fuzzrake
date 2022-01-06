@@ -31,6 +31,11 @@ abstract class DbEnabledWebTestCase extends WebTestCase
         self::assertEquals($expectedHtml, $actualHtml);
     }
 
+    protected static function submitValidForm(KernelBrowser $client, string $buttonName, array $formData): void
+    {
+        self::submitValid($client, $client->getCrawler()->selectButton($buttonName)->form($formData));
+    }
+
     protected static function submitValid(KernelBrowser $client, Form $form): void
     {
         $crawler = $client->submit($form);
@@ -47,6 +52,11 @@ abstract class DbEnabledWebTestCase extends WebTestCase
         }
 
         self::fail('Form validation failed for: '.implode(', ', array_unique($fields)));
+    }
+
+    protected static function submitInvalidForm(KernelBrowser $client, string $buttonName, array $formData): void
+    {
+        self::submitInvalid($client, $client->getCrawler()->selectButton($buttonName)->form($formData));
     }
 
     protected static function submitInvalid(KernelBrowser $client, Form $form): void

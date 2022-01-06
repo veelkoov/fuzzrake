@@ -18,7 +18,7 @@ class ContactAndPassword extends BaseForm
 {
     final public const FLD_CHANGE_PASSWORD = 'changePassword';
     final public const FLD_PASSWORD = 'password';
-    final public const BTN_BACK = 'back'; // TODO: Test me
+    final public const BTN_BACK = 'back';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
