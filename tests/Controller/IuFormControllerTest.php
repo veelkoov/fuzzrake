@@ -32,7 +32,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form();
+        $form = $client->getCrawler()->selectButton('Continue')->form();
         self::submitInvalid($client, $form);
 
         self::skipData($client, true);
@@ -48,7 +48,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         $client->request('GET', '/iu_form/start');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form();
+        $form = $client->getCrawler()->selectButton('Continue')->form();
         self::submitInvalid($client, $form);
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
@@ -220,7 +220,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
     }
 
     /**
-     * @dataProvider cannotSkipUnfinishedSteps
+     * @dataProvider cannotSkipUnfinishedStepsDataProvider
      */
     public function testCannotSkipUnfinishedSteps(string $step, string $slashedMakerId): void
     {
@@ -233,7 +233,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
     }
 
-    public function cannotSkipUnfinishedSteps()
+    public function cannotSkipUnfinishedStepsDataProvider(): array
     {
         return [
             'New maker, pass+cont'      => ['contact_and_password', ''],

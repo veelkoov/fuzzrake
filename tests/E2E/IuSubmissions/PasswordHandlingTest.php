@@ -53,7 +53,7 @@ class PasswordHandlingTest extends AbstractTest
         $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $client->getCrawler()->selectButton('Continue')->form([
             'iu_form[name]' => 'New name',
         ]);
         $this::submitValid($client, $form);
@@ -88,7 +88,7 @@ class PasswordHandlingTest extends AbstractTest
         $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $client->getCrawler()->selectButton('Continue')->form([
             'iu_form[name]' => 'New name',
         ]);
         $this::submitValid($client, $form);
@@ -125,7 +125,7 @@ class PasswordHandlingTest extends AbstractTest
         $client->request('GET', '/iu_form/start/MAKERID');
         self::skipRulesAndCaptcha($client);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form([
+        $form = $client->getCrawler()->selectButton('Continue')->form([
             'iu_form[name]' => 'New name',
         ]);
         $this::submitValid($client, $form);

@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuFormUtils;
+namespace App\Controller\IuForm\Utils;
 
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\SafeArrayRead;
+use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -63,6 +64,11 @@ class IuState
     public function reset(): void
     {
         $this->session->reset();
+    }
+
+    public function getStarted(): ?DateTimeInterface
+    {
+        return $this->session->getStarted();
     }
 
     public function save(): void

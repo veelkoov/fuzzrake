@@ -24,7 +24,7 @@ trait IuFormTrait
                 'iu_form[makerId]'         => 'TESTMID',
             ];
 
-        $form = $client->getCrawler()->selectButton('Submit')->form($data);
+        $form = $client->getCrawler()->selectButton('Continue')->form($data);
 
         self::submitValid($client, $form);
     }

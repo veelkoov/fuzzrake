@@ -6,12 +6,15 @@ namespace App\Form\InclusionUpdate;
 
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class BaseForm extends AbstractType
 {
+    public const BTN_RESET = 'reset'; // TODO: Test me
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -21,6 +24,14 @@ abstract class BaseForm extends AbstractType
                 'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',
+            ])
+            ->add(self::BTN_RESET, SubmitType::class, [
+                'label' => 'Start over or withdraw',
+                'attr'  => [
+                    'class'          => 'btn btn-outline btn-outline-danger',
+                    'formnovalidate' => 'formnovalidate',
+                    'onclick'        => 'return confirm("Are you sure you want to reset all your changes?");',
+                ],
             ])
         ;
     }
@@ -32,8 +43,6 @@ abstract class BaseForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class'        => Artisan::class,
-        ]);
+        $resolver->setDefault('data_class', Artisan::class);
     }
 }

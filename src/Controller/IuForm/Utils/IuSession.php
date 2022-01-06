@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\IuFormUtils;
+namespace App\Controller\IuForm\Utils;
 
+use App\Utils\DateTime\DateTimeUtils;
+use DateTimeImmutable;
+use DateTimeInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
@@ -71,6 +75,15 @@ class IuSession
     public function getId(): string
     {
         return $this->uuid->toRfc4122();
+    }
+
+    public function getStarted(): ?DateTimeInterface // TODO: Must use own timestamp
+    {
+        try {
+            return new DateTimeImmutable('@'.$this->session->getMetadataBag()->getCreated(), DateTimeUtils::getUtc());
+        } catch (Exception) {
+            return null;
+        }
     }
 
     private function assureFreshLifetime(): void

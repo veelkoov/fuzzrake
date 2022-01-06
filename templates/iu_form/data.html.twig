@@ -23,6 +23,8 @@
 
     {{ form_start(form) }}
 
+    {% include 'iu_form/shared_parts/session_info.html.twig' %}
+
     <h2 class="mt-4">General info</h2>
 
     <div class="row">
@@ -316,7 +318,7 @@
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="btn btn-primary btn-lg" value="Submit" />
+    <input type="submit" class="btn btn-primary" value="Continue" />
 
     {{ form_end(form) }}
 {% endblock %}

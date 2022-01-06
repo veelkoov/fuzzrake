@@ -191,7 +191,7 @@ class ExtendedTest extends AbstractTest
 
         self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), false);
 
-        $form = $client->getCrawler()->selectButton('Submit')->form();
+        $form = $client->getCrawler()->selectButton('Continue')->form();
         self::setValuesInForm($form, $newData, false);
         self::submitValid($client, $form);
 

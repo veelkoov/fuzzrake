@@ -28,8 +28,8 @@ use Symfony\Component\Routing\RouterInterface;
 class Data extends BaseForm
 {
     final public const OPT_ROUTER = 'router';
+    final public const OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
     final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    final public const PHOTOS_COPYRIGHT_OK = 'PHOTOS_COPYRIGHT_OK';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -345,7 +345,7 @@ class Data extends BaseForm
                 'label'     => 'Copyright acknowledgement',
                 'help'      => 'Fact of the photos being published on Scritch or Furtrack <strong>doesn\'t necessarily mean the photographers agreed to repost/reuse it elsewhere</strong>, including getfursu.it. Please make sure you are allowed to link those photos here.',
                 'help_html' => true,
-                'data'      => $options[self::PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
+                'data'      => $options[self::OPT_PHOTOS_COPYRIGHT_OK] ? ['OK'] : [],
                 'required'  => false,
                 'mapped'    => false,
                 'expanded'  => true,
@@ -386,15 +386,17 @@ class Data extends BaseForm
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefined(self::PHOTOS_COPYRIGHT_OK);
-        $resolver->addAllowedTypes(self::PHOTOS_COPYRIGHT_OK, 'boolean');
+        $resolver
+            ->define(self::OPT_ROUTER)
+            ->allowedTypes(RouterInterface::class)
+            ->required()
 
-        $resolver->setDefaults([
-            'validation_groups'       => ['Default', Validation::GRP_DATA],
-            self::PHOTOS_COPYRIGHT_OK => false,
-        ]);
+            ->define(self::OPT_PHOTOS_COPYRIGHT_OK)
+            ->allowedTypes('boolean')
+            ->required()
+        ;
 
-        $resolver->define(self::OPT_ROUTER)->required()->allowedTypes(RouterInterface::class);
+        $resolver->setDefault('validation_groups', ['Default', Validation::GRP_DATA]);
     }
 
     /**

@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\IuForm;
 
-use App\Controller\IuFormUtils\IuState;
+use App\Controller\AbstractRecaptchaBackedController;
+use App\Controller\IuForm\Utils\IuState;
+use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\ContactPermit;
 use App\Entity\Artisan as ArtisanE;
+use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Form\InclusionUpdate\Data;
 use App\Repository\ArtisanRepository;
@@ -29,10 +32,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-// TODO: Reset/abort
-// TODO: Step back
 class IuFormController extends AbstractRecaptchaBackedController
 {
+    use ButtonClickedTrait;
+
     public function __construct(
         ReCaptcha $reCaptcha,
         EnvironmentsService $environments,
@@ -56,7 +59,7 @@ class IuFormController extends AbstractRecaptchaBackedController
         if ($request->isMethod('POST') && $this->isReCaptchaTokenOk($request, 'iu_form_captcha')) {
             $state->markCaptchaDone();
 
-            return $this->redirectToRoute(RouteName::IU_FORM_DATA, ['makerId' => $state->makerId]);
+            return $this->redirectToStep(RouteName::IU_FORM_DATA, $state);
         }
 
         return $this->render('iu_form/captcha_and_rules.html.twig', [
@@ -74,30 +77,36 @@ class IuFormController extends AbstractRecaptchaBackedController
     {
         $state = $this->prepareState($makerId, $request);
 
-        if (null !== ($redirection = $this->redirectionToUnfinishedStep($state, RouteName::IU_FORM_DATA))) {
-            return $redirection;
-        }
-
         $form = $this->handleForm($request, $state, Data::class, [
-            Data::PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
-            Data::OPT_ROUTER          => $this->router,
+            Data::OPT_PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
+            Data::OPT_ROUTER              => $this->router,
         ]);
         $this->validatePhotosCopyright($form, $state->artisan);
+
+        if (self::clicked($form, BaseForm::BTN_RESET)) {
+            $state->reset();
+        }
+
+        if (null !== ($redirection = $this->redirectToUnfinishedStep(RouteName::IU_FORM_DATA, $state))) {
+            return $redirection;
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $state->save();
 
             $state->markDataDone();
 
-            return $this->redirectToRoute(RouteName::IU_FORM_CONTACT_AND_PASSWORD, ['makerId' => $state->makerId]);
+            return $this->redirectToStep(RouteName::IU_FORM_CONTACT_AND_PASSWORD, $state);
+
         }
 
         return $this->renderForm('iu_form/data.html.twig', [
-            'form'             => $form,
-            'noindex'          => true,
-            'submitted'        => $form->isSubmitted(),
-            'disable_tracking' => true,
-            'is_update'        => !$state->isNew(),
+            'form'               => $form,
+            'noindex'            => true,
+            'submitted'          => $form->isSubmitted(),
+            'disable_tracking'   => true,
+            'is_update'          => !$state->isNew(),
+            'session_start_time' => $state->getStarted(),
         ]);
     }
 
@@ -110,12 +119,22 @@ class IuFormController extends AbstractRecaptchaBackedController
     {
         $state = $this->prepareState($makerId, $request);
 
-        if (null !== ($redirection = $this->redirectionToUnfinishedStep($state, RouteName::IU_FORM_CONTACT_AND_PASSWORD))) {
-            return $redirection;
-        }
-
         $form = $this->handleForm($request, $state, ContactAndPassword::class, []);
         $this->validatePassword($form, $state);
+
+        if (self::clicked($form, BaseForm::BTN_RESET)) {
+            $state->reset();
+        }
+
+        if (self::clicked($form, ContactAndPassword::BTN_BACK)) {
+            $state->save();
+
+            return $this->redirectToStep(RouteName::IU_FORM_DATA, $state);
+        }
+
+        if (null !== ($redirection = $this->redirectToUnfinishedStep(RouteName::IU_FORM_CONTACT_AND_PASSWORD, $state))) {
+            return $redirection;
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             StrUtils::fixNewlines($state->artisan);
@@ -139,10 +158,11 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
 
         return $this->renderForm('iu_form/contact_and_password.html.twig', [
-            'form'             => $form,
-            'noindex'          => true,
-            'disable_tracking' => true,
-            'is_update'        => !$state->isNew(),
+            'form'               => $form,
+            'noindex'            => true,
+            'disable_tracking'   => true,
+            'is_update'          => !$state->isNew(),
+            'session_start_time' => $state->getStarted(),
         ]);
     }
 
@@ -234,17 +254,22 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
     }
 
-    private function redirectionToUnfinishedStep(IuState $state, string $currentRoute): ?RedirectResponse
+    private function redirectToUnfinishedStep(string $currentRoute, IuState $state): ?RedirectResponse
     {
         if (!$state->captchaDone() && RouteName::IU_FORM_START !== $currentRoute) {
-            return $this->redirectToRoute(RouteName::IU_FORM_START, ['makerId' => $state->makerId]);
+            return $this->redirectToStep(RouteName::IU_FORM_START, $state);
         }
 
         if (!$state->dataDone() && !in_array($currentRoute, [RouteName::IU_FORM_START, RouteName::IU_FORM_DATA])) {
-            return $this->redirectToRoute(RouteName::IU_FORM_DATA, ['makerId' => $state->makerId]);
+            return $this->redirectToStep(RouteName::IU_FORM_DATA, $state);
         }
 
         return null;
+    }
+
+    private function redirectToStep(string $route, IuState $state): RedirectResponse
+    {
+        return $this->redirectToRoute($route, ['makerId' => $state->makerId]);
     }
 
     private function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface

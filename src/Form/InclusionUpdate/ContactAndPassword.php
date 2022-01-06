@@ -9,6 +9,7 @@ use App\DataDefinitions\Fields\Validation;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +18,7 @@ class ContactAndPassword extends BaseForm
 {
     final public const FLD_CHANGE_PASSWORD = 'changePassword';
     final public const FLD_PASSWORD = 'password';
+    final public const BTN_BACK = 'back'; // TODO: Test me
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -54,6 +56,13 @@ class ContactAndPassword extends BaseForm
                 'label'     => 'I want to change my password / I forgot my password',
                 'required'  => false,
                 'mapped'    => false,
+            ])
+            ->add(self::BTN_BACK, SubmitType::class, [
+                'label' => 'Back',
+                'attr'  => [
+                    'class'          => 'btn btn-outline btn-outline-secondary',
+                    'formnovalidate' => 'formnovalidate',
+                ],
             ])
         ;
     }
