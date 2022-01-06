@@ -115,13 +115,13 @@ class ArtisanUrl implements Fetchable, Stringable
     public function recordSuccessfulFetch(): void
     {
         $this->getState()
-            ->setLastSuccess(DateTimeUtils::getNowUtc());
+            ->setLastSuccessUtc(DateTimeUtils::getNowUtc());
     }
 
     public function recordFailedFetch(int $code, string $reason): void
     {
         $this->getState()
-            ->setLastFailure(DateTimeUtils::getNowUtc())
+            ->setLastFailureUtc(DateTimeUtils::getNowUtc())
             ->setLastFailureCode($code)
             ->setLastFailureReason($reason);
     }
@@ -129,8 +129,8 @@ class ArtisanUrl implements Fetchable, Stringable
     public function resetFetchResults(): void
     {
         $this->getState()
-            ->setLastFailure(null)
-            ->setLastSuccess(null)
+            ->setLastFailureUtc(null)
+            ->setLastSuccessUtc(null)
             ->setLastFailureReason('')
             ->setLastFailureCode(0);
     }

@@ -28,14 +28,16 @@ class ArtisanUrlState
     private ?ArtisanUrl $url = null;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(name="last_success", type="datetime", nullable=true)
+     * FIXME: Rename column to UTC https://github.com/veelkoov/fuzzrake/issues/109
      */
-    private ?DateTimeInterface $lastSuccess = null;
+    private ?DateTimeInterface $lastSuccessUtc = null;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(name="last_failure", type="datetime", nullable=true)
+     * FIXME: Rename column to UTC https://github.com/veelkoov/fuzzrake/issues/109
      */
-    private ?DateTimeInterface $lastFailure = null;
+    private ?DateTimeInterface $lastFailureUtc = null;
 
     /**
      * @ORM\Column(type="integer")
@@ -71,26 +73,26 @@ class ArtisanUrlState
         return $this;
     }
 
-    public function getLastSuccess(): ?DateTimeInterface
+    public function getLastSuccessUtc(): ?DateTimeInterface
     {
-        return $this->lastSuccess;
+        return $this->lastSuccessUtc;
     }
 
-    public function setLastSuccess(?DateTime $lastSuccess): self
+    public function setLastSuccessUtc(?DateTime $lastSuccessUtc): self
     {
-        $this->lastSuccess = $lastSuccess;
+        $this->lastSuccessUtc = $lastSuccessUtc;
 
         return $this;
     }
 
-    public function getLastFailure(): ?DateTimeInterface
+    public function getLastFailureUtc(): ?DateTimeInterface
     {
-        return $this->lastFailure;
+        return $this->lastFailureUtc;
     }
 
-    public function setLastFailure(?DateTimeInterface $lastFailure): self
+    public function setLastFailureUtc(?DateTimeInterface $lastFailureUtc): self
     {
-        $this->lastFailure = $lastFailure;
+        $this->lastFailureUtc = $lastFailureUtc;
 
         return $this;
     }
@@ -121,8 +123,8 @@ class ArtisanUrlState
 
     public function getLastRequest(): ?DateTimeInterface
     {
-        $r1 = $this->lastFailure;
-        $r2 = $this->lastSuccess;
+        $r1 = $this->lastFailureUtc;
+        $r2 = $this->lastSuccessUtc;
 
         if (null === $r1) {
             return $r2;

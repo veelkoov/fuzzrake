@@ -27,8 +27,8 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
         self::flush();
 
         self::assertCount(1, $createdArtisan->getUrls());
-        self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastFailure());
-        self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastSuccess());
+        self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastFailureUtc());
+        self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastSuccessUtc());
 
         $task = new ArtisanUrlInspection(self::getEM()->getRepository(ArtisanUrl::class), $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
         $task->inspect(1);
@@ -39,8 +39,8 @@ class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
         $retrievedArtisan = $repo->findAll()[0];
 
         self::assertCount(1, $retrievedArtisan->getUrls());
-        self::assertNull($retrievedArtisan->getUrls()->first()->getState()->getLastFailure(), 'Should not have failed');
-        self::assertNotNull($retrievedArtisan->getUrls()->first()->getState()->getLastSuccess(), 'Should have succeeded');
+        self::assertNull($retrievedArtisan->getUrls()->first()->getState()->getLastFailureUtc(), 'Should not have failed');
+        self::assertNotNull($retrievedArtisan->getUrls()->first()->getState()->getLastSuccessUtc(), 'Should have succeeded');
     }
 
     private function getTestSymfonyStyle(): SymfonyStyle
