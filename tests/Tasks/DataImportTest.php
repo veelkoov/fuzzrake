@@ -80,7 +80,7 @@ class DataImportTest extends TestCase
     private function getImportManagerMock(): Manager
     {
         $result = $this->createMock(Manager::class);
-        $result->expects(static::once())->method('isAccepted')->willReturn(true);
+        $result->expects(static::exactly(2))->method('isAccepted')->willReturn(true);
 
         return $result;
     }
