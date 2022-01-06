@@ -8,7 +8,6 @@ use App\Tests\TestUtils\DbEnabledPantherTestCase;
 use Exception;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Panther\Client;
 
 class IuFormUiTest extends DbEnabledPantherTestCase
