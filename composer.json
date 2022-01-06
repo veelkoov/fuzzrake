@@ -26,14 +26,14 @@
         "symfony/runtime": "*",
         "symfony/security-csrf": "*",
         "symfony/twig-bundle": "*",
-        "symfony/uid": "5.4.*",
+        "symfony/uid": "*",
         "symfony/validator": "*",
         "symfony/webpack-encore-bundle": "^1.11",
         "symfony/yaml": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "*",
-        "phpdocumentor/reflection-docblock": "^5.3",
+        "phpdocumentor/reflection-docblock": "*",
         "rector/rector": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
