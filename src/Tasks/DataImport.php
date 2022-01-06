@@ -203,6 +203,12 @@ class DataImport
             return false;
         }
 
+        if (!$this->manager->isAccepted($item)) {
+            $this->messaging->reportNotAccepted($item);
+
+            return false;
+        }
+
         return true;
     }
 
