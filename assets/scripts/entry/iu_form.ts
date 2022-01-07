@@ -1,6 +1,7 @@
 import {ADULTS, NO, NO_CONTACT_ALLOWED} from "../consts";
 import {Radio} from "../class/Radio";
 import {toggle} from "../jQueryUtils";
+import RequiredField from "../class/RequiredField";
 
 require('../../styles/iu_form.less');
 
@@ -20,7 +21,6 @@ jQuery((_$: JQueryStatic) => {
     setup_age_section_automation();
 });
 
-
 function display_password_change_hint_if_checked_forgot(): void {
     jQuery('#iu_form_changePassword').on('change', (evt) => {
         jQuery('#forgotten_password_instructions')
@@ -31,16 +31,12 @@ function display_password_change_hint_if_checked_forgot(): void {
 
 function react_to_contact_allowance_changes(): void {
     const $prosCons = jQuery('.pros-cons-contact-options');
-    const $contactInfoContainer = jQuery('#contact_info');
-    const $contactInfoObfuscatedField = jQuery('#iu_form_contactInfoObfuscated');
 
     const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
+    const contactInfoField = new RequiredField('#iu_form_contactInfoObfuscated', '#contact_info');
 
     function refresh(immediate: boolean = false): void {
-        let requireContactInfo = contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED);
-
-        $contactInfoObfuscatedField.prop('required', requireContactInfo);
-        toggle($contactInfoContainer, requireContactInfo);
+        contactInfoField.setRequired(contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED));
 
         let duration: JQuery.Duration = immediate ? 0 : 'fast';
         let level = contactAllowed.selectedIdx();
@@ -66,8 +62,8 @@ function setup_date_field_automation(): void {
 }
 
 function setup_age_section_automation(): void {
-    const $doesNsfwContainer = jQuery('#doesNsfwContainer');
-    const $worksWithMinorsContainer = jQuery('#worksWithMinorsContainer');
+    const doesNsfwField = new RequiredField('input[name="iu_form[doesNsfw]"]', '#doesNsfwContainer');
+    const worksWithMinorsField = new RequiredField('input[name="iu_form[worksWithMinors]"]', '#worksWithMinorsContainer');
 
     const ages = new Radio('iu_form[ages]', refresh_age_section);
     const nsfwWebsite = new Radio('iu_form[nsfwWebsite]', refresh_age_section);
@@ -75,9 +71,9 @@ function setup_age_section_automation(): void {
     const doesNsfw = new Radio('iu_form[doesNsfw]', refresh_age_section);
 
     function refresh_age_section(): void {
-        toggle($doesNsfwContainer, ADULTS === ages.val());
+        doesNsfwField.setRequired(ADULTS === ages.val());
 
-        toggle($worksWithMinorsContainer, nsfwSocial.isVal(NO) && nsfwWebsite.isVal(NO)
+        worksWithMinorsField.setRequired(nsfwSocial.isVal(NO) && nsfwWebsite.isVal(NO)
             && (doesNsfw.isVal(NO) || !ages.isVal(ADULTS)));
     }
 

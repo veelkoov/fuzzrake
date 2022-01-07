@@ -98,7 +98,7 @@ class IuFormControllerTest extends DbEnabledWebTestCase
         }
 
         if ([] === $expectedErrors) {
-            self::submitValid($client, $form); // FIXME: We now have HTML validation
+            self::submitValid($client, $form);
 
             self::expectNotToPerformAssertions();
         } else {
