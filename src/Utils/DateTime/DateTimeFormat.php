@@ -11,7 +11,9 @@ final class DateTimeFormat
 {
     use UtilityClass;
 
-    public static function fragile($input, string $format = 'Y-m-d H:i'): string
+    private const DEFAULT_FORMAT = 'Y-m-d H:i';
+
+    public static function fragileUtc(mixed $input, string $format = self::DEFAULT_FORMAT): string
     {
         if ($input instanceof DateTimeInterface) {
             return $input->format($format) ?: 'unknown/error';
@@ -20,14 +22,8 @@ final class DateTimeFormat
         }
     }
 
-    public static function nullable($input, string $format = 'Y-m-d H:i'): string
+    public static function nullableUtc(mixed $input, string $format = self::DEFAULT_FORMAT): string
     {
-        if (null === $input) {
-            return 'never';
-        } elseif ($input instanceof DateTimeInterface) {
-            return $input->format($format) ?: 'unknown/error';
-        } else {
-            return 'unknown/error';
-        }
+        return null === $input ? 'never' : self::fragileUtc($input, $format);
     }
 }

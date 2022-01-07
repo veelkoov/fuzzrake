@@ -30,6 +30,17 @@ class Messaging
         $this->printer->warning('Was looking for: '.StrUtils::artisanNamesSafeForCli($artisan).'. Found more than one: '.$namesList);
     }
 
+    public function reportNotAccepted(ImportItem $item): void
+    {
+        $this->printer->warning("OK, yet not accepted: {$item->getNamesStrSafe()}");
+        $this->printer->writeln([
+            Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
+            '    '.Manager::CMD_ACCEPT,
+            '    '.Manager::CMD_REJECT,
+            '    '.Manager::CMD_IGNORE_UNTIL.' '.DateTimeUtils::getMonthLaterYmd(),
+        ]);
+    }
+
     public function reportNewMaker(ImportItem $item): void
     {
         $this->printer->warning("New maker: {$item->getNamesStrSafe()}");

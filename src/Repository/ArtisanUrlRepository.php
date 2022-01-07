@@ -65,8 +65,8 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->addSelect('avd')
             ->addSelect('apd')
             ->addSelect('us')
-            ->orderBy('us.lastSuccess', 'ASC')
-            ->addOrderBy('us.lastFailure', 'ASC');
+            ->orderBy('us.lastSuccessUtc', 'ASC')
+            ->addOrderBy('us.lastFailureUtc', 'ASC');
 
         if (!$excluded->empty()) {
             $builder

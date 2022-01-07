@@ -160,7 +160,7 @@ class HealthCheckService
             $result = null;
         }
 
-        return DateTimeFormat::fragile($result);
+        return DateTimeFormat::fragileUtc($result);
     }
 
     private function getLastBpUpdateUtc(): string
@@ -171,7 +171,7 @@ class HealthCheckService
             $result = null;
         }
 
-        return DateTimeFormat::fragile($result);
+        return DateTimeFormat::fragileUtc($result);
     }
 
     private function getServerTimeUtc(): string

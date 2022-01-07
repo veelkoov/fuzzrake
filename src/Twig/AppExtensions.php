@@ -32,8 +32,6 @@ class AppExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('fragile_int', fn (...$args): string => $this->fragileIntFilter(...$args)),
-            new TwigFilter('fragile_date', fn (...$args): string => DateTimeFormat::fragile(...$args)),
-            new TwigFilter('nullable_date', fn (...$args): string => DateTimeFormat::nullable(...$args)),
             new TwigFilter('list', [$this, 'listFilter']),
             new TwigFilter('other', [$this, 'otherFilter']),
             new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
