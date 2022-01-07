@@ -11,8 +11,8 @@
             </p>
 
             <p class="small">
-                Last update: {{ stats.lastDataUpdateTimeUtc|fragile_date }} UTC (data)
-                / {{ stats.lastSystemUpdateTimeUtc|fragile_date }} UTC (system).
+                Last update: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }} (data)
+                / {{ stats.lastSystemUpdateTimeUtc|fragile_datetime_utc }} (system).
             </p>
 
             <p>
