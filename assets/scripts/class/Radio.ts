@@ -7,7 +7,7 @@ export class Radio {
     ) {
         this.$elems = jQuery(`input[type=radio][name="${name}"]`);
 
-        this.$elems.on('change', this.changeCallback);
+        this.$elems.on('change', () => changeCallback());
     }
 
     public val(): null|string {

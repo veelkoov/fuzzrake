@@ -38,18 +38,22 @@ function react_to_contact_allowance_changes(): void {
 
     const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
 
-    function refresh(): void {
+    function refresh(immediate: boolean = false): void {
         let requireContactInfo = contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED);
 
         $contactInfoObfuscatedField.prop('required', requireContactInfo);
         toggle($contactInfoContainer, requireContactInfo);
 
+        let duration: JQuery.Duration = immediate ? 0 : 'fast';
         let level = contactAllowed.selectedIdx();
 
-        toggle($prosCons, (idx, el) => $(el).data('min-level') <= level && $(el).data('max-level') >= level);
+        toggle($prosCons, function (idx, el): boolean {
+            return $(el).data('min-level') <= level
+                && $(el).data('max-level') >= level;
+        }, duration);
     }
 
-    refresh();
+    refresh(true);
 }
 
 let day = jQuery('#iu_form_since_day').hide();
