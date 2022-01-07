@@ -30,7 +30,7 @@ abstract class BaseForm extends AbstractType
                 'attr'  => [
                     'class'          => 'btn btn-outline btn-outline-danger',
                     'formnovalidate' => 'formnovalidate',
-                    'onclick'        => 'return confirm("Are you sure you want to reset all your changes?");',
+                    'onclick'        => 'return confirm("Are you sure you want to discard all your changes?");',
                 ],
             ])
         ;

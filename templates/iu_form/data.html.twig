@@ -17,13 +17,13 @@
 
     {% include 'iu_form/shared_parts/big_scary_error.html.twig' %}
 
-    {{ form_errors(form) }}
-
-    {% include('iu_form/iu_form_parts/instructions.html.twig') %}
-
     {{ form_start(form) }}
 
     {% include 'iu_form/shared_parts/session_info.html.twig' %}
+
+    {{ form_errors(form) }}
+
+    {% include('iu_form/iu_form_parts/instructions.html.twig') %}
 
     <h2 class="mt-4">General info</h2>
 
