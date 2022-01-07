@@ -43,7 +43,7 @@ class ContactAndPassword extends BaseForm
                 'empty_data' => '',
             ])
             ->add(self::FLD_PASSWORD, PasswordType::class, [
-                'label'      => 'Updates password',
+                'label'      => 'Updates password', // grep-updates-password-field-name
                 'help'       => '8 or more characters. <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
                 'help_html'  => true,
                 'required'   => true,
