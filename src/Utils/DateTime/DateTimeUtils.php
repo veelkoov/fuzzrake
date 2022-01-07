@@ -17,7 +17,10 @@ final class DateTimeUtils
     public static function getNowUtc(): DateTime
     {
         try {
-            return DateTime::createFromFormat('U', (string) time(), self::getUtc());
+            $result = DateTime::createFromFormat('U', (string) time(), self::getUtc());
+            $result->setTimezone(self::getUtc());
+
+            return $result;
         } catch (Exception $e) {
             throw new RuntimeDateTimeException(previous: $e);
         }
@@ -34,7 +37,10 @@ final class DateTimeUtils
     public static function getUtcAt(?string $time): DateTime
     {
         try {
-            return new DateTime($time ?: 'invalid', self::getUtc());
+            $result = new DateTime($time ?: 'invalid', self::getUtc());
+            $result->setTimezone(self::getUtc());
+
+            return $result;
         } catch (Exception $e) {
             throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }

@@ -11,6 +11,7 @@ use Twig\TwigFilter;
 class DateTimeExtensions extends AbstractExtension
 {
     private const SAFE_HTML = ['is_safe' => ['html']];
+    private const FORMAT = 'Y-m-d H:i T'; // grep-expected-utc-datetime-format
 
     public function getFilters(): array
     {
@@ -22,11 +23,11 @@ class DateTimeExtensions extends AbstractExtension
 
     private static function fragileUtc(mixed $input): string
     {
-        return '<span class="utc_datetime">'.DateTimeFormat::fragileUtc($input).'</span>';
+        return '<span class="utc_datetime">'.DateTimeFormat::fragileUtc($input, self::FORMAT).'</span>';
     }
 
     private static function nullableUtc(mixed $input): string
     {
-        return '<span class="utc_datetime">'.DateTimeFormat::nullableUtc($input).'</span>';
+        return '<span class="utc_datetime">'.DateTimeFormat::nullableUtc($input, self::FORMAT).'</span>';
     }
 }
