@@ -239,7 +239,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return false === $this->getNsfwWebsite() && false === $this->getNsfwSocial() && false === $this->getSafeDoesNsfw();
     }
 
-    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getWorksWithMinors(): ?bool
     {
         return $this->getBoolValue(Field::WORKS_WITH_MINORS);
