@@ -17,6 +17,7 @@ class IuSession
     private readonly string $prefix;
     private readonly string $keySavedData;
     private readonly string $keySessionId;
+    private readonly string $keyStartDateTime;
 
     private readonly UuidV4 $uuid;
 
@@ -27,6 +28,7 @@ class IuSession
         $this->prefix = "iu_form_{$makerId}_";
         $this->keySavedData = $this->prefix.'saved_data';
         $this->keySessionId = $this->prefix.'session_uuid';
+        $this->keyStartDateTime = $this->prefix.'start_datetime';
 
         $stringUuid = $this->session->get($this->keySessionId);
 
@@ -36,6 +38,7 @@ class IuSession
             $this->uuid = Uuid::v4();
 
             $this->session->set($this->keySessionId, $this->uuid->toRfc4122());
+            $this->session->set($this->keyStartDateTime, DateTimeUtils::getNowUtc());
         }
 
         $this->assureFreshLifetime();
@@ -77,13 +80,11 @@ class IuSession
         return $this->uuid->toRfc4122();
     }
 
-    public function getStarted(): ?DateTimeInterface // TODO: Must use own timestamp
+    public function getStarted(): ?DateTimeInterface
     {
-        try {
-            return new DateTimeImmutable('@'.$this->session->getMetadataBag()->getCreated(), DateTimeUtils::getUtc());
-        } catch (Exception) {
-            return null;
-        }
+        $result = $this->session->get($this->keyStartDateTime);
+
+        return $result instanceof DateTimeInterface ? $result : null;
     }
 
     private function assureFreshLifetime(): void

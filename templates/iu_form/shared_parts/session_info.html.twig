@@ -1,7 +1,7 @@
 <div class="card border-info mb-3">
     <div class="card-body">
         <p class="card-text p-0 m-0">
-            You are working in a session started at {{ session_start_time|fragile_date }} UTC. {# TODO: This place won't forgive UTC. #}
+            You are working in a session started at {{ session_start_time|fragile_datetime_utc }}.
         </p>
         <p class="card-body text-end p-0 m-0">
             {{ form_widget(form.reset) }}
