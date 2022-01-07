@@ -24,11 +24,9 @@ class IuFormUiTest extends DbEnabledPantherTestCase
 
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
-            ages: Ages::ADULTS,
+            ages: Ages::MINORS, // ages === MINORS & nsfwSocial === true tests dynamic "doesNsfw" and "worksWithMinors"
             nsfwWebsite: false,
-            nsfwSocial: false,
-            doesNsfw: false,
-            worksWithMinors: true,
+            nsfwSocial: true,
         ));
     }
 
