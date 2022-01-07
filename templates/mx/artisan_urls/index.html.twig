@@ -44,10 +44,10 @@
                         <a href="{{ url.url }}">{{ url.url|event_url|nl2br }}</a>
                     </td>
                     <td class="text-nowrap">
-                        {{ url.state.lastSuccessUtc|nullable_date }}
+                        {{ url.state.lastSuccessUtc|nullable_datetime_utc }}
                     </td>
                     <td class="text-nowrap">
-                        {{ url.state.lastFailureUtc|nullable_date }}
+                        {{ url.state.lastFailureUtc|nullable_datetime_utc }}
                     </td>
                     <td>
                         {{ url.state.lastFailureCode }}

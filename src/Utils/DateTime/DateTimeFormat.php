@@ -11,23 +11,19 @@ final class DateTimeFormat
 {
     use UtilityClass;
 
-    public static function fragile($input, string $format = 'Y-m-d H:i'): string
+    private const FORMAT = 'Y-m-d H:i T'; // grep-expected-utc-datetime-format
+
+    public static function fragileUtc(mixed $input): string
     {
         if ($input instanceof DateTimeInterface) {
-            return $input->format($format) ?: 'unknown/error';
+            return $input->format(self::FORMAT) ?: 'unknown/error';
         } else {
             return 'unknown/error';
         }
     }
 
-    public static function nullable($input, string $format = 'Y-m-d H:i'): string
+    public static function nullableUtc(mixed $input): string
     {
-        if (null === $input) {
-            return 'never';
-        } elseif ($input instanceof DateTimeInterface) {
-            return $input->format($format) ?: 'unknown/error';
-        } else {
-            return 'unknown/error';
-        }
+        return null === $input ? 'never' : self::fragileUtc($input);
     }
 }
