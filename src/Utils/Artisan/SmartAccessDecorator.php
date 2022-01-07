@@ -297,6 +297,26 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             ->setContactAddress($address);
     }
 
+    /**
+     * Even though we serve only "safe" version of the NSFW-related fields,
+     * these internal ("unsafe") values needs to be fixed even in the database,
+     * as its snapshots are public.
+     */
+    public function assureNsfwSafety(): void
+    {
+        if (true === $this->getNsfwWebsite() || true === $this->getNsfwSocial() || true === $this->getDoesNsfw()) {
+            if (true === $this->getWorksWithMinors()) {
+                $this->setWorksWithMinors(false); // No, you don't
+            }
+        }
+
+        if (Ages::ADULTS !== $this->getAges()) {
+            if (true === $this->getDoesNsfw()) {
+                $this->setDoesNsfw(false); // No, you don't
+            }
+        }
+    }
+
     //
     // ===== VOLATILE DATA GETTERS AND SETTERS =====
     //

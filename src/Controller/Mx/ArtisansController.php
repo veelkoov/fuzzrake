@@ -37,6 +37,8 @@ class ArtisansController extends AbstractController
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
 
+        $artisan->assureNsfwSafety();
+
         if ($form->isSubmitted() && $form->isValid()) {
             if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
                 $manager->remove($entity);
