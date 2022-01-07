@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\DataDefinitions\Ages;
+use App\Tests\TestUtils\IuFormTrait;
 use App\Utils\DataInputException;
 use JsonException;
 
 class PasswordHandlingTest extends AbstractTest
 {
+    use IuFormTrait;
+
     /**
      * @throws DataInputException|JsonException
      */
@@ -17,27 +20,22 @@ class PasswordHandlingTest extends AbstractTest
     {
         $client = static::createClient();
 
-        $client->request('GET', '/iu_form/fill');
+        $client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($client);
+        self::skipData($client, true);
+
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'            => 'Maker',
-            'iu_form[country]'         => 'FI',
-            'iu_form[ages]'            => 'MIXED',
-            'iu_form[nsfwWebsite]'     => 'NO',
-            'iu_form[nsfwSocial]'      => 'NO',
-            'iu_form[worksWithMinors]' => 'NO',
-            'iu_form[makerId]'         => 'MAKERID',
-            'iu_form[contactAllowed]'  => 'NO',
-            'iu_form[password]'        => 'some-password',
+            'iu_form[contactAllowed]' => 'NO',
+            'iu_form[password]'       => 'some-password',
         ]);
-        $client->submit($form);
-        $client->followRedirect();
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
         self::performImport(true);
         self::flushAndClear();
 
-        $artisan = self::findArtisanByMakerId('MAKERID');
+        $artisan = self::findArtisanByMakerId('TESTMID');
         self::assertTrue(password_verify('some-password', $artisan->getPassword())); // Fails on plaintext
     }
 
@@ -62,13 +60,18 @@ class PasswordHandlingTest extends AbstractTest
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
+        $client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[name]' => 'New name',
+        ]);
+        $this::submitValid($client, $form);
+
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'     => 'New name',
             'iu_form[password]' => 'known-password',
         ]);
-        $client->submit($form);
-        $client->followRedirect();
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
@@ -101,13 +104,19 @@ class PasswordHandlingTest extends AbstractTest
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'     => 'New name',
-            'iu_form[password]' => 'new-password',
+        $client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[name]' => 'New name',
         ]);
-        $client->submit($form);
-        $client->followRedirect();
+        $this::submitValid($client, $form);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[password]'       => 'new-password',
+            'iu_form[changePassword]' => '1',
+        ]);
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
@@ -141,13 +150,19 @@ class PasswordHandlingTest extends AbstractTest
         $oldHash = $artisan->getPassword();
         unset($artisan);
 
-        $client->request('GET', '/iu_form/fill/MAKERID');
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[name]'     => 'New name',
-            'iu_form[password]' => 'new-password',
+        $client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[name]' => 'New name',
         ]);
-        $client->submit($form);
-        $client->followRedirect();
+        $this::submitValid($client, $form);
+
+        $form = $client->getCrawler()->selectButton('Submit')->form([
+            'iu_form[password]'       => 'new-password',
+            'iu_form[changePassword]' => '1',
+        ]);
+        $this::submitValid($client, $form);
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 

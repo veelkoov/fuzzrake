@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
+use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
 use App\Form\EventType;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/events')]
-class EventsController extends AbstractFormController
+class EventsController extends AbstractController
 {
+    use ButtonClickedTrait;
+
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
     #[Route(path: '/new', name: RouteName::MX_EVENT_NEW, methods: ['GET', 'POST'])]
     #[Cache(maxage: 0, public: false)]

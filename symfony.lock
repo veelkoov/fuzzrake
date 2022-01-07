@@ -147,6 +147,15 @@
     "php-webdriver/webdriver": {
         "version": "1.12.0"
     },
+    "phpdocumentor/reflection-common": {
+        "version": "2.2.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "5.3.0"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.5.1"
+    },
     "phpoffice/phpspreadsheet": {
         "version": "1.20.0"
     },
@@ -379,6 +388,9 @@
             "ref": "877d853a05c6713665a2f4b954734592680abff6"
         }
     },
+    "symfony/password-hasher": {
+        "version": "v5.4.0"
+    },
     "symfony/phpunit-bridge": {
         "version": "6.0",
         "recipe": {
@@ -398,6 +410,9 @@
         "version": "v1.23.1"
     },
     "symfony/polyfill-intl-normalizer": {
+        "version": "v1.23.0"
+    },
+    "symfony/polyfill-uuid": {
         "version": "v1.23.0"
     },
     "symfony/process": {
@@ -465,6 +480,9 @@
     "symfony/twig-pack": {
         "version": "v1.0.0"
     },
+    "symfony/uid": {
+        "version": "v5.4.2"
+    },
     "symfony/validator": {
         "version": "4.3",
         "recipe": {
@@ -528,5 +546,8 @@
     },
     "twig/twig": {
         "version": "v3.3.4"
+    },
+    "webmozart/assert": {
+        "version": "1.10.0"
     }
 }

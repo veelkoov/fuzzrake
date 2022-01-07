@@ -4,7 +4,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
     {{ encore_entry_script_tags('iu_form') }}
 {% endblock %}
 
@@ -16,126 +15,15 @@
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
-    {{ form_errors(form) }}
-
-    {% if submitted %}
-        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#iu_form_instructions_container">Toggle instructions</button>
-    {% endif %}
-
-    <div id="iu_form_instructions_container" {% if submitted %}class="collapse"{% endif %}>
-
-    <div class="card my-4">
-        <div class="card-body">
-            <h5 class="card-title text-danger">Please don't rush</h5>
-            <p class="card-text">
-                You don't want your information to be inaccurate/incomplete. Reserve some time for filling this. Grab your favorite beverage. This form can wait. I am aware of the fact that this form is long as hecc. But you can't say your business is a trivial thing, can you? Please start with the second suggestion: <em>Please first read the whole thing, then fill in</em>.
-            </p>
-        </div>
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2">
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-danger">Please first read the whole thing, then fill in</h5>
-                    <p class="card-text">
-                        Yes, I'm serious. I suggest to first take a look at the whole questionnaire and start filling from the start after getting familiar with what information goes where. You'll avoid repeating yourself and/or confusing your potential customers. You will also be able to tell how much time filling all of this will take.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-warning">Avoid using a smartphone/tablet</h5>
-                    <p class="card-text">
-                        I strongly suggest filling this up using a computer/laptop! Mobile devices made enough weird stuff here and will take away any comfort possible. Don't make your life hard! This form can wait.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">I may take stuff literally</h5>
-                    <p class="card-text">
-                        If you make a typo or e.g. spell your name lowercase, that's how it will end up on the site. Later correction is possible though, so no need to panic.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Expect changes</h5>
-                    <p class="card-text">
-                        Please note, that getfursu.it is still in development. Changes will happen, and there will be probably even more data gathered in the future. Not all data you put here will be available on the website immediately - some might be kept for the future.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Help needed? Problem with the form? Anything ambiguous?</h5>
-                    <p class="card-text">
-                        In case of any questions/issues, feel free to <a href="{{ path('info', { _fragment: 'contact' }) }}" target="_blank">contact me</a>!
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Feedback is welcome</h5>
-                    <p class="card-text">
-                        In case you have any remarks, please add them to <em>notes</em> at the end. This is important. This will help you in properly advertising your studio and will help me improve the website. Thank you!
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title text-danger">Privacy</h5>
-            <p class="card-text">
-                <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>). There are exceptions, marked like this: <span class="badge bg-warning text-dark">PRIVATE</span>
-            </p>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Information: required, important, recommended, optional</h5>
-            <div class="card-text">
-                <div class="mandatory d-inline-block">
-                    Fields marked like this must be filled in.
-                </div>
-                <div class="important d-inline-block">
-                    Avoid skipping fields marked like this.
-                </div>
-                <div class="recommended d-inline-block">
-                    It's recommended to fill fields marked this way.
-                </div>
-                <div class="d-inline-block">
-                    Other fields are 100% optional.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    </div> <!-- id="iu_form_instructions_container" -->
-
-    {# Hide the form initially, so in case automatic captcha fails from the start, the user won't waste time on the form they won't be able to submit #}
-    <div id="iu_form_container">
+    {% include 'iu_form/shared_parts/big_scary_error.html.twig' %}
 
     {{ form_start(form) }}
+
+    {% include 'iu_form/shared_parts/session_info.html.twig' %}
+
+    {{ form_errors(form) }}
+
+    {% include('iu_form/iu_form_parts/instructions.html.twig') %}
 
     <h2 class="mt-4">General info</h2>
 
@@ -176,6 +64,7 @@
                 {{ form_row(form.state) }}
             </div>
         </div>
+
         <div class="col-lg-6">
             <div class="recommended">
                 {{ form_row(form.city) }}
@@ -483,115 +372,9 @@
         </div>
     </div>
 
-    <hr class="mt-4" />
-    <h2>Contact, updates &amp; feedback</h2>
-
-    <table class="table table-bordered table-condensed pros-cons-contact-options">
-        <tr>
-            <th class="text-end">Options available:</th>
-            <th>No&nbsp;contact allowed</th>
-            <th>Corrections</th>
-            <th>Announcements</th>
-            <th>Feedback</th>
-        </tr>
-        <tr>
-            <td>
-                <i class="fas fa-check-square"></i>
-                Get contacted when there's an issue with your submission (e.g. wrong password).<br />
-                <i class="fas fa-times-circle"></i>
-                Any serious issue makes you submission rejected without a notice.
-            </td>
-            <td><i class="fas fa-times-circle"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-        </tr>
-        <tr>
-            <td>
-                <i class="fas fa-check-square"></i>
-                Get notified about new features available to better advertise your studio.<br />
-                <i class="fas fa-times-circle"></i>
-                You may miss important changes and new features, e.g. filters. That may push your studio into "Unknown" classification, skipped/rated lower by some users.
-            </td>
-            <td><i class="fas fa-times-circle"></i></td>
-            <td><i class="fas fa-times-circle"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-        </tr>
-        <tr>
-            <td>
-                <i class="fas fa-check-square"></i>
-                You may occasionally receive a survey to best understand your needs as a maker and make this website suit you better. You are <strong>not</strong> obliged in any way to respond, nor provide all and complete answers.<br />
-                <i class="fas fa-times-circle"></i>
-                Your chances to impact how this website works will be limited.
-            </td>
-            <td><i class="fas fa-times-circle"></i></td>
-            <td><i class="fas fa-times-circle"></i></td>
-            <td><i class="fas fa-times-circle"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-        </tr>
-        <tr>
-            <td>
-                <i class="fas fa-check-square"></i>
-                Opt-out anytime, by simply replying, or sending an update here.<br />
-                <i class="fas fa-check-square"></i>
-                Your contact info will never be shared with anyone.<br />
-                <i class="fas fa-check-square"></i>
-                No 3rd party advertising. The only advertising which <strong>may</strong> appear in the future, would be banners on the website.<br />
-            </td>
-            <td></td>
-            <td><i class="fas fa-check-square"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-            <td><i class="fas fa-check-square"></i></td>
-        </tr>
-    </table>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="mandatory">
-                {{ form_row(form.contactAllowed) }}
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div id="contact_info" class="mandatory">
-                {{ form_row(form.contactInfoObfuscated) }}
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="mandatory">
-                {{ form_row(form.password) }}
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    {{ form_widget(form.changePassword) }}
-                </div>
-                <div class="card-body d-none" id="forgotten_password_instructions">
-                    <ol class="card-text">
-                        <li>Please choose a <strong>new</strong> password you want to use and type it in the password field.</li>
-                        <li>Submit the form.</li>
-                        <li>Follow the instructions on the next page.</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{ form_rest(form) }}
 
-    <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
-    <div class="text-end mt-2">
-        <button class="btn btn-primary btn-lg g-recaptcha"
-                data-sitekey="{{ google_recaptcha_site_key }}"
-                data-callback="iuFormRecaptchaValidationCallback"
-                data-action="iu_form_submit">Submit</button>
-    </div>
+    <input type="submit" class="btn btn-primary" value="Continue" />
 
     {{ form_end(form) }}
-
-    </div> <!-- id="iu_form_container" -->
 {% endblock %}

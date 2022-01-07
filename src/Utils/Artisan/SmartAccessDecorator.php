@@ -9,6 +9,7 @@ use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\FieldsList;
+use App\DataDefinitions\Fields\Validation;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanPrivateData;
@@ -180,7 +181,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Field::IS_MINOR, $isMinor);
     }
 
-    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
+    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getAges(): ?Ages
     {
         return Ages::get($this->getStringValue(Field::AGES));
@@ -191,7 +192,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setStringValue(Field::AGES, $ages?->value);
     }
 
-    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
+    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getNsfwWebsite(): ?bool
     {
         return $this->getBoolValue(Field::NSFW_WEBSITE);
@@ -202,7 +203,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Field::NSFW_WEBSITE, $nsfwWebsite);
     }
 
-    #[NotNull(message: 'You must answer this question.', groups: ['iu_form'])]
+    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getNsfwSocial(): ?bool
     {
         return $this->getBoolValue(Field::NSFW_SOCIAL);
@@ -238,6 +239,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return false === $this->getNsfwWebsite() && false === $this->getNsfwSocial() && false === $this->getSafeDoesNsfw();
     }
 
+    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getWorksWithMinors(): ?bool
     {
         return $this->getBoolValue(Field::WORKS_WITH_MINORS);
@@ -751,16 +753,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
 
     /** @noinspection PhpUnusedParameterInspection */
-    #[Callback(groups: ['iu_form'])]
-    public function validate(ExecutionContextInterface $context, $payload): void
+    #[Callback(groups: [Validation::GRP_DATA])]
+    public function validateData(ExecutionContextInterface $context, $payload): void
     {
-        if (ContactPermit::NO !== $this->artisan->getContactAllowed() && '' === $this->artisan->getContactInfoObfuscated()) {
-            $context
-                ->buildViolation('This value should not be blank.')
-                ->atPath(Field::CONTACT_INFO_OBFUSCATED->modelName())
-                ->addViolation();
-        }
-
         if (null === $this->getDoesNsfw() && $this->isAllowedToDoNsfw()) {
             $context
                 ->buildViolation('You must answer this question.')
@@ -772,6 +767,18 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             $context
                 ->buildViolation('You must answer this question.')
                 ->atPath(Field::WORKS_WITH_MINORS->modelName())
+                ->addViolation();
+        }
+    }
+
+    /** @noinspection PhpUnusedParameterInspection */
+    #[Callback(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
+    public function validateContactAndPassword(ExecutionContextInterface $context, $payload): void
+    {
+        if (ContactPermit::NO !== $this->artisan->getContactAllowed() && '' === $this->artisan->getContactInfoObfuscated()) {
+            $context
+                ->buildViolation('This value should not be blank.')
+                ->atPath(Field::CONTACT_INFO_OBFUSCATED->modelName())
                 ->addViolation();
         }
     }
@@ -795,7 +802,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     #[Regex(pattern: '/^[A-Z0-9]*$/', message: 'Use only uppercase letters and/or digits (A-Z, 0-9).')]
     #[Regex(pattern: '/^(.{7})?$/', message: 'Use exactly 7 characters.')]
-    #[NotBlank(groups: ['iu_form'])]
+    #[NotBlank(groups: [Validation::GRP_DATA])]
     public function getMakerId(): string
     {
         return $this->artisan->getMakerId();
@@ -866,7 +873,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 16)]
-    #[NotBlank(groups: ['iu_form'])]
+    #[NotBlank(groups: [Validation::GRP_DATA])]
     public function getCountry(): string
     {
         return $this->artisan->getCountry();
@@ -1166,7 +1173,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 16)]
-    #[NotBlank(groups: ['iu_form'])]
+    #[NotBlank(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     public function getContactAllowed(): string
     {
         return $this->artisan->getContactAllowed();

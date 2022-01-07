@@ -7,6 +7,7 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
+use App\Tests\TestUtils\IuFormTrait;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
@@ -25,6 +26,8 @@ use TRegx\CleanRegex\Match\Details\Detail;
 
 class ExtendedTest extends AbstractTest
 {
+    use IuFormTrait;
+
     private const VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
         Field::CONTACT_INFO_ORIGINAL,
         Field::CONTACT_ADDRESS_PLAIN,
@@ -72,6 +75,12 @@ class ExtendedTest extends AbstractTest
 
     private const BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
         Field::WORKS_WITH_MINORS,
+    ];
+
+    private const SECOND_PAGE = [ // These fields are on the "contact + password" page (the second one)
+        Field::PASSWORD,
+        Field::CONTACT_ALLOWED,
+        Field::CONTACT_INFO_OBFUSCATED,
     ];
 
     /**
@@ -185,28 +194,35 @@ class ExtendedTest extends AbstractTest
     private static function validateIuFormOldDataSubmitNew(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
     {
         $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
+        self::skipRulesAndCaptcha($client);
 
-        self::assertResponseStatusCodeSame(200);
+        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), false);
 
-        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent());
+        $form = $client->getCrawler()->selectButton('Continue')->form();
+        self::setValuesInForm($form, $newData, false);
+        self::submitValid($client, $form);
+
+        self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), true);
 
         $form = $client->getCrawler()->selectButton('Submit')->form();
-        self::setValuesInForm($form, $newData);
-        $client->submit($form);
+        self::setValuesInForm($form, $newData, true);
+        self::submitValid($client, $form);
 
-        self::assertResponseStatusCodeSame(302);
-        $client->followRedirect();
         self::assertSelectorTextContains('h4', 'Your submission has been recorded');
     }
 
     private static function getIuFormUrlForMakerId(string $urlMakerId): string
     {
-        return '/iu_form/fill'.($urlMakerId ? '/'.$urlMakerId : '');
+        return '/iu_form/start'.($urlMakerId ? '/'.$urlMakerId : '');
     }
 
-    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody): void
+    private static function verifyGeneratedIuFormFilledWithData(Artisan $oldData, string $htmlBody, bool $secondPage): void
     {
         foreach (Fields::all() as $field) {
+            if (in_array($field, self::SECOND_PAGE) !== $secondPage) {
+                continue;
+            }
+
             if (in_array($field, self::NOT_IN_FORM)) {
                 self::assertFieldIsNotPresentInForm($field, $htmlBody);
                 self::assertFalse($field->isInIuForm());
@@ -236,7 +252,7 @@ class ExtendedTest extends AbstractTest
             self::assertContactValueFieldIsPresentWithValue($value, $field, $htmlBody);
         } else {
             self::assertNotNull($value, "Field $field->name should not be expected to be null");
-            self::assertFormValue('#iu_form_container form', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
+            self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
         }
     }
 
@@ -319,7 +335,6 @@ class ExtendedTest extends AbstractTest
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
-            /* @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
             $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
             self::assertTrue(pattern($regexp)->test($htmlBody), "$field->name radio field was not present or (not) selected.");
         }
@@ -349,9 +364,13 @@ class ExtendedTest extends AbstractTest
         }
     }
 
-    private static function setValuesInForm(Form $form, Artisan $data): void
+    private static function setValuesInForm(Form $form, Artisan $data, bool $secondPage): void
     {
         foreach (Fields::all() as $field) {
+            if (in_array($field, self::SECOND_PAGE) !== $secondPage) {
+                continue;
+            }
+
             if (in_array($field, self::NOT_IN_FORM)) {
                 continue;
             }
@@ -372,9 +391,13 @@ class ExtendedTest extends AbstractTest
             }
         }
 
-        $field = $form['iu_form[photosCopyright]'][0];
-        /* @var ChoiceFormField $field */
-        $field->tick();
+        if ($secondPage) {
+            $form['iu_form[changePassword]']->setValue('1'); // Eagerly
+        } else {
+            $field = $form['iu_form[photosCopyright]'][0];
+            /* @var ChoiceFormField $field */
+            $field->tick();
+        }
     }
 
     /**
