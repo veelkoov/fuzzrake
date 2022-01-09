@@ -6,10 +6,10 @@ namespace App\Tests\Service\Statistics;
 
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\Statistics\StatisticsService;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-class StatisticsServiceTest extends DbEnabledKernelTestCase
+class StatisticsServiceTestWithEM extends KernelTestCaseWithEM
 {
     public function testUnknownAndEuArtisansDontCountTowardsTotalCountries(): void
     {

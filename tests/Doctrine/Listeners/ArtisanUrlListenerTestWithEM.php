@@ -6,12 +6,12 @@ namespace App\Tests\Doctrine\Listeners;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use DateTime;
 use DateTimeZone;
 use Exception;
 
-class ArtisanUrlListenerTest extends DbEnabledKernelTestCase
+class ArtisanUrlListenerTestWithEM extends KernelTestCaseWithEM
 {
     /**
      * @throws Exception

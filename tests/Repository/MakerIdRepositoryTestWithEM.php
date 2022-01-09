@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\MakerId;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-class MakerIdRepositoryTest extends DbEnabledKernelTestCase
+class MakerIdRepositoryTestWithEM extends KernelTestCaseWithEM
 {
     public function testGetOldToNewMakerIdsMap(): void
     {

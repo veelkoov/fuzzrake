@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\TestUtils;
+namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-trait DbEnabledTestCaseTrait
+trait EntityManagerTrait
 {
     private static ?EntityManagerInterface $entityManager = null;
 

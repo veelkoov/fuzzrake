@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Artisan;
 
 use App\Entity\ArtisanValue;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-class SmartAccessDecoratorTest extends DbEnabledKernelTestCase
+class SmartAccessDecoratorTestWithEM extends KernelTestCaseWithEM
 {
     public function testBooleanValues(): void
     {

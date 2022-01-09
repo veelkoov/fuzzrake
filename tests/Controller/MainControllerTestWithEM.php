@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class MainControllerTest extends DbEnabledWebTestCase
+class MainControllerTestWithEM extends WebTestCaseWithEM
 {
     public function testMainPageLoads(): void
     {

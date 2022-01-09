@@ -8,11 +8,11 @@ use App\DataDefinitions\Features;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\OrderTypes;
 use App\DataDefinitions\ProductionModels;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\DomCrawler\Crawler;
 
-class StatisticsControllerTest extends DbEnabledWebTestCase
+class StatisticsControllerTestWithEM extends WebTestCaseWithEM
 {
     public function testStatisticsPageLoads(): void
     {

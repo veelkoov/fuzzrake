@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\Tests\TestUtils\IuFormTrait;
+use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\DataInputException;
 use JsonException;
 
-class PasswordHandlingTest extends AbstractTest
+class PasswordHandlingTest extends AbstractTestWithEM
 {
     use IuFormTrait;
 

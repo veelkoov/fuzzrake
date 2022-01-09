@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\TestUtils;
+namespace App\Tests\TestUtils\Cases;
 
+use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverDimension;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\PantherTestCase;
 
-abstract class DbEnabledPantherTestCase extends PantherTestCase
+abstract class PantherTestCaseWithEM extends PantherTestCase
 {
-    use DbEnabledTestCaseTrait;
+    use EntityManagerTrait;
 
     protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): PantherClient
     {

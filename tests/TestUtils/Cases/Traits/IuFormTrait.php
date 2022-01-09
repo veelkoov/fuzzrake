@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\TestUtils;
+namespace App\Tests\TestUtils\Cases\Traits;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 

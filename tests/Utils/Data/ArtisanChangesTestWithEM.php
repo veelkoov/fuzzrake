@@ -8,11 +8,11 @@ use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 
-class ArtisanChangesTest extends DbEnabledKernelTestCase
+class ArtisanChangesTestWithEM extends KernelTestCaseWithEM
 {
     public function testApply(): void
     {

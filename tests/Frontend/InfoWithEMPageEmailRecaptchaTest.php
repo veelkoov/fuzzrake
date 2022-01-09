@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Frontend;
 
-use App\Tests\TestUtils\DbEnabledPantherTestCase;
+use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Facebook\WebDriver\Exception\WebDriverException;
 
-class InfoPageEmailRecaptchaTest extends DbEnabledPantherTestCase
+class InfoWithEMPageEmailRecaptchaTest extends PantherTestCaseWithEM
 {
     /**
      * @throws WebDriverException
