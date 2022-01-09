@@ -107,6 +107,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),
             'session_start_time' => $state->getStarted(),
+            'big_error_message'  => $this->getRestoreFailedMessage($state),
         ]);
     }
 
@@ -163,6 +164,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),
             'session_start_time' => $state->getStarted(),
+            'big_error_message'  => $this->getRestoreFailedMessage($state),
         ]);
     }
 
@@ -246,11 +248,9 @@ class IuFormController extends AbstractRecaptchaBackedController
         return $state;
     }
 
-    private function indicateAnyRestoreErrors(IuState $state, FormInterface $form): void
+    private function getRestoreFailedMessage(IuState $state): string
     {
-        if ($state->hasRestoreErrors()) {
-            $form->addError(new FormError('There were some issues while handling the information you entered. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
-        }
+        return $state->hasRestoreErrors() ? 'There were some issues while handling the information you entered. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!' : '';
     }
 
     private function redirectToUnfinishedStep(string $currentRoute, IuState $state): ?RedirectResponse
@@ -273,11 +273,8 @@ class IuFormController extends AbstractRecaptchaBackedController
 
     private function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface
     {
-        $result = $this->createForm($type, $state->artisan, $options);
-
-        $result->handleRequest($request);
-        $this->indicateAnyRestoreErrors($state, $result);
-
-        return $result;
+        return $this
+            ->createForm($type, $state->artisan, $options)
+            ->handleRequest($request);
     }
 }
