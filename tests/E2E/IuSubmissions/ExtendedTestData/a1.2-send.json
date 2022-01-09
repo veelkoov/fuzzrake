@@ -3,8 +3,6 @@
     "FORMER_MAKER_IDS": "",
     "NAME": "Name mkr1 after update",
     "FORMERLY": "Name mkr1 before update\nFormerly mkr1 before update",
-    "AGES": "MIXED",
-    "WORKS_WITH_MINORS": true,
     "PASSWORD": "Password changed 1",
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-email-update-after@ema.il",
     "CONTACT_INFO_ORIGINAL": "",
@@ -17,6 +15,12 @@
     "COUNTRY": "C1",
     "STATE": "State mkr1 after update",
     "CITY": "City mkr1 after update",
+
+    "AGES": "ADULTS",
+    "NSFW_WEBSITE": true,
+    "NSFW_SOCIAL": false,
+    "DOES_NSFW": true,
+    "WORKS_WITH_MINORS": false,
 
     "PAYMENT_PLANS": "30% upfront, rest in 200 Eur/mth until fully paid\n50%/50%\nMkr1 after update",
     "PAYMENT_METHODS": "Cash\nAfter update mkr1\nBank transfer\nPalPay",

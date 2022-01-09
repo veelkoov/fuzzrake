@@ -3,8 +3,6 @@
     "FORMER_MAKER_IDS": "M000003",
     "NAME": "Maker name 3",
     "FORMERLY": "",
-    "AGES": "",
-    "WORKS_WITH_MINORS": null,
     "PASSWORD": "",
     "CONTACT_INFO_OBFUSCATED": "",
     "CONTACT_INFO_ORIGINAL": "",
@@ -17,6 +15,12 @@
     "COUNTRY": "",
     "STATE": "",
     "CITY": "",
+
+    "AGES": null,
+    "NSFW_WEBSITE": null,
+    "NSFW_SOCIAL": null,
+    "DOES_NSFW": null,
+    "WORKS_WITH_MINORS": null,
 
     "PAYMENT_PLANS": "",
     "PAYMENT_METHODS": "",
