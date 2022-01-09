@@ -27,7 +27,7 @@
             {%- if artisan.websiteUrl -%}
                 <li><a class="dropdown-item track-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a></li>
             {%- endif -%}
-            {%- for url in artisan.pricesUrls -%}
+            {%- for url in artisan.pricesUrlsArray -%}
                 <li><a class="dropdown-item track-prices" href="{{ url }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a></li>
             {%- endfor -%}
             {%- if artisan.faqUrl -%}
