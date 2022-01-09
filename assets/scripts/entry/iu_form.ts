@@ -1,23 +1,8 @@
-import DataBridge from "../class/DataBridge";
-import SuccessTextStatus = JQuery.Ajax.SuccessTextStatus;
-import jqXHR = JQuery.jqXHR;
-import ErrorTextStatus = JQuery.Ajax.ErrorTextStatus;
 import {NO_CONTACT_ALLOWED} from "../consts";
+import {Radio} from "../class/Radio";
+import {toggle} from "../jQueryUtils";
 
 require('../../styles/iu_form.less');
-
-grecaptcha.ready((): void => {
-    grecaptcha.execute(DataBridge.getGoogleRecaptchaSiteKey(), { action: 'iu_form_verify' }).then((token: string): void => {
-        jQuery.ajax(DataBridge.getApiUrl('iu_form/verify?token=' + token), {
-            success: (data: any, status: SuccessTextStatus, _: jqXHR): void => {
-                jQuery('#iu_form_container').show().removeClass('d-none');
-            },
-            error: (jqXHR1: jqXHR, textStatus: ErrorTextStatus, errorThrown: string): void => {
-                alert('ERROR! Automatic captcha failed: ' + errorThrown);
-            }
-        });
-    });
-});
 
 jQuery((_$: JQueryStatic) => {
     // @ts-ignore
@@ -30,7 +15,7 @@ jQuery((_$: JQueryStatic) => {
     }
 
     display_password_change_hint_if_checked_forgot();
-    hide_contact_form_part_if_no_contact_allowed();
+    react_to_contact_allowance_changes();
 });
 
 function set_day() {
@@ -38,7 +23,7 @@ function set_day() {
     day.val(month.val() && year.val() ? '1' : ''); // grep-default-auto-since-day-01
 }
 
-function display_password_change_hint_if_checked_forgot() {
+function display_password_change_hint_if_checked_forgot(): void {
     jQuery('#iu_form_changePassword').on('change', (evt) => {
         jQuery('#forgotten_password_instructions')
             .removeClass('d-none')
@@ -46,13 +31,29 @@ function display_password_change_hint_if_checked_forgot() {
     }).trigger('change');
 }
 
-function hide_contact_form_part_if_no_contact_allowed() {
-    jQuery('input[type=radio][name="iu_form[contactAllowed]"]').on('change', (evt) => {
-        let is_contact_allowed = NO_CONTACT_ALLOWED !== jQuery(evt.target).val();
+function react_to_contact_allowance_changes(): void {
+    const $prosCons = jQuery('.pros-cons-contact-options');
+    const $contactInfoContainer = jQuery('#contact_info');
+    const $contactInfoObfuscatedField = jQuery('#iu_form_contactInfoObfuscated');
 
-        jQuery('#contact_info').toggle(is_contact_allowed);
-        jQuery('#iu_form_contactInfoObfuscated').prop('required', is_contact_allowed);
-    });
+    const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
+
+    function refresh(immediate: boolean = false): void {
+        let requireContactInfo = contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED);
+
+        $contactInfoObfuscatedField.prop('required', requireContactInfo);
+        toggle($contactInfoContainer, requireContactInfo);
+
+        let duration: JQuery.Duration = immediate ? 0 : 'fast';
+        let level = contactAllowed.selectedIdx();
+
+        toggle($prosCons, function (idx, el): boolean {
+            return $(el).data('min-level') <= level
+                && $(el).data('max-level') >= level;
+        }, duration);
+    }
+
+    refresh(true);
 }
 
 let day = jQuery('#iu_form_since_day').hide();

@@ -16,8 +16,6 @@ RUN pip3 install awscli
 
 RUN docker-php-ext-install -j$(nproc) intl opcache zip gd
 
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-
 RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
         && rm /tmp/composer_installer
@@ -40,6 +38,10 @@ ENV PANTHER_NO_SANDBOX 1
 ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
 
 RUN apk del .build-deps
+
+ADD php.ini-production php.ini /tmp/
+RUN diff "/tmp/php.ini-production" "$PHP_INI_DIR/php.ini-production" \
+        && rm "/tmp/php.ini-production" && mv "/tmp/php.ini" "$PHP_INI_DIR/php.ini"
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
