@@ -250,7 +250,7 @@ class IuFormController extends AbstractRecaptchaBackedController
 
     private function getRestoreFailedMessage(IuState $state): string
     {
-        return $state->hasRestoreErrors() ? 'There were some issues while handling the information you entered. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!' : '';
+        return $state->hasRestoreErrors() ? 'There were some issues while handling the information you entered. It is possible that once submitted, some of it may be lost. Try to finish sending the form, but even if you succeed, please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!' : '';
     }
 
     private function redirectToUnfinishedStep(string $currentRoute, IuState $state): ?RedirectResponse
