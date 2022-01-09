@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\Tests\TestUtils\IuFormTrait;
+use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use Exception;
 
-class IuNavigationTest extends AbstractTest
+class IuNavigationTest extends AbstractTestWithEM
 {
     use IuFormTrait;
 

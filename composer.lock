@@ -6808,16 +6808,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "0.12.11",
+            "version": "0.12.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "348f392aa15fa19e9bd7489aa7bc69bc31c148a4"
+                "reference": "efcc6f135a76bfd031c31fc182ce7a6fd02b3ce5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/348f392aa15fa19e9bd7489aa7bc69bc31c148a4",
-                "reference": "348f392aa15fa19e9bd7489aa7bc69bc31c148a4",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/efcc6f135a76bfd031c31fc182ce7a6fd02b3ce5",
+                "reference": "efcc6f135a76bfd031c31fc182ce7a6fd02b3ce5",
                 "shasum": ""
             },
             "require": {
@@ -6856,7 +6856,7 @@
             "description": "Prefixed and PHP 7.1 downgraded version of rector/rector",
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/0.12.11"
+                "source": "https://github.com/rectorphp/rector/tree/0.12.12"
             },
             "funding": [
                 {
@@ -6864,7 +6864,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-05T18:37:59+00:00"
+            "time": "2022-01-07T16:49:17+00:00"
         },
         {
             "name": "symfony/browser-kit",

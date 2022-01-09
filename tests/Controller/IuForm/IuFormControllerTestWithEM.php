@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\IuForm;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
-use App\Tests\TestUtils\IuFormTrait;
+use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class IuFormControllerTest extends DbEnabledWebTestCase
+class IuFormControllerTestWithEM extends WebTestCaseWithEM
 {
     use IuFormTrait;
 

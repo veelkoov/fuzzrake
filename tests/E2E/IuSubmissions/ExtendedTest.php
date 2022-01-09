@@ -7,7 +7,7 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
-use App\Tests\TestUtils\IuFormTrait;
+use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
@@ -24,7 +24,7 @@ use Symfony\Component\DomCrawler\Form;
 use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Match\Details\Detail;
 
-class ExtendedTest extends AbstractTest
+class ExtendedTest extends AbstractTestWithEM
 {
     use IuFormTrait;
 

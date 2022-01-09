@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Event;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class EventsControllerTest extends DbEnabledWebTestCase
+class EventsControllerTestWithEM extends WebTestCaseWithEM
 {
     public function testPageLoads(): void
     {

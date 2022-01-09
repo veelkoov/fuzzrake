@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tasks\DataImport;
-use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class AbstractTest extends DbEnabledWebTestCase
+abstract class AbstractTestWithEM extends WebTestCaseWithEM
 {
     protected const IMPORT_DATA_DIR = __DIR__.'/../../../var/testIuFormData'; // TODO: This path should be coming from the container
 

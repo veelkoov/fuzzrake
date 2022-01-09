@@ -6,6 +6,7 @@ namespace App\Controller\Traits;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 trait ButtonClickedTrait
 {
@@ -17,10 +18,16 @@ trait ButtonClickedTrait
 
         $button = $form->getClickedButton();
 
-        if (null === $button || 0 !== $form->getErrors(false)->count()) {
+        if (null === $button || $button->getName() !== $buttonId) {
             return false;
         }
 
-        return $buttonId === $button->getName();
+        foreach ($form->getErrors(true) as $error) {
+            if ($error->getCause()  instanceof CsrfToken) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

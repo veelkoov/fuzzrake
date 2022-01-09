@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Repository;
 
 use App\Entity\Artisan as ArtisanE;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 
-class ArtisanRepositoryTest extends DbEnabledKernelTestCase
+class ArtisanRepositoryTestWithEM extends KernelTestCaseWithEM
 {
     /**
      * @dataProvider findByMakerIdDataProvider

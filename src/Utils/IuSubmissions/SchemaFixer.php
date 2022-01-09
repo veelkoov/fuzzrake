@@ -38,7 +38,6 @@ final class SchemaFixer
                 $data[Field::NSFW_WEBSITE->name] = null;
                 $data[Field::NSFW_SOCIAL->name] = null;
                 $data[Field::DOES_NSFW->name] = null;
-                // no break
         }
 
         return $data;

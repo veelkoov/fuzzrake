@@ -9,14 +9,14 @@ use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\ArtisanUrlInspection;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\Snapshot\WebpageSnapshotCache;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class ArtisanUrlInspectionTest extends DbEnabledKernelTestCase
+class ArtisanUrlInspectionTestWithEM extends KernelTestCaseWithEM
 {
     public function testInspect(): void
     {

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Frontend;
 
 use App\DataDefinitions\Ages;
-use App\Tests\TestUtils\DbEnabledPantherTestCase;
+use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 
-class IuFormUiTest extends DbEnabledPantherTestCase
+class IuFormUiTestWithEM extends PantherTestCaseWithEM
 {
     private ?Client $client = null;
 

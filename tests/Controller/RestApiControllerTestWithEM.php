@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Tests\TestUtils\DbEnabledWebTestCase;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Json;
 use JsonException;
 
-class RestApiControllerTest extends DbEnabledWebTestCase
+class RestApiControllerTestWithEM extends WebTestCaseWithEM
 {
     public function testArtisans(): void
     {

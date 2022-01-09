@@ -2,25 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\TestUtils;
+namespace App\Tests\TestUtils\Cases\Traits;
 
+use function pattern;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Form;
 
-abstract class DbEnabledWebTestCase extends WebTestCase
+trait UtilsTrait
 {
-    use DbEnabledTestCaseTrait;
-
-    protected static function createClient(array $options = [], array $server = []): KernelBrowser
-    {
-        $result = parent::createClient($options, $server);
-
-        self::resetDB();
-
-        return $result;
-    }
-
     protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
     {
         $pattern = pattern('\s+');
@@ -33,7 +23,13 @@ abstract class DbEnabledWebTestCase extends WebTestCase
 
     protected static function submitValidForm(KernelBrowser $client, string $buttonName, array $formData): void
     {
-        self::submitValid($client, $client->getCrawler()->selectButton($buttonName)->form($formData));
+        $button = $client->getCrawler()->selectButton($buttonName);
+
+        if (0 === $button->count()) {
+            throw new RuntimeException("Button '$buttonName' has not been found.");
+        }
+
+        self::submitValid($client, $button->form($formData));
     }
 
     protected static function submitValid(KernelBrowser $client, Form $form): void
@@ -56,7 +52,13 @@ abstract class DbEnabledWebTestCase extends WebTestCase
 
     protected static function submitInvalidForm(KernelBrowser $client, string $buttonName, array $formData): void
     {
-        self::submitInvalid($client, $client->getCrawler()->selectButton($buttonName)->form($formData));
+        $button = $client->getCrawler()->selectButton($buttonName);
+
+        if (0 === $button->count()) {
+            throw new RuntimeException("Button '$buttonName' has not been found.");
+        }
+
+        self::submitInvalid($client, $button->form($formData));
     }
 
     protected static function submitInvalid(KernelBrowser $client, Form $form): void

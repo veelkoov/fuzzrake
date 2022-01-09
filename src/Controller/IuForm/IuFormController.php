@@ -8,6 +8,7 @@ use App\Controller\AbstractRecaptchaBackedController;
 use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\ContactPermit;
+use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
@@ -106,6 +107,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),
             'session_start_time' => $state->getStarted(),
+            'big_error_message'  => $this->getRestoreFailedMessage($state),
         ]);
     }
 
@@ -162,6 +164,7 @@ class IuFormController extends AbstractRecaptchaBackedController
             'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),
             'session_start_time' => $state->getStarted(),
+            'big_error_message'  => $this->getRestoreFailedMessage($state),
         ]);
     }
 
@@ -240,17 +243,14 @@ class IuFormController extends AbstractRecaptchaBackedController
     private function prepareState(?string $makerId, Request $request): IuState
     {
         $state = new IuState($this->logger, $request->getSession(), $makerId, $this->getArtisanByMakerIdOrThrow404($makerId));
-
-        $state->artisan->setPassword(''); // Must never appear in the form
+        SecureValues::forIuForm($state->artisan);
 
         return $state;
     }
 
-    private function indicateAnyRestoreErrors(IuState $state, FormInterface $form): void
+    private function getRestoreFailedMessage(IuState $state): string
     {
-        if ($state->hasRestoreErrors()) {
-            $form->addError(new FormError('There were some issues while handling the information you entered. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));
-        }
+        return $state->hasRestoreErrors() ? 'There were some issues while handling the information you entered. It is possible that once submitted, some of it may be lost. Try to finish sending the form, but even if you succeed, please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!' : '';
     }
 
     private function redirectToUnfinishedStep(string $currentRoute, IuState $state): ?RedirectResponse
@@ -273,11 +273,8 @@ class IuFormController extends AbstractRecaptchaBackedController
 
     private function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface
     {
-        $result = $this->createForm($type, $state->artisan, $options);
-
-        $result->handleRequest($request);
-        $this->indicateAnyRestoreErrors($state, $result);
-
-        return $result;
+        return $this
+            ->createForm($type, $state->artisan, $options)
+            ->handleRequest($request);
     }
 }

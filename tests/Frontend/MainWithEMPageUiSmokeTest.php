@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Frontend;
 
-use App\Tests\TestUtils\DbEnabledPantherTestCase;
+use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 
-class MainPageUiSmokeTest extends DbEnabledPantherTestCase
+class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
 {
     /**
      * @throws WebDriverException
