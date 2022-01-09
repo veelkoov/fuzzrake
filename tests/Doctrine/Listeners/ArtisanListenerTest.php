@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Doctrine\Listeners;
 
 use App\DataDefinitions\Ages;
-use App\Tests\TestUtils\DbEnabledKernelTestCase;
+use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator;
 use Exception;
 
-class ArtisanListenerTest extends DbEnabledKernelTestCase
+class ArtisanListenerTest extends KernelTestCaseWithEM
 {
     /**
      * @throws Exception
