@@ -6,6 +6,7 @@ namespace App\Controller\IuForm\Utils;
 
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\SafeArrayRead;
 use DateTimeInterface;
@@ -73,7 +74,10 @@ class IuState
 
     public function save(): void
     {
-        $this->session->save($this->artisan->getAllData());
+        $data = $this->artisan->getAllData();
+        SecureValues::forSessionStorage($data);
+
+        $this->session->save($data);
     }
 
     public function hasRestoreErrors(): bool
@@ -95,7 +99,11 @@ class IuState
 
         if ([] !== $result->getErrors()) {
             $this->hasRestoreErrors = true;
-            $this->logger->info('Tried to restore data in given context.', $this->getLogContext(['savedData' => $this->session->getSaved()]));
+
+            $savedData = $this->session->getSaved();
+            SecureValues::forLogs($savedData);
+
+            $this->logger->info('Tried to restore data in given context.', $this->getLogContext(['savedData' => $savedData]));
         }
 
         foreach ($result->getErrors() as $error) {

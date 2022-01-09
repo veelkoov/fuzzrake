@@ -8,6 +8,7 @@ use App\Controller\AbstractRecaptchaBackedController;
 use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\ContactPermit;
+use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
@@ -240,8 +241,7 @@ class IuFormController extends AbstractRecaptchaBackedController
     private function prepareState(?string $makerId, Request $request): IuState
     {
         $state = new IuState($this->logger, $request->getSession(), $makerId, $this->getArtisanByMakerIdOrThrow404($makerId));
-
-        $state->artisan->setPassword(''); // Must never appear in the form
+        SecureValues::forIuForm($state->artisan);
 
         return $state;
     }
