@@ -31,6 +31,7 @@ export default class HandlebarsHelpers {
             photos: HandlebarsHelpers.photos,
             has: HandlebarsHelpers.has,
             since: HandlebarsHelpers.since,
+            nl2br: HandlebarsHelpers.nl2br,
         };
     }
 
@@ -42,6 +43,7 @@ export default class HandlebarsHelpers {
             'photos': true,
             'has': true,
             'since': true,
+            'nl2br': true,
         };
     }
 
@@ -120,5 +122,13 @@ export default class HandlebarsHelpers {
         }
 
         return new Handlebars.SafeString(`<div class="imgs-container">${result}</div>`);
+    }
+
+    public static nl2br(element: string | Handlebars.SafeString): Handlebars.SafeString {
+        if (element instanceof Handlebars.SafeString) {
+            return element; // FIXME: https://github.com/veelkoov/fuzzrake/issues/111
+        }
+
+        return new Handlebars.SafeString(element.split("\n").map(value => escape(value)).join('<br />'));
     }
 }

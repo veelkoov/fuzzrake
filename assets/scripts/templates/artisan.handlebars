@@ -27,7 +27,7 @@
     {{ photos artisan.miniatureUrls artisan.photoUrls }}
     {{# if artisan.intro }}
         <div class="col-sm-12 p-1">
-            <p class="lead">{{ artisan.intro }}</p>
+            <p class="lead">{{ nl2br artisan.intro }}</p>
         </div>
     {{/ if }}
     <div class="col-sm-3 p-1">
