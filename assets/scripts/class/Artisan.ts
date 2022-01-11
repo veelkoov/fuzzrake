@@ -187,9 +187,9 @@ export default class Artisan {
     }
 
     private getFilterPayPlans(): string {
-        if ([] === this.paymentPlans) {
+        if (0 === this.paymentPlans.length) {
             return '';
-        } else if (['None'] === this.paymentPlans) { // grep-payment-plans-none
+        } else if (1 === this.paymentPlans.length && 'None' === this.paymentPlans[0]) { // grep-payment-plans-none
             return 'Not supported';  // grep-payment-plans-none-label
         } else {
             return 'Supported'; // grep-payment-plans-any-label
