@@ -11,7 +11,6 @@ use App\Utils\Data\Fixer\CountryFixer;
 use App\Utils\Data\Fixer\DefinedListFixer;
 use App\Utils\Data\Fixer\FixerInterface;
 use App\Utils\Data\Fixer\FreeListFixer;
-use App\Utils\Data\Fixer\IntroFixer;
 use App\Utils\Data\Fixer\LanguagesFixer;
 use App\Utils\Data\Fixer\NoopFixer;
 use App\Utils\Data\Fixer\PayPlanFixer;
@@ -34,7 +33,6 @@ class Fixer
         private readonly LanguagesFixer $languagesFixer,
         private readonly SinceFixer $sinceFixer,
         private readonly NoopFixer $noopFixer,
-        private readonly IntroFixer $introFixer,
         private readonly StateFixer $stateFixer,
         private readonly PayPlanFixer $payPlanFixer,
     ) {
@@ -65,7 +63,6 @@ class Fixer
             Field::SINCE           => $this->sinceFixer,
             Field::COUNTRY         => $this->countryFixer,
             Field::STATE           => $this->stateFixer,
-            Field::INTRO           => $this->introFixer,
             Field::LANGUAGES       => $this->languagesFixer,
             Field::CONTACT_ALLOWED => $this->contactAllowedFixer,
             Field::PAYMENT_PLANS   => $this->payPlanFixer,
