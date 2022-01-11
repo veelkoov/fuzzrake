@@ -12,7 +12,7 @@ final class SchemaFixer
     use Singleton;
 
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const CURRENT_SCHEMA_VERSION = 11;
+    private const CURRENT_SCHEMA_VERSION = 12;
 
     public function fix(array $data): array
     {
@@ -32,6 +32,10 @@ final class SchemaFixer
 
             case 10:
                 $data[Field::AGES->name] = null;
+                // no break
+
+            case 11:
+                $data[Field::PAYMENT_PLANS->name] = explode("\n", $data[Field::PAYMENT_PLANS->name]);
         }
 
         return $data;

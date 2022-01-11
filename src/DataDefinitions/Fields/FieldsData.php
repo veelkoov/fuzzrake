@@ -47,7 +47,7 @@ final class FieldsData
         'FEATURES_COMMENT'          => ['      P F featuresComment',         null],
         'FEATURES'                  => ['L   S P F features',                V::LIST_VALIDATION],
         'OTHER_FEATURES'            => ['L   S P F otherFeatures',           V::LIST_VALIDATION],
-        'PAYMENT_PLANS'             => ['    S P F paymentPlans',            null],
+        'PAYMENT_PLANS'             => ['L   S P F paymentPlans',            null],
         'PAYMENT_METHODS'           => ['L   S P F paymentMethods',          V::LIST_VALIDATION],
         'CURRENCIES_ACCEPTED'       => ['L   S P F currenciesAccepted',      V::LIST_VALIDATION],
         'SPECIES_COMMENT'           => ['    S P F speciesComment',          null],

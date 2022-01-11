@@ -56,7 +56,7 @@ export default class Artisan {
                 features: string[],
                 readonly otherFeatures: string[],
 
-                readonly paymentPlans: string,
+                readonly paymentPlans: string[],
                 readonly paymentMethods: string[],
                 readonly currenciesAccepted: string[],
 
@@ -187,9 +187,9 @@ export default class Artisan {
     }
 
     private getFilterPayPlans(): string {
-        if ('' === this.paymentPlans) {
+        if ([] === this.paymentPlans) {
             return '';
-        } else if ('None' === this.paymentPlans) { // grep-payment-plans-none
+        } else if (['None'] === this.paymentPlans) { // grep-payment-plans-none
             return 'Not supported';  // grep-payment-plans-none-label
         } else {
             return 'Supported'; // grep-payment-plans-any-label
