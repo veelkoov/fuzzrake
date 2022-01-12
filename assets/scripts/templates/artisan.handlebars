@@ -36,50 +36,65 @@
             <p class="lead">{{ nl2br artisan.intro }}</p>
         </div>
     {{/ if }}
+
     <div class="col-sm-3 p-1">
         <h5>Produces</h5>
+
         <div class="small pb-2">
             {{# if (has artisan.productionModelsComment) }}
-                {{ artisan.productionModelsComment }}
+                {{ nl2br artisan.productionModelsComment }}
             {{/ if }}
+
             {{ optionalList artisan.productionModels }}
         </div>
+
         <h5>Styles</h5>
+
         <div class="small">
             {{# if (has artisan.stylesComment) }}
-                {{ artisan.stylesComment }}
+                {{ nl2br artisan.stylesComment }}
             {{/ if }}
+
             {{ optionalList artisan.allStyles }}
         </div>
     </div>
+
     <div class="col-sm-5 p-1">
         <h5>Types</h5>
+
         <div class="small">
             {{# if (has artisan.orderTypesComment) }}
-                {{ artisan.orderTypesComment }}
+                {{ nl2br artisan.orderTypesComment }}
             {{/ if }}
             {{ optionalList artisan.allOrderTypes }}
         </div>
     </div>
+
     <div class="col-sm-4 p-1">
         <h5>Features</h5>
+
         <div class="small">
             {{# if (has artisan.featuresComment) }}
-                {{ artisan.featuresComment }}
+                {{ nl2br artisan.featuresComment }}
             {{/ if }}
+
             {{ optionalList artisan.allFeatures }}
         </div>
     </div>
+
     <div class="col-sm-6 p-1">
         <h5>Species</h5>
+
         <div class="small" id="artisanSpecies">
             {{# if (has artisan.speciesComment) }}
-                {{ artisan.speciesComment }} <br />
+                {{ nl2br artisan.speciesComment }} <br />
             {{/ if }}
+
             {{# if (has artisan.speciesDoes) }}
                 <strong>Does</strong>: {{ commaSeparated artisan.speciesDoes }}
                 {{# if (has artisan.speciesDoesnt) }}<br />{{/ if }}
             {{/ if }}
+
             {{# if (has artisan.speciesDoesnt) }}
                 <strong>Doesn't</strong>: {{ commaSeparated artisan.speciesDoesnt }}
             {{ else }}
@@ -92,6 +107,7 @@
 
     <div class="col-sm-6 p-1">
         <h5>Payment plans</h5>
+
         <div class="small">
             {{ optionalList artisan.paymentPlans }}
         </div>
@@ -99,6 +115,7 @@
 
     <div class="col-sm-12 p-1">
         <h5>Languages</h5>
+
         <div class="small">
             {{ optional artisan.languages }}
         </div>
@@ -113,60 +130,79 @@
 
         <div id="artisanLinks"> {{! for the track-website, track-* see grep-track-link-classes }}
             <a class="btn btn-light track-ab border border-primary" href="https://bewares.getfursu.it/#search:{{ artisan.abSearchJson }}" target="_blank">Check Artists Beware records</a>
+
             {{# if artisan.fursuitReviewUrl }}
                 <a class="btn btn-light track-fsr border border-primary" href="{{ artisan.fursuitReviewUrl }}" rel="nofollow" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a>
             {{/ if }}
+
             {{# if artisan.websiteUrl }}
                 <a class="btn btn-light track-website" href="{{ artisan.websiteUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> Official website</a>
             {{/ if }}
+
             {{# each artisan.pricesUrls }}
                 <a class="btn btn-light track-prices" href="{{ this }}" rel="nofollow" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a>
             {{/ each }}
+
             {{# if artisan.faqUrl }}
                 <a class="btn btn-light track-faq" href="{{ artisan.faqUrl }}" rel="nofollow" target="_blank"><i class="fas fa-comments"></i> FAQ</a>
             {{/ if }}
+
             {{# if artisan.queueUrl }}
                 <a class="btn btn-light track-queue" href="{{ artisan.queueUrl }}" rel="nofollow" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a>
             {{/ if }}
+
             {{# if artisan.furAffinityUrl }}
                 <a class="btn btn-light track-fa" href="{{ artisan.furAffinityUrl }}" rel="nofollow" target="_blank"><i class="fas fa-image"></i> FurAffinity</a>
             {{/ if }}
+
             {{# if artisan.deviantArtUrl }}
                 <a class="btn btn-light track-da" href="{{ artisan.deviantArtUrl }}" rel="nofollow" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a>
             {{/ if }}
+
             {{# if artisan.twitterUrl }}
                 <a class="btn btn-light track-twitter" href="{{ artisan.twitterUrl }}" rel="nofollow" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
             {{/ if }}
+
             {{# if artisan.facebookUrl }}
                 <a class="btn btn-light track-facebook" href="{{ artisan.facebookUrl }}" rel="nofollow" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
             {{/ if }}
+
             {{# if artisan.tumblrUrl }}
                 <a class="btn btn-light track-tumblr" href="{{ artisan.tumblrUrl }}" rel="nofollow" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a>
             {{/ if }}
+
             {{# if artisan.youtubeUrl }}
                 <a class="btn btn-light track-youtube" href="{{ artisan.youtubeUrl }}" rel="nofollow" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
             {{/ if }}
+
             {{# if artisan.instagramUrl }}
                 <a class="btn btn-light track-instagram" href="{{ artisan.instagramUrl }}" rel="nofollow" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
             {{/ if }}
+
             {{# if artisan.etsyUrl }}
                 <a class="btn btn-light track-etsy" href="{{ artisan.etsyUrl }}" rel="nofollow" target="_blank"><i class="fab fa-etsy"></i> Etsy</a>
             {{/ if }}
+
             {{# if artisan.theDealersDenUrl }}
                 <a class="btn btn-light track-tdd" href="{{ artisan.theDealersDenUrl }}" rel="nofollow" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a>
             {{/ if }}
+
             {{# if artisan.otherShopUrl }}
                 <a class="btn btn-light track-shop" href="{{ artisan.otherShopUrl }}" rel="nofollow" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a>
             {{/ if }}
+
             {{# if artisan.furryAminoUrl }}
                 <a class="btn btn-light track-amino" href="{{ artisan.furryAminoUrl }}" rel="nofollow" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a>
             {{/ if }}
+
             {{# if artisan.scritchUrl }}
                 <a class="btn btn-light track-scritch" href="{{ artisan.scritchUrl }}" rel="nofollow" target="_blank"><i class="fas fa-camera"></i> Scritch</a>
             {{/ if }}
+
             {{# if artisan.furtrackUrl }}
                 <a class="btn btn-light track-furtrack" href="{{ artisan.furtrackUrl }}" rel="nofollow" target="_blank"><i class="fas fa-camera"></i> Furtrack</a>
             {{/ if }}
+
             {{# if artisan.linklistUrl }}
                 <a class="btn btn-light track-links" href="{{ artisan.linklistUrl }}" rel="nofollow" target="_blank"><i class="fas fa-link"></i> List of links</a>
             {{/ if }}
@@ -189,6 +225,7 @@
                 {{# if artisan.csTrackerIssue }}
                     <p><strong>Note:</strong> the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/incomplete.</p>
                 {{/ if }}
+
                 <table class="table table-sm table-striped table-borderless">
                     {{# each artisan.openFor }}
                         <tr> <td>{{ this }}</td><td><i class="fas fa-check-square"></i>&nbsp;Open</td> </tr>
@@ -209,6 +246,7 @@
                 <p><a href="{{ trackingUrl }}" target="_blank">Learn more</a></p>
             {{/ if }}
         </div>
+
         <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-4 text-end{{/ if }} p-1">
             {{# if artisan.isStatusKnown }}
                 <p>
@@ -229,6 +267,7 @@
 
     <div class="col-sm-12 p-1 pt-3">
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
+
         <p class="small">
             This maker/studio has {{ artisan.completeness }}% data completeness. {{ artisan.completenessComment }}
             Click the button below to check update options.
