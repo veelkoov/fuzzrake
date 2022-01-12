@@ -122,7 +122,7 @@ class Data extends BaseForm
             ])
             ->add('currenciesAccepted', TextareaType::class, [
                 'label'      => 'What currencies do you accept?',
-                'help'       => 'Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please.',
+                'help'       => 'Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please. <strong>Note: using PayPal and similar systems doesn\'t mean you accept all currencies</strong> - those systems just convert the payments using some rates and possibly add conversion fees. Please list the <strong>target/primary</strong> currencies configured in your account.',
                 'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',
