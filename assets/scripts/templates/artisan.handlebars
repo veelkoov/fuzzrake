@@ -20,24 +20,24 @@
 
 <div class="modal-body row px-4 py-2">
     {{# if artisan.inactiveReason }}
-        <div class="col-sm-12 p-1 alert alert-warning" role="alert">
+        <div class="col-md-12 p-1 alert alert-warning" role="alert">
             <strong>This maker has been marked as inactive</strong>, reason: {{ artisan.inactiveReason }}
         </div>
     {{/ if }}
 
     {{# if (hasPhotos artisan) }}
-        <div class="col-sm-12 p-1 overflow-auto imgs-container">
+        <div class="col-md-12 p-1 overflow-auto imgs-container">
             {{ photos artisan }}
         </div>
     {{/ if }}
 
     {{# if artisan.intro }}
-        <div class="col-sm-12 p-1">
+        <div class="col-md-12 p-1">
             <p class="lead">{{ nl2br artisan.intro }}</p>
         </div>
     {{/ if }}
 
-    <div class="col-sm-3 p-1">
+    <div class="col-md-3 p-1">
         <h5>Produces</h5>
 
         <div class="small pb-2">
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="col-sm-5 p-1">
+    <div class="col-md-5 p-1">
         <h5>Types</h5>
 
         <div class="small">
@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <div class="col-sm-4 p-1">
+    <div class="col-md-4 p-1">
         <h5>Features</h5>
 
         <div class="small">
@@ -82,10 +82,10 @@
         </div>
     </div>
 
-    <div class="col-sm-6 p-1">
+    <div class="col-md-6 p-1">
         <h5>Species</h5>
 
-        <div class="small" id="artisanSpecies">
+        <div class="small pb-2" id="artisanSpecies">
             {{# if (has artisan.speciesComment) }}
                 {{ nl2br artisan.speciesComment }} <br />
             {{/ if }}
@@ -103,17 +103,7 @@
                 {{/ unless }}
             {{/ if }}
         </div>
-    </div>
 
-    <div class="col-sm-6 p-1">
-        <h5>Payment plans</h5>
-
-        <div class="small">
-            {{ optionalList artisan.paymentPlans }}
-        </div>
-    </div>
-
-    <div class="col-sm-12 p-1">
         <h5>Languages</h5>
 
         <div class="small">
@@ -121,7 +111,27 @@
         </div>
     </div>
 
-    <div class="col-sm-12 p-1">
+    <div class="col-md-6 p-1">
+        <h5>Payment plans</h5>
+
+        <div class="small pb-2">
+            {{ optionalList artisan.paymentPlans }}
+        </div>
+
+        <h5>Currencies</h5>
+
+        <div class="small pb-2">
+            {{ optional artisan.currenciesAccepted }}
+        </div>
+
+        <h5>Methods</h5>
+
+        <div class="small">
+            {{ optional artisan.paymentMethods }}
+        </div>
+    </div>
+
+    <div class="col-md-12 p-1">
         <h5>Links</h5>
 
         <p class="small mb-1">
@@ -209,18 +219,18 @@
         </div>
     </div>
 
-    <div class="col-sm-12 p-1">
+    <div class="col-md-12 p-1">
         <h5>Commissions status</h5>
     </div>
 
     {{# unless artisan.commissionsUrls }}
-        <div class="col-sm-12 p-1">
+        <div class="col-md-12 p-1">
             <p>Commissions status is not being tracked.</p>
 
             <p><a href="{{ trackingUrl }}" target="_blank">Learn more</a></p>
         </div>
     {{ else }}
-        <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-8{{/ if }} p-1">
+        <div class="{{# if artisan.isStatusKnown }}col-md-6{{ else }}col-md-8{{/ if }} p-1">
             {{# if artisan.isStatusKnown }}
                 {{# if artisan.csTrackerIssue }}
                     <p><strong>Note:</strong> the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/incomplete.</p>
@@ -247,7 +257,7 @@
             {{/ if }}
         </div>
 
-        <div class="{{# if artisan.isStatusKnown }}col-sm-6{{ else }}col-sm-4 text-end{{/ if }} p-1">
+        <div class="{{# if artisan.isStatusKnown }}col-md-6{{ else }}col-md-4 text-end{{/ if }} p-1">
             {{# if artisan.isStatusKnown }}
                 <p>
                     Status is tracked and updated automatically based on the contents of:
@@ -265,7 +275,7 @@
         </div>
     {{/ unless }}
 
-    <div class="col-sm-12 p-1 pt-3">
+    <div class="col-md-12 p-1 pt-3">
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
 
         <p class="small">
