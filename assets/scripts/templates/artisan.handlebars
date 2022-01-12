@@ -24,7 +24,13 @@
             <strong>This maker has been marked as inactive</strong>, reason: {{ artisan.inactiveReason }}
         </div>
     {{/ if }}
-    {{ photos artisan.miniatureUrls artisan.photoUrls }}
+
+    {{# if (hasPhotos artisan) }}
+        <div class="col-sm-12 p-1">
+            {{ photos artisan }}
+        </div>
+    {{/ if }}
+
     {{# if artisan.intro }}
         <div class="col-sm-12 p-1">
             <p class="lead">{{ nl2br artisan.intro }}</p>
@@ -83,23 +89,28 @@
             {{/ if }}
         </div>
     </div>
+
     <div class="col-sm-6 p-1">
         <h5>Payment plans</h5>
         <div class="small">
             {{ optionalList artisan.paymentPlans }}
         </div>
     </div>
+
     <div class="col-sm-12 p-1">
         <h5>Languages</h5>
         <div class="small">
             {{ optional artisan.languages }}
         </div>
     </div>
+
     <div class="col-sm-12 p-1">
         <h5>Links</h5>
+
         <p class="small mb-1">
-            If you're going to contact the studio/maker, <u>please let them know you found them here{{# unless artisan.completenessGood }} and that their data could use some updates{{/ unless }}</u>! This&nbsp;will help us all a lot. Thank you!
+            Please mention "<mark class="user-select-all">I found you on getfursu.it{{# unless artisan.completenessGood }} (BTW it says your data could use some updates){{/ unless }}</mark>" when contacting the maker, thank you! ❤️
         </p>
+
         <div id="artisanLinks"> {{! for the track-website, track-* see grep-track-link-classes }}
             <a class="btn btn-light track-ab border border-primary" href="https://bewares.getfursu.it/#search:{{ artisan.abSearchJson }}" target="_blank">Check Artists Beware records</a>
             {{# if artisan.fursuitReviewUrl }}
