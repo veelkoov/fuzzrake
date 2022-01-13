@@ -18,7 +18,7 @@ class PayMethodFixer extends AbstractListFixer
 
     protected static function getSeparatorRegexp(): string
     {
-        return '[\n,.]';
+        return '[\n,.]|[, ]and ';
     }
 
     protected function getNonsplittable(): array
