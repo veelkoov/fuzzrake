@@ -8,12 +8,13 @@ use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer\ContactAllowedFixer;
 use App\Utils\Data\Fixer\CountryFixer;
+use App\Utils\Data\Fixer\CurrencyFixer;
 use App\Utils\Data\Fixer\DefinedListFixer;
 use App\Utils\Data\Fixer\FixerInterface;
 use App\Utils\Data\Fixer\FreeListFixer;
-use App\Utils\Data\Fixer\IntroFixer;
 use App\Utils\Data\Fixer\LanguagesFixer;
 use App\Utils\Data\Fixer\NoopFixer;
+use App\Utils\Data\Fixer\PayMethodFixer;
 use App\Utils\Data\Fixer\PayPlanFixer;
 use App\Utils\Data\Fixer\SinceFixer;
 use App\Utils\Data\Fixer\SpeciesListFixer;
@@ -34,9 +35,10 @@ class Fixer
         private readonly LanguagesFixer $languagesFixer,
         private readonly SinceFixer $sinceFixer,
         private readonly NoopFixer $noopFixer,
-        private readonly IntroFixer $introFixer,
         private readonly StateFixer $stateFixer,
         private readonly PayPlanFixer $payPlanFixer,
+        private readonly CurrencyFixer $currencyFixer,
+        private readonly PayMethodFixer $payMethodFixer,
     ) {
     }
 
@@ -58,19 +60,20 @@ class Fixer
 
             Field::PRODUCTION_MODELS, Field::FEATURES, Field::STYLES, Field::ORDER_TYPES => $this->definedListFixer,
 
-            Field::FORMER_MAKER_IDS, Field::OTHER_FEATURES, Field::OTHER_ORDER_TYPES, Field::OTHER_STYLES, Field::URL_PHOTOS, Field::URL_MINIATURES, Field::CURRENCIES_ACCEPTED, Field::PAYMENT_METHODS => $this->freeListFixer,
+            Field::FORMER_MAKER_IDS, Field::OTHER_FEATURES, Field::OTHER_ORDER_TYPES, Field::OTHER_STYLES, Field::URL_PHOTOS, Field::URL_MINIATURES, => $this->freeListFixer,
 
             Field::URL_COMMISSIONS, Field::URL_DEVIANTART, Field::URL_FACEBOOK, Field::URL_FAQ, Field::URL_FUR_AFFINITY, Field::URL_FURSUITREVIEW, Field::URL_INSTAGRAM, Field::URL_PRICES, Field::URL_TUMBLR, Field::URL_TWITTER, Field::URL_YOUTUBE, Field::URL_WEBSITE, Field::URL_QUEUE, Field::URL_ETSY, Field::URL_FURTRACK => $this->urlFixer,
 
-            Field::SINCE           => $this->sinceFixer,
-            Field::COUNTRY         => $this->countryFixer,
-            Field::STATE           => $this->stateFixer,
-            Field::INTRO           => $this->introFixer,
-            Field::LANGUAGES       => $this->languagesFixer,
-            Field::CONTACT_ALLOWED => $this->contactAllowedFixer,
-            Field::PAYMENT_PLANS   => $this->payPlanFixer,
+            Field::SINCE               => $this->sinceFixer,
+            Field::COUNTRY             => $this->countryFixer,
+            Field::STATE               => $this->stateFixer,
+            Field::LANGUAGES           => $this->languagesFixer,
+            Field::CONTACT_ALLOWED     => $this->contactAllowedFixer,
+            Field::PAYMENT_PLANS       => $this->payPlanFixer,
+            Field::PAYMENT_METHODS     => $this->payMethodFixer,
+            Field::CURRENCIES_ACCEPTED => $this->currencyFixer,
 
-            default                => $this->noopFixer,
+            default                    => $this->noopFixer,
         };
     }
 }

@@ -31,6 +31,15 @@ final class ValidationRegexps
     final public const COUNTRY = '^([A-Z]{2})?$';
     final public const STATE = '^([A-Za-zé ]{4,})?$';
 
+    final public const CURRENCIES = '^([A-Z]{3}(\n[A-Z]{3})*)?$';
+    private const PAY_COMMENT = '( \([ a-zA-Z&@-]+\))?';
+    private const PAY_METHODS_LIST = 'Apple Pay|Bank transfers'
+        .'|Cash|Cash App|Checks|Cashier\'s checks'
+        .'|Credit/debit cards'.'|Credit cards'.'|Debit cards'
+        .'|Depop|Etsy|E-transfers|Google Pay|Ko-fi|Money orders'
+        .'|PayPal|SEPA|Square|Stripe|Venmo|Vipps|Wise';
+    final public const PAY_METHODS = '^((?<=\n|^)('.self::PAY_METHODS_LIST.')'.self::PAY_COMMENT.'(\n|(?=$)))*$';
+
     final public const GENERIC_URL_LIST = '^(https?://[^/]+/.*(\nhttps?://[^/]+/.*)*)?$'; // TODO: Improve URL validation regexps #79
     final public const PHOTO_URL_LIST = '^((https://scritch\.es/pictures/[-a-f0-9]{36}|https://www\.furtrack\.com/p/\d+)(\n(https://scritch\.es/pictures/[-a-f0-9]{36}|https://www\.furtrack\.com/p/\d+)){0,4})?$';
     final public const MINIATURE_URL_LIST = '.?'; // TODO: Improve URL validation regexps #79

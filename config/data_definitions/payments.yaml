@@ -1,0 +1,36 @@
+parameters:
+  noPayPlans:
+    commonRegexPrefix: '^'
+    commonRegexSuffix: '$'
+    replacements: # grep-payment-plans-none
+      'None/100% up ?front':                'None'
+      '"None, 100% upfront"':               'None'
+      'None':                               'None'
+      'No payment plans/100% upfront':      'None'
+      '100% upfront every part':            'None'
+      '100% Up ?Front\.?':                  'None'
+      '1 complete payment':                 'None'
+
+  currencies:
+    commonRegexPrefix: '(?<=^|\n)'
+    commonRegexSuffix: '(?=\n|$)'
+    replacements:
+      'Euro':          'EUR'
+
+  paymentMethods:
+    commonRegexPrefix: '(?<=^|\n)'
+    commonRegexSuffix: '(?=\n|$)'
+    replacements:
+      'Apple Pay':                          'Apple Pay'
+      'Bank ?trans?fers?':                  'Bank transfers'
+      'Checks?':                            'Checks'
+      'Cash ?app':                          'Cash App'
+      'Credit cards?':                      'Credit cards'
+      'Debit/credit cards':                 'Credit/debit cards'
+      'Debit cards?':                       'Debit cards'
+      'E-transfers?':                       'E-transfers'
+      'Google Pay':                         'Google Pay'
+      'Ko-?fi':                             'Ko-fi'
+      'Money ?orders?':                     'Money orders'
+      'PayPal':                             'PayPal'
+      '(Transfer)?Wise(\.com)?':            'Wise'
