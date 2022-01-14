@@ -32,12 +32,12 @@ final class ValidationRegexps
     final public const STATE = '^([A-Za-zé ]{4,})?$';
 
     final public const CURRENCIES = '^([A-Z]{3}(\n[A-Z]{3})*)?$';
-    private const PAY_COMMENT = '( \([ a-zA-Z&@-]+\))?';
-    private const PAY_METHODS_LIST = 'Apple Pay|Bank transfers'
-        .'|Cash|Cash App|Checks|Cashier\'s checks'
+    private const PAY_COMMENT = '( \([ 0-9a-zA-Z&@;%-]+\))?';
+    private const PAY_METHODS_LIST = 'Apple Pay|Bank transfers|BLIK'
+        .'|Cash|Cash App|Checks|Cashier\'s checks|Crypto'
         .'|Credit/debit cards'.'|Credit cards'.'|Debit cards'
-        .'|Depop|Etsy|E-transfers|Google Pay|Ko-fi|Money orders'
-        .'|PayPal|SEPA|Square|Stripe|Venmo|Vipps|Wise';
+        .'|Depop|Etsy Payments|E-transfers|Google Pay|Ko-fi|Money orders|Other'
+        .'|PayPal|Revolut|SEPA|Square|Stripe|Swish|Venmo|Vipps|VISA|Wise|Zelle';
     final public const PAY_METHODS = '^((?<=\n|^)('.self::PAY_METHODS_LIST.')'.self::PAY_COMMENT.'(\n|(?=$)))*$';
 
     final public const GENERIC_URL_LIST = '^(https?://[^/]+/.*(\nhttps?://[^/]+/.*)*)?$'; // TODO: Improve URL validation regexps #79

@@ -15,7 +15,7 @@ parameters:
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
     replacements:
-      'Euro':          'EUR'
+      'Euro?':                              'EUR'
 
   paymentMethods:
     commonRegexPrefix: '(?<=^|\n)'
@@ -23,14 +23,17 @@ parameters:
     replacements:
       'Apple Pay':                          'Apple Pay'
       'Bank ?trans?fers?':                  'Bank transfers'
+      'BLIK':                               'BLIK'
       'Checks?':                            'Checks'
       'Cash ?app':                          'Cash App'
       'Credit cards?':                      'Credit cards'
-      'Debit/credit cards':                 'Credit/debit cards'
+      'Debit/credit cards?':                'Credit/debit cards'
+      'Credit/debit cards?':                'Credit/debit cards'
       'Debit cards?':                       'Debit cards'
       'E-transfers?':                       'E-transfers'
+      'Etsy( Payments)?':                   'Etsy Payments'
       'Google Pay':                         'Google Pay'
       'Ko-?fi':                             'Ko-fi'
       'Money ?orders?':                     'Money orders'
-      'PayPal':                             'PayPal'
+      'Pay ?Pal( only)?':                   'PayPal'
       '(Transfer)?Wise(\.com)?':            'Wise'
