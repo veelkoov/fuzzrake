@@ -52,8 +52,8 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('formerly', TextareaType::class, [
-                'label'      => 'Formerly known as',
-                'help'       => 'If your studio changed its name in the past, what was it? You can keep any old names here. Please: each name on a separate line.',
+                'label'      => 'Formerly known as / also known as',
+                'help'       => 'What was your studio known as before? Do you use multiple nicknames? You can keep any old names and aliases here. Please: each name on a separate line.',
                 'required'   => false,
                 'empty_data' => '',
             ])
