@@ -37,6 +37,10 @@
         </div>
     {{/ if }}
 
+    <div class="col-md-12 p-1">
+        <p class="mb-0 small">Ages of studio members: {{ describeAges artisan }}</p>
+    </div>
+
     <div class="col-md-3 p-1">
         <h5>Produces</h5>
 
@@ -279,7 +283,7 @@
         <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
 
         <p class="small">
-            This maker/studio has {{ artisan.completeness }}% data completeness. {{ artisan.completenessComment }}
+            This maker/studio has {{ artisan.completeness }}% data completeness. {{ describeCompleteness artisan }}
             Click the button below to check update options.
         </p>
     </div>

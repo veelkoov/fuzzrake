@@ -15,7 +15,6 @@ export default class Artisan {
     readonly features: Set<string>;
     readonly allFeatures: string[];
     readonly abSearchJson: string;
-    readonly completenessComment: string;
     readonly completenessGood: boolean;
     readonly openFor: Set<string>;
     readonly filterPayPlans: string;
@@ -115,7 +114,6 @@ export default class Artisan {
         this.allStyles = Artisan.makeAllList(styles, otherStyles);
         this.orderTypes = new Set<string>(orderTypes);
         this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
-        this.completenessComment = Artisan.getCompletenessComment(completeness);
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
         this.openFor = new Set<string>(openFor);
         this.isStatusKnown = this.openFor.size + this.closedFor.length > 0;
@@ -170,20 +168,6 @@ export default class Artisan {
         }
 
         return result;
-    }
-
-    private static getCompletenessComment(completeness: number): string {
-        if (completeness >= Artisan.DATA_COMPLETE_LEVEL_PERFECT) {
-            return 'Awesome! ❤️';
-        } else if (completeness >= Artisan.DATA_COMPLETE_LEVEL_GREAT) {
-            return 'Great!'
-        } else if (completeness >= Artisan.DATA_COMPLETE_LEVEL_GOOD) {
-            return 'Good job!'
-        } else if (completeness >= Artisan.DATA_COMPLETE_LEVEL_OK) {
-            return 'Some updates might be helpful...';
-        } else {
-            return 'Yikes! :( Updates needed!';
-        }
     }
 
     private getFilterPayPlans(): string {
