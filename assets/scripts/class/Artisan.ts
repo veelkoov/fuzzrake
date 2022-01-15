@@ -63,6 +63,7 @@ export default class Artisan {
                 readonly speciesDoes: string[],
                 readonly speciesDoesnt: string[],
 
+                readonly isMinor: boolean,
                 readonly ages: string,
                 readonly safeDoesNsfw: boolean,
                 readonly safeWorksWithMinors: boolean,

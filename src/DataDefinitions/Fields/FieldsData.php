@@ -53,7 +53,7 @@ final class FieldsData
         'SPECIES_COMMENT'           => ['    S P F speciesComment',          null],
         'SPECIES_DOES'              => ['L   S P F speciesDoes',             ''],
         'SPECIES_DOESNT'            => ['L   S P F speciesDoesnt',           ''],
-        'IS_MINOR'                  => ['          isMinor',                 null],
+        'IS_MINOR'                  => ['      P   isMinor',                 null],
         'AGES'                      => ['    S P F ages',                    null],
         'NSFW_WEBSITE'              => ['        F nsfwWebsite',             null],
         'NSFW_SOCIAL'               => ['        F nsfwSocial',              null],
