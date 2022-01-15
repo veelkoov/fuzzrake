@@ -53,8 +53,8 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('formerly', TextareaType::class, [
-                'label'      => 'Formerly known as',
-                'help'       => 'If your studio changed its name in the past, what was it? You can keep any old names here. Please: each name on a separate line.',
+                'label'      => 'Formerly known as / also known as',
+                'help'       => 'What was your studio known as before? Do you use multiple nicknames? You can keep any old names and aliases here. Please: each name on a separate line.',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -141,7 +141,7 @@ class Data extends BaseForm
             ])
             ->add('currenciesAccepted', TextareaType::class, [
                 'label'      => 'What currencies do you accept?',
-                'help'       => 'Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please.',
+                'help'       => 'Examples: <em>USD</em>, <em>AUD</em>, <em>CAD</em>, <em>EUR</em>, <em>BRL</em>, <em>CZK</em>. Each in a separate line, please. <strong>Note: using PayPal and similar systems doesn\'t mean you accept all currencies</strong> - those systems just convert the payments using some rates and possibly add conversion fees. Please list the <strong>target/primary</strong> currencies configured in your account.',
                 'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',

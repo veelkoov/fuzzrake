@@ -23,7 +23,7 @@
     "WORKS_WITH_MINORS": false,
 
     "PAYMENT_PLANS": "30% upfront, rest in 200 Eur/mth until fully paid\n50%/50%\nMkr1 after update",
-    "PAYMENT_METHODS": "Cash\nAfter update mkr1\nBank transfer\nPalPay",
+    "PAYMENT_METHODS": "Cash\nAfter update mkr1\nBank transfers\nPalPay",
     "CURRENCIES_ACCEPTED": "AUD\nUSD",
 
     "PRODUCTION_MODELS_COMMENT": "Prod models comment after update",

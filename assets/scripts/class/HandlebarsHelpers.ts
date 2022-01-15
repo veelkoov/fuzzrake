@@ -1,4 +1,5 @@
 import * as Handlebars from "handlebars/runtime";
+import Artisan from "./Artisan";
 
 const escape = Handlebars.Utils.escapeExpression;
 
@@ -25,23 +26,27 @@ export default class HandlebarsHelpers {
 
     public static getHelpersToRegister(): {} {
         return {
-            optional: HandlebarsHelpers.optional,
-            optionalList: HandlebarsHelpers.optionalList,
+            optional:       HandlebarsHelpers.optional,
+            optionalList:   HandlebarsHelpers.optionalList,
             commaSeparated: HandlebarsHelpers.commaSeparated,
-            photos: HandlebarsHelpers.photos,
-            has: HandlebarsHelpers.has,
-            since: HandlebarsHelpers.since,
+            photos:         HandlebarsHelpers.photos,
+            hasPhotos:      HandlebarsHelpers.hasPhotos,
+            has:            HandlebarsHelpers.has,
+            since:          HandlebarsHelpers.since,
+            nl2br:          HandlebarsHelpers.nl2br,
         };
     }
 
     public static getKnownHelpersObject(): {} {
         return {
-            'optional': true,
-            'optionalList': true,
-            'commaSeparated': true,
-            'photos': true,
-            'has': true,
-            'since': true,
+            optional:       true,
+            optionalList:   true,
+            commaSeparated: true,
+            hasPhotos:      true,
+            photos:         true,
+            has:            true,
+            since:          true,
+            nl2br:          true,
         };
     }
 
@@ -108,17 +113,29 @@ export default class HandlebarsHelpers {
         return rendered ? new Handlebars.SafeString(`<ul>${rendered}</ul>`) : HandlebarsHelpers.HTML_SIGN_UNKNOWN;
     }
 
-    public static photos(miniatures: string[], photos: string[]): string | object {
-        if (miniatures.length === 0 || miniatures.length !== photos.length) {
+    public static photos(artisan: Artisan): string | object {
+        if (!HandlebarsHelpers.hasPhotos(artisan)) {
             return '';
         }
 
         let result: string = '';
 
-        for (let i: number = 0; i < miniatures.length; i++) {
-            result += `<div><a href="${escape(photos[i])}" target="_blank"><img src="${escape(miniatures[i])}" alt="" /></a></div>`;
+        for (let i: number = 0; i < artisan.miniatureUrls.length; i++) {
+            result += `<div><a href="${escape(artisan.photoUrls[i])}" target="_blank"><img src="${escape(artisan.miniatureUrls[i])}" alt="" /></a></div>`;
         }
 
         return new Handlebars.SafeString(`<div class="imgs-container">${result}</div>`);
+    }
+
+    public static hasPhotos(artisan: Artisan): boolean {
+        return artisan.photoUrls.length !== 0 && artisan.miniatureUrls.length === artisan.photoUrls.length;
+    }
+
+    public static nl2br(element: string | Handlebars.SafeString): Handlebars.SafeString {
+        if (element instanceof Handlebars.SafeString) {
+            return element; // FIXME: https://github.com/veelkoov/fuzzrake/issues/111
+        }
+
+        return new Handlebars.SafeString(element.split("\n").map(value => escape(value)).join('<br />'));
     }
 }
