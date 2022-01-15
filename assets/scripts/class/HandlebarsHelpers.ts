@@ -1,6 +1,7 @@
 import * as Handlebars from "handlebars/runtime";
-import Artisan from "./Artisan";
 import {SafeString} from "handlebars/runtime";
+import Artisan from "./Artisan";
+import {ADULTS, MINORS, MIXED} from "../consts";
 
 type TplString = string | SafeString;
 const escape = Handlebars.Utils.escapeExpression;
@@ -35,6 +36,7 @@ export default class HandlebarsHelpers {
             has:            HandlebarsHelpers.has,
             since:          HandlebarsHelpers.since,
             nl2br:          HandlebarsHelpers.nl2br,
+            describeAges:   HandlebarsHelpers.describeAges,
         };
     }
 
@@ -48,6 +50,7 @@ export default class HandlebarsHelpers {
             has:            true,
             since:          true,
             nl2br:          true,
+            describeAges:   true,
         };
     }
 
@@ -138,5 +141,24 @@ export default class HandlebarsHelpers {
         }
 
         return new SafeString(element.split("\n").map(value => escape(value)).join('<br />'));
+    }
+
+    public static describeAges(artisan: Artisan): TplString {
+        switch (artisan.ages) {
+            case MINORS:
+                return 'I am a (we all are) minor(s)/underage';
+            case MIXED:
+                return 'The studio consists of both minors and adults';
+            case ADULTS:
+                return 'I am (all of us are) at least 18 years old';
+        }
+
+        if (true === artisan.isMinor) {
+            return 'I am minor/underage';
+        } else if (false === artisan.isMinor) {
+            return 'I am at least 18 years old';
+        }
+
+        return HTML_SIGN_UNKNOWN;
     }
 }

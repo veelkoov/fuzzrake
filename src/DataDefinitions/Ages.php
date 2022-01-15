@@ -8,9 +8,9 @@ use App\Utils\Arrays;
 
 enum Ages: string
 {
-    case MINORS = 'MINORS';
-    case MIXED = 'MIXED';
-    case ADULTS = 'ADULTS';
+    case MINORS = 'MINORS'; // grep-const-ages-minors
+    case MIXED = 'MIXED'; // grep-const-ages-mixed
+    case ADULTS = 'ADULTS'; // grep-const-ages-adults
 
     public function getLabel(): string
     {
