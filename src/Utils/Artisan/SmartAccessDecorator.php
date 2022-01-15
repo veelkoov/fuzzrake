@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
@@ -181,20 +182,71 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
-    public function getAges(): ?string
+    public function getAges(): ?Ages
     {
-        return $this->getStringValue(Field::AGES);
+        return Ages::get($this->getStringValue(Field::AGES));
     }
 
-    public function setAges(?string $ages): self
+    public function setAges(?Ages $ages): self
     {
-        return $this->setStringValue(Field::AGES, $ages);
+        return $this->setStringValue(Field::AGES, $ages?->value);
     }
 
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
+    public function getNsfwWebsite(): ?bool
+    {
+        return $this->getBoolValue(Field::NSFW_WEBSITE);
+    }
+
+    public function setNsfwWebsite(?bool $nsfwWebsite): self
+    {
+        return $this->setBoolValue(Field::NSFW_WEBSITE, $nsfwWebsite);
+    }
+
+    #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
+    public function getNsfwSocial(): ?bool
+    {
+        return $this->getBoolValue(Field::NSFW_SOCIAL);
+    }
+
+    public function setNsfwSocial(?bool $nsfwSocial): self
+    {
+        return $this->setBoolValue(Field::NSFW_SOCIAL, $nsfwSocial);
+    }
+
+    public function isAllowedToDoNsfw(): bool
+    {
+        return Ages::ADULTS === $this->getAges();
+    }
+
+    public function getDoesNsfw(): ?bool
+    {
+        return $this->getBoolValue(Field::DOES_NSFW);
+    }
+
+    public function getSafeDoesNsfw(): bool
+    {
+        return true === $this->getDoesNsfw() && $this->isAllowedToDoNsfw();
+    }
+
+    public function setDoesNsfw(?bool $doesNsfw): self
+    {
+        return $this->setBoolValue(Field::DOES_NSFW, $doesNsfw);
+    }
+
+    public function isAllowedToWorkWithMinors(): bool
+    {
+        return false === $this->getNsfwWebsite() && false === $this->getNsfwSocial() && false === $this->getSafeDoesNsfw();
+    }
+
     public function getWorksWithMinors(): ?bool
     {
         return $this->getBoolValue(Field::WORKS_WITH_MINORS);
+    }
+
+    public function getSafeWorksWithMinors(): bool
+    {
+        return $this->getWorksWithMinors() && $this->isAllowedToWorkWithMinors();
     }
 
     public function setWorksWithMinors(?bool $worksWithMinors): self
@@ -243,6 +295,26 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             ->getPrivateData()
             ->setOriginalContactInfo($newOriginalContactValue)
             ->setContactAddress($address);
+    }
+
+    /**
+     * Even though we serve only "safe" version of the NSFW-related fields,
+     * these internal ("unsafe") values needs to be fixed even in the database,
+     * as its snapshots are public.
+     */
+    public function assureNsfwSafety(): void
+    {
+        if (true === $this->getNsfwWebsite() || true === $this->getNsfwSocial() || true === $this->getDoesNsfw()) {
+            if (true === $this->getWorksWithMinors()) {
+                $this->setWorksWithMinors(false); // No, you don't
+            }
+        }
+
+        if (Ages::ADULTS !== $this->getAges()) {
+            if (true === $this->getDoesNsfw()) {
+                $this->setDoesNsfw(false); // No, you don't
+            }
+        }
     }
 
     //
@@ -700,8 +772,27 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     //
 
     /** @noinspection PhpUnusedParameterInspection */
+    #[Callback(groups: [Validation::GRP_DATA])]
+    public function validateData(ExecutionContextInterface $context, $payload): void
+    {
+        if (null === $this->getDoesNsfw() && $this->isAllowedToDoNsfw()) {
+            $context
+                ->buildViolation('You must answer this question.')
+                ->atPath(Field::DOES_NSFW->modelName())
+                ->addViolation();
+        }
+
+        if (null === $this->getWorksWithMinors() && $this->isAllowedToWorkWithMinors()) {
+            $context
+                ->buildViolation('You must answer this question.')
+                ->atPath(Field::WORKS_WITH_MINORS->modelName())
+                ->addViolation();
+        }
+    }
+
+    /** @noinspection PhpUnusedParameterInspection */
     #[Callback(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    public function validate(ExecutionContextInterface $context, $payload): void
+    public function validateContactAndPassword(ExecutionContextInterface $context, $payload): void
     {
         if (ContactPermit::NO !== $this->artisan->getContactAllowed() && '' === $this->artisan->getContactInfoObfuscated()) {
             $context

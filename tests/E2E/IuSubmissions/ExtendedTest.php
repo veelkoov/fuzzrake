@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
@@ -14,6 +15,7 @@ use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
+use BackedEnum;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -42,6 +44,8 @@ class ExtendedTest extends AbstractTestWithEM
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
         Field::IS_MINOR,
+        Field::SAFE_DOES_NSFW,
+        Field::SAFE_WORKS_WITH_MINORS,
     ];
 
     private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
@@ -59,6 +63,8 @@ class ExtendedTest extends AbstractTestWithEM
         Field::BP_TRACKER_ISSUE,
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
+        Field::SAFE_DOES_NSFW,
+        Field::SAFE_WORKS_WITH_MINORS,
     ];
 
     private const EXPANDED = [ // List fields in the form of multiple checkboxes
@@ -73,6 +79,9 @@ class ExtendedTest extends AbstractTestWithEM
     ];
 
     private const BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
+        Field::DOES_NSFW,
+        Field::NSFW_SOCIAL,
+        Field::NSFW_WEBSITE,
         Field::WORKS_WITH_MINORS,
     ];
 
@@ -174,7 +183,13 @@ class ExtendedTest extends AbstractTestWithEM
             }
 
             self::assertArrayHasKey($fieldName, $data);
-            $result->set(Field::from($fieldName), $data[$fieldName]);
+
+            $value = $data[$fieldName];
+            if (Field::AGES === $field) {
+                $value = Ages::get($value);
+            }
+
+            $result->set(Field::from($fieldName), $value);
 
             unset($data[$fieldName]);
         }
@@ -235,6 +250,10 @@ class ExtendedTest extends AbstractTestWithEM
 
     private static function assertFieldIsPresentWithValue(mixed $value, Field $field, string $htmlBody): void
     {
+        if ($value instanceof BackedEnum) {
+            $value = $value->value;
+        }
+
         if (in_array($field, self::EXPANDED) || in_array($field, self::EXPANDED_SELECTS)) {
             self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
@@ -371,6 +390,8 @@ class ExtendedTest extends AbstractTestWithEM
             $value = $data->get($field);
             if (is_bool($value)) {
                 $value = $value ? 'YES' : 'NO';
+            } elseif ($value instanceof BackedEnum) {
+                $value = $value->value;
             }
 
             $fields = $form["iu_form[{$field->modelName()}]"];

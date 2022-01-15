@@ -21,6 +21,9 @@ trait IuFormTrait
                 'iu_form[country]'         => 'Test country',
                 'iu_form[ages]'            => 'ADULTS',
                 'iu_form[worksWithMinors]' => 'NO',
+                'iu_form[nsfwWebsite]'     => 'NO',
+                'iu_form[nsfwSocial]'      => 'NO',
+                'iu_form[doesNsfw]'        => 'NO',
                 'iu_form[makerId]'         => 'TESTMID',
             ];
 

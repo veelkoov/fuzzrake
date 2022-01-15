@@ -37,7 +37,12 @@ enum Field: string
     case SPECIES_DOESNT            = 'SPECIES_DOESNT';
     case IS_MINOR                  = 'IS_MINOR'; // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/103
     case AGES                      = 'AGES';
+    case NSFW_WEBSITE              = 'NSFW_WEBSITE';
+    case NSFW_SOCIAL               = 'NSFW_SOCIAL';
+    case DOES_NSFW                 = 'DOES_NSFW';
+    case SAFE_DOES_NSFW            = 'SAFE_DOES_NSFW';
     case WORKS_WITH_MINORS         = 'WORKS_WITH_MINORS';
+    case SAFE_WORKS_WITH_MINORS    = 'SAFE_WORKS_WITH_MINORS';
     case URL_FURSUITREVIEW         = 'URL_FURSUITREVIEW';
     case URL_WEBSITE               = 'URL_WEBSITE';
     case URL_PRICES                = 'URL_PRICES';

@@ -28,142 +28,51 @@
     <h2 class="mt-4">General info</h2>
 
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="mandatory">
                 {{ form_row(form.name) }}
             </div>
+
             <div class="important">
                 {{ form_row(form.formerly) }}
             </div>
         </div>
-        <div class="col-lg-6">
+
+        <div class="col-lg-4">
+            <div class="mandatory">
+                {{ form_row(form.makerId) }}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
             <div class="recommended">
                 {{ form_row(form.since) }}
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="mandatory">
-                {{ form_row(form.ages) }}
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="mandatory">
-                {{ form_row(form.worksWithMinors) }}
-            </div>
-        </div>
-    </div>
-
     <hr class="mt-4" />
-    <h2>Location of the studio</h2>
+    <h2>Location &amp; languages</h2>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="mandatory">
                 {{ form_row(form.country) }}
             </div>
-        </div>
-        <div class="col-lg-4">
+
             <div class="recommended">
                 {{ form_row(form.state) }}
             </div>
         </div>
-        <div class="col-lg-4">
+
+        <div class="col-lg-6">
             <div class="recommended">
                 {{ form_row(form.city) }}
             </div>
-        </div>
-    </div>
 
-    <hr class="mt-4" />
-    <h2>Payments</h2>
-
-    <div class="row">
-        <div class="col-lg-6">
             <div class="recommended">
-                {{ form_row(form.paymentPlans) }}
+                {{ form_row(form.languages) }}
             </div>
-            {{ form_row(form.paymentMethods) }}
-        </div>
-        <div class="col-lg-6">
-            <div class="recommended">
-                {{ form_row(form.pricesUrls) }}
-            </div>
-            {{ form_row(form.currenciesAccepted) }}
-        </div>
-    </div>
-
-    <hr class="mt-4" />
-    <h2>Production models</h2>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="important">
-                {{ form_row(form.productionModels) }}
-            </div>
-        </div>
-        <div class="col-lg-6">
-            {{ form_row(form.productionModelsComment) }}
-        </div>
-    </div>
-
-    <hr class="mt-4" />
-    <h2>Styles</h2>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="important">
-                {{ form_row(form.styles) }}
-            </div>
-        </div>
-        <div class="col-lg-6">
-            {{ form_row(form.otherStyles) }}
-            {{ form_row(form.stylesComment) }}
-        </div>
-    </div>
-
-    <hr class="mt-4" />
-    <h2>Order types</h2>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="important">
-                {{ form_row(form.orderTypes) }}
-            </div>
-        </div>
-        <div class="col-lg-6">
-            {{ form_row(form.otherOrderTypes) }}
-            {{ form_row(form.orderTypesComment) }}
-        </div>
-    </div>
-
-    <hr class="mt-4" />
-    <h2>Features</h2>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="important">
-                {{ form_row(form.features) }}
-            </div>
-        </div>
-        <div class="col-lg-6">
-            {{ form_row(form.otherFeatures) }}
-            {{ form_row(form.featuresComment) }}
-        </div>
-    </div>
-
-    <hr class="mt-4" />
-    <h2>Species</h2>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="important">
-                {{ form_row(form.speciesDoes) }}
-            </div>
-            {{ form_row(form.speciesDoesnt) }}
-            {{ form_row(form.speciesComment) }}
         </div>
     </div>
 
@@ -261,6 +170,161 @@
     </div>
 
     <hr class="mt-4" />
+    <h2>Age &amp; related</h2>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mandatory">
+                {{ form_row(form.ages) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="helphints-toggle">
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#agesExplanation" aria-expanded="false" aria-controls="agesExplanation">What? Why?</button>
+    </div>
+
+    <div class="collapse helphints-contents" id="agesExplanation">
+        <div class="card">
+            <div class="card-body">
+                <p>
+                    getfursu.it welcomes both artists and visitors of many kinds. Some of you run full-blown fursuit studios with dedicated websites and dedicated social media. Some of you treat fursuit building as a side hobby, and don't have the time to keep dedicated websites and social media accounts. There are artists, who keep both their art and fursuit portfolios in one place. Some use the same, day-to-day accounts, for both private and fursuit building related stuff.
+                </p>
+
+                <p>
+                    And there are many kinds of visitors, who may be interested in different stuff. Those also may happen to not be interested in the particular stuff of yours, even when there may be many, who love what you do. Worth mentioning, some makers on getfursu.it are willing to work with minors.
+                </p>
+
+                <p>
+                    <strong>Goal:</strong> getfursu.it must be <strong>minors-friendly by default, while still welcoming everybody</strong>. The questions below are especially important to be answered accurately, to avoid any user to unwillingly run into any content they would rather not see, or should not see due to their age. Please act responsibly!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mandatory">
+                {{ form_row(form.nsfwWebsite) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mandatory">
+                {{ form_row(form.nsfwSocial) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="doesNsfwContainer">
+        <div class="col-lg-12">
+            <div class="mandatory">
+                {{ form_row(form.doesNsfw) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="worksWithMinorsContainer">
+        <div class="col-lg-12">
+            <div class="mandatory">
+                {{ form_row(form.worksWithMinors) }}
+            </div>
+        </div>
+    </div>
+
+    <hr class="mt-4" />
+    <h2>Payments</h2>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="recommended">
+                {{ form_row(form.paymentPlans) }}
+            </div>
+            {{ form_row(form.paymentMethods) }}
+        </div>
+        <div class="col-lg-6">
+            <div class="recommended">
+                {{ form_row(form.pricesUrls) }}
+            </div>
+            {{ form_row(form.currenciesAccepted) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
+    <h2>Production models</h2>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.productionModels) }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.productionModelsComment) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
+    <h2>Styles</h2>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.styles) }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.otherStyles) }}
+            {{ form_row(form.stylesComment) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
+    <h2>Order types</h2>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.orderTypes) }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.otherOrderTypes) }}
+            {{ form_row(form.orderTypesComment) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
+    <h2>Features</h2>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="important">
+                {{ form_row(form.features) }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.otherFeatures) }}
+            {{ form_row(form.featuresComment) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
+    <h2>Species</h2>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="important">
+                {{ form_row(form.speciesDoes) }}
+            </div>
+            {{ form_row(form.speciesDoesnt) }}
+            {{ form_row(form.speciesComment) }}
+        </div>
+    </div>
+
+    <hr class="mt-4" />
     <h2>Automatic commissions status tracking (open/closed)</h2>
 
     <div class="recommended">
@@ -268,7 +332,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-            {{ form_row(form.commissionsUrls) }}
+                {{ form_row(form.commissionsUrls) }}
             </div>
         </div>
     </div>
@@ -302,14 +366,6 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="recommended">
-                {{ form_row(form.languages) }}
-            </div>
-
-            <div class="mandatory">
-                {{ form_row(form.makerId) }}
-            </div>
-
             {{ form_row(form.intro) }}
 
             {{ form_row(form.notes) }}

@@ -161,6 +161,8 @@ class DataImport
             }
         }
 
+        $artisan->assureNsfwSafety();
+
         return $artisan;
     }
 

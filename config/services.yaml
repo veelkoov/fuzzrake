@@ -60,6 +60,13 @@ services:
         arguments:
             - '@doctrine.orm.default_result_cache'
 
+    App\Doctrine\Listeners\ArtisanListener:
+        tags:
+            - name: 'doctrine.orm.entity_listener'
+              event: 'preFlush'
+              entity: 'App\Entity\Artisan'
+              lazy: true
+
     App\Doctrine\Listeners\ArtisanUrlListener:
         tags:
             - name: 'doctrine.orm.entity_listener'

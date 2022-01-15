@@ -10,6 +10,7 @@ use App\DataDefinitions\Fields\Validation;
 use App\DataDefinitions\OrderTypes;
 use App\DataDefinitions\ProductionModels;
 use App\DataDefinitions\Styles;
+use App\Form\AgesTransformer;
 use App\Form\BooleanTransformer;
 use App\Form\SinceTransformer;
 use App\Form\StringArrayTransformer;
@@ -93,9 +94,27 @@ class Data extends BaseForm
                 'help'       => '<strong>NOTE:</strong> minors are currently still required to state their age on their website as well, <a href="'.$rulesPagePath.'" target="_blank">as per rules</a>.', // grep-state-age-on-website-until-filters-are-in-place
                 'help_html'  => true,
             ])
+            ->add('nsfwWebsite', ChoiceType::class, [
+                'label'      => 'The websites linked above may contain "non-family-friendly" (or <em>NSFW</em>) content, such as, but not limited to:<br />&bull; <u>suggestive</u> or explicit adult content<br />&bull; triggering or controversial content<br />&bull; content not suitable for those under 18',
+                'label_html' => true,
+                'required'   => true,
+                'choices'    => ['Yes / Possibly' => 'YES', 'No, all content is, and forever will be, safe for everyone to view' => 'NO'],
+                'expanded'   => true,
+            ])
+            ->add('nsfwSocial', ChoiceType::class, [
+                'label'      => 'Is there a possibility of <em>NSFW</em> (or the type of content listed above) being <u>liked</u>/shared/posted/commented on by your social media account?',
+                'label_html' => true,
+                'required'   => true,
+                'choices'    => ['Yes / Possibly' => 'YES', 'No, all content is, and forever will be, safe for everyone to view' => 'NO'],
+                'expanded'   => true,
+            ])
+            ->add('doesNsfw', ChoiceType::class, [
+                'label'    => 'Do you offer fursuit features intended for adult use?',
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
+                'expanded' => true,
+            ])
             ->add('worksWithMinors', ChoiceType::class, [
-                'label'    => 'Do you accept commissions from minors/underage clients?',
-                'required' => true,
+                'label'    => 'Do you accept commissions from minors or people under 18?',
                 'choices'  => ['Yes' => 'YES', 'No' => 'NO'],
                 'expanded' => true,
             ])
@@ -378,8 +397,12 @@ class Data extends BaseForm
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
 
-        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
         $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
+        $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
+
+        foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors'] as $field) {
+            $builder->get($field)->addModelTransformer(BooleanTransformer::getInstance());
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

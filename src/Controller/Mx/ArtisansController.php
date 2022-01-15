@@ -44,6 +44,8 @@ class ArtisansController extends AbstractController
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
 
+        $artisan->assureNsfwSafety();
+
         if ($form->isSubmitted() && $this->success($artisan, $form)) {
             $this->manager->flush();
 

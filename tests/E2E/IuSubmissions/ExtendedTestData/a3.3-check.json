@@ -3,8 +3,6 @@
     "FORMER_MAKER_IDS": "M000003",
     "NAME": "Maker name 3",
     "FORMERLY": "Formerly 3",
-    "AGES": "ADULTS",
-    "WORKS_WITH_MINORS": false,
     "PASSWORD": "Password artisan 3",
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: art3***********ess3@e****l",
     "CONTACT_INFO_ORIGINAL": "E-MAIL: art3e-mail-address3@ema.il",
@@ -17,6 +15,12 @@
     "COUNTRY": "FI",
     "STATE": "State 3",
     "CITY": "City 3",
+
+    "AGES": "ADULTS",
+    "NSFW_WEBSITE": true,
+    "NSFW_SOCIAL": true,
+    "DOES_NSFW": false,
+    "WORKS_WITH_MINORS": false,
 
     "PAYMENT_PLANS": "Payment plans 3",
     "PAYMENT_METHODS": "Methods 3",

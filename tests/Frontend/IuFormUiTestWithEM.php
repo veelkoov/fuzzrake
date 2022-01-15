@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Frontend;
 
+use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
-use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 
@@ -22,11 +22,16 @@ class IuFormUiTestWithEM extends PantherTestCaseWithEM
         $this->client->getCookieJar()->clear();
         self::setWindowSize($this->client, 1600, 900);
 
-        self::persistAndFlush(self::getArtisan(makerId: 'MAKERID', ages: 'ADULTS', worksWithMinors: true));
+        self::persistAndFlush(self::getArtisan(
+            makerId: 'MAKERID',
+            ages: Ages::MINORS, // ages === MINORS & nsfwSocial === true tests dynamic "doesNsfw" and "worksWithMinors"
+            nsfwWebsite: false,
+            nsfwSocial: true,
+        ));
     }
 
     /**
-     * @throws WebDriverException|Exception
+     * @throws Exception
      */
     public function testIForgotPasswordShowsHelp(): void
     {
@@ -48,6 +53,7 @@ class IuFormUiTestWithEM extends PantherTestCaseWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
+        $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
 
         $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
         self::assertSelectorIsVisible('#iu_form_contactInfoObfuscated');
@@ -56,6 +62,7 @@ class IuFormUiTestWithEM extends PantherTestCaseWithEM
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
+        $this->client->waitForInvisibility('#iu_form_contactInfoObfuscated', 5);
 
         $this->client->waitForInvisibility('#iu_form_contactInfoObfuscated', 5);
         self::assertSelectorIsNotVisible('#iu_form_contactInfoObfuscated');

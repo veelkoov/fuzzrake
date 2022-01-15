@@ -3,8 +3,6 @@
     "FORMER_MAKER_IDS": "",
     "NAME": "Maker name a2_2",
     "FORMERLY": "Formerly a2_2",
-    "AGES": "MINORS",
-    "WORKS_WITH_MINORS": false,
     "PASSWORD": "Password a2_2",
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: 2emaa2_2il2@ema.il",
     "CONTACT_INFO_ORIGINAL": "",
@@ -17,6 +15,12 @@
     "COUNTRY": "C2",
     "STATE": "of mind a2_2",
     "CITY": "Lisek a2_2",
+
+    "AGES": "MINORS",
+    "NSFW_WEBSITE": true,
+    "NSFW_SOCIAL": true,
+    "DOES_NSFW": true,
+    "WORKS_WITH_MINORS": true,
 
     "PAYMENT_PLANS": "30% upfront, rest in 100 Eur/mth until fully paid (a2_2)",
     "PAYMENT_METHODS": "Cash\nBaa2_2nk transfer\nPalPay\nHugs_a2_2",

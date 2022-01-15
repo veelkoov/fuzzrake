@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
+use App\DataDefinitions\Ages;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -77,7 +78,10 @@ trait EntityManagerTrait
         string $country = 'CZ',
         string $password = '',
         string $contactAllowed = '',
-        ?string $ages = null,
+        ?Ages $ages = null,
+        ?bool $nsfwWebsite = null,
+        ?bool $nsfwSocial = null,
+        ?bool $doesNsfw = null,
         ?bool $worksWithMinors = null,
     ): Artisan {
         $result = (new Artisan())
@@ -89,7 +93,7 @@ trait EntityManagerTrait
             ->getVolatileData()
             ->setLastCsUpdate(DateTimeUtils::getNowUtc())
             ->setLastBpUpdate(DateTimeUtils::getNowUtc())
-            ->getArtisan();
+        ;
 
         if ('' !== $password) {
             $result->setPassword($password);
@@ -100,13 +104,11 @@ trait EntityManagerTrait
             $result->setContactAllowed($contactAllowed);
         }
 
-        if (null !== $ages) {
-            $result->setAges($ages);
-        }
-
-        if (null !== $worksWithMinors) {
-            $result->setWorksWithMinors($worksWithMinors);
-        }
+        $result->setAges($ages);
+        $result->setNsfwWebsite($nsfwWebsite);
+        $result->setNsfwSocial($nsfwSocial);
+        $result->setDoesNsfw($doesNsfw);
+        $result->setWorksWithMinors($worksWithMinors);
 
         return $result;
     }

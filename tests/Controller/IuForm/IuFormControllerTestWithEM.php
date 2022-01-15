@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\IuForm;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
@@ -54,7 +55,8 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_ages + .help-text + .invalid-feedback', 'You must answer this question.');
-        self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_nsfwWebsite + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_nsfwSocial + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
 
         self::skipData($client, true);
@@ -66,6 +68,100 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
 
         self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_password + .help-text + .invalid-feedback', 'Password is required.');
+    }
+
+    /**
+     * @dataProvider ageStuffFieldsDataProvider
+     */
+    public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[name]'            => 'test-maker-555',
+            'iu_form[country]'         => 'Finland',
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[ages]'            => $ages,
+            'iu_form[nsfwWebsite]'     => $nsfwWebsite,
+            'iu_form[nsfwSocial]'      => $nsfwSocial,
+        ]);
+
+        if (null !== $doesNsfw) {
+            $form->setValues(['iu_form[doesNsfw]' => $doesNsfw]);
+        }
+
+        if (null !== $worksWithMinors) {
+            $form->setValues(['iu_form[worksWithMinors]' => $worksWithMinors]);
+        }
+
+        if ([] === $expectedErrors) {
+            self::submitValid($client, $form);
+
+            self::expectNotToPerformAssertions();
+        } else {
+            self::submitInvalid($client, $form);
+
+            foreach ($expectedErrors as $selector => $message) {
+                self::assertSelectorTextContains($selector, $message);
+            }
+        }
+    }
+
+    public function ageStuffFieldsDataProvider(): array
+    {
+        return [
+            // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
+            //         WEB.   SOCIAL  NSFW   W/MINORS  ERRORS
+            ['MINORS', 'NO',  'NO',   null,  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+            ]],
+            ['MINORS', 'NO',  'NO',   null,  'NO',     []],
+            ['MINORS', 'NO',  'YES',  null,  null,     []],
+            ['MINORS', 'YES', 'NO',   null,  null,     []],
+            ['MINORS', 'YES', 'YES',  null,  null,     []],
+
+            ['MIXED',  'NO',  'NO',   null,  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+            ]],
+            ['MIXED',  'NO',  'NO',   null,  'NO',     []],
+            ['MIXED',  'NO',  'YES',  null,  null,     []],
+            ['MIXED',  'YES', 'NO',   null,  null,     []],
+            ['MIXED',  'YES', 'YES',  null,  null,     []],
+
+            ['ADULTS', 'NO',  'NO',   null,  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'NO',  'NO',   'NO',  null,     [
+                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'NO',  'NO',   'NO',  'NO',     []],
+            ['ADULTS', 'NO',  'NO',   'NO',  'YES',    []],
+            ['ADULTS', 'NO',  'NO',   'YES', null,     []],
+
+            ['ADULTS', 'NO',  'YES',  null,  null,     [
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'NO',  'YES',  'NO',  null,     []],
+            ['ADULTS', 'NO',  'YES',  'YES', null,     []],
+
+            ['ADULTS', 'YES', 'NO',   null,  null,     [
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'YES', 'NO',   'NO',  null,     []],
+            ['ADULTS', 'YES', 'NO',   'YES', null,     []],
+
+            ['ADULTS', 'YES', 'YES',  null,  null,     [
+                '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
+            ]],
+            ['ADULTS', 'YES', 'YES',  'NO',  null,     []],
+            ['ADULTS', 'YES', 'YES',  'NO',  null,     []],
+            ['ADULTS', 'YES', 'YES',  'YES', null,     []],
+            ['ADULTS', 'YES', 'YES',  'YES', null,     []],
+        ];
     }
 
     public function testContactMethodNotRequiredWhenContactNotAllowed(): void
@@ -120,7 +216,9 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
-            ages: 'MIXED',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -145,7 +243,9 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'CORRECTIONS',
-            ages: 'ADULTS',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -172,7 +272,9 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'NO',
-            ages: 'ADULTS',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -200,7 +302,9 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: ContactPermit::CORRECTIONS,
-            ages: 'MINORS',
+            ages: Ages::MINORS,
+            nsfwWebsite: false,
+            nsfwSocial: false,
             worksWithMinors: true,
         ));
 
@@ -251,7 +355,10 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
             makerId: 'MAKERID',
             password: 'password-555',
             contactAllowed: 'CORRECTIONS',
-            ages: 'ADULTS',
+            ages: Ages::ADULTS,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            doesNsfw: false,
             worksWithMinors: true,
         ));
 

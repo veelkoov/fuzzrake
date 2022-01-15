@@ -19,8 +19,8 @@ class IuNavigationTest extends AbstractTestWithEM
         self::skipRulesAndCaptcha($client);
 
         $this::submitInvalidForm($client, 'Continue', [
-            'iu_form[name]'  => 'Some name',
-            'iu_form[ages]'  => 'ADULTS',
+            'iu_form[name]' => 'Some name',
+            'iu_form[ages]' => 'ADULTS',
         ]);
 
         self::assertInputValueSame('iu_form[name]', 'Some name', "Partial data hasn't been saved");
@@ -75,6 +75,9 @@ class IuNavigationTest extends AbstractTestWithEM
         $this::submitValidForm($client, 'Continue', [
             'iu_form[name]'            => 'test-some-name',
             'iu_form[ages]'            => 'ADULTS',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[doesNsfw]'        => 'NO',
             'iu_form[worksWithMinors]' => 'NO',
             'iu_form[country]'         => 'FI',
             'iu_form[makerId]'         => 'ABRTEST',

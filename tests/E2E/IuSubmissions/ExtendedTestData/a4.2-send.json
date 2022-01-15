@@ -3,8 +3,6 @@
     "FORMER_MAKER_IDS": "",
     "NAME": "Maker name 4",
     "FORMERLY": "",
-    "AGES": "MINORS",
-    "WORKS_WITH_MINORS": true,
     "PASSWORD": "Maker 4 password",
     "CONTACT_INFO_OBFUSCATED": "",
     "CONTACT_INFO_ORIGINAL": "",
@@ -17,6 +15,12 @@
     "COUNTRY": "CZ",
     "STATE": "",
     "CITY": "",
+
+    "AGES": "MINORS",
+    "NSFW_WEBSITE": false,
+    "NSFW_SOCIAL": true,
+    "DOES_NSFW": false,
+    "WORKS_WITH_MINORS": false,
 
     "PAYMENT_PLANS": "",
     "PAYMENT_METHODS": "",

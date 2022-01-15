@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
+use BackedEnum;
 use DateTimeInterface;
 
 class Diff
@@ -41,8 +42,11 @@ class Diff
         return [$field, $old->get($field), $new->get($field)];
     }
 
-    private function addChange(Field $field, DateTimeInterface|string|bool|null $old, DateTimeInterface|string|bool|null $new): void
-    {
+    private function addChange(
+        Field $field,
+        BackedEnum|DateTimeInterface|string|bool|null $old,
+        BackedEnum|DateTimeInterface|string|bool|null $new,
+    ): void {
         if ($field->isList()) {
             $change = new ListChange($field, $old, $new);
         } else {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
+use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\DataInputException;
 use JsonException;
@@ -45,7 +46,16 @@ class PasswordHandlingTest extends AbstractTestWithEM
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'known-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
+        $artisan = self::getArtisan(
+            name: 'Old name',
+            makerId: 'MAKERID',
+            password: 'known-password',
+            contactAllowed: 'NO',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            worksWithMinors: true,
+        );
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -80,7 +90,16 @@ class PasswordHandlingTest extends AbstractTestWithEM
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
+        $artisan = self::getArtisan(
+            name: 'Old name',
+            makerId: 'MAKERID',
+            password: 'old-password',
+            contactAllowed: 'NO',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            worksWithMinors: true,
+        );
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);
@@ -117,7 +136,16 @@ class PasswordHandlingTest extends AbstractTestWithEM
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(name: 'Old name', makerId: 'MAKERID', password: 'old-password', contactAllowed: 'NO', ages: 'ADULTS', worksWithMinors: true);
+        $artisan = self::getArtisan(
+            name: 'Old name',
+            makerId: 'MAKERID',
+            password: 'old-password',
+            contactAllowed: 'NO',
+            ages: Ages::MIXED,
+            nsfwWebsite: false,
+            nsfwSocial: false,
+            worksWithMinors: true,
+        );
         self::persistAndFlush($artisan);
         $oldHash = $artisan->getPassword();
         unset($artisan);

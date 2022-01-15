@@ -91,25 +91,6 @@ class StatisticsControllerTestWithEM extends WebTestCaseWithEM
         self::assertEquals('3 (50.00%)', $this->getRowValue($crawler, 'FORMER_MAKER_IDS'));
     }
 
-    public function testBooleanValuesCountProperly(): void
-    {
-        $client = static::createClient();
-
-        $a1 = self::getArtisan('Is minor: true', 'M000001', ages: 'MINORS');
-        $a2 = self::getArtisan('Works with minors: true 1', 'M000002', worksWithMinors: true);
-        $a3 = self::getArtisan('Works with minors: true 2', 'M000003', worksWithMinors: true);
-        $a4 = self::getArtisan('Only nulls', 'M000004');
-
-        self::persistAndFlush($a1, $a2, $a3, $a4);
-
-        $client->request('GET', '/statistics.html');
-        $crawler = $client->getCrawler();
-
-        self::assertEquals('4 (100.00%)', $this->getRowValue($crawler, 'NAME'));
-        self::assertEquals('2 (50.00%)', $this->getRowValue($crawler, 'WORKS_WITH_MINORS'));
-        self::assertEquals('1 (25.00%)', $this->getRowValue($crawler, 'AGES'));
-    }
-
     private static function assertRowValueEquals(string $expected, string $rowLabel, Crawler $crawler): void
     {
         static::assertEquals($expected, static::getRowValue($crawler, $rowLabel));

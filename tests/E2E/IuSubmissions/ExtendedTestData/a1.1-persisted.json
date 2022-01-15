@@ -3,8 +3,6 @@
     "FORMER_MAKER_IDS": "OLDMKR0",
     "NAME": "Name mkr1 before update",
     "FORMERLY": "Formerly mkr1 before update",
-    "AGES": "MINORS",
-    "WORKS_WITH_MINORS": false,
     "PASSWORD": "Password mkr1 before update",
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-e************before@e****l",
     "CONTACT_INFO_ORIGINAL": "E-MAIL: mkr1-email-update-before@ema.il",
@@ -17,6 +15,12 @@
     "COUNTRY": "C0",
     "STATE": "State mkr1 before update",
     "CITY": "City mkr1 before update",
+
+    "AGES": "MINORS",
+    "NSFW_WEBSITE": false,
+    "NSFW_SOCIAL": true,
+    "DOES_NSFW": false,
+    "WORKS_WITH_MINORS": false,
 
     "PAYMENT_PLANS": "30% upfront, rest in 100 Eur/mth until fully paid\n50%/50%\nMkr1 before update",
     "PAYMENT_METHODS": "Cash\nBank transfers\nBefore update mkr1\nPalPay",
