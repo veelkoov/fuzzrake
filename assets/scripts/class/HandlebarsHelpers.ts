@@ -28,38 +28,31 @@ export default class HandlebarsHelpers {
 
     public static getHelpersToRegister(): {} {
         return {
-            optional:       HandlebarsHelpers.optional,
-            optionalList:   HandlebarsHelpers.optionalList,
-            commaSeparated: HandlebarsHelpers.commaSeparated,
-            photos:         HandlebarsHelpers.photos,
-            hasPhotos:      HandlebarsHelpers.hasPhotos,
-            has:            HandlebarsHelpers.has,
-            since:          HandlebarsHelpers.since,
-            nl2br:          HandlebarsHelpers.nl2br,
-            describeAges:   HandlebarsHelpers.describeAges,
-        };
-    }
-
-    public static getKnownHelpersObject(): {} {
-        return {
-            optional:       true,
-            optionalList:   true,
-            commaSeparated: true,
-            hasPhotos:      true,
-            photos:         true,
-            has:            true,
-            since:          true,
-            nl2br:          true,
-            describeAges:   true,
+            optional:             HandlebarsHelpers.optional,
+            optionalList:         HandlebarsHelpers.optionalList,
+            commaSeparated:       HandlebarsHelpers.commaSeparated,
+            photos:               HandlebarsHelpers.photos,
+            hasPhotos:            HandlebarsHelpers.hasPhotos,
+            has:                  HandlebarsHelpers.has,
+            since:                HandlebarsHelpers.since,
+            nl2br:                HandlebarsHelpers.nl2br,
+            describeAges:         HandlebarsHelpers.describeAges,
+            describeCompleteness: HandlebarsHelpers.describeCompleteness,
         };
     }
 
     public static tplCfg(): {} {
+        let knownHelpers = {};
+
+        for (let key in this.getHelpersToRegister()) {
+            knownHelpers[key] = true;
+        }
+
         return {
             assumeObjects: true,
             data: false,
             knownHelpersOnly: true,
-            knownHelpers: HandlebarsHelpers.getKnownHelpersObject(),
+            knownHelpers: knownHelpers,
         };
     }
 
@@ -160,5 +153,19 @@ export default class HandlebarsHelpers {
         }
 
         return HTML_SIGN_UNKNOWN;
+    }
+
+    private static describeCompleteness(artisan: Artisan): string {
+        if (artisan.completeness >= Artisan.DATA_COMPLETE_LEVEL_PERFECT) {
+            return 'Awesome! ❤️';
+        } else if (artisan.completeness >= Artisan.DATA_COMPLETE_LEVEL_GREAT) {
+            return 'Great!'
+        } else if (artisan.completeness >= Artisan.DATA_COMPLETE_LEVEL_GOOD) {
+            return 'Good job!'
+        } else if (artisan.completeness >= Artisan.DATA_COMPLETE_LEVEL_OK) {
+            return 'Some updates might be helpful...';
+        } else {
+            return 'Yikes! :( Updates needed!';
+        }
     }
 }
