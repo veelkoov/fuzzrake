@@ -59,6 +59,7 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
         $this->screenshot($client);
         self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
+        usleep(600000); // Let all the animations end
         $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
         $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
         $this->screenshot($client);
