@@ -1,7 +1,10 @@
 import * as Handlebars from "handlebars/runtime";
 import Artisan from "./Artisan";
+import {SafeString} from "handlebars/runtime";
 
+type TplString = string | SafeString;
 const escape = Handlebars.Utils.escapeExpression;
+const HTML_SIGN_UNKNOWN = new SafeString('<i class="fas fa-question-circle" title="Unknown"></i>')
 
 export default class HandlebarsHelpers {
     private static readonly MONTHS = {
@@ -18,8 +21,6 @@ export default class HandlebarsHelpers {
         '11': 'Nov',
         '12': 'Dec',
     };
-
-    private static readonly HTML_SIGN_UNKNOWN = new Handlebars.SafeString('<i class="fas fa-question-circle" title="Unknown"></i>');
 
     private constructor() {
     }
@@ -79,7 +80,7 @@ export default class HandlebarsHelpers {
         return subject !== null && subject !== '';
     }
 
-    public static optional(element: string | string[] | Set<string>): string | object {
+    public static optional(element: string | string[] | Set<string>): TplString {
         if (element instanceof Set) {
             element = Array.from(element);
         }
@@ -88,7 +89,7 @@ export default class HandlebarsHelpers {
             element = element.join(', ');
         }
 
-        return element !== '' ? element : HandlebarsHelpers.HTML_SIGN_UNKNOWN;
+        return element !== '' ? element : HTML_SIGN_UNKNOWN;
     }
 
     public static since(element: string): string | object {
@@ -101,7 +102,7 @@ export default class HandlebarsHelpers {
         return HandlebarsHelpers.optional(element);
     }
 
-    public static optionalList(list: string[] | Set<string>): string | object {
+    public static optionalList(list: string[] | Set<string>): TplString {
         if (list instanceof Set) {
             list = Array.from(list);
         }
@@ -110,10 +111,10 @@ export default class HandlebarsHelpers {
             return `<li>${escape(value)}</li>`;
         }).join('');
 
-        return rendered ? new Handlebars.SafeString(`<ul>${rendered}</ul>`) : HandlebarsHelpers.HTML_SIGN_UNKNOWN;
+        return rendered ? new SafeString(`<ul>${rendered}</ul>`) : HTML_SIGN_UNKNOWN;
     }
 
-    public static photos(artisan: Artisan): string | object {
+    public static photos(artisan: Artisan): TplString {
         if (!HandlebarsHelpers.hasPhotos(artisan)) {
             return '';
         }
@@ -124,18 +125,18 @@ export default class HandlebarsHelpers {
             result += `<div><a href="${escape(artisan.photoUrls[i])}" target="_blank"><img src="${escape(artisan.miniatureUrls[i])}" alt="" /></a></div>`;
         }
 
-        return new Handlebars.SafeString(`<div class="imgs-container">${result}</div>`);
+        return new SafeString(`<div class="imgs-container">${result}</div>`);
     }
 
     public static hasPhotos(artisan: Artisan): boolean {
         return artisan.photoUrls.length !== 0 && artisan.miniatureUrls.length === artisan.photoUrls.length;
     }
 
-    public static nl2br(element: string | Handlebars.SafeString): Handlebars.SafeString {
-        if (element instanceof Handlebars.SafeString) {
+    public static nl2br(element: TplString): SafeString {
+        if (element instanceof SafeString) {
             return element; // FIXME: https://github.com/veelkoov/fuzzrake/issues/111
         }
 
-        return new Handlebars.SafeString(element.split("\n").map(value => escape(value)).join('<br />'));
+        return new SafeString(element.split("\n").map(value => escape(value)).join('<br />'));
     }
 }
