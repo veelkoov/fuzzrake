@@ -6,7 +6,7 @@ namespace App\DataDefinitions;
 
 use App\Utils\Arrays;
 
-enum Ages: string
+enum Ages : string
 {
     case MINORS = 'MINORS'; // grep-const-ages-minors
     case MIXED = 'MIXED'; // grep-const-ages-mixed

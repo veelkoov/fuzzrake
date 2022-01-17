@@ -6,10 +6,10 @@ namespace App\Tests\ByCodeAnalysis;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
+use function pattern;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
-use function pattern;
 
 /**
  * Don't judge, I'm having a lot of fun here!
