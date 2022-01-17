@@ -25,9 +25,10 @@ class Messaging
 
     public function reportMoreThanOneMatchedArtisans(Artisan $artisan, array $results): void
     {
-        $namesList = implode(', ', array_map(fn (Artisan $artisan) => StrUtils::artisanNamesSafeForCli($artisan), $results));
+        $foundList = implode(",\n", array_map(fn (Artisan $artisan) => StrUtils::artisanNamesSafeForCli($artisan), $results));
+        $searchedName = StrUtils::artisanNamesSafeForCli($artisan);
 
-        $this->printer->warning('Was looking for: '.StrUtils::artisanNamesSafeForCli($artisan).'. Found more than one: '.$namesList);
+        $this->printer->warning("Was looking for: {$searchedName}. Found more than one: \n{$foundList}");
     }
 
     public function reportNotAccepted(ImportItem $item): void

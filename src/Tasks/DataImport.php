@@ -107,7 +107,6 @@ class DataImport
 
     /**
      * @throws DataInputException
-     * @noinspection PhpDocRedundantThrowsInspection FIXME: throws declaration on implementation instead of interface
      */
     private function createImportItem(IuSubmission $submission): ImportItem
     {
@@ -117,13 +116,16 @@ class DataImport
         $this->manager->correctArtisan($input->getChanged(), $submission->getId());
         $this->fdv->perform($input, FDV::FIX);
 
-        $originalEntity = $this->findBestMatchArtisan($input->getChanged(), $submission->getId()) ?: new Artisan();
+        $originalEntity = $this->findBestMatchArtisan($submission, $input->getChanged()) ?: new Artisan();
 
         $entity = new ArtisanChanges($originalEntity, $submission->getId());
 
         return new ImportItem($submission, $input, $entity);
     }
 
+    /**
+     * @throws DataInputException
+     */
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
         foreach (Fields::inIuForm() as $field) {
@@ -166,16 +168,19 @@ class DataImport
         return $artisan;
     }
 
-    private function findBestMatchArtisan(Artisan $artisan, string $submissionId): ?Artisan
+    /**
+     * @throws DataInputException
+     */
+    private function findBestMatchArtisan(IuSubmission $submission, Artisan $input): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
-            $artisan->getAllNamesArr(),
-            $artisan->getAllMakerIdsArr(),
-            $this->manager->getMatchedName($submissionId)
+            array_merge([$submission->get(Field::NAME)], StringList::unpack($submission->get(Field::FORMERLY))),
+            array_merge([$submission->get(Field::MAKER_ID)], StringList::unpack($submission->get(Field::FORMER_MAKER_IDS))),
+            $this->manager->getMatchedName($submission->getId())
         );
 
         if (count($results) > 1) {
-            $this->messaging->reportMoreThanOneMatchedArtisans($artisan, $results);
+            $this->messaging->reportMoreThanOneMatchedArtisans($input, Artisan::wrapAll($results));
 
             return null;
         }
