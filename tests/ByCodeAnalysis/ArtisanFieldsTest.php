@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils;
+namespace App\Tests\ByCodeAnalysis;
 
 use App\DataDefinitions\Fields\Fields;
+use App\Tests\TestUtils\Paths;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
+use function pattern;
 
 /**
  * Don't judge, I'm having a lot of fun here!
@@ -22,7 +24,7 @@ class ArtisanFieldsTest extends TestCase
      */
     public function testArtisanTsModel(): void
     {
-        $modelSource = file_get_contents(__DIR__.'/../../assets/scripts/class/Artisan.ts');
+        $modelSource = file_get_contents(Paths::getArtisanTypeScriptClassPath());
 
         $parameters = pattern(self::REGEXP_CONSTRUCTOR, 'si')
             ->match($modelSource)

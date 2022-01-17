@@ -6,6 +6,7 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\Paths;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -19,8 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class AbstractTestWithEM extends WebTestCaseWithEM
 {
-    protected const IMPORT_DATA_DIR = __DIR__.'/../../../var/testIuFormData'; // TODO: This path should be coming from the container
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,7 +40,7 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         $corrections = '';
 
         if ($acceptAll) {
-            foreach (Finder::getFrom(self::IMPORT_DATA_DIR) as $submission) {
+            foreach (Finder::getFrom(Paths::getTestIuFormDataPath()) as $submission) {
                 $corrections .= "with {$submission->getId()}: accept\n";
             }
         }
@@ -60,13 +59,13 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         $import = new DataImport(self::getEM(), $this->getImportManager($acceptAll), $printer,
             static::getContainer()->get(FdvFactory::class)->create($printer), false);
 
-        $import->import(Finder::getFrom(self::IMPORT_DATA_DIR));
+        $import->import(Finder::getFrom(Paths::getTestIuFormDataPath()));
 
         return $output;
     }
 
     private function emptyTestSubmissionsDir(): void
     {
-        (new Filesystem())->remove(self::IMPORT_DATA_DIR);
+        (new Filesystem())->remove(Paths::getTestIuFormDataPath());
     }
 }
