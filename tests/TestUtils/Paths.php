@@ -18,4 +18,9 @@ class Paths
     {
         return __DIR__.'/../../var/testIuFormData'; // TODO: Compute using container stuff.
     }
+
+    public static function getCompletenessCalcClassPath(): string
+    {
+        return __DIR__.'/../../src/Utils/Artisan/CompletenessCalc.php';
+    }
 }
