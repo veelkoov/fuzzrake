@@ -6,6 +6,7 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\FieldsList;
+use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Console\Formatter;
 use App\Utils\StringList;
@@ -31,7 +32,7 @@ class Differ
         $oldVal = StrUtils::asStr($old->get($field) ?? '');
         $impVal = StrUtils::asStr($imported?->get($field) ?? '');
 
-        if ($oldVal === $newVal) {
+        if ($oldVal === $newVal || SecureValues::hideImportDiff($field)) {
             return;
         }
 

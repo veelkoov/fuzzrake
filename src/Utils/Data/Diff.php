@@ -6,6 +6,7 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
 use BackedEnum;
@@ -21,7 +22,9 @@ class Diff
     public function __construct(Artisan $old, Artisan $new)
     {
         foreach (Fields::persisted() as $field) {
-            $this->addChange(...$this->getField($field, $old, $new));
+            if (!SecureValues::hideConfirmDiff($field)) {
+                $this->addChange(...$this->getField($field, $old, $new));
+            }
         }
     }
 

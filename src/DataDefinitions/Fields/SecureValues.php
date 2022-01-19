@@ -29,6 +29,16 @@ final class SecureValues
         self::replace(Field::PASSWORD, '', $where);
     }
 
+    public static function hideImportDiff(Field $field): bool
+    {
+        return Field::PASSWORD === $field;
+    }
+
+    public static function hideConfirmDiff(Field $field): bool
+    {
+        return in_array($field, [Field::PASSWORD, Field::CONTACT_METHOD, Field::CONTACT_INFO_ORIGINAL, Field::CONTACT_ADDRESS_PLAIN]);
+    }
+
     private static function replace(Field $what, string $with, array &$where): void
     {
         if (array_key_exists($what->value, $where)) {
