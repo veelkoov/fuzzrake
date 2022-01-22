@@ -285,6 +285,12 @@ class ArtisanType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('contactInfoObfuscated', TextType::class, [
+                'label'      => 'Obfuscated contact info',
+                'required'   => false,
+                'empty_data' => '',
+                'help'       => 'Leave unchanged for automated updates of contact fields based on "original". Introduce any change to suppress automation and customize obfuscated info.',
+            ])
             ->add('contactAllowed', ChoiceType::class, [
                 'label'      => 'Contact allowed?',
                 'choices'    => ContactPermit::getKeyKeyMap(),

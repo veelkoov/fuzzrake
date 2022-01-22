@@ -41,12 +41,15 @@ class ArtisansController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        $prevObfuscated = $artisan->getContactInfoObfuscated();
+        $prevOriginal = $artisan->getContactInfoOriginal();
+
         $form = $this->createForm(ArtisanType::class, $artisan);
         $form->handleRequest($request);
 
         $artisan->assureNsfwSafety();
 
-        if ($form->isSubmitted() && $this->success($artisan, $form)) {
+        if ($form->isSubmitted() && $this->success($artisan, $form, $prevObfuscated, $prevOriginal)) {
             $this->manager->flush();
 
             return $this->redirectToRoute(RouteName::MAIN);
@@ -58,7 +61,7 @@ class ArtisansController extends AbstractController
         ]);
     }
 
-    private function success(Artisan $artisan, FormInterface $form): bool
+    private function success(Artisan $artisan, FormInterface $form, string $prevObfuscated, string $prevOriginal): bool
     {
         if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
             $this->manager->remove($artisan);
@@ -67,7 +70,8 @@ class ArtisansController extends AbstractController
         }
 
         if ($form->isValid()) {
-            $artisan->updateContact($artisan->getContactInfoOriginal());
+            $this->updateContactUnlessObfuscatedGotCustomized($artisan, $prevObfuscated, $prevOriginal);
+
             StrUtils::fixNewlines($artisan);
 
             $this->manager->persist($artisan);
@@ -76,5 +80,12 @@ class ArtisansController extends AbstractController
         }
 
         return false;
+    }
+
+    private function updateContactUnlessObfuscatedGotCustomized(Artisan $artisan, string $prevObfuscated, string $prevOriginal): void
+    {
+        if ($artisan->getContactInfoObfuscated() === $prevObfuscated && $artisan->getContactInfoOriginal() !== $prevOriginal) {
+            $artisan->updateContact($artisan->getContactInfoOriginal());
+        }
     }
 }

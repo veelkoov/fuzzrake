@@ -55,4 +55,112 @@ class ArtisansControllerTestWithEM extends WebTestCaseWithEM
 
         self::assertResponseStatusCodeSame(422);
     }
+
+    /**
+     * @dataProvider contactUpdatesDataProvider
+     */
+    public function testContactUpdates(array $data): void
+    {
+        $client = static::createClient();
+
+        $artisan = self::getArtisan();
+        $artisan
+            ->setContactInfoOriginal($data['init_original'])
+            ->setContactInfoObfuscated($data['init_obfuscated'])
+            ->setContactMethod($data['init_method'])
+            ->setContactAddressPlain($data['init_address']);
+        self::persistAndFlush($artisan);
+
+        $client->request('GET', "/mx/artisans/{$artisan->getId()}/edit");
+
+        self::submitValidForm($client, 'Save', [
+            'artisan[contactInfoObfuscated]' => $data['set_obfuscated'],
+            'artisan[contactInfoOriginal]'   => $data['set_original'],
+        ]);
+
+        unset($artisan);
+        self::clear();
+
+        $artisan = self::findArtisanByMakerId('TEST000');
+        self::assertEquals($data['check_original'], $artisan->getContactInfoOriginal(), 'Original info differs');
+        self::assertEquals($data['check_obfuscated'], $artisan->getContactInfoObfuscated(), 'Obfuscated info differs');
+        self::assertEquals($data['check_method'], $artisan->getContactMethod(), 'Method differs');
+        self::assertEquals($data['check_address'], $artisan->getContactAddressPlain(), 'Address differs');
+    }
+
+    public function contactUpdatesDataProvider(): array
+    {
+        return [
+            [[
+                'init_original'   => '',
+                'init_obfuscated' => '',
+                'init_method'     => '',
+                'init_address'    => '',
+
+                'set_original'    => 'some-email@somedomain.fi',
+                'set_obfuscated'  => '',
+
+                'check_original'   => 'some-email@somedomain.fi',
+                'check_obfuscated' => 'E-MAIL: so******il@som*******.fi',
+                'check_method'     => 'E-MAIL',
+                'check_address'    => 'some-email@somedomain.fi',
+            ]],
+            [[
+                'init_original'   => '',
+                'init_obfuscated' => '',
+                'init_method'     => '',
+                'init_address'    => '',
+
+                'set_original'    => '',
+                'set_obfuscated'  => 'some-email@somedomain.fi',
+
+                'check_original'   => '',
+                'check_obfuscated' => 'some-email@somedomain.fi',
+                'check_method'     => '',
+                'check_address'    => '',
+            ]],
+            [[
+                'init_original'   => 'some-email@somedomain.fi',
+                'init_obfuscated' => 'E-MAIL: so******il@som*******.fi',
+                'init_method'     => 'E-MAIL',
+                'init_address'    => 'some-email@somedomain.fi',
+
+                'set_original'    => 'Telegram: @some_telegram',
+                'set_obfuscated'  => 'E-MAIL: so******il@som*******.fi',
+
+                'check_original'   => 'Telegram: @some_telegram',
+                'check_obfuscated' => 'TELEGRAM: @som*******ram',
+                'check_method'     => 'TELEGRAM',
+                'check_address'    => '@some_telegram',
+            ]],
+            [[
+                'init_original'   => 'some-email@somedomain.fi',
+                'init_obfuscated' => 'E-MAIL: so******il@som*******.fi',
+                'init_method'     => 'E-MAIL',
+                'init_address'    => 'some-email@somedomain.fi',
+
+                'set_original'    => 'some-email@somedomain.fi',
+                'set_obfuscated'  => 'Please update, original was: E-MAIL: so******il@som*******.fi',
+
+                'check_original'   => 'some-email@somedomain.fi',
+                'check_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
+                'check_method'     => 'E-MAIL',
+                'check_address'    => 'some-email@somedomain.fi',
+            ]],
+            [[
+                'init_original'   => 'some-email@somedomain.fi',
+                'init_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
+                'init_method'     => 'E-MAIL',
+                'init_address'    => 'some-email@somedomain.fi',
+
+                'set_original'    => 'some-email@somedomain.fi',
+                'set_obfuscated'  => 'Please update, original was: E-MAIL: so******il@som*******.fi',
+
+                'check_original'   => 'some-email@somedomain.fi',
+                'check_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
+                'check_method'     => 'E-MAIL',
+                'check_address'    => 'some-email@somedomain.fi',
+            ]],
+        ];
+    }
 }
