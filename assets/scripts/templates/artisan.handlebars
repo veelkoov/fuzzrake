@@ -237,7 +237,10 @@
         <div class="{{# if artisan.isStatusKnown }}col-md-6{{ else }}col-md-8{{/ if }} p-1">
             {{# if artisan.isStatusKnown }}
                 {{# if artisan.csTrackerIssue }}
-                    <p><strong>Note:</strong> the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/incomplete.</p>
+                    <p>
+                        <i class="inaccurate fas fa-question-circle"></i>
+                        Note: the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/<wbr>incomplete.
+                    </p>
                 {{/ if }}
 
                 <table class="table table-sm table-striped table-borderless">
@@ -250,6 +253,7 @@
                 </table>
             {{ else }}
                 <p>
+                    <i class="inaccurate fas fa-question-circle"></i>
                     Failed to automatically determine commissions status. It should be tracked and updated automatically based on the contents of:
                     {{# each artisan.commissionsUrls }}
                         <a href="{{ this }}" rel="nofollow" target="_blank">{{ this }}</a>

@@ -63,10 +63,10 @@
                     {%- if artisan.speciesDoes or artisan.speciesDoesnt -%}
                         <ul>
                             {%- for specie in artisan.speciesDoes|list -%}
-                                <li class="yes"><i class="fas fa-check-square"></i>&nbsp;{{ specie }}</li>
+                                <li class="yes"><i class="fas fa-check"></i>&nbsp;{{ specie }}</li>
                             {%- endfor -%}
                             {%- for specie in artisan.speciesDoesnt|list -%}
-                                <li class="no"><i class="fas fa-times-circle"></i>&nbsp;{{ specie }}</li>
+                                <li class="no"><i class="fas fa-times"></i>&nbsp;{{ specie }}</li>
                             {%- endfor -%}
                         </ul>
                     {%- endif -%}
@@ -75,12 +75,16 @@
                     {%- if artisan.commissions is not empty or artisan.csTrackerIssue -%}
                         <ul>
                             {%- if artisan.csTrackerIssue -%}
-                                <li class="inaccurate"><i class="fas fa-exclamation-triangle"></i>&nbsp;Tracking issues</li>
+                                {%- if artisan.commissions is empty -%}
+                                    <li class="inaccurate"><i class="far fa-question-circle"></i>&nbsp;Unknown</li>
+                                {%- else -%}
+                                    <li class="inaccurate"><i class="far fa-question-circle"></i>&nbsp;Unsure</li>
+                                {%- endif -%}
                             {%- endif -%}
                             {%- for offer in artisan.commissions -%}
                                 {%- set class = offer.isOpen ? 'yes' : 'no' -%}
-                                {%- set symbol = offer.isOpen ? 'fa-check-square' : 'fa-times-circle' -%}
-                                <li class="{{ class }}"><i class="fas {{ symbol }}"></i>&nbsp;{{ offer.offer }}</li>
+                                {%- set symbol = offer.isOpen ? 'fas fa-check' : 'fas fa-times' -%}
+                                <li class="{{ class }}"><i class="{{ symbol }}"></i>&nbsp;{{ offer.offer }}</li>
                             {%- endfor -%}
                         </ul>
                     {%- endif -%}
