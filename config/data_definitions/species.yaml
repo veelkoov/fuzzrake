@@ -252,14 +252,15 @@ parameters:
       - 'Any animal and most mysticals (dragons*, serials, gryphons)'
       - 'Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)'
       - 'Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)'
+      - 'Avian Species (for now, until we perfect our moving jaw beak design)'
       - 'Basic canines, vulpines, angel dragons. (Will consider if unique)'
       - 'Characters with overly complicated anatomy (3 mouths, 4 eyes, etc.)'
+      - 'Complex species, as if the species has too many parts and details, I will say so during the quote.'
       - 'Dutch Angel Dragons (Tail, paws and feet paws ONLY)'
       - 'Etc.'
       - 'skullsuits...' # FIXME: How the heck am i supposed to interpret that
       - 'Some birds (unless its on another headbase then I''ll do it)'
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
-      - 'Complex species, as if the species has too many parts and details, I will say so during the quote.'
 
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
