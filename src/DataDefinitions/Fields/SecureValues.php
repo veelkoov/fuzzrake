@@ -36,7 +36,7 @@ final class SecureValues
 
     public static function hideConfirmDiff(Field $field): bool
     {
-        return in_array($field, [Field::PASSWORD, Field::CONTACT_METHOD, Field::CONTACT_INFO_ORIGINAL, Field::CONTACT_ADDRESS_PLAIN]);
+        return in_array($field, [Field::PASSWORD, Field::CONTACT_METHOD, Field::CONTACT_INFO_ORIGINAL, Field::CONTACT_ADDRESS_PLAIN, Field::URL_MINIATURES]);
     }
 
     private static function replace(Field $what, string $with, array &$where): void
