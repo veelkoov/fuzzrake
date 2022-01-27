@@ -340,8 +340,27 @@
     <hr class="mt-4" />
     <h2>Photos of your creations - Scritch &amp; Furtrack</h2>
 
+    <div class="row">
+        <div class="col-lg-4 text-center">
+            <img class="img-fluid rounded tiny-dog" src="{{ asset('images/stop_scrolling.webp') }}" alt="" />
+        </div>
+
+        <div class="col-lg-8">
+            <p>Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners:</p>
+
+            <ul>
+                <li>everybody can take part in tagging ("I know this fursuiter, here goes a tag!"),</li>
+                <li>makers keep own pages with a list of their creations and photos,</li>
+                <li>fursuiters have easy access to all their photos.</li>
+            </ul>
+
+            <p><strong>To put it simple, it's a far better alternative to tagging on Facebook or Twitter, or uploading the photos to some on-line file share or photo service.</strong></p>
+
+            <p class="small">Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
+        </div>
+    </div>
+
     <div class="recommended">
-        <p class="small">Have you heard about <a href="https://scritch.es/" target="_blank">Scritch</a> or <a href="https://www.furtrack.com/" target="_blank">Furtrack</a>? These are initiatives of creating a proper service for publishing fursuit photos while being able to tag their makers and owners. The whole community can take part in tagging ("I know this fursuiter, here goes a tag!"). Makers keep their pages with links to their websites &amp; social media and a list of the photos of their creations. Fursuiters have easy access to all their photos. It's far better than tagging on Facebook or Twitter or just uploading the photos on some on-line drives/photo services. Note: getfursu.it maintainer is involved in neither Scritch nor Furtrack development/maintenance; in case of any questions/issues regarding those websites, please reach out to their administrators.</p>
 
         <div class="row">
             <div class="col-lg-6">
@@ -357,6 +376,31 @@
             </div>
             <div class="col-lg-6">
                 {{ form_row(form.photosCopyright) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="helphints-toggle">
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#photosExplanation" aria-expanded="false" aria-controls="photosExplanation">How to properly add photos</button>
+    </div>
+
+    <div class="collapse helphints-contents" id="photosExplanation">
+        <div class="card">
+            <div class="card-body">
+                <ul>
+                    <li>
+                        To copy a link from <strong>Scritch</strong>, open the photo and click "Get link" on the upper-right of the pop-up. You should end up with something similar to this:
+                        <em>https://scritch.es/pictures/25ae6f07-9855-445f-9c1d-a8c78166b81b</em>.
+                    </li>
+
+                    <li>
+                        To copy a link from <strong>Furtrack</strong>, open the photo and click the link on the upper-right corner of the pop-up. You should end up with something similar to this:
+                        <em>https://www.furtrack.com/p/49767</em>.
+                    </li>
+                    <li>
+                        If you reorder the photos, notify the maintainer about it by e.g. adding some notes below ("I&nbsp;reordered the photos"). Otherwise, reordering will be ignored due to the limitations of the software. {# grep-cannot-easily-reorder-photos #}
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

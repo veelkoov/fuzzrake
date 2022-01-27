@@ -355,7 +355,7 @@ class Data extends BaseForm
             ])
             ->add('photoUrls', TextareaType::class, [
                 'label'      => 'Choose up to 5 "featured" photos of your creations',
-                'help'       => 'You can use photos hosted on either Scritch or Furtrack or both (mixed). To copy a link from <strong>Scritch</strong>, open the photo and click "Get link" on the upper-right of the pop-up. You should end up with something similar to this: <em>https://scritch.es/pictures/25ae6f07-9855-445f-9c1d-a8c78166b81b</em>. To copy a link from <strong>Furtrack</strong>, open the photo and click the link on the upper-right corner of the pop-up. You should end up with something similar to this: <em>https://www.furtrack.com/p/49767</em>. Kindly place each photo link in a single line. Note: If you want to reorder the photos, do this in the field and notify the maintainer about this by adding notes or contacting ("I reordered the photos").', // grep-cannot-easily-reorder-photos
+                'help'       => 'You can use photos hosted on either <strong>Scritch or Furtrack</strong> or both (mixed), <strong>getfursu.it cannot serve photos from anywhere else</strong>. Kindly place each photo link in a single line. Check the instructions on adding/<wbr>reordering below.',
                 'help_html'  => true,
                 'required'   => false,
                 'empty_data' => '',
