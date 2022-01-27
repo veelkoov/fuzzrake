@@ -37,7 +37,7 @@ final class ValidationRegexps
         .'|Cash|Cash App|Checks|Cashier\'s checks|Crypto'
         .'|Credit/debit cards'.'|Credit cards'.'|Debit cards'
         .'|Depop|Etsy Payments|E-transfers|Google Pay|Ko-fi|Money orders|Other'
-        .'|PayPal|Revolut|SEPA|Square|Stripe|Swish|Venmo|Vipps|VISA|Wise|Zelle';
+        .'|PayID|PayPal|Revolut|SEPA|Square|Stripe|Swish|Venmo|Vipps|VISA|Wise|Zelle';
     final public const PAY_METHODS = '^((?<=\n|^)('.self::PAY_METHODS_LIST.')'.self::PAY_COMMENT.'(\n|(?=$)))*$';
 
     final public const GENERIC_URL_LIST = '^(https?://[^/]+/.*(\nhttps?://[^/]+/.*)*)?$'; // TODO: Improve URL validation regexps #79

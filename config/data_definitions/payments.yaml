@@ -36,4 +36,5 @@ parameters:
       'Ko-?fi':                             'Ko-fi'
       'Money ?orders?':                     'Money orders'
       'Pay ?Pal( only)?':                   'PayPal'
+      'PayPal invoices?':                   'PayPal (invoices)'
       '(Transfer)?Wise(\.com)?':            'Wise'
