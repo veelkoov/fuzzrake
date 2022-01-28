@@ -13,6 +13,7 @@ parameters:
       "czech( republic)?":                             "CZ"
       "d[ea]nmark":                                    "DK"
       "(germany|Deutschland)":                         "DE"
+      "estonia":                                       "EE"
       "finland":                                       "FI"
       "france":                                        "FR"
       "(uk|england|united kingdom)":                   "GB"

@@ -60,6 +60,11 @@
     "region": "Europe"
   },
   {
+    "name": "Estonia",
+    "code": "EE",
+    "region": "Europe"
+  },
+  {
     "name": "EU (unspecified)",
     "code": "EU",
     "region": "Europe",
