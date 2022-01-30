@@ -3,7 +3,7 @@ import HandlebarsHelpers from "../class/HandlebarsHelpers";
 import Tracking from "../class/Tracking";
 import {getArtisanFromRelated} from "./utils";
 
-const template = require('../templates/artisan.handlebars');
+const template = require('../../templates/artisan.handlebars');
 let $contents: JQuery<HTMLElement>;
 
 function detailsPopUpShowCallback(event: any): void {

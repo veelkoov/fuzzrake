@@ -4,7 +4,10 @@ import Artisan from "../class/Artisan";
 import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
-const filtersButtonHtml = `<button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal">Choose filters</button>`;
+const additionalButtonsHtml = '\
+        <button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal"></button>\
+        <button id="filtersButton" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">Legend</button>\
+    ';
 
 const dataTableOptions = {
     dom:
@@ -25,7 +28,7 @@ const dataTableOptions = {
         className: 'btn btn-dark',
         columns: '.toggleable',
         extend: 'colvis',
-        text: 'Choose columns'
+        text: 'Columns'
     }],
     infoCallback: dataTableInfoCallback,
 };
@@ -98,7 +101,7 @@ export function init(): (() => void)[] {
             $dtDataTable = $jqDataTable.DataTable(dataTableOptions);
             $jqDataTable.on('search.dt', highlightByMakerIdCallback);
             $jqDataTable.on('column-visibility.dt', recordColumnsVisibilityCallback);
-            $jqDataTable.parents('.dataTables_wrapper').find('.dt-buttons').append(filtersButtonHtml);
+            $jqDataTable.parents('.dataTables_wrapper').find('.dt-buttons').append(additionalButtonsHtml);
             setRefreshCallback($dtDataTable.draw);
         },
         () => {

@@ -30,7 +30,7 @@ function refreshFiltersShowButton(): void {
     let count = countActiveFilters();
     let badge = count > 0 ? ` <span class="badge rounded-pill bg-light text-dark">${count}</span>` : '';
 
-    $filtersShowButton.html(`Choose filters${badge}`);
+    $filtersShowButton.html(`Filters${badge}`);
 }
 
 function setupSpeciesFiltersToggleButtons(): void {

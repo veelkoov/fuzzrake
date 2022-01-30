@@ -2,7 +2,7 @@ import DataBridge from "../class/DataBridge";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
 import {getArtisanFromRelated} from "./utils";
 
-const template = require('../templates/updates.handlebars');
+const template = require('../../templates/updates.handlebars');
 let $contents: JQuery<HTMLElement>;
 
 function updateRequestModalShowCallback(event: any): void {

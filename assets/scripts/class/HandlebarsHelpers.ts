@@ -1,7 +1,7 @@
 import * as Handlebars from "handlebars/runtime";
 import {SafeString} from "handlebars/runtime";
 import Artisan from "./Artisan";
-import {ADULTS, MINORS, MIXED} from "../consts";
+import {ADULTS, ADULTS_DESC, MINORS, MINORS_DESC, MIXED, MIXED_DESC} from "../consts";
 
 type TplString = string | SafeString;
 const escape = Handlebars.Utils.escapeExpression;
@@ -139,20 +139,20 @@ export default class HandlebarsHelpers {
     public static describeAges(artisan: Artisan): TplString {
         switch (artisan.ages) {
             case MINORS:
-                return 'I am a (we all are) minor(s)/underage';
+                return new SafeString(MINORS_DESC + ' <i class="ages fa-solid fa-user-minus"></i>');
             case MIXED:
-                return 'The studio consists of both minors and adults';
+                return new SafeString(MIXED_DESC + ' <i class="ages fa-solid fa-user-plus"></i> <i class="ages fa-solid fa-user-minus"></i>');
             case ADULTS:
-                return 'I am (all of us are) at least 18 years old';
+                return ADULTS_DESC;
         }
 
         if (true === artisan.isMinor) {
-            return 'I am minor/underage';
+            return new SafeString(MINORS_DESC + ' <i class="ages fa-solid fa-user-minus"></i>');
         } else if (false === artisan.isMinor) {
-            return 'I am at least 18 years old';
+            return ADULTS_DESC;
         }
 
-        return HTML_SIGN_UNKNOWN;
+        return new SafeString(HTML_SIGN_UNKNOWN.toString() + ' <i class="ages fa-solid fa-user"></i>');
     }
 
     private static describeCompleteness(artisan: Artisan): string {
