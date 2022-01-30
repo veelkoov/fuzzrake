@@ -6,6 +6,7 @@ namespace App\Utils\IuSubmissions;
 
 use App\Utils\DataInputException;
 use App\Utils\Traits\UtilityClass;
+use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
 use Symfony\Component\Finder\Finder as FileFinder;
@@ -19,7 +20,7 @@ final class Finder
      *
      * @throws JsonException|DataInputException
      */
-    public static function getFrom(string $directoryPath): array
+    public static function getFrom(string $directoryPath, ?DateTimeInterface $onlyAfter): array
     {
         if (!is_dir($directoryPath)) {
             throw new InvalidArgumentException("Directory '$directoryPath' does not exist");
@@ -31,7 +32,11 @@ final class Finder
         $finder->files()->in($directoryPath)->sortByName();
 
         foreach ($finder as $file) {
-            $result[] = IuSubmission::fromFile($file);
+            $item = IuSubmission::fromFile($file);
+
+            if (null === $onlyAfter || $item->getTimestamp() >= $onlyAfter) {
+                $result[] = $item;
+            }
         }
 
         return $result;

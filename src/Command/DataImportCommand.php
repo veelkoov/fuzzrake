@@ -7,6 +7,8 @@ namespace App\Command;
 use App\Tasks\DataImportFactory;
 use App\Utils\Data\Manager;
 use App\Utils\DataInputException;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\IuSubmissions\Finder;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
@@ -34,6 +36,7 @@ class DataImportCommand extends Command
             ->addOption('fix-mode', null, null, 'Show import command for fixes')
             ->addArgument('import-dir', InputArgument::REQUIRED, 'Import directory path')
             ->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path')
+            ->addArgument('only-after', InputArgument::OPTIONAL, 'Process requests no earlier than this date')
         ;
     }
 
@@ -44,10 +47,22 @@ class DataImportCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        try {
+            if (null !== $input->getArgument('only-after')) {
+                $onlyAfter = DateTimeUtils::getUtcAt($input->getArgument('only-after') ?? '');
+            } else {
+                $onlyAfter = null;
+            }
+        } catch (DateTimeException $e) {
+            $io->error('Invalid start date argument(s), '.$e->getMessage());
+
+            return 1;
+        }
+
         $import = $this->dataImportFactory->get(Manager::createFromFile($input->getArgument('corrections-file')),
             $io, $input->getOption('fix-mode'));
 
-        $import->import(Finder::getFrom($input->getArgument('import-dir')));
+        $import->import(Finder::getFrom($input->getArgument('import-dir'), $onlyAfter));
 
         if ($input->getOption('commit')) {
             $this->objectManager->flush();
