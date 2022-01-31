@@ -55,6 +55,7 @@ final class Regexes
         'when will you start taking new C___S',
         'even though you\'re closed for C___S',
         'C___S open in',
+        'quotes open (?:in )?MONTHS',
         'slots are open in',
         'as slots open',
         '(?:>| )art C___S(?: are:?| ?:)', // "art commissions"
