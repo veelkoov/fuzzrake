@@ -20,7 +20,7 @@ final class Finder
      *
      * @throws JsonException|DataInputException
      */
-    public static function getFrom(string $directoryPath, ?DateTimeInterface $onlyAfter): array
+    public static function getFrom(string $directoryPath, ?DateTimeInterface $onlyAfter = null): array
     {
         if (!is_dir($directoryPath)) {
             throw new InvalidArgumentException("Directory '$directoryPath' does not exist");
