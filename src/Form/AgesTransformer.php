@@ -15,7 +15,7 @@ class AgesTransformer implements DataTransformerInterface
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {
-        return $value?->value ?? '';
+        return $value?->value;
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */

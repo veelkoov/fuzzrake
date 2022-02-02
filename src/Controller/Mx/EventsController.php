@@ -6,7 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
-use App\Form\EventType;
+use App\Form\Mx\EventType;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;

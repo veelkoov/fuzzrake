@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\Mx;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
@@ -10,6 +10,9 @@ use App\DataDefinitions\Features;
 use App\DataDefinitions\OrderTypes;
 use App\DataDefinitions\ProductionModels;
 use App\DataDefinitions\Styles;
+use App\Form\AgesTransformer;
+use App\Form\BooleanTransformer;
+use App\Form\StringArrayTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -314,6 +317,7 @@ class ArtisanType extends AbstractType
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
         }
         $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
+        $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\Form\QueryType;
+use App\Form\Mx\QueryType;
 use App\Repository\ArtisanRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
