@@ -34,9 +34,7 @@
 
     {% include 'main/parts/intro.html.twig' %}
 
-    {% if not isDevEnv() %}
-        {% include 'main/parts/scam-risk-warning.html.twig' %}
-    {% endif %}
+    {% include 'main/parts/checklist.html.twig' %}
 
     <div id="data-loading-message" class="alert alert-primary" role="alert">
         The data is being processed. This may take several seconds. If it's stuck for
@@ -49,7 +47,7 @@
         </ul>
     </div>
 
-    <div id="scam-risk-acknowledged" {% if not isDevEnv() %}style="display: none;"{% endif %}>
+    <div id="checklist-done" style="display: none;">
         <div id="data-table-container" style="display: none;">
             {% include 'main/table/body.html.twig' %}
         </div>

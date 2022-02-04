@@ -12,3 +12,4 @@ export const MIXED_DESC = 'There is a mix of people over and under 18';
 export const ADULTS_DESC = 'Everyone is over 18';
 
 export const NO = 'NO';
+export const YES = 'YES';
