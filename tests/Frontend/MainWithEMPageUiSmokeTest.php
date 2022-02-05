@@ -31,10 +31,22 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
         (new Filesystem())->remove(Paths::getTestCacheDir());
 
         $client->request('GET', '/');
-        $client->waitForVisibility('#scam-risk-warning', 5);
-        $this->screenshot($client);
 
-        $client->findElement(WebDriverBy::id('scam-risk-acknowledgement'))->click();
+        $client->waitForVisibility('#checklist-ill-be-careful', 5);
+        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+
+        $client->waitForVisibility('#checklist-ack-pros-and-cons', 1);
+        $client->findElement(WebDriverBy::id('checklist-ack-pros-and-cons'))->click();
+
+        $client->waitForVisibility('#aasImAdult', 1);
+        $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+
+        $client->waitForVisibility('#aasAllowNsfw', 1);
+        $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+
+        $client->waitForVisibility('#checklist-dismiss-btn', 1);
+        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+
         $client->waitForVisibility('#artisans', 5);
 
         self::assertStringContainsString('Displaying 3 out of 3 fursuit makers in the database.', $client->getCrawler()->findElement(WebDriverBy::id('artisans_info'))->getText());
@@ -54,14 +66,14 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
 
         self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('artisanName'))->getText());
 
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
+        $this->shakeTheCat($client);
 
         $client->findElement(WebDriverBy::xpath('//div[@id="artisanDetailsModalContent"]//button[text() = "Data outdated/inaccurate?"]'))->click();
 
         $client->waitForVisibility('#artisanUpdatesModalContent', 5);
         self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
+        $this->shakeTheCat($client);
 
         $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
         $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
@@ -80,7 +92,7 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
      *
      * @throws Exception
      */
-    private function aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen(Client $client): void
+    private function shakeTheCat(Client $client): void
     {
         $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
