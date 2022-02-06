@@ -2,6 +2,7 @@ import Species from '../species/Species';
 import * as DataTable from '../main/artisansTable';
 import * as DetailsPopUp from '../main/detailsPopUp';
 import * as Checklist from '../main/checklist';
+import * as Filters from '../main/filters';
 import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
@@ -56,6 +57,7 @@ jQuery(function () {
     callbacks.push(...UpdateRequestPopUp.init());
     callbacks.push(...Checklist.init());
     callbacks.push(...DataTable.init());
+    callbacks.push(...Filters.init());
     callbacks.push(...DetailsPopUp.init());
     callbacks.push(finalizeInit);
 

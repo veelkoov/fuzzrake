@@ -1,4 +1,5 @@
 import Artisan from "../../class/Artisan";
+import FilterInterface from "../data/FilterInterface";
 
 export default interface FilterVisInterface {
     isActive(): boolean;
@@ -10,4 +11,6 @@ export default interface FilterVisInterface {
     getFilterId(): string;
 
     matches(artisan: Artisan): boolean;
+
+    getFilter(): FilterInterface;
 }

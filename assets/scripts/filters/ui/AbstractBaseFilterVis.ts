@@ -71,6 +71,10 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         return this.filter.isActive();
     }
 
+    public getFilter(): FilterInterface {
+        return this.filter;
+    }
+
     protected refreshUi(): void {
         this.$clearButton.toggle(this.filter.isActive());
         this.$statusDisplay.text(this.filter.getStatus());

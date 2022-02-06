@@ -2,11 +2,15 @@ import {Checkbox} from "../class/Checkbox";
 import {toggle} from "../jQueryUtils";
 import {Radio} from "../class/Radio";
 import {NO, YES} from "../consts";
+import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
+import {applyFilters} from "./filters";
 
 let illBeCareful: Checkbox, ackProsAndCons: Checkbox, iLikeButtons: Checkbox;
 let isAdult: Radio, wantsSfw: Radio;
 let $prosConsContainer: JQuery<HTMLElement>, $ageContainer: JQuery<HTMLElement>,
     $wantsSfwContainer: JQuery<HTMLElement>, $dismissButton: JQuery<HTMLElement>;
+
+const config = new AgeAndSfwConfig();
 
 function isReady(): boolean {
     return illBeCareful.isChecked() && ackProsAndCons.isChecked() && (isAdult.isVal(NO) || wantsSfw.isAnySelected());
@@ -16,6 +20,9 @@ function refreshAll(): void {
     toggle($prosConsContainer, illBeCareful.isChecked());
     toggle($ageContainer, illBeCareful.isChecked() && ackProsAndCons.isChecked());
     toggle($wantsSfwContainer, illBeCareful.isChecked() && ackProsAndCons.isChecked() && isAdult.isVal(YES));
+
+    config.setWantsSfw(!wantsSfw.isVal(NO));
+    config.setIsAdult(isAdult.isVal(YES));
 
     let emoticon: string, label: string;
 
@@ -36,7 +43,13 @@ function refreshAll(): void {
 
 function dismiss(): void {
     if (isReady()) {
+        applyFilters();
+
         jQuery('#checklist-container, #checklist-done').toggle();
+
+        // Checklist causes the user to be at the bottom of the table when it shows up
+        let offset = jQuery('#data-table-container').offset() || { 'top': 5 };
+        window.scrollTo(0, offset.top - 5);
     }
 }
 
@@ -60,4 +73,8 @@ export function init(): (() => void)[] {
             refreshAll();
         },
     ];
+}
+
+export function getAgeAndSfwConfig(): AgeAndSfwConfig {
+    return config;
 }

@@ -1,9 +1,9 @@
-import FilterVisInterface from "./ui/FilterVisInterface";
 import Artisan from "../class/Artisan";
+import FilterInterface from "./data/FilterInterface";
 
 export default class DataTablesFilterPlugin {
     public constructor(private readonly artisans: Artisan[],
-                       private readonly filters: FilterVisInterface[]) {
+                       private readonly filters: FilterInterface[]) {
     }
 
     public getCallback(): (s: object, d: Array<any>, i: number, o: any, c: number) => boolean {

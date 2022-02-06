@@ -1,7 +1,7 @@
 import {makerIdRegexp} from "../consts";
 import DataBridge from "../class/DataBridge";
 import Artisan from "../class/Artisan";
-import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from "./filters";
+import {setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
 const additionalButtonsHtml = '\
@@ -104,15 +104,6 @@ export function init(): (() => void)[] {
         },
         () => {
             restoreColumns();
-        },
-        () => {
-            initFilters();
-        },
-        () => {
-            restoreFilters();
-        },
-        () => {
-            applyFilters();
         },
     ];
 }
