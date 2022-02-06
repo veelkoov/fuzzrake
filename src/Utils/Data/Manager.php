@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
+use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
@@ -225,6 +226,11 @@ class Manager
         foreach ($corrections as $correction) {
             $value = $artisan->get($correction->getField());
             $correctedValue = $correction->apply($value);
+
+            if (Field::AGES === $correction->getField()) {
+                $correctedValue = Ages::get($correctedValue);
+            }
+
             $artisan->set($correction->getField(), $correctedValue);
         }
     }
