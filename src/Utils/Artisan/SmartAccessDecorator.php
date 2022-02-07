@@ -214,19 +214,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Field::NSFW_SOCIAL, $nsfwSocial);
     }
 
-    public function isAllowedToDoNsfw(): bool
-    {
-        return Ages::ADULTS === $this->getAges();
-    }
-
     public function getDoesNsfw(): ?bool
     {
         return $this->getBoolValue(Field::DOES_NSFW);
-    }
-
-    public function getSafeDoesNsfw(): bool
-    {
-        return true === $this->getDoesNsfw() && $this->isAllowedToDoNsfw();
     }
 
     public function setDoesNsfw(?bool $doesNsfw): self
@@ -234,24 +224,60 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setBoolValue(Field::DOES_NSFW, $doesNsfw);
     }
 
-    public function isAllowedToWorkWithMinors(): bool
-    {
-        return false === $this->getNsfwWebsite() && false === $this->getNsfwSocial() && false === $this->getSafeDoesNsfw();
-    }
-
     public function getWorksWithMinors(): ?bool
     {
         return $this->getBoolValue(Field::WORKS_WITH_MINORS);
     }
 
-    public function getSafeWorksWithMinors(): bool
-    {
-        return $this->getWorksWithMinors() && $this->isAllowedToWorkWithMinors();
-    }
-
     public function setWorksWithMinors(?bool $worksWithMinors): self
     {
         return $this->setBoolValue(Field::WORKS_WITH_MINORS, $worksWithMinors);
+    }
+
+    public function isAllowedToDoNsfw(): ?bool
+    {
+        if (null === ($ages = $this->getAges())) {
+            return null;
+        }
+
+        return Ages::ADULTS === $ages;
+    }
+
+    public function isAllowedToWorkWithMinors(): ?bool
+    {
+        if ((null === ($nsfwWebsite = $this->getNsfwWebsite()))
+            || (null === ($nsfwSocial = $this->getNsfwSocial()))
+            || (null === ($doesNsfw = $this->getDoesNsfw()))) {
+            return null;
+        }
+
+        return false === $nsfwWebsite && false === $nsfwSocial && false === $doesNsfw;
+    }
+
+    public function getSafeDoesNsfw(): ?bool
+    {
+        if (null === ($allowed = $this->isAllowedToDoNsfw())) {
+            return null;
+        }
+
+        if (false === $allowed) {
+            return false;
+        }
+
+        return $this->getDoesNsfw();
+    }
+
+    public function getSafeWorksWithMinors(): ?bool
+    {
+        if (null === ($allowed = $this->isAllowedToWorkWithMinors())) {
+            return null;
+        }
+
+        if (false === $allowed) {
+            return false;
+        }
+
+        return $this->getWorksWithMinors();
     }
 
     /**
