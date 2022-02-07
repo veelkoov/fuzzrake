@@ -40,8 +40,6 @@ trait EntityManagerTrait
         $schemaTool = new OrmSchemaTool(self::getEM());
         $schemaTool->dropSchema($metadata);
         $schemaTool->updateSchema($metadata);
-
-        self::flushAndClear();
     }
 
     protected static function getArtisanRepository(): ArtisanRepository

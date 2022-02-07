@@ -27,6 +27,11 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         return $result;
     }
 
+    protected function tearDown(): void
+    {
+        self::stopWebServer();
+    }
+
     protected static function setWindowSize(PantherClient $client, int $width, int $height): void
     {
         $client->manage()->window()->setSize(new WebDriverDimension($width, $height));
