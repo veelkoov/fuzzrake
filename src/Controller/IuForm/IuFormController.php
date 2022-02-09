@@ -10,6 +10,7 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
+use App\EventListener\LegacyDisrespector;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Form\InclusionUpdate\Data;
@@ -18,7 +19,6 @@ use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\Utils\Password;
-use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
@@ -138,7 +138,6 @@ class IuFormController extends AbstractRecaptchaBackedController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            StrUtils::fixNewlines($state->artisan);
             $state->artisan->setContactInfoOriginal($state->artisan->getContactInfoObfuscated()); // grep-contact-updates-magic
 
             $submittedPasswordOk = $this->handlePassword($state);

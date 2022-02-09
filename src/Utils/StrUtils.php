@@ -64,17 +64,6 @@ final class StrUtils
         return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
     }
 
-    public static function fixNewlines(Artisan $artisan): void
-    {
-        foreach (Fields::persisted() as $field) {
-            if (($value = $artisan->get($field)) && is_string($value)) {
-                $newValue = rtrim(str_replace("\r\n", "\n", $value), "\r");
-
-                $artisan->set($field, $newValue);
-            }
-        }
-    }
-
     public static function asStr(BackedEnum|DateTimeInterface|bool|string|null $value): string
     {
         if (null === $value) {

@@ -6,10 +6,10 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Artisan as ArtisanE;
+use App\EventListener\LegacyDisrespector;
 use App\Form\Mx\ArtisanType;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\StrUtils;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -71,8 +71,6 @@ class ArtisansController extends AbstractController
 
         if ($form->isValid()) {
             $this->updateContactUnlessObfuscatedGotCustomized($artisan, $prevObfuscated, $prevOriginal);
-
-            StrUtils::fixNewlines($artisan);
 
             $this->manager->persist($artisan);
 
