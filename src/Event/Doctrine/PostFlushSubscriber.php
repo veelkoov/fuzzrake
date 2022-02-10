@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Doctrine\Subscribers;
+namespace App\Event\Doctrine;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;

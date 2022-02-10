@@ -14,8 +14,6 @@ class StringArrayTransformer implements DataTransformerInterface
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {
-        $value = str_replace("\r\n", "\n", $value);
-
         return array_filter(explode("\n", $value ?? ''));
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Doctrine\Listeners;
+namespace App\Tests\Event\Doctrine;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
@@ -11,7 +11,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 
-class ArtisanUrlListenerTestWithEM extends KernelTestCaseWithEM
+class ArtisanUrlListenerTest extends KernelTestCaseWithEM
 {
     /**
      * @throws Exception

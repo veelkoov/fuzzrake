@@ -468,7 +468,6 @@ class ExtendedTest extends AbstractTestWithEM
 
     private static function validateConsoleOutput(string $output, array $expectedArtisans): void
     {
-        $output = str_replace("\r", "\n", $output);
         $output = pattern('^(OLD |NEW |IMP | *set )[^\n]+\n+', 'm')->prune($output);
         $output = pattern('^-+\n+', 'm')->prune($output);
 

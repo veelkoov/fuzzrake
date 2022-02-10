@@ -10,7 +10,6 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
-use App\EventListener\LegacyDisrespector;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Form\InclusionUpdate\Data;

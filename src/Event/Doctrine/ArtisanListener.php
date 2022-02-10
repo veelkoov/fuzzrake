@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Doctrine\Listeners;
+namespace App\Event\Doctrine;
 
 use App\Entity\Artisan;
 use App\Utils\Artisan\SmartAccessDecorator;

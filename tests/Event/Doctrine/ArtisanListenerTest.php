@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Doctrine\Listeners;
+namespace App\Tests\Event\Doctrine;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;

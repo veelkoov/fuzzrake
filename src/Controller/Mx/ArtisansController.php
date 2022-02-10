@@ -6,7 +6,6 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Artisan as ArtisanE;
-use App\EventListener\LegacyDisrespector;
 use App\Form\Mx\ArtisanType;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
