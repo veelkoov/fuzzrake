@@ -7,10 +7,6 @@ declare const MAKER_IDS_MAP: object;
 declare const SPECIES: object;
 
 export default abstract class DataBridge {
-    public static getDataUpdatesUrl(): string {
-        return DATA_BRIDGE.dataUpdatesUrl;
-    }
-
     public static getTrackingUrl(): string {
         return DATA_BRIDGE.trackingUrl;
     }

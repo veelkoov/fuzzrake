@@ -2,26 +2,48 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-md-8">
             <h4 class="alert-heading">Fursuit makers database</h4>
 
             <p>
                 Welcome to the spawnbase of the furries! Currently {{ stats.activeArtisansCount|fragile_int }}&nbsp;makers from
-                {{ stats.countryCount|fragile_int }}&nbsp;countries are listed here. Do you know one missing from here? - let them know!
-            </p>
+                {{ stats.countryCount|fragile_int }}&nbsp;countries are listed here.
 
-            <p class="small">
-                Last update: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }} (data)
-                / {{ stats.lastSystemUpdateTimeUtc|fragile_datetime_utc }} (system).
+                <br />
+
+                <span class="small">
+                    Last update: {{ stats.lastDataUpdateTimeUtc|fragile_datetime_utc }} (data)
+                    / {{ stats.lastSystemUpdateTimeUtc|fragile_datetime_utc }} (system).
+                </span>
             </p>
 
             <p>
-                <span class="badge bg-danger">Encountered a bug?</span> Want a feature? Want more information?
-                <a href="{{ feedback_form_url }}" target="_blank">Click here!</a>
+                <a class="btn btn-primary m-2" href="{{ feedback_form_url }}" target="_blank">
+                    Report a bug or request a feature
+                </a>
+                <a class="btn btn-success m-2" href="{{ path('data_updates') }}">
+                    Join or update studio's information
+                </a>
+            </p>
+
+            <p>
+                <strong>Help spreading awareness of this website by tweeting:</strong>
+            </p>
+
+            <p>
+                "We need more #FursuitMakers to join getfursu.it"
+                <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="We need more #FursuitMakers to join" data-url="https://getfursu.it/" data-related="getfursuit" data-lang="en" data-dnt="true" data-show-count="false">Tweet</a>
+
+                <br />
+
+                "Check out this #FursuitMakers list: getfursu.it"
+                <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="Check out this #FursuitMakers list:" data-url="https://getfursu.it/" data-related="getfursuit" data-lang="en" data-dnt="true" data-show-count="false">Tweet</a>
+
+                <script async src="https://platform.twitter.com/widgets.js"></script>
             </p>
         </div>
 
-        <div class="col-sm-4 px-0 text-center">
+        <div class="col-md-4 px-0 text-center">
             <img src="{{ asset('images/website-banner-top-transparent.webp') }}" class="img-fluid" alt="" />
         </div>
     </div>
