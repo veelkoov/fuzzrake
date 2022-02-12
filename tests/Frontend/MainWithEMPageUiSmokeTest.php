@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\Frontend;
 
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use Facebook\WebDriver\Exception\WebDriverException;
+use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverKeys;
+use Symfony\Component\Panther\Client;
 
 class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
 {
     /**
-     * @throws WebDriverException
+     * @throws Exception
      */
     public function testMainPageUiSmoke(): void
     {
@@ -30,48 +32,56 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
 
         $client->findElement(WebDriverBy::id('scam-risk-acknowledgement'))->click();
         $client->waitForVisibility('#artisans', 5);
-        $this->screenshot($client);
 
         self::assertStringContainsString('Displaying 3 out of 3 fursuit makers in the database.', $client->getCrawler()->findElement(WebDriverBy::id('artisans_info'))->getText());
 
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
         $client->waitForVisibility('#filtersTitle', 5);
-        $this->screenshot($client);
 
         $client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
         $client->waitForVisibility('input[type=checkbox][value=CZ]', 5);
-        $this->screenshot($client);
 
         $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[@data-action="all"]'))->click();
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
         $client->waitFor('//div[@id="artisans_info"]/p[contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 5);
-        $this->screenshot($client);
 
         $client->findElement(WebDriverBy::xpath('//td[contains(text(), "Test artisan 1")]'))->click();
         $client->waitForVisibility('//a[@id="makerId" and @href="#TEST001"]', 5);
-        $this->screenshot($client);
 
         self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('artisanName'))->getText());
+
+        $this->shakeTheCat($client);
 
         $client->findElement(WebDriverBy::xpath('//div[@id="artisanDetailsModalContent"]//button[text() = "Data outdated/inaccurate?"]'))->click();
 
         $client->waitForVisibility('#artisanUpdatesModalContent', 5);
-        $this->screenshot($client);
         self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
-        usleep(1000000); // Let all the animations end
+        $this->shakeTheCat($client);
+
         $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
         $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
-        $this->screenshot($client);
 
         $client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
         $client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
-        $this->screenshot($client);
 
         $client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
         $client->waitForVisibility('#artisanUpdatesModalContent', 5);
-        $this->screenshot($client);
 
         self::assertStringContainsString('Test artisan 3', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+    }
+
+    /**
+     * If only I was competent enough to be able to fix this test properly.
+     *
+     * @throws Exception
+     */
+    private function shakeTheCat(Client $client): void
+    {
+        $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        usleep(100000);
+
+        $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        usleep(100000);
     }
 }
