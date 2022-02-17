@@ -1,4 +1,4 @@
-export class Checkbox {
+export default class Checkbox {
     private $elems: JQuery<HTMLElement>;
 
     constructor(
@@ -22,5 +22,9 @@ export class Checkbox {
 
     public isChecked(): boolean {
         return null !== this.val();
+    }
+
+    public check(): void {
+        this.$elems.prop('checked', true);
     }
 }

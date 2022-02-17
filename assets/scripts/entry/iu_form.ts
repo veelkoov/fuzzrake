@@ -1,5 +1,5 @@
 import {ADULTS, NO, NO_CONTACT_ALLOWED} from "../consts";
-import {Radio} from "../class/Radio";
+import Radio from "../class/Radio";
 import {toggle} from "../jQueryUtils";
 import RequiredField from "../class/RequiredField";
 

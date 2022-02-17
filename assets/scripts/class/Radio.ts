@@ -1,4 +1,4 @@
-export class Radio {
+export default class Radio {
     private $elems: JQuery<HTMLElement>;
 
     constructor(
@@ -30,5 +30,10 @@ export class Radio {
 
     public selectedIdx(): number {
         return this.$elems.index(this.$elems.filter(':checked'));
+    }
+
+    public selectVal(value: string): void {
+        this.$elems.filter(idx => value === this.$elems.eq(idx).val())
+            .prop('checked', true);
     }
 }
