@@ -1,12 +1,9 @@
 <?php
 
-/** @noinspection PhpUnused */
-
 declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Entity\Event;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
@@ -14,7 +11,6 @@ use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use InvalidArgumentException;
 use JsonException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -130,5 +126,4 @@ class AppExtensions extends AbstractExtension
     {
         return implode(', ', $query->filterList($input));
     }
-
 }

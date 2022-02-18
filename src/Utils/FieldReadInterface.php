@@ -8,8 +8,5 @@ use App\DataDefinitions\Fields\Field;
 
 interface FieldReadInterface
 {
-    /**
-     * @throws DataInputException
-     */
     public function get(Field $field);
 }

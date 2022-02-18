@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use Exception;
+use RuntimeException;
 
-class DataInputException extends Exception
+class DataInputException extends RuntimeException
 {
 }

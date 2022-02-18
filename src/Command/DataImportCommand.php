@@ -6,12 +6,10 @@ namespace App\Command;
 
 use App\Tasks\DataImportFactory;
 use App\Utils\Data\Manager;
-use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\IuSubmissions\Finder;
 use Doctrine\ORM\EntityManagerInterface;
-use JsonException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,9 +38,6 @@ class DataImportCommand extends Command
         ;
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

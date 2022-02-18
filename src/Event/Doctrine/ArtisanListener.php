@@ -10,6 +10,7 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 
 class ArtisanListener
 {
+    /** @noinspection PhpUnusedParameterInspection */
     public function preFlush(Artisan $artisan, PreFlushEventArgs $event): void
     {
         SmartAccessDecorator::wrap($artisan)->assureNsfwSafety();

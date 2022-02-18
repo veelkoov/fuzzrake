@@ -56,21 +56,19 @@ class IuSubmission implements FieldReadInterface
         return $field->isList() ? StringList::pack($value) : $value;
     }
 
-    /**
-     * @throws JsonException|DataInputException
-     */
     public static function fromFile(SplFileInfo $source): self
     {
         $timestamp = self::getTimestampFromFilePath($source->getRelativePathname());
         $id = self::getIdFromFilePath($source->getRelativePathname());
-        $data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()));
+        try {
+            $data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()));
+        } catch (JsonException $ex) {
+            throw new DataInputException(previous: $ex);
+        }
 
         return new self($timestamp, $id, $data);
     }
 
-    /**
-     * @throws DataInputException
-     */
     private static function getTimestampFromFilePath(string $filePath): DateTimeInterface
     {
         $dateTimeStr = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}:\d{2}:\d{2})_\d{4}\.json$')
@@ -83,11 +81,6 @@ class IuSubmission implements FieldReadInterface
         }
     }
 
-    /**
-     * @noinspection PhpDocRedundantThrowsInspection
-     *
-     * @throws DataInputException
-     */
     private static function getIdFromFilePath(string $filePath): string
     {
         return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')

@@ -10,9 +10,7 @@ use App\Tests\TestUtils\Paths;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
-use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\Finder;
-use JsonException;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -32,9 +30,6 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         $this->emptyTestSubmissionsDir();
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     protected function getImportManager(bool $acceptAll): Manager
     {
         $corrections = '';
@@ -48,9 +43,6 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         return new Manager($corrections);
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     protected function performImport(bool $acceptAll): BufferedOutput
     {
         $output = new BufferedOutput();
