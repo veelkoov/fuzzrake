@@ -14,43 +14,39 @@ final class CompletenessCalc
 {
     use UtilityClass;
 
-    private const CRUCIAL = 20;
     private const IMPORTANT = 15;
     private const AVERAGE = 10;
     private const MINOR = 5;
     private const TRIVIAL = 2;
     private const INSIGNIFICANT = 0;
 
+    private const WEBSITES = [
+        F::URL_WEBSITE,
+        F::URL_FUR_AFFINITY,
+        F::URL_DEVIANTART,
+        F::URL_TWITTER,
+        F::URL_FACEBOOK,
+        F::URL_TUMBLR,
+        F::URL_INSTAGRAM,
+        F::URL_YOUTUBE,
+        F::URL_LINKLIST,
+        F::URL_FURRY_AMINO,
+    ];
+
+    /**
+     * Ignored (virtual, not available for makers, etc.):
+     * SAFE_DOES_NSFW, SAFE_WORKS_WITH_MINORS, URL_MINIATURES, INACTIVE_REASON, CS_LAST_CHECK, CS_TRACKER_ISSUE,
+     * BP_LAST_CHECK, BP_TRACKER_ISSUE, COMPLETENESS.
+     *
+     * Process stuff, insignificant for visitors:
+     * PASSWORD, CONTACT_ALLOWED, CONTACT_METHOD, CONTACT_ADDRESS_PLAIN, CONTACT_INFO_OBFUSCATED,
+     * CONTACT_INFO_ORIGINAL, NOTES.
+     */
     public static function count(Artisan $artisan): int
     {
-        /**
-         * Ignored (virtual, not available for makers, etc.):
-         * SAFE_DOES_NSFW, SAFE_WORKS_WITH_MINORS, URL_MINIATURES, INACTIVE_REASON, CS_LAST_CHECK, CS_TRACKER_ISSUE,
-         * BP_LAST_CHECK, BP_TRACKER_ISSUE, COMPLETENESS.
-         *
-         * Process stuff, insignificant for visitors:
-         * PASSWORD, CONTACT_ALLOWED, CONTACT_METHOD, CONTACT_ADDRESS_PLAIN, CONTACT_INFO_OBFUSCATED,
-         * CONTACT_INFO_ORIGINAL, NOTES.
-         */
-        $websites = [
-            F::URL_WEBSITE,
-            F::URL_FUR_AFFINITY,
-            F::URL_DEVIANTART,
-            F::URL_TWITTER,
-            F::URL_FACEBOOK,
-            F::URL_TUMBLR,
-            F::URL_INSTAGRAM,
-            F::URL_YOUTUBE,
-            F::URL_LINKLIST,
-            F::URL_FURRY_AMINO,
-        ];
-
         $result = new CompletenessResult($artisan);
 
         $result
-            // Required field, lack of maker ID = very old or imported.
-            ->anyNotEmpty(self::CRUCIAL, F::MAKER_ID)
-
             // Absolutely optional.
             ->anyNotEmpty(self::INSIGNIFICANT, F::FORMER_MAKER_IDS)
 
@@ -59,15 +55,6 @@ final class CompletenessCalc
 
             // It's not even kinda possible.
             ->anyNotEmpty(self::INSIGNIFICANT, F::NAME)
-
-            // Required field. One of the most important aspect of this website.
-            ->anyNotEmpty(self::CRUCIAL, F::COUNTRY)
-
-            // Required fields.
-            ->anyNotNull(self::CRUCIAL, F::AGES)
-            ->anyNotNull(self::CRUCIAL, F::NSFW_WEBSITE)
-            ->anyNotNull(self::CRUCIAL, F::NSFW_SOCIAL)
-            ->anyNotEmpty(self::CRUCIAL, ...$websites)
 
             // We can't force one to receive a review.
             ->anyNotEmpty(self::INSIGNIFICANT, F::URL_FURSUITREVIEW)
@@ -126,7 +113,7 @@ final class CompletenessCalc
             ->anyNotEmpty(self::INSIGNIFICANT, F::OPEN_FOR, F::CLOSED_FOR)
         ;
 
-        if (in_array(ProductionModels::STANDARD_COMMISSIONS, StringList::unpack($artisan->getProductionModels()))) {
+        if (self::doesCommissions($artisan)) {
             // If you do commissions, these make sense.
             $result
                 ->anyNotEmpty(self::AVERAGE, F::URL_COMMISSIONS)
@@ -135,19 +122,54 @@ final class CompletenessCalc
             ;
         }
 
-        if (in_array($artisan->getCountry(), ['US', 'CA'])) {
+        if (self::shouldCountState($artisan)) {
             // Optional for non-US and non-CA. Not as important as country, because it's the same country.
             $result->anyNotEmpty(self::MINOR, F::STATE);
         }
 
+        // Just all required give 50%
+        // Just all optional give 50%
+        // But missing a single required stops you at 50%
+
+        $crucialResult = self::getResultForCrucialFields($artisan);
+
+        if (100 === $crucialResult) {
+            $result->add($result->getTotal(), $result->getTotal());
+        } else {
+            $result->add($result->getTotal(), 0.0 !== $result->getTotal() ? $crucialResult / $result->getTotal() : 0);
+        }
+
+        return $result->result();
+    }
+
+    private static function doesCommissions(SmartAccessDecorator $artisan): bool
+    {
+        return in_array(ProductionModels::STANDARD_COMMISSIONS, StringList::unpack($artisan->getProductionModels()));
+    }
+
+    private static function shouldCountState(SmartAccessDecorator $artisan): bool
+    {
+        return in_array($artisan->getCountry(), ['US', 'CA']);
+    }
+
+    private static function getResultForCrucialFields(SmartAccessDecorator $artisan): int
+    {
+        $result = new CompletenessResult($artisan);
+
+        $result
+            ->anyNotEmpty(1, F::MAKER_ID) // Lack of maker ID = very old or imported.
+            ->anyNotEmpty(1, F::COUNTRY) // One of the most important aspect of this website.
+            ->anyNotNull(1, F::AGES)
+            ->anyNotNull(1, F::NSFW_WEBSITE)
+            ->anyNotNull(1, F::NSFW_SOCIAL)
+            ->anyNotEmpty(1, ...self::WEBSITES);
+
         if ($artisan->isAllowedToWorkWithMinors()) {
-            // Required field.
-            $result->anyNotNull(self::CRUCIAL, F::WORKS_WITH_MINORS);
+            $result->anyNotNull(1, F::WORKS_WITH_MINORS);
         }
 
         if ($artisan->isAllowedToDoNsfw()) {
-            // Required field.
-            $result->anyNotNull(self::CRUCIAL, F::DOES_NSFW);
+            $result->anyNotNull(1, F::DOES_NSFW);
         }
 
         return $result->result();

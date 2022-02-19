@@ -9,20 +9,25 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 final class CompletenessResult
 {
-    private int $earned = 0;
-    private int $total = 0;
+    private float $earned = 0.0;
+    private float $total = 0.0;
 
     public function __construct(
         private readonly Artisan $artisan,
     ) {
     }
 
-    public function result(): int
+    public function getTotal(): float
     {
-        return 0 !== $this->total ? (int) ($this->earned / $this->total * 100) : 0;
+        return $this->total;
     }
 
-    public function anyNotNull(int $weight, ...$fields): CompletenessResult
+    public function result(): int
+    {
+        return 0.0 !== $this->total ? (int) round(100 * $this->earned / $this->total) : 0;
+    }
+
+    public function anyNotNull(float $weight, ...$fields): CompletenessResult
     {
         $this->total += $weight;
 
@@ -38,7 +43,7 @@ final class CompletenessResult
         return $this;
     }
 
-    public function anyNotEmpty(int $weight, Field ...$fields): CompletenessResult
+    public function anyNotEmpty(float $weight, Field ...$fields): CompletenessResult
     {
         $this->total += $weight;
 
@@ -52,5 +57,11 @@ final class CompletenessResult
         }
 
         return $this;
+    }
+
+    public function add(float $weight, float $earned): void
+    {
+        $this->total += $weight;
+        $this->earned += $earned;
     }
 }
