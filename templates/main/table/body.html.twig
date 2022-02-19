@@ -35,6 +35,10 @@
 
                     {{- artisan|ages_for_table -}}
 
+                    {%- if artisan.completeness < 50 -%}
+                        &nbsp;<i class="insufficient-data fa-solid fa-cloud-moon"></i>
+                    {%- endif -%}
+
                     {%- if isDevOrTestEnv() -%}
                         <br />
                         <small>{{ artisan.id }} {{ artisan.contactAddressPlain }}</small>
