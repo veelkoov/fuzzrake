@@ -1,8 +1,8 @@
 export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_PERFECT = 100;
-    public static readonly DATA_COMPLETE_LEVEL_GREAT = 90;
-    public static readonly DATA_COMPLETE_LEVEL_GOOD = 80;
-    public static readonly DATA_COMPLETE_LEVEL_OK = 60;
+    public static readonly DATA_COMPLETE_LEVEL_GREAT = 80;
+    public static readonly DATA_COMPLETE_LEVEL_GOOD = 65;
+    public static readonly DATA_COMPLETE_LEVEL_OK = 50;
 
     readonly languages: Set<string>;
     readonly location: string;
