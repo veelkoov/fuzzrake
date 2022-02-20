@@ -123,9 +123,6 @@ class DataImport
         return new ImportItem($submission, $input, $entity);
     }
 
-    /**
-     * @throws DataInputException
-     */
     private function updateArtisanWithData(Artisan $artisan, FieldReadInterface $source): Artisan
     {
         foreach (Fields::inIuForm() as $field) {
@@ -168,9 +165,6 @@ class DataImport
         return $artisan;
     }
 
-    /**
-     * @throws DataInputException
-     */
     private function findBestMatchArtisan(IuSubmission $submission, Artisan $input): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(

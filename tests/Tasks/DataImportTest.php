@@ -12,7 +12,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\FixerDifferValidator;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
-use App\Utils\DataInputException;
 use App\Utils\IuSubmissions\IuSubmission;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,8 +21,6 @@ class DataImportTest extends TestCase
 {
     /**
      * @dataProvider imagesUpdateShouldResetMiniaturesDataProvider
-     *
-     * @throws DataInputException
      */
     public function testImagesUpdateShouldResetMiniatures(string $initialUrlPhotos, string $initialMiniatures, string $newUrlPhotos, string $expectedMiniatures): void
     {

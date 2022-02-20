@@ -63,17 +63,11 @@ class Manager
      */
     private ?string $currentSubject = null;
 
-    /**
-     * @throws DataInputException
-     */
     public function __construct(string $directives)
     {
         $this->readDirectives($directives);
     }
 
-    /**
-     * @throws DataInputException
-     */
     public static function createFromFile(string $correctionsFilePath): self
     {
         if (!file_exists($correctionsFilePath)) {
@@ -119,9 +113,6 @@ class Manager
         return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !DateTimeUtils::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
     }
 
-    /**
-     * @throws DataInputException
-     */
     private function readDirectives(string $directives)
     {
         $buffer = new StringBuffer($directives);
@@ -145,9 +136,6 @@ class Manager
         $this->corrections[$submissionId][] = new ValueCorrection($submissionId, $field, $wrongValue, $correctedValue);
     }
 
-    /**
-     * @throws DataInputException
-     */
     private function readCommand(StringBuffer $buffer): void
     {
         $command = $buffer->readUntilWhitespaceOrEof();
@@ -244,9 +232,6 @@ class Manager
         return $this->corrections[$subject] ?? [];
     }
 
-    /**
-     * @throws DataInputException
-     */
     private function getCurrentSubject(): string
     {
         if (null === $this->currentSubject) {

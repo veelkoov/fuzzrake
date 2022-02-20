@@ -11,7 +11,6 @@ use App\Utils\Data\FdvFactory;
 use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
-use App\Utils\DataInputException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -44,9 +43,6 @@ class DataTidyCommand extends Command
         ;
     }
 
-    /**
-     * @throws DataInputException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

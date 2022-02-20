@@ -6,7 +6,6 @@ namespace App\Tests\Utils\Data;
 
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Manager;
-use App\Utils\DataInputException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -26,9 +25,6 @@ class ManagerTest extends TestCase
         new Manager('with MAKERID: accept');
     }
 
-    /**
-     * @throws DataInputException
-     */
     public function testLoadingFromFile(): void
     {
         $filesystem = new Filesystem();

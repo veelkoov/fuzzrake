@@ -6,16 +6,11 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Utils\DataInputException;
-use JsonException;
 
 class PasswordHandlingTest extends AbstractTestWithEM
 {
     use IuFormTrait;
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     public function testNewMakerPasswordIsHashed(): void
     {
         $client = static::createClient();
@@ -39,9 +34,6 @@ class PasswordHandlingTest extends AbstractTestWithEM
         self::assertTrue(password_verify('some-password', $artisan->getPassword())); // Fails on plaintext
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     public function testMakerUpdatedWithCorrectPasswordHasUnchangedHash(): void
     {
         $client = static::createClient();
@@ -83,9 +75,6 @@ class PasswordHandlingTest extends AbstractTestWithEM
         self::assertEquals('New name', $artisan->getName(), 'The update did not actually happen');
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     public function testMakerUpdatedWithPasswordChangeHasUpdatedHash(): void
     {
         $client = static::createClient();
@@ -129,9 +118,6 @@ class PasswordHandlingTest extends AbstractTestWithEM
         self::assertTrue(password_verify('new-password', $artisan->getPassword()), 'Updated password fails');
     }
 
-    /**
-     * @throws DataInputException|JsonException
-     */
     public function testNotAcceptedMakerWithWrongPasswordDoesntGetUpdated(): void
     {
         $client = static::createClient();
