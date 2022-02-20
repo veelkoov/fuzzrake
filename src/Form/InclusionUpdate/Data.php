@@ -44,7 +44,6 @@ class Data extends BaseForm
         $otherOrderTypesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types'], UrlGeneratorInterface::ABSOLUTE_PATH);
         $otherFeaturesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features'], UrlGeneratorInterface::ABSOLUTE_PATH);
         $makerIdPagePath = $router->generate(RouteName::MAKER_IDS, referenceType: UrlGeneratorInterface::ABSOLUTE_PATH);
-        $rulesPagePath = $router->generate(RouteName::RULES, referenceType: UrlGeneratorInterface::ABSOLUTE_PATH);
 
         $builder
             ->add('name', TextType::class, [
@@ -91,8 +90,6 @@ class Data extends BaseForm
                 'required'   => true,
                 'choices'    => Ages::getChoices(false),
                 'expanded'   => true,
-                'help'       => '<strong>NOTE:</strong> minors are currently still required to state their age on their website as well, <a href="'.$rulesPagePath.'" target="_blank">as per rules</a>.', // grep-state-age-on-website-until-filters-are-in-place
-                'help_html'  => true,
             ])
             ->add('nsfwWebsite', ChoiceType::class, [
                 'label'      => 'The websites linked above may contain "non-family-friendly" (or <em>NSFW</em>) content, such as, but not limited to:<br />&bull; <u>suggestive</u> or explicit adult content<br />&bull; triggering or controversial content<br />&bull; content not suitable for those under 18',
