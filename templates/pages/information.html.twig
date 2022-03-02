@@ -1,0 +1,41 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}general information{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
+    {{ encore_entry_script_tags('info') }}
+{% endblock %}
+
+{% block body %}
+    <h1>Information</h1>
+
+    {% set parts = [
+        {'introduction': 'OwO what\'s this?', 'data-updates': 'How to add/update your studio/maker info'},
+        {'help-needed': 'How can you help', 'contact': 'Contact maintainer'},
+        {'tracking': 'Tracking of commissions status', 'maker-ids': 'Maker IDs'},
+        {'tasklist': 'Plans/features/bugs', 'statistics': 'Statistics'},
+        {'friends': 'Friends', 'licenses': 'Licenses'},
+    ] %}
+
+    <ul class="nav justify-content-center">
+        {% for part_group in parts %}
+            {% for id, title in part_group %}
+                <li class="nav-item"><a class="nav-link" href="#{{ id }}">{{ title }}</a></li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+    {% for part_group in parts %}
+        <div class="row mt-4">
+            {% for id, title in part_group %}
+                <div class="col-md">
+                    <h3 id="{{ id }}">{{ title }}</h3>
+
+                    {% include 'pages/information_parts/'~ id ~ '.html.twig' %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}
