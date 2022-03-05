@@ -53,4 +53,11 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/rules.html.twig', []);
     }
+
+    #[Route('/should_know.html', name: RouteName::SHOULD_KNOW)]
+    #[Cache(maxage: 21600, public: true)]
+    public function shouldKnow(): Response
+    {
+        return $this->render('pages/should_know.html.twig', []);
+    }
 }
