@@ -24,6 +24,7 @@ class CrawlersController extends AbstractController
             RouteName::INFO,
             RouteName::MAIN,
             RouteName::MAKER_IDS,
+            RouteName::NEW_ARTISANS,
             RouteName::RULES,
             RouteName::STATISTICS,
             RouteName::TRACKING,
