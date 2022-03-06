@@ -28,14 +28,8 @@ class MainController extends AbstractController
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Route(path: '/index.html')]
     #[Cache(public: true)]
-    public function main(Request $request, ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species, StatisticsService $statistics): Response
+    public function main(ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species, StatisticsService $statistics): Response
     {
-        if ('hexometer' === $request->get('ref')) {
-            return new Response('*Notices your scan* OwO what\'s this?', Response::HTTP_MISDIRECTED_REQUEST,
-                ['Content-Type' => 'text/plain; charset=UTF-8']
-            );
-        }
-
         $response = $this->render('main/main.html.twig', [
             'artisans'            => Artisan::wrapAll($artisanRepository->getAll()),
             'makerIdsMap'         => $makerIdRepository->getOldToNewMakerIdsMap(),
