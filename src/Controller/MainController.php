@@ -16,7 +16,6 @@ use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -36,6 +35,22 @@ class MainController extends AbstractController
             'stats'               => $statistics->getMainPageStats(),
             'filters'             => $filterService->getFiltersTplData(),
             'species'             => $species->getTree(),
+        ]);
+
+        self::setExpires($response);
+
+        return $response;
+    }
+
+    /**
+     * @throws DateTimeException
+     */
+    #[Route(path: '/new.html', name: RouteName::NEW_ARTISANS)]
+    #[Cache(public: true)]
+    public function newArtisans(ArtisanRepository $artisanRepository): Response
+    {
+        $response = $this->render('main/new.html.twig', [
+            'artisans' => Artisan::wrapAll($artisanRepository->getNew()),
         ]);
 
         self::setExpires($response);

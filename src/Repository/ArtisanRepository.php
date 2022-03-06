@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\ValidationRegexps;
+use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;
@@ -36,6 +37,19 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getAll(): array
     {
         return $this->getArtisansQueryBuilder()
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getResult();
+    }
+
+    public function getNew(): array
+    {
+        return $this->getArtisansQueryBuilder()
+            ->where('v.fieldName = :fieldName')
+            ->andWhere('v.value > :fieldValue')
+            ->setParameter('fieldName', Field::DATE_ADDED->value)
+            ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
+            ->orderBy('v.value', 'DESC')
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();

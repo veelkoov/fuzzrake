@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\NewArtisan;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
 use DateTimeInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -16,12 +15,9 @@ class MainExtensions extends AbstractExtension
 {
     private readonly DateTimeInterface $newCutoff;
 
-    /**
-     * @throws DateTimeException
-     */
     public function __construct()
     {
-        $this->newCutoff = DateTimeUtils::getUtcAt('-42 days'); // grep-amount-of-days-considered-new
+        $this->newCutoff = NewArtisan::getCutoffDate();
     }
 
     public function getFilters(): array

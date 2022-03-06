@@ -31,6 +31,7 @@ final class RouteName
     final public const MX_EVENT_EDIT = 'mx_event_edit';
     final public const MX_EVENT_NEW = 'mx_event_new';
     final public const MX_QUERY = 'mx_query';
+    final public const NEW_ARTISANS = 'new_artisans';
     final public const RULES = 'rules';
     final public const SITEMAP = 'sitemap';
     final public const STATISTICS = 'statistics';

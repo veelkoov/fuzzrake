@@ -1,0 +1,28 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}recently added{% endblock %}
+
+{% block body %}
+    <h1>
+        Recently added makers/studios
+    </h1>
+
+    {% if artisans is empty %}
+        <div class="alert alert-primary" role="alert">
+            None have been added recently.
+        </div>
+    {% endif %}
+
+    <ul>
+        {% for artisan in artisans %}
+            <li>
+                <a href="{{ path('main', { '_fragment': artisan.lastMakerId }) }}">{{ artisan.name }}</a>
+                {% if artisan.formerly %}
+                    <span class="text-muted">
+                        / {{ artisan.formerlyArr|join(' / ') }}
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
