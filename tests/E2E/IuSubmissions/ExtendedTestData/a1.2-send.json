@@ -1,20 +1,20 @@
 {
     "MAKER_ID": "NWMKRI0",
-    "FORMER_MAKER_IDS": "",
+
     "NAME": "Name mkr1 after update",
     "FORMERLY": "Name mkr1 before update\nFormerly mkr1 before update",
     "PASSWORD": "Password changed 1",
+
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-email-update-after@ema.il",
-    "CONTACT_INFO_ORIGINAL": "",
-    "CONTACT_ADDRESS_PLAIN": "",
-    "CONTACT_METHOD": "",
     "CONTACT_ALLOWED": "ANNOUNCEMENTS",
+
     "INTRO": "Intro mkr1 after update",
     "SINCE": "2020-09",
     "LANGUAGES": "Czech (limited)\nEnglish\nMkr1 after update",
     "COUNTRY": "C1",
     "STATE": "State mkr1 after update",
     "CITY": "City mkr1 after update",
+
 
     "AGES": "ADULTS",
     "NSFW_WEBSITE": true,
@@ -46,7 +46,6 @@
     "SPECIES_DOESNT": "Doesn't after update",
 
     "NOTES": "Notes after update",
-    "INACTIVE_REASON": "Inactive reason maker 1 - not updated",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/maker1_after_update.html",
     "URL_WEBSITE": "https://mywebsite.com/maker1_after_update.html",
@@ -68,7 +67,6 @@
     "URL_SCRITCH": "https://scritch.es/maker1_after_update.html",
     "URL_FURTRACK": "https://www.furtrack.com/maker1_after_update.html",
     "URL_PHOTOS": "https://scritchphotos.com/url1-maker1_after_update.html\nhttps://www.furtrack.com/url2-maker1_after_update.html",
-    "URL_MINIATURES": "",
     "URL_OTHER": "https://other.com/maker1_fater_update.html",
     "URL_COMMISSIONS": "https://cst.com/cst1-maker1_after_update.html\nhttps://cst2.com/cst2-maker1_after_update.html"
 }

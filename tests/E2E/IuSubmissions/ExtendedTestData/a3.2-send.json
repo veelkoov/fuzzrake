@@ -1,20 +1,20 @@
 {
     "MAKER_ID": "MAKERI3",
-    "FORMER_MAKER_IDS": "M000003",
+
     "NAME": "Maker name 3",
     "FORMERLY": "Formerly 3",
     "PASSWORD": "Password artisan 3",
+
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: art3e-mail-address3@ema.il",
-    "CONTACT_INFO_ORIGINAL": "",
-    "CONTACT_ADDRESS_PLAIN": "",
-    "CONTACT_METHOD": "",
     "CONTACT_ALLOWED": "CORRECTIONS",
+
     "INTRO": "Intro artisan 3",
     "SINCE": "2016-05",
     "LANGUAGES": "Finnish",
     "COUNTRY": "FI",
     "STATE": "State 3",
     "CITY": "City 3",
+
 
     "AGES": "ADULTS",
     "NSFW_WEBSITE": true,
@@ -46,7 +46,6 @@
     "SPECIES_DOESNT": "Doesn't artisan 3",
 
     "NOTES": "Notes artisan 3",
-    "INACTIVE_REASON": "",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/artisan3.html",
     "URL_WEBSITE": "https://mywebsite.com/artisan3.html",
@@ -68,7 +67,6 @@
     "URL_SCRITCH": "https://scritch.es/value_artisan3.html",
     "URL_FURTRACK": "https://www.furtrack.com/value_artisan3.html",
     "URL_PHOTOS": "https://scritchphotos.com/value_artisan3.html\nhttps://www.furtrack.com/value_artisan3.html",
-    "URL_MINIATURES": "",
     "URL_OTHER": "https://other.com/value_artisan3.html",
     "URL_COMMISSIONS": "https://cst.com/value_artisan3.html\nhttps://cst2.com/value2artisan3.html"
 }

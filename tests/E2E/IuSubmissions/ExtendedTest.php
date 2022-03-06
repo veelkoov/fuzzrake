@@ -10,14 +10,15 @@ use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DataInputException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
+use Exception;
 use InvalidArgumentException;
-use JsonException;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
@@ -49,13 +50,6 @@ class ExtendedTest extends AbstractTestWithEM
     ];
 
     private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
-        Field::IS_MINOR,
-        Field::FORMER_MAKER_IDS,
-        Field::URL_MINIATURES,
-        Field::CONTACT_INFO_ORIGINAL,
-        Field::CONTACT_METHOD,
-        Field::CONTACT_ADDRESS_PLAIN,
-        Field::INACTIVE_REASON,
         Field::COMPLETENESS,
         Field::CS_LAST_CHECK,
         Field::CS_TRACKER_ISSUE,
@@ -63,8 +57,18 @@ class ExtendedTest extends AbstractTestWithEM
         Field::BP_TRACKER_ISSUE,
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
+        Field::IS_MINOR,
         Field::SAFE_DOES_NSFW,
         Field::SAFE_WORKS_WITH_MINORS,
+
+        Field::FORMER_MAKER_IDS,
+        Field::URL_MINIATURES,
+        Field::CONTACT_INFO_ORIGINAL,
+        Field::CONTACT_METHOD,
+        Field::CONTACT_ADDRESS_PLAIN,
+        Field::INACTIVE_REASON,
+        Field::DATE_ADDED,
+        Field::DATE_UPDATED,
     ];
 
     private const EXPANDED = [ // List fields in the form of multiple checkboxes
@@ -91,6 +95,11 @@ class ExtendedTest extends AbstractTestWithEM
         Field::CONTACT_INFO_OBFUSCATED,
     ];
 
+    public static function setUpBeforeClass(): void
+    {
+        ClockMock::register(DateTimeUtils::class);
+    }
+
     /**
      * Purpose of this test is to make sure:
      * - all fields, which should be updatable by I/U form, are available and get updated after,
@@ -104,10 +113,12 @@ class ExtendedTest extends AbstractTestWithEM
      * 3. Updated maker with minimal starting info, full info after update,
      * 4. New maker with minimal info.
      *
-     * @throws JsonException|DataInputException
+     * @throws Exception
      */
     public function testIuSubmissionAndImportFlow(): void
     {
+        ClockMock::withClockMock(true);
+
         self::sanityChecks();
 
         $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
@@ -120,22 +131,22 @@ class ExtendedTest extends AbstractTestWithEM
         self::assertCount(2, $repo->findAll(), 'Two artisans in the DB before import');
 
         $oldData1 = self::getArtisanData('a1.1-persisted');
-        $newData1 = self::getArtisanData('a1.2-send');
+        $newData1 = self::getArtisanData('a1.2-send', self::NOT_IN_FORM);
         $makerId1 = $oldData1->getMakerId();
         self::validateIuFormOldDataSubmitNew($client, $makerId1, $oldData1, $newData1);
 
         $oldData2 = new Artisan();
-        $newData2 = self::getArtisanData('a2.2-send');
+        $newData2 = self::getArtisanData('a2.2-send', self::NOT_IN_FORM);
         $makerId2 = '';
         self::validateIuFormOldDataSubmitNew($client, $makerId2, $oldData2, $newData2);
 
         $oldData3 = self::getArtisanData('a3.1-persisted');
-        $newData3 = self::getArtisanData('a3.2-send');
+        $newData3 = self::getArtisanData('a3.2-send', self::NOT_IN_FORM);
         $makerId3 = $oldData3->getLastMakerId();
         self::validateIuFormOldDataSubmitNew($client, $makerId3, $oldData3, $newData3);
 
         $oldData4 = new Artisan();
-        $newData4 = self::getArtisanData('a4.2-send');
+        $newData4 = self::getArtisanData('a4.2-send', self::NOT_IN_FORM);
         $makerId4 = '';
         self::validateIuFormOldDataSubmitNew($client, $makerId4, $oldData4, $newData4);
 
@@ -169,16 +180,16 @@ class ExtendedTest extends AbstractTestWithEM
     }
 
     /**
-     * @throws JsonException
+     * @throws Exception
      */
-    private static function getArtisanData(string $variant): Artisan
+    private static function getArtisanData(string $variant, array $skippedFields = self::NOT_IN_TEST_DATA): Artisan
     {
         $result = new Artisan();
 
         $data = Json::readFile(__DIR__."/ExtendedTestData/$variant.json");
 
         foreach (Fields::all() as $fieldName => $field) {
-            if (in_array($field, self::NOT_IN_TEST_DATA)) {
+            if (in_array($field, $skippedFields)) {
                 continue;
             }
 
@@ -187,6 +198,8 @@ class ExtendedTest extends AbstractTestWithEM
             $value = $data[$fieldName];
             if (Field::AGES === $field) {
                 $value = Ages::get($value);
+            } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
+                $value = '/now/' === $value ? DateTimeUtils::getNowUtc() : DateTimeUtils::getUtcAt($value);
             }
 
             $result->set(Field::from($fieldName), $value);

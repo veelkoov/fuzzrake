@@ -1,20 +1,26 @@
 {
     "MAKER_ID": "MKRID04",
     "FORMER_MAKER_IDS": "",
+
     "NAME": "Maker name 4",
     "FORMERLY": "",
     "PASSWORD": "Maker 4 password",
+
     "CONTACT_INFO_OBFUSCATED": "",
     "CONTACT_INFO_ORIGINAL": "",
     "CONTACT_ADDRESS_PLAIN": "",
     "CONTACT_METHOD": "",
     "CONTACT_ALLOWED": "NO",
+
     "INTRO": "",
     "SINCE": "",
     "LANGUAGES": "",
     "COUNTRY": "CZ",
     "STATE": "",
     "CITY": "",
+
+    "DATE_ADDED": "/now/",
+    "DATE_UPDATED": null,
 
     "AGES": "MINORS",
     "NSFW_WEBSITE": false,

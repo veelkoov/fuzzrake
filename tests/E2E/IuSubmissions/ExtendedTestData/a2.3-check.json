@@ -1,20 +1,26 @@
 {
     "MAKER_ID": "MAKERI2",
     "FORMER_MAKER_IDS": "",
+
     "NAME": "Maker name a2_2",
     "FORMERLY": "Formerly a2_2",
     "PASSWORD": "Password a2_2",
+
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: 2e*******l2@e****l",
     "CONTACT_INFO_ORIGINAL": "E-MAIL: 2emaa2_2il2@ema.il",
     "CONTACT_ADDRESS_PLAIN": "2emaa2_2il2@ema.il",
     "CONTACT_METHOD": "E-MAIL",
     "CONTACT_ALLOWED": "FEEDBACK",
+
     "INTRO": "Le intro a2_2",
     "SINCE": "2018-03",
     "LANGUAGES": "Czecha2_2 (limited)\nEnglisha2_2",
     "COUNTRY": "C2",
     "STATE": "of mind a2_2",
     "CITY": "Lisek a2_2",
+
+    "DATE_ADDED": "/now/",
+    "DATE_UPDATED": null,
 
     "AGES": "MINORS",
     "NSFW_WEBSITE": true,

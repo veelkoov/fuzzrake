@@ -20,6 +20,8 @@ use App\Entity\MakerId;
 use App\Utils\Artisan\Fields\CommissionAccessor;
 use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\Contact;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Parse;
 use App\Utils\StringList;
@@ -168,7 +170,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     //
-    // ===== VARIOUS HELPERS =====
+    // ===== VARIOUS HELPERS, DATA-TABLE HELPERS =====
     //
 
     public function getIsMinor(): ?bool
@@ -341,6 +343,30 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
                 $this->setDoesNsfw(false); // No, you don't
             }
         }
+    }
+
+    public function getDateAdded(): ?DateTimeInterface
+    {
+        return $this->getDateTimeValue(Field::DATE_ADDED);
+    }
+
+    public function setDateAdded(?DateTimeInterface $dateAdded): self
+    {
+        $this->setDateTimeValue(Field::DATE_ADDED, $dateAdded);
+
+        return $this;
+    }
+
+    public function getDateUpdated(): ?DateTimeInterface
+    {
+        return $this->getDateTimeValue(Field::DATE_UPDATED);
+    }
+
+    public function setDateUpdated(?DateTimeInterface $dateUpdated): self
+    {
+        $this->setDateTimeValue(Field::DATE_UPDATED, $dateUpdated);
+
+        return $this;
     }
 
     //
@@ -1363,6 +1389,26 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     private function setBoolValue(Field $field, ?bool $newValue): self
+    {
+        if (null !== $newValue) {
+            $newValue = StrUtils::asStr($newValue);
+        }
+
+        return $this->setStringValue($field, $newValue);
+    }
+
+    private function getDateTimeValue(Field $field): ?DateTimeInterface
+    {
+        $value = $this->getStringValue($field);
+
+        try {
+            return null !== $value ? DateTimeUtils::getUtcAt($value) : null;
+        } catch (DateTimeException) {
+            return null;
+        }
+    }
+
+    private function setDateTimeValue(Field $field, ?DateTimeInterface $newValue): self
     {
         if (null !== $newValue) {
             $newValue = StrUtils::asStr($newValue);

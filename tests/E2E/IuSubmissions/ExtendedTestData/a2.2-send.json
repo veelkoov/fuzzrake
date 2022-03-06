@@ -1,20 +1,20 @@
 {
     "MAKER_ID": "MAKERI2",
-    "FORMER_MAKER_IDS": "",
+
     "NAME": "Maker name a2_2",
     "FORMERLY": "Formerly a2_2",
     "PASSWORD": "Password a2_2",
+
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: 2emaa2_2il2@ema.il",
-    "CONTACT_INFO_ORIGINAL": "",
-    "CONTACT_ADDRESS_PLAIN": "",
-    "CONTACT_METHOD": "",
     "CONTACT_ALLOWED": "FEEDBACK",
+
     "INTRO": "Le intro a2_2",
     "SINCE": "2018-03",
     "LANGUAGES": "Czecha2_2 (limited)\nEnglisha2_2",
     "COUNTRY": "C2",
     "STATE": "of mind a2_2",
     "CITY": "Lisek a2_2",
+
 
     "AGES": "MINORS",
     "NSFW_WEBSITE": true,
@@ -46,7 +46,6 @@
     "SPECIES_DOESNT": "Doesn't a2_2",
 
     "NOTES": "Notes a2_2",
-    "INACTIVE_REASON": "",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/value_a2_2.html",
     "URL_WEBSITE": "https://mywebsite.com/value_a2_2.html",
@@ -68,7 +67,6 @@
     "URL_SCRITCH": "https://scritch.es/value_a2_2.html",
     "URL_FURTRACK": "https://www.furtrack.com/value_a2_2.html",
     "URL_PHOTOS": "https://scritchphotos.com/value_a2_2.html\nhttps://www.furtrack.com/value_a2_2.html",
-    "URL_MINIATURES": "",
     "URL_OTHER": "https://other.com/value_a2_2.html",
     "URL_COMMISSIONS": "https://cst.com/value_a2_2.html\nhttps://cst2.com/value2a2_2.html"
 }

@@ -12,6 +12,8 @@ enum Field: string
     case FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
     case NAME = 'NAME';
     case FORMERLY = 'FORMERLY';
+    case DATE_ADDED = 'DATE_ADDED';
+    case DATE_UPDATED = 'DATE_UPDATED';
     case INTRO = 'INTRO';
     case SINCE = 'SINCE';
     case LANGUAGES = 'LANGUAGES';

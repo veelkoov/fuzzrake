@@ -1,20 +1,26 @@
 {
     "MAKER_ID": "MAKERI0",
     "FORMER_MAKER_IDS": "OLDMKR0",
+
     "NAME": "Name mkr1 before update",
     "FORMERLY": "Formerly mkr1 before update",
     "PASSWORD": "Password mkr1 before update",
+
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-e************before@e****l",
     "CONTACT_INFO_ORIGINAL": "E-MAIL: mkr1-email-update-before@ema.il",
     "CONTACT_ADDRESS_PLAIN": "emaila1_1@ema.il",
     "CONTACT_METHOD": "E-MAIL",
     "CONTACT_ALLOWED": "CORRECTIONS",
+
     "INTRO": "Intro mkr1 before update",
     "SINCE": "2019-10",
     "LANGUAGES": "Czech (limited)\nMkr1 before update\nEnglish",
     "COUNTRY": "C0",
     "STATE": "State mkr1 before update",
     "CITY": "City mkr1 before update",
+
+    "DATE_ADDED": "2022-01-01 00:00:00",
+    "DATE_UPDATED": "2022-01-01 00:00:00",
 
     "AGES": "MINORS",
     "NSFW_WEBSITE": false,

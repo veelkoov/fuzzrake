@@ -14,6 +14,7 @@ use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\IuSubmissions\IuSubmission;
@@ -161,6 +162,12 @@ class DataImport
         }
 
         $artisan->assureNsfwSafety();
+
+        if (null === $artisan->getId()) {
+            $artisan->setDateAdded(DateTimeUtils::getNowUtc());
+        } else {
+            $artisan->setDateUpdated(DateTimeUtils::getNowUtc());
+        }
 
         return $artisan;
     }

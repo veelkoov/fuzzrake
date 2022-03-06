@@ -1,20 +1,26 @@
 {
     "MAKER_ID": "",
     "FORMER_MAKER_IDS": "M000003",
+
     "NAME": "Maker name 3",
     "FORMERLY": "",
     "PASSWORD": "",
+
+    "CONTACT_ALLOWED": "",
     "CONTACT_INFO_OBFUSCATED": "",
     "CONTACT_INFO_ORIGINAL": "",
     "CONTACT_ADDRESS_PLAIN": "",
     "CONTACT_METHOD": "",
-    "CONTACT_ALLOWED": "",
+
     "INTRO": "",
     "SINCE": "",
     "LANGUAGES": "",
     "COUNTRY": "",
     "STATE": "",
     "CITY": "",
+
+    "DATE_ADDED": "2022-02-02 00:00:00",
+    "DATE_UPDATED": null,
 
     "AGES": null,
     "NSFW_WEBSITE": null,

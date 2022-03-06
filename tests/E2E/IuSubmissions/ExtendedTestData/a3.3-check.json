@@ -1,20 +1,26 @@
 {
     "MAKER_ID": "MAKERI3",
     "FORMER_MAKER_IDS": "M000003",
+
     "NAME": "Maker name 3",
     "FORMERLY": "Formerly 3",
     "PASSWORD": "Password artisan 3",
+
     "CONTACT_INFO_OBFUSCATED": "E-MAIL: art3***********ess3@e****l",
     "CONTACT_INFO_ORIGINAL": "E-MAIL: art3e-mail-address3@ema.il",
     "CONTACT_ADDRESS_PLAIN": "art3e-mail-address3@ema.il",
     "CONTACT_METHOD": "E-MAIL",
     "CONTACT_ALLOWED": "CORRECTIONS",
+
     "INTRO": "Intro artisan 3",
     "SINCE": "2016-05",
     "LANGUAGES": "Finnish",
     "COUNTRY": "FI",
     "STATE": "State 3",
     "CITY": "City 3",
+
+    "DATE_ADDED": "2022-02-02 00:00:00",
+    "DATE_UPDATED": "/now/",
 
     "AGES": "ADULTS",
     "NSFW_WEBSITE": true,

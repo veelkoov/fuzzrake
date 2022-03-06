@@ -30,6 +30,8 @@ final class FieldsData
         'FORMER_MAKER_IDS'          => ['L   S P   formerMakerIds',          V::FORMER_MAKER_IDS],
         'NAME'                      => ['    S P F name',                    V::NON_EMPTY],
         'FORMERLY'                  => ['L   S P F formerly',                null],
+        'DATE_ADDED'                => ['      P   dateAdded',               null],
+        'DATE_UPDATED'              => ['      P   dateUpdated',             null],
         'INTRO'                     => ['    S P F intro',                   null],
         'SINCE'                     => ['    S P F since',                   V::SINCE],
         'LANGUAGES'                 => ['L   S P F languages',               null],

@@ -32,6 +32,9 @@ export default class Artisan {
                 readonly name: string,
                 readonly formerly: string[],
 
+                readonly dateAdded: string,
+                readonly dateUpdated: string,
+
                 readonly intro: string,
                 readonly since: string,
 
