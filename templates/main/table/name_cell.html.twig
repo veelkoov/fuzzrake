@@ -1,0 +1,25 @@
+{%- if artisan.country -%}
+    <span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>&nbsp;
+{%- endif -%}
+
+{%- if artisan.inactiveReason -%}
+    <span class="hidden" aria-hidden="true">~</span>{{ artisan.name ~ ' [inactive]' }}{# grep-inactive-mark #}
+{%- else -%}
+    {{ artisan.name }}
+{%- endif -%}
+
+{{ artisan|ages_for_table }}
+
+{%- if artisan.completeness < 50 -%}
+    &nbsp;<i class="insufficient-data fa-solid fa-cloud-moon"></i>
+{%- endif -%}
+
+{%- if artisan|is_new -%}
+    <br />
+    <small class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</small>
+{%- endif -%}
+
+{%- if isDevOrTestEnv() -%}
+    <br />
+    <small>{{ artisan.id }} {{ artisan.contactAddressPlain }}</small>
+{%- endif -%}

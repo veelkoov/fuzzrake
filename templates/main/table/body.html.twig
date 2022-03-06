@@ -21,28 +21,7 @@
         <tr class="fursuit-maker artisan-data {% if artisan.inactiveReason %}inactive{% endif %}" {% if artisan.makerId %}id="{{ artisan.makerId }}"{% endif %}>
             {%- apply spaceless %}
                 <td class="name" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
-                    {%- if artisan.country -%}
-                        <span class="flag-icon flag-icon-{{ artisan.country|lower }}"></span>&nbsp;
-                    {%- endif -%}
-
-                    {%- if artisan.inactiveReason -%}
-                        <span class="hidden" aria-hidden="true">~</span>{{- artisan.name ~ ' [inactive]' -}}{#- grep-inactive-mark -#}
-                    {% else %}
-                        {{- artisan.name -}}
-                    {%- endif -%}
-
-                    &nbsp;
-
-                    {{- artisan|ages_for_table -}}
-
-                    {%- if artisan.completeness < 50 -%}
-                        &nbsp;<i class="insufficient-data fa-solid fa-cloud-moon"></i>
-                    {%- endif -%}
-
-                    {%- if isDevOrTestEnv() -%}
-                        <br />
-                        <small>{{ artisan.id }} {{ artisan.contactAddressPlain }}</small>
-                    {%- endif -%}
+                    {% include 'main/table/name_cell.html.twig' %}
                 </td>
                 <td class="maker-id" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
                     {{- artisan.makerId -}}
