@@ -25,6 +25,7 @@ use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
 use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Pattern;
 
 class ExtendedTest extends AbstractTestWithEM
 {
@@ -284,13 +285,13 @@ class ExtendedTest extends AbstractTestWithEM
     private static function assertExpandedFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
     {
         if (in_array($field, self::EXPANDED)) {
-            $array = '\[]';
+            $array = '[]';
             self::assertNotNull($value);
         } else {
             $array = '';
         }
 
-        $selected = pattern('<input[^>]*name="iu_form\['.$field->modelName().']'.$array.'"[^>]*value="(?<value>[^"]+)"[^>]*>')
+        $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $array])
             ->match($htmlBody)->flatMapAssoc(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
         $expected = StringList::unpack($value);
