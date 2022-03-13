@@ -291,8 +291,7 @@ class ExtendedTest extends AbstractTestWithEM
         }
 
         $selected = pattern('<input[^>]*name="iu_form\['.$field->modelName().']'.$array.'"[^>]*value="(?<value>[^"]+)"[^>]*>')
-            ->match($htmlBody)->map(fn (Detail $detail): array => [$detail->group('value')->text(), str_contains($detail->text(), 'checked="checked"')]);
-        $selected = Arrays::assoc($selected);
+            ->match($htmlBody)->flatMapAssoc(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
         $expected = StringList::unpack($value);
 
