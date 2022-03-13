@@ -28,8 +28,7 @@ class ArtisanFieldsTest extends TestCase
 
         $parameters = pattern(self::REGEXP_CONSTRUCTOR, 'si')
             ->match($modelSource)
-            ->findFirst(fn (Detail $detail): string => $detail->get('parameters'))
-            ->orThrow();
+            ->first(fn (Detail $detail): string => $detail->get('parameters'));
 
         $matches = pattern(self::REGEXP_CONSTRUCTOR_PARAMETER, 'i')->match($parameters);
 
