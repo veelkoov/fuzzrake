@@ -54,6 +54,8 @@ class DataImport
 
             $item->calculateDiff();
             if ($item->getDiff()->hasAnythingChanged()) {
+                $this->setAddedUpdatedTimestamps($item->getFixedEntity());
+
                 $this->printer->setCurrentContext($item->getEntity());
                 $this->messaging->reportUpdates($item);
             }
@@ -163,12 +165,6 @@ class DataImport
 
         $artisan->assureNsfwSafety();
 
-        if (null === $artisan->getId()) {
-            $artisan->setDateAdded(DateTimeUtils::getNowUtc());
-        } else {
-            $artisan->setDateUpdated(DateTimeUtils::getNowUtc());
-        }
-
         return $artisan;
     }
 
@@ -224,5 +220,14 @@ class DataImport
     {
         $item->getEntity()->apply();
         $this->objectManager->persist($item->getOriginalEntity());
+    }
+
+    private function setAddedUpdatedTimestamps(Artisan $entity): void
+    {
+        if (null === $entity->getId()) {
+            $entity->setDateAdded(DateTimeUtils::getNowUtc());
+        } else {
+            $entity->setDateUpdated(DateTimeUtils::getNowUtc());
+        }
     }
 }
