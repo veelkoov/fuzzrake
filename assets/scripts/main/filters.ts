@@ -11,6 +11,7 @@ import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
 import ValueUnFilter from "../filters/data/ValueUnFilter";
 import {getAgeAndSfwConfig} from "./checklist";
 import AgeAndSfwFilter from "../filters/data/AgeAndSfwFilter";
+import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 
 let filters: FilterVisInterface[] = [];
 let $filtersShowButton: JQuery<HTMLElement>;
@@ -57,7 +58,7 @@ function initFilters(): void {
     let dataFilters = filters.map(value => value.getFilter());
     dataFilters.push(new AgeAndSfwFilter(getAgeAndSfwConfig()));
 
-    let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), dataFilters);
+    let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), dataFilters, AgeAndSfwConfig.getInstance());
     jQuery.fn.dataTable.ext.search.push(filterDtPlugin.getCallback());
     $filtersShowButton = jQuery('#filtersButton');
     jQuery('#filtersModal').on('hidden.bs.modal', applyFilters);

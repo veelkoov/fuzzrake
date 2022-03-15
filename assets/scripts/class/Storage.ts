@@ -1,14 +1,19 @@
 export default class Storage {
+    public static readonly FILLED = 'filled';
+    public static readonly IS_ADULT = 'isAdult';
+    public static readonly WANTS_SFW = 'wantsSfw';
+    public static readonly MAKER_MODE = 'makerMode';
+
     private constructor() {
     }
 
-    public static getBoolean(key: string): boolean|null {
+    public static getBoolean(key: string, defaultValue: boolean = null): boolean|null {
         const result = this.get(key);
 
         switch (result) {
             case '1': return true;
             case '0': return false;
-            default: return null;
+            default: return defaultValue;
         }
     }
 

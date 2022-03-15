@@ -1,6 +1,5 @@
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Checkbox from "../class/Checkbox";
-import Storage from "../class/Storage";
 import Radio from "../class/Radio";
 import {applyFilters} from "./filters";
 import {NO, YES} from "../consts";
@@ -11,11 +10,7 @@ let isAdult: Radio, wantsSfw: Radio;
 let $prosConsContainer: JQuery<HTMLElement>, $ageContainer: JQuery<HTMLElement>,
     $wantsSfwContainer: JQuery<HTMLElement>, $dismissButton: JQuery<HTMLElement>;
 
-const config = new AgeAndSfwConfig();
-
-const S_WANTS_SFW = 'wantsSfw';
-const S_FILLED = 'filled';
-const S_IS_ADULT = 'isAdult';
+const config = AgeAndSfwConfig.getInstance();
 
 function isReady(): boolean {
     return illBeCareful.isChecked() && ackProsAndCons.isChecked() && (isAdult.isVal(NO) || wantsSfw.isAnySelected());
@@ -46,19 +41,22 @@ function refreshAll(): void {
     $dismissButton.val(label + (iLikeButtons.isChecked() ? emoticon : ''));
 }
 
-function dismiss(): void {
+function dismissChecklist(): void {
+    applyFilters();
+
+    jQuery('#checklist-container, #data-table-content-container').toggle();
+
+    // Checklist causes the user to be at the bottom of the table when it shows up
+    let offset = jQuery('#data-table-content-container').offset() || {'top': 5};
+    window.scrollTo(0, offset.top - 5);
+}
+
+function dismissButtonOnClick(): void {
     if (isReady()) {
-        applyFilters();
+        config.setIsFilled(true);
+        config.save();
 
-        jQuery('#checklist-container, #checklist-done').toggle();
-
-        // Checklist causes the user to be at the bottom of the table when it shows up
-        let offset = jQuery('#data-table-container').offset() || { 'top': 5 };
-        window.scrollTo(0, offset.top - 5);
-
-        Storage.saveBoolean(S_FILLED, true, 3600);
-        Storage.saveBoolean(S_IS_ADULT, isAdult.isVal(YES), 3600)
-        Storage.saveBoolean(S_WANTS_SFW, !wantsSfw.isVal(NO), 3600);
+        dismissChecklist();
     }
 }
 
@@ -69,7 +67,7 @@ export function init(): (() => void)[] {
             $ageContainer = jQuery('#checklist-age-container');
             $wantsSfwContainer = jQuery('#checklist-wants-sfw-container');
             $dismissButton = jQuery('#checklist-dismiss-btn');
-            $dismissButton.on('click', dismiss);
+            $dismissButton.on('click', dismissButtonOnClick);
 
             illBeCareful = new Checkbox('checklist-ill-be-careful', refreshAll);
             ackProsAndCons = new Checkbox('checklist-ack-pros-and-cons', refreshAll);
@@ -78,20 +76,25 @@ export function init(): (() => void)[] {
             isAdult = new Radio('checklistIsAdult', refreshAll);
             wantsSfw = new Radio('checklistWantsSfw', refreshAll);
 
-            if (Storage.getBoolean(S_FILLED)) {
+            if (config.getIsFilled()) {
                 illBeCareful.check();
                 ackProsAndCons.check();
 
-                if (!Storage.getBoolean(S_IS_ADULT)) {
+                if (!config.getIsAdult()) {
                     isAdult.selectVal(NO);
                 } else {
                     isAdult.selectVal(YES);
-                    wantsSfw.selectVal(Storage.getBoolean(S_WANTS_SFW) ? YES : NO);
+                    wantsSfw.selectVal(config.getWantsSfw() ? YES : NO);
                 }
             }
         },
         () => {
             refreshAll();
+        },
+        () => {
+            if (config.getMakerMode()) {
+                dismissChecklist();
+            }
         },
     ];
 }

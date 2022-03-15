@@ -49,8 +49,10 @@
     <div class="card mt-3" id="DOUBLE_CHECK_NEW">
         <div class="card-body">
             <p class="card-text">
-                You could already be on the list even if you haven't ever sent any form. While checking, please look for old names as well. Also, in case for any reason your studio have been marked as <em>[inactive]</em>, {# grep-inactive-mark #} it would be listed after the letter <em>Z</em>.
+                You could already be on the list even if you haven't ever sent any form. You should check for old names as well. Also, in case for any reason your studio have been marked as <em>[inactive]</em>, {# grep-inactive-mark #} it would be listed after the letter <em>Z</em>. Please use the link below to check the list.
             </p>
+
+            <p class="card-text"><a class="disable-filters-goto-main-page" href="{{ path('main') }}" target="_blank">Temporarily disable all the filters and open the main page</a></p>
 
             <a href="#INCLUSION_REQUEST" class="btn btn-outline-primary">I'm not there</a>
             <a href="#UPDATE_REQUEST" class="btn btn-outline-primary">Found it</a>
@@ -92,13 +94,14 @@
     <div class="card mt-3" id="UPDATE_REQUEST">
         <div class="card-body">
             <ol class="card-text">
-                <li>Please navigate to the <a href="{{ path('main') }}" target="_blank">main page</a>.</li>
-                <li>Find your studio / your name on the list (it may be your old name).</li>
+                <li>Find your studio / your name on the list (it may be an old name), using the below link.</li>
                 <li>Click on the name - a details pop-up should show up.</li>
                 <li>Look at the bottom of the pop-up. Click the <em>Data outdated/inaccurate?</em> button</li> {# grep-updates-button #}
                 <li>Click the link intended for use by makers, rules will appear. After acknowledging them, a form should appear, pre-filled with your old information.</li>
                 <li>After sending the form be sure to follow any instructions which will appear on the confirmation page.</li>
             </ol>
+
+            <p class="card-text"><a class="disable-filters-goto-main-page" href="{{ path('main') }}" target="_blank">Temporarily disable all the filters and open the main page</a></p>
         </div>
     </div>
 

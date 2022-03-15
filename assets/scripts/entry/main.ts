@@ -55,10 +55,10 @@ jQuery(function () {
     callbacks.push(...Species.initWithArtisansUpdate()); // FIXME: Artisans should be completely initialized in one step
     callbacks.push(() => Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister()))
     callbacks.push(...UpdateRequestPopUp.init());
-    callbacks.push(...Checklist.init());
     callbacks.push(...DataTable.init());
     callbacks.push(...Filters.init());
     callbacks.push(...DetailsPopUp.init());
+    callbacks.push(...Checklist.init());
     callbacks.push(finalizeInit);
 
     executeOneByOne(callbacks);
