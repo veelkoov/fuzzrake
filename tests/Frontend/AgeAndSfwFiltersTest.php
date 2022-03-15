@@ -22,11 +22,11 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
                     foreach ([null, true, false] as $doesNsfw) {
                         foreach ([null, true, false] as $worksWithMinors) {
                             if (Ages::ADULTS !== $ages && true === $doesNsfw) {
-                                continue; // TODO: Figure out a way to test such an DB inconsistency as well
+                                continue; // TODO: Figure out a way to test such an DB inconsistency as well #125
                             }
 
                             if (true === $nsfwWebsite || true === $nsfwSocial || true === $doesNsfw) {
-                                continue; // TODO: Figure out a way to test such an DB inconsistency as well
+                                continue; // TODO: Figure out a way to test such an DB inconsistency as well #125
                             }
 
                             $showMinor = false === $nsfwWebsite
