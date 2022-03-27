@@ -15,6 +15,7 @@ parameters:
       "d[ea]nmark":                                    "DK"
       "(germany|Deutschland)":                         "DE"
       "estonia":                                       "EE"
+      "European Union":                                "EU"
       "finland":                                       "FI"
       "france":                                        "FR"
       "(uk|england|united kingdom)":                   "GB"

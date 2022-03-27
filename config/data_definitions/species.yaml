@@ -111,6 +111,7 @@ parameters:
             "i_Robots":
             Synths:
             "i_Species with robotic/cybernetic, or otherwise mechanical appearance":
+            '3D printing & electronics required species (e.g. Protogens, Skullies)':
           Crux:
           Drekkubuses:
           "Ghost Bones Dragon":
@@ -123,6 +124,7 @@ parameters:
           Pokemons:
           Sergals:
           "Skull animals":
+            '3D printing & electronics required species (e.g. Protogens, Skullies)':
           Sparkledogs:
           Wickerbeasts:
 
@@ -171,6 +173,7 @@ parameters:
 
         "i_Copyright-related classification?": # FIXME
           "Copyrighted characters":
+            'Copyrighted characters (e.g. Pokemons)':
           "Copyrighted species": # Alias of below?
           "Closed species":
           "Open species":
@@ -261,6 +264,8 @@ parameters:
       - 'skullsuits...' # FIXME: How the heck am i supposed to interpret that
       - 'Some birds (unless its on another headbase then I''ll do it)'
       - 'Species with robotic/cybernetic, or otherwise mechanical appearance'
+      - 'Copyrighted characters (e.g. Pokemons)'
+      - '3D printing & electronics required species (e.g. Protogens, Skullies)'
 
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
@@ -348,6 +353,7 @@ parameters:
       'Skull Animals?':                                      'Skull animals'
       'Small felines?':                                      'Small cats'
       'Snow leopards?':                                      'Snow leopards'
+      'Synths/protogens':                                    "Synths\nProtogens"
       'Weasels?':                                            'Weasels'
       'Wicker ?beas?ts?':                                    'Wickerbeasts'
       'Wolf':                                                'Wolves'
