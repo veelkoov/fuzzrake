@@ -68,6 +68,9 @@ export default class Artisan {
 
                 readonly isMinor: boolean,
                 readonly ages: string,
+                readonly nsfwWebsite: boolean,
+                readonly nsfwSocial: boolean,
+                readonly doesNsfw: boolean,
                 readonly safeDoesNsfw: boolean,
                 readonly safeWorksWithMinors: boolean,
 
