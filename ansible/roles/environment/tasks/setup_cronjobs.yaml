@@ -7,7 +7,7 @@
 
 - name: setup update cronjob
   cron:
-    hour:   "6,18"
+    hour:   "0,12"
     name:   "tracker - commissions"
     minute: 0
     value:  "{{ update_script_path|quote }} >> {{ update_log_path|quote }} 2>&1"
