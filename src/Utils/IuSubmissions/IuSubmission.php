@@ -12,7 +12,6 @@ use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use App\Utils\Regexp\CountReceiver as Expect;
-use App\Utils\Regexp\ReplacingException;
 use App\Utils\StringList;
 use DateTimeInterface;
 use JsonException;
@@ -85,15 +84,9 @@ class IuSubmission implements FieldReadInterface
 
     private static function getIdFromFilePath(string $filePath): string
     {
-        try {
-            return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
-                ->replace($filePath)
-                ->counting(Expect::once())
-                ->withReferences('$1-$2-$3_$4$5$6_$7');
-        }
-        /* @noinspection PhpRedundantCatchClauseInspection - from Expect::once() callback */
-        catch (ReplacingException $ex) {
-            throw new DataInputException(previous: $ex);
-        }
+        return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
+            ->replace($filePath)
+            ->counting(Expect::once(DataInputException::class))
+            ->withReferences('$1-$2-$3_$4$5$6_$7');
     }
 }
