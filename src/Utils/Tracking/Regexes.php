@@ -8,6 +8,9 @@ use App\Utils\Traits\UtilityClass;
 
 final class Regexes
 {
+    // TODO: Research Pattern::alteration()
+    // TODO: Research https://t-regx.com/docs/composite-pattern https://github.com/T-Regx/T-Regx/blob/develop/ChangeLog.md#added-in-0140
+
     use UtilityClass;
 
     final public const GRP_STATUS = 'status';

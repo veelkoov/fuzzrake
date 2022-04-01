@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd56e83960cf17ab78ad449f393f7efd",
+    "content-hash": "de7bfcdc0e82eb915eb8c8be5ffea0f9",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -2199,16 +2199,16 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "v0.13.0",
+            "version": "0.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/T-Regx/T-Regx.git",
-                "reference": "8b7ff6dac6fee3e642b03c3ddb48297f0c366822"
+                "reference": "3c3062d1f3a79f17fbf94fe91dc977d6c310f026"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/8b7ff6dac6fee3e642b03c3ddb48297f0c366822",
-                "reference": "8b7ff6dac6fee3e642b03c3ddb48297f0c366822",
+                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/3c3062d1f3a79f17fbf94fe91dc977d6c310f026",
+                "reference": "3c3062d1f3a79f17fbf94fe91dc977d6c310f026",
                 "shasum": ""
             },
             "require": {
@@ -2218,9 +2218,10 @@
             "require-dev": {
                 "ext-json": "*",
                 "php-coveralls/php-coveralls": "^2.0",
-                "phpunit/phpunit": "^9.0 || ^8.0 || ^7.5",
+                "phpunit/phpunit": "^9.5.4 || ^8.0 || ^7.5",
                 "rawr/cross-data-providers": "^2.3.0",
-                "rawr/fqn-check": "^1.2.0"
+                "rawr/fqn-check": "^1.2.0",
+                "symfony/console": "<6.0"
             },
             "type": "library",
             "autoload": {
@@ -2235,7 +2236,7 @@
             "license": [
                 "MIT"
             ],
-            "description": "The most advanced PHP regexp library. Clean, descriptive wrapper functions enhancing PCRE extension methods.",
+            "description": "#StandWithUkraine",
             "keywords": [
                 "OOP",
                 "PCRE",
@@ -2259,7 +2260,7 @@
             ],
             "support": {
                 "issues": "https://github.com/T-Regx/T-Regx/issues",
-                "source": "https://github.com/T-Regx/T-Regx/tree/v0.13.0"
+                "source": "https://github.com/T-Regx/T-Regx/tree/0.21.0"
             },
             "funding": [
                 {
@@ -2267,7 +2268,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-28T22:42:01+00:00"
+            "time": "2022-03-24T13:23:58+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -7853,5 +7854,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
