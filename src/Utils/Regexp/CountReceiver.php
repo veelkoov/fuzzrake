@@ -20,20 +20,16 @@ final class CountReceiver
     public static function once(string|callable|Throwable $orElse): callable
     {
         return function (int $count, PatternStructure $pattern) use ($orElse): void {
-            $fail = function (string $message) use ($orElse, $count, $pattern): void {
-                if (is_callable($orElse)) {
-                    $orElse($count, $pattern);
-                } elseif ($orElse instanceof Throwable) {
-                    throw $orElse;
-                } else {
-                    throw new $orElse($message);
-                }
-            };
+            if (1 === $count) {
+                return;
+            }
 
-            if (0 === $count) {
-                $fail('Pattern has not been replaced');
-            } elseif ($count > 1) {
-                $fail("Pattern has been replaced $count times instead of once");
+            if (is_callable($orElse)) {
+                $orElse($count, $pattern);
+            } elseif ($orElse instanceof Throwable) {
+                throw $orElse;
+            } else {
+                throw new $orElse(0 === $count ? 'Pattern has not been replaced' : "Pattern has been replaced $count times instead of once");
             }
         };
     }
