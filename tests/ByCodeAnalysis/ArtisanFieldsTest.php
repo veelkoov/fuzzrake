@@ -6,18 +6,21 @@ namespace App\Tests\ByCodeAnalysis;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
-use function pattern;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\PatternException;
 use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Pattern;
 
 /**
  * Don't judge, I'm having a lot of fun here!
  */
 class ArtisanFieldsTest extends TestCase
 {
-    private const REGEXP_CONSTRUCTOR = 'constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)';
-    private const REGEXP_CONSTRUCTOR_PARAMETER = '(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)';
+    public function setUp()
+    {
+        $this->constructor = Pattern::of('constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)', 'si');
+        $this->constructorParameter = Pattern::of('(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)', 'i');
+    }
 
     /**
      * @throws PatternException
@@ -26,11 +29,11 @@ class ArtisanFieldsTest extends TestCase
     {
         $modelSource = file_get_contents(Paths::getArtisanTypeScriptClassPath());
 
-        $parameters = pattern(self::REGEXP_CONSTRUCTOR, 'si')
+        $parameters = $this->constructor
             ->match($modelSource)
-            ->first(fn (Detail $detail): string => $detail->get('parameters'));
+            ->first(fn(Detail $detail): string => $detail->get('parameters'));
 
-        $matches = pattern(self::REGEXP_CONSTRUCTOR_PARAMETER, 'i')->match($parameters);
+        $matches = $this->constructorParameter->match($parameters);
 
         static::assertGreaterThan(0, $matches->count());
 
