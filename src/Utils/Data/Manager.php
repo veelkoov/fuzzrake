@@ -113,7 +113,7 @@ class Manager
         return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !DateTimeUtils::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
     }
 
-    private function readDirectives(string $directives)
+    private function readDirectives(string $directives): void
     {
         $buffer = new StringBuffer($directives);
 

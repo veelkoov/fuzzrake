@@ -9,8 +9,6 @@ use App\Repository\MakerIdRepository;
 use App\Service\FilterService;
 use App\Service\Statistics\StatisticsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\Species\Species;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -22,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @throws UnexpectedResultException|DateTimeException
+     * @throws UnexpectedResultException
      */
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Route(path: '/index.html')]
@@ -38,9 +36,6 @@ class MainController extends AbstractController
         ]);
     }
 
-    /**
-     * @throws DateTimeException
-     */
     #[Route(path: '/new.html', name: RouteName::NEW_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
     public function newArtisans(ArtisanRepository $artisanRepository): Response

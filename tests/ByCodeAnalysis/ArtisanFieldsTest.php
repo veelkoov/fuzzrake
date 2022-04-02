@@ -6,10 +6,10 @@ namespace App\Tests\ByCodeAnalysis;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
-use function pattern;
 use PHPUnit\Framework\TestCase;
-use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Exception\PatternException;
 use TRegx\CleanRegex\Match\Details\Detail;
+use function pattern;
 
 /**
  * Don't judge, I'm having a lot of fun here!
@@ -20,7 +20,7 @@ class ArtisanFieldsTest extends TestCase
     private const REGEXP_CONSTRUCTOR_PARAMETER = '(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)';
 
     /**
-     * @throws NonexistentGroupException
+     * @throws PatternException
      */
     public function testArtisanTsModel(): void
     {

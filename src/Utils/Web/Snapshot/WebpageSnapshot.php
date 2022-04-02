@@ -102,7 +102,7 @@ class WebpageSnapshot
         return [
             'url'         => $this->url,
             'ownerName'   => $this->ownerName,
-            'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
+            'retrievedAt' => $this->retrievedAt->format(DATE_ATOM),
             'childCount'  => count($this->children),
             'headers'     => $this->headers,
             'httpCode'    => $this->httpCode,

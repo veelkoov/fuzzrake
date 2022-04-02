@@ -146,8 +146,8 @@ class HealthCheckService
     private function getUpdatesStatus(string $oldestAllowedCheck, DateTimeInterface $actualLastCheck): string
     {
         /* Need to format as string, because PHP doesn't allow comparing the mock object returned by PHPUnit from the repo mock (I guess) */
-        $actual = $actualLastCheck->format(DATE_ISO8601);
-        $oldestAllowed = DateTimeUtils::getUtcAt($oldestAllowedCheck)->format(DATE_ISO8601);
+        $actual = $actualLastCheck->format(DATE_ATOM);
+        $oldestAllowed = DateTimeUtils::getUtcAt($oldestAllowedCheck)->format(DATE_ATOM);
 
         return $actual > $oldestAllowed ? self::OK : self::WARNING;
     }

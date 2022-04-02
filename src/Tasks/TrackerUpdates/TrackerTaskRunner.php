@@ -38,7 +38,7 @@ class TrackerTaskRunner
     /**
      * @throws TrackerException
      */
-    public function performUpdates()
+    public function performUpdates(): void
     {
         $this->snapshots->prefetchUrls($this->trackerTask->getUrlsToPrefetch(), $this->refetch, $this->io);
 
