@@ -11,7 +11,6 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
-use App\Utils\Regexp\CountReceiver as Expect;
 use App\Utils\StringList;
 use DateTimeInterface;
 use JsonException;
@@ -86,7 +85,8 @@ class IuSubmission implements FieldReadInterface
     {
         return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
             ->replace($filePath)
-            ->counting(Expect::once(DataInputException::class))
+            ->first()
+            ->exactly()
             ->withReferences('$1-$2-$3_$4$5$6_$7');
     }
 }
