@@ -7,7 +7,6 @@ namespace App\Utils\Web\Snapshot;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
-use DateTimeInterface;
 use InvalidArgumentException;
 
 class WebpageSnapshot
@@ -24,9 +23,13 @@ class WebpageSnapshot
         private readonly string $ownerName,
         private readonly int $httpCode,
         /*
-         * @var string[] FIXME: Type hinting not working
+         * @var string[]
          */
         private readonly array $headers,
+        /*
+         * @var string[]
+         */
+        private readonly array $errors,
     ) {
     }
 
@@ -84,6 +87,14 @@ class WebpageSnapshot
         return $this->headers;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
     public function isOK(): bool
     {
         return 200 === $this->httpCode;
@@ -105,6 +116,7 @@ class WebpageSnapshot
             'retrievedAt' => $this->retrievedAt->format(DATE_ATOM),
             'childCount'  => count($this->children),
             'headers'     => $this->headers,
+            'errors'      => $this->errors,
             'httpCode'    => $this->httpCode,
         ];
     }
@@ -118,7 +130,14 @@ class WebpageSnapshot
             throw new InvalidArgumentException('Contents is not a string');
         }
 
-        return new self($input['url'], $input['contents'], DateTimeUtils::getUtcAt($input['retrievedAt']),
-            $input['ownerName'], $input['httpCode'] ?? 0, $input['headers'] ?? []);
+        return new self(
+            $input['url'],
+            $input['contents'],
+            DateTimeUtils::getUtcAt($input['retrievedAt']),
+            $input['ownerName'],
+            $input['httpCode'] ?? 0,
+            $input['headers'] ?? [],
+            $input['errors'] ?? [],
+        );
     }
 }
