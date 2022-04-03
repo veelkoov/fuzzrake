@@ -12,6 +12,7 @@ use TRegx\CleanRegex\Pattern;
 
 class RegexFactory
 {
+    private Pattern $unnamed;
     private Pattern $namedGroup;
 
     /**
@@ -42,13 +43,13 @@ class RegexFactory
     public function __construct(array $trackerRegexes)
     {
         $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
+        $this->unnamed = pattern('(?<!\\\\\\\\\\\\)(?<!\\\\)\\((?!\\?)'); // Known issue: can't be more than 3 "\" before the "("
 
         $this->groupTranslations = $trackerRegexes['group_translations'];
         $this->loadPlaceholders($trackerRegexes['placeholders']);
         $this->loadFalsePositives($trackerRegexes['false_positives']);
         $this->loadOfferStatuses($trackerRegexes['offer_statuses']);
         $this->validateGroupTranslations();
-        // TODO: Automate changing non-named groups to non-capturing groups
     }
 
     /**
@@ -169,12 +170,14 @@ class RegexFactory
     {
         $this->falsePositives = $falsePositives;
         $this->resolvePlaceholders($this->falsePositives);
+        $this->setUnnamedToNoncaptured($this->falsePositives);
     }
 
     private function loadOfferStatuses(array $offerStatuses): void
     {
         $this->offerStatuses = $offerStatuses;
         $this->resolvePlaceholders($this->offerStatuses);
+        $this->setUnnamedToNoncaptured($this->offerStatuses);
     }
 
     private function validateGroupTranslations(): void
@@ -197,6 +200,13 @@ class RegexFactory
                     throw new ConfigurationException("Group translations for '$key' contain non-string items");
                 }
             }
+        }
+    }
+
+    private function setUnnamedToNoncaptured(array &$regexes): void
+    {
+        foreach ($regexes as &$regex) {
+            $regex = $this->unnamed->replace($regex)->all()->with('(?:');
         }
     }
 }
