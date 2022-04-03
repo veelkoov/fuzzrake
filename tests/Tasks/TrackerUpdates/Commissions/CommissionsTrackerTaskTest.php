@@ -184,7 +184,7 @@ class CommissionsTrackerTaskTest extends TestCase
         $loggerMock = self::createMock(LoggerInterface::class);
 
         $urlsFetchDateTime = DateTimeUtils::getNowUtc();
-        $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, []);
+        $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, [], []);
         foreach ($artisan->getUrls() as $url) {
             $url->getState()->setLastSuccessUtc($urlsFetchDateTime);
         }
