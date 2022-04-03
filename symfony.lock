@@ -117,6 +117,9 @@
     "myclabs/php-enum": {
         "version": "1.8.3"
     },
+    "nette/utils": {
+        "version": "v3.2.7"
+    },
     "nikic/php-parser": {
         "version": "v4.13.1"
     },

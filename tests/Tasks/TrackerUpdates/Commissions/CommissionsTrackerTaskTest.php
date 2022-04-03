@@ -8,11 +8,11 @@ use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\Commissions\CommissionsTrackerTask;
+use App\Tracker\OfferStatus;
+use App\Tracker\OfferStatusParser;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\DateTime\DateTimeUtils;
-use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\OfferStatus;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use DateTime;
 use DateTimeInterface;
@@ -184,7 +184,7 @@ class CommissionsTrackerTaskTest extends TestCase
         $loggerMock = self::createMock(LoggerInterface::class);
 
         $urlsFetchDateTime = DateTimeUtils::getNowUtc();
-        $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, []);
+        $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, [], []);
         foreach ($artisan->getUrls() as $url) {
             $url->getState()->setLastSuccessUtc($urlsFetchDateTime);
         }
@@ -195,7 +195,7 @@ class CommissionsTrackerTaskTest extends TestCase
             ->method('get')
             ->willReturn($dummyWebpageSnapshot);
 
-        $parserMock = self::createMock(CommissionsStatusParser::class);
+        $parserMock = self::createMock(OfferStatusParser::class);
         $parserMock
             ->expects(self::exactly($mockedUrlsCount))
             ->method('getCommissionsStatuses')

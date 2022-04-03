@@ -9,12 +9,12 @@ use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\TrackerUpdates\TrackerTaskInterface;
+use App\Tracker\OfferStatus;
+use App\Tracker\OfferStatusParser;
+use App\Tracker\TrackerException;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\StringList;
-use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\OfferStatus;
-use App\Utils\Tracking\TrackerException;
 use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -30,7 +30,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         private readonly ArtisanRepository $repository,
         private readonly LoggerInterface $logger,
         private readonly WebpageSnapshotManager $snapshots,
-        private readonly CommissionsStatusParser $parser,
+        private readonly OfferStatusParser $parser,
     ) {
         $this->artisans = Artisan::wrapAll($this->repository->findAll());
     }

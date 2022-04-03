@@ -26,27 +26,18 @@ class WebpageSnapshotManager
     ) {
     }
 
-    /**
-     * @throws ExceptionInterface
-     */
-    public function get(Fetchable $url, bool $refetch, bool $throw): WebpageSnapshot
+    public function get(Fetchable $url, bool $refetch): WebpageSnapshot
     {
         if (!$refetch && (null !== ($result = $this->cache->get($url)))) {
-            $this->logger->debug('Retrieved from cache: '.$url);
+            $this->logger->debug("Retrieved from cache: $url");
 
             return $result;
         }
 
-        try {
-            $result = $this->fetch($url, $throw);
-            $this->updateUrlHealthStatus($url, $result, null);
+        $result = $this->fetch($url);
+        $this->cache->set($url, $result);
 
-            $this->cache->set($url, $result);
-        } catch (ExceptionInterface $exception) {
-            $this->updateUrlHealthStatus($url, null, $exception);
-
-            throw $exception;
-        }
+        $this->updateUrlHealthStatus($url, $result);
 
         return $result;
     }
@@ -61,11 +52,7 @@ class WebpageSnapshotManager
         $progressReportIo->progressStart(count($urls));
 
         while (($url = $queue->pop())) {
-            try {
-                $this->get($url, $refetch, false);
-            } catch (ExceptionInterface) {
-                // Prefetching = keep quiet, we'll retry
-            }
+            $this->get($url, $refetch);
 
             $progressReportIo->progressAdvance();
         }
@@ -73,40 +60,63 @@ class WebpageSnapshotManager
         $progressReportIo->progressFinish();
     }
 
-    /**
-     * @throws ExceptionInterface
-     */
-    private function fetch(Fetchable $url, bool $throw): WebpageSnapshot
+    private function fetch(Fetchable $url): WebpageSnapshot
     {
-        $this->logger->debug('Will request: '.$url);
-        $response = $this->getDependencyAware($url);
-        $this->logger->debug('Sent request: '.$url);
+        $response = null;
+        $code = null;
+        $content = null;
+        $headers = null;
+        $errors = [];
 
-        $code = $response->getStatusCode();
-        $content = $response->getContent($throw);
+        $this->logger->debug("Will request: $url");
+
+        try {
+            $response = $this->getDependencyAware($url);
+        } catch (ExceptionInterface $ex) {
+            $this->logger->info("Exception during fetching: $url", ['exception' => $ex]);
+            $errors[] = $ex->getMessage();
+        }
+
+        $this->logger->debug("Finished requesting: $url");
+
+        try {
+            $code = $response?->getStatusCode();
+        } catch (ExceptionInterface $ex) {
+            $this->logger->info("Exception during getting status code for: $url", ['exception' => $ex]);
+            $errors[] = $ex->getMessage();
+        }
+
+        try {
+            $content = $response?->getContent();
+        } catch (ExceptionInterface $ex) {
+            $this->logger->info("Exception during getting content for: $url", ['exception' => $ex]);
+            $errors[] = $ex->getMessage();
+        }
+
+        try {
+            $headers = $response?->getHeaders();
+        } catch (ExceptionInterface $ex) {
+            $this->logger->info("Exception during getting headers for: $url", ['exception' => $ex]);
+            $errors[] = $ex->getMessage();
+        }
 
         if (200 === $code && null !== ($latentCode = WebsiteInfo::getLatentCode($url->getUrl(), $content))) {
             $this->logger->info("Correcting response code for $url from $code to $latentCode");
             $code = $latentCode;
         }
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content, DateTimeUtils::getNowUtc(),
-            $url->getOwnerName(), $code, $response->getHeaders($throw));
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content ?? '', DateTimeUtils::getNowUtc(),
+            $url->getOwnerName(), $code ?? 0, $headers ?? [], array_unique($errors));
 
-        $this->logger->debug('Received response: '.$url);
-
-        $this->fetchChildren($webpageSnapshot, $url, $throw);
+        $this->fetchChildren($webpageSnapshot, $url);
 
         return $webpageSnapshot;
     }
 
-    /**
-     * @throws ExceptionInterface
-     */
-    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url, bool $throw): void
+    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
     {
         foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
-            $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url), $throw));
+            $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
         }
     }
 
@@ -122,16 +132,16 @@ class WebpageSnapshotManager
         }
     }
 
-    private function updateUrlHealthStatus(Fetchable $url, ?WebpageSnapshot $snapshot, ?ExceptionInterface $exception): void
+    private function updateUrlHealthStatus(Fetchable $url, ?WebpageSnapshot $snapshot): void
     {
         if ($snapshot && $snapshot->isOK()) {
             $url->recordSuccessfulFetch();
         } else {
-            $code = $exception ? $exception->getCode() : $snapshot->getHttpCode();
-            $message = $exception ? $exception->getMessage() : "HTTP $code returned for \"{$url->getUrl()}\"";
+            $code = $snapshot->getHttpCode();
+            $message = implode(' / ', $snapshot->getErrors());
 
             $url->recordFailedFetch($code, $message);
-            $this->logger->debug("Failed fetching: '$url' ($message)");
+            $this->logger->debug("Failed fetching '$url' with code $code: $message");
         }
     }
 }

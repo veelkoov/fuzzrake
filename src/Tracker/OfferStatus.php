@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Tracking;
+namespace App\Tracker;
 
 class OfferStatus
 {

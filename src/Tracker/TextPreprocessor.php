@@ -4,13 +4,14 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Tracking;
+namespace App\Tracker;
 
 use App\Utils\Json;
 use App\Utils\Regexp\Replacements;
 use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\WebsiteInfo;
 use JsonException;
+use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
@@ -18,36 +19,13 @@ use TRegx\CleanRegex\Pattern;
 
 class TextPreprocessor
 {
-    private const REPLACEMENTS = [
-        '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])' => '_',
-        '(?<=return|delete) (?=this)'                                           => '_',
-        '<script[^>]*>[^ ]+</script>'                                           => ' ',
-        '<meta (itemprop|property)="(og:|twitter:)?description"[^>]+>'          => ' ', // Seems to duplicate primary content
-
-        '&nbsp;'                                          => ' ',
-        "\u{00A0}"                                        => ' ', // NBSP
-        '<br */?>'                                        => "\n",
-        '<style[^>]*>.*?</style>'                         => ' ',
-        '<!--.*?-->'                                      => ' ',
-        '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
-        '\*\*\*OPEN\*\*\*'                                => 'open',
-        '(<[^>]+ )style="[^"]*"([^>]*>)'                  => '$1$2',
-
-        '&#(39|8217);'                                    => "'",
-
-        '  +'   => ' ',
-        "\n\n+" => "\n",
-    ];
-
-    private readonly Replacements $replacements;
-
     /**
      * @param Pattern[] $falsePositivePatterns
      */
     public function __construct(
         private readonly array $falsePositivePatterns,
+        private readonly Replacements $replacements,
     ) {
-        $this->replacements = new Replacements(self::REPLACEMENTS, 's', '', '');
     }
 
     /**
@@ -100,21 +78,7 @@ class TextPreprocessor
             return $webpage;
         }
 
-        return $this->flattenArray($result);
-    }
-
-    /**
-     * https://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array#comment7768057_1320156.
-     */
-    private function flattenArray(array $array): string
-    {
-        $result = '';
-
-        array_walk_recursive($array, function ($a, $b) use (&$result) {
-            $result .= "$b: $a\n";
-        });
-
-        return $result;
+        return implode(' ', Arrays::flatten($result));
     }
 
     /**
