@@ -32,6 +32,7 @@ services:
             $speciesDefinitions:              '%species_definitions%'
             $states:                          '%states%'
             $strings:                         '%strings%'
+            $trackerRegexes:                  '%tracker_regexes%'
             $urls:                            '%urls%'
 
             $healthCheckValues:

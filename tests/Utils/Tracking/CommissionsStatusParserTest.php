@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Tracking;
 
+use App\Tests\TestUtils\Paths;
+use App\Tracker\PatternFactory;
 use App\Utils\Json;
 use App\Utils\Tracking\CommissionsStatusParser;
 use App\Utils\Tracking\OfferStatus;
-use App\Utils\Tracking\Patterns;
 use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 
 class CommissionsStatusParserTest extends TestCase
 {
@@ -20,7 +22,9 @@ class CommissionsStatusParserTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$csp = new CommissionsStatusParser(new Patterns());
+        $parameters = Yaml::parseFile(Paths::getDataDefinitionsPath('tracker_regexes.yaml'));
+
+        self::$csp = new CommissionsStatusParser(new PatternFactory($parameters['parameters']['tracker_regexes']));
     }
 
     /**

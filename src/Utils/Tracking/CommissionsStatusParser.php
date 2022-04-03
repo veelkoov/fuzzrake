@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils\Tracking;
 
+use App\Tracker\PatternFactory;
+use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
+use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
@@ -15,13 +18,19 @@ class CommissionsStatusParser
      */
     private readonly array $offerStatusPatterns;
 
+    /**
+     * @var string[][]
+     */
+    private array $groupTranslations;
+
     private readonly TextPreprocessor $preprocessor;
 
     public function __construct(
-        private readonly Patterns $patterns,
+        private readonly PatternFactory $patternFactory,
     ) {
-        $this->offerStatusPatterns = $this->patterns->getOfferStatusPatterns();
-        $this->preprocessor = new TextPreprocessor($this->patterns->getFalsePositivePatterns());
+        $this->offerStatusPatterns = $this->patternFactory->getOfferStatuses();
+        $this->preprocessor = new TextPreprocessor($this->patternFactory->getFalsePositives());
+        $this->groupTranslations = $this->patternFactory->getGroupTranslations();
     }
 
     /**
@@ -66,10 +75,53 @@ class CommissionsStatusParser
             $statusPattern->match($text->getUnused())->forEach(function (Detail $match) use (&$result, $text): void {
                 $text->use($match->byteOffset(), $match->byteTail());
 
-                array_push($result, ...$this->patterns->matchStatusAndOfferFrom($match));
+                $this->appendOfferStatuses($match, $result);
             });
         }
 
         return $result;
+    }
+
+    /**
+     * @throws TrackerException
+     */
+    private function appendOfferStatuses(Detail $match, array &$result): void
+    {
+        $status = null;
+        $offers = [];
+
+        try {
+            $nonEmptyGroups = array_filter($match->namedGroups()->names(), fn ($name) => $match->matched($name));
+        } catch (NonexistentGroupException $e) {
+            throw new UnbelievableRuntimeException($e);
+        }
+
+        $detail = "{$match->text()} (groups: ".implode(', ', $nonEmptyGroups).')';
+
+        foreach ($nonEmptyGroups as $groupName) {
+            foreach ($this->groupTranslations[$groupName] as $translation) {
+                if (str_starts_with($translation, 'STATUS:')) { // grep-offer-status-constants
+                    if (null !== $status) {
+                        throw new TrackerException("Double status caught in: $detail");
+                    }
+
+                    $status = 'STATUS:OPEN' === $translation; // grep-offer-status-constants
+                } else {
+                    $offers[] = $translation;
+                }
+            }
+        }
+
+        if (null === $status) {
+            throw new TrackerException("Missing status group in: $detail");
+        }
+
+        if ([] === $offers) {
+            throw new TrackerException("Missing offer group(s) in: $detail");
+        }
+
+        foreach ($offers as $offer) {
+            $result[] = new OfferStatus($offer, $status);
+        }
     }
 }

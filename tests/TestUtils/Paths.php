@@ -23,4 +23,9 @@ class Paths
     {
         return __DIR__.'/../../src/Utils/Artisan/CompletenessCalc.php';
     }
+
+    public static function getDataDefinitionsPath(string $fileName): string
+    {
+        return __DIR__."/../../config/data_definitions/$fileName";
+    }
 }
