@@ -16,19 +16,17 @@ class WebpageSnapshot
      */
     private array $children = [];
 
+    /**
+     * @param string[] $headers
+     * @param string[] $errors
+     */
     public function __construct(
         private readonly string $url,
         private readonly string $contents,
         private readonly DateTime $retrievedAt,
         private readonly string $ownerName,
         private readonly int $httpCode,
-        /*
-         * @var string[]
-         */
         private readonly array $headers,
-        /*
-         * @var string[]
-         */
         private readonly array $errors,
     ) {
     }
