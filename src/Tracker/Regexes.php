@@ -12,15 +12,17 @@ class Regexes
          */
         private readonly array $falsePositives,
 
-        /**
-         * @var string[]
-         */
         private readonly array $offerStatuses,
 
         /**
          * @var string[][]
          */
         private readonly array $groupTranslations,
+
+        /**
+         * @var string[]
+         */
+        private readonly array $cleaners,
     ) {
     }
 
@@ -46,5 +48,13 @@ class Regexes
     public function getGroupTranslations(): array
     {
         return $this->groupTranslations;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCleaners(): array
+    {
+        return $this->cleaners;
     }
 }

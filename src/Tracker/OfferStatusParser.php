@@ -28,7 +28,7 @@ class OfferStatusParser
         PatternProvider $provider,
     ) {
         $this->offerStatusPatterns = $provider->getOfferStatuses();
-        $this->preprocessor = new TextPreprocessor($provider->getFalsePositives());
+        $this->preprocessor = new TextPreprocessor($provider->getFalsePositives(), $provider->getCleaners());
         $this->groupTranslations = $provider->getGroupTranslations();
     }
 

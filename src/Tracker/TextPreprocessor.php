@@ -19,36 +19,13 @@ use TRegx\CleanRegex\Pattern;
 
 class TextPreprocessor
 {
-    private const REPLACEMENTS = [
-        '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])' => '_',
-        '(?<=return|delete) (?=this)'                                           => '_',
-        '<script[^>]*>[^ ]+</script>'                                           => ' ',
-        '<meta (itemprop|property)="(og:|twitter:)?description"[^>]+>'          => ' ', // Seems to duplicate primary content
-
-        '&nbsp;'                                          => ' ',
-        "\u{00A0}"                                        => ' ', // NBSP
-        '<br */?>'                                        => "\n",
-        '<style[^>]*>.*?</style>'                         => ' ',
-        '<!--.*?-->'                                      => ' ',
-        '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>' => '',
-        '\*\*\*OPEN\*\*\*'                                => 'open',
-        '(<[^>]+ )style="[^"]*"([^>]*>)'                  => '$1$2',
-
-        '&#(39|8217);'                                    => "'",
-
-        '  +'   => ' ',
-        "\n\n+" => "\n",
-    ];
-
-    private readonly Replacements $replacements;
-
     /**
      * @param Pattern[] $falsePositivePatterns
      */
     public function __construct(
         private readonly array $falsePositivePatterns,
+        private readonly Replacements $replacements,
     ) {
-        $this->replacements = new Replacements(self::REPLACEMENTS, 's', '', '');
     }
 
     /**

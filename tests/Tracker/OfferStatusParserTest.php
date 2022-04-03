@@ -27,7 +27,12 @@ class OfferStatusParserTest extends TestCase
     {
         $parameters = Yaml::parseFile(Paths::getDataDefinitionsPath('tracker_regexes.yaml'));
         $factory = new RegexFactory($parameters['parameters']['tracker_regexes']);
-        $regexes = new Regexes($factory->getFalsePositives(), $factory->getOfferStatuses(), $factory->getGroupTranslations());
+        $regexes = new Regexes(
+            $factory->getFalsePositives(),
+            $factory->getOfferStatuses(),
+            $factory->getGroupTranslations(),
+            $factory->getCleaners(),
+        );
 
         self::$csp = new OfferStatusParser(new PatternProvider(new RegexesProviderMock($regexes)));
     }

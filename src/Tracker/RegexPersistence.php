@@ -15,6 +15,7 @@ class RegexPersistence implements RegexesProvider
     private const KEY_OFFER_STATUS = 'OFFER_STATUS';
     private const KEY_FALSE_POSITIVE = 'FALSE-POSITIVE';
     private const GROUP_TRANSLATIONS = 'TRANSLATIONS';
+    private const GROUP_CLEANERS = 'CLEANERS';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -29,6 +30,7 @@ class RegexPersistence implements RegexesProvider
         $falsePositives = [];
         $offerStatuses = [];
         $groupTranslations = [];
+        $cleaners = [];
 
         foreach ($this->settingRepository->findAll() as $setting) {
             if (self::GROUP_REGEXES === $setting->getGroup()) {
@@ -45,12 +47,14 @@ class RegexPersistence implements RegexesProvider
                 }
 
                 $groupTranslations[$setting->getKey()][] = $setting->getValue();
+            } elseif (self::GROUP_CLEANERS === $setting->getGroup()) {
+                $cleaners[$setting->getKey()] = $setting->getValue();
             } else {
                 $this->logger->warning('Retrieved unsupported item from the settings table', ['entity' => $setting]);
             }
         }
 
-        return new Regexes($falsePositives, $offerStatuses, $groupTranslations);
+        return new Regexes($falsePositives, $offerStatuses, $groupTranslations, $cleaners);
     }
 
     public function rebuild(): void
@@ -84,6 +88,15 @@ class RegexPersistence implements RegexesProvider
 
                 $this->entityManager->persist($setting);
             }
+        }
+
+        foreach ($this->patternFactory->getCleaners() as $subject => $replacement) {
+            $setting = (new TrackerSetting())
+                ->setGroup(self::GROUP_CLEANERS)
+                ->setKey($subject)
+                ->setValue($replacement);
+
+            $this->entityManager->persist($setting);
         }
 
         $this->entityManager->flush();

@@ -40,6 +40,11 @@ class RegexFactory
      */
     private array $usedGroupNames = [];
 
+    /**
+     * @var string[]
+     */
+    private array $cleaners = [];
+
     public function __construct(array $trackerRegexes)
     {
         $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
@@ -49,6 +54,7 @@ class RegexFactory
         $this->loadPlaceholders($trackerRegexes['placeholders']);
         $this->loadFalsePositives($trackerRegexes['false_positives']);
         $this->loadOfferStatuses($trackerRegexes['offer_statuses']);
+        $this->loadCleaners($trackerRegexes['cleaners']);
         $this->validateGroupTranslations();
     }
 
@@ -74,6 +80,14 @@ class RegexFactory
     public function getGroupTranslations(): array
     {
         return $this->groupTranslations;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCleaners(): array
+    {
+        return $this->cleaners;
     }
 
     private function loadPlaceholders(array $placeholders): void
@@ -171,6 +185,7 @@ class RegexFactory
         $this->falsePositives = $falsePositives;
         $this->resolvePlaceholders($this->falsePositives);
         $this->setUnnamedToNoncaptured($this->falsePositives);
+        $this->validateRegexes($this->falsePositives);
     }
 
     private function loadOfferStatuses(array $offerStatuses): void
@@ -178,6 +193,17 @@ class RegexFactory
         $this->offerStatuses = $offerStatuses;
         $this->resolvePlaceholders($this->offerStatuses);
         $this->setUnnamedToNoncaptured($this->offerStatuses);
+        $this->validateRegexes($this->offerStatuses);
+    }
+
+    private function loadCleaners(array $cleaners): void
+    {
+        $regexes = array_keys($cleaners);
+
+        $this->resolvePlaceholders($regexes);
+        $this->validateRegexes($regexes);
+
+        $this->cleaners = array_combine($regexes, array_values($cleaners));
     }
 
     private function validateGroupTranslations(): void
@@ -207,6 +233,15 @@ class RegexFactory
     {
         foreach ($regexes as &$regex) {
             $regex = $this->unnamed->replace($regex)->all()->with('(?:');
+        }
+    }
+
+    private function validateRegexes(array $regexes): void
+    {
+        foreach ($regexes as $regex) {
+            if (!Pattern::of($regex)->valid()) {
+                throw new ConfigurationException("Invalid regex: $regex");
+            }
         }
     }
 }

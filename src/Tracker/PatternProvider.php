@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tracker;
 
+use App\Utils\Regexp\Replacements;
 use Nette\Utils\Arrays;
 use TRegx\CleanRegex\Pattern;
 
@@ -24,6 +25,8 @@ class PatternProvider
      */
     private array $groupTranslations;
 
+    private Replacements $cleaners;
+
     public function __construct(
         RegexesProvider $regexPersistence,
     ) {
@@ -32,6 +35,7 @@ class PatternProvider
         $this->groupTranslations = $regexes->getGroupTranslations();
         $this->falsePositives = Arrays::map($regexes->getFalsePositives(), fn ($item) => pattern($item, 's'));
         $this->offerStatuses = Arrays::map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 's'));
+        $this->cleaners = new Replacements($regexes->getCleaners(), 's', '', '');
     }
 
     /**
@@ -56,5 +60,10 @@ class PatternProvider
     public function getGroupTranslations(): array
     {
         return $this->groupTranslations;
+    }
+
+    public function getCleaners(): Replacements
+    {
+        return $this->cleaners;
     }
 }

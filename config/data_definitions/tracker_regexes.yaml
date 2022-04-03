@@ -157,3 +157,23 @@ parameters:
         - 'oct(ober)?'
         - 'nov(ember)?'
         - 'dec(ember)?'
+
+    cleaners:
+      '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
+      '(?<=return|delete) (?=this)':                                           '_'
+      '<script[^>]*>[^ ]+</script>':                                           ' '
+      '<meta (itemprop|property)="(og:|twitter:)?description"[^>]+>':          ' ' # Seems to duplicate primary content
+
+      '&nbsp;':                                          ' '
+      "\u00A0":                                          ' ' # NBSP
+      '<br */?>':                                        "\n"
+      '<style[^>]*>.*?</style>':                         ' '
+      '<!--.*?-->':                                      ' '
+      '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>': ''
+      '\*\*\*OPEN\*\*\*':                                'open'
+      '(<[^>]+ )style="[^"]*"([^>]*>)':                  '$1$2'
+
+      '&#(39|8217);': "'"
+
+      '  +':   ' '
+      "\n\n+": "\n"
