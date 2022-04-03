@@ -28,4 +28,9 @@ class Paths
     {
         return __DIR__."/../../config/data_definitions/$fileName";
     }
+
+    public static function getTestDataPath(string $fileName): string
+    {
+        return __DIR__."/../test_data/$fileName";
+    }
 }

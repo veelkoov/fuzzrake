@@ -10,7 +10,7 @@ use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
-class PatternFactory
+class RegexFactory
 {
     private Pattern $namedGroup;
 
@@ -52,21 +52,24 @@ class PatternFactory
     }
 
     /**
-     * @return Pattern[]
+     * @return string[]
      */
     public function getOfferStatuses(): array
     {
-        return Arrays::map($this->offerStatuses, fn ($item, $idx, $arr) => pattern($item, 's'));
+        return $this->offerStatuses;
     }
 
     /**
-     * @return Pattern[]
+     * @return string[]
      */
     public function getFalsePositives(): array
     {
-        return Arrays::map($this->falsePositives, fn ($item, $idx, $arr) => pattern($item, 's'));
+        return $this->falsePositives;
     }
 
+    /**
+     * @return string[][]
+     */
     public function getGroupTranslations(): array
     {
         return $this->groupTranslations;

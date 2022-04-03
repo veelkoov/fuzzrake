@@ -25,11 +25,11 @@ class OfferStatusParser
     private readonly TextPreprocessor $preprocessor;
 
     public function __construct(
-        private readonly PatternFactory $patternFactory,
+        PatternProvider $provider,
     ) {
-        $this->offerStatusPatterns = $this->patternFactory->getOfferStatuses();
-        $this->preprocessor = new TextPreprocessor($this->patternFactory->getFalsePositives());
-        $this->groupTranslations = $this->patternFactory->getGroupTranslations();
+        $this->offerStatusPatterns = $provider->getOfferStatuses();
+        $this->preprocessor = new TextPreprocessor($provider->getFalsePositives());
+        $this->groupTranslations = $provider->getGroupTranslations();
     }
 
     /**

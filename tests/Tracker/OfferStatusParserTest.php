@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Tracker;
 
 use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\RegexesProviderMock;
 use App\Tracker\OfferStatus;
 use App\Tracker\OfferStatusParser;
-use App\Tracker\PatternFactory;
+use App\Tracker\PatternProvider;
+use App\Tracker\Regexes;
+use App\Tracker\RegexFactory;
 use App\Tracker\TrackerException;
 use App\Utils\Json;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
@@ -23,8 +26,10 @@ class OfferStatusParserTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $parameters = Yaml::parseFile(Paths::getDataDefinitionsPath('tracker_regexes.yaml'));
+        $factory = new RegexFactory($parameters['parameters']['tracker_regexes']);
+        $regexes = new Regexes($factory->getFalsePositives(), $factory->getOfferStatuses(), $factory->getGroupTranslations());
 
-        self::$csp = new OfferStatusParser(new PatternFactory($parameters['parameters']['tracker_regexes']));
+        self::$csp = new OfferStatusParser(new PatternProvider(new RegexesProviderMock($regexes)));
     }
 
     /**
@@ -57,6 +62,6 @@ class OfferStatusParserTest extends TestCase
             $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../../test_data/statuses/*/*/expected.json')));
+        }, glob(Paths::getTestDataPath('/statuses/*/*/expected.json'))));
     }
 }
