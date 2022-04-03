@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Tasks\TrackerUpdates\TrackerTaskRunnerFactory;
-use App\Utils\Tracking\TrackerException;
+use App\Tracker\TrackerException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

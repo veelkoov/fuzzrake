@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Tracking;
+namespace App\Tracker;
 
-use App\Tracker\PatternFactory;
 use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
-class CommissionsStatusParser
+class OfferStatusParser
 {
     /**
      * @var Pattern[]
