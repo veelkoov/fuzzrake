@@ -11,6 +11,7 @@ use App\Utils\Regexp\Replacements;
 use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\WebsiteInfo;
 use JsonException;
+use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
@@ -100,21 +101,7 @@ class TextPreprocessor
             return $webpage;
         }
 
-        return $this->flattenArray($result);
-    }
-
-    /**
-     * https://stackoverflow.com/questions/1319903/how-to-flatten-a-multidimensional-array#comment7768057_1320156.
-     */
-    private function flattenArray(array $array): string
-    {
-        $result = '';
-
-        array_walk_recursive($array, function ($a, $b) use (&$result) {
-            $result .= "$b: $a\n";
-        });
-
-        return $result;
+        return implode(' ', Arrays::flatten($result));
     }
 
     /**
