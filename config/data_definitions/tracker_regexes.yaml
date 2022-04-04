@@ -41,29 +41,36 @@ parameters:
     false_positives:
       - 'next C___S opening (estimated|will)'
       - '(if|when|while) OFFER (are )?STATUS'
-      - "when (i('m| am| will)?|we('re| are| will)?) open for (new )?OFFER"
+      - 'when WE_ARE DOING_STUFF_FALSE_POSITVES'
       - 'when will you start taking new C___S'
+      - 'when do you open for commissions/quotes'
+      - 'when (my |our )(COMMISSIONS|QUOTES) (are )?open'
       - "even though you're closed for C___S"
-      - 'C___S open in'
-      - 'quotes open (in )?MONTHS'
+      - 'although (fursuit )?C___S are closed'
+      - '(quotes|C___S) open (in |(in )?MONTHS)'
       - 'slots are open in'
-      - 'as slots open'
-      - '(>| )art C___S( are:?| ?:)' # "art commissions"
+      - 'as (soon as WE_ARE|slots) open'
+      - '[^a-z]art(work)? C___S( are:?| ?:)' # "art commissions"
       - 'OFFER status: STATUS ?</h1>\s*<h1[^>]*> ?MONTHS'
+      - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
+
 
     offer_statuses:
+      - "(?P<open>you can still submit a QUOTES form if you're interested)"
+      - 'WE_ARE STATUS COMMISSIONS'
       - '(C___S\s*[:-]\s*)?STATUS for (new )?OFFER'
-      - 'OFFER( status| NOW)?( | ?[:_-]\s*?)STATUS' # - and _ should work for attributes as well
-      - 'OFFER\s+(are:?|basically)\s+(NOW:?\s+)?(&gt;&gt;)?STATUS' # "(&gt;&gt;)?" - test case 057
+      - 'OFFER( status| NOW)?([ :_-]+\s*?)STATUS' # - and _ should work for attributes as well
+      - 'OFFER\s+(are:?|basically)\s+(NOW:?\s+)?(&gt;&gt;)?STATUS' # "(&gt;&gt;)?" - tc057
       - 'STATUS new OFFER'
-      - 'NOW we are STATUS for a handful of OFFER'
+      - 'NOW we are STATUS for a handful of OFFER' # WTF
       - 'NOW\s+STATUS\s+(new\s+|for\s+)?OFFER'
       - 'we STATUS OFFER'
-      - '\[ OFFER[. ]+STATUS \]' # Test case 045
+      - '\[ OFFER[. ]+STATUS \]' # tc045
       - '<h2[^>]*> ?OFFER \| STATUS ?</h2>'
       - '<h2[^>]*> ?OFFER(( status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS' # No closing </h2> for any comments
       - '<h4[^>]*> ?OFFER(( status:?| ?:))? ?</h4>\s*<h4[^>]*> ?STATUS' # No closing </h4> for any comments
-      - '<p[^>]*> ?OFFER(( status:?| ?:)) ?</p>\s*<p[^>]*> ?NOW STATUS' # No closing </p> for any comments
+      - '<p[^>]*> ?OFFER(( status:?| ?:))? ?</p>\s*<p[^>]*> ?NOW STATUS' # No closing </p> for any comments
+      - 'OFFER(( status:?| ?:))?\s*</h1>\s*</div>\s*<div[^>]*>\s*<p[^>]*>\s*STATUS'
 
     placeholders:
       'STATUS':
@@ -79,8 +86,7 @@ parameters:
       'CLOSED':
         - '$closed$'
         - 'closed?'
-        - 'not currently taking on' # Test case 058
-        - 'not accepting'
+        - 'not (NOW )?(taking on|accepting|open for)'
         - "don't (do|take|provide)"
 
       'OFFER':
@@ -89,7 +95,7 @@ parameters:
             - 'handpaws_AND_sockpaws C___S'
         - 'PARTS&REFURBISHMENTS':
             - '$parts_refurbishments$'
-            - 'small/single parts_AND_refurbishments C___S'
+            - 'parts_AND_refurbishments C___S'
         - 'COMMISSIONS&QUOTES':
             - '$commissions_quotes$'
             - '(C___S_AND_quotes?)'
@@ -108,11 +114,11 @@ parameters:
             - '(fursuit )?parts? C___S'
         - 'COMMISSIONS':
             - '$commissions$'
-            - '(fursuit )?C___S'
-            - '(custom )?slots?'
+            - '(custom )?(costume |fursuit )?C___S'
+            - '(custom |C___S )?slots?'
             - 'fursuits?( queue)?'
             - 'comms'
-            - 'current mode' # Test case 052
+            - 'current mode' # tc052
             - 'projects'
         - 'TRADES':
             - '$trades$'
@@ -144,6 +150,10 @@ parameters:
         - 'now'
         - 'always'
 
+      'WE_ARE':
+        - "we( are|'re| will)?"
+        - "i( am|'m| will)?"
+
       'MONTHS':
         - 'jan(uary)?'
         - 'feb(ruary)?'
@@ -157,6 +167,11 @@ parameters:
         - 'oct(ober)?'
         - 'nov(ember)?'
         - 'dec(ember)?'
+
+      'DOING_STUFF_FALSE_POSITVES':
+        - 'open for'
+        - 'taking'
+        - 'take'
 
     cleaners:
       '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
@@ -177,3 +192,8 @@ parameters:
 
       '  +':   ' '
       "\n\n+": "\n"
+
+      # square.site
+      # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
+      ',"attributes":\{[^}]*\}': ''
+      '"\},\{"insert":"':        ''
