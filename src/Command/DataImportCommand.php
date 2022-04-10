@@ -7,7 +7,7 @@ namespace App\Command;
 use App\Tasks\DataImportFactory;
 use App\Utils\Data\Manager;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\IuSubmissions\Finder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -44,7 +44,7 @@ class DataImportCommand extends Command
 
         try {
             if (null !== $input->getArgument('only-after')) {
-                $onlyAfter = DateTimeUtils::getUtcAt($input->getArgument('only-after') ?? '');
+                $onlyAfter = UtcClock::at($input->getArgument('only-after') ?? '');
             } else {
                 $onlyAfter = null;
             }

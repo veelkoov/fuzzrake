@@ -21,12 +21,12 @@ use App\Utils\Artisan\Fields\CommissionAccessor;
 use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\Parse;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -359,24 +359,24 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
     }
 
-    public function getDateAdded(): ?DateTimeInterface
+    public function getDateAdded(): ?DateTimeImmutable
     {
         return $this->getDateTimeValue(Field::DATE_ADDED);
     }
 
-    public function setDateAdded(?DateTimeInterface $dateAdded): self
+    public function setDateAdded(?DateTimeImmutable $dateAdded): self
     {
         $this->setDateTimeValue(Field::DATE_ADDED, $dateAdded);
 
         return $this;
     }
 
-    public function getDateUpdated(): ?DateTimeInterface
+    public function getDateUpdated(): ?DateTimeImmutable
     {
         return $this->getDateTimeValue(Field::DATE_UPDATED);
     }
 
-    public function setDateUpdated(?DateTimeInterface $dateUpdated): self
+    public function setDateUpdated(?DateTimeImmutable $dateUpdated): self
     {
         $this->setDateTimeValue(Field::DATE_UPDATED, $dateUpdated);
 
@@ -387,12 +387,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VOLATILE DATA GETTERS AND SETTERS =====
     //
 
-    public function getCsLastCheck(): ?DateTimeInterface
+    public function getCsLastCheck(): ?DateTimeImmutable
     {
         return $this->getVolatileData()->getLastCsUpdate();
     }
 
-    public function setCsLastCheck(?DateTimeInterface $csLastCheck): void
+    public function setCsLastCheck(?DateTimeImmutable $csLastCheck): void
     {
         $this->getVolatileData()->setLastCsUpdate($csLastCheck);
     }
@@ -409,12 +409,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getBpLastCheck(): ?DateTimeInterface
+    public function getBpLastCheck(): ?DateTimeImmutable
     {
         return $this->getVolatileData()->getLastBpUpdate();
     }
 
-    public function setBpLastCheck(?DateTimeInterface $bpLastCheck): void
+    public function setBpLastCheck(?DateTimeImmutable $bpLastCheck): void
     {
         $this->getVolatileData()->setLastBpUpdate($bpLastCheck);
     }
@@ -1413,18 +1413,18 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setStringValue($field, $newValue);
     }
 
-    private function getDateTimeValue(Field $field): ?DateTimeInterface
+    private function getDateTimeValue(Field $field): ?DateTimeImmutable
     {
         $value = $this->getStringValue($field);
 
         try {
-            return null !== $value ? DateTimeUtils::getUtcAt($value) : null;
+            return null !== $value ? UtcClock::at($value) : null;
         } catch (DateTimeException) {
             return null;
         }
     }
 
-    private function setDateTimeValue(Field $field, ?DateTimeInterface $newValue): self
+    private function setDateTimeValue(Field $field, ?DateTimeImmutable $newValue): self
     {
         if (null !== $newValue) {
             $newValue = StrUtils::asStr($newValue);

@@ -6,8 +6,8 @@ namespace App\Repository;
 
 use App\Entity\ArtisanVolatileData;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
-use DateTime;
+use App\Utils\DateTime\UtcClock;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,9 +29,9 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
      * @throws DateTimeException
      * @throws UnexpectedResultException
      */
-    public function getLastCsUpdateTime(): DateTime
+    public function getLastCsUpdateTime(): DateTimeImmutable
     {
-        return DateTimeUtils::getUtcAt($this
+        return UtcClock::at($this
             ->createQueryBuilder('avd')
             ->select('MAX(avd.lastCsUpdate)')
             ->getQuery()
@@ -43,9 +43,9 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
      * @throws DateTimeException
      * @throws UnexpectedResultException
      */
-    public function getLastBpUpdateTime(): DateTime
+    public function getLastBpUpdateTime(): DateTimeImmutable
     {
-        return DateTimeUtils::getUtcAt($this
+        return UtcClock::at($this
             ->createQueryBuilder('avd')
             ->select('MAX(avd.lastBpUpdate)')
             ->getQuery()

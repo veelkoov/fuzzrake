@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\DateTime;
 
 use App\Utils\Traits\UtilityClass;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 final class DateTimeFormat
 {
@@ -15,7 +15,7 @@ final class DateTimeFormat
 
     public static function fragileUtc(mixed $input, string $format = self::DEFAULT_FORMAT): string
     {
-        if ($input instanceof DateTimeInterface) {
+        if ($input instanceof DateTimeImmutable) {
             return $input->format($format) ?: 'unknown/error';
         } else {
             return 'unknown/error';

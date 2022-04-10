@@ -9,11 +9,11 @@ use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
-use DateTimeInterface;
+use DateTimeImmutable;
 use InvalidArgumentException;
 
 class Manager
@@ -53,7 +53,7 @@ class Manager
     private array $rejectedItems = [];
 
     /**
-     * @var DateTimeInterface[] Associative list of requests waiting for re-validation
+     * @var DateTimeImmutable[] Associative list of requests waiting for re-validation
      *                          Key = submission ID, value = date until when ignored
      */
     private array $itemsIgnoreFinalTimes = [];
@@ -103,14 +103,14 @@ class Manager
         return in_array($item->getId(), $this->rejectedItems);
     }
 
-    public function getIgnoredUntilDate(ImportItem $item): DateTimeInterface
+    public function getIgnoredUntilDate(ImportItem $item): DateTimeImmutable
     {
         return $this->itemsIgnoreFinalTimes[$item->getId()];
     }
 
     public function isDelayed(ImportItem $item): bool
     {
-        return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !DateTimeUtils::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
+        return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !UtcClock::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
     }
 
     private function readDirectives(string $directives): void
@@ -160,7 +160,7 @@ class Manager
                 $readFinalTime = $buffer->readUntilWhitespaceOrEof();
 
                 try {
-                    $parsedFinalTime = DateTimeUtils::getUtcAt($readFinalTime);
+                    $parsedFinalTime = UtcClock::at($readFinalTime);
                 } catch (DateTimeException $e) {
                     throw new DataInputException("Failed to parse date: '$readFinalTime'", 0, $e);
                 }

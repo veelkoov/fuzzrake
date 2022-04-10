@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTime;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,16 +27,16 @@ class ArtisanUrlState
     private ?ArtisanUrl $url = null;
 
     /**
-     * @ORM\Column(name="last_success", type="datetime", nullable=true)
+     * @ORM\Column(name="last_success", type="datetime_immutable", nullable=true)
      * FIXME: Rename column to UTC https://github.com/veelkoov/fuzzrake/issues/109
      */
-    private ?DateTimeInterface $lastSuccessUtc = null;
+    private ?DateTimeImmutable $lastSuccessUtc = null;
 
     /**
-     * @ORM\Column(name="last_failure", type="datetime", nullable=true)
+     * @ORM\Column(name="last_failure", type="datetime_immutable", nullable=true)
      * FIXME: Rename column to UTC https://github.com/veelkoov/fuzzrake/issues/109
      */
-    private ?DateTimeInterface $lastFailureUtc = null;
+    private ?DateTimeImmutable $lastFailureUtc = null;
 
     /**
      * @ORM\Column(type="integer")
@@ -73,24 +72,24 @@ class ArtisanUrlState
         return $this;
     }
 
-    public function getLastSuccessUtc(): ?DateTimeInterface
+    public function getLastSuccessUtc(): ?DateTimeImmutable
     {
         return $this->lastSuccessUtc;
     }
 
-    public function setLastSuccessUtc(?DateTime $lastSuccessUtc): self
+    public function setLastSuccessUtc(?DateTimeImmutable $lastSuccessUtc): self
     {
         $this->lastSuccessUtc = $lastSuccessUtc;
 
         return $this;
     }
 
-    public function getLastFailureUtc(): ?DateTimeInterface
+    public function getLastFailureUtc(): ?DateTimeImmutable
     {
         return $this->lastFailureUtc;
     }
 
-    public function setLastFailureUtc(?DateTimeInterface $lastFailureUtc): self
+    public function setLastFailureUtc(?DateTimeImmutable $lastFailureUtc): self
     {
         $this->lastFailureUtc = $lastFailureUtc;
 
@@ -121,7 +120,7 @@ class ArtisanUrlState
         return $this;
     }
 
-    public function getLastRequest(): ?DateTimeInterface
+    public function getLastRequest(): ?DateTimeImmutable
     {
         $r1 = $this->lastFailureUtc;
         $r2 = $this->lastSuccessUtc;

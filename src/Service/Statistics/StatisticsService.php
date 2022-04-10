@@ -7,7 +7,7 @@ namespace App\Service\Statistics;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\UnexpectedResultException;
 
 class StatisticsService
@@ -39,7 +39,7 @@ class StatisticsService
         }
 
         try {
-            $lastSystemUpdateTimeUtc = DateTimeUtils::getUtcAt(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'));
+            $lastSystemUpdateTimeUtc = UtcClock::at(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'));
         } catch (DateTimeException) {
             $lastSystemUpdateTimeUtc = null;
         }

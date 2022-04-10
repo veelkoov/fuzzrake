@@ -8,7 +8,7 @@ use App\DataDefinitions\Ages;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
@@ -91,8 +91,8 @@ trait EntityManagerTrait
 
         $result
             ->getVolatileData()
-            ->setLastCsUpdate(DateTimeUtils::getNowUtc())
-            ->setLastBpUpdate(DateTimeUtils::getNowUtc())
+            ->setLastCsUpdate(UtcClock::now())
+            ->setLastBpUpdate(UtcClock::now())
         ;
 
         if ('' !== $password) {

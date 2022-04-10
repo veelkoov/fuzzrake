@@ -8,7 +8,7 @@ use App\Entity\Event;
 use App\Repository\EventRepository;
 use App\Utils\Arrays;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,7 +48,7 @@ class EventsController extends AbstractController
             Event::TYPE_CS_UPDATED,
         ], explode(',', $request->get('types', '')));
 
-        $fourDaysAgo = DateTimeUtils::getUtcAt('-4 days'); // Workaround for FSR bot; https://github.com/veelkoov/fuzzrake/issues/126
+        $fourDaysAgo = UtcClock::at('-4 days'); // Workaround for FSR bot; https://github.com/veelkoov/fuzzrake/issues/126
 
         $result = new Response($this->renderView('events/events-atom.xml.twig', [
             'events' => array_filter($eventRepository->getRecent($types), fn ($event) => $event->getTimestamp() > $fourDaysAgo),

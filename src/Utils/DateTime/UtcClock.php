@@ -5,24 +5,25 @@ declare(strict_types=1);
 namespace App\Utils\DateTime;
 
 use App\Utils\Traits\UtilityClass;
+use App\Utils\UnbelievableRuntimeException;
 use DateTime;
-use DateTimeInterface;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 
-final class DateTimeUtils
+final class UtcClock
 {
     use UtilityClass;
 
-    public static function getNowUtc(): DateTime
+    public static function now(): DateTimeImmutable
     {
         try {
-            $result = DateTime::createFromFormat('U', (string) time(), self::getUtc());
+            $result = DateTime::createFromFormat('U', (string) self::time(), self::getUtc());
             $result->setTimezone(self::getUtc());
 
-            return $result;
+            return DateTimeImmutable::createFromMutable($result);
         } catch (Exception $e) {
-            throw new RuntimeDateTimeException(previous: $e);
+            throw new UnbelievableRuntimeException($e);
         }
     }
 
@@ -34,13 +35,13 @@ final class DateTimeUtils
     /**
      * @throws DateTimeException
      */
-    public static function getUtcAt(?string $time): DateTime
+    public static function at(?string $time): DateTimeImmutable
     {
         try {
             $result = new DateTime($time ?: 'invalid', self::getUtc());
             $result->setTimezone(self::getUtc());
 
-            return $result;
+            return DateTimeImmutable::createFromMutable($result);
         } catch (Exception $e) {
             throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }
@@ -61,13 +62,23 @@ final class DateTimeUtils
         return date('Y-m-d', strtotime('+1 day'));
     }
 
-    public static function passed(DateTimeInterface $dateTime): bool
+    public static function passed(DateTimeImmutable $dateTime): bool
     {
-        return self::getNowUtc() > $dateTime;
+        return self::now() > $dateTime;
     }
 
     public static function timems(): int
     {
-        return (int) (microtime(true) * 1000);
+        return self::isTest() ? UtcClockForTests::timems() : (int) (microtime(true) * 1000);
+    }
+
+    public static function time(): int
+    {
+        return self::isTest() ? UtcClockForTests::time() : time();
+    }
+
+    private static function isTest(): bool
+    {
+        return 'test' === ($_ENV['APP_ENV'] ?? null);
     }
 }

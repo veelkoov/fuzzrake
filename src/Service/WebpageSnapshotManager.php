@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
@@ -105,7 +105,7 @@ class WebpageSnapshotManager
             $code = $latentCode;
         }
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content ?? '', DateTimeUtils::getNowUtc(),
+        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content ?? '', UtcClock::now(),
             $url->getOwnerName(), $code ?? 0, $headers ?? [], array_unique($errors));
 
         $this->fetchChildren($webpageSnapshot, $url);

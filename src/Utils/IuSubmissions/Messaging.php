@@ -7,7 +7,7 @@ namespace App\Utils\IuSubmissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\StrUtils;
 
 class Messaging
@@ -38,7 +38,7 @@ class Messaging
             Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
             '    '.Manager::CMD_ACCEPT,
             '    '.Manager::CMD_REJECT,
-            '    '.Manager::CMD_IGNORE_UNTIL.' '.DateTimeUtils::getMonthLaterYmd(),
+            '    '.Manager::CMD_IGNORE_UNTIL.' '.UtcClock::getMonthLaterYmd(),
         ]);
     }
 
@@ -49,7 +49,7 @@ class Messaging
             Manager::CMD_WITH.' '.$item->getId().': // '.$item->getMakerId(),
             '    '.Manager::CMD_ACCEPT,
             '    '.Manager::CMD_REJECT,
-            '    '.Manager::CMD_IGNORE_UNTIL.' '.DateTimeUtils::getMonthLaterYmd(),
+            '    '.Manager::CMD_IGNORE_UNTIL.' '.UtcClock::getMonthLaterYmd(),
             '    '.Manager::CMD_MATCH_TO_NAME.' |ABCDEFGHIJ|',
         ]);
     }
@@ -62,7 +62,7 @@ class Messaging
 
     public function reportInvalidPassword(ImportItem $item): void
     {
-        $tomorrow = DateTimeUtils::getTomorrowYmd();
+        $tomorrow = UtcClock::getTomorrowYmd();
 
         $this->printer->warning("{$item->getNamesStrSafe()} provided invalid password");
         $this->printer->writeln([

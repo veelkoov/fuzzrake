@@ -23,6 +23,7 @@ class EventType extends AbstractType
     {
         $builder
             ->add('timestamp', DateTimeType::class, [
+                'input'       => 'datetime_immutable',
                 'label'       => 'Timestamp',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',

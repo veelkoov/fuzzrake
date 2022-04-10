@@ -9,7 +9,7 @@ use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\SafeArrayRead;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -67,7 +67,7 @@ class IuState
         $this->session->reset();
     }
 
-    public function getStarted(): ?DateTimeInterface
+    public function getStarted(): ?DateTimeImmutable
     {
         return $this->session->getStarted();
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web\HttpClient;
 
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\UrlUtils;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -70,7 +70,7 @@ class GentleHttpClient extends HttpClient
         $host = UrlUtils::hostFromUrl($url);
 
         if (array_key_exists($host, $this->lastRequestsMs)) {
-            $millisecondsToWait = $this->lastRequestsMs[$host] + self::DELAY_FOR_HOST_MILLISEC - DateTimeUtils::timems();
+            $millisecondsToWait = $this->lastRequestsMs[$host] + self::DELAY_FOR_HOST_MILLISEC - UtcClock::timems();
 
             if ($millisecondsToWait > 0) {
                 usleep($millisecondsToWait * 1000);
@@ -80,6 +80,6 @@ class GentleHttpClient extends HttpClient
 
     private function updateLastHostCall(string $url): void
     {
-        $this->lastRequestsMs[UrlUtils::hostFromUrl($url)] = DateTimeUtils::timems();
+        $this->lastRequestsMs[UrlUtils::hostFromUrl($url)] = UtcClock::timems();
     }
 }

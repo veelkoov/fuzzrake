@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Web;
 
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 
 class DelayAwareUrlFetchingQueue
 {
@@ -53,7 +53,7 @@ class DelayAwareUrlFetchingQueue
 
         if (array_key_exists($this->lastHost, $this->hosts)) {
             // Naively assume that next pop() call happens almost right after the previous URL got fetched
-            $this->hosts[$this->lastHost][self::NEXT_FETCH_TIMESTAMP] = DateTimeUtils::timems() + $this->millisecondsDelay;
+            $this->hosts[$this->lastHost][self::NEXT_FETCH_TIMESTAMP] = UtcClock::timems() + $this->millisecondsDelay;
         }
 
         $this->sortHosts();
@@ -71,7 +71,7 @@ class DelayAwareUrlFetchingQueue
 
     private function sortHosts(): void
     {
-        $now = DateTimeUtils::timems();
+        $now = UtcClock::timems();
 
         uasort($this->hosts, function (array $a, array $b) use ($now): int {
             $timestampDiff = max(0, $a[self::NEXT_FETCH_TIMESTAMP] - $now) <=> max(0, $b[self::NEXT_FETCH_TIMESTAMP] - $now);

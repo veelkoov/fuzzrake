@@ -8,18 +8,18 @@ use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use App\Utils\StringList;
-use DateTimeInterface;
+use DateTimeImmutable;
 use JsonException;
 use Symfony\Component\Finder\SplFileInfo;
 
 class IuSubmission implements FieldReadInterface
 {
     public function __construct(
-        private readonly DateTimeInterface $timestamp,
+        private readonly DateTimeImmutable $timestamp,
         private readonly string $id,
         private readonly array $data,
     ) {
@@ -30,7 +30,7 @@ class IuSubmission implements FieldReadInterface
         return $this->id;
     }
 
-    public function getTimestamp(): DateTimeInterface
+    public function getTimestamp(): DateTimeImmutable
     {
         return $this->timestamp;
     }
@@ -69,13 +69,13 @@ class IuSubmission implements FieldReadInterface
         return new self($timestamp, $id, $data);
     }
 
-    private static function getTimestampFromFilePath(string $filePath): DateTimeInterface
+    private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable
     {
         $dateTimeStr = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}:\d{2}:\d{2})_\d{4}\.json$')
             ->replace($filePath)->first()->withReferences('$1-$2-$3 $4');
 
         try {
-            return DateTimeUtils::getUtcAt($dateTimeStr);
+            return UtcClock::at($dateTimeStr);
         } catch (DateTimeException $e) {
             throw new DataInputException('Couldn\'t parse the timestamp out of the I/U submission file path', 0, $e);
         }

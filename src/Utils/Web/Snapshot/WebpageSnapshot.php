@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Utils\Web\Snapshot;
 
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
-use DateTime;
+use App\Utils\DateTime\UtcClock;
+use DateTimeImmutable;
 use InvalidArgumentException;
 
 class WebpageSnapshot
@@ -23,7 +23,7 @@ class WebpageSnapshot
     public function __construct(
         private readonly string $url,
         private readonly string $contents,
-        private readonly DateTime $retrievedAt,
+        private readonly DateTimeImmutable $retrievedAt,
         private readonly string $ownerName,
         private readonly int $httpCode,
         private readonly array $headers,
@@ -67,7 +67,7 @@ class WebpageSnapshot
         return $this->contents;
     }
 
-    public function getRetrievedAt(): DateTime
+    public function getRetrievedAt(): DateTimeImmutable
     {
         return $this->retrievedAt;
     }
@@ -131,7 +131,7 @@ class WebpageSnapshot
         return new self(
             $input['url'],
             $input['contents'],
-            DateTimeUtils::getUtcAt($input['retrievedAt']),
+            UtcClock::at($input['retrievedAt']),
             $input['ownerName'],
             $input['httpCode'] ?? 0,
             $input['headers'] ?? [],

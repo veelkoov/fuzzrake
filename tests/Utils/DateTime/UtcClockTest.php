@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Utils\DateTime;
 
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\TestCase;
 
-class DateTimeUtilsTest extends TestCase
+class UtcClockTest extends TestCase
 {
     public function testGetNowUtcUsesUtcTimeZoneType3(): void
     {
-        $subject = DateTimeUtils::getNowUtc()->getTimezone();
+        $subject = UtcClock::now()->getTimezone();
 
         self::assertEquals('UTC', $subject->getName());
     }
@@ -22,7 +22,7 @@ class DateTimeUtilsTest extends TestCase
      */
     public function testGetUtcAtUsesUtcTimeZoneType3(): void
     {
-        $subject = DateTimeUtils::getUtcAt('2022-01-07 13:01')->getTimezone();
+        $subject = UtcClock::at('2022-01-07 13:01')->getTimezone();
 
         self::assertEquals('UTC', $subject->getName());
     }

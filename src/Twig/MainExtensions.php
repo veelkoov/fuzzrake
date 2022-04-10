@@ -7,13 +7,13 @@ namespace App\Twig;
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\NewArtisan;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class MainExtensions extends AbstractExtension
 {
-    private readonly DateTimeInterface $newCutoff;
+    private readonly DateTimeImmutable $newCutoff;
 
     public function __construct()
     {

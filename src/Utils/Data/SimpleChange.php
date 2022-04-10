@@ -7,14 +7,14 @@ namespace App\Utils\Data;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\StrUtils;
 use BackedEnum;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 class SimpleChange implements ChangeInterface
 {
     public function __construct(
         private readonly Field $field,
-        private readonly BackedEnum|DateTimeInterface|string|bool|null $old,
-        private readonly BackedEnum|DateTimeInterface|string|bool|null $new,
+        private readonly BackedEnum|DateTimeImmutable|string|bool|null $old,
+        private readonly BackedEnum|DateTimeImmutable|string|bool|null $new,
     ) {
     }
 

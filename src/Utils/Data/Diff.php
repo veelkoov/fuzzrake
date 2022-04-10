@@ -10,7 +10,7 @@ use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
 use BackedEnum;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 class Diff
 {
@@ -47,8 +47,8 @@ class Diff
 
     private function addChange(
         Field $field,
-        BackedEnum|DateTimeInterface|string|bool|null $old,
-        BackedEnum|DateTimeInterface|string|bool|null $new,
+        BackedEnum|DateTimeImmutable|string|bool|null $old,
+        BackedEnum|DateTimeImmutable|string|bool|null $new,
     ): void {
         if ($field->isList()) {
             $change = new ListChange($field, $old, $new);

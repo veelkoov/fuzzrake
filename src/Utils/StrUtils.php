@@ -8,7 +8,7 @@ use App\Twig\AppExtensions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
 use BackedEnum;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 final class StrUtils
 {
@@ -63,11 +63,11 @@ final class StrUtils
         return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
     }
 
-    public static function asStr(BackedEnum|DateTimeInterface|bool|string|null $value): string
+    public static function asStr(BackedEnum|DateTimeImmutable|bool|string|null $value): string
     {
         if (null === $value) {
             return 'unknown';
-        } elseif ($value instanceof DateTimeInterface) {
+        } elseif ($value instanceof DateTimeImmutable) {
             return $value->format('Y-m-d H:i:s');
         } elseif ($value instanceof BackedEnum) {
             return (string) $value->value;

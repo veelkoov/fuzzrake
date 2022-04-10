@@ -9,7 +9,8 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\DateTime\UtcClockForTests;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -17,7 +18,6 @@ use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
 use Exception;
 use InvalidArgumentException;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
@@ -97,7 +97,7 @@ class ExtendedTest extends AbstractTestWithEM
 
     public static function setUpBeforeClass(): void
     {
-        ClockMock::register(DateTimeUtils::class);
+        UtcClockForTests::reset();
     }
 
     /**
@@ -117,8 +117,6 @@ class ExtendedTest extends AbstractTestWithEM
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        ClockMock::withClockMock(true);
-
         self::sanityChecks();
 
         $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
@@ -199,7 +197,7 @@ class ExtendedTest extends AbstractTestWithEM
             if (Field::AGES === $field) {
                 $value = Ages::get($value);
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
-                $value = '/now/' === $value ? DateTimeUtils::getNowUtc() : DateTimeUtils::getUtcAt($value);
+                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at($value);
             }
 
             $result->set(Field::from($fieldName), $value);
