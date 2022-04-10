@@ -16,7 +16,7 @@ use TRegx\CleanRegex\Pattern;
  */
 class ArtisanFieldsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->constructor = Pattern::of('constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?,?\s*)+)\)', 'si');
         $this->constructorParameter = Pattern::of('(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?(?:,|$)', 'i');
@@ -31,7 +31,7 @@ class ArtisanFieldsTest extends TestCase
 
         $parameters = $this->constructor
             ->match($modelSource)
-            ->first(fn(Detail $detail): string => $detail->get('parameters'));
+            ->first(fn (Detail $detail): string => $detail->get('parameters'));
 
         $matches = $this->constructorParameter->match($parameters);
 
