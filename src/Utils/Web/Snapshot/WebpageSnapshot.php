@@ -7,7 +7,6 @@ namespace App\Utils\Web\Snapshot;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use DateTime;
-use DateTimeInterface;
 use InvalidArgumentException;
 
 class WebpageSnapshot
@@ -17,16 +16,18 @@ class WebpageSnapshot
      */
     private array $children = [];
 
+    /**
+     * @param string[] $headers
+     * @param string[] $errors
+     */
     public function __construct(
         private readonly string $url,
         private readonly string $contents,
         private readonly DateTime $retrievedAt,
         private readonly string $ownerName,
         private readonly int $httpCode,
-        /*
-         * @var string[] FIXME: Type hinting not working
-         */
         private readonly array $headers,
+        private readonly array $errors,
     ) {
     }
 
@@ -84,6 +85,14 @@ class WebpageSnapshot
         return $this->headers;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
     public function isOK(): bool
     {
         return 200 === $this->httpCode;
@@ -102,9 +111,10 @@ class WebpageSnapshot
         return [
             'url'         => $this->url,
             'ownerName'   => $this->ownerName,
-            'retrievedAt' => $this->retrievedAt->format(DateTimeInterface::ISO8601),
+            'retrievedAt' => $this->retrievedAt->format(DATE_ATOM),
             'childCount'  => count($this->children),
             'headers'     => $this->headers,
+            'errors'      => $this->errors,
             'httpCode'    => $this->httpCode,
         ];
     }
@@ -118,7 +128,14 @@ class WebpageSnapshot
             throw new InvalidArgumentException('Contents is not a string');
         }
 
-        return new self($input['url'], $input['contents'], DateTimeUtils::getUtcAt($input['retrievedAt']),
-            $input['ownerName'], $input['httpCode'] ?? 0, $input['headers'] ?? []);
+        return new self(
+            $input['url'],
+            $input['contents'],
+            DateTimeUtils::getUtcAt($input['retrievedAt']),
+            $input['ownerName'],
+            $input['httpCode'] ?? 0,
+            $input['headers'] ?? [],
+            $input['errors'] ?? [],
+        );
     }
 }

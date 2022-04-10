@@ -19,7 +19,7 @@ class Printer
         Formatter::setup($io->getFormatter());
     }
 
-    public function setCurrentContext(ArtisanChanges $artisan)
+    public function setCurrentContext(ArtisanChanges $artisan): void
     {
         $this->currentContext = $artisan;
     }

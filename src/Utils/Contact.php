@@ -19,13 +19,13 @@ final class Contact
     final public const E_MAIL = 'E-MAIL';
 
     private const PATTERNS = [
-        '(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.]+)(?:$|[ )])' => [self::E_MAIL,    ''],
-        'telegram *[:-]? ?[ @]([a-z0-9_]+)'                      => [self::TELEGRAM,  '@'],
-        '@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram'         => [self::TELEGRAM,  '@'],
-        '@?([a-z0-9_]+)( on|@) twitter'                          => [self::TWITTER,   '@'],
-        '^https://twitter.com/([a-z0-9_-]+)$'                    => [self::TWITTER,   ''],
-        'twitter[-:, ]* ?@?([a-z0-9_]+)'                         => [self::TWITTER,   '@'],
-        'instagram[-:, ]* ?@?([a-z0-9_]+)'                       => [self::INSTAGRAM, '@'],
+        '(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.-]+)(?:$|[ )])' => [self::E_MAIL,    ''],
+        'telegram *[:-]? ?[ @]([a-z0-9_]+)'                       => [self::TELEGRAM,  '@'],
+        '@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram'          => [self::TELEGRAM,  '@'],
+        '@?([a-z0-9_]+)( on|@) twitter'                           => [self::TWITTER,   '@'],
+        '^https://twitter.com/([a-z0-9_-]+)$'                     => [self::TWITTER,   ''],
+        'twitter[-:, ]* ?@?([a-z0-9_]+)'                          => [self::TWITTER,   '@'],
+        'instagram[-:, ]* ?@?([a-z0-9_]+)'                        => [self::INSTAGRAM, '@'],
     ];
 
     /**

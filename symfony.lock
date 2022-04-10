@@ -72,9 +72,6 @@
     "doctrine/persistence": {
         "version": "2.2.3"
     },
-    "doctrine/reflection": {
-        "version": "1.2.1"
-    },
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
@@ -105,9 +102,6 @@
             "config/packages/google_recaptcha.yaml"
         ]
     },
-    "jdorn/sql-formatter": {
-        "version": "v1.2.17"
-    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -117,29 +111,17 @@
     "markbaker/matrix": {
         "version": "3.0.0"
     },
-    "migrify/migrify-kernel": {
-        "version": "0.4.2"
-    },
-    "migrify/php-config-printer": {
-        "version": "0.4.2"
-    },
     "monolog/monolog": {
         "version": "2.3.5"
     },
     "myclabs/php-enum": {
         "version": "1.8.3"
     },
+    "nette/utils": {
+        "version": "v3.2.7"
+    },
     "nikic/php-parser": {
         "version": "v4.13.1"
-    },
-    "ocramius/package-versions": {
-        "version": "1.9.0"
-    },
-    "ondram/ci-detector": {
-        "version": "3.5.1"
-    },
-    "php": {
-        "version": "7.4"
     },
     "php-cs-fixer/diff": {
         "version": "v2.0.2"
@@ -202,18 +184,6 @@
         },
         "files": [
             "config/packages/sensio_framework_extra.yaml"
-        ]
-    },
-    "sensiolabs/security-checker": {
-        "version": "4.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "4.0",
-            "ref": "160c9b600564faa1224e8f387d49ef13ceb8b793"
-        },
-        "files": [
-            "config/packages/security_checker.yaml"
         ]
     },
     "symfony/apache-pack": {
@@ -355,9 +325,6 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
-    "symfony/mime": {
-        "version": "v5.0.10"
-    },
     "symfony/monolog-bridge": {
         "version": "v5.4.0-RC1"
     },
@@ -418,9 +385,6 @@
     "symfony/process": {
         "version": "v5.4.0-RC1"
     },
-    "symfony/profiler-pack": {
-        "version": "v1.0.4"
-    },
     "symfony/property-access": {
         "version": "v5.4.0-RC1"
     },
@@ -476,9 +440,6 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
-    },
-    "symfony/twig-pack": {
-        "version": "v1.0.0"
     },
     "symfony/uid": {
         "version": "v5.4.2"
@@ -540,9 +501,6 @@
     },
     "symfony/yaml": {
         "version": "v5.4.0-RC1"
-    },
-    "twig/extra-bundle": {
-        "version": "v3.0.4"
     },
     "twig/twig": {
         "version": "v3.3.4"

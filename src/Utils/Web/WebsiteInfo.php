@@ -99,20 +99,10 @@ final class WebsiteInfo
      */
     private static function getWixsiteDependencyUrls(WebpageSnapshot $webpageSnapshot): array
     {
-        $result = [];
-
-        pattern(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, 'si')
+        return pattern(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, 'si')
             ->match($webpageSnapshot->getContents())
-            ->forEach(function (Detail $detail) use ($result): void {
-                try {
-                    /* @noinspection PhpArrayUsedOnlyForWriteInspection - False positive */
-                    $result[] = $detail->get('data_url');
-                } catch (NonexistentGroupException $e) {
-                    throw new UnbelievableRuntimeException($e);
-                }
-            });
-
-        return $result;
+            ->group('data_url')
+            ->all();
     }
 
     /**

@@ -46,10 +46,11 @@ class GentleHttpClient extends HttpClient
      */
     public function getImmediately(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
     {
-        $result = parent::get($url, $cookieJar, $additionalHeaders);
-        $this->updateLastHostCall($url);
-
-        return $result;
+        try {
+            return parent::get($url, $cookieJar, $additionalHeaders);
+        } finally {
+            $this->updateLastHostCall($url);
+        }
     }
 
     /**
@@ -57,10 +58,11 @@ class GentleHttpClient extends HttpClient
      */
     public function postImmediately(string $url, string $payload, CookieJar $cookieJar, array $additionalHeaders = []): ResponseInterface
     {
-        $result = parent::post($url, $payload, $cookieJar, $additionalHeaders);
-        $this->updateLastHostCall($url);
-
-        return $result;
+        try {
+            return parent::post($url, $payload, $cookieJar, $additionalHeaders);
+        } finally {
+            $this->updateLastHostCall($url);
+        }
     }
 
     private function delayForHost(string $url): void

@@ -7,7 +7,7 @@ namespace App\Tests\ByCodeAnalysis;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use PHPUnit\Framework\TestCase;
-use TRegx\CleanRegex\Exception\NonexistentGroupException;
+use TRegx\CleanRegex\Exception\PatternException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
@@ -23,7 +23,7 @@ class ArtisanFieldsTest extends TestCase
     }
 
     /**
-     * @throws NonexistentGroupException
+     * @throws PatternException
      */
     public function testArtisanTsModel(): void
     {

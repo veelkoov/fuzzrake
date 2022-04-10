@@ -8,9 +8,9 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\EventFactory;
 use App\Service\WebpageSnapshotManager;
+use App\Tracker\TrackerException;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator;
-use App\Utils\Tracking\TrackerException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -38,7 +38,7 @@ class TrackerTaskRunner
     /**
      * @throws TrackerException
      */
-    public function performUpdates()
+    public function performUpdates(): void
     {
         $this->snapshots->prefetchUrls($this->trackerTask->getUrlsToPrefetch(), $this->refetch, $this->io);
 

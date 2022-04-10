@@ -1,0 +1,199 @@
+parameters:
+  tracker_regexes:
+    group_translations:
+      'open':
+        - 'STATUS:OPEN' # grep-offer-status-constants
+      'closed':
+        - 'STATUS:CLOSED' # grep-offer-status-constants
+
+      'hadpaws_sockpaws':
+        - 'HANDPAWS COMMISSIONS'
+        - 'SOCKPAWS COMMISSIONS'
+      'parts_refurbishments':
+        - 'PARTS'
+        - 'REFURBISHMENTS'
+      'commissions_quotes':
+        - 'COMMISSIONS'
+        - 'QUOTES'
+      'fullsuit_commissions':
+        - 'FULLSUIT COMMISSIONS'
+      'partial_commissions':
+        - 'PARTIAL COMMISSIONS'
+      'head_commissions':
+        - 'HEAD COMMISSIONS'
+      'parts':
+        - 'PARTS'
+      'commissions':
+        - 'COMMISSIONS'
+      'trades':
+        - 'TRADES'
+      'refurbishments':
+        - 'REFURBISHMENTS'
+      'premades':
+        - 'PRE-MADES'
+      'artistic_liberty':
+        - 'ARTISTIC LIBERTY'
+      'quotes':
+        - 'QUOTES'
+      'orders':
+        - 'ORDERS'
+
+    false_positives:
+      - 'next C___S opening (estimated|will)'
+      - '(if|when|while) OFFER (are )?STATUS'
+      - 'when WE_ARE DOING_STUFF_FALSE_POSITVES'
+      - 'when will you start taking new C___S'
+      - 'when do you open for commissions/quotes'
+      - 'when (my |our )(COMMISSIONS|QUOTES) (are )?open'
+      - "even though you're closed for C___S"
+      - 'although (fursuit )?C___S are closed'
+      - '(quotes|C___S) open (in |(in )?MONTHS)'
+      - 'slots are open in'
+      - 'as (soon as WE_ARE|slots) open'
+      - '[^a-z]art(work)? C___S( are:?| ?:)' # "art commissions"
+      - 'OFFER status: STATUS ?</h1>\s*<h1[^>]*> ?MONTHS'
+      - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
+
+
+    offer_statuses:
+      - "(?P<open>you can still submit a QUOTES form if you're interested)"
+      - 'WE_ARE STATUS COMMISSIONS'
+      - '(C___S\s*[:-]\s*)?STATUS for (new )?OFFER'
+      - 'OFFER( status| NOW)?([ :_-]+\s*?)STATUS' # - and _ should work for attributes as well
+      - 'OFFER\s+(are:?|basically)\s+(NOW:?\s+)?(&gt;&gt;)?STATUS' # "(&gt;&gt;)?" - tc057
+      - 'STATUS new OFFER'
+      - 'NOW we are STATUS for a handful of OFFER' # WTF
+      - 'NOW\s+STATUS\s+(new\s+|for\s+)?OFFER'
+      - 'we STATUS OFFER'
+      - '\[ OFFER[. ]+STATUS \]' # tc045
+      - '<h2[^>]*> ?OFFER \| STATUS ?</h2>'
+      - '<h2[^>]*> ?OFFER(( status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS' # No closing </h2> for any comments
+      - '<h4[^>]*> ?OFFER(( status:?| ?:))? ?</h4>\s*<h4[^>]*> ?STATUS' # No closing </h4> for any comments
+      - '<p[^>]*> ?OFFER(( status:?| ?:))? ?</p>\s*<p[^>]*> ?NOW STATUS' # No closing </p> for any comments
+      - 'OFFER(( status:?| ?:))?\s*</h1>\s*</div>\s*<div[^>]*>\s*<p[^>]*>\s*STATUS'
+
+    placeholders:
+      'STATUS':
+        - 'OPEN'
+        - 'CLOSED'
+
+      'OPEN':
+        - '$open$'
+        - 'open(?!ing)'
+        - 'only making'
+        - 'taking'
+
+      'CLOSED':
+        - '$closed$'
+        - 'closed?'
+        - 'not (NOW )?(taking on|accepting|open for)'
+        - "don't (do|take|provide)"
+
+      'OFFER':
+        - 'HANDPAWS&SOCKPAWS':
+            - '$hadpaws_sockpaws$'
+            - 'handpaws_AND_sockpaws C___S'
+        - 'PARTS&REFURBISHMENTS':
+            - '$parts_refurbishments$'
+            - 'parts_AND_refurbishments C___S'
+        - 'COMMISSIONS&QUOTES':
+            - '$commissions_quotes$'
+            - '(C___S_AND_quotes?)'
+            - '(quotes?_AND_C___S)'
+        - 'FULLSUIT_COMMISSIONS':
+            - '$fullsuit_commissions$'
+            - 'fullsuit C___S'
+        - 'PARTIAL_COMMISSIONS':
+            - '$partial_commissions$'
+            - 'partial C___S'
+        - 'HEAD_COMMISSIONS':
+            - '$head_commissions$'
+            - 'head C___S'
+        - 'PARTS':
+            - '$parts$'
+            - '(fursuit )?parts? C___S'
+        - 'COMMISSIONS':
+            - '$commissions$'
+            - '(custom )?(costume |fursuit )?C___S'
+            - '(custom |C___S )?slots?'
+            - 'fursuits?( queue)?'
+            - 'comms'
+            - 'current mode' # tc052
+            - 'projects'
+        - 'TRADES':
+            - '$trades$'
+            - 'trades?'
+        - 'REFURBISHMENTS':
+            - '$refurbishments$'
+            - 'refurbishments?'
+        - 'PRE-MADES':
+            - '$premades$'
+            - 'pre-?mades?( designs?)?'
+        - 'ARTISTIC_LIBERTY':
+            - '$artistic_liberty$'
+            - 'artistic liberty'
+        - 'QUOTES':
+            - '$quotes$'
+            - 'quotes?'
+        - 'ORDERS':
+            - '$orders$'
+            - '(custom )?orders?'
+
+      '_AND_':
+        - ' and '
+        - ' ?(&amp;|/) ?'
+
+      'C___S': 'comm?iss?ions?' # Not including "comms"
+
+      'NOW':
+        - 'currently'
+        - 'now'
+        - 'always'
+
+      'WE_ARE':
+        - "we( are|'re| will)?"
+        - "i( am|'m| will)?"
+
+      'MONTHS':
+        - 'jan(uary)?'
+        - 'feb(ruary)?'
+        - 'mar(ch)?'
+        - 'apr(il)?'
+        - 'may'
+        - 'june?'
+        - 'july?'
+        - 'aug(ust)?'
+        - 'sep(tember)?'
+        - 'oct(ober)?'
+        - 'nov(ember)?'
+        - 'dec(ember)?'
+
+      'DOING_STUFF_FALSE_POSITVES':
+        - 'open for'
+        - 'taking'
+        - 'take'
+
+    cleaners:
+      '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
+      '(?<=return|delete) (?=this)':                                           '_'
+      '<script[^>]*>[^ ]+</script>':                                           ' '
+      '<meta (itemprop|property)="(og:|twitter:)?description"[^>]+>':          ' ' # Seems to duplicate primary content
+
+      '&nbsp;':                                          ' '
+      "\u00A0":                                          ' ' # NBSP
+      '<br */?>':                                        "\n"
+      '<style[^>]*>.*?</style>':                         ' '
+      '<!--.*?-->':                                      ' '
+      '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>': ''
+      '\*\*\*OPEN\*\*\*':                                'open'
+      '(<[^>]+ )style="[^"]*"([^>]*>)':                  '$1$2'
+
+      '&#(39|8217);': "'"
+
+      '  +':   ' '
+      "\n\n+": "\n"
+
+      # square.site
+      # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
+      ',"attributes":\{[^}]*\}': ''
+      '"\},\{"insert":"':        ''

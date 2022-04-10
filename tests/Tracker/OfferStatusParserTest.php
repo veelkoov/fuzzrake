@@ -2,25 +2,39 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Tracking;
+namespace App\Tests\Tracker;
 
+use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\RegexesProviderMock;
+use App\Tracker\OfferStatus;
+use App\Tracker\OfferStatusParser;
+use App\Tracker\PatternProvider;
+use App\Tracker\Regexes;
+use App\Tracker\RegexFactory;
+use App\Tracker\TrackerException;
 use App\Utils\Json;
-use App\Utils\Tracking\CommissionsStatusParser;
-use App\Utils\Tracking\OfferStatus;
-use App\Utils\Tracking\Patterns;
-use App\Utils\Tracking\TrackerException;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 
-class CommissionsStatusParserTest extends TestCase
+class OfferStatusParserTest extends TestCase
 {
-    private static CommissionsStatusParser $csp;
+    private static OfferStatusParser $csp;
 
     public static function setUpBeforeClass(): void
     {
-        self::$csp = new CommissionsStatusParser(new Patterns());
+        $parameters = Yaml::parseFile(Paths::getDataDefinitionsPath('tracker_regexes.yaml'));
+        $factory = new RegexFactory($parameters['parameters']['tracker_regexes']);
+        $regexes = new Regexes(
+            $factory->getFalsePositives(),
+            $factory->getOfferStatuses(),
+            $factory->getGroupTranslations(),
+            $factory->getCleaners(),
+        );
+
+        self::$csp = new OfferStatusParser(new PatternProvider(new RegexesProviderMock($regexes)));
     }
 
     /**
@@ -53,6 +67,6 @@ class CommissionsStatusParserTest extends TestCase
             $snapshot = WebpageSnapshotJar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(__DIR__.'/../../test_data/statuses/*/*/expected.json')));
+        }, glob(Paths::getTestDataPath('/statuses/*/*/expected.json'))));
     }
 }

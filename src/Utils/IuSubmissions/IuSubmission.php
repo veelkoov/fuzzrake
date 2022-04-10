@@ -86,9 +86,7 @@ class IuSubmission implements FieldReadInterface
         return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
             ->replace($filePath)
             ->first()
-            ->otherwise(function (): never {
-                throw new DataInputException('Couldn\'t make an I/U submission ID out of the file path');
-            })
+            ->exactly()
             ->withReferences('$1-$2-$3_$4$5$6_$7');
     }
 }
