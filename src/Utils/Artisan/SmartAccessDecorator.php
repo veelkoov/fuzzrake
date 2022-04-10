@@ -247,13 +247,27 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function isAllowedToWorkWithMinors(): ?bool
     {
-        if ((null === ($nsfwWebsite = $this->getNsfwWebsite()))
-            || (null === ($nsfwSocial = $this->getNsfwSocial()))
-            || (null === ($doesNsfw = $this->getDoesNsfw()))) {
+        $nsfwWebsite = $this->getNsfwWebsite();
+        $nsfwSocial = $this->getNsfwSocial();
+
+        if (null === $nsfwWebsite || null === $nsfwSocial) {
             return null;
         }
 
-        return false === $nsfwWebsite && false === $nsfwSocial && false === $doesNsfw;
+        if (true === $nsfwWebsite || true === $nsfwSocial) {
+            return false;
+        }
+
+        $doesNsfw = $this->getDoesNsfw();
+
+        if (null !== $doesNsfw) {
+            return !$doesNsfw;
+        }
+
+        return match ($this->isAllowedToDoNsfw()) {
+            false => true,
+            true, null => null,
+        };
     }
 
     public function getSafeDoesNsfw(): ?bool

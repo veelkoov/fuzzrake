@@ -12,7 +12,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\DomCrawler\Crawler;
 
-class StatisticsControllerTestWithEM extends WebTestCaseWithEM
+class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testStatisticsPageLoads(): void
     {

@@ -6,7 +6,7 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class EventsControllerTestWithEM extends WebTestCaseWithEM
+class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testEventAddAndEdit()
     {

@@ -6,7 +6,7 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class QueryControllerTestWithEM extends WebTestCaseWithEM
+class QueryControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testNewArtisan()
     {

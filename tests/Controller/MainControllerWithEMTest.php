@@ -6,7 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class MainControllerTestWithEM extends WebTestCaseWithEM
+class MainControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testMainPageLoads(): void
     {

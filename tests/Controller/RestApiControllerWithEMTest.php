@@ -8,7 +8,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Json;
 use JsonException;
 
-class RestApiControllerTestWithEM extends WebTestCaseWithEM
+class RestApiControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testArtisans(): void
     {

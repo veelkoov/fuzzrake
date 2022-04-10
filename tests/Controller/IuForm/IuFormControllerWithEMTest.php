@@ -9,7 +9,7 @@ use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class IuFormControllerTestWithEM extends WebTestCaseWithEM
+class IuFormControllerWithEMTest extends WebTestCaseWithEM
 {
     use IuFormTrait;
 
@@ -54,7 +54,7 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
 
         self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
         self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
-        self::assertSelectorTextContains('#iu_form_ages + .help-text + .invalid-feedback', 'You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_ages + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_nsfwWebsite + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_nsfwSocial + .invalid-feedback', 'You must answer this question.');
         self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
@@ -132,7 +132,6 @@ class IuFormControllerTestWithEM extends WebTestCaseWithEM
             ['MIXED',  'YES', 'YES',  null,  null,     []],
 
             ['ADULTS', 'NO',  'NO',   null,  null,     [
-                '#iu_form_worksWithMinors + .invalid-feedback' => 'You must answer this question.',
                 '#iu_form_doesNsfw + .invalid-feedback'        => 'You must answer this question.',
             ]],
             ['ADULTS', 'NO',  'NO',   'NO',  null,     [

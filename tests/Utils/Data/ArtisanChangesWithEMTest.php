@@ -12,7 +12,7 @@ use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 
-class ArtisanChangesTestWithEM extends KernelTestCaseWithEM
+class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
 {
     public function testApply(): void
     {

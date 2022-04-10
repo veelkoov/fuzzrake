@@ -10,7 +10,7 @@ use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 
-class IuFormUiTestWithEM extends PantherTestCaseWithEM
+class IuFormUiWithEMTest extends PantherTestCaseWithEM
 {
     private ?Client $client = null;
 

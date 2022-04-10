@@ -7,7 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\Event;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
-class EventsControllerTestWithEM extends WebTestCaseWithEM
+class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testPageLoads(): void
     {
@@ -16,7 +16,7 @@ class EventsControllerTestWithEM extends WebTestCaseWithEM
         $client->request('GET', '/events.html');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('p', 'All times are UTC');
+        static::assertSelectorTextContains('p', 'See all recently added makers');
     }
 
     /**
