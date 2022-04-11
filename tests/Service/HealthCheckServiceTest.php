@@ -6,13 +6,12 @@ namespace App\Tests\Service;
 
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\HealthCheckService;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\DateTime\UtcClockForTests;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ClockMock;
 
 class HealthCheckServiceTest extends TestCase
 {
@@ -33,21 +32,25 @@ class HealthCheckServiceTest extends TestCase
     public function testTimes(): void
     {
         $acsrMock = $this->createPartialMock(ArtisanVolatileDataRepository::class, ['getLastCsUpdateTime', 'getLastBpUpdateTime']);
+        $csDateTime = DateTimeImmutable::createFromFormat('U', (string) (UtcClock::time() - 300), new DateTimeZone('UTC'));
+        $bpDateTime = DateTimeImmutable::createFromFormat('U', (string) (UtcClock::time() - 900), new DateTimeZone('UTC'));
+        $nowDateTime = DateTimeImmutable::createFromFormat('U', (string) UtcClock::time(), new DateTimeZone('UTC'));
+
         $acsrMock
             ->expects(self::exactly(2))
             ->method('getLastCsUpdateTime')
-            ->willReturn(DateTimeImmutable::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+            ->willReturn($csDateTime);
         $acsrMock
             ->expects(self::exactly(2))
             ->method('getLastBpUpdateTime')
-            ->willReturn(DateTimeImmutable::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+            ->willReturn($bpDateTime);
 
         $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
         $data = $hcSrv->getStatus();
 
-        static::assertEquals(DateTimeImmutable::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data['serverTimeUtc']);
-        static::assertEquals(DateTimeImmutable::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastCsUpdateUtc']);
-        static::assertEquals(DateTimeImmutable::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastBpUpdateUtc']);
+        static::assertEquals($nowDateTime->format('Y-m-d H:i:s'), $data['serverTimeUtc']);
+        static::assertEquals($csDateTime->format('Y-m-d H:i'), $data['lastCsUpdateUtc']);
+        static::assertEquals($bpDateTime->format('Y-m-d H:i'), $data['lastBpUpdateUtc']);
     }
 
     /**
