@@ -17,11 +17,7 @@ final class UtcClockForTests
     {
         $path = self::getTimestampPath();
 
-        if (!file_exists($path)) {
-            file_put_contents($path, (string) (int) (microtime(true) * 1000));
-        }
-
-        return (int) file_get_contents($path);
+        return !file_exists($path) ? self::actualTimems() : (int) file_get_contents($path);
     }
 
     public static function time(): int
@@ -29,7 +25,12 @@ final class UtcClockForTests
         return (int) (self::timems() / 1000);
     }
 
-    public static function reset(): void
+    public static function start(): void
+    {
+        file_put_contents(self::getTimestampPath(), (string) self::actualTimems());
+    }
+
+    public static function finish(): void
     {
         unlink(self::getTimestampPath());
     }
@@ -42,5 +43,10 @@ final class UtcClockForTests
     private static function getTimestampPath(): string
     {
         return self::rootDirPath().'/var/cache/test/timestamp.txt';
+    }
+
+    private static function actualTimems(): int
+    {
+        return (int) (microtime(true) * 1000);
     }
 }

@@ -95,9 +95,9 @@ class ExtendedTest extends AbstractTestWithEM
         Field::CONTACT_INFO_OBFUSCATED,
     ];
 
-    public static function setUpBeforeClass(): void
+    public static function tearDownAfterClass(): void
     {
-        UtcClockForTests::reset();
+        UtcClockForTests::finish();
     }
 
     /**
@@ -117,6 +117,8 @@ class ExtendedTest extends AbstractTestWithEM
      */
     public function testIuSubmissionAndImportFlow(): void
     {
+        UtcClockForTests::start();
+
         self::sanityChecks();
 
         $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB

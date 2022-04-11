@@ -24,13 +24,15 @@ class HealthCheckServiceTest extends TestCase
         'LOAD_15M_MAX'               => 0.2,
     ];
 
-    public static function setUpBeforeClass(): void
+    public static function tearDownAfterClass(): void
     {
-        UtcClockForTests::reset();
+        UtcClockForTests::finish();
     }
 
     public function testTimes(): void
     {
+        UtcClockForTests::start();
+
         $acsrMock = $this->createPartialMock(ArtisanVolatileDataRepository::class, ['getLastCsUpdateTime', 'getLastBpUpdateTime']);
         $csDateTime = DateTimeImmutable::createFromFormat('U', (string) (UtcClock::time() - 300), new DateTimeZone('UTC'));
         $bpDateTime = DateTimeImmutable::createFromFormat('U', (string) (UtcClock::time() - 900), new DateTimeZone('UTC'));
