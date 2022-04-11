@@ -49,17 +49,17 @@ final class UtcClock
 
     public static function getMonthLaterYmd(): string
     {
-        return date('Y-m-d', strtotime('+1 month'));
+        return date('Y-m-d', strtotime('+1 month', self::time()));
     }
 
     public static function getWeekLaterYmd(): string
     {
-        return date('Y-m-d', strtotime('+1 week'));
+        return date('Y-m-d', strtotime('+1 week', self::time()));
     }
 
     public static function getTomorrowYmd(): string
     {
-        return date('Y-m-d', strtotime('+1 day'));
+        return date('Y-m-d', strtotime('+1 day', self::time()));
     }
 
     public static function passed(DateTimeImmutable $dateTime): bool

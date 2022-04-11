@@ -6,6 +6,9 @@ namespace App\Utils\DateTime;
 
 use App\Utils\Traits\UtilityClass;
 
+/**
+ * ClockMock doesn't work with kernel-enabled tests.
+ */
 final class UtcClockForTests
 {
     use UtilityClass;
