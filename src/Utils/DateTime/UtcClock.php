@@ -6,7 +6,6 @@ namespace App\Utils\DateTime;
 
 use App\Utils\Traits\UtilityClass;
 use App\Utils\UnbelievableRuntimeException;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -18,10 +17,7 @@ final class UtcClock
     public static function now(): DateTimeImmutable
     {
         try {
-            $result = DateTime::createFromFormat('U', (string) self::time(), self::getUtc());
-            $result->setTimezone(self::getUtc());
-
-            return DateTimeImmutable::createFromMutable($result);
+            return DateTimeImmutable::createFromFormat('U', (string) self::time())->setTimezone(self::getUtc());
         } catch (Exception $e) {
             throw new UnbelievableRuntimeException($e);
         }
@@ -38,10 +34,7 @@ final class UtcClock
     public static function at(?string $time): DateTimeImmutable
     {
         try {
-            $result = new DateTime($time ?: 'invalid', self::getUtc());
-            $result->setTimezone(self::getUtc());
-
-            return DateTimeImmutable::createFromMutable($result);
+            return new DateTimeImmutable($time ?: 'invalid', self::getUtc());
         } catch (Exception $e) {
             throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
         }
