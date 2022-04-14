@@ -41,6 +41,7 @@ class FilterService
             'countries'           => $this->getCountriesFilterData(),
             'states'              => $this->artisanRepository->getDistinctStatesToCountAssoc(),
             'species'             => $this->getSpeciesFilterItems(),
+            'worksWithMinors'     => $this->artisanRepository->getSafeWorksWithMinors(),
         ];
     }
 
