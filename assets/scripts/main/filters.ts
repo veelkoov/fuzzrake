@@ -61,7 +61,8 @@ export function initFilters(): void {
     filters.push(new GenericFilterVis<string>('orderTypes', new AnySetUnOtFilter('orderTypes')));
     filters.push(new GenericFilterVis<string>('productionModels', new AnySetUnFilter('productionModels')));
     filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
-    filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
+    filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor'))); // FIXME: boolean?
+    filters.push(new GenericFilterVis<string>('worksWithMinors', new ValueUnFilter('safeWorksWithMinors')));
     filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
 
     let filterDtPlugin = new DataTablesFilterPlugin(DataBridge.getArtisans(), filters);

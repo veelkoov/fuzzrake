@@ -12,6 +12,7 @@
         {{ macros.ctrl_button('commissionsStatus', 'Open for') }}
         {{ macros.ctrl_button('species',           'Species') }}
         {{ macros.ctrl_button('paymentPlans',      'Payment plans') }}
+        {{ macros.ctrl_button('worksWithMinors',   'Works with minors') }}
     </div>
 </div>
 
@@ -25,3 +26,4 @@
 {{ macros.body_multiselect('commissionsStatus', 'helphints/commissions_status.html.twig', filters.commissionsStatuses, 'commissionStatus') }}
 {{ macros.body_other('species', 'helphints/species.html.twig', 'species.html.twig', filters) }}
 {{ macros.body_multiselect('paymentPlans',      'helphints/payment_plans.html.twig',      filters.paymentPlans, 'paymentPlan') }}
+{{ macros.body_multiselect('worksWithMinors',   'helphints/works_with_minors.html.twig',  filters.worksWithMinors, 'worksWithMinors') }}
