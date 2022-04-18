@@ -42,7 +42,9 @@ final class UtcClockForTests
 
     private static function getTimestampPath(): string
     {
-        return self::rootDirPath().'/var/cache/test/timestamp.txt';
+        static $result = null;
+
+        return $result ??= self::rootDirPath().'/var/cache/test/timestamp.txt';
     }
 
     private static function actualTimems(): int
