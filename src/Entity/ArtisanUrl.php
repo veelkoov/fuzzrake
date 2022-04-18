@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Fetchable;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
@@ -115,13 +115,13 @@ class ArtisanUrl implements Fetchable, Stringable
     public function recordSuccessfulFetch(): void
     {
         $this->getState()
-            ->setLastSuccessUtc(DateTimeUtils::getNowUtc());
+            ->setLastSuccessUtc(UtcClock::now());
     }
 
     public function recordFailedFetch(int $code, string $reason): void
     {
         $this->getState()
-            ->setLastFailureUtc(DateTimeUtils::getNowUtc())
+            ->setLastFailureUtc(UtcClock::now())
             ->setLastFailureCode($code)
             ->setLastFailureReason($reason);
     }

@@ -12,10 +12,9 @@ use App\Tracker\OfferStatus;
 use App\Tracker\OfferStatusParser;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Snapshot\WebpageSnapshot;
-use DateTime;
-use DateTimeInterface;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +28,7 @@ class CommissionsTrackerTaskTest extends TestCase
             ->addCommission(new ArtisanCommissionsStatus()) // There was some status
             ->setCommissionsUrls(''); // Artisan removed tracking
         $inputArtisan->getVolatileData()
-            ->setLastCsUpdate(new DateTime('1 day ago')); // We had some check previously
+            ->setLastCsUpdate(new DateTimeImmutable('1 day ago')); // We had some check previously
 
         $testSubject = $this->getTestSubject($inputArtisan, []);
         $testResult = $testSubject->getUpdates();
@@ -54,7 +53,7 @@ class CommissionsTrackerTaskTest extends TestCase
         $changedArtisan = $this->getChangedArtisan($testResult);
 
         self::assertNotNull($changedArtisan->getCsLastCheck()); // The last CS timestamp got set
-        self::assertInstanceOf(DateTimeInterface::class, $changedArtisan->getCsLastCheck());
+        self::assertInstanceOf(DateTimeImmutable::class, $changedArtisan->getCsLastCheck());
     }
 
     public function testSuccessfulCheckResetsErrorState(): void
@@ -183,7 +182,7 @@ class CommissionsTrackerTaskTest extends TestCase
 
         $loggerMock = self::createMock(LoggerInterface::class);
 
-        $urlsFetchDateTime = DateTimeUtils::getNowUtc();
+        $urlsFetchDateTime = UtcClock::now();
         $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, [], []);
         foreach ($artisan->getUrls() as $url) {
             $url->getState()->setLastSuccessUtc($urlsFetchDateTime);

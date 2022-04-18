@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\DataDefinitions;
 
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\StrUtils;
 use App\Utils\Traits\UtilityClass;
 use App\Utils\UnbelievableRuntimeException;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 class NewArtisan
 {
     use UtilityClass;
 
-    public static function getCutoffDate(): DateTimeInterface
+    public static function getCutoffDate(): DateTimeImmutable
     {
         try {
-            return DateTimeUtils::getUtcAt('-42 days'); // grep-amount-of-days-considered-new
+            return UtcClock::at('-42 days'); // grep-amount-of-days-considered-new
         } catch (DateTimeException $e) {
             throw new UnbelievableRuntimeException($e);
         }

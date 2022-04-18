@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,9 +30,9 @@ class ArtisanVolatileData
     private ?Artisan $artisan = null;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTimeInterface $lastCsUpdate = null;
+    private ?DateTimeImmutable $lastCsUpdate = null;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -40,9 +40,9 @@ class ArtisanVolatileData
     private bool $csTrackerIssue = false;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTimeInterface $lastBpUpdate = null;
+    private ?DateTimeImmutable $lastBpUpdate = null;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -66,12 +66,12 @@ class ArtisanVolatileData
         return $this;
     }
 
-    public function getLastCsUpdate(): ?DateTimeInterface
+    public function getLastCsUpdate(): ?DateTimeImmutable
     {
         return $this->lastCsUpdate;
     }
 
-    public function setLastCsUpdate(?DateTimeInterface $lastCsUpdate): self
+    public function setLastCsUpdate(?DateTimeImmutable $lastCsUpdate): self
     {
         $this->lastCsUpdate = $lastCsUpdate;
 
@@ -90,12 +90,12 @@ class ArtisanVolatileData
         return $this;
     }
 
-    public function getLastBpUpdate(): ?DateTimeInterface
+    public function getLastBpUpdate(): ?DateTimeImmutable
     {
         return $this->lastBpUpdate;
     }
 
-    public function setLastBpUpdate(?DateTimeInterface $lastBpUpdate): self
+    public function setLastBpUpdate(?DateTimeImmutable $lastBpUpdate): self
     {
         $this->lastBpUpdate = $lastBpUpdate;
 

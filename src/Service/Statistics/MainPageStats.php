@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service\Statistics;
 
-use DateTimeInterface;
+use DateTimeImmutable;
 
 class MainPageStats
 {
     public function __construct(
         private readonly ?int $activeArtisansCount,
         private readonly ?int $countryCount,
-        private readonly ?DateTimeInterface $lastDataUpdateTimeUtc,
-        private readonly ?DateTimeInterface $lastSystemUpdateTimeUtc,
+        private readonly ?DateTimeImmutable $lastDataUpdateTimeUtc,
+        private readonly ?DateTimeImmutable $lastSystemUpdateTimeUtc,
     ) {
     }
 
@@ -26,12 +26,12 @@ class MainPageStats
         return $this->countryCount;
     }
 
-    public function getLastDataUpdateTimeUtc(): ?DateTimeInterface
+    public function getLastDataUpdateTimeUtc(): ?DateTimeImmutable
     {
         return $this->lastDataUpdateTimeUtc;
     }
 
-    public function getLastSystemUpdateTimeUtc(): ?DateTimeInterface
+    public function getLastSystemUpdateTimeUtc(): ?DateTimeImmutable
     {
         return $this->lastSystemUpdateTimeUtc;
     }

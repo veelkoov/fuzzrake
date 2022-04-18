@@ -7,8 +7,8 @@ namespace App\Repository;
 use App\Doctrine\Hydrators\ColumnHydrator;
 use App\Entity\Event;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
-use DateTimeInterface;
+use App\Utils\DateTime\UtcClock;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Andx;
@@ -32,7 +32,7 @@ class EventRepository extends ServiceEntityRepository
     /**
      * @return Event[]
      */
-    public function selectTrackingTmpFailures(DateTimeInterface $date1, DateTimeInterface $date2): array // FIXME #93
+    public function selectTrackingTmpFailures(DateTimeImmutable $date1, DateTimeImmutable $date2): array // FIXME #93
     {
         $ids = $this->createQueryBuilder('en')
             ->join(Event::class, 'eo', Join::WITH, new Andx([
@@ -66,7 +66,7 @@ class EventRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('e')
             ->where('e.timestamp >= :oldest')
             ->orderBy('e.timestamp', 'DESC')
-            ->setParameter('oldest', DateTimeUtils::getUtcAt('-31 days'));
+            ->setParameter('oldest', UtcClock::at('-31 days'));
 
         if ([] !== $types) {
             $query

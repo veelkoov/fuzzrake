@@ -14,7 +14,7 @@ use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DataInputException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\IuSubmissions\IuSubmission;
@@ -225,9 +225,9 @@ class DataImport
     private function setAddedUpdatedTimestamps(Artisan $entity): void
     {
         if (null === $entity->getId()) {
-            $entity->setDateAdded(DateTimeUtils::getNowUtc());
+            $entity->setDateAdded(UtcClock::now());
         } else {
-            $entity->setDateUpdated(DateTimeUtils::getNowUtc());
+            $entity->setDateUpdated(UtcClock::now());
         }
     }
 }

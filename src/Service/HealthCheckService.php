@@ -7,10 +7,10 @@ namespace App\Service;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeFormat;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Parse;
 use App\Utils\ParseException;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 
 class HealthCheckService
@@ -143,11 +143,11 @@ class HealthCheckService
     /**
      * @throws DateTimeException
      */
-    private function getUpdatesStatus(string $oldestAllowedCheck, DateTimeInterface $actualLastCheck): string
+    private function getUpdatesStatus(string $oldestAllowedCheck, DateTimeImmutable $actualLastCheck): string
     {
         /* Need to format as string, because PHP doesn't allow comparing the mock object returned by PHPUnit from the repo mock (I guess) */
         $actual = $actualLastCheck->format(DATE_ATOM);
-        $oldestAllowed = DateTimeUtils::getUtcAt($oldestAllowedCheck)->format(DATE_ATOM);
+        $oldestAllowed = UtcClock::at($oldestAllowedCheck)->format(DATE_ATOM);
 
         return $actual > $oldestAllowed ? self::OK : self::WARNING;
     }
@@ -176,7 +176,7 @@ class HealthCheckService
 
     private function getServerTimeUtc(): string
     {
-        return DateTimeUtils::getNowUtc()->format('Y-m-d H:i:s');
+        return UtcClock::now()->format('Y-m-d H:i:s');
     }
 
     private function getCpuCountRawOutput(): string

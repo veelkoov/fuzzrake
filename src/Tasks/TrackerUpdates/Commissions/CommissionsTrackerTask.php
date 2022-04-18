@@ -15,7 +15,7 @@ use App\Tracker\TrackerException;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\StringList;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
@@ -78,7 +78,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
     /**
      * @return OfferStatus[]
      */
-    private function getAllOfferStatuses(Artisan $artisan, ?DateTimeInterface &$lastCsUpdate, bool &$csTrackerIssue): array
+    private function getAllOfferStatuses(Artisan $artisan, ?DateTimeImmutable &$lastCsUpdate, bool &$csTrackerIssue): array
     {
         $result = [];
 

@@ -6,13 +6,12 @@ namespace App\Tests\Service;
 
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\HealthCheckService;
-use App\Utils\DateTime\DateTimeUtils;
-use DateTime;
-use DateTimeInterface;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\DateTime\UtcClockForTests;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ClockMock;
 
 class HealthCheckServiceTest extends TestCase
 {
@@ -25,33 +24,35 @@ class HealthCheckServiceTest extends TestCase
         'LOAD_15M_MAX'               => 0.2,
     ];
 
-    public static function setUpBeforeClass(): void
+    public static function tearDownAfterClass(): void
     {
-        ClockMock::register(DateTimeUtils::class);
+        UtcClockForTests::finish();
     }
 
     public function testTimes(): void
     {
-        ClockMock::withClockMock(true);
+        UtcClockForTests::start();
 
         $acsrMock = $this->createPartialMock(ArtisanVolatileDataRepository::class, ['getLastCsUpdateTime', 'getLastBpUpdateTime']);
+        $csDateTime = DateTimeImmutable::createFromFormat('U', (string) (UtcClock::time() - 300), new DateTimeZone('UTC'));
+        $bpDateTime = DateTimeImmutable::createFromFormat('U', (string) (UtcClock::time() - 900), new DateTimeZone('UTC'));
+        $nowDateTime = DateTimeImmutable::createFromFormat('U', (string) UtcClock::time(), new DateTimeZone('UTC'));
+
         $acsrMock
             ->expects(self::exactly(2))
             ->method('getLastCsUpdateTime')
-            ->willReturn(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+            ->willReturn($csDateTime);
         $acsrMock
             ->expects(self::exactly(2))
             ->method('getLastBpUpdateTime')
-            ->willReturn(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC')));
+            ->willReturn($bpDateTime);
 
         $hcSrv = new HealthCheckService($acsrMock, self::HC_VALUES);
         $data = $hcSrv->getStatus();
 
-        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i:s'), $data['serverTimeUtc']);
-        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastCsUpdateUtc']);
-        static::assertEquals(DateTime::createFromFormat('U', (string) ClockMock::time(), new DateTimeZone('UTC'))->format('Y-m-d H:i'), $data['lastBpUpdateUtc']);
-
-        ClockMock::withClockMock(false);
+        static::assertEquals($nowDateTime->format('Y-m-d H:i:s'), $data['serverTimeUtc']);
+        static::assertEquals($csDateTime->format('Y-m-d H:i'), $data['lastCsUpdateUtc']);
+        static::assertEquals($bpDateTime->format('Y-m-d H:i'), $data['lastBpUpdateUtc']);
     }
 
     /**
@@ -59,7 +60,7 @@ class HealthCheckServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function testGetXyzUpdatesStatus(string $repoMethodName, string $hcStatusResultKey, DateTimeInterface $returnedDateTime, string $expectedResult): void
+    public function testGetXyzUpdatesStatus(string $repoMethodName, string $hcStatusResultKey, DateTimeImmutable $returnedDateTime, string $expectedResult): void
     {
         $avdrMock = $this->createMock(ArtisanVolatileDataRepository::class);
         $avdrMock
@@ -81,10 +82,10 @@ class HealthCheckServiceTest extends TestCase
         $utc = new DateTimeZone('UTC');
 
         return [
-            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTime('-12 hours -10 minutes', $utc), 'OK'],
-            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTime('-12 hours -20 minutes', $utc), 'WARNING'],
-            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTime('-7 days -10 minutes', $utc), 'OK'],
-            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTime('-7 days -20 minutes', $utc), 'WARNING'],
+            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTimeImmutable('-12 hours -10 minutes', $utc), 'OK'],
+            ['getLastCsUpdateTime', 'csUpdatesStatus', new DateTimeImmutable('-12 hours -20 minutes', $utc), 'WARNING'],
+            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTimeImmutable('-7 days -10 minutes', $utc), 'OK'],
+            ['getLastBpUpdateTime', 'bpUpdatesStatus', new DateTimeImmutable('-7 days -20 minutes', $utc), 'WARNING'],
         ];
     }
 

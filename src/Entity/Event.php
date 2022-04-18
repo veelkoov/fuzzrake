@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\StringList;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
@@ -30,9 +30,9 @@ class Event
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
-    private DateTimeInterface $timestamp;
+    private DateTimeImmutable $timestamp;
 
     /**
      * @ORM\Column(type="string", length=4095)
@@ -98,7 +98,7 @@ class Event
 
     public function __construct()
     {
-        $this->timestamp = DateTimeUtils::getNowUtc();
+        $this->timestamp = UtcClock::now();
     }
 
     public function getId(): ?int
@@ -113,12 +113,12 @@ class Event
         return $this;
     }
 
-    public function getTimestamp(): DateTimeInterface
+    public function getTimestamp(): DateTimeImmutable
     {
         return $this->timestamp;
     }
 
-    public function setTimestamp(DateTimeInterface $timestamp): self
+    public function setTimestamp(DateTimeImmutable $timestamp): self
     {
         $this->timestamp = $timestamp;
 

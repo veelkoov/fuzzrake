@@ -6,9 +6,17 @@ namespace App\Tests\Controller;
 
 use App\Entity\Event;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\DateTime\UtcClockForTests;
 
 class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
+    public static function tearDownAfterClass(): void
+    {
+        UtcClockForTests::finish();
+    }
+
     public function testPageLoads(): void
     {
         $client = static::createClient();
@@ -91,5 +99,41 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         $client->request('GET', '/events-atom.xml');
 
         self::assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @throws DateTimeException
+     */
+    public function testAtomFeedShowsOnlyEventsYoungerThan4Days(): void
+    {
+        $client = static::createClient();
+
+        /*
+         * If I move this above the client creation, the test will fail randomly. WTF?!
+         * If I leave it here, it will still ocassinally fail. WTWTF?!
+         * https://github.com/veelkoov/fuzzrake/issues/135
+         */
+        UtcClockForTests::start();
+
+        $fourDaysInSeconds = 4 * 24 * 60 * 60;
+        $older = UtcClock::time() - $fourDaysInSeconds - 1;
+        $younger = UtcClock::time() - $fourDaysInSeconds + 1;
+
+        $eventVisible = (new Event())
+            ->setType(Event::TYPE_GENERIC)
+            ->setDescription('I should be visible in the Atom feed')
+            ->setTimestamp(UtcClock::at("@$younger"));
+
+        $eventHidden = (new Event())
+            ->setType(Event::TYPE_GENERIC)
+            ->setDescription('I should not appear in the Atom feed')
+            ->setTimestamp(UtcClock::at("@$older"));
+
+        $this->persistAndFlush($eventVisible, $eventHidden);
+
+        $contents = $client->request('GET', '/events-atom.xml')->outerHtml();
+
+        self::assertStringContainsString('I should be visible in the Atom feed', $contents);
+        self::assertStringNotContainsString('I should not appear in the Atom feed', $contents);
     }
 }

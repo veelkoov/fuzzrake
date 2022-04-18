@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Utils\Traits\UtilityClass;
-use DateTimeInterface;
+use DateTimeImmutable;
 use InvalidArgumentException;
 use Symfony\Component\Finder\Finder as FileFinder;
 
@@ -16,7 +16,7 @@ final class Finder
     /**
      * @return IuSubmission[]
      */
-    public static function getFrom(string $directoryPath, ?DateTimeInterface $onlyAfter = null): array
+    public static function getFrom(string $directoryPath, ?DateTimeImmutable $onlyAfter = null): array
     {
         if (!is_dir($directoryPath)) {
             throw new InvalidArgumentException("Directory '$directoryPath' does not exist");

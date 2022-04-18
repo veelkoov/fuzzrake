@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Repository\EventRepository;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
+use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -41,8 +41,8 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $date1 = DateTimeUtils::getUtcAt($input->getArgument('date1') ?? '');
-            $date2 = DateTimeUtils::getUtcAt($input->getArgument('date2') ?? '');
+            $date1 = UtcClock::at($input->getArgument('date1') ?? '');
+            $date2 = UtcClock::at($input->getArgument('date2') ?? '');
         } catch (DateTimeException $e) {
             $io->error('Invalid/missing date argument(s), '.$e->getMessage());
 

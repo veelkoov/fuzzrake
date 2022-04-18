@@ -7,7 +7,7 @@ namespace App\Tests\Event\Doctrine;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
-use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 
@@ -20,8 +20,8 @@ class ArtisanUrlListenerTest extends KernelTestCaseWithEM
     {
         self::bootKernel();
 
-        $lastFailureUtc = new DateTime('now', new DateTimeZone('UTC'));
-        $lastSuccessUtc = new DateTime('now', new DateTimeZone('UTC'));
+        $lastFailureUtc = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $lastSuccessUtc = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $lastFailureCode = 404;
         $lastFailureReason = 'test reason';
 

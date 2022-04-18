@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm\Utils;
 
-use App\Utils\DateTime\DateTimeUtils;
-use DateTimeInterface;
+use App\Utils\DateTime\UtcClock;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
@@ -36,7 +36,7 @@ class IuSession
             $this->uuid = Uuid::v4();
 
             $this->session->set($this->keySessionId, $this->uuid->toRfc4122());
-            $this->session->set($this->keyStartDateTime, DateTimeUtils::getNowUtc());
+            $this->session->set($this->keyStartDateTime, UtcClock::now());
         }
 
         $this->assureFreshLifetime();
@@ -78,11 +78,11 @@ class IuSession
         return $this->uuid->toRfc4122();
     }
 
-    public function getStarted(): ?DateTimeInterface
+    public function getStarted(): ?DateTimeImmutable
     {
         $result = $this->session->get($this->keyStartDateTime);
 
-        return $result instanceof DateTimeInterface ? $result : null;
+        return $result instanceof DateTimeImmutable ? $result : null;
     }
 
     private function assureFreshLifetime(): void
