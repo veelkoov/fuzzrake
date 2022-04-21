@@ -1,7 +1,8 @@
 {
     "devDependencies": {
-        "@symfony/stimulus-bridge": "^2.0.0",
-        "@symfony/webpack-encore": "^1.0.0",
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/stimulus-bridge": "^3.0.0",
+        "@symfony/webpack-encore": "^1.7.0",
         "@types/bootstrap": "^5.1.0",
         "@types/datatables.net": "^1.10.19",
         "@types/datatables.net-buttons": "^1.4.3",
@@ -13,7 +14,6 @@
         "less": "^4.1.1",
         "less-loader": "^9.0.0",
         "regenerator-runtime": "^0.13.2",
-        "stimulus": "^2.0.0",
         "ts-loader": "^9.0.0",
         "typescript": "^4.3.5",
         "webpack-notifier": "^1.6.0"

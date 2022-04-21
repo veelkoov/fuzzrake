@@ -19,6 +19,10 @@ framework:
     php_errors:
         log: true
 
+when@beta:
+    framework:
+        disallow_search_engine_index: true
+
 when@test:
     framework:
         test: true

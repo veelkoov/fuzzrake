@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Event\Doctrine;
 
-use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
+use Psr\Cache\CacheItemPoolInterface;
 
 class PostFlushSubscriber implements EventSubscriber
 {
     public function __construct(
-        private readonly CacheProvider $cacheProvider,
+        private readonly CacheItemPoolInterface $cacheProvider,
     ) {
     }
 
@@ -24,6 +24,6 @@ class PostFlushSubscriber implements EventSubscriber
 
     public function postFlush()
     {
-        $this->cacheProvider->flushAll();
+        $this->cacheProvider->clear();
     }
 }
