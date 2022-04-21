@@ -52,12 +52,54 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         $form = $client->getCrawler()->selectButton('Continue')->form();
         self::submitInvalid($client, $form);
 
-        self::assertSelectorTextContains('#iu_form_name + .invalid-feedback', 'This value should not be blank.');
-        self::assertSelectorTextContains('#iu_form_country + .invalid-feedback', 'This value should not be blank.');
-        self::assertSelectorTextContains('#iu_form_ages + .invalid-feedback', 'You must answer this question.');
-        self::assertSelectorTextContains('#iu_form_nsfwWebsite + .invalid-feedback', 'You must answer this question.');
-        self::assertSelectorTextContains('#iu_form_nsfwSocial + .invalid-feedback', 'You must answer this question.');
-        self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_name + .invalid-feedback',
+            'This value should not be blank.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(1)',
+            'Studio/maker\'s name - This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_country + .invalid-feedback',
+            'This value should not be blank.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(2)',
+            'Country - This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_ages + .invalid-feedback',
+            'You must answer this question.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(3)',
+            'What is your age? - You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_nsfwWebsite + .invalid-feedback',
+            'You must answer this question.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(4)',
+            'The websites linked above may contain "non-family-friendly" (or NSFW) content, such as, but not limited to: - You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_nsfwSocial + .invalid-feedback',
+            'You must answer this question.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(5)',
+            'Is there a possibility of NSFW (or the type of content listed above) being liked/shared/posted/commented on by your social media account? - You must answer this question.');
+        self::assertSelectorTextContains('#iu_form_makerId + .help-text + .invalid-feedback',
+            'This value should not be blank.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(6)',
+            '"Maker ID" - This value should not be blank.');
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[ages]'        => 'MINORS',
+            'iu_form[nsfwWebsite]' => 'NO',
+            'iu_form[nsfwSocial]'  => 'NO',
+        ]);
+        self::submitInvalid($client, $form);
+
+        self::assertSelectorTextContains('#iu_form_worksWithMinors + .invalid-feedback',
+            'You must answer this question.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(3)',
+            'Do you accept commissions from minors or people under 18? - You must answer this question.');
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[ages]'        => 'ADULTS',
+            'iu_form[nsfwWebsite]' => 'NO',
+            'iu_form[nsfwSocial]'  => 'NO',
+        ]);
+        self::submitInvalid($client, $form);
+
+        self::assertSelectorTextContains('#iu_form_doesNsfw + .invalid-feedback',
+            'You must answer this question.');
+        self::assertSelectorTextContains('#form_errors_top li:nth-child(3)',
+            'Do you offer fursuit features intended for adult use?');
 
         self::skipData($client, true);
 

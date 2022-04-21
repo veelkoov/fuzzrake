@@ -101,6 +101,7 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         return $this->renderForm('iu_form/data.html.twig', [
             'form'               => $form,
+            'errors'             => $form->getErrors(true),
             'noindex'            => true,
             'submitted'          => $form->isSubmitted(),
             'disable_tracking'   => true,
@@ -158,6 +159,7 @@ class IuFormController extends AbstractRecaptchaBackedController
 
         return $this->renderForm('iu_form/contact_and_password.html.twig', [
             'form'               => $form,
+            'errors'             => $form->getErrors(true),
             'noindex'            => true,
             'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),

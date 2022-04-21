@@ -1,0 +1,16 @@
+{% if errors is not empty %}
+    <div class="alert alert-danger" role="alert" id="form_errors_top">
+        <h4 class="alert-heading">Errors encountered</h4>
+
+        <ul>
+            {% for error in errors %}
+                <li>
+                    {% set label = error.origin.config.getOption('label')|default('General')|split('<br />', 2)[0] %}
+                    {% set is_html = error.origin.config.getOption('label_html') %}
+
+                    <strong>{{ is_html ? label|raw : label }}</strong> - {{ error.message }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

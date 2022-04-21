@@ -3,7 +3,8 @@
         <p class="card-text p-0 m-0">
             This is {% if is_update %}a data update request for an existing maker{% else %}a request to add new maker{% endif %}. Your session started at {{ session_start_time|fragile_datetime_utc }}.
         </p>
-        <p class="card-body text-end p-0 m-0">
+
+        <p class="card-text text-end p-0 m-0">
             {{ form_widget(form.reset) }}
         </p>
     </div>
