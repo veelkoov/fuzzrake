@@ -15,6 +15,7 @@ use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,6 +40,7 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         return $this->getArtisansQueryBuilder()
             ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
     }
@@ -52,6 +54,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
             ->orderBy('v.value', 'DESC')
             ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
     }
@@ -65,30 +68,19 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->enableResultCache(3600)
             ->getResult();
     }
 
     private function getArtisansQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('a')
-            ->leftJoin('a.volatileData', 'vd')
-            ->leftJoin('a.urls', 'u')
-            ->leftJoin('a.commissions', 'c')
-            ->leftJoin('u.state', 'us')
-            ->leftJoin('a.makerIds', 'mi')
-            ->leftJoin('a.values', 'v')
-            /*
-             * Even if unneeded, we have to join the private data table, because of Doctrine's limitation (as of 2.7):
-             * "Inverse side of x-to-one can never be lazy". It's OK, since the server does not hold the data anyway.
-             */
-            ->leftJoin('a.privateData', 'pd')
-            ->addSelect('vd')
-            ->addSelect('u')
-            ->addSelect('c')
-            ->addSelect('us')
-            ->addSelect('mi')
-            ->addSelect('pd')
-            ->addSelect('v')
+            ->leftJoin('a.volatileData', 'vd')->addSelect('vd')
+            ->leftJoin('a.urls', 'u')->addSelect('u')
+            ->leftJoin('a.commissions', 'c')->addSelect('c')
+            ->leftJoin('a.makerIds', 'mi')->addSelect('mi')
+            ->leftJoin('a.values', 'v')->addSelect('v')
             ->orderBy('a.name', 'ASC');
     }
 

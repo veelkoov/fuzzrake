@@ -39,7 +39,7 @@ class ArtisanUrl implements Fetchable, Stringable
     private string $url = '';
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanUrlState", mappedBy="url", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanUrlState", mappedBy="url", cascade={"persist", "remove"}, orphanRemoval=true, fetch="LAZY")
      */
     private ?ArtisanUrlState $state = null;
 

@@ -178,12 +178,12 @@ class Artisan implements Stringable
     private string $contactInfoObfuscated = '';
 
     /**
-     * @ORM\OneToOne(targetEntity=ArtisanVolatileData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=ArtisanVolatileData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true, fetch="LAZY")
      */
     private ?ArtisanVolatileData $volatileData = null;
 
     /**
-     * @ORM\OneToOne(targetEntity=ArtisanPrivateData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=ArtisanPrivateData::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true, fetch="LAZY")
      */
     private ?ArtisanPrivateData $privateData = null;
 
