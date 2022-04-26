@@ -65,7 +65,7 @@ services:
         tags:
             - { name: 'doctrine.event_subscriber' }
         arguments:
-            - '@cache.doctrine.orm.default.result'
+            - '@cache.app'
 
     App\Event\Doctrine\ArtisanListener:
         tags:
