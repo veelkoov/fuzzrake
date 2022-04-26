@@ -2,7 +2,7 @@ monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
 
-when@dev: &when-at-dev
+when@dev:
     monolog:
         handlers:
             main:
@@ -23,8 +23,6 @@ when@dev: &when-at-dev
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine", "!console"]
 
-when@beta: *when-at-dev
-
 when@test:
     monolog:
         handlers:
@@ -39,7 +37,7 @@ when@test:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
 
-when@prod:
+when@prod: &when-at-prod
     monolog:
         handlers:
             main:
@@ -61,3 +59,5 @@ when@prod:
                 type: stream
                 channels: [deprecation]
                 path: php://stderr
+
+when@beta: *when-at-prod
