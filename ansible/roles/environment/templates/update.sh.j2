@@ -6,5 +6,8 @@ date -u
 
 # TODO: Path from group vars
 docker exec fuzzrake-prod /var/www/html/bin/console app:tracker:run-updates commissions --refetch --commit
+docker exec fuzzrake-prod /var/www/html/bin/console cache:clear
+docker exec fuzzrake-prod /var/www/html/bin/console cache:warmup
+curl -o /dev/null -s https://getfursu.it/
 
 date -u

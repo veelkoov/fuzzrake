@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
+use App\Service\Artisans;
 use App\Service\FilterService;
 use App\Service\Statistics\StatisticsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -25,10 +26,10 @@ class MainController extends AbstractController
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Route(path: '/index.html')]
     #[Cache(maxage: 3600, public: true)]
-    public function main(ArtisanRepository $artisanRepository, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species, StatisticsService $statistics): Response
+    public function main(Artisans $artisans, MakerIdRepository $makerIdRepository, FilterService $filterService, Species $species, StatisticsService $statistics): Response
     {
         return $this->render('main/main.html.twig', [
-            'artisans'            => Artisan::wrapAll($artisanRepository->getAll()),
+            'artisans'            => $artisans,
             'makerIdsMap'         => $makerIdRepository->getOldToNewMakerIdsMap(),
             'stats'               => $statistics->getMainPageStats(),
             'filters'             => $filterService->getFiltersTplData(),

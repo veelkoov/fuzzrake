@@ -1,10 +1,12 @@
+{% cache 'parts_data.js' %}
+
 var ARTISANS = null;
 var MAKER_IDS_MAP = null;
 var SPECIES = null;
 
 window.loadFuzzrakeData = function (ac) {
     ARTISANS = [
-        {% for artisan in artisans %}
+        {% for artisan in artisans.all %}
             new ac({{ artisan|jsonToArtisanParameters }}),
         {% endfor %}
     ];
@@ -29,3 +31,5 @@ window.loadFuzzrakeData = function (ac) {
         {{ _self.species_json(species) }}
     };
 }
+
+{% endcache %}
