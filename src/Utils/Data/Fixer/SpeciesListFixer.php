@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data\Fixer;
 
 use App\Utils\Regexp\Replacements;
-use App\Utils\Species\Species;
+use App\Utils\Species\SpeciesService;
 
 class SpeciesListFixer extends AbstractListFixer
 {
@@ -16,7 +16,7 @@ class SpeciesListFixer extends AbstractListFixer
 
     private readonly Replacements $replacements;
 
-    public function __construct(Species $species, array $strings, array $lists)
+    public function __construct(SpeciesService $species, array $strings, array $lists)
     {
         parent::__construct($lists, $strings);
 

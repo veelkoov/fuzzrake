@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Utils\Species\Specie;
-use App\Utils\Species\Species;
+use App\Utils\Species\SpeciesService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +39,7 @@ class GenerateSpeciesDotCommand extends Command
     private readonly Filesystem $fs;
 
     public function __construct(
-        private readonly Species $species,
+        private readonly SpeciesService $species,
     ) {
         parent::__construct();
 

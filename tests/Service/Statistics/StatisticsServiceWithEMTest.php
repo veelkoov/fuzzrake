@@ -26,7 +26,7 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
         $subject = new StatisticsService($artisanRepository, $avdRepositoryMock);
         $result = $subject->getMainPageStats();
 
-        self::assertEquals(1, $result->getCountryCount());
+        self::assertEquals(1, $result->countryCount);
     }
 
     public function testInactiveArtisansDontCountTowardsTotalActive(): void
@@ -44,6 +44,6 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
         $subject = new StatisticsService($artisanRepository, $avdRepositoryMock);
         $result = $subject->getMainPageStats();
 
-        self::assertEquals(2, $result->getActiveArtisansCount());
+        self::assertEquals(2, $result->activeArtisansCount);
     }
 }

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Utils\Data\Validator;
 
 use App\DataDefinitions\Fields\Field;
-use App\Utils\Species\Species;
+use App\Utils\Species\SpeciesService;
 use App\Utils\StringList;
 
 class SpeciesListValidator implements ValidatorInterface
 {
     public function __construct(
-        private readonly Species $speciesService,
+        private readonly SpeciesService $speciesService,
     ) {
     }
 

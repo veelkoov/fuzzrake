@@ -12,7 +12,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\Item;
 use App\Utils\Filters\Set;
-use App\Utils\Species\Species;
+use App\Utils\Species\SpeciesService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -57,7 +57,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, Species $species): Response
+    public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, SpeciesService $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();

@@ -33,4 +33,9 @@ class Paths
     {
         return __DIR__."/../test_data/$fileName";
     }
+
+    public static function getTestCacheDir(): string
+    {
+        return __DIR__.'/../../var/cache/test';
+    }
 }

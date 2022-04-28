@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\DataOnDemand;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-class Artisans
+class ArtisansDOD
 {
     private ?array $artisanEs = null;
     private ?array $artisans = null;

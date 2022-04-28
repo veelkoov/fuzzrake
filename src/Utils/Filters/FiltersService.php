@@ -2,47 +2,45 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Utils\Filters;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
-use App\Utils\Filters\FilterData;
-use App\Utils\Filters\Set;
-use App\Utils\Filters\SpecialItems;
+use App\Service\CountriesDataService;
 use App\Utils\Species\Specie;
-use App\Utils\Species\Species;
+use App\Utils\Species\SpeciesService;
 use Doctrine\ORM\UnexpectedResultException;
 
-class FilterService
+class FiltersService
 {
     public function __construct(
         private readonly ArtisanRepository $artisanRepository,
         private readonly ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
-        private readonly Species $species,
+        private readonly SpeciesService $species,
     ) {
     }
 
     /**
      * @throws UnexpectedResultException
      */
-    public function getFiltersTplData(): array
+    public function getFiltersTplData(): FiltersData
     {
-        return [
-            'orderTypes'          => $this->artisanRepository->getDistinctOrderTypes(),
-            'styles'              => $this->artisanRepository->getDistinctStyles(),
-            'paymentPlans'        => $this->getPaymentPlans(),
-            'features'            => $this->artisanRepository->getDistinctFeatures(),
-            'productionModels'    => $this->artisanRepository->getDistinctProductionModels(),
-            'commissionsStatuses' => $this->getCommissionsStatuses(),
-            'languages'           => $this->artisanRepository->getDistinctLanguages(),
-            'countries'           => $this->getCountriesFilterData(),
-            'states'              => $this->artisanRepository->getDistinctStatesToCountAssoc(),
-            'species'             => $this->getSpeciesFilterItems(),
-            'worksWithMinors'     => $this->artisanRepository->getSafeWorksWithMinors(),
-        ];
+        return new FiltersData(
+            $this->artisanRepository->getDistinctOrderTypes(),
+            $this->artisanRepository->getDistinctStyles(),
+            $this->getPaymentPlans(),
+            $this->artisanRepository->getDistinctFeatures(),
+            $this->artisanRepository->getDistinctProductionModels(),
+            $this->getCommissionsStatuses(),
+            $this->artisanRepository->getDistinctLanguages(),
+            $this->getCountriesFilterData(),
+            $this->artisanRepository->getDistinctStatesToCountAssoc(),
+            $this->getSpeciesFilterItems(),
+            $this->artisanRepository->getSafeWorksWithMinors(),
+        );
     }
 
     private function getCountriesFilterData(): FilterData
