@@ -1,16 +1,16 @@
 <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
     {% if isDevOrTestEnv() %}
-        <a class="btn btn-warning track-ignore" href="{{ path('mx_artisan_edit', { id: artisan.id }) }}"><i class="fas fa-edit"></i></a> {# for the track-ignore, track-website, track-* see grep-track-link-classes #}
+        <a class="btn btn-warning" href="{{ path('mx_artisan_edit', { id: artisan.id }) }}"><i class="fas fa-edit"></i></a>
     {% endif %}
 
     {%- if artisan.fursuitReviewUrl -%}
-        <a class="btn btn-secondary track-fsr" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
+        <a class="btn btn-secondary u-tbl u-fsr" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
     {%- endif -%}
 
-    <a class="btn btn-secondary track-ab" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
+    <a class="btn btn-secondary u-tbl u-ab" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
 
     {%- if artisan.websiteUrl -%}
-        <a class="btn btn-secondary track-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
+        <a class="btn btn-secondary u-tbl u-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
     {%- endif -%}
 
     <div class="btn-group" role="group">
@@ -20,67 +20,69 @@
         </button>
 
         <ul class="dropdown-menu" aria-labelledby="{{ btnGroupDropLinksId }}">
-            <li><a class="dropdown-item track-ab" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"> <i class="fa-solid fa-spell-check"></i> Check on Artists Beware</a></li>
+            <li><a class="u-tbl u-ab dropdown-item" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"> <i class="fa-solid fa-spell-check"></i> Check on Artists Beware</a></li>
             {%- if artisan.fursuitReviewUrl -%}
-                <li><a class="dropdown-item track-fsr" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a></li>
+                <li><a class="u-tbl u-fsr dropdown-item" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a></li>
             {%- endif -%}
             {%- if artisan.websiteUrl -%}
-                <li><a class="dropdown-item track-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a></li>
+                <li><a class="u-tbl u-website dropdown-item" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a></li>
             {%- endif -%}
             {%- for url in artisan.pricesUrlsArray -%}
-                <li><a class="dropdown-item track-prices" href="{{ url }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a></li>
+                <li><a class="u-tbl u-prices dropdown-item" href="{{ url }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a></li>
             {%- endfor -%}
             {%- if artisan.faqUrl -%}
-                <li><a class="dropdown-item track-faq" href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a></li>
+                <li><a class="u-tbl u-faq dropdown-item" href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a></li>
             {%- endif -%}
             {%- if artisan.queueUrl -%}
-                <li><a class="dropdown-item track-queue" href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a></li>
+                <li><a class="u-tbl u-queue dropdown-item" href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a></li>
             {%- endif -%}
             {%- if artisan.furAffinityUrl -%}
-                <li><a class="dropdown-item track-fa" href="{{ artisan.furAffinityUrl }}" target="_blank"><i class="fas fa-image"></i> FurAffinity</a></li>
+                <li><a class="u-tbl u-fa dropdown-item" href="{{ artisan.furAffinityUrl }}" target="_blank"><i class="fas fa-image"></i> FurAffinity</a></li>
             {%- endif -%}
             {%- if artisan.deviantArtUrl -%}
-                <li><a class="dropdown-item track-da" href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a></li>
+                <li><a class="u-tbl u-da dropdown-item" href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a></li>
             {%- endif -%}
             {%- if artisan.twitterUrl -%}
-                <li><a class="dropdown-item track-twitter" href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+                <li><a class="u-tbl u-twitter dropdown-item" href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
             {%- endif -%}
             {%- if artisan.facebookUrl -%}
-                <li><a class="dropdown-item track-facebook" href="{{ artisan.facebookUrl }}" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                <li><a class="u-tbl u-facebook dropdown-item" href="{{ artisan.facebookUrl }}" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
             {%- endif -%}
             {%- if artisan.tumblrUrl -%}
-                <li><a class="dropdown-item track-tumblr" href="{{ artisan.tumblrUrl }}" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a></li>
+                <li><a class="u-tbl u-tumblr dropdown-item" href="{{ artisan.tumblrUrl }}" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a></li>
             {%- endif -%}
             {%- if artisan.youtubeUrl -%}
-                <li><a class="dropdown-item track-youtube" href="{{ artisan.youtubeurl }}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
+                <li><a class="u-tbl u-youtube dropdown-item" href="{{ artisan.youtubeurl }}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
             {%- endif -%}
             {%- if artisan.instagramUrl -%}
-                <li><a class="dropdown-item track-instagram" href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                <li><a class="u-tbl u-instagram dropdown-item" href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
             {%- endif -%}
             {%- if artisan.etsyUrl -%}
-                <li><a class="dropdown-item track-etsy" href="{{ artisan.etsyUrl }}" target="_blank"><i class="fab fa-etsy"></i> Etsy</a></li>
+                <li><a class="u-tbl u-etsy dropdown-item" href="{{ artisan.etsyUrl }}" target="_blank"><i class="fab fa-etsy"></i> Etsy</a></li>
             {%- endif -%}
             {%- if artisan.theDealersDenUrl -%}
-                <li><a class="dropdown-item track-tdd" href="{{ artisan.theDealersDenUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a></li>
+                <li><a class="u-tbl u-tdd dropdown-item" href="{{ artisan.theDealersDenUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a></li>
             {%- endif -%}
             {%- if artisan.otherShopUrl -%}
-                <li><a class="dropdown-item track-shop" href="{{ artisan.otherShopUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a></li>
+                <li><a class="u-tbl u-shop dropdown-item" href="{{ artisan.otherShopUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a></li>
             {%- endif -%}
             {%- if artisan.furryAminoUrl -%}
-                <li><a class="dropdown-item track-amino" href="{{ artisan.furryAminoUrl }}" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a></li>
+                <li><a class="u-tbl u-amino dropdown-item" href="{{ artisan.furryAminoUrl }}" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a></li>
             {%- endif -%}
             {%- if artisan.scritchUrl -%}
-                <li><a class="dropdown-item track-scritch" href="{{ artisan.scritchUrl }}" target="_blank"><i class="fas fa-camera"></i> Scritch</a></li>
+                <li><a class="u-tbl u-scritch dropdown-item" href="{{ artisan.scritchUrl }}" target="_blank"><i class="fas fa-camera"></i> Scritch</a></li>
             {%- endif -%}
             {%- if artisan.furtrackUrl -%}
-                <li><a class="dropdown-item track-furtrack" href="{{ artisan.furtrackUrl }}" target="_blank"><i class="fas fa-camera"></i> Furtrack</a></li>
+                <li><a class="u-tbl u-furtrack dropdown-item" href="{{ artisan.furtrackUrl }}" target="_blank"><i class="fas fa-camera"></i> Furtrack</a></li>
             {%- endif -%}
             {%- if artisan.linklistUrl -%}
-                <li><a class="dropdown-item track-links" href="{{ artisan.linklistUrl }}" target="_blank"><i class="fas fa-link"></i> List of links</a></li>
+                <li><a class="u-tbl u-links dropdown-item" href="{{ artisan.linklistUrl }}" target="_blank"><i class="fas fa-link"></i> List of links</a></li>
             {%- endif -%}
-            <li><a class="dropdown-item request-update track-report" data-bs-toggle="modal" data-bs-target="#artisanUpdatesModal">
-                <i class="fas fa-exclamation-triangle"></i> Data outdated/inaccurate?
-            </a></li>
+            <li>
+                <a class="u-tbl u-report dropdown-item" data-bs-toggle="modal" data-bs-target="#artisanUpdatesModal">
+                    <i class="fas fa-exclamation-triangle"></i> Data outdated/inaccurate?
+                </a>
+            </li>
         </ul>
     </div>
 </div>
