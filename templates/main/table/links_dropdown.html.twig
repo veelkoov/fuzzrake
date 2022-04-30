@@ -4,13 +4,13 @@
     {% endif %}
 
     {%- if artisan.fursuitReviewUrl -%}
-        <a class="btn btn-secondary u-tbl u-fsr" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
+        <a class="u-tbl u-fsr btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
     {%- endif -%}
 
-    <a class="btn btn-secondary u-tbl u-ab" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
+    <a class="u-tbl u-ab btn btn-secondary" href="https://bewares.getfursu.it/#search:{{ artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
 
     {%- if artisan.websiteUrl -%}
-        <a class="btn btn-secondary u-tbl u-website" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
+        <a class="u-tbl u-website btn btn-secondary" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
     {%- endif -%}
 
     <div class="btn-group" role="group">
