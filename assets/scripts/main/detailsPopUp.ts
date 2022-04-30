@@ -1,6 +1,5 @@
 import DataBridge from "../class/DataBridge";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
-import Tracking from "../class/Tracking";
 import {getArtisanFromRelated} from "./utils";
 
 const template = require('../../templates/artisan.handlebars');
@@ -16,8 +15,6 @@ function detailsPopUpShowCallback(event: any): void {
     }, HandlebarsHelpers.tplCfg()));
 
     $contents.data('artisan', artisan);
-
-    Tracking.setupOnLinks('#artisanLinks a', 'artisan-modal');
 }
 
 export function init(): (() => void)[] {

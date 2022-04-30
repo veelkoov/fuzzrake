@@ -6,7 +6,6 @@ import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
 import {makerIdHashRegexp} from '../consts';
-import Tracking from "../class/Tracking";
 import * as Handlebars from "handlebars/runtime";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
 
@@ -42,8 +41,6 @@ function finalizeInit(): void {
             jQuery('#' + makerId).children().eq(0).trigger('click');
         }
     }
-
-    Tracking.setupOnLinks('.artisan-links a', 'artisan-datatable-right');
 
     jQuery('#data-loading-message, #data-table-container').toggle();
 
