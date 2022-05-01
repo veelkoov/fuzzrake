@@ -6,6 +6,7 @@ namespace App\Tests\Frontend;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\TestCache;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -27,6 +28,8 @@ class MakerModeTest extends PantherTestCaseWithEM
             self::getArtisan('Maker: minor, wwn', 'TEST002', 'FI', ages: Ages::MINORS,
                 nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: true),
         );
+
+        TestCache::clear();
 
         // Expect: main page initially shows the checklist and no makers
 

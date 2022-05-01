@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Frontend;
 
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\TestCache;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Panther\Client;
 
 class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
@@ -28,7 +27,7 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
             self::getArtisan('Test artisan 3', 'TEST003', 'DE'),
         );
 
-        (new Filesystem())->remove(Paths::getTestCacheDir());
+        TestCache::clear();
 
         $client->request('GET', '/');
 
