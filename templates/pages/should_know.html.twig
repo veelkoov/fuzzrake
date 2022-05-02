@@ -2,6 +2,49 @@
 
 {% block title %}What you should know about fursuits{% endblock %}
 
+{% set refs = {
+    'FSR1': {
+        uri: 'https://fursuitreview.com/blog/what-is-a-fursuit-types-styles-padding/',
+        label: 'FursuitReview - What Is A Fursuit: Types, Styles, & Padding',
+    },
+    'FSR2': {
+        uri: 'https://fursuitreview.com/blog/buying-a-fursuit-is-a-fursuit-right-for-you/',
+        label: 'FursuitReview - Buying a Fursuit: Is a Fursuit Right For You?',
+    },
+    'FSR3': {
+        uri: 'https://fursuitreview.com/blog/choosing-the-right-maker-for-your-fursuit/',
+        label: 'FursuitReview - Choosing the Right Maker for Your Fursuit',
+    },
+    'FSR4': {
+        uri: 'https://fursuitreview.com/blog/buying-a-fursuit-pre-mades-vs-commissions-finding-maker-contacts/',
+        label: 'FursuitReview - Buying a Fursuit: Pre-mades vs. Commissions, & Finding Maker Contacts',
+    },
+    'FSR5': {
+        uri: 'https://fursuitreview.com/blog/buying-a-fursuit-the-commission-process/',
+        label: 'FursuitReview - Buying a Fursuit: The Commission Process',
+    },
+    'TT1': {
+        uri: 'https://twitter.com/FursuitReview/status/1484344172672786437',
+        label: 'Twitter thread: "What is information you often see mentioned as a negative in submitted reviews that are in reality, something to be considered preference or nothing to worry about?"',
+    },
+    'TT2': {
+        uri: 'https://twitter.com/getfursuit/status/1489529415478521856',
+        label: 'Twitter thread: "What would be few of the most important things for your potential customers to know or understand before trying to commission?"',
+    },
+} %}
+
+{% macro read_more(refs, names) %}
+    <p class="small">
+        External, valuable readings:
+
+        {% for name in names %}
+            <a href="#ref-{{ name }}">{{ refs[name]['label'] }}</a> {%- if not loop.last %},{% endif %}
+        {% endfor %}
+    </p>
+{% endmacro %}
+
+{% from _self import read_more %}
+
 {% block body %}
     <p class="text-bold text-danger">This is a work in progress. In fact, this is one of the most "scratchpady" thing on this website. Nothing is to be considered final and/or complete.</p>
 
@@ -40,6 +83,8 @@
         <p>
             Worth noting, wearing a fursuit is some kind of effort as well. It looks cute and fun from outside, but you must be prepared for some inconveniences, especially high temperatures, and limited breathability.
         </p>
+
+        {{ read_more(refs, ['FSR2']) }}
     </div>
 
     <h4 class="pt-3">Fursuit is an <strong>expensive, luxury</strong> item</h4>
@@ -60,8 +105,10 @@
         </p>
 
         <p>
-            <strong>High prices of fursuits are the reason for many scammers and thieves being out there. You should read more about this below.</strong>
+            <strong>High prices of fursuits are the reason for many scammers and thieves being out there. This topic is covered wider later on this page.</strong>
         </p>
+
+        {{ read_more(refs, ['FSR2']) }}
     </div>
 
     <h4 class="pt-3">You need to be <strong>18+</strong> years old (most times)</h4>
@@ -80,13 +127,25 @@
         <p>
             One important thing you should also consider is the fact that you still grow. Given that fursuits are expensive, are you sure you want to spend your money on something you may soon no longer fit?
         </p>
+
+        {{ read_more(refs, ['FSR2']) }}
     </div>
 
-    <h4 class="pt-3">There are options you should know about</h4>
+    <h4 class="pt-3">Alternatives to commissioning</h4>
 
     <p>
-        You may want to commission fursuit of your own character (if you already have one), but many fursuiters wear so-called "pre-mades"; some makers also offer "artistic liberty" commissions. TODO: Expand, explain or link.
+        Besides commissioning a custom character, you could also decide to get a "pre-made" or commission artistic liberty suit.
+
+        <a data-bs-toggle="collapse" href="#collapse8" aria-expanded="false" aria-controls="collapse8">Read more</a>
     </p>
+
+    <div class="collapse" id="collapse8">
+        <p>
+            If you don't have your own original character (fursona) designed, or you don't necessarily want to be cosplaying it in particular, there are alternatives. You can buy a pre-made: ready to buy fursuit designed how the maker imagined it - pretty popular option. Some makers also offer artistic liberty commissions, where you give the maker more freedom designing your suit.
+        </p>
+
+        {{ read_more(refs, ['FSR4']) }}
+    </div>
 
     <h4 class="pt-3">Learn about <strong>the risk</strong></h4>
 
@@ -129,7 +188,9 @@
         </li>
     </ul>
 
-    <h5 class="pt-2">"I've chosen the maker, how to verify them?"</h5>
+    {{ read_more(refs, ['FSR2']) }}
+
+    <h5 class="pt-3">"I've chosen the maker, how to verify them?"</h5>
 
     <ul>
         <li>
@@ -147,13 +208,17 @@
 
     <h5 class="pt-2">What's required on your side</h5>
 
-    <p>
-        You <strong>need</strong> an exhaustive reference sheet. Have it to avoid misunderstandings. Text description is not enough. The ref sheet should be precise enough to make any markings, special features, and color placements easy to understand.
-    </p>
+    <ul>
+        <li>
+            You <strong>need</strong> an exhaustive reference sheet. Have it to avoid misunderstandings. Text description is not enough. The ref sheet should be precise enough to make any markings, special features, and color placements easy to understand.
+        </li>
 
-    <p>
-        Check/ask if the maker you chose have their own instructions for preparing a DTD.
-    </p>
+        <li>
+            Check/ask if the maker you chose have their own instructions for preparing a DTD.
+        </li>
+    </ul>
+
+    {{ read_more(refs, ['FSR5']) }}
 
     <h5 class="pt-2">Looks</h5>
 
@@ -169,39 +234,49 @@
 
     <h5 class="pt-2">Time</h5>
 
-    <p>
-        Makers have different queue lengths, but, in general, you should be prepared to spend some time waiting, after you finalized the order.
-    </p>
+    <ul>
+        <li>
+            If a maker state their <strong>completion time</strong>, this most probably <strong>doesn't include</strong> queue time, payment plans or retrieval of materials or your DTD.
+        </li>
 
-    <p>
-        If a maker state their <strong>completion time</strong>, this most probably <strong>doesn't include</strong> queue time, payment plans or retrieval of materials or your DTD.
-    </p>
+        <li>
+            Makers have different queue lengths, but, in general, you should be prepared to spend some time waiting, after you finalized the order.
+        </li>
+
+        <li>
+            In case things go wrong, <a href="https://twitter.com/Artists_Beware/status/1491512169539649538" target="_blank">you may be offered a refund. Take it.</a>
+        </li>
+    </ul>
+
+    {{ read_more(refs, ['FSR5']) }}
 
     <h5 class="pt-2">Communication</h5>
 
-    <p>
-        <strong>Do not expect the maker to respond immediately.</strong> (Including when they already started working on your suit!)
+    <ul>
+        <li>
+            <strong>Do not expect the maker to respond immediately.</strong> (Including when they already started working on your suit!)
 
-        <a data-bs-toggle="collapse" href="#collapse6" aria-expanded="false" aria-controls="collapse6">Read more</a>
-    </p>
+            <a data-bs-toggle="collapse" href="#collapse6" aria-expanded="false" aria-controls="collapse6">Read more</a>
 
-    <p class="collapse" id="collapse6">
-        There are many reasons they do not respond to you right now. They may be in a different timezone, they may be asleep right now. Makers are not machines, they don't work 24/7, they may have weekends and/or days off.
-    </p>
+            <p class="collapse mt-1" id="collapse6">
+                There are many reasons they do not respond to you right now. They may be in a different timezone, they may be asleep right now. Makers are not machines, they don't work 24/7, they may have weekends and/or days off.
+            </p>
+        </li>
 
-    <p>
-        Talk with the maker about <strong>frequency of updates/WIPs - do not assume</strong> anything.
-    </p>
+        <li>
+            Talk with the maker about <strong>frequency of updates/WIPs - do not assume</strong> anything.
+        </li>
 
-    <p>
-        Your maker may start working on some other fursuit at the same time. This doesn't necessarily mean that they've changed priorities.
+        <li>
+            Your maker may start working on some other fursuit at the same time. This doesn't necessarily mean that they've changed priorities.
 
-        <a data-bs-toggle="collapse" href="#collapse7" aria-expanded="false" aria-controls="collapse7">Read more</a>
-    </p>
+            <a data-bs-toggle="collapse" href="#collapse7" aria-expanded="false" aria-controls="collapse7">Read more</a>
 
-    <p class="collapse" id="collapse7">
-        It's sometimes more convenient and effective to do it that way: perform repetitive actions working on multiple similar parts simultaneously.
-    </p>
+            <p class="collapse mt-1" id="collapse7">
+                It's sometimes more convenient and effective to do it that way: perform repetitive actions working on multiple similar parts simultaneously.
+            </p>
+        </li>
+    </ul>
 
     <h1 class="pt-3">Read more</h1>
 
@@ -209,16 +284,12 @@
         :O You want to read more? Awesome, check the stuff below! BTW, those are the sources of the essence you see above.
     </p>
 
-    <ul class="list-unstyled">
-        <li>
-            [1] <a href="https://fursuitreview.com/blog/how-to-buy-a-fursuit-guide/">How to Buy a Fursuit: Guide Series</a>
-        </li>
-        <li>
-            [2] <a href="https://twitter.com/FursuitReview/status/1484344172672786437">Twitter thread: "What is information you often see mentioned as a negative in submitted reviews that are in reality, something to be considered preference or nothing to worry about?"</a>
-        </li>
-        <li>
-            [3] <a href="https://twitter.com/getfursuit/status/1489529415478521856">Twitter thread: "What would be few of the most important things for your potential customers to know or understand before trying to commission?"</a>
-        </li>
+    <ul class="list-unstyled references">
+        {% for name, ref in refs %}
+            <li id="ref-{{ name }}">
+                [{{ name }}] <a href="{{ ref['uri'] }}" target="_blank">{{ ref['label'] }}</a> <i class="fa-solid fa-up-right-from-square"></i>
+            </li>
+        {% endfor %}
     </ul>
 
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
