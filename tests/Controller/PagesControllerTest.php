@@ -58,4 +58,14 @@ class PagesControllerTest extends WebTestCase
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', 'Rules for makers/studios');
     }
+
+    public function testShouldKnow()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/should_know.html');
+
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', '"I want a fursuit NOW!"');
+    }
 }
