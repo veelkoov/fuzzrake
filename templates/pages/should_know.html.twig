@@ -1,6 +1,6 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}What you should know about fursuits{% endblock %}
+{% block title %}What you should know{% endblock %}
 
 {% set refs = {
     'FSR1': {
@@ -46,17 +46,30 @@
 {% from _self import read_more %}
 
 {% block body %}
-    <p class="text-bold text-danger">This is a work in progress. In fact, this is one of the most "scratchpady" thing on this website. Nothing is to be considered final and/or complete.</p>
-
     <h1 class="pt-4">"I want a fursuit NOW!"</h1>
 
     <p>
         Sorry, but you will not get one in next days, nor weeks, so reading this will not hurt. And it will help you avoid problems. <strong>Be patient and don't make any rush decisions.</strong>
     </p>
 
+    <h4 class="pt-3">What can I find on this page?</h4>
+
+    <ol>
+        <li>What you should know before commissioning</li>
+        <li>Few tips on staying safer</li>
+        <li>Some advice on how to work with the maker</li>
+        <li>Links to external, more verbose resources</li>
+    </ol>
+
+    <p>
+        <strong>Information here is not exhaustive. Please reach for the external resources.</strong>
+        This page is <a href="https://github.com/veelkoov/fuzzrake/issues/138">not complete</a>.
+    </p>
+
+
     <h1 class="pt-4">What you should know</h1>
 
-    <h4 class="pt-2">Do you want to <strong>become a furry</strong>?</h4>
+    <h4 class="pt-3">Do you want to <strong>become a furry</strong>?</h4>
 
     <p>
         Great news! <strong>You don't have to buy a fursuit to be a furry.</strong>
@@ -131,10 +144,10 @@
         {{ read_more(refs, ['FSR2']) }}
     </div>
 
-    <h4 class="pt-3">Alternatives to commissioning</h4>
+    <h4 class="pt-3">Alternatives to standard commissions</h4>
 
     <p>
-        Besides commissioning a custom character, you could also decide to get a "pre-made" or commission artistic liberty suit.
+        You could also decide to get a "pre-made" or commission artistic liberty suit.
 
         <a data-bs-toggle="collapse" href="#collapse8" aria-expanded="false" aria-controls="collapse8">Read more</a>
     </p>
@@ -147,19 +160,23 @@
         {{ read_more(refs, ['FSR4']) }}
     </div>
 
-    <h4 class="pt-3">Learn about <strong>the risk</strong></h4>
+    <h1 class="pt-4">Learn about <strong>the risk</strong></h1>
 
     <p>
         Unfortunately, scammers and unreliable makers are not cooperating, and they continuously refuse to clearly label themselves as scammers or unreliable makers. :( So you need to be careful.
     </p>
 
-    <h5 class="pt-2">"But the maker is on getfursu.it, so they are reliable, right?"</h5>
+    <h4 class="pt-3">"But the maker is on getfursu.it, so they are reliable, right?"</h4>
 
     <p>
         <strong>NO, getfursu.it doesn't guarantee safety!</strong> This website is a single-person effort; I don't have enough time &amp; energy to do all the background checks.
     </p>
 
-    <h5 class="pt-2">Rules</h5>
+    <p>
+        New makers are marked like this: <span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>. Everyone starts some day, so everyone will bear that mark at some point. But if a scammer made it on getfursu.it, they would probably still have this. Be more careful (or even "carefulest") with those makers.
+    </p>
+
+    <h4 class="pt-3">General advice</h4>
 
     <ul>
         <li>
@@ -180,21 +197,15 @@
         <li>
             Offers "too good to be true" are scam.
         </li>
-        <li>
-            On getfursu.it, new makers are marked like this: <span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>. Everyone starts some day, so everyone will bear that mark at some point. But if a scammer made it on getfursu.it, they would probably still have this. Be more careful (or even "carefulest") with those makers.
-        </li>
-        <li>
-            <span class="text-danger">TODO</span>
-        </li>
     </ul>
 
     {{ read_more(refs, ['FSR2']) }}
 
-    <h5 class="pt-3">"I've chosen the maker, how to verify them?"</h5>
+    <h4 class="pt-3">"I've chosen the maker, how to verify them?"</h4>
 
     <ul>
         <li>
-            Ask on social media<wbr>/groups<wbr>/forums if someone had prior experience working with the maker<wbr>/studio. Do it now, or you're not getting a hug! You may want to try on, e.g. <a href="https://discord.gg/mep6nUy" target="_blank">FursuitReview Discord server</a>. <span class="text-danger">TODO: suggest hashtags/more places</span>
+            Ask on social media<wbr>/groups<wbr>/forums if someone had prior experience working with the maker<wbr>/studio. Do it now, or you're not getting a hug! You may want to try on, e.g. <a href="https://discord.gg/mep6nUy" target="_blank">FursuitReview Discord server</a>.
         </li>
         <li>
             Check if they have any reviews on <a href="https://fursuitreview.com/">FursuitReview</a>.
@@ -204,9 +215,9 @@
         </li>
     </ul>
 
-    <h4 class="pt-3">Working with a maker - what to expect</h4>
+    <h1 class="pt-4">Working with a maker</h1>
 
-    <h5 class="pt-2">What's required on your side</h5>
+    <h4 class="pt-3">What's required on your side</h4>
 
     <ul>
         <li>
@@ -220,7 +231,7 @@
 
     {{ read_more(refs, ['FSR5']) }}
 
-    <h5 class="pt-2">Looks</h5>
+    <h4 class="pt-3">Looks</h4>
 
     <p>
         Your maker will not "copy" someone else's style.
@@ -232,7 +243,7 @@
         Don't ask for such an approach. It's uncool to copy someone else's style, and it's rude to be asking to do so.
     </p>
 
-    <h5 class="pt-2">Time</h5>
+    <h4 class="pt-3">Time</h4>
 
     <ul>
         <li>
@@ -250,7 +261,7 @@
 
     {{ read_more(refs, ['FSR5']) }}
 
-    <h5 class="pt-2">Communication</h5>
+    <h4 class="pt-3">Communication</h4>
 
     <ul>
         <li>
@@ -278,7 +289,7 @@
         </li>
     </ul>
 
-    <h1 class="pt-3">Read more</h1>
+    <h1 class="pt-4">Read more</h1>
 
     <p>
         :O You want to read more? Awesome, check the stuff below! BTW, those are the sources of the essence you see above.
