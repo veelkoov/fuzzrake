@@ -34,6 +34,7 @@ final class RouteName
     final public const NEW_ARTISANS = 'new_artisans';
     final public const RULES = 'rules';
     final public const SITEMAP = 'sitemap';
+    final public const SHOULD_KNOW = 'should_know';
     final public const STATISTICS = 'statistics';
     final public const TRACKING = 'tracking';
 }
