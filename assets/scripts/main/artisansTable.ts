@@ -4,6 +4,16 @@ import Artisan from "../class/Artisan";
 import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from "./filters";
 import Api = DataTables.Api;
 
+require('datatables.net');
+require('datatables.net-bs5');
+require('datatables.net-buttons');
+require('datatables.net-buttons-bs5');
+require('datatables.net-buttons/js/buttons.colVis.min')
+require('datatables.net-buttons/js/buttons.html5.min')
+
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import 'datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css';
+
 const additionalButtonsHtml = '\
         <button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal"></button>\
         <button id="filtersButton" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">Legend</button>\
@@ -26,9 +36,9 @@ const dataTableOptions = {
     ],
     buttons: [{
         className: 'btn btn-dark',
-        columns: '.toggleable',
-        extend: 'colvis',
-        text: 'Columns'
+        columns:   '.toggleable',
+        extend:    'colvis',
+        text:      'Columns'
     }],
     infoCallback: dataTableInfoCallback,
 };
