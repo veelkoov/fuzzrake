@@ -1,4 +1,4 @@
-require('../../styles/events.less');
+import '../../styles/events.less';
 
 jQuery(function (): void {
     jQuery('#events-list .toggle-details').on('click', (event: Event) => {

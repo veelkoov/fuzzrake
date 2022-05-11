@@ -1,14 +1,14 @@
-import AllSetUnOtFilter from "../filters/data/AllSetUnOtFilter";
-import AnySetUnFilter from "../filters/data/AnySetUnFilter";
-import AnySetUnOtFilter from "../filters/data/AnySetUnOtFilter";
-import DataBridge from "../class/DataBridge";
-import DataTablesFilterPlugin from "../filters/DataTablesFilterPlugin";
-import FilterVisInterface from "../filters/ui/FilterVisInterface";
-import GenericFilterVis from "../filters/ui/GenericFilterVis";
-import OpenForFilter from "../filters/data/OpenForFilter";
-import Species from "../species/Species";
-import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
-import ValueUnFilter from "../filters/data/ValueUnFilter";
+import AllSetUnOtFilter from '../filters/data/AllSetUnOtFilter';
+import AnySetUnFilter from '../filters/data/AnySetUnFilter';
+import AnySetUnOtFilter from '../filters/data/AnySetUnOtFilter';
+import DataBridge from '../class/DataBridge';
+import DataTablesFilterPlugin from '../filters/DataTablesFilterPlugin';
+import FilterVisInterface from '../filters/ui/FilterVisInterface';
+import GenericFilterVis from '../filters/ui/GenericFilterVis';
+import OpenForFilter from '../filters/data/OpenForFilter';
+import Species from '../species/Species';
+import SpeciesFilterVis from '../filters/ui/SpeciesFilterVis';
+import ValueUnFilter from '../filters/data/ValueUnFilter';
 
 let filters: FilterVisInterface[] = [];
 let $filtersShowButton: JQuery<HTMLElement>;

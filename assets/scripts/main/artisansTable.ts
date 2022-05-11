@@ -1,8 +1,17 @@
-import {makerIdRegexp} from "../consts";
-import DataBridge from "../class/DataBridge";
-import Artisan from "../class/Artisan";
-import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from "./filters";
-import Api = DataTables.Api;
+import Artisan from '../class/Artisan';
+import DataBridge from '../class/DataBridge';
+import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from './filters';
+import {makerIdRegexp} from '../consts';
+
+import 'datatables.net';
+import 'datatables.net-bs5';
+import 'datatables.net-buttons';
+import 'datatables.net-buttons-bs5';
+import 'datatables.net-buttons/js/buttons.colVis.min';
+import 'datatables.net-buttons/js/buttons.html5.min';
+
+import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import 'datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css';
 
 const additionalButtonsHtml = '\
         <button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal"></button>\
@@ -26,9 +35,9 @@ const dataTableOptions = {
     ],
     buttons: [{
         className: 'btn btn-dark',
-        columns: '.toggleable',
-        extend: 'colvis',
-        text: 'Columns'
+        columns:   '.toggleable',
+        extend:    'colvis',
+        text:      'Columns'
     }],
     infoCallback: dataTableInfoCallback,
 };
@@ -37,7 +46,7 @@ const columnsSetVersion: string = '1';
 
 /* $jqDataTable and $dtDataTable is the same object; i just don't know how to type hint it properly */
 let $jqDataTable: JQuery<HTMLElement>;
-let $dtDataTable: Api;
+let $dtDataTable;
 let $artisanRows: JQuery<HTMLElement>;
 
 function highlightByMakerIdCallback(): void {

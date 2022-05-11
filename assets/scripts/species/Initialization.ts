@@ -1,7 +1,7 @@
-import Species from "./Species";
-import DataBridge from "../class/DataBridge";
-import Artisan from "../class/Artisan";
-import Specie from "./Specie";
+import Artisan from '../class/Artisan';
+import DataBridge from '../class/DataBridge';
+import Specie from './Specie';
+import Species from './Species';
 
 export default class Initialization {
     private static readonly DEFAULT_DOES_WHEN_ONLY_DOESNT = 'Most species'; // grep-assumed-does-specie-when-artisan-has-only-doesnt

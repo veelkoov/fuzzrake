@@ -1,4 +1,4 @@
-export class Radio {
+export default class Radio {
     private $elems: JQuery<HTMLElement>;
 
     constructor(

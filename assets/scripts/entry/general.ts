@@ -1,6 +1,13 @@
-import moment = require('moment');
+import * as jQuery from 'jquery';
+// @ts-ignore ¯\_(ツ)_/¯
+window.$ = window.jQuery = jQuery
 
-require('../../styles/general.less');
+import 'bootstrap';
+import * as moment from 'moment';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '../../styles/general.less';
 
 jQuery(() => {
     jQuery('span.utc_datetime').each((index, element) => {

@@ -1,9 +1,9 @@
-import {ADULTS, NO, NO_CONTACT_ALLOWED} from "../consts";
-import {Radio} from "../class/Radio";
-import {toggle} from "../jQueryUtils";
-import RequiredField from "../class/RequiredField";
+import Radio from '../class/Radio';
+import RequiredField from '../class/RequiredField';
+import {ADULTS, NO, NO_CONTACT_ALLOWED} from '../consts';
+import {toggle} from '../jQueryUtils';
 
-require('../../styles/iu_form.less');
+import '../../styles/iu_form.less';
 
 jQuery((_$: JQueryStatic) => {
     // @ts-ignore

@@ -1,6 +1,6 @@
-import AbstractSingleFieldUnFilter from "./AbstractSingleFieldUnFilter";
-import Artisan from "../../class/Artisan";
-import StatusWriter from "../StatusWriter";
+import AbstractSingleFieldUnFilter from './AbstractSingleFieldUnFilter';
+import Artisan from '../../class/Artisan';
+import StatusWriter from '../StatusWriter';
 
 export default class ValueUnFilter<T> extends AbstractSingleFieldUnFilter<T> {
     public constructor(fieldName: string) {

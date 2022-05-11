@@ -1,6 +1,6 @@
-import Specie from "./Specie";
-import DataBridge from "../class/DataBridge";
-import Initialization from "./Initialization";
+import DataBridge from '../class/DataBridge';
+import Initialization from './Initialization';
+import Specie from './Specie';
 
 export default class Species {
     private static INSTANCE: Species = null;

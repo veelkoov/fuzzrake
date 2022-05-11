@@ -1,6 +1,6 @@
-import Artisan from "../../class/Artisan";
-import UnknownValue from "./special/UnknownValue";
-import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
+import AbstractSingleFieldFilter from './AbstractSingleFieldFilter';
+import Artisan from '../../class/Artisan';
+import UnknownValue from './special/UnknownValue';
 
 export default abstract class AbstractSingleFieldUnFilter<T> extends AbstractSingleFieldFilter<T> {
     private readonly unknown: UnknownValue;

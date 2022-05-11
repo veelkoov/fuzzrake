@@ -1,16 +1,16 @@
-import Species from "../species/Species";
+import * as AntiScamWarning from '../main/antiScamWarning';
 import * as DataTable from '../main/artisansTable';
 import * as DetailsPopUp from '../main/detailsPopUp';
-import * as AntiScamWarning from '../main/antiScamWarning';
+import * as Handlebars from 'handlebars/runtime';
 import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
-import {makerIdHashRegexp} from '../consts';
-import * as Handlebars from "handlebars/runtime";
 import HandlebarsHelpers from "../class/HandlebarsHelpers";
+import Species from '../species/Species';
+import {makerIdHashRegexp} from '../consts';
 
-require('../../styles/main.less');
-require('../../3rd-party/flag-icon-css/css/flag-icon.css');
+import '../../3rd-party/flag-icon-css/css/flag-icon.css';
+import '../../styles/main.less';
 
 function executeOneByOne(callbacks): void {
     setTimeout(() => {
