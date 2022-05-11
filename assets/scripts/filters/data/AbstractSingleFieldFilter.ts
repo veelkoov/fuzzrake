@@ -1,4 +1,4 @@
-import AbstractBaseFilter from "./AbstractBaseFilter";
+import AbstractBaseFilter from './AbstractBaseFilter';
 
 export default abstract class AbstractSingleFieldFilter<T> extends AbstractBaseFilter<T> {
     protected readonly fieldName: string;

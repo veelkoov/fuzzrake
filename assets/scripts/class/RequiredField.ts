@@ -1,8 +1,8 @@
-import {toggle} from "../jQueryUtils";
+import {toggle} from '../jQueryUtils';
 
 export default class RequiredField {
-    private $fields: JQuery<HTMLElement>;
-    private $container: JQuery<HTMLElement>;
+    private readonly $fields: JQuery<HTMLElement>;
+    private readonly $container: JQuery<HTMLElement>;
 
     constructor(fieldsSelector: string, containerSelector: string) {
         this.$fields = jQuery(fieldsSelector);

@@ -1,8 +1,8 @@
-import AbstractSingleFieldFilter from "./AbstractSingleFieldFilter";
-import Artisan from "../../class/Artisan";
-import NotTrackedValue from "./special/NotTrackedValue";
-import StatusWriter from "../StatusWriter";
-import TrackingIssuesValue from "./special/TrackingIssuesValue";
+import AbstractSingleFieldFilter from './AbstractSingleFieldFilter';
+import Artisan from '../../class/Artisan';
+import NotTrackedValue from './special/NotTrackedValue';
+import StatusWriter from '../StatusWriter';
+import TrackingIssuesValue from './special/TrackingIssuesValue';
 
 export default class OpenForFilter<T> extends AbstractSingleFieldFilter<T> {
     private readonly trackingIssues: TrackingIssuesValue;

@@ -1,7 +1,6 @@
-import FilterVisInterface from "./FilterVisInterface";
-import FilterInterface from "../data/FilterInterface";
-import Artisan from "../../class/Artisan";
-import ClickEvent = JQuery.ClickEvent;
+import Artisan from '../../class/Artisan'
+import FilterInterface from '../data/FilterInterface';
+import FilterVisInterface from './FilterVisInterface';;
 
 export default abstract class AbstractBaseFilterVis implements FilterVisInterface {
     private readonly idPart: string;
@@ -107,7 +106,7 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
     }
 
     private setupClearButton(): void {
-        this.$clearButton.on('click', (event: ClickEvent) => {
+        this.$clearButton.on('click', (event: JQuery.ClickEvent) => {
             event.stopImmediatePropagation();
 
             this.filter.clear();

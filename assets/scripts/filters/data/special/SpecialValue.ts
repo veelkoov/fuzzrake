@@ -1,5 +1,5 @@
-import SpecialValueInterface from "./SpecialValueInterface";
-import Artisan from "../../../class/Artisan";
+import Artisan from '../../../class/Artisan'
+import SpecialValueInterface from './SpecialValueInterface';;
 
 export default abstract class SpecialValue implements SpecialValueInterface {
     protected selected: boolean = false;

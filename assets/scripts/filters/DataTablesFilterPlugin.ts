@@ -1,5 +1,5 @@
-import FilterVisInterface from "./ui/FilterVisInterface";
-import Artisan from "../class/Artisan";
+import Artisan from '../class/Artisan';
+import FilterVisInterface from './ui/FilterVisInterface';
 
 export default class DataTablesFilterPlugin {
     public constructor(private readonly artisans: Artisan[],

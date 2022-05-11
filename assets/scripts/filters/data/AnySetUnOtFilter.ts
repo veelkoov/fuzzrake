@@ -1,6 +1,6 @@
-import AbstractSingleFieldUnOtFilter from "./AbstractSingleFieldUnOtFilter";
-import Artisan from "../../class/Artisan";
-import StatusWriter from "../StatusWriter";
+import AbstractSingleFieldUnOtFilter from './AbstractSingleFieldUnOtFilter';
+import Artisan from '../../class/Artisan';
+import StatusWriter from '../StatusWriter';
 
 export default class AnySetUnOtFilter<T> extends AbstractSingleFieldUnOtFilter<T> {
     public constructor(fieldName: string) {

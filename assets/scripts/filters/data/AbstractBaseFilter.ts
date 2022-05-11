@@ -1,5 +1,5 @@
-import Artisan from "../../class/Artisan";
-import FilterInterface from "./FilterInterface";
+import Artisan from '../../class/Artisan';
+import FilterInterface from './FilterInterface';
 
 export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     protected selectedValues: Set<T> = new Set<T>();

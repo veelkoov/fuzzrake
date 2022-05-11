@@ -1,6 +1,6 @@
-import AbstractBaseFilterVis from "./AbstractBaseFilterVis";
-import SpeciesFilter from "../data/SpeciesFilter";
-import Species from "../../species/Species";
+import AbstractBaseFilterVis from './AbstractBaseFilterVis';
+import Species from '../../species/Species';
+import SpeciesFilter from '../data/SpeciesFilter';
 
 export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private readonly markersByDescendantSpecie: { [specieName: string]: JQuery<HTMLSpanElement> };

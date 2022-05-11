@@ -1,4 +1,4 @@
-import Artisan from "../../class/Artisan";
+import Artisan from '../../class/Artisan';
 
 export default interface FilterVisInterface {
     isActive(): boolean;

@@ -1,4 +1,4 @@
-import Artisan from "./Artisan";
+import Artisan from './Artisan';
 
 declare const DATA_BRIDGE: { [key: string]: string };
 
