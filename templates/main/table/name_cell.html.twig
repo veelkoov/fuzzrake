@@ -8,7 +8,7 @@
     {{ artisan.name }}
 {%- endif %}
 
-<span style="white-space: nowrap;">
+<span class="text-nowrap">
     {{- artisan|ages_for_table -}}
 
     {%- if artisan.completeness < 50 -%}
