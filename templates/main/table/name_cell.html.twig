@@ -6,24 +6,24 @@
     <span class="hidden" aria-hidden="true">~</span>{{ artisan.name ~ ' [inactive]' }}{# grep-inactive-mark #}
 {%- else -%}
     {{ artisan.name }}
-{%- endif -%}
+{%- endif %}
 
-{{ artisan|ages_for_table }}
+<span style="white-space: nowrap;">
+    {{- artisan|ages_for_table -}}
 
-{%- if artisan.completeness < 50 -%}
-    &nbsp;<i class="insufficient-data fa-solid fa-cloud-moon"></i>
-{%- endif -%}
+    {%- if artisan.completeness < 50 -%}
+        &nbsp;<i class="insufficient-data fa-solid fa-cloud-moon"></i>
+    {%- endif -%}
 
-{%- if not artisan.allowedToWorkWithMinors -%}
-    &nbsp;<i class="fa-solid fa-triangle-exclamation possibly-unsafe"></i><span class="possibly-unsafe-18">18</span>
-{%- endif -%}
+    {%- if not artisan.allowedToWorkWithMinors -%}
+        &nbsp;<i class="fa-solid fa-triangle-exclamation possibly-unsafe"></i><span class="possibly-unsafe-18">18</span>
+    {%- endif -%}
 
-{%- if artisan|is_new -%}
-    <br />
-    <small class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</small>
-{%- endif -%}
+    {%- if artisan|is_new -%}
+        &nbsp;<span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>
+    {%- endif -%}
 
-{%- if isDevOrTestEnv() -%}
-    <br />
-    <small>{{ artisan.id }} {{ artisan.contactAddressPlain }}</small>
-{%- endif -%}
+    {%- if isDevOrTestEnv() -%}
+        <small> ({{ artisan.id }})</small>
+    {%- endif -%}
+</span>

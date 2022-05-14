@@ -30,7 +30,7 @@ class MainExtensions extends AbstractExtension
 
     private function agesForTableFilter(Artisan $artisan): string
     {
-        $result = match ($artisan->getAges()) {
+        return match ($artisan->getAges()) {
             Ages::MINORS => '<i class="ages fa-solid fa-user-minus"></i>',
             Ages::MIXED  => '<i class="ages fa-solid fa-user-plus"></i> <i class="ages fa-solid fa-user-minus"></i>',
             Ages::ADULTS => '',
@@ -40,8 +40,6 @@ class MainExtensions extends AbstractExtension
                 default  => '<i class="ages fa-solid fa-user"></i>',
             },
         };
-
-        return '' === $result ? '' : "&nbsp;$result";
     }
 
     private function isNewFilter(Artisan $artisan): bool
