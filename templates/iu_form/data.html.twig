@@ -1,6 +1,6 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}Inclusion/update form{% endblock %}
+{% block title %}inclusion/update request{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ block('title') }}</h1>
+    <h1>{{ block('title')|capitalize }}</h1>
 
     {% include 'iu_form/shared_parts/big_scary_error.html.twig' %}
 

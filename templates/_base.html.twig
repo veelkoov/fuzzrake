@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>getfursu.it - {% block title %}list of fursuit makers. Find your maker!{% endblock %}</title>
+    <title>getfursu.it - {% block title %}be true furry self{% endblock %}</title>
 
     {% block add_meta %}{% endblock %}
 
@@ -20,7 +20,7 @@
             infoUrl: '{{ path('info')|escape('js') }}',
             trackingUrl: '{{ path('tracking')|escape('js') }}',
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
-            iuFormRedirectUrl: '{{ path('route_iu_form_step_start', { makerId: 'MAKER_ID' })|escape('js') }}',
+            iuFormRedirectUrl: '{{ path('iu_form_step_start', { makerId: 'MAKER_ID' })|escape('js') }}',
             reportFormUrl: '{{ report_form_url|escape('js') }}',
             trackingFailedImgSrc: '{{ asset('images/parsing_failed.webp')|escape('js') }}',
         };

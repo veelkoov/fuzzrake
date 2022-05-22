@@ -36,14 +36,15 @@ class Data extends BaseForm
     {
         parent::buildForm($builder, $options);
 
-        if (!(($router = $options[self::OPT_ROUTER]) instanceof RouterInterface)) {
-            throw new InvalidArgumentException('I wanted a router.');
-        }
+        /**
+         * @var RouterInterface $router
+         */
+        $router = $options[self::OPT_ROUTER];
 
-        $otherStylesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_styles'], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $otherOrderTypesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types'], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $otherFeaturesPath = $router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features'], UrlGeneratorInterface::ABSOLUTE_PATH);
-        $makerIdPagePath = $router->generate(RouteName::MAKER_IDS, referenceType: UrlGeneratorInterface::ABSOLUTE_PATH);
+        $otherStylesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_styles']));
+        $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
+        $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
+        $makerIdPagePath = htmlspecialchars($router->generate(RouteName::MAKER_IDS, [], UrlGeneratorInterface::ABSOLUTE_PATH));
 
         $builder
             ->add('name', TextType::class, [
