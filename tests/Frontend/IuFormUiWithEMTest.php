@@ -112,12 +112,22 @@ class IuFormUiWithEMTest extends PantherTestCaseWithEM
     private function getToLastPage(): void
     {
         $this->client->request('GET', '/iu_form/start/MAKERID');
+
+        $this->client->waitForVisibility('#iu_form_confirmUpdatingTheRightOne_0', 5);
+        $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmUpdatingTheRightOne_0'))->click();
+
+        $this->client->waitForVisibility('#iu_form_confirmYouAreTheMaker_0', 5);
+        $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmYouAreTheMaker_0'))->click();
+
+        $this->client->waitForVisibility('#iu_form_confirmNoPendingUpdates_0', 5);
+        $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmNoPendingUpdates_0'))->click();
+
         $this->client->waitForVisibility('button.g-recaptcha', 5);
-
         $this->client->findElement(WebDriverBy::cssSelector('button.g-recaptcha'))->click();
-        $this->client->waitForVisibility('#iu_form_name', 5);
 
+        $this->client->waitForVisibility('#iu_form_name', 5);
         $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
+
         $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
     }
 }
