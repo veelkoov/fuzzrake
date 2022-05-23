@@ -27,7 +27,7 @@ class IuNavigationTest extends AbstractTestWithEM
 
         $this::submitValidForm($client, 'Start over or withdraw', []);
 
-        self::assertSelectorTextContains('h1', 'Rules for makers/studios', "Haven't been redirected back");
+        self::assertSelectorTextContains('h1', 'Inclusion/update request', "Haven't been redirected back");
 
         self::skipRulesAndCaptcha($client);
 
@@ -51,7 +51,7 @@ class IuNavigationTest extends AbstractTestWithEM
 
         $this::submitValidForm($client, 'Start over or withdraw', []);
 
-        self::assertSelectorTextContains('h1', 'Rules for makers/studios', "Haven't been redirected back");
+        self::assertSelectorTextContains('h1', 'Inclusion/update request', "Haven't been redirected back");
 
         self::skipRulesAndCaptcha($client);
 
