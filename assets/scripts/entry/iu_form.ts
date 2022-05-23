@@ -21,38 +21,20 @@ function setup_start_page(): void {
         }
     }
 
-    const confirmNoPendingUpdates = new Radio('iu_form[confirmNoPendingUpdates]', refresh_page);
-    const decisionOverPreviousUpdates = new DynamicRadio('iu_form[decisionOverPreviousUpdates]', '#decisionOverPreviousUpdates', refresh_page, false);
-    const $dealWithQueuedUpdates = jQuery('#hotToProceedWithQueuedUpdates');
+    const confirmAddingANewOne = new Radio('iu_form[confirmAddingANewOne]', refresh_page);
+    const ensureStudioIsNotThereAlready = new DynamicRadio('iu_form[ensureStudioIsNotThereAlready]', '#ensureStudioIsNotThereAlready', refresh_page, false);
+    const confirmUpdatingTheRightOne = new Radio('iu_form[confirmUpdatingTheRightOne]', refresh_page);
+    const $addNewStudioInstead = jQuery('#addNewStudioInstead');
+    const $findTheStudioToUpdate = jQuery('#findTheStudioToUpdate');
     const confirmYouAreTheMaker = new DynamicRadio('iu_form[confirmYouAreTheMaker]', '#confirmYouAreTheMaker', refresh_page, false);
     const $doNotFillTheForm = jQuery('#doNotFillTheForm');
-    const confirmAddingANewOne = new DynamicRadio('iu_form[confirmAddingANewOne]', '#confirmAddingANewOne', refresh_page, false);
-    const ensureStudioIsNotThereAlready = new DynamicRadio('iu_form[ensureStudioIsNotThereAlready]', '#ensureStudioIsNotThereAlready', refresh_page, false);
-    const confirmUpdatingTheRightOne = new DynamicRadio('iu_form[confirmUpdatingTheRightOne]', '#confirmUpdatingTheRightOne', refresh_page, false);
-    const $addNewStudioInstead = jQuery('#addNewStudioInstead');
-
-    const $findTheStudioToUpdate = jQuery('#findTheStudioToUpdate');
-    const $contactTheMaintainer = jQuery('#contactTheMaintainer');
+    const confirmNoPendingUpdates = new DynamicRadio('iu_form[confirmNoPendingUpdates]', '#confirmNoPendingUpdates', refresh_page, false);
+    const decisionOverPreviousUpdates = new DynamicRadio('iu_form[decisionOverPreviousUpdates]', '#decisionOverPreviousUpdates', refresh_page, false);
+    const $howToProceedWithQueuedUpdates = jQuery('#howToProceedWithQueuedUpdates');
     const $rulesAndContinueButton = jQuery('#rulesAndContinueButton');
 
     function refresh_page(): void {
-        decisionOverPreviousUpdates.toggle(confirmNoPendingUpdates.isVal('submission-pending'));
-
-        toggle($dealWithQueuedUpdates, decisionOverPreviousUpdates.isVal('can-not-be-cancelled'));
-
-        confirmYouAreTheMaker.toggle(
-            confirmNoPendingUpdates.isAnySelected()
-            && (!decisionOverPreviousUpdates.isAvailable()
-                || decisionOverPreviousUpdates.isVal('can-be-cancelled'))
-        );
-
-        toggle($doNotFillTheForm, confirmYouAreTheMaker.isVal('not-the-maker'));
-
-        confirmAddingANewOne.toggle(confirmYouAreTheMaker.isVal('i-am-the-maker'));
-
         ensureStudioIsNotThereAlready.toggle(confirmAddingANewOne.isVal('yes'));
-
-        confirmUpdatingTheRightOne.toggle(confirmYouAreTheMaker.isVal('i-am-the-maker'));
 
         toggle($addNewStudioInstead, confirmUpdatingTheRightOne.isVal('add-new-instead'));
 
@@ -62,11 +44,23 @@ function setup_start_page(): void {
             || confirmUpdatingTheRightOne.isVal('update-other-one')
         );
 
-        toggle($contactTheMaintainer, false); // FIXME
-
-        toggle($rulesAndContinueButton,
+        confirmYouAreTheMaker.toggle(
             ensureStudioIsNotThereAlready.isVal('is-new-studio')
             || confirmUpdatingTheRightOne.isVal('correct')
+        );
+
+        toggle($doNotFillTheForm, confirmYouAreTheMaker.isVal('not-the-maker'));
+
+        confirmNoPendingUpdates.toggle(confirmYouAreTheMaker.isVal('i-am-the-maker'));
+
+        decisionOverPreviousUpdates.toggle(confirmNoPendingUpdates.isVal('submission-pending'));
+
+        toggle($howToProceedWithQueuedUpdates, decisionOverPreviousUpdates.isVal('can-not-be-cancelled'));
+
+        toggle($rulesAndContinueButton,
+            confirmNoPendingUpdates.isAnySelected()
+            && (!decisionOverPreviousUpdates.isAvailable()
+                || decisionOverPreviousUpdates.isVal('can-be-cancelled'))
         );
     }
 

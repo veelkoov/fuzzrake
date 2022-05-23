@@ -20,30 +20,6 @@
 
     {{ form_start(form) }}
 
-    <div id="confirmNoPendingUpdates">
-        {{ form_row(form.confirmNoPendingUpdates) }}
-    </div>
-
-    <div id="decisionOverPreviousUpdates">
-        {{ form_row(form.decisionOverPreviousUpdates) }}
-    </div>
-
-    <div class="alert alert-primary" id="hotToProceedWithQueuedUpdates">
-        If you are waiting over a week already or if you prefer your changes to be on-line as soon as possible, please contact the maintainer immediately using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>. Otherwise, please wait a few days. The updates are usually processed once a week on weekends.
-    </div>
-
-    <div id="confirmYouAreTheMaker">
-        {{ form_row(form.confirmYouAreTheMaker) }}
-    </div>
-
-    <div class="alert alert-danger" id="doNotFillTheForm">
-        Do not fill the form. It will get rejected. Please contact the fursuit maker and ask them to do the updates. This is the link you should send them: <a href="{{ path('iu_form_step_start') }}">right-click or press&amp;hold then copy link address/URL</a>.
-    </div>
-
-    <div class="alert alert-primary" id="contactTheMaintainer">
-        Please contact the maintainer using any of the means listed on the info page.
-    </div>
-
     {% if is_new %}
         <div id="confirmAddingANewOne">
             {{ form_row(form.confirmAddingANewOne) }}
@@ -59,7 +35,7 @@
     {% endif %}
 
     <div class="alert alert-primary" role="alert" id="addNewStudioInstead">
-        To request adding a new studio/maker, please click <a href="{{ path('iu_form_step_start') }}">here</a>. <strong>Note:</strong> this will restart this form, but in the correct flow.
+        To request adding a new studio/maker, please click <a href="{{ path('iu_form_step_start') }}">here</a>.
     </div>
 
     <div class="alert alert-primary" role="alert" id="findTheStudioToUpdate">
@@ -70,6 +46,26 @@
             <li>Look at the bottom of the pop-up. Click the <em>Data outdated/inaccurate?</em> button.</li> {# grep-updates-button #}
             <li>Click the link intended for use by makers.</li>
         </ol>
+    </div>
+
+    <div id="confirmYouAreTheMaker">
+        {{ form_row(form.confirmYouAreTheMaker) }}
+    </div>
+
+    <div class="alert alert-danger" id="doNotFillTheForm">
+        Do not fill the form. It will get rejected. Please contact the fursuit maker and ask them to do the updates. This is the link you should send them: <a href="{{ path('iu_form_step_start') }}">right-click or press&amp;hold then copy link address/URL</a>.
+    </div>
+
+    <div id="confirmNoPendingUpdates">
+        {{ form_row(form.confirmNoPendingUpdates) }}
+    </div>
+
+    <div id="decisionOverPreviousUpdates">
+        {{ form_row(form.decisionOverPreviousUpdates) }}
+    </div>
+
+    <div class="alert alert-primary" id="howToProceedWithQueuedUpdates">
+        If you are waiting over a week already or if you prefer your changes to be on-line as soon as possible, please contact the maintainer immediately using any of the means listed on the <a href="{{ path('info', { _fragment: 'contact'}) }}">info page</a>. Otherwise, please wait a few days. The updates are usually processed once a week on weekends.
     </div>
 
     {{ form_rest(form) }}
