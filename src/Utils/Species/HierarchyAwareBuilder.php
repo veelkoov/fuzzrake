@@ -16,7 +16,7 @@ class HierarchyAwareBuilder
     /**
      * @var Specie[] Associative: key = name, value = Specie object. Species fit for filtering
      */
-    private readonly array $flat;
+    private array $flat;
 
     /**
      * @var Specie[] Species fit for filtering
@@ -93,8 +93,7 @@ class HierarchyAwareBuilder
             $ignored = true;
         }
 
-        /** @noinspection PhpSecondWriteToReadonlyPropertyInspection */
-        $specie = $this->flat[$specieName] ??= new Specie($specieName, $ignored); // @phpstan-ignore-line
+        $specie = $this->flat[$specieName] ??= new Specie($specieName, $ignored);
 
         if (null !== $parent) {
             $specie->addParent($parent);
