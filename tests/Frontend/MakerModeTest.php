@@ -15,7 +15,7 @@ class MakerModeTest extends PantherTestCaseWithEM
     /**
      * @throws Exception
      */
-    public function DISABLED_testTurningMakerModeOnAndOff(): void // FIXME: Requires re-work after merge from develop, class: disable-filters-goto-main-page
+    public function testTurningMakerModeOnAndOff(): void
     {
         $client = static::createPantherClient();
         self::setWindowSize($client, 1600, 900);
@@ -42,7 +42,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: navigate to the data updates page and enable the maker mode, go back to the main page
 
-        $client->request('GET', '/index.php/data_updates.html');
+        $client->request('GET', '/index.php/iu_form/start');
 
         $client->clickLink('Temporarily disable all the filters and open the main page');
         $client->request('GET', '/index.php/'); // Workaround for the new tab being opened
@@ -86,7 +86,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: navigate to the data updates page and enable the maker mode, go back to the main page
 
-        $client->request('GET', '/index.php/data_updates.html');
+        $client->request('GET', '/index.php/iu_form/start');
 
         $client->clickLink('Temporarily disable all the filters and open the main page');
         $client->request('GET', '/index.php/'); // Workaround for the new tab being opened

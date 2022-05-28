@@ -16,6 +16,13 @@
 {% block body %}
     <h1>{{ block('title')|capitalize }}</h1>
 
+    <p class="mt-3">
+        <a class="disable-filters-goto-main-page text-decoration-none" href="{{ path('main') }}" target="_blank">
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+            Temporarily disable all the filters and <strong>open the main page</strong>
+        </a>
+    </p>
+
     {% include 'iu_form/shared_parts/big_scary_error.html.twig' %}
 
     {{ form_start(form) }}
@@ -40,7 +47,7 @@
 
     <div class="alert alert-primary" role="alert" id="findTheStudioToUpdate">
         <ol class="mb-0">
-            <li>Please navigate to the <a href="{{ path('main') }}" target="_blank">main page</a>.</li>
+            <li>Please navigate to the main page using the <i class="fa-solid fa-filter-circle-xmark"></i> link above.</li>
             <li>Find your studio / your name on the list (it may be your old name; if for any reason it got marked as <em>[inactive]</em>, {# grep-inactive-mark #} it would be listed after the letter Z).</li>
             <li>Click on the name - a details pop-up should show up.</li>
             <li>Look at the bottom of the pop-up. Click the <em>Data outdated/inaccurate?</em> button.</li> {# grep-updates-button #}
