@@ -1,6 +1,6 @@
-import SpecialValue from "./SpecialValue";
-import Artisan from "../../../class/Artisan";
-import AbstractUnknownValue from "./AbstractUnknownValue";
+import AbstractUnknownValue from './AbstractUnknownValue';
+import Artisan from '../../../class/Artisan';
+import SpecialValue from './SpecialValue';
 
 export default class OtherValue extends SpecialValue {
     public static readonly VALUE: string = '*'; // grep-special-value-other

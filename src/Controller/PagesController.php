@@ -12,13 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PagesController extends AbstractController
 {
-    #[Route(path: '/data_updates.html', name: RouteName::DATA_UPDATES)]
-    #[Cache(maxage: 21600, public: true)]
-    public function dataUpdates(): Response
-    {
-        return $this->render('pages/data_updates.html.twig', []);
-    }
-
     #[Route(path: '/info.html', name: RouteName::INFO)]
     #[Cache(maxage: 21600, public: true)]
     public function info(): Response
@@ -52,5 +45,12 @@ class PagesController extends AbstractController
     public function rules(): Response
     {
         return $this->render('pages/rules.html.twig', []);
+    }
+
+    #[Route('/should_know.html', name: RouteName::SHOULD_KNOW)]
+    #[Cache(maxage: 21600, public: true)]
+    public function shouldKnow(): Response
+    {
+        return $this->render('pages/should_know.html.twig', []);
     }
 }

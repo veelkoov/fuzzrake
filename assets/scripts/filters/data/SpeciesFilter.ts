@@ -1,21 +1,21 @@
-import AbstractBaseFilter from "./AbstractBaseFilter";
-import AbstractSingleFieldUnFilter from "./AbstractSingleFieldUnFilter";
-import AbstractSingleFieldUnOtFilter from "./AbstractSingleFieldUnOtFilter";
-import AllSetUnOtFilter from "./AllSetUnOtFilter";
-import AnySetUnOtFilter from "./AnySetUnOtFilter";
-import Artisan from "../../class/Artisan";
-import FilterInterface from "./FilterInterface";
-import OtherValue from "./special/OtherValue";
-import Specie from "../../species/Specie";
-import Species from "../../species/Species";
-import StatusWriter from "../StatusWriter";
-import UnknownValueTwoFields from "./special/UnknownValueTwoFields";
+import AbstractBaseFilter from './AbstractBaseFilter';
+import AbstractSingleFieldUnFilter from './AbstractSingleFieldUnFilter';
+import AbstractSingleFieldUnOtFilter from './AbstractSingleFieldUnOtFilter';
+import AllSetUnOtFilter from './AllSetUnOtFilter';
+import AnySetUnOtFilter from './AnySetUnOtFilter';
+import Artisan from '../../class/Artisan';
+import FilterInterface from './FilterInterface';
+import OtherValue from './special/OtherValue';
+import Specie from '../../species/Specie';
+import Species from '../../species/Species';
+import StatusWriter from '../StatusWriter';
+import UnknownValueTwoFields from './special/UnknownValueTwoFields';
 
 export default class SpeciesFilter extends AbstractBaseFilter<string> {
-    private inFilter: AbstractSingleFieldUnOtFilter<string>;
-    private outFilter: AbstractSingleFieldUnFilter<string>;
-    private unknown: UnknownValueTwoFields;
-    private other: OtherValue;
+    private readonly inFilter: AbstractSingleFieldUnOtFilter<string>;
+    private readonly outFilter: AbstractSingleFieldUnFilter<string>;
+    private readonly unknown: UnknownValueTwoFields;
+    private readonly other: OtherValue;
     private recalculationRequired = true;
 
     public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string, private readonly species: Species) {

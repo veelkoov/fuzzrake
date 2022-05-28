@@ -1,13 +1,19 @@
-import moment = require('moment');
-import Storage from "../class/Storage";
-import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
-import {toggle} from "../jQueryUtils";
+import * as jQuery from 'jquery';
+// @ts-ignore ¯\_(ツ)_/¯
+window.$ = window.jQuery = jQuery
 
-require('../../styles/general.less');
+import 'bootstrap';
+import * as moment from 'moment';
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import {toggle} from '../jQueryUtils';
 
-jQuery($ => {
-    $('span.utc_datetime').each((index, element) => {
-        let $span = $(element);
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '../../styles/general.less';
+
+jQuery(() => {
+    jQuery('span.utc_datetime').each((index, element) => {
+        let $span = jQuery(element);
 
         let parts = $span.text().match(/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) UTC$/); // grep-expected-utc-datetime-format
 
@@ -23,22 +29,21 @@ jQuery($ => {
     });
 });
 
-jQuery($ => {
+jQuery(() => {
     let config = AgeAndSfwConfig.getInstance();
 
     function setMakerModeState(enabled: boolean) {
-
         config.setMakerMode(enabled);
         config.save();
     }
 
     toggle('#maker-mode-warning', config.getMakerMode());
 
-    $('a.disable-filters-goto-main-page').on('click', () => {
+    jQuery('a.disable-filters-goto-main-page').on('click', () => {
         setMakerModeState(true);
     });
 
-    $('#btn-reenable-filters').on('click', () => {
+    jQuery('#btn-reenable-filters').on('click', () => {
         setMakerModeState(false);
     });
 });

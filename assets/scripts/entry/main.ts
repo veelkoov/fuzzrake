@@ -1,17 +1,17 @@
-import Species from '../species/Species';
+import * as Checklist from '../main/checklist';
 import * as DataTable from '../main/artisansTable';
 import * as DetailsPopUp from '../main/detailsPopUp';
-import * as Checklist from '../main/checklist';
 import * as Filters from '../main/filters';
+import * as Handlebars from 'handlebars/runtime';
 import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
-import {makerIdHashRegexp} from '../consts';
-import * as Handlebars from 'handlebars/runtime';
 import HandlebarsHelpers from '../class/HandlebarsHelpers';
+import Species from '../species/Species';
+import {makerIdHashRegexp} from '../consts';
 
-require('../../styles/main.less');
-require('../../3rd-party/flag-icon-css/css/flag-icon.css');
+import '../../3rd-party/flag-icon-css/css/flag-icon.css';
+import '../../styles/main.less';
 
 function executeOneByOne(callbacks): void {
     setTimeout(() => {

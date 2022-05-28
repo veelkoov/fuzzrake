@@ -8,16 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PagesControllerTest extends WebTestCase
 {
-    public function testDataUpdates(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/data_updates.html');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Who adds/updates information on getfursu.it?');
-    }
-
     public function testInfo(): void
     {
         $client = static::createClient();
@@ -67,5 +57,15 @@ class PagesControllerTest extends WebTestCase
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', 'Rules for makers/studios');
+    }
+
+    public function testShouldKnow()
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/should_know.html');
+
+        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        static::assertSelectorTextContains('h1', '"I want a fursuit NOW!"');
     }
 }

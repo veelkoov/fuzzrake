@@ -1,6 +1,6 @@
-import Artisan from "../class/Artisan";
-import FilterInterface from "./data/FilterInterface";
-import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import Artisan from '../class/Artisan';
+import FilterInterface from './data/FilterInterface';
 
 export default class DataTablesFilterPlugin {
     public constructor(

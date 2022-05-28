@@ -1,7 +1,7 @@
-import * as Handlebars from "handlebars/runtime";
-import {SafeString} from "handlebars/runtime";
-import Artisan from "./Artisan";
-import {ADULTS, ADULTS_DESC, MINORS, MINORS_DESC, MIXED, MIXED_DESC} from "../consts";
+import * as Handlebars from 'handlebars/runtime';
+import Artisan from './Artisan';
+import {ADULTS, ADULTS_DESC, MINORS, MINORS_DESC, MIXED, MIXED_DESC} from '../consts';
+import {SafeString} from 'handlebars/runtime';
 
 type TplString = string | SafeString;
 const escape = Handlebars.Utils.escapeExpression;

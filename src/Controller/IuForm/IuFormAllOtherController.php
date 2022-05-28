@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller\IuForm;
+
+use App\ValueObject\Routing\RouteName;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class IuFormAllOtherController extends AbstractIuFormController
+{
+    #[Route(path: '/iu_form/confirmation', name: RouteName::IU_FORM_CONFIRMATION)]
+    #[Cache(maxage: 0, public: false)]
+    public function iuFormConfirmation(Request $request): Response
+    {
+        return $this->render('iu_form/confirmation.html.twig', [
+            'disable_tracking'       => true,
+            'password_ok'            => 'yes' === $request->get('passwordOk', 'no'),
+            'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
+            'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),
+        ]);
+    }
+
+    #[Route(path: '/iu_form/fill/{makerId}')]
+    #[Route(path: '/iu_form/{makerId}', priority: -10)]
+    #[Cache(maxage: 0, public: false)]
+    public function oldAddressRedirect(?string $makerId = null): Response
+    {
+        return $this->redirectToRoute(RouteName::IU_FORM_START, ['makerId' => $makerId]);
+    }
+}

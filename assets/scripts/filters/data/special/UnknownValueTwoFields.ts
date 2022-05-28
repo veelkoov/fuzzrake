@@ -1,5 +1,5 @@
-import AbstractUnknownValue from "./AbstractUnknownValue";
-import Artisan from "../../../class/Artisan";
+import AbstractUnknownValue from './AbstractUnknownValue';
+import Artisan from '../../../class/Artisan';
 
 export default class UnknownValueTwoFields extends AbstractUnknownValue {
     public constructor(protected readonly fieldName1: string, protected readonly fieldName2: string) {

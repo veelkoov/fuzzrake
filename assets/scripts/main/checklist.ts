@@ -1,6 +1,6 @@
 import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import Checkbox from "../class/Checkbox";
-import Radio from "../class/Radio";
+import Radio from "../class/fields/Radio";
 import {applyFilters} from "./filters";
 import {NO, YES} from "../consts";
 import {toggle} from "../jQueryUtils";
