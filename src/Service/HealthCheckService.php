@@ -61,11 +61,13 @@ class HealthCheckService
 
     public function getDiskStatus(string $rawData): string
     {
-        $disks = explode("\n", trim($rawData));
+        $rawData = trim($rawData);
 
-        if (empty($disks)) {
+        if ('' === $rawData) {
             return self::WARNING;
         }
+
+        $disks = explode("\n", $rawData);
 
         foreach ($disks as $disk) {
             $disk = explode("\t", $disk);

@@ -20,7 +20,7 @@ class OfferStatusParser
     /**
      * @var string[][]
      */
-    private array $groupTranslations;
+    private readonly array $groupTranslations;
 
     private readonly TextPreprocessor $preprocessor;
 

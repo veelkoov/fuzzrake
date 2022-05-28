@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class BaseForm extends AbstractType
 {
-    public const BTN_RESET = 'reset';
+    final public const BTN_RESET = 'reset';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

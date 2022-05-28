@@ -20,7 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IuFormContactAndPasswordController extends AbstractIuFormController
 {
-
     /**
      * @throws NotFoundHttpException
      */

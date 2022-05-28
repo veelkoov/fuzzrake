@@ -70,7 +70,7 @@ class CommissionsTrackerTask implements TrackerTaskInterface
      */
     private function extractOfferStatuses(ArtisanUrl $url): array
     {
-        $webpageSnapshot = $this->snapshots->get($url, false, false);
+        $webpageSnapshot = $this->snapshots->get($url, false);
 
         return $this->parser->getCommissionsStatuses($webpageSnapshot);
     }

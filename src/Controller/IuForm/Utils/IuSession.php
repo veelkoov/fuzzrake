@@ -33,7 +33,7 @@ class IuSession
         if (is_string($stringUuid) && UuidV4::isValid($stringUuid)) {
             $this->uuid = UuidV4::fromRfc4122($stringUuid);
         } else {
-            $this->uuid = Uuid::v4();
+            $this->uuid = Uuid::v4(); // @phpstan-ignore-line
 
             $this->session->set($this->keySessionId, $this->uuid->toRfc4122());
             $this->session->set($this->keyStartDateTime, UtcClock::now());

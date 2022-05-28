@@ -44,7 +44,7 @@ trait UtilsTrait
 
         $fields = [];
         foreach ($crawler->filter('input.is-invalid') as $field) {
-            $fields[] = $field->getAttribute('name');
+            $fields[] = $field->getAttribute('name'); // @phpstan-ignore-line DOMNode::getAttribute() is defined
         }
 
         self::fail('Form validation failed for: '.implode(', ', array_unique($fields)));

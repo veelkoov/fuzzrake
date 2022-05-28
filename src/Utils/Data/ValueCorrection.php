@@ -48,6 +48,6 @@ class ValueCorrection implements Stringable
 
     public function __toString(): string
     {
-        return "$this->subject $this->field '$this->wrongValue' '$this->correctedValue'";
+        return "$this->subject {$this->field->value} '$this->wrongValue' '$this->correctedValue'";
     }
 }

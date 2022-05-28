@@ -33,7 +33,7 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
             $this->expectException(NoResultException::class);
         }
 
-        $result = self::getEM()->getRepository(ArtisanE::class)->findByMakerId($makerId);
+        $result = self::getEM()->getRepository(ArtisanE::class)->findByMakerId($makerId); // @phpstan-ignore-line
 
         static::assertEquals($artisans[$resultIdx], $result);
     }
@@ -78,12 +78,12 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
         self::persistAndFlush($artisan);
         self::clear();
 
-        $retrieved1 = self::getEM()->getRepository(ArtisanE::class)->findByMakerId('MAKRID1');
+        $retrieved1 = self::getEM()->getRepository(ArtisanE::class)->findByMakerId('MAKRID1'); // @phpstan-ignore-line
 
         self::assertEquals($artisan->getMakerId(), $retrieved1->getMakerId());
         self::assertEquals($accessor->getFormerMakerIds(), Artisan::wrap($retrieved1)->getFormerMakerIds());
 
-        $retrieved2 = self::getEM()->getRepository(ArtisanE::class)->findByMakerId('MAKRID2');
+        $retrieved2 = self::getEM()->getRepository(ArtisanE::class)->findByMakerId('MAKRID2'); // @phpstan-ignore-line
         self::assertEquals($retrieved1, $retrieved2);
     }
 

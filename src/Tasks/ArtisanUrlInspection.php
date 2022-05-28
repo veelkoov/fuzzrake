@@ -27,7 +27,7 @@ final class ArtisanUrlInspection
 
         foreach ($urls as $url) {
             try {
-                $this->webpageSnapshotManager->get($url, true, false);
+                $this->webpageSnapshotManager->get($url, true);
             } catch (ExceptionInterface) {
                 // Ignore - failure has been recorded
             }
