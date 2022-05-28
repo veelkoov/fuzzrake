@@ -23,19 +23,4 @@ class RestApiControllerWithEMTest extends WebTestCaseWithEM
         self::assertStringContainsString('"APIARTS"', $text);
         self::assertStringContainsString('"FI"', $text);
     }
-
-    /**
-     * @throws JsonException
-     */
-    public function testHealth(): void
-    {
-        $client = static::createClient();
-        self::addSimpleArtisan();
-
-        $client->request('GET', '/health');
-        self::assertResponseStatusCodeSame(200);
-
-        $data = Json::decode($client->getResponse()->getContent());
-        self::assertEquals('OK', $data['status']);
-    }
 }
