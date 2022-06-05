@@ -53,7 +53,6 @@ function initFilters(): void {
     filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
     filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
     filters.push(new SpeciesFilterVis('species', 'speciesDoesFilters', 'speciesDoesntFilters', Species.get()));
-    filters.push(new GenericFilterVis<string>('worksWithMinors', new ValueUnFilter('safeWorksWithMinors')));
 
     let dataFilters = filters.map(value => value.getFilter());
     dataFilters.push(new AgeAndSfwFilter(getAgeAndSfwConfig()));

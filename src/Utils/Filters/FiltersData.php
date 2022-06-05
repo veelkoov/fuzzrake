@@ -17,7 +17,6 @@ class FiltersData
         public readonly FilterData $countries,
         public readonly FilterData $states,
         public readonly Set $species,
-        public readonly FilterData $worksWithMinors,
     ) {
     }
 }

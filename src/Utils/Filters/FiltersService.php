@@ -39,7 +39,6 @@ class FiltersService
             $this->getCountriesFilterData(),
             $this->artisanRepository->getDistinctStatesToCountAssoc(),
             $this->getSpeciesFilterItems(),
-            $this->artisanRepository->getSafeWorksWithMinors(),
         );
     }
 
