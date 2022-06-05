@@ -98,9 +98,6 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-        self::waitUntilShows('#checklist-ack-pros-and-cons');
-        $client->findElement(WebDriverBy::id('checklist-ack-pros-and-cons'))->click();
-
         if ($userIsMinor) {
             self::waitUntilShows('#aasImNotAdult');
             $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();

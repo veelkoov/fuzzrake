@@ -5,21 +5,19 @@ import {applyFilters} from "./filters";
 import {NO, YES} from "../consts";
 import {toggle} from "../jQueryUtils";
 
-let illBeCareful: Checkbox, ackProsAndCons: Checkbox, iLikeButtons: Checkbox;
+let illBeCareful: Checkbox, iLikeButtons: Checkbox;
 let isAdult: Radio, wantsSfw: Radio;
-let $prosConsContainer: JQuery<HTMLElement>, $ageContainer: JQuery<HTMLElement>,
-    $wantsSfwContainer: JQuery<HTMLElement>, $dismissButton: JQuery<HTMLElement>;
+let $ageContainer: JQuery<HTMLElement>, $wantsSfwContainer: JQuery<HTMLElement>, $dismissButton: JQuery<HTMLElement>;
 
 const config = AgeAndSfwConfig.getInstance();
 
 function isReady(): boolean {
-    return illBeCareful.isChecked() && ackProsAndCons.isChecked() && (isAdult.isVal(NO) || wantsSfw.isAnySelected());
+    return illBeCareful.isChecked() && (isAdult.isVal(NO) || wantsSfw.isAnySelected());
 }
 
 function refreshAll(): void {
-    toggle($prosConsContainer, illBeCareful.isChecked());
-    toggle($ageContainer, illBeCareful.isChecked() && ackProsAndCons.isChecked());
-    toggle($wantsSfwContainer, illBeCareful.isChecked() && ackProsAndCons.isChecked() && isAdult.isVal(YES));
+    toggle($ageContainer, illBeCareful.isChecked());
+    toggle($wantsSfwContainer, illBeCareful.isChecked() && isAdult.isVal(YES));
 
     config.setWantsSfw(!wantsSfw.isVal(NO));
     config.setIsAdult(isAdult.isVal(YES));
@@ -63,14 +61,12 @@ function dismissButtonOnClick(): void {
 export function init(): (() => void)[] {
     return [
         () => {
-            $prosConsContainer = jQuery('#checklist-pros-and-cons-container');
             $ageContainer = jQuery('#checklist-age-container');
             $wantsSfwContainer = jQuery('#checklist-wants-sfw-container');
             $dismissButton = jQuery('#checklist-dismiss-btn');
             $dismissButton.on('click', dismissButtonOnClick);
 
             illBeCareful = new Checkbox('checklist-ill-be-careful', refreshAll);
-            ackProsAndCons = new Checkbox('checklist-ack-pros-and-cons', refreshAll);
             iLikeButtons = new Checkbox('checklist-i-like-buttons', refreshAll);
 
             isAdult = new Radio('checklistIsAdult', refreshAll);
@@ -78,7 +74,6 @@ export function init(): (() => void)[] {
 
             if (config.getIsFilled()) {
                 illBeCareful.check();
-                ackProsAndCons.check();
 
                 if (!config.getIsAdult()) {
                     isAdult.selectVal(NO);

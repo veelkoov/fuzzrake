@@ -70,8 +70,6 @@ class MakerModeTest extends PantherTestCaseWithEM
         // Action: fill the checklist, aim for minors-friendly experience
 
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
-        self::waitUntilShows('#checklist-ack-pros-and-cons');
-        $client->findElement(WebDriverBy::id('checklist-ack-pros-and-cons'))->click();
         self::waitUntilShows('#aasImNotAdult');
         $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();

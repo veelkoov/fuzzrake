@@ -34,9 +34,6 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
         $client->waitForVisibility('#checklist-ill-be-careful', 5);
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-        $client->waitForVisibility('#checklist-ack-pros-and-cons', 1);
-        $client->findElement(WebDriverBy::id('checklist-ack-pros-and-cons'))->click();
-
         $client->waitForVisibility('#aasImAdult', 1);
         $client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
