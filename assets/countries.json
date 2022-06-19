@@ -2,7 +2,7 @@
   {
     "name": "Argentina",
     "code": "AR",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "Australia",
@@ -22,17 +22,17 @@
   {
     "name": "Brazil",
     "code": "BR",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "Canada",
     "code": "CA",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "Chile",
     "code": "CL",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "China",
@@ -47,7 +47,7 @@
   {
     "name": "Costa Rica",
     "code": "CR",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "Czechia",
@@ -103,7 +103,7 @@
   {
     "name": "Mexico",
     "code": "MX",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "Netherlands",
@@ -124,6 +124,11 @@
     "name": "Poland",
     "code": "PL",
     "region": "Europe"
+  },
+  {
+    "name": "Peru",
+    "code": "PE",
+    "region": "Americas"
   },
   {
     "name": "Portugal",
@@ -163,7 +168,7 @@
   {
     "name": "United States",
     "code": "US",
-    "region": "America"
+    "region": "Americas"
   },
   {
     "name": "South Africa",
