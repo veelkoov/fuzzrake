@@ -19,14 +19,14 @@ abstract class AbstractListFixer extends StringFixer
         $this->replacements = new Replacements($lists['replacements'], 'i', $lists['commonRegexPrefix'], $lists['commonRegexSuffix']);
     }
 
-    public function fix(string $fieldName, string $subject): string
+    public function fix(string $subject): string
     {
-        $items = StringList::split($subject, static::getSeparatorRegexp(), static::getNonsplittable());
+        $items = StringList::split($subject, static::getSeparatorRegexp(), static::getNonsplittable($subject));
         $items = array_filter(array_map(fn (string $item): string => $this->fixItem($item), $items));
 
         $subject = StringList::pack($items);
         $subject = $this->getReplacements()->do($subject);
-        $subject = parent::fix($fieldName, $subject);
+        $subject = parent::fix($subject);
         $subject = StringList::unpack($subject);
 
         if (static::shouldSort()) {
@@ -43,7 +43,7 @@ abstract class AbstractListFixer extends StringFixer
     /**
      * @return string[]
      */
-    protected function getNonsplittable(): array
+    protected function getNonsplittable(string $subject): array
     {
         return [];
     }

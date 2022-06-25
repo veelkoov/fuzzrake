@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Utils\Json;
-use JsonException;
 
 class RestApiControllerWithEMTest extends WebTestCaseWithEM
 {

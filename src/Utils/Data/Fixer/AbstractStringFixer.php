@@ -15,7 +15,7 @@ class AbstractStringFixer implements FixerInterface
         $this->replacements = new Replacements($regexes['replacements'], 'i', $regexes['commonRegexPrefix'], $regexes['commonRegexSuffix']);
     }
 
-    public function fix(string $fieldName, string $subject): string
+    public function fix(string $subject): string
     {
         return $this->replacements->do(trim($subject));
     }

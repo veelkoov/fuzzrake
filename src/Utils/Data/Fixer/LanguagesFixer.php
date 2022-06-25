@@ -24,9 +24,9 @@ class LanguagesFixer extends StringFixer
         $this->replacements = new Replacements($languages['replacements'], 'i', $languages['commonRegexPrefix'], $languages['commonRegexSuffix']);
     }
 
-    public function fix(string $fieldName, string $subject): string
+    public function fix(string $subject): string
     {
-        $subject = parent::fix($fieldName, $subject);
+        $subject = parent::fix($subject);
 
         $subject = pattern('[\n,;&]|[, ]and ')->split($subject);
         $subject = array_filter(array_map('trim', $subject));

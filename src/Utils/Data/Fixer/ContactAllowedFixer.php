@@ -8,7 +8,7 @@ use App\DataDefinitions\ContactPermit;
 
 class ContactAllowedFixer implements FixerInterface
 {
-    public function fix(string $fieldName, string $subject): string
+    public function fix(string $subject): string
     {
         return str_replace(ContactPermit::getValues(), ContactPermit::getKeys(), $subject);
     }

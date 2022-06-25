@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Tracker;
 
+use App\Tests\TestUtils\DataDefinitions;
 use App\Tests\TestUtils\Paths;
 use App\Tests\TestUtils\RegexesProviderMock;
 use App\Tracker\OfferStatus;
@@ -17,7 +18,6 @@ use App\Utils\Web\Snapshot\WebpageSnapshot;
 use App\Utils\Web\Snapshot\WebpageSnapshotJar;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Yaml\Yaml;
 
 class OfferStatusParserTest extends TestCase
 {
@@ -25,8 +25,7 @@ class OfferStatusParserTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $parameters = Yaml::parseFile(Paths::getDataDefinitionsPath('tracker_regexes.yaml'));
-        $factory = new RegexFactory($parameters['parameters']['tracker_regexes']);
+        $factory = new RegexFactory(DataDefinitions::get('tracker_regexes.yaml', 'tracker_regexes'));
         $regexes = new Regexes(
             $factory->getFalsePositives(),
             $factory->getOfferStatuses(),
