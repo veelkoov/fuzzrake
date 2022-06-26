@@ -34,7 +34,7 @@ class SpeciesListFixer extends AbstractListFixer
         return "[\n,.]";
     }
 
-    protected function getNonsplittable(): array
+    protected function getNonsplittable(string $subject): array
     {
         return $this->unsplittable;
     }

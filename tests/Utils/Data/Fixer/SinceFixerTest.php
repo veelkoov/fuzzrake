@@ -13,7 +13,7 @@ class SinceFixerTest extends TestCase
     {
         $fixer = new SinceFixer();
 
-        self::assertEquals('2021-02', $fixer->fix('ignored', '2021-02-15'));
-        self::assertEquals('9999-99', $fixer->fix('ignored', '9999-99-99'));
+        self::assertEquals('2021-02', $fixer->fix('2021-02-15'));
+        self::assertEquals('9999-99', $fixer->fix('9999-99-99'));
     }
 }

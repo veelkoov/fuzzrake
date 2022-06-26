@@ -13,19 +13,19 @@ class PatternProvider
     /**
      * @var Pattern[]
      */
-    private array $falsePositives;
+    private readonly array $falsePositives;
 
     /**
      * @var Pattern[]
      */
-    private array $offerStatuses;
+    private readonly array $offerStatuses;
 
     /**
      * @var string[][]
      */
-    private array $groupTranslations;
+    private readonly array $groupTranslations;
 
-    private Replacements $cleaners;
+    private readonly Replacements $cleaners;
 
     public function __construct(
         RegexesProvider $regexPersistence,

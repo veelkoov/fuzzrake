@@ -54,7 +54,6 @@ class IuFormDataController extends AbstractIuFormController
             'errors'             => $form->getErrors(true),
             'noindex'            => true,
             'submitted'          => $form->isSubmitted(),
-            'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),
             'session_start_time' => $state->getStarted(),
             'big_error_message'  => $this->getRestoreFailedMessage($state),

@@ -51,13 +51,13 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         $crawler = $client->getCrawler();
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertRowValueEquals('2 (100.00%)', Features::FOLLOW_ME_EYES, $crawler);
-        static::assertRowValueEquals('1 (50.00%)', ProductionModels::STANDARD_COMMISSIONS, $crawler);
-        static::assertRowValueEquals('1 (50.00%)', OrderTypes::FULL_DIGITIGRADE, $crawler);
-        static::assertRowValueEquals('2 (100.00%)', 'Unknown', $crawler->filterXPath('//h1[text()="Styles"]')->nextAll()->first());
-        static::assertRowValueEquals('2 (100.00%)', 'Total', $crawler->filterXPath('//h1[text()="Commission status"]')->nextAll()->first());
-        static::assertRowValueEquals('2 (100.00%)', Field::NAME->name, $crawler);
-        static::assertRowValueEquals('1 (50.00% × 2 = 100.00%)', 'CZ, SK', $crawler);
+        self::assertRowValueEquals('2 (100.00%)', Features::FOLLOW_ME_EYES, $crawler);
+        self::assertRowValueEquals('1 (50.00%)', ProductionModels::STANDARD_COMMISSIONS, $crawler);
+        self::assertRowValueEquals('1 (50.00%)', OrderTypes::FULL_DIGITIGRADE, $crawler);
+        self::assertRowValueEquals('2 (100.00%)', 'Unknown', $crawler->filterXPath('//h1[text()="Styles"]')->nextAll()->first());
+        self::assertRowValueEquals('2 (100.00%)', 'Total', $crawler->filterXPath('//h1[text()="Commission status"]')->nextAll()->first());
+        self::assertRowValueEquals('2 (100.00%)', Field::NAME->name, $crawler);
+        self::assertRowValueEquals('1 (50.00% × 2 = 100.00%)', 'CZ, SK', $crawler);
         // https://github.com/veelkoov/fuzzrake/issues/74
         // static::assertRowValueEquals('1 (50.00%)', '40-49%', $crawler);
         // static::assertRowValueEquals('1 (50.00%)', '50-59%', $crawler);
@@ -93,7 +93,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
     private static function assertRowValueEquals(string $expected, string $rowLabel, Crawler $crawler): void
     {
-        static::assertEquals($expected, static::getRowValue($crawler, $rowLabel));
+        static::assertEquals($expected, self::getRowValue($crawler, $rowLabel));
     }
 
     private static function getRowValue(Crawler $crawler, string $rowLabel): string

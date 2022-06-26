@@ -13,8 +13,8 @@ class StateFixer extends AbstractStringFixer
         parent::__construct($states);
     }
 
-    public function fix(string $fieldName, string $subject): string
+    public function fix(string $subject): string
     {
-        return parent::fix($fieldName, $this->stringFixer->fix($fieldName, $subject));
+        return parent::fix($this->stringFixer->fix($subject));
     }
 }

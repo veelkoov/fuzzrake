@@ -12,8 +12,8 @@ use TRegx\CleanRegex\Pattern;
 
 class RegexFactory
 {
-    private Pattern $unnamed;
-    private Pattern $namedGroup;
+    private readonly Pattern $unnamed;
+    private readonly Pattern $namedGroup;
 
     /**
      * @var string[]
@@ -33,7 +33,7 @@ class RegexFactory
     /**
      * @var string[][]
      */
-    private array $groupTranslations;
+    private readonly array $groupTranslations;
 
     /**
      * @var string[]

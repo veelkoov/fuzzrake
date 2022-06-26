@@ -31,9 +31,9 @@ class FieldsList implements IteratorAggregate
 
     /**
      * @return Field[]
-     * @noinspection PhpDocSignatureInspection - Workaround for generics
+     * @noinspection PhpDocSignatureInspection - Workaround for generics in foreach
      */
-    public function getIterator(): Traversable
+    public function getIterator(): Traversable // @phpstan-ignore-line - Workaround for generics in foreach
     {
         return new ArrayIterator($this->fields);
     }

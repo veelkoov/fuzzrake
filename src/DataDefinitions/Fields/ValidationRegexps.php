@@ -32,7 +32,7 @@ final class ValidationRegexps
     final public const STATE = '^([A-Za-zé ]{4,})?$';
 
     final public const CURRENCIES = '^([A-Z]{3}(\n[A-Z]{3})*)?$';
-    private const PAY_COMMENT = '( \([ 0-9a-zA-Z&@;%-]+\))?';
+    private const PAY_COMMENT = '( \([^)]+\))?';
     private const PAY_METHODS_LIST = 'Apple Pay|Bank transfers|BLIK'
         .'|Cash|Cash App|Checks|Cashier\'s checks|Crypto'
         .'|Credit/debit cards'.'|Credit cards'.'|Debit cards'

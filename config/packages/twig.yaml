@@ -4,7 +4,6 @@ twig:
     globals:
         feedback_form_url:       '%feedback_form_url%'
         filter_suggest_form_url: '%filter_suggest_form_url%'
-        google_analytics_id:     '%google_analytics_id%'
         report_form_url:         '%report_form_url%'
 
 when@test:

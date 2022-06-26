@@ -17,9 +17,9 @@ class PayPlanFixer extends AbstractStringFixer
         $this->replacements = new Replacements($noPayPlans['replacements'], 'i', $noPayPlans['commonRegexPrefix'], $noPayPlans['commonRegexSuffix']);
     }
 
-    public function fix(string $fieldName, string $subject): string
+    public function fix(string $subject): string
     {
-        $result = parent::fix($fieldName, $subject);
+        $result = parent::fix($subject);
 
         return $this->replacements->do($result);
     }

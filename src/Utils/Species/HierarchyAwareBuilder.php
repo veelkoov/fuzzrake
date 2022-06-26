@@ -21,7 +21,7 @@ class HierarchyAwareBuilder
     /**
      * @var Specie[] Species fit for filtering
      */
-    private array $tree;
+    private readonly array $tree;
 
     /**
      * @var string[] Names of species considered valid by the validator (list of all, not only fit for filtering)

@@ -17,7 +17,6 @@ class IuFormAllOtherController extends AbstractIuFormController
     public function iuFormConfirmation(Request $request): Response
     {
         return $this->render('iu_form/confirmation.html.twig', [
-            'disable_tracking'       => true,
             'password_ok'            => 'yes' === $request->get('passwordOk', 'no'),
             'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
             'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),

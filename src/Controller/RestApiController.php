@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
-use App\Service\HealthCheckService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -64,12 +63,5 @@ class RestApiController extends AbstractRecaptchaBackedController
     public function oldToNewMakerIdsMap(MakerIdRepository $makerIdRepository): JsonResponse
     {
         return new JsonResponse($makerIdRepository->getOldToNewMakerIdsMap());
-    }
-
-    #[Route(path: '/health', name: RouteName::HEALTH)]
-    #[Cache(maxage: 0, public: false)]
-    public function healthcheck(HealthCheckService $healthCheckService): JsonResponse
-    {
-        return new JsonResponse($healthCheckService->getStatus());
     }
 }

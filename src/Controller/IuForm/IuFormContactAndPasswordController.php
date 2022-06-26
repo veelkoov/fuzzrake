@@ -70,7 +70,6 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
             'form'               => $form,
             'errors'             => $form->getErrors(true),
             'noindex'            => true,
-            'disable_tracking'   => true,
             'is_update'          => !$state->isNew(),
             'session_start_time' => $state->getStarted(),
             'big_error_message'  => $this->getRestoreFailedMessage($state),

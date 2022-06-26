@@ -45,12 +45,18 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/new.html', name: RouteName::NEW_ARTISANS)]
+    #[Route(path: '/new', name: RouteName::NEW_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
     public function newArtisans(ArtisanRepository $artisanRepository): Response
     {
         return $this->render('main/new.html.twig', [
             'artisans' => Artisan::wrapAll($artisanRepository->getNew()),
         ]);
+    }
+
+    #[Route(path: '/new.html')]
+    public function newArtisansRedirect(): Response
+    {
+        return $this->redirectToRoute(RouteName::NEW_ARTISANS);
     }
 }

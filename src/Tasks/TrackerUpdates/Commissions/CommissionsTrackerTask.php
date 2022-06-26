@@ -17,7 +17,7 @@ use App\Utils\Data\ArtisanChanges;
 use App\Utils\StringList;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
-use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use TRegx\SafeRegex\Exception\RuntimePregException;
 
 class CommissionsTrackerTask implements TrackerTaskInterface
 {
@@ -66,11 +66,10 @@ class CommissionsTrackerTask implements TrackerTaskInterface
      * @return OfferStatus[]
      *
      * @throws TrackerException
-     * @throws ExceptionInterface
      */
     private function extractOfferStatuses(ArtisanUrl $url): array
     {
-        $webpageSnapshot = $this->snapshots->get($url, false, false);
+        $webpageSnapshot = $this->snapshots->get($url, false);
 
         return $this->parser->getCommissionsStatuses($webpageSnapshot);
     }
@@ -98,7 +97,8 @@ class CommissionsTrackerTask implements TrackerTaskInterface
                 }
 
                 array_push($result, ...$allOfferStatuses);
-            } catch (ExceptionInterface|TrackerException $exception) {
+            } /* @noinspection PhpRedundantCatchClauseInspection */
+            catch (TrackerException|RuntimePregException $exception) {
                 $this->logger->notice('Exception caught while detecting statuses in URL', [
                     'artisan'   => (string) $artisan,
                     'url'       => (string) $url,
