@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/')]
 class StatisticsController extends AbstractController
 {
     private const MATCH_WORDS = [
@@ -55,7 +54,7 @@ class StatisticsController extends AbstractController
     /**
      * @throws UnexpectedResultException
      */
-    #[Route(path: '/statistics.html', name: RouteName::STATISTICS)]
+    #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
     public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, SpeciesService $species): Response
     {

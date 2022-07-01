@@ -25,7 +25,6 @@ class MainController extends AbstractController
      * @throws InvalidArgumentException
      */
     #[Route(path: '/', name: RouteName::MAIN)]
-    #[Route(path: '/index.html')]
     #[Cache(maxage: 3600, public: true)]
     public function main(ArtisansDOD $artisans, MakerIdRepository $makerIdRepository, FiltersService $filterService,
                          SpeciesService $speciesService, StatisticsService $statisticsService,
@@ -52,11 +51,5 @@ class MainController extends AbstractController
         return $this->render('main/new.html.twig', [
             'artisans' => Artisan::wrapAll($artisanRepository->getNew()),
         ]);
-    }
-
-    #[Route(path: '/new.html')]
-    public function newArtisansRedirect(): Response
-    {
-        return $this->redirectToRoute(RouteName::NEW_ARTISANS);
     }
 }
