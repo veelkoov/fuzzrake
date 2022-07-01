@@ -19,7 +19,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
         self::addSimpleArtisan();
 
-        $client->request('GET', '/statistics.html');
+        $client->request('GET', '/stats');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1#data_statistics', 'Data statistics');
@@ -47,7 +47,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $client->request('GET', '/statistics.html');
+        $client->request('GET', '/stats');
         $crawler = $client->getCrawler();
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
@@ -85,7 +85,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($artisan3, $artisan4, $artisan5);
 
-        $client->request('GET', '/statistics.html');
+        $client->request('GET', '/stats');
         $crawler = $client->getCrawler();
 
         self::assertEquals('3 (50.00%)', $this->getRowValue($crawler, 'FORMER_MAKER_IDS'));

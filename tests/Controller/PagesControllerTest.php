@@ -12,7 +12,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/info.html');
+        $client->request('GET', '/info');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h3#contact', 'Contact maintainer');
@@ -23,7 +23,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/tracking.html');
+        $client->request('GET', '/tracking');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', 'Automatic tracking and status updates');
@@ -33,7 +33,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/maker_ids.html');
+        $client->request('GET', '/maker-ids');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', 'What is a "maker ID"?');
@@ -43,7 +43,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/donate.html');
+        $client->request('GET', '/donate');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h2', 'Please donate');
@@ -53,7 +53,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/rules.html');
+        $client->request('GET', '/rules');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', 'Rules for makers/studios');
@@ -63,7 +63,7 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/should_know.html');
+        $client->request('GET', '/should-know');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('h1', '"I want a fursuit NOW!"');
