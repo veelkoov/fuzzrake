@@ -102,8 +102,6 @@ export default class Artisan {
                 readonly inactiveReason: string,
                 readonly csLastCheck: string,
                 readonly csTrackerIssue: boolean,
-                readonly bpLastCheck: string,
-                readonly bpTrackerIssue: boolean,
                 openFor: string[],
                 readonly closedFor: string[],
                 readonly completeness: number,

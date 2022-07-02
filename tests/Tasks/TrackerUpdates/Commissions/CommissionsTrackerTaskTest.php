@@ -7,7 +7,7 @@ namespace App\Tests\Tasks\TrackerUpdates\Commissions;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\TrackerUpdates\Commissions\CommissionsTrackerTask;
+use App\Tasks\TrackerUpdates\CommissionsTrackerTask;
 use App\Tracker\OfferStatus;
 use App\Tracker\OfferStatusParser;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

@@ -11,16 +11,16 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use LogicException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
+#[AsCommand('app:data:set-miniatures')]
 class DataSetMiniaturesCommand extends Command
 {
-    protected static $defaultName = 'app:data:set-miniatures';
-
     public function __construct(
         private readonly ArtisanRepository $artisanRepository,
         private readonly EntityManagerInterface $entityManager,

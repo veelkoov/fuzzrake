@@ -12,42 +12,42 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PagesController extends AbstractController
 {
-    #[Route(path: '/info.html', name: RouteName::INFO)]
+    #[Route(path: '/info', name: RouteName::INFO)]
     #[Cache(maxage: 21600, public: true)]
     public function info(): Response
     {
         return $this->render('pages/information.html.twig', []);
     }
 
-    #[Route(path: '/tracking.html', name: RouteName::TRACKING)]
+    #[Route(path: '/tracking', name: RouteName::TRACKING)]
     #[Cache(maxage: 21600, public: true)]
     public function tracking(): Response
     {
         return $this->render('pages/tracking.html.twig', []);
     }
 
-    #[Route(path: '/maker_ids.html', name: RouteName::MAKER_IDS)]
+    #[Route(path: '/maker-ids', name: RouteName::MAKER_IDS)]
     #[Cache(maxage: 21600, public: true)]
     public function makerIds(): Response
     {
         return $this->render('pages/maker_ids.html.twig', []);
     }
 
-    #[Route(path: '/donate.html', name: RouteName::DONATE)]
+    #[Route(path: '/donate', name: RouteName::DONATE)]
     #[Cache(maxage: 21600, public: true)]
     public function donate(): Response
     {
         return $this->render('pages/donate.html.twig', []);
     }
 
-    #[Route('/rules.html', name: RouteName::RULES)]
+    #[Route(path: '/rules', name: RouteName::RULES)]
     #[Cache(maxage: 21600, public: true)]
     public function rules(): Response
     {
         return $this->render('pages/rules.html.twig', []);
     }
 
-    #[Route('/should_know.html', name: RouteName::SHOULD_KNOW)]
+    #[Route(path: '/should-know', name: RouteName::SHOULD_KNOW)]
     #[Cache(maxage: 21600, public: true)]
     public function shouldKnow(): Response
     {

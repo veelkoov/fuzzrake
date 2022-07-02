@@ -21,7 +21,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
     {
         $client = static::createClient();
 
-        $client->request('GET', '/events.html');
+        $client->request('GET', '/events');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
         static::assertSelectorTextContains('p', 'See all recently added makers');
@@ -35,7 +35,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
         $this->persistAndFlush($event);
 
-        $client->request('GET', '/events.html');
+        $client->request('GET', '/events');
 
         $actualHtml = $client->getCrawler()->filter('#events-list p')->html();
 

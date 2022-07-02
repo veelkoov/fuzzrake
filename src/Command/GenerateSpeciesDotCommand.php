@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,10 +14,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+#[AsCommand('app:data:generate-species-dot')]
 class GenerateSpeciesDotCommand extends Command
 {
-    protected static $defaultName = 'app:data:generate-species-dot';
-
     private const DOT_FILE_PATH = 'species.dot';
 
     private const GROUPS_WITH_ARTIFICIAL_PLACEMENT = [

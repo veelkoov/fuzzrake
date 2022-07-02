@@ -42,12 +42,12 @@ class ArtisanVolatileData
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTimeImmutable $lastBpUpdate = null;
+    private ?DateTimeImmutable $lastBpUpdate = null; // TODO: Remove
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private bool $bpTrackerIssue = false;
+    private bool $bpTrackerIssue = false; // TODO: Remove
 
     public function getId(): ?int
     {
@@ -86,30 +86,6 @@ class ArtisanVolatileData
     public function setCsTrackerIssue(bool $csTrackerIssue): self
     {
         $this->csTrackerIssue = $csTrackerIssue;
-
-        return $this;
-    }
-
-    public function getLastBpUpdate(): ?DateTimeImmutable
-    {
-        return $this->lastBpUpdate;
-    }
-
-    public function setLastBpUpdate(?DateTimeImmutable $lastBpUpdate): self
-    {
-        $this->lastBpUpdate = $lastBpUpdate;
-
-        return $this;
-    }
-
-    public function getBpTrackerIssue(): bool
-    {
-        return $this->bpTrackerIssue;
-    }
-
-    public function setBpTrackerIssue(bool $bpTrackerIssue): self
-    {
-        $this->bpTrackerIssue = $bpTrackerIssue;
 
         return $this;
     }

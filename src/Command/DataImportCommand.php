@@ -10,16 +10,16 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\IuSubmissions\Finder;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand('app:data:import')]
 class DataImportCommand extends Command
 {
-    protected static $defaultName = 'app:data:import';
-
     public function __construct(
         private readonly DataImportFactory $dataImportFactory,
         private readonly EntityManagerInterface $objectManager,

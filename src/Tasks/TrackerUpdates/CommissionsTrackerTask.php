@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\TrackerUpdates\Commissions;
+namespace App\Tasks\TrackerUpdates;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\ArtisanUrl;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\TrackerUpdates\TrackerTaskInterface;
 use App\Tracker\OfferStatus;
 use App\Tracker\OfferStatusParser;
 use App\Tracker\TrackerException;

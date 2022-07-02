@@ -409,28 +409,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getBpLastCheck(): ?DateTimeImmutable
-    {
-        return $this->getVolatileData()->getLastBpUpdate();
-    }
-
-    public function setBpLastCheck(?DateTimeImmutable $bpLastCheck): void
-    {
-        $this->getVolatileData()->setLastBpUpdate($bpLastCheck);
-    }
-
-    public function getBpTrackerIssue(): bool
-    {
-        return $this->getVolatileData()->getBpTrackerIssue();
-    }
-
-    public function setBpTrackerIssue(bool $bpTrackerIssue): self
-    {
-        $this->getVolatileData()->setBpTrackerIssue($bpTrackerIssue);
-
-        return $this;
-    }
-
     //
     // ===== COMMISSIONS STATUS HELPERS =====
     //
@@ -810,7 +788,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             $value = match ($field) {
                 Field::COMPLETENESS       => $this->getCompleteness(),
                 Field::CS_LAST_CHECK      => StrUtils::asStr($this->getCsLastCheck()),
-                Field::BP_LAST_CHECK      => StrUtils::asStr($this->getBpLastCheck()),
                 Field::DATE_ADDED         => StrUtils::asStr($this->getDateAdded()),
                 Field::DATE_UPDATED       => StrUtils::asStr($this->getDateUpdated()),
                 default                   => $this->get($field),

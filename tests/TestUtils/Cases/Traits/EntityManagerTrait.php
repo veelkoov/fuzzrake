@@ -92,7 +92,6 @@ trait EntityManagerTrait
         $result
             ->getVolatileData()
             ->setLastCsUpdate(UtcClock::now())
-            ->setLastBpUpdate(UtcClock::now())
         ;
 
         if ('' !== $password) {

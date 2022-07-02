@@ -47,7 +47,7 @@ class StatisticsService
         return new MainPageStats(
             $activeArtisansCount,
             $countryCount,
-            $lastDataUpdateTimeUtc, // TODO: CS&BP? See #29
+            $lastDataUpdateTimeUtc,
             $lastSystemUpdateTimeUtc,
         );
     }

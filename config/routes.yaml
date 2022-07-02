@@ -1,7 +1,63 @@
 controllers:
     resource: ../src/Controller/
-    type: annotation
+    type: attribute
 
-kernel:
-    resource: ../src/Kernel.php
-    type: annotation
+legacy_index:
+  path: /index.html
+  controller: &redirect Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+  defaults:
+    route: main
+
+legacy_new:
+  path: /new.html
+  controller: *redirect
+  defaults:
+    route: new_artisans
+
+legacy_events:
+  path: /events.html
+  controller: *redirect
+  defaults:
+    route: events
+
+legacy_info:
+  path: /info.html
+  controller: *redirect
+  defaults:
+    route: info
+
+legacy_tracking:
+  path: /tracking.html
+  controller: *redirect
+  defaults:
+    route: tracking
+
+legacy_maker_ids:
+  path: /maker_ids.html
+  controller: *redirect
+  defaults:
+    route: maker_ids
+
+legacy_donate:
+  path: /donate.html
+  controller: *redirect
+  defaults:
+    route: donate
+
+legacy_rules:
+  path: /rules.html
+  controller: *redirect
+  defaults:
+    route: rules
+
+legacy_should_know:
+  path: /should_know.html
+  controller: *redirect
+  defaults:
+    route: should_know
+
+legacy_statistics:
+  path: /statistics.html
+  controller: *redirect
+  defaults:
+    route: statistics

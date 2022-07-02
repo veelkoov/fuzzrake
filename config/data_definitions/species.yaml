@@ -271,7 +271,7 @@ parameters:
     commonRegexPrefix: '(?<=^|\n)'
     commonRegexSuffix: '(?=\n|$)'
     replacements:
-      '^(any|all|most) species$':                            'Most species'
+      '^(any|all|most)( species)?$':                         'Most species'
 
       "AD's|(Ange?le? dragons?)":                            'Angel Dragons'
       'Amphibians?':                                         'Amphibians'

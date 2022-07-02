@@ -21,7 +21,7 @@ class EventsController extends AbstractController
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/events.html', name: RouteName::EVENTS)]
+    #[Route(path: '/events', name: RouteName::EVENTS)]
     #[Cache(maxage: 3600, public: true)]
     public function events(EventRepository $eventRepository): Response
     {

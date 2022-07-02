@@ -12,16 +12,16 @@ use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand('app:data:tidy')]
 class DataTidyCommand extends Command
 {
-    protected static $defaultName = 'app:data:tidy';
-
     private const OPT_COMMIT = 'commit';
     private const OPT_WITH_INACTIVE = 'with-inactive';
     private const ARG_CORRECTIONS_FILE = 'corrections-file';

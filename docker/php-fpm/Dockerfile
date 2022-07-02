@@ -56,3 +56,4 @@ RUN diff  "/tmp/php.ini-production.dist" "$PHP_INI_DIR/php.ini-production" \
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
+RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'

@@ -30,7 +30,7 @@
 
     "PAYMENT_PLANS": "30% upfront, rest in 100 Eur/mth until fully paid (a2_2)",
     "PAYMENT_METHODS": "Cash\nBaa2_2nk transfer\nPalPay\nHugs_a2_2",
-    "CURRENCIES_ACCEPTED": "USD\nEUa2_2",
+    "CURRENCIES_ACCEPTED": "USD\nEUA2_2",
 
     "PRODUCTION_MODELS_COMMENT": "Comment about production models a2_2",
     "PRODUCTION_MODELS": "Artistic liberty commissions\nPremades\nStandard commissions",

@@ -9,7 +9,6 @@ end
 
 IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
 FIXES_FILE_PATH = 'imports/import-fixes.txt'
-IU_SUBMISSIONS_S3_PATH = read_iu_submissions_s3_path
 
 DB_PATH = 'var/db.sqlite'
 DB_TMP_PATH = "#{DB_PATH}.tmp"
@@ -44,7 +43,7 @@ end
 def run_docker(*args)
   user_and_group = `echo -n $(id -u):$(id -g)`
 
-  run_shell('docker', 'exec', '--user', user_and_group, '-ti', 'fuzzrake', *args)
+  run_shell('docker', 'compose', '--project-directory', 'docker', 'exec', '--user', user_and_group, '-ti', 'php', *args)
 end
 
 def run_console(*args)
@@ -93,7 +92,7 @@ def fix_phpunit
 end
 
 task('fix-phpunit')  { fix_phpunit }
-task('docker-dev')   { Dir.chdir('docker') { run_shell('docker-compose', 'up', '--detach', '--build') } }
+task('docker-dev')   { run_shell('docker', 'compose', '--project-directory', 'docker', 'up', '--detach', '--build') }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
 task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
@@ -210,7 +209,7 @@ mtask(:cstr, :cst, '--refetch')
 task 'get-submissions' do
   run_shell('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
             'getfursu.it:/var/www/prod/var/iuFormData/', IMPORT_DIR_PATH)
-  run_shell('aws', 's3', 'sync', '--size-only', IU_SUBMISSIONS_S3_PATH, IMPORT_DIR_PATH)
+  run_shell('aws', 's3', 'sync', '--size-only', read_iu_submissions_s3_path, IMPORT_DIR_PATH)
 end
 
 mtask(:import, :console, 'app:data:import', IMPORT_DIR_PATH, FIXES_FILE_PATH)
