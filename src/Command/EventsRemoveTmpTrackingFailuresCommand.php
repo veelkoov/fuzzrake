@@ -8,6 +8,7 @@ use App\Repository\EventRepository;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,10 +16,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand('app:events:remove-tmp-tracking-failures')]
 class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
 {
-    protected static $defaultName = 'app:events:remove-tmp-tracking-failures';
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly EventRepository $eventRepository,

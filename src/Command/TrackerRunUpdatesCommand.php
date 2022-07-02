@@ -7,16 +7,16 @@ namespace App\Command;
 use App\Tasks\TrackerUpdates\TrackerTaskRunnerFactory;
 use App\Tracker\TrackerException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand('app:tracker:run-updates')]
 class TrackerRunUpdatesCommand extends Command
 {
-    protected static $defaultName = 'app:tracker:run-updates';
-
     private const OPT_REFETCH = 'refetch';
     private const OPT_COMMIT = 'commit';
     private const ARG_MODE = 'mode';

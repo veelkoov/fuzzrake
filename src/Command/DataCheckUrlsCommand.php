@@ -7,16 +7,16 @@ namespace App\Command;
 use App\Tasks\ArtisanUrlInspectionFactory;
 use App\Utils\Parse;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand('app:data:check-urls')]
 class DataCheckUrlsCommand extends Command
 {
-    protected static $defaultName = 'app:data:check-urls';
-
     private const DEFAULT_LIMIT = 10;
     private const OPT_LIMIT = 'limit';
 
