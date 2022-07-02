@@ -11,6 +11,7 @@ enum Ages : string
     case MINORS = 'MINORS'; // grep-const-ages-minors
     case MIXED = 'MIXED'; // grep-const-ages-mixed
     case ADULTS = 'ADULTS'; // grep-const-ages-adults
+    // https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/6214
 
     public function getLabel(): string
     {
