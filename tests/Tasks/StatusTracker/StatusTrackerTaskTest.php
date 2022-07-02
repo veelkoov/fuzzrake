@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tasks\TrackerUpdates\Commissions;
+namespace App\Tests\Tasks\StatusTracker;
 
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\TrackerUpdates\CommissionsTrackerTask;
+use App\Tasks\StatusTracker\StatusTrackerTask;
 use App\Tracker\OfferStatus;
 use App\Tracker\OfferStatusParser;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class CommissionsTrackerTaskTest extends TestCase
+class StatusTrackerTaskTest extends TestCase
 {
     public function testNoCommissionsUrlsResetsEverything(): void
     {
@@ -173,7 +173,7 @@ class CommissionsTrackerTaskTest extends TestCase
         self::assertOfferStatuses([$os1, $os2], $changedArtisan); // Only the not-conflicting status is available
     }
 
-    private function getTestSubject(Artisan $artisan, array $mockReturnedOfferStatuses): CommissionsTrackerTask
+    private function getTestSubject(Artisan $artisan, array $mockReturnedOfferStatuses): StatusTrackerTask
     {
         $mockedUrlsCount = count($mockReturnedOfferStatuses);
 
@@ -200,7 +200,7 @@ class CommissionsTrackerTaskTest extends TestCase
             ->method('getCommissionsStatuses')
             ->willReturnOnConsecutiveCalls(...$mockReturnedOfferStatuses);
 
-        return new CommissionsTrackerTask($artisanRepoMock, $loggerMock, $snapshotsMock, $parserMock);
+        return new StatusTrackerTask($artisanRepoMock, $loggerMock, $snapshotsMock, $parserMock);
     }
 
     /**

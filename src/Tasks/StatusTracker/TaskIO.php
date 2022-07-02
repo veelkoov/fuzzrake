@@ -2,47 +2,47 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\TrackerUpdates;
+namespace App\Tasks\StatusTracker;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\EventFactory;
+use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tracker\TrackerException;
+use App\Tracker\OfferStatusParser;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class TrackerTaskRunner
+class TaskIO
 {
     private readonly FieldsList $eventCreatingFields;
     private readonly FieldsList $skipDiffForFields;
+    private readonly StatusTrackerTask $task;
 
-    /** @noinspection PhpPropertyOnlyWrittenInspection */
     public function __construct(
-        private readonly TrackerTaskInterface $trackerTask,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
+        private readonly ArtisanRepository $repository,
+        private readonly OfferStatusParser $parser,
         private readonly WebpageSnapshotManager $snapshots,
         private readonly FixerDifferValidator $fdv,
         private readonly bool $refetch,
         private readonly bool $commit,
         private readonly SymfonyStyle $io,
     ) {
+        $this->task = new StatusTrackerTask($this->repository, $this->logger, $this->snapshots, $this->parser);
         $this->eventCreatingFields = new FieldsList([Field::OPEN_FOR]);
         $this->skipDiffForFields = new FieldsList([Field::CS_LAST_CHECK]);
     }
 
-    /**
-     * @throws TrackerException
-     */
     public function performUpdates(): void
     {
-        $this->snapshots->prefetchUrls($this->trackerTask->getUrlsToPrefetch(), $this->refetch, $this->io);
+        $this->snapshots->prefetchUrls($this->task->getUrlsToPrefetch(), $this->refetch, $this->io);
 
-        $updates = $this->trackerTask->getUpdates();
+        $updates = $this->task->getUpdates();
 
         $this->report($updates);
 
@@ -70,7 +70,7 @@ class TrackerTaskRunner
 
         foreach ($updates as $update) {
             if ($update->differs($this->eventCreatingFields)) {
-                $event = EventFactory::forCsTracker($update);
+                $event = EventFactory::forStatusTracker($update);
                 $this->entityManager->persist($event);
             }
 

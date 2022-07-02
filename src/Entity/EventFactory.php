@@ -12,7 +12,7 @@ class EventFactory
 {
     use UtilityClass;
 
-    public static function forCsTracker(ArtisanChanges $changes): Event
+    public static function forStatusTracker(ArtisanChanges $changes): Event
     {
         $original = $changes->getSubject();
         $changed = $changes->getChanged();

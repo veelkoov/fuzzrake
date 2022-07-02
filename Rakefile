@@ -198,7 +198,7 @@ task 'get-snapshots' do
             'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-mtask(:cst, :console, 'app:tracker:run-updates', 'commissions')
+mtask(:cst, :console, 'app:status-tracker:run')
 mtask(:cstc, :cst, '--commit')
 mtask(:cstr, :cst, '--refetch')
 
