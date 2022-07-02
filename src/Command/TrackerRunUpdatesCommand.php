@@ -45,7 +45,6 @@ class TrackerRunUpdatesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $task = $this->factory->get(
-            $input->getArgument(self::ARG_MODE),
             $input->getOption(self::OPT_REFETCH),
             $input->getOption(self::OPT_COMMIT),
             $io,
