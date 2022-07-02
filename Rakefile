@@ -9,7 +9,6 @@ end
 
 IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
 FIXES_FILE_PATH = 'imports/import-fixes.txt'
-IU_SUBMISSIONS_S3_PATH = read_iu_submissions_s3_path
 
 DB_PATH = 'var/db.sqlite'
 DB_TMP_PATH = "#{DB_PATH}.tmp"
@@ -210,7 +209,7 @@ mtask(:cstr, :cst, '--refetch')
 task 'get-submissions' do
   run_shell('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
             'getfursu.it:/var/www/prod/var/iuFormData/', IMPORT_DIR_PATH)
-  run_shell('aws', 's3', 'sync', '--size-only', IU_SUBMISSIONS_S3_PATH, IMPORT_DIR_PATH)
+  run_shell('aws', 's3', 'sync', '--size-only', read_iu_submissions_s3_path, IMPORT_DIR_PATH)
 end
 
 mtask(:import, :console, 'app:data:import', IMPORT_DIR_PATH, FIXES_FILE_PATH)
