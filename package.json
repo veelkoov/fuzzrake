@@ -2,7 +2,7 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/stimulus-bridge": "^3.0.0",
-        "@symfony/webpack-encore": "^1.7.0",
+        "@symfony/webpack-encore": "^2.0.0",
         "@types/grecaptcha": "^3.0.1",
         "@types/jquery": "^3.5.14",
         "core-js": "^3.0.0",
