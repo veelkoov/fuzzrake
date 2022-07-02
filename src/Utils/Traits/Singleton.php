@@ -12,8 +12,8 @@ trait Singleton
     {
     }
 
-    public static function getInstance(): static
+    public static function getInstance(): self
     {
-        return self::$INSTANCE ?? self::$INSTANCE = new static();
+        return self::$INSTANCE ?? self::$INSTANCE = new self();
     }
 }
