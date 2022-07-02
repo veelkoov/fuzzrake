@@ -73,8 +73,6 @@ enum Field: string
     case PASSWORD = 'PASSWORD';
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
     case CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
-    case BP_LAST_CHECK = 'BP_LAST_CHECK';
-    case BP_TRACKER_ISSUE = 'BP_TRACKER_ISSUE';
     case OPEN_FOR = 'OPEN_FOR';
     case CLOSED_FOR = 'CLOSED_FOR';
     case COMPLETENESS = 'COMPLETENESS';

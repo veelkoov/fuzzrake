@@ -20,7 +20,6 @@ final class SchemaFixer
 
         switch ($data[self::SCHEMA_VERSION]) {
             case 8:
-                $data[Field::BP_LAST_CHECK->name] = 'unknown';
                 $data[Field::URL_PRICES->name] = [$data[Field::URL_PRICES->name]];
                 $data[Field::URL_COMMISSIONS->name] = [$data['URL_CST']];
                 // no break
@@ -40,8 +39,10 @@ final class SchemaFixer
 
             case 12:
                 $data[Field::NSFW_WEBSITE->name] = null;
-                $data[Field::NSFW_SOCIAL->name] = null;
-                $data[Field::DOES_NSFW->name] = null;
+                // no break
+
+            case 13:
+                unset($data['BP_LAST_CHECK']);
         }
 
         return $data;

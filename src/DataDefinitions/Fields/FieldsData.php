@@ -91,8 +91,6 @@ final class FieldsData
         'PASSWORD'                  => ['        F password',                null],
         'CS_LAST_CHECK'             => ['      P   csLastCheck',             null],
         'CS_TRACKER_ISSUE'          => ['      P   csTrackerIssue',          null],
-        'BP_LAST_CHECK'             => ['      P   bpLastCheck',             null],
-        'BP_TRACKER_ISSUE'          => ['      P   bpTrackerIssue',          null],
         'OPEN_FOR'                  => ['L     P   openFor',                 null],
         'CLOSED_FOR'                => ['L     P   closedFor',               null],
         'COMPLETENESS'              => ['  D   P   completeness',            null],
