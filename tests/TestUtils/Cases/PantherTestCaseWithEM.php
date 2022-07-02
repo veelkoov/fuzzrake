@@ -16,7 +16,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
 
     protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): PantherClient
     {
-        $options['hostname'] ??= 'fuzzrake';
+        $options['hostname'] ??= 'localhost';
 
         $result = parent::createPantherClient($options, $kernelOptions, $managerOptions);
 

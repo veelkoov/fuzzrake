@@ -15,7 +15,7 @@ class InfoWithEMPageEmailRecaptchaTest extends PantherTestCaseWithEM
     public function testRecaptchaWorksAndEmailAddressAppears(): void
     {
         $client = static::createPantherClient();
-        $client->request('GET', '/index.php/info.html');
+        $client->request('GET', '/index.php/info');
 
         $client->waitForVisibility('a[href^="mailto:"]', 5);
         self::assertTrue(true); // If the above did not timed out, we're good

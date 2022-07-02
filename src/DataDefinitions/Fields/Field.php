@@ -81,6 +81,7 @@ enum Field: string
     case CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
     case CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
     case CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
+    // https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/6214
 
     public function getData(): FieldData
     {
