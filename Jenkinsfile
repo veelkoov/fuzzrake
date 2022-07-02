@@ -3,11 +3,6 @@ pipeline {
     label 'fuzzrake'
   }
 
-  environment {
-    GOOGLE_RECAPTCHA_SITE_KEY = credentials('GOOGLE_RECAPTCHA_SITE_KEY')
-    GOOGLE_RECAPTCHA_SECRET = credentials('GOOGLE_RECAPTCHA_SECRET')
-  }
-
   stages {
     stage('Merge develop') {
       steps {
@@ -18,8 +13,17 @@ pipeline {
     }
 
     stage('Install') {
+      environment {
+        GOOGLE_RECAPTCHA_SITE_KEY = credentials('GOOGLE_RECAPTCHA_SITE_KEY')
+        GOOGLE_RECAPTCHA_SECRET = credentials('GOOGLE_RECAPTCHA_SECRET')
+      }
+
       steps {
         ansiColor('xterm') {
+          sh 'rm -f .env.test.local'
+          sh 'echo "GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY" >> .env.test.local'
+          sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'
+
           sh 'rake docker-dev'
           sh 'rake composer[install]'
           sh 'yarn install'
