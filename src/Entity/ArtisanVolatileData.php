@@ -59,7 +59,7 @@ class ArtisanVolatileData
         return $this->artisan;
     }
 
-    public function setArtisan(Artisan $artisan): self
+    public function setArtisan(?Artisan $artisan): self
     {
         $this->artisan = $artisan;
 

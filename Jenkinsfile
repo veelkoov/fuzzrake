@@ -43,7 +43,7 @@ pipeline {
     stage('PHPStan') {
       steps {
         ansiColor('xterm') {
-          sh 'rake phpstan[analyze,src,tests,--level=2]'
+          sh 'rake ps'
         }
       }
     }

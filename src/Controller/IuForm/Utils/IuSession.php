@@ -6,7 +6,7 @@ namespace App\Controller\IuForm\Utils;
 
 use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
 
@@ -20,7 +20,7 @@ class IuSession
     private readonly UuidV4 $uuid;
 
     public function __construct(
-        private readonly Session $session,
+        private readonly SessionInterface $session,
         string $makerId,
     ) {
         $this->prefix = "iu_form_{$makerId}_";
