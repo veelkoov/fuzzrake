@@ -29,7 +29,7 @@ class DataQuery
     private array $excludedItems = [];
 
     /**
-     * @var string[] Associative: name = item, value = count
+     * @var array<string, int> Associative: name = item, value = count
      */
     private array $matchedItems = [];
 
@@ -91,7 +91,7 @@ class DataQuery
     }
 
     /**
-     * @return string[]
+     * @return array<string, int>
      */
     public function getMatchedItems(): array
     {
@@ -149,6 +149,9 @@ class DataQuery
         return !empty($this->filterListInternal($listInput, true));
     }
 
+    /**
+     * @return string[]
+     */
     private function filterListInternal(string $listInput, bool $addMatches): array
     {
         $result = [];

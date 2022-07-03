@@ -86,6 +86,9 @@ class UrlAccessorTest extends TestCase
         self::assertEquals([$url3], array_values($artisan->getUrlObjs(Field::URL_WEBSITE)));
     }
 
+    /**
+     * @return string[]
+     */
     private function getUrlArray(ArtisanE $artisan): array
     {
         $result = array_map(fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl(), $artisan->getUrls()->toArray());

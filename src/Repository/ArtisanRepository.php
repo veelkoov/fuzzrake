@@ -47,6 +47,9 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Artisan[]
+     */
     public function getNew(): array
     {
         return $this->getArtisansQueryBuilder()
@@ -233,6 +236,9 @@ class ArtisanRepository extends ServiceEntityRepository
         return $builder->getQuery()->getResult();
     }
 
+    /**
+     * @return array{items: string[], otherItems?: string[]}
+     */
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
     {
         $queryBuilder = $this->createQueryBuilder('a')

@@ -782,6 +782,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== JSON STUFF =====
     //
 
+    /**
+     * @return array<string, psJsonFieldValue>
+     */
     private function getValuesForJson(FieldsList $fields): array
     {
         return array_map(function (Field $field) {
@@ -797,16 +800,25 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }, $fields->asArray());
     }
 
+    /**
+     * @return array<string, psJsonFieldValue>
+     */
     public function getPublicData(): array
     {
         return $this->getValuesForJson(Fields::public());
     }
 
+    /**
+     * @return array<string, psJsonFieldValue>
+     */
     public function getAllData(): array
     {
         return $this->getValuesForJson(Fields::all());
     }
 
+    /**
+     * @return array<string, psJsonFieldValue>
+     */
     public function jsonSerialize(): array
     {
         return $this->getPublicData();

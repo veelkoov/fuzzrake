@@ -14,7 +14,7 @@ class HierarchyAwareBuilder
     private const FLAG_IGNORE_THIS_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
     /**
-     * @var Specie[] Associative: key = name, value = Specie object. Species fit for filtering
+     * @var array<string, Specie> Associative: key = name, value = Specie object. Species fit for filtering
      */
     private array $flat;
 
@@ -37,11 +37,17 @@ class HierarchyAwareBuilder
         $this->addValidNamesFrom($species);
     }
 
+    /**
+     * @return array<string, Specie>
+     */
     public function getFlat(): array
     {
         return $this->flat;
     }
 
+    /**
+     * @return Specie[]
+     */
     public function getTree(): array
     {
         return $this->tree;
@@ -73,6 +79,9 @@ class HierarchyAwareBuilder
         }
     }
 
+    /**
+     * @return array<string, Specie>
+     */
     private function getTreeFor(array $species, Specie $parent = null): array
     {
         $result = [];
@@ -108,6 +117,9 @@ class HierarchyAwareBuilder
         return $specie;
     }
 
+    /**
+     * @return array{0: string, 1: string}
+     */
     private static function splitSpecieFlagsName(string $specie): array
     {
         try {

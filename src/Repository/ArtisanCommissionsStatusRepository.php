@@ -29,6 +29,8 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return psArtisanStatsArray
+     *
      * @throws UnexpectedResultException
      */
     public function getCommissionsStats(): array
@@ -92,6 +94,9 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function getDistinctWithOpenCount(): array
     {
         return Arrays::assoc($this->createQueryBuilder('acs')

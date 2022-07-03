@@ -23,6 +23,9 @@ final class UrlAccessor extends AbstractAccessor
         return self::_get($artisan, $urlFieldName);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getList(Artisan $artisan, string $urlFieldName): array
     {
         return self::_getList($artisan, $urlFieldName);

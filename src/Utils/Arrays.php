@@ -10,6 +10,11 @@ final class Arrays
 {
     use UtilityClass;
 
+    /**
+     * @param mixed[] $input
+     *
+     * @return array<int|string, mixed>
+     */
     public static function assoc(array $input, int|string $key = 0, int|string $value = 1): array
     {
         $result = [];
@@ -21,6 +26,12 @@ final class Arrays
         return $result;
     }
 
+    /**
+     * @param mixed[] $a1
+     * @param mixed[] $a2
+     *
+     * @return mixed[]
+     */
     public static function intersect(array $a1, array $a2): array
     {
         $result = $a1;

@@ -102,6 +102,11 @@ class DataSetMiniaturesCommand extends Command
         return $result;
     }
 
+    /**
+     * @param string[] $pictureUrls
+     *
+     * @return string[]
+     */
     private function filterUnsupportedUrls(array $pictureUrls): array
     {
         $result = [];

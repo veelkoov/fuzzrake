@@ -88,6 +88,9 @@ class StatisticsController extends AbstractController
         ]);
     }
 
+    /**
+     * @return array<string, int>
+     */
     private function prepareTableData(FilterData $input): array
     {
         $result = [];
@@ -132,6 +135,11 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
+    /**
+     * @param psArtisanStatsArray $commissionsStats
+     *
+     * @return array<string, int>
+     */
     private function prepareCommissionsStatsTableData(array $commissionsStats): array
     {
         return [
@@ -148,6 +156,8 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
+     *
+     * @return array<string, int>
      */
     private function prepareCompletenessData(array $artisans): array
     {
@@ -169,6 +179,8 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
+     *
+     * @return array<string, int>
      *
      * @see SmartAccessDecorator::getLastMakerId()
      */

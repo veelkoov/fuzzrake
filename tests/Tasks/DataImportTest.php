@@ -44,7 +44,7 @@ class DataImportTest extends TestCase
         static::assertEquals($expectedMiniatures, Artisan::wrap($artisan)->getMiniatureUrls());
     }
 
-    public function imagesUpdateShouldResetMiniaturesDataProvider(): array
+    public function imagesUpdateShouldResetMiniaturesDataProvider(): array // @phpstan-ignore-line
     {
         return [
             ['', '', '', ''],

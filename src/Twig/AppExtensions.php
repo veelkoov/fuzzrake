@@ -91,6 +91,9 @@ class AppExtensions extends AbstractExtension
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function listFilter(string $input): array
     {
         return StringList::unpack($input);
@@ -104,6 +107,11 @@ class AppExtensions extends AbstractExtension
         return trim(Json::encode(array_values($artisan->getPublicData())), '[]');
     }
 
+    /**
+     * @param Item[] $items
+     *
+     * @return Item[]
+     */
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         $pattern = pattern($matchWord, 'i');

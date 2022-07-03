@@ -6,7 +6,13 @@ parameters:
 
   ignoreErrors: # TODO: REMOVE, fix all
     - '# with no value type specified in iterable type #'
-    - '# return type has no value type specified in iterable type #'
+
+  typeAliases:
+    psIuSubmissionArray:       'array<string,int|bool|string|string[]>'
+    psWebpageSnapshotMetadata: 'array{url: string, ownerName: string, retrievedAt: string, childCount: int, headers: string[][], errors: string[], httpCode: int}'
+    psFieldValue:              'BackedEnum|DateTimeImmutable|string|bool|null'
+    psJsonFieldValue:          'string[]|string|bool|null'
+    psArtisanStatsArray:       'array{open_for_anything: int, closed_for_anything: int, successfully_tracked: int, partially_tracked: int, tracking_failed: int, tracking_issues: int, tracked: int, total: int}'
 
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon

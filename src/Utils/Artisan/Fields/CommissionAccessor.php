@@ -24,6 +24,9 @@ final class CommissionAccessor extends AbstractAccessor
         return self::_get($artisan, $isOpen);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getList(Artisan $artisan, bool $isOpen): array
     {
         return self::_getList($artisan, $isOpen);

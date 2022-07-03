@@ -59,7 +59,7 @@ class OfferStatusParserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function analyseStatusDataProvider(): array
+    public function analyseStatusDataProvider(): array // @phpstan-ignore-line
     {
         return array_filter(array_map(function ($filepath) {
             $expectedResult = Json::decode(trim(file_get_contents($filepath)));

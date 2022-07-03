@@ -378,7 +378,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
     }
 
-    public function cannotSkipUnfinishedStepsDataProvider(): array
+    public function cannotSkipUnfinishedStepsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             'New maker, pass+cont'      => ['contact_and_password', ''],

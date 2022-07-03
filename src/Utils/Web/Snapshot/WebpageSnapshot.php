@@ -106,6 +106,9 @@ class WebpageSnapshot
         return array_merge([$this->contents], ...array_map(fn (WebpageSnapshot $snapshot) => $snapshot->getAllContents(), $this->getChildren()));
     }
 
+    /**
+     * @return psWebpageSnapshotMetadata
+     */
     public function getMetadata(): array
     {
         return [

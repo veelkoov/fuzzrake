@@ -54,6 +54,8 @@ class OfferStatusParser
     }
 
     /**
+     * @return Text[]
+     *
      * @throws TrackerException
      */
     private function preprocessAll(string $artisanName, string $additionalFilter, WebpageSnapshot $snapshot): array

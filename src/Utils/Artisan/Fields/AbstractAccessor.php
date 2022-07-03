@@ -56,6 +56,8 @@ abstract class AbstractAccessor
 
     /**
      * @param S $subset
+     *
+     * @return string[]
      */
     protected static function _getList(Artisan $artisan, $subset): array
     {
@@ -64,12 +66,17 @@ abstract class AbstractAccessor
 
     /**
      * @param S $subset
+     *
+     * @return T[]
      */
     protected static function _getObjs(Artisan $artisan, $subset): array
     {
         return array_filter(static::getExistingItems($artisan), static::getItemsFilter($subset));
     }
 
+    /**
+     * @return T[]
+     */
     abstract protected static function getExistingItems(Artisan $artisan): array;
 
     /**

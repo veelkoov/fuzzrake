@@ -19,7 +19,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class IuSubmission implements FieldReadInterface
 {
     /**
-     * @param array<string,int|bool|string|string[]> $data
+     * @param psIuSubmissionArray $data
      */
     public function __construct(
         private readonly DateTimeImmutable $timestamp,

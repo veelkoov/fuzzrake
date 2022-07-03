@@ -71,6 +71,9 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    /**
+     * @return ArtisanUrl[]
+     */
     public function getOrderedBySuccessDate(FieldsList $excluded): array
     {
         $builder = $this->createQueryBuilder('au')

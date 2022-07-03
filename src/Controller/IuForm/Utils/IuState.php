@@ -111,6 +111,11 @@ class IuState
         }
     }
 
+    /**
+     * @param mixed[] $additionalContext
+     *
+     * @return mixed[]
+     */
     private function getLogContext(array $additionalContext = []): array
     {
         return array_merge(['iu_session' => $this->session->getId()], $additionalContext);
