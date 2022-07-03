@@ -26,7 +26,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Get rid of X -> unknown -> x state changes between two given dates')

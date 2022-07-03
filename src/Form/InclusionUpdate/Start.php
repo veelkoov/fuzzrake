@@ -17,7 +17,7 @@ class Start extends AbstractType
     final public const OPT_ROUTER = 'router';
     final public const OPT_STUDIO_NAME = 'studio_name';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /**
          * @var RouterInterface $router
@@ -103,7 +103,7 @@ class Start extends AbstractType
         return 'iu_form';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('data_class', StartData::class);
 

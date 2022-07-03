@@ -15,7 +15,7 @@ abstract class BaseForm extends AbstractType
 {
     final public const BTN_RESET = 'reset';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('notes', TextareaType::class, [
@@ -41,7 +41,7 @@ abstract class BaseForm extends AbstractType
         return 'iu_form';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('data_class', Artisan::class);
     }

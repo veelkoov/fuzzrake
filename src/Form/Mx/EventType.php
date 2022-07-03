@@ -19,7 +19,7 @@ class EventType extends AbstractType
     final public const BTN_SAVE = 'save';
     final public const BTN_DELETE = 'delete';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('timestamp', DateTimeType::class, [
@@ -64,7 +64,7 @@ class EventType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Event::class,

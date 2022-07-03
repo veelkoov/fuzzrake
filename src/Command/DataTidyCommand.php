@@ -34,7 +34,7 @@ class DataTidyCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')

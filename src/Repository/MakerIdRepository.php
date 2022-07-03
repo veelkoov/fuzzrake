@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method MakerId|null findOneBy(array $criteria, array $orderBy = null)
  * @method MakerId[]    findAll()
  * @method MakerId[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<MakerId>
  */
 class MakerIdRepository extends ServiceEntityRepository
 {

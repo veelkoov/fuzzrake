@@ -9,6 +9,9 @@ use Closure;
 use IteratorAggregate;
 use Traversable;
 
+/**
+ * @implements IteratorAggregate<Field>
+ */
 class FieldsList implements IteratorAggregate
 {
     private array $fields = [];

@@ -17,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArtisanVolatileData|null findOneBy(array $criteria, array $orderBy = null)
  * @method ArtisanVolatileData[]    findAll()
  * @method ArtisanVolatileData[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ArtisanVolatileData>
  */
 class ArtisanVolatileDataRepository extends ServiceEntityRepository
 {

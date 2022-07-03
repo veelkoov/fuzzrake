@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArtisanPrivateData|null findOneBy(array $criteria, array $orderBy = null)
  * @method ArtisanPrivateData[]    findAll()
  * @method ArtisanPrivateData[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ArtisanPrivateData>
  */
 class ArtisanPrivateDataRepository extends ServiceEntityRepository
 {

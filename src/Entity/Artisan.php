@@ -190,30 +190,30 @@ class Artisan implements Stringable
     /**
      * @ORM\OneToMany(targetEntity=ArtisanUrl::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|ArtisanUrl[]
+     * @var Collection<int,ArtisanUrl>
      */
-    private Collection|array $urls;
+    private Collection $urls;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|ArtisanCommissionsStatus[]
+     * @var Collection<int,ArtisanCommissionsStatus>
      */
-    private Collection|array $commissions;
+    private Collection $commissions;
 
     /**
      * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|MakerId[]
+     * @var Collection<int,MakerId>
      */
-    private Collection|array $makerIds;
+    private Collection $makerIds;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanValue::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|ArtisanValue[]
+     * @var Collection<int,ArtisanValue>
      */
-    private Collection|array $values;
+    private Collection $values;
 
     public function __construct()
     {
@@ -689,9 +689,9 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection|ArtisanUrl[]
+     * @return Collection<int,ArtisanUrl>
      */
-    public function getUrls(): Collection|array
+    public function getUrls(): Collection
     {
         return $this->urls;
     }
@@ -719,9 +719,9 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection|ArtisanCommissionsStatus[]
+     * @return Collection<int,ArtisanCommissionsStatus>
      */
-    public function getCommissions(): Collection|array
+    public function getCommissions(): Collection
     {
         return $this->commissions;
     }
@@ -749,9 +749,9 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection|MakerId[]
+     * @return Collection<int,MakerId>
      */
-    public function getMakerIds(): Collection|array
+    public function getMakerIds(): Collection
     {
         return $this->makerIds;
     }
@@ -779,9 +779,9 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection|ArtisanValue[]
+     * @return Collection<int,ArtisanValue>
      */
-    public function getValues(): Collection|array
+    public function getValues(): Collection
     {
         return $this->values;
     }

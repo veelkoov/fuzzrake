@@ -25,6 +25,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Artisan|null findOneBy(array $criteria, array $orderBy = null)
  * @method Artisan[]    findAll()
  * @method Artisan[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Artisan>
  */
 class ArtisanRepository extends ServiceEntityRepository
 {

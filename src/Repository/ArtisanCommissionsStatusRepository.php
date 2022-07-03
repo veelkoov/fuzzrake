@@ -18,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArtisanCommissionsStatus|null findOneBy(array $criteria, array $orderBy = null)
  * @method ArtisanCommissionsStatus[]    findAll()
  * @method ArtisanCommissionsStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ArtisanCommissionsStatus>
  */
 class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
 {
