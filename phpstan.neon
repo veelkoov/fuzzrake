@@ -1,0 +1,8 @@
+parameters:
+	level: 4
+	paths:
+		- src
+		- tests
+
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon

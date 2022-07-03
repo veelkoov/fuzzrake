@@ -44,6 +44,7 @@ class DataImportCommand extends Command
 
         try {
             if (null !== $input->getArgument('only-after')) {
+                // @phpstan-ignore-next-line - It can be null
                 $onlyAfter = UtcClock::at($input->getArgument('only-after') ?? '');
             } else {
                 $onlyAfter = null;

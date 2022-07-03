@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\DataDefinitions\Ages;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -44,7 +45,7 @@ trait EntityManagerTrait
 
     protected static function getArtisanRepository(): ArtisanRepository
     {
-        return static::getContainer()->get(ArtisanRepository::class);
+        return self::getEM()->getRepository(ArtisanE::class);
     }
 
     protected static function findArtisanByMakerId(string $makerId): Artisan

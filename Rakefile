@@ -94,13 +94,14 @@ end
 task('fix-phpunit')  { fix_phpunit }
 task('docker-dev')   { run_shell('docker', 'compose', '--project-directory', 'docker', 'up', '--detach', '--build') }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
-task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', *args) }
+task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| phpunit(*args) }
 task qa: [:rector, 'php-cs-fixer', :phpunit]
 
 task pcf: ['php-cs-fixer']
 task pu: [:phpunit]
+task ps: [:phpstan]
 
 #
 # DATABASE MANAGEMENT

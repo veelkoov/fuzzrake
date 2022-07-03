@@ -21,7 +21,7 @@ class MakerIdRepositoryWithEMTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($m1, $m2, $m3, $m4);
 
-        $map = self::getEM()->getRepository(MakerId::class)->getOldToNewMakerIdsMap(); // @phpstan-ignore-line
+        $map = self::getEM()->getRepository(MakerId::class)->getOldToNewMakerIdsMap();
 
         self::assertEquals([
             'MAKER22' => 'MAKER21',
