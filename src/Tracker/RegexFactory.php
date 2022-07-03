@@ -31,7 +31,7 @@ class RegexFactory
     private array $offerStatuses = [];
 
     /**
-     * @var string[][]
+     * @var array<string, string[]>
      */
     private readonly array $groupTranslations;
 
@@ -45,6 +45,9 @@ class RegexFactory
      */
     private array $cleaners = [];
 
+    /**
+     * @param psTrackerRegexes $trackerRegexes
+     */
     public function __construct(array $trackerRegexes)
     {
         $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
@@ -75,7 +78,7 @@ class RegexFactory
     }
 
     /**
-     * @return string[][]
+     * @return array<string, string[]>
      */
     public function getGroupTranslations(): array
     {
@@ -90,13 +93,19 @@ class RegexFactory
         return $this->cleaners;
     }
 
+    /**
+     * @param array<string, psTrackerPlaceholder> $placeholders
+     */
     private function loadPlaceholders(array $placeholders): void
     {
         $this->loadPlaceholderItem($placeholders, '');
         $this->resolvePlaceholders($this->placeholders);
     }
 
-    private function loadPlaceholderItem(mixed $input, string $path): string
+    /**
+     * @param array<string, psTrackerPlaceholder>|psTrackerPlaceholder $input
+     */
+    private function loadPlaceholderItem($input, string $path): string
     {
         if (is_string($input)) {
             return $input;
@@ -117,6 +126,9 @@ class RegexFactory
         return $this->loadMapPlaceholderItem($input, $path);
     }
 
+    /**
+     * @param psTrackerPlaceholderChild[]|string[] $input
+     */
     private function loadListPlaceholderItem(array $input, string $path): string
     {
         $items = Arrays::map($input, fn ($item, $idx, $arr) => $this->loadPlaceholderItem($item, "$path/$idx"));
@@ -150,6 +162,9 @@ class RegexFactory
         return "($group".implode('|', $items).')';
     }
 
+    /**
+     * @param array<string, psTrackerPlaceholder> $input
+     */
     private function loadMapPlaceholderItem(array $input, string $path): string
     {
         foreach ($input as $placeholder => $contents) {
@@ -163,6 +178,9 @@ class RegexFactory
         return '('.implode('|', array_keys($input)).')';
     }
 
+    /**
+     * @param array<string, string|array<string, string>> $subject
+     */
     private function resolvePlaceholders(array &$subject): void
     {
         $changed = false;
@@ -180,6 +198,9 @@ class RegexFactory
         }
     }
 
+    /**
+     * @param string[] $falsePositives
+     */
     private function loadFalsePositives(array $falsePositives): void
     {
         $this->falsePositives = $falsePositives;
@@ -188,6 +209,9 @@ class RegexFactory
         $this->validateRegexes($this->falsePositives);
     }
 
+    /**
+     * @param string[] $offerStatuses
+     */
     private function loadOfferStatuses(array $offerStatuses): void
     {
         $this->offerStatuses = $offerStatuses;
@@ -196,6 +220,9 @@ class RegexFactory
         $this->validateRegexes($this->offerStatuses);
     }
 
+    /**
+     * @param string[] $cleaners
+     */
     private function loadCleaners(array $cleaners): void
     {
         $regexes = array_keys($cleaners);
@@ -229,6 +256,9 @@ class RegexFactory
         }
     }
 
+    /**
+     * @param string[] $regexes
+     */
     private function setUnnamedToNoncaptured(array &$regexes): void
     {
         foreach ($regexes as &$regex) {
@@ -236,6 +266,9 @@ class RegexFactory
         }
     }
 
+    /**
+     * @param string[] $regexes
+     */
     private function validateRegexes(array $regexes): void
     {
         foreach ($regexes as $regex) {

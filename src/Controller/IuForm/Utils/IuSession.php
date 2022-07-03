@@ -63,6 +63,9 @@ class IuSession
         }
     }
 
+    /**
+     * @param array<string, psFieldValue> $data
+     */
     public function save(array $data): void
     {
         $this->session->set($this->keySavedData, $data);

@@ -207,6 +207,9 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string[] $names
+     * @param string[] $makerIds
+     *
      * @return Artisan[]
      */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array

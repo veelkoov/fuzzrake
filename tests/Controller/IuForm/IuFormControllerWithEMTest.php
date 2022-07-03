@@ -113,6 +113,8 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
+     * @param array<string, string> $expectedErrors
+     *
      * @dataProvider ageStuffFieldsDataProvider
      */
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void

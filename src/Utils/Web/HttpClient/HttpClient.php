@@ -32,6 +32,8 @@ class HttpClient
     }
 
     /**
+     * @param array<string, string> $additionalHeaders
+     *
      * @throws TransportExceptionInterface
      */
     public function get(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
@@ -44,6 +46,8 @@ class HttpClient
     }
 
     /**
+     * @param array<string, string> $additionalHeaders
+     *
      * @throws TransportExceptionInterface
      */
     public function post(string $url, string $payload, CookieJar $cookieJar, array $additionalHeaders = []): ResponseInterface

@@ -63,6 +63,9 @@ class DataImportTest extends TestCase
         return $result;
     }
 
+    /**
+     * @param array<string, psJsonFieldValue> $initialData
+     */
     private function getBasicArtisan(array $initialData): ArtisanE
     {
         $artisan = Artisan::wrap($result = new ArtisanE());
@@ -93,6 +96,9 @@ class DataImportTest extends TestCase
         return $this->createMock(FixerDifferValidator::class);
     }
 
+    /**
+     * @param array<string, psJsonFieldValue> $data
+     */
     private function getIuSubmission(ArtisanE $artisan, array $data): IuSubmission
     {
         $allData = Artisan::wrap($artisan)->getAllData();

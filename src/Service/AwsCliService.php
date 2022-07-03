@@ -14,6 +14,9 @@ class AwsCliService
     ) {
     }
 
+    /**
+     * @param string[] $commandArgv
+     */
     public function execute(array $commandArgv, string $commandDescription): bool
     {
         $process = new Process($commandArgv);

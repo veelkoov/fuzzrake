@@ -37,6 +37,8 @@ class OfferStatusParserTest extends TestCase
     }
 
     /**
+     * @param array<array{0: string, 1: bool}> $expectedResult
+     *
      * @dataProvider analyseStatusDataProvider
      *
      * @throws TrackerException

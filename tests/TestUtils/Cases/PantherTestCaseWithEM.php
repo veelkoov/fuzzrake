@@ -14,6 +14,11 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
 {
     use EntityManagerTrait;
 
+    /**
+     * @param array<string, string> $options
+     * @param array<string, string> $kernelOptions
+     * @param array<string, string> $managerOptions
+     */
     protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): PantherClient
     {
         $options['hostname'] ??= 'localhost';

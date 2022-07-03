@@ -57,6 +57,8 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
+     * @param string[] $data
+     *
      * @dataProvider contactUpdatesDataProvider
      */
     public function testContactUpdates(array $data): void

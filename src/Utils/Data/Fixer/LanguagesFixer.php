@@ -16,12 +16,16 @@ class LanguagesFixer extends StringFixer
     private readonly Pattern $pattern;
     private readonly Replacements $replacements;
 
+    /**
+     * @param psLanguagesFixerConfig $languages
+     * @param psFixerConfig          $strings
+     */
     public function __construct(array $languages, array $strings)
     {
         parent::__construct($strings);
 
         $this->pattern = pattern($languages['regexp'], 'i');
-        $this->replacements = new Replacements($languages['replacements'], 'i', $languages['commonRegexPrefix'], $languages['commonRegexSuffix']);
+        $this->replacements = new Replacements($languages['replacements'], 'i', $languages['regex_prefix'], $languages['regex_suffix']);
     }
 
     public function fix(string $subject): string

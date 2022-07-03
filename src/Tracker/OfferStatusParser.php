@@ -84,6 +84,8 @@ class OfferStatusParser
     }
 
     /**
+     * @param OfferStatus[] $result
+     *
      * @throws TrackerException
      */
     private function appendOfferStatuses(Detail $match, array &$result): void

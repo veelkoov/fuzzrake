@@ -21,6 +21,9 @@ trait UtilsTrait
         self::assertEquals($expectedHtml, $actualHtml);
     }
 
+    /**
+     * @param array<string, string> $formData
+     */
     protected static function submitValidForm(KernelBrowser $client, string $buttonName, array $formData): void
     {
         $button = $client->getCrawler()->selectButton($buttonName);
@@ -50,6 +53,9 @@ trait UtilsTrait
         self::fail('Form validation failed for: '.implode(', ', array_unique($fields)));
     }
 
+    /**
+     * @param array<string, string> $formData
+     */
     protected static function submitInvalidForm(KernelBrowser $client, string $buttonName, array $formData): void
     {
         $button = $client->getCrawler()->selectButton($buttonName);

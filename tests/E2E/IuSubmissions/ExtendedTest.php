@@ -176,6 +176,8 @@ class ExtendedTest extends AbstractTestWithEM
     }
 
     /**
+     * @param Field[] $skippedFields
+     *
      * @throws Exception
      */
     private static function getArtisanData(string $variant, array $skippedFields = self::NOT_IN_TEST_DATA): Artisan
@@ -348,6 +350,9 @@ class ExtendedTest extends AbstractTestWithEM
         self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
     }
 
+    /**
+     * @param string[] $choices
+     */
     private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody): void
     {
         self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->name.");
@@ -442,6 +447,9 @@ class ExtendedTest extends AbstractTestWithEM
         $fields['day']->select('1'); // grep-default-auto-since-day-01
     }
 
+    /**
+     * @param FormField[] $fields
+     */
     private static function setValuesInExpandedField(string $value, array $fields): void
     {
         $values = StringList::unpack($value);
@@ -474,6 +482,9 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
+    /**
+     * @param Artisan[] $expectedArtisans
+     */
     private static function validateConsoleOutput(string $output, array $expectedArtisans): void
     {
         $output = pattern('^(OLD |NEW |IMP | *set )[^\n]+\n+', 'm')->prune($output);

@@ -28,6 +28,9 @@ class HierarchyAwareBuilder
      */
     private array $validNames;
 
+    /**
+     * @param psSpecies $species
+     */
     public function __construct(array $species)
     {
         $this->flat = [];
@@ -62,7 +65,7 @@ class HierarchyAwareBuilder
     }
 
     /**
-     * @param array[]|string[] $species
+     * @param psSpecies $species
      */
     private function addValidNamesFrom(array $species): void
     {
@@ -80,6 +83,8 @@ class HierarchyAwareBuilder
     }
 
     /**
+     * @param psSpecies $species
+     *
      * @return array<string, Specie>
      */
     private function getTreeFor(array $species, Specie $parent = null): array
@@ -96,6 +101,9 @@ class HierarchyAwareBuilder
         return $result;
     }
 
+    /**
+     * @param psSpecies|null $subspecies
+     */
     private function getUpdatedSpecie(string $specieName, bool $ignored, ?Specie $parent, ?array $subspecies): Specie
     {
         if (null !== $parent && $parent->isIgnored()) {

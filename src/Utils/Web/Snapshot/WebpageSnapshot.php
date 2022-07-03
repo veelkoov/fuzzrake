@@ -123,6 +123,8 @@ class WebpageSnapshot
     }
 
     /**
+     * @param array<string, int|string|string[]|string[][]> $input
+     *
      * @throws DateTimeException
      */
     public static function fromArray(array $input): WebpageSnapshot
