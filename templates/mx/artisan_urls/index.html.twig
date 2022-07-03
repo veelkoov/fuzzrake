@@ -19,14 +19,14 @@
         </thead>
         <tbody>
             {% for url in urls %}
-                {% if url.state.lastSuccess is not null %}
-                    {% if url.state.lastFailure is not null and url.state.lastFailure > url.state.lastSuccess %}
+                {% if url.state.lastSuccessUtc is not null %}
+                    {% if url.state.lastFailureUtc is not null and url.state.lastFailureUtc > url.state.lastSuccessUtc %}
                         {% set class = 'table-danger' %}
                     {% else %}
                         {% set class = 'table-success' %}
                     {% endif %}
                 {% else %}
-                    {% if url.state.lastFailure is not null %}
+                    {% if url.state.lastFailureUtc is not null %}
                         {% set class = 'table-danger' %}
                     {% else %}
                         {% set class = '' %}
@@ -35,7 +35,8 @@
 
                 <tr>
                     <td>
-                        <a href="{{ path('mx_artisan_edit', { 'id': url.artisan.id }) }}">{{ url.artisan.lastMakerId }}</a>
+                        <a href="{{ path('mx_artisan_edit', { 'id': url.artisan.id }) }}">{{ url.artisan.makerId|default((url.artisan|smart).lastMakerId) }}</a><br>
+                        {{ url.artisan.contactAllowed|default('NO') }}
                     </td>
                     <td class="text-nowrap {{ class }}">
                         {{ url.type }}
