@@ -19,7 +19,7 @@ class HierarchyAwareBuilderTest extends TestCase
         self::assertCount($expectedCount, $subject->getValidNames());
     }
 
-    public function validNamesDoesntContainDuplicatesDataProvider(): array
+    public function validNamesDoesntContainDuplicatesDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [

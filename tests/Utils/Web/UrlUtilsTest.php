@@ -17,7 +17,7 @@ class UrlUtilsTest extends TestCase
         self::assertEquals($expected, UrlUtils::hostFromUrl($input));
     }
 
-    public function hostFromUrlDataProvider(): array
+    public function hostFromUrlDataProvider(): array // @phpstan-ignore-line
     {
         return [
             ['https://www.getfursu.it/', 'getfursu.it'],
@@ -34,7 +34,7 @@ class UrlUtilsTest extends TestCase
         self::assertEquals($expected, UrlUtils::safeFileNameFromUrl($input));
     }
 
-    public function safeFileNameFromUrlDataProvider(): array
+    public function safeFileNameFromUrlDataProvider(): array // @phpstan-ignore-line
     {
         return [
             ['https://getfursu.it/data_updates.html#anchor', 'getfursu.it_data_updates.html'],

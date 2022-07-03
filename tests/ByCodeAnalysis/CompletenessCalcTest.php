@@ -45,7 +45,7 @@ class CompletenessCalcTest extends TestCase
         self::assertEquals(50, CompletenessCalc::count($subject));
     }
 
-    public function justRequiredGive50DataProvider(): array
+    public function justRequiredGive50DataProvider(): array // @phpstan-ignore-line
     {
         return [
             [Ages::ADULTS, false, false, false, false],

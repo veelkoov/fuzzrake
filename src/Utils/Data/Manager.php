@@ -223,7 +223,7 @@ class Manager
         }
     }
 
-    private function getCorrectionsFor($subject): array
+    private function getCorrectionsFor(Artisan|string $subject): array
     {
         if ($subject instanceof Artisan) {
             $subject = $subject->getLastMakerId();

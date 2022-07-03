@@ -11,7 +11,7 @@ class DebugStdoutOutput extends Output
     /**
      * {@inheritdoc}
      */
-    protected function doWrite(string $message, bool $newline)
+    protected function doWrite(string $message, bool $newline): void
     {
         echo $message.($newline ? PHP_EOL : '');
     }

@@ -152,7 +152,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         }
     }
 
-    public function ageStuffFieldsDataProvider(): array
+    public function ageStuffFieldsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED

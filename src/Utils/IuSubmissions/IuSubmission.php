@@ -35,7 +35,7 @@ class IuSubmission implements FieldReadInterface
         return $this->timestamp;
     }
 
-    public function get(Field $field)
+    public function get(Field $field): mixed
     {
         $fieldName = $field->name;
 

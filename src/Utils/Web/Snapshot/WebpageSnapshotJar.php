@@ -60,6 +60,9 @@ final class WebpageSnapshotJar
         }
     }
 
+    /**
+     * @return string[]
+     */
     private static function getPaths(string $baseDir): array
     {
         return [

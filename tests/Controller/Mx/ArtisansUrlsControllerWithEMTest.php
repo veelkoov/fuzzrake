@@ -8,7 +8,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
 class ArtisansUrlsControllerWithEMTest extends WebTestCaseWithEM
 {
-    public function testPageLoads()
+    public function testPageLoads(): void
     {
         $client = static::createClient();
 

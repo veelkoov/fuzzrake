@@ -10,7 +10,7 @@ final class Arrays
 {
     use UtilityClass;
 
-    public static function assoc(array $input, $key = 0, $value = 1): array
+    public static function assoc(array $input, int|string $key = 0, int|string $value = 1): array
     {
         $result = [];
 

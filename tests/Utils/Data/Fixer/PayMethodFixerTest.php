@@ -23,12 +23,12 @@ class PayMethodFixerTest extends TestCase
     /**
      * @dataProvider fixDataProvider
      */
-    public function testFix(string $expected, $actual): void
+    public function testFix(string $expected, string $actual): void
     {
         self::assertEquals($actual, self::$subject->fix($expected));
     }
 
-    public function fixDataProvider(): array
+    public function fixDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [

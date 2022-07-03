@@ -1,8 +1,13 @@
 parameters:
-	level: 5
-	paths:
-		- src
-		- tests
+  level: 6
+  paths:
+    - src
+    - tests
+
+  ignoreErrors: # TODO: REMOVE, fix all
+    - '# with no value type specified in iterable type #'
+    - '# return type has no value type specified in iterable type #'
+    - '# type has no value type specified in iterable type #'
 
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon

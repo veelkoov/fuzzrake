@@ -348,7 +348,7 @@ class ExtendedTest extends AbstractTestWithEM
         self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);
     }
 
-    private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody)
+    private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody): void
     {
         self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->name.");
 
