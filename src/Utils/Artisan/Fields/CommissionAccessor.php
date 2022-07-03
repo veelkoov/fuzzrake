@@ -9,6 +9,9 @@ use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
+/**
+ * @extends AbstractAccessor<bool,ArtisanCommissionsStatus>
+ */
 final class CommissionAccessor extends AbstractAccessor
 {
     public static function set(Artisan $artisan, bool $isOpen, string $newValue): void

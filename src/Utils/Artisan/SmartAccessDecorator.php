@@ -709,7 +709,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->getUrl(Field::URL_OTHER);
     }
 
-    public function setOtherUrls($otherUrls): self
+    public function setOtherUrls(string $otherUrls): self
     {
         return $this->setUrl(Field::URL_OTHER, $otherUrls);
     }
@@ -818,7 +818,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     /** @noinspection PhpUnusedParameterInspection */
     #[Callback(groups: [Validation::GRP_DATA])]
-    public function validateData(ExecutionContextInterface $context, $payload): void
+    public function validateData(ExecutionContextInterface $context, mixed $payload): void
     {
         if (null === $this->getDoesNsfw() && $this->isAllowedToDoNsfw()) {
             $context
@@ -837,7 +837,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     /** @noinspection PhpUnusedParameterInspection */
     #[Callback(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    public function validateContactAndPassword(ExecutionContextInterface $context, $payload): void
+    public function validateContactAndPassword(ExecutionContextInterface $context, mixed $payload): void
     {
         if (ContactPermit::NO !== $this->artisan->getContactAllowed() && '' === $this->artisan->getContactInfoObfuscated()) {
             $context
@@ -1309,7 +1309,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getUrls(): Collection|array
+    /**
+     * @return Collection<int,ArtisanUrl>
+     */
+    public function getUrls(): Collection
     {
         return $this->artisan->getUrls();
     }
@@ -1328,7 +1331,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getCommissions(): Collection|array
+    /**
+     * @return Collection<int,ArtisanCommissionsStatus>
+     */
+    public function getCommissions(): Collection
     {
         return $this->artisan->getCommissions();
     }
@@ -1347,7 +1353,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    public function getMakerIds(): Collection|array
+    /**
+     * @return Collection<int,MakerId>
+     */
+    public function getMakerIds(): Collection
     {
         return $this->artisan->getMakerIds();
     }

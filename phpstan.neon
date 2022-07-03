@@ -9,11 +9,5 @@ parameters:
     - '# return type has no value type specified in iterable type #'
     - '# type has no value type specified in iterable type #'
 
-  excludePaths: # TODO: REMOVE, fix all
-    - src/Utils/Artisan/SmartAccessDecorator.php
-    - src/Utils/Artisan/Fields/CommissionAccessor.php
-    - src/Utils/Artisan/Fields/UrlAccessor.php
-    - src/Utils/Artisan/Fields/AbstractAccessor.php
-
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon
