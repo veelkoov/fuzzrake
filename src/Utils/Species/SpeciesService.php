@@ -12,6 +12,9 @@ class SpeciesService
 {
     private ?HierarchyAwareBuilder $builder = null;
 
+    /**
+     * @param array{replacements: string[], regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: string[]} $speciesDefinitions
+     */
     public function __construct(
         private readonly array $speciesDefinitions,
         private readonly ArtisanRepository $artisanRepository,
@@ -45,7 +48,7 @@ class SpeciesService
     public function getListFixerReplacements(): Replacements
     {
         return new Replacements($this->speciesDefinitions['replacements'], 'i',
-            $this->speciesDefinitions['commonRegexPrefix'], $this->speciesDefinitions['commonRegexSuffix']);
+            $this->speciesDefinitions['regex_prefix'], $this->speciesDefinitions['regex_suffix']);
     }
 
     /**

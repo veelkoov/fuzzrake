@@ -17,6 +17,10 @@ class SafeArrayRead
      * @var string[]
      */
     private array $errors = [];
+
+    /**
+     * @var Field[]
+     */
     private array $notCopiedYet;
 
     public function __construct(

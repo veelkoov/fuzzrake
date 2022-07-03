@@ -10,7 +10,7 @@ use JsonException;
 class CountriesDataService
 {
     /**
-     * [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ].
+     * @var array<string,array{'name': string, 'code': string, 'region': string}>
      */
     private array $data;
 

@@ -14,6 +14,9 @@ use Traversable;
  */
 class FieldsList implements IteratorAggregate
 {
+    /**
+     * @var array<string,Field>
+     */
     private array $fields = [];
 
     /**

@@ -7,7 +7,6 @@ parameters:
   ignoreErrors: # TODO: REMOVE, fix all
     - '# with no value type specified in iterable type #'
     - '# return type has no value type specified in iterable type #'
-    - '# type has no value type specified in iterable type #'
 
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon

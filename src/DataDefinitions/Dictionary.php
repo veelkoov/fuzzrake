@@ -6,7 +6,14 @@ namespace App\DataDefinitions;
 
 abstract class Dictionary
 {
+    /**
+     * @var array<string,string>
+     */
     protected static ?array $valueKeyMap = null;
+
+    /**
+     * @var array<string,string>
+     */
     protected static ?array $keyKeyMap = null;
 
     abstract public static function getValues(): array;

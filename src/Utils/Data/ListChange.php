@@ -9,9 +9,24 @@ use App\Utils\StringList;
 
 class ListChange implements ChangeInterface
 {
+    /**
+     * @var string[]
+     */
     private readonly array $old;
+
+    /**
+     * @var string[]
+     */
     private readonly array $new;
+
+    /**
+     * @var string[]
+     */
     private array $added;
+
+    /**
+     * @var string[]
+     */
     private array $removed;
 
     public function __construct(
