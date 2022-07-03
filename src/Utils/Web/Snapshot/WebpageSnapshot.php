@@ -17,8 +17,8 @@ class WebpageSnapshot
     private array $children = [];
 
     /**
-     * @param string[] $headers
-     * @param string[] $errors
+     * @param string[][] $headers
+     * @param string[]   $errors
      */
     public function __construct(
         private readonly string $url,
@@ -78,7 +78,7 @@ class WebpageSnapshot
     }
 
     /**
-     * @return string[]
+     * @return string[][]
      */
     public function getHeaders(): array
     {

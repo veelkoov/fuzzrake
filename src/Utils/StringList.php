@@ -50,7 +50,7 @@ final class StringList
      */
     public static function split(string $input, string $separatorRegexp, array $nonsplittables = []): array
     {
-        $nonsplittables = array_fill_keys($nonsplittables, null);
+        $nonsplittables = array_fill_keys($nonsplittables, '');
         $i = 0;
 
         foreach ($nonsplittables as &$uItem) {

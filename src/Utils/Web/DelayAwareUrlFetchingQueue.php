@@ -10,10 +10,6 @@ class DelayAwareUrlFetchingQueue
 {
     private const NEXT_FETCH_TIMESTAMP = 'last_fetch_timestamp';
     private const URLS = 'urls';
-
-    /**
-     * @var Fetchable[]
-     */
     private array $hosts = [];
     private ?string $lastHost = null;
 
