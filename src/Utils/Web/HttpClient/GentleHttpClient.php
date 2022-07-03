@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class GentleHttpClient extends HttpClient
 {
-    final public const DELAY_FOR_HOST_MILLISEC = 5000;
+    final public const DELAY_FOR_HOST_MILLISEC = 10000;
 
     /**
      * Host => Last request since Epoch [ms].

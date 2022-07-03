@@ -17,6 +17,7 @@ final class Fields
     private static ?FieldsList $inStats = null;
     private static ?FieldsList $lists = null;
     private static ?FieldsList $urls = null;
+    private static ?FieldsList $nonInspected = null;
     private static ?FieldsList $none = null;
 
     public static function all(): FieldsList
@@ -56,7 +57,7 @@ final class Fields
 
     public static function nonInspectedUrls(): FieldsList
     {
-        return self::$urls ??= self::urls()->filtered(fn (Field $field): bool => in_array($field->name, FieldsData::NON_INSPECTED_URLS));
+        return self::$nonInspected ??= self::urls()->filtered(fn (Field $field): bool => in_array($field, FieldsData::NON_INSPECTED_URLS, true));
     }
 
     public static function none(): FieldsList

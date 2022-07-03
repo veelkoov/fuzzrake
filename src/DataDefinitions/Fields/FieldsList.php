@@ -61,6 +61,6 @@ class FieldsList implements IteratorAggregate
 
     public function empty(): bool
     {
-        return 0 !== count($this->fields);
+        return 0 === count($this->fields);
     }
 }
