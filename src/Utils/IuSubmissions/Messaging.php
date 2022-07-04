@@ -23,6 +23,9 @@ class Messaging
         $this->printer->writeln("{$item->getIdStrSafe()} ignored until {$this->manager->getIgnoredUntilDate($item)->format('Y-m-d')}");
     }
 
+    /**
+     * @param Artisan[] $results
+     */
     public function reportMoreThanOneMatchedArtisans(Artisan $artisan, array $results): void
     {
         $foundList = implode(",\n", array_map(fn (Artisan $artisan) => StrUtils::artisanNamesSafeForCli($artisan), $results));

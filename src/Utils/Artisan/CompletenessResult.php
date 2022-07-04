@@ -27,7 +27,7 @@ final class CompletenessResult
         return 0.0 !== $this->total ? (int) round(100 * $this->earned / $this->total) : 0;
     }
 
-    public function anyNotNull(float $weight, ...$fields): CompletenessResult
+    public function anyNotNull(float $weight, Field ...$fields): CompletenessResult
     {
         $this->total += $weight;
 

@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method TrackerSetting|null findOneBy(array $criteria, array $orderBy = null)
  * @method TrackerSetting[]    findAll()
  * @method TrackerSetting[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<TrackerSetting>
  */
 class TrackerSettingRepository extends ServiceEntityRepository
 {

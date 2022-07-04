@@ -54,6 +54,8 @@ class OfferStatusParser
     }
 
     /**
+     * @return Text[]
+     *
      * @throws TrackerException
      */
     private function preprocessAll(string $artisanName, string $additionalFilter, WebpageSnapshot $snapshot): array
@@ -82,6 +84,8 @@ class OfferStatusParser
     }
 
     /**
+     * @param OfferStatus[] $result
+     *
      * @throws TrackerException
      */
     private function appendOfferStatuses(Detail $match, array &$result): void

@@ -1,7 +1,7 @@
 parameters:
   urls:
-    commonRegexPrefix: '^'
-    commonRegexSuffix: '$'
+    regex_prefix: '^'
+    regex_suffix: '$'
     replacements:
       'no': ''
 

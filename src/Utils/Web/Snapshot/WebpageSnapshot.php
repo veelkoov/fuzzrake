@@ -106,6 +106,9 @@ class WebpageSnapshot
         return array_merge([$this->contents], ...array_map(fn (WebpageSnapshot $snapshot) => $snapshot->getAllContents(), $this->getChildren()));
     }
 
+    /**
+     * @return psWebpageSnapshotMetadata
+     */
     public function getMetadata(): array
     {
         return [
@@ -120,6 +123,8 @@ class WebpageSnapshot
     }
 
     /**
+     * @param array<string, int|string|string[]|string[][]> $input
+     *
      * @throws DateTimeException
      */
     public static function fromArray(array $input): WebpageSnapshot

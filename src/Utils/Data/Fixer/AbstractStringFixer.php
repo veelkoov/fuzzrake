@@ -10,9 +10,12 @@ class AbstractStringFixer implements FixerInterface
 {
     private readonly Replacements $replacements;
 
+    /**
+     * @param psFixerConfig $regexes
+     */
     public function __construct(array $regexes)
     {
-        $this->replacements = new Replacements($regexes['replacements'], 'i', $regexes['commonRegexPrefix'], $regexes['commonRegexSuffix']);
+        $this->replacements = new Replacements($regexes['replacements'], 'i', $regexes['regex_prefix'], $regexes['regex_suffix']);
     }
 
     public function fix(string $subject): string

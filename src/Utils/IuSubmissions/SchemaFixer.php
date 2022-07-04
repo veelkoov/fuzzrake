@@ -14,6 +14,11 @@ final class SchemaFixer
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
     private const CURRENT_SCHEMA_VERSION = 13;
 
+    /**
+     * @param psIuSubmissionArray $data
+     *
+     * @return psIuSubmissionArray
+     */
     public function fix(array $data): array
     {
         $data = self::assureVersionFieldExists($data);
@@ -48,6 +53,11 @@ final class SchemaFixer
         return $data;
     }
 
+    /**
+     * @param psIuSubmissionArray $data
+     *
+     * @return psIuSubmissionArray
+     */
     private function assureVersionFieldExists(array $data): array
     {
         if (!array_key_exists(self::SCHEMA_VERSION, $data)) {
@@ -57,6 +67,11 @@ final class SchemaFixer
         return $data;
     }
 
+    /**
+     * @param psIuSubmissionArray $data
+     *
+     * @return psIuSubmissionArray
+     */
     public static function appendSchemaVersion(array $data): array
     {
         $data[self::SCHEMA_VERSION] = self::CURRENT_SCHEMA_VERSION;

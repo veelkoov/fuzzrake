@@ -268,8 +268,8 @@ parameters:
       - 'Copyrighted characters (e.g. Pokemons)'
       - '3D printing & electronics required species (e.g. Protogens, Skullies)'
 
-    commonRegexPrefix: '(?<=^|\n)'
-    commonRegexSuffix: '(?=\n|$)'
+    regex_prefix: '(?<=^|\n)'
+    regex_suffix: '(?=\n|$)'
     replacements:
       '^(any|all|most)( species)?$':                         'Most species'
 

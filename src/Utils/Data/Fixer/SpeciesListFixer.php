@@ -16,6 +16,10 @@ class SpeciesListFixer extends AbstractListFixer
 
     private readonly Replacements $replacements;
 
+    /**
+     * @param psFixerConfig $strings
+     * @param psFixerConfig $lists
+     */
     public function __construct(SpeciesService $species, array $strings, array $lists)
     {
         parent::__construct($lists, $strings);

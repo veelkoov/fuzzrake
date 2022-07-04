@@ -21,6 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArtisanUrl|null findOneBy(array $criteria, array $orderBy = null)
  * @method ArtisanUrl[]    findAll()
  * @method ArtisanUrl[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ArtisanUrl>
  */
 class ArtisanUrlRepository extends ServiceEntityRepository
 {
@@ -69,6 +71,9 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    /**
+     * @return ArtisanUrl[]
+     */
     public function getOrderedBySuccessDate(FieldsList $excluded): array
     {
         $builder = $this->createQueryBuilder('au')

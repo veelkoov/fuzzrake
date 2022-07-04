@@ -113,6 +113,8 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
+     * @param array<string, string> $expectedErrors
+     *
      * @dataProvider ageStuffFieldsDataProvider
      */
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
@@ -152,7 +154,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         }
     }
 
-    public function ageStuffFieldsDataProvider(): array
+    public function ageStuffFieldsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
@@ -378,7 +380,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
     }
 
-    public function cannotSkipUnfinishedStepsDataProvider(): array
+    public function cannotSkipUnfinishedStepsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             'New maker, pass+cont'      => ['contact_and_password', ''],

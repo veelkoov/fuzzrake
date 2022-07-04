@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PagesControllerTest extends WebTestCase
 {
-    public function testInfo()
+    public function testInfo(): void
     {
         $client = static::createClient();
 
@@ -19,7 +19,7 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h3#data-updates', 'How to add/update your studio/maker info');
     }
 
-    public function testTracking()
+    public function testTracking(): void
     {
         $client = static::createClient();
 
@@ -29,7 +29,7 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h1', 'Automatic tracking and status updates');
     }
 
-    public function testMakerIds()
+    public function testMakerIds(): void
     {
         $client = static::createClient();
 
@@ -39,7 +39,7 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h1', 'What is a "maker ID"?');
     }
 
-    public function testDonate()
+    public function testDonate(): void
     {
         $client = static::createClient();
 
@@ -49,7 +49,7 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h2', 'Please donate');
     }
 
-    public function testRules()
+    public function testRules(): void
     {
         $client = static::createClient();
 
@@ -59,7 +59,7 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h1', 'Rules for makers/studios');
     }
 
-    public function testShouldKnow()
+    public function testShouldKnow(): void
     {
         $client = static::createClient();
 

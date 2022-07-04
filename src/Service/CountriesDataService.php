@@ -10,7 +10,7 @@ use JsonException;
 class CountriesDataService
 {
     /**
-     * [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ].
+     * @var array<string, array{name: string, code: string, region: string}>
      */
     private array $data;
 
@@ -23,6 +23,9 @@ class CountriesDataService
         $this->loadCountriesData($projectDir);
     }
 
+    /**
+     * @return string[]
+     */
     public function getRegions(): array
     {
         $result = array_unique(array_map(fn (array $country): string => $country['region'], $this->data));

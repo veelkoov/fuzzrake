@@ -18,6 +18,9 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class IuSubmission implements FieldReadInterface
 {
+    /**
+     * @param psIuSubmissionArray $data
+     */
     public function __construct(
         private readonly DateTimeImmutable $timestamp,
         private readonly string $id,
@@ -35,7 +38,7 @@ class IuSubmission implements FieldReadInterface
         return $this->timestamp;
     }
 
-    public function get(Field $field)
+    public function get(Field $field): mixed
     {
         $fieldName = $field->name;
 

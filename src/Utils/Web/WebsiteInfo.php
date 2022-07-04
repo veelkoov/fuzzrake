@@ -75,7 +75,7 @@ final class WebsiteInfo
         return pattern(self::INSTAGRAM_CONTENTS_REGEXP, 'si')->test($webpageContents);
     }
 
-    public static function getTrelloBoardDataUrl($boardId): string
+    public static function getTrelloBoardDataUrl(string $boardId): string
     {
         return "https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData";
     }

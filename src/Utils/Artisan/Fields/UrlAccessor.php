@@ -8,6 +8,9 @@ use App\Entity\ArtisanUrl;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
+/**
+ * @extends AbstractAccessor<string, ArtisanUrl>
+ */
 final class UrlAccessor extends AbstractAccessor
 {
     public static function set(Artisan $artisan, string $urlFieldName, string $newValue): void
@@ -20,6 +23,9 @@ final class UrlAccessor extends AbstractAccessor
         return self::_get($artisan, $urlFieldName);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getList(Artisan $artisan, string $urlFieldName): array
     {
         return self::_getList($artisan, $urlFieldName);

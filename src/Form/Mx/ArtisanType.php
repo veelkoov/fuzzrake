@@ -28,7 +28,7 @@ class ArtisanType extends AbstractType
     final public const BTN_SAVE = 'save';
     final public const BTN_DELETE = 'delete';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('makerId', TextType::class, [
@@ -320,7 +320,7 @@ class ArtisanType extends AbstractType
         $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Artisan::class,

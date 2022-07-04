@@ -8,5 +8,5 @@ use App\DataDefinitions\Fields\Field;
 
 interface FieldReadInterface
 {
-    public function get(Field $field);
+    public function get(Field $field): mixed;
 }

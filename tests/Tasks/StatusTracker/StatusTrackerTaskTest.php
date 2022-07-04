@@ -173,6 +173,9 @@ class StatusTrackerTaskTest extends TestCase
         self::assertOfferStatuses([$os1, $os2], $changedArtisan); // Only the not-conflicting status is available
     }
 
+    /**
+     * @param array<array<OfferStatus>> $mockReturnedOfferStatuses
+     */
     private function getTestSubject(Artisan $artisan, array $mockReturnedOfferStatuses): StatusTrackerTask
     {
         $mockedUrlsCount = count($mockReturnedOfferStatuses);

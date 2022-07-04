@@ -31,7 +31,7 @@ class Data extends BaseForm
     final public const OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
     final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
 
@@ -402,7 +402,7 @@ class Data extends BaseForm
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 

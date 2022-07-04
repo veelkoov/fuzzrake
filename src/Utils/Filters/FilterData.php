@@ -7,6 +7,10 @@ namespace App\Utils\Filters;
 class FilterData
 {
     private readonly Set $items;
+
+    /**
+     * @var SpecialItem[]
+     */
     private readonly array $specialItems;
 
     public function __construct(

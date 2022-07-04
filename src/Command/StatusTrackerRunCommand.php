@@ -26,7 +26,7 @@ class StatusTrackerRunCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption(self::OPT_REFETCH, null, null, 'Refresh cache (re-fetch pages)')

@@ -38,7 +38,7 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
         static::assertEquals($artisans[$resultIdx], $result);
     }
 
-    public function findByMakerIdDataProvider(): array
+    public function findByMakerIdDataProvider(): array // @phpstan-ignore-line
     {
         Artisan::wrap($m1 = new ArtisanE())->setMakerId('MAKER11');
         Artisan::wrap($m2 = new ArtisanE())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');

@@ -8,5 +8,5 @@ use App\DataDefinitions\Fields\Field;
 
 interface ValidatorInterface
 {
-    public function isValid(Field $field, $subject): bool;
+    public function isValid(Field $field, string $subject): bool;
 }

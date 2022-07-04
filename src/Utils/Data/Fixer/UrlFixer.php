@@ -10,11 +10,15 @@ class UrlFixer extends StringFixer
 {
     private readonly Replacements $replacements;
 
+    /**
+     * @param psFixerConfig $urls
+     * @param psFixerConfig $strings
+     */
     public function __construct(array $urls, array $strings)
     {
         parent::__construct($strings);
 
-        $this->replacements = new Replacements($urls['replacements'], 'i', $urls['commonRegexPrefix'], $urls['commonRegexSuffix']);
+        $this->replacements = new Replacements($urls['replacements'], 'i', $urls['regex_prefix'], $urls['regex_suffix']);
     }
 
     public function fix(string $subject): string

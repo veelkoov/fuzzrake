@@ -43,7 +43,7 @@ class Differ
         }
     }
 
-    private function showListDiff(string $fieldName, $oldVal, $newVal, $impVal = null): void
+    private function showListDiff(string $fieldName, string $oldVal, string $newVal, string $impVal = null): void
     {
         $oldValItems = StringList::unpack($oldVal);
         $newValItems = StringList::unpack($newVal);
@@ -79,7 +79,7 @@ class Differ
         $this->printer->writeln("NEW $fieldName $q".implode($n, $newValItems).$q);
     }
 
-    private function showSingleValueDiff(Field $field, $oldVal, $newVal, $impVal = null): void
+    private function showSingleValueDiff(Field $field, string $oldVal, string $newVal, string $impVal = null): void
     {
         $q = Formatter::shy('"');
 

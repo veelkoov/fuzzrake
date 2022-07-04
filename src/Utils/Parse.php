@@ -15,7 +15,7 @@ final class Parse
 {
     use UtilityClass;
 
-    public static function tInt($input): int
+    public static function tInt(mixed $input): int
     {
         if (is_int($input)) {
             return $input;
@@ -28,7 +28,7 @@ final class Parse
         return self::int($input ?? '');
     }
 
-    public static function int($input): int
+    public static function int(mixed $input): int
     {
         if (is_int($input)) {
             return $input;

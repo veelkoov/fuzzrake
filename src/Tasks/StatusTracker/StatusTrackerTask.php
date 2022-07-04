@@ -164,7 +164,10 @@ class StatusTrackerTask
         return array_filter($result, fn (?OfferStatus $item): bool => null !== $item);
     }
 
-    private function getArtisanChangesGiven(Artisan $artisan, array $offerStatuses, bool $csTrackerIssue, $lastCsUpdate): ArtisanChanges
+    /**
+     * @param OfferStatus[] $offerStatuses
+     */
+    private function getArtisanChangesGiven(Artisan $artisan, array $offerStatuses, bool $csTrackerIssue, ?DateTimeImmutable $lastCsUpdate): ArtisanChanges
     {
         $result = new ArtisanChanges($artisan);
         $result->getChanged()->getVolatileData()->setCsTrackerIssue($csTrackerIssue);

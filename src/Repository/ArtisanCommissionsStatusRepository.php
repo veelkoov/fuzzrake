@@ -18,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArtisanCommissionsStatus|null findOneBy(array $criteria, array $orderBy = null)
  * @method ArtisanCommissionsStatus[]    findAll()
  * @method ArtisanCommissionsStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ArtisanCommissionsStatus>
  */
 class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
 {
@@ -27,6 +29,8 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return psArtisanStatsArray
+     *
      * @throws UnexpectedResultException
      */
     public function getCommissionsStats(): array
@@ -90,6 +94,9 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function getDistinctWithOpenCount(): array
     {
         return Arrays::assoc($this->createQueryBuilder('acs')

@@ -24,7 +24,10 @@ class Printer
         $this->currentContext = $artisan;
     }
 
-    public function writeln($messages): void
+    /**
+     * @param string|iterable<string> $messages
+     */
+    public function writeln(string|iterable $messages): void
     {
         $this->showArtisanNameIfContextChanged();
         $this->io->writeln($messages);

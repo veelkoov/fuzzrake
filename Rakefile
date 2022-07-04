@@ -40,10 +40,16 @@ def run_shell(*args)
   system(*args) || raise('Command returned non-zero exit code')
 end
 
+def docker_compose(*args)
+  project_name = ENV.fetch('FUZZRAKE_DEV_PROJECT_NAME', 'fuzzrake')
+
+  run_shell('docker', 'compose', '--project-directory', 'docker', '--project-name', project_name, *args)
+end
+
 def run_docker(*args)
   user_and_group = `echo -n $(id -u):$(id -g)`
 
-  run_shell('docker', 'compose', '--project-directory', 'docker', 'exec', '--user', user_and_group, '-ti', 'php', *args)
+  docker_compose('exec', '--user', user_and_group, '-ti', 'php', *args)
 end
 
 def run_console(*args)
@@ -93,7 +99,7 @@ def fix_phpunit
 end
 
 task('fix-phpunit')  { fix_phpunit }
-task('docker-dev')   { run_shell('docker', 'compose', '--project-directory', 'docker', 'up', '--detach', '--build') }
+task('docker-dev')   { docker_compose('up', '--detach', '--build') }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
 task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }

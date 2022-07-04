@@ -40,6 +40,9 @@ class Diff
         return !empty($this->changes);
     }
 
+    /**
+     * @return array{0: Field, 1: psFieldValue, 2: psFieldValue}
+     */
     private function getField(Field $field, Artisan $old, Artisan $new): array
     {
         return [$field, $old->get($field), $new->get($field)];

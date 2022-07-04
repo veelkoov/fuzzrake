@@ -25,6 +25,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Artisan|null findOneBy(array $criteria, array $orderBy = null)
  * @method Artisan[]    findAll()
  * @method Artisan[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Artisan>
  */
 class ArtisanRepository extends ServiceEntityRepository
 {
@@ -45,6 +47,9 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Artisan[]
+     */
     public function getNew(): array
     {
         return $this->getArtisansQueryBuilder()
@@ -202,6 +207,9 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string[] $names
+     * @param string[] $makerIds
+     *
      * @return Artisan[]
      */
     public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array
@@ -231,6 +239,9 @@ class ArtisanRepository extends ServiceEntityRepository
         return $builder->getQuery()->getResult();
     }
 
+    /**
+     * @return array{items: string[], otherItems?: string[]}
+     */
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
     {
         $queryBuilder = $this->createQueryBuilder('a')

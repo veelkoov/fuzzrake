@@ -31,6 +31,9 @@ class DisrespectfulLegacyScraper implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param (string|string[])[] $array
+     */
     private static function removeUselessCrapFromArray(array &$array): void
     {
         foreach ($array as $key => $value) {

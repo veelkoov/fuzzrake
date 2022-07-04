@@ -31,7 +31,7 @@ class EventFactoryTest extends TestCase
         self::assertEquals($expectedCheckedUrls, $result->getCheckedUrlsArray());
     }
 
-    public function fromArtisanChangesDataProvider(): array
+    public function fromArtisanChangesDataProvider(): array // @phpstan-ignore-line
     {
         $artisan1 = (new Artisan())
             ->setName('Artisan name 1')

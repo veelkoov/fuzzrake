@@ -6,6 +6,9 @@ namespace App\Utils\Data\Fixer;
 
 class StateFixer extends AbstractStringFixer
 {
+    /**
+     * @param psFixerConfig $states
+     */
     public function __construct(
         array $states,
         private readonly StringFixer $stringFixer,

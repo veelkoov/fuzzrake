@@ -37,7 +37,7 @@ class ValueCorrection implements Stringable
         return $this->correctedValue;
     }
 
-    public function apply($value): string
+    public function apply(mixed $value): string
     {
         if (null === $this->wrongValue) {
             return $this->correctedValue;

@@ -10,6 +10,10 @@ class PayMethodFixer extends AbstractListFixer
 {
     private Pattern $nsp;
 
+    /**
+     * @param psFixerConfig $paymentMethods
+     * @param psFixerConfig $strings
+     */
     public function __construct(array $paymentMethods, array $strings)
     {
         parent::__construct($paymentMethods, $strings);

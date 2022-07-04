@@ -22,6 +22,9 @@ enum Ages : string
         };
     }
 
+    /**
+     * @return array<string, string|null>
+     */
     public static function getChoices(bool $includeUnknown): array
     {
         $result = Arrays::assoc(array_map(fn ($item): array => [$item->getLabel(), $item->value], self::cases()));

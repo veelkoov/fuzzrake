@@ -22,7 +22,7 @@ class GentleHttpClient extends HttpClient
     private array $lastRequestsMs = [];
 
     /**
-     * @throws TransportExceptionInterface
+     * {@inheritDoc}
      */
     public function get(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
     {
@@ -32,7 +32,7 @@ class GentleHttpClient extends HttpClient
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * {@inheritDoc}
      */
     public function post(string $url, string $payload, CookieJar $cookieJar, array $additionalHeaders = []): ResponseInterface
     {
@@ -42,6 +42,8 @@ class GentleHttpClient extends HttpClient
     }
 
     /**
+     * @param array<string, string> $additionalHeaders
+     *
      * @throws TransportExceptionInterface
      */
     public function getImmediately(string $url, CookieJar $cookieJar = null, array $additionalHeaders = []): ResponseInterface
@@ -54,6 +56,8 @@ class GentleHttpClient extends HttpClient
     }
 
     /**
+     * @param array<string, string> $additionalHeaders
+     *
      * @throws TransportExceptionInterface
      */
     public function postImmediately(string $url, string $payload, CookieJar $cookieJar, array $additionalHeaders = []): ResponseInterface

@@ -13,12 +13,17 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
+use Exception;
+use RuntimeException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait EntityManagerTrait
 {
     private static ?EntityManagerInterface $entityManager = null;
 
+    /**
+     * @param array<string, string> $options
+     */
     protected static function bootKernel(array $options = []): KernelInterface
     {
         $result = parent::bootKernel($options);
@@ -31,7 +36,11 @@ trait EntityManagerTrait
 
     protected static function getEM(): EntityManagerInterface
     {
-        return self::$entityManager ??= self::getContainer()->get('doctrine.orm.default_entity_manager');
+        try {
+            return self::$entityManager ??= self::getContainer()->get('doctrine.orm.default_entity_manager');
+        } catch (Exception $caught) {
+            throw new RuntimeException(previous: $caught);
+        }
     }
 
     protected static function resetDB(): void

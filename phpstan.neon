@@ -1,8 +1,24 @@
 parameters:
-	level: 5
-	paths:
-		- src
-		- tests
+  level: 6
+  paths:
+    - src
+    - tests
+
+  typeAliases:
+    psIuSubmissionArray:       'array<string,int|bool|string|string[]>'
+    psWebpageSnapshotMetadata: 'array{url: string, ownerName: string, retrievedAt: string, childCount: int, headers: string[][], errors: string[], httpCode: int}'
+    psFieldValue:              'BackedEnum|DateTimeImmutable|string|bool|null'
+    psJsonFieldValue:          'string[]|string|bool|null'
+    psArtisanStatsArray:       'array{open_for_anything: int, closed_for_anything: int, successfully_tracked: int, partially_tracked: int, tracking_failed: int, tracking_issues: int, tracked: int, total: int}'
+    psSpecies:                 'array<string, psSpecie>'
+    psSpecie:                  'array<string, mixed>' # No recursion allowed
+    psFixerConfig:             'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string}'
+    psLanguagesFixerConfig:    'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, regexp: string}'
+
+    psTrackerRegexes:          'array{group_translations: array<string, string[]>, false_positives: string[], offer_statuses: string[], placeholders: array<string, psTrackerPlaceholder>, cleaners: array<string, string>}'
+
+    psTrackerPlaceholder:      'string|string[]|psTrackerPlaceholderChild[]'
+    psTrackerPlaceholderChild: 'array<string, string[]>'
 
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon

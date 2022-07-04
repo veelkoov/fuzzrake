@@ -1,7 +1,7 @@
 parameters:
   strings:
-    commonRegexPrefix: ''
-    commonRegexSuffix: ''
+    regex_prefix: ''
+    regex_suffix: ''
     replacements:
       '’':                        "'"
       '^-$':                      ''
@@ -15,8 +15,8 @@ parameters:
       '(^|\\s)LED($|\\s)':        '$1LED$2'
 
   lists:
-    commonRegexPrefix: '(?<=^|\n)'
-    commonRegexSuffix: '(?=\n|$)'
+    regex_prefix: '(?<=^|\n)'
+    regex_suffix: '(?=\n|$)'
     replacements:
       'Arm ?sleeves':                                'Arm sleeves'
       'backpacks':                                   'Backpacks'

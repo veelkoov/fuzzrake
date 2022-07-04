@@ -32,8 +32,8 @@ class Manager
     final public const CMD_WITH = 'with';
 
     /**
-     * @var ValueCorrection[][] Associative list of corrections to be applied
-     *                          Key = submission ID or maker ID, value = correction
+     * @var array<string, ValueCorrection[]> Associative list of corrections to be applied
+     *                                       Key = submission ID or maker ID, value = correction
      */
     private array $corrections = [];
 
@@ -223,7 +223,10 @@ class Manager
         }
     }
 
-    private function getCorrectionsFor($subject): array
+    /**
+     * @return ValueCorrection[]
+     */
+    private function getCorrectionsFor(Artisan|string $subject): array
     {
         if ($subject instanceof Artisan) {
             $subject = $subject->getLastMakerId();
