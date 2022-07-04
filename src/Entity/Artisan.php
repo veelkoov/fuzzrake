@@ -190,28 +190,28 @@ class Artisan implements Stringable
     /**
      * @ORM\OneToMany(targetEntity=ArtisanUrl::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection<int,ArtisanUrl>
+     * @var Collection<int, ArtisanUrl>
      */
     private Collection $urls;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection<int,ArtisanCommissionsStatus>
+     * @var Collection<int, ArtisanCommissionsStatus>
      */
     private Collection $commissions;
 
     /**
      * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection<int,MakerId>
+     * @var Collection<int, MakerId>
      */
     private Collection $makerIds;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanValue::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection<int,ArtisanValue>
+     * @var Collection<int, ArtisanValue>
      */
     private Collection $values;
 
@@ -689,7 +689,7 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection<int,ArtisanUrl>
+     * @return Collection<int, ArtisanUrl>
      */
     public function getUrls(): Collection
     {
@@ -719,7 +719,7 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection<int,ArtisanCommissionsStatus>
+     * @return Collection<int, ArtisanCommissionsStatus>
      */
     public function getCommissions(): Collection
     {
@@ -749,7 +749,7 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection<int,MakerId>
+     * @return Collection<int, MakerId>
      */
     public function getMakerIds(): Collection
     {
@@ -779,7 +779,7 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection<int,ArtisanValue>
+     * @return Collection<int, ArtisanValue>
      */
     public function getValues(): Collection
     {

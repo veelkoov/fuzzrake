@@ -10,7 +10,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
 /**
- * @extends AbstractAccessor<bool,ArtisanCommissionsStatus>
+ * @extends AbstractAccessor<bool, ArtisanCommissionsStatus>
  */
 final class CommissionAccessor extends AbstractAccessor
 {

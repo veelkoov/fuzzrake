@@ -9,7 +9,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
 /**
- * @extends AbstractAccessor<string,ArtisanUrl>
+ * @extends AbstractAccessor<string, ArtisanUrl>
  */
 final class UrlAccessor extends AbstractAccessor
 {

@@ -1322,7 +1322,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return Collection<int,ArtisanUrl>
+     * @return Collection<int, ArtisanUrl>
      */
     public function getUrls(): Collection
     {
@@ -1344,7 +1344,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return Collection<int,ArtisanCommissionsStatus>
+     * @return Collection<int, ArtisanCommissionsStatus>
      */
     public function getCommissions(): Collection
     {
@@ -1366,7 +1366,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return Collection<int,MakerId>
+     * @return Collection<int, MakerId>
      */
     public function getMakerIds(): Collection
     {

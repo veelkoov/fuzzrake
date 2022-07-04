@@ -12,7 +12,7 @@ class DelayAwareUrlFetchingQueue
     private const URLS = 'urls';
 
     /**
-     * @var array<string, array{'last_fetch_timestamp': int, 'urls': Fetchable[]}>
+     * @var array<string, array{last_fetch_timestamp: int, urls: Fetchable[]}>
      */
     private array $hosts = [];
     private ?string $lastHost = null;

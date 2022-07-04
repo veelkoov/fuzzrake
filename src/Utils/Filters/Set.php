@@ -10,8 +10,8 @@ use Iterator;
 use IteratorAggregate;
 
 /**
- * @implements ArrayAccess<string,string|Item>
- * @implements IteratorAggregate<string,string|Item>
+ * @implements ArrayAccess<string, Item>
+ * @implements IteratorAggregate<string, Item>
  */
 class Set implements IteratorAggregate, ArrayAccess
 {
