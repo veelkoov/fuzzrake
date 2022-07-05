@@ -9,8 +9,8 @@ use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\Snapshot\WebpageSnapshot;
-use App\Utils\Web\Snapshot\WebpageSnapshotCache;
+use App\Utils\Web\WebpageSnapshot\Cache;
+use App\Utils\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Web\WebsiteInfo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -21,12 +21,12 @@ class WebpageSnapshotManager
 {
     public function __construct(
         private readonly GentleHttpClient $httpClient,
-        private readonly WebpageSnapshotCache $cache,
+        private readonly Cache $cache,
         private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function get(Fetchable $url, bool $refetch): WebpageSnapshot
+    public function get(Fetchable $url, bool $refetch): Snapshot
     {
         if (!$refetch && (null !== ($result = $this->cache->get($url)))) {
             $this->logger->debug("Retrieved from cache: $url");
@@ -60,7 +60,7 @@ class WebpageSnapshotManager
         $progressReportIo->progressFinish();
     }
 
-    private function fetch(Fetchable $url): WebpageSnapshot
+    private function fetch(Fetchable $url): Snapshot
     {
         $response = null;
         $code = null;
@@ -105,7 +105,7 @@ class WebpageSnapshotManager
             $code = $latentCode;
         }
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content ?? '', UtcClock::now(),
+        $webpageSnapshot = new Snapshot($url->getUrl(), $content ?? '', UtcClock::now(),
             $url->getOwnerName(), $code ?? 0, $headers ?? [], array_unique($errors));
 
         $this->fetchChildren($webpageSnapshot, $url);
@@ -113,7 +113,7 @@ class WebpageSnapshotManager
         return $webpageSnapshot;
     }
 
-    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
+    private function fetchChildren(Snapshot $webpageSnapshot, Fetchable $url): void
     {
         foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
             $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
@@ -132,7 +132,7 @@ class WebpageSnapshotManager
         }
     }
 
-    private function updateUrlHealthStatus(Fetchable $url, ?WebpageSnapshot $snapshot): void
+    private function updateUrlHealthStatus(Fetchable $url, ?Snapshot $snapshot): void
     {
         if ($snapshot && $snapshot->isOK()) {
             $url->recordSuccessfulFetch();

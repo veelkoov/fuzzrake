@@ -2,22 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web\Snapshot;
+namespace App\Utils\Web\WebpageSnapshot;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\UrlUtils;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Exception\IOException;
 
-class WebpageSnapshotCache
+class Cache
 {
+    private readonly string $cacheDirPath;
+
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly string $cacheDirPath,
+        #[Autowire('%kernel.project_dir%/var/snapshots')]
+        string $cacheDirPath,
     ) {
+        $this->cacheDirPath = $cacheDirPath;
     }
 
     public function has(Fetchable $url): bool
@@ -25,14 +30,14 @@ class WebpageSnapshotCache
         return is_dir($this->getBaseDir($url->getUrl()));
     }
 
-    public function get(Fetchable $url): ?WebpageSnapshot
+    public function get(Fetchable $url): ?Snapshot
     {
         if (!$this->has($url)) {
             return null;
         }
 
         try {
-            return WebpageSnapshotJar::load($this->getBaseDir($url->getUrl()));
+            return Jar::load($this->getBaseDir($url->getUrl()));
         } catch (JsonException|DateTimeException|InvalidArgumentException $e) {
             $this->logger->warning('Failed reading snapshot from cache', ['url' => $url, 'exception' => $e]);
 
@@ -40,10 +45,10 @@ class WebpageSnapshotCache
         }
     }
 
-    public function set(Fetchable $url, WebpageSnapshot $snapshot): void
+    public function set(Fetchable $url, Snapshot $snapshot): void
     {
         try {
-            WebpageSnapshotJar::dump($this->getBaseDir($url->getUrl()), $snapshot);
+            Jar::dump($this->getBaseDir($url->getUrl()), $snapshot);
         } catch (JsonException|IOException $e) {
             $this->logger->warning('Failed saving snapshot into cache', ['url' => $url, 'exception' => $e]);
         }
