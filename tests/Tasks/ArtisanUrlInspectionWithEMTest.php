@@ -11,7 +11,7 @@ use App\Service\WebpageSnapshotManager;
 use App\Tasks\ArtisanUrlInspection;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\Snapshot\WebpageSnapshotCache;
+use App\Utils\Web\WebpageSnapshot\Cache;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -66,9 +66,9 @@ class ArtisanUrlInspectionWithEMTest extends KernelTestCaseWithEM
         return $this->createMock(LoggerInterface::class);
     }
 
-    private function getTestWebpageSnapshotCache(): WebpageSnapshotCache
+    private function getTestWebpageSnapshotCache(): Cache
     {
-        return $this->createMock(WebpageSnapshotCache::class);
+        return $this->createMock(Cache::class);
     }
 
     private function getTestGentleHttpClient(): GentleHttpClient

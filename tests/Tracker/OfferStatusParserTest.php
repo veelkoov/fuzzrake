@@ -14,8 +14,8 @@ use App\Tracker\Regexes;
 use App\Tracker\RegexFactory;
 use App\Tracker\TrackerException;
 use App\Utils\Json;
-use App\Utils\Web\Snapshot\WebpageSnapshot;
-use App\Utils\Web\Snapshot\WebpageSnapshotJar;
+use App\Utils\Web\WebpageSnapshot\Jar;
+use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -43,7 +43,7 @@ class OfferStatusParserTest extends TestCase
      *
      * @throws TrackerException
      */
-    public function testGetStatuses(string $testSetPath, WebpageSnapshot $snapshot, array $expectedResult): void
+    public function testGetStatuses(string $testSetPath, Snapshot $snapshot, array $expectedResult): void
     {
         $actual = array_map(fn (OfferStatus $offerStatus): string => "{$offerStatus->getOffer()}: ".($offerStatus->getStatus() ? 'OPEN' : 'CLOSED'), self::$csp->getCommissionsStatuses($snapshot));
 
@@ -65,7 +65,7 @@ class OfferStatusParserTest extends TestCase
     {
         return array_filter(array_map(function ($filepath) {
             $expectedResult = Json::decode(trim(file_get_contents($filepath)));
-            $snapshot = WebpageSnapshotJar::load(dirname($filepath));
+            $snapshot = Jar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
         }, glob(Paths::getTestDataPath('/statuses/*/*/expected.json'))));

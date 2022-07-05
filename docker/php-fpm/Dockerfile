@@ -14,7 +14,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
 
 RUN pip3 install awscli
 
-RUN docker-php-ext-install -j$(nproc) intl opcache zip gd
+RUN docker-php-ext-install -j$(nproc) intl opcache zip gd bcmath
 
 RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
