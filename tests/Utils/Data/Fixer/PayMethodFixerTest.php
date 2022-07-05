@@ -17,7 +17,7 @@ class PayMethodFixerTest extends TestCase
         $strings = DataDefinitions::get('generic.yaml', 'strings');
         $payments = DataDefinitions::get('payments.yaml', 'paymentMethods');
 
-        self::$subject = new PayMethodFixer($payments, $strings);
+        self::$subject = new PayMethodFixer($payments, $strings); // @phpstan-ignore-line - Data structures
     }
 
     /**

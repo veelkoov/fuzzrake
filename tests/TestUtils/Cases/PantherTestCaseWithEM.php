@@ -34,16 +34,4 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     {
         $client->manage()->window()->setSize(new WebDriverDimension($width, $height));
     }
-
-    protected function screenshot(WebDriver $client): void
-    {
-        $somekindoftrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, limit: 1);
-
-        $class = str_replace('\\', '/', static::class);
-        $class = pattern('^App/Tests/')->prune($class);
-
-        $line = $somekindoftrace[0]['line'];
-
-        $client->takeScreenshot("var/screenshots/$class/$line.png");
-    }
 }
