@@ -77,6 +77,9 @@ class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
         $artisan1 = $em->find(ArtisanE::class, $id1);
         $artisan2 = $em->find(ArtisanE::class, $id2);
 
+        self::assertNotNull($artisan1);
+        self::assertNotNull($artisan2);
+
         self::assertEquals('Artisan 1', $artisan1->getName());
         self::assertEquals('Tampere', $artisan1->getCity());
 

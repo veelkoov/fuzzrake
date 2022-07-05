@@ -21,4 +21,5 @@ parameters:
     psTrackerPlaceholderChild: 'array<string, string[]>'
 
 includes:
-    - vendor/phpstan/phpstan-doctrine/extension.neon
+  - vendor/phpstan/phpstan-doctrine/extension.neon
+  - vendor/phpstan/phpstan-phpunit/extension.neon
