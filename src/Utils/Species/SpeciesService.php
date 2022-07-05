@@ -13,7 +13,7 @@ class SpeciesService
     private ?HierarchyAwareBuilder $builder = null;
 
     /**
-     * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: psSpecies} $speciesDefinitions
+     * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: array<string, psSpecie>} $speciesDefinitions
      */
     public function __construct(
         private readonly array $speciesDefinitions,

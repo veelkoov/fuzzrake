@@ -11,6 +11,8 @@ use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\IuSubmissions\Finder;
+use Exception;
+use RuntimeException;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -48,8 +50,9 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         $output = new BufferedOutput();
 
         $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
-        $import = new DataImport(self::getEM(), $this->getImportManager($acceptAll), $printer,
-            static::getContainer()->get(FdvFactory::class)->create($printer), false);
+        $importManager = $this->getImportManager($acceptAll);
+        $fdv = $this->getFdvFactory()->create($printer);
+        $import = new DataImport(self::getEM(), $importManager, $printer, $fdv, false);
 
         $import->import(Finder::getFrom(Paths::getTestIuFormDataPath()));
 
@@ -59,5 +62,18 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
     private function emptyTestSubmissionsDir(): void
     {
         (new Filesystem())->remove(Paths::getTestIuFormDataPath());
+    }
+
+    private function getFdvFactory(): FdvFactory
+    {
+        try {
+            $result = self::getContainer()->get(FdvFactory::class);
+        } catch (Exception $cause) {
+            throw new RuntimeException(previous: $cause);
+        }
+
+        self::assertInstanceOf(FdvFactory::class, $result);
+
+        return $result;
     }
 }

@@ -6,6 +6,7 @@ namespace App\Tracker;
 
 use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
+use Nette\Utils\Arrays;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
@@ -39,10 +40,7 @@ class OfferStatusParser
      */
     public function getCommissionsStatuses(Snapshot $snapshot): array
     {
-        $additionalFilter = TextPreprocessor::guessFilterFromUrl($snapshot->url);
-        $artisanName = $snapshot->ownerName;
-
-        $texts = $this->preprocessAll($artisanName, $additionalFilter, $snapshot);
+        $texts = $this->getPreprocessedTexts($snapshot);
 
         $result = [];
 
@@ -58,9 +56,11 @@ class OfferStatusParser
      *
      * @throws TrackerException
      */
-    private function preprocessAll(string $artisanName, string $additionalFilter, Snapshot $snapshot): array
+    private function getPreprocessedTexts(Snapshot $snapshot): array
     {
-        return array_map(fn (string $input): Text => $this->preprocessor->getText($input, $artisanName, $additionalFilter), $snapshot->getAllContents());
+        $additionalFilter = TextPreprocessor::guessFilterFromUrl($snapshot->url);
+
+        return Arrays::map($snapshot->getAllContents(), fn (string $input): Text => $this->preprocessor->getText($input, $snapshot->url, $snapshot->ownerName, $additionalFilter));
     }
 
     /**

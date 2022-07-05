@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Filters;
 
+use InvalidArgumentException;
+
 class Item
 {
     private readonly string $label;
@@ -13,7 +15,15 @@ class Item
         string $label = '',
         private int $count = 0,
     ) {
-        $this->label = $label ?: (string) $value;
+        if ('' === $label) {
+            if (!is_string($value)) {
+                throw new InvalidArgumentException('Label required for non-string items');
+            }
+
+            $label = $value;
+        }
+
+        $this->label = $label;
     }
 
     public function getLabel(): string

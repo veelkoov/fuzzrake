@@ -45,10 +45,7 @@ class RegexFactory
      */
     private array $cleaners = [];
 
-    /**
-     * @param psTrackerRegexes $trackerRegexes
-     */
-    public function __construct(array $trackerRegexes)
+    public function __construct(array $trackerRegexes) // @phpstan-ignore-line TODO: Typehint that
     {
         $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
         $this->unnamed = pattern('(?<!\\\\\\\\\\\\)(?<!\\\\)\\((?!\\?)'); // Known issue: can't be more than 3 "\" before the "("
@@ -93,19 +90,13 @@ class RegexFactory
         return $this->cleaners;
     }
 
-    /**
-     * @param array<string, psTrackerPlaceholder> $placeholders
-     */
-    private function loadPlaceholders(array $placeholders): void
+    private function loadPlaceholders(array $placeholders): void // @phpstan-ignore-line TODO: Typehint that
     {
         $this->loadPlaceholderItem($placeholders, '');
         $this->resolvePlaceholders($this->placeholders);
     }
 
-    /**
-     * @param array<string, psTrackerPlaceholder>|psTrackerPlaceholder $input
-     */
-    private function loadPlaceholderItem($input, string $path): string
+    private function loadPlaceholderItem(mixed $input, string $path): string
     {
         if (is_string($input)) {
             return $input;
@@ -126,10 +117,7 @@ class RegexFactory
         return $this->loadMapPlaceholderItem($input, $path);
     }
 
-    /**
-     * @param psTrackerPlaceholderChild[]|string[] $input
-     */
-    private function loadListPlaceholderItem(array $input, string $path): string
+    private function loadListPlaceholderItem(array $input, string $path): string // @phpstan-ignore-line TODO: Typehint that
     {
         $items = Arrays::map($input, fn ($item, $idx, $arr) => $this->loadPlaceholderItem($item, "$path/$idx"));
 
@@ -162,10 +150,7 @@ class RegexFactory
         return "($group".implode('|', $items).')';
     }
 
-    /**
-     * @param array<string, psTrackerPlaceholder> $input
-     */
-    private function loadMapPlaceholderItem(array $input, string $path): string
+    private function loadMapPlaceholderItem(array $input, string $path): string // @phpstan-ignore-line TODO: Typehint that
     {
         foreach ($input as $placeholder => $contents) {
             if (array_key_exists($placeholder, $this->placeholders)) {

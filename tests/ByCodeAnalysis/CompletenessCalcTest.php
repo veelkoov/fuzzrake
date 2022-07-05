@@ -10,12 +10,13 @@ use App\Tests\TestUtils\Paths;
 use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
+use function Psl\File\read;
 
 class CompletenessCalcTest extends TestCase
 {
     public function testAllFieldsCovered(): void
     {
-        $contents = file_get_contents(Paths::getCompletenessCalcClassPath());
+        $contents = read(Paths::getCompletenessCalcClassPath());
         $wrongCount = [];
 
         foreach (Fields::all() as $field) {

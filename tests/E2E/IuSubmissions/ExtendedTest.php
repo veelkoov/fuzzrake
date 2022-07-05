@@ -184,6 +184,9 @@ class ExtendedTest extends AbstractTestWithEM
     {
         $result = new Artisan();
 
+        /**
+         * @var array<string, psJsonFieldValue> $data
+         */
         $data = Json::readFile(__DIR__."/ExtendedTestData/$variant.json");
 
         foreach (Fields::all() as $fieldName => $field) {
@@ -215,12 +218,14 @@ class ExtendedTest extends AbstractTestWithEM
         $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
         self::skipRulesAndCaptcha($client);
 
+        self::assertNotFalse($client->getResponse()->getContent());
         self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), false);
 
         $form = $client->getCrawler()->selectButton('Continue')->form();
         self::setValuesInForm($form, $newData, false);
         self::submitValid($client, $form);
 
+        self::assertNotFalse($client->getResponse()->getContent());
         self::verifyGeneratedIuFormFilledWithData($oldData, $client->getResponse()->getContent(), true);
 
         $form = $client->getCrawler()->selectButton('Submit')->form();
@@ -321,6 +326,8 @@ class ExtendedTest extends AbstractTestWithEM
                 throw new UnbelievableRuntimeException($exception);
             }
 
+            self::assertIsString($matchedText);
+
             if ('' === $value) {
                 self::assertStringNotContainsStringIgnoringCase('selected="selected"', $matchedText);
             } else {
@@ -365,14 +372,17 @@ class ExtendedTest extends AbstractTestWithEM
         }
     }
 
-    private static function assertValueIsNotPresentInForm(mixed $value, Field $field, string $htmlBody): void
+    private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
     {
         if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
             $match = pattern('<input[^>]+name="iu_form\[password]"[^>]*>')->match($htmlBody);
             self::assertCount(1, $match);
 
             try {
-                self::assertStringNotContainsStringIgnoringCase('value', $match->first());
+                $textMatch = $match->first();
+                self::assertIsString($textMatch);
+
+                self::assertStringNotContainsStringIgnoringCase('value', $textMatch); // Needle = attribute name
             } catch (SubjectNotMatchedException $exception) {
                 throw new UnbelievableRuntimeException($exception);
             }

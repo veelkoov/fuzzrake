@@ -7,6 +7,9 @@ namespace App\Form;
 use App\Utils\Traits\Singleton;
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @implements DataTransformerInterface<bool, ?string>
+ */
 class BooleanTransformer implements DataTransformerInterface
 {
     use Singleton;

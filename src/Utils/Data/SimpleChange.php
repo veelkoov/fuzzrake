@@ -6,15 +6,17 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
 use App\Utils\StrUtils;
-use BackedEnum;
-use DateTimeImmutable;
 
 class SimpleChange implements ChangeInterface
 {
+    /**
+     * @param psFieldValue $old
+     * @param psFieldValue $new
+     */
     public function __construct(
         private readonly Field $field,
-        private readonly BackedEnum|DateTimeImmutable|string|bool|null $old,
-        private readonly BackedEnum|DateTimeImmutable|string|bool|null $new,
+        private readonly mixed $old,
+        private readonly mixed $new,
     ) {
     }
 
