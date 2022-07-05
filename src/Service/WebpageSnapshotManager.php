@@ -137,8 +137,8 @@ class WebpageSnapshotManager
         if ($snapshot && $snapshot->isOK()) {
             $url->recordSuccessfulFetch();
         } else {
-            $code = $snapshot->getHttpCode();
-            $message = implode(' / ', $snapshot->getErrors());
+            $code = $snapshot->httpCode;
+            $message = implode(' / ', $snapshot->errors);
 
             $url->recordFailedFetch($code, $message);
             $this->logger->debug("Failed fetching '$url' with code $code: $message");

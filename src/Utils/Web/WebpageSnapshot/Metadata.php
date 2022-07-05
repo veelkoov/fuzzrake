@@ -9,8 +9,8 @@ use DateTimeImmutable;
 class Metadata
 {
     /**
-     * @property string[][] $headers
-     * @property string[]   $errors
+     * @param string[][] $headers
+     * @param string[]   $errors
      */
     public function __construct(
         public readonly string $url,
