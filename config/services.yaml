@@ -82,8 +82,3 @@ services:
             - '@App\Utils\IuSubmissions\LocalStorageService'
             - '@App\Service\AwsCliService'
             - '%env(resolve:S3_COPIES_BUCKET_URL)%'
-
-    App\Utils\Web\Snapshot\WebpageSnapshotCache:
-        arguments:
-            - '@logger'
-            - '%kernel.project_dir%/var/snapshots'

@@ -13,7 +13,7 @@ use App\Tracker\OfferStatusParser;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\Snapshot\WebpageSnapshot;
+use App\Utils\Web\WebpageSnapshot\Snapshot;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -186,7 +186,7 @@ class StatusTrackerTaskTest extends TestCase
         $loggerMock = self::createMock(LoggerInterface::class);
 
         $urlsFetchDateTime = UtcClock::now();
-        $dummyWebpageSnapshot = new WebpageSnapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, [], []);
+        $dummyWebpageSnapshot = new Snapshot('', '', $urlsFetchDateTime, '', Response::HTTP_OK, [], []);
         foreach ($artisan->getUrls() as $url) {
             $url->getState()->setLastSuccessUtc($urlsFetchDateTime);
         }
