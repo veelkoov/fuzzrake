@@ -32,26 +32,28 @@ pipeline {
       }
     }
 
-    stage('PHPUnit') {
-      steps {
-        ansiColor('xterm') {
-          sh 'rake pu'
+    parallel {
+      stage('PHPUnit') {
+        steps {
+          ansiColor('xterm') {
+            sh 'rake pu'
+          }
         }
       }
-    }
 
-    stage('PHPStan') {
-      steps {
-        ansiColor('xterm') {
-          sh 'rake ps'
+      stage('PHPStan') {
+        steps {
+          ansiColor('xterm') {
+            sh 'rake ps'
+          }
         }
       }
-    }
 
-    stage('PHP-CS-Fixer') {
-      steps {
-        ansiColor('xterm') {
-          sh 'rake pcf[--dry-run]'
+      stage('PHP-CS-Fixer') {
+        steps {
+          ansiColor('xterm') {
+            sh 'rake pcf[--dry-run]'
+          }
         }
       }
     }
