@@ -69,7 +69,10 @@ trait EntityManagerTrait
 
     protected static function findArtisanByMakerId(string $makerId): Artisan
     {
-        return Artisan::wrap(self::getArtisanRepository()->findOneBy(['makerId' => $makerId]));
+        $artisan = self::getArtisanRepository()->findOneBy(['makerId' => $makerId]);
+        self::assertNotNull($artisan);
+
+        return Artisan::wrap($artisan);
     }
 
     protected static function addSimpleArtisan(): Artisan
