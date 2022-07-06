@@ -6,7 +6,6 @@ namespace App\Tests\Tasks;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
-use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\ArtisanUrlInspection;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;

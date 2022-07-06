@@ -7,6 +7,7 @@ namespace App\Tests\ByCodeAnalysis;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use PHPUnit\Framework\TestCase;
+use function Psl\File\read;
 use TRegx\CleanRegex\Exception\PatternException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
@@ -30,11 +31,12 @@ class ArtisanFieldsTest extends TestCase
      */
     public function testArtisanTsModel(): void
     {
-        $modelSource = file_get_contents(Paths::getArtisanTypeScriptClassPath());
+        $modelSource = read(Paths::getArtisanTypeScriptClassPath());
 
         $parameters = $this->constructor
             ->match($modelSource)
-            ->first(fn (Detail $detail): string => $detail->get('parameters'));
+            ->group('parameters')
+            ->nth(0);
 
         $matches = $this->constructorParameter->match($parameters);
 

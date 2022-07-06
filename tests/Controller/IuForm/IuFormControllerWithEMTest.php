@@ -377,7 +377,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(makerId: 'REDIREC'));
 
         $crawler = $client->request('GET', "/iu_form/$step$slashedMakerId");
-        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
+        $uri = $crawler->getUri();
+
+        self::assertNotNull($uri);
+        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $uri);
     }
 
     public function cannotSkipUnfinishedStepsDataProvider(): array // @phpstan-ignore-line

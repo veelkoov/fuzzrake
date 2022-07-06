@@ -5,7 +5,7 @@ parameters:
     - tests
 
   typeAliases:
-    psIuSubmissionArray:       'array<string,int|bool|string|string[]>'
+    psIuSubmissionFieldValue:  'null|int|bool|string|string[]'
     psWebpageSnapshotMetadata: 'array{url: string, ownerName: string, retrievedAt: string, childCount: int, headers: string[][], errors: string[], httpCode: int}'
     psFieldValue:              'BackedEnum|DateTimeImmutable|string|bool|null'
     psJsonFieldValue:          'string[]|string|bool|null'

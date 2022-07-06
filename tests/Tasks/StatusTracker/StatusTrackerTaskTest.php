@@ -212,8 +212,7 @@ class StatusTrackerTaskTest extends TestCase
     private function getChangedArtisan(array $testResult): Artisan
     {
         self::assertCount(1, $testResult);
-
-        $artisanChanges = array_pop($testResult);
+        $artisanChanges = $testResult[0];
 
         return $artisanChanges->getChanged();
     }
