@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases;
 
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
-use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverDimension;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\PantherTestCase;

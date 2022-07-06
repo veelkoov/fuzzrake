@@ -143,10 +143,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
 
         if ([] === $expectedErrors) {
             self::submitValid($client, $form);
-
-            self::expectNotToPerformAssertions();
+            self::assertSelectorTextContains('h2', 'Contact');
         } else {
             self::submitInvalid($client, $form);
+            self::assertSelectorTextContains('h2', 'General info');
 
             foreach ($expectedErrors as $selector => $message) {
                 self::assertSelectorTextContains($selector, $message);

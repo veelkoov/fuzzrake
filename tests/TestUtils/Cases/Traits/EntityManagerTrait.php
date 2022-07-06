@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
 use Exception;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait EntityManagerTrait
@@ -36,11 +37,20 @@ trait EntityManagerTrait
 
     protected static function getEM(): EntityManagerInterface
     {
+        return self::$entityManager ??= self::retrieveEM(self::getContainer());
+    }
+
+    private static function retrieveEM(ContainerInterface $container): EntityManagerInterface
+    {
         try {
-            return self::$entityManager ??= self::getContainer()->get('doctrine.orm.default_entity_manager');
+            $entityManager = $container->get('doctrine.orm.default_entity_manager');
         } catch (Exception $caught) {
             throw new RuntimeException(previous: $caught);
         }
+
+        self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
+
+        return $entityManager;
     }
 
     protected static function resetDB(): void
