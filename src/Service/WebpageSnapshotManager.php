@@ -105,7 +105,7 @@ class WebpageSnapshotManager
             $code = $latentCode;
         }
 
-        $webpageSnapshot = new Snapshot($url->getUrl(), $content ?? '', UtcClock::now(),
+        $webpageSnapshot = new Snapshot($content ?? '', $url->getUrl(), UtcClock::now(),
             $url->getOwnerName(), $code ?? 0, $headers ?? [], array_unique($errors));
 
         $this->fetchChildren($webpageSnapshot, $url);
