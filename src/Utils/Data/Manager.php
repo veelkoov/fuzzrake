@@ -15,6 +15,7 @@ use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 use DateTimeImmutable;
 use InvalidArgumentException;
+use function Psl\File\read;
 
 class Manager
 {
@@ -74,7 +75,7 @@ class Manager
             throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
         }
 
-        return new Manager(file_get_contents($correctionsFilePath));
+        return new Manager(read($correctionsFilePath));
     }
 
     public function correctArtisan(Artisan $artisan, string $submissionId = null): void
