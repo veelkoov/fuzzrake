@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\HttpClient\GentleHttpClient;
+use App\Utils\Web\TimedUrlQueue;
 use App\Utils\Web\WebpageSnapshot\Cache;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Web\WebsiteInfo;
@@ -47,7 +47,7 @@ class WebpageSnapshotManager
      */
     public function prefetchUrls(array $urls, bool $refetch, StyleInterface $progressReportIo): void
     {
-        $queue = new DelayAwareUrlFetchingQueue($urls, GentleHttpClient::DELAY_FOR_HOST_MILLISEC);
+        $queue = new TimedUrlQueue($urls, $this->httpClient->timing);
 
         $progressReportIo->progressStart(count($urls));
 
@@ -64,7 +64,7 @@ class WebpageSnapshotManager
     {
         $response = null;
         $code = null;
-        $content = null;
+        $content = '';
         $headers = null;
         $errors = [];
 
@@ -87,7 +87,7 @@ class WebpageSnapshotManager
         }
 
         try {
-            $content = $response?->getContent();
+            $content = $response?->getContent() ?? '';
         } catch (ExceptionInterface $ex) {
             $this->logger->info("Exception during getting content for: $url", ['exception' => $ex]);
             $errors[] = $ex->getMessage();
@@ -105,7 +105,7 @@ class WebpageSnapshotManager
             $code = $latentCode;
         }
 
-        $webpageSnapshot = new Snapshot($content ?? '', $url->getUrl(), UtcClock::now(),
+        $webpageSnapshot = new Snapshot($content, $url->getUrl(), UtcClock::now(),
             $url->getOwnerName(), $code ?? 0, $headers ?? [], array_unique($errors));
 
         $this->fetchChildren($webpageSnapshot, $url);

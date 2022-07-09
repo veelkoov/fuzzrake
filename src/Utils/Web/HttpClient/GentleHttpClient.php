@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Web\HttpClient;
 
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Web\HostCallsTiming;
 use App\Utils\Web\UrlUtils;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -14,12 +15,14 @@ class GentleHttpClient extends HttpClient
 {
     final public const DELAY_FOR_HOST_MILLISEC = 10000;
 
-    /**
-     * Host => Last request since Epoch [ms].
-     *
-     * @var int[]
-     */
-    private array $lastRequestsMs = [];
+    public readonly HostCallsTiming $timing;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->timing = new HostCallsTiming(self::DELAY_FOR_HOST_MILLISEC);
+    }
 
     /**
      * {@inheritDoc}
@@ -71,19 +74,17 @@ class GentleHttpClient extends HttpClient
 
     private function delayForHost(string $url): void
     {
-        $host = UrlUtils::hostFromUrl($url);
+        $nextAllowedCallTimestampMs = $this->timing->nextCallTimestampMs(UrlUtils::hostFromUrl($url));
 
-        if (array_key_exists($host, $this->lastRequestsMs)) {
-            $millisecondsToWait = $this->lastRequestsMs[$host] + self::DELAY_FOR_HOST_MILLISEC - UtcClock::timems();
+        $millisecondsToWait = $nextAllowedCallTimestampMs - UtcClock::timems();
 
-            if ($millisecondsToWait > 0) {
-                usleep($millisecondsToWait * 1000);
-            }
+        if ($millisecondsToWait > 0) {
+            usleep($millisecondsToWait * 1000);
         }
     }
 
     private function updateLastHostCall(string $url): void
     {
-        $this->lastRequestsMs[UrlUtils::hostFromUrl($url)] = UtcClock::timems();
+        $this->timing->called(UrlUtils::hostFromUrl($url));
     }
 }
