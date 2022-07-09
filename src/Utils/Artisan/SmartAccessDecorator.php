@@ -41,12 +41,11 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
-    public function __construct(
-        private ?ArtisanE $artisan = null,
-    ) {
-        if (null === $this->artisan) {
-            $this->artisan = new ArtisanE();
-        }
+    private ArtisanE $artisan;
+
+    public function __construct(ArtisanE $artisan = null)
+    {
+        $this->artisan = $artisan ?? new ArtisanE();
     }
 
     public function __clone()
