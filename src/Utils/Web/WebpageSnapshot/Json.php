@@ -27,6 +27,8 @@ class Json
 
     public static function deserialize(string $json): Metadata
     {
-        return self::serializer()->deserialize($json, Metadata::class, 'json');
+        $result = self::serializer()->deserialize($json, Metadata::class, 'json');
+
+        return $result; // @phpstan-ignore-line
     }
 }
