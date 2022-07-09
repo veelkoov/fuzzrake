@@ -4,6 +4,9 @@ parameters:
     - src
     - tests
 
+  symfony:
+    consoleApplicationLoader: tests/console-application.php
+
   typeAliases:
     psIuSubmissionFieldValue:  'null|int|bool|string|string[]'
     psWebpageSnapshotMetadata: 'array{url: string, ownerName: string, retrievedAt: string, childCount: int, headers: string[][], errors: string[], httpCode: int}'
@@ -21,7 +24,3 @@ parameters:
 
     psTrackerPlaceholder:      'string|string[]|psTrackerPlaceholderChild[]'
     psTrackerPlaceholderChild: 'array<string, string[]>'
-
-includes:
-  - vendor/phpstan/phpstan-doctrine/extension.neon
-  - vendor/phpstan/phpstan-phpunit/extension.neon
