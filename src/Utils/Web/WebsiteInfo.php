@@ -56,7 +56,7 @@ final class WebsiteInfo
         return false;
     }
 
-    public static function isFurAffinityUserProfile(?string $url, ?string $webpageContents): bool
+    public static function isFurAffinityUserProfile(string $url, string $webpageContents): bool
     {
         if (!self::isFurAffinity($url, $webpageContents)) {
             return false;
