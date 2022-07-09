@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class HierarchyAwareBuilderTest extends TestCase
 {
     /**
-     * @param psSpecies $species
+     * @param array<string, psSpecie> $species
      *
      * @dataProvider validNamesDoesntContainDuplicatesDataProvider
      */
@@ -22,7 +22,7 @@ class HierarchyAwareBuilderTest extends TestCase
     }
 
     /**
-     * @return array<int, array{0: psSpecie, 1: int}>
+     * @return array<int, array{0: array<string, psSpecie>, 1: int}>
      */
     public function validNamesDoesntContainDuplicatesDataProvider(): array
     {
