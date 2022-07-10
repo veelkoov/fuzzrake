@@ -71,8 +71,8 @@ class Manager
 
     public static function createFromFile(string $correctionsFilePath): self
     {
-        if (!file_exists($correctionsFilePath)) {
-            throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
+        if ('' === $correctionsFilePath) {
+            throw new InvalidArgumentException('Corrections file path cannot be empty');
         }
 
         return new Manager(read($correctionsFilePath));

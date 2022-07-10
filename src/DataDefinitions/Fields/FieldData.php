@@ -13,7 +13,7 @@ class FieldData
 
     public function __construct(
         public readonly string $name,
-        public readonly ?string $modelName,
+        public readonly string $modelName,
         ?string $validationRegexp,
         public readonly bool $isList,
         public readonly bool $isPersisted,

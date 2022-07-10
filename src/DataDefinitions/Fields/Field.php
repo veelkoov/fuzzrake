@@ -88,7 +88,7 @@ enum Field: string
         return FieldsData::get($this);
     }
 
-    public function modelName(): ?string
+    public function modelName(): string
     {
         return $this->getData()->modelName;
     }

@@ -27,7 +27,7 @@ class OfferStatusParserTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $trackerRegexes = DataDefinitions::get('tracker_regexes.yaml', 'tracker_regexes');
-        $factory = new RegexFactory($trackerRegexes); // @phpstan-ignore-line - Data structure
+        $factory = new RegexFactory($trackerRegexes);
 
         $regexes = new Regexes(
             $factory->getFalsePositives(),

@@ -184,6 +184,9 @@ class ExtendedTest extends AbstractTestWithEM
     {
         $result = new Artisan();
 
+        /**
+         * @var array<string, psJsonFieldValue> $data
+         */
         $data = Json::readFile(__DIR__."/ExtendedTestData/$variant.json");
 
         foreach (Fields::all() as $fieldName => $field) {
