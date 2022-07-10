@@ -28,6 +28,8 @@ final class NotificationsGenerator
 
         foreach (Fields::urls() as $url) {
             if (($val = $data->get($url))) {
+                $val = StrUtils::asStr($val);
+
                 $message .= $url->name.': '.$val."\n";
             }
         }

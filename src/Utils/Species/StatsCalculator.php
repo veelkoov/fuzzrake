@@ -122,7 +122,7 @@ class StatsCalculator
         $result = [];
 
         foreach ($artisans as $artisan) {
-            array_push($result, ...StringList::unpack($artisan->get($field)));
+            array_push($result, ...StringList::unpack($artisan->getString($field)));
         }
 
         return $result;

@@ -22,6 +22,7 @@ use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\Parse;
 use App\Utils\StringList;
@@ -95,6 +96,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function get(Field $field): mixed
     {
         $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
@@ -108,6 +112,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
 
         return call_user_func([$this, $getter]);
+    }
+
+    public function getString(Field $field): string
+    {
+        return Enforce::string($this->get($field));
     }
 
     //
