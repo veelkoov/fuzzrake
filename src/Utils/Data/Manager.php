@@ -214,7 +214,7 @@ class Manager
     {
         foreach ($corrections as $correction) {
             $value = $artisan->get($correction->getField());
-            $correctedValue = $correction->apply($value);
+            $correctedValue = $correction->apply(StrUtils::asStr($value));
 
             if (Field::AGES === $correction->getField()) {
                 $correctedValue = Ages::get($correctedValue);

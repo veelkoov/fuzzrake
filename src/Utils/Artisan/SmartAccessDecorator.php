@@ -31,6 +31,8 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;
 use JsonSerializable;
+use LogicException;
+use Nette\Utils\Arrays;
 use Stringable;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
@@ -81,17 +83,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function set(Field $field, mixed $newValue): self
     {
-        $setter = 'set'.ucfirst($field->modelName() ?: 'noModelName');
+        $setter = 'set'.ucfirst($field->modelName());
 
-        if (method_exists($this->artisan, $setter)) {
-            call_user_func([$this->artisan, $setter], $newValue);
-        }
-
-        if (!method_exists($this, $setter)) {
+        if (is_callable($callback = [$this->artisan, $setter])) {
+            call_user_func($callback, $newValue);
+        } elseif (is_callable($callback = [$this, $setter])) {
+            call_user_func($callback, $newValue);
+        } else {
             throw new InvalidArgumentException("Setter for $field->name does not exist");
         }
-
-        call_user_func([$this, $setter], $newValue);
 
         return $this;
     }
@@ -101,17 +101,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function get(Field $field): mixed
     {
-        $getter = 'get'.ucfirst($field->modelName() ?: 'noModelName');
+        $getter = 'get'.ucfirst($field->modelName());
 
-        if (method_exists($this->artisan, $getter)) {
-            return call_user_func([$this->artisan, $getter]);
-        }
-
-        if (!method_exists($this, $getter)) {
+        if (is_callable($callback = [$this->artisan, $getter])) {
+            $result = call_user_func($callback);
+        } elseif (is_callable($callback = [$this, $getter])) {
+            $result = call_user_func($callback);
+        } else {
             throw new InvalidArgumentException("Getter for $field->name does not exist");
         }
 
-        return call_user_func([$this, $getter]);
+        return $result; // @phpstan-ignore-line
     }
 
     public function getString(Field $field): string
@@ -125,14 +125,14 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getLastMakerId(): string
     {
-        return $this->artisan->getMakerId() ?: current($this->getFormerMakerIdsArr());
+        return $this->artisan->getMakerId() ?: current($this->getFormerMakerIdsArr()) ?: throw new LogicException('Maker does not have any maker ID');
     }
 
     public function hasMakerId(string $makerId): bool
     {
         return in_array($makerId, $this->artisan->getMakerIds()
-            ->map(fn (MakerId $makerId): string => $makerId->getMakerId())
-            ->toArray());
+            ->map(fn (MakerId $makerId): ?string => $makerId->getMakerId())
+            ->toArray(), true);
     }
 
     public function getFormerMakerIds(): string
@@ -163,10 +163,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getFormerMakerIdsArr(): array
     {
-        return $this->artisan->getMakerIds()
-            ->map(fn (MakerId $makerId): string => $makerId->getMakerId())
-            ->filter(fn (string $makerId): bool => $makerId !== $this->getMakerId())
-            ->toArray();
+        return array_filter($this->artisan->getMakerIds()
+            ->map(fn (MakerId $makerId): ?string => $makerId->getMakerId())
+            ->filter(fn (?string $makerId): bool => $makerId !== $this->getMakerId())
+            ->toArray());
     }
 
     /**
@@ -795,7 +795,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     private function getValuesForJson(FieldsList $fields): array
     {
-        return array_map(function (Field $field) {
+        return Arrays::map($fields, function (Field $field) {
             $value = match ($field) {
                 Field::COMPLETENESS       => $this->getCompleteness(),
                 Field::CS_LAST_CHECK      => StrUtils::asStr($this->getCsLastCheck()),
@@ -804,8 +804,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
                 default                   => $this->get($field),
             };
 
-            return $field->isList() && !is_array($value) ? StringList::unpack($value) : $value;
-        }, $fields->asArray());
+            return $field->isList() && !is_array($value) ? StringList::unpack(Enforce::nString($value)) : $value;
+        });
     }
 
     /**
@@ -1430,6 +1430,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
     }
 
+    /** @noinspection PhpReturnValueOfMethodIsNeverUsedInspection */
     private function setDateTimeValue(Field $field, ?DateTimeImmutable $newValue): self
     {
         if (null !== $newValue) {

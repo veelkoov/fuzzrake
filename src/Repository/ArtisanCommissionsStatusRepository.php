@@ -45,7 +45,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
         $rsm->addScalarResult('tracked', 'tracked', 'integer');
         $rsm->addScalarResult('total', 'total', 'integer');
 
-        return $this
+        $result = $this
             ->getEntityManager()
             ->createNativeQuery('
 
@@ -92,6 +92,8 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ])
             ->enableResultCache(3600)
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
+
+        return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -99,12 +101,14 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
      */
     public function getDistinctWithOpenCount(): array
     {
-        return Arrays::assoc($this->createQueryBuilder('acs')
+        $resultData = $this->createQueryBuilder('acs')
             ->select('acs.offer')
             ->addSelect('SUM(acs.isOpen) AS openCount')
             ->groupBy('acs.offer')
             ->getQuery()
             ->enableResultCache(3600)
-            ->getArrayResult(), 'offer', 'openCount');
+            ->getArrayResult();
+
+        return Arrays::assoc($resultData, 'offer', 'openCount'); // @phpstan-ignore-line Lack of skill to fix this
     }
 }

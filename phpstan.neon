@@ -4,6 +4,8 @@ parameters:
     - src
     - tests
 
+  doctrine:
+    objectManagerLoader: tests/object-manager.php
   symfony:
     consoleApplicationLoader: tests/console-application.php
 
