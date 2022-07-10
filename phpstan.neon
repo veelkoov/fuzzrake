@@ -19,8 +19,3 @@ parameters:
 
     psFixerConfig:             'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string}'
     psLanguagesFixerConfig:    'array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, regexp: string}'
-
-    psTrackerRegexes:          'array{group_translations: array<string, string[]>, false_positives: string[], offer_statuses: string[], placeholders: array<string, psTrackerPlaceholder>, cleaners: array<string, string>}'
-
-    psTrackerPlaceholder:      'string|string[]|psTrackerPlaceholderChild[]'
-    psTrackerPlaceholderChild: 'array<string, string[]>'
