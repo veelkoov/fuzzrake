@@ -83,15 +83,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function set(Field $field, mixed $newValue): self
     {
-        $setter = 'set'.ucfirst($field->modelName());
+        $callback = [$this, 'set'.ucfirst($field->modelName())];
 
-        if (is_callable($callback = [$this->artisan, $setter])) {
-            call_user_func($callback, $newValue);
-        } elseif (is_callable($callback = [$this, $setter])) {
-            call_user_func($callback, $newValue);
-        } else {
+        if (!is_callable($callback)) {
             throw new InvalidArgumentException("Setter for $field->name does not exist");
         }
+
+        call_user_func($callback, $newValue);
 
         return $this;
     }
@@ -101,15 +99,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function get(Field $field): mixed
     {
-        $getter = 'get'.ucfirst($field->modelName());
+        $callback = [$this, 'get'.ucfirst($field->modelName())];
 
-        if (is_callable($callback = [$this->artisan, $getter])) {
-            $result = call_user_func($callback);
-        } elseif (is_callable($callback = [$this, $getter])) {
-            $result = call_user_func($callback);
-        } else {
+        if (!is_callable($callback)) {
             throw new InvalidArgumentException("Getter for $field->name does not exist");
         }
+
+        $result = call_user_func($callback);
 
         return $result; // @phpstan-ignore-line
     }
