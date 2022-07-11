@@ -45,22 +45,6 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws DateTimeException
-     * @throws UnexpectedResultException
-     */
-    public function getLastBpUpdateTime(): DateTimeImmutable
-    {
-        $resultData = $this
-            ->createQueryBuilder('avd')
-            ->select('MAX(avd.lastBpUpdate)')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getSingleScalarResult();
-
-        return UtcClock::at(Enforce::string($resultData));
-    }
-
-    /**
      * @throws UnexpectedResultException
      */
     public function getCsTrackingIssuesCount(): int
