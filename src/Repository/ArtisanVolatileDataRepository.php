@@ -41,7 +41,7 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getSingleScalarResult();
 
-        return UtcClock::at(Enforce::string($resultData));
+        return UtcClock::at(Enforce::nString($resultData));
     }
 
     /**
