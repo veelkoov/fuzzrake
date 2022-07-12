@@ -40,18 +40,18 @@ pipeline {
       }
     }
 
-    stage('PHPStan') {
-      steps {
-        ansiColor('xterm') {
-          sh 'rake ps'
-        }
-      }
-    }
-
     stage('PHP-CS-Fixer') {
       steps {
         ansiColor('xterm') {
           sh 'rake pcf[--dry-run]'
+        }
+      }
+    }
+
+    stage('PHPStan') {
+      steps {
+        ansiColor('xterm') {
+          sh 'rake ps'
         }
       }
     }
