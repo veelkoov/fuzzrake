@@ -6,6 +6,7 @@ namespace App\Controller\IuForm;
 
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\Data;
+use App\Utils\ArrayReader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -63,8 +64,8 @@ class IuFormDataController extends AbstractIuFormController
     private function validatePhotosCopyright(FormInterface $form, Artisan $artisan): void
     {
         $field = $form->get(Data::FLD_PHOTOS_COPYRIGHT);
-        $fieldData = $field->getData();
-        $isOK = is_array($fieldData) && 'OK' === ($fieldData[0] ?? null);
+
+        $isOK = 'OK' === ArrayReader::of($field->getData())->getOrDefault('[0]', null);
 
         if ('' !== $artisan->getPhotoUrls() && !$isOK) {
             $field->addError(new FormError('You must not use any photos without permission from the photographer.'));
