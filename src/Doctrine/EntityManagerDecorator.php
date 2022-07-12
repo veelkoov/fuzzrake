@@ -17,4 +17,13 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
 
         parent::persist($object);
     }
+
+    public function remove(object $object): void
+    {
+        if ($object instanceof SmartAccessDecorator) {
+            $object = $object->getArtisan();
+        }
+
+        parent::remove($object);
+    }
 }

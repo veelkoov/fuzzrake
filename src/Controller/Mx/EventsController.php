@@ -6,6 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
+use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
@@ -39,7 +40,9 @@ class EventsController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $form = $this->createForm(EventType::class, $event);
+        $form = $this->createForm(EventType::class, $event, [
+            AbstractTypeWithDelete::OPT_DELETABLE => null !== $event->getId(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $this->success($event, $form)) {
