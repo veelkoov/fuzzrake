@@ -54,6 +54,6 @@ final class Arrays
 
     public static function isArrayOfStrings(mixed $value): bool
     {
-        return !is_array($value) || !array_reduce($value, fn ($prev, $item) => $prev && is_string($item), true);
+        return !is_array($value) || !array_is_list($value) || !array_reduce($value, fn ($prev, $item) => $prev && is_string($item), true);
     }
 }

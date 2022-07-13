@@ -34,10 +34,10 @@ final class Enforce
      */
     public static function strList(mixed $input): array
     {
-        if (!is_array($input) || !array_is_list($input) || ([] !== $input && !is_string($input[0]))) {
+        if (!Arrays::isArrayOfStrings($input)) {
             throw new InvalidArgumentException('Expected array of strings');
         }
 
-        return $input;
+        return $input; // @phpstan-ignore-line
     }
 }
