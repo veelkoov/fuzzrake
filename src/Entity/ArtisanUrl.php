@@ -26,7 +26,7 @@ class ArtisanUrl implements Fetchable, Stringable
      * @ORM\ManyToOne(targetEntity="App\Entity\Artisan", inversedBy="urls")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private ?Artisan $artisan = null;
+    private Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -55,12 +55,12 @@ class ArtisanUrl implements Fetchable, Stringable
         return $this;
     }
 
-    public function getArtisan(): ?Artisan
+    public function getArtisan(): Artisan
     {
         return $this->artisan;
     }
 
-    public function setArtisan(?Artisan $artisan): self
+    public function setArtisan(Artisan $artisan): self
     {
         $this->artisan = $artisan;
 

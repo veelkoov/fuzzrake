@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Filters;
 
+use App\Utils\Enforce;
 use InvalidArgumentException;
 
 class Item
@@ -34,6 +35,16 @@ class Item
     public function getValue(): string|Set
     {
         return $this->value;
+    }
+
+    public function getValueString(): string
+    {
+        return Enforce::string($this->value);
+    }
+
+    public function getValueSet(): Set
+    {
+        return Enforce::objectOf($this->value, Set::class);
     }
 
     public function getCount(): int

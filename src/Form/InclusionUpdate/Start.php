@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form\InclusionUpdate;
 
 use App\Controller\IuForm\Utils\StartData;
+use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -80,7 +81,7 @@ class Start extends AbstractType
                 ])
             ;
         } else {
-            $studioName = htmlspecialchars($options[self::OPT_STUDIO_NAME]);
+            $studioName = htmlspecialchars(Enforce::string($options[self::OPT_STUDIO_NAME]));
 
             $builder
                 ->add('confirmUpdatingTheRightOne', ChoiceType::class, [

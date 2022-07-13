@@ -11,6 +11,7 @@ use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\DateTime\UtcClockForTests;
+use App\Utils\Enforce;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -185,7 +186,7 @@ class ExtendedTest extends AbstractTestWithEM
         $result = new Artisan();
 
         /**
-         * @var array<string, psJsonFieldValue> $data
+         * @var array<string, string|bool|null> $data
          */
         $data = Json::readFile(__DIR__."/ExtendedTestData/$variant.json");
 
@@ -195,12 +196,12 @@ class ExtendedTest extends AbstractTestWithEM
             }
 
             self::assertArrayHasKey($fieldName, $data);
-
             $value = $data[$fieldName];
+
             if (Field::AGES === $field) {
-                $value = Ages::get($value);
+                $value = Ages::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
-                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at($value);
+                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::nString($value));
             }
 
             $result->set(Field::from($fieldName), $value);
@@ -257,7 +258,7 @@ class ExtendedTest extends AbstractTestWithEM
             $value = $oldData->get($field);
 
             if (in_array($field, self::VALUE_MUST_NOT_BE_SHOWN_IN_FORM)) {
-                self::assertValueIsNotPresentInForm($value, $field, $htmlBody);
+                self::assertValueIsNotPresentInForm(Enforce::string($value), $field, $htmlBody);
             } else {
                 self::assertFieldIsPresentWithValue($value, $field, $htmlBody);
             }
@@ -271,15 +272,15 @@ class ExtendedTest extends AbstractTestWithEM
         }
 
         if (in_array($field, self::EXPANDED) || in_array($field, self::EXPANDED_SELECTS)) {
-            self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
+            self::assertExpandedFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
-            self::assertSinceFieldIsPresentWithValue($value, $htmlBody);
+            self::assertSinceFieldIsPresentWithValue(Enforce::string($value), $htmlBody);
         } elseif (in_array($field, self::BOOLEAN)) {
-            self::assertYesNoFieldIsPresentWithValue($value, $field, $htmlBody);
+            self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, $htmlBody);
         } elseif (Field::CONTACT_ALLOWED === $field) {
-            self::assertContactValueFieldIsPresentWithValue($value, $field, $htmlBody);
+            self::assertContactValueFieldIsPresentWithValue(Enforce::string($value), $field, $htmlBody);
         } else {
-            self::assertNotNull($value, "Field $field->name should not be expected to be null");
+            self::assertIsString($value, "Field $field->name should be a string");
             self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
         }
     }
@@ -420,20 +421,29 @@ class ExtendedTest extends AbstractTestWithEM
             $fields = $form["iu_form[{$field->modelName()}]"];
 
             if (Field::SINCE === $field) {
-                self::setValuesInSinceField($value, $fields);
+                $fields = Enforce::arrayOf($fields, FormField::class);
+
+                self::setValuesInSinceField(Enforce::string($value), $fields);
             } elseif (in_array($field, self::EXPANDED)) {
-                self::setValuesInExpandedField($value, $fields);
+                $fields = Enforce::arrayOf($fields, FormField::class);
+
+                self::setValuesInExpandedField(Enforce::string($value), $fields);
             } else {
-                $fields->setValue($value);
+                $field = Enforce::objectOf($fields, FormField::class);
+
+                $field->setValue(Enforce::nString($value));
             }
         }
 
         if ($secondPage) {
-            $form['iu_form[changePassword]']->setValue('1'); // Eagerly
+            $field = Enforce::objectOf($form['iu_form[changePassword]'], FormField::class);
+
+            $field->setValue('1'); // Eagerly
         } else {
-            $field = $form['iu_form[photosCopyright]'][0];
-            /* @var ChoiceFormField $field */
-            $field->tick();
+            $fields = $form['iu_form[photosCopyright]'];
+            self::assertTrue(is_array($fields) && $fields[0] instanceof ChoiceFormField);
+
+            $fields[0]->tick();
         }
     }
 
@@ -485,7 +495,7 @@ class ExtendedTest extends AbstractTestWithEM
 
         foreach (Fields::all() as $fieldName => $field) {
             if (Field::PASSWORD === $field) {
-                self::assertTrue(password_verify($expected->get($field), $actual->get($field)), 'Password differs.');
+                self::assertTrue(password_verify($expected->getString($field), $actual->getString($field)), 'Password differs.');
             } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getMakerId()}.");
             }
