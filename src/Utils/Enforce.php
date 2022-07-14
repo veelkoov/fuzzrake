@@ -40,4 +40,54 @@ final class Enforce
 
         return $input;
     }
+
+    public static function bool(mixed $input): bool
+    {
+        if (!is_bool($input)) {
+            throw new InvalidArgumentException('Expected bool, got '.get_debug_type($input));
+        }
+
+        return $input;
+    }
+
+    public static function nBool(mixed $input): ?bool
+    {
+        if (null === $input) {
+            return null;
+        }
+
+        return self::bool($input);
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $class
+     *
+     * @return array<T>
+     */
+    public static function arrayOf(mixed $input, string $class): array
+    {
+        if (!is_array($input) || !array_reduce($input, fn ($p, $i) => $p && is_object($i) && is_subclass_of($i, $class), true)) {
+            throw new InvalidArgumentException("Expected an array of $class");
+        }
+
+        return $input;
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     */
+    public static function objectOf(mixed $input, string $class): mixed
+    {
+        if (!is_object($input) || !is_subclass_of($input, $class)) {
+            throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
+        }
+
+        return $input;
+    }
 }
