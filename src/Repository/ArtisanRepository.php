@@ -313,9 +313,14 @@ class ArtisanRepository extends ServiceEntityRepository
             $parameters["par$i"] = "%$item%";
         }
 
-        $resultData = $this->createQueryBuilder('a')
-            ->where(implode(' OR ', $ORs))
-            ->andWhere('a.inactiveReason = :empty')
+        $builder = $this->createQueryBuilder('a')
+            ->where('a.inactiveReason = :empty');
+
+        if ([] !== $ORs) {
+            $builder->andWhere(implode(' OR ', $ORs));
+        }
+
+        $resultData = $builder
             ->setParameters($parameters)
             ->getQuery()
             ->enableResultCache(3600)

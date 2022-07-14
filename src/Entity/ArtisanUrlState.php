@@ -24,7 +24,7 @@ class ArtisanUrlState
      * @ORM\OneToOne(targetEntity="App\Entity\ArtisanUrl", inversedBy="state")
      * @ORM\JoinColumn(name="artisan_url_id", nullable=false)
      */
-    private ?ArtisanUrl $url = null;
+    private ArtisanUrl $url;
 
     /**
      * @ORM\Column(name="last_success", type="datetime_immutable", nullable=true)
@@ -60,12 +60,12 @@ class ArtisanUrlState
         return $this;
     }
 
-    public function getUrl(): ?ArtisanUrl
+    public function getUrl(): ArtisanUrl
     {
         return $this->url;
     }
 
-    public function setUrl(?ArtisanUrl $url): ArtisanUrlState
+    public function setUrl(ArtisanUrl $url): ArtisanUrlState
     {
         $this->url = $url;
 

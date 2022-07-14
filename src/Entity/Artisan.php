@@ -651,15 +651,7 @@ class Artisan implements Stringable
 
     public function setVolatileData(?ArtisanVolatileData $volatileData): self
     {
-        // unset the owning side of the relation if necessary
-        if (null === $volatileData && null !== $this->volatileData) {
-            $this->volatileData->setArtisan(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $volatileData && $volatileData->getArtisan() !== $this) {
-            $volatileData->setArtisan($this);
-        }
+        $volatileData?->setArtisan($this);
 
         $this->volatileData = $volatileData;
 
@@ -673,15 +665,7 @@ class Artisan implements Stringable
 
     public function setPrivateData(?ArtisanPrivateData $privateData): self
     {
-        // unset the owning side of the relation if necessary
-        if (null === $privateData && null !== $this->privateData) {
-            $this->privateData->setArtisan(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $privateData && $privateData->getArtisan() !== $this) {
-            $privateData->setArtisan($this);
-        }
+        $privateData?->setArtisan($this);
 
         $this->privateData = $privateData;
 
@@ -708,12 +692,7 @@ class Artisan implements Stringable
 
     public function removeUrl(ArtisanUrl $artisanUrl): self
     {
-        if ($this->urls->removeElement($artisanUrl)) {
-            // set the owning side to null (unless already changed)
-            if ($artisanUrl->getArtisan() === $this) {
-                $artisanUrl->setArtisan(null);
-            }
-        }
+        $this->urls->removeElement($artisanUrl);
 
         return $this;
     }
@@ -738,12 +717,7 @@ class Artisan implements Stringable
 
     public function removeCommission(ArtisanCommissionsStatus $commission): self
     {
-        if ($this->commissions->removeElement($commission)) {
-            // set the owning side to null (unless already changed)
-            if ($commission->getArtisan() === $this) {
-                $commission->setArtisan(null);
-            }
-        }
+        $this->commissions->removeElement($commission);
 
         return $this;
     }
@@ -768,12 +742,7 @@ class Artisan implements Stringable
 
     public function removeMakerId(MakerId $makerId): self
     {
-        if ($this->makerIds->removeElement($makerId)) {
-            // set the owning side to null (unless already changed)
-            if ($makerId->getArtisan() === $this) {
-                $makerId->setArtisan(null);
-            }
-        }
+        $this->makerIds->removeElement($makerId);
 
         return $this;
     }
@@ -798,12 +767,7 @@ class Artisan implements Stringable
 
     public function removeValue(ArtisanValue $value): self
     {
-        if ($this->values->removeElement($value)) {
-            // set the owning side to null (unless already changed)
-            if ($value->getArtisan() === $this) {
-                $value->setArtisan(null);
-            }
-        }
+        $this->values->removeElement($value);
 
         return $this;
     }

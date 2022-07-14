@@ -24,14 +24,14 @@ class MakerId
      * @ORM\ManyToOne(targetEntity=Artisan::class, inversedBy="makerIds")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Artisan $artisan = null;
+    private Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=7, unique=true, nullable=false)
      */
-    private ?string $makerId;
+    private string $makerId;
 
-    public function __construct(?string $makerId = null)
+    public function __construct(string $makerId = '')
     {
         $this->makerId = $makerId;
     }
@@ -41,12 +41,12 @@ class MakerId
         return $this->id;
     }
 
-    public function getArtisan(): ?Artisan
+    public function getArtisan(): Artisan
     {
         return $this->artisan;
     }
 
-    public function setArtisan(?Artisan $artisan): self
+    public function setArtisan(Artisan $artisan): self
     {
         $this->artisan = $artisan;
 
