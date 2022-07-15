@@ -16,9 +16,9 @@ final class SchemaFixer
     private const CURRENT_SCHEMA_VERSION = 13;
 
     /**
-     * @param array<string, psIuSubmissionFieldValue> $data
+     * @param array<string, psJsonFieldValue> $data
      *
-     * @return array<string, psIuSubmissionFieldValue>
+     * @return array<string, psJsonFieldValue>
      */
     public function fix(array $data): array
     {
@@ -55,9 +55,9 @@ final class SchemaFixer
     }
 
     /**
-     * @param array<string, psIuSubmissionFieldValue> $data
+     * @param array<string, psJsonFieldValue> $data
      *
-     * @return array<string, psIuSubmissionFieldValue>
+     * @return array<string, psJsonFieldValue>
      */
     private function assureVersionFieldExists(array $data): array
     {
@@ -69,9 +69,9 @@ final class SchemaFixer
     }
 
     /**
-     * @param array<string, psIuSubmissionFieldValue> $data
+     * @param array<string, psJsonFieldValue> $data
      *
-     * @return array<string, psIuSubmissionFieldValue>
+     * @return array<string, psJsonFieldValue>
      */
     public static function appendSchemaVersion(array $data): array
     {

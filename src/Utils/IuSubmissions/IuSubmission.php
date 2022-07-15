@@ -20,7 +20,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class IuSubmission implements FieldReadInterface
 {
     /**
-     * @param array<string, psIuSubmissionFieldValue> $data
+     * @param array<string, psJsonFieldValue> $data
      */
     public function __construct(
         private readonly DateTimeImmutable $timestamp,
@@ -75,7 +75,7 @@ class IuSubmission implements FieldReadInterface
 
         try {
             /**
-             * @var array<string, psIuSubmissionFieldValue> $data
+             * @var array<string, psJsonFieldValue> $data
              */
             $data = Json::decode($source->getContents());
         } catch (JsonException $ex) {
