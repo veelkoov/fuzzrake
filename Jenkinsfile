@@ -35,7 +35,19 @@ pipeline {
     stage('PHPUnit') {
       steps {
         ansiColor('xterm') {
-          sh 'rake pu'
+          sh 'rake pu[--log-junit,junit-results.xml,--coverage-clover,clover-results.xml]'
+        }
+      }
+
+      post {
+        always {
+          junit 'junit-results.xml'
+
+          clover cloverReportDir: '.',
+            cloverReportFileName: 'clover.xml',
+            failingTarget: [conditionalCoverage: 20, methodCoverage: 20, statementCoverage: 20],
+            healthyTarget: [conditionalCoverage: 50, methodCoverage: 50, statementCoverage: 50],
+            unhealthyTarget: [conditionalCoverage: 40, methodCoverage: 40, statementCoverage: 40]
         }
       }
     }
@@ -43,7 +55,7 @@ pipeline {
     stage('PHP-CS-Fixer') {
       steps {
         ansiColor('xterm') {
-          sh 'rake pcf[--dry-run]'
+          sh 'rake pcf[--dry-run,--diff]'
         }
       }
     }
