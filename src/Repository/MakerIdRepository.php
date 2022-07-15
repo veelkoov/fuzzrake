@@ -25,10 +25,13 @@ class MakerIdRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return string[]
+     * @return array<string, string>
      */
     public function getOldToNewMakerIdsMap(): array
     {
+        /**
+         * @var array<array<string>> $rows
+         */
         $rows = $this->createQueryBuilder('m')
             ->join('m.artisan', 'a')
             ->select('m.makerId AS former')
@@ -40,6 +43,8 @@ class MakerIdRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getArrayResult();
 
-        return Arrays::assoc($rows, 'former', 'current');
+        $resultData = Arrays::assoc($rows, 'former', 'current');
+
+        return $resultData; // @phpstan-ignore-line
     }
 }
