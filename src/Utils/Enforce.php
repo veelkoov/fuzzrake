@@ -68,8 +68,12 @@ final class Enforce
      */
     public static function arrayOf(mixed $input, string $class): array
     {
-        if (!is_array($input) || !array_reduce($input, fn ($p, $i) => $p && is_object($i) && is_subclass_of($i, $class), true)) {
+        if (!is_array($input)) {
             throw new InvalidArgumentException("Expected an array of $class");
+        }
+
+        foreach ($input as $item) {
+            Enforce::objectOf($item, $class);
         }
 
         return $input;
@@ -84,10 +88,10 @@ final class Enforce
      */
     public static function objectOf(mixed $input, string $class): mixed
     {
-        if (!is_object($input) || !is_subclass_of($input, $class)) {
-            throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
+        if (is_object($input) && (is_a($input, $class) || is_subclass_of($input, $class))) {
+            return $input;
         }
 
-        return $input;
+        throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
     }
 }
