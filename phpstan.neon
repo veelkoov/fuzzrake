@@ -10,10 +10,8 @@ parameters:
     consoleApplicationLoader: tests/console-application.php
 
   typeAliases:
-    psIuSubmissionFieldValue:  'null|int|bool|string|string[]'
-    psWebpageSnapshotMetadata: 'array{url: string, ownerName: string, retrievedAt: string, childCount: int, headers: string[][], errors: string[], httpCode: int}'
     psFieldValue:              'App\DataDefinitions\Ages|DateTimeImmutable|string[]|string|int|bool|null'
-    psJsonFieldValue:          'string[]|string|bool|null'
+    psJsonFieldValue:          'string[]|string|int|bool|null'
     psArtisanStatsArray:       'array{open_for_anything: int, closed_for_anything: int, successfully_tracked: int, partially_tracked: int, tracking_failed: int, tracking_issues: int, tracked: int, total: int}'
 
     psSpecie:                  'null|array<string, psSubspecie>'
