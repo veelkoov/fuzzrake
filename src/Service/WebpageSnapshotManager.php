@@ -51,7 +51,7 @@ class WebpageSnapshotManager
 
         $progressReportIo->progressStart(count($urls));
 
-        while (($url = $queue->pop())) {
+        while ($url = $queue->pop()) {
             $this->get($url, $refetch);
 
             $progressReportIo->progressAdvance();

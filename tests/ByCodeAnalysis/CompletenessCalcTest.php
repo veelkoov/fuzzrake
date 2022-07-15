@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Paths;
 use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
+
 use function Psl\File\read;
 
 class CompletenessCalcTest extends TestCase

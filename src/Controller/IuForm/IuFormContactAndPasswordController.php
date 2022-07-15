@@ -85,7 +85,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
         $changePassword = $form->get(ContactAndPassword::FLD_CHANGE_PASSWORD);
         $password = $form->get(ContactAndPassword::FLD_PASSWORD);
 
-        if (!($changePassword->getData() ?? false) && !(Password::verify($state->artisan, $state->previousPassword))) {
+        if (!($changePassword->getData() ?? false) && !Password::verify($state->artisan, $state->previousPassword)) {
             $password->addError(new FormError('Invalid password supplied.'));
         }
     }

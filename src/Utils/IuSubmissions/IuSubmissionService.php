@@ -27,7 +27,7 @@ class IuSubmissionService
         try {
             $relativeFilePath = $this->local->saveOnDiskGetRelativePath($this->submissionToJson($submission));
 
-            if (($s3SendingOk = $this->s3->sendCopyToS3($relativeFilePath))) {
+            if ($s3SendingOk = $this->s3->sendCopyToS3($relativeFilePath)) {
                 /* If successfully pushed data to S3, remove local copy. It's safer in S3 */
                 $this->local->removeLocalCopy($relativeFilePath);
             }
