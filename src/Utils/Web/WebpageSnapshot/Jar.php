@@ -7,9 +7,10 @@ namespace App\Utils\Web\WebpageSnapshot;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Traits\UtilityClass;
 use JsonException;
-use function Psl\File\read;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
+
+use function Psl\File\read;
 
 final class Jar
 {

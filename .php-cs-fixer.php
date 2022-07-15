@@ -7,11 +7,11 @@ $finder = (new PhpCsFixer\Finder())
 
 return (new PhpCsFixer\Config())
     ->setRules([
-        '@Symfony' => true,
+        '@Symfony'               => true,
         'binary_operator_spaces' => [
             'operators' => ['=>' => 'align_single_space'],
         ],
-        'array_syntax' => ['syntax' => 'short'],
+        'ordered_imports' => ['sort_algorithm' => 'alpha', 'imports_order' => ['const', 'class', 'function']]
     ])
     ->setFinder($finder)
 ;

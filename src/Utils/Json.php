@@ -7,6 +7,7 @@ namespace App\Utils;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use JsonException;
+
 use function Psl\File\read;
 
 final class Json

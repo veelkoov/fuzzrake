@@ -7,10 +7,11 @@ namespace App\Tests\ByCodeAnalysis;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use PHPUnit\Framework\TestCase;
-use function Psl\File\read;
 use TRegx\CleanRegex\Exception\PatternException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
+
+use function Psl\File\read;
 
 /**
  * Don't judge, I'm having a lot of fun here!

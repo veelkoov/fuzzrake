@@ -18,6 +18,7 @@ use App\Utils\Web\WebpageSnapshot\Jar;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Exception;
 use PHPUnit\Framework\TestCase;
+
 use function Psl\File\read;
 
 class OfferStatusParserTest extends TestCase
