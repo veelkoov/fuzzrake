@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Utils\Traits\UtilityClass;
+use InvalidArgumentException;
 use JsonException;
-use RuntimeException;
+
+use function Psl\File\read;
 
 final class Json
 {
@@ -33,12 +35,10 @@ final class Json
      */
     public static function readFile(string $filePath): mixed
     {
-        $contents = file_get_contents($filePath);
-
-        if (false === $contents) {
-            throw new RuntimeException("Failed to read the file: '$filePath'");
+        if ('' === $filePath) {
+            throw new InvalidArgumentException('File path is required');
         }
 
-        return self::decode($contents);
+        return self::decode(read($filePath));
     }
 }

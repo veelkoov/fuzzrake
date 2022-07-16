@@ -9,6 +9,7 @@ use App\Repository\EventRepository;
 use App\Utils\Arrays;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,11 +43,7 @@ class EventsController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function events_atom(Request $request, EventRepository $eventRepository): Response
     {
-        $types = Arrays::intersect([
-            Event::TYPE_DATA_UPDATED,
-            Event::TYPE_GENERIC,
-            Event::TYPE_CS_UPDATED,
-        ], explode(',', $request->get('types', '')));
+        $types = $this->getChosenEventTypes($request);
 
         $fourDaysAgo = UtcClock::at('-4 days'); // Workaround for FSR bot; https://github.com/veelkoov/fuzzrake/issues/126
 
@@ -57,5 +54,21 @@ class EventsController extends AbstractController
         $result->headers->set('Content-Type', 'application/atom+xml; charset=UTF-8');
 
         return $result;
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function getChosenEventTypes(Request $request): array
+    {
+        $requestedTypes = explode(',', (string) $request->request->get('types', ''));
+
+        $result = Arrays::intersect([
+            Event::TYPE_DATA_UPDATED,
+            Event::TYPE_GENERIC,
+            Event::TYPE_CS_UPDATED,
+        ], $requestedTypes);
+
+        return Enforce::strList($result);
     }
 }

@@ -27,7 +27,7 @@ class ArtisanCommissionsStatus
      * @ORM\ManyToOne(targetEntity=Artisan::class, inversedBy="commissions")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Artisan $artisan = null;
+    private Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -44,12 +44,12 @@ class ArtisanCommissionsStatus
         return $this->id;
     }
 
-    public function getArtisan(): ?Artisan
+    public function getArtisan(): Artisan
     {
         return $this->artisan;
     }
 
-    public function setArtisan(?Artisan $artisan): self
+    public function setArtisan(Artisan $artisan): self
     {
         $this->artisan = $artisan;
 

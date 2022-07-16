@@ -11,6 +11,8 @@ use TRegx\CleanRegex\Exception\PatternException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
+use function Psl\File\read;
+
 /**
  * Don't judge, I'm having a lot of fun here!
  */
@@ -30,11 +32,12 @@ class ArtisanFieldsTest extends TestCase
      */
     public function testArtisanTsModel(): void
     {
-        $modelSource = file_get_contents(Paths::getArtisanTypeScriptClassPath());
+        $modelSource = read(Paths::getArtisanTypeScriptClassPath());
 
         $parameters = $this->constructor
             ->match($modelSource)
-            ->first(fn (Detail $detail): string => $detail->get('parameters'));
+            ->group('parameters')
+            ->nth(0);
 
         $matches = $this->constructorParameter->match($parameters);
 

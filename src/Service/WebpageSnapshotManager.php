@@ -51,7 +51,7 @@ class WebpageSnapshotManager
 
         $progressReportIo->progressStart(count($urls));
 
-        while (($url = $queue->pop())) {
+        while ($url = $queue->pop()) {
             $this->get($url, $refetch);
 
             $progressReportIo->progressAdvance();
@@ -132,9 +132,9 @@ class WebpageSnapshotManager
         }
     }
 
-    private function updateUrlHealthStatus(Fetchable $url, ?Snapshot $snapshot): void
+    private function updateUrlHealthStatus(Fetchable $url, Snapshot $snapshot): void
     {
-        if ($snapshot && $snapshot->isOK()) {
+        if ($snapshot->isOK()) {
             $url->recordSuccessfulFetch();
         } else {
             $code = $snapshot->httpCode;

@@ -17,6 +17,7 @@ class RestApiControllerWithEMTest extends WebTestCaseWithEM
         self::assertResponseStatusCodeSame(200);
 
         $text = $client->getResponse()->getContent();
+        self::assertNotFalse($text);
         self::assertStringContainsString('"API testing artisan"', $text);
         self::assertStringContainsString('"APIARTS"', $text);
         self::assertStringContainsString('"FI"', $text);

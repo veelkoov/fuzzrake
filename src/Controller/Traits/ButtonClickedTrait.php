@@ -18,12 +18,12 @@ trait ButtonClickedTrait
 
         $button = $form->getClickedButton();
 
-        if (null === $button || $button->getName() !== $buttonId) {
+        if (!($button instanceof FormInterface) || $button->getName() !== $buttonId) {
             return false;
         }
 
         foreach ($form->getErrors(true) as $error) {
-            if ($error->getCause()  instanceof CsrfToken) {
+            if ($error->getCause() instanceof CsrfToken) {
                 return false;
             }
         }

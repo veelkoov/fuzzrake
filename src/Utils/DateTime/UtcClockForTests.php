@@ -6,8 +6,12 @@ namespace App\Utils\DateTime;
 
 use App\Tests\TestUtils\Paths;
 use App\Utils\Traits\UtilityClass;
+
 use function Psl\File\read;
 use function Psl\File\write;
+use function Psl\Filesystem\create_directory;
+use function Psl\Filesystem\get_directory;
+use function Psl\Filesystem\is_directory;
 
 /**
  * ClockMock doesn't work with kernel-enabled tests.
@@ -50,6 +54,10 @@ final class UtcClockForTests
 
     private static function setTimeMs(int $timeMsToSet): void
     {
+        if (!is_directory(get_directory(Paths::getTimestampPath()))) {
+            create_directory(get_directory(Paths::getTimestampPath()));
+        }
+
         write(Paths::getTimestampPath(), (string) $timeMsToSet);
     }
 }

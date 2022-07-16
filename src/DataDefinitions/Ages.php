@@ -33,7 +33,7 @@ enum Ages : string
             $result['Unknown'] = null;
         }
 
-        return $result;
+        return $result; // @phpstan-ignore-line
     }
 
     public static function get(?string $value): ?Ages

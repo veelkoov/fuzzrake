@@ -15,6 +15,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Nette\Utils\Arrays;
 
 /**
  * @method ArtisanUrl|null find($id, $lockMode = null, $lockVersion = null)
@@ -49,10 +50,13 @@ class ArtisanUrlRepository extends ServiceEntityRepository
         $rsm->addJoinedEntityFromClassMetadata(MakerId::class, 'mi', 'a',
             'makerIds', ['id' => 'mi_id', 'artisan_id' => 'mi_artisan_id', 'maker_id' => 'mi_maker_id']);
 
-        $whereClause = $excluded->empty() ? '' :
-            'WHERE au.type NOT IN ('.implode(',', array_map(fn (string $type): string => $this->getEntityManager()->getConnection()->quote($type, ParameterType::STRING), $excluded->names())).')';
+        if ($excluded->empty()) {
+            $whereClause = '';
+        } else {
+            $whereClause = 'WHERE au.type NOT IN ('.implode(',', $this->quoted($excluded->names())).')';
+        }
 
-        return $this->getEntityManager()
+        $resultData = $this->getEntityManager()
             ->createNativeQuery("
                     SELECT {$rsm->generateSelectClause()}
                     FROM artisans_urls AS au
@@ -69,6 +73,8 @@ class ArtisanUrlRepository extends ServiceEntityRepository
                     LIMIT $limit
                 ", $rsm)
             ->execute();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -96,6 +102,24 @@ class ArtisanUrlRepository extends ServiceEntityRepository
                 ->setParameter('excluded', $excluded->names());
         }
 
-        return $builder->getQuery()->execute();
+        $resultData = $builder->getQuery()->execute();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+    }
+
+    /**
+     * @param string[] $input
+     *
+     * @return string[]
+     */
+    private function quoted(array $input): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        return Arrays::map($input, function (string $type) use ($connection): string {
+            $result = $connection->quote($type, ParameterType::STRING);
+
+            return $result; // @phpstan-ignore-line
+        });
     }
 }

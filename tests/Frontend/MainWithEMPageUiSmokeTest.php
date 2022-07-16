@@ -32,7 +32,6 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
 
         $client->request('GET', '/');
         $client->waitForVisibility('#scam-risk-warning', 5);
-        $this->screenshot($client);
 
         $client->findElement(WebDriverBy::id('scam-risk-acknowledgement'))->click();
         $client->waitForVisibility('#artisans', 5);

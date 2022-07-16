@@ -58,6 +58,9 @@ class Set implements IteratorAggregate, ArrayAccess
         uasort($this->items, fn (Item $a, Item $b): int => strcmp($a->getLabel(), $b->getLabel()));
     }
 
+    /**
+     * @return Iterator<string, Item>
+     */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->items);

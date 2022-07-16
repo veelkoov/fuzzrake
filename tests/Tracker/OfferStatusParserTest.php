@@ -19,13 +19,17 @@ use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
+use function Psl\File\read;
+
 class OfferStatusParserTest extends TestCase
 {
     private static OfferStatusParser $csp;
 
     public static function setUpBeforeClass(): void
     {
-        $factory = new RegexFactory(DataDefinitions::get('tracker_regexes.yaml', 'tracker_regexes'));
+        $trackerRegexes = DataDefinitions::get('tracker_regexes.yaml', 'tracker_regexes');
+        $factory = new RegexFactory($trackerRegexes);
+
         $regexes = new Regexes(
             $factory->getFalsePositives(),
             $factory->getOfferStatuses(),
@@ -63,11 +67,13 @@ class OfferStatusParserTest extends TestCase
      */
     public function analyseStatusDataProvider(): array // @phpstan-ignore-line
     {
-        return array_filter(array_map(function ($filepath) {
-            $expectedResult = Json::decode(trim(file_get_contents($filepath)));
+        $paths = array_filter(glob(Paths::getTestDataPath('/statuses/*/*/expected.json')) ?: []);
+
+        return array_map(function ($filepath) {
+            $expectedResult = Json::decode(trim(read($filepath)));
             $snapshot = Jar::load(dirname($filepath));
 
             return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, glob(Paths::getTestDataPath('/statuses/*/*/expected.json'))));
+        }, $paths);
     }
 }

@@ -55,16 +55,16 @@ class FiltersService
         }
 
         foreach ($artisansCountries->getItems() as $country) {
-            $code = $country->getValue();
+            $code = $country->getValueString();
             $region = $this->countriesDataService->getRegionFrom($code);
             $name = $this->countriesDataService->getNameFor($code);
 
             $result->getItems()[$region]->incCount($country->getCount());
-            $result->getItems()[$region]->getValue()->addComplexItem($code, $code, $name, $country->getCount());
+            $result->getItems()[$region]->getValueSet()->addComplexItem($code, $code, $name, $country->getCount());
         }
 
         foreach ($result->getItems() as $item) {
-            $item->getValue()->sort();
+            $item->getValueSet()->sort();
         }
 
         return $result;

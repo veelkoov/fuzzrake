@@ -143,10 +143,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
 
         if ([] === $expectedErrors) {
             self::submitValid($client, $form);
-
-            self::expectNotToPerformAssertions();
+            self::assertSelectorTextContains('h2', 'Contact');
         } else {
             self::submitInvalid($client, $form);
+            self::assertSelectorTextContains('h2', 'General info');
 
             foreach ($expectedErrors as $selector => $message) {
                 self::assertSelectorTextContains($selector, $message);
@@ -377,7 +377,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(makerId: 'REDIREC'));
 
         $crawler = $client->request('GET', "/iu_form/$step$slashedMakerId");
-        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
+        $uri = $crawler->getUri();
+
+        self::assertNotNull($uri);
+        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $uri);
     }
 
     public function cannotSkipUnfinishedStepsDataProvider(): array // @phpstan-ignore-line

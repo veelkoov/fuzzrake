@@ -27,8 +27,8 @@ class MainController extends AbstractController
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Cache(maxage: 3600, public: true)]
     public function main(ArtisansDOD $artisans, MakerIdRepository $makerIdRepository, FiltersService $filterService,
-                         SpeciesService $speciesService, StatisticsService $statisticsService,
-                         TagAwareCacheInterface $cache): Response
+        SpeciesService $speciesService, StatisticsService $statisticsService,
+        TagAwareCacheInterface $cache): Response
     {
         $filters = $cache->get('mainpage.filters', fn () => $filterService->getFiltersTplData());
         $statistics = $cache->get('mainpage.statistics', fn () => $statisticsService->getMainPageStats());

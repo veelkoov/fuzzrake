@@ -29,7 +29,7 @@ class HierarchyAwareBuilder
     private array $validNames;
 
     /**
-     * @param psSpecies $species
+     * @param array<string, psSpecie> $species
      */
     public function __construct(array $species)
     {
@@ -65,7 +65,7 @@ class HierarchyAwareBuilder
     }
 
     /**
-     * @param psSpecies $species
+     * @param array<string, psSpecie> $species
      */
     private function addValidNamesFrom(array $species): void
     {
@@ -77,13 +77,13 @@ class HierarchyAwareBuilder
             }
 
             if (is_array($subspecies)) {
-                $this->addValidNamesFrom($subspecies);
+                $this->addValidNamesFrom($this->subspecies($subspecies));
             }
         }
     }
 
     /**
-     * @param psSpecies $species
+     * @param array<string, psSpecie> $species
      *
      * @return array<string, Specie>
      */
@@ -94,7 +94,13 @@ class HierarchyAwareBuilder
         foreach ($species as $specieName => $subspecies) {
             [$flags, $specieName] = self::splitSpecieFlagsName($specieName);
 
-            $result[$specieName] = $this->getUpdatedSpecie($specieName, self::hasIgnoreFlag($flags), $parent, $subspecies);
+            if (null !== $subspecies) {
+                $subspecies = $this->subspecies($subspecies);
+            }
+
+            $ignored = self::hasIgnoreFlag($flags);
+
+            $result[$specieName] = $this->getUpdatedSpecie($specieName, $ignored, $parent, $subspecies);
             $this->validNames[] = $specieName;
         }
 
@@ -102,7 +108,17 @@ class HierarchyAwareBuilder
     }
 
     /**
-     * @param psSpecies|null $subspecies
+     * @param array<string, psSubspecie> $subspecies
+     *
+     * @return array<string, psSpecie>
+     */
+    private function subspecies(array $subspecies): array
+    {
+        return $subspecies; // @phpstan-ignore-line - No recursion allowed
+    }
+
+    /**
+     * @param array<string, psSpecie>|null $subspecies
      */
     private function getUpdatedSpecie(string $specieName, bool $ignored, ?Specie $parent, ?array $subspecies): Specie
     {

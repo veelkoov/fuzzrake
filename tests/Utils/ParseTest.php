@@ -13,7 +13,7 @@ class ParseTest extends TestCase
     /**
      * @dataProvider intAndTIntDataProvider
      */
-    public function testIntAndTInt(mixed $input, int|false $expectedInt, int|false $expectedTInt): void
+    public function testIntAndTInt(null|float|int|string $input, int|false $expectedInt, int|false $expectedTInt): void
     {
         try {
             self::assertSame($expectedInt, Parse::int($input));

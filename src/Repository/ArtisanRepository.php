@@ -40,11 +40,13 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getAll(): array
     {
-        return $this->getArtisansQueryBuilder()
+        $resultData = $this->getArtisansQueryBuilder()
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -52,7 +54,7 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getNew(): array
     {
-        return $this->getArtisansQueryBuilder()
+        $resultData = $this->getArtisansQueryBuilder()
             ->where('v.fieldName = :fieldName')
             ->andWhere('v.value > :fieldValue')
             ->setParameter('fieldName', Field::DATE_ADDED->value)
@@ -62,6 +64,8 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -69,13 +73,15 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getActive(): array
     {
-        return $this->getArtisansQueryBuilder()
+        $resultData = $this->getArtisansQueryBuilder()
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     private function getArtisansQueryBuilder(): QueryBuilder
@@ -95,13 +101,15 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getDistinctCountriesCount(): int
     {
-        return (int) $this->createQueryBuilder('a')
+        $resultData = $this->createQueryBuilder('a')
             ->select('COUNT (DISTINCT a.country)')
             ->where('a.country != \'\'')
             ->andWhere('a.country != \'EU\'') // grep-country-eu
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
+
+        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     public function getDistinctCountriesToCountAssoc(): FilterData
@@ -159,14 +167,15 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getPaymentPlans(): array
     {
-        return array_map(fn (array $row) => $row['paymentPlans'],
-            $this->createQueryBuilder('a')
-                ->select('a.paymentPlans AS paymentPlans')
-                ->where('a.inactiveReason = :empty')
-                ->setParameter('empty', '')
-                ->getQuery()
-                ->enableResultCache(3600)
-                ->getArrayResult());
+        $resultData = $this->createQueryBuilder('a')
+            ->select('a.paymentPlans AS paymentPlans')
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleColumnResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData
@@ -187,7 +196,7 @@ class ArtisanRepository extends ServiceEntityRepository
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
-                if (($item = trim($item))) {
+                if ($item = trim($item)) {
                     $result->getItems()->addOrIncItem($item);
                 }
             }
@@ -236,11 +245,13 @@ class ArtisanRepository extends ServiceEntityRepository
             ++$i;
         }
 
-        return $builder->getQuery()->getResult();
+        $resultData = $builder->getQuery()->getResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
-     * @return array{items: string[], otherItems?: string[]}
+     * @return array<array{items: string, otherItems?: string}>
      */
     private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
     {
@@ -254,9 +265,11 @@ class ArtisanRepository extends ServiceEntityRepository
             $queryBuilder->addSelect("a.$otherColumnName AS otherItems");
         }
 
-        return $queryBuilder->getQuery()
+        $resultData = $queryBuilder->getQuery()
             ->enableResultCache(3600)
             ->getArrayResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -269,7 +282,7 @@ class ArtisanRepository extends ServiceEntityRepository
         }
 
         try {
-            return $this->createQueryBuilder('a')
+            $resultData = $this->createQueryBuilder('a')
                 ->join('a.makerIds', 'm_where')
                 ->where('m_where.makerId = :makerId')
                 ->setParameter('makerId', $makerId)
@@ -279,6 +292,8 @@ class ArtisanRepository extends ServiceEntityRepository
         } catch (NonUniqueResultException $e) {
             throw new UnbelievableRuntimeException($e);
         }
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -298,13 +313,20 @@ class ArtisanRepository extends ServiceEntityRepository
             $parameters["par$i"] = "%$item%";
         }
 
-        return $this->createQueryBuilder('a')
-            ->where(implode(' OR ', $ORs))
-            ->andWhere('a.inactiveReason = :empty')
+        $builder = $this->createQueryBuilder('a')
+            ->where('a.inactiveReason = :empty');
+
+        if ([] !== $ORs) {
+            $builder->andWhere(implode(' OR ', $ORs));
+        }
+
+        $resultData = $builder
             ->setParameters($parameters)
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();
+
+        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -313,13 +335,15 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function countActive(): int
     {
-        return (int) $this->createQueryBuilder('a')
+        $resultData = $this->createQueryBuilder('a')
             ->select('COUNT(a)')
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
+
+        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -327,7 +351,7 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getCsTrackedCount(): int
     {
-        return (int) $this->createQueryBuilder('a')
+        $resultData = $this->createQueryBuilder('a')
             ->leftJoin('a.urls', 'au')
             ->select('COUNT(DISTINCT a.id)')
             ->where('au.type = :type')
@@ -339,6 +363,8 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
+
+        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     public function getSafeWorksWithMinors(): FilterData // TODO: Get rid of this terribliness https://github.com/veelkoov/fuzzrake/issues/120

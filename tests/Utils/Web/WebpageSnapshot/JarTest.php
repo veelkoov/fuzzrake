@@ -9,9 +9,10 @@ use App\Utils\Web\WebpageSnapshot\Jar;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
+
 use function Psl\Env\temp_dir;
 use function Psl\Filesystem\delete_directory;
-use Symfony\Component\Uid\Uuid;
 
 class JarTest extends TestCase
 {

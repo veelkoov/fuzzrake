@@ -53,7 +53,7 @@ class Printer
 
     private function showArtisanNameIfContextChanged(): void
     {
-        if ($this->lastContext !== $this->currentContext) {
+        if ($this->lastContext !== $this->currentContext && null !== $this->currentContext) {
             $this->io->section(StrUtils::artisanNamesSafeForCli(
                 $this->currentContext->getSubject(),
                 $this->currentContext->getChanged()

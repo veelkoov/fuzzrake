@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\ArtisanVolatileData;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Enforce;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\UnexpectedResultException;
@@ -33,26 +34,14 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
      */
     public function getLastCsUpdateTime(): DateTimeImmutable
     {
-        return UtcClock::at($this
+        $resultData = $this
             ->createQueryBuilder('avd')
             ->select('MAX(avd.lastCsUpdate)')
             ->getQuery()
             ->enableResultCache(3600)
-            ->getSingleScalarResult());
-    }
+            ->getSingleScalarResult();
 
-    /**
-     * @throws DateTimeException
-     * @throws UnexpectedResultException
-     */
-    public function getLastBpUpdateTime(): DateTimeImmutable
-    {
-        return UtcClock::at($this
-            ->createQueryBuilder('avd')
-            ->select('MAX(avd.lastBpUpdate)')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getSingleScalarResult());
+        return UtcClock::at(Enforce::nString($resultData));
     }
 
     /**
@@ -60,12 +49,14 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
      */
     public function getCsTrackingIssuesCount(): int
     {
-        return (int) $this->createQueryBuilder('avd')
+        $resultData = $this->createQueryBuilder('avd')
             ->select('COUNT(avd.id)')
             ->where('avd.csTrackerIssue = :true')
             ->setParameter('true', true)
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();
+
+        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 }

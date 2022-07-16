@@ -8,6 +8,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\Diff;
 use App\Utils\StrUtils;
+use LogicException;
 
 class ImportItem
 {
@@ -86,9 +87,9 @@ class ImportItem
         return $this->entity->getSubject()->getPassword();
     }
 
-    public function getDiff(): ?Diff
+    public function getDiff(): Diff
     {
-        return $this->diff;
+        return $this->diff ?? throw new LogicException('Diff has not been calculated yet');
     }
 
     public function calculateDiff(): void
