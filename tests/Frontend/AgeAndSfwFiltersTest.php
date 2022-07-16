@@ -13,6 +13,9 @@ use Facebook\WebDriver\WebDriverBy;
 
 class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 {
+    /**
+     * @return array<array{0: ?Ages, 1: ?bool, 2: ?bool, 3: ?bool, 4: ?bool, 5: bool, 6: bool}>
+     */
     private static function getCombinations(): array
     {
         $result = [];
@@ -125,6 +128,9 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         }
     }
 
+    /**
+     * @return array<array{0: bool, 1: ?bool}>
+     */
     public function ageAndSfwFiltersDataProvider(): array
     {
         return [

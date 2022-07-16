@@ -8,6 +8,7 @@ use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverDimension;
+use LogicException;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -31,8 +32,15 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         return $result;
     }
 
+    protected static function getPantherClient(): PantherClient
+    {
+        return self::$pantherClient ?? throw new LogicException('Panther client has not been initialized yet');
+    }
+
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         self::stopWebServer();
     }
 
@@ -47,7 +55,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     protected static function waitUntilShows(string $locator, int $millisecondsForAnimation = 200): void
     {
         usleep($millisecondsForAnimation * 1000);
-        self::$pantherClient->waitForVisibility($locator, 1);
+        self::getPantherClient()->waitForVisibility($locator, 1);
     }
 
     protected static function assertVisible(string $locator): void
@@ -55,7 +63,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         $exception = null;
 
         try {
-            self::$pantherClient->waitForVisibility($locator, 1);
+            self::getPantherClient()->waitForVisibility($locator, 1);
         } catch (NoSuchElementException|TimeoutException $caught) {
             $exception = $caught;
         }
@@ -68,7 +76,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         $exception = null;
 
         try {
-            self::$pantherClient->waitForInvisibility($locator, 1);
+            self::getPantherClient()->waitForInvisibility($locator, 1);
         } catch (NoSuchElementException|TimeoutException $caught) {
             $exception = $caught;
         }
