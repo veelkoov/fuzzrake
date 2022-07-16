@@ -6,12 +6,11 @@ namespace App\Tests\Tasks;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
-use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tasks\ArtisanUrlInspection;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\Snapshot\WebpageSnapshotCache;
+use App\Utils\Web\WebpageSnapshot\Cache;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -27,20 +26,23 @@ class ArtisanUrlInspectionWithEMTest extends KernelTestCaseWithEM
         self::flush();
 
         self::assertCount(1, $createdArtisan->getUrls());
-        self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastFailureUtc());
-        self::assertNull($createdArtisan->getUrls()->first()->getState()->getLastSuccessUtc());
+        $createdUrl = $createdArtisan->getUrls()[0];
+        self::assertNotNull($createdUrl);
+        self::assertNull($createdUrl->getState()->getLastFailureUtc());
+        self::assertNull($createdUrl->getState()->getLastSuccessUtc());
 
         $task = new ArtisanUrlInspection(self::getEM()->getRepository(ArtisanUrl::class), $this->getTestWebpageSnapshotManager(), $this->getTestSymfonyStyle());
         $task->inspect(1);
         self::flush();
 
         $repo = self::getEM()->getRepository(ArtisanE::class);
-        /** @var ArtisanRepository $repo */
         $retrievedArtisan = $repo->findAll()[0];
 
         self::assertCount(1, $retrievedArtisan->getUrls());
-        self::assertNull($retrievedArtisan->getUrls()->first()->getState()->getLastFailureUtc(), 'Should not have failed');
-        self::assertNotNull($retrievedArtisan->getUrls()->first()->getState()->getLastSuccessUtc(), 'Should have succeeded');
+        $retrievedUrl = $retrievedArtisan->getUrls()[0];
+        self::assertNotNull($retrievedUrl);
+        self::assertNull($retrievedUrl->getState()->getLastFailureUtc(), 'Should not have failed');
+        self::assertNotNull($retrievedUrl->getState()->getLastSuccessUtc(), 'Should have succeeded');
     }
 
     private function getTestSymfonyStyle(): SymfonyStyle
@@ -66,9 +68,9 @@ class ArtisanUrlInspectionWithEMTest extends KernelTestCaseWithEM
         return $this->createMock(LoggerInterface::class);
     }
 
-    private function getTestWebpageSnapshotCache(): WebpageSnapshotCache
+    private function getTestWebpageSnapshotCache(): Cache
     {
-        return $this->createMock(WebpageSnapshotCache::class);
+        return $this->createMock(Cache::class);
     }
 
     private function getTestGentleHttpClient(): GentleHttpClient

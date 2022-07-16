@@ -9,6 +9,10 @@ use ArrayIterator;
 use Iterator;
 use IteratorAggregate;
 
+/**
+ * @implements ArrayAccess<string, Item>
+ * @implements IteratorAggregate<string, Item>
+ */
 class Set implements IteratorAggregate, ArrayAccess
 {
     /**
@@ -54,6 +58,9 @@ class Set implements IteratorAggregate, ArrayAccess
         uasort($this->items, fn (Item $a, Item $b): int => strcmp($a->getLabel(), $b->getLabel()));
     }
 
+    /**
+     * @return Iterator<string, Item>
+     */
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->items);

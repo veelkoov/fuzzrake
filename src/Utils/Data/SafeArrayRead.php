@@ -6,21 +6,31 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\FieldsList;
-use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator;
+use App\Utils\Enforce;
 use App\Utils\StringList;
+use InvalidArgumentException;
 use TypeError;
 
 class SafeArrayRead
 {
     /**
+     * @var array<mixed>
+     */
+    private readonly array $source;
+
+    /**
      * @var string[]
      */
     private array $errors = [];
+
+    /**
+     * @var Field[]
+     */
     private array $notCopiedYet;
 
     public function __construct(
-        private readonly mixed $source,
+        mixed $source,
         private readonly SmartAccessDecorator $target,
         private readonly FieldsList $fields,
     ) {
@@ -29,6 +39,7 @@ class SafeArrayRead
         if (!is_array($source)) {
             $this->addError('Input data is not an array.');
         } else {
+            $this->source = $source;
             $this->copyFields();
         }
 
@@ -77,7 +88,9 @@ class SafeArrayRead
         unset($this->notCopiedYet[$fieldName]);
 
         if ($field->isList()) {
-            if (Arrays::isArrayOfStrings($value)) {
+            try {
+                $value = Enforce::strList($value);
+            } catch (InvalidArgumentException) {
                 $this->addError("Field '$fieldName' was not an array of strings.");
 
                 return;

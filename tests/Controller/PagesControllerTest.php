@@ -59,7 +59,7 @@ class PagesControllerTest extends WebTestCase
         static::assertSelectorTextContains('h1', 'Rules for makers/studios');
     }
 
-    public function testShouldKnow()
+    public function testShouldKnow(): void
     {
         $client = static::createClient();
 

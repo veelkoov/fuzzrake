@@ -113,6 +113,8 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
+     * @param array<string, string> $expectedErrors
+     *
      * @dataProvider ageStuffFieldsDataProvider
      */
     public function testAgeStuffFields(string $ages, string $nsfwWebsite, string $nsfwSocial, ?string $doesNsfw, ?string $worksWithMinors, array $expectedErrors): void
@@ -141,10 +143,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
 
         if ([] === $expectedErrors) {
             self::submitValid($client, $form);
-
-            self::expectNotToPerformAssertions();
+            self::assertSelectorTextContains('h2', 'Contact');
         } else {
             self::submitInvalid($client, $form);
+            self::assertSelectorTextContains('h2', 'General info');
 
             foreach ($expectedErrors as $selector => $message) {
                 self::assertSelectorTextContains($selector, $message);
@@ -152,7 +154,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         }
     }
 
-    public function ageStuffFieldsDataProvider(): array
+    public function ageStuffFieldsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
@@ -375,10 +377,13 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(makerId: 'REDIREC'));
 
         $crawler = $client->request('GET', "/iu_form/$step$slashedMakerId");
-        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $crawler->getUri());
+        $uri = $crawler->getUri();
+
+        self::assertNotNull($uri);
+        self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $uri);
     }
 
-    public function cannotSkipUnfinishedStepsDataProvider(): array
+    public function cannotSkipUnfinishedStepsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             'New maker, pass+cont'      => ['contact_and_password', ''],

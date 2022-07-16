@@ -6,6 +6,7 @@ namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Artisan as ArtisanE;
+use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\ArtisanType;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -43,7 +44,9 @@ class ArtisansController extends AbstractController
         $prevObfuscated = $artisan->getContactInfoObfuscated();
         $prevOriginal = $artisan->getContactInfoOriginal();
 
-        $form = $this->createForm(ArtisanType::class, $artisan);
+        $form = $this->createForm(ArtisanType::class, $artisan, [
+            AbstractTypeWithDelete::OPT_DELETABLE => null !== $artisan->getId(),
+        ]);
         $form->handleRequest($request);
 
         $artisan->assureNsfwSafety();

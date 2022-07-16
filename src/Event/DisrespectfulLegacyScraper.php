@@ -16,6 +16,7 @@ class DisrespectfulLegacyScraper implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
+        // @phpstan-ignore-next-line - Rhetorical question
         return self::TYPEWRITERS_ARE_USED_ON_THE_INTERNET ? [] : [KernelEvents::REQUEST => 'removeUselessCrapFromRequest'];
     }
 
@@ -30,6 +31,9 @@ class DisrespectfulLegacyScraper implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param (string|string[])[] $array
+     */
     private static function removeUselessCrapFromArray(array &$array): void
     {
         foreach ($array as $key => $value) {

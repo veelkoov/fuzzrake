@@ -6,11 +6,17 @@ namespace App\DataDefinitions\Fields;
 
 use ArrayIterator;
 use Closure;
+use Iterator;
 use IteratorAggregate;
-use Traversable;
 
+/**
+ * @implements IteratorAggregate<string, Field>
+ */
 class FieldsList implements IteratorAggregate
 {
+    /**
+     * @var array<string, Field>
+     */
     private array $fields = [];
 
     /**
@@ -30,10 +36,9 @@ class FieldsList implements IteratorAggregate
     }
 
     /**
-     * @return Field[]
-     * @noinspection PhpDocSignatureInspection - Workaround for generics in foreach
+     * @return Iterator<string, Field>
      */
-    public function getIterator(): Traversable // @phpstan-ignore-line - Workaround for generics in foreach
+    public function getIterator(): Iterator
     {
         return new ArrayIterator($this->fields);
     }
@@ -61,6 +66,6 @@ class FieldsList implements IteratorAggregate
 
     public function empty(): bool
     {
-        return 0 !== count($this->fields);
+        return 0 === count($this->fields);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\TrackerUpdates;
+namespace App\Tasks\StatusTracker;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\ArtisanUrl;
@@ -18,7 +18,7 @@ use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use TRegx\SafeRegex\Exception\RuntimePregException;
 
-class CommissionsTrackerTask implements TrackerTaskInterface
+class StatusTrackerTask
 {
     /**
      * @var Artisan[]
@@ -164,7 +164,10 @@ class CommissionsTrackerTask implements TrackerTaskInterface
         return array_filter($result, fn (?OfferStatus $item): bool => null !== $item);
     }
 
-    private function getArtisanChangesGiven(Artisan $artisan, array $offerStatuses, bool $csTrackerIssue, $lastCsUpdate): ArtisanChanges
+    /**
+     * @param OfferStatus[] $offerStatuses
+     */
+    private function getArtisanChangesGiven(Artisan $artisan, array $offerStatuses, bool $csTrackerIssue, ?DateTimeImmutable $lastCsUpdate): ArtisanChanges
     {
         $result = new ArtisanChanges($artisan);
         $result->getChanged()->getVolatileData()->setCsTrackerIssue($csTrackerIssue);

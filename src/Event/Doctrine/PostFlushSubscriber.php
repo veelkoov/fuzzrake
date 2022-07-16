@@ -22,7 +22,7 @@ class PostFlushSubscriber implements EventSubscriber
         ];
     }
 
-    public function postFlush()
+    public function postFlush(): void
     {
         $this->cacheProvider->clear();
     }

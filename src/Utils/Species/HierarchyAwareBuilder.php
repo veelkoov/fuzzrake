@@ -14,7 +14,7 @@ class HierarchyAwareBuilder
     private const FLAG_IGNORE_THIS_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
     /**
-     * @var Specie[] Associative: key = name, value = Specie object. Species fit for filtering
+     * @var array<string, Specie> Associative: key = name, value = Specie object. Species fit for filtering
      */
     private array $flat;
 
@@ -28,6 +28,9 @@ class HierarchyAwareBuilder
      */
     private array $validNames;
 
+    /**
+     * @param array<string, psSpecie> $species
+     */
     public function __construct(array $species)
     {
         $this->flat = [];
@@ -37,11 +40,17 @@ class HierarchyAwareBuilder
         $this->addValidNamesFrom($species);
     }
 
+    /**
+     * @return array<string, Specie>
+     */
     public function getFlat(): array
     {
         return $this->flat;
     }
 
+    /**
+     * @return Specie[]
+     */
     public function getTree(): array
     {
         return $this->tree;
@@ -56,7 +65,7 @@ class HierarchyAwareBuilder
     }
 
     /**
-     * @param array[]|string[] $species
+     * @param array<string, psSpecie> $species
      */
     private function addValidNamesFrom(array $species): void
     {
@@ -68,11 +77,16 @@ class HierarchyAwareBuilder
             }
 
             if (is_array($subspecies)) {
-                $this->addValidNamesFrom($subspecies);
+                $this->addValidNamesFrom($this->subspecies($subspecies));
             }
         }
     }
 
+    /**
+     * @param array<string, psSpecie> $species
+     *
+     * @return array<string, Specie>
+     */
     private function getTreeFor(array $species, Specie $parent = null): array
     {
         $result = [];
@@ -80,13 +94,32 @@ class HierarchyAwareBuilder
         foreach ($species as $specieName => $subspecies) {
             [$flags, $specieName] = self::splitSpecieFlagsName($specieName);
 
-            $result[$specieName] = $this->getUpdatedSpecie($specieName, self::hasIgnoreFlag($flags), $parent, $subspecies);
+            if (null !== $subspecies) {
+                $subspecies = $this->subspecies($subspecies);
+            }
+
+            $ignored = self::hasIgnoreFlag($flags);
+
+            $result[$specieName] = $this->getUpdatedSpecie($specieName, $ignored, $parent, $subspecies);
             $this->validNames[] = $specieName;
         }
 
         return $result;
     }
 
+    /**
+     * @param array<string, psSubspecie> $subspecies
+     *
+     * @return array<string, psSpecie>
+     */
+    private function subspecies(array $subspecies): array
+    {
+        return $subspecies; // @phpstan-ignore-line - No recursion allowed
+    }
+
+    /**
+     * @param array<string, psSpecie>|null $subspecies
+     */
     private function getUpdatedSpecie(string $specieName, bool $ignored, ?Specie $parent, ?array $subspecies): Specie
     {
         if (null !== $parent && $parent->isIgnored()) {
@@ -108,6 +141,9 @@ class HierarchyAwareBuilder
         return $specie;
     }
 
+    /**
+     * @return array{0: string, 1: string}
+     */
     private static function splitSpecieFlagsName(string $specie): array
     {
         try {

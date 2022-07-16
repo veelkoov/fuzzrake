@@ -9,6 +9,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
+        "azjezz/psl": "^2.0",
         "composer/package-versions-deprecated": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
@@ -26,6 +27,7 @@
         "symfony/monolog-bundle": "^3.6",
         "symfony/runtime": "*",
         "symfony/security-csrf": "*",
+        "symfony/serializer": "6.1.*",
         "symfony/twig-bundle": "*",
         "symfony/uid": "*",
         "symfony/validator": "*",
@@ -37,6 +39,11 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "*",
         "phpdocumentor/reflection-docblock": "*",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan-doctrine": "^1.3",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpstan/phpstan-symfony": "^1.2",
         "rector/rector": "*",
         "symfony/css-selector": "*",
         "symfony/debug-bundle": "*",
@@ -55,7 +62,8 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "phpstan/extension-installer": true
         }
     },
     "autoload": {

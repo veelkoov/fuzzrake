@@ -8,6 +8,7 @@ use App\Form\Mx\QueryType;
 use App\Repository\ArtisanRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
+use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +31,7 @@ class QueryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $query = new DataQuery($form->get(QueryType::ITEM_QUERY)->getData());
+            $query = new DataQuery(Enforce::nString($form->get(QueryType::ITEM_QUERY)->getData()) ?? '');
             $query->run($artisanRepository);
         } else {
             $query = new DataQuery('');

@@ -1,7 +1,7 @@
 parameters:
   languages:
-    commonRegexPrefix: ''
-    commonRegexSuffix: ''
+    regex_prefix: ''
+    regex_suffix: ''
     replacements:
       ' with Google Translate': ' (with a translator)'
       ' ?\(native\)': ''

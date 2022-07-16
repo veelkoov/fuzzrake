@@ -8,7 +8,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
 class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
-    public function testEventAddAndEdit()
+    public function testEventAddAndEdit(): void
     {
         $client = static::createClient();
 

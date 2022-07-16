@@ -26,7 +26,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Get rid of X -> unknown -> x state changes between two given dates')
@@ -41,8 +41,8 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $date1 = UtcClock::at($input->getArgument('date1') ?? '');
-            $date2 = UtcClock::at($input->getArgument('date2') ?? '');
+            $date1 = UtcClock::at($input->getArgument('date1'));
+            $date2 = UtcClock::at($input->getArgument('date2'));
         } catch (DateTimeException $e) {
             $io->error('Invalid/missing date argument(s), '.$e->getMessage());
 

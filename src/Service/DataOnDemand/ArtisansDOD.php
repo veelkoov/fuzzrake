@@ -10,7 +10,14 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class ArtisansDOD
 {
+    /**
+     * @var ArtisanE[]
+     */
     private ?array $artisanEs = null;
+
+    /**
+     * @var Artisan[]
+     */
     private ?array $artisans = null;
 
     public function __construct(

@@ -109,6 +109,9 @@ final class FieldsData
         F::URL_OTHER,
     ];
 
+    /**
+     * @var array<string,FieldData>
+     */
     private static array $fields = [];
 
     public static function init(): void

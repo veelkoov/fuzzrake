@@ -43,7 +43,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /** @noinspection HtmlUnknownTarget */
-    public function eventDescriptionDataProvider(): array
+    public function eventDescriptionDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [

@@ -88,30 +88,35 @@ class StatisticsController extends AbstractController
         ]);
     }
 
+    /**
+     * @return array<string, int>
+     */
     private function prepareTableData(FilterData $input): array
     {
         $result = [];
 
         foreach ($input->getItems() as $item) {
-            if (!array_key_exists($item->getCount(), $result)) {
-                $result[$item->getCount()] = [];
+            $count = (int) $item->getCount();
+
+            if (!array_key_exists($count, $result)) {
+                $result[$count] = [];
             }
 
-            $result[$item->getCount()][] = $item->getLabel();
+            $result[$count][] = $item->getLabel();
         }
 
         foreach ($result as $item => $items) {
-            $result[$item] = implode(', ', $items);
+            $result[$item] = implode(', ', $items); // @phpstan-ignore-line
         }
 
-        $result = array_flip($result);
+        $result = array_flip($result); // @phpstan-ignore-line
         arsort($result);
 
         foreach ($input->getSpecialItems() as $item) {
             $result[$item->getLabel()] = $item->getCount();
         }
 
-        return $result;
+        return $result; // @phpstan-ignore-line
     }
 
     /**
@@ -132,6 +137,11 @@ class StatisticsController extends AbstractController
         return $result;
     }
 
+    /**
+     * @param psArtisanStatsArray $commissionsStats
+     *
+     * @return array<string, int>
+     */
     private function prepareCommissionsStatsTableData(array $commissionsStats): array
     {
         return [
@@ -148,6 +158,8 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
+     *
+     * @return array<string, int>
      */
     private function prepareCompletenessData(array $artisans): array
     {
@@ -169,6 +181,8 @@ class StatisticsController extends AbstractController
 
     /**
      * @param Artisan[] $artisans
+     *
+     * @return array<string, int>
      *
      * @see SmartAccessDecorator::getLastMakerId()
      */

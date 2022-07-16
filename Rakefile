@@ -40,10 +40,16 @@ def run_shell(*args)
   system(*args) || raise('Command returned non-zero exit code')
 end
 
+def docker_compose(*args)
+  project_name = ENV.fetch('FUZZRAKE_DEV_PROJECT_NAME', 'fuzzrake')
+
+  run_shell('docker', 'compose', '--project-directory', 'docker', '--project-name', project_name, *args)
+end
+
 def run_docker(*args)
   user_and_group = `echo -n $(id -u):$(id -g)`
 
-  run_shell('docker', 'compose', '--project-directory', 'docker', 'exec', '--user', user_and_group, '-ti', 'php', *args)
+  docker_compose('exec', '--user', user_and_group, '-ti', 'php', *args)
 end
 
 def run_console(*args)
@@ -68,6 +74,7 @@ task(:cc)       { clear_cache }
 task(:cl)       { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
 task('cc-prod') { run_shell('ssh', 'getfursu.it', 'sudo rm -rf /var/www/prod/var/cache/prod') }
 task(:composer) { |_t, args| run_composer(*args) }
+task(:docker)   { |_t, args| run_docker(*args) }
 
 #
 # TESTING AND DEV
@@ -92,15 +99,15 @@ def fix_phpunit
 end
 
 task('fix-phpunit')  { fix_phpunit }
-task('docker-dev')   { run_shell('docker', 'compose', '--project-directory', 'docker', 'up', '--detach', '--build') }
+task('docker-dev')   { docker_compose('up', '--detach', '--build') }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
-task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', *args) }
+task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| phpunit(*args) }
-task qa: [:rector, 'php-cs-fixer', :phpunit]
 
 task pcf: ['php-cs-fixer']
 task pu: [:phpunit]
+task ps: [:phpstan]
 
 #
 # DATABASE MANAGEMENT
@@ -183,7 +190,6 @@ task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
 task(:yarn_encore_production) { run_shell('yarn', 'encore', 'production') }
 task 'update-deps': [:composer_upgrade, :yarn_upgrade, :yarn_encore_production, 'fix-phpunit'] do
   clear_cache
-  phpunit
 end
 task('commit-deps') { run_shell('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
 
@@ -198,7 +204,7 @@ task 'get-snapshots' do
             'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
 end
 
-mtask(:cst, :console, 'app:tracker:run-updates', 'commissions')
+mtask(:cst, :console, 'app:status-tracker:run')
 mtask(:cstc, :cst, '--commit')
 mtask(:cstr, :cst, '--refetch')
 

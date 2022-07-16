@@ -131,7 +131,7 @@ class DataImport
         foreach (Fields::inIuForm() as $field) {
             switch ($field) {
                 case Field::MAKER_ID:
-                    $newValue = $source->get($field);
+                    $newValue = $source->getString($field);
 
                     if ($newValue !== $artisan->getMakerId()) {
                         $artisan->setFormerMakerIds(StringList::pack($artisan->getAllMakerIdsArr()));
@@ -140,7 +140,7 @@ class DataImport
                     break;
 
                 case Field::CONTACT_INFO_OBFUSCATED: // grep-contact-updates-magic
-                    $newValue = $source->get(Field::CONTACT_INFO_ORIGINAL);
+                    $newValue = $source->getString(Field::CONTACT_INFO_ORIGINAL);
 
                     if ($newValue === $artisan->getContactInfoObfuscated()) {
                         break; // No updates
@@ -151,7 +151,7 @@ class DataImport
 
                 case Field::URL_PHOTOS:
                     // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
-                    if (!StringList::sameElements($artisan->get($field), $source->get($field))) {
+                    if (!StringList::sameElements($artisan->getString($field), $source->getString($field))) {
                         $artisan->setMiniatureUrls('');
                     }
 
@@ -171,8 +171,8 @@ class DataImport
     private function findBestMatchArtisan(IuSubmission $submission, Artisan $input): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
-            array_merge([$submission->get(Field::NAME)], StringList::unpack($submission->get(Field::FORMERLY))),
-            array_merge([$submission->get(Field::MAKER_ID)], StringList::unpack($submission->get(Field::FORMER_MAKER_IDS))),
+            array_merge([$submission->getString(Field::NAME)], StringList::unpack($submission->getString(Field::FORMERLY))),
+            array_merge([$submission->getString(Field::MAKER_ID)], StringList::unpack($submission->getString(Field::FORMER_MAKER_IDS))),
             $this->manager->getMatchedName($submission->getId())
         );
 

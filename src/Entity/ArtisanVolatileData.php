@@ -27,7 +27,7 @@ class ArtisanVolatileData
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="volatileData")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private ?Artisan $artisan = null;
+    private Artisan $artisan;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
@@ -35,7 +35,7 @@ class ArtisanVolatileData
     private ?DateTimeImmutable $lastCsUpdate = null;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private bool $csTrackerIssue = false;
 
@@ -45,7 +45,7 @@ class ArtisanVolatileData
     private ?DateTimeImmutable $lastBpUpdate = null; // TODO: Remove
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private bool $bpTrackerIssue = false; // TODO: Remove
 
@@ -54,7 +54,7 @@ class ArtisanVolatileData
         return $this->id;
     }
 
-    public function getArtisan(): ?Artisan
+    public function getArtisan(): Artisan
     {
         return $this->artisan;
     }

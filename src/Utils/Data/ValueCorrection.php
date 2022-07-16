@@ -17,27 +17,12 @@ class ValueCorrection implements Stringable
     ) {
     }
 
-    public function getSubject(): string
-    {
-        return $this->subject;
-    }
-
     public function getField(): Field
     {
         return $this->field;
     }
 
-    public function getWrongValue(): string
-    {
-        return $this->wrongValue;
-    }
-
-    public function getCorrectedValue(): string
-    {
-        return $this->correctedValue;
-    }
-
-    public function apply($value): string
+    public function apply(string $value): string
     {
         if (null === $this->wrongValue) {
             return $this->correctedValue;

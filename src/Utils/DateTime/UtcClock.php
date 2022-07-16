@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Utils\DateTime;
 
 use App\Utils\Traits\UtilityClass;
-use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
+use RuntimeException;
 
 final class UtcClock
 {
@@ -16,11 +16,13 @@ final class UtcClock
 
     public static function now(): DateTimeImmutable
     {
-        try {
-            return DateTimeImmutable::createFromFormat('U', (string) self::time())->setTimezone(self::getUtc());
-        } catch (Exception $e) {
-            throw new UnbelievableRuntimeException($e);
+        $result = DateTimeImmutable::createFromFormat('U', (string) self::time());
+
+        if (false === $result) {
+            throw new RuntimeException('Failed to parse "U" date');
         }
+
+        return $result->setTimezone(self::getUtc());
     }
 
     public static function getUtc(): DateTimeZone
@@ -31,7 +33,7 @@ final class UtcClock
     /**
      * @throws DateTimeException
      */
-    public static function at(?string $time): DateTimeImmutable
+    public static function at(string|false|null $time): DateTimeImmutable
     {
         try {
             return new DateTimeImmutable($time ?: 'invalid', self::getUtc());

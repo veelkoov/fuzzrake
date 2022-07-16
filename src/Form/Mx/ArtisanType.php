@@ -14,22 +14,19 @@ use App\Form\AgesTransformer;
 use App\Form\BooleanTransformer;
 use App\Form\StringArrayTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ArtisanType extends AbstractType
+class ArtisanType extends AbstractTypeWithDelete
 {
-    final public const BTN_SAVE = 'save';
-    final public const BTN_DELETE = 'delete';
-
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
+
         $builder
             ->add('makerId', TextType::class, [
                 'label'      => 'Maker ID',
@@ -299,19 +296,7 @@ class ArtisanType extends AbstractType
                 'choices'    => ContactPermit::getKeyKeyMap(),
                 'empty_data' => ContactPermit::NO,
             ])
-            ->add(self::BTN_SAVE, SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
-            ])
         ;
-
-        if (null !== $builder->getData()->getId()) {
-            $builder->add(self::BTN_DELETE, SubmitType::class, [
-                'attr' => [
-                    'class'   => 'btn btn-danger',
-                    'onclick' => 'return confirm("Delete?");',
-                ],
-            ]);
-        }
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
@@ -320,8 +305,10 @@ class ArtisanType extends AbstractType
         $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'data_class' => Artisan::class,
         ]);

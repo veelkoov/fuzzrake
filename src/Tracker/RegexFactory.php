@@ -31,7 +31,7 @@ class RegexFactory
     private array $offerStatuses = [];
 
     /**
-     * @var string[][]
+     * @var array<string, string[]>
      */
     private readonly array $groupTranslations;
 
@@ -45,7 +45,7 @@ class RegexFactory
      */
     private array $cleaners = [];
 
-    public function __construct(array $trackerRegexes)
+    public function __construct(array $trackerRegexes) // @phpstan-ignore-line TODO: Typehint that
     {
         $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
         $this->unnamed = pattern('(?<!\\\\\\\\\\\\)(?<!\\\\)\\((?!\\?)'); // Known issue: can't be more than 3 "\" before the "("
@@ -75,7 +75,7 @@ class RegexFactory
     }
 
     /**
-     * @return string[][]
+     * @return array<string, string[]>
      */
     public function getGroupTranslations(): array
     {
@@ -90,7 +90,7 @@ class RegexFactory
         return $this->cleaners;
     }
 
-    private function loadPlaceholders(array $placeholders): void
+    private function loadPlaceholders(array $placeholders): void // @phpstan-ignore-line TODO: Typehint that
     {
         $this->loadPlaceholderItem($placeholders, '');
         $this->resolvePlaceholders($this->placeholders);
@@ -117,7 +117,7 @@ class RegexFactory
         return $this->loadMapPlaceholderItem($input, $path);
     }
 
-    private function loadListPlaceholderItem(array $input, string $path): string
+    private function loadListPlaceholderItem(array $input, string $path): string // @phpstan-ignore-line TODO: Typehint that
     {
         $items = Arrays::map($input, fn ($item, $idx, $arr) => $this->loadPlaceholderItem($item, "$path/$idx"));
 
@@ -150,7 +150,7 @@ class RegexFactory
         return "($group".implode('|', $items).')';
     }
 
-    private function loadMapPlaceholderItem(array $input, string $path): string
+    private function loadMapPlaceholderItem(array $input, string $path): string // @phpstan-ignore-line TODO: Typehint that
     {
         foreach ($input as $placeholder => $contents) {
             if (array_key_exists($placeholder, $this->placeholders)) {
@@ -163,6 +163,9 @@ class RegexFactory
         return '('.implode('|', array_keys($input)).')';
     }
 
+    /**
+     * @param array<string, string|array<string, string>> $subject
+     */
     private function resolvePlaceholders(array &$subject): void
     {
         $changed = false;
@@ -180,6 +183,9 @@ class RegexFactory
         }
     }
 
+    /**
+     * @param string[] $falsePositives
+     */
     private function loadFalsePositives(array $falsePositives): void
     {
         $this->falsePositives = $falsePositives;
@@ -188,6 +194,9 @@ class RegexFactory
         $this->validateRegexes($this->falsePositives);
     }
 
+    /**
+     * @param string[] $offerStatuses
+     */
     private function loadOfferStatuses(array $offerStatuses): void
     {
         $this->offerStatuses = $offerStatuses;
@@ -196,6 +205,9 @@ class RegexFactory
         $this->validateRegexes($this->offerStatuses);
     }
 
+    /**
+     * @param string[] $cleaners
+     */
     private function loadCleaners(array $cleaners): void
     {
         $regexes = array_keys($cleaners);
@@ -229,6 +241,9 @@ class RegexFactory
         }
     }
 
+    /**
+     * @param string[] $regexes
+     */
     private function setUnnamedToNoncaptured(array &$regexes): void
     {
         foreach ($regexes as &$regex) {
@@ -236,6 +251,9 @@ class RegexFactory
         }
     }
 
+    /**
+     * @param string[] $regexes
+     */
     private function validateRegexes(array $regexes): void
     {
         foreach ($regexes as $regex) {

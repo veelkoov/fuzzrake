@@ -12,12 +12,10 @@ use Symfony\Component\Panther\Client;
 
 class IuFormUiWithEMTest extends PantherTestCaseWithEM
 {
-    private ?Client $client = null;
+    private Client $client;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->client = static::createPantherClient();
         $this->client->getCookieJar()->clear();
         self::setWindowSize($this->client, 1600, 900);

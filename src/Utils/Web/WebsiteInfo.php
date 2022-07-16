@@ -6,7 +6,7 @@ namespace App\Utils\Web;
 
 use App\Utils\Traits\UtilityClass;
 use App\Utils\UnbelievableRuntimeException;
-use App\Utils\Web\Snapshot\WebpageSnapshot;
+use App\Utils\Web\WebpageSnapshot\Snapshot;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 
@@ -29,18 +29,18 @@ final class WebsiteInfo
     private const TRELLO_BOARD_URL_REGEXP = '^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/';
     private const WIXSITE_CHILDREN_REGEXP = '<link[^>]* href="(?<data_url>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>';
 
-    public static function isWixsite(WebpageSnapshot $webpageSnapshot): bool
+    public static function isWixsite(Snapshot $webpageSnapshot): bool
     {
-        if (false !== stripos($webpageSnapshot->getUrl(), '.wixsite.com/')) {
+        if (false !== stripos($webpageSnapshot->url, '.wixsite.com/')) {
             return true;
         }
 
-        return pattern(self::WIXSITE_CONTENTS_REGEXP, 'si')->test($webpageSnapshot->getContents());
+        return pattern(self::WIXSITE_CONTENTS_REGEXP, 'si')->test($webpageSnapshot->contents);
     }
 
-    public static function isTrello(WebpageSnapshot $webpageSnapshot): bool
+    public static function isTrello(Snapshot $webpageSnapshot): bool
     {
-        return false !== stripos($webpageSnapshot->getUrl(), '//trello.com/');
+        return false !== stripos($webpageSnapshot->url, '//trello.com/');
     }
 
     public static function isFurAffinity(?string $url, ?string $webpageContents): bool
@@ -56,7 +56,7 @@ final class WebsiteInfo
         return false;
     }
 
-    public static function isFurAffinityUserProfile(?string $url, ?string $webpageContents): bool
+    public static function isFurAffinityUserProfile(string $url, string $webpageContents): bool
     {
         if (!self::isFurAffinity($url, $webpageContents)) {
             return false;
@@ -75,7 +75,7 @@ final class WebsiteInfo
         return pattern(self::INSTAGRAM_CONTENTS_REGEXP, 'si')->test($webpageContents);
     }
 
-    public static function getTrelloBoardDataUrl($boardId): string
+    public static function getTrelloBoardDataUrl(string $boardId): string
     {
         return "https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData";
     }
@@ -83,7 +83,7 @@ final class WebsiteInfo
     /**
      * @return string[]
      */
-    public static function getChildrenUrls(WebpageSnapshot $webpageSnapshot): array
+    public static function getChildrenUrls(Snapshot $webpageSnapshot): array
     {
         if (WebsiteInfo::isWixsite($webpageSnapshot)) {
             return self::getWixsiteDependencyUrls($webpageSnapshot);
@@ -97,10 +97,10 @@ final class WebsiteInfo
     /**
      * @return string[]
      */
-    private static function getWixsiteDependencyUrls(WebpageSnapshot $webpageSnapshot): array
+    private static function getWixsiteDependencyUrls(Snapshot $webpageSnapshot): array
     {
         return pattern(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, 'si')
-            ->match($webpageSnapshot->getContents())
+            ->match($webpageSnapshot->contents)
             ->group('data_url')
             ->all();
     }
@@ -108,10 +108,10 @@ final class WebsiteInfo
     /**
      * @return string[]
      */
-    private static function getTrelloDependencyUrls(WebpageSnapshot $webpageSnapshot): array
+    private static function getTrelloDependencyUrls(Snapshot $webpageSnapshot): array
     {
         return pattern(WebsiteInfo::TRELLO_BOARD_URL_REGEXP)
-            ->match($webpageSnapshot->getUrl())
+            ->match($webpageSnapshot->url)
             ->findFirst(function (Detail $detail): array {
                 try {
                     return [WebsiteInfo::getTrelloBoardDataUrl($detail->get('boardId'))];

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\DelayAwareUrlFetchingQueue;
 use App\Utils\Web\DependencyUrl;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\Snapshot\WebpageSnapshot;
-use App\Utils\Web\Snapshot\WebpageSnapshotCache;
+use App\Utils\Web\TimedUrlQueue;
+use App\Utils\Web\WebpageSnapshot\Cache;
+use App\Utils\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Web\WebsiteInfo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -21,12 +21,12 @@ class WebpageSnapshotManager
 {
     public function __construct(
         private readonly GentleHttpClient $httpClient,
-        private readonly WebpageSnapshotCache $cache,
+        private readonly Cache $cache,
         private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function get(Fetchable $url, bool $refetch): WebpageSnapshot
+    public function get(Fetchable $url, bool $refetch): Snapshot
     {
         if (!$refetch && (null !== ($result = $this->cache->get($url)))) {
             $this->logger->debug("Retrieved from cache: $url");
@@ -47,11 +47,11 @@ class WebpageSnapshotManager
      */
     public function prefetchUrls(array $urls, bool $refetch, StyleInterface $progressReportIo): void
     {
-        $queue = new DelayAwareUrlFetchingQueue($urls, GentleHttpClient::DELAY_FOR_HOST_MILLISEC);
+        $queue = new TimedUrlQueue($urls, $this->httpClient->timing);
 
         $progressReportIo->progressStart(count($urls));
 
-        while (($url = $queue->pop())) {
+        while ($url = $queue->pop()) {
             $this->get($url, $refetch);
 
             $progressReportIo->progressAdvance();
@@ -60,11 +60,11 @@ class WebpageSnapshotManager
         $progressReportIo->progressFinish();
     }
 
-    private function fetch(Fetchable $url): WebpageSnapshot
+    private function fetch(Fetchable $url): Snapshot
     {
         $response = null;
         $code = null;
-        $content = null;
+        $content = '';
         $headers = null;
         $errors = [];
 
@@ -87,7 +87,7 @@ class WebpageSnapshotManager
         }
 
         try {
-            $content = $response?->getContent();
+            $content = $response?->getContent() ?? '';
         } catch (ExceptionInterface $ex) {
             $this->logger->info("Exception during getting content for: $url", ['exception' => $ex]);
             $errors[] = $ex->getMessage();
@@ -105,7 +105,7 @@ class WebpageSnapshotManager
             $code = $latentCode;
         }
 
-        $webpageSnapshot = new WebpageSnapshot($url->getUrl(), $content ?? '', UtcClock::now(),
+        $webpageSnapshot = new Snapshot($content, $url->getUrl(), UtcClock::now(),
             $url->getOwnerName(), $code ?? 0, $headers ?? [], array_unique($errors));
 
         $this->fetchChildren($webpageSnapshot, $url);
@@ -113,7 +113,7 @@ class WebpageSnapshotManager
         return $webpageSnapshot;
     }
 
-    private function fetchChildren(WebpageSnapshot $webpageSnapshot, Fetchable $url): void
+    private function fetchChildren(Snapshot $webpageSnapshot, Fetchable $url): void
     {
         foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
             $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
@@ -132,13 +132,13 @@ class WebpageSnapshotManager
         }
     }
 
-    private function updateUrlHealthStatus(Fetchable $url, ?WebpageSnapshot $snapshot): void
+    private function updateUrlHealthStatus(Fetchable $url, Snapshot $snapshot): void
     {
-        if ($snapshot && $snapshot->isOK()) {
+        if ($snapshot->isOK()) {
             $url->recordSuccessfulFetch();
         } else {
-            $code = $snapshot->getHttpCode();
-            $message = implode(' / ', $snapshot->getErrors());
+            $code = $snapshot->httpCode;
+            $message = implode(' / ', $snapshot->errors);
 
             $url->recordFailedFetch($code, $message);
             $this->logger->debug("Failed fetching '$url' with code $code: $message");

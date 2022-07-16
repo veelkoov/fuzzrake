@@ -26,13 +26,20 @@ class ArtisanUrlListenerTest extends KernelTestCaseWithEM
         $lastFailureReason = 'test reason';
 
         $persistedArtisan = new ArtisanE();
-        $persistedArtisan->addUrl((new ArtisanUrl())->getState()->setLastFailureUtc($lastFailureUtc)->setLastSuccessUtc($lastSuccessUtc)->setLastFailureCode($lastFailureCode)->setLastFailureReason($lastFailureReason)->getUrl());
+        $artisanUrl = new ArtisanUrl();
+        $artisanUrl->getState()
+            ->setLastFailureUtc($lastFailureUtc)
+            ->setLastSuccessUtc($lastSuccessUtc)
+            ->setLastFailureCode($lastFailureCode)
+            ->setLastFailureReason($lastFailureReason);
+        $persistedArtisan->addUrl($artisanUrl);
 
         self::persistAndFlush($persistedArtisan);
 
         /** @var ArtisanE $retrievedArtisan */
         $retrievedArtisan = self::getEM()->getRepository(ArtisanE::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];
+        self::assertNotNull($url);
 
         self::assertEquals($lastSuccessUtc, $url->getState()->getLastSuccessUtc());
         self::assertEquals($lastFailureUtc, $url->getState()->getLastFailureUtc());
@@ -45,6 +52,7 @@ class ArtisanUrlListenerTest extends KernelTestCaseWithEM
 
         $retrievedArtisan = self::getEM()->getRepository(ArtisanE::class)->findAll()[0];
         $url = $retrievedArtisan->getUrls()[0];
+        self::assertNotNull($url);
 
         self::assertNull($url->getState()->getLastSuccessUtc());
         self::assertNull($url->getState()->getLastFailureUtc());

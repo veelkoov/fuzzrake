@@ -4,7 +4,14 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
+use App\Tests\TestUtils\Paths;
 use App\Utils\Traits\UtilityClass;
+
+use function Psl\File\read;
+use function Psl\File\write;
+use function Psl\Filesystem\create_directory;
+use function Psl\Filesystem\get_directory;
+use function Psl\Filesystem\is_directory;
 
 /**
  * ClockMock doesn't work with kernel-enabled tests.
@@ -15,9 +22,9 @@ final class UtcClockForTests
 
     public static function timems(): int
     {
-        $path = self::getTimestampPath();
+        $path = Paths::getTimestampPath();
 
-        return !file_exists($path) ? self::actualTimems() : (int) file_get_contents($path);
+        return !file_exists($path) ? self::actualTimems() : (int) read($path);
     }
 
     public static function time(): int
@@ -27,28 +34,30 @@ final class UtcClockForTests
 
     public static function start(): void
     {
-        file_put_contents(self::getTimestampPath(), (string) self::actualTimems());
+        self::setTimeMs(self::actualTimems());
     }
 
     public static function finish(): void
     {
-        unlink(self::getTimestampPath());
+        unlink(Paths::getTimestampPath());
     }
 
-    private static function rootDirPath(): string
+    public static function passMs(int $msToPass): void
     {
-        return realpath(__DIR__.'/'.str_repeat('../', substr_count(self::class, '\\')));
-    }
-
-    private static function getTimestampPath(): string
-    {
-        static $result = null;
-
-        return $result ??= self::rootDirPath().'/var/cache/test/timestamp.txt';
+        self::setTimeMs(self::timems() + $msToPass);
     }
 
     private static function actualTimems(): int
     {
         return (int) (microtime(true) * 1000);
+    }
+
+    private static function setTimeMs(int $timeMsToSet): void
+    {
+        if (!is_directory(get_directory(Paths::getTimestampPath()))) {
+            create_directory(get_directory(Paths::getTimestampPath()));
+        }
+
+        write(Paths::getTimestampPath(), (string) $timeMsToSet);
     }
 }

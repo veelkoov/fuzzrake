@@ -37,7 +37,7 @@ class AppExtensions extends AbstractExtension
         ];
     }
 
-    private function fragileIntFilter($input): string
+    private function fragileIntFilter(mixed $input): string
     {
         if (is_int($input)) {
             return (string) $input;
@@ -76,7 +76,7 @@ class AppExtensions extends AbstractExtension
         return new Counter();
     }
 
-    public function otherFilter($primaryList, $otherList): string
+    public function otherFilter(string $primaryList, string $otherList): string
     {
         $primaryList = str_replace("\n", ', ', $primaryList);
 
@@ -91,6 +91,9 @@ class AppExtensions extends AbstractExtension
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function listFilter(string $input): array
     {
         return StringList::unpack($input);
@@ -104,6 +107,11 @@ class AppExtensions extends AbstractExtension
         return trim(Json::encode(array_values($artisan->getPublicData())), '[]');
     }
 
+    /**
+     * @param Item[] $items
+     *
+     * @return Item[]
+     */
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         $pattern = pattern($matchWord, 'i');

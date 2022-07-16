@@ -28,7 +28,7 @@ class LegacyRedirectionsTest extends WebTestCaseWithEM
         static::assertSelectorTextContains($checkedSelector, $expectedText);
     }
 
-    public function legacyRedirectionDataProvider(): array
+    public function legacyRedirectionDataProvider(): array // @phpstan-ignore-line
     {
         return [
             '/index.html'       => ['/index.html', 'h4', 'Fursuit makers database'],

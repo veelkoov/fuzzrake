@@ -13,7 +13,7 @@ class ParseTest extends TestCase
     /**
      * @dataProvider intAndTIntDataProvider
      */
-    public function testIntAndTInt($input, $expectedInt, $expectedTInt): void
+    public function testIntAndTInt(null|float|int|string $input, int|false $expectedInt, int|false $expectedTInt): void
     {
         try {
             self::assertSame($expectedInt, Parse::int($input));
@@ -28,7 +28,7 @@ class ParseTest extends TestCase
         }
     }
 
-    public function intAndTIntDataProvider(): array
+    public function intAndTIntDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [null,   false, false],
@@ -61,7 +61,7 @@ class ParseTest extends TestCase
         self::assertEquals($expected, Parse::nBool($input));
     }
 
-    public function nBoolDataProvider(): array
+    public function nBoolDataProvider(): array // @phpstan-ignore-line
     {
         return [
             ['1',       true],

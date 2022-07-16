@@ -19,9 +19,9 @@ class EventFactoryTest extends TestCase
      * @param string[] $expectedCheckedUrls
      */
     public function testForCsTracker(ArtisanChanges $inputArtisanChanges, bool $expectedHadTrackerIssues,
-    string $expectedArtisanName, array $expectedNoLongerOpenFor, array $expectedNowOpenFor, array $expectedCheckedUrls): void
+        string $expectedArtisanName, array $expectedNoLongerOpenFor, array $expectedNowOpenFor, array $expectedCheckedUrls): void
     {
-        $result = EventFactory::forCsTracker($inputArtisanChanges);
+        $result = EventFactory::forStatusTracker($inputArtisanChanges);
 
         self::assertEquals('CS_UPDATED', $result->getType());
         self::assertEquals($expectedHadTrackerIssues, $result->getTrackingIssues());
@@ -31,7 +31,7 @@ class EventFactoryTest extends TestCase
         self::assertEquals($expectedCheckedUrls, $result->getCheckedUrlsArray());
     }
 
-    public function fromArtisanChangesDataProvider(): array
+    public function fromArtisanChangesDataProvider(): array // @phpstan-ignore-line
     {
         $artisan1 = (new Artisan())
             ->setName('Artisan name 1')

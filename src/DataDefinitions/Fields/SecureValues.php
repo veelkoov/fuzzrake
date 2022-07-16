@@ -17,6 +17,9 @@ final class SecureValues
         $artisan->setPassword('');
     }
 
+    /**
+     * @param array<string, psFieldValue> $where
+     */
     public static function forLogs(array &$where): void
     {
         self::replace(Field::PASSWORD, '[redacted]', $where);
@@ -24,6 +27,9 @@ final class SecureValues
         self::replace(Field::CONTACT_INFO_OBFUSCATED, '[redacted]', $where);
     }
 
+    /**
+     * @param array<string, psFieldValue> $where
+     */
     public static function forSessionStorage(array &$where): void
     {
         self::replace(Field::PASSWORD, '', $where);
@@ -39,6 +45,9 @@ final class SecureValues
         return in_array($field, [Field::PASSWORD, Field::CONTACT_METHOD, Field::CONTACT_INFO_ORIGINAL, Field::CONTACT_ADDRESS_PLAIN, Field::URL_MINIATURES, Field::DATE_ADDED, Field::DATE_UPDATED]);
     }
 
+    /**
+     * @param array<string, psFieldValue> $where
+     */
     private static function replace(Field $what, string $with, array &$where): void
     {
         if (array_key_exists($what->value, $where)) {

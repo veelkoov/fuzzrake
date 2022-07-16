@@ -1,7 +1,7 @@
 parameters:
   countries:
-    commonRegexPrefix: '^'
-    commonRegexSuffix: '$'
+    regex_prefix: '^'
+    regex_suffix: '$'
     replacements:
       "argentina":                                     "AR"
       "australia":                                     "AU"
@@ -39,8 +39,8 @@ parameters:
       "south africa":                                  "ZA"
 
   states:
-    commonRegexPrefix: '^'
-    commonRegexSuffix: '$'
+    regex_prefix: '^'
+    regex_suffix: '$'
     replacements:
       'AK$|^Alaska':                    'Alaska'
       'AL$|^Alabama':                   'Alabama'

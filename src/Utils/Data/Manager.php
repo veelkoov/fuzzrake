@@ -16,6 +16,8 @@ use App\Utils\StrUtils;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
+use function Psl\File\read;
+
 class Manager
 {
     final public const CMD_COMMENT = '//';
@@ -32,8 +34,8 @@ class Manager
     final public const CMD_WITH = 'with';
 
     /**
-     * @var ValueCorrection[][] Associative list of corrections to be applied
-     *                          Key = submission ID or maker ID, value = correction
+     * @var array<string, ValueCorrection[]> Associative list of corrections to be applied
+     *                                       Key = submission ID or maker ID, value = correction
      */
     private array $corrections = [];
 
@@ -70,11 +72,11 @@ class Manager
 
     public static function createFromFile(string $correctionsFilePath): self
     {
-        if (!file_exists($correctionsFilePath)) {
-            throw new InvalidArgumentException("File '$correctionsFilePath' does not exist");
+        if ('' === $correctionsFilePath) {
+            throw new InvalidArgumentException('Corrections file path cannot be empty');
         }
 
-        return new Manager(file_get_contents($correctionsFilePath));
+        return new Manager(read($correctionsFilePath));
     }
 
     public function correctArtisan(Artisan $artisan, string $submissionId = null): void
@@ -213,7 +215,7 @@ class Manager
     {
         foreach ($corrections as $correction) {
             $value = $artisan->get($correction->getField());
-            $correctedValue = $correction->apply($value);
+            $correctedValue = $correction->apply(StrUtils::asStr($value));
 
             if (Field::AGES === $correction->getField()) {
                 $correctedValue = Ages::get($correctedValue);
@@ -223,7 +225,10 @@ class Manager
         }
     }
 
-    private function getCorrectionsFor($subject): array
+    /**
+     * @return ValueCorrection[]
+     */
+    private function getCorrectionsFor(Artisan|string $subject): array
     {
         if ($subject instanceof Artisan) {
             $subject = $subject->getLastMakerId();

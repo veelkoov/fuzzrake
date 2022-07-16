@@ -11,6 +11,10 @@ abstract class WebTestCaseWithEM extends WebTestCase
 {
     use EntityManagerTrait;
 
+    /**
+     * @param array<string, string> $options
+     * @param array<string, string> $server
+     */
     protected static function createClient(array $options = [], array $server = []): KernelBrowser
     {
         $result = parent::createClient($options, $server);

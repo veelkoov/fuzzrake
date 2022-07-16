@@ -14,7 +14,7 @@ RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
 
 RUN pip3 install awscli
 
-RUN docker-php-ext-install -j$(nproc) intl opcache zip gd
+RUN docker-php-ext-install -j$(nproc) intl opcache zip gd bcmath
 
 RUN wget https://getcomposer.org/installer -O /tmp/composer_installer \
         && php /tmp/composer_installer --install-dir=/usr/local/bin --filename=composer \
@@ -57,3 +57,6 @@ RUN diff  "/tmp/php.ini-production.dist" "$PHP_INI_DIR/php.ini-production" \
 VOLUME /var/www/html
 WORKDIR /var/www/html
 RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'
+
+VOLUME /composer
+ENV COMPOSER_HOME /composer

@@ -54,7 +54,7 @@ class FixerDifferValidator
             if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
                 || !$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID
                 || $resetAndShowFixCommand) {
-                $this->printFixCommandOptionally($field, $artisan, $imported, $flags & self::USE_SET_FOR_FIX_CMD);
+                $this->printFixCommandOptionally($field, $artisan, $imported, (bool) ($flags & self::USE_SET_FOR_FIX_CMD));
             }
 
             if ($resetAndShowFixCommand) {
@@ -63,7 +63,7 @@ class FixerDifferValidator
         }
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanChanges $artisan, ?Artisan $imported, $useSetForFixCmd): void
+    private function printFixCommandOptionally(Field $field, ArtisanChanges $artisan, ?Artisan $imported, bool $useSetForFixCmd): void
     {
         if (!$this->hideFixCommandFor($field)) {
             $original = $imported ?? $artisan->getSubject();

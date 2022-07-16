@@ -24,7 +24,7 @@ class ArtisanValue
      * @ORM\ManyToOne(targetEntity=Artisan::class, inversedBy="values")
      * @ORM\JoinColumn(name="artisan_id", nullable=false)
      */
-    private ?Artisan $artisan = null;
+    private Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -65,7 +65,7 @@ class ArtisanValue
         return $this;
     }
 
-    public function getArtisan(): ?Artisan
+    public function getArtisan(): Artisan
     {
         return $this->artisan;
     }

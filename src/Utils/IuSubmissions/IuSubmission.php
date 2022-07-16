@@ -9,6 +9,7 @@ use App\DataDefinitions\Fields\Field;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use App\Utils\StringList;
@@ -18,6 +19,9 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class IuSubmission implements FieldReadInterface
 {
+    /**
+     * @param array<string, psJsonFieldValue> $data
+     */
     public function __construct(
         private readonly DateTimeImmutable $timestamp,
         private readonly string $id,
@@ -35,7 +39,10 @@ class IuSubmission implements FieldReadInterface
         return $this->timestamp;
     }
 
-    public function get(Field $field)
+    /**
+     * {@inheritDoc}
+     */
+    public function get(Field $field): mixed
     {
         $fieldName = $field->name;
 
@@ -50,23 +57,32 @@ class IuSubmission implements FieldReadInterface
         }
 
         if (Field::AGES === $field) {
-            $value = Ages::get($value);
+            $value = Ages::get(Enforce::nString($value));
         }
 
-        return $field->isList() ? StringList::pack($value) : $value;
+        return $field->isList() ? StringList::pack(Enforce::strList($value)) : $value;
+    }
+
+    public function getString(Field $field): string
+    {
+        return Enforce::string($this->get($field));
     }
 
     public static function fromFile(SplFileInfo $source): self
     {
         $timestamp = self::getTimestampFromFilePath($source->getRelativePathname());
         $id = self::getIdFromFilePath($source->getRelativePathname());
+
         try {
-            $data = SchemaFixer::getInstance()->fix(Json::decode($source->getContents()));
+            /**
+             * @var array<string, psJsonFieldValue> $data
+             */
+            $data = Json::decode($source->getContents());
         } catch (JsonException $ex) {
             throw new DataInputException(previous: $ex);
         }
 
-        return new self($timestamp, $id, $data);
+        return new self($timestamp, $id, SchemaFixer::getInstance()->fix($data));
     }
 
     private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable

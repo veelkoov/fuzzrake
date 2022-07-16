@@ -12,11 +12,15 @@ abstract class AbstractListFixer extends StringFixer
 {
     private readonly Replacements $replacements;
 
+    /**
+     * @param psFixerConfig $lists
+     * @param psFixerConfig $strings
+     */
     public function __construct(array $lists, array $strings)
     {
         parent::__construct($strings);
 
-        $this->replacements = new Replacements($lists['replacements'], 'i', $lists['commonRegexPrefix'], $lists['commonRegexSuffix']);
+        $this->replacements = new Replacements($lists['replacements'], 'i', $lists['regex_prefix'], $lists['regex_suffix']);
     }
 
     public function fix(string $subject): string

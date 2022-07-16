@@ -77,6 +77,9 @@ abstract class AbstractIuFormController extends AbstractRecaptchaBackedControlle
         return $this->redirectToRoute($route, ['makerId' => $state->makerId]);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface
     {
         return $this

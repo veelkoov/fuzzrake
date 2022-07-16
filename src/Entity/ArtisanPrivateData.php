@@ -29,7 +29,7 @@ class ArtisanPrivateData
      * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
      * @ORM\JoinColumn(name="artisan_id", nullable=false, unique=true)
      */
-    private ?Artisan $artisan = null;
+    private Artisan $artisan;
 
     /**
      * @ORM\Column(type="string", length=512)
@@ -53,7 +53,7 @@ class ArtisanPrivateData
         return $this->id;
     }
 
-    public function getArtisan(): ?Artisan
+    public function getArtisan(): Artisan
     {
         return $this->artisan;
     }

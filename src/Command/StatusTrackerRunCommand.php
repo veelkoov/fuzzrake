@@ -4,36 +4,33 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Tasks\TrackerUpdates\TrackerTaskRunnerFactory;
+use App\Tasks\StatusTracker\TaskIOFactory;
 use App\Tracker\TrackerException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand('app:tracker:run-updates')]
-class TrackerRunUpdatesCommand extends Command
+#[AsCommand('app:status-tracker:run')]
+class StatusTrackerRunCommand extends Command
 {
     private const OPT_REFETCH = 'refetch';
     private const OPT_COMMIT = 'commit';
-    private const ARG_MODE = 'mode';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly TrackerTaskRunnerFactory $factory,
+        private readonly TaskIOFactory $factory,
     ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption(self::OPT_REFETCH, null, null, 'Refresh cache (re-fetch pages)')
             ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
-            ->addArgument(self::ARG_MODE, InputArgument::REQUIRED, 'Mode of work')
         ;
     }
 

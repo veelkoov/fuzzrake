@@ -18,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ArtisanCommissionsStatus|null findOneBy(array $criteria, array $orderBy = null)
  * @method ArtisanCommissionsStatus[]    findAll()
  * @method ArtisanCommissionsStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ArtisanCommissionsStatus>
  */
 class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
 {
@@ -27,6 +29,8 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return psArtisanStatsArray
+     *
      * @throws UnexpectedResultException
      */
     public function getCommissionsStats(): array
@@ -41,7 +45,7 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
         $rsm->addScalarResult('tracked', 'tracked', 'integer');
         $rsm->addScalarResult('total', 'total', 'integer');
 
-        return $this
+        $result = $this
             ->getEntityManager()
             ->createNativeQuery('
 
@@ -88,16 +92,23 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
             ])
             ->enableResultCache(3600)
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
+
+        return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function getDistinctWithOpenCount(): array
     {
-        return Arrays::assoc($this->createQueryBuilder('acs')
+        $resultData = $this->createQueryBuilder('acs')
             ->select('acs.offer')
             ->addSelect('SUM(acs.isOpen) AS openCount')
             ->groupBy('acs.offer')
             ->getQuery()
             ->enableResultCache(3600)
-            ->getArrayResult(), 'offer', 'openCount');
+            ->getArrayResult();
+
+        return Arrays::assoc($resultData, 'offer', 'openCount'); // @phpstan-ignore-line Lack of skill to fix this
     }
 }

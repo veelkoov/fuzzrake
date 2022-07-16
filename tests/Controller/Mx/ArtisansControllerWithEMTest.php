@@ -8,7 +8,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
 class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 {
-    public function testNewArtisan()
+    public function testNewArtisan(): void
     {
         $client = static::createClient();
 
@@ -57,6 +57,8 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
+     * @param string[] $data
+     *
      * @dataProvider contactUpdatesDataProvider
      */
     public function testContactUpdates(array $data): void
@@ -88,7 +90,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         self::assertEquals($data['check_address'], $artisan->getContactAddressPlain(), 'Address differs');
     }
 
-    public function contactUpdatesDataProvider(): array
+    public function contactUpdatesDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [[

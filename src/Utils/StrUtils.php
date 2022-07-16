@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\DataDefinitions\Ages;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
-use BackedEnum;
 use DateTimeImmutable;
 
 final class StrUtils
@@ -63,18 +63,25 @@ final class StrUtils
         return mb_strtoupper(mb_substr($input, 0, 1)).mb_substr($input, 1);
     }
 
-    public static function asStr(BackedEnum|DateTimeImmutable|bool|string|null $value): string
+    /**
+     * @param psFieldValue $value
+     */
+    public static function asStr(mixed $value): string
     {
         if (null === $value) {
             return 'unknown';
         } elseif ($value instanceof DateTimeImmutable) {
             return $value->format('Y-m-d H:i:s');
-        } elseif ($value instanceof BackedEnum) {
+        } elseif ($value instanceof Ages) {
             return (string) $value->value;
+        } elseif (is_int($value)) {
+            return (string) $value;
         } elseif (is_bool($value)) {
-            $value = $value ? 'True' : 'False';
+            return $value ? 'True' : 'False';
+        } elseif (is_array($value)) {
+            return implode(', ', $value);
+        } else {
+            return $value;
         }
-
-        return $value;
     }
 }

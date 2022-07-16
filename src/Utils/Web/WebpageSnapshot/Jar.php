@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web\Snapshot;
+namespace App\Utils\Web\WebpageSnapshot;
 
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\Json;
 use App\Utils\Traits\UtilityClass;
 use JsonException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 
-final class WebpageSnapshotJar
+use function Psl\File\read;
+
+final class Jar
 {
     use UtilityClass;
 
-    private const JSON_SERIALIZATION_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-                                             | JSON_UNESCAPED_LINE_TERMINATORS | JSON_PRETTY_PRINT;
     private const PATH_META_FILE = 'meta_file';
     private const PATH_DATA_FILE = 'data_file';
 
@@ -27,16 +26,17 @@ final class WebpageSnapshotJar
      * @throws DateTimeException
      * @throws InvalidArgumentException
      */
-    public static function load(string $baseDir): WebpageSnapshot
+    public static function load(string $baseDir): Snapshot
     {
         $paths = self::getPaths($baseDir);
 
-        $data = Json::decode(file_get_contents($paths[self::PATH_META_FILE]));
-        $data['contents'] = file_get_contents($paths[self::PATH_DATA_FILE]);
+        $metadataJsonString = read($paths[self::PATH_META_FILE]);
+        $contents = read($paths[self::PATH_DATA_FILE]);
 
-        $result = WebpageSnapshot::fromArray($data);
+        $metadata = Json::deserialize($metadataJsonString);
+        $result = Snapshot::restore($contents, $metadata);
 
-        for ($index = 0; $index < $data['childCount']; ++$index) {
+        for ($index = 0; $index < $metadata->childCount; ++$index) {
             $result->addChild(self::load(self::getChildDirPath($baseDir, $index)));
         }
 
@@ -46,20 +46,23 @@ final class WebpageSnapshotJar
     /**
      * @throws JsonException
      */
-    public static function dump(string $baseDir, WebpageSnapshot $snapshot): void
+    public static function dump(string $baseDir, Snapshot $snapshot): void
     {
         self::$fs ??= new Filesystem();
         self::$fs->mkdir($baseDir);
 
         $paths = self::getPaths($baseDir);
-        self::$fs->dumpFile($paths[self::PATH_META_FILE], Json::encode($snapshot->getMetadata(), self::JSON_SERIALIZATION_OPTIONS));
-        self::$fs->dumpFile($paths[self::PATH_DATA_FILE], $snapshot->getContents());
+        self::$fs->dumpFile($paths[self::PATH_META_FILE], Json::serialize(Metadata::from($snapshot)));
+        self::$fs->dumpFile($paths[self::PATH_DATA_FILE], $snapshot->contents);
 
         foreach ($snapshot->getChildren() as $index => $child) {
             self::dump(self::getChildDirPath($baseDir, $index), $child);
         }
     }
 
+    /**
+     * @return array{meta_file: non-empty-string, data_file: non-empty-string}
+     */
     private static function getPaths(string $baseDir): array
     {
         return [

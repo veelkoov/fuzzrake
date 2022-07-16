@@ -8,7 +8,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
 class QueryControllerWithEMTest extends WebTestCaseWithEM
 {
-    public function testNewArtisan()
+    public function testNewArtisan(): void
     {
         $client = static::createClient();
 

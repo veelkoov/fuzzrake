@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\DataDefinitions\Ages;
+use App\Entity\Artisan as ArtisanE;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -12,12 +13,18 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Password;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool as OrmSchemaTool;
+use Exception;
+use RuntimeException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait EntityManagerTrait
 {
     private static ?EntityManagerInterface $entityManager = null;
 
+    /**
+     * @param array<string, string> $options
+     */
     protected static function bootKernel(array $options = []): KernelInterface
     {
         $result = parent::bootKernel($options);
@@ -30,7 +37,20 @@ trait EntityManagerTrait
 
     protected static function getEM(): EntityManagerInterface
     {
-        return self::$entityManager ??= self::getContainer()->get('doctrine.orm.default_entity_manager');
+        return self::$entityManager ??= self::retrieveEM(self::getContainer());
+    }
+
+    private static function retrieveEM(ContainerInterface $container): EntityManagerInterface
+    {
+        try {
+            $entityManager = $container->get('doctrine.orm.default_entity_manager');
+        } catch (Exception $caught) {
+            throw new RuntimeException(previous: $caught);
+        }
+
+        self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
+
+        return $entityManager;
     }
 
     protected static function resetDB(): void
@@ -44,12 +64,15 @@ trait EntityManagerTrait
 
     protected static function getArtisanRepository(): ArtisanRepository
     {
-        return static::getContainer()->get(ArtisanRepository::class);
+        return self::getEM()->getRepository(ArtisanE::class);
     }
 
     protected static function findArtisanByMakerId(string $makerId): Artisan
     {
-        return Artisan::wrap(self::getArtisanRepository()->findOneBy(['makerId' => $makerId]));
+        $artisan = self::getArtisanRepository()->findOneBy(['makerId' => $makerId]);
+        self::assertNotNull($artisan);
+
+        return Artisan::wrap($artisan);
     }
 
     protected static function addSimpleArtisan(): Artisan

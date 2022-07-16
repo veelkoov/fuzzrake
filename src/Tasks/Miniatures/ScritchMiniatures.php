@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks\Miniatures;
 
+use App\Utils\ArrayReader;
 use App\Utils\Json;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use LogicException;
@@ -26,7 +27,7 @@ class ScritchMiniatures extends AbstractMiniatures
 
     public function getMiniatureUrl(string $photoUrl): string
     {
-        $csrfToken = $this->getCsrfToken();
+        $csrfToken = $this->getOrRetrieveCsrfToken();
         $pictureId = $this->getPictureId($photoUrl);
         $jsonPayload = $this->getGraphQlJsonPayload($pictureId);
 
@@ -38,13 +39,10 @@ class ScritchMiniatures extends AbstractMiniatures
 
         $this->updateCookies($response);
 
-        $thumbnailUrl = Json::decode($response->getContent(true))['data']['medium']['thumbnail'] ?? '';
+        $postData = Json::decode($response->getContent(true));
+        $accessor = new ArrayReader($postData);
 
-        if ('' === $thumbnailUrl) {
-            throw new LogicException('No thumbnail URL found in response');
-        }
-
-        return $thumbnailUrl;
+        return $accessor->getNonEmptyString('[data][medium][thumbnail]');
     }
 
     protected function getRegexp(): string
@@ -68,14 +66,26 @@ class ScritchMiniatures extends AbstractMiniatures
     /**
      * @throws ExceptionInterface
      */
+    private function getOrRetrieveCsrfToken(): string
+    {
+        return $this->csrfToken ??= $this->getCsrfToken();
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
     private function getCsrfToken(): string
     {
-        if (null === $this->csrfToken) {
-            $response = $this->httpClient->get('https://scritch.es/', $this->cookieJar);
-            $this->updateCookies($response);
-            $this->csrfToken = $this->cookieJar->get('csrf-token')->getValue();
+        $response = $this->httpClient->get('https://scritch.es/', $this->cookieJar);
+
+        $this->updateCookies($response);
+
+        $csrfTokenCookie = $this->cookieJar->get('csrf-token');
+
+        if (null === $csrfTokenCookie) {
+            throw new LogicException('Missing csrf-token cookie');
         }
 
-        return $this->csrfToken;
+        return $csrfTokenCookie->getValue();
     }
 }

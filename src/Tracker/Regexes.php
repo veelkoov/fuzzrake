@@ -6,22 +6,16 @@ namespace App\Tracker;
 
 class Regexes
 {
+    /**
+     * @param string[]                $falsePositives
+     * @param string[]                $offerStatuses
+     * @param array<string, string[]> $groupTranslations
+     * @param string[]                $cleaners
+     */
     public function __construct(
-        /**
-         * @var string[]
-         */
         private readonly array $falsePositives,
-
         private readonly array $offerStatuses,
-
-        /**
-         * @var string[][]
-         */
         private readonly array $groupTranslations,
-
-        /**
-         * @var string[]
-         */
         private readonly array $cleaners,
     ) {
     }
@@ -43,7 +37,7 @@ class Regexes
     }
 
     /**
-     * @return string[][]
+     * @return array<string, string[]>
      */
     public function getGroupTranslations(): array
     {

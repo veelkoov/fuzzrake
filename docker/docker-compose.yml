@@ -4,9 +4,6 @@
 
 # This docker-compose is for dev machines only!
 
-version: '3.8'
-name:    '${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}'
-
 services:
   web:
     image: nginx:alpine
@@ -25,3 +22,4 @@ services:
     restart: unless-stopped
     volumes:
       - ..:/var/www/html
+      - '${FUZZRAKE_COMPOSER_HOME:-../var/composer}:/composer'

@@ -7,10 +7,13 @@ namespace App\Service;
 use App\Utils\Json;
 use JsonException;
 
+/**
+ * @phpstan-type psCountryData array{name: string, code: string, region: string}
+ */
 class CountriesDataService
 {
     /**
-     * [ "code" => [ "name" => "...", "code" => "...", "region" => "..."], ... ].
+     * @var array<string, psCountryData>
      */
     private array $data;
 
@@ -23,6 +26,9 @@ class CountriesDataService
         $this->loadCountriesData($projectDir);
     }
 
+    /**
+     * @return string[]
+     */
     public function getRegions(): array
     {
         $result = array_unique(array_map(fn (array $country): string => $country['region'], $this->data));
@@ -46,7 +52,11 @@ class CountriesDataService
      */
     private function loadCountriesData(string $projectDir): void
     {
-        $dataNumberIndexes = Json::decode(file_get_contents($projectDir.'/assets/countries.json'));
+        /**
+         * @var array<psCountryData> $dataNumberIndexes
+         */
+        $dataNumberIndexes = Json::readFile($projectDir.'/assets/countries.json');
+
         $dataCodeIndexes = [];
 
         foreach ($dataNumberIndexes as $country) {

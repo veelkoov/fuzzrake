@@ -7,6 +7,9 @@ namespace App\Form;
 use App\Utils\Traits\Singleton;
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @implements DataTransformerInterface<string, string>
+ */
 class SinceTransformer implements DataTransformerInterface
 {
     use Singleton;
@@ -14,12 +17,12 @@ class SinceTransformer implements DataTransformerInterface
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {
-        return pattern('^\d{4}-\d{2}$')->test($value) ? $value.'-01' : '';
+        return pattern('^\d{4}-\d{2}$')->test($value ?? '') ? $value.'-01' : '';
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function reverseTransform($value): mixed
     {
-        return substr($value, 0, 7);
+        return substr($value ?? '', 0, 7);
     }
 }

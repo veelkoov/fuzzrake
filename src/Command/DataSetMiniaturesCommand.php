@@ -30,7 +30,7 @@ class DataSetMiniaturesCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption('commit', null, null, 'Save changes in the database')
@@ -102,6 +102,11 @@ class DataSetMiniaturesCommand extends Command
         return $result;
     }
 
+    /**
+     * @param string[] $pictureUrls
+     *
+     * @return string[]
+     */
     private function filterUnsupportedUrls(array $pictureUrls): array
     {
         $result = [];

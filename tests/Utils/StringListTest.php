@@ -20,7 +20,7 @@ class StringListTest extends TestCase
         self::assertEquals($expectedResult, StringList::split($input, $separatorRegexp, $nonsplittables));
     }
 
-    public function splitDataProvider(): array
+    public function splitDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [
@@ -38,7 +38,7 @@ class StringListTest extends TestCase
         self::assertEquals($expected, StringList::sameElements($input1, $input2));
     }
 
-    public function sameElementsDataProvider(): array
+    public function sameElementsDataProvider(): array // @phpstan-ignore-line
     {
         return [
             [true, 'abc', 'abc'],

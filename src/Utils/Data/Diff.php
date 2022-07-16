@@ -8,9 +8,8 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Enforce;
 use App\Utils\StrUtils;
-use BackedEnum;
-use DateTimeImmutable;
 
 class Diff
 {
@@ -40,18 +39,22 @@ class Diff
         return !empty($this->changes);
     }
 
+    /**
+     * @return array{0: Field, 1: psFieldValue, 2: psFieldValue}
+     */
     private function getField(Field $field, Artisan $old, Artisan $new): array
     {
         return [$field, $old->get($field), $new->get($field)];
     }
 
-    private function addChange(
-        Field $field,
-        BackedEnum|DateTimeImmutable|string|bool|null $old,
-        BackedEnum|DateTimeImmutable|string|bool|null $new,
-    ): void {
+    /**
+     * @param psFieldValue $old
+     * @param psFieldValue $new
+     */
+    private function addChange(Field $field, mixed $old, mixed $new): void
+    {
         if ($field->isList()) {
-            $change = new ListChange($field, $old, $new);
+            $change = new ListChange($field, Enforce::string($old), Enforce::string($new));
         } else {
             $change = new SimpleChange($field, $old, $new);
         }

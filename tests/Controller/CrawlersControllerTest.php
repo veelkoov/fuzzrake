@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CrawlersControllerTest extends WebTestCase
 {
-    public function testSitemap()
+    public function testSitemap(): void
     {
         $client = static::createClient();
 

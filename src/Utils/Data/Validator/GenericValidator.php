@@ -8,7 +8,7 @@ use App\DataDefinitions\Fields\Field;
 
 class GenericValidator implements ValidatorInterface
 {
-    public function isValid(Field $field, $subject): bool
+    public function isValid(Field $field, string $subject): bool
     {
         $pattern = $field->validationPattern();
 

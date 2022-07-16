@@ -34,12 +34,12 @@ class DataTidyCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
             ->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include inactive artisans')
-            ->addArgument(self::ARG_CORRECTIONS_FILE, InputArgument::OPTIONAL, 'Corrections file path')
+            ->addArgument(self::ARG_CORRECTIONS_FILE, InputArgument::REQUIRED, 'Corrections file path')
         ;
     }
 
@@ -48,7 +48,7 @@ class DataTidyCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $manager = Manager::createFromFile($input->getArgument(self::ARG_CORRECTIONS_FILE) ?: '/dev/null');
+        $manager = Manager::createFromFile($input->getArgument(self::ARG_CORRECTIONS_FILE));
 
         $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
 

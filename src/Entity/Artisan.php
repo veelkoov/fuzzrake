@@ -190,30 +190,30 @@ class Artisan implements Stringable
     /**
      * @ORM\OneToMany(targetEntity=ArtisanUrl::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|ArtisanUrl[]
+     * @var Collection<int, ArtisanUrl>
      */
-    private Collection|array $urls;
+    private Collection $urls;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanCommissionsStatus::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|ArtisanCommissionsStatus[]
+     * @var Collection<int, ArtisanCommissionsStatus>
      */
-    private Collection|array $commissions;
+    private Collection $commissions;
 
     /**
      * @ORM\OneToMany(targetEntity=MakerId::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|MakerId[]
+     * @var Collection<int, MakerId>
      */
-    private Collection|array $makerIds;
+    private Collection $makerIds;
 
     /**
      * @ORM\OneToMany(targetEntity=ArtisanValue::class, mappedBy="artisan", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @var Collection|ArtisanValue[]
+     * @var Collection<int, ArtisanValue>
      */
-    private Collection|array $values;
+    private Collection $values;
 
     public function __construct()
     {
@@ -651,15 +651,7 @@ class Artisan implements Stringable
 
     public function setVolatileData(?ArtisanVolatileData $volatileData): self
     {
-        // unset the owning side of the relation if necessary
-        if (null === $volatileData && null !== $this->volatileData) {
-            $this->volatileData->setArtisan(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $volatileData && $volatileData->getArtisan() !== $this) {
-            $volatileData->setArtisan($this);
-        }
+        $volatileData?->setArtisan($this);
 
         $this->volatileData = $volatileData;
 
@@ -673,15 +665,7 @@ class Artisan implements Stringable
 
     public function setPrivateData(?ArtisanPrivateData $privateData): self
     {
-        // unset the owning side of the relation if necessary
-        if (null === $privateData && null !== $this->privateData) {
-            $this->privateData->setArtisan(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $privateData && $privateData->getArtisan() !== $this) {
-            $privateData->setArtisan($this);
-        }
+        $privateData?->setArtisan($this);
 
         $this->privateData = $privateData;
 
@@ -689,9 +673,9 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection|ArtisanUrl[]
+     * @return Collection<int, ArtisanUrl>
      */
-    public function getUrls(): Collection|array
+    public function getUrls(): Collection
     {
         return $this->urls;
     }
@@ -708,20 +692,15 @@ class Artisan implements Stringable
 
     public function removeUrl(ArtisanUrl $artisanUrl): self
     {
-        if ($this->urls->removeElement($artisanUrl)) {
-            // set the owning side to null (unless already changed)
-            if ($artisanUrl->getArtisan() === $this) {
-                $artisanUrl->setArtisan(null);
-            }
-        }
+        $this->urls->removeElement($artisanUrl);
 
         return $this;
     }
 
     /**
-     * @return Collection|ArtisanCommissionsStatus[]
+     * @return Collection<int, ArtisanCommissionsStatus>
      */
-    public function getCommissions(): Collection|array
+    public function getCommissions(): Collection
     {
         return $this->commissions;
     }
@@ -738,20 +717,15 @@ class Artisan implements Stringable
 
     public function removeCommission(ArtisanCommissionsStatus $commission): self
     {
-        if ($this->commissions->removeElement($commission)) {
-            // set the owning side to null (unless already changed)
-            if ($commission->getArtisan() === $this) {
-                $commission->setArtisan(null);
-            }
-        }
+        $this->commissions->removeElement($commission);
 
         return $this;
     }
 
     /**
-     * @return Collection|MakerId[]
+     * @return Collection<int, MakerId>
      */
-    public function getMakerIds(): Collection|array
+    public function getMakerIds(): Collection
     {
         return $this->makerIds;
     }
@@ -768,20 +742,15 @@ class Artisan implements Stringable
 
     public function removeMakerId(MakerId $makerId): self
     {
-        if ($this->makerIds->removeElement($makerId)) {
-            // set the owning side to null (unless already changed)
-            if ($makerId->getArtisan() === $this) {
-                $makerId->setArtisan(null);
-            }
-        }
+        $this->makerIds->removeElement($makerId);
 
         return $this;
     }
 
     /**
-     * @return Collection|ArtisanValue[]
+     * @return Collection<int, ArtisanValue>
      */
-    public function getValues(): Collection|array
+    public function getValues(): Collection
     {
         return $this->values;
     }
@@ -798,12 +767,7 @@ class Artisan implements Stringable
 
     public function removeValue(ArtisanValue $value): self
     {
-        if ($this->values->removeElement($value)) {
-            // set the owning side to null (unless already changed)
-            if ($value->getArtisan() === $this) {
-                $value->setArtisan(null);
-            }
-        }
+        $this->values->removeElement($value);
 
         return $this;
     }

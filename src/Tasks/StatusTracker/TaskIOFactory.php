@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\TrackerUpdates;
+namespace App\Tasks\StatusTracker;
 
-use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tracker\OfferStatusParser;
@@ -14,28 +13,25 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class TrackerTaskRunnerFactory
+class TaskIOFactory
 {
-    final public const COMMISSIONS = 'commissions';
-
-    private readonly ArtisanRepository $artisanRepository;
-
     public function __construct(
         private readonly LoggerInterface $logger,
+        private readonly ArtisanRepository $artisanRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly WebpageSnapshotManager $webpageSnapshotManager,
         private readonly OfferStatusParser $parser,
         private readonly FdvFactory $fdvFactory,
     ) {
-        $this->artisanRepository = $entityManager->getRepository(ArtisanE::class);
     }
 
-    public function get(bool $refetch, bool $commit, SymfonyStyle $io): TrackerTaskRunner
+    public function get(bool $refetch, bool $commit, SymfonyStyle $io): TaskIO
     {
-        return new TrackerTaskRunner(
-            new CommissionsTrackerTask($this->artisanRepository, $this->logger, $this->webpageSnapshotManager, $this->parser),
+        return new TaskIO(
             $this->logger,
             $this->entityManager,
+            $this->artisanRepository,
+            $this->parser,
             $this->webpageSnapshotManager,
             $this->fdvFactory->create(new Printer($io)),
             $refetch,

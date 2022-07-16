@@ -21,6 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Event|null findOneBy(array $criteria, array $orderBy = null)
  * @method Event[]    findAll()
  * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Event>
  */
 class EventRepository extends ServiceEntityRepository
 {

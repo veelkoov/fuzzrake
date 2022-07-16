@@ -8,5 +8,10 @@ use App\DataDefinitions\Fields\Field;
 
 interface FieldReadInterface
 {
-    public function get(Field $field);
+    /**
+     * @return psFieldValue
+     */
+    public function get(Field $field): mixed;
+
+    public function getString(Field $field): string;
 }

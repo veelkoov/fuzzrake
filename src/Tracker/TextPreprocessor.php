@@ -31,14 +31,14 @@ class TextPreprocessor
     /**
      * @throws TrackerException
      */
-    public function getText(string $inputText, string $artisanName, string $additionalFilter): Text
+    public function getText(string $inputText, string $url, string $artisanName, string $additionalFilter): Text
     {
         $contents = $this->extractFromJson($inputText);
         $contents = strtolower($contents);
         $contents = $this->applyReplacements($contents);
         $contents = self::replaceArtisanName($artisanName, $contents);
         $contents = $this->removeFalsePositives($contents);
-        $contents = $this->applyFilters($contents, $additionalFilter);
+        $contents = $this->applyFilters($url, $contents, $additionalFilter);
 
         return new Text($inputText, $contents);
     }
@@ -78,17 +78,21 @@ class TextPreprocessor
             return $webpage;
         }
 
-        return implode(' ', Arrays::flatten($result));
+        if (!is_array($result)) {
+            $result = [$result];
+        }
+
+        return implode(' ', array_filter(Arrays::flatten($result), fn ($item): bool => is_string($item)));
     }
 
     /**
      * @throws TrackerException
      * @noinspection PhpUnusedParameterInspection TODO: Better handling of FA statuses #81
      */
-    private function applyFilters(string $inputText, string $additionalFilter): string
+    private function applyFilters(string $url, string $inputText, string $additionalFilter): string
     {
-        if (WebsiteInfo::isFurAffinity(null, $inputText)) {
-            if (WebsiteInfo::isFurAffinityUserProfile(null, $inputText)) {
+        if (WebsiteInfo::isFurAffinity($url, $inputText)) {
+            if (WebsiteInfo::isFurAffinityUserProfile($url, $inputText)) {
                 // $additionalFilter = 'profile' === $additionalFilter ? 'td[width="80%"][align="left"]' : '';
                 $additionalFilter = ''; // TODO: Better handling of FA statuses #81
 

@@ -27,7 +27,7 @@ class DataCheckUrlsCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addOption(self::OPT_LIMIT, '', InputOption::VALUE_REQUIRED, 'Number of URLs to check', self::DEFAULT_LIMIT)

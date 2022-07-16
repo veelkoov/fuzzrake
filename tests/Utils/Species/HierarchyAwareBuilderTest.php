@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 class HierarchyAwareBuilderTest extends TestCase
 {
     /**
+     * @param array<string, psSpecie> $species
+     *
      * @dataProvider validNamesDoesntContainDuplicatesDataProvider
      */
     public function testValidNamesDoesntContainDuplicates(array $species, int $expectedCount): void
@@ -19,6 +21,9 @@ class HierarchyAwareBuilderTest extends TestCase
         self::assertCount($expectedCount, $subject->getValidNames());
     }
 
+    /**
+     * @return array<int, array{0: array<string, psSpecie>, 1: int}>
+     */
     public function validNamesDoesntContainDuplicatesDataProvider(): array
     {
         return [

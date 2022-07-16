@@ -9,6 +9,9 @@ use App\Entity\ArtisanCommissionsStatus;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Closure;
 
+/**
+ * @extends AbstractAccessor<bool, ArtisanCommissionsStatus>
+ */
 final class CommissionAccessor extends AbstractAccessor
 {
     public static function set(Artisan $artisan, bool $isOpen, string $newValue): void
@@ -21,6 +24,9 @@ final class CommissionAccessor extends AbstractAccessor
         return self::_get($artisan, $isOpen);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getList(Artisan $artisan, bool $isOpen): array
     {
         return self::_getList($artisan, $isOpen);

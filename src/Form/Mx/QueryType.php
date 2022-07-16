@@ -13,7 +13,7 @@ class QueryType extends AbstractType
 {
     final public const ITEM_QUERY = 'ITEM_QUERY';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(self::ITEM_QUERY, TextType::class, [
