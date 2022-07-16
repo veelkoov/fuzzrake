@@ -49,7 +49,7 @@ end
 def run_docker(*args)
   user_and_group = `echo -n $(id -u):$(id -g)`
 
-  docker_compose('exec', '--user', user_and_group, '-ti', '-e', 'XDEBUG_MODE=coverage', 'php', *args)
+  docker_compose('exec', '--user', user_and_group, '-ti', 'php', *args)
 end
 
 def run_console(*args)

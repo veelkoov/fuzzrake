@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use InvalidArgumentException;
+use Symfony\Component\PropertyAccess\Exception\AccessException;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface as Accessor;
 
@@ -42,5 +44,19 @@ class ArrayReader
         }
 
         return $result;
+    }
+
+    public function getOrDefault(string $propertyPath, mixed $default): mixed
+    {
+        try {
+            return $this->propertyAccessor->getValue($this->data, $propertyPath);
+        } catch (AccessException|UnexpectedTypeException) {
+            return $default;
+        }
+    }
+
+    public static function of(mixed $data): self
+    {
+        return new self($data);
     }
 }
