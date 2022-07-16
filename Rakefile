@@ -104,7 +104,6 @@ task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *
 task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
 task(:phpunit)       { |_t, args| phpunit(*args) }
-task qa: [:rector, 'php-cs-fixer', :phpunit]
 
 task pcf: ['php-cs-fixer']
 task pu: [:phpunit]
@@ -191,7 +190,6 @@ task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
 task(:yarn_encore_production) { run_shell('yarn', 'encore', 'production') }
 task 'update-deps': [:composer_upgrade, :yarn_upgrade, :yarn_encore_production, 'fix-phpunit'] do
   clear_cache
-  phpunit
 end
 task('commit-deps') { run_shell('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
 
