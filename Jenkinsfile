@@ -4,7 +4,41 @@ pipeline {
   }
 
   stages {
+    stage('Trigger branches builds') {
+      when {
+        branch 'develop'
+      }
+
+      steps {
+        script {
+          sh(
+              script: '''git branch -a | grep '^  remotes/origin/' | cut -d/ -f3-''',
+              returnStdout: true,
+          )
+              .tokenize("\n")
+              .each { branch ->
+                if (!['beta', 'develop'].contains(branch)) {
+                  try {
+                    build(
+                        job: currentBuild.fullProjectName.replaceFirst(~/\/${env.BRANCH_NAME}$/, "/$branch"),
+                        wait: false,
+                    )
+                  } catch (error) {
+                    echo(error.getMessage())
+                  }
+                }
+              }
+        }
+      }
+    }
+
     stage('Merge develop') {
+      when {
+        not {
+          branch 'develop'
+        }
+      }
+
       steps {
         ansiColor('xterm') {
           sh 'git merge --no-edit origin/develop'
