@@ -38,7 +38,6 @@ export default class HandlebarsHelpers {
             nl2br:                HandlebarsHelpers.nl2br,
             describeAges:         HandlebarsHelpers.describeAges,
             describeCompleteness: HandlebarsHelpers.describeCompleteness,
-            isPossiblyUnsafe:     HandlebarsHelpers.isPossiblyUnsafe,
         };
     }
 
@@ -154,10 +153,6 @@ export default class HandlebarsHelpers {
         }
 
         return new SafeString(HTML_SIGN_UNKNOWN.toString() + ' <i class="ages fa-solid fa-user"></i>');
-    }
-
-    public static isPossiblyUnsafe(artisan: Artisan): boolean {
-        return false !== artisan.nsfwWebsite || false !== artisan.nsfwSocial || false !== artisan.doesNsfw;
     }
 
     private static describeCompleteness(artisan: Artisan): string {
