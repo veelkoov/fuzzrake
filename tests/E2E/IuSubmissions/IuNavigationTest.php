@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
+use App\Utils\TestUtils\TestsBridge;
 use Exception;
 
 class IuNavigationTest extends AbstractTestWithEM
 {
     use IuFormTrait;
+
+    public static function tearDownAfterClass(): void
+    {
+        TestsBridge::resetCaptcha();
+    }
 
     public function testAbortWorksOnDataPage(): void
     {

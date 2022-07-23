@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Frontend;
+namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Paths;
@@ -12,7 +12,7 @@ use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Panther\Client;
 
-class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
+class MainPageTest extends PantherTestCaseWithEM
 {
     /**
      * @throws Exception

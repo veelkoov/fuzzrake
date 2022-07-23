@@ -4,37 +4,34 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
-use App\Controller\AbstractRecaptchaBackedController;
 use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
-use App\Service\EnvironmentsService;
+use App\Service\Captcha;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
-use ReCaptcha\ReCaptcha;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
-abstract class AbstractIuFormController extends AbstractRecaptchaBackedController
+abstract class AbstractIuFormController extends AbstractController
 {
     use ButtonClickedTrait;
 
     public function __construct(
-        ReCaptcha $reCaptcha,
-        EnvironmentsService $environments,
-        LoggerInterface $logger,
+        protected readonly Captcha $captcha,
+        protected readonly LoggerInterface $logger,
         protected readonly IuSubmissionService $iuFormService,
         protected readonly RouterInterface $router,
         private readonly ArtisanRepository $artisanRepository,
     ) {
-        parent::__construct($reCaptcha, $environments, $logger);
     }
 
     private function getArtisanByMakerIdOrThrow404(?string $makerId): Artisan

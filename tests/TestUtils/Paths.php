@@ -60,12 +60,4 @@ final class Paths
     {
         return __DIR__.'/../../var/cache/test';
     }
-
-    /**
-     * @return non-empty-string
-     */
-    public static function getTimestampPath(): string
-    {
-        return Paths::getTestCacheDir().'/timestamp.txt';
-    }
 }

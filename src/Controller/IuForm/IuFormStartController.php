@@ -33,7 +33,7 @@ class IuFormStartController extends AbstractIuFormController
         $bigErrorMessage = '';
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->isReCaptchaTokenOk($request, 'iu_form_captcha')) {
+            if ($this->captcha->isValid($request, 'iu_form_captcha')) {
                 $state->markCaptchaDone();
 
                 return $this->redirectToStep(RouteName::IU_FORM_DATA, $state);

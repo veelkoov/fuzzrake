@@ -21,7 +21,6 @@ services:
             $contactEmail:                    '%env(resolve:CONTACT_EMAIL)%'
             $countries:                       '%countries%'
             $currencies:                      '%currencies%'
-            $environment:                     '%kernel.environment%'
             $languages:                       '%languages%'
             $lists:                           '%lists%'
             $noPayPlans:                      '%noPayPlans%'

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
+use App\Utils\TestUtils\TestsBridge;
+use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -64,16 +66,11 @@ final class UtcClock
 
     public static function timems(): int
     {
-        return self::isTest() ? UtcClockForTests::timems() : (int) (microtime(true) * 1000);
+        return TestsBridge::isTest() ? UtcClockMock::timems() : (int) (microtime(true) * 1000);
     }
 
     public static function time(): int
     {
-        return self::isTest() ? UtcClockForTests::time() : time();
-    }
-
-    private static function isTest(): bool
-    {
-        return 'test' === ($_ENV['APP_ENV'] ?? null);
+        return TestsBridge::isTest() ? UtcClockMock::time() : time();
     }
 }

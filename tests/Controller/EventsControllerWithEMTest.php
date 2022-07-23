@@ -8,13 +8,13 @@ use App\Entity\Event;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\DateTime\UtcClockForTests;
+use App\Utils\TestUtils\UtcClockMock;
 
 class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
     public static function tearDownAfterClass(): void
     {
-        UtcClockForTests::finish();
+        UtcClockMock::finish();
     }
 
     public function testPageLoads(): void
@@ -113,7 +113,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
          * If I leave it here, it will still ocassinally fail. WTWTF?!
          * https://github.com/veelkoov/fuzzrake/issues/135
          */
-        UtcClockForTests::start();
+        UtcClockMock::start();
 
         $fourDaysInSeconds = 4 * 24 * 60 * 60;
         $older = UtcClock::time() - $fourDaysInSeconds - 1;

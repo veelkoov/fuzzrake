@@ -6,16 +6,23 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
+use App\Service\Captcha;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RestApiController extends AbstractRecaptchaBackedController
+class RestApiController extends AbstractController
 {
+    public function __construct(
+        private readonly Captcha $captcha,
+    ) {
+    }
+
     #[Route(path: '/api/', name: RouteName::API)]
     #[Cache(maxage: 3600, public: true)]
     public function api(): Response
@@ -27,25 +34,12 @@ class RestApiController extends AbstractRecaptchaBackedController
     #[Cache(maxage: 0, public: false)]
     public function info_emailHtml(Request $request, string $contactEmail): Response
     {
-        $ok = $this->isReCaptchaTokenOk($request, 'info_emailHtml');
+        $ok = $this->captcha->isValid($request, 'info_emailHtml');
 
         if ($ok) {
             $contactEmail = htmlspecialchars($contactEmail);
 
             return new Response("<a href=\"mailto:$contactEmail\" class=\"btn btn-primary my-1 btn-sm\"><i class=\"fas fa-envelope\"></i> $contactEmail</a>");
-        } else {
-            return new Response('', Response::HTTP_FORBIDDEN, ['X-Fuzzrake-Debug' => 'reCAPTCHA validation failed']);
-        }
-    }
-
-    #[Route(path: '/api/iu_form/verify')]
-    #[Cache(maxage: 0, public: false)]
-    public function iu_form_verify(Request $request): Response
-    {
-        $ok = $this->isReCaptchaTokenOk($request, 'iu_form_verify');
-
-        if ($ok) {
-            return new Response('', Response::HTTP_NO_CONTENT);
         } else {
             return new Response('', Response::HTTP_FORBIDDEN, ['X-Fuzzrake-Debug' => 'reCAPTCHA validation failed']);
         }
