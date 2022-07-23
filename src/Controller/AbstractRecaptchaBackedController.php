@@ -25,11 +25,14 @@ class AbstractRecaptchaBackedController extends AbstractController
             return true;
         }
 
+        $token = $request->get('token');
+        $token = is_string($token) ? $token : '';
+
         $response = $this->reCaptcha
             ->setExpectedHostname($request->getHost())
             ->setExpectedAction($action)
             ->setScoreThreshold($_ENV['GOOGLE_RECAPTCHA_SCORE_THRESHOLD'] ?: 0.8)
-            ->verify((string) $request->query->get('token'), $request->getClientIp());
+            ->verify($token, $request->getClientIp());
 
         if (!$response->isSuccess()) {
             $this->logger->info('reCAPTCHA verification failed', [$response->toArray()]);
