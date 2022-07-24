@@ -2,26 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Service;
 
-use App\Service\EnvironmentsService;
+use App\Utils\TestUtils\TestsBridge;
 use Psr\Log\LoggerInterface;
 use ReCaptcha\ReCaptcha;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 
-class AbstractRecaptchaBackedController extends AbstractController
+class Captcha
 {
+    private readonly float $threshold;
+
     public function __construct(
         private readonly ReCaptcha $reCaptcha,
-        private readonly EnvironmentsService $environments,
-        protected readonly LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
+        #[Autowire('%env(GOOGLE_RECAPTCHA_SCORE_THRESHOLD)%')]
+        string $threshold,
     ) {
+        $threshold = floatval($threshold);
+        $this->threshold = $threshold >= 0.0 && $threshold <= 1.0 ? $threshold : 0.9;
     }
 
-    protected function isReCaptchaTokenOk(Request $request, string $action): bool
+    public function isValid(Request $request, string $action): bool
     {
-        if ($this->environments->isTest()) {
+        if (TestsBridge::shouldSkipSingleCaptcha()) {
             return true;
         }
 
@@ -31,7 +36,7 @@ class AbstractRecaptchaBackedController extends AbstractController
         $response = $this->reCaptcha
             ->setExpectedHostname($request->getHost())
             ->setExpectedAction($action)
-            ->setScoreThreshold($_ENV['GOOGLE_RECAPTCHA_SCORE_THRESHOLD'] ?: 0.8)
+            ->setScoreThreshold($this->threshold)
             ->verify($token, $request->getClientIp());
 
         if (!$response->isSuccess()) {

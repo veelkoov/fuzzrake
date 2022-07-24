@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
+use App\Tests\TestUtils\Paths;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\Filesystem\Filesystem;
 
 use function pattern;
 
@@ -73,5 +75,10 @@ trait UtilsTrait
         $client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
+    }
+
+    protected function clearCache(): void
+    {
+        (new Filesystem())->remove(Paths::getCachePoolsDir());
     }
 }
