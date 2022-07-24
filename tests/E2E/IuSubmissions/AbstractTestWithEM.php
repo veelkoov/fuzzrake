@@ -23,12 +23,14 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->emptyTestSubmissionsDir();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
+
         $this->emptyTestSubmissionsDir();
     }
 

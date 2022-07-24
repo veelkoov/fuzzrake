@@ -12,18 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 class TimedUrlQueueTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        UtcClockMock::start();
-    }
-
-    protected function tearDown(): void
-    {
-        UtcClockMock::finish();
-    }
-
     public function testPop(): void
     {
+        UtcClockMock::start();
+
         $timing = new HostCallsTiming(1000);
         $urls = [
             new FreeUrl('https://two-host.example.com/abcd'),

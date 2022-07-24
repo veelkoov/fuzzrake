@@ -6,16 +6,10 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Utils\TestUtils\TestsBridge;
 
 class PasswordHandlingTest extends AbstractTestWithEM
 {
     use IuFormTrait;
-
-    public static function tearDownAfterClass(): void
-    {
-        TestsBridge::resetCaptcha();
-    }
 
     public function testNewMakerPasswordIsHashed(): void
     {

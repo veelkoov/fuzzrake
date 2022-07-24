@@ -14,7 +14,6 @@ use App\Utils\Enforce;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
-use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
@@ -92,12 +91,6 @@ class ExtendedTest extends AbstractTestWithEM
         Field::CONTACT_ALLOWED,
         Field::CONTACT_INFO_OBFUSCATED,
     ];
-
-    public static function tearDownAfterClass(): void
-    {
-        UtcClockMock::finish();
-        TestsBridge::resetCaptcha();
-    }
 
     /**
      * Purpose of this test is to make sure:

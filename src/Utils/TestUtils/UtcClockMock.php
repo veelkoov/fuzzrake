@@ -28,11 +28,6 @@ final class UtcClockMock
         TestsBridge::setTimeMs(self::actualTimems());
     }
 
-    public static function finish(): void
-    {
-        TestsBridge::resetTimeMs();
-    }
-
     public static function passMs(int $msToPass): void
     {
         TestsBridge::setTimeMs(self::timems() + $msToPass);

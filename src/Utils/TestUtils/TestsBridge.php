@@ -27,23 +27,43 @@ final class TestsBridge
         return 'test' === ($_ENV['APP_ENV'] ?? null);
     }
 
+    public static function reset(): void
+    {
+        $mark = self::readBridgeFileInt(self::MARK_SKIP_SINGLE_CAPTCHA_PATH);
+
+        self::removeBridgeFile(self::MARK_SKIP_SINGLE_CAPTCHA_PATH);
+        self::removeBridgeFile(self::MOCK_TIMESTAMP_PATH);
+
+        if (null !== $mark) {
+            throw new LogicException('Found unconsumed captcha skip mark');
+        }
+    }
+
     // ===== CAPTCHA MOCKING =====
 
     public static function setSkipSingleCaptcha(): void
     {
+        if (!self::isTest()) {
+            throw new LogicException('This must not be called outside tests');
+        }
+
+        if (null !== self::readBridgeFileInt(self::MARK_SKIP_SINGLE_CAPTCHA_PATH)) {
+            throw new LogicException('Skipping captcha mark added twice');
+        }
+
         self::writeBridgeFileInt(self::MARK_SKIP_SINGLE_CAPTCHA_PATH, time());
     }
 
     public static function shouldSkipSingleCaptcha(): bool
     {
         if (!self::isTest()) {
-            throw new LogicException('This must not be called outside tests');
+            return false;
         }
 
         $timestamp = self::readBridgeFileInt(self::MARK_SKIP_SINGLE_CAPTCHA_PATH);
 
         if (null !== $timestamp && time() <= $timestamp + self::CAPTCHA_SKIP_TIMEOUT_SECONDS) {
-            self::resetCaptcha();
+            self::removeBridgeFile(self::MARK_SKIP_SINGLE_CAPTCHA_PATH);
 
             return true;
         }
@@ -51,21 +71,11 @@ final class TestsBridge
         return false;
     }
 
-    public static function resetCaptcha(): void
-    {
-        self::removeBridgeFile(self::MARK_SKIP_SINGLE_CAPTCHA_PATH);
-    }
-
     // ===== TIME MOCKING =====
 
     public static function setTimeMs(int $timeMsToSet): void
     {
         self::writeBridgeFileInt(self::MOCK_TIMESTAMP_PATH, $timeMsToSet);
-    }
-
-    public static function resetTimeMs(): void
-    {
-        self::removeBridgeFile(self::MOCK_TIMESTAMP_PATH);
     }
 
     public static function getTimeMs(): ?int

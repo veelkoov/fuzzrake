@@ -8,16 +8,10 @@ use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Utils\TestUtils\TestsBridge;
 
 class IuFormControllerWithEMTest extends WebTestCaseWithEM
 {
     use IuFormTrait;
-
-    public static function tearDownAfterClass(): void
-    {
-        TestsBridge::resetCaptcha();
-    }
 
     public function testIuFormLoadsForExistingMakers(): void
     {
