@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Tests\TestUtils\Paths;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Panther\Client;
 
 class MainPageTest extends PantherTestCaseWithEM
@@ -28,7 +26,7 @@ class MainPageTest extends PantherTestCaseWithEM
             self::getArtisan('Test artisan 3', 'TEST003', 'DE'),
         );
 
-        (new Filesystem())->remove(Paths::getTestCacheDir());
+        $this->clearCache();
 
         $client->request('GET', '/');
         $client->waitForVisibility('#scam-risk-warning', 5);

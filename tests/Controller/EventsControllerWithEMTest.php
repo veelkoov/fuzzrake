@@ -119,7 +119,6 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
 
         $client = static::createClient();
         $this->persistAndFlush($eventVisible, $eventHidden);
-        self::assertCount(2, $this->getEM()->getRepository(Event::class)->findAll(), 'Two events in the DB before test');
 
         $contents = $client->request('GET', '/events-atom.xml')->outerHtml();
 

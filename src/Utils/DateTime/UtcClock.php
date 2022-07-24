@@ -7,29 +7,27 @@ namespace App\Utils\DateTime;
 use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\Traits\UtilityClass;
+use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use RuntimeException;
 
 final class UtcClock
 {
     use UtilityClass;
 
-    public static function now(): DateTimeImmutable
-    {
-        $result = DateTimeImmutable::createFromFormat('U', (string) self::time());
-
-        if (false === $result) {
-            throw new RuntimeException('Failed to parse "U" date');
-        }
-
-        return $result->setTimezone(self::getUtc());
-    }
-
     public static function getUtc(): DateTimeZone
     {
         return new DateTimeZone('UTC');
+    }
+
+    public static function now(): DateTimeImmutable
+    {
+        try {
+            return self::fromTimestamp(self::time());
+        } catch (DateTimeException $exception) {
+            throw new UnbelievableRuntimeException($exception);
+        }
     }
 
     /**
@@ -37,10 +35,28 @@ final class UtcClock
      */
     public static function at(string|false|null $time): DateTimeImmutable
     {
+        $timestamp = strtotime((string) $time, self::time());
+
+        if (false === $timestamp) {
+            throw new DateTimeException("Failed to parse timestamp from input: '$time'");
+        }
+
         try {
-            return new DateTimeImmutable($time ?: 'invalid', self::getUtc());
-        } catch (Exception $e) {
-            throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
+            return self::fromTimestamp($timestamp);
+        } catch (DateTimeException $exception) {
+            throw new DateTimeException("Failed to create DateTime from input: '$time'", previous: $exception);
+        }
+    }
+
+    /**
+     * @throws DateTimeException
+     */
+    public static function fromTimestamp(int $timestamp): DateTimeImmutable
+    {
+        try {
+            return (new DateTimeImmutable("@$timestamp"))->setTimezone(self::getUtc());
+        } catch (Exception $exception) {
+            throw new DateTimeException("Failed to create DateTime from timestamp: $timestamp", previous: $exception);
         }
     }
 
