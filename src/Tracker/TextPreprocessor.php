@@ -115,7 +115,11 @@ class TextPreprocessor
 
         if (WebsiteInfo::isTwitter($inputText)) {
             $crawler = new Crawler($inputText);
-            $filtered = $crawler->filter('div.profileheadercard');
+            $filtered = $crawler->filterXPath('//main//nav/preceding-sibling::div');
+
+            if (0 === $filtered->count()) {
+                $filtered = $crawler->filter('div.profileheadercard');
+            }
 
             if (1 !== $filtered->count()) {
                 throw new TrackerException('Failed to filter Twitter profile, nodes count: '.$filtered->count());
