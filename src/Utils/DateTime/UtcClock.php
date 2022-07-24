@@ -23,11 +23,7 @@ final class UtcClock
 
     public static function now(): DateTimeImmutable
     {
-        try {
-            return self::fromTimestamp(self::time());
-        } catch (DateTimeException $exception) {
-            throw new UnbelievableRuntimeException($exception);
-        }
+        return self::fromTimestamp(self::time());
     }
 
     /**
@@ -41,22 +37,18 @@ final class UtcClock
             throw new DateTimeException("Failed to parse timestamp from input: '$time'");
         }
 
-        try {
-            return self::fromTimestamp($timestamp);
-        } catch (DateTimeException $exception) {
-            throw new DateTimeException("Failed to create DateTime from input: '$time'", previous: $exception);
-        }
+        return self::fromTimestamp($timestamp);
     }
 
-    /**
-     * @throws DateTimeException
-     */
     public static function fromTimestamp(int $timestamp): DateTimeImmutable
     {
         try {
             return (new DateTimeImmutable("@$timestamp"))->setTimezone(self::getUtc());
+
+            // @codeCoverageIgnoreStart
         } catch (Exception $exception) {
-            throw new DateTimeException("Failed to create DateTime from timestamp: $timestamp", previous: $exception);
+            throw new UnbelievableRuntimeException($exception); // Each timestamp can be converted to a date
+            // @codeCoverageIgnoreEnd
         }
     }
 
