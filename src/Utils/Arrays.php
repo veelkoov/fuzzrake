@@ -49,6 +49,6 @@ final class Arrays
             }
         }
 
-        return $result;
+        return array_values($result);
     }
 }

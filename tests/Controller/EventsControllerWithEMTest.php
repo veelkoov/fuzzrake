@@ -8,15 +8,10 @@ use App\Entity\Event;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\DateTime\UtcClockForTests;
+use App\Utils\TestUtils\UtcClockMock;
 
 class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
-    public static function tearDownAfterClass(): void
-    {
-        UtcClockForTests::finish();
-    }
-
     public function testPageLoads(): void
     {
         $client = static::createClient();
@@ -106,14 +101,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
      */
     public function testAtomFeedShowsOnlyEventsYoungerThan4Days(): void
     {
-        $client = static::createClient();
-
-        /*
-         * If I move this above the client creation, the test will fail randomly. WTF?!
-         * If I leave it here, it will still ocassinally fail. WTWTF?!
-         * https://github.com/veelkoov/fuzzrake/issues/135
-         */
-        UtcClockForTests::start();
+        UtcClockMock::start();
 
         $fourDaysInSeconds = 4 * 24 * 60 * 60;
         $older = UtcClock::time() - $fourDaysInSeconds - 1;
@@ -129,6 +117,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
             ->setDescription('I should not appear in the Atom feed')
             ->setTimestamp(UtcClock::at("@$older"));
 
+        $client = static::createClient();
         $this->persistAndFlush($eventVisible, $eventHidden);
 
         $contents = $client->request('GET', '/events-atom.xml')->outerHtml();

@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Frontend;
+namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Tests\TestUtils\TestCache;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -29,7 +28,7 @@ class MakerModeTest extends PantherTestCaseWithEM
                 nsfwWebsite: false, nsfwSocial: false, doesNsfw: false, worksWithMinors: true),
         );
 
-        TestCache::clear();
+        $this->clearCache();
 
         // Expect: main page initially shows the checklist and no makers
 

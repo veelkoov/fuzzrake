@@ -4,30 +4,26 @@ declare(strict_types=1);
 
 namespace App\Utils\DateTime;
 
+use App\Utils\TestUtils\TestsBridge;
+use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\Traits\UtilityClass;
+use App\Utils\UnbelievableRuntimeException;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use RuntimeException;
 
 final class UtcClock
 {
     use UtilityClass;
 
-    public static function now(): DateTimeImmutable
-    {
-        $result = DateTimeImmutable::createFromFormat('U', (string) self::time());
-
-        if (false === $result) {
-            throw new RuntimeException('Failed to parse "U" date');
-        }
-
-        return $result->setTimezone(self::getUtc());
-    }
-
     public static function getUtc(): DateTimeZone
     {
         return new DateTimeZone('UTC');
+    }
+
+    public static function now(): DateTimeImmutable
+    {
+        return self::fromTimestamp(self::time());
     }
 
     /**
@@ -35,10 +31,24 @@ final class UtcClock
      */
     public static function at(string|false|null $time): DateTimeImmutable
     {
+        $timestamp = strtotime((string) $time, self::time());
+
+        if (false === $timestamp) {
+            throw new DateTimeException("Failed to parse timestamp from input: '$time'");
+        }
+
+        return self::fromTimestamp($timestamp);
+    }
+
+    public static function fromTimestamp(int $timestamp): DateTimeImmutable
+    {
         try {
-            return new DateTimeImmutable($time ?: 'invalid', self::getUtc());
-        } catch (Exception $e) {
-            throw new DateTimeException($e->getMessage(), $e->getCode(), $e);
+            return (new DateTimeImmutable("@$timestamp"))->setTimezone(self::getUtc());
+
+            // @codeCoverageIgnoreStart
+        } catch (Exception $exception) {
+            throw new UnbelievableRuntimeException($exception); // Each timestamp can be converted to a date
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -64,16 +74,11 @@ final class UtcClock
 
     public static function timems(): int
     {
-        return self::isTest() ? UtcClockForTests::timems() : (int) (microtime(true) * 1000);
+        return TestsBridge::isTest() ? UtcClockMock::timems() : (int) (microtime(true) * 1000);
     }
 
     public static function time(): int
     {
-        return self::isTest() ? UtcClockForTests::time() : time();
-    }
-
-    private static function isTest(): bool
-    {
-        return 'test' === ($_ENV['APP_ENV'] ?? null);
+        return TestsBridge::isTest() ? UtcClockMock::time() : time();
     }
 }

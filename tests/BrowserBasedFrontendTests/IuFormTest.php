@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Frontend;
+namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
@@ -10,7 +10,7 @@ use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 
-class IuFormUiWithEMTest extends PantherTestCaseWithEM
+class IuFormTest extends PantherTestCaseWithEM
 {
     private Client $client;
 

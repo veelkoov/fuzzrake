@@ -10,11 +10,11 @@ use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\DateTime\UtcClockForTests;
 use App\Utils\Enforce;
 use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
+use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
 use Exception;
@@ -92,11 +92,6 @@ class ExtendedTest extends AbstractTestWithEM
         Field::CONTACT_INFO_OBFUSCATED,
     ];
 
-    public static function tearDownAfterClass(): void
-    {
-        UtcClockForTests::finish();
-    }
-
     /**
      * Purpose of this test is to make sure:
      * - all fields, which should be updatable by I/U form, are available and get updated after,
@@ -114,7 +109,7 @@ class ExtendedTest extends AbstractTestWithEM
      */
     public function testIuSubmissionAndImportFlow(): void
     {
-        UtcClockForTests::start();
+        UtcClockMock::start();
 
         self::sanityChecks();
 

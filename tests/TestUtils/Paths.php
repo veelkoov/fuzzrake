@@ -56,16 +56,8 @@ final class Paths
     /**
      * @return non-empty-string
      */
-    public static function getTestCacheDir(): string
+    public static function getCachePoolsDir(): string
     {
-        return __DIR__.'/../../var/cache/test';
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public static function getTimestampPath(): string
-    {
-        return Paths::getTestCacheDir().'/timestamp.txt';
+        return __DIR__.'/../../var/cache/test/pools';
     }
 }

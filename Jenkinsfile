@@ -4,7 +4,41 @@ pipeline {
   }
 
   stages {
+    stage('Trigger branches builds') {
+      when {
+        branch 'develop'
+      }
+
+      steps {
+        script {
+          sh(
+              script: '''git branch -a | grep '^  remotes/origin/' | cut -d/ -f3-''',
+              returnStdout: true,
+          )
+              .tokenize("\n")
+              .each { branch ->
+                if (!['beta', 'develop'].contains(branch)) {
+                  try {
+                    build(
+                        job: currentBuild.fullProjectName.replaceFirst(~/\/${env.BRANCH_NAME}$/, "/$branch"),
+                        wait: false,
+                    )
+                  } catch (error) {
+                    echo(error.getMessage())
+                  }
+                }
+              }
+        }
+      }
+    }
+
     stage('Merge develop') {
+      when {
+        not {
+          branch 'develop'
+        }
+      }
+
       steps {
         ansiColor('xterm') {
           sh 'git merge --no-edit origin/develop'
@@ -20,6 +54,10 @@ pipeline {
 
       steps {
         ansiColor('xterm') {
+          dir('tests/test_data/statuses') {
+            git(branch: 'main', poll: false, url: env.FUZZRAKE_STATUSES_TEST_DATA_GIT_URI)
+          }
+
           sh 'rm -f .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY" >> .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'

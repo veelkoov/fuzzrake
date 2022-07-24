@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Frontend;
+namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\DataDefinitions\Ages;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Tests\TestUtils\TestCache;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
@@ -94,7 +93,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         }
         $this->persistAndFlush(...$artisans);
 
-        TestCache::clear();
+        $this->clearCache();
 
         $client->request('GET', '/');
         $client->waitForElementToContain('.alert-dismissible p', 'Currently '.count($artisans).' makers from 0 countries are listed here.', 1);

@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Frontend;
+namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Tests\TestUtils\TestCache;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Panther\Client;
 
-class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
+class MainPageTest extends PantherTestCaseWithEM
 {
     /**
      * @throws Exception
@@ -27,7 +26,7 @@ class MainWithEMPageUiSmokeTest extends PantherTestCaseWithEM
             self::getArtisan('Test artisan 3', 'TEST003', 'DE'),
         );
 
-        TestCache::clear();
+        $this->clearCache();
 
         $client->request('GET', '/');
 
