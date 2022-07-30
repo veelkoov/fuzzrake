@@ -28,7 +28,7 @@ class FurtrackMiniatures extends AbstractMiniatures
         $postStub = $accessor->getNonEmptyString('[post][postStub]');
         $metaFiletype = $accessor->getNonEmptyString('[post][metaFiletype]');
 
-        return "https://orca.furtrack.com/gallery/sample/$postStub.$metaFiletype";
+        return "https://orca.furtrack.com/gallery/thumb/$postStub.$metaFiletype";
     }
 
     protected function getRegexp(): string
