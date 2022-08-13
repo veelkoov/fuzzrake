@@ -33,13 +33,13 @@ class MainPageTest extends PantherTestCaseWithEM
         $client->waitForVisibility('#checklist-ill-be-careful', 5);
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-        $client->waitForVisibility('#aasImAdult', 1);
+        $client->waitForVisibility('#aasImAdult', 5);
         $client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-        $client->waitForVisibility('#aasAllowNsfw', 1);
+        $client->waitForVisibility('#aasAllowNsfw', 5);
         $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
 
-        $client->waitForVisibility('#checklist-dismiss-btn', 1);
+        $client->waitForVisibility('#checklist-dismiss-btn', 5);
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         $client->waitForVisibility('#artisans', 5);
