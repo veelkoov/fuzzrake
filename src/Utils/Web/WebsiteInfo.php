@@ -23,7 +23,7 @@ final class WebsiteInfo
     private const FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING = '<title>System Error</title>';
 
     private const WIXSITE_CONTENTS_REGEXP = '<meta\s+name="generator"\s+content="Wix\.com Website Builder"\s*/?>';
-    private const TWITTER_CONTENTS_SEARCH_STRING = '| Twitter</title>';
+    private const TWITTER_CONTENTS_SEARCH_STRING = 'Twitter</title>';
     private const INSTAGRAM_CONTENTS_REGEXP = 'Instagram photos and videos\s*</title>';
 
     private const TRELLO_BOARD_URL_REGEXP = '^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/';
