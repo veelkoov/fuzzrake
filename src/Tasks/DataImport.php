@@ -32,7 +32,6 @@ class DataImport
         private readonly Manager $manager,
         private readonly Printer $printer,
         private readonly FDV $fdv,
-        private readonly bool $showAllFixCmds,
     ) {
         $this->messaging = new Messaging($printer, $manager);
 
@@ -46,8 +45,7 @@ class DataImport
      */
     public function import(array $artisansData): void
     {
-        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | FDV::USE_SET_FOR_FIX_CMD
-                | ($this->showAllFixCmds ? FDV::SHOW_ALL_FIX_CMD_FOR_CHANGED : 0);
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | FDV::USE_SET_FOR_FIX_CMD;
 
         foreach ($this->createImportItems($artisansData) as $item) {
             $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput());

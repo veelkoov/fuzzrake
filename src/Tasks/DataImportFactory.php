@@ -18,11 +18,10 @@ class DataImportFactory
     ) {
     }
 
-    public function get(Manager $importManager, SymfonyStyle $io, bool $showAllFixCmds): DataImport
+    public function get(Manager $importManager, SymfonyStyle $io): DataImport
     {
         $printer = new Printer($io);
 
-        return new DataImport($this->objectManager, $importManager, $printer, $this->fdvFactory->create($printer),
-            $showAllFixCmds);
+        return new DataImport($this->objectManager, $importManager, $printer, $this->fdvFactory->create($printer));
     }
 }

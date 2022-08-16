@@ -54,7 +54,7 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
         $importManager = $this->getImportManager($acceptAll);
         $fdv = $this->getFdvFactory()->create($printer);
-        $import = new DataImport(self::getEM(), $importManager, $printer, $fdv, false);
+        $import = new DataImport(self::getEM(), $importManager, $printer, $fdv);
 
         $import->import(Finder::getFrom(Paths::getTestIuFormDataPath()));
 
