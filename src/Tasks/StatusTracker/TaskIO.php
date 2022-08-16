@@ -57,7 +57,7 @@ class TaskIO
     private function report(array $updates): void
     {
         foreach ($updates as $update) {
-            $this->fdv->perform($update, FixerDifferValidator::SHOW_DIFF, skipDiffFor: $this->skipDiffForFields);
+            $this->fdv->perform($update, skipDiffFor: $this->skipDiffForFields);
         }
     }
 

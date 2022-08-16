@@ -57,7 +57,7 @@ class DataTidyCommand extends Command
 
             $manager->correctArtisan($artisanFixWip->getChanged());
 
-            $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF | FDV::RESET_INVALID_PLUS_SHOW_FIX_CMD);
+            $fdv->perform($artisanFixWip, FDV::FIX | FDV::RESET_INVALID_PLUS_SHOW_FIX_CMD);
             $artisanFixWip->apply();
         }
 
