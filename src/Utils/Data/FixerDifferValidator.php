@@ -15,6 +15,7 @@ use InvalidArgumentException;
 class FixerDifferValidator
 {
     final public const FIX = 1;
+    final public const SHOW_DIFF = 2;
     final public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
     final public const SHOW_FIX_CMD_FOR_INVALID = 16;
     final public const USE_SET_FOR_FIX_CMD = 32;
@@ -41,7 +42,7 @@ class FixerDifferValidator
                 $this->fixer->fix($artisan->getChanged(), $field);
             }
 
-            if (!$skipDiffFor->has($field)) {
+            if ($flags & self::SHOW_DIFF && !$skipDiffFor->has($field)) {
                 $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged(), $imported);
             }
 

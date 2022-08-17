@@ -45,7 +45,7 @@ class DataImport
      */
     public function import(array $artisansData): void
     {
-        $flags = FDV::SHOW_FIX_CMD_FOR_INVALID | FDV::USE_SET_FOR_FIX_CMD;
+        $flags = FDV::SHOW_DIFF | FDV::SHOW_FIX_CMD_FOR_INVALID | FDV::USE_SET_FOR_FIX_CMD;
 
         foreach ($this->createImportItems($artisansData) as $item) {
             $this->updateArtisanWithData($item->getFixedEntity(), $item->getFixedInput());
