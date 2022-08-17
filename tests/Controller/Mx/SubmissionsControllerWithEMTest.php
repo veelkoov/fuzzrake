@@ -57,7 +57,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setMakerId('MAKERID')
             ->setName('Some testing maker')
             ->setCountry('FI')
-            ->setFeatures(Features::MOVABLE_JAW."\n".Features::FOLLOW_ME_EYES)
+            ->setFeatures(Features::FOLLOW_ME_EYES."\n".Features::MOVABLE_JAW)
             ->setOtherFeatures("Hidden pocket\nSqueaker in nose")
             ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
             ->setOtherOrderTypes('Arm sleeves')
@@ -81,16 +81,44 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $client->request('GET', "/mx/submissions/$id");
 
+        self::assertSelectorTextContains('tr.MAKER_ID.current', 'MAKERID');
+        self::assertSelectorTextContains('tr.MAKER_ID.submitted', 'MAKERID');
+        self::assertSelectorTextContains('tr.MAKER_ID.changed', 'MAKERID');
         self::assertSelectorExists('tr.MAKER_ID.submitted.submitted-same.not-fixed.not-changing');
 
+        self::assertSelectorTextContains('tr.NAME.current', 'Some testing maker');
+        self::assertSelectorTextContains('tr.NAME.submitted', 'Changed name');
+        self::assertSelectorTextContains('tr.NAME.changed', 'Changed name');
         self::assertSelectorExists('tr.NAME.submitted.submitted-different.not-fixed.changing');
+
+        self::assertSelectorTextContains('tr.COUNTRY.current', 'FI');
+        self::assertSelectorTextContains('tr.COUNTRY.submitted', 'Finland');
+        self::assertSelectorTextContains('tr.COUNTRY.changed', 'FI');
         self::assertSelectorExists('tr.COUNTRY.submitted.submitted-different.fixes-applied.not-changing');
+
+        self::assertSelectorTextContains('tr.URL_TWITTER.current', ''); // FIXME: This may not work as expected
+        self::assertSelectorTextContains('tr.URL_TWITTER.submitted', 'http://www.twitter.com/getfursuit');
+        self::assertSelectorTextContains('tr.URL_TWITTER.changed', 'https://twitter.com/getfursuit');
         self::assertSelectorExists('tr.URL_TWITTER.submitted.submitted-different.fixes-applied.changing');
 
+        self::assertSelectorTextContains('tr.PRODUCTION_MODELS.current', 'Standard commissions');
+        self::assertSelectorTextContains('tr.PRODUCTION_MODELS.submitted', 'Standard commissions');
+        self::assertSelectorTextContains('tr.PRODUCTION_MODELS.changed', 'Standard commissions');
         self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted.submitted-same.not-fixed.not-changing');
 
+        self::assertSelectorTextContains('tr.FEATURES.current', 'Follow-me eyes Movable jaw');
+        self::assertSelectorTextContains('tr.FEATURES.submitted', 'Follow-me eyes');
+        self::assertSelectorTextContains('tr.FEATURES.changed', 'Follow-me eyes');
         self::assertSelectorExists('tr.FEATURES.submitted.submitted-different.not-fixed.changing');
+
+        self::assertSelectorTextContains('tr.OTHER_ORDER_TYPES.current', 'Arm sleeves');
+        self::assertSelectorTextContains('tr.OTHER_ORDER_TYPES.submitted', 'Armsleeves');
+        self::assertSelectorTextContains('tr.OTHER_ORDER_TYPES.changed', 'Arm sleeves');
         self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted.submitted-different.fixes-applied.not-changing');
+
+        self::assertSelectorTextContains('tr.OTHER_FEATURES.current', 'Hidden pocket Squeaker in nose');
+        self::assertSelectorTextContains('tr.OTHER_FEATURES.submitted', 'Hidden pockets');
+        self::assertSelectorTextContains('tr.OTHER_FEATURES.changed', 'Hidden pocket');
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted.submitted-different.fixes-applied.changing');
     }
 

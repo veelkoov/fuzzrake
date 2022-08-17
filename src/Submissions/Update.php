@@ -7,6 +7,7 @@ namespace App\Submissions;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\IuSubmissions\IuSubmission;
+use App\Utils\StringList;
 
 class Update
 {
@@ -34,7 +35,11 @@ class Update
 
     public function fixesApplied(Field $field): bool
     {
-        return $this->originalInput->get($field) !== $this->updatedArtisan->get($field);
+        if ($field->isList()) {
+            return !StringList::sameElements($this->originalInput->getString($field), $this->updatedArtisan->getString($field));
+        } else {
+            return $this->originalInput->get($field) !== $this->updatedArtisan->get($field);
+        }
     }
 
     public function isChanging(Field $field): bool
