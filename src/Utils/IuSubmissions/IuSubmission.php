@@ -97,7 +97,7 @@ class IuSubmission implements FieldReadInterface
         }
     }
 
-    private static function getIdFromFilePath(string $filePath): string
+    public static function getIdFromFilePath(string $filePath): string
     {
         return pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}):(\d{2}):(\d{2})_(\d{4})\.json$')
             ->replace($filePath)

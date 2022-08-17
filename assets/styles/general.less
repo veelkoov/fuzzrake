@@ -57,3 +57,33 @@ span.utc_datetime {
 .references :target {
   background-color: #ffec00;
 }
+
+#mx-submission {
+  tr.current {
+    &.not-fixed.not-changing {
+      display: none;
+    }
+  }
+
+  tr.submitted {
+    &.not-fixed {
+      color: #bbb;
+      display: none;
+    }
+
+    &.fixes-applied {
+      color: #0a53be;
+    }
+  }
+
+  tr.changed {
+    &.changing {
+      color: #31b131;
+    }
+
+    &.not-changing {
+      color: #bbb;
+      display: none;
+    }
+  }
+}

@@ -48,13 +48,15 @@ class SubmissionsService
 
     public function getUpdate(IuSubmission $submission): Update
     {
-        $originalInput = $this->updateWith(new Artisan(), $submission);
+        $originalInput = new Artisan();
+        $this->updateWith($originalInput, $submission);
         $fixedInput = $this->fixer->getFixed($originalInput);
 
         $matchedArtisans = $this->getArtisans($fixedInput);
 
         $originalArtisan = 1 === count($matchedArtisans) ? Arrays::single($matchedArtisans) : new Artisan();
-        $updatedArtisan = $this->updateWith($originalArtisan, $fixedInput);
+        $updatedArtisan = clone $originalArtisan;
+        $this->updateWith($updatedArtisan, $fixedInput);
 
         return new Update(
             $submission,
@@ -65,7 +67,7 @@ class SubmissionsService
         );
     }
 
-    public function updateWith(Artisan $artisan, FieldReadInterface $source): Artisan
+    public function updateWith(Artisan $artisan, FieldReadInterface $source): void
     {
         foreach (Fields::inIuForm() as $field) {
             switch ($field) {
@@ -103,8 +105,6 @@ class SubmissionsService
         }
 
         $artisan->assureNsfwSafety();
-
-        return $artisan;
     }
 
     /**

@@ -32,8 +32,13 @@ class Update
         return $this->originalInput->get($field) !== $this->originalArtisan->get($field);
     }
 
-    public function fixerChanged(Field $field): bool
+    public function fixesApplied(Field $field): bool
     {
         return $this->originalInput->get($field) !== $this->updatedArtisan->get($field);
+    }
+
+    public function isChanging(Field $field): bool
+    {
+        return $this->originalArtisan->get($field) !== $this->updatedArtisan->get($field);
     }
 }

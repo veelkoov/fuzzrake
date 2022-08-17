@@ -9,7 +9,7 @@
         <p>Matched multiple makers - fail</p>
     {% endif %}
 
-    <table class="table table-sm">
+    <table class="table table-sm" id="mx-submission">
         <thead>
             <tr>
                 <th>Field</th>
@@ -18,24 +18,29 @@
         </thead>
         <tbody>
             {% for field in fields %}
-                {% if not update.new %}
-                    <tr>
-                        <td>{{ field.name }} [current]</td>
-                        <td>{{ update.originalInput.get(field)|as_str }}</td>
-                    </tr>
-                {% endif %}
-                {% if update.submittedDifferent(field) %}
-                    {% if update.fixerChanged(field) %}
-                        <tr>
-                            <td>{{ field.name }} [submitted]</td>
-                            <td>{{ update.originalArtisan.get(field)|as_str }}</td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td>{{ field.name }} [changed]</td>
-                        <td>{{ update.updatedArtisan.get(field)|as_str }}</td>
-                    </tr>
-                {% endif %}
+                {% set submitted_different = update.submittedDifferent(field) %}
+                {% set fixes_applied = update.fixesApplied(field) %}
+                {% set is_changing = update.isChanging(field) %}
+
+                {% set row_class = (submitted_different ? 'submitted-different' : 'submitted-same')
+                    ~ ' ' ~ (fixes_applied ? 'fixes-applied' : 'not-fixed')
+                    ~ ' ' ~ (is_changing ? 'changing' : 'not-changing')
+                %}
+
+                <tr class="{{ field.value }} current {{ row_class }}">
+                    <td>{{ field.name }}&nbsp;[current]</td>
+                    <td>{{ update.originalInput.get(field)|as_str }}</td>
+                </tr>
+
+                <tr class="{{ field.value }} submitted {{ row_class }}">
+                    <td>{{ field.name }}&nbsp;[submitted]</td>
+                    <td>{{ update.originalArtisan.get(field)|as_str }}</td>
+                </tr>
+
+                <tr class="{{ field.value }} changed {{ row_class }}">
+                    <td>{{ field.name }}&nbsp;[changed]</td>
+                    <td>{{ update.updatedArtisan.get(field)|as_str }}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
