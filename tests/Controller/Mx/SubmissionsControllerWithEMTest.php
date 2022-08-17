@@ -122,7 +122,34 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorExists('tr.OTHER_FEATURES.submitted.submitted-different.fixes-applied.changing');
     }
 
-    // TODO: Test submission with multiple matched makers
+    public function testSubmissionMatchingMultipleMakers(): void
+    {
+        $client = self::createClient();
+
+        $entity1 = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Some testing maker')
+        ;
+        $entity2 = (new Artisan())
+            ->setMakerId('MAKERI2')
+            ->setName('Testing maker')
+        ;
+
+        self::persistAndFlush($entity1, $entity2);
+
+        $submission = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Testing maker')
+        ;
+
+        $id = Submissions::submit($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextContains('p', 'Matched multiple makers: Some testing maker (MAKERID), Testing maker (MAKERI2). Unable to continue.');
+
+        // TODO: Consider some more safety measures?
+    }
 
     /**
      * @throws JsonException

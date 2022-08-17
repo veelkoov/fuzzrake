@@ -5,13 +5,25 @@
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
-    {% if update.matchedArtisans|length > 1 %} {# TODO: Improve this section #}
-        <p>Matched multiple makers - fail</p>
+    {% if update.matchedArtisans|length > 1 %}
+        <p>
+            Matched multiple makers:
+
+            {% for artisan in update.matchedArtisans %}
+                <a href="{{ path('main', {'_fragment': artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>
+                {%- if loop.last %}.{% else %},{% endif %}
+            {% endfor %}
+
+            <span class="text-danger">Unable to continue.</span>
+        </p>
     {% elseif update.matchedArtisans is empty %}
-        <p>Creating a new maker</p>
+        <p>Creating a new maker.</p>
     {% else %}
-        {% set maker = update.matchedArtisans|first %}
-        <p>Updating: {{ maker.makerId }}</p>
+        {% set artisan = update.matchedArtisans|first %}
+
+        <p>
+            Updating: <a href="{{ path('main', {'_fragment': artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>.
+        </p>
     {% endif %}
 
     <table class="table table-sm" id="mx-submission">
@@ -21,6 +33,7 @@
                 <th>Value</th>
             </tr>
         </thead>
+
         <tbody>
             {% for field in fields %}
                 {% set submitted_different = update.submittedDifferent(field) %}
@@ -34,17 +47,17 @@
 
                 <tr class="{{ field.value }} current {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[current]</td>
-                    <td>{{ update.originalArtisan.get(field)|as_str }}</td>
+                    <td>{{ update.originalArtisan.get(field)|as_str|nl2br }}</td>
                 </tr>
 
                 <tr class="{{ field.value }} submitted {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[submitted]</td>
-                    <td>{{ update.originalInput.get(field)|as_str }}</td>
+                    <td>{{ update.originalInput.get(field)|as_str|nl2br }}</td>
                 </tr>
 
                 <tr class="{{ field.value }} changed {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[changed]</td>
-                    <td>{{ update.updatedArtisan.get(field)|as_str }}</td>
+                    <td>{{ update.updatedArtisan.get(field)|as_str|nl2br }}</td>
                 </tr>
             {% endfor %}
         </tbody>
