@@ -47,7 +47,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $state->artisan->setContactInfoOriginal($state->artisan->getContactInfoObfuscated()); // grep-contact-updates-magic
+            $state->artisan->setContactInfoOriginal($state->artisan->getContactInfoObfuscated()); // grep-contact-updates-magic // FIXME: Remove
 
             $submittedPasswordOk = $this->handlePassword($state);
 

@@ -42,7 +42,7 @@ class SubmissionsController extends AbstractController
 
         return $this->render('mx/submissions/submission.html.twig', [
             'update'     => $update,
-            'fields'     => Fields::all(), // TODO: Only required/changeable
+            'fields'     => Fields::persisted(),
         ]);
     }
 

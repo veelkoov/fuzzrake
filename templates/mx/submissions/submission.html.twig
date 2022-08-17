@@ -43,6 +43,7 @@
                 {% set row_class = (submitted_different ? 'submitted-different' : 'submitted-same')
                     ~ ' ' ~ (fixes_applied ? 'fixes-applied' : 'not-fixed')
                     ~ ' ' ~ (is_changing ? 'changing' : 'not-changing')
+                    ~ ' ' ~ (field.isInIuForm ? 'in-iu-form' : 'automated')
                 %}
 
                 <tr class="{{ field.value }} current {{ row_class }}">

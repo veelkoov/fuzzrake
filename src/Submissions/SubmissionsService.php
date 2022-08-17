@@ -10,6 +10,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\Finder;
 use App\Utils\IuSubmissions\IuSubmission;
@@ -55,8 +56,12 @@ class SubmissionsService
         $matchedArtisans = $this->getArtisans($fixedInput);
 
         $originalArtisan = 1 === count($matchedArtisans) ? Arrays::single($matchedArtisans) : new Artisan();
+
+        $this->updateContact($originalInput, $fixedInput, $originalArtisan);
+
         $updatedArtisan = clone $originalArtisan;
         $this->updateWith($updatedArtisan, $fixedInput);
+        $this->setAddedUpdatedTimestamps($updatedArtisan);
 
         return new Update(
             $submission,
@@ -80,14 +85,11 @@ class SubmissionsService
                     }
                     break;
 
-                case Field::CONTACT_INFO_OBFUSCATED: // grep-contact-updates-magic
-                    $newValue = $source->getString(Field::CONTACT_INFO_ORIGINAL);
-
-                    if ($newValue === $artisan->getContactInfoObfuscated()) {
-                        break; // No updates
-                    }
-
-                    $artisan->updateContact($newValue);
+                case Field::CONTACT_INFO_OBFUSCATED:
+                    $artisan->set(Field::CONTACT_INFO_OBFUSCATED, $source->get(Field::CONTACT_INFO_OBFUSCATED));
+                    $artisan->set(Field::CONTACT_INFO_ORIGINAL, $source->get(Field::CONTACT_INFO_ORIGINAL));
+                    $artisan->set(Field::CONTACT_METHOD, $source->get(Field::CONTACT_METHOD));
+                    $artisan->set(Field::CONTACT_ADDRESS_PLAIN, $source->get(Field::CONTACT_ADDRESS_PLAIN));
                     break;
 
                 case Field::URL_PHOTOS:
@@ -119,5 +121,27 @@ class SubmissionsService
         );
 
         return Artisan::wrapAll($results);
+    }
+
+    private function setAddedUpdatedTimestamps(Artisan $entity): void
+    {
+        if (null === $entity->getId()) {
+            $entity->setDateAdded(UtcClock::now());
+        } else {
+            $entity->setDateUpdated(UtcClock::now());
+        }
+    }
+
+    private function updateContact(Artisan $originalInput, Artisan $fixedInput, Artisan $originalArtisan): void
+    {
+        $submittedContact = $originalInput->getContactInfoObfuscated();
+
+        if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getContactInfoObfuscated()) {
+            $originalInput->updateContact($originalArtisan->getContactInfoOriginal());
+            $fixedInput->updateContact($originalArtisan->getContactInfoOriginal());
+        } else {
+            $originalInput->updateContact($submittedContact);
+            $fixedInput->updateContact($submittedContact);
+        }
     }
 }
