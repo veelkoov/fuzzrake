@@ -14,9 +14,11 @@ final class Finder
     use UtilityClass;
 
     /**
+     * @param ?positive-int $limit
+     *
      * @return IuSubmission[]
      */
-    public static function getFrom(string $directoryPath, ?DateTimeImmutable $onlyAfter = null): array
+    public static function getFrom(string $directoryPath, ?DateTimeImmutable $onlyAfter = null, ?int $limit = null, bool $reverse = false): array
     {
         if (!is_dir($directoryPath)) {
             throw new InvalidArgumentException("Directory '$directoryPath' does not exist");
@@ -24,17 +26,37 @@ final class Finder
 
         $result = [];
 
-        $finder = new FileFinder();
-        $finder->files()->in($directoryPath)->sortByName();
-
-        foreach ($finder as $file) {
+        foreach (self::getFinder($directoryPath, $reverse) as $file) {
             $item = IuSubmission::fromFile($file);
 
-            if (null === $onlyAfter || $item->getTimestamp() >= $onlyAfter) {
-                $result[] = $item;
+            if (self::isTooOld($onlyAfter, $item)) {
+                continue;
             }
+
+            if (null !== $limit && 0 === $limit--) {
+                break;
+            }
+
+            $result[] = $item;
         }
 
         return $result;
+    }
+
+    private static function isTooOld(?DateTimeImmutable $onlyAfter, IuSubmission $item): bool
+    {
+        return null !== $onlyAfter && $item->getTimestamp() < $onlyAfter;
+    }
+
+    private static function getFinder(string $directoryPath, bool $reverse): FileFinder
+    {
+        $finder = new FileFinder();
+        $finder->files()->in($directoryPath)->sortByName();
+
+        if ($reverse) {
+            $finder->reverseSorting();
+        }
+
+        return $finder;
     }
 }

@@ -1,0 +1,24 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Maker ID</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submission in submissions %}
+                <tr>
+                    <td><a href="{{ path('mx_submission', {'id': submission.id}) }}">{{ submission.id }}</a></td>
+                    <td>{# TODO #}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

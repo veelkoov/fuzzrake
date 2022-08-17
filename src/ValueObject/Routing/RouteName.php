@@ -28,6 +28,8 @@ final class RouteName
     final public const MX_ARTISAN_URLS = 'mx_artisan_urls';
     final public const MX_EVENT_EDIT = 'mx_event_edit';
     final public const MX_EVENT_NEW = 'mx_event_new';
+    final public const MX_SUBMISSION = 'mx_submission';
+    final public const MX_SUBMISSIONS = 'mx_submissions';
     final public const MX_QUERY = 'mx_query';
     final public const NEW_ARTISANS = 'new_artisans';
     final public const RULES = 'rules';

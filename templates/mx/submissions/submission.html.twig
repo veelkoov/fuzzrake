@@ -1,0 +1,42 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}Submission {{ update.submission.id }}{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    {% if update.matchedArtisans|length > 1 %}
+        <p>Matched multiple makers - fail</p>
+    {% endif %}
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field in fields %}
+                {% if not update.new %}
+                    <tr>
+                        <td>{{ field.name }} [current]</td>
+                        <td>{{ update.originalInput.get(field)|as_str }}</td>
+                    </tr>
+                {% endif %}
+                {% if update.submittedDifferent(field) %}
+                    {% if update.fixerChanged(field) %}
+                        <tr>
+                            <td>{{ field.name }} [submitted]</td>
+                            <td>{{ update.originalArtisan.get(field)|as_str }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>{{ field.name }} [changed]</td>
+                        <td>{{ update.updatedArtisan.get(field)|as_str }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

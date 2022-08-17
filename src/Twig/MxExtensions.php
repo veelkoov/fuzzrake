@@ -6,6 +6,7 @@ namespace App\Twig;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\StrUtils;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -15,6 +16,7 @@ class MxExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('smart', fn (Artisan|ArtisanE $artisan) => $this->smartFilter($artisan)),
+            new TwigFilter('as_str', fn (mixed $value) => $this->asStr($value)),
         ];
     }
 
@@ -25,5 +27,13 @@ class MxExtensions extends AbstractExtension
         }
 
         return $artisan;
+    }
+
+    /**
+     * @param psFieldValue $value
+     */
+    private function asStr(mixed $value): string
+    {
+        return StrUtils::asStr($value);
     }
 }

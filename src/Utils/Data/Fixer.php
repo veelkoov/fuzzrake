@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
+use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer\ContactAllowedFixer;
 use App\Utils\Data\Fixer\CountryFixer;
@@ -42,7 +43,18 @@ class Fixer
     ) {
     }
 
-    public function fix(Artisan $artisan, Field $field): void
+    public function getFixed(Artisan $input): Artisan
+    {
+        $result = clone $input;
+
+        foreach (Fields::persisted() as $field) {
+            $this->fix($result, $field);
+        }
+
+        return $result;
+    }
+
+    public function fix(Artisan $artisan, Field $field): void // TODO: Get rid of / private
     {
         $value = $artisan->get($field);
 

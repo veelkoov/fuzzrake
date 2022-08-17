@@ -7,6 +7,7 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\Submissions;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
@@ -16,7 +17,6 @@ use RuntimeException;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
 
 abstract class AbstractTestWithEM extends WebTestCaseWithEM
 {
@@ -24,14 +24,14 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
     {
         parent::setUp();
 
-        $this->emptyTestSubmissionsDir();
+        Submissions::emptyTestSubmissionsDir();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        $this->emptyTestSubmissionsDir();
+        Submissions::emptyTestSubmissionsDir();
     }
 
     protected function getImportManager(bool $acceptAll): Manager
@@ -59,11 +59,6 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         $import->import(Finder::getFrom(Paths::getTestIuFormDataPath()));
 
         return $output;
-    }
-
-    private function emptyTestSubmissionsDir(): void
-    {
-        (new Filesystem())->remove(Paths::getTestIuFormDataPath());
     }
 
     private function getFdvFactory(): FdvFactory

@@ -25,7 +25,7 @@ class IuSubmissionService
     public function submit(Artisan $submission): bool
     {
         try {
-            $relativeFilePath = $this->local->saveOnDiskGetRelativePath($this->submissionToJson($submission));
+            $relativeFilePath = $this->local->saveOnDiskGetRelativePath(self::asJson($submission));
 
             if ($s3SendingOk = $this->s3->sendCopyToS3($relativeFilePath)) {
                 /* If successfully pushed data to S3, remove local copy. It's safer in S3 */
@@ -45,7 +45,7 @@ class IuSubmissionService
     /**
      * @throws JsonException
      */
-    private function submissionToJson(Artisan $submission): string
+    public static function asJson(Artisan $submission): string
     {
         return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()), JSON_PRETTY_PRINT);
     }
