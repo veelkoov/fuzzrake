@@ -326,7 +326,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return ContactPermit::FEEDBACK === $this->artisan->getContactAllowed();
     }
 
-    public function updateContact(string $newOriginalContactValue): void
+    public function updateContact(string $newOriginalContactValue): self
     {
         [$method, $address] = Contact::parse($newOriginalContactValue);
 
@@ -341,6 +341,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             ->getPrivateData()
             ->setOriginalContactInfo($newOriginalContactValue)
             ->setContactAddress($address);
+
+        return $this;
     }
 
     /**

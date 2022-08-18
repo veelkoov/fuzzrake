@@ -7,23 +7,24 @@ namespace App\Tests\Submissions;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
 use App\Submissions\SubmissionsService;
+use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
-use PHPUnit\Framework\TestCase;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\TestUtils\UtcClockMock;
+
+use function Psl\Vec\map;
 
 class SubmissionsServiceTest extends TestCase
 {
     public function testUpdateHandlesNewContactInfoProperly(): void
     {
-        $artisanRepoMock = $this->getArtisanRepoMock([]);
-        $fixerMock = $this->getFixerMock();
-
         $submission = Submissions::from((new Artisan())
             ->setContactInfoObfuscated('getfursu.it@localhost.localdomain')
         );
 
-        $subject = new SubmissionsService($artisanRepoMock, $fixerMock, '');
+        $subject = $this->getSetUpSubmissionsService([]);
         $result = $subject->getUpdate($submission);
 
         self::assertEquals('', $result->originalArtisan->getContactInfoOriginal());
@@ -39,15 +40,15 @@ class SubmissionsServiceTest extends TestCase
 
     public function testUpdateHandlesContactInfoChangeProperly(): void
     {
-        $artisan = $this->getArtisanMock('getfursu.it@localhost.localdomain');
-
-        $artisanRepoMock = $this->getArtisanRepoMock([$artisan->getArtisan()]);
-        $fixerMock = $this->getFixerMock();
+        $artisan = $this->getPersistedArtisanMock()
+          ->updateContact('getfursu.it@localhost.localdomain')
+        ;
 
         $submission = Submissions::from((new Artisan())
-            ->setContactInfoObfuscated('Telegram: @getfursuit'));
+            ->setContactInfoObfuscated('Telegram: @getfursuit')
+        );
 
-        $subject = new SubmissionsService($artisanRepoMock, $fixerMock, '');
+        $subject = $this->getSetUpSubmissionsService([$artisan]);
         $result = $subject->getUpdate($submission);
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
@@ -63,15 +64,15 @@ class SubmissionsServiceTest extends TestCase
 
     public function testUpdateHandlesUnchangedContactInfoProperly(): void
     {
-        $artisan = $this->getArtisanMock('getfursu.it@localhost.localdomain');
-
-        $artisanRepoMock = $this->getArtisanRepoMock([$artisan->getArtisan()]);
-        $fixerMock = $this->getFixerMock();
+        $artisan = $this->getPersistedArtisanMock()
+            ->updateContact('getfursu.it@localhost.localdomain')
+        ;
 
         $submission = Submissions::from((new Artisan())
-            ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain'));
+            ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain')
+        );
 
-        $subject = new SubmissionsService($artisanRepoMock, $fixerMock, '');
+        $subject = $this->getSetUpSubmissionsService([$artisan]);
         $result = $subject->getUpdate($submission);
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
@@ -85,34 +86,67 @@ class SubmissionsServiceTest extends TestCase
         self::assertEquals('E-MAIL: ge*******it@local***********omain', $result->updatedArtisan->getContactInfoObfuscated());
     }
 
-    /**
-     * @param ArtisanE[] $artisans
-     */
-    private function getArtisanRepoMock(array $artisans): ArtisanRepository
+    public function testAddedDateIsHandledProperly(): void
     {
-        $artisanRepoMock = $this->createMock(ArtisanRepository::class);
-        $artisanRepoMock->expects($this->once())->method('findBestMatches')->willReturn($artisans);
+        UtcClockMock::start();
 
-        return $artisanRepoMock;
+        $submission = Submissions::from(new Artisan());
+
+        $subject = $this->getSetUpSubmissionsService([]);
+        $result = $subject->getUpdate($submission);
+
+        self::assertEquals(null, $result->originalArtisan->getDateAdded());
+        self::assertEquals(null, $result->originalArtisan->getDateUpdated());
+
+        self::assertEquals(UtcClock::now(), $result->originalInput->getDateAdded());
+        self::assertEquals(null, $result->originalInput->getDateUpdated());
+
+        self::assertEquals(UtcClock::now(), $result->updatedArtisan->getDateAdded());
+        self::assertEquals(null, $result->updatedArtisan->getDateUpdated());
     }
 
-    private function getFixerMock(): Fixer
+    public function testUpdatedDateIsHandledProperly(): void
+    {
+        UtcClockMock::start();
+
+        $artisan = $this->getPersistedArtisanMock();
+
+        $submission = Submissions::from(new Artisan());
+
+        $subject = $this->getSetUpSubmissionsService([$artisan]);
+        $result = $subject->getUpdate($submission);
+
+        self::assertEquals(null, $result->originalArtisan->getDateAdded());
+        self::assertEquals(null, $result->originalArtisan->getDateUpdated());
+
+        self::assertEquals(null, $result->originalInput->getDateAdded());
+        self::assertEquals(UtcClock::now(), $result->originalInput->getDateUpdated());
+
+        self::assertEquals(null, $result->updatedArtisan->getDateAdded());
+        self::assertEquals(UtcClock::now(), $result->updatedArtisan->getDateUpdated());
+    }
+
+    private function getPersistedArtisanMock(): Artisan
+    {
+        $result = $this->getMockBuilder(ArtisanE::class)->onlyMethods(['getId'])->getMock();
+        $result->method('getId')->willReturn(1);
+
+        return Artisan::wrap($result);
+    }
+
+    /**
+     * @param Artisan[] $bestMatchesArtisans
+     */
+    private function getSetUpSubmissionsService(array $bestMatchesArtisans): SubmissionsService
     {
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
 
-        return $fixerMock;
-    }
+        $entities = map($bestMatchesArtisans, fn ($item) => $item->getArtisan());
 
-    /** @noinspection PhpSameParameterValueInspection */
-    private function getArtisanMock(string $originalContactValue): Artisan
-    {
-        $entity = $this->getMockBuilder(ArtisanE::class)->onlyMethods(['getId'])->getMock();
-        $entity->method('getId')->willReturn(1);
+        $artisanRepoMock = $this->createMock(ArtisanRepository::class);
+        $artisanRepoMock->expects($this->once())->method('findBestMatches')->willReturn($entities);
 
-        $result = new Artisan($entity);
-        $result->updateContact($originalContactValue);
-
-        return $result;
+        return new SubmissionsService($artisanRepoMock, $fixerMock, '');
     }
 }

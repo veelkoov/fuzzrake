@@ -51,17 +51,19 @@ class SubmissionsService
     {
         $originalInput = new Artisan();
         $this->updateWith($originalInput, $submission);
-        $fixedInput = $this->fixer->getFixed($originalInput);
 
-        $matchedArtisans = $this->getArtisans($fixedInput);
-
+        /* This bases on input before fixing. Could use some improvements. */
+        $matchedArtisans = $this->getArtisans($originalInput);
         $originalArtisan = 1 === count($matchedArtisans) ? Arrays::single($matchedArtisans) : new Artisan();
 
-        $this->updateContact($originalInput, $fixedInput, $originalArtisan);
+        $this->handleSpecialFieldsInInput($originalInput, $originalArtisan);
+
+        $fixedInput = $this->fixer->getFixed($originalInput);
 
         $updatedArtisan = clone $originalArtisan;
         $this->updateWith($updatedArtisan, $fixedInput);
-        $this->setAddedUpdatedTimestamps($updatedArtisan);
+
+        $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
 
         return new Update(
             $submission,
@@ -80,8 +82,10 @@ class SubmissionsService
                     $newValue = $source->getString($field);
 
                     if ($newValue !== $artisan->getMakerId()) {
-                        $artisan->setFormerMakerIds(StringList::pack($artisan->getAllMakerIdsArr()));
                         $artisan->setMakerId($newValue);
+                        $artisan->setFormerMakerIds(StringList::pack($artisan->getAllMakerIdsArr()));
+                    } else {
+                        $artisan->setFormerMakerIds($source->getString(Field::FORMER_MAKER_IDS));
                     }
                     break;
 
@@ -112,36 +116,38 @@ class SubmissionsService
     /**
      * @return Artisan[]
      */
-    public function getArtisans(Artisan $submissionData): array
+    private function getArtisans(Artisan $submissionData): array
     {
         $results = $this->artisans->findBestMatches(
-            concat([$submissionData->getString(Field::NAME)], StringList::unpack($submissionData->getString(Field::FORMERLY))),
-            concat([$submissionData->getString(Field::MAKER_ID)], StringList::unpack($submissionData->getString(Field::FORMER_MAKER_IDS))),
-            null,
+            concat([$submissionData->getName()], $submissionData->getFormerlyArr()),
+            concat([$submissionData->getMakerId()], $submissionData->getFormerMakerIdsArr()),
+            null, // TODO: Remove this or implement
         );
 
         return Artisan::wrapAll($results);
     }
 
-    private function setAddedUpdatedTimestamps(Artisan $entity): void
-    {
-        if (null === $entity->getId()) {
-            $entity->setDateAdded(UtcClock::now());
-        } else {
-            $entity->setDateUpdated(UtcClock::now());
-        }
-    }
-
-    private function updateContact(Artisan $originalInput, Artisan $fixedInput, Artisan $originalArtisan): void
+    private function handleSpecialFieldsInInput(Artisan $originalInput, Artisan $originalArtisan): void
     {
         $submittedContact = $originalInput->getContactInfoObfuscated();
 
         if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getContactInfoObfuscated()) {
             $originalInput->updateContact($originalArtisan->getContactInfoOriginal());
-            $fixedInput->updateContact($originalArtisan->getContactInfoOriginal());
         } else {
             $originalInput->updateContact($submittedContact);
-            $fixedInput->updateContact($submittedContact);
+        }
+
+        if (null === $originalArtisan->getId()) {
+            $originalInput->setDateAdded(UtcClock::now());
+        } else {
+            $originalInput->setDateUpdated(UtcClock::now());
+        }
+    }
+
+    private function handleSpecialFieldsInEntity(Artisan $updatedArtisan, Artisan $originalArtisan): void
+    {
+        if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
+            $updatedArtisan->setMiniatureUrls('');
         }
     }
 }
