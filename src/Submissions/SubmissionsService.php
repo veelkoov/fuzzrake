@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Submissions;
 
-use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
+use App\DataDefinitions\Fields\FieldsList;
 use App\Repository\ArtisanRepository;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -50,7 +50,7 @@ class SubmissionsService
     public function getUpdate(IuSubmission $submission): Update
     {
         $originalInput = new Artisan();
-        $this->updateWith($originalInput, $submission);
+        $this->updateWith($originalInput, $submission, Fields::inIuForm());
 
         /* This bases on input before fixing. Could use some improvements. */
         $matchedArtisans = $this->getArtisans($originalInput);
@@ -61,7 +61,7 @@ class SubmissionsService
         $fixedInput = $this->fixer->getFixed($originalInput);
 
         $updatedArtisan = clone $originalArtisan;
-        $this->updateWith($updatedArtisan, $fixedInput);
+        $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
 
         $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
 
@@ -74,40 +74,10 @@ class SubmissionsService
         );
     }
 
-    public function updateWith(Artisan $artisan, FieldReadInterface $source): void
+    public function updateWith(Artisan $artisan, FieldReadInterface $source, FieldsList $fields): void
     {
-        foreach (Fields::inIuForm() as $field) {
-            switch ($field) {
-                case Field::MAKER_ID:
-                    $newValue = $source->getString($field);
-
-                    if ($newValue !== $artisan->getMakerId()) {
-                        $artisan->setMakerId($newValue);
-                        $artisan->setFormerMakerIds(StringList::pack($artisan->getAllMakerIdsArr()));
-                    } else {
-                        $artisan->setFormerMakerIds($source->getString(Field::FORMER_MAKER_IDS));
-                    }
-                    break;
-
-                case Field::CONTACT_INFO_OBFUSCATED:
-                    $artisan->set(Field::CONTACT_INFO_OBFUSCATED, $source->get(Field::CONTACT_INFO_OBFUSCATED));
-                    $artisan->set(Field::CONTACT_INFO_ORIGINAL, $source->get(Field::CONTACT_INFO_ORIGINAL));
-                    $artisan->set(Field::CONTACT_METHOD, $source->get(Field::CONTACT_METHOD));
-                    $artisan->set(Field::CONTACT_ADDRESS_PLAIN, $source->get(Field::CONTACT_ADDRESS_PLAIN));
-                    break;
-
-                case Field::URL_PHOTOS:
-                    // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
-                    if (!StringList::sameElements($artisan->getString($field), $source->getString($field))) {
-                        $artisan->setMiniatureUrls('');
-                    }
-
-                    $artisan->set($field, $source->get($field));
-                    break;
-
-                default:
-                    $artisan->set($field, $source->get($field));
-            }
+        foreach ($fields as $field) {
+            $artisan->set($field, $source->get($field));
         }
 
         $artisan->assureNsfwSafety();
@@ -141,6 +111,12 @@ class SubmissionsService
             $originalInput->setDateAdded(UtcClock::now());
         } else {
             $originalInput->setDateUpdated(UtcClock::now());
+
+            if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) { // TODO: Test me!
+                $originalInput->setFormerMakerIds(StringList::pack($originalArtisan->getAllMakerIdsArr()));
+            } else {
+                $originalInput->setFormerMakerIds($originalArtisan->getFormerMakerIds());
+            }
         }
     }
 

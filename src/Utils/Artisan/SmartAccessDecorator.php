@@ -21,6 +21,7 @@ use App\Utils\Artisan\Fields\CommissionAccessor;
 use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
@@ -108,6 +109,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $result = call_user_func($callback);
 
         return $result; // @phpstan-ignore-line
+    }
+
+    public function equals(Field $field, self $other): bool
+    {
+        if ($field->isList()) {
+            return StringList::sameElements($this->getString($field), $other->getString($field));
+        } elseif ($field->isDate()) {
+            return DateTimeUtils::equal($this->getDateTimeValue($field), $other->getDateTimeValue($field));
+        } else {
+            return $this->get($field) === $other->get($field);
+        }
     }
 
     public function getString(Field $field): string

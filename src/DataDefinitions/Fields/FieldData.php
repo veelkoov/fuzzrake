@@ -16,6 +16,7 @@ class FieldData
         public readonly string $modelName,
         ?string $validationRegexp,
         public readonly bool $isList,
+        public readonly bool $isDate,
         public readonly bool $isPersisted,
         public readonly bool $inStats,
         public readonly bool $public,

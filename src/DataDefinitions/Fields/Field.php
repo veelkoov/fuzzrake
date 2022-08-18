@@ -103,6 +103,11 @@ enum Field: string
         return $this->getData()->isList;
     }
 
+    public function isDate(): bool
+    {
+        return $this->getData()->isDate;
+    }
+
     public function isPersisted(): bool
     {
         return $this->getData()->isPersisted;

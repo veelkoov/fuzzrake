@@ -8,7 +8,9 @@ use ArrayIterator;
 use Closure;
 use Iterator;
 use IteratorAggregate;
+
 use function Psl\Vec\concat;
+use function Psl\Vec\values;
 
 /**
  * @implements IteratorAggregate<string, Field>
@@ -36,7 +38,7 @@ class FieldsList implements IteratorAggregate
      */
     public function plus(array $fields): self
     {
-        return new FieldsList(concat($this->fields, $fields));
+        return new FieldsList(concat(values($this->fields), $fields));
     }
 
     public function filtered(Closure $filter): self

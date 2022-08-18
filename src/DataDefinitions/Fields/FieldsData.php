@@ -8,6 +8,8 @@ use App\DataDefinitions\Fields\Field as F;
 use App\DataDefinitions\Fields\ValidationRegexps as V;
 use App\Utils\Traits\UtilityClass;
 
+use function Psl\Iter\contains;
+
 final class FieldsData
 {
     use UtilityClass;
@@ -101,6 +103,11 @@ final class FieldsData
         'CONTACT_INFO_ORIGINAL'     => ['          contactInfoOriginal',     null],
     ];
 
+    final public const DATES = [
+        F::DATE_ADDED,
+        F::DATE_UPDATED,
+    ];
+
     final public const NON_INSPECTED_URLS = [
         F::URL_FURTRACK,
         F::URL_SCRITCH,
@@ -136,6 +143,7 @@ final class FieldsData
                 substr($data, 10),
                 $validationRegexp,
                 self::MARK_LIST === $data[0],
+                contains(self::DATES, $field),
                 self::MARK_DYNAMIC !== $data[2],
                 self::MARK_STATS === $data[4],
                 self::MARK_PUBLIC === $data[6],
