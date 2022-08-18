@@ -48,7 +48,7 @@
 
                 <tr class="{{ field.value }} current {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[current]</td>
-                    <td>{{ update.originalArtisan.get(field)|as_str|nl2br }}</td>
+                    <td>{{ field|difference(false, update.originalArtisan, update.updatedArtisan) }}</td>
                 </tr>
 
                 <tr class="{{ field.value }} submitted {{ row_class }}">
@@ -56,9 +56,9 @@
                     <td>{{ update.originalInput.get(field)|as_str|nl2br }}</td>
                 </tr>
 
-                <tr class="{{ field.value }} changed {{ row_class }}">
+                <tr class="{{ field.value }} changed {{ row_class }} bottom-separator">
                     <td>{{ field.name }}&nbsp;[changed]</td>
-                    <td>{{ update.updatedArtisan.get(field)|as_str|nl2br }}</td>
+                    <td>{{ field|difference(true, update.updatedArtisan, update.originalArtisan) }}</td>
                 </tr>
             {% endfor %}
         </tbody>

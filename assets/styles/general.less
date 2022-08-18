@@ -59,31 +59,24 @@ span.utc_datetime {
 }
 
 #mx-submission {
-  tr.current {
+  tr {
     &.not-fixed.not-changing {
+      color: #bbb;
       display: none;
     }
   }
 
   tr.submitted {
     &.not-fixed {
-      color: #bbb;
       display: none;
     }
 
-    &.fixes-applied {
+    &.fixes-applied td:last-child {
       color: #0a53be;
     }
   }
 
-  tr.changed {
-    &.changing {
-      color: #31b131;
-    }
-
-    &.not-changing {
-      color: #bbb;
-      display: none;
-    }
+  tr.bottom-separator td {
+    border-bottom: 2px solid #aaa;
   }
 }
