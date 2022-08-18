@@ -109,6 +109,16 @@ final class FieldsData
         F::URL_OTHER,
     ];
 
+    final public const IU_FORM_AFFECTED = [
+        F::FORMER_MAKER_IDS,
+        F::DATE_ADDED,
+        F::DATE_UPDATED,
+        F::CONTACT_METHOD,
+        F::CONTACT_ADDRESS_PLAIN,
+        // obfuscated is in form
+        F::CONTACT_INFO_ORIGINAL,
+    ];
+
     /**
      * @var array<string,FieldData>
      */

@@ -14,6 +14,7 @@ final class Fields
     private static ?FieldsList $persisted = null;
     private static ?FieldsList $public = null;
     private static ?FieldsList $inIuForm = null;
+    private static ?FieldsList $iuFormAffected = null;
     private static ?FieldsList $inStats = null;
     private static ?FieldsList $lists = null;
     private static ?FieldsList $urls = null;
@@ -38,6 +39,11 @@ final class Fields
     public static function inIuForm(): FieldsList
     {
         return self::$inIuForm ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm());
+    }
+
+    public static function iuFormAffected(): FieldsList
+    {
+        return self::$iuFormAffected ??= self::inIuForm()->plus(FieldsData::IU_FORM_AFFECTED);
     }
 
     public static function inStats(): FieldsList

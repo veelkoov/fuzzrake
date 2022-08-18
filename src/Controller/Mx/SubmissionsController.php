@@ -42,7 +42,7 @@ class SubmissionsController extends AbstractController
 
         return $this->render('mx/submissions/submission.html.twig', [
             'update'     => $update,
-            'fields'     => Fields::persisted(),
+            'fields'     => Fields::iuFormAffected(),
         ]);
     }
 
