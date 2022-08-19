@@ -10,6 +10,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
+use App\Utils\Data\Manager;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\Finder;
@@ -28,6 +29,7 @@ class SubmissionsService
     public function __construct(
         private readonly ArtisanRepository $artisans,
         private readonly Fixer $fixer,
+        private readonly Manager $manager,
         #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
         string $submissionsDirPath,
     ) {
@@ -64,6 +66,7 @@ class SubmissionsService
         $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
 
         $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
+        $this->manager->correctArtisan($updatedArtisan, $submission->getId());
 
         return new Update(
             $submission,

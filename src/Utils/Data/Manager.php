@@ -16,6 +16,7 @@ use App\Utils\StrUtils;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use function Psl\File\read;
 
 class Manager
@@ -65,18 +66,26 @@ class Manager
      */
     private ?string $currentSubject = null;
 
-    public function __construct(string $directives)
-    {
+
+    public function __construct(
+        string $directives = '',
+        #[Autowire('%env(resolve:CORRECTIONS_FILE_PATH)%')]
+        string $directivesFilePath = '',
+    ) {
         $this->readDirectives($directives);
+
+        if ('' !== $directivesFilePath) {
+            $this->readDirectives(read($directivesFilePath));
+        }
     }
 
-    public static function createFromFile(string $correctionsFilePath): self
+    public static function createFromFile(string $directivesFilePath): self
     {
-        if ('' === $correctionsFilePath) {
+        if ('' === $directivesFilePath) {
             throw new InvalidArgumentException('Corrections file path cannot be empty');
         }
 
-        return new Manager(read($correctionsFilePath));
+        return new Manager(directivesFilePath: $directivesFilePath);
     }
 
     public function correctArtisan(Artisan $artisan, string $submissionId = null): void

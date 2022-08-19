@@ -11,6 +11,7 @@ use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
+use App\Utils\Data\Manager;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 
@@ -21,6 +22,7 @@ class SubmissionsServiceTest extends TestCase
     public function testUpdateHandlesNewContactInfoProperly(): void
     {
         $submission = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
             ->setContactInfoObfuscated('getfursu.it@localhost.localdomain')
         );
 
@@ -41,10 +43,12 @@ class SubmissionsServiceTest extends TestCase
     public function testUpdateHandlesContactInfoChangeProperly(): void
     {
         $artisan = $this->getPersistedArtisanMock()
-          ->updateContact('getfursu.it@localhost.localdomain')
+            ->setMakerId('MAKERID')
+            ->updateContact('getfursu.it@localhost.localdomain')
         ;
 
         $submission = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
             ->setContactInfoObfuscated('Telegram: @getfursuit')
         );
 
@@ -65,10 +69,12 @@ class SubmissionsServiceTest extends TestCase
     public function testUpdateHandlesUnchangedContactInfoProperly(): void
     {
         $artisan = $this->getPersistedArtisanMock()
+            ->setMakerId('MAKERID')
             ->updateContact('getfursu.it@localhost.localdomain')
         ;
 
         $submission = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
             ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain')
         );
 
@@ -90,7 +96,9 @@ class SubmissionsServiceTest extends TestCase
     {
         UtcClockMock::start();
 
-        $submission = Submissions::from(new Artisan());
+        $submission = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
+        );
 
         $subject = $this->getSetUpSubmissionsService([]);
         $result = $subject->getUpdate($submission);
@@ -109,9 +117,13 @@ class SubmissionsServiceTest extends TestCase
     {
         UtcClockMock::start();
 
-        $artisan = $this->getPersistedArtisanMock();
+        $artisan = $this->getPersistedArtisanMock()
+            ->setMakerId('MAKERID')
+        ;
 
-        $submission = Submissions::from(new Artisan());
+        $submission = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
+        );
 
         $subject = $this->getSetUpSubmissionsService([$artisan]);
         $result = $subject->getUpdate($submission);
@@ -139,14 +151,16 @@ class SubmissionsServiceTest extends TestCase
      */
     private function getSetUpSubmissionsService(array $bestMatchesArtisans): SubmissionsService
     {
-        $fixerMock = $this->createMock(Fixer::class);
-        $fixerMock->method('getFixed')->willReturnArgument(0);
-
         $entities = map($bestMatchesArtisans, fn ($item) => $item->getArtisan());
 
         $artisanRepoMock = $this->createMock(ArtisanRepository::class);
         $artisanRepoMock->expects($this->once())->method('findBestMatches')->willReturn($entities);
 
-        return new SubmissionsService($artisanRepoMock, $fixerMock, '');
+        $fixerMock = $this->createMock(Fixer::class);
+        $fixerMock->method('getFixed')->willReturnArgument(0);
+
+        $manager = new Manager('');
+
+        return new SubmissionsService($artisanRepoMock, $fixerMock, $manager, '');
     }
 }
