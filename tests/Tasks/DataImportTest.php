@@ -36,7 +36,7 @@ class DataImportTest extends TestCase
         $printer = $this->getPrinterMock();
         $fdv = $this->getFixerDifferValidatorMock();
 
-        $dataImport = new DataImport($objectManager, $importManager, $printer, $fdv, false);
+        $dataImport = new DataImport($objectManager, $importManager, $printer, $fdv);
         $dataImport->import([$this->getIuSubmission($artisan, [
             Field::URL_PHOTOS->name => [$newUrlPhotos],
         ])]);

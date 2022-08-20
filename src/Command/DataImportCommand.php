@@ -31,7 +31,6 @@ class DataImportCommand extends Command
     {
         $this
             ->addOption('commit', null, null, 'Save changes in the database')
-            ->addOption('fix-mode', null, null, 'Show import command for fixes')
             ->addArgument('import-dir', InputArgument::REQUIRED, 'Import directory path')
             ->addArgument('corrections-file', InputArgument::REQUIRED, 'Corrections file path')
             ->addArgument('only-after', InputArgument::OPTIONAL, 'Process requests no earlier than this date')
@@ -55,8 +54,8 @@ class DataImportCommand extends Command
             return 1;
         }
 
-        $import = $this->dataImportFactory->get(Manager::createFromFile($input->getArgument('corrections-file')),
-            $io, $input->getOption('fix-mode'));
+        $manager = Manager::createFromFile($input->getArgument('corrections-file'));
+        $import = $this->dataImportFactory->get($manager, $io);
 
         $import->import(Finder::getFrom($input->getArgument('import-dir'), $onlyAfter));
 

@@ -16,7 +16,6 @@ class FixerDifferValidator
 {
     final public const FIX = 1;
     final public const SHOW_DIFF = 2;
-    final public const SHOW_ALL_FIX_CMD_FOR_CHANGED = 4;
     final public const RESET_INVALID_PLUS_SHOW_FIX_CMD = 8;
     final public const SHOW_FIX_CMD_FOR_INVALID = 16;
     final public const USE_SET_FOR_FIX_CMD = 32;
@@ -34,7 +33,6 @@ class FixerDifferValidator
     public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null, FieldsList $skipDiffFor = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
-        $anyDifference = $artisan->differs();
         $skipDiffFor ??= Fields::none();
 
         foreach (Fields::persisted() as $field) {
@@ -51,9 +49,7 @@ class FixerDifferValidator
             $isValid = !$field->isValidated() || $this->validator->isValid($artisan, $field);
             $resetAndShowFixCommand = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$isValid;
 
-            if ($anyDifference && $flags & self::SHOW_ALL_FIX_CMD_FOR_CHANGED
-                || !$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID
-                || $resetAndShowFixCommand) {
+            if (!$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID || $resetAndShowFixCommand) {
                 $this->printFixCommandOptionally($field, $artisan, $imported, (bool) ($flags & self::USE_SET_FOR_FIX_CMD));
             }
 
