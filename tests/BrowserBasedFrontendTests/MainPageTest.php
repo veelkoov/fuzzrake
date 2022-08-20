@@ -30,16 +30,18 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $client->request('GET', '/');
 
-        $client->waitForVisibility('#checklist-ill-be-careful', 5);
+        $infoText = 'Currently 3 makers from 3 countries are listed here.';
+        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-        $client->waitForVisibility('#aasImAdult', 5);
+        self::waitUntilShows('#aasImAdult');
         $client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-        $client->waitForVisibility('#aasAllowNsfw', 5);
+        self::waitUntilShows('#aasAllowNsfw');
         $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
 
-        $client->waitForVisibility('#checklist-dismiss-btn', 5);
+        self::waitUntilShows('#checklist-dismiss-btn');
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         $client->waitForVisibility('#artisans', 5);

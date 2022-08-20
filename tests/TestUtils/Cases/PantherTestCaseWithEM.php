@@ -56,7 +56,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     /**
      * @throws NoSuchElementException|TimeoutException
      */
-    protected static function waitUntilShows(string $locator, int $millisecondsForAnimation = 200): void
+    protected static function waitUntilShows(string $locator, int $millisecondsForAnimation = 500): void
     {
         usleep($millisecondsForAnimation * 1000);
         self::getPantherClient()->waitForVisibility($locator, 1);

@@ -96,7 +96,9 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $client->request('GET', '/');
-        $client->waitForElementToContain('.alert-dismissible p', 'Currently '.count($artisans).' makers from 0 countries are listed here.', 1);
+
+        $infoText = 'Currently '.count($artisans).' makers from 0 countries are listed here.';
+        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
