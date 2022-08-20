@@ -1,11 +1,11 @@
-import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
-import Checkbox from "../class/Checkbox";
-import Radio from "../class/fields/Radio";
-import {applyFilters} from "./filters";
-import {NO, YES} from "../consts";
-import {toggle} from "../jQueryUtils";
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import Checkbox from '../class/Checkbox';
+import Radio from '../class/fields/Radio';
+import {applyFilters} from './filters';
+import {NO, YES} from '../consts';
+import {toggle} from '../jQueryUtils';
 
-let illBeCareful: Checkbox, iLikeButtons: Checkbox;
+let illBeCareful: Checkbox;
 let isAdult: Radio, wantsSfw: Radio;
 let $ageContainer: JQuery<HTMLElement>, $wantsSfwContainer: JQuery<HTMLElement>, $dismissButton: JQuery<HTMLElement>;
 
@@ -22,21 +22,21 @@ function refreshAll(): void {
     config.setWantsSfw(!wantsSfw.isVal(NO));
     config.setIsAdult(isAdult.isVal(YES));
 
-    let emoticon: string, label: string;
+    let label: string, addClass: string, removeClass: string;
 
     if (isReady()) {
         label = 'I will now click this button';
-        emoticon = ' :)';
-        $dismissButton.addClass('btn-primary');
-        $dismissButton.removeClass('btn-secondary');
+        addClass = 'btn-primary';
+        removeClass = 'btn-secondary';
     } else {
         label = "I can't click this button yet";
-        emoticon = ' :(';
-        $dismissButton.removeClass('btn-primary');
-        $dismissButton.addClass('btn-secondary');
+        removeClass = 'btn-primary';
+        addClass = 'btn-secondary';
     }
 
-    $dismissButton.val(label + (iLikeButtons.isChecked() ? emoticon : ''));
+    $dismissButton.val(label);
+    $dismissButton.addClass(addClass);
+    $dismissButton.removeClass(removeClass);
 }
 
 function dismissChecklist(): void {
@@ -67,7 +67,6 @@ export function init(): (() => void)[] {
             $dismissButton.on('click', dismissButtonOnClick);
 
             illBeCareful = new Checkbox('checklist-ill-be-careful', refreshAll);
-            iLikeButtons = new Checkbox('checklist-i-like-buttons', refreshAll);
 
             isAdult = new Radio('checklistIsAdult', refreshAll);
             wantsSfw = new Radio('checklistWantsSfw', refreshAll);
