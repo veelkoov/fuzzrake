@@ -5,9 +5,9 @@ window.$ = window.jQuery = jQuery
 import 'bootstrap';
 import * as moment from 'moment';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/general.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import '../../styles/general.less';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 jQuery(() => {
     jQuery('span.utc_datetime').each((index, element) => {

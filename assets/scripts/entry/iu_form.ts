@@ -4,7 +4,7 @@ import Radio from '../class/fields/Radio';
 import {ADULTS, NO, NO_CONTACT_ALLOWED} from '../consts';
 import {toggle} from '../jQueryUtils';
 
-import '../../styles/iu_form.less';
+import '../../styles/iu_form.scss';
 
 jQuery((_$: JQueryStatic) => {
     setup_start_page();
