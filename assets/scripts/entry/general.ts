@@ -4,6 +4,7 @@ window.$ = window.jQuery = jQuery
 
 import 'bootstrap';
 import * as moment from 'moment';
+import * as tocbot from 'tocbot';
 
 import '../../styles/general.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -24,5 +25,13 @@ jQuery(() => {
         let originalIsoTime = `${parts[1]}T${parts[2]}:00Z`;
 
         $span.html(moment(originalIsoTime).local().format('YYYY-MM-DD HH:mm'));
+    });
+
+    tocbot.init({
+        tocSelector: '#sk-toc',
+        contentSelector: '#sk-content',
+        headingSelector: 'h1, h2, h3, h4, h5, h6',
+        extraLinkClasses: 'text-decoration-none',
+        orderedList: false,
     });
 });
