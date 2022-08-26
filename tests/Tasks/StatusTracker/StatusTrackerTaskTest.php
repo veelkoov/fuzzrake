@@ -226,7 +226,7 @@ class StatusTrackerTaskTest extends TestCase
 
         $actual = $actualArtisan->getCommissions()->toArray();
 
-        foreach ($actual as $a_key => $commission) {
+        foreach ($actual as $a_key       => $commission) {
             foreach ($expected as $e_key => $expectedOfferStatus) {
                 if ($commission->getOffer() === $expectedOfferStatus->getOffer()
                     && $commission->getIsOpen() === $expectedOfferStatus->getStatus()) {
