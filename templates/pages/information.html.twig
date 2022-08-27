@@ -1,6 +1,6 @@
 {% extends '_base.html.twig' %}
 
-{% block title %}general information{% endblock %}
+{% block title %}General information{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -9,34 +9,16 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Information</h1>
+    <h1 class="visually-hidden">General information</h1>
 
-    {% set parts = [
-        {'introduction': 'OwO what\'s this?', 'data-updates': 'How to add/update your studio/maker info'},
-        {'should-know': 'Getting a fursuit - what you should know'},
-        {'help-needed': 'How can you help', 'contact': 'Contact maintainer'},
-        {'tracking': 'Tracking of commissions status', 'maker-ids': 'Maker IDs'},
-        {'tasklist': 'Plans/features/bugs', 'statistics': 'Statistics'},
-        {'friends': 'Friends', 'licenses': 'Licenses'},
-    ] %}
+    <div class="row">
+        <aside class="col-lg-3 sticky-lg-top overflow-auto" style="height: calc(100% - 6rem);">
+            <h5 class="pt-2">Table of contents</h5>
+            <div id="sk-toc"></div>
+        </aside>
 
-    <ul class="nav justify-content-center">
-        {% for part_group in parts %}
-            {% for id, title in part_group %}
-                <li class="nav-item"><a class="nav-link" href="#{{ id }}">{{ title }}</a></li>
-            {% endfor %}
-        {% endfor %}
-    </ul>
-
-    {% for part_group in parts %}
-        <div class="row mt-4">
-            {% for id, title in part_group %}
-                <div class="col-md">
-                    <h3 id="{{ id }}">{{ title }}</h3>
-
-                    {% include 'pages/information_parts/'~ id ~ '.html.twig' %}
-                </div>
-            {% endfor %}
+        <div id="sk-content" class="col-lg-9" data-bs-spy="scroll" data-bs-target="#sk-toc">
+            {% include 'pages/information_contents.html.twig' %}
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}

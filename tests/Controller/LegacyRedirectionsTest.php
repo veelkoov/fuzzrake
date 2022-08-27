@@ -34,12 +34,12 @@ class LegacyRedirectionsTest extends WebTestCaseWithEM
             '/index.html'       => ['/index.html', 'h4', 'Fursuit makers database'],
             '/new.html'         => ['/new.html', 'h1', 'Recently added makers/studios'],
             '/events.html'      => ['/events.html', 'p', 'See all recently added makers'],
-            '/info.html'        => ['/info.html', 'h1', 'Information'],
+            '/info.html'        => ['/info.html', 'h1', 'General information'],
             '/tracking.html'    => ['/tracking.html', 'h1', 'Automatic tracking and status updates'],
             '/maker_ids.html'   => ['/maker_ids.html', 'h1', 'What is a "maker ID"?'],
             '/donate.html'      => ['/donate.html', 'h1', 'TL;DR'],
             '/rules.html'       => ['/rules.html', 'h1', 'Rules for makers/studios'],
-            '/should_know.html' => ['/should_know.html', 'h1', '"I want a fursuit NOW!"'],
+            '/should_know.html' => ['/should_know.html', 'h1', 'What you should know'],
             '/statistics.html'  => ['/statistics.html', 'h1', 'Commission status'],
         ];
     }

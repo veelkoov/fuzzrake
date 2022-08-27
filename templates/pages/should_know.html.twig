@@ -2,6 +2,11 @@
 
 {% block title %}What you should know{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script async src="https://platform.twitter.com/widgets.js"></script>
+{% endblock %}
+
 {% set refs = {
     'FSR1': {
         uri: 'https://fursuitreview.com/blog/what-is-a-fursuit-types-styles-padding/',
@@ -44,6 +49,8 @@
 {% endmacro %}
 
 {% block body %}
+    <h1 class="visually-hidden">What you should know</h1>
+
     <div class="row">
         <aside class="col-lg-3 sticky-lg-top overflow-auto" style="height: calc(100% - 6rem);">
             <h5 class="pt-2">Table of contents</h5>
@@ -54,6 +61,4 @@
             {% include 'pages/should_know_contents.html.twig' %}
         </div>
     </div>
-
-    <script async src="https://platform.twitter.com/widgets.js"></script>
 {% endblock %}
