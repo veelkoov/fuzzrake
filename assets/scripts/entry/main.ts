@@ -11,7 +11,7 @@ import Species from '../species/Species';
 import {makerIdHashRegexp} from '../consts';
 
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
-import '../../styles/main.less';
+import '../../styles/main.scss';
 
 function executeOneByOne(callbacks): void {
     setTimeout(() => {

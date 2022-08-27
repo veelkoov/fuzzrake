@@ -1,4 +1,4 @@
-import '../../styles/events.less';
+import '../../styles/events.scss';
 
 jQuery(function (): void {
     jQuery('#events-list .toggle-details').on('click', (event: Event) => {

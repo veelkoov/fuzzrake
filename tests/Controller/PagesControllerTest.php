@@ -66,6 +66,6 @@ class PagesControllerTest extends WebTestCase
         $client->request('GET', '/should-know');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', '"I want a fursuit NOW!"');
+        static::assertSelectorTextContains('h1', 'What you should know');
     }
 }
