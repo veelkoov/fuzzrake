@@ -20,7 +20,7 @@ class FurtrackMiniatures extends AbstractMiniatures
     {
         $pictureId = $this->getPictureId($photoUrl);
 
-        $response = $this->httpClient->get("https://ultra.furtrack.com/view/post/$pictureId");
+        $response = $this->httpClient->get("https://solar.furtrack.com/view/post/$pictureId");
 
         $postData = Json::decode($response->getContent(true));
         $accessor = new ArrayReader($postData);

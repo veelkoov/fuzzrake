@@ -60,7 +60,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader((config) => {
@@ -77,7 +77,6 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
 
-    .enableLessLoader()
     .enableHandlebarsLoader()
 ;
 
