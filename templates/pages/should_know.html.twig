@@ -4,7 +4,14 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('toc') }}
+
     <script async src="https://platform.twitter.com/widgets.js"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('toc') }}
 {% endblock %}
 
 {% set refs = {

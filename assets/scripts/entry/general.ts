@@ -6,7 +6,6 @@ import 'bootstrap';
 import * as moment from 'moment';
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import {toggle} from '../jQueryUtils';
-import * as tocbot from 'tocbot';
 
 import '../../styles/general.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -27,16 +26,6 @@ jQuery(() => {
         let originalIsoTime = `${parts[1]}T${parts[2]}:00Z`;
 
         $span.html(moment(originalIsoTime).local().format('YYYY-MM-DD HH:mm'));
-    });
-});
-
-jQuery(() => {
-    tocbot.init({
-        tocSelector: '#sk-toc',
-        contentSelector: '#sk-content',
-        headingSelector: 'h1, h2, h3, h4, h5, h6',
-        extraLinkClasses: 'text-decoration-none',
-        orderedList: false,
     });
 });
 

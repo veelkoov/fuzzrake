@@ -4,8 +4,15 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
     {{ encore_entry_script_tags('info') }}
+    {{ encore_entry_script_tags('toc') }}
+
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('toc') }}
 {% endblock %}
 
 {% block body %}
