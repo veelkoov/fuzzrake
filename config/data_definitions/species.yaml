@@ -284,6 +284,7 @@ parameters:
       'Big (cats|felines)( in general)?':                    "Big cats"
       'Birds?':                                              'Birds'
       'Birds/avians in general':                             'Birds'
+      'Bovines?':                                            'Bovines'
       'Bunn(y|ies)':                                         'Rabbits'
       'Caracles|Caracals?':                                  'Caracals'
       'Cats?( in general)?':                                 'Felines'
