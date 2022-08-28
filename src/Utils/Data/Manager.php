@@ -15,8 +15,8 @@ use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 use DateTimeImmutable;
 use InvalidArgumentException;
-
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
 use function Psl\File\read;
 
 class Manager
@@ -65,7 +65,6 @@ class Manager
      * @var string|null Last submission ID or maker ID selected by 'WITH' command
      */
     private ?string $currentSubject = null;
-
 
     public function __construct(
         string $directives = '',

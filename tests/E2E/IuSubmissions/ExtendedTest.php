@@ -8,6 +8,7 @@ use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
+use App\Tests\TestUtils\Paths;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
@@ -183,7 +184,7 @@ class ExtendedTest extends AbstractTestWithEM
         /**
          * @var array<string, string|bool|null> $data
          */
-        $data = Json::readFile(__DIR__."/ExtendedTestData/$variant.json");
+        $data = Json::readFile(Paths::getTestDataPath("extended_test/$variant.json"));
 
         foreach (Fields::all() as $fieldName => $field) {
             if (in_array($field, $skippedFields)) {
