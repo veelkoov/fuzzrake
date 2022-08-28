@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
-use App\Tests\TestUtils\Paths;
+use App\Tests\TestUtils\JsonArtisanDataLoader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
-use App\Utils\Json;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use App\Utils\TestUtils\UtcClockMock;
@@ -36,17 +33,6 @@ class ExtendedTest extends AbstractTestWithEM
         Field::CONTACT_INFO_ORIGINAL,
         Field::CONTACT_ADDRESS_PLAIN,
         Field::PASSWORD,
-    ];
-
-    private const NOT_IN_TEST_DATA = [ // Fields which are not loaded from JSON, they are not impacted by import
-        Field::COMPLETENESS,
-        Field::CS_LAST_CHECK,
-        Field::CS_TRACKER_ISSUE,
-        Field::OPEN_FOR,
-        Field::CLOSED_FOR,
-        Field::IS_MINOR,
-        Field::SAFE_DOES_NSFW,
-        Field::SAFE_WORKS_WITH_MINORS,
     ];
 
     private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
@@ -116,38 +102,39 @@ class ExtendedTest extends AbstractTestWithEM
 
         $client = static::createClient(); // Single client to be used throughout the whole test to avoid multiple in-memory DB
         $repo = self::getArtisanRepository();
+        $loader = new JsonArtisanDataLoader('extended_test');
 
-        $oldArtisan1 = self::getArtisanData('a1.1-persisted');
-        $oldArtisan3 = self::getArtisanData('a3.1-persisted');
+        $oldArtisan1 = $loader->getArtisanData('a1.1-persisted');
+        $oldArtisan3 = $loader->getArtisanData('a3.1-persisted');
 
         self::persistAndFlush($oldArtisan1, $oldArtisan3);
         self::assertCount(2, $repo->findAll(), 'Two artisans in the DB before import');
 
-        $oldData1 = self::getArtisanData('a1.1-persisted');
-        $newData1 = self::getArtisanData('a1.2-send', self::NOT_IN_FORM);
+        $oldData1 = $loader->getArtisanData('a1.1-persisted');
+        $newData1 = $loader->getArtisanData('a1.2-send', self::NOT_IN_FORM);
         $makerId1 = $oldData1->getMakerId();
         self::validateIuFormOldDataSubmitNew($client, $makerId1, $oldData1, $newData1);
 
         $oldData2 = new Artisan();
-        $newData2 = self::getArtisanData('a2.2-send', self::NOT_IN_FORM);
+        $newData2 = $loader->getArtisanData('a2.2-send', self::NOT_IN_FORM);
         $makerId2 = '';
         self::validateIuFormOldDataSubmitNew($client, $makerId2, $oldData2, $newData2);
 
-        $oldData3 = self::getArtisanData('a3.1-persisted');
-        $newData3 = self::getArtisanData('a3.2-send', self::NOT_IN_FORM);
+        $oldData3 = $loader->getArtisanData('a3.1-persisted');
+        $newData3 = $loader->getArtisanData('a3.2-send', self::NOT_IN_FORM);
         $makerId3 = $oldData3->getLastMakerId();
         self::validateIuFormOldDataSubmitNew($client, $makerId3, $oldData3, $newData3);
 
         $oldData4 = new Artisan();
-        $newData4 = self::getArtisanData('a4.2-send', self::NOT_IN_FORM);
+        $newData4 = $loader->getArtisanData('a4.2-send', self::NOT_IN_FORM);
         $makerId4 = '';
         self::validateIuFormOldDataSubmitNew($client, $makerId4, $oldData4, $newData4);
 
         $expectedArtisans = [
-            self::getArtisanData('a1.3-check'),
-            self::getArtisanData('a2.3-check'),
-            self::getArtisanData('a3.3-check'),
-            self::getArtisanData('a4.3-check'),
+            $loader->getArtisanData('a1.3-check'),
+            $loader->getArtisanData('a2.3-check'),
+            $loader->getArtisanData('a3.3-check'),
+            $loader->getArtisanData('a4.3-check'),
         ];
 
         $output = $this->performImport(true);
@@ -170,44 +157,6 @@ class ExtendedTest extends AbstractTestWithEM
         foreach (self::EXPANDED_SELECTS as $field) {
             self::assertNotContains($field, self::EXPANDED);
         }
-    }
-
-    /**
-     * @param Field[] $skippedFields
-     *
-     * @throws Exception
-     */
-    private static function getArtisanData(string $variant, array $skippedFields = self::NOT_IN_TEST_DATA): Artisan
-    {
-        $result = new Artisan();
-
-        /**
-         * @var array<string, string|bool|null> $data
-         */
-        $data = Json::readFile(Paths::getTestDataPath("extended_test/$variant.json"));
-
-        foreach (Fields::all() as $fieldName => $field) {
-            if (in_array($field, $skippedFields)) {
-                continue;
-            }
-
-            self::assertArrayHasKey($fieldName, $data);
-            $value = $data[$fieldName];
-
-            if (Field::AGES === $field) {
-                $value = Ages::get(Enforce::nString($value));
-            } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
-                $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::nString($value));
-            }
-
-            $result->set(Field::from($fieldName), $value);
-
-            unset($data[$fieldName]);
-        }
-
-        self::assertEquals([], $data);
-
-        return $result;
     }
 
     private static function validateIuFormOldDataSubmitNew(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
