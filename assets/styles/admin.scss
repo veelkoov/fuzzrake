@@ -1,0 +1,44 @@
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
+
+#mx-submission {
+  tr {
+    &.not-fixed.not-changing {
+      color: #bbb;
+      display: none;
+    }
+  }
+
+  tr.before {
+    a {
+      color: $danger;
+      text-decoration: none;
+    }
+  }
+
+  tr.submitted {
+    &.not-fixed {
+      display: none;
+    }
+
+    &.fixes-applied td:last-child {
+      color: #0a53be;
+    }
+
+    a {
+      color: #0a53be;
+      text-decoration: none;
+    }
+  }
+
+  tr.after {
+    a {
+      color: $success;
+      text-decoration: none;
+    }
+  }
+
+  tr.bottom-separator td {
+    border-bottom: 2px solid #aaa;
+  }
+}

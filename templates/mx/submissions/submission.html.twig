@@ -1,4 +1,4 @@
-{% extends '_base.html.twig' %}
+{% extends 'mx/_base.html.twig' %}
 
 {% block title %}Submission {{ update.submission.id }}{% endblock %}
 
@@ -46,19 +46,21 @@
                     ~ ' ' ~ (field.isInIuForm ? 'in-iu-form' : 'automated')
                 %}
 
-                <tr class="{{ field.value }} current {{ row_class }}">
-                    <td>{{ field.name }}&nbsp;[current]</td>
-                    <td>{{ field|difference(false, update.originalArtisan, update.updatedArtisan) }}</td>
-                </tr>
+                {% if not update.isNew %}
+                    <tr class="{{ field.value }} before {{ row_class }}">
+                        <td>{{ field.name }}&nbsp;[current]</td>
+                        <td>{{ field|difference(false, update.originalArtisan, update.updatedArtisan)|link_urls }}</td>
+                    </tr>
+                {% endif %}
 
                 <tr class="{{ field.value }} submitted {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[submitted]</td>
-                    <td>{{ update.originalInput.get(field)|as_str|nl2br }}</td>
+                    <td>{{ update.originalInput.get(field)|as_str|nl2br|link_urls }}</td>
                 </tr>
 
-                <tr class="{{ field.value }} changed {{ row_class }} bottom-separator">
+                <tr class="{{ field.value }} after {{ row_class }} bottom-separator">
                     <td>{{ field.name }}&nbsp;[changed]</td>
-                    <td>{{ field|difference(true, update.updatedArtisan, update.originalArtisan) }}</td>
+                    <td>{{ field|difference(true, update.updatedArtisan, update.originalArtisan)|link_urls }}</td>
                 </tr>
             {% endfor %}
         </tbody>

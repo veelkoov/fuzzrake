@@ -9,6 +9,8 @@ use App\Entity\Artisan as ArtisanE;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
+use TRegx\CleanRegex\Pattern;
+use TRegx\CleanRegex\Replace\Details\ReplaceDetail;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -16,6 +18,14 @@ use function Psl\Iter\contains;
 
 class MxExtensions extends AbstractExtension
 {
+    private const HTML = ['is_safe' => ['html']];
+    private readonly Pattern $linkPattern;
+
+    public function __construct()
+    {
+        $this->linkPattern = pattern('https?://[^ ,;\n<>"]+', 'i');
+    }
+
     public function getFilters(): array
     {
         return [
@@ -25,8 +35,9 @@ class MxExtensions extends AbstractExtension
             new TwigFilter('difference',
                 function (Field $field, bool $isNew, Artisan $current, Artisan $other): string {
                     return $this->difference($field, $isNew, $current, $other);
-                }, ['is_safe' => ['html']],
+                }, self::HTML,
             ),
+            new TwigFilter('link_urls', fn (string $input) => $this->linkUrls($input), self::HTML),
         ];
     }
 
@@ -75,5 +86,14 @@ class MxExtensions extends AbstractExtension
         }
 
         return $result;
+    }
+
+    private function linkUrls(string $input): string
+    {
+        return $this->linkPattern->replace($input)->all()->callback(function (ReplaceDetail $detail): string {
+            $url = htmlspecialchars($detail->text());
+
+            return "<a href=\"$url\">$url</a>";
+        });
     }
 }
