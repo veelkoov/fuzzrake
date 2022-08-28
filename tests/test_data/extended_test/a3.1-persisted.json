@@ -1,9 +1,12 @@
 {
     "MAKER_ID": "",
-    "FORMER_MAKER_IDS": "M000003",
+    "FORMER_MAKER_IDS": [
+        "M000003"
+    ],
 
     "NAME": "Maker name 3",
-    "FORMERLY": "",
+    "FORMERLY": [
+    ],
     "PASSWORD": "",
 
     "CONTACT_ALLOWED": "",
@@ -14,7 +17,8 @@
 
     "INTRO": "",
     "SINCE": "",
-    "LANGUAGES": "",
+    "LANGUAGES": [
+    ],
     "COUNTRY": "",
     "STATE": "",
     "CITY": "",
@@ -28,35 +32,48 @@
     "DOES_NSFW": null,
     "WORKS_WITH_MINORS": null,
 
-    "PAYMENT_PLANS": "",
-    "PAYMENT_METHODS": "",
-    "CURRENCIES_ACCEPTED": "",
+    "PAYMENT_PLANS": [
+    ],
+    "PAYMENT_METHODS": [
+    ],
+    "CURRENCIES_ACCEPTED": [
+    ],
 
     "PRODUCTION_MODELS_COMMENT": "",
-    "PRODUCTION_MODELS": "",
+    "PRODUCTION_MODELS": [
+    ],
 
     "STYLES_COMMENT": "",
-    "STYLES": "",
-    "OTHER_STYLES": "",
+    "STYLES": [
+    ],
+    "OTHER_STYLES": [
+    ],
 
     "ORDER_TYPES_COMMENT": "",
-    "ORDER_TYPES": "",
-    "OTHER_ORDER_TYPES": "",
+    "ORDER_TYPES": [
+    ],
+    "OTHER_ORDER_TYPES": [
+    ],
 
     "FEATURES_COMMENT": "",
-    "FEATURES": "",
-    "OTHER_FEATURES": "",
+    "FEATURES": [
+    ],
+    "OTHER_FEATURES": [
+    ],
 
     "SPECIES_COMMENT": "",
-    "SPECIES_DOES": "",
-    "SPECIES_DOESNT": "",
+    "SPECIES_DOES": [
+    ],
+    "SPECIES_DOESNT": [
+    ],
 
     "NOTES": "",
     "INACTIVE_REASON": "",
 
     "URL_FURSUITREVIEW": "",
     "URL_WEBSITE": "",
-    "URL_PRICES": "",
+    "URL_PRICES": [
+    ],
     "URL_FAQ": "",
     "URL_FUR_AFFINITY": "",
     "URL_DEVIANTART": "",
@@ -73,8 +90,11 @@
     "URL_QUEUE": "",
     "URL_SCRITCH": "",
     "URL_FURTRACK": "",
-    "URL_PHOTOS": "",
-    "URL_MINIATURES": "",
+    "URL_PHOTOS": [
+    ],
+    "URL_MINIATURES": [
+    ],
     "URL_OTHER": "",
-    "URL_COMMISSIONS": ""
+    "URL_COMMISSIONS": [
+    ]
 }

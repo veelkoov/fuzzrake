@@ -2,7 +2,8 @@
     "MAKER_ID": "MKRID04",
 
     "NAME": "Maker name 4",
-    "FORMERLY": "",
+    "FORMERLY": [
+    ],
     "PASSWORD": "Maker 4 password",
 
     "CONTACT_INFO_OBFUSCATED": "",
@@ -10,7 +11,8 @@
 
     "INTRO": "",
     "SINCE": "",
-    "LANGUAGES": "",
+    "LANGUAGES": [
+    ],
     "COUNTRY": "CZ",
     "STATE": "",
     "CITY": "",
@@ -22,34 +24,47 @@
     "DOES_NSFW": false,
     "WORKS_WITH_MINORS": false,
 
-    "PAYMENT_PLANS": "",
-    "PAYMENT_METHODS": "",
-    "CURRENCIES_ACCEPTED": "",
+    "PAYMENT_PLANS": [
+    ],
+    "PAYMENT_METHODS": [
+    ],
+    "CURRENCIES_ACCEPTED": [
+    ],
 
     "PRODUCTION_MODELS_COMMENT": "",
-    "PRODUCTION_MODELS": "",
+    "PRODUCTION_MODELS": [
+    ],
 
     "STYLES_COMMENT": "",
-    "STYLES": "",
-    "OTHER_STYLES": "",
+    "STYLES": [
+    ],
+    "OTHER_STYLES": [
+    ],
 
     "ORDER_TYPES_COMMENT": "",
-    "ORDER_TYPES": "",
-    "OTHER_ORDER_TYPES": "",
+    "ORDER_TYPES": [
+    ],
+    "OTHER_ORDER_TYPES": [
+    ],
 
     "FEATURES_COMMENT": "",
-    "FEATURES": "",
-    "OTHER_FEATURES": "",
+    "FEATURES": [
+    ],
+    "OTHER_FEATURES": [
+    ],
 
     "SPECIES_COMMENT": "",
-    "SPECIES_DOES": "",
-    "SPECIES_DOESNT": "",
+    "SPECIES_DOES": [
+    ],
+    "SPECIES_DOESNT": [
+    ],
 
     "NOTES": "",
 
     "URL_FURSUITREVIEW": "",
     "URL_WEBSITE": "",
-    "URL_PRICES": "",
+    "URL_PRICES": [
+    ],
     "URL_FAQ": "",
     "URL_FUR_AFFINITY": "",
     "URL_DEVIANTART": "",
@@ -66,7 +81,9 @@
     "URL_QUEUE": "",
     "URL_SCRITCH": "",
     "URL_FURTRACK": "",
-    "URL_PHOTOS": "",
+    "URL_PHOTOS": [
+    ],
     "URL_OTHER": "",
-    "URL_COMMISSIONS": ""
+    "URL_COMMISSIONS": [
+    ]
 }
