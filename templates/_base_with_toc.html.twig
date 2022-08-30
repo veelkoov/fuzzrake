@@ -1,0 +1,26 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('toc') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('toc') }}
+{% endblock %}
+
+{% block body %}
+    <h1 class="visually-hidden">{{ block('title') }}</h1>
+
+    <div class="row">
+        <aside class="col-lg-3 sticky-lg-top overflow-auto" style="height: calc(100% - 6rem);">
+            <h5 class="pt-2">Table of contents</h5>
+            <div id="sk-toc"></div>
+        </aside>
+
+        <div id="sk-content" class="col-lg-9" data-bs-spy="scroll" data-bs-target="#sk-toc">
+            {% block contents %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

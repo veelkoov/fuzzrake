@@ -1,139 +1,51 @@
-{% extends '_base.html.twig' %}
+{% extends '_base_with_toc.html.twig' %}
 
-{% block title %}information about automated status tracking{% endblock %}
+{% block title %}Automated tracking and status updates{% endblock %}
 
-{% block body %}
-    <h1>Automatic tracking and status updates</h1>
-
-    <p>
-        getfursu.it has limited ability to track and update commissions status (open/closed). On this page:
-    </p>
-
-    <ol>
-        <li><a href="#tracking_overview">Overview - how this works</a></li>
-        <li><a href="#tracking_limitations">Limitations</a></li>
-        <li>
-            Do's and dont's
-            <ol>
-                <li><a href="#tracking_dos_donts_websites">Websites: unsupported and supported</a></li>
-                <li><a href="#tracking_dos_donts_status">Status: what (not) to post</a></li>
-            </ol>
-        </li>
-        <li><a href="#tracking_how_to_enroll">How to enroll</a></li>
-    </ol>
-
-    <h1 id="tracking_overview">Overview - how this works</h1>
-
-    <div class="row py-4">
-        <div class="col-sm-8">
-            <h2>1. Maker fills inclusion/update form</h2>
-            <p>
-                Fursuit maker decides which of their webpages getfursu.it should monitor for updates. To do that, the maker needs to send the inclusion/update form. This must be done every time the address changes (e.g. the maker decided to abandon one social platform and now posts the updates elsewhere).
-            </p>
-        </div>
-        <div class="col-sm-4 text-center img-tracking">
-            <img src="{{ asset('images/tracking/1_form.webp') }}" alt="" class="img-fluid">
-        </div>
-    </div>
-
-    <div class="row py-4">
-        <div class="col-sm-8">
-            <h2>2. Inclusion/update form gets processed</h2>
-            <p>
-                The address which was selected by the maker to be tracked by getfursu.it gets saved into the database along with all the information included in the inclusion/update form.
-            </p>
-        </div>
-        <div class="col-sm-4 text-center img-tracking">
-            <img src="{{ asset('images/tracking/2_into_the_db.webp') }}" alt="" class="img-fluid">
-        </div>
-    </div>
-
-    <div class="row py-4">
-        <div class="col-sm-12">
-            <h2>3. Periodic updates</h2>
-            <p>
-                With the tracked webpage address in the database, the rest of the process is automated. This is what happens behind the scenes:
-            </p>
-        </div>
-    </div>
-    <div class="row py-4">
-        <div class="col-sm-8">
-            <h3>3.1. Reading list of addresses</h3>
-            <p>
-                getfursu.it retrieves the list of webpages' addresses which it's supposed to monitor, from the database where they are being kept.
-            </p>
-        </div>
-        <div class="col-sm-4 text-center img-tracking">
-            <img src="{{ asset('images/tracking/3_pariodical_read.webp') }}" alt="" class="img-fluid">
-        </div>
-    </div>
-
-    <div class="row py-4">
-        <div class="col-sm-8">
-            <h3>3.2. Fetching webpages</h3>
-            <p>
-                Having the list of addresses, getfursu.it checks all the webpages and tries to figure out commissions' statuses.
-            </p>
-        </div>
-        <div class="col-sm-4 text-center img-tracking">
-            <img src="{{ asset('images/tracking/4_fetch_webpages.webp') }}" alt="" class="img-fluid">
-        </div>
-    </div>
-
-    <div class="row py-4">
-        <div class="col-sm-8">
-            <h3>3.3. Updating the database</h3>
-            <p>
-                After determining the statuses, getfursu.it updates the makers' data in the database.
-            </p>
-        </div>
-        <div class="col-sm-4 text-center img-tracking">
-            <img src="{{ asset('images/tracking/5_update_db.webp') }}" alt="" class="img-fluid">
-        </div>
-    </div>
-
-    <div class="row py-4">
-        <div class="col-sm-8">
-            <h3>3.4. Updates are on-line!</h3>
-            <p>
-                After the database got updated, getfursu.it visitors will see the statuses as determined from the webpages, where makers originally published updates.
-            </p>
-        </div>
-        <div class="col-sm-4 text-center img-tracking">
-            <img src="{{ asset('images/tracking/6_online.webp') }}" alt="" class="img-fluid">
-        </div>
-    </div>
+{% block contents %}
+    <h1 id="general-idea">General idea</h1>
 
     <p>
-        Now that you've read this you should understand how this works and why I decided to give up on learning how to draw and instead focused on getfursu.it development. <small class="text-muted">Disclaimer: images <strong>below</strong> were <strong>not</strong> drawn by me, obviously. Artist is credited on the <a href="{{ path('info', { _fragment: 'artist' }) }}">info page</a>.</small>
+        To allow getfursu.it visitors filter by commissions status, makers can choose a page to be tracked. The tracking happens twice a day. Once the maker announces opening on their page, it should be reflected here within half a day. {# grep-tracking-frequency #}
     </p>
 
-    <h1 id="tracking_limitations">Limitations</h1>
+    <h1 id="limitations">Limitations</h1>
 
     <ul>
         <li>
             <strong>Updates are delayed</strong>: getfursu.it updates statuses twice a day, so it may even take 12 hours for the updates done by a maker to be reflected here. Take this into account if you are waiting for your beloved maker to open. You'd better follow their social media or other stuff. {# grep-tracking-frequency #}
         </li>
         <li>
-            Some websites are not supported (see below).
+            The software can make mistakes and will use the privilege.
         </li>
         <li>
-            Pages requiring to be registered&amp;logged in are not supported.
+            Some websites are not supported (see below). This includes those requiring visitors to be registered&amp;logged in.
         </li>
         <li>
-            The software will not "click" any links, buttons, etc. Please, provide the exact address of where the status is for tracking.
+            getfursu.it is unable to "click" any links, buttons, etc. Exact address, where the status is published, must be submitted to getfursu.it.
         </li>
         <li>
             Only simple English language is supported.
         </li>
-        <li>
-            The software can make mistakes and will use the privilege.
-        </li>
     </ul>
 
-    <h1>Do's and dont's</h1>
+    <h1 id="makers-how-to-enroll" class="mt-4">Makers - How to enroll</h1>
 
-    <h2 id="tracking_dos_donts_websites">Websites: unsupported and supported</h2>
+    <p>
+        To make getfursu.it track and update your status, familarize yourself with the <em>Limitations</em> (above) and check the <em>Do's and dont's</em> (below). Then you can choose the page to be tracked by <a href="{{ path('iu_form_step_start') }}">filling the inclusion/update form</a>, providing the tracked page's address in correct field.
+    </p>
+
+    <p>
+        It's easy to forget about the tracking once set up. <strong>Remember:</strong> whenever you change address of your website, or sometimes even rename the page (which can cause address to change in some <a href="https://en.wikipedia.org/wiki/Content_management_system#Installation_type" target="_blank">CMSes</a>), getfursu.it will not automatically update that - you will need to send the form again.
+    </p>
+
+    <p>
+        <a href="{{ path('info', { _fragment: 'contact' }) }}">Contact me</a> in case of any doubts/problems!
+    </p>
+
+    <h1 id="makers-dos-and-donts">Makers - Do's and dont's</h1>
+
+    <h2 id="websites-unsupported-and-supported">Websites: unsupported and supported</h2>
 
     <div class="row">
         <div class="col-sm-4 text-center img-tracking">
@@ -167,11 +79,12 @@
                 <li>Twitter profile info.</li>
                 <li>Trello <strong>sometimes</strong> works.</li>
                 <li>DeviantArt profile info <strong>should</strong> work (untested).</li>
+                <li>Other websites may be supported as well.</li>
             </ul>
         </div>
     </div>
 
-    <h2 class="mt-4" id="tracking_dos_donts_status">Status: what (not) to post</h2>
+    <h2 class="mt-4" id="status-what-not-to-post">Status: what (not) to post</h2>
 
     <div class="row">
         <div class="col-sm-4 text-center img-tracking">
@@ -186,7 +99,7 @@
                     <em>cOwOmissions open! :)</em> <small class="text-muted">No fancy wording, please. getfursu.it "gets" simple English only.</small>
                 </li>
                 <li>
-                    <em>Commissions open in February!</em> <small class="text-muted">Better solution below.</small>
+                    <em>Commissions open in February!</em> <small class="text-muted">Depending on how you word it, you may fool getfursu.it into "thinking" you are open <u>now</u>. Better solution below.</small>
                 </li>
                 <li>
                     <em>3 slots left!</em> <small class="text-muted">Better solution below.</small>
@@ -217,14 +130,4 @@
             </ul>
         </div>
     </div>
-
-    <h1 id="tracking_how_to_enroll" class="mt-4">How to enroll</h1>
-
-    <p>
-        To make getfursu.it track and update your status, make sure your website complies with the above recommendations and <a href="{{ path('iu_form_step_start') }}">send the inclusion/update form</a>, providing the website's address in correct field. Of course, don't forget to update your data on getfursu.it, whenever you move commissions information between pages/subpages.
-    </p>
-
-    <p>
-        <a href="{{ path('info', { _fragment: 'contact' }) }}">Contact me</a> in case of any doubts/problems!
-    </p>
 {% endblock %}

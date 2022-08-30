@@ -26,7 +26,7 @@ class PagesControllerTest extends WebTestCase
         $client->request('GET', '/tracking');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Automatic tracking and status updates');
+        static::assertSelectorTextContains('h1', 'Automated tracking and status updates');
     }
 
     public function testMakerIds(): void
@@ -36,7 +36,7 @@ class PagesControllerTest extends WebTestCase
         $client->request('GET', '/maker-ids');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'What is a "maker ID"?');
+        static::assertSelectorTextContains('h1', 'Fursuit makers IDs');
     }
 
     public function testDonate(): void
