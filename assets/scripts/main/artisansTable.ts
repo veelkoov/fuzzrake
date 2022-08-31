@@ -1,7 +1,7 @@
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
-import {applyFilters, initFilters, restoreFilters, setRefreshCallback} from './filters';
 import {makerIdRegexp} from '../consts';
+import {setRefreshCallback} from './filters';
 
 import 'datatables.net';
 import 'datatables.net-bs5';
@@ -113,15 +113,6 @@ export function init(): (() => void)[] {
         },
         () => {
             restoreColumns();
-        },
-        () => {
-            initFilters();
-        },
-        () => {
-            restoreFilters();
-        },
-        () => {
-            applyFilters();
         },
     ];
 }

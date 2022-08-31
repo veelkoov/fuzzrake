@@ -35,4 +35,9 @@ export default class Radio implements RadioInterface {
     public selectedIdx(): number {
         return this.$elements.index(this.$elements.filter(':checked'));
     }
+
+    public selectVal(value: string): void {
+        this.$elements.filter(idx => value === this.$elements.eq(idx).val())
+            .prop('checked', true);
+    }
 }

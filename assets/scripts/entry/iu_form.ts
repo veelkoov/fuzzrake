@@ -6,7 +6,7 @@ import {toggle} from '../jQueryUtils';
 
 import '../../styles/iu_form.scss';
 
-jQuery((_$: JQueryStatic) => {
+jQuery(() => {
     setup_start_page();
     setup_data_page();
     setup_password_and_contact_page();

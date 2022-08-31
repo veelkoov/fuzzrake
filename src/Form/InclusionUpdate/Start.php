@@ -70,11 +70,11 @@ class Start extends AbstractType
                     'required' => true,
                 ])
                 ->add('ensureStudioIsNotThereAlready', ChoiceType::class, [
-                    'label'      => "You could already be on the list even if you haven't ever sent any form. Please check the <a href=\"$mainPath\" target=\"_blank\">main page</a>. Look for old names as well. If for any reason your studio have been marked as <em>[inactive]</em>, it would be listed after the letter Z.", // grep-inactive-mark
+                    'label'      => 'You could already be on the list even if you haven\'t ever sent any form. Please navigate to the main page using the <i class="fa-solid fa-filter-circle-xmark"></i> link above. Look for old names as well. If for any reason your studio have been marked as <em>[inactive]</em>, it would be listed after the letter Z.', // grep-inactive-mark
                     'label_html' => true,
                     'choices'    => [
-                        "Checked - I'm not there, not even marked as <em>[inactive]</em>" => 'is-new-studio', // grep-inactive-mark
-                        "I've found my old name/studio"                                   => 'found-old-studio',
+                        "Checked after clicking the link above - I'm not there, not even marked as <em>[inactive]</em>" => 'is-new-studio', // grep-inactive-mark
+                        "I've found my old name/studio"                                                                 => 'found-old-studio',
                     ],
                     'expanded'  => true,
                     'required'  => true,

@@ -1,11 +1,12 @@
-import * as AntiScamWarning from '../main/antiScamWarning';
+import * as Checklist from '../main/checklist';
 import * as DataTable from '../main/artisansTable';
 import * as DetailsPopUp from '../main/detailsPopUp';
+import * as Filters from '../main/filters';
 import * as Handlebars from 'handlebars/runtime';
 import * as UpdateRequestPopUp from '../main/updateRequestPopUp';
 import Artisan from '../class/Artisan';
 import DataBridge from '../class/DataBridge';
-import HandlebarsHelpers from "../class/HandlebarsHelpers";
+import HandlebarsHelpers from '../class/HandlebarsHelpers';
 import Species from '../species/Species';
 import {makerIdHashRegexp} from '../consts';
 
@@ -54,9 +55,10 @@ jQuery(function () {
     callbacks.push(...Species.initWithArtisansUpdate()); // FIXME: Artisans should be completely initialized in one step
     callbacks.push(() => Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister()))
     callbacks.push(...UpdateRequestPopUp.init());
-    callbacks.push(...AntiScamWarning.init());
     callbacks.push(...DataTable.init());
+    callbacks.push(...Filters.init());
     callbacks.push(...DetailsPopUp.init());
+    callbacks.push(...Checklist.init());
     callbacks.push(finalizeInit);
 
     executeOneByOne(callbacks);

@@ -28,17 +28,16 @@ export default class HandlebarsHelpers {
 
     public static getHelpersToRegister(): {} {
         return {
-            optional:                HandlebarsHelpers.optional,
-            optionalList:            HandlebarsHelpers.optionalList,
-            commaSeparated:          HandlebarsHelpers.commaSeparated,
-            photos:                  HandlebarsHelpers.photos,
-            hasPhotos:               HandlebarsHelpers.hasPhotos,
-            has:                     HandlebarsHelpers.has,
-            since:                   HandlebarsHelpers.since,
-            nl2br:                   HandlebarsHelpers.nl2br,
-            describeAges:            HandlebarsHelpers.describeAges,
-            describeCompleteness:    HandlebarsHelpers.describeCompleteness,
-            allowedToWorkWithMinors: HandlebarsHelpers.allowedToWorkWithMinors,
+            optional:             HandlebarsHelpers.optional,
+            optionalList:         HandlebarsHelpers.optionalList,
+            commaSeparated:       HandlebarsHelpers.commaSeparated,
+            photos:               HandlebarsHelpers.photos,
+            hasPhotos:            HandlebarsHelpers.hasPhotos,
+            has:                  HandlebarsHelpers.has,
+            since:                HandlebarsHelpers.since,
+            nl2br:                HandlebarsHelpers.nl2br,
+            describeAges:         HandlebarsHelpers.describeAges,
+            describeCompleteness: HandlebarsHelpers.describeCompleteness,
         };
     }
 
@@ -154,26 +153,6 @@ export default class HandlebarsHelpers {
         }
 
         return new SafeString(HTML_SIGN_UNKNOWN.toString() + ' <i class="ages fa-solid fa-user"></i>');
-    }
-
-    public static allowedToWorkWithMinors(artisan: Artisan): boolean {
-        if (null === artisan.nsfwWebsite || null === artisan.nsfwSocial) {
-            return null;
-        }
-
-        if (true === artisan.nsfwWebsite || true === artisan.nsfwSocial) {
-            return false;
-        }
-
-        if (null !== artisan.doesNsfw) {
-            return !artisan.doesNsfw;
-        }
-
-        if (null === artisan.ages) {
-           return null;
-        }
-
-        return ADULTS !== artisan.ages;
     }
 
     private static describeCompleteness(artisan: Artisan): string {
