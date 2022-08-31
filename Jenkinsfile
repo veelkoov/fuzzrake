@@ -17,7 +17,7 @@ pipeline {
           )
               .tokenize("\n")
               .each { branch ->
-                if (!['beta', 'develop'].contains(branch)) {
+                if (!['main', 'beta', 'develop'].contains(branch)) {
                   try {
                     build(
                         job: currentBuild.fullProjectName.replaceFirst(~/\/${env.BRANCH_NAME}$/, "/$branch"),
