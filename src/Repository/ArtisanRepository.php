@@ -8,7 +8,6 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\ValidationRegexps;
 use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
-use App\Utils\Artisan\SmartAccessDecorator as ArtisanW;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
@@ -365,21 +364,5 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
-    }
-
-    public function getSafeWorksWithMinors(): FilterData // TODO: Get rid of this terribliness https://github.com/veelkoov/fuzzrake/issues/120
-    {
-        $result = new FilterData();
-        $wwmCount = 0;
-
-        foreach (ArtisanW::wrapAll($this->getActive()) as $artisan) {
-            if ($artisan->getSafeWorksWithMinors()) {
-                ++$wwmCount;
-            }
-        }
-
-        $result->getItems()->addComplexItem('1', '1', 'Yes', $wwmCount);
-
-        return $result;
     }
 }

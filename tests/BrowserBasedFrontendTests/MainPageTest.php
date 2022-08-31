@@ -29,9 +29,21 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $client->request('GET', '/');
-        $client->waitForVisibility('#scam-risk-warning', 5);
 
-        $client->findElement(WebDriverBy::id('scam-risk-acknowledgement'))->click();
+        $infoText = 'Currently 3 makers from 3 countries are listed here.';
+        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+
+        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+
+        self::waitUntilShows('#aasImAdult');
+        $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+
+        self::waitUntilShows('#aasAllowNsfw');
+        $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+
+        self::waitUntilShows('#checklist-dismiss-btn');
+        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+
         $client->waitForVisibility('#artisans', 5);
 
         self::assertStringContainsString('Displaying 3 out of 3 fursuit makers in the database.', $client->getCrawler()->findElement(WebDriverBy::id('artisans_info'))->getText());
