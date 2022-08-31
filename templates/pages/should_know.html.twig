@@ -1,17 +1,11 @@
-{% extends '_base.html.twig' %}
+{% extends '_base_with_toc.html.twig' %}
 
 {% block title %}What you should know{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('toc') }}
 
     <script async src="https://platform.twitter.com/widgets.js"></script>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('toc') }}
 {% endblock %}
 
 {% set refs = {
@@ -55,17 +49,294 @@
     </p>
 {% endmacro %}
 
-{% block body %}
-    <h1 class="visually-hidden">What you should know</h1>
+{% block contents %}
+    {% from 'pages/should_know.html.twig' import read_more %}
 
-    <div class="row">
-        <aside class="col-lg-3 sticky-lg-top overflow-auto" style="height: calc(100% - 6rem);">
-            <h5 class="pt-2">Table of contents</h5>
-            <div id="sk-toc"></div>
-        </aside>
+    <h1 id="i-want-a-fursuite-now" class="pt-4">"I want a fursuit NOW!"</h1>
 
-        <div id="sk-content" class="col-lg-9" data-bs-spy="scroll" data-bs-target="#sk-toc">
-            {% include 'pages/should_know_contents.html.twig' %}
-        </div>
+    <p>
+        Sorry, but you will not get one in next days, nor weeks, so reading this will not hurt. And it will help you avoid problems. <strong>Be patient and don't make any rush decisions.</strong>
+    </p>
+
+    <h4 id="what-can-i-find-on-this-page" class="pt-3">What can I find on this page?</h4>
+
+    <ol>
+        <li>What you should know before commissioning</li>
+        <li>Few tips on staying safer</li>
+        <li>Some advice on how to work with the maker</li>
+        <li>Links to external, more verbose resources</li>
+    </ol>
+
+    <p>
+        <strong>Information here is not exhaustive. Please reach for the external resources.</strong>
+        This page is <a href="https://github.com/veelkoov/fuzzrake/issues/138">not complete</a>.
+    </p>
+
+
+    <h1 id="what-you-should-know" class="pt-4">What you should know</h1>
+
+    <h4 id="do-you-want-to-become-a-furry" class="pt-3">Do you want to <strong>become a furry</strong>?</h4>
+
+    <p>
+        Great news! <strong>You don't have to buy a fursuit to be a furry.</strong>
+
+        <a data-bs-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapse1">Read more</a>
+    </p>
+
+    <p class="collapse" id="collapse1">
+        You can enjoy all the fandom has to offer, including attending conventions, joining fursuit walks, meetings, on-line activities, art and so on. You can ask fursuiters for selfies with them and for hugs. All of this without the need to pay for your own fursuit and waiting weeks/months for its completion.
+    </p>
+
+    <h4 id="fursuits-require-significant-effort" class="pt-3">Fursuits require <strong>significant effort</strong></h4>
+
+    <p>
+        A lot of effort it required not only to get a fursuit, but also after getting it.
+
+        <a data-bs-toggle="collapse" href="#collapse4" aria-expanded="false" aria-controls="collapse4">Read more</a>
+    </p>
+
+    <div class="collapse" id="collapse4">
+        <p>
+            To get a fursuit, you will need to find a maker, go through the ordering process (including getting a quote, creating DTD in most cases, etc.). That's quite a lot. And after you will get your suit, you will need to maintain it in good shape, especially keep it clean.
+        </p>
+        <p>
+            Worth noting, wearing a fursuit is some kind of effort as well. It looks cute and fun from outside, but you must be prepared for some inconveniences, especially high temperatures, and limited breathability.
+        </p>
+
+        {{ read_more(refs, ['FSR2']) }}
     </div>
+
+    <h4 id="fursuit-is-an-expensive-luxury-item" class="pt-3">Fursuit is an <strong>expensive, luxury</strong> item</h4>
+
+    <p>
+        Fursuits are often very expensive... unless when you want to sell yours.
+
+        <a data-bs-toggle="collapse" href="#collapse2" aria-expanded="false" aria-controls="collapse2">Read more</a>
+    </p>
+
+    <div class="collapse" id="collapse2">
+        <p>
+            Each fursuit is a unique, hand-made item, created by an artist. Fursuits are not mass-produced. They require materials which are not cheap as well (primarily fur).
+        </p>
+
+        <p>
+            However, the situation changes 180&deg; if you want to sell yours. You will find it difficult to resell it, and you won't sell it at the price you bought it. Probably far cheaper. Thus, "changing your mind" after buying one would be unfortunate.
+        </p>
+
+        <p>
+            <strong>High prices of fursuits are the reason for many scammers and thieves being out there. This topic is covered wider later on this page.</strong>
+        </p>
+
+        {{ read_more(refs, ['FSR2']) }}
+    </div>
+
+    <h4 id="you-need-to-be-18-years-old-most-times" class="pt-3">You need to be <strong>18+</strong> years old (most times)</h4>
+
+    <p>
+        A lot of makers don't work with minors.
+
+        <a data-bs-toggle="collapse" href="#collapse3" aria-expanded="false" aria-controls="collapse3">Read more</a>
+    </p>
+
+    <div class="collapse" id="collapse3">
+        <p>
+            There are variety of reasons, including legal - making a financial transaction. Cheating will probably get you in trouble. If you want the fursuit so bad, and you get caught, you may never be able to get the fursuit from your beloved makers. They share information, and they won't be willing to work with you anymore.
+        </p>
+
+        <p>
+            One important thing you should also consider is the fact that you still grow. Given that fursuits are expensive, are you sure you want to spend your money on something you may soon no longer fit?
+        </p>
+
+        {{ read_more(refs, ['FSR2']) }}
+    </div>
+
+    <h4 id="alternatives-to-standard-commissions" class="pt-3">Alternatives to standard commissions</h4>
+
+    <p>
+        You could also decide to get a "pre-made" or commission artistic liberty suit.
+
+        <a data-bs-toggle="collapse" href="#collapse8" aria-expanded="false" aria-controls="collapse8">Read more</a>
+    </p>
+
+    <div class="collapse" id="collapse8">
+        <p>
+            If you don't have your own original character (fursona) designed, or you don't necessarily want to be cosplaying it in particular, there are alternatives. You can buy a pre-made: ready to buy fursuit designed how the maker imagined it - pretty popular option. Some makers also offer artistic liberty commissions, where you give the maker more freedom designing your suit.
+        </p>
+
+        {{ read_more(refs, ['FSR4']) }}
+    </div>
+
+    <h1 id="learn-about-the-risk" class="pt-4">Learn about <strong>the risk</strong></h1>
+
+    <p>
+        Unfortunately, scammers and unreliable makers are not cooperating, and they continuously refuse to clearly label themselves as scammers or unreliable makers. :( So you need to be careful.
+    </p>
+
+    <h4 id="but-the-maker-is-on-getfursuit-so-they-are-reliable-right" class="pt-3">"But the maker is on getfursu.it, so they are reliable, right?"</h4>
+
+    <p>
+        <strong>NO, getfursu.it doesn't guarantee safety!</strong> This website is a single-person effort; I don't have enough time &amp; energy to do all the background checks.
+    </p>
+
+    <p>
+        New makers are marked like this: <span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>. Everyone starts some day, so everyone will bear that mark at some point. But if a scammer made it on getfursu.it, they would probably still have this. Be more careful (or even "carefulest") with those makers.
+    </p>
+
+    <h4 id="general-advice" class="pt-3">General advice</h4>
+
+    <ul>
+        <li>
+            If an artists shares their work only privately, that's a red flag. Legitimate makers will post their work publicly. <br />
+
+            <blockquote class="twitter-tweet"><p lang="en" dir="ltr">A quick and very-repostable guide in response to all them scam accounts popping up pretending to be fursuit makers! <a href="https://t.co/Gm79AfDVml">pic.twitter.com/Gm79AfDVml</a></p>&mdash; Pajama Cat Studio (@PJCatStudio) <a href="https://twitter.com/PJCatStudio/status/1506272358646140929?ref_src=twsrc%5Etfw">March 22, 2022</a></blockquote>
+        </li>
+        <li>
+            <strong>Use e-mail for communication.</strong> Some messengers allow erasing of the history for both sides. If discussing something over IM, send a compilation of things agreed on through e-mail and request confirmation (this will also reduce risk of misunderstandings).<br />
+
+            <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Co-signed by us.<br><br>Please just use email to verify important details/ dates/ payments sent. Have some kind of paper trail that can&#39;t be deleted. <a href="https://t.co/dOS7zf7Ipj">https://t.co/dOS7zf7Ipj</a></p>&mdash; Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1421136884626038784?ref_src=twsrc%5Etfw">July 30, 2021</a></blockquote>
+        </li>
+        <li>
+            If a maker wants "friends and family" option on PayPal, and they are not popular, be especially careful. <br />
+
+            <blockquote class="twitter-tweet"><p lang="en" dir="ltr">In light of the alarming amount of bewares that have come our way regarding sales gone wrong and the client has paid via &quot;Friends and Family&quot; on Paypal... Abbie has a friendly <a href="https://twitter.com/hashtag/PSA?src=hash&amp;ref_src=twsrc%5Etfw">#PSA</a> for you.<br><br>Please share, share, SHARE this. You are not protected if you pay via F&amp;F. So don&#39;t. <a href="https://t.co/XcKIg345Cj">pic.twitter.com/XcKIg345Cj</a></p>&mdash; Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1265030367544664065?ref_src=twsrc%5Etfw">May 25, 2020</a></blockquote>
+        </li>
+        <li>
+            Offers "too good to be true" are scam.
+        </li>
+    </ul>
+
+    {{ read_more(refs, ['FSR2']) }}
+
+    <h4 id="ive-chosen-the-maker-how-to-verify-them" class="pt-3">"I've chosen the maker, how to verify them?"</h4>
+
+    <ul>
+        <li>
+            Ask on social media<wbr>/groups<wbr>/forums if someone had prior experience working with the maker<wbr>/studio. Do it now, or you're not getting a hug! You may want to try on, e.g. <a href="https://discord.gg/mep6nUy" target="_blank">FursuitReview Discord server</a>.
+        </li>
+        <li>
+            Check if they have any reviews on <a href="https://fursuitreview.com/">FursuitReview</a>.
+        </li>
+        <li>
+            Check if they've been listed on <a href="https://artistsbeware.info/">Artists Beware</a> (<a href="https://bewares.getfursu.it">alternate search tool</a>).
+        </li>
+    </ul>
+
+    <h1 id="working-with-a-maker" class="pt-4">Working with a maker</h1>
+
+    <h4 id="whats-required-on-your-side" class="pt-3">What's required on your side</h4>
+
+    <ul>
+        <li>
+            You <strong>need</strong> an exhaustive reference sheet. Have it to avoid misunderstandings. Text description is not enough. The ref sheet should be precise enough to make any markings, special features, and color placements easy to understand.
+            <ul>
+                <li>
+                    You do not need a paid reference sheet, you can use free templates. You can also draw it all yourself, or add some special additional parts to a free template you use. (Don't be a jerk, don't remove credits from free templates!)
+                </li>
+                <li>
+                    Remember that a picture is worth more than 1024 words.
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            Check/ask if the maker you chose have their own instructions for preparing a DTD.
+        </li>
+    </ul>
+
+    {{ read_more(refs, ['FSR5']) }}
+
+    <h4 id="looks" class="pt-3">Looks</h4>
+
+    <p>
+        Your maker will not "copy" someone else's style.
+
+        <a data-bs-toggle="collapse" href="#collapse5" aria-expanded="false" aria-controls="collapse5">Read more</a>
+    </p>
+
+    <p class="collapse" id="collapse5">
+        Don't ask for such an approach. It's uncool to copy someone else's style, and it's rude to be asking to do so.
+    </p>
+
+    <h4 id="time" class="pt-3">Time</h4>
+
+    <ul>
+        <li>
+            If a maker state their <strong>completion time</strong>, this most probably <strong>doesn't include</strong> queue time, payment plans or retrieval of materials or your DTD.
+        </li>
+
+        <li>
+            Makers have different queue lengths, but, in general, you should be prepared to spend some time waiting, after you finalized the order.
+        </li>
+
+        <li>
+            In case things go wrong, <a href="https://twitter.com/Artists_Beware/status/1491512169539649538" target="_blank">you may be offered a refund. Take it.</a>
+        </li>
+    </ul>
+
+    {{ read_more(refs, ['FSR5']) }}
+
+    <h4 id="communication" class="pt-3">Communication</h4>
+
+    <ul>
+        <li>
+            <strong>Do not expect the maker to respond immediately.</strong> (Including when they already started working on your suit!)
+
+            <a data-bs-toggle="collapse" href="#collapse6" aria-expanded="false" aria-controls="collapse6">Read more</a>
+
+            <p class="collapse mt-1" id="collapse6">
+                There are many reasons they do not respond to you right now. They may be in a different timezone, they may be asleep right now. Makers are not machines, they don't work 24/7, they may have weekends and/or days off.
+            </p>
+        </li>
+
+        <li>
+            Talk with the maker about <strong>frequency of updates/WIPs - do not assume</strong> anything.
+        </li>
+
+        <li>
+            Your maker may start working on some other fursuit at the same time. This doesn't necessarily mean that they've changed priorities.
+
+            <a data-bs-toggle="collapse" href="#collapse7" aria-expanded="false" aria-controls="collapse7">Read more</a>
+
+            <p class="collapse mt-1" id="collapse7">
+                It's sometimes more convenient and effective to do it that way: perform repetitive actions working on multiple similar parts simultaneously.
+            </p>
+        </li>
+    </ul>
+
+    <h4 id="non-native-speakers" class="pt-2">Non-native speakers</h4>
+
+    <p>
+        Commissioning process between two people who do not share the same native language requires some additional dose of effort and patience. This applies to both sides of the conversation.
+    </p>
+
+    <ul>
+        <li>
+            If you are using your native language, try to use simple sentences.
+        </li>
+        <li>
+            Assume rude/harsh words and statements are not intended, but come from a mistake.
+        </li>
+        <li>
+            If the other person stated that they did not understand you, rephrase your statements, try using other words, simplify your writing.
+        </li>
+        <li>
+            Assume translators make mistakes. If you use a translator, make the other person aware of it. If you send whole translated sentences/paragraphs, you may want to send the original text as well. The other person will be able to re-translate it on their side, and see alternative translations.
+        </li>
+    </ul>
+
+    <blockquote class="twitter-tweet"><p lang="en" dir="ltr">On the other side: ESL individuals may use words that sound harsh or rude. That can be due to bad English translations. Don&#39;t assume bad intentions automatically.</p>&mdash; Artists Beware (@Artists_Beware) <a href="https://twitter.com/Artists_Beware/status/1339017089286348801?ref_src=twsrc%5Etfw">December 16, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <h1 id="read-more" class="pt-4">Read more</h1>
+
+    <p>
+        :O You want to read more? Awesome, check the stuff below! BTW, those are the sources of the essence you see above.
+    </p>
+
+    <ul class="list-unstyled references">
+        {% for name, ref in refs %}
+            <li id="ref-{{ name }}">
+                [{{ name }}] <a href="{{ ref['uri'] }}" target="_blank">{{ ref['label'] }}</a> <i class="fa-solid fa-up-right-from-square"></i>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

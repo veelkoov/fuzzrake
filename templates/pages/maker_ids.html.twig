@@ -1,53 +1,53 @@
-{% extends '_base.html.twig' %}
+{% extends '_base_with_toc.html.twig' %}
 
-{% block title %}fursuit makers IDs{% endblock %}
+{% block title %}Fursuit makers IDs{% endblock %}
 
-{% block body %}
-    <div class="row">
-        <div class="col-sm">
-            <h1>What is a "maker ID"?</h1>
+{% block contents %}
+    <h1 id="what-is-a-maker-id">What is a "maker ID"?</h1>
 
-            <p>
-                Maker ID is a 7-character, unique signature of a maker/studio. It's short enough to squeeze it
-                into your profile description or on the fursuitter badge, but whoever sees it can just look it
-                up here and will find your creator.
-            </p>
+    <p>
+        Maker ID is a <strong>7-character, unique signature of a maker/studio</strong>. It's short enough to squeeze it into your profile description or on the fursuitter badge, but whoever sees it can just look it up here and will find your creator.
+    </p>
 
-            <p>
-                For example, imagine someone posted a nice photo of himself goofing around in his fursuit.
-                You navigate to the guy's profile:
-            </p>
-            <img src="{{ asset('images/maker_ids/profile.webp') }}" alt="" class="img-fluid" />
+    <p>
+        For example, imagine someone posted a nice photo of himself goofing around in his fursuit. You navigate to the guy's profile:
+    </p>
 
-            <p>
-                Among all the insignificant information he provided you see what you're looking for: who created his fursuit.
-                The scissors symbol is optional, you'd know the ID by its specific format anyway.
-            </p>
-
-            <p>Having a known maker ID you can easily find them on the list using the search field on the right:</p>
-            <img src="{{ asset('images/maker_ids/found.webp') }}" alt="" class="img-fluid" />
-        </div>
-
-        <div class="col-sm">
-            <h1>How-to</h1>
-
-            <p>You can find the maker ID of a studio at the top-left corner of the details pop-up:</p>
-            <img src="{{ asset('images/maker_ids/pop-up.webp') }}" alt="" class="img-fluid" />
-
-            <p>In fact, this is a link you can copy and paste. It leads directly to your maker's info.</p>
-
-            <p>
-                If a maker's ID does not show up, it means they didn't update their data in a long time. How about
-                you poke them, so they send the updates?
-            </p>
-
-            <h1>Properties</h1>
-            <ul>
-                <li>Maker IDs are unique</li>
-                <li>Makers can change their IDs, but you will still be able to find them using their previous ID</li>
-                <li>Exceptions possible in corner cases</li>
-                <li>Maker IDs have no influence on you wagging your tail, however you should wag it every day</li>
-            </ul>
-        </div>
+    <div class="text-center">
+        <img src="{{ asset('images/maker_ids/profile.webp') }}" alt="" class="img-fluid img-thumbnail" />
     </div>
+
+    <p class="mt-3">
+        Among all the insignificant information he provided you see what you're looking for: who created his fursuit.
+        The scissors symbol is optional, you'd know the ID by its specific format anyway.
+    </p>
+
+    <p>Having a known maker ID you can easily find them on the list using the search field on the right:</p>
+
+    <div class="text-center">
+        <img src="{{ asset('images/maker_ids/found.webp') }}" alt="" class="img-fluid img-thumbnail" />
+    </div>
+
+    <h1 id="how-to" class="mt-4">How-to</h1>
+
+    <p>You can find the maker ID of a studio in the top-left corner of the details pop-up:</p>
+
+    <div class="text-center">
+        <img src="{{ asset('images/maker_ids/pop-up.webp') }}" alt="" class="img-fluid img-thumbnail" />
+    </div>
+
+    <p class="mt-3">In fact, this is a link you can copy and paste. It leads directly to your maker's info.</p>
+
+    <p>
+        If a maker's ID does not show up, it means they didn't update their data in a long time. How about
+        you poke them, so they send the updates?
+    </p>
+
+    <h1 id="properties" class="mt-4">Properties</h1>
+    <ul>
+        <li>Maker IDs are unique</li>
+        <li>Makers can change their IDs, but you will still be able to find them using their previous ID</li>
+        <li>Exceptions possible in corner cases</li>
+        <li>Maker IDs have no influence on you wagging your tail, however you should wag it every day</li>
+    </ul>
 {% endblock %}
