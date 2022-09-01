@@ -29,15 +29,11 @@ class AdminExtensions extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('smart', fn (Artisan|ArtisanE $artisan) => $this->smartFilter($artisan)),
-            new TwigFilter('as_str', fn (mixed $value) => $this->asStr($value)),
-            new TwigFilter('as_field', fn (string $name) => $this->asField($name)),
-            new TwigFilter('difference',
-                function (Field $field, string $class, Artisan $current, Artisan $other): string {
-                    return $this->difference($field, $class, $current, $other);
-                }, self::HTML,
-            ),
-            new TwigFilter('link_urls', fn (string $input) => $this->linkUrls($input), self::HTML),
+            new TwigFilter('smart', $this->smartFilter(...)),
+            new TwigFilter('as_str', $this->asStr(...)),
+            new TwigFilter('as_field', $this->asField(...)),
+            new TwigFilter('difference', $this->difference(...), self::HTML),
+            new TwigFilter('link_urls', $this->linkUrls(...), self::HTML),
         ];
     }
 

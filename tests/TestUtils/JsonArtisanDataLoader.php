@@ -22,7 +22,7 @@ class JsonArtisanDataLoader
     ) {
     }
 
-    public const FIELDS_NOT_IN_TEST_DATA = [ // Fields which are not loaded from JSON, they are not impacted by import
+    final public const FIELDS_NOT_IN_TEST_DATA = [ // Fields which are not loaded from JSON, they are not impacted by import
         Field::COMPLETENESS,
         Field::CS_LAST_CHECK,
         Field::CS_TRACKER_ISSUE,
