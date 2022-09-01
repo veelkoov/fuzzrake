@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\ArtisanVolatileDataRepository;
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,23 +19,23 @@ class ArtisanVolatileData
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'volatileData', targetEntity: Artisan::class)]
     #[ORM\JoinColumn(name: 'artisan_id', nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $lastCsUpdate = null;
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $csTrackerIssue = false;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $lastBpUpdate = null; // TODO: Remove
 
-    #[ORM\Column(type: 'boolean', nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $bpTrackerIssue = false; // TODO: Remove
 
     public function getId(): ?int

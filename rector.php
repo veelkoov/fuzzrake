@@ -28,7 +28,9 @@ return static function (RectorConfig $rectorConfig): void {
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
         SymfonySetList::SYMFONY_STRICT,
 
-        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        DoctrineSetList::DOCTRINE_CODE_QUALITY,
+        DoctrineSetList::DOCTRINE_DBAL_30,
+        DoctrineSetList::DOCTRINE_ORM_29,
 
         PHPUnitLevelSetList::UP_TO_PHPUNIT_90,
         PHPUnitSetList::PHPUNIT_91,

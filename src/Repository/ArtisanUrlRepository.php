@@ -12,6 +12,7 @@ use App\Entity\ArtisanUrlState;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\MakerId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -93,8 +94,8 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             ->addSelect('apd')
             ->addSelect('us')
             ->addSelect('mi')
-            ->orderBy('us.lastSuccessUtc', 'ASC')
-            ->addOrderBy('us.lastFailureUtc', 'ASC');
+            ->orderBy('us.lastSuccessUtc', Criteria::ASC)
+            ->addOrderBy('us.lastFailureUtc', Criteria::ASC);
 
         if (!$excluded->empty()) {
             $builder

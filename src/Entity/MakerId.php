@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\MakerIdRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MakerIdRepository::class)]
@@ -13,14 +14,14 @@ class MakerId
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Artisan::class, inversedBy: 'makerIds')]
     #[ORM\JoinColumn(nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: 'string', length: 7, unique: true, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 7, unique: true)]
     private string $makerId;
 
     public function __construct(string $makerId = '')

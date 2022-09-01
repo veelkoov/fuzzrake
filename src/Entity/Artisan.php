@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\ArtisanRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 
@@ -16,106 +17,106 @@ class Artisan implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 16)]
+    #[ORM\Column(type: Types::STRING, length: 16)]
     private string $makerId = '';
 
-    #[ORM\Column(type: 'string', length: 128)]
+    #[ORM\Column(type: Types::STRING, length: 128)]
     private string $name = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $formerly = '';
 
-    #[ORM\Column(type: 'string', length: 512)]
+    #[ORM\Column(type: Types::STRING, length: 512)]
     private string $intro = '';
 
-    #[ORM\Column(type: 'string', length: 16)]
+    #[ORM\Column(type: Types::STRING, length: 16)]
     private string $since = '';
 
-    #[ORM\Column(type: 'string', length: 16)]
+    #[ORM\Column(type: Types::STRING, length: 16)]
     private string $country = '';
 
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(type: Types::STRING, length: 32)]
     private string $state = '';
 
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(type: Types::STRING, length: 32)]
     private string $city = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $productionModelsComment = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $productionModels = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $stylesComment = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $styles = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $otherStyles = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $orderTypesComment = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $orderTypes = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $otherOrderTypes = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $featuresComment = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $features = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $otherFeatures = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $paymentPlans = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $paymentMethods = '';
 
-    #[ORM\Column(type: 'string', length: 64)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     private string $currenciesAccepted = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $speciesComment = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $speciesDoes = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $speciesDoesnt = '';
 
-    #[ORM\Column(type: 'string', length: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $languages = '';
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $notes = '';
 
-    #[ORM\Column(type: 'string', length: 512)]
+    #[ORM\Column(type: Types::STRING, length: 512)]
     private string $inactiveReason = '';
 
-    #[ORM\Column(type: 'string', length: 16)]
+    #[ORM\Column(type: Types::STRING, length: 16)]
     private string $contactAllowed = '';
 
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(type: Types::STRING, length: 32)]
     private string $contactMethod = '';
 
-    #[ORM\Column(type: 'string', length: 128)]
+    #[ORM\Column(type: Types::STRING, length: 128)]
     private string $contactInfoObfuscated = '';
 
-    #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
+    #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanVolatileData $volatileData = null;
 
-    #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanPrivateData::class, cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
+    #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanPrivateData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanPrivateData $privateData = null;
 
     /**

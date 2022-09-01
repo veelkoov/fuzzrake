@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\ArtisanUrlRepository;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\Fetchable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 
@@ -16,20 +17,20 @@ class ArtisanUrl implements Fetchable, Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Artisan::class, inversedBy: 'urls')]
     #[ORM\JoinColumn(name: 'artisan_id', nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(type: Types::STRING, length: 32)]
     private string $type = '';
 
-    #[ORM\Column(type: 'string', length: 1024)]
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $url = '';
 
-    #[ORM\OneToOne(mappedBy: 'url', targetEntity: ArtisanUrlState::class, cascade: ['persist', 'remove'], fetch: 'LAZY', orphanRemoval: true)]
+    #[ORM\OneToOne(mappedBy: 'url', targetEntity: ArtisanUrlState::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanUrlState $state = null;
 
     public function getId(): ?int

@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\DataDefinitions\Fields\Validation;
 use App\Repository\ArtisanPrivateDataRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,22 +21,22 @@ class ArtisanPrivateData
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'privateData', targetEntity: Artisan::class)]
     #[ORM\JoinColumn(name: 'artisan_id', unique: true, nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: 'string', length: 512)]
+    #[ORM\Column(type: Types::STRING, length: 512)]
     private string $contactAddress = '';
 
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $password = '';
 
-    #[ORM\Column(type: 'string', length: 512)]
+    #[ORM\Column(type: Types::STRING, length: 512)]
     private string $originalContactInfo = '';
 
     public function getId(): ?int
