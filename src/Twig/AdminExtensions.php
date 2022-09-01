@@ -6,6 +6,7 @@ namespace App\Twig;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
+use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
@@ -18,7 +19,6 @@ use function Psl\Iter\contains;
 
 class AdminExtensions extends AbstractExtension
 {
-    private const HTML = ['is_safe' => ['html']];
     private readonly Pattern $linkPattern;
 
     public function __construct()
@@ -32,8 +32,8 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('smart', $this->smartFilter(...)),
             new TwigFilter('as_str', $this->asStr(...)),
             new TwigFilter('as_field', $this->asField(...)),
-            new TwigFilter('difference', $this->difference(...), self::HTML),
-            new TwigFilter('link_urls', $this->linkUrls(...), self::HTML),
+            new TwigFilter('difference', $this->difference(...), SafeFor::HTML),
+            new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
         ];
     }
 

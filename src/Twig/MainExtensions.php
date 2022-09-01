@@ -6,6 +6,7 @@ namespace App\Twig;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\NewArtisan;
+use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use DateTimeImmutable;
 use Twig\Extension\AbstractExtension;
@@ -23,8 +24,8 @@ class MainExtensions extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('ages_for_table', fn (Artisan $artisan) => $this->agesForTableFilter($artisan), ['is_safe' => ['html']]),
-            new TwigFilter('is_new', fn (Artisan $artisan) => $this->isNewFilter($artisan)),
+            new TwigFilter('ages_for_table', $this->agesForTableFilter(...), SafeFor::HTML),
+            new TwigFilter('is_new', $this->isNewFilter(...)),
         ];
     }
 

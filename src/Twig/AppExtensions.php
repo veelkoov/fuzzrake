@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Service\EnvironmentsService;
+use App\Twig\Utils\Counter;
+use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
 use App\Utils\Filters\Item;
@@ -26,14 +28,14 @@ class AppExtensions extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('fragile_int', fn (...$args): string => $this->fragileIntFilter(...$args)),
+            new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
             new TwigFilter('list', $this->listFilter(...)),
             new TwigFilter('other', $this->otherFilter(...)),
             new TwigFilter('event_url', StrUtils::shortPrintUrl(...)),
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
             new TwigFilter('humanFriendlyRegexp', $this->filterHumanFriendlyRegexp(...)),
             new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
-            new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), ['is_safe' => ['js']]),
+            new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), SafeFor::JS),
         ];
     }
 
