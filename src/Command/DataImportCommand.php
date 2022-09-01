@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand('app:data:import')]
-class DataImportCommand extends Command
+class DataImportCommand extends Command // TODO: Remove
 {
     public function __construct(
         private readonly DataImportFactory $dataImportFactory,

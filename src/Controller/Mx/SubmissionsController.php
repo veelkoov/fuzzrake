@@ -53,14 +53,15 @@ class SubmissionsController extends AbstractController
     {
         $submissionData = $this->getSubmissionData($id);
         $submission = $this->getSubmission($id);
-        [$directivesError, $manager] = $this->getManager($submission);
-        $update = $this->service->getUpdate($submissionData, $manager);
 
         $form = $this->createForm(SubmissionType::class, $submission);
 
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             $this->repository->add($submission, true);
         }
+
+        [$directivesError, $manager] = $this->getManager($submission);
+        $update = $this->service->getUpdate($submissionData, $manager);
 
         if (null !== $directivesError) {
             $message = "The directives have been ignored completely due to an error. $directivesError";
