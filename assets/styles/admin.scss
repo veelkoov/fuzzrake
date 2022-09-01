@@ -1,6 +1,26 @@
 @import '../../node_modules/bootstrap/scss/functions';
 @import '../../node_modules/bootstrap/scss/variables';
 
+.badge-outline-primary {
+  color: $primary;
+  border: 1px solid $primary;
+}
+
+.badge-outline-secondary {
+  color: $secondary;
+  border: 1px solid $secondary;
+}
+
+.badge-outline-success {
+  color: $success;
+  border: 1px solid $success;
+}
+
+.badge-outline-danger {
+  color: $danger;
+  border: 1px solid $danger;
+}
+
 #mx-submission {
   tr {
     &.not-fixed.not-changing {

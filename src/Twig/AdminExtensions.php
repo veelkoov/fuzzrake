@@ -16,7 +16,7 @@ use Twig\TwigFilter;
 
 use function Psl\Iter\contains;
 
-class MxExtensions extends AbstractExtension
+class AdminExtensions extends AbstractExtension
 {
     private const HTML = ['is_safe' => ['html']];
     private readonly Pattern $linkPattern;
@@ -33,8 +33,8 @@ class MxExtensions extends AbstractExtension
             new TwigFilter('as_str', fn (mixed $value) => $this->asStr($value)),
             new TwigFilter('as_field', fn (string $name) => $this->asField($name)),
             new TwigFilter('difference',
-                function (Field $field, bool $isNew, Artisan $current, Artisan $other): string {
-                    return $this->difference($field, $isNew, $current, $other);
+                function (Field $field, string $class, Artisan $current, Artisan $other): string {
+                    return $this->difference($field, $class, $current, $other);
                 }, self::HTML,
             ),
             new TwigFilter('link_urls', fn (string $input) => $this->linkUrls($input), self::HTML),
@@ -63,15 +63,15 @@ class MxExtensions extends AbstractExtension
         return Field::from($name);
     }
 
-    private function difference(Field $field, bool $isNew, Artisan $subject, Artisan $other): string
+    private function difference(Field $field, string $classSuffix, Artisan $subject, Artisan $other): string
     {
         if (!$field->isList()) {
-            $class = $isNew ? 'text-success' : 'text-danger';
+            $class = "text-$classSuffix";
 
             return '<span class="'.$class.'">'.htmlspecialchars(StrUtils::asStr($subject->get($field))).'</span>';
         }
 
-        $bsClass = $isNew ? 'bg-success' : 'bg-danger';
+        $bsClass = "badge-outline-$classSuffix";
 
         $result = '';
 
@@ -79,10 +79,10 @@ class MxExtensions extends AbstractExtension
         $otherItems = StringList::unpack($other->getString($field));
 
         foreach ($subjectItems as $item) {
-            $itemClass = contains($otherItems, $item) ? 'bg-secondary' : $bsClass;
+            $itemClass = contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
             $text = htmlspecialchars($item);
 
-            $result .= " <span class=\"badge rounded-pill $itemClass\">$text</span> ";
+            $result .= " <span class=\"badge $itemClass\">$text</span> ";
         }
 
         return $result;

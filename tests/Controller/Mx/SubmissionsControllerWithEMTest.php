@@ -49,7 +49,61 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
-    public function testChangesAreProperlyMarked(): void
+    public function testAdditionIsProperlyRendered(): void
+    {
+        $client = self::createClient();
+
+        $submission = (new Artisan())
+            // NOT fixed
+            ->setMakerId('MAKERID')
+
+            // Fixed
+            ->setCountry('Finland')
+
+            // Fixed
+            ->setTwitterUrl('http://www.twitter.com/getfursuit')
+
+            // NOT fixed
+            ->setFeatures(Features::FOLLOW_ME_EYES)
+
+            // Fixed
+            ->setOtherFeatures('Hidden pockets')
+        ;
+
+        $id = Submissions::submit($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorNotExists('tr.MAKER_ID.before');
+        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'MAKERID');
+        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'MAKERID');
+        self::assertSelectorExists('tr.MAKER_ID.submitted-different.not-fixed.changing');
+
+        self::assertSelectorNotExists('tr.COUNTRY.before');
+        self::assertSelectorTextSame('tr.COUNTRY.submitted td+td', 'Finland');
+        self::assertSelectorTextSame('tr.COUNTRY.after td+td', 'FI');
+        self::assertSelectorExists('tr.COUNTRY.submitted-different.fixes-applied.changing');
+
+        self::assertSelectorNotExists('tr.URL_TWITTER.before');
+        self::assertSelectorTextSame('tr.URL_TWITTER.submitted td+td', 'http://www.twitter.com/getfursuit');
+        self::assertSelectorTextSame('tr.URL_TWITTER.after td+td', 'https://twitter.com/getfursuit');
+        self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
+
+        self::assertSelectorNotExists('tr.FEATURES.before');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td', 'Follow-me eyes');
+        self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
+
+        self::assertSelectorNotExists('tr.OTHER_FEATURES.before');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td', 'Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td', 'Hidden pocket');
+        self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testUpdateIsProperlyRendered(): void
     {
         $client = self::createClient();
 
@@ -61,67 +115,96 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setOtherFeatures("Hidden pocket\nSqueaker in nose")
             ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
             ->setOtherOrderTypes('Arm sleeves')
+            ->setCurrenciesAccepted('Euro')
         ;
 
         self::persistAndFlush($entity);
 
         $submission = (new Artisan())
-            ->setMakerId('MAKERID') // Unchanged
-            ->setName('Changed name') // Changed, no fixer
+            // Submitted the same, NOT fixed, NOT changed
+            ->setMakerId('MAKERID')
+
+            // Submitted different, NOT fixed, changed
+            ->setName('Changed name')
+
+            // Submitted different, NOT fixed, changed / not tested
             ->setFormerly('Some testing maker')
-            ->setCountry('Finland') // Changed, fixed, result same
-            ->setTwitterUrl('http://www.twitter.com/getfursuit') // Changed, fixed, result different
-            ->setFeatures(Features::FOLLOW_ME_EYES) // Changed, no fixer
-            ->setOtherFeatures('Hidden pockets') // Changed, fixed, result changed
-            ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS) // Unchanged
+
+            // Submitted different, fixed, NOT changed
+            ->setCountry('Finland')
+
+            // Submitted different, fixed, changed
+            ->setTwitterUrl('http://www.twitter.com/getfursuit')
+
+            // Submitted different, NOT fixed, changed
+            ->setFeatures(Features::FOLLOW_ME_EYES)
+
+            // Submitted different, fixed, changed
+            ->setOtherFeatures('Hidden pockets')
+
+            // Submitted the same, NOT fixed, NOT changed
+            ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
+
+            // Submitted different, fixed, NOT changed
             ->setOtherOrderTypes('Armsleeves')
+
+            // Submitted the same, fixed, changed
+            ->setCurrenciesAccepted('Euro')
         ;
 
         $id = Submissions::submit($submission);
 
         $client->request('GET', "/mx/submissions/$id");
 
-        self::assertSelectorTextContains('tr.MAKER_ID.current', 'MAKERID');
-        self::assertSelectorTextContains('tr.MAKER_ID.submitted', 'MAKERID');
-        self::assertSelectorTextContains('tr.MAKER_ID.changed', 'MAKERID');
-        self::assertSelectorExists('tr.MAKER_ID.submitted.submitted-same.not-fixed.not-changing');
+        self::assertSelectorTextSame('tr.MAKER_ID.before td+td', 'MAKERID');
+        self::assertSelectorTextSame('tr.MAKER_ID.submitted td+td', 'MAKERID');
+        self::assertSelectorTextSame('tr.MAKER_ID.after td+td', 'MAKERID');
+        self::assertSelectorExists('tr.MAKER_ID.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextContains('tr.NAME.current', 'Some testing maker');
-        self::assertSelectorTextContains('tr.NAME.submitted', 'Changed name');
-        self::assertSelectorTextContains('tr.NAME.changed', 'Changed name');
-        self::assertSelectorExists('tr.NAME.submitted.submitted-different.not-fixed.changing');
+        self::assertSelectorTextSame('tr.NAME.before td+td', 'Some testing maker');
+        self::assertSelectorTextSame('tr.NAME.submitted td+td', 'Changed name');
+        self::assertSelectorTextSame('tr.NAME.after td+td', 'Changed name');
+        self::assertSelectorExists('tr.NAME.submitted-different.not-fixed.changing');
 
-        self::assertSelectorTextContains('tr.COUNTRY.current', 'FI');
-        self::assertSelectorTextContains('tr.COUNTRY.submitted', 'Finland');
-        self::assertSelectorTextContains('tr.COUNTRY.changed', 'FI');
-        self::assertSelectorExists('tr.COUNTRY.submitted.submitted-different.fixes-applied.not-changing');
+        self::assertSelectorTextSame('tr.COUNTRY.before td+td', 'FI');
+        self::assertSelectorTextSame('tr.COUNTRY.submitted td+td', 'Finland');
+        self::assertSelectorTextSame('tr.COUNTRY.after td+td', 'FI');
+        self::assertSelectorExists('tr.COUNTRY.submitted-different.fixes-applied.not-changing');
 
-        self::assertSelectorTextContains('tr.URL_TWITTER.current', ''); // FIXME: This may not work as expected
-        self::assertSelectorTextContains('tr.URL_TWITTER.submitted', 'http://www.twitter.com/getfursuit');
-        self::assertSelectorTextContains('tr.URL_TWITTER.changed', 'https://twitter.com/getfursuit');
-        self::assertSelectorExists('tr.URL_TWITTER.submitted.submitted-different.fixes-applied.changing');
+        self::assertSelectorTextSame('tr.URL_TWITTER.before td+td', '');
+        self::assertSelectorTextSame('tr.URL_TWITTER.submitted td+td', 'http://www.twitter.com/getfursuit');
+        self::assertSelectorTextSame('tr.URL_TWITTER.after td+td', 'https://twitter.com/getfursuit');
+        self::assertSelectorExists('tr.URL_TWITTER.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextContains('tr.PRODUCTION_MODELS.current', 'Standard commissions');
-        self::assertSelectorTextContains('tr.PRODUCTION_MODELS.submitted', 'Standard commissions');
-        self::assertSelectorTextContains('tr.PRODUCTION_MODELS.changed', 'Standard commissions');
-        self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted.submitted-same.not-fixed.not-changing');
+        self::assertSelectorTextSame('tr.FEATURES.before td+td', 'Follow-me eyes Movable jaw');
+        self::assertSelectorTextSame('tr.FEATURES.submitted td+td', 'Follow-me eyes');
+        self::assertSelectorTextSame('tr.FEATURES.after td+td', 'Follow-me eyes');
+        self::assertSelectorExists('tr.FEATURES.submitted-different.not-fixed.changing');
 
-        self::assertSelectorTextContains('tr.FEATURES.current', 'Follow-me eyes Movable jaw');
-        self::assertSelectorTextContains('tr.FEATURES.submitted', 'Follow-me eyes');
-        self::assertSelectorTextContains('tr.FEATURES.changed', 'Follow-me eyes');
-        self::assertSelectorExists('tr.FEATURES.submitted.submitted-different.not-fixed.changing');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.before td+td', 'Hidden pocket Squeaker in nose');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.submitted td+td', 'Hidden pockets');
+        self::assertSelectorTextSame('tr.OTHER_FEATURES.after td+td', 'Hidden pocket');
+        self::assertSelectorExists('tr.OTHER_FEATURES.submitted-different.fixes-applied.changing');
 
-        self::assertSelectorTextContains('tr.OTHER_ORDER_TYPES.current', 'Arm sleeves');
-        self::assertSelectorTextContains('tr.OTHER_ORDER_TYPES.submitted', 'Armsleeves');
-        self::assertSelectorTextContains('tr.OTHER_ORDER_TYPES.changed', 'Arm sleeves');
-        self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted.submitted-different.fixes-applied.not-changing');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.before td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.submitted td+td', 'Standard commissions');
+        self::assertSelectorTextSame('tr.PRODUCTION_MODELS.after td+td', 'Standard commissions');
+        self::assertSelectorExists('tr.PRODUCTION_MODELS.submitted-same.not-fixed.not-changing');
 
-        self::assertSelectorTextContains('tr.OTHER_FEATURES.current', 'Hidden pocket Squeaker in nose');
-        self::assertSelectorTextContains('tr.OTHER_FEATURES.submitted', 'Hidden pockets');
-        self::assertSelectorTextContains('tr.OTHER_FEATURES.changed', 'Hidden pocket');
-        self::assertSelectorExists('tr.OTHER_FEATURES.submitted.submitted-different.fixes-applied.changing');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.before td+td', 'Arm sleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.submitted td+td', 'Armsleeves');
+        self::assertSelectorTextSame('tr.OTHER_ORDER_TYPES.after td+td', 'Arm sleeves');
+        self::assertSelectorExists('tr.OTHER_ORDER_TYPES.submitted-different.fixes-applied.not-changing');
+
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.before td+td', 'Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.submitted td+td', 'Euro');
+        self::assertSelectorTextSame('tr.CURRENCIES_ACCEPTED.after td+td', 'EUR');
+        self::assertSelectorExists('tr.CURRENCIES_ACCEPTED.submitted-same.fixes-applied.changing');
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testSubmissionMatchingMultipleMakers(): void
     {
         $client = self::createClient();
@@ -146,7 +229,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $client->request('GET', "/mx/submissions/$id");
 
-        self::assertSelectorTextContains('p', 'Matched multiple makers: Some testing maker (MAKERID), Testing maker (MAKERI2). Unable to continue.');
+        self::assertSelectorTextSame('p', 'Matched multiple makers: Some testing maker (MAKERID), Testing maker (MAKERI2). Unable to continue.');
 
         // TODO: Consider some more safety measures?
     }
