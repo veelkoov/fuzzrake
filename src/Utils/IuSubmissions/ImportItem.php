@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
+use App\Submissions\Changes\Description;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
-use App\Utils\Data\Diff;
 use App\Utils\StrUtils;
 use LogicException;
 
 class ImportItem
 {
-    private ?Diff $diff = null;
+    private ?Description $diff = null;
 
     /**
      * @var string[]
@@ -87,14 +87,14 @@ class ImportItem
         return $this->entity->getSubject()->getPassword();
     }
 
-    public function getDiff(): Diff
+    public function getDiff(): Description
     {
         return $this->diff ?? throw new LogicException('Diff has not been calculated yet');
     }
 
     public function calculateDiff(): void
     {
-        $this->diff = new Diff($this->getOriginalEntity(), $this->getFixedEntity());
+        $this->diff = new Description($this->getOriginalEntity(), $this->getFixedEntity());
     }
 
     public function addReplaced(string $replaced): void

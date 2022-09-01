@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Submissions;
 
 use App\DataDefinitions\Fields\Field;
+use App\Submissions\Changes\Description;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\IuSubmissions\IuSubmission;
 
@@ -40,5 +41,10 @@ class Update
     public function isChanging(Field $field): bool
     {
         return !$this->originalArtisan->equals($field, $this->updatedArtisan);
+    }
+
+    public function getDescription(): Description
+    {
+        return new Description($this->originalArtisan, $this->updatedArtisan);
     }
 }

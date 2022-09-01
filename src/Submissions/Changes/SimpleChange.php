@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Submissions\Changes;
 
 use App\DataDefinitions\Fields\Field;
 use App\Utils\StrUtils;
