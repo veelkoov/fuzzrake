@@ -4,49 +4,37 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\ArtisanVolatileDataRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArtisanVolatileDataRepository")
- * @ORM\Table(name="artisans_volatile_data")
- *
  * NOTE: Ephemeral information, can be recreated by running update command. Table should not be committed, as that
- *       would generate too much noise in the repo history
+ *       would generate too much noise in the repo history.
  */
+#[ORM\Entity(repositoryClass: ArtisanVolatileDataRepository::class)]
+#[ORM\Table(name: 'artisans_volatile_data')]
 class ArtisanVolatileData
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="volatileData")
-     * @ORM\JoinColumn(name="artisan_id", nullable=false)
-     */
+    #[ORM\OneToOne(inversedBy: 'volatileData', targetEntity: Artisan::class)]
+    #[ORM\JoinColumn(name: 'artisan_id', nullable: false)]
     private Artisan $artisan;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $lastCsUpdate = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $csTrackerIssue = false;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $lastBpUpdate = null; // TODO: Remove
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $bpTrackerIssue = false; // TODO: Remove
 
     public function getId(): ?int

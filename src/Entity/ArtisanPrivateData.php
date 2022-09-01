@@ -5,47 +5,37 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\DataDefinitions\Fields\Validation;
+use App\Repository\ArtisanPrivateDataRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArtisanPrivateDataRepository")
- * @ORM\Table(name="artisans_private_data")
- *
  * NOTE: Private information given exclusively to the DB maintainer, must not be shared without makers' approval.
  *       Must never be dumped, nor committed.
  */
+#[ORM\Entity(repositoryClass: ArtisanPrivateDataRepository::class)]
+#[ORM\Table(name: 'artisans_private_data')]
 class ArtisanPrivateData
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Artisan", inversedBy="privateData")
-     * @ORM\JoinColumn(name="artisan_id", nullable=false, unique=true)
-     */
+    #[ORM\OneToOne(inversedBy: 'privateData', targetEntity: Artisan::class)]
+    #[ORM\JoinColumn(name: 'artisan_id', unique: true, nullable: false)]
     private Artisan $artisan;
 
-    /**
-     * @ORM\Column(type="string", length=512)
-     */
+    #[ORM\Column(type: 'string', length: 512)]
     private string $contactAddress = '';
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $password = '';
 
-    /**
-     * @ORM\Column(type="string", length=512)
-     */
+    #[ORM\Column(type: 'string', length: 512)]
     private string $originalContactInfo = '';
 
     public function getId(): ?int
