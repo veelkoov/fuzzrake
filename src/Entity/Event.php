@@ -4,96 +4,70 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\EventRepository;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\StringList;
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThan;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
- * @ORM\Table(name="events")
- */
+#[ORM\Entity(repositoryClass: EventRepository::class)]
+#[ORM\Table(name: 'events')]
 class Event
 {
     final public const TYPE_DATA_UPDATED = 'DATA_UPDATED';
     final public const TYPE_CS_UPDATED = 'CS_UPDATED';
     final public const TYPE_GENERIC = 'GENERIC';
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $timestamp;
 
-    /**
-     * @ORM\Column(type="string", length=4095)
-     */
+    #[ORM\Column(type: Types::STRING, length: 4095)]
     private string $description = '';
 
-    /**
-     * @ORM\Column(type="string", length=16)
-     */
+    #[ORM\Column(type: Types::STRING, length: 16)]
     private string $type = self::TYPE_DATA_UPDATED;
 
-    /**
-     * @ORM\Column(type="string", length=256)
-     */
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $noLongerOpenFor = '';
 
-    /**
-     * @ORM\Column(type="string", length=256)
-     */
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $nowOpenFor = '';
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $trackingIssues = false;
 
-    /**
-     * @ORM\Column(type="string", length=256)
-     */
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $artisanName = '';
 
-    /**
-     * @ORM\Column(type="string", length=1024)
-     */
+    #[ORM\Column(type: Types::STRING, length: 1024)]
     private string $checkedUrls = '';
 
-    /**
-     * @ORM\Column(type="integer")
-     */
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $newMakersCount = 0;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $updatedMakersCount = 0;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
     #[GreaterThanOrEqual(value: 0)]
     #[LessThan(value: 500)]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $reportedUpdatedMakersCount = 0;
 
-    /**
-     * @ORM\Column(type="string", length=256)
-     */
     #[Length(max: 256)]
+    #[ORM\Column(type: Types::STRING, length: 256)]
     private string $gitCommits = '';
 
     public function __construct()

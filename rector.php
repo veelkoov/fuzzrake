@@ -2,53 +2,46 @@
 
 declare(strict_types=1);
 
-use Rector\Core\Configuration\Option;
-use Rector\Php71\Rector\FuncCall\CountOnNullRector;
-use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
+use Rector\Config\RectorConfig;
+use Rector\Doctrine\Set\DoctrineSetList;
+use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\PHPUnit\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
+use Rector\PHPUnit\Set\PHPUnitLevelSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\SetList;
+use Rector\Set\ValueObject\LevelSetList;
+use Rector\Symfony\Set\SymfonyLevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(SetList::PHP_70);
-    $containerConfigurator->import(SetList::PHP_71);
-    $containerConfigurator->import(SetList::PHP_72);
-    $containerConfigurator->import(SetList::PHP_73);
-    $containerConfigurator->import(SetList::PHP_74);
-    $containerConfigurator->import(SetList::PHP_80);
-    $containerConfigurator->import(SetList::PHP_81);
-    $containerConfigurator->import(SymfonySetList::SYMFONY_50);
-    $containerConfigurator->import(SymfonySetList::SYMFONY_52);
-    $containerConfigurator->import(SymfonySetList::SYMFONY_CODE_QUALITY);
-    $containerConfigurator->import(PHPUnitSetList::PHPUNIT_60);
-    $containerConfigurator->import(PHPUnitSetList::PHPUNIT_70);
-    $containerConfigurator->import(PHPUnitSetList::PHPUNIT_75);
-    $containerConfigurator->import(PHPUnitSetList::PHPUNIT_80);
-    $containerConfigurator->import(PHPUnitSetList::PHPUNIT_90);
-    $containerConfigurator->import(PHPUnitSetList::PHPUNIT_91);
-
-    $parameters = $containerConfigurator->parameters();
-
-    $parameters->set(Option::SKIP, [
-        AddLiteralSeparatorToNumberRector::class,
-        CountOnNullRector::class, // TODO: Reconsider
-        ClassPropertyAssignToConstructorPromotionRector::class, // TODO: Remove when Doctrine annotations are supported in constructor parameters
-        AddDoesNotPerformAssertionToNonAssertingTestRector::class, // Not an issue in our case; we don't have "unsafe" tests
-        JsonThrowOnErrorRector::class, // Using our own utility class, using named arguments
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->paths([
+        __DIR__.'/src',
+        __DIR__.'/tests',
     ]);
 
-    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_81,
 
-    $parameters->set(Option::PATHS, [__DIR__.'/src', __DIR__.'/tests']);
+        SymfonyLevelSetList::UP_TO_SYMFONY_60,
+        SymfonySetList::SYMFONY_CODE_QUALITY,
+        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
+        SymfonySetList::SYMFONY_STRICT,
 
-    $parameters->set(Option::SYMFONY_CONTAINER_XML_PATH_PARAMETER, __DIR__.'/var/cache/dev/App_KernelDevDebugContainer.xml');
+        DoctrineSetList::DOCTRINE_CODE_QUALITY,
+        DoctrineSetList::DOCTRINE_DBAL_30,
+        DoctrineSetList::DOCTRINE_ORM_29,
 
-    $parameters->set(Option::AUTOLOAD_PATHS, [
-        __DIR__.'/vendor/autoload.php',
-        __DIR__.'/vendor/bin/.phpunit/phpunit/vendor/autoload.php',
+        PHPUnitLevelSetList::UP_TO_PHPUNIT_90,
+        PHPUnitSetList::PHPUNIT_91,
+    ]);
+
+    $rectorConfig->parallel();
+
+    $rectorConfig->skip([
+        ClassPropertyAssignToConstructorPromotionRector::class, // Breaks annotations
+        AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
+        AddDoesNotPerformAssertionToNonAssertingTestRector::class, // TODO
+        ArraySpreadInsteadOfArrayMergeRector::class, // TODO
     ]);
 };

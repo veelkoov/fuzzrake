@@ -4,48 +4,34 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\ArtisanUrlStateRepository;
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ArtisanUrlStateRepository")
- * @ORM\Table(name="artisans_urls_states")
- */
+#[ORM\Entity(repositoryClass: ArtisanUrlStateRepository::class)]
+#[ORM\Table(name: 'artisans_urls_states')]
 class ArtisanUrlState
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\ArtisanUrl", inversedBy="state")
-     * @ORM\JoinColumn(name="artisan_url_id", nullable=false)
-     */
+    #[ORM\OneToOne(inversedBy: 'state', targetEntity: ArtisanUrl::class)]
+    #[ORM\JoinColumn(name: 'artisan_url_id', nullable: false)]
     private ArtisanUrl $url;
 
-    /**
-     * @ORM\Column(name="last_success", type="datetime_immutable", nullable=true)
-     * FIXME: Rename column to UTC https://github.com/veelkoov/fuzzrake/issues/109
-     */
+    #[ORM\Column(name: 'last_success', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $lastSuccessUtc = null;
 
-    /**
-     * @ORM\Column(name="last_failure", type="datetime_immutable", nullable=true)
-     * FIXME: Rename column to UTC https://github.com/veelkoov/fuzzrake/issues/109
-     */
+    #[ORM\Column(name: 'last_failure', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $lastFailureUtc = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: Types::INTEGER)]
     private int $lastFailureCode = 0;
 
-    /**
-     * @ORM\Column(type="string", length=512)
-     */
+    #[ORM\Column(type: Types::STRING, length: 512)]
     private string $lastFailureReason = '';
 
     public function getId(): ?int
