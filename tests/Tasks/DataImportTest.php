@@ -7,12 +7,12 @@ namespace App\Tests\Tasks;
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
+use App\Submissions\SubmissionData;
 use App\Tasks\DataImport;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\FixerDifferValidator;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
-use App\Utils\IuSubmissions\IuSubmission;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -99,12 +99,12 @@ class DataImportTest extends TestCase
     /**
      * @param array<string, psJsonFieldValue> $data
      */
-    private function getIuSubmission(ArtisanE $artisan, array $data): IuSubmission
+    private function getIuSubmission(ArtisanE $artisan, array $data): SubmissionData
     {
         $allData = Artisan::wrap($artisan)->getAllData();
         $allData = array_merge($allData, $data);
 
-        return new IuSubmission(new DateTimeImmutable(), 'test_id', $allData);
+        return new SubmissionData(new DateTimeImmutable(), 'test_id', $allData);
     }
 
     private function getArtisanRepositoryMock(ArtisanE $artisan): ArtisanRepository

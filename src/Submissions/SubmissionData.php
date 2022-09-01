@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\IuSubmissions;
+namespace App\Submissions;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
@@ -11,13 +11,14 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
+use App\Utils\IuSubmissions\SchemaFixer;
 use App\Utils\Json;
 use App\Utils\StringList;
 use DateTimeImmutable;
 use JsonException;
 use Symfony\Component\Finder\SplFileInfo;
 
-class IuSubmission implements FieldReadInterface
+class SubmissionData implements FieldReadInterface
 {
     /**
      * @param array<string, psJsonFieldValue> $data
@@ -92,8 +93,8 @@ class IuSubmission implements FieldReadInterface
 
         try {
             return UtcClock::at($dateTimeStr);
-        } catch (DateTimeException $e) {
-            throw new DataInputException('Couldn\'t parse the timestamp out of the I/U submission file path', 0, $e);
+        } catch (DateTimeException $exception) {
+            throw new DataInputException("Couldn't parse the timestamp ('$dateTimeStr') out of the I/U submission file path: '$filePath'", previous: $exception);
         }
     }
 
@@ -104,5 +105,14 @@ class IuSubmission implements FieldReadInterface
             ->first()
             ->exactly()
             ->withReferences('$1-$2-$3_$4$5$6_$7');
+    }
+
+    public static function getFilePathFromId(string $id): string
+    {
+        return pattern('^(\d{4})-(\d{2})-(\d{2})_(\d{2})(\d{2})(\d{2})_(\d{4})$')
+            ->replace($id)
+            ->first()
+            ->exactly()
+            ->withReferences('$1/$2/$3/$4:$5:$6_$7.json');
     }
 }

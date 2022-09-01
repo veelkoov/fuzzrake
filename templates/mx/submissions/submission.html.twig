@@ -66,6 +66,23 @@
         </tbody>
     </table>
 
+    {{ form_start(form) }}
+
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.directives) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.comment) }}
+        </div>
+    </div>
+    <div class="text-end">
+        {{ form_row(form.update) }}
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
     <h2>Text description</h2>
 
     <p class="small user-select-all">{{ update.description.text|nl2br }}</p>

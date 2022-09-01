@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
+use App\Submissions\SubmissionData;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -16,7 +17,7 @@ final class Finder
     /**
      * @param ?positive-int $limit
      *
-     * @return IuSubmission[]
+     * @return SubmissionData[]
      */
     public static function getFrom(string $directoryPath, ?DateTimeImmutable $onlyAfter = null, ?int $limit = null, bool $reverse = false): array
     {
@@ -27,7 +28,7 @@ final class Finder
         $result = [];
 
         foreach (self::getFinder($directoryPath, $reverse) as $file) {
-            $item = IuSubmission::fromFile($file);
+            $item = SubmissionData::fromFile($file);
 
             if (self::isTooOld($onlyAfter, $item)) {
                 continue;
@@ -43,7 +44,7 @@ final class Finder
         return $result;
     }
 
-    private static function isTooOld(?DateTimeImmutable $onlyAfter, IuSubmission $item): bool
+    private static function isTooOld(?DateTimeImmutable $onlyAfter, SubmissionData $item): bool
     {
         return null !== $onlyAfter && $item->getTimestamp() < $onlyAfter;
     }

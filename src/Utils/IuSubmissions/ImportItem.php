@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\Submissions\Changes\Description;
+use App\Submissions\SubmissionData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\StrUtils;
@@ -20,7 +21,7 @@ class ImportItem
     private array $replaced = [];
 
     public function __construct(
-        private readonly IuSubmission $iuSubmission,
+        private readonly SubmissionData $iuSubmission,
         private readonly ArtisanChanges $input,
         private readonly ArtisanChanges $entity,
     ) {

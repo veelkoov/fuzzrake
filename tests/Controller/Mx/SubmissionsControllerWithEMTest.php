@@ -6,6 +6,7 @@ namespace App\Tests\Controller\Mx;
 
 use App\DataDefinitions\Features;
 use App\DataDefinitions\ProductionModels;
+use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -232,6 +233,80 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextSame('p', 'Matched multiple makers: Some testing maker (MAKERID), Testing maker (MAKERI2). Unable to continue.');
 
         // TODO: Consider some more safety measures?
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testUpdatingExistingSubmission(): void
+    {
+        $client = self::createClient();
+
+        $submissionData = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Testing maker')
+        ;
+
+        $id = Submissions::submit($submissionData);
+
+        $submission = (new Submission())
+            ->setStrId($id)
+            ->setComment('Old comment')
+            ->setDirectives('Old directives')
+        ;
+
+        $this->persistAndFlush($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextSame('#submission_comment', 'Old comment');
+        self::assertSelectorTextSame('#submission_directives', 'Old directives');
+
+        $client->submitForm('Update', [
+            'submission[comment]'    => 'New comment',
+            'submission[directives]' => 'New directives',
+        ]);
+
+        self::assertResponseStatusCodeSame(200);
+
+        // Reload to make sure saved is OK
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextSame('#submission_comment', 'New comment');
+        self::assertSelectorTextSame('#submission_directives', 'New directives');
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testCreatingSubmission(): void
+    {
+        $client = self::createClient();
+
+        $submissionData = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Testing maker')
+        ;
+
+        $id = Submissions::submit($submissionData);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextSame('#submission_comment', '');
+        self::assertSelectorTextSame('#submission_directives', '');
+
+        $client->submitForm('Update', [
+            'submission[comment]'    => 'Added comment',
+            'submission[directives]' => 'Added directives',
+        ]);
+
+        self::assertResponseStatusCodeSame(200);
+
+        // Reload to make sure saved is OK
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextSame('#submission_comment', 'Added comment');
+        self::assertSelectorTextSame('#submission_directives', 'Added directives');
     }
 
     /**

@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace App\Controller\Mx;
 
 use App\DataDefinitions\Fields\Fields;
+use App\Entity\Submission;
+use App\Form\Mx\SubmissionType;
+use App\Repository\SubmissionRepository;
+use App\Submissions\SubmissionData;
 use App\Submissions\SubmissionsService;
-use App\Utils\IuSubmissions\IuSubmission;
 use App\ValueObject\Routing\RouteName;
+use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,6 +23,7 @@ class SubmissionsController extends AbstractController
 {
     public function __construct(
         private readonly SubmissionsService $service,
+        private readonly SubmissionRepository $repository,
     ) {
     }
 
@@ -32,21 +38,31 @@ class SubmissionsController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route(path: '/{id}', name: RouteName::MX_SUBMISSION)]
     #[Cache(maxage: 0, public: false)]
-    public function submission(string $id): Response
+    public function submission(Request $request, string $id): Response
     {
+        $submissionData = $this->getSubmissionData($id);
         $submission = $this->getSubmission($id);
+        $update = $this->service->getUpdate($submissionData);
 
-        $update = $this->service->getUpdate($submission);
+        $form = $this->createForm(SubmissionType::class, $submission);
+
+        if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
+            $this->repository->add($submission, true);
+        }
 
         return $this->render('mx/submissions/submission.html.twig', [
-            'update'     => $update,
-            'fields'     => Fields::iuFormAffected(),
+            'update' => $update,
+            'fields' => Fields::iuFormAffected(),
+            'form'   => $form->createView(),
         ]);
     }
 
-    private function getSubmission(string $id): IuSubmission
+    private function getSubmissionData(string $id): SubmissionData
     {
         $result = $this->service->getSubmissionById($id);
 
@@ -55,5 +71,13 @@ class SubmissionsController extends AbstractController
         }
 
         return $result;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    private function getSubmission(string $id): Submission
+    {
+        return $this->repository->findByStrId($id) ?? (new Submission())->setStrId($id);
     }
 }

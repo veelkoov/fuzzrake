@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
+use App\Submissions\SubmissionData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FixerDifferValidator as FDV;
@@ -17,7 +18,6 @@ use App\Utils\DataInputException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\ImportItem;
-use App\Utils\IuSubmissions\IuSubmission;
 use App\Utils\IuSubmissions\Messaging;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +39,7 @@ class DataImport
     }
 
     /**
-     * @param IuSubmission[] $artisansData
+     * @param SubmissionData[] $artisansData
      *
      * @throws DataInputException
      */
@@ -68,7 +68,7 @@ class DataImport
     }
 
     /**
-     * @param IuSubmission[] $artisansData
+     * @param SubmissionData[] $artisansData
      *
      * @return ImportItem[]
      *
@@ -109,7 +109,7 @@ class DataImport
     /**
      * @throws DataInputException
      */
-    private function createImportItem(IuSubmission $submission): ImportItem
+    private function createImportItem(SubmissionData $submission): ImportItem
     {
         $originalInput = $this->updateArtisanWithData(new Artisan(), $submission);
 
@@ -166,7 +166,7 @@ class DataImport
         return $artisan;
     }
 
-    private function findBestMatchArtisan(IuSubmission $submission, Artisan $input): ?Artisan
+    private function findBestMatchArtisan(SubmissionData $submission, Artisan $input): ?Artisan
     {
         $results = $this->artisanRepository->findBestMatches(
             array_merge([$submission->getString(Field::NAME)], StringList::unpack($submission->getString(Field::FORMERLY))),

@@ -14,7 +14,6 @@ use App\Utils\Data\Manager;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\IuSubmissions\IuSubmission;
 use App\Utils\StringList;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -37,19 +36,19 @@ class SubmissionsService
     }
 
     /**
-     * @return IuSubmission[]
+     * @return SubmissionData[]
      */
     public function getSubmissions(): array
     {
         return Finder::getFrom($this->submissionsDirPath, limit: 20, reverse: true);
     }
 
-    public function getSubmissionById(string $id): ?IuSubmission
+    public function getSubmissionById(string $id): ?SubmissionData
     {
         return first(filter($this->getSubmissions(), fn ($submission) => $submission->getId() === $id));
     }
 
-    public function getUpdate(IuSubmission $submission): Update
+    public function getUpdate(SubmissionData $submission): Update
     {
         $originalInput = new Artisan();
         $this->updateWith($originalInput, $submission, Fields::inIuForm());

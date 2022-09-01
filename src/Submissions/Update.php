@@ -7,7 +7,6 @@ namespace App\Submissions;
 use App\DataDefinitions\Fields\Field;
 use App\Submissions\Changes\Description;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\IuSubmissions\IuSubmission;
 
 class Update
 {
@@ -15,7 +14,7 @@ class Update
      * @param Artisan[] $matchedArtisans
      */
     public function __construct(
-        public readonly IuSubmission $submission,
+        public readonly SubmissionData $submission,
         public readonly array $matchedArtisans,
         public readonly Artisan $originalInput,
         public readonly Artisan $originalArtisan,

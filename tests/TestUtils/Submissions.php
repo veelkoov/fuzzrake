@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils;
 
+use App\Submissions\SubmissionData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\IuSubmissions\IuSubmission;
 use App\Utils\IuSubmissions\IuSubmissionService;
 use App\Utils\IuSubmissions\LocalStorageService;
 use Exception;
@@ -32,13 +32,13 @@ class Submissions
 
         $path = self::$storage->saveOnDiskGetRelativePath(IuSubmissionService::asJson($artisan));
 
-        return IuSubmission::getIdFromFilePath($path);
+        return SubmissionData::getIdFromFilePath($path);
     }
 
-    public static function from(Artisan $artisan): IuSubmission
+    public static function from(Artisan $artisan): SubmissionData
     {
         $data = IuSubmissionService::asArray($artisan);
 
-        return new IuSubmission(UtcClock::now(), 'MOCK SUBMISSION', $data);
+        return new SubmissionData(UtcClock::now(), 'MOCK SUBMISSION', $data);
     }
 }
