@@ -13,6 +13,7 @@ use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonyLevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
+use Rector\Transform\Rector\Attribute\AttributeKeyToClassConstFetchRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -40,6 +41,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         ClassPropertyAssignToConstructorPromotionRector::class, // Breaks annotations
+        AttributeKeyToClassConstFetchRector::class, // Ignores imports
         AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
         AddDoesNotPerformAssertionToNonAssertingTestRector::class, // TODO
         ArraySpreadInsteadOfArrayMergeRector::class, // TODO

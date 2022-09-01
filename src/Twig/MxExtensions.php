@@ -14,7 +14,7 @@ class MxExtensions extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('smart', fn (Artisan|ArtisanE $artisan) => $this->smartFilter($artisan)),
+            new TwigFilter('smart', $this->smartFilter(...)),
         ];
     }
 

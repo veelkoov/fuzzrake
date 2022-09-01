@@ -110,6 +110,14 @@ pipeline {
             }
           }
         }
+
+        stage('Rector') {
+          steps {
+            ansiColor('xterm') {
+              sh 'rake rector[--dry-run]'
+            }
+          }
+        }
       }
     }
   }
