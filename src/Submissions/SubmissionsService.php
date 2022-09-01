@@ -10,7 +10,6 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
-use App\Utils\Data\Manager;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\IuSubmissions\Finder;
@@ -28,7 +27,6 @@ class SubmissionsService
     public function __construct(
         private readonly ArtisanRepository $artisans,
         private readonly Fixer $fixer,
-        private readonly Manager $manager,
         #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
         string $submissionsDirPath,
     ) {
@@ -48,10 +46,10 @@ class SubmissionsService
         return first(filter($this->getSubmissions(), fn ($submission) => $submission->getId() === $id));
     }
 
-    public function getUpdate(SubmissionData $submission): Update
+    public function getUpdate(SubmissionData $submissionData, Manager $manager): Update
     {
         $originalInput = new Artisan();
-        $this->updateWith($originalInput, $submission, Fields::inIuForm());
+        $this->updateWith($originalInput, $submissionData, Fields::inIuForm());
 
         /* This bases on input before fixing. Could use some improvements. */
         $matchedArtisans = $this->getArtisans($originalInput);
@@ -65,10 +63,10 @@ class SubmissionsService
         $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
 
         $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
-        $this->manager->correctArtisan($updatedArtisan, $submission->getId());
+        $manager->correctArtisan($updatedArtisan, $submissionData->getId());
 
         return new Update(
-            $submission,
+            $submissionData,
             $matchedArtisans,
             $originalInput,
             $originalArtisan,

@@ -8,12 +8,17 @@ use App\DataDefinitions\Fields\Fields;
 use App\Entity\Submission;
 use App\Form\Mx\SubmissionType;
 use App\Repository\SubmissionRepository;
+use App\Submissions\Manager;
+use App\Submissions\ManagerConfigError;
 use App\Submissions\SubmissionData;
 use App\Submissions\SubmissionsService;
+use App\Utils\UnbelievableRuntimeException;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,6 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SubmissionsController extends AbstractController
 {
     public function __construct(
+        private readonly LoggerInterface $logger,
         private readonly SubmissionsService $service,
         private readonly SubmissionRepository $repository,
     ) {
@@ -47,12 +53,18 @@ class SubmissionsController extends AbstractController
     {
         $submissionData = $this->getSubmissionData($id);
         $submission = $this->getSubmission($id);
-        $update = $this->service->getUpdate($submissionData);
+        [$directivesError, $manager] = $this->getManager($submission);
+        $update = $this->service->getUpdate($submissionData, $manager);
 
         $form = $this->createForm(SubmissionType::class, $submission);
 
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
             $this->repository->add($submission, true);
+        }
+
+        if (null !== $directivesError) {
+            $message = "The directives have been ignored completely due to an error. $directivesError";
+            $form['directives']?->addError(new FormError($message));
         }
 
         return $this->render('mx/submissions/submission.html.twig', [
@@ -79,5 +91,26 @@ class SubmissionsController extends AbstractController
     private function getSubmission(string $id): Submission
     {
         return $this->repository->findByStrId($id) ?? (new Submission())->setStrId($id);
+    }
+
+    /**
+     * @return array{0: ?string, 1: Manager}
+     */
+    private function getManager(Submission $submission): array
+    {
+        $directives = $submission->getDirectives();
+        $strId = $submission->getStrId();
+
+        try {
+            return [null, new Manager($this->logger, "with {$strId}:\n$directives")]; // TODO: Remove "with"
+        } catch (ManagerConfigError $error) {
+            $directivesError = $error->getMessage();
+
+            try {
+                return [$directivesError, new Manager($this->logger, '')];
+            } catch (ManagerConfigError $error) {
+                throw new UnbelievableRuntimeException($error);
+            }
+        }
     }
 }

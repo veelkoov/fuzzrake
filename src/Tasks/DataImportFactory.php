@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
+use App\Submissions\Manager;
 use App\Utils\Data\FdvFactory;
-use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;

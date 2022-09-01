@@ -312,6 +312,67 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
+    public function testDirectivesWork(): void
+    {
+        $client = self::createClient();
+
+        $submissionData = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Testing maker')
+            ->setIntro('Some submitted intro information')
+            ->setSpeciesDoes("All species\nMost experience in k9s")
+        ;
+
+        $id = Submissions::submit($submissionData);
+
+        $submission = (new Submission())
+            ->setStrId($id)
+            ->setDirectives("set INTRO 'Some changed intro information'\nset SPECIES_DOES 'Most species'\nset SPECIES_COMMENT 'Most experience in canines'")
+        ;
+
+        $this->persistAndFlush($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextSame('tr.INTRO.submitted td+td', 'Some submitted intro information');
+        self::assertSelectorTextSame('tr.INTRO.after td+td', 'Some changed intro information');
+
+        self::assertSelectorTextSame('tr.SPECIES_DOES.submitted td+td', 'All species Most experience in k9s');
+        self::assertSelectorTextSame('tr.SPECIES_DOES.after td+td', 'Most species');
+
+        self::assertSelectorTextSame('tr.SPECIES_COMMENT.submitted td+td', '');
+        self::assertSelectorTextSame('tr.SPECIES_COMMENT.after td+td', 'Most experience in canines');
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testInvalidDirectivesDontBreakPage(): void
+    {
+        $client = self::createClient();
+
+        $submissionData = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Testing maker')
+        ;
+
+        $id = Submissions::submit($submissionData);
+
+        $submission = (new Submission())
+            ->setStrId($id)
+            ->setDirectives('Let me just put something random here')
+        ;
+
+        $this->persistAndFlush($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+        self::assertResponseStatusCodeSame(200);
+        self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
+    }
+
+    /**
+     * @throws JsonException
+     */
     private function generateRandomFakeSubmissions(int $count): void
     {
         while (--$count >= 0) {

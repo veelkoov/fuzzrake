@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Submissions;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Data\ValueCorrection;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -67,6 +68,9 @@ class Manager
      */
     private ?string $currentSubject = null;
 
+    /**
+     * @throws ManagerConfigError
+     */
     public function __construct(
         private readonly LoggerInterface $logger,
         string $directives = '',
@@ -120,6 +124,9 @@ class Manager
         return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !UtcClock::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
     }
 
+    /**
+     * @throws ManagerConfigError
+     */
     private function readDirectives(string $directives): void
     {
         $buffer = new StringBuffer($directives);
@@ -143,6 +150,9 @@ class Manager
         $this->corrections[$submissionId][] = new ValueCorrection($submissionId, $field, $wrongValue, $correctedValue);
     }
 
+    /**
+     * @throws ManagerConfigError
+     */
     private function readCommand(StringBuffer $buffer): void
     {
         $command = $buffer->readUntilWhitespaceOrEof();
@@ -169,7 +179,7 @@ class Manager
                 try {
                     $parsedFinalTime = UtcClock::at($readFinalTime);
                 } catch (DateTimeException $e) {
-                    throw new DataInputException("Failed to parse date: '$readFinalTime'", 0, $e);
+                    throw new ManagerConfigError("Failed to parse date: '$readFinalTime'", 0, $e);
                 }
 
                 $this->itemsIgnoreFinalTimes[$this->getCurrentSubject()] = $parsedFinalTime;
@@ -202,14 +212,14 @@ class Manager
                 $subject = $buffer->readUntil(':');
 
                 if (pattern('^([A-Z0-9]{7}|\d{4}-\d{2}-\d{2}_\d{6}_\d{4})$')->fails($subject)) {
-                    throw new DataInputException("Invalid subject: '$subject'");
+                    throw new ManagerConfigError("Invalid subject: '$subject'");
                 }
 
                 $this->currentSubject = $subject;
                 break;
 
             default:
-                throw new DataInputException("Unknown command: '$command'");
+                throw new ManagerConfigError("Unknown command: '$command'");
         }
     }
 

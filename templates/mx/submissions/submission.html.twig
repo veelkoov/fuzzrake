@@ -26,6 +26,23 @@
         </p>
     {% endif %}
 
+    {{ form_start(form) }}
+
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.directives) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.comment) }}
+        </div>
+    </div>
+    <div class="text-end">
+        {{ form_row(form.update) }}
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
     <table class="table table-sm" id="mx-submission">
         <thead>
             <tr>
@@ -65,23 +82,6 @@
             {% endfor %}
         </tbody>
     </table>
-
-    {{ form_start(form) }}
-
-    <div class="row">
-        <div class="col-lg-6">
-            {{ form_row(form.directives) }}
-        </div>
-        <div class="col-lg-6">
-            {{ form_row(form.comment) }}
-        </div>
-    </div>
-    <div class="text-end">
-        {{ form_row(form.update) }}
-    </div>
-
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
 
     <h2>Text description</h2>
 

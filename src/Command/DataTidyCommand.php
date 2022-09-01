@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Repository\ArtisanRepository;
+use App\Submissions\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\FixerDifferValidator as FDV;
-use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

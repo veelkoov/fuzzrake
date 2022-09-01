@@ -6,12 +6,12 @@ namespace App\Tests\Submissions;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Repository\ArtisanRepository;
+use App\Submissions\Manager;
 use App\Submissions\SubmissionsService;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
-use App\Utils\Data\Manager;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 use Psr\Log\LoggerInterface;
@@ -28,7 +28,7 @@ class SubmissionsServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpSubmissionsService([]);
-        $result = $subject->getUpdate($submission);
+        $result = $subject->getUpdate($submission, $this->getIdleManager());
 
         self::assertEquals('', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('', $result->originalArtisan->getContactMethod());
@@ -54,7 +54,7 @@ class SubmissionsServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpSubmissionsService([$artisan]);
-        $result = $subject->getUpdate($submission);
+        $result = $subject->getUpdate($submission, $this->getIdleManager());
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
@@ -80,7 +80,7 @@ class SubmissionsServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpSubmissionsService([$artisan]);
-        $result = $subject->getUpdate($submission);
+        $result = $subject->getUpdate($submission, $this->getIdleManager());
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
@@ -102,7 +102,7 @@ class SubmissionsServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpSubmissionsService([]);
-        $result = $subject->getUpdate($submission);
+        $result = $subject->getUpdate($submission, $this->getIdleManager());
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
@@ -127,7 +127,7 @@ class SubmissionsServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpSubmissionsService([$artisan]);
-        $result = $subject->getUpdate($submission);
+        $result = $subject->getUpdate($submission, $this->getIdleManager());
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
@@ -160,10 +160,11 @@ class SubmissionsServiceTest extends TestCase
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
 
-        $loggerMock = $this->createMock(LoggerInterface::class);
+        return new SubmissionsService($artisanRepoMock, $fixerMock, '');
+    }
 
-        $manager = new Manager($loggerMock, '');
-
-        return new SubmissionsService($artisanRepoMock, $fixerMock, $manager, '');
+    private function getIdleManager(): Manager
+    {
+        return new Manager($this->createMock(LoggerInterface::class), '');
     }
 }

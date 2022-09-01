@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
+use App\Submissions\Manager;
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Paths;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Data\FdvFactory;
-use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\IuSubmissions\Finder;
 use Exception;

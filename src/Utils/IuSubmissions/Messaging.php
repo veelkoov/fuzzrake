@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
+use App\Submissions\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\StrUtils;

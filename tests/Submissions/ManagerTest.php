@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Data;
+namespace App\Tests\Submissions;
 
+use App\Submissions\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Manager;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
