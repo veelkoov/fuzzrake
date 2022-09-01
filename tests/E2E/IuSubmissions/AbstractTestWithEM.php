@@ -13,6 +13,7 @@ use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use App\Utils\IuSubmissions\Finder;
 use Exception;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -44,7 +45,7 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
             }
         }
 
-        return new Manager($corrections);
+        return new Manager($this->createMock(LoggerInterface::class), $corrections);
     }
 
     protected function performImport(bool $acceptAll): BufferedOutput

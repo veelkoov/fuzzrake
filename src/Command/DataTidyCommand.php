@@ -12,6 +12,7 @@ use App\Utils\Data\FixerDifferValidator as FDV;
 use App\Utils\Data\Manager;
 use App\Utils\Data\Printer;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,6 +31,7 @@ class DataTidyCommand extends Command
         private readonly EntityManagerInterface $objectManager,
         private readonly ArtisanRepository $artisanRepo,
         private readonly FdvFactory $fdvFactory,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }
@@ -48,7 +50,7 @@ class DataTidyCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $manager = Manager::createFromFile($input->getArgument(self::ARG_CORRECTIONS_FILE));
+        $manager = new Manager($this->logger, directivesFilePath: $input->getArgument(self::ARG_CORRECTIONS_FILE));
 
         $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
 

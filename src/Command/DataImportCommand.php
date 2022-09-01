@@ -10,6 +10,7 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\IuSubmissions\Finder;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,6 +24,7 @@ class DataImportCommand extends Command
     public function __construct(
         private readonly DataImportFactory $dataImportFactory,
         private readonly EntityManagerInterface $objectManager,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }
@@ -54,7 +56,7 @@ class DataImportCommand extends Command
             return 1;
         }
 
-        $manager = Manager::createFromFile($input->getArgument('corrections-file'));
+        $manager = new Manager($this->logger, directivesFilePath: $input->getArgument('corrections-file'));
         $import = $this->dataImportFactory->get($manager, $io);
 
         $import->import(Finder::getFrom($input->getArgument('import-dir'), $onlyAfter));

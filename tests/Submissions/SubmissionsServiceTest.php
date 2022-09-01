@@ -14,6 +14,7 @@ use App\Utils\Data\Fixer;
 use App\Utils\Data\Manager;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
+use Psr\Log\LoggerInterface;
 
 use function Psl\Vec\map;
 
@@ -159,7 +160,9 @@ class SubmissionsServiceTest extends TestCase
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
 
-        $manager = new Manager('');
+        $loggerMock = $this->createMock(LoggerInterface::class);
+
+        $manager = new Manager($loggerMock, '');
 
         return new SubmissionsService($artisanRepoMock, $fixerMock, $manager, '');
     }

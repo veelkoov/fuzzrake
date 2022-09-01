@@ -14,10 +14,11 @@ use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 use DateTimeImmutable;
-use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 use function Psl\File\read;
+use function Psl\Filesystem\exists;
 
 class Manager
 {
@@ -67,24 +68,20 @@ class Manager
     private ?string $currentSubject = null;
 
     public function __construct(
+        private readonly LoggerInterface $logger,
         string $directives = '',
         #[Autowire('%env(resolve:CORRECTIONS_FILE_PATH)%')]
-        string $directivesFilePath = '',
+        string $directivesFilePath = '', // TODO: Remove
     ) {
         $this->readDirectives($directives);
 
         if ('' !== $directivesFilePath) {
-            $this->readDirectives(read($directivesFilePath));
+            if (exists($directivesFilePath)) {
+                $this->readDirectives(read($directivesFilePath));
+            } else {
+                $this->logger->warning("Configured directives file does not exist: '$directivesFilePath'");
+            }
         }
-    }
-
-    public static function createFromFile(string $directivesFilePath): self
-    {
-        if ('' === $directivesFilePath) {
-            throw new InvalidArgumentException('Corrections file path cannot be empty');
-        }
-
-        return new Manager(directivesFilePath: $directivesFilePath);
     }
 
     public function correctArtisan(Artisan $artisan, string $submissionId = null): void
