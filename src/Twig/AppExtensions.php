@@ -27,13 +27,13 @@ class AppExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('fragile_int', fn (...$args): string => $this->fragileIntFilter(...$args)),
-            new TwigFilter('list', [$this, 'listFilter']),
-            new TwigFilter('other', [$this, 'otherFilter']),
-            new TwigFilter('event_url', [StrUtils::class, 'shortPrintUrl']),
-            new TwigFilter('filterItemsMatching', [$this, 'filterItemsMatchingFilter']),
-            new TwigFilter('humanFriendlyRegexp', [$this, 'filterHumanFriendlyRegexp']),
-            new TwigFilter('filterByQuery', [$this, 'filterFilterByQuery']),
-            new TwigFilter('jsonToArtisanParameters', [$this, 'jsonToArtisanParametersFilter'], ['is_safe' => ['js']]),
+            new TwigFilter('list', $this->listFilter(...)),
+            new TwigFilter('other', $this->otherFilter(...)),
+            new TwigFilter('event_url', StrUtils::shortPrintUrl(...)),
+            new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
+            new TwigFilter('humanFriendlyRegexp', $this->filterHumanFriendlyRegexp(...)),
+            new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
+            new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), ['is_safe' => ['js']]),
         ];
     }
 
@@ -49,10 +49,10 @@ class AppExtensions extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('isDevEnv', [$this, 'isDevEnvFunction']),
-            new TwigFunction('isDevOrTestEnv', [$this, 'isDevOrTestEnvFunction']),
-            new TwigFunction('isTestEnv', [$this, 'isTestEnvFunction']),
-            new TwigFunction('getCounter', [$this, 'getCounterFunction']),
+            new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
+            new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
+            new TwigFunction('isTestEnv', $this->isTestEnvFunction(...)),
+            new TwigFunction('getCounter', $this->getCounterFunction(...)),
         ];
     }
 

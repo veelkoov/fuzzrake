@@ -8,7 +8,7 @@ use TRegx\CleanRegex\Pattern;
 
 class PayMethodFixer extends AbstractListFixer
 {
-    private Pattern $nsp;
+    private readonly Pattern $nsp;
 
     /**
      * @param psFixerConfig $paymentMethods

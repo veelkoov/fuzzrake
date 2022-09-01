@@ -49,7 +49,7 @@ class DataQuery
         foreach ($items as $item) {
             switch ($item[0]) {
                 case self::EXCLUDE_CHAR:
-                    $this->excludedItems[] = substr($item, 1);
+                    $this->excludedItems[] = substr((string) $item, 1);
                     break;
 
                 case self::CMD_START_CHAR:

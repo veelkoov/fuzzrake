@@ -53,7 +53,7 @@ class EventsRemoveTmpTrackingFailuresCommand extends Command // FIXME #93
         $io->note('Found '.count($events).' events');
 
         if ($input->getOption('commit')) {
-            array_walk($events, [$this->entityManager, 'remove']);
+            array_walk($events, $this->entityManager->remove(...));
             $this->entityManager->flush();
 
             $io->success('Events found were removed');

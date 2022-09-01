@@ -15,9 +15,9 @@ class ArrayReader
     /**
      * @var array<mixed>
      */
-    private array $data;
+    private readonly array $data;
 
-    private Accessor $propertyAccessor;
+    private readonly Accessor $propertyAccessor;
 
     /**
      * @param mixed $data When not array, will throw an exception
