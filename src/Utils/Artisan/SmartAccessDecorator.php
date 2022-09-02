@@ -351,13 +351,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function assureNsfwSafety(): void
     {
         if (true === $this->getWorksWithMinors()) {
-            if (!$this->isAllowedToWorkWithMinors()) {
+            if (true !== $this->isAllowedToWorkWithMinors()) {
                 $this->setWorksWithMinors(false); // No, you don't
             }
         }
 
         if (true === $this->getDoesNsfw()) {
-            if (!$this->isAllowedToDoNsfw()) {
+            if (true !== $this->isAllowedToDoNsfw()) {
                 $this->setDoesNsfw(false); // No, you don't
             }
         }

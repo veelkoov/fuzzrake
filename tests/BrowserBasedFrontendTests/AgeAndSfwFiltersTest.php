@@ -10,6 +10,8 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
+use function Psl\Iter\contains;
+
 class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 {
     /**
@@ -24,23 +26,18 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
                 foreach ([null, true, false] as $nsfwSocial) {
                     foreach ([null, true, false] as $doesNsfw) {
                         foreach ([null, true, false] as $worksWithMinors) {
-                            if (Ages::ADULTS !== $ages && true === $doesNsfw) {
-                                continue; // TODO: Figure out a way to test such an DB inconsistency as well #125
-                            }
+                            // TODO: Figure out a way to test DB inconsistencies as well #125
+                            //       Listeners will be correcting some combinations here
 
-                            if (true === $nsfwWebsite || true === $nsfwSocial || true === $doesNsfw) {
-                                continue; // TODO: Figure out a way to test such an DB inconsistency as well #125
-                            }
-
-                            $showMinor = false === $nsfwWebsite
+                            $showToMinors = false === $nsfwWebsite
                                 && false === $nsfwSocial
-                                && false === $doesNsfw
+                                && (false === $doesNsfw || (null === $doesNsfw && contains([Ages::MIXED, Ages::MINORS], $ages)))
                                 && true === $worksWithMinors;
 
-                            $showSfw = false === $nsfwWebsite
+                            $showAsSfw = false === $nsfwWebsite
                                 && false === $nsfwSocial;
 
-                            $result[] = [$ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors, $showMinor, $showSfw];
+                            $result[] = [$ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors, $showToMinors, $showAsSfw];
                         }
                     }
                 }
@@ -64,30 +61,32 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         $artisans = [];
         $expected = [];
 
-        foreach (self::getCombinations() as $data) {
-            [$ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors, $showMinor, $showSfw] = $data;
+        foreach (self::getCombinations() as $idx => $data) {
+            [$ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors, $showToMinors, $showAsSfw] = $data;
 
-            $makerId = match ($ages) {
+            $makerId = sprintf('M%06d', $idx);
+
+            $name = match ($ages) {
                 Ages::MINORS => 'MIN',
                 Ages::MIXED  => 'MIX',
                 Ages::ADULTS => 'ADT',
                 null         => 'UNK',
             };
-            $makerId .= $this->letter($nsfwWebsite, 'W');
-            $makerId .= $this->letter($nsfwSocial, 'S');
-            $makerId .= $this->letter($doesNsfw, 'N');
-            $makerId .= $this->letter($worksWithMinors, 'M');
+            $name .= ' '.$this->descBool($nsfwWebsite, 'nWeb');
+            $name .= ' '.$this->descBool($nsfwSocial, 'nSoc');
+            $name .= ' '.$this->descBool($doesNsfw, 'nsfw');
+            $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
             $artisans[$makerId] = (new Artisan())
                 ->setMakerId($makerId)
-                ->setName($makerId)
+                ->setName($name)
                 ->setAges($ages)
                 ->setNsfwWebsite($nsfwWebsite)
                 ->setNsfwSocial($nsfwSocial)
                 ->setDoesNsfw($doesNsfw)
                 ->setWorksWithMinors($worksWithMinors);
 
-            if (($showMinor && $userIsMinor) || ($showSfw && true === $userWantsSfw) || false === $userWantsSfw) {
+            if (($showToMinors && $userIsMinor) || ($showAsSfw && true === $userWantsSfw) || false === $userWantsSfw) {
                 $expected[$makerId] = $artisans[$makerId];
             }
         }
@@ -119,12 +118,12 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         self::waitUntilShows('#data-table-container');
 
         foreach ($expected as $artisan) {
-            self::assertVisible('#'.$artisan->getMakerId());
+            self::assertVisible('#'.$artisan->getMakerId(), "Should display {$artisan->getName()}");
         }
 
         foreach ($artisans as $makerId => $artisan) {
             if (!array_key_exists($makerId, $expected)) {
-                self::assertInvisible('#'.$artisan->getMakerId());
+                self::assertInvisible('#'.$artisan->getMakerId(), "Should not display {$artisan->getName()}");
             }
         }
     }
@@ -141,12 +140,12 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
         ];
     }
 
-    private function letter(?bool $value, string $letter): string
+    private function descBool(?bool $value, string $description): string
     {
-        if (null === $value) {
-            return '0';
-        }
-
-        return $value ? $letter : '1';
+        return $description.'='.match ($value) {
+            true  => 'Y',
+            false => 'N',
+            null  => '?',
+        };
     }
 }
