@@ -73,7 +73,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         self::getPantherClient()->waitForInvisibility($locator, 1);
     }
 
-    protected static function assertVisible(string $locator): void
+    protected static function assertVisible(string $locator, string $message = null): void
     {
         $exception = null;
 
@@ -83,10 +83,10 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
             $exception = $caught;
         }
 
-        self::assertNull($exception, "Element '$locator' is not visible.");
+        self::assertNull($exception, $message ?? "Element '$locator' is not visible.");
     }
 
-    protected static function assertInvisible(string $locator): void
+    protected static function assertInvisible(string $locator, string $message = null): void
     {
         $exception = null;
 
@@ -96,6 +96,6 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
             $exception = $caught;
         }
 
-        self::assertNull($exception, "Element '$locator' is visible.");
+        self::assertNull($exception, $message ?? "Element '$locator' is visible.");
     }
 }
