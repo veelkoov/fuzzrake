@@ -371,6 +371,52 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
+     * @dataProvider passwordHandlingWorksDataProvider
+     *
+     * @throws JsonException
+     */
+    public function testPasswordHandlingWorks(bool $new, bool $passwordSame): void
+    {
+        $client = self::createClient();
+
+        if (!$new) {
+            $entity = (new Artisan())
+                ->setMakerId('MAKERID')
+                ->setPassword('password')
+            ;
+
+            self::persistAndFlush($entity);
+        }
+
+        $submission = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setPassword($passwordSame ? 'password' : 'PASSPHRASE')
+        ;
+
+        $id = Submissions::submit($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        if ($new || $passwordSame) {
+            self::assertSelectorNotExists('p.text-danger');
+        } else {
+            self::assertSelectorTextSame('p.text-danger', "Password doesn't match");
+        }
+    }
+
+    /**
+     * @return array<array{0: bool}>
+     */
+    public function passwordHandlingWorksDataProvider(): array
+    {
+        return [
+            'New artisan'                        => [true, true],
+            'Updating artisan, wrong password'   => [false, false],
+            'Updating artisan, correct password' => [false, true],
+        ];
+    }
+
+    /**
      * @throws JsonException
      */
     private function generateRandomFakeSubmissions(int $count): void

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Submissions;
 
 use App\Entity\Artisan as ArtisanE;
+use App\Entity\Submission;
 use App\Repository\ArtisanRepository;
-use App\Submissions\Manager;
+use App\Submissions\SubmissionException;
 use App\Submissions\SubmissionsService;
+use App\Submissions\UpdatesService;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -18,17 +20,17 @@ use Psr\Log\LoggerInterface;
 
 use function Psl\Vec\map;
 
-class SubmissionsServiceTest extends TestCase
+class UpdatesServiceTest extends TestCase
 {
     public function testUpdateHandlesNewContactInfoProperly(): void
     {
-        $submission = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Artisan())
             ->setMakerId('MAKERID')
             ->setContactInfoObfuscated('getfursu.it@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpSubmissionsService([]);
-        $result = $subject->getUpdate($submission, $this->getIdleManager());
+        $subject = $this->getSetUpUpdatesService([]);
+        $result = $subject->getUpdateFor($submissionData, new Submission());
 
         self::assertEquals('', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('', $result->originalArtisan->getContactMethod());
@@ -53,8 +55,8 @@ class SubmissionsServiceTest extends TestCase
             ->setContactInfoObfuscated('Telegram: @getfursuit')
         );
 
-        $subject = $this->getSetUpSubmissionsService([$artisan]);
-        $result = $subject->getUpdate($submission, $this->getIdleManager());
+        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $result = $subject->getUpdateFor($submission, new Submission());
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
@@ -79,8 +81,8 @@ class SubmissionsServiceTest extends TestCase
             ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain')
         );
 
-        $subject = $this->getSetUpSubmissionsService([$artisan]);
-        $result = $subject->getUpdate($submission, $this->getIdleManager());
+        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $result = $subject->getUpdateFor($submission, new Submission());
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
@@ -97,12 +99,12 @@ class SubmissionsServiceTest extends TestCase
     {
         UtcClockMock::start();
 
-        $submission = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Artisan())
             ->setMakerId('MAKERID')
         );
 
-        $subject = $this->getSetUpSubmissionsService([]);
-        $result = $subject->getUpdate($submission, $this->getIdleManager());
+        $subject = $this->getSetUpUpdatesService([]);
+        $result = $subject->getUpdateFor($submissionData, new Submission());
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
@@ -114,6 +116,9 @@ class SubmissionsServiceTest extends TestCase
         self::assertEquals(null, $result->updatedArtisan->getDateUpdated());
     }
 
+    /**
+     * @throws SubmissionException
+     */
     public function testUpdatedDateIsHandledProperly(): void
     {
         UtcClockMock::start();
@@ -122,12 +127,12 @@ class SubmissionsServiceTest extends TestCase
             ->setMakerId('MAKERID')
         ;
 
-        $submission = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Artisan())
             ->setMakerId('MAKERID')
         );
 
-        $subject = $this->getSetUpSubmissionsService([$artisan]);
-        $result = $subject->getUpdate($submission, $this->getIdleManager());
+        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $result = $subject->getUpdateFor($submissionData, new Submission());
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
@@ -150,21 +155,20 @@ class SubmissionsServiceTest extends TestCase
     /**
      * @param Artisan[] $bestMatchesArtisans
      */
-    private function getSetUpSubmissionsService(array $bestMatchesArtisans): SubmissionsService
+    private function getSetUpUpdatesService(array $bestMatchesArtisans): UpdatesService
     {
         $entities = map($bestMatchesArtisans, fn ($item) => $item->getArtisan());
 
         $artisanRepoMock = $this->createMock(ArtisanRepository::class);
         $artisanRepoMock->expects($this->once())->method('findBestMatches')->willReturn($entities);
 
+        $submissionsServiceMock = $this->createMock(SubmissionsService::class);
+
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
 
-        return new SubmissionsService($artisanRepoMock, $fixerMock, '');
-    }
+        $loggerMock = $this->createMock(LoggerInterface::class);
 
-    private function getIdleManager(): Manager
-    {
-        return new Manager($this->createMock(LoggerInterface::class), '');
+        return new UpdatesService($loggerMock, $artisanRepoMock, $submissionsServiceMock, $fixerMock);
     }
 }

@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace App\Submissions;
 
-use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\FieldsList;
-use App\Repository\ArtisanRepository;
-use App\Utils\Arrays;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Fixer;
-use App\Utils\DateTime\UtcClock;
-use App\Utils\FieldReadInterface;
+use App\Entity\Submission;
+use App\Repository\SubmissionRepository;
 use App\Utils\IuSubmissions\Finder;
-use App\Utils\StringList;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 use function Psl\Iter\first;
-use function Psl\Vec\concat;
 use function Psl\Vec\filter;
 
 class SubmissionsService
@@ -25,8 +18,7 @@ class SubmissionsService
     private readonly string $submissionsDirPath;
 
     public function __construct(
-        private readonly ArtisanRepository $artisans,
-        private readonly Fixer $fixer,
+        private readonly SubmissionRepository $repository,
         #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
         string $submissionsDirPath,
     ) {
@@ -41,89 +33,31 @@ class SubmissionsService
         return Finder::getFrom($this->submissionsDirPath, limit: 20, reverse: true);
     }
 
-    public function getSubmissionById(string $id): ?SubmissionData
-    {
-        return first(filter($this->getSubmissions(), fn ($submission) => $submission->getId() === $id));
-    }
-
-    public function getUpdate(SubmissionData $submissionData, Manager $manager): Update
-    {
-        $originalInput = new Artisan();
-        $this->updateWith($originalInput, $submissionData, Fields::inIuForm());
-
-        /* This bases on input before fixing. Could use some improvements. */
-        $matchedArtisans = $this->getArtisans($originalInput);
-        $originalArtisan = 1 === count($matchedArtisans) ? Arrays::single($matchedArtisans) : new Artisan();
-
-        $this->handleSpecialFieldsInInput($originalInput, $originalArtisan);
-
-        $fixedInput = $this->fixer->getFixed($originalInput);
-
-        $updatedArtisan = clone $originalArtisan;
-        $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
-
-        $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
-        $manager->correctArtisan($updatedArtisan, $submissionData->getId());
-
-        return new Update(
-            $submissionData,
-            $matchedArtisans,
-            $originalInput,
-            $originalArtisan,
-            $updatedArtisan,
-        );
-    }
-
-    public function updateWith(Artisan $artisan, FieldReadInterface $source, FieldsList $fields): void
-    {
-        foreach ($fields as $field) {
-            $artisan->set($field, $source->get($field));
-        }
-
-        $artisan->assureNsfwSafety();
-    }
-
     /**
-     * @return Artisan[]
+     * @throws MissingSubmissionException
      */
-    private function getArtisans(Artisan $submissionData): array
+    public function getSubmissionDataById(string $id): SubmissionData
     {
-        $results = $this->artisans->findBestMatches(
-            concat([$submissionData->getName()], $submissionData->getFormerlyArr()),
-            concat([$submissionData->getMakerId()], $submissionData->getFormerMakerIdsArr()),
-            null, // TODO: Remove this or implement
-        );
+        $result = first(filter($this->getSubmissions(), fn ($submission) => $submission->getId() === $id));
 
-        return Artisan::wrapAll($results);
-    }
-
-    private function handleSpecialFieldsInInput(Artisan $originalInput, Artisan $originalArtisan): void
-    {
-        $submittedContact = $originalInput->getContactInfoObfuscated();
-
-        if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getContactInfoObfuscated()) {
-            $originalInput->updateContact($originalArtisan->getContactInfoOriginal());
-        } else {
-            $originalInput->updateContact($submittedContact);
+        if (null === $result) {
+            throw new MissingSubmissionException("Couldn't find the submission with the given ID: '$id'");
         }
 
-        if (null === $originalArtisan->getId()) {
-            $originalInput->setDateAdded(UtcClock::now());
-        } else {
-            $originalInput->setDateUpdated(UtcClock::now());
+        return $result;
+    }
 
-            if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) { // TODO: Test me!
-                $originalInput->setFormerMakerIds(StringList::pack($originalArtisan->getAllMakerIdsArr()));
-            } else {
-                $originalInput->setFormerMakerIds($originalArtisan->getFormerMakerIds());
-            }
+    public function getSubmissionById(string $id): Submission
+    {
+        try {
+            return $this->repository->findByStrId($id) ?? (new Submission())->setStrId($id);
+        } catch (NonUniqueResultException $exception) {
+            throw new SubmissionException(previous: $exception);
         }
     }
 
-    private function handleSpecialFieldsInEntity(Artisan $updatedArtisan, Artisan $originalArtisan): void
+    public function updateEntity(Update $update): void
     {
-        if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
-            $updatedArtisan->setMiniatureUrls('');
-        }
+        $this->repository->add($update->submission, true);
     }
 }

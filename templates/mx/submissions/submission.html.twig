@@ -83,6 +83,10 @@
         </tbody>
     </table>
 
+    {% if not update.isNew and not update.passwordMatches %}
+        <p class="text-danger">Password doesn't match</p>
+    {% endif %}
+
     <h2>Text description</h2>
 
     <p class="small user-select-all">{{ update.description.text|nl2br }}</p>
