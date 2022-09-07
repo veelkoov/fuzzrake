@@ -44,17 +44,23 @@ class SubmissionsController extends AbstractController
     public function submission(Request $request, string $id): Response
     {
         try {
-            $update = $this->updates->getUpdateBySubmissionId($id);
+            $input = $this->submissions->getUpdateInputBySubmissionId($id);
         } catch (MissingSubmissionException $exception) {
             $this->logger->warning($exception);
 
             throw $this->createNotFoundException($exception->getMessage());
         }
 
-        $form = $this->createForm(SubmissionType::class, $update->submission);
+        $form = $this->createForm(SubmissionType::class, $input->submission)->handleRequest($request);
 
-        if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
+        $update = $this->updates->getUpdateFor($input);
+
+        if ($form->isSubmitted()) {
             $this->submissions->updateEntity($update);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // TODO
         }
 
         foreach ($update->errors as $error) {

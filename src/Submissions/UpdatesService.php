@@ -25,28 +25,17 @@ class UpdatesService
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly ArtisanRepository $artisans,
-        private readonly SubmissionsService $submissions,
         private readonly Fixer $fixer,
     ) {
     }
 
-    /**
-     * @throws MissingSubmissionException
-     */
-    public function getUpdateBySubmissionId(string $submissionId): Update
+    public function getUpdateFor(UpdateInput $input): Update
     {
-        $submissionData = $this->submissions->getSubmissionDataById($submissionId);
-        $submission = $this->submissions->getSubmissionById($submissionData->getId());
-
-        return $this->getUpdateFor($submissionData, $submission);
-    }
-
-    public function getUpdateFor(SubmissionData $submissionData, Submission $submission): Update
-    {
-        [$directivesError, $manager] = $this->getManager($submission);
+        [$directivesError, $manager] = $this->getManager($input->submission);
+        $errors = filter([$directivesError]);
 
         $originalInput = new Artisan();
-        $this->updateWith($originalInput, $submissionData, Fields::inIuForm());
+        $this->updateWith($originalInput, $input->submissionData, Fields::inIuForm());
 
         /* This bases on input before fixing. Could use some improvements. */
         $matchedArtisans = $this->getArtisans($originalInput);
@@ -60,16 +49,25 @@ class UpdatesService
         $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
 
         $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
-        $manager->correctArtisan($updatedArtisan, $submissionData->getId());
+        $manager->correctArtisan($updatedArtisan, $input->submissionStrId);
+
+        $isNew = null === $originalArtisan->getId();
+        $isAccepted = $manager->isAccepted($input->submissionData);
+
+        if (!$isNew && $originalArtisan->getPassword() !== $updatedArtisan->getPassword() && !$isAccepted) {
+            $errors[] = 'Password does not match.';
+        }
 
         return new Update(
-            $submissionData,
-            $submission,
+            $input->submissionData,
+            $input->submission,
             $matchedArtisans,
             $originalInput,
             $originalArtisan,
             $updatedArtisan,
-            filter([$directivesError]),
+            $errors,
+            $isAccepted,
+            $isNew,
         );
     }
 

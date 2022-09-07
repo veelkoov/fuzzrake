@@ -104,7 +104,7 @@ class Manager
         return $this->matchedNames[$submissionId] ?? null;
     }
 
-    public function isAccepted(ImportItem $item): bool
+    public function isAccepted(ImportItem|SubmissionData $item): bool
     {
         return in_array($item->getId(), $this->acceptedItems);
     }

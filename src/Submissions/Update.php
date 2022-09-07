@@ -11,9 +11,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class Update
 {
-    public readonly bool $isNew;
-    public readonly bool $passwordMatches;
-
     /**
      * @param Artisan[] $matchedArtisans
      * @param string[]  $errors
@@ -26,9 +23,9 @@ class Update
         public readonly Artisan $originalArtisan,
         public readonly Artisan $updatedArtisan,
         public readonly array $errors,
+        public readonly bool $isAccepted,
+        public readonly bool $isNew,
     ) {
-        $this->isNew = null === $this->originalArtisan->getId();
-        $this->passwordMatches = $this->originalArtisan->getPassword() === $this->updatedArtisan->getPassword();
     }
 
     public function submittedDifferent(Field $field): bool

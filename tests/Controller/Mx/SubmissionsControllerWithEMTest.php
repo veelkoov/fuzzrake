@@ -347,6 +347,38 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
+    public function testDirectivesUpdateIsImmediate(): void
+    {
+        $client = self::createClient();
+
+        $submissionData = (new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Testing maker')
+            ->setIntro('Some submitted intro information')
+            ->setSpeciesDoes("All species\nMost experience in k9s")
+        ;
+
+        $id = Submissions::submit($submissionData);
+
+        $submission = (new Submission())
+            ->setStrId($id)
+        ;
+
+        $this->persistAndFlush($submission);
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        $client->submitForm('Update', [
+            'submission[directives]' => 'invalid-directive',
+        ]);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertSelectorTextSame('.invalid-feedback', "The directives have been ignored completely due to an error. Unknown command: 'invalid-directive'");
+    }
+
+    /**
+     * @throws JsonException
+     */
     public function testInvalidDirectivesDontBreakPage(): void
     {
         $client = self::createClient();
@@ -371,11 +403,11 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /**
-     * @dataProvider passwordHandlingWorksDataProvider
+     * @dataProvider passwordHandlingAndAcceptingWorksDataProvider
      *
      * @throws JsonException
      */
-    public function testPasswordHandlingWorks(bool $new, bool $passwordSame): void
+    public function testPasswordHandlingAndAcceptingWorks(bool $new, bool $passwordSame, bool $accepted): void
     {
         $client = self::createClient();
 
@@ -388,31 +420,38 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             self::persistAndFlush($entity);
         }
 
-        $submission = (new Artisan())
+        $submissionData = (new Artisan())
             ->setMakerId('MAKERID')
             ->setPassword($passwordSame ? 'password' : 'PASSPHRASE')
         ;
 
-        $id = Submissions::submit($submission);
+        $id = Submissions::submit($submissionData);
+
+        if ($accepted) {
+            self::persistAndFlush((new Submission())->setStrId($id)->setDirectives('accept'));
+        }
 
         $client->request('GET', "/mx/submissions/$id");
 
-        if ($new || $passwordSame) {
-            self::assertSelectorNotExists('p.text-danger');
+        if ($new || $passwordSame || $accepted) {
+            self::assertSelectorNotExists('.invalid-feedback');
         } else {
-            self::assertSelectorTextSame('p.text-danger', "Password doesn't match");
+            self::assertSelectorTextSame('.invalid-feedback', 'Password does not match.');
         }
     }
 
     /**
-     * @return array<array{0: bool}>
+     * @return array<string, array{0: bool, 1: bool}>
      */
-    public function passwordHandlingWorksDataProvider(): array
+    public function passwordHandlingAndAcceptingWorksDataProvider(): array
     {
         return [
-            'New artisan'                        => [true, true],
-            'Updating artisan, wrong password'   => [false, false],
-            'Updating artisan, correct password' => [false, true],
+            'New artisan, not accepted'                => [true,  true,  false],
+            'New artisan, accepted'                    => [true,  true,  true],
+            'Updating, wrong password, not accepted'   => [false, false, false],
+            'Updating, wrong password, accepted'       => [false, false, true],
+            'Updating, correct password, not accepted' => [false, true,  false],
+            'Updating, correct password, accepted'     => [false, true,  true],
         ];
     }
 

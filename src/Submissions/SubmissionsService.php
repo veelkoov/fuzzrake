@@ -36,7 +36,15 @@ class SubmissionsService
     /**
      * @throws MissingSubmissionException
      */
-    public function getSubmissionDataById(string $id): SubmissionData
+    public function getUpdateInputBySubmissionId(string $id): UpdateInput
+    {
+        return new UpdateInput($this->getSubmissionDataById($id), $this->getSubmissionById($id));
+    }
+
+    /**
+     * @throws MissingSubmissionException
+     */
+    private function getSubmissionDataById(string $id): SubmissionData
     {
         $result = first(filter($this->getSubmissions(), fn ($submission) => $submission->getId() === $id));
 
@@ -47,7 +55,7 @@ class SubmissionsService
         return $result;
     }
 
-    public function getSubmissionById(string $id): Submission
+    private function getSubmissionById(string $id): Submission
     {
         try {
             return $this->repository->findByStrId($id) ?? (new Submission())->setStrId($id);

@@ -8,7 +8,7 @@ use App\Entity\Artisan as ArtisanE;
 use App\Entity\Submission;
 use App\Repository\ArtisanRepository;
 use App\Submissions\SubmissionException;
-use App\Submissions\SubmissionsService;
+use App\Submissions\UpdateInput;
 use App\Submissions\UpdatesService;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
@@ -30,7 +30,7 @@ class UpdatesServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpUpdatesService([]);
-        $result = $subject->getUpdateFor($submissionData, new Submission());
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('', $result->originalArtisan->getContactMethod());
@@ -50,13 +50,13 @@ class UpdatesServiceTest extends TestCase
             ->updateContact('getfursu.it@localhost.localdomain')
         ;
 
-        $submission = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Artisan())
             ->setMakerId('MAKERID')
             ->setContactInfoObfuscated('Telegram: @getfursuit')
         );
 
         $subject = $this->getSetUpUpdatesService([$artisan]);
-        $result = $subject->getUpdateFor($submission, new Submission());
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
@@ -76,13 +76,13 @@ class UpdatesServiceTest extends TestCase
             ->updateContact('getfursu.it@localhost.localdomain')
         ;
 
-        $submission = Submissions::from((new Artisan())
+        $submissionData = Submissions::from((new Artisan())
             ->setMakerId('MAKERID')
             ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain')
         );
 
         $subject = $this->getSetUpUpdatesService([$artisan]);
-        $result = $subject->getUpdateFor($submission, new Submission());
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
         self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
@@ -104,7 +104,7 @@ class UpdatesServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpUpdatesService([]);
-        $result = $subject->getUpdateFor($submissionData, new Submission());
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
@@ -132,7 +132,7 @@ class UpdatesServiceTest extends TestCase
         );
 
         $subject = $this->getSetUpUpdatesService([$artisan]);
-        $result = $subject->getUpdateFor($submissionData, new Submission());
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
@@ -162,13 +162,11 @@ class UpdatesServiceTest extends TestCase
         $artisanRepoMock = $this->createMock(ArtisanRepository::class);
         $artisanRepoMock->expects($this->once())->method('findBestMatches')->willReturn($entities);
 
-        $submissionsServiceMock = $this->createMock(SubmissionsService::class);
-
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
 
         $loggerMock = $this->createMock(LoggerInterface::class);
 
-        return new UpdatesService($loggerMock, $artisanRepoMock, $submissionsServiceMock, $fixerMock);
+        return new UpdatesService($loggerMock, $artisanRepoMock, $fixerMock);
     }
 }
