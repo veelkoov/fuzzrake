@@ -7,7 +7,7 @@ namespace App\Utils\Data;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\FieldsList;
-use App\IuHandling\Manager;
+use App\IuHandling\Import\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Console\Formatter;
 use App\Utils\StrUtils;

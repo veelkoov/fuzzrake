@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling;
+namespace App\IuHandling\Import;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Submission;

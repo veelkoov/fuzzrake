@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling;
+namespace App\IuHandling\Submission;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

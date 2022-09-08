@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling;
+namespace App\IuHandling\Storage;
 
 use App\Utils\DateTime\UtcClock;
 use Exception;

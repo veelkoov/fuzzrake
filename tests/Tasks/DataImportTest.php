@@ -6,8 +6,8 @@ namespace App\Tests\Tasks;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
-use App\IuHandling\Manager;
-use App\IuHandling\SubmissionData;
+use App\IuHandling\Import\Manager;
+use App\IuHandling\Import\SubmissionData;
 use App\Repository\ArtisanRepository;
 use App\Tasks\DataImport;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -44,7 +44,10 @@ class DataImportTest extends TestCase
         static::assertEquals($expectedMiniatures, Artisan::wrap($artisan)->getMiniatureUrls());
     }
 
-    public function imagesUpdateShouldResetMiniaturesDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return list<list<string>>
+     */
+    public function imagesUpdateShouldResetMiniaturesDataProvider(): array
     {
         return [
             ['', '', '', ''],

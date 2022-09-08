@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\IuHandling\Finder;
-use App\IuHandling\Manager;
+use App\IuHandling\Import\Manager;
+use App\IuHandling\Storage\Finder;
 use App\Tasks\DataImportFactory;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\IuHandling\Finder;
-use App\IuHandling\Manager;
+use App\IuHandling\Import\Manager;
+use App\IuHandling\Storage\Finder;
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Paths;

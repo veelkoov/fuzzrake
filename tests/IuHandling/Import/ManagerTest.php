@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Submissions;
+namespace App\Tests\IuHandling\Import;
 
-use App\IuHandling\Manager;
+use App\IuHandling\Import\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

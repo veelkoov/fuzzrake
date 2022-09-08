@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling;
+namespace App\IuHandling\Submission;
 
-use App\IuHandling\NotificationsGenerator as Generator;
+use App\IuHandling\SchemaFixer;
+use App\IuHandling\Storage\LocalStorageService;
+use App\IuHandling\Storage\S3StorageService;
+use App\IuHandling\Submission\NotificationsGenerator as Generator;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Json;
 use App\Utils\Notifications\SnsService;
@@ -12,7 +15,7 @@ use Exception;
 use JsonException;
 use Psr\Log\LoggerInterface;
 
-class IuSubmissionService
+class SubmissionService
 {
     public function __construct(
         private readonly LoggerInterface $logger,

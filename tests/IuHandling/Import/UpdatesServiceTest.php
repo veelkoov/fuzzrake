@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Submissions;
+namespace App\Tests\IuHandling\Import;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\Submission;
-use App\IuHandling\SubmissionException;
-use App\IuHandling\UpdateInput;
-use App\IuHandling\UpdatesService;
+use App\IuHandling\Exception\SubmissionException;
+use App\IuHandling\Import\UpdateInput;
+use App\IuHandling\Import\UpdatesService;
 use App\Repository\ArtisanRepository;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
@@ -17,7 +17,6 @@ use App\Utils\Data\Fixer;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 use Psr\Log\LoggerInterface;
-
 use function Psl\Vec\map;
 
 class UpdatesServiceTest extends TestCase

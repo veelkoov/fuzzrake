@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling;
+namespace App\IuHandling\Import;
 
 use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\Submission;
+use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\ArtisanRepository;
 use App\Utils\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

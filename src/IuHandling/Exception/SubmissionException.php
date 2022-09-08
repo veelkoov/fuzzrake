@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\IuHandling;
+namespace App\IuHandling\Exception;
 
 use RuntimeException;
 

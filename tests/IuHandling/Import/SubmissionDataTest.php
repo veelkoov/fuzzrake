@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Submissions;
+namespace App\Tests\IuHandling\Import;
 
-use App\IuHandling\SubmissionData;
+use App\IuHandling\Import\SubmissionData;
 use PHPUnit\Framework\TestCase;
 
 class SubmissionDataTest extends TestCase
