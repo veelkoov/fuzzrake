@@ -2,19 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\IuSubmissions;
+namespace App\IuHandling;
 
 use App\Utils\DateTime\UtcClock;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LocalStorageService
 {
     private readonly Filesystem $filesystem;
+    private readonly string $dataDirPath;
 
     public function __construct(
-        private readonly string $dataDirPath,
+        #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
+        string $dataDirPath,
     ) {
+        $this->dataDirPath = $dataDirPath;
         $this->filesystem = new Filesystem();
     }
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\IuSubmissions;
+namespace App\IuHandling;
 
+use App\IuHandling\NotificationsGenerator as Generator;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\IuSubmissions\NotificationsGenerator as Generator;
 use App\Utils\Json;
 use App\Utils\Notifications\SnsService;
 use Exception;

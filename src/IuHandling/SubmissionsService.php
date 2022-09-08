@@ -6,7 +6,6 @@ namespace App\IuHandling;
 
 use App\Entity\Submission;
 use App\Repository\SubmissionRepository;
-use App\Utils\IuSubmissions\Finder;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 

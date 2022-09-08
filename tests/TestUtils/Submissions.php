@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils;
 
+use App\IuHandling\IuSubmissionService;
+use App\IuHandling\LocalStorageService;
 use App\IuHandling\SubmissionData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\IuSubmissions\IuSubmissionService;
-use App\Utils\IuSubmissions\LocalStorageService;
 use Exception;
 use JsonException;
 use Symfony\Component\Filesystem\Filesystem;

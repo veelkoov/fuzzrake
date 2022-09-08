@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\IuSubmissions;
+namespace App\IuHandling;
 
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Enforce;

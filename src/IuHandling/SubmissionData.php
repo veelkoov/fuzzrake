@@ -11,7 +11,6 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
-use App\Utils\IuSubmissions\SchemaFixer;
 use App\Utils\Json;
 use App\Utils\StringList;
 use DateTimeImmutable;
