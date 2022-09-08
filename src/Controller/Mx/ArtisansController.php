@@ -13,21 +13,21 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/artisans')]
-class ArtisansController extends AbstractController
+class ArtisansController extends FuzzrakeAbstractController
 {
     use ButtonClickedTrait;
 
     public function __construct(
-        private readonly EnvironmentsService $environments,
         private readonly EntityManagerInterface $manager,
+        EnvironmentsService $environments,
     ) {
+        parent::__construct($environments);
     }
 
     #[Route(path: '/{id}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
@@ -35,11 +35,9 @@ class ArtisansController extends AbstractController
     #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?ArtisanE $entity): Response
     {
-        $artisan = new Artisan($entity);
+        $this->authorize();
 
-        if (!$this->environments->isDevOrTest()) {
-            throw $this->createAccessDeniedException();
-        }
+        $artisan = new Artisan($entity);
 
         $prevObfuscated = $artisan->getContactInfoObfuscated();
         $prevOriginal = $artisan->getContactInfoOriginal();
