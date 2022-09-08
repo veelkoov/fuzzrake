@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
-use App\Submissions\Manager;
+use App\IuHandling\Manager;
 use App\Utils\Data\FdvFactory;
 use App\Utils\Data\Printer;
 use Doctrine\ORM\EntityManagerInterface;

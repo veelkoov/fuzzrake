@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Submissions;
+namespace App\IuHandling;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Submission;
-use App\Submissions\Changes\Description;
+use App\IuHandling\Changes\Description;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class Update

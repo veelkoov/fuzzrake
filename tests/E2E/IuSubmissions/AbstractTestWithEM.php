@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\Submissions\Manager;
+use App\IuHandling\Manager;
 use App\Tasks\DataImport;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Paths;

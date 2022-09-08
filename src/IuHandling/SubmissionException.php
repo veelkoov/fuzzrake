@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Submissions;
+namespace App\IuHandling;
 
 use RuntimeException;
 

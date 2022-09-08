@@ -6,9 +6,9 @@ namespace App\Tests\Tasks;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
+use App\IuHandling\Manager;
+use App\IuHandling\SubmissionData;
 use App\Repository\ArtisanRepository;
-use App\Submissions\Manager;
-use App\Submissions\SubmissionData;
 use App\Tasks\DataImport;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\FixerDifferValidator;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Submissions\Manager;
+use App\IuHandling\Manager;
 use App\Tasks\DataImportFactory;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;

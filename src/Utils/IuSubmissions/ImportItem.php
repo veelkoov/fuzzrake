@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\Submissions\Changes\Description;
-use App\Submissions\SubmissionData;
+use App\IuHandling\Changes\Description;
+use App\IuHandling\SubmissionData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
 use App\Utils\StrUtils;

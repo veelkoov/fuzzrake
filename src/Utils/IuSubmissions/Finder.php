@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\IuSubmissions;
 
-use App\Submissions\SubmissionData;
+use App\IuHandling\SubmissionData;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
 use InvalidArgumentException;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Submissions\Changes;
+namespace App\IuHandling\Changes;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;

@@ -6,9 +6,9 @@ namespace App\Controller\Mx;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Form\Mx\SubmissionType;
-use App\Submissions\MissingSubmissionException;
-use App\Submissions\SubmissionsService;
-use App\Submissions\UpdatesService;
+use App\IuHandling\MissingSubmissionException;
+use App\IuHandling\SubmissionsService;
+use App\IuHandling\UpdatesService;
 use App\ValueObject\Routing\RouteName;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;

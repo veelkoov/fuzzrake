@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Submissions;
 
-use App\Submissions\SubmissionData;
+use App\IuHandling\SubmissionData;
 use PHPUnit\Framework\TestCase;
 
 class SubmissionDataTest extends TestCase

@@ -6,10 +6,10 @@ namespace App\Tests\Submissions;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\Submission;
+use App\IuHandling\SubmissionException;
+use App\IuHandling\UpdateInput;
+use App\IuHandling\UpdatesService;
 use App\Repository\ArtisanRepository;
-use App\Submissions\SubmissionException;
-use App\Submissions\UpdateInput;
-use App\Submissions\UpdatesService;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

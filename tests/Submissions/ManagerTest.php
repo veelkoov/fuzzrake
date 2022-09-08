@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Submissions;
 
-use App\Submissions\Manager;
+use App\IuHandling\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
