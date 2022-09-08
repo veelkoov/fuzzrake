@@ -17,6 +17,7 @@ use App\Utils\Data\Fixer;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 use Psr\Log\LoggerInterface;
+
 use function Psl\Vec\map;
 
 class UpdatesServiceTest extends TestCase
@@ -141,6 +142,42 @@ class UpdatesServiceTest extends TestCase
 
         self::assertEquals(null, $result->updatedArtisan->getDateAdded());
         self::assertEquals(UtcClock::now(), $result->updatedArtisan->getDateUpdated());
+    }
+
+    /**
+     * @dataProvider imagesUpdateShouldResetMiniaturesDataProvider
+     */
+    public function testUpdateHandlesImagesUpdateProperly(string $initialUrlPhotos, string $initialMiniatures, string $newUrlPhotos, string $expectedMiniatures): void
+    {
+        $artisan = $this->getPersistedArtisanMock()
+            ->setMakerId('MAKERID')
+            ->setPhotoUrls($initialUrlPhotos)
+            ->setMiniatureUrls($initialMiniatures)
+        ;
+
+        $submissionData = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
+            ->setPhotoUrls($newUrlPhotos)
+        );
+
+        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+
+        self::assertEquals($expectedMiniatures, $result->updatedArtisan->getMiniatureUrls());
+    }
+
+    /**
+     * @return array<string, array{string, string, string, string}>
+     */
+    public function imagesUpdateShouldResetMiniaturesDataProvider(): array
+    {
+        return [
+            'No photos at all'         => ['', '', '', ''],
+            'No photos before, adding' => ['', '', 'NEW_PHOTOS', ''],
+            'Clearing existing photos' => ['OLD_PHOTOS', 'OLD_MINIATURES', '', ''],
+            'Changing photos'          => ['OLD_PHOTOS', 'OLD_MINIATURES', 'NEW_PHOTOS', ''],
+            'Photos exist, unchanged'  => ['OLD_PHOTOS', 'OLD_MINIATURES', 'OLD_PHOTOS', 'OLD_MINIATURES'],
+        ];
     }
 
     private function getPersistedArtisanMock(): Artisan
