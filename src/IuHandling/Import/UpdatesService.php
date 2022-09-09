@@ -16,7 +16,6 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
 use App\Utils\UnbelievableRuntimeException;
-use Psr\Log\LoggerInterface;
 
 use function Psl\Vec\concat;
 use function Psl\Vec\filter;
@@ -24,7 +23,6 @@ use function Psl\Vec\filter;
 class UpdatesService
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
         private readonly ArtisanRepository $artisans,
         private readonly Fixer $fixer,
     ) {
@@ -50,10 +48,10 @@ class UpdatesService
         $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
 
         $this->handleSpecialFieldsInEntity($updatedArtisan, $originalArtisan);
-        $manager->correctArtisan($updatedArtisan, $input->submissionStrId);
+        $manager->correctArtisan($updatedArtisan);
 
         $isNew = null === $originalArtisan->getId();
-        $isAccepted = $manager->isAccepted($input->submissionData);
+        $isAccepted = $manager->isAccepted();
 
         if (!$isNew && $originalArtisan->getPassword() !== $updatedArtisan->getPassword() && !$isAccepted) {
             $errors[] = 'Password does not match.';
@@ -77,16 +75,13 @@ class UpdatesService
      */
     public function getManager(Submission $submission): array
     {
-        $directives = $submission->getDirectives();
-        $strId = $submission->getStrId();
-
         try {
-            return ['', new Manager($this->logger, "with {$strId}:\n$directives")]; // TODO: Remove "with"
+            return ['', new Manager($submission->getDirectives())];
         } catch (ManagerConfigError $error) {
             $directivesError = "The directives have been ignored completely due to an error. {$error->getMessage()}";
 
             try {
-                return [$directivesError, new Manager($this->logger, '')];
+                return [$directivesError, new Manager('')];
             } catch (ManagerConfigError $error) {
                 throw new UnbelievableRuntimeException($error);
             }

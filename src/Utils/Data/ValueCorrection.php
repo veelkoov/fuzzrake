@@ -10,7 +10,6 @@ use Stringable;
 class ValueCorrection implements Stringable
 {
     public function __construct(
-        private readonly string $subject,
         private readonly Field $field,
         private readonly ?string $wrongValue,
         private readonly string $correctedValue,
@@ -33,6 +32,6 @@ class ValueCorrection implements Stringable
 
     public function __toString(): string
     {
-        return "$this->subject {$this->field->value} '$this->wrongValue' '$this->correctedValue'";
+        return "{$this->field->value} '$this->wrongValue' '$this->correctedValue'";
     }
 }

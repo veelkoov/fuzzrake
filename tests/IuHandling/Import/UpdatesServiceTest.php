@@ -17,7 +17,6 @@ use App\Utils\Data\Fixer;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
-use Psr\Log\LoggerInterface;
 
 use function Psl\Vec\map;
 
@@ -205,8 +204,6 @@ class UpdatesServiceTest extends TestCase
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
 
-        $loggerMock = $this->createMock(LoggerInterface::class);
-
-        return new UpdatesService($loggerMock, $artisanRepoMock, $fixerMock);
+        return new UpdatesService($artisanRepoMock, $fixerMock);
     }
 }
