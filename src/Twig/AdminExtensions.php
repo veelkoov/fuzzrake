@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Data\Validator;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use TRegx\CleanRegex\Pattern;
@@ -21,8 +22,9 @@ class AdminExtensions extends AbstractExtension
 {
     private readonly Pattern $linkPattern;
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly Validator $validator,
+    ) {
         $this->linkPattern = pattern('https?://[^ ,;\n<>"]+', 'i');
     }
 
@@ -34,6 +36,7 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('as_field', $this->asField(...)),
             new TwigFilter('difference', $this->difference(...), SafeFor::HTML),
             new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
+            new TwigFilter('is_valid', $this->isValid(...)),
         ];
     }
 
@@ -91,5 +94,10 @@ class AdminExtensions extends AbstractExtension
 
             return "<a href=\"$url\">$url</a>";
         });
+    }
+
+    private function isValid(Artisan $artisan, Field $field): bool
+    {
+        return $this->validator->isValid($artisan, $field);
     }
 }

@@ -63,6 +63,8 @@
                     ~ ' ' ~ (field.isInIuForm ? 'in-iu-form' : 'automated')
                 %}
 
+                {% set new_value_class = update.updatedArtisan|is_valid(field) ? '' : 'table-danger' %}
+
                 {% if not update.isNew %}
                     <tr class="{{ field.value }} before {{ row_class }}">
                         <td>{{ field.name }}&nbsp;[before]</td>
@@ -76,7 +78,7 @@
                 </tr>
 
                 <tr class="{{ field.value }} after {{ row_class }} bottom-separator">
-                    <td>{{ field.name }}&nbsp;[after]</td>
+                    <td class="{{ new_value_class }}">{{ field.name }}&nbsp;[after]</td>
                     <td>{{ field|difference('success', update.updatedArtisan, update.originalArtisan)|link_urls }}</td>
                 </tr>
             {% endfor %}

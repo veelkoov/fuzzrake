@@ -84,7 +84,6 @@ class SubmissionsController extends FuzzrakeAbstractController
 }
 
 // TODO: Report changed maker ID
-// TODO: Validation
 // TODO: Mark new makers
 // TODO: Display comments
 // TODO: Statuses

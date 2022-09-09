@@ -31,7 +31,7 @@ class FixerDifferValidator
         $this->differ = new Differ($this->printer);
     }
 
-    public function perform(ArtisanChanges $artisan, int $flags = 0, Artisan $imported = null, FieldsList $skipDiffFor = null): void
+    public function perform(ArtisanChanges $artisan, int $flags = 0, FieldsList $skipDiffFor = null): void
     {
         $artisan = $this->getArtisanFixWip($artisan);
         $skipDiffFor ??= Fields::none();
@@ -44,14 +44,14 @@ class FixerDifferValidator
             }
 
             if ($flags & self::SHOW_DIFF && !$skipDiffFor->has($field)) {
-                $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged(), $imported);
+                $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged());
             }
 
-            $isValid = !$field->isValidated() || $this->validator->isValid($artisan, $field);
+            $isValid = $this->validator->isValid($artisan->getChanged(), $field);
             $resetAndShowFixCommand = $flags & self::RESET_INVALID_PLUS_SHOW_FIX_CMD && !$isValid;
 
             if (!$isValid && $flags & self::SHOW_FIX_CMD_FOR_INVALID || $resetAndShowFixCommand) {
-                $this->printFixCommandOptionally($field, $artisan, $imported, (bool) ($flags & self::USE_SET_FOR_FIX_CMD));
+                $this->printFixCommandOptionally($field, $artisan, (bool) ($flags & self::USE_SET_FOR_FIX_CMD));
             }
 
             if ($resetAndShowFixCommand) {
@@ -60,12 +60,12 @@ class FixerDifferValidator
         }
     }
 
-    private function printFixCommandOptionally(Field $field, ArtisanChanges $artisan, ?Artisan $imported, bool $useSetForFixCmd): void
+    private function printFixCommandOptionally(Field $field, ArtisanChanges $artisan, bool $useSetForFixCmd): void
     {
         if (!$this->hideFixCommandFor($field)) {
-            $original = $imported ?? $artisan->getSubject();
-            $originalVal = StrUtils::strSafeForCli(StrUtils::asStr($original->get($field)));
-            if (!$this->validator->isValid($artisan, $field)) {
+            $originalVal = StrUtils::strSafeForCli(StrUtils::asStr($artisan->getSubject()->get($field)));
+
+            if (!$this->validator->isValid($artisan->getChanged(), $field)) {
                 $originalVal = Formatter::invalid($originalVal);
             }
 
