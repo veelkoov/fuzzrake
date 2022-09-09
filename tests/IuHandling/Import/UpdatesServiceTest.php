@@ -14,6 +14,7 @@ use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer;
+use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 use Psr\Log\LoggerInterface;
@@ -117,7 +118,7 @@ class UpdatesServiceTest extends TestCase
     }
 
     /**
-     * @throws SubmissionException
+     * @throws SubmissionException|DateTimeException
      */
     public function testUpdatedDateIsHandledProperly(): void
     {

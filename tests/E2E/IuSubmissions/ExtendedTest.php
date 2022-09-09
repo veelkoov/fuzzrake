@@ -11,7 +11,6 @@ use App\Tests\TestUtils\JsonArtisanDataLoader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Enforce;
 use App\Utils\StringList;
-use App\Utils\StrUtils;
 use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
@@ -137,11 +136,10 @@ class ExtendedTest extends AbstractTestWithEM
             $loader->getArtisanData('a4.3-check'),
         ];
 
-        $output = $this->performImport(true);
-        self::validateConsoleOutput($output->fetch(), $expectedArtisans);
+        $this->performImport($client, true, 4);
 
         self::flush();
-        self::assertCount(4, $repo->findAll(), 'Expected three artisans in the DB after import');
+        self::assertCount(4, $repo->findAll(), 'Expected four artisans in the DB after import');
 
         foreach ($expectedArtisans as $expectedArtisan) {
             self::validateArtisanAfterImport($expectedArtisan);
@@ -445,28 +443,6 @@ class ExtendedTest extends AbstractTestWithEM
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getMakerId()}.");
             }
         }
-    }
-
-    /**
-     * @param Artisan[] $expectedArtisans
-     */
-    private static function validateConsoleOutput(string $output, array $expectedArtisans): void
-    {
-        $output = pattern('^(OLD |NEW |IMP | *set )[^\n]+\n+', 'm')->prune($output);
-        $output = pattern('^-+\n+', 'm')->prune($output);
-
-        $output = pattern('\[WARNING\]\s+?[a-zA-Z0-9 /\n]+?\s+?changed\s+?their\s+?maker\s+?ID\s+?from\s+?[A-Z0-9]{7}\s+?to\s+?[A-Z0-9]{7}')
-            ->prune($output);
-
-        $expectedHeaders = array_map(fn ($artisan) => StrUtils::artisanNamesSafeForCli($artisan), $expectedArtisans);
-
-        $output = str_replace($expectedHeaders, '', $output);
-        $output = str_replace('[OK] Accepted for import', '', $output, $count);
-        $output = trim($output);
-
-        self::assertEmpty($output, "Unexpected output in the console: \n".$output);
-
-        self::assertEquals(4, $count, 'Unexpected number of imports performed.');
     }
 
     private static function assertFieldIsNotPresentInForm(Field $field, string $htmlBody): void

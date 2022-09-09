@@ -65,8 +65,10 @@ class SubmissionsController extends FuzzrakeAbstractController
             $this->submissions->updateEntity($update);
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // TODO
+        if ($form->isSubmitted() && $form->isValid() && $update->isAccepted) {
+            $this->updates->import($update);
+
+            return $this->redirectToRoute(RouteName::MX_SUBMISSIONS);
         }
 
         foreach ($update->errors as $error) {

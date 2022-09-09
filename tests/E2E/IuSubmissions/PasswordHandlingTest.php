@@ -27,7 +27,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
-        self::performImport(true);
+        self::performImport($client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('TESTMID');
@@ -67,7 +67,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
 
-        self::performImport(true);
+        self::performImport($client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
@@ -109,7 +109,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
-        self::performImport(true);
+        self::performImport($client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');
@@ -152,7 +152,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
 
         self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
 
-        self::performImport(false);
+        self::performImport($client, false, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('MAKERID');

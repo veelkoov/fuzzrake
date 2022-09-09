@@ -93,7 +93,7 @@ class UpdatesService
         }
     }
 
-    public function updateWith(Artisan $artisan, FieldReadInterface $source, FieldsList $fields): void
+    private function updateWith(Artisan $artisan, FieldReadInterface $source, FieldsList $fields): void
     {
         foreach ($fields as $field) {
             $artisan->set($field, $source->get($field));
@@ -145,5 +145,17 @@ class UpdatesService
         if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
             $updatedArtisan->setMiniatureUrls('');
         }
+    }
+
+    public function import(Update $update): void
+    {
+        $existingEntity = $update->originalArtisan;
+        $cloneWithUpdates = $update->updatedArtisan;
+
+        foreach (Fields::persisted() as $field) {
+            $existingEntity->set($field, $cloneWithUpdates->get($field));
+        }
+
+        $this->artisans->add($existingEntity->getArtisan(), true);
     }
 }
