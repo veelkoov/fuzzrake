@@ -110,7 +110,7 @@ class UpdatesService
         $results = $this->artisans->findBestMatches(
             concat([$submissionData->getName()], $submissionData->getFormerlyArr()),
             concat([$submissionData->getMakerId()], $submissionData->getFormerMakerIdsArr()),
-            null, // TODO: Remove this or implement
+            null, // TODO: Matching maker by maker ID
         );
 
         return Artisan::wrapAll($results);
@@ -142,6 +142,7 @@ class UpdatesService
 
     private function handleSpecialFieldsInEntity(Artisan $updatedArtisan, Artisan $originalArtisan): void
     {
+        // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
         if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
             $updatedArtisan->setMiniatureUrls('');
         }

@@ -10,12 +10,8 @@ use App\IuHandling\Exception\ManagerConfigError;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ValueCorrection;
 use App\Utils\DataInputException;
-use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\UtcClock;
-use App\Utils\IuSubmissions\ImportItem;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
-use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -27,12 +23,7 @@ class Manager
     final public const CMD_COMMENT = '//';
     final public const CMD_ACCEPT = 'accept';
     final public const CMD_CLEAR = 'clear';
-    final public const CMD_IGNORE_UNTIL = 'ignore-until'; // Let's delay request
     final public const CMD_MATCH_TO_NAME = 'match-to-name';
-    final public const CMD_REJECT = 'reject'; /* I'm sorry, but if you provided a request with zero contact info and I can't find
-                                         * you using means available for a common citizen (I'm not from CIA/FBI/Facebook),
-                                         * then I can't include your bare studio name on the list. No one else will be able
-                                         * to find you anyway. */
     final public const CMD_REPLACE = 'replace';
     final public const CMD_SET = 'set';
     final public const CMD_WITH = 'with';
@@ -52,17 +43,6 @@ class Manager
      * @var string[] Associative list: submission ID => matched artisan name
      */
     private array $matchedNames = [];
-
-    /**
-     * @var string[] List of submission IDs which got rejected
-     */
-    private array $rejectedItems = [];
-
-    /**
-     * @var DateTimeImmutable[] Associative list of requests waiting for re-validation
-     *                          Key = submission ID, value = date until when ignored
-     */
-    private array $itemsIgnoreFinalTimes = [];
 
     /**
      * @var string|null Last submission ID or maker ID selected by 'WITH' command
@@ -105,24 +85,9 @@ class Manager
         return $this->matchedNames[$submissionId] ?? null;
     }
 
-    public function isAccepted(ImportItem|SubmissionData $item): bool
+    public function isAccepted(SubmissionData $item): bool
     {
         return in_array($item->getId(), $this->acceptedItems);
-    }
-
-    public function isRejected(ImportItem $item): bool
-    {
-        return in_array($item->getId(), $this->rejectedItems);
-    }
-
-    public function getIgnoredUntilDate(ImportItem $item): DateTimeImmutable
-    {
-        return $this->itemsIgnoreFinalTimes[$item->getId()];
-    }
-
-    public function isDelayed(ImportItem $item): bool
-    {
-        return array_key_exists($item->getId(), $this->itemsIgnoreFinalTimes) && !UtcClock::passed($this->itemsIgnoreFinalTimes[$item->getId()]);
     }
 
     /**
@@ -174,24 +139,8 @@ class Manager
                 $buffer->readUntilEolOrEof();
                 break;
 
-            case self::CMD_IGNORE_UNTIL:
-                $readFinalTime = $buffer->readUntilWhitespaceOrEof();
-
-                try {
-                    $parsedFinalTime = UtcClock::at($readFinalTime);
-                } catch (DateTimeException $e) {
-                    throw new ManagerConfigError("Failed to parse date: '$readFinalTime'", 0, $e);
-                }
-
-                $this->itemsIgnoreFinalTimes[$this->getCurrentSubject()] = $parsedFinalTime;
-                break;
-
             case self::CMD_MATCH_TO_NAME:
                 $this->matchedNames[$this->currentSubject] = $buffer->readToken();
-                break;
-
-            case self::CMD_REJECT:
-                $this->rejectedItems[] = $this->getCurrentSubject();
                 break;
 
             case self::CMD_REPLACE:
