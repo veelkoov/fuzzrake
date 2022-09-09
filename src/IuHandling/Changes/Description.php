@@ -9,7 +9,6 @@ use App\DataDefinitions\Fields\Fields;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Enforce;
-use App\Utils\StrUtils;
 
 use function Psl\Vec\map;
 
@@ -32,18 +31,6 @@ class Description
     public function getText(): string
     {
         return implode("\n", map($this->changes, fn (ChangeInterface $change) => $change->getDescription()));
-    }
-
-    public function getDescriptionCliSafe(): string // TODO: Remove
-    {
-        $res = implode("\n", array_map(fn (ChangeInterface $change) => StrUtils::strSafeForCli($change->getDescription()), $this->changes));
-
-        return '' === $res ? '' : $res."\n";
-    }
-
-    public function hasAnythingChanged(): bool // TODO: Remove
-    {
-        return !empty($this->changes);
     }
 
     /**
