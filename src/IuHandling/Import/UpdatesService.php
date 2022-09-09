@@ -129,6 +129,7 @@ class UpdatesService
         if (null === $originalArtisan->getId()) {
             $originalInput->setDateAdded(UtcClock::now());
         } else {
+            $originalInput->setDateAdded($originalArtisan->getDateAdded());
             $originalInput->setDateUpdated(UtcClock::now());
 
             if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) { // TODO: Test me!

@@ -123,8 +123,11 @@ class UpdatesServiceTest extends TestCase
     {
         UtcClockMock::start();
 
+        $dateAdded = UtcClock::at('2022-09-09 09:09:09');
+
         $artisan = $this->getPersistedArtisanMock()
             ->setMakerId('MAKERID')
+            ->setDateAdded($dateAdded)
         ;
 
         $submissionData = Submissions::from((new Artisan())
@@ -134,13 +137,13 @@ class UpdatesServiceTest extends TestCase
         $subject = $this->getSetUpUpdatesService([$artisan]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals(null, $result->originalArtisan->getDateAdded());
+        self::assertEquals($dateAdded, $result->originalArtisan->getDateAdded());
         self::assertEquals(null, $result->originalArtisan->getDateUpdated());
 
-        self::assertEquals(null, $result->originalInput->getDateAdded());
+        self::assertEquals($dateAdded, $result->originalInput->getDateAdded());
         self::assertEquals(UtcClock::now(), $result->originalInput->getDateUpdated());
 
-        self::assertEquals(null, $result->updatedArtisan->getDateAdded());
+        self::assertEquals($dateAdded, $result->updatedArtisan->getDateAdded());
         self::assertEquals(UtcClock::now(), $result->updatedArtisan->getDateUpdated());
     }
 
