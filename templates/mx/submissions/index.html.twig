@@ -11,7 +11,7 @@
                 <th>Timestamp</th>
                 <th>Maker ID</th>
                 <th>Maker name</th>
-                <th>Status</th>
+                <th>Comments</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,7 +21,7 @@
                     <td>{{ submission.timestamp|fragile_datetime_utc }}</td>
                     <td>{{ submission.get('MAKER_ID'|as_field) }}</td>
                     <td>{{ submission.get('NAME'|as_field) }}</td>
-                    <td>{# TODO #}</td>
+                    <td>{{ submission|get_comments|nl2br }}</td>
                     <td>
                         <a href="{{ path('mx_submission', {'id': submission.id}) }}">Open</a>
                     </td>

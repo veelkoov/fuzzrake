@@ -6,11 +6,14 @@ namespace App\Twig;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
+use App\IuHandling\Import\SubmissionData;
+use App\Repository\SubmissionRepository;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Validator;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
+use Doctrine\ORM\NonUniqueResultException;
 use TRegx\CleanRegex\Pattern;
 use TRegx\CleanRegex\Replace\Details\ReplaceDetail;
 use Twig\Extension\AbstractExtension;
@@ -22,8 +25,10 @@ class AdminExtensions extends AbstractExtension
 {
     private readonly Pattern $linkPattern;
 
+    /** @noinspection ConstructorTwigExtensionHeavyConstructor TODO: Remove necessity for this */
     public function __construct(
         private readonly Validator $validator,
+        private readonly SubmissionRepository $submissionRepository,
     ) {
         $this->linkPattern = pattern('https?://[^ ,;\n<>"]+', 'i');
     }
@@ -37,6 +42,7 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('difference', $this->difference(...), SafeFor::HTML),
             new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
             new TwigFilter('is_valid', $this->isValid(...)),
+            new TwigFilter('get_comments', $this->getComment(...)),
         ];
     }
 
@@ -99,5 +105,13 @@ class AdminExtensions extends AbstractExtension
     private function isValid(Artisan $artisan, Field $field): bool
     {
         return $this->validator->isValid($artisan, $field);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    private function getComment(SubmissionData $submissionData): string
+    {
+        return $this->submissionRepository->findByStrId($submissionData->getId())?->getComment() ?? '';
     }
 }

@@ -22,6 +22,7 @@ IGNORED_TABLES = %w[
   artisans_volatile_data
   artisans_urls_states
   tracker_settings
+  submissions
 ].freeze
 
 #
