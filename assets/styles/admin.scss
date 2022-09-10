@@ -66,3 +66,8 @@
     border-bottom: 2px solid #aaa;
   }
 }
+
+textarea#submission_directives,
+textarea#submission_comment {
+  height: 7em;
+}

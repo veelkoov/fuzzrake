@@ -1,6 +1,6 @@
 {% extends 'mx/_base.html.twig' %}
 
-{% block title %}Submission {{ update.submission.id }}{% endblock %}
+{% block title %}Submission {{ update.submission.strId }}{% endblock %}
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
@@ -53,17 +53,22 @@
                     <tr class="{{ field.value }} before {{ row_class }}">
                         <td>{{ field.name }}&nbsp;[before]</td>
                         <td>{{ field|difference('danger', update.originalArtisan, update.updatedArtisan)|link_urls }}</td>
+                        <td></td>
                     </tr>
                 {% endif %}
 
                 <tr class="{{ field.value }} submitted {{ row_class }}">
                     <td>{{ field.name }}&nbsp;[submitted]</td>
                     <td>{{ field|difference('primary', update.originalInput, update.updatedArtisan)|link_urls }}</td>
+                    <td></td>
                 </tr>
 
-                <tr class="{{ field.value }} after {{ row_class }} bottom-separator">
+                <tr class="{{ field.value }} after {{ row_class }} bottom-separator" data-field="{{ field.name }}" data-value="{{ update.updatedArtisan.get(field)|as_str }}">
                     <td class="{{ new_value_class }}">{{ field.name }}&nbsp;[after]</td>
                     <td>{{ field|difference('success', update.updatedArtisan, update.originalArtisan)|link_urls }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary fix-button">fix</button>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
