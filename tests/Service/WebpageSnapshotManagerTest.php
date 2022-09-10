@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\Service\WebpageSnapshotManager;
+use App\Tests\TestUtils\Cases\TestCase;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\Web\Fetchable;
 use App\Utils\Web\HttpClient\GentleHttpClient;
 use App\Utils\Web\WebpageSnapshot\Cache;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -17,6 +18,8 @@ class WebpageSnapshotManagerTest extends TestCase
 {
     public function testGetCreatesProperSnapshot(): void
     {
+        UtcClockMock::start();
+
         $contents = 'some-testing-contents';
         $url = 'some-testing-url';
         $statusCode = 482;
