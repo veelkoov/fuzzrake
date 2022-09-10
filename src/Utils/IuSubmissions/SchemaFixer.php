@@ -45,6 +45,8 @@ final class SchemaFixer
 
             case 12:
                 $data[Field::NSFW_WEBSITE->name] = null;
+                $data[Field::NSFW_SOCIAL->name] = null;
+                $data[Field::DOES_NSFW->name] = null;
                 // no break
 
             case 13:
