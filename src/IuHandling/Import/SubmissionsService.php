@@ -32,7 +32,7 @@ class SubmissionsService
      */
     public function getSubmissions(): array
     {
-        return Finder::getFrom($this->submissionsDirPath, limit: 20, reverse: true);
+        return Finder::getFrom($this->submissionsDirPath, 20, true);
     }
 
     /**
