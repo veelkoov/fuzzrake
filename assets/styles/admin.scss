@@ -29,6 +29,10 @@
     }
   }
 
+  tr.structured {
+    opacity: 0.5;
+  }
+
   tr.before {
     a {
       color: $danger;

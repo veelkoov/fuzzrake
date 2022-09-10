@@ -61,6 +61,7 @@
                     ~ ' ' ~ (fixes_applied ? 'fixes-applied' : 'not-fixed')
                     ~ ' ' ~ (is_changing ? 'changing' : 'not-changing')
                     ~ ' ' ~ (field.isInIuForm ? 'in-iu-form' : 'automated')
+                    ~ ' ' ~ (field.isFreeForm ? 'free-form' : 'structured')
                 %}
 
                 {% set new_value_class = update.updatedArtisan|is_valid(field) ? '' : 'table-danger' %}
