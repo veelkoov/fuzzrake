@@ -14,10 +14,10 @@ use App\Utils\StrUtils;
 
 class Manager
 {
-    final public const CMD_COMMENT = '//';
     final public const CMD_ACCEPT = 'accept';
     final public const CMD_CLEAR = 'clear';
-    final public const CMD_MATCH_TO_NAME = 'match-to-name';
+    final public const CMD_COMMENT = '//';
+    final public const CMD_MATCH_MAKER_ID = 'match-maker-id';
     final public const CMD_REPLACE = 'replace';
     final public const CMD_SET = 'set';
 
@@ -26,7 +26,7 @@ class Manager
      */
     private array $corrections = [];
     private bool $isAccepted = false;
-    private ?string $matchedName = null;
+    private ?string $matchedMakerId = null;
 
     /**
      * @throws ManagerConfigError
@@ -44,9 +44,9 @@ class Manager
         $this->applyCorrections($artisan, $corrections);
     }
 
-    public function getMatchedName(): ?string
+    public function getMatchedMakerId(): ?string
     {
-        return $this->matchedName;
+        return $this->matchedMakerId;
     }
 
     public function isAccepted(): bool
@@ -97,8 +97,8 @@ class Manager
                 $buffer->readUntilEolOrEof();
                 break;
 
-            case self::CMD_MATCH_TO_NAME:
-                $this->matchedName = $buffer->readToken();
+            case self::CMD_MATCH_MAKER_ID:
+                $this->matchedMakerId = $buffer->readUntilWhitespaceOrEof();
                 break;
 
             case self::CMD_REPLACE:

@@ -37,7 +37,7 @@ class UpdatesService
         $this->updateWith($originalInput, $input->submissionData, Fields::inIuForm());
 
         /* This bases on input before fixing. Could use some improvements. */
-        $matchedArtisans = $this->getArtisans($originalInput);
+        $matchedArtisans = $this->getArtisans($originalInput, $manager->getMatchedMakerId());
         $originalArtisan = 1 === count($matchedArtisans) ? Arrays::single($matchedArtisans) : new Artisan();
 
         $this->handleSpecialFieldsInInput($originalInput, $originalArtisan);
@@ -100,13 +100,17 @@ class UpdatesService
     /**
      * @return Artisan[]
      */
-    private function getArtisans(Artisan $submissionData): array
+    private function getArtisans(Artisan $submissionData, ?string $matchedMakerId): array
     {
-        $results = $this->artisans->findBestMatches(
-            concat([$submissionData->getName()], $submissionData->getFormerlyArr()),
-            concat([$submissionData->getMakerId()], $submissionData->getFormerMakerIdsArr()),
-            null, // TODO: Matching maker by maker ID
-        );
+        if (null !== $matchedMakerId) {
+            $makerIds = [$matchedMakerId];
+            $names = [];
+        } else {
+            $makerIds = concat([$submissionData->getMakerId()], $submissionData->getFormerMakerIdsArr());
+            $names = concat([$submissionData->getName()], $submissionData->getFormerlyArr());
+        }
+
+        $results = $this->artisans->findBestMatches($names, $makerIds);
 
         return Artisan::wrapAll($results);
     }

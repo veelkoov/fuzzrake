@@ -239,12 +239,8 @@ class ArtisanRepository extends ServiceEntityRepository
      *
      * @return Artisan[]
      */
-    public function findBestMatches(array $names, array $makerIds, ?string $matchedName): array // TODO: Remove $matchedName
+    public function findBestMatches(array $names, array $makerIds): array
     {
-        if (null !== $matchedName) {
-            $names[] = $matchedName;
-        }
-
         $builder = $this->createQueryBuilder('a')
             ->leftJoin('a.makerIds', 'm');
 

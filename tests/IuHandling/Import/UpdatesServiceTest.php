@@ -29,7 +29,9 @@ class UpdatesServiceTest extends TestCase
             ->setContactInfoObfuscated('getfursu.it@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpUpdatesService([]);
+        $subject = $this->getSetUpUpdatesService([
+            [[''], ['MAKERID'], []],
+        ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('', $result->originalArtisan->getContactInfoOriginal());
@@ -55,7 +57,9 @@ class UpdatesServiceTest extends TestCase
             ->setContactInfoObfuscated('Telegram: @getfursuit')
         );
 
-        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $subject = $this->getSetUpUpdatesService([
+            [[''], ['MAKERID'], [$artisan]],
+        ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
@@ -81,7 +85,9 @@ class UpdatesServiceTest extends TestCase
             ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain')
         );
 
-        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $subject = $this->getSetUpUpdatesService([
+            [[''], ['MAKERID'], [$artisan]],
+        ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
@@ -103,7 +109,9 @@ class UpdatesServiceTest extends TestCase
             ->setMakerId('MAKERID')
         );
 
-        $subject = $this->getSetUpUpdatesService([]);
+        $subject = $this->getSetUpUpdatesService([
+            [[''], ['MAKERID'], []],
+        ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals(null, $result->originalArtisan->getDateAdded());
@@ -134,7 +142,9 @@ class UpdatesServiceTest extends TestCase
             ->setMakerId('MAKERID')
         );
 
-        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $subject = $this->getSetUpUpdatesService([
+            [[''], ['MAKERID'], [$artisan]],
+        ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals($dateAdded, $result->originalArtisan->getDateAdded());
@@ -163,7 +173,9 @@ class UpdatesServiceTest extends TestCase
             ->setPhotoUrls($newUrlPhotos)
         );
 
-        $subject = $this->getSetUpUpdatesService([$artisan]);
+        $subject = $this->getSetUpUpdatesService([
+            [[''], ['MAKERID'], [$artisan]],
+        ]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
         self::assertEquals($expectedMiniatures, $result->updatedArtisan->getMiniatureUrls());
@@ -183,6 +195,35 @@ class UpdatesServiceTest extends TestCase
         ];
     }
 
+    public function testResolvingMultipleMatchedByMakerId(): void
+    {
+        $artisan1 = $this->getPersistedArtisanMock()
+            ->setMakerId('MAKER01')
+            ->setName('Common name')
+        ;
+
+        $artisan2 = $this->getPersistedArtisanMock()
+            ->setMakerId('MAKER02')
+            ->setName('Common part')
+        ;
+
+        $submissionData = Submissions::from((new Artisan())
+            ->setMakerId('MAKERID')
+            ->setName('Common')
+        );
+
+        $subject = $this->getSetUpUpdatesService([
+            [['Common'], ['MAKERID'], [$artisan1, $artisan2]],
+            [[], ['MAKER01'], [$artisan1]],
+        ]);
+
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+        self::assertEquals([$artisan1, $artisan2], $result->matchedArtisans);
+
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id MAKER01')));
+        self::assertEquals([$artisan1], $result->matchedArtisans);
+    }
+
     private function getPersistedArtisanMock(): Artisan
     {
         $result = $this->getMockBuilder(ArtisanE::class)->onlyMethods(['getId'])->getMock();
@@ -192,14 +233,20 @@ class UpdatesServiceTest extends TestCase
     }
 
     /**
-     * @param Artisan[] $bestMatchesArtisans
+     * @param list<array{list<string>, list<string>, list<Artisan>}> $calls
      */
-    private function getSetUpUpdatesService(array $bestMatchesArtisans): UpdatesService
+    private function getSetUpUpdatesService(array $calls): UpdatesService
     {
-        $entities = map($bestMatchesArtisans, fn ($item) => $item->getArtisan());
-
         $artisanRepoMock = $this->createMock(ArtisanRepository::class);
-        $artisanRepoMock->expects($this->once())->method('findBestMatches')->willReturn($entities);
+        $artisanRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $makerIds) use ($calls) {
+            foreach ($calls as $call) {
+                if ($call[0] === $names && $call[1] === $makerIds) {
+                    return map($call[2], fn ($artisan) => $artisan->getArtisan());
+                }
+            }
+
+            self::fail('findBestMatches was called with unexpected parameters');
+        });
 
         $fixerMock = $this->createMock(Fixer::class);
         $fixerMock->method('getFixed')->willReturnArgument(0);
