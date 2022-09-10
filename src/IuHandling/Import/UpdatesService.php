@@ -73,7 +73,7 @@ class UpdatesService
     /**
      * @return array{0: string, 1: Manager}
      */
-    public function getManager(Submission $submission): array
+    private function getManager(Submission $submission): array
     {
         try {
             return ['', new Manager($submission->getDirectives())];
