@@ -20,7 +20,7 @@ class WebsiteInfo
     private const FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING = '<title>System Error</title>';
 
     private const TRELLO_BOARD_URL_REGEXP = '^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/';
-    private const WIXSITE_CHILDREN_REGEXP = '<link[^>]* href="(?<dataUrl>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>'; // TODO: Re-check this
+    private const WIXSITE_CHILDREN_REGEXP = '<link[^>]* href="(?<dataUrl>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>'; // TODO: Re-check this https://github.com/veelkoov/fuzzrake/issues/155
     private const INSTAGRAM_URL_REGEXP = '^https?://(?:www\.)?instagram\.com/(?<username>[^/]+)/?$';
 
     private readonly Detector $detector;
