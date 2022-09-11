@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tracker;
+namespace App\Tracking\Regex;
 
+use App\Tracking\Exception\ConfigurationException;
 use App\Utils\UnbelievableRuntimeException;
 use Nette\Utils\Arrays;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;

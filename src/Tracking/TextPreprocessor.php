@@ -4,8 +4,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tracker;
+namespace App\Tracking;
 
+use App\Tracking\Exception\TrackerException;
 use App\Utils\Json;
 use App\Utils\Regexp\Replacements;
 use App\Utils\UnbelievableRuntimeException;

@@ -2,24 +2,28 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tasks\StatusTracker;
+namespace App\Tests\Tracking;
 
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tasks\StatusTracker\StatusTrackerTask;
-use App\Tracker\OfferStatus;
-use App\Tracker\OfferStatusParser;
+use App\Tracking\OfferStatus\OfferStatus;
+use App\Tracking\OfferStatus\OfferStatusProcessor;
+use App\Tracking\StatusTracker;
+use App\Tracking\TextParser;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\ArtisanChanges;
+use App\Utils\Data\FixerDifferValidator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Response;
 
-class StatusTrackerTaskTest extends TestCase
+class StatusTrackerTest extends TestCase
 {
     public function testNoCommissionsUrlsResetsEverything(): void
     {
@@ -31,9 +35,8 @@ class StatusTrackerTaskTest extends TestCase
             ->setLastCsUpdate(new DateTimeImmutable('1 day ago')); // We had some check previously
 
         $testSubject = $this->getTestSubject($inputArtisan, []);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error marker is removed
         self::assertOfferStatuses([], $changedArtisan); // Offers got cleared
@@ -48,9 +51,8 @@ class StatusTrackerTaskTest extends TestCase
         $testSubject = $this->getTestSubject($inputArtisan, [
             [], // We get empty analysis result (should not matter for the timestamp)
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertNotNull($changedArtisan->getCsLastCheck()); // The last CS timestamp got set
         self::assertInstanceOf(DateTimeImmutable::class, $changedArtisan->getCsLastCheck());
@@ -67,9 +69,8 @@ class StatusTrackerTaskTest extends TestCase
         $testSubject = $this->getTestSubject($inputArtisan, [
             [$os1], // We will find one offer status
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error maker got cleared
         self::assertOfferStatuses([$os1], $changedArtisan); // The parsed status is available
@@ -84,9 +85,8 @@ class StatusTrackerTaskTest extends TestCase
         $testSubject = $this->getTestSubject($inputArtisan, [
             [], // We get empty analysis result
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertTrue($changedArtisan->getCsTrackerIssue()); // There is an error marker now
         self::assertEmpty($changedArtisan->getCommissions()); // Result expected empty
@@ -102,9 +102,8 @@ class StatusTrackerTaskTest extends TestCase
             [new OfferStatus('Some-offer', true)], // First URL brought some results
             [], // But the second one returned empty set
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertTrue($changedArtisan->getCsTrackerIssue()); // There is an error marker now
         self::assertCount(1, $changedArtisan->getCommissions()); // The status parsed in the first URL is available
@@ -123,9 +122,8 @@ class StatusTrackerTaskTest extends TestCase
         $testSubject = $this->getTestSubject($inputArtisan, [
             [$os1], [$os2, $os3], // We get results from both URLs
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error maker is gone
         self::assertOfferStatuses([$os1, $os2, $os3], $changedArtisan); // All statuses parsed are available
@@ -144,9 +142,8 @@ class StatusTrackerTaskTest extends TestCase
         $testSubject = $this->getTestSubject($inputArtisan, [
             [$os1], [$os2, $os3], // We get results from both URLs
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertTrue($changedArtisan->getCsTrackerIssue()); // The error maker is now set
         self::assertOfferStatuses([$os2], $changedArtisan); // Only the not-conflicting status is available
@@ -165,9 +162,8 @@ class StatusTrackerTaskTest extends TestCase
         $testSubject = $this->getTestSubject($inputArtisan, [
             [$os1], [$os2, $os3], // We get results from both URLs
         ]);
-        $testResult = $testSubject->getUpdates();
 
-        $changedArtisan = $this->getChangedArtisan($testResult);
+        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
 
         self::assertTrue($changedArtisan->getCsTrackerIssue()); // The error maker is now set
         self::assertOfferStatuses([$os1, $os2], $changedArtisan); // Only the not-conflicting status is available
@@ -176,7 +172,7 @@ class StatusTrackerTaskTest extends TestCase
     /**
      * @param array<array<OfferStatus>> $mockReturnedOfferStatuses
      */
-    private function getTestSubject(Artisan $artisan, array $mockReturnedOfferStatuses): StatusTrackerTask
+    private function getTestSubject(Artisan $artisan, array $mockReturnedOfferStatuses): StatusTracker
     {
         $mockedUrlsCount = count($mockReturnedOfferStatuses);
 
@@ -197,13 +193,19 @@ class StatusTrackerTaskTest extends TestCase
             ->method('get')
             ->willReturn($dummyWebpageSnapshot);
 
-        $parserMock = self::createMock(OfferStatusParser::class);
+        $parserMock = self::createMock(TextParser::class);
         $parserMock
             ->expects(self::exactly($mockedUrlsCount))
-            ->method('getCommissionsStatuses')
+            ->method('getOfferStatuses')
             ->willReturnOnConsecutiveCalls(...$mockReturnedOfferStatuses);
 
-        return new StatusTrackerTask($artisanRepoMock, $loggerMock, $snapshotsMock, $parserMock);
+        $emMock = $this->createMock(EntityManagerInterface::class);
+
+        $processor = new OfferStatusProcessor($parserMock);
+        $ioMock = $this->createMock(SymfonyStyle::class);
+        $fdvMock = $this->createMock(FixerDifferValidator::class);
+
+        return new StatusTracker($loggerMock, $emMock, $artisanRepoMock, $processor, $snapshotsMock, $fdvMock, false, false, $ioMock);
     }
 
     /**
@@ -228,8 +230,8 @@ class StatusTrackerTaskTest extends TestCase
 
         foreach ($actual as $a_key       => $commission) {
             foreach ($expected as $e_key => $expectedOfferStatus) {
-                if ($commission->getOffer() === $expectedOfferStatus->getOffer()
-                    && $commission->getIsOpen() === $expectedOfferStatus->getStatus()) {
+                if ($commission->getOffer() === $expectedOfferStatus->offer
+                    && $commission->getIsOpen() === $expectedOfferStatus->status) {
                     unset($expected[$e_key]);
                     unset($actual[$a_key]);
 

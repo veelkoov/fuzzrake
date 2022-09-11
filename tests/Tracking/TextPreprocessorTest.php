@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tracker;
+namespace App\Tests\Tracking;
 
-use App\Tracker\TextPreprocessor;
+use App\Tracking\TextPreprocessor;
 use PHPUnit\Framework\TestCase;
 
 class TextPreprocessorTest extends TestCase

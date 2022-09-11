@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tracker;
+namespace App\Tracking\Regex;
 
 use App\Utils\Regexp\Replacements;
-use Nette\Utils\Arrays;
 use TRegx\CleanRegex\Pattern;
+
+use function Psl\Vec\map;
 
 class PatternProvider
 {
@@ -33,8 +34,8 @@ class PatternProvider
         $regexes = $regexPersistence->getRegexes();
 
         $this->groupTranslations = $regexes->getGroupTranslations();
-        $this->falsePositives = Arrays::map($regexes->getFalsePositives(), fn ($item) => pattern($item, 's'));
-        $this->offerStatuses = Arrays::map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 's'));
+        $this->falsePositives = map($regexes->getFalsePositives(), fn ($item) => pattern($item, 's'));
+        $this->offerStatuses = map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 's'));
         $this->cleaners = new Replacements($regexes->getCleaners(), 's', '', '');
     }
 

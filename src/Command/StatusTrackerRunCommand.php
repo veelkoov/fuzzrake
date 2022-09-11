@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Tasks\StatusTracker\TaskIOFactory;
-use App\Tracker\TrackerException;
+use App\Tracking\Exception\TrackerException;
+use App\Tracking\StatusTrackerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,7 +21,7 @@ class StatusTrackerRunCommand extends Command
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly TaskIOFactory $factory,
+        private readonly StatusTrackerFactory $factory,
     ) {
         parent::__construct();
     }

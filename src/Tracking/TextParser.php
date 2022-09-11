@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tracker;
+namespace App\Tracking;
 
+use App\Tracking\Exception\TrackerException;
+use App\Tracking\OfferStatus\OfferStatus;
+use App\Tracking\Regex\PatternProvider;
 use App\Utils\UnbelievableRuntimeException;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Nette\Utils\Arrays;
@@ -11,7 +14,7 @@ use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
-class OfferStatusParser
+class TextParser
 {
     /**
      * @var Pattern[]
@@ -38,7 +41,7 @@ class OfferStatusParser
      *
      * @throws TrackerException
      */
-    public function getCommissionsStatuses(Snapshot $snapshot): array
+    public function getOfferStatuses(Snapshot $snapshot): array
     {
         $texts = $this->getPreprocessedTexts($snapshot);
 

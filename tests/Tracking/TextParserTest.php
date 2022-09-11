@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Tracker;
+namespace App\Tests\Tracking;
 
 use App\Tests\TestUtils\DataDefinitions;
 use App\Tests\TestUtils\Paths;
 use App\Tests\TestUtils\RegexesProviderMock;
-use App\Tracker\OfferStatus;
-use App\Tracker\OfferStatusParser;
-use App\Tracker\PatternProvider;
-use App\Tracker\Regexes;
-use App\Tracker\RegexFactory;
-use App\Tracker\TrackerException;
+use App\Tracking\Exception\TrackerException;
+use App\Tracking\OfferStatus\OfferStatus;
+use App\Tracking\Regex\PatternProvider;
+use App\Tracking\Regex\Regexes;
+use App\Tracking\Regex\RegexFactory;
+use App\Tracking\TextParser;
 use App\Utils\Json;
 use App\Utils\Web\WebpageSnapshot\Jar;
 use App\Utils\Web\WebpageSnapshot\Snapshot;
@@ -20,10 +20,11 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 
 use function Psl\File\read;
+use function Psl\Vec\map;
 
-class OfferStatusParserTest extends TestCase
+class TextParserTest extends TestCase
 {
-    private static OfferStatusParser $csp;
+    private static TextParser $csp;
 
     public static function setUpBeforeClass(): void
     {
@@ -37,7 +38,7 @@ class OfferStatusParserTest extends TestCase
             $factory->getCleaners(),
         );
 
-        self::$csp = new OfferStatusParser(new PatternProvider(new RegexesProviderMock($regexes)));
+        self::$csp = new TextParser(new PatternProvider(new RegexesProviderMock($regexes)));
     }
 
     /**
@@ -49,9 +50,9 @@ class OfferStatusParserTest extends TestCase
      */
     public function testGetStatuses(string $testSetPath, Snapshot $snapshot, array $expectedResult): void
     {
-        $actual = array_map(fn (OfferStatus $offerStatus): string => "{$offerStatus->getOffer()}: ".($offerStatus->getStatus() ? 'OPEN' : 'CLOSED'), self::$csp->getCommissionsStatuses($snapshot));
+        $actual = map(self::$csp->getOfferStatuses($snapshot), fn (OfferStatus $offerStatus): string => "{$offerStatus->offer}: ".($offerStatus->status ? 'OPEN' : 'CLOSED'));
 
-        $expected = array_map(fn (array $offerStatus): string => "$offerStatus[0]: ".($offerStatus[1] ? 'OPEN' : 'CLOSED'), $expectedResult);
+        $expected = map($expectedResult, fn (array $offerStatus): string => "$offerStatus[0]: ".($offerStatus[1] ? 'OPEN' : 'CLOSED'));
 
         sort($actual);
         sort($expected);

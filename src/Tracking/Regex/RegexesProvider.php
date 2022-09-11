@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tracker;
+namespace App\Tracking\Regex;
 
 interface RegexesProvider
 {
