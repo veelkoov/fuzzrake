@@ -13,9 +13,9 @@ use App\Tracking\Regex\PatternProvider;
 use App\Tracking\Regex\Regexes;
 use App\Tracking\Regex\RegexFactory;
 use App\Tracking\TextParser;
+use App\Tracking\Web\WebpageSnapshot\Jar;
+use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Json;
-use App\Utils\Web\WebpageSnapshot\Jar;
-use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Exception;
 use PHPUnit\Framework\TestCase;
 

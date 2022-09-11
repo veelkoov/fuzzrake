@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Web;
+namespace App\Tests\Tracking\Web;
 
-use App\Utils\Web\UrlUtils;
+use App\Tracking\Web\Url\UrlUtils;
 use PHPUnit\Framework\TestCase;
 
 class UrlUtilsTest extends TestCase

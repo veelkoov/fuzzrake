@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web\WebpageSnapshot;
+namespace App\Tracking\Web\WebpageSnapshot;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\Traits\UtilityClass;

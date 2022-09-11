@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Tracking\Web;
 
+use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Traits\UtilityClass;
 use App\Utils\UnbelievableRuntimeException;
-use App\Utils\Web\WebpageSnapshot\Snapshot;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 

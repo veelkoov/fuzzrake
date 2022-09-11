@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web\HttpClient;
+namespace App\Tracking\Web\HttpClient;
 
+use App\Tracking\Web\HostCallsTiming;
+use App\Tracking\Web\Url\UrlUtils;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\HostCallsTiming;
-use App\Utils\Web\UrlUtils;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;

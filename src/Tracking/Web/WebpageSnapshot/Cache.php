@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web\WebpageSnapshot;
+namespace App\Tracking\Web\WebpageSnapshot;
 
+use App\Tracking\Web\Url\Fetchable;
+use App\Tracking\Web\Url\UrlUtils;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\Web\Fetchable;
-use App\Utils\Web\UrlUtils;
 use JsonException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;

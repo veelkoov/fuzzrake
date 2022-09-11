@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web\WebpageSnapshot;
+namespace App\Tracking\Web\WebpageSnapshot;
 
 use DateTimeInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;

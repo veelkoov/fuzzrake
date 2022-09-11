@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Tracking\Web\HttpClient\GentleHttpClient;
+use App\Tracking\Web\TimedUrlQueue;
+use App\Tracking\Web\Url\DependencyUrl;
+use App\Tracking\Web\Url\Fetchable;
+use App\Tracking\Web\WebpageSnapshot\Cache;
+use App\Tracking\Web\WebpageSnapshot\Snapshot;
+use App\Tracking\Web\WebsiteInfo;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\DependencyUrl;
-use App\Utils\Web\Fetchable;
-use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\TimedUrlQueue;
-use App\Utils\Web\WebpageSnapshot\Cache;
-use App\Utils\Web\WebpageSnapshot\Snapshot;
-use App\Utils\Web\WebsiteInfo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tasks\Miniatures;
 
+use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Utils\ArrayReader;
 use App\Utils\Json;
-use App\Utils\Web\HttpClient\GentleHttpClient;
 
 class FurtrackMiniatures extends AbstractMiniatures
 {

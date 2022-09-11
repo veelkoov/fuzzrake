@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ArtisanUrlRepository;
+use App\Tracking\Web\Url\Fetchable;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\Fetchable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;

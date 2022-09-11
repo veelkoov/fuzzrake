@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Web\WebpageSnapshot;
+namespace App\Tests\Tracking\Web\WebpageSnapshot;
 
+use App\Tracking\Web\WebpageSnapshot\Jar;
+use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\WebpageSnapshot\Jar;
-use App\Utils\Web\WebpageSnapshot\Snapshot;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;

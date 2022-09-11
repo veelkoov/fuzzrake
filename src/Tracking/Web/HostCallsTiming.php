@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Tracking\Web;
 
 use App\Utils\DateTime\UtcClock;
 

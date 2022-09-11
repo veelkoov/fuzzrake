@@ -7,10 +7,10 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Tracking\Exception\TrackerException;
+use App\Tracking\Web\WebsiteInfo;
 use App\Utils\Json;
 use App\Utils\Regexp\Replacements;
 use App\Utils\UnbelievableRuntimeException;
-use App\Utils\Web\WebsiteInfo;
 use JsonException;
 use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;

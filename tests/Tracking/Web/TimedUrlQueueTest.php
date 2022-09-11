@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Web;
+namespace App\Tests\Tracking\Web;
 
+use App\Tracking\Web\HostCallsTiming;
+use App\Tracking\Web\TimedUrlQueue;
+use App\Tracking\Web\Url\FreeUrl;
 use App\Utils\TestUtils\UtcClockMock;
-use App\Utils\Web\FreeUrl;
-use App\Utils\Web\HostCallsTiming;
-use App\Utils\Web\TimedUrlQueue;
 use PHPUnit\Framework\TestCase;
 
 class TimedUrlQueueTest extends TestCase

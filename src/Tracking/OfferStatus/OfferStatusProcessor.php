@@ -7,7 +7,7 @@ namespace App\Tracking\OfferStatus;
 use App\Tracking\Exception\TrackerException;
 use App\Tracking\Issue;
 use App\Tracking\TextParser;
-use App\Utils\Web\WebpageSnapshot\Snapshot;
+use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use TRegx\SafeRegex\Exception\RuntimePregException;
 
 class OfferStatusProcessor

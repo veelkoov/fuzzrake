@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Web;
+namespace App\Tracking\Web;
 
+use App\Tracking\Web\Url\Fetchable;
+use App\Tracking\Web\Url\UrlUtils;
 use App\Utils\DateTime\UtcClock;
 
 class TimedUrlQueue
