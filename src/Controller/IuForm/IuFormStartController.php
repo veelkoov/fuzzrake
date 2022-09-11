@@ -27,7 +27,6 @@ class IuFormStartController extends AbstractIuFormController
 
         $form = $this->createForm(Start::class, new StartData(), [
             Start::OPT_STUDIO_NAME => $this->getMakerDesc($state->artisan),
-            Start::OPT_ROUTER      => $this->router,
         ])->handleRequest($request);
 
         $bigErrorMessage = '';

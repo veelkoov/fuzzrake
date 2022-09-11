@@ -6,27 +6,17 @@ namespace App\Form\InclusionUpdate;
 
 use App\Controller\IuForm\Utils\StartData;
 use App\Utils\Enforce;
-use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 
 class Start extends AbstractType
 {
-    final public const OPT_ROUTER = 'router';
     final public const OPT_STUDIO_NAME = 'studio_name';
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /**
-         * @var RouterInterface $router
-         */
-        $router = $options[self::OPT_ROUTER];
-
-        $mainPath = htmlspecialchars($router->generate(RouteName::MAIN));
-
         $builder
             ->add('confirmNoPendingUpdates', ChoiceType::class, [
                 'label'      => 'Have you submitted the form previously?',
@@ -109,10 +99,6 @@ class Start extends AbstractType
         $resolver->setDefault('data_class', StartData::class);
 
         $resolver
-            ->define(self::OPT_ROUTER)
-            ->allowedTypes(RouterInterface::class)
-            ->required()
-
             ->define(self::OPT_STUDIO_NAME)
             ->allowedTypes('string', 'null')
             ->required()
