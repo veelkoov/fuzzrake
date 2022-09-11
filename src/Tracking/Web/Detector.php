@@ -36,9 +36,13 @@ class Detector
         return contains_ci($webpageSnapshot->url, '//trello.com/');
     }
 
-    public function isInstagram(Snapshot $webpageSnapshot): bool
+    public function isInstagram(Snapshot|string $subject): bool
     {
-        return contains_ci($webpageSnapshot->url, 'instagram.com/');
+        if (!is_string($subject)) {
+            $subject = $subject->url;
+        }
+
+        return contains_ci($subject, 'instagram.com/');
     }
 
     public function isFurAffinity(string $url): bool

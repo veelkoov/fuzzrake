@@ -21,7 +21,7 @@ class WebsiteInfo
 
     private const TRELLO_BOARD_URL_REGEXP = '^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/';
     private const WIXSITE_CHILDREN_REGEXP = '<link[^>]* href="(?<dataUrl>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>'; // TODO: Re-check this
-    private const INSTAGRAM_URL_REGEXP = 'https?://(?:www\.)?instagram\.com/(?<username>_kimmyko_)/?$';
+    private const INSTAGRAM_URL_REGEXP = '^https?://(?:www\.)?instagram\.com/(?<username>[^/]+)/?$';
 
     private readonly Detector $detector;
     private readonly Pattern $wixsiteChildrenPattern;
