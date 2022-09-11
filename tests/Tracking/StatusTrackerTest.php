@@ -208,17 +208,6 @@ class StatusTrackerTest extends TestCase
     }
 
     /**
-     * @param ArtisanChanges[] $testResult
-     */
-    private function getChangedArtisan(array $testResult): Artisan
-    {
-        self::assertCount(1, $testResult);
-        $artisanChanges = $testResult[0];
-
-        return $artisanChanges->getChanged();
-    }
-
-    /**
      * @param OfferStatus[] $expected
      */
     private static function assertOfferStatuses(array $expected, Artisan $actualArtisan): void
