@@ -9,10 +9,11 @@ use App\Tracking\OfferStatus\OfferStatus;
 use App\Tracking\Regex\PatternProvider;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\UnbelievableRuntimeException;
-use Nette\Utils\Arrays;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
+
+use function Psl\Vec\map;
 
 class TextParser
 {
@@ -61,9 +62,7 @@ class TextParser
      */
     private function getPreprocessedTexts(Snapshot $snapshot): array
     {
-        $additionalFilter = TextPreprocessor::guessFilterFromUrl($snapshot->url);
-
-        return Arrays::map($snapshot->getAllContents(), fn (string $input): Text => $this->preprocessor->getText($input, $snapshot->url, $snapshot->ownerName, $additionalFilter));
+        return map($snapshot->getAllContents(), fn (string $input): Text => $this->preprocessor->getText($input, $snapshot->url, $snapshot->ownerName));
     }
 
     /**

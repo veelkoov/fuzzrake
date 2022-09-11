@@ -17,11 +17,4 @@ class TextPreprocessorTest extends TestCase
 
         self::assertEquals("About STUDIO_NAME's work", TextPreprocessor::replaceArtisanName('Intergalactic Pancake', "About Intergalactic Pancake's work"));
     }
-
-    public function testGuessFilterFromUrl(): void
-    {
-        self::assertEquals('guessFilter', TextPreprocessor::guessFilterFromUrl('AnyKindOfUrl#guessFilter'));
-        self::assertEquals('', TextPreprocessor::guessFilterFromUrl('AnyKindOfUrl#'));
-        self::assertEquals('', TextPreprocessor::guessFilterFromUrl('AnyKindOfUrl'));
-    }
 }

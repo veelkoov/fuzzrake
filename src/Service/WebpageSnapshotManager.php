@@ -19,11 +19,14 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class WebpageSnapshotManager
 {
+    private readonly WebsiteInfo $websiteInfo;
+
     public function __construct(
         private readonly GentleHttpClient $httpClient,
         private readonly Cache $cache,
         private readonly LoggerInterface $logger,
     ) {
+        $this->websiteInfo = new WebsiteInfo();
     }
 
     public function get(Fetchable $url, bool $refetch): Snapshot
@@ -100,7 +103,7 @@ class WebpageSnapshotManager
             $errors[] = $ex->getMessage();
         }
 
-        if (200 === $code && null !== ($latentCode = WebsiteInfo::getLatentCode($url->getUrl(), $content))) {
+        if (200 === $code && null !== ($latentCode = $this->websiteInfo->getLatentCode($url->getUrl(), $content))) {
             $this->logger->info("Correcting response code for $url from $code to $latentCode");
             $code = $latentCode;
         }
@@ -115,7 +118,7 @@ class WebpageSnapshotManager
 
     private function fetchChildren(Snapshot $webpageSnapshot, Fetchable $url): void
     {
-        foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
+        foreach ($this->websiteInfo->getChildrenUrls($webpageSnapshot) as $childUrl) {
             $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
         }
     }
