@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils;
 
-use App\Tracker\Regexes;
-use App\Tracker\RegexesProvider;
+use App\Tracking\Regex\Regexes;
+use App\Tracking\Regex\RegexesProvider;
 
 class RegexesProviderMock implements RegexesProvider
 {

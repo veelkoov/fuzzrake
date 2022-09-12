@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Tracking\Web\HttpClient\GentleHttpClient;
+use App\Tracking\Web\TimedUrlQueue;
+use App\Tracking\Web\Url\DependencyUrl;
+use App\Tracking\Web\Url\Fetchable;
+use App\Tracking\Web\WebpageSnapshot\Cache;
+use App\Tracking\Web\WebpageSnapshot\Snapshot;
+use App\Tracking\Web\WebsiteInfo;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\Web\DependencyUrl;
-use App\Utils\Web\Fetchable;
-use App\Utils\Web\HttpClient\GentleHttpClient;
-use App\Utils\Web\TimedUrlQueue;
-use App\Utils\Web\WebpageSnapshot\Cache;
-use App\Utils\Web\WebpageSnapshot\Snapshot;
-use App\Utils\Web\WebsiteInfo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -19,11 +19,14 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class WebpageSnapshotManager
 {
+    private readonly WebsiteInfo $websiteInfo;
+
     public function __construct(
         private readonly GentleHttpClient $httpClient,
         private readonly Cache $cache,
         private readonly LoggerInterface $logger,
     ) {
+        $this->websiteInfo = new WebsiteInfo();
     }
 
     public function get(Fetchable $url, bool $refetch): Snapshot
@@ -100,7 +103,7 @@ class WebpageSnapshotManager
             $errors[] = $ex->getMessage();
         }
 
-        if (200 === $code && null !== ($latentCode = WebsiteInfo::getLatentCode($url->getUrl(), $content))) {
+        if (200 === $code && null !== ($latentCode = $this->websiteInfo->getLatentCode($url->getUrl(), $content))) {
             $this->logger->info("Correcting response code for $url from $code to $latentCode");
             $code = $latentCode;
         }
@@ -115,7 +118,7 @@ class WebpageSnapshotManager
 
     private function fetchChildren(Snapshot $webpageSnapshot, Fetchable $url): void
     {
-        foreach (WebsiteInfo::getChildrenUrls($webpageSnapshot) as $childUrl) {
+        foreach ($this->websiteInfo->getChildrenUrls($webpageSnapshot) as $childUrl) {
             $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
         }
     }

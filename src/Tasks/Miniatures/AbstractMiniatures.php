@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tasks\Miniatures;
 
+use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Utils\UnbelievableRuntimeException;
-use App\Utils\Web\HttpClient\GentleHttpClient;
 use JsonException;
 use LogicException;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
