@@ -299,10 +299,10 @@ class ArtisanType extends AbstractTypeWithDelete
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
+            $builder->get($fieldName)->addModelTransformer(new StringArrayTransformer());
         }
-        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
-        $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
+        $builder->get('worksWithMinors')->addModelTransformer(new BooleanTransformer());
+        $builder->get('ages')->addModelTransformer(new AgesTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void

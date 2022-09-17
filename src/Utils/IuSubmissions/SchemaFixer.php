@@ -6,12 +6,9 @@ namespace App\Utils\IuSubmissions;
 
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Enforce;
-use App\Utils\Traits\Singleton;
 
 final class SchemaFixer
 {
-    use Singleton;
-
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
     private const CURRENT_SCHEMA_VERSION = 13;
 

@@ -391,14 +391,14 @@ class Data extends BaseForm
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
+            $builder->get($fieldName)->addModelTransformer(new StringArrayTransformer());
         }
 
-        $builder->get('since')->addModelTransformer(SinceTransformer::getInstance());
-        $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
+        $builder->get('since')->addModelTransformer(new SinceTransformer());
+        $builder->get('ages')->addModelTransformer(new AgesTransformer());
 
         foreach (['nsfwWebsite', 'nsfwSocial', 'doesNsfw', 'worksWithMinors'] as $field) {
-            $builder->get($field)->addModelTransformer(BooleanTransformer::getInstance());
+            $builder->get($field)->addModelTransformer(new BooleanTransformer());
         }
     }
 

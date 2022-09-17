@@ -82,7 +82,7 @@ class IuSubmission implements FieldReadInterface
             throw new DataInputException(previous: $ex);
         }
 
-        return new self($timestamp, $id, SchemaFixer::getInstance()->fix($data));
+        return new self($timestamp, $id, (new SchemaFixer())->fix($data));
     }
 
     private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable
