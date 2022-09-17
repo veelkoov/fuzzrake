@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
-use App\Entity\Artisan as ArtisanE;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\UpdateInput;
@@ -222,14 +221,6 @@ class UpdatesServiceTest extends TestCase
 
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id MAKER01')));
         self::assertEquals([$artisan1], $result->matchedArtisans);
-    }
-
-    private function getPersistedArtisanMock(): Artisan
-    {
-        $result = $this->getMockBuilder(ArtisanE::class)->onlyMethods(['getId'])->getMock();
-        $result->method('getId')->willReturn(1);
-
-        return Artisan::wrap($result);
     }
 
     /**

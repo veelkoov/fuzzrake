@@ -455,6 +455,14 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         ];
     }
 
+    public function testContactStuffWorks(): void
+    {
+        // Descriptions shows up
+        // Contact description shows up
+        // TODO: Contact method shows up
+        // TODO: E-mail clickable if possible
+    }
+
     /**
      * @throws JsonException
      */

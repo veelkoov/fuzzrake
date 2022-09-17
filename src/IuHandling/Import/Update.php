@@ -11,6 +11,8 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class Update
 {
+    public readonly UpdateContact $contact;
+
     /**
      * @param Artisan[] $matchedArtisans
      * @param string[]  $errors
@@ -26,6 +28,7 @@ class Update
         public readonly bool $isAccepted,
         public readonly bool $isNew,
     ) {
+        $this->contact = UpdateContact::from($this->originalArtisan, $this->updatedArtisan);
     }
 
     public function submittedDifferent(Field $field): bool

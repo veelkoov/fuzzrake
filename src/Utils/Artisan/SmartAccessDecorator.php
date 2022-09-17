@@ -52,6 +52,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $this->artisan = $artisan ?? new ArtisanE();
     }
 
+    public static function new(): self
+    {
+        return new self();
+    }
+
     public function __clone()
     {
         $this->artisan = clone $this->artisan;
