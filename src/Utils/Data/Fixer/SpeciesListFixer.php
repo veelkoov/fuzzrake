@@ -9,11 +9,6 @@ use App\Utils\Species\SpeciesService;
 
 class SpeciesListFixer extends AbstractListFixer
 {
-    /**
-     * @var string[]
-     */
-    private readonly array $unsplittable;
-
     private readonly Replacements $replacements;
 
     /**
@@ -25,7 +20,6 @@ class SpeciesListFixer extends AbstractListFixer
         parent::__construct($lists, $strings);
 
         $this->replacements = $species->getListFixerReplacements();
-        $this->unsplittable = $species->getListFixerUnsplittable();
     }
 
     protected static function shouldSort(): bool
@@ -35,12 +29,7 @@ class SpeciesListFixer extends AbstractListFixer
 
     protected static function getSeparatorRegexp(): string
     {
-        return "[\n,.]";
-    }
-
-    protected function getNonsplittable(string $subject): array
-    {
-        return $this->unsplittable;
+        return "\n";
     }
 
     protected function getReplacements(): Replacements

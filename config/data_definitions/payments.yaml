@@ -34,6 +34,7 @@ parameters:
       'Etsy( Payments)?':                   'Etsy Payments'
       'Google Pay':                         'Google Pay'
       'Ko-?fi':                             'Ko-fi'
+      'KoronaPay':                          'KoronaPay'
       'Money ?orders?':                     'Money orders'
       'Pay ?Pal( only)?':                   'PayPal'
       'PayPal invoices?':                   'PayPal (invoices)'
