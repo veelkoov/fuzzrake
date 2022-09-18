@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
@@ -195,6 +196,8 @@ class ExtendedTest extends AbstractTestWithEM
 
             if (Field::AGES === $field) {
                 $value = Ages::get(Enforce::nString($value));
+            } elseif (Field::CONTACT_ALLOWED === $field) {
+                $value = ContactPermit::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
                 $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::nString($value));
             }
@@ -273,7 +276,7 @@ class ExtendedTest extends AbstractTestWithEM
         } elseif (in_array($field, self::BOOLEAN)) {
             self::assertYesNoFieldIsPresentWithValue(Enforce::nBool($value), $field, $htmlBody);
         } elseif (Field::CONTACT_ALLOWED === $field) {
-            self::assertContactValueFieldIsPresentWithValue(Enforce::string($value), $field, $htmlBody);
+            self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } else {
             self::assertIsString($value, "Field $field->name should be a string");
             self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
@@ -342,12 +345,8 @@ class ExtendedTest extends AbstractTestWithEM
         self::assertRadioFieldIsPresentWithValue($value, ['YES', 'NO'], $field, $htmlBody);
     }
 
-    private static function assertContactValueFieldIsPresentWithValue(string $value, Field $field, string $htmlBody): void
+    private static function assertContactValueFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
     {
-        if ('' === $value) {
-            $value = null;
-        }
-
         $choices = ['NO', 'CORRECTIONS', 'ANNOUNCEMENTS', 'FEEDBACK'];
 
         self::assertRadioFieldIsPresentWithValue($value, $choices, $field, $htmlBody);

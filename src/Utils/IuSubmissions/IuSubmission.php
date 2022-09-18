@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\IuSubmissions;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;
@@ -58,6 +59,10 @@ class IuSubmission implements FieldReadInterface
 
         if (Field::AGES === $field) {
             $value = Ages::get(Enforce::nString($value));
+        }
+
+        if (Field::CONTACT_ALLOWED === $field) {
+            $value = ContactPermit::get(Enforce::nString($value));
         }
 
         return $field->isList() ? StringList::pack(Enforce::strList($value)) : $value;

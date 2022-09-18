@@ -6,7 +6,6 @@ namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Fixer\ContactAllowedFixer;
 use App\Utils\Data\Fixer\CountryFixer;
 use App\Utils\Data\Fixer\CurrencyFixer;
 use App\Utils\Data\Fixer\DefinedListFixer;
@@ -30,7 +29,6 @@ class Fixer
         private readonly FreeListFixer $freeListFixer,
         private readonly SpeciesListFixer $speciesListFixer,
         private readonly UrlFixer $urlFixer,
-        private readonly ContactAllowedFixer $contactAllowedFixer,
         private readonly CountryFixer $countryFixer,
         private readonly LanguagesFixer $languagesFixer,
         private readonly SinceFixer $sinceFixer,
@@ -68,7 +66,6 @@ class Fixer
             Field::COUNTRY             => $this->countryFixer,
             Field::STATE               => $this->stateFixer,
             Field::LANGUAGES           => $this->languagesFixer,
-            Field::CONTACT_ALLOWED     => $this->contactAllowedFixer,
             Field::PAYMENT_PLANS       => $this->payPlanFixer,
             Field::PAYMENT_METHODS     => $this->payMethodFixer,
             Field::CURRENCIES_ACCEPTED => $this->currencyFixer,

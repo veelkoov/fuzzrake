@@ -92,8 +92,8 @@ class Messaging
     {
         $this->printer->writeln($item->getDiff()->getDescriptionCliSafe());
         $this->printer->writeln('Contact info: '
-            .($item->getOriginalEntity()->getContactAllowed() ?: '-')
-            .'/'.$item->getFixedEntity()->getContactAllowed()
+            .($item->getOriginalEntity()->getContactAllowed()?->getLabel() ?? '-')
+            .'/'.($item->getFixedEntity()->getContactAllowed()?->getLabel() ?? '-')
             .' '.($item->getOriginalEntity()->getContactInfoOriginal() ?: '?'));
     }
 

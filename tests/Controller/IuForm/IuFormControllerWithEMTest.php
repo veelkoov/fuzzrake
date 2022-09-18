@@ -258,7 +258,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
             password: 'password-555',
-            contactAllowed: 'NO',
+            contactAllowed: ContactPermit::NO,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -285,7 +285,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
             password: 'password-555',
-            contactAllowed: 'CORRECTIONS',
+            contactAllowed: ContactPermit::CORRECTIONS,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -314,7 +314,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
             password: 'password-555',
-            contactAllowed: 'NO',
+            contactAllowed: ContactPermit::NO,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -400,7 +400,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
             password: 'password-555',
-            contactAllowed: 'CORRECTIONS',
+            contactAllowed: ContactPermit::CORRECTIONS,
             ages: Ages::ADULTS,
             nsfwWebsite: false,
             nsfwSocial: false,

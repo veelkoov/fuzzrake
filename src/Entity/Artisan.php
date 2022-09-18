@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\DataDefinitions\ContactPermit;
 use App\Repository\ArtisanRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -104,8 +105,8 @@ class Artisan implements Stringable
     #[ORM\Column(type: Types::STRING, length: 512)]
     private string $inactiveReason = '';
 
-    #[ORM\Column(type: Types::STRING, length: 16)]
-    private string $contactAllowed = '';
+    #[ORM\Column(type: Types::STRING, length: 16, nullable: true, enumType: ContactPermit::class)]
+    private ?ContactPermit $contactAllowed = null;
 
     #[ORM\Column(type: Types::STRING, length: 32)]
     private string $contactMethod = '';
@@ -536,12 +537,12 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getContactAllowed(): string
+    public function getContactAllowed(): ?ContactPermit
     {
         return $this->contactAllowed;
     }
 
-    public function setContactAllowed(string $contactAllowed): self
+    public function setContactAllowed(?ContactPermit $contactAllowed): self
     {
         $this->contactAllowed = $contactAllowed;
 

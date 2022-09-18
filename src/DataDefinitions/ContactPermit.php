@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\DataDefinitions;
 
-class ContactPermit extends Dictionary
-{
-    final public const NO = 'NO'; // grep-no-contact-allowed
-    final public const CORRECTIONS = 'CORRECTIONS';
-    final public const ANNOUNCEMENTS = 'ANNOUNCEMENTS';
-    final public const FEEDBACK = 'FEEDBACK';
+use App\Utils\Traits\EnumUtils;
 
-    public static function getValues(): array
+enum ContactPermit: string
+{
+    use EnumUtils;
+
+    case NO = 'NO'; // grep-no-contact-allowed
+    case CORRECTIONS = 'CORRECTIONS';
+    case ANNOUNCEMENTS = 'ANNOUNCEMENTS';
+    case FEEDBACK = 'FEEDBACK';
+
+    public function getLabel(): string
     {
-        return [
+        return match ($this) {
             self::NO            => 'Never',
             self::CORRECTIONS   => 'Corrections',
             self::ANNOUNCEMENTS => 'Announcements',
             self::FEEDBACK      => 'Feedback',
-        ];
+        };
     }
 }

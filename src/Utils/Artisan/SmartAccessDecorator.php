@@ -1252,14 +1252,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 16)]
-    #[NotBlank(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    public function getContactAllowed(): string
+    #[NotNull(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
+    public function getContactAllowed(): ?ContactPermit
     {
         return $this->artisan->getContactAllowed();
     }
 
-    public function setContactAllowed(string $contactAllowed): self
+    public function setContactAllowed(?ContactPermit $contactAllowed): self
     {
         $this->artisan->setContactAllowed($contactAllowed);
 

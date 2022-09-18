@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\DataDefinitions;
 
-use App\Utils\Arrays;
+use App\Utils\Traits\EnumUtils;
 
 enum Ages: string
 {
+    use EnumUtils;
+
     case MINORS = 'MINORS'; // grep-const-ages-minors
     case MIXED = 'MIXED'; // grep-const-ages-mixed
     case ADULTS = 'ADULTS'; // grep-const-ages-adults
-    // https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/6214
 
     public function getLabel(): string
     {
@@ -20,24 +21,5 @@ enum Ages: string
             self::MIXED  => 'There is a mix of people over and under 18',
             self::ADULTS => 'Everyone is over 18',
         };
-    }
-
-    /**
-     * @return array<string, string|null>
-     */
-    public static function getChoices(bool $includeUnknown): array
-    {
-        $result = Arrays::assoc(array_map(fn ($item): array => [$item->getLabel(), $item->value], self::cases()));
-
-        if ($includeUnknown) {
-            $result['Unknown'] = null;
-        }
-
-        return $result; // @phpstan-ignore-line
-    }
-
-    public static function get(?string $value): ?Ages
-    {
-        return null === $value ? null : Ages::from($value);
     }
 }

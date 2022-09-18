@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;
@@ -100,7 +101,7 @@ trait EntityManagerTrait
         string $makerId = 'TEST000',
         string $country = 'CZ',
         string $password = '',
-        string $contactAllowed = '',
+        ContactPermit $contactAllowed = null,
         ?Ages $ages = null,
         ?bool $nsfwWebsite = null,
         ?bool $nsfwSocial = null,
@@ -122,10 +123,7 @@ trait EntityManagerTrait
             Password::encryptOn($result);
         }
 
-        if ('' !== $contactAllowed) {
-            $result->setContactAllowed($contactAllowed);
-        }
-
+        $result->setContactAllowed($contactAllowed);
         $result->setAges($ages);
         $result->setNsfwWebsite($nsfwWebsite);
         $result->setNsfwSocial($nsfwSocial);
