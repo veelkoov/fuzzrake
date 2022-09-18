@@ -28,7 +28,7 @@ class UpdateContact
         $description = $isNew || $was === $now ? $now->getLabel() : "{$was->getLabel()} → {$now->getLabel()}";
         $isAllowed = ($isNew || ContactPermit::NO !== $was) && (ContactPermit::NO !== $now);
 
-        if ($isNew || '' === $original->getContactAddressPlain()) {
+        if ($isNew) {
             $method = $updated->getContactMethod();
             $address = $updated->getContactAddressPlain();
         } else {
