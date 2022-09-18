@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
@@ -73,6 +74,8 @@ final class StrUtils
         } elseif ($value instanceof DateTimeImmutable) {
             return $value->format('Y-m-d H:i:s');
         } elseif ($value instanceof Ages) {
+            return (string) $value->value;
+        } elseif ($value instanceof ContactPermit) {
             return (string) $value->value;
         } elseif (is_int($value)) {
             return (string) $value;

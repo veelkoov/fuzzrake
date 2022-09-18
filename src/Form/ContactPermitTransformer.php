@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * @implements DataTransformerInterface<Ages, ?string>
+ * @implements DataTransformerInterface<ContactPermit, ?string>
  */
-class AgesTransformer implements DataTransformerInterface
+class ContactPermitTransformer implements DataTransformerInterface
 {
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
@@ -21,6 +21,6 @@ class AgesTransformer implements DataTransformerInterface
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function reverseTransform($value): mixed
     {
-        return Ages::tryFrom($value ?? '');
+        return ContactPermit::tryFrom($value ?? '');
     }
 }

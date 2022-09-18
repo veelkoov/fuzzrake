@@ -46,7 +46,7 @@ class UpdateContactTest extends TestCase
 
     // TODO: Test other parts of from()
 
-    private function getUpdateContact(?string $old, string $new): UpdateContact
+    private function getUpdateContact(?ContactPermit $old, ContactPermit $new): UpdateContact
     {
         $oldA = null === $old ? new Artisan() : self::getPersistedArtisanMock()->setContactAllowed($old);
         $newA = Artisan::new()->setContactAllowed($new);

@@ -25,7 +25,7 @@ class UpdateContact
         $now = self::getContactAllowed($updated);
         $isNew = null === $original->getId();
 
-        $description = $isNew || $was === $now ? $now : "{$was} → {$now}";
+        $description = $isNew || $was === $now ? $now->getLabel() : "{$was->getLabel()} → {$now->getLabel()}";
         $isAllowed = ($isNew || ContactPermit::NO !== $was) && (ContactPermit::NO !== $now);
 
         if ($isNew || '' === $original->getContactAddressPlain()) {
@@ -45,14 +45,8 @@ class UpdateContact
         );
     }
 
-    private static function getContactAllowed(Artisan $artisan): string
+    private static function getContactAllowed(Artisan $artisan): ContactPermit
     {
-        $result = $artisan->getContactAllowed();
-
-        if ('' === $result) {
-            return ContactPermit::NO;
-        }
-
-        return $result;
+        return $artisan->getContactAllowed() ?? ContactPermit::NO;
     }
 }

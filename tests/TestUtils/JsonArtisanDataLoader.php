@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -62,6 +63,8 @@ class JsonArtisanDataLoader
 
             if (Field::AGES === $field) {
                 $value = Ages::get(Enforce::nString($value));
+            } elseif (Field::CONTACT_ALLOWED === $field) {
+                $value = ContactPermit::get(Enforce::nString($value));
             } elseif (null !== $value && in_array($field, [Field::DATE_ADDED, Field::DATE_UPDATED])) {
                 $value = '/now/' === $value ? UtcClock::now() : UtcClock::at(Enforce::nString($value));
             }

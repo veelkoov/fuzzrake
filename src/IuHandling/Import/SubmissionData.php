@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IuHandling\Import;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Field;
 use App\IuHandling\SchemaFixer;
 use App\Utils\DataInputException;
@@ -61,6 +62,10 @@ class SubmissionData implements FieldReadInterface
             $value = Ages::get(Enforce::nString($value));
         }
 
+        if (Field::CONTACT_ALLOWED === $field) {
+            $value = ContactPermit::get(Enforce::nString($value));
+        }
+
         return $field->isList() ? StringList::pack(Enforce::strList($value)) : $value;
     }
 
@@ -83,7 +88,7 @@ class SubmissionData implements FieldReadInterface
             throw new DataInputException(previous: $ex);
         }
 
-        return new self($timestamp, $id, SchemaFixer::getInstance()->fix($data));
+        return new self($timestamp, $id, (new SchemaFixer())->fix($data));
     }
 
     private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable

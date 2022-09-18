@@ -9,7 +9,7 @@
     ],
     "PASSWORD": "",
 
-    "CONTACT_ALLOWED": "",
+    "CONTACT_ALLOWED": null,
     "CONTACT_INFO_OBFUSCATED": "",
     "CONTACT_INFO_ORIGINAL": "",
     "CONTACT_ADDRESS_PLAIN": "",

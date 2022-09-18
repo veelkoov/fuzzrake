@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Utils\Traits\Singleton;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
@@ -12,8 +11,6 @@ use Symfony\Component\Form\DataTransformerInterface;
  */
 class SinceTransformer implements DataTransformerInterface
 {
-    use Singleton;
-
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {

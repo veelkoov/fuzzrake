@@ -12,6 +12,7 @@ use App\DataDefinitions\ProductionModels;
 use App\DataDefinitions\Styles;
 use App\Form\AgesTransformer;
 use App\Form\BooleanTransformer;
+use App\Form\ContactPermitTransformer;
 use App\Form\StringArrayTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -292,17 +293,18 @@ class ArtisanType extends AbstractTypeWithDelete
                 'help'       => 'Leave unchanged for automated updates of contact fields based on "original". Introduce any change to suppress automation and customize obfuscated info.',
             ])
             ->add('contactAllowed', ChoiceType::class, [
-                'label'      => 'Contact allowed?',
-                'choices'    => ContactPermit::getKeyKeyMap(),
-                'empty_data' => ContactPermit::NO,
+                'label'   => 'Contact allowed?',
+                'choices' => ContactPermit::getChoices(true),
             ])
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(StringArrayTransformer::getInstance());
+            $builder->get($fieldName)->addModelTransformer(new StringArrayTransformer());
         }
-        $builder->get('worksWithMinors')->addModelTransformer(BooleanTransformer::getInstance());
-        $builder->get('ages')->addModelTransformer(AgesTransformer::getInstance());
+
+        $builder->get('worksWithMinors')->addModelTransformer(new BooleanTransformer());
+        $builder->get('ages')->addModelTransformer(new AgesTransformer());
+        $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -6,6 +6,7 @@ namespace App\Form\InclusionUpdate;
 
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Validation;
+use App\Form\ContactPermitTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -28,8 +29,7 @@ class ContactAndPassword extends BaseForm
             ->add('contactAllowed', ChoiceType::class, [
                 'label'      => 'When is contact allowed?',
                 'required'   => true,
-                'choices'    => ContactPermit::getValueKeyMap(),
-                'empty_data' => ContactPermit::NO,
+                'choices'    => ContactPermit::getChoices(false),
                 'expanded'   => true,
             ])
             ->add('contactInfoObfuscated', TextType::class, [
@@ -65,6 +65,8 @@ class ContactAndPassword extends BaseForm
                 ],
             ])
         ;
+
+        $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void

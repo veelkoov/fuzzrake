@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E\IuSubmissions;
 
 use App\DataDefinitions\Ages;
+use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 
 class PasswordHandlingTest extends AbstractTestWithEM
@@ -42,7 +43,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             name: 'Old name',
             makerId: 'MAKERID',
             password: 'known-password',
-            contactAllowed: 'NO',
+            contactAllowed: ContactPermit::NO,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -83,7 +84,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             name: 'Old name',
             makerId: 'MAKERID',
             password: 'old-password',
-            contactAllowed: 'NO',
+            contactAllowed: ContactPermit::NO,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -126,7 +127,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
             name: 'Old name',
             makerId: 'MAKERID',
             password: 'old-password',
-            contactAllowed: 'NO',
+            contactAllowed: ContactPermit::NO,
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,

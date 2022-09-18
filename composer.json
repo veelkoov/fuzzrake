@@ -27,7 +27,7 @@
         "symfony/monolog-bundle": "^3.6",
         "symfony/runtime": "*",
         "symfony/security-csrf": "*",
-        "symfony/serializer": "6.1.*",
+        "symfony/serializer": "*",
         "symfony/twig-bundle": "*",
         "symfony/uid": "*",
         "symfony/validator": "*",
