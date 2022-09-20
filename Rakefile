@@ -99,7 +99,8 @@ def fix_phpunit
 end
 
 task('fix-phpunit')  { fix_phpunit }
-task('docker-dev')   { docker_compose('up', '--detach', '--build') }
+task('docker-up')    { docker_compose('up', '--detach', '--build') }
+task('docker-down')  { docker_compose('down') }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
 task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }

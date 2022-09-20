@@ -35,6 +35,7 @@ class PayMethodFixer extends AbstractListFixer
     {
         return [
             'wise.com',
+            'boosty.to',
             ...$this->nsp->match($subject)->all(),
         ];
     }
