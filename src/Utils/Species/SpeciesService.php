@@ -52,14 +52,6 @@ class SpeciesService
     }
 
     /**
-     * @return string[]
-     */
-    public function getListFixerUnsplittable(): array
-    {
-        return $this->speciesDefinitions['leave_unchanged'];
-    }
-
-    /**
      * @return SpecieStats[]
      */
     public function getStats(): array
