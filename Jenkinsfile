@@ -63,7 +63,7 @@ pipeline {
           sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'
           sh 'echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/db.sqlite" >> .env.local'
 
-          sh 'rake docker-dev'
+          sh 'rake docker-up'
           sh 'rake composer[install]'
           sh 'yarn install'
           sh 'rake yep'
