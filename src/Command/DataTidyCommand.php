@@ -49,7 +49,7 @@ class DataTidyCommand extends Command
         foreach ($artisans as $artisan) {
             $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
 
-            $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF | FDV::RESET_INVALID_PLUS_SHOW_FIX_CMD);
+            $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF);
             $artisanFixWip->apply();
         }
 
