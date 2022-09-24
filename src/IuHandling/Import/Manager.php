@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\DataDefinitions\Ages;
 use App\DataDefinitions\Fields\Field;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -101,14 +100,6 @@ class Manager
                 $this->matchedMakerId = $buffer->readUntilWhitespaceOrEof();
                 break;
 
-            case self::CMD_REPLACE:
-                $fieldName = $buffer->readUntilWhitespace();
-                $wrongValue = StrUtils::undoStrSafeForCli($buffer->readToken());
-                $correctedValue = StrUtils::undoStrSafeForCli($buffer->readToken());
-
-                $this->addCorrection($fieldName, $wrongValue, $correctedValue);
-                break;
-
             case self::CMD_SET:
                 $fieldName = $buffer->readUntilWhitespace();
                 $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
@@ -127,12 +118,7 @@ class Manager
     private function applyCorrections(Artisan $artisan, array $corrections): void
     {
         foreach ($corrections as $correction) {
-            $value = $artisan->get($correction->getField());
-            $correctedValue = $correction->apply(StrUtils::asStr($value));
-
-            if (Field::AGES === $correction->getField()) {
-                $correctedValue = Ages::get($correctedValue);
-            }
+            $correctedValue = $correction->apply(StrUtils::asStr($artisan->get($correction->getField())));
 
             $artisan->set($correction->getField(), $correctedValue);
         }
