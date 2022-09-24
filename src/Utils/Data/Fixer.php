@@ -52,7 +52,7 @@ class Fixer
         return $result;
     }
 
-    public function fix(Artisan $artisan, Field $field): void // TODO: Get rid of / private
+    public function fix(Artisan $artisan, Field $field): void
     {
         $value = $artisan->get($field);
 
