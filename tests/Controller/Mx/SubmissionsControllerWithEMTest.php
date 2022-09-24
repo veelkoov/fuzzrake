@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Mx;
 
+use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Features;
 use App\DataDefinitions\ProductionModels;
 use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Contact;
 use JsonException;
 use Symfony\Component\Uid\Uuid;
 
@@ -455,12 +457,72 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         ];
     }
 
-    public function testContactStuffWorks(): void
+    /**
+     * @throws JsonException
+     */
+    public function testChangesDescriptionShowUp(): void
     {
-        // Descriptions shows up
-        // Contact description shows up
-        // TODO: Contact method shows up
-        // TODO: E-mail clickable if possible
+        $client = self::createClient();
+
+        self::persistAndFlush(Artisan::new()->setMakerId('MAKERID')->setName('Old name'));
+        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')->setName('New name'));
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextContains('p.text-body', 'Changed NAME from "Old name" to "New name"');
+    }
+
+    /**
+     * @throws JsonException
+     *
+     * @dataProvider contactInfoWorksDataProvider
+     */
+    public function testContactInfoWorks(bool $email, bool $allowed): void
+    {
+        $client = self::createClient();
+
+        $method = $email ? Contact::E_MAIL : Contact::TELEGRAM;
+        $address = $email ? 'getfursu.it@example.com' : '@telegram';
+        $permit = $allowed ? ContactPermit::FEEDBACK : ContactPermit::NO;
+
+        self::persistAndFlush(Artisan::new()->setMakerId('MAKERID')
+            ->setName('Old name')
+            ->setContactMethod($method)
+            ->setContactAddressPlain($address)
+            ->setContactAllowed($permit)
+        );
+        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')
+            ->setName('New name')
+            ->setContactMethod($method)
+            ->setContactAddressPlain($address)
+            ->setContactAllowed($permit)
+        );
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorExists('#contact-info-card .card-body.text-'.($allowed ? 'success' : 'danger'));
+        self::assertSelectorTextSame('#contact-info-card h5.card-title', $allowed ? 'Allowed: Feedback' : 'Allowed: Never');
+
+        self::assertSelectorTextContains('#contact-info-card h5 + p', "{$method}: {$address}");
+
+        if ($email) {
+            self::assertSelectorExists('#contact-info-card h5 + p a[href^="mailto:"]');
+        } else {
+            self::assertSelectorNotExists('#contact-info-card h5 + p a[href^="mailto:"]');
+        }
+    }
+
+    /**
+     * @return array<string, array{bool, bool}>
+     */
+    public function contactInfoWorksDataProvider(): array
+    {
+        return [
+            'E-mail, contact allowed'      => [true,  true],
+            'E-mail, contact disallowed'   => [true,  false],
+            'Telegram, contact allowed'    => [false, true],
+            'Telegram, contact disallowed' => [false, false],
+        ];
     }
 
     /**
