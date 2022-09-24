@@ -23,7 +23,7 @@ class Differ
         $newVal = StrUtils::asStr($new->get($field) ?? '');
         $oldVal = StrUtils::asStr($old->get($field) ?? '');
 
-        if ($oldVal === $newVal || SecureValues::hideImportDiff($field)) {
+        if ($oldVal === $newVal || SecureValues::hideOnAdminScreen($field)) {
             return;
         }
 

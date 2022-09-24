@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\DataDefinitions\Fields\Field;
+use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\IuHandling\Import\SubmissionData;
 use App\Repository\SubmissionRepository;
@@ -71,9 +72,10 @@ class AdminExtensions extends AbstractExtension
     private function difference(Field $field, string $classSuffix, Artisan $subject, Artisan $other): string
     {
         if (!$field->isList()) {
+            $value = $this->getOptionallyRedactedValue($field, $subject);
             $class = "text-$classSuffix";
 
-            return '<span class="'.$class.'">'.htmlspecialchars(StrUtils::asStr($subject->get($field))).'</span>';
+            return '<span class="'.$class.'">'.htmlspecialchars(StrUtils::asStr($value)).'</span>';
         }
 
         $bsClass = "badge-outline-$classSuffix";
@@ -113,5 +115,17 @@ class AdminExtensions extends AbstractExtension
     private function getComment(SubmissionData $submissionData): string
     {
         return $this->submissionRepository->findByStrId($submissionData->getId())?->getComment() ?? '';
+    }
+
+    /**
+     * @return psFieldValue
+     */
+    private function getOptionallyRedactedValue(Field $field, Artisan $subject): mixed
+    {
+        if (SecureValues::hideOnAdminScreen($field)) {
+            return '[redacted]';
+        } else {
+            return $subject->get($field);
+        }
     }
 }

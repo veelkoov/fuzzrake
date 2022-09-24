@@ -529,6 +529,60 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
+    public function testInvalidIdDoesntCauseError500(): void
+    {
+        $client = self::createClient();
+        Submissions::submit(Artisan::new()); // Only to have the submissions directory existing
+        $client->request('GET', '/mx/submissions/wrongId');
+
+        self::assertResponseStatusCodeSame(404);
+    }
+
+    /**
+     * @dataProvider passwordIsRedactedDataProvider
+     *
+     * @throws JsonException
+     */
+    public function testPasswordIsRedacted(bool $isNew, bool $changePassword): void
+    {
+        $client = self::createClient();
+
+        if (!$isNew) {
+            $entity = Artisan::new()->setMakerId('MAKERID')->setPassword('password___1234');
+
+            self::persistAndFlush($entity);
+        }
+
+        $submittedPassword = $changePassword ? 'password___5678' : 'password___1234';
+        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')->setPassword($submittedPassword));
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorTextSame('tr.MAKER_ID td+td', 'MAKERID');
+        self::assertSelectorTextNotContains('body', 'password___');
+
+        if (!$isNew) {
+            self::assertSelectorTextSame('tr.PASSWORD.before td+td', '[redacted]');
+        }
+        self::assertSelectorTextSame('tr.PASSWORD.submitted td+td', '[redacted]');
+        self::assertSelectorTextSame('tr.PASSWORD.after td+td', '[redacted]');
+    }
+
+    /**
+     * @return array<string, array{bool, bool}>
+     */
+    public function passwordIsRedactedDataProvider(): array
+    {
+        return [
+            'New maker'                          => [true, false],
+            'Updated maker, no password change'  => [true, false],
+            'Updated maker, password is changed' => [true, true],
+        ];
+    }
+
+    /**
+     * @throws JsonException
+     */
     private function generateRandomFakeSubmissions(int $count): void
     {
         while (--$count >= 0) {

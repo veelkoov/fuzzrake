@@ -22,7 +22,7 @@ class Description
     public function __construct(Artisan $old, Artisan $new)
     {
         foreach (Fields::persisted() as $field) {
-            if (!SecureValues::hideConfirmDiff($field)) {
+            if (!SecureValues::hideInChangesDescription($field)) {
                 $this->addChange(...$this->getField($field, $old, $new));
             }
         }
