@@ -25,7 +25,7 @@ class AdminExtensions extends AbstractExtension
 {
     private readonly Pattern $linkPattern;
 
-    /** @noinspection ConstructorTwigExtensionHeavyConstructor TODO: Remove necessity for this */
+    /** @noinspection ConstructorTwigExtensionHeavyConstructor TODO: https://github.com/veelkoov/fuzzrake/issues/156 */
     public function __construct(
         private readonly Validator $validator,
         private readonly SubmissionRepository $submissionRepository,
