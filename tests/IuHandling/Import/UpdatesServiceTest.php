@@ -223,6 +223,47 @@ class UpdatesServiceTest extends TestCase
         self::assertEquals([$artisan1], $result->matchedArtisans);
     }
 
+    public function testUpdateHandlesMakerIdChangeProperly(): void
+    {
+        $artisan = $this->getPersistedArtisanMock()
+            ->setMakerId('MAKERID')
+            ->setFormerMakerIds('MAKER00')
+            ->setName('The old maker name')
+        ;
+
+        // Changing
+        $submissionData1 = Submissions::from(Artisan::new()
+            ->setMakerId('MAKER22')
+            ->setName('The new maker name')
+            ->setFormerly('The old maker name')
+        );
+
+        $result1 = $this->getSetUpUpdatesService([
+            [['The new maker name', 'The old maker name'], ['MAKER22'], [$artisan]],
+        ])->getUpdateFor(new UpdateInput($submissionData1, new Submission()));
+
+        self::assertEquals('The new maker name', $result1->updatedArtisan->getName());
+        self::assertEquals('The old maker name', $result1->updatedArtisan->getFormerly());
+        self::assertEquals('MAKER22', $result1->updatedArtisan->getMakerId());
+        self::assertEquals(['MAKERID', 'MAKER00'], $result1->updatedArtisan->getFormerMakerIdsArr());
+
+        // No change
+        $submissionData2 = Submissions::from(Artisan::new()
+            ->setMakerId('MAKERID')
+            ->setName('The new maker name')
+            ->setFormerly('The old maker name')
+        );
+
+        $result2 = $this->getSetUpUpdatesService([
+            [['The new maker name', 'The old maker name'], ['MAKERID'], [$artisan]],
+        ])->getUpdateFor(new UpdateInput($submissionData2, new Submission()));
+
+        self::assertEquals('The new maker name', $result2->updatedArtisan->getName());
+        self::assertEquals('The old maker name', $result2->updatedArtisan->getFormerly());
+        self::assertEquals('MAKERID', $result2->updatedArtisan->getMakerId());
+        self::assertEquals('MAKER00', $result2->updatedArtisan->getFormerMakerIds());
+    }
+
     /**
      * @param list<array{list<string>, list<string>, list<Artisan>}> $calls
      */

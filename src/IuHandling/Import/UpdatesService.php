@@ -139,7 +139,7 @@ class UpdatesService
             $originalInput->setDateAdded($originalArtisan->getDateAdded());
             $originalInput->setDateUpdated(UtcClock::now());
 
-            if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) { // TODO: Test me!
+            if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) {
                 $originalInput->setFormerMakerIds(StringList::pack($originalArtisan->getAllMakerIdsArr()));
             } else {
                 $originalInput->setFormerMakerIds($originalArtisan->getFormerMakerIds());
