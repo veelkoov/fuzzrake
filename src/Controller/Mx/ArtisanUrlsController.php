@@ -6,23 +6,19 @@ namespace App\Controller\Mx;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanUrlRepository;
-use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/artisan_urls')]
-class ArtisanUrlsController extends AbstractController
+class ArtisanUrlsController extends FuzzrakeAbstractController
 {
     #[Route(path: '/', name: RouteName::MX_ARTISAN_URLS)]
     #[Cache(maxage: 0, public: false)]
-    public function index(ArtisanUrlRepository $repository, EnvironmentsService $environments): Response
+    public function index(ArtisanUrlRepository $repository): Response
     {
-        if (!$environments->isDevOrTest()) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->authorize();
 
         $urls = $repository->getOrderedBySuccessDate(Fields::nonInspectedUrls());
 

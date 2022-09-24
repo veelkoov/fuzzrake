@@ -14,11 +14,10 @@ final class Fields
     private static ?FieldsList $persisted = null;
     private static ?FieldsList $public = null;
     private static ?FieldsList $inIuForm = null;
+    private static ?FieldsList $iuFormAffected = null;
     private static ?FieldsList $inStats = null;
-    private static ?FieldsList $lists = null;
     private static ?FieldsList $urls = null;
     private static ?FieldsList $nonInspected = null;
-    private static ?FieldsList $none = null;
 
     public static function all(): FieldsList
     {
@@ -40,14 +39,14 @@ final class Fields
         return self::$inIuForm ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm());
     }
 
+    public static function iuFormAffected(): FieldsList
+    {
+        return self::$iuFormAffected ??= self::inIuForm()->plus(FieldsData::IU_FORM_AFFECTED);
+    }
+
     public static function inStats(): FieldsList
     {
         return self::$inStats ??= self::all()->filtered(fn (Field $field): bool => $field->inStats());
-    }
-
-    public static function lists(): FieldsList
-    {
-        return self::$lists ??= self::all()->filtered(fn (Field $field): bool => $field->isList());
     }
 
     public static function urls(): FieldsList
@@ -58,10 +57,5 @@ final class Fields
     public static function nonInspectedUrls(): FieldsList
     {
         return self::$nonInspected ??= self::urls()->filtered(fn (Field $field): bool => in_array($field, FieldsData::NON_INSPECTED_URLS, true));
-    }
-
-    public static function none(): FieldsList
-    {
-        return self::$none ??= new FieldsList([]);
     }
 }

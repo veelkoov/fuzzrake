@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
+use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Fixer\CountryFixer;
 use App\Utils\Data\Fixer\CurrencyFixer;
@@ -38,6 +39,17 @@ class Fixer
         private readonly CurrencyFixer $currencyFixer,
         private readonly PayMethodFixer $payMethodFixer,
     ) {
+    }
+
+    public function getFixed(Artisan $input): Artisan
+    {
+        $result = clone $input;
+
+        foreach (Fields::persisted() as $field) {
+            $this->fix($result, $field);
+        }
+
+        return $result;
     }
 
     public function fix(Artisan $artisan, Field $field): void

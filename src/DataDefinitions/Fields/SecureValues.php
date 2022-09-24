@@ -35,12 +35,12 @@ final class SecureValues
         self::replace(Field::PASSWORD, '', $where);
     }
 
-    public static function hideImportDiff(Field $field): bool
+    public static function hideOnAdminScreen(Field $field): bool
     {
         return Field::PASSWORD === $field;
     }
 
-    public static function hideConfirmDiff(Field $field): bool
+    public static function hideInChangesDescription(Field $field): bool
     {
         return in_array($field, [Field::PASSWORD, Field::CONTACT_METHOD, Field::CONTACT_INFO_ORIGINAL, Field::CONTACT_ADDRESS_PLAIN, Field::URL_MINIATURES, Field::DATE_ADDED, Field::DATE_UPDATED]);
     }

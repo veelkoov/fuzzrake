@@ -8,6 +8,7 @@ use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\PHPUnit\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
+use Rector\PHPUnit\Rector\MethodCall\GetMockBuilderGetMockToCreateMockRector;
 use Rector\PHPUnit\Set\PHPUnitLevelSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
@@ -43,6 +44,7 @@ return static function (RectorConfig $rectorConfig): void {
         ClassPropertyAssignToConstructorPromotionRector::class, // Breaks annotations
         AttributeKeyToClassConstFetchRector::class, // Ignores imports
         AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
+        GetMockBuilderGetMockToCreateMockRector::class, // Using createPartialMock leaves uninitialized properties
         AddDoesNotPerformAssertionToNonAssertingTestRector::class, // TODO
         ArraySpreadInsteadOfArrayMergeRector::class, // TODO
     ]);

@@ -81,7 +81,6 @@ enum Field: string
     case CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
     case CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
     case CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
-    // https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/6214
 
     public function getData(): FieldData
     {
@@ -101,6 +100,11 @@ enum Field: string
     public function isList(): bool
     {
         return $this->getData()->isList;
+    }
+
+    public function isDate(): bool
+    {
+        return $this->getData()->isDate;
     }
 
     public function isPersisted(): bool
@@ -126,5 +130,10 @@ enum Field: string
     public function inStats(): bool
     {
         return $this->getData()->inStats;
+    }
+
+    public function isFreeForm(): bool
+    {
+        return $this->getData()->isFreeForm;
     }
 }

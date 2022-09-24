@@ -15,6 +15,11 @@ class StringBuffer
 {
     private AbstractString $buffer;
 
+    /**
+     * @var array<string, string>
+     */
+    private array $delimitedCache = [];
+
     public function __construct(string $buffer)
     {
         $this->buffer = new UnicodeString($buffer);
@@ -32,12 +37,12 @@ class StringBuffer
 
     public function readUntilWhitespaceOrEof(): string
     {
-        return $this->readUntilRegexp("\s|$");
+        return $this->readUntilRegexp('\s|$');
     }
 
     public function readUntilWhitespace(): string
     {
-        return $this->readUntilRegexp("\s");
+        return $this->readUntilRegexp('\s');
     }
 
     public function readToken(): string
@@ -60,10 +65,12 @@ class StringBuffer
     private function readUntilRegexp(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
         try {
+            $delimitedPattern = $this->delimitedCache[$terminator] ??= pattern($terminator)->delimited();
+
             /**
              * @var string[] $parts
              */
-            $parts = preg::split(pattern($terminator)->delimited(), $this->buffer->toString(), 2);
+            $parts = preg::split($delimitedPattern, $this->buffer->toString(), 2);
         } catch (PregException $e) {
             throw new RuntimeException("Terminator '$terminator' is not a valid regexp: {$e->getMessage()}");
         }

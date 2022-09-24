@@ -12,10 +12,11 @@
                 {% include '_menu_item.html.twig' with {'name': 'maker_ids', 'pretty_name': '<i class="fas fa-id-badge"></i> Maker IDs' } %}
                 {% include '_menu_item.html.twig' with {'name': 'events', 'pretty_name': '<i class="fas fa-history"></i> Updates' } %}
                 {% if isDevEnv() %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'pretty_name': '<i class="fas fa-plus"></i> New maker' } %}
-                    {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'pretty_name': '<i class="fas fa-plus"></i> New event' } %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'pretty_name': '<i class="fas fa-plus"></i> Maker' } %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'pretty_name': '<i class="fas fa-plus"></i> Event' } %}
                     {% include '_menu_item.html.twig' with {'name': 'mx_artisan_urls', 'pretty_name': '<i class="fas fa-link"></i> URLs' } %}
                     {% include '_menu_item.html.twig' with {'name': 'mx_query', 'pretty_name': '<i class="fas fa-filter"></i> Query' } %}
+                    {% include '_menu_item.html.twig' with {'name': 'mx_submissions', 'pretty_name': '<i class="fa-solid fa-file-lines"></i> Submissions' } %}
                 {% endif %}
             </ul>
         </div>

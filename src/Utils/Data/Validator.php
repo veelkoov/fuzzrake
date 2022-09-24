@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Data;
 
 use App\DataDefinitions\Fields\Field;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Data\Validator\GenericValidator;
 use App\Utils\Data\Validator\SpeciesListValidator;
 use App\Utils\Data\Validator\ValidatorInterface;
@@ -19,9 +20,9 @@ class Validator
         $this->genericValidator = new GenericValidator();
     }
 
-    public function isValid(ArtisanChanges $artisan, Field $field): bool
+    public function isValid(Artisan $artisan, Field $field): bool
     {
-        return $this->getValidator($field)->isValid($field, $artisan->getChanged()->getString($field));
+        return !$field->isValidated() || $this->getValidator($field)->isValid($field, $artisan->getString($field));
     }
 
     private function getValidator(Field $field): ValidatorInterface

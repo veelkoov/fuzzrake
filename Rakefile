@@ -8,7 +8,6 @@ def read_iu_submissions_s3_path # Use dotenv or sth if more than this is ever re
 end
 
 IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
-FIXES_FILE_PATH = 'imports/import-fixes.txt'
 
 DB_PATH = 'var/db.sqlite'
 DB_TMP_PATH = "#{DB_PATH}.tmp"
@@ -23,6 +22,7 @@ IGNORED_TABLES = %w[
   artisans_volatile_data
   artisans_urls_states
   tracker_settings
+  submissions
 ].freeze
 
 #
@@ -219,13 +219,9 @@ task 'get-submissions' do
   run_shell('aws', 's3', 'sync', '--size-only', read_iu_submissions_s3_path, IMPORT_DIR_PATH)
 end
 
-mtask(:import, :console, 'app:data:import', IMPORT_DIR_PATH, FIXES_FILE_PATH)
-mtask(:importf, :import, '--fix-mode')
-mtask(:importc, :import, '--commit')
-
 #
 # DATA TIDY TASKS
 #
 
-mtask(:tidy, :console, 'app:data:tidy', FIXES_FILE_PATH)
+mtask(:tidy, :console, 'app:data:tidy')
 mtask(:tidyc, :tidy, '--commit')

@@ -12,21 +12,21 @@ use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/events')]
-class EventsController extends AbstractController
+class EventsController extends FuzzrakeAbstractController
 {
     use ButtonClickedTrait;
 
     public function __construct(
-        private readonly EnvironmentsService $environments,
         private readonly EntityManagerInterface $manager,
+        EnvironmentsService $environments,
     ) {
+        parent::__construct($environments);
     }
 
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]
@@ -36,9 +36,7 @@ class EventsController extends AbstractController
     {
         $event ??= new Event();
 
-        if (!$this->environments->isDevOrTest() || !$event->isEditable()) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->authorize($event->isEditable());
 
         $form = $this->createForm(EventType::class, $event, [
             AbstractTypeWithDelete::OPT_DELETABLE => null !== $event->getId(),

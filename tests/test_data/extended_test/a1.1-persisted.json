@@ -1,0 +1,151 @@
+{
+    "MAKER_ID": "MAKERI0",
+    "FORMER_MAKER_IDS": [
+        "OLDMKR0"
+    ],
+
+    "NAME": "Name mkr1 before update",
+    "FORMERLY": [
+        "Formerly mkr1 before update"
+    ],
+    "PASSWORD": "Password mkr1 before update",
+
+    "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-e************before@e****l",
+    "CONTACT_INFO_ORIGINAL": "E-MAIL: mkr1-email-update-before@ema.il",
+    "CONTACT_ADDRESS_PLAIN": "emaila1_1@ema.il",
+    "CONTACT_METHOD": "E-MAIL",
+    "CONTACT_ALLOWED": "CORRECTIONS",
+
+    "INTRO": "Intro mkr1 before update",
+    "SINCE": "2019-10",
+    "LANGUAGES": [
+        "Czech (limited)",
+        "Mkr1 before update",
+        "English"
+    ],
+    "COUNTRY": "C0",
+    "STATE": "State mkr1 before update",
+    "CITY": "City mkr1 before update",
+
+    "DATE_ADDED": "2022-01-01 00:00:00",
+    "DATE_UPDATED": "2022-01-01 00:00:00",
+
+    "AGES": "MINORS",
+    "NSFW_WEBSITE": false,
+    "NSFW_SOCIAL": true,
+    "DOES_NSFW": false,
+    "WORKS_WITH_MINORS": false,
+
+    "PAYMENT_PLANS": [
+        "30% upfront, rest in 100 Eur/mth until fully paid",
+        "50%/50%",
+        "Mkr1 before update"
+    ],
+    "PAYMENT_METHODS": [
+        "Cash",
+        "Bank transfers",
+        "Before update mkr1",
+        "PalPay"
+    ],
+    "CURRENCIES_ACCEPTED": [
+        "USD",
+        "EUR",
+        "BUD"
+    ],
+
+    "PRODUCTION_MODELS_COMMENT": "Before update prod models comment",
+    "PRODUCTION_MODELS": [
+        "Premades"
+    ],
+
+    "STYLES_COMMENT": "Styles comment before update",
+    "STYLES": [
+        "Kemono",
+        "Realistic",
+        "Semi Toony"
+    ],
+    "OTHER_STYLES": [
+        "Other styles",
+        "Before update",
+        "Maker 1"
+    ],
+
+    "ORDER_TYPES_COMMENT": "Order types comment before update",
+    "ORDER_TYPES": [
+        "Feetpaws (as parts/separate)",
+        "Full plantigrade",
+        "Head (as parts/separate)",
+        "Partial (head + handpaws + tail + feetpaws)",
+        "Three-fourth (head + handpaws + tail + legs/pants + feetpaws)"
+    ],
+    "OTHER_ORDER_TYPES": [
+        "Other order",
+        "Types maker 1",
+        "Before update"
+    ],
+
+    "FEATURES_COMMENT": "Features before update comment",
+    "FEATURES": [
+        "Adjustable/wiggle ears",
+        "Attached tail",
+        "Exchangeable hairs",
+        "Follow-me eyes",
+        "Indoor feet",
+        "LED/EL lights",
+        "Outdoor feet",
+        "Removable eyelids",
+        "Washable heads"
+    ],
+    "OTHER_FEATURES": [
+        "Other features",
+        "Before update",
+        "Maker 1"
+    ],
+
+    "SPECIES_COMMENT": "Species comment before update",
+    "SPECIES_DOES": [
+        "Does before update"
+    ],
+    "SPECIES_DOESNT": [
+        "Doesn't before update"
+    ],
+
+    "NOTES": "Notes before update",
+    "INACTIVE_REASON": "Inactive reason maker 1 - not updated",
+
+    "URL_FURSUITREVIEW": "https://fursuitreview.com/maker1_before_update.html",
+    "URL_WEBSITE": "https://mywebsite.com/maker1_before_update.html",
+    "URL_PRICES": [
+        "https://mywebsite.com/prices1-maker1_before_update.html",
+        "https://mywebsite.com/prices2-maker1_before_update.html"
+    ],
+    "URL_FAQ": "https://mywebsite.com/faq_maker1_before_update.html",
+    "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/maker1_before_update/",
+    "URL_DEVIANTART": "https://www.deviantart.com/maker1_before_update.html",
+    "URL_TWITTER": "https://twitter.com/maker1_before_update.html",
+    "URL_FACEBOOK": "https://www.facebook.com/maker1_before_update.html/",
+    "URL_TUMBLR": "https://tumblr.com/maker1_before_update.html",
+    "URL_INSTAGRAM": "https://www.instagram.com/maker1_before_update.html/",
+    "URL_YOUTUBE": "https://youtube.com/maker1_before_update.html",
+    "URL_LINKLIST": "https://linklist.com/maker1_before_update.html",
+    "URL_FURRY_AMINO": "https://furryamino.com/maker1_before_update.html",
+    "URL_ETSY": "https://etsy.com/maker1_before_update.html",
+    "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/maker1_before_update.html",
+    "URL_OTHER_SHOP": "https://othershop.com/maker1_before_update.html",
+    "URL_QUEUE": "https://queue.com/maker1_before_update.html",
+    "URL_SCRITCH": "https://scritch.es/maker1_before_update.html",
+    "URL_FURTRACK": "https://www.furtrack.com/maker1_before_update.html",
+    "URL_PHOTOS": [
+        "https://scritchphotos.com/url1-maker1_before_update.html",
+        "https://www.furtrack.com/url2-maker1_before_update.html"
+    ],
+    "URL_MINIATURES": [
+        "https://scritchphotos.com/url1-maker1_before_update-mini.html",
+        "https://www.furtrack.com/url2-maker1_before_update-mini.html"
+    ],
+    "URL_OTHER": "https://other.com/maker1_before_update.html",
+    "URL_COMMISSIONS": [
+        "https://cst.com/cst1-maker1_before_update.html",
+        "https://cst2.com/cst2-maker1_before_update.html"
+    ]
+}

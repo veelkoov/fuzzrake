@@ -6,26 +6,22 @@ namespace App\Controller\Mx;
 
 use App\Form\Mx\QueryType;
 use App\Repository\ArtisanRepository;
-use App\Service\EnvironmentsService;
 use App\Utils\DataQuery;
 use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/query')]
-class QueryController extends AbstractController
+class QueryController extends FuzzrakeAbstractController
 {
     #[Route(path: '/', name: RouteName::MX_QUERY)]
     #[Cache(maxage: 0, public: false)]
-    public function query(Request $request, ArtisanRepository $artisanRepository, EnvironmentsService $environments): Response
+    public function query(Request $request, ArtisanRepository $artisanRepository): Response
     {
-        if (!$environments->isDevOrTest()) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->authorize();
 
         $form = $this->createForm(QueryType::class);
         $form->handleRequest($request);

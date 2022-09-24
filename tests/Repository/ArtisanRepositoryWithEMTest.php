@@ -91,24 +91,41 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
     {
         self::bootKernel();
 
+        $commonPart = 'maker A';
+
+        $m1name = 'Maker 1';
+        $m1oldName1 = "Old $commonPart";
+        $m1oldName2 = "Older $commonPart";
+        $m1makerId = 'MAKER11';
+        $m1oldMakerId1 = 'MAKER12';
+
         Artisan::wrap($a1 = new ArtisanE())
-            ->setName('Maker 1')
-            ->setFormerly("Old maker A\nOlder maker A")
-            ->setMakerId('MAKER11')
-            ->setFormerMakerIds('MAKER12');
+            ->setName($m1name)
+            ->setFormerly("{$m1oldName1}\n{$m1oldName2}")
+            ->setMakerId($m1makerId)
+            ->setFormerMakerIds($m1oldMakerId1);
+
+        $m2name = 'Maker 2';
+        $m2oldName1 = 'Old maker B';
+        $m2oldName2 = $commonPart;
+        $m2makerId = 'MAKER21';
+        $m2oldMakerId1 = 'MAKER22';
+        $m2OldMakerId2 = 'MAKER23';
+
         Artisan::wrap($a2 = new ArtisanE())
-            ->setName('Maker 2')
-            ->setFormerly("Old maker B\nmaker A")
-            ->setMakerId('MAKER21')
-            ->setFormerMakerIds("MAKER22\nMAKER23");
+            ->setName($m2name)
+            ->setFormerly("{$m2oldName1}\n{$m2oldName2}")
+            ->setMakerId($m2makerId)
+            ->setFormerMakerIds($m2oldMakerId1."\n".$m2OldMakerId2);
 
         self::persistAndFlush($a1, $a2);
 
         $repo = self::getArtisanRepository();
 
-        self::assertEquals([$a1], $repo->findBestMatches(['Maker 1'], ['MAKER12'], null));
-        self::assertEquals([$a1], $repo->findBestMatches(['Old maker A'], ['NEWMKID'], null));
-        self::assertEquals([$a2], $repo->findBestMatches(['Anything'], [], 'Old maker B'));
-        self::assertEquals([$a2], $repo->findBestMatches([], ['MAKER23'], null));
+        self::assertEquals([$a1], $repo->findBestMatches([$m1name], [$m1oldMakerId1]));
+        self::assertEquals([$a1], $repo->findBestMatches([$m1oldName1], ['NEWMKID']));
+        self::assertEquals([$a2], $repo->findBestMatches([], [$m2OldMakerId2]));
+        self::assertEquals([$a1, $a2], $repo->findBestMatches([$m2oldName2], [])); // Shares common part
+        self::assertEquals([$a1, $a2], $repo->findBestMatches([], [$m1makerId, $m2oldMakerId1]));
     }
 }

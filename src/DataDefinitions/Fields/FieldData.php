@@ -16,10 +16,12 @@ class FieldData
         public readonly string $modelName,
         ?string $validationRegexp,
         public readonly bool $isList,
-        public readonly bool $isPersisted,
+        public readonly bool $isFreeForm,
         public readonly bool $inStats,
         public readonly bool $public,
         public readonly bool $isInIuForm,
+        public readonly bool $isDate,
+        public readonly bool $isPersisted,
     ) {
         $this->validationPattern = null !== $validationRegexp ? pattern($validationRegexp) : null;
         $this->isValidated = null !== $this->validationPattern;

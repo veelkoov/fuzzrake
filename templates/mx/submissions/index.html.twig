@@ -1,0 +1,32 @@
+{% extends 'mx/_base.html.twig' %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Maker ID</th>
+                <th>Maker name</th>
+                <th>Comments</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submission in submissions %}
+                <tr>
+                    <td>{{ submission.timestamp|fragile_datetime_utc }}</td>
+                    <td>{{ submission.get('MAKER_ID'|as_field) }}</td>
+                    <td>{{ submission.get('NAME'|as_field) }}</td>
+                    <td>{{ submission|get_comments|nl2br }}</td>
+                    <td>
+                        <a href="{{ path('mx_submission', {'id': submission.id}) }}">Open</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

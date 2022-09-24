@@ -98,7 +98,7 @@ class IuNavigationTest extends AbstractTestWithEM
             'iu_form[password]'       => 'test-some-password',
         ]);
 
-        self::performImport(true);
+        self::performImport($client, true, 1);
         self::flushAndClear();
 
         $artisan = self::findArtisanByMakerId('ABRTEST');

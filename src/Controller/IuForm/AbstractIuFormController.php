@@ -8,10 +8,10 @@ use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
+use App\IuHandling\Submission\SubmissionService;
 use App\Repository\ArtisanRepository;
 use App\Service\Captcha;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\IuSubmissions\IuSubmissionService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
@@ -28,7 +28,7 @@ abstract class AbstractIuFormController extends AbstractController
     public function __construct(
         protected readonly Captcha $captcha,
         protected readonly LoggerInterface $logger,
-        protected readonly IuSubmissionService $iuFormService,
+        protected readonly SubmissionService $iuFormService,
         protected readonly RouterInterface $router,
         private readonly ArtisanRepository $artisanRepository,
     ) {

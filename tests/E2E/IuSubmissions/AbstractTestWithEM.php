@@ -4,19 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\Tasks\DataImport;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
-use App\Tests\TestUtils\Paths;
-use App\Utils\Data\FdvFactory;
-use App\Utils\Data\Manager;
-use App\Utils\Data\Printer;
-use App\Utils\IuSubmissions\Finder;
-use Exception;
-use RuntimeException;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
+use App\Tests\TestUtils\Submissions;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 abstract class AbstractTestWithEM extends WebTestCaseWithEM
 {
@@ -24,58 +14,32 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
     {
         parent::setUp();
 
-        $this->emptyTestSubmissionsDir();
+        Submissions::emptyTestSubmissionsDir();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        $this->emptyTestSubmissionsDir();
+        Submissions::emptyTestSubmissionsDir();
     }
 
-    protected function getImportManager(bool $acceptAll): Manager
+    protected function performImport(KernelBrowser $client, bool $acceptAll, int $expectedImports): void
     {
-        $corrections = '';
+        $crawler = $client->request('GET', '/mx/submissions/');
 
-        if ($acceptAll) {
-            foreach (Finder::getFrom(Paths::getTestIuFormDataPath()) as $submission) {
-                $corrections .= "with {$submission->getId()}: accept\n";
-            }
+        $links = $crawler->filter('table a')->links();
+
+        self::assertCount($expectedImports, $links);
+
+        foreach ($links as $link) {
+            $crawler = $client->request('GET', $link->getUri());
+
+            $form = $crawler->selectButton('Update')->form([
+                'submission[directives]' => $acceptAll ? 'accept' : '',
+            ]);
+
+            $client->submit($form);
         }
-
-        return new Manager($corrections);
-    }
-
-    protected function performImport(bool $acceptAll): BufferedOutput
-    {
-        $output = new BufferedOutput();
-
-        $printer = new Printer(new SymfonyStyle(new StringInput(''), $output));
-        $importManager = $this->getImportManager($acceptAll);
-        $fdv = $this->getFdvFactory()->create($printer);
-        $import = new DataImport(self::getEM(), $importManager, $printer, $fdv);
-
-        $import->import(Finder::getFrom(Paths::getTestIuFormDataPath()));
-
-        return $output;
-    }
-
-    private function emptyTestSubmissionsDir(): void
-    {
-        (new Filesystem())->remove(Paths::getTestIuFormDataPath());
-    }
-
-    private function getFdvFactory(): FdvFactory
-    {
-        try {
-            $result = self::getContainer()->get(FdvFactory::class);
-        } catch (Exception $cause) {
-            throw new RuntimeException(previous: $cause);
-        }
-
-        self::assertInstanceOf(FdvFactory::class, $result);
-
-        return $result;
     }
 }
