@@ -72,7 +72,7 @@ class SubmissionsController extends FuzzrakeAbstractController
         }
 
         foreach ($update->errors as $error) {
-            $form['directives']?->addError(new FormError($error));
+            $form->get('directives')->addError(new FormError($error));
         }
 
         return $this->render('mx/submissions/submission.html.twig', [
