@@ -13,6 +13,7 @@ class FixerDifferValidator
     final public const SHOW_DIFF = 2;
 
     private readonly Differ $differ;
+    private readonly FieldsList $noneFields;
 
     public function __construct(
         private readonly Fixer $fixer,
@@ -20,11 +21,12 @@ class FixerDifferValidator
         private readonly Printer $printer,
     ) {
         $this->differ = new Differ($this->printer);
+        $this->noneFields = new FieldsList([]);
     }
 
     public function perform(ArtisanChanges $artisan, int $flags = 0, FieldsList $skipDiffFor = null): void
     {
-        $skipDiffFor ??= Fields::none();
+        $skipDiffFor ??= $this->noneFields;
 
         foreach (Fields::persisted() as $field) {
             $this->printer->setCurrentContext($artisan);

@@ -44,15 +44,6 @@ class ArtisanRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Artisan $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     /**
      * @return Artisan[]
      */

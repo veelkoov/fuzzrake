@@ -34,15 +34,6 @@ class SubmissionRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Submission $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     /**
      * @throws NonUniqueResultException
      */
