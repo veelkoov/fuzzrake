@@ -36,9 +36,17 @@ class UpdatesService
         $originalInput = new Artisan();
         $this->updateWith($originalInput, $input->submissionData, Fields::inIuForm());
 
-        /* This bases on input before fixing. Could use some improvements. */
         $matchedArtisans = $this->getArtisans($originalInput, $manager->getMatchedMakerId());
-        $originalArtisan = 1 === count($matchedArtisans) ? Arrays::single($matchedArtisans) : new Artisan();
+
+        if (1 === count($matchedArtisans)) {
+            $originalArtisan = Arrays::single($matchedArtisans);
+        } else {
+            $originalArtisan = new Artisan();
+
+            if ([] !== $matchedArtisans) {
+                $errors[] = 'Single maker must get selected.';
+            }
+        }
 
         $this->handleSpecialFieldsInInput($originalInput, $originalArtisan);
 

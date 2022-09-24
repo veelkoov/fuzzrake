@@ -212,29 +212,30 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     {
         $client = self::createClient();
 
-        $entity1 = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Some testing maker')
-        ;
-        $entity2 = (new Artisan())
-            ->setMakerId('MAKERI2')
-            ->setName('Testing maker')
-        ;
+        $entity1 = Artisan::new()->setMakerId('MAKERID')->setName('Some testing maker')->setCity('Kuopio');
+        $entity2 = Artisan::new()->setMakerId('MAKERI2')->setName('Testing maker');
 
         self::persistAndFlush($entity1, $entity2);
 
-        $submission = (new Artisan())
-            ->setMakerId('MAKERID')
-            ->setName('Testing maker')
-        ;
-
-        $id = Submissions::submit($submission);
+        $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')->setName('Testing maker')->setCity('Oulu'));
 
         $client->request('GET', "/mx/submissions/$id");
 
         self::assertSelectorTextSame('p', 'Matched multiple makers: Some testing maker (MAKERID), Testing maker (MAKERI2). Unable to continue.');
+        self::assertSelectorTextSame('.invalid-feedback', 'Single maker must get selected.');
 
-        // TODO: Consider some more safety measures?
+        // With multiple makers matched, will be displayed as a new maker
+        self::assertSelectorTextContains('p.text-body', 'Added CITY: "Oulu"');
+
+        $client->submitForm('Update', [
+            'submission[directives]' => 'match-maker-id MAKERID',
+        ]);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertSelectorNotExists('.invalid-feedback');
+
+        // With a single maker selected, display actual difference
+        self::assertSelectorTextContains('p.text-body', 'Changed CITY from "Kuopio" to "Oulu"');
     }
 
     /**
