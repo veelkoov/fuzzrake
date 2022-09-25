@@ -7,7 +7,6 @@ namespace App\IuHandling\Import;
 use App\DataDefinitions\Fields\Field;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ValueCorrection;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 
@@ -38,9 +37,9 @@ class Manager
 
     public function correctArtisan(Artisan $artisan): void
     {
-        $corrections = $this->getCorrectionsFor();
-
-        $this->applyCorrections($artisan, $corrections);
+        foreach ($this->corrections as $correction) {
+            $artisan->set($correction->field, $correction->value);
+        }
     }
 
     public function getMatchedMakerId(): ?string
@@ -68,9 +67,9 @@ class Manager
         }
     }
 
-    private function addCorrection(string $fieldName, ?string $wrongValue, string $correctedValue): void
+    private function addCorrection(string $fieldName, string $correctedValue): void
     {
-        $this->corrections[] = new ValueCorrection(Field::from($fieldName), $wrongValue, $correctedValue);
+        $this->corrections[] = new ValueCorrection(Field::from($fieldName), $correctedValue);
     }
 
     /**
@@ -89,7 +88,7 @@ class Manager
             case self::CMD_CLEAR:
                 $fieldName = $buffer->readUntilWhitespaceOrEof();
 
-                $this->addCorrection($fieldName, null, '');
+                $this->addCorrection($fieldName, '');
                 break;
 
             case self::CMD_COMMENT:
@@ -104,31 +103,11 @@ class Manager
                 $fieldName = $buffer->readUntilWhitespace();
                 $newValue = StrUtils::undoStrSafeForCli($buffer->readToken());
 
-                $this->addCorrection($fieldName, null, $newValue);
+                $this->addCorrection($fieldName, $newValue);
                 break;
 
             default:
                 throw new ManagerConfigError("Unknown command: '$command'");
         }
-    }
-
-    /**
-     * @param ValueCorrection[] $corrections
-     */
-    private function applyCorrections(Artisan $artisan, array $corrections): void
-    {
-        foreach ($corrections as $correction) {
-            $correctedValue = $correction->apply(StrUtils::asStr($artisan->get($correction->getField())));
-
-            $artisan->set($correction->getField(), $correctedValue);
-        }
-    }
-
-    /**
-     * @return ValueCorrection[]
-     */
-    private function getCorrectionsFor(): array
-    {
-        return $this->corrections;
     }
 }

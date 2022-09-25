@@ -14,7 +14,6 @@ class ArtisanChanges
 
     public function __construct(
         private readonly Artisan $subject,
-        private readonly ?string $submissionId = null,
     ) {
         $this->changed = clone $subject;
     }
@@ -27,11 +26,6 @@ class ArtisanChanges
     public function getChanged(): Artisan
     {
         return $this->changed;
-    }
-
-    public function getSubmissionId(): ?string
-    {
-        return $this->submissionId;
     }
 
     public function apply(): void
