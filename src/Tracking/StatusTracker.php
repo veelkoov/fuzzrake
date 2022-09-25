@@ -142,7 +142,7 @@ class StatusTracker
     private function logIssues(OfferStatusResult $resolvedOfferStatuses, Artisan $artisan): void
     {
         foreach ($resolvedOfferStatuses->issues as $issue) {
-            $context = merge(['artisan' => $artisan], $issue->toLogContext());
+            $context = merge($issue->toLogContext(), ['artisan' => (string) $artisan]);
 
             $this->logger->notice($issue->description, $context);
         }

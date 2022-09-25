@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class StatusTrackerFactory
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $trackingLogger,
         private readonly ArtisanRepository $artisanRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly WebpageSnapshotManager $webpageSnapshotManager,
@@ -28,7 +28,7 @@ class StatusTrackerFactory
     public function get(bool $refetch, bool $commit, SymfonyStyle $io): StatusTracker
     {
         return new StatusTracker(
-            $this->logger,
+            $this->trackingLogger,
             $this->entityManager,
             $this->artisanRepository,
             $this->offerStatusProcessor,
