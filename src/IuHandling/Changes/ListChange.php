@@ -53,11 +53,11 @@ class ListChange implements ChangeInterface
         }
 
         if (!empty($removed)) {
-            $res .= '' === $res ? 'Removed '.$name : ' and removed';
+            $res .= '' === $res ? "Removed {$name}" : ' and removed';
 
             $res .= ': "'.implode('", "', $removed).'"';
         } elseif ('' === $res) {
-            $res = $name.': no changes';
+            $res = "{$name} did not change";
         }
 
         return $res;

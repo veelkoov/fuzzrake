@@ -23,20 +23,28 @@ class SimpleChange implements ChangeInterface
     public function getDescription(): string
     {
         $name = $this->field->name;
-        $old = StrUtils::asStr($this->old);
-        $new = StrUtils::asStr($this->new);
+
+        $oldIsEmpty = null === $this->old || '' === $this->old;
+        $newIsEmpty = null === $this->new || '' === $this->new;
+
+        $old = $this->getOptionallyQuotedValue($this->old);
+        $new = $this->getOptionallyQuotedValue($this->new);
 
         if ($old === $new) {
-            return $name.': '.'no changes';
-        } else {
-            if ('' !== $new) {
-                if ('' !== $old) {
-                    return 'Changed '.$name.' from "'.$old.'" to "'.$new.'"';
-                } else {
-                    return 'Added '.$name.': "'.$new.'"';
-                }
+            return "{$name} did not change";
+        }
+
+        if ($oldIsEmpty) {
+            if ($newIsEmpty) {
+                return "Changed {$name} from {$old} to {$new}";
             } else {
-                return 'Removed '.$name.': "'.$old.'"';
+                return "Added {$name}: {$new}";
+            }
+        } else {
+            if ($newIsEmpty) {
+                return "Removed {$name}: {$old}";
+            } else {
+                return "Changed {$name} from {$old} to {$new}";
             }
         }
     }
@@ -44,5 +52,17 @@ class SimpleChange implements ChangeInterface
     public function isActuallyAChange(): bool
     {
         return $this->old !== $this->new;
+    }
+
+    /**
+     * @param psFieldValue $value
+     */
+    private function getOptionallyQuotedValue(mixed $value): string
+    {
+        if (null === $value) {
+            return 'unknown';
+        } else {
+            return '"'.StrUtils::asStr($value).'"';
+        }
     }
 }
