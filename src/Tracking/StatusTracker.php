@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\ArtisanUrl;
 use App\Entity\EventFactory;
+use App\IuHandling\Changes\Description;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tracking\OfferStatus\OfferStatus;
@@ -15,8 +15,6 @@ use App\Tracking\OfferStatus\OfferStatusProcessor;
 use App\Tracking\OfferStatus\OfferStatusResult;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ArtisanChanges;
-use App\Utils\Data\FixerDifferValidator;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -31,8 +29,6 @@ class StatusTracker
      * @var Artisan[]
      */
     private readonly array $artisans;
-    private readonly FieldsList $eventCreatingFields;
-    private readonly FieldsList $skipDiffForFields;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -40,14 +36,10 @@ class StatusTracker
         private readonly ArtisanRepository $repository,
         private readonly OfferStatusProcessor $processor,
         private readonly WebpageSnapshotManager $snapshots,
-        private readonly FixerDifferValidator $fdv,
         private readonly bool $refetch,
-        private readonly bool $commit,
         private readonly SymfonyStyle $io,
     ) {
         $this->artisans = Artisan::wrapAll($this->repository->findAll());
-        $this->eventCreatingFields = new FieldsList([Field::OPEN_FOR]);
-        $this->skipDiffForFields = new FieldsList([Field::CS_LAST_CHECK]);
     }
 
     public function performUpdates(): void
@@ -55,63 +47,24 @@ class StatusTracker
         $urls = $this->getUrlsToFetch();
         $this->snapshots->prefetchUrls($urls, $this->refetch, $this->io);
 
-        $updates = map($this->artisans, $this->getUpdatesFor(...));
+        foreach ($this->artisans as $artisan) {
+            $urls = $artisan->getUrlObjs(Field::URL_COMMISSIONS);
+            $snapshots = map($urls, fn (ArtisanUrl $url): Snapshot => $this->snapshots->get($url, false));
 
-        $this->report($updates);
+            $offerStatusResult = $this->processor->getOfferStatuses($snapshots);
+            $this->logIssues($offerStatusResult, $artisan);
 
-        if ($this->commit) {
-            $this->apply($updates);
+            $updates = $this->applyUpdatesFor($artisan, $offerStatusResult);
+            $this->logArtisanUpdates($updates, $artisan);
         }
     }
 
-    public function getUpdatesFor(Artisan $artisan): ArtisanChanges
+    private function applyUpdatesFor(Artisan $artisan, OfferStatusResult $offerStatuses): Description
     {
-        $urls = $artisan->getUrlObjs(Field::URL_COMMISSIONS);
-        $snapshots = map($urls, fn (ArtisanUrl $url): Snapshot => $this->snapshots->get($url, false));
+        $before = clone $artisan;
 
-        $everything = $this->processor->getAllOfferStatuses($snapshots);
-        $resolved = $this->processor->getResolvedOfferStatuses($everything);
-
-        $this->logIssues($resolved, $artisan);
-
-        return $this->getArtisanChangesGiven($artisan, $resolved);
-    }
-
-    /**
-     * @param ArtisanChanges[] $updates
-     */
-    private function report(array $updates): void
-    {
-        foreach ($updates as $update) {
-            $this->fdv->perform($update, FixerDifferValidator::SHOW_DIFF, $this->skipDiffForFields);
-        }
-    }
-
-    /**
-     * @param ArtisanChanges[] $updates
-     */
-    private function apply(array $updates): void
-    {
-        $this->io->progressStart(count($updates));
-
-        foreach ($updates as $update) {
-            if ($update->differs($this->eventCreatingFields)) {
-                $event = EventFactory::forStatusTracker($update);
-                $this->entityManager->persist($event);
-            }
-
-            $update->apply();
-            $this->io->progressAdvance();
-        }
-
-        $this->io->progressFinish();
-    }
-
-    private function getArtisanChangesGiven(Artisan $artisan, OfferStatusResult $offerStatuses): ArtisanChanges
-    {
-        $result = new ArtisanChanges($artisan);
-        $result->getChanged()->getVolatileData()->setCsTrackerIssue($offerStatuses->csTrackerIssue);
-        $result->getChanged()->getVolatileData()->setLastCsUpdate($offerStatuses->lastCsUpdate);
+        $artisan->setCsTrackerIssue($offerStatuses->csTrackerIssue);
+        $artisan->setCsLastCheck($offerStatuses->lastCsUpdate);
 
         foreach ([true, false] as $status) {
             $offersMatchingStatus = array_filter($offerStatuses->offerStatuses, fn (OfferStatus $item): bool => $item->status === $status);
@@ -119,13 +72,13 @@ class StatusTracker
             $newValue = StringList::pack(map($offersMatchingStatus, fn (OfferStatus $item): string => ucfirst(strtolower($item->offer))));
 
             if ($status) {
-                $result->getChanged()->setOpenFor($newValue);
+                $artisan->setOpenFor($newValue);
             } else {
-                $result->getChanged()->setClosedFor($newValue);
+                $artisan->setClosedFor($newValue);
             }
         }
 
-        return $result;
+        return new Description($before, $artisan);
     }
 
     /**
@@ -145,6 +98,17 @@ class StatusTracker
             $context = merge($issue->toLogContext(), ['artisan' => (string) $artisan]);
 
             $this->logger->notice($issue->description, $context);
+        }
+    }
+
+    private function logArtisanUpdates(Description $updates, Artisan $artisan): void
+    {
+        foreach ($updates->getChanges() as $change) {
+            $this->logger->info($change->getDescription(), ['artisan' => (string) $artisan]);
+
+            if (Field::OPEN_FOR === $change->getField()) {
+                $this->entityManager->persist(EventFactory::forStatusTracker($change, $artisan));
+            }
         }
     }
 }

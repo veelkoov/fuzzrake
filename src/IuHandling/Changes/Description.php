@@ -34,6 +34,14 @@ class Description
     }
 
     /**
+     * @return ChangeInterface[]
+     */
+    public function getChanges(): array
+    {
+        return $this->changes;
+    }
+
+    /**
      * @return array{0: Field, 1: psFieldValue, 2: psFieldValue}
      */
     private function getField(Field $field, Artisan $old, Artisan $new): array

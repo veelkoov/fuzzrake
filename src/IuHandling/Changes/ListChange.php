@@ -12,22 +12,22 @@ class ListChange implements ChangeInterface
     /**
      * @var string[]
      */
-    private readonly array $old;
+    public readonly array $old;
 
     /**
      * @var string[]
      */
-    private readonly array $new;
+    public readonly array $new;
 
     /**
      * @var string[]
      */
-    private array $added;
+    public readonly array $added;
 
     /**
      * @var string[]
      */
-    private array $removed;
+    public readonly array $removed;
 
     public function __construct(
         private readonly Field $field,
@@ -37,7 +37,7 @@ class ListChange implements ChangeInterface
         $this->old = StringList::unpack($old);
         $this->new = StringList::unpack($new);
 
-        $this->setCalculatedAddedRemoved();
+        [$this->added, $this->removed] = $this->calculateAddedRemoved($this->old, $this->new);
     }
 
     public function getDescription(): string
@@ -68,22 +68,36 @@ class ListChange implements ChangeInterface
         return !empty($this->added) || !empty($this->removed);
     }
 
-    private function setCalculatedAddedRemoved(): void
+    /**
+     * @param string[] $new
+     * @param string[] $old
+     *
+     * @return array{string[], string[]}
+     */
+    private static function calculateAddedRemoved(array $old, array $new): array
     {
-        $this->added = [];
-        $this->removed = [];
-        $common = array_intersect($this->new, $this->old);
+        $added = [];
+        $removed = [];
 
-        foreach ($this->old as $item) {
+        $common = array_intersect($new, $old);
+
+        foreach ($old as $item) {
             if (!in_array($item, $common)) {
-                $this->removed[] = $item;
+                $removed[] = $item;
             }
         }
 
-        foreach ($this->new as $item) {
+        foreach ($new as $item) {
             if (!in_array($item, $common)) {
-                $this->added[] = $item;
+                $added[] = $item;
             }
         }
+
+        return [$added, $removed];
+    }
+
+    public function getField(): Field
+    {
+        return $this->field;
     }
 }

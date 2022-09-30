@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Utils\Data\ArtisanChanges;
+use App\IuHandling\Changes\ChangeInterface;
+use App\IuHandling\Changes\ListChange;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
+use InvalidArgumentException;
 
 class EventFactory
 {
     use UtilityClass;
 
-    public static function forStatusTracker(ArtisanChanges $changes): Event
+    public static function forStatusTracker(ChangeInterface $changes, Artisan $updatedArtisan): Event
     {
-        $original = $changes->getSubject();
-        $changed = $changes->getChanged();
-
-        $noLongerOpenFor = array_diff($original->getOpenForArray(), $changed->getOpenForArray());
-        $nowOpenFor = array_diff($changed->getOpenForArray(), $original->getOpenForArray());
+        if (!($changes instanceof ListChange)) {
+            throw new InvalidArgumentException('Unable to generate the event from a non-list change');
+        }
 
         return (new Event())
             ->setType(Event::TYPE_CS_UPDATED)
-            ->setCheckedUrls($changed->getCommissionsUrls())
-            ->setArtisanName($changed->getName())
-            ->setTrackingIssues($changed->getCsTrackerIssue())
-            ->setNoLongerOpenFor(StringList::pack($noLongerOpenFor))
-            ->setNowOpenFor(StringList::pack($nowOpenFor));
+            ->setCheckedUrls($updatedArtisan->getCommissionsUrls())
+            ->setArtisanName($updatedArtisan->getName())
+            ->setTrackingIssues($updatedArtisan->getCsTrackerIssue())
+            ->setNoLongerOpenFor(StringList::pack($changes->removed))
+            ->setNowOpenFor(StringList::pack($changes->added));
     }
 }

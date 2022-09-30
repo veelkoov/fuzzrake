@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Tracking\Exception\TrackerException;
 use App\Tracking\StatusTrackerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -34,16 +33,12 @@ class StatusTrackerRunCommand extends Command
         ;
     }
 
-    /**
-     * @throws TrackerException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $task = $this->factory->get(
             $input->getOption(self::OPT_REFETCH),
-            $input->getOption(self::OPT_COMMIT),
             $io,
         );
 
