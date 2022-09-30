@@ -37,7 +37,7 @@ class ListChange implements ChangeInterface
         $this->old = StringList::unpack($old);
         $this->new = StringList::unpack($new);
 
-        [$this->added, $this->removed] = $this->calculateAddedRemoved($this->old, $this->new);
+        [$this->added, $this->removed] = self::calculateAddedRemoved($this->old, $this->new);
     }
 
     public function getDescription(): string

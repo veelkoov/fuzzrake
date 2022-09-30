@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Data;
+namespace App\Tests\Utils\DataTidying;
 
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
@@ -10,7 +10,7 @@ use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ArtisanChanges;
+use App\Utils\DataTidying\ArtisanChanges;
 
 class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
 {
