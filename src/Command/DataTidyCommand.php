@@ -8,7 +8,6 @@ use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataTidying\ArtisanChanges;
 use App\Utils\DataTidying\FdvFactory;
-use App\Utils\DataTidying\FixerDifferValidator as FDV;
 use App\Utils\DataTidying\Printer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -49,7 +48,7 @@ class DataTidyCommand extends Command
         foreach ($artisans as $artisan) {
             $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
 
-            $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF);
+            $fdv->perform($artisanFixWip);
             $artisanFixWip->apply();
         }
 

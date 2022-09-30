@@ -5,17 +5,12 @@ declare(strict_types=1);
 namespace App\Utils\DataTidying;
 
 use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\FieldsList;
 use App\Utils\Data\Fixer;
 use App\Utils\Data\Validator;
 
 class FixerDifferValidator
 {
-    final public const FIX = 1;
-    final public const SHOW_DIFF = 2;
-
     private readonly Differ $differ;
-    private readonly FieldsList $noneFields;
 
     public function __construct(
         private readonly Fixer $fixer,
@@ -23,27 +18,20 @@ class FixerDifferValidator
         private readonly Printer $printer,
     ) {
         $this->differ = new Differ($this->printer);
-        $this->noneFields = new FieldsList([]);
     }
 
-    public function perform(ArtisanChanges $artisan, int $flags = 0, FieldsList $skipDiffFor = null): void
+    public function perform(ArtisanChanges $artisan): void
     {
-        $skipDiffFor ??= $this->noneFields;
-
         foreach (Fields::persisted() as $field) {
             $this->printer->setCurrentContext($artisan);
 
-            if ($flags & self::FIX) {
-                $this->fixer->fix($artisan->getChanged(), $field);
+            $this->fixer->fix($artisan->getChanged(), $field);
 
-                if (!$this->validator->isValid($artisan->getChanged(), $field)) {
-                    $artisan->getChanged()->set($field, $artisan->getSubject()->get($field));
-                }
+            if (!$this->validator->isValid($artisan->getChanged(), $field)) {
+                $artisan->getChanged()->set($field, $artisan->getSubject()->get($field));
             }
 
-            if ($flags & self::SHOW_DIFF && !$skipDiffFor->has($field)) {
-                $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged());
-            }
+            $this->differ->showDiff($field, $artisan->getSubject(), $artisan->getChanged());
         }
     }
 }
