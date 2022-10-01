@@ -8,12 +8,10 @@ use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @see AbstractAccessor
- * @see ArtisanChanges
  * @see UrlAccessor
  */
 class UrlAccessorTest extends TestCase

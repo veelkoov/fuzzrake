@@ -7,17 +7,16 @@ namespace App\Tests\Tracking;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
+use App\Tests\TestUtils\Cases\TestCase;
 use App\Tracking\OfferStatus\OfferStatus;
 use App\Tracking\OfferStatus\OfferStatusProcessor;
 use App\Tracking\StatusTracker;
 use App\Tracking\TextParser;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\FixerDifferValidator;
 use App\Utils\DateTime\UtcClock;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,91 +25,90 @@ class StatusTrackerTest extends TestCase
 {
     public function testNoCommissionsUrlsResetsEverything(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(true) // We had error marker before
             ->addCommission(new ArtisanCommissionsStatus()) // There was some status
             ->setCommissionsUrls(''); // Artisan removed tracking
-        $inputArtisan->getVolatileData()
+        $artisan->getVolatileData()
             ->setLastCsUpdate(new DateTimeImmutable('1 day ago')); // We had some check previously
 
-        $testSubject = $this->getTestSubject($inputArtisan, []);
+        $testSubject = $this->getTestSubject($artisan, []);
+        $testSubject->performUpdates();
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
-
-        self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error marker is removed
-        self::assertOfferStatuses([], $changedArtisan); // Offers got cleared
-        self::assertNull($changedArtisan->getCsLastCheck()); // Last CS check reset to null
+        self::assertFalse($artisan->getCsTrackerIssue()); // The error marker is removed
+        self::assertOfferStatuses([], $artisan); // Offers got cleared
+        self::assertNull($artisan->getCsLastCheck()); // Last CS check reset to null
     }
 
     public function testCheckSetsLastCsTimestamp(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCommissionsUrls('one-url'); // There is a single URL to check
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [], // We get empty analysis result (should not matter for the timestamp)
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertNotNull($changedArtisan->getCsLastCheck()); // The last CS timestamp got set
-        self::assertInstanceOf(DateTimeImmutable::class, $changedArtisan->getCsLastCheck());
+        self::assertNotNull($artisan->getCsLastCheck()); // The last CS timestamp got set
+        self::assertInstanceOf(DateTimeImmutable::class, $artisan->getCsLastCheck());
     }
 
     public function testSuccessfulCheckResetsErrorState(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(true) // There was an error marker
             ->setCommissionsUrls('one-url'); // There is a single URL to check
 
         $os1 = new OfferStatus('Some-offer', true);
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [$os1], // We will find one offer status
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error maker got cleared
-        self::assertOfferStatuses([$os1], $changedArtisan); // The parsed status is available
+        self::assertFalse($artisan->getCsTrackerIssue()); // The error maker got cleared
+        self::assertOfferStatuses([$os1], $artisan); // The parsed status is available
     }
 
     public function testEmptyResultFromSingleUrlSetsErrorState(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(false) // There was no error marker before
             ->setCommissionsUrls('one-url'); // We check a single URL
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [], // We get empty analysis result
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertTrue($changedArtisan->getCsTrackerIssue()); // There is an error marker now
-        self::assertEmpty($changedArtisan->getCommissions()); // Result expected empty
+        self::assertTrue($artisan->getCsTrackerIssue()); // There is an error marker now
+        self::assertEmpty($artisan->getCommissions()); // Result expected empty
     }
 
     public function testSingleFailedCommissionsUrlSetsErrorState(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(false) // There was no error marker before
             ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [new OfferStatus('Some-offer', true)], // First URL brought some results
             [], // But the second one returned empty set
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertTrue($changedArtisan->getCsTrackerIssue()); // There is an error marker now
-        self::assertCount(1, $changedArtisan->getCommissions()); // The status parsed in the first URL is available
+        self::assertTrue($artisan->getCsTrackerIssue()); // There is an error marker now
+        self::assertCount(1, $artisan->getCommissions()); // The status parsed in the first URL is available
     }
 
     public function testResultsFromTwoUrlsAreProperlyGathered(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(true) // There was an error marker before
             ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
@@ -118,19 +116,19 @@ class StatusTrackerTest extends TestCase
         $os2 = new OfferStatus('Another-offer', true);
         $os3 = new OfferStatus('Next-offer', false);
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [$os1], [$os2, $os3], // We get results from both URLs
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertFalse($changedArtisan->getCsTrackerIssue()); // The error maker is gone
-        self::assertOfferStatuses([$os1, $os2, $os3], $changedArtisan); // All statuses parsed are available
+        self::assertFalse($artisan->getCsTrackerIssue()); // The error maker is gone
+        self::assertOfferStatuses([$os1, $os2, $os3], $artisan); // All statuses parsed are available
     }
 
     public function testContradictingOfferStatusesRemoveTheOfferAndSetsErrorState(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(false) // There was no error marker before
             ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
@@ -138,19 +136,19 @@ class StatusTrackerTest extends TestCase
         $os2 = new OfferStatus('Another-offer', true);
         $os3 = new OfferStatus('Some-offer', false); // Different than $os1
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [$os1], [$os2, $os3], // We get results from both URLs
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertTrue($changedArtisan->getCsTrackerIssue()); // The error maker is now set
-        self::assertOfferStatuses([$os2], $changedArtisan); // Only the not-conflicting status is available
+        self::assertTrue($artisan->getCsTrackerIssue()); // The error maker is now set
+        self::assertOfferStatuses([$os2], $artisan); // Only the not-conflicting status is available
     }
 
     public function testDuplicatedOfferStatusesKeepTheOfferButSetsErrorState(): void
     {
-        $inputArtisan = (new Artisan())
+        $artisan = Artisan::new()
             ->setCsTrackerIssue(false) // There was no error marker before
             ->setCommissionsUrls("one-url\nsecond-url"); // There are two tracked URLs
 
@@ -158,14 +156,14 @@ class StatusTrackerTest extends TestCase
         $os2 = new OfferStatus('Another-offer', false);
         $os3 = new OfferStatus('Some-offer', true); // Same as $os1
 
-        $testSubject = $this->getTestSubject($inputArtisan, [
+        $testSubject = $this->getTestSubject($artisan, [
             [$os1], [$os2, $os3], // We get results from both URLs
         ]);
 
-        $changedArtisan = $testSubject->getUpdatesFor($inputArtisan)->getChanged();
+        $testSubject->performUpdates();
 
-        self::assertTrue($changedArtisan->getCsTrackerIssue()); // The error maker is now set
-        self::assertOfferStatuses([$os1, $os2], $changedArtisan); // Only the not-conflicting status is available
+        self::assertTrue($artisan->getCsTrackerIssue()); // The error maker is now set
+        self::assertOfferStatuses([$os1, $os2], $artisan); // Only the not-conflicting status is available
     }
 
     /**
@@ -202,9 +200,8 @@ class StatusTrackerTest extends TestCase
 
         $processor = new OfferStatusProcessor($parserMock);
         $ioMock = $this->createMock(SymfonyStyle::class);
-        $fdvMock = $this->createMock(FixerDifferValidator::class);
 
-        return new StatusTracker($loggerMock, $emMock, $artisanRepoMock, $processor, $snapshotsMock, $fdvMock, false, false, $ioMock);
+        return new StatusTracker($loggerMock, $emMock, $artisanRepoMock, $processor, $snapshotsMock, false, $ioMock);
     }
 
     /**

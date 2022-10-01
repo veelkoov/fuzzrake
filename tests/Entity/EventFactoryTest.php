@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\DataDefinitions\Fields\Field;
 use App\Entity\EventFactory;
+use App\IuHandling\Changes\ChangeInterface;
+use App\IuHandling\Changes\ListChange;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ArtisanChanges;
 use PHPUnit\Framework\TestCase;
 
 class EventFactoryTest extends TestCase
@@ -18,10 +20,10 @@ class EventFactoryTest extends TestCase
      * @param string[] $expectedNowOpenFor
      * @param string[] $expectedCheckedUrls
      */
-    public function testForCsTracker(ArtisanChanges $inputArtisanChanges, bool $expectedHadTrackerIssues,
-        string $expectedArtisanName, array $expectedNoLongerOpenFor, array $expectedNowOpenFor, array $expectedCheckedUrls): void
+    public function testForCsTracker(ChangeInterface $inputArtisanChanges, Artisan $updatedArtisan, bool $expectedHadTrackerIssues,
+                                     string $expectedArtisanName, array $expectedNoLongerOpenFor, array $expectedNowOpenFor, array $expectedCheckedUrls): void
     {
-        $result = EventFactory::forStatusTracker($inputArtisanChanges);
+        $result = EventFactory::forStatusTracker($inputArtisanChanges, $updatedArtisan);
 
         self::assertEquals('CS_UPDATED', $result->getType());
         self::assertEquals($expectedHadTrackerIssues, $result->getTrackingIssues());
@@ -31,48 +33,39 @@ class EventFactoryTest extends TestCase
         self::assertEquals($expectedCheckedUrls, $result->getCheckedUrlsArray());
     }
 
-    public function fromArtisanChangesDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return array<array{ChangeInterface, Artisan, bool, string, string[], string[], string[]}>
+     */
+    public function fromArtisanChangesDataProvider(): array
     {
-        $artisan1 = (new Artisan())
+        $artisan1 = Artisan::new()
             ->setName('Artisan name 1')
             ->setOpenFor("Commissions\nPre-mades")
             ->setCsTrackerIssue(false)
             ->setCommissionsUrls("abc1\ndef1")
         ;
-        $changes1 = new ArtisanChanges($artisan1);
-        $changes1->getChanged()
-            ->setOpenFor("Pre-mades\nArtistic liberty")
-            ->setCsTrackerIssue(true)
-        ;
+        $changes1 = new ListChange(Field::OPEN_FOR, $artisan1->getOpenFor(), "Pre-mades\nArtistic liberty");
 
-        $artisan2 = (new Artisan())
+        $artisan2 = Artisan::new()
             ->setName('Artisan name 2')
             ->setOpenFor('')
             ->setCsTrackerIssue(true)
             ->setCommissionsUrls('def2')
         ;
-        $changes2 = new ArtisanChanges($artisan2);
-        $changes2->getChanged()
-            ->setOpenFor('New stuff')
-            ->setCsTrackerIssue(false)
-        ;
+        $changes2 = new ListChange(Field::OPEN_FOR, $artisan2->getOpenFor(), 'New stuff');
 
-        $artisan3 = (new Artisan())
+        $artisan3 = Artisan::new()
             ->setName('Artisan name 3')
             ->setOpenFor('Old stuff')
             ->setCsTrackerIssue(false)
             ->setCommissionsUrls("abc3\ndef3\nghi3")
         ;
-        $changes3 = new ArtisanChanges($artisan3);
-        $changes3->getChanged()
-            ->setOpenFor('')
-            ->setCsTrackerIssue(false)
-        ;
+        $changes3 = new ListChange(Field::OPEN_FOR, $artisan3->getOpenFor(), '');
 
         return [
-            [$changes1, true, 'Artisan name 1', ['Commissions'], ['Artistic liberty'], ['abc1', 'def1']],
-            [$changes2, false, 'Artisan name 2', [], ['New stuff'], ['def2']],
-            [$changes3, false, 'Artisan name 3', ['Old stuff'], [], ['abc3', 'def3', 'ghi3']],
+            [$changes1, $artisan1, false, 'Artisan name 1', ['Commissions'], ['Artistic liberty'], ['abc1', 'def1']],
+            [$changes2, $artisan2, true, 'Artisan name 2', [], ['New stuff'], ['def2']],
+            [$changes3, $artisan3, false, 'Artisan name 3', ['Old stuff'], [], ['abc3', 'def3', 'ghi3']],
         ];
     }
 }

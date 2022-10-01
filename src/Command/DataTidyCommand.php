@@ -6,10 +6,9 @@ namespace App\Command;
 
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\ArtisanChanges;
-use App\Utils\Data\FdvFactory;
-use App\Utils\Data\FixerDifferValidator as FDV;
-use App\Utils\Data\Printer;
+use App\Utils\DataTidying\ArtisanChanges;
+use App\Utils\DataTidying\FdvFactory;
+use App\Utils\DataTidying\Printer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -49,7 +48,7 @@ class DataTidyCommand extends Command
         foreach ($artisans as $artisan) {
             $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
 
-            $fdv->perform($artisanFixWip, FDV::FIX | FDV::SHOW_DIFF);
+            $fdv->perform($artisanFixWip);
             $artisanFixWip->apply();
         }
 

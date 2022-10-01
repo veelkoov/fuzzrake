@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Utils\DataTidying;
 
-use App\Utils\Console\Formatter;
 use App\Utils\StrUtils;
 use Symfony\Component\Console\Style\SymfonyStyle;
 

@@ -65,4 +65,9 @@ class SimpleChange implements ChangeInterface
             return '"'.StrUtils::asStr($value).'"';
         }
     }
+
+    public function getField(): Field
+    {
+        return $this->field;
+    }
 }

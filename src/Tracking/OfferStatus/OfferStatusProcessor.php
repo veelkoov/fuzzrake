@@ -20,7 +20,17 @@ class OfferStatusProcessor
     /**
      * @param Snapshot[] $snapshots
      */
-    public function getAllOfferStatuses(array $snapshots): OfferStatusResult
+    public function getOfferStatuses(array $snapshots): OfferStatusResult
+    {
+        $intermediate = $this->getAllOfferStatuses($snapshots);
+
+        return $this->getResolvedOfferStatuses($intermediate);
+    }
+
+    /**
+     * @param Snapshot[] $snapshots
+     */
+    private function getAllOfferStatuses(array $snapshots): OfferStatusResult
     {
         $statuses = [];
         $issues = [];
@@ -49,7 +59,7 @@ class OfferStatusProcessor
         return new OfferStatusResult($statuses, $lastCsUpdate, $csTrackerIssue, $issues);
     }
 
-    public function getResolvedOfferStatuses(OfferStatusResult $input): OfferStatusResult
+    private function getResolvedOfferStatuses(OfferStatusResult $input): OfferStatusResult
     {
         $statuses = [];
         $issues = $input->issues;

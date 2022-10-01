@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Utils\DataTidying;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Console\Formatter;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 

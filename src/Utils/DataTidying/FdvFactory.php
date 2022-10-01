@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Utils\DataTidying;
+
+use App\Utils\Data\Fixer;
+use App\Utils\Data\Validator;
 
 class FdvFactory
 {
