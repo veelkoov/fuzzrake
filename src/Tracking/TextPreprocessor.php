@@ -101,10 +101,6 @@ class TextPreprocessor
             $crawler = new Crawler($inputText);
             $filtered = $crawler->filterXPath('//main//nav/preceding-sibling::div');
 
-            if (0 === $filtered->count()) { // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/153
-                $filtered = $crawler->filter('div.profileheadercard');
-            }
-
             if (1 !== $filtered->count()) {
                 throw new TrackerException('Failed to filter Twitter profile, nodes count: '.$filtered->count());
             }

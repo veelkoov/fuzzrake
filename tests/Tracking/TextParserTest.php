@@ -20,6 +20,8 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 
 use function Psl\File\read;
+use function Psl\Str\Byte\strip_suffix;
+use function Psl\Str\strip_prefix;
 use function Psl\Vec\map;
 
 class TextParserTest extends TestCase
@@ -42,7 +44,7 @@ class TextParserTest extends TestCase
     }
 
     /**
-     * @param array<array{0: string, 1: bool}> $expectedResult
+     * @param array<array{string, bool}> $expectedResult
      *
      * @dataProvider analyseStatusDataProvider
      *
@@ -64,17 +66,24 @@ class TextParserTest extends TestCase
     }
 
     /**
+     * @return array<string, array{string, Snapshot, array<array{string, bool}>}>
+     *
      * @throws Exception
      */
-    public function analyseStatusDataProvider(): array // @phpstan-ignore-line
+    public function analyseStatusDataProvider(): iterable
     {
         $paths = array_filter(glob(Paths::getTestDataPath('/statuses/*/*/expected.json')) ?: []);
+        $prefix = Paths::getTestDataPath('/statuses/');
 
-        return array_map(function ($filepath) {
-            $expectedResult = Json::decode(trim(read($filepath)));
-            $snapshot = Jar::load(dirname($filepath));
+        foreach ($paths as $path) {
+            /**
+             * @var array<array{0: string, 1: bool}> $expectedResult
+             */
+            $expectedResult = Json::decode(read($path));
+            $snapshot = Jar::load(dirname($path));
+            $case = strip_prefix(strip_suffix($path, '/expected.json'), $prefix);
 
-            return [basename(dirname($filepath)), $snapshot, $expectedResult];
-        }, $paths);
+            yield $case => [basename(dirname($path)), $snapshot, $expectedResult];
+        }
     }
 }
