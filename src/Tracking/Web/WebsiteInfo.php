@@ -20,11 +20,9 @@ class WebsiteInfo
     private const FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING = '<title>System Error</title>';
 
     private const TRELLO_BOARD_URL_REGEXP = '^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/';
-    private const WIXSITE_CHILDREN_REGEXP = '<link[^>]* href="(?<dataUrl>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>'; // TODO: Re-check this https://github.com/veelkoov/fuzzrake/issues/155
     private const INSTAGRAM_URL_REGEXP = '^https?://(?:www\.)?instagram\.com/(?<username>[^/]+)/?$';
 
     private readonly Detector $detector;
-    private readonly Pattern $wixsiteChildrenPattern;
     private readonly Pattern $trelloBoardUrlPattern;
     private readonly Pattern $instagramUrlPattern;
 
@@ -32,7 +30,6 @@ class WebsiteInfo
     {
         $this->detector = new Detector();
 
-        $this->wixsiteChildrenPattern = pattern(WebsiteInfo::WIXSITE_CHILDREN_REGEXP, 'si');
         $this->trelloBoardUrlPattern = pattern(self::TRELLO_BOARD_URL_REGEXP);
         $this->instagramUrlPattern = pattern(WebsiteInfo::INSTAGRAM_URL_REGEXP);
     }
@@ -68,10 +65,8 @@ class WebsiteInfo
      */
     private function getWixsiteDependencyUrls(Snapshot $webpageSnapshot): array
     {
-        return $this->wixsiteChildrenPattern
-            ->match($webpageSnapshot->contents)
-            ->group('dataUrl')
-            ->all();
+        // There used to be links '<link[^>]* href="(?<dataUrl>https://static.wixstatic.com/sites/[a-z0-9_]+\.json\.z\?v=\d+)"[^>]*>' containing data, not all's in HTML.
+        return [];
     }
 
     /**
