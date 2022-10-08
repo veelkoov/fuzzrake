@@ -44,7 +44,8 @@ parameters:
       - 'when WE_ARE DOING_STUFF_FALSE_POSITVES'
       - 'when will you start taking new C___S'
       - 'when do you open for commissions/quotes'
-      - 'when (my |our )(COMMISSIONS|QUOTES) (are )?open'
+      - '(when|if) (my |our |the )(COMMISSIONS|QUOTES) (are )?open'
+      - 'after the commissions close'
       - "even though you're closed for C___S"
       - 'although (fursuit )?C___S are closed'
       - '(quotes|C___S) open (in |(in )?MONTHS)'
@@ -53,7 +54,6 @@ parameters:
       - '[^a-z]art(work)? C___S( are:?| ?:)' # "art commissions"
       - 'OFFER status: STATUS ?</h1>\s*<h1[^>]*> ?MONTHS'
       - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
-
 
     offer_statuses:
       - "(?P<open>you can still submit a QUOTES form if you're interested)"
@@ -69,7 +69,8 @@ parameters:
       - '<h2[^>]*> ?OFFER \| STATUS ?</h2>'
       - '<h2[^>]*> ?OFFER(( status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS' # No closing </h2> for any comments
       - '<h4[^>]*> ?OFFER(( status:?| ?:))? ?</h4>\s*<h4[^>]*> ?STATUS' # No closing </h4> for any comments
-      - '<p[^>]*> ?OFFER(( status:?| ?:))? ?</p>\s*<p[^>]*> ?NOW STATUS' # No closing </p> for any comments
+      - '<p[^>]*> ?OFFER(( status:?| ?:))? ?</p>\s*<p[^>]*> ?(NOW )?STATUS' # No closing </p> for any comments
+      - '<h2[^>]*> ?OFFER(( status:?| ?:))? ?</h2>\s*<p[^>]*> ?(NOW )?STATUS' # No closing </p> for any comments
       - 'OFFER(( status:?| ?:))?\s*</h1>\s*</div>\s*<div[^>]*>\s*<p[^>]*>\s*STATUS'
 
     placeholders:
