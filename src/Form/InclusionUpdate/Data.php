@@ -12,6 +12,7 @@ use App\DataDefinitions\ProductionModels;
 use App\DataDefinitions\Styles;
 use App\Form\AgesTransformer;
 use App\Form\BooleanTransformer;
+use App\Form\RouterDependentTrait;
 use App\Form\SinceTransformer;
 use App\Form\StringArrayTransformer;
 use App\ValueObject\Routing\RouteName;
@@ -23,11 +24,11 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 class Data extends BaseForm
 {
-    final public const OPT_ROUTER = 'router';
+    use RouterDependentTrait;
+
     final public const OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
     final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
 
@@ -35,11 +36,7 @@ class Data extends BaseForm
     {
         parent::buildForm($builder, $options);
 
-        /**
-         * @var RouterInterface $router
-         */
-        $router = $options[self::OPT_ROUTER];
-
+        $router = self::getRouter($options);
         $otherStylesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_styles']));
         $otherOrderTypesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_order_types']));
         $otherFeaturesPath = htmlspecialchars($router->generate(RouteName::STATISTICS, ['_fragment' => 'other_features']));
@@ -405,12 +402,9 @@ class Data extends BaseForm
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
+        self::configureRouterOption($resolver);
 
         $resolver
-            ->define(self::OPT_ROUTER)
-            ->allowedTypes(RouterInterface::class)
-            ->required()
-
             ->define(self::OPT_PHOTOS_COPYRIGHT_OK)
             ->allowedTypes('boolean')
             ->required()
