@@ -26,7 +26,7 @@ trait RouterDependentTrait
         $result = $options['router'] ?? null;
 
         if (!$result instanceof RouterInterface) {
-            throw new InvalidArgumentException('Expected a router instance provided in options');
+            throw new InvalidArgumentException('Expected a router instance provided in options'); // @codeCoverageIgnore
         }
 
         return $result;

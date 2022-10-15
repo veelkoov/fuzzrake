@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Feedback;
+namespace App\ValueObject;
 
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
