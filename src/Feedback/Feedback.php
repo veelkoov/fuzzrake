@@ -11,14 +11,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class Feedback
 {
     #[IsTrue(message: 'This is required.')]
-    public bool $noContactBack;
+    public bool $noContactBack = false;
 
     #[NotBlank(message: 'This is required.')]
-    public string $subject;
+    public string $subject = '';
 
-    #[Length(min: 1, max: 100)]
-    public string $maker;
+    #[Length(max: 100)]
+    public string $maker = '';
 
     #[NotBlank(message: 'This is required.')]
-    public string $details;
+    public string $details = '';
 }

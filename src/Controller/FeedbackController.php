@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Feedback\Feedback;
 use App\Form\FeedbackType;
+use App\Service\Captcha;
 use App\Utils\Notifications\MessengerInterface;
 use App\Utils\Notifications\Notification;
 use App\ValueObject\Routing\RouteName;
@@ -20,6 +21,7 @@ class FeedbackController extends AbstractController
     public function __construct(
         private readonly RouterInterface $router,
         private readonly MessengerInterface $messenger,
+        private readonly Captcha $captcha,
     ) {
     }
 
@@ -36,14 +38,21 @@ class FeedbackController extends AbstractController
             'router' => $this->router,
         ]);
 
+        $big_error_message = '';
+
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
-            if ($this->sendFeedback($feedback)) {
+            if (!$this->captcha->isValid($request, 'feedback_form_captcha')) {
+                $big_error_message = "Captcha failed. Please retry submitting. If this doesn't help, try another browser or other network connection.";
+            } elseif (!$this->sendFeedback($feedback)) {
+                $big_error_message = 'Could not sent the message due to server error. Sorry for the inconvenience!';
+            } else {
                 return $this->redirectToRoute(RouteName::FEEDBACK_SENT);
             }
         }
 
         return $this->renderForm('feedback/feedback.html.twig', [
-            'feedback_form' => $form,
+            'form'              => $form,
+            'big_error_message' => $big_error_message,
         ]);
     }
 

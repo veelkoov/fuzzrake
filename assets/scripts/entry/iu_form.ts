@@ -5,6 +5,7 @@ import {ADULTS, NO, NO_CONTACT_ALLOWED} from '../consts';
 import {toggle} from '../jQueryUtils';
 
 import '../../styles/iu_form.scss';
+import Captcha from '../class/Captcha';
 
 jQuery(() => {
     setup_start_page();
@@ -13,13 +14,7 @@ jQuery(() => {
 });
 
 function setup_start_page(): void {
-    window['iuFormRecaptchaValidationCallback'] = function(token: string): void {
-        try {
-            jQuery('#iu_form_recaptcha_token').val(token).parents('form').trigger('submit');
-        } catch (e) {
-            alert('ERROR! Sending form failed. ' + e);
-        }
-    }
+    Captcha.setupValidationCallback();
 
     const confirmAddingANewOne = new Radio('iu_form[confirmAddingANewOne]', refresh_page);
     const ensureStudioIsNotThereAlready = new DynamicRadio('iu_form[ensureStudioIsNotThereAlready]', '#ensureStudioIsNotThereAlready', refresh_page, false);

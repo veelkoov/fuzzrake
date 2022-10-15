@@ -23,7 +23,7 @@
         </a>
     </p>
 
-    {% include 'iu_form/shared_parts/big_scary_error.html.twig' %}
+    {% include 'shared_parts/big_scary_error.html.twig' %}
 
     {{ form_start(form) }}
 
@@ -80,11 +80,11 @@
     <div id="rulesAndContinueButton">
         {% include 'shared_parts/rules.html.twig' %}
 
-        <input type="hidden" name="token" id="iu_form_recaptcha_token" value="" />
+        <input type="hidden" name="token" id="form_recaptcha_token" value="" />
 
         <button type="submit" class="btn btn-primary btn-lg g-recaptcha"
                 data-sitekey="{{ google_recaptcha_site_key }}"
-                data-callback="iuFormRecaptchaValidationCallback"
+                data-callback="formRecaptchaValidationCallback"
                 data-action="iu_form_captcha">Agree and continue</button>
     </div>
 
