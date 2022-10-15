@@ -20,13 +20,13 @@
 
     {{ form_start(form) }}
 
-    {{ form_row(form.noContactBack) }}
-    {{ form_row(form.maker) }}
-
     {{ form_row(form.subject) }}
     <div id="feedback-subject-notice" class="alert alert-danger" role="alert"></div>
 
     <div id="feedback-submit-option">
+        {{ form_row(form.noContactBack) }}
+        {{ form_row(form.maker) }}
+
         <p><strong>NOTE:</strong> English only. <small class="text-muted">Any feedback sent in a language other than English will be simply ignored without any evaluation.</small></p>
         {{ form_row(form.details) }}
         {{ form_rest(form) }}
