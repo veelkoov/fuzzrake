@@ -12,9 +12,12 @@ use Symfony\Component\Validator\Constraints\NotEqualTo;
 final class Feedback
 {
     private const EXPLANATION_OPTIONS_ERROR_MESSAGE = 'The selected option serves only for explanation, you cannot use it.';
+    private const HELP_ME_GET_A_FURSUIT = 'Help me get a fursuit';
     private const COMMISSIONS_INFO_INACCURATE = "Maker's commissions info (open/closed) is inaccurate";
     private const OTHER_INFO_OUTDATED = "Other maker's information is (partially) outdated";
+
     final public const OPTIONS = [
+        self::HELP_ME_GET_A_FURSUIT,
         self::COMMISSIONS_INFO_INACCURATE,
         "Maker's website/social account is no longer working",
         self::OTHER_INFO_OUTDATED,
@@ -28,6 +31,7 @@ final class Feedback
     public bool $noContactBack = false;
 
     #[NotBlank(message: 'This is required.')]
+    #[NotEqualTo(self::HELP_ME_GET_A_FURSUIT, message: self::EXPLANATION_OPTIONS_ERROR_MESSAGE)]
     #[NotEqualTo(self::COMMISSIONS_INFO_INACCURATE, message: self::EXPLANATION_OPTIONS_ERROR_MESSAGE)]
     #[NotEqualTo(self::OTHER_INFO_OUTDATED, message: self::EXPLANATION_OPTIONS_ERROR_MESSAGE)]
     public string $subject = '';

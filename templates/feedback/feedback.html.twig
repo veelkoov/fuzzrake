@@ -16,8 +16,6 @@
 {% block body %}
     <h1>Feedback form</h1>
 
-    <p><strong>NOTE:</strong> English only. <small class="text-muted">Any feedback sent in a language other than English will be simply ignored without any evaluation.</small></p>
-
     {% include 'shared_parts/big_scary_error.html.twig' %}
 
     {{ form_start(form) }}
@@ -29,6 +27,7 @@
     <div id="feedback-subject-notice" class="alert alert-danger" role="alert"></div>
 
     <div id="feedback-submit-option">
+        <p><strong>NOTE:</strong> English only. <small class="text-muted">Any feedback sent in a language other than English will be simply ignored without any evaluation.</small></p>
         {{ form_row(form.details) }}
         {{ form_rest(form) }}
 
