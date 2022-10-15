@@ -30,7 +30,7 @@ class FeedbackController extends AbstractController
     {
         $feedback = new Feedback();
 
-        if (null !== $maker = $request->query->get('maker')) {
+        if (null !== $maker = $request->query->get('maker')) { // grep-maker-query-parameter
             $feedback->maker = $maker;
         }
 

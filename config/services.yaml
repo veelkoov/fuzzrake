@@ -7,9 +7,6 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    report_form_url:           'https://docs.google.com/forms/d/e/1FAIpQLSd72ex2FgHbJvkPRiADON0oCJx75JzQQCOLEQIGaSt3DSy2-Q/viewform' # Outdated info report form
-    feedback_form_url:         'https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform' # Feature request/bug report/feedback form
-    filter_suggest_form_url:   "https://docs.google.com/forms/d/e/1FAIpQLSeFujrw46QIgGz7J6t0ffEJ_Cq3NCP7euqwYq5AN0OBOki3yQ/viewform?usp=pp_url&entry.1805323921=I'd+like+to+be+able+to+filter+by:+___PLEASE___SPECIFY___HERE___" # The form above prefilled for suggesting a new filter
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 services:
