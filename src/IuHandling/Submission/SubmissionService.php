@@ -10,7 +10,7 @@ use App\IuHandling\Storage\S3StorageService;
 use App\IuHandling\Submission\NotificationsGenerator as Generator;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Json;
-use App\Utils\Notifications\SnsService;
+use App\Utils\Notifications\MessengerInterface;
 use Exception;
 use JsonException;
 use Psr\Log\LoggerInterface;
@@ -21,7 +21,7 @@ class SubmissionService
         private readonly LoggerInterface $logger,
         private readonly LocalStorageService $local,
         private readonly S3StorageService $s3,
-        private readonly SnsService $sns,
+        private readonly MessengerInterface $messenger,
     ) {
     }
 
@@ -35,7 +35,7 @@ class SubmissionService
                 $this->local->removeLocalCopy($relativeFilePath);
             }
 
-            $this->sns->send(Generator::getMessage($submission, $s3SendingOk)); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
+            $this->messenger->send(Generator::getMessage($submission, $s3SendingOk)); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
 
             return true;
         } catch (Exception $exception) {

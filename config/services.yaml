@@ -24,7 +24,6 @@ services:
             $languages:                       '%languages%'
             $lists:                           '%lists%'
             $noPayPlans:                      '%noPayPlans%'
-            $notificationSnsTopicArn:         '%env(resolve:NOTIFICATIONS_TOPIC_ARN)%'
             $paymentMethods:                  '%paymentMethods%'
             $projectDir:                      '%kernel.project_dir%'
             $speciesDefinitions:              '%species_definitions%'

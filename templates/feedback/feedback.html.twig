@@ -1,0 +1,21 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}feedback form{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('feedback') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('feedback') }}
+{% endblock %}
+
+{% block body %}
+    <h1>Feedback form</h1>
+
+    <p><strong>NOTE:</strong> English only. <small class="text-muted">Any feedback sent in a language other than English will be simply ignored with no evaluation at all.</small></p>
+
+    {{ form(feedback_form) }}
+{% endblock %}
