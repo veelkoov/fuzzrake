@@ -22,14 +22,23 @@
 
     {{ form_start(form) }}
 
-    {{ form_rest(form) }}
+    {{ form_row(form.noContactBack) }}
+    {{ form_row(form.maker) }}
 
-    <input type="hidden" name="token" id="form_recaptcha_token" value="" />
+    {{ form_row(form.subject) }}
+    <div id="feedback-subject-notice" class="alert alert-danger" role="alert"></div>
 
-    <button type="submit" class="btn btn-primary btn-lg g-recaptcha"
-            data-sitekey="{{ google_recaptcha_site_key }}"
-            data-callback="formRecaptchaValidationCallback"
-            data-action="feedback_form_captcha">Send</button>
+    <div id="feedback-submit-option">
+        {{ form_row(form.details) }}
+        {{ form_rest(form) }}
+
+        <input type="hidden" name="token" id="form_recaptcha_token" value="" />
+
+        <button type="submit" class="btn btn-primary btn-lg g-recaptcha"
+                data-sitekey="{{ google_recaptcha_site_key }}"
+                data-callback="formRecaptchaValidationCallback"
+                data-action="feedback_form_captcha">Send</button>
+    </div>
 
     {{ form_end(form) }}
 {% endblock %}

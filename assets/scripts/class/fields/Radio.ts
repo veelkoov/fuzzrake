@@ -5,7 +5,12 @@ export default class Radio implements RadioInterface {
         private fieldName: string,
         private changeCallback: () => void,
     ) {
-        this.$elements = jQuery(Radio.getSelector(fieldName));
+        const selector = Radio.getSelector(fieldName);
+        this.$elements = jQuery(selector);
+
+        if (0 === this.$elements.length) {
+            console.error(`${selector} didn't match any radio field`);
+        }
 
         this.$elements.on('change', () => changeCallback());
     }

@@ -35,21 +35,14 @@ class FeedbackType extends AbstractType
                 'empty_data' => '',
             ])
             ->add('subject', ChoiceType::class, [
-                'label'   => 'What would you like to give feedback about?',
-                'choices' => [
-                    "Maker's commissions info (open/closed) is inaccurate",
-                    "Maker's website/social account is no longer working",
-                    "Other maker's information is (partially) outdated",
-                    'Other information on this website needs attention (not related to a particular maker)',
-                    'Suggest an improvement to this website',
-                    'Report a technical problem/bug with this website',
-                    'Other',
-                ],
+                'label'        => 'What would you like to give feedback about?',
+                'choices'      => Feedback::OPTIONS,
                 'choice_label' => fn ($item) => $item,
                 'expanded'     => true,
             ])
             ->add('details', TextareaType::class, [
-                'label' => 'Please provide any necessary details',
+                'label'      => 'Please provide any necessary details',
+                'empty_data' => '',
             ])
         ;
     }
