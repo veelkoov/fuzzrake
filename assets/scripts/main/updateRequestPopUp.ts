@@ -12,7 +12,6 @@ function updateRequestModalShowCallback(event: any): void {
         'artisanName': artisan.name,
         'iuFormUrl': DataBridge.getIuFormRedirectUrl().replace('MAKER_ID', artisan.getLastMakerId()),
         'feedbackFormUrl': DataBridge.getFeedbackFormUrl() + '?maker=' + encodeURIComponent(artisan.getLastMakerId()), // grep-maker-query-parameter
-        'infoPath': DataBridge.getInfoUrl(),
     }, HandlebarsHelpers.tplCfg()));
 }
 

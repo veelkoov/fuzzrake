@@ -11,10 +11,6 @@ export default abstract class DataBridge {
         return DATA_BRIDGE.trackingUrl;
     }
 
-    public static getInfoUrl(): string {
-        return DATA_BRIDGE.infoUrl;
-    }
-
     public static getIuFormRedirectUrl(): string {
         return DATA_BRIDGE.iuFormRedirectUrl;
     }

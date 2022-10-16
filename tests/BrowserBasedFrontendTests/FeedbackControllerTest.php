@@ -50,7 +50,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         self::openMakerCardByClickingOnTheirNameInTheTable($client, $artisan->getName());
         self::openDataOutdatedPopup($client);
 
-        $client->clickLink('submit feedback form');
+        $client->clickLink('submit the feedback form');
 
         self::assertCount(2, $client->getWindowHandles());
         $client->switchTo()->window($client->getWindowHandles()[1]);
