@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests;
 
+use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
@@ -12,6 +13,8 @@ use Symfony\Component\Panther\Client;
 
 class MainPageTest extends PantherTestCaseWithEM
 {
+    use MainPageTestsTrait;
+
     /**
      * @throws Exception
      */
@@ -29,24 +32,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $client->request('GET', '/');
-
-        $infoText = 'Currently 3 makers from 3 countries are listed here.';
-        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
-
-        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
-
-        self::waitUntilShows('#aasImAdult');
-        $client->findElement(WebDriverBy::id('aasImAdult'))->click();
-
-        self::waitUntilShows('#aasAllowNsfw');
-        $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
-
-        self::waitUntilShows('#checklist-dismiss-btn');
-        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
-
-        $client->waitForVisibility('#artisans', 5);
-
-        self::assertStringContainsString('Displaying 3 out of 3 fursuit makers in the database.', $client->getCrawler()->findElement(WebDriverBy::id('artisans_info'))->getText());
+        self::skipCheckListAdultAllowNsfw($client, 3);
 
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
         $client->waitForVisibility('#filtersTitle', 5);
@@ -58,16 +44,13 @@ class MainPageTest extends PantherTestCaseWithEM
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
         $client->waitFor('//div[@id="artisans_info"]/p[contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 5);
 
-        $client->findElement(WebDriverBy::xpath('//td[contains(text(), "Test artisan 1")]'))->click();
-        $client->waitForVisibility('//a[@id="makerId" and @href="#TEST001"]', 5);
-
-        self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('artisanName'))->getText());
+        self::openMakerCardByClickingOnTheirNameInTheTable($client, 'Test artisan 1');
+        self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
 
-        $client->findElement(WebDriverBy::xpath('//div[@id="artisanDetailsModalContent"]//button[text() = "Data outdated/inaccurate?"]'))->click();
+        self::openDataOutdatedPopup($client);
 
-        $client->waitForVisibility('#artisanUpdatesModalContent', 5);
         self::assertStringContainsString('Test artisan 1', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
