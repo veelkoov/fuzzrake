@@ -2,24 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\Transformers;
 
+use App\DataDefinitions\ContactPermit;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * @implements DataTransformerInterface<string, string>
+ * @implements DataTransformerInterface<ContactPermit, ?string>
  */
-class SinceTransformer implements DataTransformerInterface
+class ContactPermitTransformer implements DataTransformerInterface
 {
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {
-        return pattern('^\d{4}-\d{2}$')->test($value ?? '') ? $value.'-01' : '';
+        return $value?->value;
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function reverseTransform($value): mixed
     {
-        return substr($value ?? '', 0, 7);
+        return ContactPermit::tryFrom($value ?? '');
     }
 }

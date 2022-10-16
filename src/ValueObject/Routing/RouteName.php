@@ -16,6 +16,8 @@ final class RouteName
     final public const DONATE = 'donate';
     final public const EVENTS = 'events';
     final public const EVENTS_ATOM = 'events_atom';
+    final public const FEEDBACK_FORM = 'feedback_form';
+    final public const FEEDBACK_SENT = 'feedback_sent';
     final public const INFO = 'info';
     final public const IU_FORM_START = 'iu_form_step_start';
     final public const IU_FORM_DATA = 'iu_form_step_data';

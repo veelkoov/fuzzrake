@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\Transformers;
 
 use Symfony\Component\Form\DataTransformerInterface;
 

@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('admin', './assets/scripts/entry/admin.ts')
     .addEntry('events', './assets/scripts/entry/events.ts')
+    .addEntry('feedback', './assets/scripts/entry/feedback.ts')
     .addEntry('general', './assets/scripts/entry/general.ts')
     .addEntry('info', './assets/scripts/entry/info.ts')
     .addEntry('iu_form', './assets/scripts/entry/iu_form.ts')

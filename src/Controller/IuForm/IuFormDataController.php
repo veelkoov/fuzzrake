@@ -30,7 +30,7 @@ class IuFormDataController extends AbstractIuFormController
 
         $form = $this->handleForm($request, $state, Data::class, [
             Data::OPT_PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
-            Data::OPT_ROUTER              => $this->router,
+            'router'                      => $this->router,
         ]);
         $this->validatePhotosCopyright($form, $state->artisan);
 

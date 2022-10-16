@@ -6,7 +6,7 @@ namespace App\Form\InclusionUpdate;
 
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Validation;
-use App\Form\ContactPermitTransformer;
+use App\Form\Transformers\ContactPermitTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

@@ -5,21 +5,31 @@ import {ADULTS, NO, NO_CONTACT_ALLOWED} from '../consts';
 import {toggle} from '../jQueryUtils';
 
 import '../../styles/iu_form.scss';
+import Captcha from '../class/Captcha';
 
 jQuery(() => {
-    setup_start_page();
-    setup_data_page();
-    setup_password_and_contact_page();
+    const caption = $('form[name="iu_form"] input[type="submit"]').val();
+
+    switch (caption) {
+        case 'Agree and continue':
+            setup_start_page();
+            break;
+
+        case 'Continue':
+            setup_data_page();
+            break;
+
+        case 'Submit':
+            setup_password_and_contact_page();
+            break;
+
+        default:
+            console.error(`Failed to detect I/U form submission stage: '${caption}'`);
+    }
 });
 
 function setup_start_page(): void {
-    window['iuFormRecaptchaValidationCallback'] = function(token: string): void {
-        try {
-            jQuery('#iu_form_recaptcha_token').val(token).parents('form').trigger('submit');
-        } catch (e) {
-            alert('ERROR! Sending form failed. ' + e);
-        }
-    }
+    Captcha.setupOnForm('form[name="iu_form"]');
 
     const confirmAddingANewOne = new Radio('iu_form[confirmAddingANewOne]', refresh_page);
     const ensureStudioIsNotThereAlready = new DynamicRadio('iu_form[ensureStudioIsNotThereAlready]', '#ensureStudioIsNotThereAlready', refresh_page, false);

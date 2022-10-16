@@ -1,10 +1,6 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bootstrap_5_layout.html.twig']
-    globals:
-        feedback_form_url:       '%feedback_form_url%'
-        filter_suggest_form_url: '%filter_suggest_form_url%'
-        report_form_url:         '%report_form_url%'
 
 when@test:
     twig:

@@ -11,8 +11,7 @@ function updateRequestModalShowCallback(event: any): void {
     $contents.html(template({
         'artisanName': artisan.name,
         'iuFormUrl': DataBridge.getIuFormRedirectUrl().replace('MAKER_ID', artisan.getLastMakerId()),
-        'outdatedReportFormUrl': DataBridge.getReportFormUrl() + '?usp=pp_url&entry.1289735951=' + encodeURIComponent(artisan.name),
-        'infoPath': DataBridge.getInfoUrl(),
+        'feedbackFormUrl': DataBridge.getFeedbackFormUrl() + '?maker=' + encodeURIComponent(artisan.getLastMakerId()), // grep-maker-query-parameter
     }, HandlebarsHelpers.tplCfg()));
 }
 

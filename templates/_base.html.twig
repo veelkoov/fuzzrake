@@ -17,11 +17,10 @@
     <script>
         const DATA_BRIDGE = {
             apiBaseUrl: '{{ url('api')|escape('js') }}',
-            infoUrl: '{{ path('info')|escape('js') }}',
             trackingUrl: '{{ path('tracking')|escape('js') }}',
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
             iuFormRedirectUrl: '{{ path('iu_form_step_start', { makerId: 'MAKER_ID' })|escape('js') }}',
-            reportFormUrl: '{{ report_form_url|escape('js') }}',
+            feedbackFormUrl: '{{ path('feedback_form')|escape('js') }}',
             trackingFailedImgSrc: '{{ asset('images/parsing_failed.webp')|escape('js') }}',
         };
     </script>

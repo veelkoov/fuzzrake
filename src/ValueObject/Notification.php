@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Notifications;
+namespace App\ValueObject;
 
 class Notification
 {
