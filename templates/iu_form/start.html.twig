@@ -82,10 +82,14 @@
 
         <input type="hidden" name="token" id="form_recaptcha_token" value="" />
 
-        <button type="submit" class="btn btn-primary btn-lg g-recaptcha"
-                data-sitekey="{{ google_recaptcha_site_key }}"
-                data-callback="formRecaptchaValidationCallback"
-                data-action="iu_form_captcha">Agree and continue</button>
+        <div class="d-none g-recaptcha"
+             data-sitekey="{{ google_recaptcha_site_key }}"
+             data-callback="formRecaptchaValidationCallback"
+             data-action="iu_form_captcha"
+             data-size="invisible"
+        ></div>
+
+        <input type="submit" class="btn btn-primary btn-lg" value="Agree and continue" />
     </div>
 
     {{ form_end(form) }}

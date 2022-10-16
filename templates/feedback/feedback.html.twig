@@ -33,10 +33,14 @@
 
         <input type="hidden" name="token" id="form_recaptcha_token" value="" />
 
-        <button type="submit" class="btn btn-primary btn-lg g-recaptcha"
-                data-sitekey="{{ google_recaptcha_site_key }}"
-                data-callback="formRecaptchaValidationCallback"
-                data-action="feedback_form_captcha">Send</button>
+        <div class="d-none g-recaptcha"
+             data-sitekey="{{ google_recaptcha_site_key }}"
+             data-callback="formRecaptchaValidationCallback"
+             data-action="feedback_form_captcha"
+             data-size="invisible"
+        ></div>
+
+        <input type="submit" class="btn btn-primary btn-lg" value="Send" />
     </div>
 
     {{ form_end(form) }}

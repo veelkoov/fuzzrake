@@ -3,12 +3,12 @@ import Radio from "../class/fields/Radio";
 import {toggle} from "../jQueryUtils";
 
 jQuery(() => {
-    Captcha.setupValidationCallback();
+    Captcha.setupOnForm('form[name="feedback"]');
 
     react_to_subject_changes();
 });
 
-function react_to_subject_changes() {
+function react_to_subject_changes(): void {
     const subject = new Radio('feedback[subject]', refresh);
     const $feedbackSubjectNotice = $('#feedback-subject-notice');
     const $feedbackSubmitOption = $('#feedback-submit-option');

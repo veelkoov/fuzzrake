@@ -73,7 +73,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
 
         self::assertCount(8, $crawler->filter('input[name="feedback[subject]"]'));
 
-        $buttonXpath = '//button[@type="submit"]';
+        $buttonXpath = '//input[@type="submit"]';
         $noticeCssSel = '#feedback-subject-notice';
 
         // 1st option
@@ -136,7 +136,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
             'feedback[noContactBack]' => true,
         ]);
 
-        $client->findElement(WebDriverBy::xpath('//button[@type="submit"]'))->click();
+        $client->findElement(WebDriverBy::xpath('//input[@type="submit"]'))->click();
         $client->waitForVisibility('div.alert', 10);
 
         self::assertSelectorTextSame('h1', 'Feedback submitted');

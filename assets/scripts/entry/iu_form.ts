@@ -8,13 +8,28 @@ import '../../styles/iu_form.scss';
 import Captcha from '../class/Captcha';
 
 jQuery(() => {
-    setup_start_page();
-    setup_data_page();
-    setup_password_and_contact_page();
+    const caption = $('form[name="iu_form"] input[type="submit"]').val();
+
+    switch (caption) {
+        case 'Agree and continue':
+            setup_start_page();
+            break;
+
+        case 'Continue':
+            setup_data_page();
+            break;
+
+        case 'Submit':
+            setup_password_and_contact_page();
+            break;
+
+        default:
+            console.error(`Failed to detect I/U form submission stage: '${caption}'`);
+    }
 });
 
 function setup_start_page(): void {
-    Captcha.setupValidationCallback();
+    Captcha.setupOnForm('form[name="iu_form"]');
 
     const confirmAddingANewOne = new Radio('iu_form[confirmAddingANewOne]', refresh_page);
     const ensureStudioIsNotThereAlready = new DynamicRadio('iu_form[ensureStudioIsNotThereAlready]', '#ensureStudioIsNotThereAlready', refresh_page, false);

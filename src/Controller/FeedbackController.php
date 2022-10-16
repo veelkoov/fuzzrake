@@ -50,7 +50,6 @@ class FeedbackController extends AbstractController
             }
         }
 
-        // TODO: https://stackoverflow.com/questions/41665935/html5-form-validation-before-recaptchas
         return $this->renderForm('feedback/feedback.html.twig', [
             'form'              => $form,
             'big_error_message' => $big_error_message,
