@@ -2,25 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Form\Transformers;
 
-use App\DataDefinitions\Ages;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * @implements DataTransformerInterface<Ages, ?string>
+ * @implements DataTransformerInterface<string, string>
  */
-class AgesTransformer implements DataTransformerInterface
+class SinceTransformer implements DataTransformerInterface
 {
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {
-        return $value?->value;
+        return pattern('^\d{4}-\d{2}$')->test($value ?? '') ? $value.'-01' : '';
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function reverseTransform($value): mixed
     {
-        return Ages::tryFrom($value ?? '');
+        return substr($value ?? '', 0, 7);
     }
 }

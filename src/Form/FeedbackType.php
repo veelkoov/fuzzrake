@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Form\Transformers\NullToEmptyStringTransformer;
 use App\ValueObject\Feedback;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\AbstractType;
@@ -45,6 +46,8 @@ class FeedbackType extends AbstractType
                 'empty_data' => '',
             ])
         ;
+
+        $builder->get('subject')->addModelTransformer(new NullToEmptyStringTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void
