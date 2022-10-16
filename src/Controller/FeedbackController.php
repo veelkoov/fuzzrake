@@ -6,9 +6,9 @@ namespace App\Controller;
 
 use App\Form\FeedbackType;
 use App\Service\Captcha;
-use App\Utils\Notifications\MessengerInterface;
-use App\Utils\Notifications\Notification;
+use App\Service\Notifications\MessengerInterface;
 use App\ValueObject\Feedback;
+use App\ValueObject\Notification;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

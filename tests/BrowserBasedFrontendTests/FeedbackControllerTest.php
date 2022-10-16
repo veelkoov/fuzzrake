@@ -8,6 +8,7 @@ use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\WebDriverBy;
 
 /**
  * @see \App\Tests\Controller\FeedbackControllerTest
@@ -60,13 +61,85 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         self::assertSelectorExists('//input[@id="feedback_maker" and @value="'.$expectedMakerId.'"]');
     }
 
+    /**
+     * @throws WebDriverException
+     */
     public function testExplanationsShowingUpAndFormBlocksForSpecialOptions(): void
     {
-        // TODO
+        $client = static::createPantherClient();
+        $client->request('GET', '/index.php/feedback');
+
+        $crawler = $client->getCrawler();
+
+        self::assertCount(8, $crawler->filter('input[name="feedback[subject]"]'));
+
+        $buttonXpath = '//button[@type="submit"]';
+        $noticeCssSel = '#feedback-subject-notice';
+
+        // 1st option
+        $client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
+        self::waitUntilHides($buttonXpath);
+        self::assertVisible($noticeCssSel);
+        self::assertSelectorTextContains($noticeCssSel, 'getfursu.it maintainer does not assist individuals');
+
+        // 3rd option
+        $client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
+        self::waitUntilShows($buttonXpath);
+        self::assertInvisible($noticeCssSel);
+
+        // 2nd option
+        $client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
+        self::waitUntilHides($buttonXpath);
+        self::assertVisible($noticeCssSel);
+        self::assertSelectorTextContains($noticeCssSel, 'This cannot be adjusted manually.');
+
+        // 5th option
+        $client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
+        self::waitUntilShows($buttonXpath);
+        self::assertInvisible($noticeCssSel);
+
+        // 4th option
+        $client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
+        self::waitUntilHides($buttonXpath);
+        self::assertVisible($noticeCssSel);
+        self::assertSelectorTextContains($noticeCssSel, 'All the information needs to be updated by the makers themselves.');
+
+        // 6th option
+        $client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
+        self::waitUntilShows($buttonXpath);
+        self::assertInvisible($noticeCssSel);
+
+        // 7th option, no visual change
+        $client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
+        self::assertVisible($buttonXpath);
+        self::assertInvisible($noticeCssSel);
+
+        // 8th option, no visual change
+        $client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
+        self::assertVisible($buttonXpath);
+        self::assertInvisible($noticeCssSel);
     }
 
-    public function testSimpleFormSubmissionWithCaptcha(): void
+    /**
+     * @throws WebDriverException
+     */
+    public function testCaptchaWorksBySimpleSubmission(): void
     {
-        // TODO
+        $client = static::createPantherClient();
+        $client->request('GET', '/index.php/feedback');
+
+        $client->waitForVisibility('h1', 10);
+
+        $client->getCrawler()->selectButton('Send')->form([
+            'feedback[details]'       => 'Testing details',
+            'feedback[subject]'       => 'Other (please provide adequate details and context)',
+            'feedback[noContactBack]' => true,
+        ]);
+
+        $client->findElement(WebDriverBy::xpath('//button[@type="submit"]'))->click();
+        $client->waitForVisibility('div.alert', 10);
+
+        self::assertSelectorTextSame('h1', 'Feedback submitted');
+        self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');
     }
 }

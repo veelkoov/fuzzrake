@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Notifications;
+namespace App\Service\Notifications;
+
+use App\ValueObject\Notification;
 
 interface MessengerInterface
 {

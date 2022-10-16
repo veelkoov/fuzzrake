@@ -6,9 +6,9 @@ namespace App\IuHandling\Submission;
 
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Notifications\Notification;
 use App\Utils\StrUtils;
 use App\Utils\Traits\UtilityClass;
+use App\ValueObject\Notification;
 
 final class NotificationsGenerator
 {
