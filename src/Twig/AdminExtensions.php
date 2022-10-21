@@ -95,7 +95,7 @@ class AdminExtensions extends AbstractExtension
         return $result;
     }
 
-    private function linkUrls(string $input): string
+    public function linkUrls(string $input): string
     {
         return $this->linkPattern->replace($input)->all()->callback(function (ReplaceDetail $detail): string {
             $url = htmlspecialchars($detail->text());

@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Twig;
+
+use App\Repository\SubmissionRepository;
+use App\Twig\AdminExtensions;
+use App\Utils\Data\Validator;
+use PHPUnit\Framework\TestCase;
+
+class AdminExtensionsTest extends TestCase // https?://[^ ,;\n<>"]+
+{
+    /**
+     * @dataProvider linkUrlsDataProvider
+     */
+    public function testLinkUrls(string $input, string $expectedOutput): void
+    {
+        $validatorMock = $this->createMock(Validator::class);
+        $repoMock = $this->createMock(SubmissionRepository::class);
+
+        $subject = new AdminExtensions($validatorMock, $repoMock);
+
+        self::assertEquals($expectedOutput, $subject->linkUrls($input));
+    }
+
+    /**
+     * @return array<array{string, string}>
+     */
+    public function linkUrlsDataProvider(): array
+    {
+        return [
+            [
+                'just plain text',
+                'just plain text',
+            ], [
+                'prefix http://getfursu.it/new suffix',
+                'prefix <a href="http://getfursu.it/new">http://getfursu.it/new</a> suffix',
+            ], [
+                'prefix http://getfursu.it/new middle https://getfursu.it/info suffix',
+                'prefix <a href="http://getfursu.it/new">http://getfursu.it/new</a> middle <a href="https://getfursu.it/info">https://getfursu.it/info</a> suffix',
+            ],
+        ];
+    }
+}
