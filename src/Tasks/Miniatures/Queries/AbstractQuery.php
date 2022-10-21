@@ -34,9 +34,9 @@ abstract class AbstractQuery
             ->findFirst(function (Detail $detail): string {
                 try {
                     return $detail->get('picture_id');
-                } catch (NonexistentGroupException $e) {
+                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                     throw new UnbelievableRuntimeException($e);
-                }
+                } // @codeCoverageIgnoreEnd
             })->orElse(fn () => throw new LogicException("Failed to match picture URL: '$photoUrl'"));
     }
 

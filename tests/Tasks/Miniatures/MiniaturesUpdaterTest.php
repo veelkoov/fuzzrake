@@ -147,6 +147,32 @@ class MiniaturesUpdaterTest extends TestCase
         self::assertEquals("poiuy\nlkjhg", $artisan->getMiniatureUrls());
     }
 
+    public function testUnexpectedResponse(): void
+    {
+        $artisan = Artisan::new()->setPhotoUrls('https://www.furtrack.com/p/41933');
+
+        $client = $this->createMock(GentleHttpClient::class);
+        $subject = $this->getMiniaturesUpdater($client);
+
+        $client->method('get')->withAnyParameters()->willReturn($this->response('Imagine HTTP 500'));
+
+        self::assertEquals('Details: Syntax error', $subject->update($artisan));
+    }
+
+    public function testWrongCsrfScritchCookie(): void
+    {
+        $artisan = Artisan::new()
+            ->setPhotoUrls('https://scritch.es/pictures/847486df-64fc-45a2-b74b-11fd87fe43ca');
+
+        $client = $this->createMock(GentleHttpClient::class);
+        $subject = $this->getMiniaturesUpdater($client);
+
+        $client->method('get')->withConsecutive(['https://scritch.es/'])
+            ->willReturnOnConsecutiveCalls($this->response(null, false));
+
+        self::assertEquals('Details: Missing csrf-token cookie', $subject->update($artisan));
+    }
+
     private function getMiniaturesUpdater(GentleHttpClient $client): MiniaturesUpdater
     {
         return new MiniaturesUpdater(new ScritchQuery($client), new FurtrackQuery($client));
