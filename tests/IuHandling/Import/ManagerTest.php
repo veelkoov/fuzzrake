@@ -9,6 +9,9 @@ use App\IuHandling\Import\Manager;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class ManagerTest extends TestCase
 {
     public function testBehaviorWithoutTrailingNewline(): void

@@ -7,6 +7,9 @@ namespace App\Tests\Tracking;
 use App\Tracking\TextPreprocessor;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class TextPreprocessorTest extends TestCase
 {
     public function testReplaceArtisanName(): void

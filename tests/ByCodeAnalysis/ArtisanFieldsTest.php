@@ -15,6 +15,8 @@ use function Psl\File\read;
 
 /**
  * Don't judge, I'm having a lot of fun here!
+ *
+ * @small
  */
 class ArtisanFieldsTest extends TestCase
 {

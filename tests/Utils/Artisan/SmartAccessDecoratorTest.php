@@ -10,6 +10,9 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class SmartAccessDecoratorTest extends TestCase
 {
     /**

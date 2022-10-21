@@ -24,6 +24,9 @@ use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
+/**
+ * @medium
+ */
 class ExtendedTest extends AbstractTestWithEM
 {
     use IuFormTrait;

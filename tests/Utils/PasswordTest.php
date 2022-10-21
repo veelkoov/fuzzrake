@@ -8,6 +8,9 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Password;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class PasswordTest extends TestCase
 {
     public function testPlaintextGetsEncrypted(): void

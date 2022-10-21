@@ -9,6 +9,9 @@ use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
+/**
+ * @medium
+ */
 class IuFormControllerWithEMTest extends WebTestCaseWithEM
 {
     use IuFormTrait;

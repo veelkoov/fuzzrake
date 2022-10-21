@@ -24,6 +24,9 @@ use function Psl\Str\Byte\strip_suffix;
 use function Psl\Str\strip_prefix;
 use function Psl\Vec\map;
 
+/**
+ * @small
+ */
 class TextParserTest extends TestCase
 {
     private static TextParser $csp;

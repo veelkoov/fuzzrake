@@ -8,6 +8,9 @@ use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 
+/**
+ * @medium
+ */
 class PasswordHandlingTest extends AbstractTestWithEM
 {
     use IuFormTrait;

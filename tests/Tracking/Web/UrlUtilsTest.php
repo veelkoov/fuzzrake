@@ -7,6 +7,9 @@ namespace App\Tests\Tracking\Web;
 use App\Tracking\Web\Url\UrlUtils;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class UrlUtilsTest extends TestCase
 {
     /**

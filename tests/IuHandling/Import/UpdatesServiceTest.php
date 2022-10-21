@@ -19,6 +19,9 @@ use App\Utils\TestUtils\UtcClockMock;
 
 use function Psl\Vec\map;
 
+/**
+ * @small
+ */
 class UpdatesServiceTest extends TestCase
 {
     public function testUpdateHandlesNewContactInfoProperly(): void

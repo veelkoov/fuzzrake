@@ -6,6 +6,9 @@ namespace App\Tests\Controller\Traits;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
+/**
+ * @medium
+ */
 class ButtonClickedTraitTest extends WebTestCaseWithEM
 {
     public function testClicked(): void

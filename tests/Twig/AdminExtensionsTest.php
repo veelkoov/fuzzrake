@@ -9,7 +9,10 @@ use App\Twig\AdminExtensions;
 use App\Utils\Data\Validator;
 use PHPUnit\Framework\TestCase;
 
-class AdminExtensionsTest extends TestCase // https?://[^ ,;\n<>"]+
+/**
+ * @small
+ */
+class AdminExtensionsTest extends TestCase
 {
     /**
      * @dataProvider linkUrlsDataProvider

@@ -8,6 +8,9 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\FieldsData;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class FieldsDataTest extends TestCase
 {
     public function testSanityChecks(): void

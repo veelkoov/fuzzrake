@@ -14,6 +14,9 @@ use Symfony\Component\Uid\Uuid;
 use function Psl\Env\temp_dir;
 use function Psl\Filesystem\delete_directory;
 
+/**
+ * @small
+ */
 class JarTest extends TestCase
 {
     private string $dumpDirPath = '';

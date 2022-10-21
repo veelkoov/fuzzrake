@@ -7,6 +7,9 @@ namespace App\Tests\Utils\Data\Fixer;
 use App\Utils\Data\Fixer\SinceFixer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class SinceFixerTest extends TestCase
 {
     public function testReplacement(): void

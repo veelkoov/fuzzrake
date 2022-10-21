@@ -7,6 +7,9 @@ namespace App\Tests\Utils;
 use App\Utils\StringBuffer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class StringBufferTest extends TestCase
 {
     public function testIsEmpty(): void

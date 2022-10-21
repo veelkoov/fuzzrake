@@ -10,6 +10,9 @@ use App\Tracking\Web\Url\FreeUrl;
 use App\Utils\TestUtils\UtcClockMock;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class TimedUrlQueueTest extends TestCase
 {
     public function testPop(): void

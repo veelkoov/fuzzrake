@@ -15,6 +15,9 @@ use App\Utils\Contact;
 use JsonException;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @medium
+ */
 class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 {
     protected function setUp(): void

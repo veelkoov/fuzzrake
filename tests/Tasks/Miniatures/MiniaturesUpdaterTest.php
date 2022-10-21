@@ -14,6 +14,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * @small
+ */
 class MiniaturesUpdaterTest extends TestCase
 {
     public function testUnsupported(): void

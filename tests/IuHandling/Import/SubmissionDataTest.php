@@ -7,6 +7,9 @@ namespace App\Tests\IuHandling\Import;
 use App\IuHandling\Import\SubmissionData;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class SubmissionDataTest extends TestCase
 {
     public function testGetIdFromFilePath(): void

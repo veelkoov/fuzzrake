@@ -7,6 +7,9 @@ namespace App\Tests\Utils;
 use App\Utils\StringList;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class StringListTest extends TestCase
 {
     /**

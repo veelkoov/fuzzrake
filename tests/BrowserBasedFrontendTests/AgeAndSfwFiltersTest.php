@@ -12,6 +12,9 @@ use Facebook\WebDriver\WebDriverBy;
 
 use function Psl\Iter\contains;
 
+/**
+ * @large
+ */
 class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 {
     /**

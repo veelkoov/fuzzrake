@@ -8,6 +8,9 @@ use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
+/**
+ * @large
+ */
 class RulesDisplayTest extends PantherTestCaseWithEM
 {
     /**

@@ -6,6 +6,9 @@ namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
+/**
+ * @medium
+ */
 class RestApiControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testArtisans(): void

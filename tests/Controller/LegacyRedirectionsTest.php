@@ -7,6 +7,9 @@ namespace App\Tests\Controller;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
+/**
+ * @medium
+ */
 class LegacyRedirectionsTest extends WebTestCaseWithEM
 {
     private KernelBrowser $client;

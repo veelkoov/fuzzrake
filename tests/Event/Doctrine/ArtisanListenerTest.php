@@ -9,6 +9,9 @@ use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator;
 use Exception;
 
+/**
+ * @medium
+ */
 class ArtisanListenerTest extends KernelTestCaseWithEM
 {
     /**

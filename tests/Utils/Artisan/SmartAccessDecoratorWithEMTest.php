@@ -8,6 +8,9 @@ use App\Entity\ArtisanValue;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
+/**
+ * @medium
+ */
 class SmartAccessDecoratorWithEMTest extends KernelTestCaseWithEM
 {
     public function testBooleanValues(): void

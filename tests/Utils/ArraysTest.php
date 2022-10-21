@@ -8,6 +8,9 @@ use App\Utils\Arrays;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class ArraysTest extends TestCase
 {
     public function testIntersect(): void

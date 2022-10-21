@@ -11,6 +11,9 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Panther\Client;
 
+/**
+ * @large
+ */
 class MainPageTest extends PantherTestCaseWithEM
 {
     use MainPageTestsTrait;

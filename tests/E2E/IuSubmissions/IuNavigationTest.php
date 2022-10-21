@@ -7,6 +7,9 @@ namespace App\Tests\E2E\IuSubmissions;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use Exception;
 
+/**
+ * @medium
+ */
 class IuNavigationTest extends AbstractTestWithEM
 {
     use IuFormTrait;

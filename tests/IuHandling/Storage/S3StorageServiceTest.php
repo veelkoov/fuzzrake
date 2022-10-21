@@ -11,6 +11,9 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @small
+ */
 class S3StorageServiceTest extends TestCase
 {
     /**

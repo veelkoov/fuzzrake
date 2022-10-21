@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @see AbstractAccessor
  * @see UrlAccessor
+ *
+ * @medium
  */
 class UrlAccessorTest extends TestCase
 {

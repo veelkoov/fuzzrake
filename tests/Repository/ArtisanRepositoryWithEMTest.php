@@ -10,6 +10,9 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
 
+/**
+ * @medium
+ */
 class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
 {
     /**
