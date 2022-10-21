@@ -151,7 +151,7 @@ class UpdatesService
     {
         // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
         if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
-            $updatedArtisan->setMiniatureUrls('');
+            $updatedArtisan->setMiniatureUrls(''); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
         }
     }
 

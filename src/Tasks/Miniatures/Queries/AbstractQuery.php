@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\Miniatures;
+namespace App\Tasks\Miniatures\Queries;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Utils\UnbelievableRuntimeException;
@@ -13,7 +13,7 @@ use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Details\Detail;
 use TRegx\CleanRegex\Pattern;
 
-abstract class AbstractMiniatures
+abstract class AbstractQuery
 {
     protected Pattern $pattern;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\Miniatures;
+namespace App\Tasks\Miniatures\Queries;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Utils\ArrayReader;
 use App\Utils\Json;
 
-class FurtrackMiniatures extends AbstractMiniatures
+class FurtrackQuery extends AbstractQuery
 {
     public function __construct(
         GentleHttpClient $httpClient,

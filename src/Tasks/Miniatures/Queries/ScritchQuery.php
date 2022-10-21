@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\Miniatures;
+namespace App\Tasks\Miniatures\Queries;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Utils\ArrayReader;
@@ -12,7 +12,7 @@ use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class ScritchMiniatures extends AbstractMiniatures
+class ScritchQuery extends AbstractQuery
 {
     private readonly CookieJar $cookieJar;
     private ?string $csrfToken = null;

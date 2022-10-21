@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Repository\ArtisanRepository;
-use App\Tasks\Miniatures\FurtrackMiniatures;
-use App\Tasks\Miniatures\ScritchMiniatures;
+use App\Tasks\Miniatures\MiniaturesUpdater;
+use App\Tasks\Miniatures\UpdateResult;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\EntityManagerInterface;
-use JsonException;
-use LogicException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 #[AsCommand('app:data:set-miniatures')]
 class DataSetMiniaturesCommand extends Command
@@ -24,8 +21,7 @@ class DataSetMiniaturesCommand extends Command
     public function __construct(
         private readonly ArtisanRepository $artisanRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly ScritchMiniatures $scritch,
-        private readonly FurtrackMiniatures $furtrack,
+        private readonly MiniaturesUpdater $updater,
     ) {
         parent::__construct();
     }
@@ -42,32 +38,29 @@ class DataSetMiniaturesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach (Artisan::wrapAll($this->artisanRepository->getAll()) as $artisan) {
-            $pictureUrls = array_filter(explode("\n", $artisan->getPhotoUrls()));
+            $makerId = $artisan->getLastMakerId();
 
-            if (empty($pictureUrls)) {
-                $artisan->setMiniatureUrls('');
-                continue;
+            $result = $this->updater->update($artisan);
+
+            switch ($result) {
+                case UpdateResult::NO_CHANGE:
+                    break;
+
+                case UpdateResult::CLEARED:
+                    $io->info("Cleared miniatures for $makerId.");
+                    break;
+
+                case UpdateResult::RETRIEVED:
+                    $io->info("Retrieved miniatures for $makerId.");
+                    break;
+
+                default:
+                    if (!is_string($result)) {
+                        $result = $result->name;
+                    }
+
+                    $io->error("Error for $makerId. $result");
             }
-
-            if (count($pictureUrls) === count(array_filter(explode("\n", $artisan->getMiniatureUrls())))) {
-                continue;
-            }
-
-            $unsupported = $this->filterUnsupportedUrls($pictureUrls);
-            if (0 !== count($unsupported)) {
-                $io->error('Unsupported URLs for '.$artisan->getLastMakerId().': '.implode(', ', $unsupported));
-                continue;
-            }
-
-            try {
-                $miniatureUrls = $this->retrieveMiniatureUrls($pictureUrls);
-            } catch (ExceptionInterface|JsonException|LogicException $e) {
-                $io->error('Failed: '.$artisan->getLastMakerId().', '.$e->getMessage());
-                continue;
-            }
-
-            $artisan->setMiniatureUrls(implode("\n", $miniatureUrls));
-            $io->writeln('Retrieved miniatures for '.$artisan->getLastMakerId());
         }
 
         if ($input->getOption('commit')) {
@@ -78,45 +71,5 @@ class DataSetMiniaturesCommand extends Command
         }
 
         return 0;
-    }
-
-    /**
-     * @param string[] $pictureUrls
-     *
-     * @return string[]
-     *
-     * @throws JsonException|LogicException|ExceptionInterface
-     */
-    private function retrieveMiniatureUrls(array $pictureUrls): array
-    {
-        $result = [];
-
-        foreach ($pictureUrls as $url) {
-            if ($this->furtrack->supportsUrl($url)) {
-                $result[] = $this->furtrack->getMiniatureUrl($url);
-            } else {
-                $result[] = $this->scritch->getMiniatureUrl($url);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string[] $pictureUrls
-     *
-     * @return string[]
-     */
-    private function filterUnsupportedUrls(array $pictureUrls): array
-    {
-        $result = [];
-
-        foreach ($pictureUrls as $url) {
-            if (!$this->scritch->supportsUrl($url) && !$this->furtrack->supportsUrl($url)) {
-                $result[] = $url;
-            }
-        }
-
-        return $result;
     }
 }
