@@ -79,9 +79,9 @@ class WebsiteInfo
             ->findFirst(function (Detail $detail): array {
                 try {
                     return [self::getTrelloBoardDataUrl($detail->get('boardId'))];
-                } catch (NonexistentGroupException $e) {
+                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                     throw new UnbelievableRuntimeException($e);
-                }
+                } // @codeCoverageIgnoreEnd
             })
             ->orReturn([]);
     }
@@ -96,9 +96,9 @@ class WebsiteInfo
             ->findFirst(function (Detail $detail): array {
                 try {
                     return [self::getInstagramUserProfileDataUrl($detail->get('username'))];
-                } catch (NonexistentGroupException $e) {
+                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                     throw new UnbelievableRuntimeException($e);
-                }
+                } // @codeCoverageIgnoreEnd
             })
             ->orReturn([]);
     }

@@ -294,9 +294,9 @@ class ArtisanRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->enableResultCache(3600)
                 ->getSingleResult();
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException $e) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($e);
-        }
+        } // @codeCoverageIgnoreEnd
 
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }

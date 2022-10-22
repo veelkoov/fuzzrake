@@ -152,9 +152,9 @@ class HierarchyAwareBuilder
                     $match->group('flags')->text(),
                     $match->group('specie')->text(),
                 ])->orReturn(['', $specie]);
-        } catch (NonexistentGroupException $exception) {
+        } catch (NonexistentGroupException $exception) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($exception);
-        }
+        } // @codeCoverageIgnoreEnd
     }
 
     private static function hasIgnoreFlag(string $flags): bool

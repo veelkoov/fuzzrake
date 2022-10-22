@@ -90,9 +90,9 @@ class UpdatesService
 
             try {
                 return [$directivesError, new Manager('')];
-            } catch (ManagerConfigError $error) {
+            } catch (ManagerConfigError $error) { // @codeCoverageIgnoreStart
                 throw new UnbelievableRuntimeException($error);
-            }
+            } // @codeCoverageIgnoreEnd
         }
     }
 

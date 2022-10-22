@@ -97,9 +97,9 @@ class TextParser
 
         try {
             $nonEmptyGroups = array_filter($match->namedGroups()->names(), fn ($name) => $match->matched($name));
-        } catch (NonexistentGroupException $e) {
+        } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($e);
-        }
+        } // @codeCoverageIgnoreEnd
 
         $detail = "{$match->text()} (groups: ".implode(', ', $nonEmptyGroups).')';
 

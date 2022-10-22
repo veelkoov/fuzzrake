@@ -45,9 +45,9 @@ final class Contact
                 ->findFirst(function (Detail $detail) use ($template): array {
                     try {
                         return [$template[0], $template[1].$detail->group(1)->text()];
-                    } catch (NonexistentGroupException $e) {
+                    } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                         throw new UnbelievableRuntimeException($e);
-                    }
+                    } // @codeCoverageIgnoreEnd
                 })
                 ->orReturn(null);
 

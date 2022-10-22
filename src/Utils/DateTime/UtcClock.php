@@ -44,12 +44,9 @@ final class UtcClock
     {
         try {
             return (new DateTimeImmutable("@$timestamp"))->setTimezone(self::getUtc());
-
-            // @codeCoverageIgnoreStart
-        } catch (Exception $exception) {
+        } catch (Exception $exception) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($exception); // Each timestamp can be converted to a date
-            // @codeCoverageIgnoreEnd
-        }
+        } // @codeCoverageIgnoreEnd
     }
 
     public static function getMonthLaterYmd(): string

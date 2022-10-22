@@ -41,9 +41,9 @@ class LanguagesFixer extends StringFixer
                 try {
                     $language = $detail->get('language');
                     $limited = $detail->matched('prefix') || $detail->matched('suffix');
-                } catch (NonexistentGroupException $e) {
+                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                     throw new UnbelievableRuntimeException($e);
-                }
+                } // @codeCoverageIgnoreEnd
 
                 $language = StrUtils::ucfirst($language);
 

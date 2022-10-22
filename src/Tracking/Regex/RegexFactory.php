@@ -137,9 +137,9 @@ class RegexFactory
                 }
 
                 $group = '?P<'.$groupName.'>';
-            } catch (NonexistentGroupException $e) {
+            } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                 throw new UnbelievableRuntimeException($e);
-            }
+            } // @codeCoverageIgnoreEnd
 
             array_shift($items);
         });
