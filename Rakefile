@@ -108,6 +108,9 @@ task(:phpunit)       { |_t, args| phpunit(*args) }
 
 task pcf: ['php-cs-fixer']
 task pu: [:phpunit]
+mtask(:pus, :phpunit, '--group', 'small')
+mtask(:pum, :phpunit, '--group', 'medium')
+mtask(:pul, :phpunit, '--group', 'large')
 task ps: [:phpstan]
 
 #
