@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Exception\IOException;
-use TRegx\CleanRegex\Pattern;
 
 use function Psl\Str\strip_prefix;
 use function Psl\Str\uppercase;
@@ -20,7 +19,6 @@ use function Psl\Str\uppercase;
 class Cache
 {
     private readonly string $cacheDirPath;
-    private readonly Pattern $wwwPattern;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -28,7 +26,6 @@ class Cache
         string $cacheDirPath,
     ) {
         $this->cacheDirPath = $cacheDirPath;
-        $this->wwwPattern = pattern('^www\.');
     }
 
     public function has(Fetchable $url): bool
@@ -62,7 +59,7 @@ class Cache
 
     private function getBaseDir(string $url): string
     {
-        $hostName = $this->wwwPattern->prune(UrlUtils::hostFromUrl($url));
+        $hostName = strip_prefix(UrlUtils::hostFromUrl($url), 'www.');
 
         $urlFsSafe = UrlUtils::safeFileNameFromUrl($url);
         $urlFsSafe = strip_prefix($urlFsSafe, $hostName);

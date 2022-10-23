@@ -94,7 +94,10 @@ class SubmissionData implements FieldReadInterface
     private static function getTimestampFromFilePath(string $filePath): DateTimeImmutable
     {
         $dateTimeStr = pattern('^(?:.*/)?(\d{4})/(\d{2})/(\d{2})/(\d{2}:\d{2}:\d{2})_\d{4}\.json$')
-            ->replace($filePath)->first()->withReferences('$1-$2-$3 $4');
+            ->replace($filePath)
+            ->first()
+            ->exactly()
+            ->withReferences('$1-$2-$3 $4');
 
         try {
             return UtcClock::at($dateTimeStr);
