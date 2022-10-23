@@ -8,7 +8,7 @@ use App\Tracking\Exception\ConfigurationException;
 use App\Utils\UnbelievableRuntimeException;
 use Nette\Utils\Arrays;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class RegexFactory
@@ -124,7 +124,7 @@ class RegexFactory
 
         $group = '';
 
-        $this->namedGroup->match($items[0])->findFirst(function (Detail $detail) use (&$group, &$items, $path): void {
+        $this->namedGroup->match($items[0])->findFirst()->map(function (Detail $detail) use (&$group, &$items, $path): void {
             try {
                 $groupName = $detail->get('name');
 
@@ -248,7 +248,7 @@ class RegexFactory
     private function setUnnamedToNoncaptured(array &$regexes): void
     {
         foreach ($regexes as &$regex) {
-            $regex = $this->unnamed->replace($regex)->all()->with('(?:');
+            $regex = $this->unnamed->replace($regex)->with('(?:');
         }
     }
 

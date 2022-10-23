@@ -8,7 +8,7 @@ use App\Utils\Regexp\Replacements;
 use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class LanguagesFixer extends StringFixer

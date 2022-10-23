@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ccbf60b85cfcfb1a78f19c163855db4",
+    "content-hash": "21566489e1470e4ccebef141db3e1d92",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -2379,16 +2379,16 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "0.21.0",
+            "version": "0.38.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/T-Regx/T-Regx.git",
-                "reference": "3c3062d1f3a79f17fbf94fe91dc977d6c310f026"
+                "reference": "d79e4c2a154ffdfda8c9838fb0064db162c5061f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/3c3062d1f3a79f17fbf94fe91dc977d6c310f026",
-                "reference": "3c3062d1f3a79f17fbf94fe91dc977d6c310f026",
+                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/d79e4c2a154ffdfda8c9838fb0064db162c5061f",
+                "reference": "d79e4c2a154ffdfda8c9838fb0064db162c5061f",
                 "shasum": ""
             },
             "require": {
@@ -2397,11 +2397,9 @@
             },
             "require-dev": {
                 "ext-json": "*",
-                "php-coveralls/php-coveralls": "^2.0",
                 "phpunit/phpunit": "^9.5.4 || ^8.0 || ^7.5",
                 "rawr/cross-data-providers": "^2.3.0",
-                "rawr/fqn-check": "^1.2.0",
-                "symfony/console": "<6.0"
+                "rawr/fqn-check": "^1.3.0"
             },
             "type": "library",
             "autoload": {
@@ -2416,31 +2414,35 @@
             "license": [
                 "MIT"
             ],
-            "description": "#StandWithUkraine",
+            "description": "PHP regular expression brought up to modern standards.",
             "keywords": [
+                "Match",
                 "OOP",
                 "PCRE",
-                "TDD",
-                "automatic delimiters",
                 "clean",
                 "delimiters",
                 "expression",
-                "php",
+                "pattern",
                 "preg",
+                "preg_last_error",
                 "preg_match",
                 "preg_match_all",
                 "preg_quote",
                 "preg_replace",
                 "preg_replace_callback",
+                "preg_split",
                 "prepared patterns",
                 "regex",
                 "regexp",
                 "regular",
-                "t-regx"
+                "search",
+                "split",
+                "t-regx",
+                "tregx"
             ],
             "support": {
                 "issues": "https://github.com/T-Regx/T-Regx/issues",
-                "source": "https://github.com/T-Regx/T-Regx/tree/0.21.0"
+                "source": "https://github.com/T-Regx/T-Regx/tree/0.38.0"
             },
             "funding": [
                 {
@@ -2448,7 +2450,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-24T13:23:58+00:00"
+            "time": "2022-10-23T11:29:32+00:00"
         },
         {
             "name": "revolt/event-loop",

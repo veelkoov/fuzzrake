@@ -18,8 +18,8 @@ trait UtilsTrait
     {
         $pattern = pattern('\s+');
 
-        $expectedHtml = trim($pattern->replace($expectedHtml)->all()->with(' '));
-        $actualHtml = trim($pattern->replace($actualHtml)->all()->with(' '));
+        $expectedHtml = trim($pattern->replace($expectedHtml)->with(' '));
+        $actualHtml = trim($pattern->replace($actualHtml)->with(' '));
 
         self::assertEquals($expectedHtml, $actualHtml);
     }

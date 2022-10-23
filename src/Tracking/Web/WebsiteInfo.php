@@ -7,7 +7,7 @@ namespace App\Tracking\Web;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\UnbelievableRuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 use function Psl\Str\contains_ci;
@@ -76,7 +76,8 @@ class WebsiteInfo
     {
         return $this->trelloBoardUrlPattern
             ->match($webpageSnapshot->url)
-            ->findFirst(function (Detail $detail): array {
+            ->findFirst()
+            ->map(function (Detail $detail): array {
                 try {
                     return [self::getTrelloBoardDataUrl($detail->get('boardId'))];
                 } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
@@ -93,7 +94,8 @@ class WebsiteInfo
     {
         return $this->instagramUrlPattern
             ->match($webpageSnapshot->url)
-            ->findFirst(function (Detail $detail): array {
+            ->findFirst()
+            ->map(function (Detail $detail): array {
                 try {
                     return [self::getInstagramUserProfileDataUrl($detail->get('username'))];
                 } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart

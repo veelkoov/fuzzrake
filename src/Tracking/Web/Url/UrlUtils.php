@@ -20,7 +20,7 @@ final class UrlUtils
     public static function safeFileNameFromUrl(string $url): string
     {
         $result = pattern('^https?://(www\.)?|(\?|#).+$', 'i')->prune($url);
-        $result = pattern('[^a-z0-9_.-]+', 'i')->replace($result)->all()->with('_');
+        $result = pattern('[^a-z0-9_.-]+', 'i')->replace($result)->with('_');
 
         return trim($result, '_');
     }

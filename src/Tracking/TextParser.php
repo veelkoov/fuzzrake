@@ -8,11 +8,11 @@ use App\Tracking\Exception\TrackerException;
 use App\Tracking\OfferStatus\OfferStatus;
 use App\Tracking\Regex\PatternProvider;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
-use App\Utils\UnbelievableRuntimeException;
-use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
+use TRegx\CleanRegex\Match\Group;
 use TRegx\CleanRegex\Pattern;
 
+use function Psl\Vec\filter;
 use function Psl\Vec\map;
 
 class TextParser
@@ -95,15 +95,11 @@ class TextParser
         $status = null;
         $offers = [];
 
-        try {
-            $nonEmptyGroups = array_filter($match->namedGroups()->names(), fn ($name) => $match->matched($name));
-        } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
-            throw new UnbelievableRuntimeException($e);
-        } // @codeCoverageIgnoreEnd
+        $nonEmptyGroupNames = filter(map($match->namedGroups(), fn (Group $group) => $group->matched() ? $group->name() : null));
 
-        $detail = "{$match->text()} (groups: ".implode(', ', $nonEmptyGroups).')';
+        $detail = "{$match->text()} (groups: ".implode(', ', $nonEmptyGroupNames).')';
 
-        foreach ($nonEmptyGroups as $groupName) {
+        foreach ($nonEmptyGroupNames as $groupName) {
             foreach ($this->groupTranslations[$groupName] as $translation) {
                 if (str_starts_with($translation, 'STATUS:')) { // grep-offer-status-constants
                     if (null !== $status) {

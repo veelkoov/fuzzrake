@@ -6,7 +6,7 @@ namespace App\Utils\Species;
 
 use App\Utils\UnbelievableRuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 
 class HierarchyAwareBuilder
 {
@@ -148,7 +148,7 @@ class HierarchyAwareBuilder
     {
         try {
             return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)
-                ->findFirst(fn (Detail $match): array => [
+                ->findFirst()->map(fn (Detail $match): array => [
                     $match->group('flags')->text(),
                     $match->group('specie')->text(),
                 ])->orReturn(['', $specie]);

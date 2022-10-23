@@ -20,6 +20,6 @@ class SimpleReplacement implements ReplacementInterface
 
     public function do(string $input): string
     {
-        return $this->pattern->replace($input)->all()->withReferences($this->replacement);
+        return $this->pattern->replace($input)->withReferences($this->replacement);
     }
 }

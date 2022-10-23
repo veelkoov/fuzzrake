@@ -21,7 +21,7 @@ use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Form;
 use TRegx\CleanRegex\Exception\SubjectNotMatchedException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 /**
@@ -241,7 +241,7 @@ class ExtendedTest extends AbstractTestWithEM
         }
 
         $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $array])
-            ->match($htmlBody)->flatMapAssoc(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
+            ->match($htmlBody)->toMap(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
         $expected = StringList::unpack($value);
 
@@ -268,7 +268,7 @@ class ExtendedTest extends AbstractTestWithEM
             self::assertCount(1, $match, "since/$sfName didn't match exactly once.");
 
             try {
-                $matchedText = $match->first();
+                $matchedText = $match->first()->text();
             } catch (SubjectNotMatchedException $exception) {
                 throw new UnbelievableRuntimeException($exception);
             }
@@ -322,7 +322,7 @@ class ExtendedTest extends AbstractTestWithEM
             self::assertCount(1, $match);
 
             try {
-                $textMatch = $match->first();
+                $textMatch = $match->first()->text();
                 self::assertIsString($textMatch);
 
                 self::assertStringNotContainsStringIgnoringCase('value', $textMatch); // Needle = attribute name
