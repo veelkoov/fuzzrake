@@ -11,6 +11,9 @@ use App\IuHandling\Changes\ListChange;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class EventFactoryTest extends TestCase
 {
     /**

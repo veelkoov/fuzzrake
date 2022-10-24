@@ -15,8 +15,8 @@ use App\Utils\Data\Validator;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\NonUniqueResultException;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
-use TRegx\CleanRegex\Replace\Details\ReplaceDetail;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -95,9 +95,9 @@ class AdminExtensions extends AbstractExtension
         return $result;
     }
 
-    private function linkUrls(string $input): string
+    public function linkUrls(string $input): string
     {
-        return $this->linkPattern->replace($input)->all()->callback(function (ReplaceDetail $detail): string {
+        return $this->linkPattern->replace($input)->callback(function (Detail $detail): string {
             $url = htmlspecialchars($detail->text());
 
             return "<a href=\"$url\">$url</a>";

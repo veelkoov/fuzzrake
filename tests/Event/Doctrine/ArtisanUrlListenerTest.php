@@ -11,6 +11,9 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 
+/**
+ * @medium
+ */
 class ArtisanUrlListenerTest extends KernelTestCaseWithEM
 {
     /**

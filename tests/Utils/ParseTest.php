@@ -8,6 +8,9 @@ use App\Utils\Parse;
 use App\Utils\ParseException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class ParseTest extends TestCase
 {
     /**

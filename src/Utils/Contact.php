@@ -6,7 +6,7 @@ namespace App\Utils;
 
 use App\Utils\Traits\UtilityClass;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 
 final class Contact
 {
@@ -42,12 +42,13 @@ final class Contact
         foreach (self::PATTERNS as $pattern => $template) {
             $result = pattern($pattern, 'i')
                 ->match($input)
-                ->findFirst(function (Detail $detail) use ($template): array {
+                ->findFirst()
+                ->map(function (Detail $detail) use ($template): array {
                     try {
                         return [$template[0], $template[1].$detail->group(1)->text()];
-                    } catch (NonexistentGroupException $e) {
+                    } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                         throw new UnbelievableRuntimeException($e);
-                    }
+                    } // @codeCoverageIgnoreEnd
                 })
                 ->orReturn(null);
 

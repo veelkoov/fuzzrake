@@ -11,6 +11,9 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Contact;
 use InvalidArgumentException;
 
+/**
+ * @small
+ */
 class UpdateContactTest extends TestCase
 {
     public function testPermissionAndDescription(): void

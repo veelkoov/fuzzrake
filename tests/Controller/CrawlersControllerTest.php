@@ -6,6 +6,9 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @medium
+ */
 class CrawlersControllerTest extends WebTestCase
 {
     public function testSitemap(): void

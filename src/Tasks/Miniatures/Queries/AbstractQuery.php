@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tasks\Miniatures;
+namespace App\Tasks\Miniatures\Queries;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Utils\UnbelievableRuntimeException;
@@ -10,10 +10,10 @@ use JsonException;
 use LogicException;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
-abstract class AbstractMiniatures
+abstract class AbstractQuery
 {
     protected Pattern $pattern;
 
@@ -31,12 +31,13 @@ abstract class AbstractMiniatures
     protected function getPictureId(string $photoUrl): string
     {
         return $this->pattern->match($photoUrl)
-            ->findFirst(function (Detail $detail): string {
+            ->findFirst()
+            ->map(function (Detail $detail): string {
                 try {
                     return $detail->get('picture_id');
-                } catch (NonexistentGroupException $e) {
+                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
                     throw new UnbelievableRuntimeException($e);
-                }
+                } // @codeCoverageIgnoreEnd
             })->orElse(fn () => throw new LogicException("Failed to match picture URL: '$photoUrl'"));
     }
 

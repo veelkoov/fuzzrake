@@ -10,7 +10,6 @@ class SinceFixer implements FixerInterface
     {
         return pattern('(\d{4})-(\d{2})(?:-\d{2})?')
             ->replace($subject)
-            ->all()
             ->withReferences('$1-$2');
     }
 }

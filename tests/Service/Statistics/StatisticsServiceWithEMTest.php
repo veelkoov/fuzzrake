@@ -9,6 +9,9 @@ use App\Service\Statistics\StatisticsService;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
+/**
+ * @medium
+ */
 class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
 {
     public function testUnknownAndEuArtisansDontCountTowardsTotalCountries(): void

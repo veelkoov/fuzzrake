@@ -8,13 +8,15 @@ use App\DataDefinitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use PHPUnit\Framework\TestCase;
 use TRegx\CleanRegex\Exception\PatternException;
-use TRegx\CleanRegex\Match\Details\Detail;
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 use function Psl\File\read;
 
 /**
  * Don't judge, I'm having a lot of fun here!
+ *
+ * @small
  */
 class ArtisanFieldsTest extends TestCase
 {
@@ -36,8 +38,9 @@ class ArtisanFieldsTest extends TestCase
 
         $parameters = $this->constructor
             ->match($modelSource)
+            ->first()
             ->group('parameters')
-            ->nth(0);
+            ->text();
 
         $matches = $this->constructorParameter->match($parameters);
 

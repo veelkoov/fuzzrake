@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
+use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class PayMethodFixer extends AbstractListFixer
@@ -36,7 +37,7 @@ class PayMethodFixer extends AbstractListFixer
         return [
             'wise.com',
             'boosty.to',
-            ...$this->nsp->match($subject)->all(),
+            ...$this->nsp->match($subject)->map(fn (Detail $detail) => $detail->text()),
         ];
     }
 }

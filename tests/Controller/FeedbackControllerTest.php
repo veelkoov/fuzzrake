@@ -7,6 +7,9 @@ namespace App\Tests\Controller;
 use App\Tests\TestUtils\Cases\WebTestCase;
 use App\Utils\TestUtils\TestsBridge;
 
+/**
+ * @medium
+ */
 class FeedbackControllerTest extends WebTestCase
 {
     public function testSimpleFeedbackSubmission(): void

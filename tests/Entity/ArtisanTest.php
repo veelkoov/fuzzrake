@@ -7,6 +7,9 @@ namespace App\Tests\Entity;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class ArtisanTest extends TestCase
 {
     public function testSettingMakerIdAddsToTheEmptyCollection(): void

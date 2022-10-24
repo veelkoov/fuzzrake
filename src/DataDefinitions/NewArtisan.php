@@ -19,9 +19,9 @@ class NewArtisan
     {
         try {
             return UtcClock::at('-42 days'); // grep-amount-of-days-considered-new
-        } catch (DateTimeException $e) {
+        } catch (DateTimeException $e) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($e);
-        }
+        } // @codeCoverageIgnoreEnd
     }
 
     public static function getCutoffDateStr(): string

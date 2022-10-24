@@ -14,6 +14,9 @@ use App\Utils\TestUtils\UtcClockMock;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * @small
+ */
 class WebpageSnapshotManagerTest extends TestCase
 {
     public function testGetCreatesProperSnapshot(): void

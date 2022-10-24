@@ -7,6 +7,9 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Facebook\WebDriver\Exception\WebDriverException;
 
+/**
+ * @large
+ */
 class InfoPageTest extends PantherTestCaseWithEM
 {
     /**

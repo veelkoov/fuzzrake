@@ -15,6 +15,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * @medium
+ */
 class ArtisanUrlInspectionWithEMTest extends KernelTestCaseWithEM
 {
     public function testInspect(): void

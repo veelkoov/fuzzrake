@@ -21,6 +21,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @small
+ */
 class StatusTrackerTest extends TestCase
 {
     public function testNoCommissionsUrlsResetsEverything(): void

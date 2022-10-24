@@ -10,6 +10,9 @@ use Exception;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
 
+/**
+ * @large
+ */
 class IuFormTest extends PantherTestCaseWithEM
 {
     private Client $client;

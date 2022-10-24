@@ -10,6 +10,9 @@ use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class UtcClockTest extends TestCase
 {
     protected function tearDown(): void

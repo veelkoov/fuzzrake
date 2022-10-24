@@ -10,6 +10,9 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
 
+/**
+ * @medium
+ */
 class EventsControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testPageLoads(): void

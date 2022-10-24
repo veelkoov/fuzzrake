@@ -8,6 +8,9 @@ use App\DataDefinitions\Fields\Field;
 use App\IuHandling\Changes\SimpleChange;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class SimpleChangeTest extends TestCase
 {
     public function testNoChange(): void

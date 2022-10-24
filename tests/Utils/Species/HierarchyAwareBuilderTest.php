@@ -7,6 +7,9 @@ namespace App\Tests\Utils\Species;
 use App\Utils\Species\HierarchyAwareBuilder;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class HierarchyAwareBuilderTest extends TestCase
 {
     /**

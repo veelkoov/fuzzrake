@@ -12,6 +12,8 @@ use Facebook\WebDriver\WebDriverBy;
 
 /**
  * @see \App\Tests\Controller\FeedbackControllerTest
+ *
+ * @large
  */
 class FeedbackControllerTest extends PantherTestCaseWithEM
 {

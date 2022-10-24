@@ -62,7 +62,7 @@ class StringBuffer
         return 0 === $this->buffer->length();
     }
 
-    private function readUntilRegexp(string $terminator, bool $trimWhitespaceAfterwards = true): string
+    public function readUntilRegexp(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
         try {
             $delimitedPattern = $this->delimitedCache[$terminator] ??= pattern($terminator)->delimited();
@@ -94,5 +94,10 @@ class StringBuffer
         $this->buffer = $this->buffer->slice(1);
 
         return $result;
+    }
+
+    public function peekAll(): string
+    {
+        return $this->buffer->toString();
     }
 }

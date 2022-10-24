@@ -8,6 +8,9 @@ use App\Entity\MakerId;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
+/**
+ * @medium
+ */
 class MakerIdRepositoryWithEMTest extends KernelTestCaseWithEM
 {
     public function testGetOldToNewMakerIdsMap(): void

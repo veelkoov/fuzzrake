@@ -9,6 +9,9 @@ use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
+/**
+ * @large
+ */
 class MakerModeTest extends PantherTestCaseWithEM
 {
     /**

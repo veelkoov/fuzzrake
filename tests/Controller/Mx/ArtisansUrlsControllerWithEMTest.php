@@ -6,6 +6,9 @@ namespace App\Tests\Controller\Mx;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
+/**
+ * @medium
+ */
 class ArtisansUrlsControllerWithEMTest extends WebTestCaseWithEM
 {
     public function testPageLoads(): void

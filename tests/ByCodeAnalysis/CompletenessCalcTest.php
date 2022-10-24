@@ -13,6 +13,9 @@ use PHPUnit\Framework\TestCase;
 
 use function Psl\File\read;
 
+/**
+ * @small
+ */
 class CompletenessCalcTest extends TestCase
 {
     public function testAllFieldsCovered(): void

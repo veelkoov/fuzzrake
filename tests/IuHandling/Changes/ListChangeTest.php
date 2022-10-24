@@ -8,6 +8,9 @@ use App\DataDefinitions\Fields\Field;
 use App\IuHandling\Changes\ListChange;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class ListChangeTest extends TestCase
 {
     public function testNoChange(): void

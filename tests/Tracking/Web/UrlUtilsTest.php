@@ -7,6 +7,9 @@ namespace App\Tests\Tracking\Web;
 use App\Tracking\Web\Url\UrlUtils;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class UrlUtilsTest extends TestCase
 {
     /**
@@ -17,10 +20,14 @@ class UrlUtilsTest extends TestCase
         self::assertEquals($expected, UrlUtils::hostFromUrl($input));
     }
 
-    public function hostFromUrlDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return array<array{string, string}>
+     */
+    public function hostFromUrlDataProvider(): array
     {
         return [
             ['https://www.getfursu.it/', 'getfursu.it'],
+            ['http://www.getfursu.it/path', 'getfursu.it'],
             ['https://beta.getfursu.it/test', 'beta.getfursu.it'],
             ['httpsaaa!!!fff/', 'invalid_host'],
         ];
@@ -34,7 +41,10 @@ class UrlUtilsTest extends TestCase
         self::assertEquals($expected, UrlUtils::safeFileNameFromUrl($input));
     }
 
-    public function safeFileNameFromUrlDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return array<array{string, string}>
+     */
+    public function safeFileNameFromUrlDataProvider(): array
     {
         return [
             ['https://getfursu.it/data_updates.html#anchor', 'getfursu.it_data_updates.html'],

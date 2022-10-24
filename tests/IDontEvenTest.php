@@ -9,6 +9,9 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * @small
+ */
 class IDontEvenTest extends TestCase
 {
     /**

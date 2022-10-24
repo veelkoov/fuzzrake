@@ -8,6 +8,9 @@ use App\Tests\TestUtils\DataDefinitions;
 use App\Utils\Data\Fixer\PayMethodFixer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class PayMethodFixerTest extends TestCase
 {
     private static PayMethodFixer $subject;

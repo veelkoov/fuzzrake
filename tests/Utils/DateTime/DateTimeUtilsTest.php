@@ -9,6 +9,9 @@ use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class DateTimeUtilsTest extends TestCase
 {
     /**
