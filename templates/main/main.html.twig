@@ -35,18 +35,22 @@
 
     {% include 'main/parts/intro.html.twig' %}
 
-    {% include 'main/parts/checklist.html.twig' %}
+    <div id="loading-indicator-container" class="alert alert-primary pb-0" role="alert">
+        <h4 class="alert-heading">Loading, please wait. <small class="text-muted" id="loading-indicator-message"></small></h4>
 
-    <div id="data-loading-message" class="alert alert-primary" role="alert">
-        The data is being processed. This may take several seconds. If it's stuck for
-        <strong>more than half a minute</strong>, you may want to try:
+        <hr>
 
-        <ul>
+        <p class="small mb-1">If it is stuck for more than half a minute, you may want to try:</p>
+
+        <ul class="small">
             <li>refreshing the page / clearing the cache</li>
             <li>using the "incognito mode"</li>
             <li>using other browser or device</li>
         </ul>
     </div>
+    {% include '_loading.html.twig' %}
+
+    {% include 'main/parts/checklist.html.twig' %}
 
     <div id="data-table-content-container" style="display: none;">
         <div id="maker-mode-warning" class="card border-danger mb-3">

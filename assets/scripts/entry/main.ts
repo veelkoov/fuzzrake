@@ -44,6 +44,8 @@ function finalizeInit(): void {
     }
 
     jQuery('#data-loading-message, #data-table-container').toggle();
+    // @ts-ignore
+    window.fliSetLoading(false);
 
     openArtisanByFragment(window.location.hash);
 }
