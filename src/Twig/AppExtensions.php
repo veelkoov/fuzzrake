@@ -6,6 +6,7 @@ namespace App\Twig;
 
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\Counter;
+use App\Twig\Utils\HumanReadableRegexes;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
@@ -20,9 +21,12 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
+    private readonly HumanReadableRegexes $humanReadableRegexes;
+
     public function __construct(
         private readonly EnvironmentsService $environments,
     ) {
+        $this->humanReadableRegexes = new HumanReadableRegexes();
     }
 
     public function getFilters(): array
@@ -33,7 +37,7 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('other', $this->otherFilter(...)),
             new TwigFilter('event_url', StrUtils::shortPrintUrl(...)),
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
-            new TwigFilter('humanFriendlyRegexp', $this->filterHumanFriendlyRegexp(...)),
+            new TwigFilter('humanFriendlyRegexp', $this->humanReadableRegexes->makeReadable(...)),
             new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
             new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), SafeFor::JS),
         ];
@@ -119,17 +123,6 @@ class AppExtensions extends AbstractExtension
         $pattern = pattern($matchWord, 'i');
 
         return array_filter($items, fn (Item $item) => $pattern->test($item->getLabel()));
-    }
-
-    public function filterHumanFriendlyRegexp(string $input): string
-    {
-        $input = pattern('\(\?<!.+?\)', 'i')->prune($input);
-        $input = pattern('\(\?!.+?\)', 'i')->prune($input);
-        $input = pattern('\([^a-z]+?\)', 'i')->prune($input);
-        $input = pattern('[()?]', 'i')->prune($input);
-        $input = pattern('\[.+?\]', 'i')->prune($input);
-
-        return strtoupper($input);
     }
 
     public function filterFilterByQuery(string $input, DataQuery $query): string
