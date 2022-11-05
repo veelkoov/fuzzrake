@@ -23,10 +23,9 @@ class TextPreprocessor
      * @param Pattern[] $falsePositivePatterns
      */
     public function __construct(
-        array                         $falsePositivePatterns,
+        array $falsePositivePatterns,
         private readonly Replacements $replacements,
-    )
-    {
+    ) {
         $this->falsePositivePatterns = Pattern::list($falsePositivePatterns);
         $this->detector = new Detector();
     }

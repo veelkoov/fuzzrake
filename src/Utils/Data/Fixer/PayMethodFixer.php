@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Data\Fixer;
 
-use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class PayMethodFixer extends AbstractListFixer

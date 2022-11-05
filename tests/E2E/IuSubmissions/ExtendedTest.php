@@ -264,11 +264,11 @@ class ExtendedTest extends AbstractTestWithEM
                 continue; // grep-default-auto-since-day-01
             }
 
-            $match = pattern('<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>', 's')->match($htmlBody);
+            $match = pattern('<select[^>]+name="iu_form\[since]\['.$sfName.']"[^>]*>.+?</select>', 's')->search($htmlBody);
             self::assertCount(1, $match, "since/$sfName didn't match exactly once.");
 
             try {
-                $matchedText = $match->first()->text();
+                $matchedText = $match->first();
             } catch (SubjectNotMatchedException $exception) {
                 throw new UnbelievableRuntimeException($exception);
             }
@@ -318,11 +318,11 @@ class ExtendedTest extends AbstractTestWithEM
     private static function assertValueIsNotPresentInForm(string $value, Field $field, string $htmlBody): void
     {
         if (Field::PASSWORD === $field) { // paranoid show off, and you missed some possibility, did you?
-            $match = pattern('<input[^>]+name="iu_form\[password]"[^>]*>')->match($htmlBody);
+            $match = pattern('<input[^>]+name="iu_form\[password]"[^>]*>')->search($htmlBody);
             self::assertCount(1, $match);
 
             try {
-                $textMatch = $match->first()->text();
+                $textMatch = $match->first();
                 self::assertIsString($textMatch);
 
                 self::assertStringNotContainsStringIgnoringCase('value', $textMatch); // Needle = attribute name
