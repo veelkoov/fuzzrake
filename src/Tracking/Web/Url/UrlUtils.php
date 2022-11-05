@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tracking\Web\Url;
 
+use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 
 use function Psl\Str\Byte\strip_prefix;
@@ -19,8 +20,8 @@ final class UrlUtils
 
     public static function safeFileNameFromUrl(string $url): string
     {
-        $result = pattern('^https?://(www\.)?|(\?|#).+$', 'i')->prune($url);
-        $result = pattern('[^a-z0-9_.-]+', 'i')->replace($result)->with('_');
+        $result = Patterns::getI('^https?://(www\.)?|(\?|#).+$')->prune($url);
+        $result = Patterns::getI('[^a-z0-9_.-]+')->replace($result)->with('_');
 
         return trim($result, '_');
     }

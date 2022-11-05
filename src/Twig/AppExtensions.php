@@ -12,6 +12,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
 use App\Utils\Filters\Item;
 use App\Utils\Json;
+use App\Utils\Regexp\Patterns;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use JsonException;
@@ -120,7 +121,7 @@ class AppExtensions extends AbstractExtension
      */
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
-        $pattern = pattern($matchWord, 'i');
+        $pattern = Patterns::getI($matchWord);
 
         return array_filter($items, fn (Item $item) => $pattern->test($item->getLabel()));
     }

@@ -8,6 +8,7 @@ use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
 use App\Twig\AppExtensions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
 
@@ -45,10 +46,9 @@ final class StrUtils
      *
      * @see AppExtensions
      */
-    public static function shortPrintUrl(string $originalUrl): string
+    public static function shortPrintUrl(string $url): string
     {
-        $url = pattern('^https?://(www\.)?')->prune($originalUrl);
-        $url = pattern('/?(#profile)?$')->prune($url);
+        $url = Patterns::get('^https?://(www\.)?|/?$')->prune($url);
         $url = str_replace('/user/', '/u/', $url);
         $url = str_replace('/journal/', '/j/', $url);
 

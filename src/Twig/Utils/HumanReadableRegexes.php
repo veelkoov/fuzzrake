@@ -19,7 +19,7 @@ class HumanReadableRegexes
         '\[.+?\]',
     ];
 
-    private PatternList $patterns;
+    private readonly PatternList $patterns;
 
     public function __construct()
     {
