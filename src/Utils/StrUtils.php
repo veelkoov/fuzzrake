@@ -6,9 +6,7 @@ namespace App\Utils;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
-use App\Twig\AppExtensions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;
 
@@ -39,24 +37,6 @@ final class StrUtils
     public static function undoStrSafeForCli(string $input): string
     {
         return str_replace(['\r', '\n', '\\'], ["\r", "\n", '\\'], $input);
-    }
-
-    /**
-     * @noinspection PhpUnused
-     *
-     * @see AppExtensions
-     */
-    public static function shortPrintUrl(string $url): string
-    {
-        $url = Patterns::get('^https?://(www\.)?|/?$')->prune($url);
-        $url = str_replace('/user/', '/u/', $url);
-        $url = str_replace('/journal/', '/j/', $url);
-
-        if (strlen($url) > 50) {
-            $url = substr($url, 0, 40).'...';
-        }
-
-        return $url;
     }
 
     public static function ucfirst(string $input): string

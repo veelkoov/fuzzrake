@@ -6,7 +6,7 @@ namespace App\Twig;
 
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\Counter;
-use App\Twig\Utils\HumanReadableRegexes;
+use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
@@ -14,7 +14,6 @@ use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use App\Utils\StringList;
-use App\Utils\StrUtils;
 use JsonException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -22,12 +21,12 @@ use Twig\TwigFunction;
 
 class AppExtensions extends AbstractExtension
 {
-    private readonly HumanReadableRegexes $humanReadableRegexes;
+    private readonly HumanFriendly $friendly;
 
     public function __construct(
         private readonly EnvironmentsService $environments,
     ) {
-        $this->humanReadableRegexes = new HumanReadableRegexes();
+        $this->friendly = new HumanFriendly();
     }
 
     public function getFilters(): array
@@ -36,9 +35,9 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
             new TwigFilter('list', $this->listFilter(...)),
             new TwigFilter('other', $this->otherFilter(...)),
-            new TwigFilter('event_url', StrUtils::shortPrintUrl(...)),
+            new TwigFilter('event_url', $this->friendly->shortUrl(...)),
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
-            new TwigFilter('humanFriendlyRegexp', $this->humanReadableRegexes->makeReadable(...)),
+            new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
             new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
             new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), SafeFor::JS),
         ];
