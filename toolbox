@@ -40,7 +40,7 @@ function assure_line_in_file() {
 }
 
 function run_setup() {
-    # TODO: sudo is required as a workaround for filesystem/Docker user permission issues
+    # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
     run_command sudo mkdir -p ./var/cache
     run_command sudo mkdir -p ./var/log
     run_command sudo chmod -R a+w ./var
@@ -104,7 +104,7 @@ function action() {
 
         'console')      run_console "$@" ;;
 
-        # TODO: sudo is required as a workaround for filesystem/Docker user permission issues
+        # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
         'cc')           run_command sudo rm -rf ./var/cache/* ;;
 
         'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
