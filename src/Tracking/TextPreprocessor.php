@@ -12,18 +12,21 @@ use JsonException;
 use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;
 use TRegx\CleanRegex\Pattern;
+use TRegx\CleanRegex\PatternList;
 
 class TextPreprocessor
 {
+    private readonly PatternList $falsePositivePatterns;
     private readonly Detector $detector;
 
     /**
      * @param Pattern[] $falsePositivePatterns
      */
     public function __construct(
-        private readonly array $falsePositivePatterns,
+        array $falsePositivePatterns,
         private readonly Replacements $replacements,
     ) {
+        $this->falsePositivePatterns = Pattern::list($falsePositivePatterns);
         $this->detector = new Detector();
     }
 
@@ -36,7 +39,7 @@ class TextPreprocessor
         $contents = strtolower($contents);
         $contents = $this->applyReplacements($contents);
         $contents = self::replaceArtisanName($artisanName, $contents);
-        $contents = $this->removeFalsePositives($contents);
+        $contents = $this->falsePositivePatterns->prune($contents);
         $contents = $this->applyFilters($url, $contents);
 
         return new Text($inputText, $contents);
@@ -109,15 +112,6 @@ class TextPreprocessor
         }
 
         return $inputText;
-    }
-
-    private function removeFalsePositives(string $contents): string
-    {
-        foreach ($this->falsePositivePatterns as $pattern) {
-            $contents = $pattern->prune($contents);
-        }
-
-        return $contents;
     }
 
     private function applyReplacements(string $contents): string

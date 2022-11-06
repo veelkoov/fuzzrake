@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 
 final class StringList
@@ -59,7 +60,7 @@ final class StringList
 
         $input = self::replaceNonsplittables($input, $nonsplittables);
 
-        $result = pattern($separatorRegexp)->split($input);
+        $result = Patterns::get($separatorRegexp)->split($input);
 
         $nonsplittables = array_flip($nonsplittables);
 

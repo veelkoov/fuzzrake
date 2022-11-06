@@ -7,6 +7,7 @@ namespace App\Utils\Species;
 use App\Utils\UnbelievableRuntimeException;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Detail;
+use TRegx\CleanRegex\Pattern;
 
 class HierarchyAwareBuilder
 {
@@ -28,11 +29,15 @@ class HierarchyAwareBuilder
      */
     private array $validNames;
 
+    private readonly Pattern $flagPattern;
+
     /**
      * @param array<string, psSpecie> $species
      */
     public function __construct(array $species)
     {
+        $this->flagPattern = pattern(self::FLAG_PREFIX_REGEXP);
+
         $this->flat = [];
         $this->tree = $this->getTreeFor($species);
 
@@ -70,7 +75,7 @@ class HierarchyAwareBuilder
     private function addValidNamesFrom(array $species): void
     {
         foreach ($species as $specie => $subspecies) {
-            [, $specie] = self::splitSpecieFlagsName($specie);
+            [, $specie] = $this->splitSpecieFlagsName($specie);
 
             if (!in_array($specie, $this->validNames)) {
                 $this->validNames[] = $specie;
@@ -92,7 +97,7 @@ class HierarchyAwareBuilder
         $result = [];
 
         foreach ($species as $specieName => $subspecies) {
-            [$flags, $specieName] = self::splitSpecieFlagsName($specieName);
+            [$flags, $specieName] = $this->splitSpecieFlagsName($specieName);
 
             if (null !== $subspecies) {
                 $subspecies = $this->subspecies($subspecies);
@@ -144,10 +149,10 @@ class HierarchyAwareBuilder
     /**
      * @return array{0: string, 1: string}
      */
-    private static function splitSpecieFlagsName(string $specie): array
+    private function splitSpecieFlagsName(string $specie): array
     {
         try {
-            return pattern(self::FLAG_PREFIX_REGEXP)->match($specie)
+            return $this->flagPattern->match($specie)
                 ->findFirst()->map(fn (Detail $match): array => [
                     $match->group('flags')->text(),
                     $match->group('specie')->text(),

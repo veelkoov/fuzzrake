@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Detail;
@@ -40,7 +41,7 @@ final class Contact
         }
 
         foreach (self::PATTERNS as $pattern => $template) {
-            $result = pattern($pattern, 'i')
+            $result = Patterns::getI($pattern)
                 ->match($input)
                 ->findFirst()
                 ->map(function (Detail $detail) use ($template): array {
