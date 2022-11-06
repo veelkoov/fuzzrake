@@ -104,13 +104,8 @@ task('docker-down')  { docker_compose('down') }
 task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
 task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
 task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
-task(:phpunit)       { |_t, args| phpunit(*args) }
 
 task pcf: ['php-cs-fixer']
-task pu: [:phpunit]
-mtask(:pus, :phpunit, '--group', 'small')
-mtask(:pum, :phpunit, '--group', 'medium')
-mtask(:pul, :phpunit, '--group', 'large')
 task ps: [:phpstan]
 
 #

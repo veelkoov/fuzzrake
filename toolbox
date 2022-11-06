@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
+
+
+function run_command() {
+    echo "Executing: $*"
+
+    "$@"
+}
+
+function run_docker_compose() {
+    run_command docker compose --project-directory docker --project-name "$PROJECT_NAME" "$@"
+}
+
+function run_docker() {
+    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php  "$@"
+}
+
+function error() {
+    local message="$1"
+
+    echo "ERROR: $message" >&2
+    echo ''
+    usage
+    exit 1
+}
+
+function usage() {
+    echo 'Usage:'
+    echo "    $0 ACTION [arguments ...]"
+    echo ''
+    echo 'Available actions:'
+    echo ''
+    echo '    pu           run PHPUnit tests'
+    echo '    pus          run PHPUnit tests, "small" group'
+    echo '    pum          run PHPUnit tests, "medium" group'
+    echo '    pul          run PHPUnit tests, "large" group'
+}
+
+function action() {
+    [[ $# -ge 1 ]] || error 'Not enough arguments'
+
+    local action="$1"
+    shift
+
+    case $action in
+        'pu')           run_docker ./bin/phpunit --testdox "$@" ;;
+        'pus')          action pu --group small  "$@" ;;
+        'pum')          action pu --group medium "$@" ;;
+        'pul')          action pu --group large  "$@" ;;
+
+        *) error "Unknown action: '$action'" ;;
+    esac
+}
+
+action "$@"
