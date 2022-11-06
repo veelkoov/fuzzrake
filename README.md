@@ -15,5 +15,4 @@ See https://getfursu.it/info
 * `./toolbox setup`
 * `./toolbox docker-up`
 * `./toolbox composer install`
-* `./toolbox cc`
 * `./toolbox pus`
