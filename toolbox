@@ -4,7 +4,6 @@ set -euo pipefail
 
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
-
 function run_command() {
     echo "Executing: $*"
 
@@ -15,8 +14,20 @@ function run_docker_compose() {
     run_command docker compose --project-directory docker --project-name "$PROJECT_NAME" "$@"
 }
 
-function run_docker() {
-    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php  "$@"
+function run_docker_compose_exec() {
+    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
+}
+
+function run_composer() {
+    run_docker_compose_exec composer "$@"
+}
+
+function run_setup() {
+    # TODO: sudo is required as a workaround for filesystem/Docker user permission issues
+    run_command sudo mkdir -p ./var/cache
+    run_command sudo mkdir -p ./var/log
+    run_command sudo chmod a+w ./var/cache
+    run_command sudo chmod a+w ./var/log
 }
 
 function error() {
@@ -34,6 +45,15 @@ function usage() {
     echo ''
     echo 'Available actions:'
     echo ''
+    echo '    setup        Setup and/or fix required filesystem items and/or settings'
+    echo ''
+    echo '    docker-up    "ups" the Docker Compose project'
+    echo '    docker-down  "downs" the Docker Compose project'
+    echo ''
+    echo '    composer     run Composer'
+    echo ''
+    echo '    cc           clear cache'
+    echo ''
     echo '    pu           run PHPUnit tests'
     echo '    pus          run PHPUnit tests, "small" group'
     echo '    pum          run PHPUnit tests, "medium" group'
@@ -47,7 +67,16 @@ function action() {
     shift
 
     case $action in
-        'pu')           run_docker ./bin/phpunit --testdox "$@" ;;
+        'setup')        run_setup ;;
+        'docker-up')    run_docker_compose up --detach --build ;;
+        'docker-down')  run_docker_compose down ;;
+
+        'composer')     run_composer "$@" ;;
+
+        # TODO: sudo is required as a workaround for filesystem/Docker user permission issues
+        'cc')           run_command sudo rm -rf ./var/cache/* ;;
+
+        'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
         'pus')          action pu --group small  "$@" ;;
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;
