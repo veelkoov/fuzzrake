@@ -61,7 +61,6 @@ pipeline {
           sh 'rm -f .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY" >> .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'
-          sh 'echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/db.sqlite" >> .env.local'
 
           sh 'rake docker-up'
           sh 'rake composer[install]'
