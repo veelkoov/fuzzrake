@@ -46,11 +46,11 @@ function run_setup() {
     run_command sudo chmod -R a+w ./var
     run_command touch ./var/db.sqlite
 
-    assure_line_in_file ./.env.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file ./.env.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 
-    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 }
 
 function error() {
