@@ -83,6 +83,10 @@ function usage() {
     echo '    pus          run PHPUnit tests, "small" group'
     echo '    pum          run PHPUnit tests, "medium" group'
     echo '    pul          run PHPUnit tests, "large" group'
+    echo ''
+    echo '    pcf          run PHP CS Fixer'
+    echo '    ps           run PHPStan'
+    echo '    rector       run Rector'
 }
 
 function action() {
@@ -107,6 +111,10 @@ function action() {
         'pus')          action pu --group small  "$@" ;;
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;
+
+        'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
+        'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
+        'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
 
         *) error "Unknown action: '$action'" ;;
     esac

@@ -85,12 +85,6 @@ def fix_phpunit
 end
 
 task('fix-phpunit')  { fix_phpunit }
-task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
-task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
-task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
-
-task pcf: ['php-cs-fixer']
-task ps: [:phpstan]
 
 #
 # DATABASE MANAGEMENT
