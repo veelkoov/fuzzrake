@@ -22,12 +22,33 @@ function run_composer() {
     run_docker_compose_exec composer "$@"
 }
 
+function run_console() {
+    run_docker_compose_exec ./bin/console "$@"
+}
+
+function assure_line_in_file() {
+    local filepath="$1"
+    local pattern="$2"
+    local default="$3"
+
+    grep -q "$pattern" "$filepath" || {
+        echo "Appending '$default' to '$filepath'"
+        echo "$default" >> "$filepath"
+    }
+}
+
 function run_setup() {
     # TODO: sudo is required as a workaround for filesystem/Docker user permission issues
     run_command sudo mkdir -p ./var/cache
     run_command sudo mkdir -p ./var/log
-    run_command sudo chmod a+w ./var/cache
-    run_command sudo chmod a+w ./var/log
+    run_command sudo chmod -R a+w ./var
+    run_command touch ./var/db.sqlite
+
+    assure_line_in_file ./.env.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+
+    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 }
 
 function error() {
@@ -52,6 +73,8 @@ function usage() {
     echo ''
     echo '    composer     run Composer'
     echo ''
+    echo '    console      run Symfony console command'
+    echo ''
     echo '    cc           clear cache'
     echo ''
     echo '    pu           run PHPUnit tests'
@@ -72,6 +95,8 @@ function action() {
         'docker-down')  run_docker_compose down ;;
 
         'composer')     run_composer "$@" ;;
+
+        'console')      run_console "$@" ;;
 
         # TODO: sudo is required as a workaround for filesystem/Docker user permission issues
         'cc')           run_command sudo rm -rf ./var/cache/* ;;
