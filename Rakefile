@@ -56,24 +56,14 @@ def run_console(*args)
   run_docker('./bin/console', *args)
 end
 
-def run_composer(*args)
-  run_docker('composer', *args)
-end
-
-def clear_cache
-  run_shell('sudo', 'rm', '-rf', 'var/cache/dev', 'var/cache/test')
-end
-
 #
 # MISCELLANEOUS TASKS
 #
 
 task(:default)  { run_shell('rake', '--tasks', '--all') }
 task(:console)  { |_t, args| run_console(*args) }
-task(:cc)       { clear_cache }
 task(:cl)       { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
 task('cc-prod') { run_shell('ssh', 'getfursu.it', 'sudo rm -rf /var/www/prod/var/cache/prod') }
-task(:composer) { |_t, args| run_composer(*args) }
 task(:docker)   { |_t, args| run_docker(*args) }
 
 #
@@ -90,28 +80,11 @@ def create_link(file_path, link_path)
   end
 end
 
-def phpunit(*additional_args)
-  run_docker('./bin/phpunit', '--testdox', *additional_args)
-end
-
 def fix_phpunit
   create_link('vendor/symfony/phpunit-bridge', 'vendor/bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
 end
 
 task('fix-phpunit')  { fix_phpunit }
-task('docker-up')    { docker_compose('up', '--detach', '--build') }
-task('docker-down')  { docker_compose('down') }
-task(:rector)        { |_t, args| run_docker('./vendor/bin/rector', 'process', *args) }
-task(:phpstan)       { |_t, args| run_docker('./vendor/bin/phpstan', 'analyse', '-c', 'phpstan.neon', *args) }
-task('php-cs-fixer') { |_t, args| run_docker('./vendor/bin/php-cs-fixer', 'fix', *args) }
-task(:phpunit)       { |_t, args| phpunit(*args) }
-
-task pcf: ['php-cs-fixer']
-task pu: [:phpunit]
-mtask(:pus, :phpunit, '--group', 'small')
-mtask(:pum, :phpunit, '--group', 'medium')
-mtask(:pul, :phpunit, '--group', 'large')
-task ps: [:phpstan]
 
 #
 # DATABASE MANAGEMENT
@@ -192,11 +165,6 @@ end
 task(:composer_upgrade) { run_docker('composer', '--no-cache', 'upgrade') } # No cache in the container
 task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
 task(:yarn_encore_production) { run_shell('yarn', 'encore', 'production') }
-task 'update-deps': [:composer_upgrade, :yarn_upgrade, :yarn_encore_production, 'fix-phpunit'] do
-  clear_cache
-end
-task('commit-deps') { run_shell('git', 'commit', '-m', 'Updated 3rd party dependencies', 'composer.lock', 'symfony.lock', 'yarn.lock') }
-
 task yep: [:yarn_encore_production]
 
 #

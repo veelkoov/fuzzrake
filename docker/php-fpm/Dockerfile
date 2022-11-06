@@ -54,9 +54,11 @@ RUN diff  "/tmp/php.ini-production.dist" "$PHP_INI_DIR/php.ini-production" \
     && mv "/tmp/php.ini"                 "$PHP_INI_DIR/php.ini" \
     && rm "/tmp/php.ini-production.dist"
 
+# FIXME: https://github.com/veelkoov/fuzzrake/issues/168
 VOLUME /var/www/html
 WORKDIR /var/www/html
 RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'
 
+# FIXME: https://github.com/veelkoov/fuzzrake/issues/168
 VOLUME /composer
 ENV COMPOSER_HOME /composer

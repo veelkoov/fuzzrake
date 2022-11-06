@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
+
+pushd "$(dirname "$(realpath "$0")")"
+
+function run_command() {
+    echo "Executing: $*"
+
+    "$@"
+}
+
+function run_docker_compose() {
+    run_command docker compose --project-directory docker --project-name "$PROJECT_NAME" "$@"
+}
+
+function run_docker_compose_exec() {
+    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
+}
+
+function run_composer() {
+    run_docker_compose_exec composer "$@"
+}
+
+function run_console() {
+    run_docker_compose_exec ./bin/console "$@"
+}
+
+function assure_line_in_file() {
+    local filepath="$1"
+    local pattern="$2"
+    local default="$3"
+
+    grep -q "$pattern" "$filepath" || {
+        echo "Appending '$default' to '$filepath'"
+        echo "$default" >> "$filepath"
+    }
+}
+
+function run_setup() {
+    # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
+    run_command sudo mkdir -p ./var/cache
+    run_command sudo mkdir -p ./var/log
+    run_command sudo chmod -R a+w ./var
+    run_command touch ./var/db.sqlite
+
+    assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+
+    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+}
+
+function error() {
+    local message="$1"
+
+    echo "ERROR: $message" >&2
+    echo ''
+    usage
+    exit 1
+}
+
+function usage() {
+    echo 'Usage:'
+    echo "    $0 ACTION [arguments ...]"
+    echo ''
+    echo 'Available actions:'
+    echo ''
+    echo '    setup        Setup and/or fix required filesystem items and/or settings'
+    echo ''
+    echo '    docker-up    "ups" the Docker Compose project'
+    echo '    docker-down  "downs" the Docker Compose project'
+    echo ''
+    echo '    composer     run Composer'
+    echo ''
+    echo '    console      run Symfony console command'
+    echo ''
+    echo '    cc           clear cache'
+    echo ''
+    echo '    pu           run PHPUnit tests'
+    echo '    pus          run PHPUnit tests, "small" group'
+    echo '    pum          run PHPUnit tests, "medium" group'
+    echo '    pul          run PHPUnit tests, "large" group'
+    echo ''
+    echo '    pcf          run PHP CS Fixer'
+    echo '    ps           run PHPStan'
+    echo '    rector       run Rector'
+}
+
+function action() {
+    [[ $# -ge 1 ]] || error 'Not enough arguments'
+
+    local action="$1"
+    shift
+
+    case $action in
+        'setup')        run_setup ;;
+        'docker-up')    run_docker_compose up --detach --build ;;
+        'docker-down')  run_docker_compose down ;;
+
+        'composer')     run_composer "$@" ;;
+
+        'console')      run_console "$@" ;;
+
+        # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
+        'cc')           run_command sudo rm -rf ./var/cache/* ;;
+
+        'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
+        'pus')          action pu --group small  "$@" ;;
+        'pum')          action pu --group medium "$@" ;;
+        'pul')          action pu --group large  "$@" ;;
+
+        'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
+        'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
+        'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
+
+        *) error "Unknown action: '$action'" ;;
+    esac
+}
+
+action "$@"
