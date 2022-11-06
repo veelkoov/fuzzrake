@@ -29,13 +29,13 @@ To make tests in `@medium` group work:
 * `yarn encore production`
 * `./toolbox pum`
 
-To make `dev` environment work:
+To make the `dev` environment and tests in `@large` group work:
 * All the above setup
 * `./toolbox console doctrine:schema:create`
+* Setup reCaptcha (required for some functionalities)
 
 
 ## Known issues ("gotchas")
 
 * Yarn is not dockerized and automated
 * Tests in `@medium` group will not work without Yarn
-* Tests in `@large` group will not work without proper reCaptcha setup

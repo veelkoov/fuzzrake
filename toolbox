@@ -4,6 +4,8 @@ set -euo pipefail
 
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
+pushd "$(dirname "$(realpath "$0")")"
+
 function run_command() {
     echo "Executing: $*"
 
