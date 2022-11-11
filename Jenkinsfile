@@ -62,12 +62,12 @@ pipeline {
           sh 'echo "GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY" >> .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'
 
-          sh 'rake docker-up'
-          sh 'rake composer[install]'
+          sh './toolbox docker-up'
+          sh './toolbox composer install'
           sh 'yarn install'
-          sh 'rake yep'
-          sh 'rake pu[--version]'
-          sh 'rake console[doctrine:schema:create]'
+          sh './toolbox yep'
+          sh './toolbox pu --version'
+          sh './toolbox console doctrine:schema:create'
         }
       }
     }
@@ -77,7 +77,7 @@ pipeline {
         stage('PHPUnit') {
           steps {
             ansiColor('xterm') {
-              sh 'rake pu[--log-junit,junit-results.xml,--coverage-clover,clover-results.xml,--coverage-html,coverage-results]'
+              sh './toolbox pu --log-junit junit-results.xml --coverage-clover clover-results.xml --coverage-html coverage-results]'
             }
           }
 
@@ -97,7 +97,7 @@ pipeline {
         stage('PHP-CS-Fixer') {
           steps {
             ansiColor('xterm') {
-              sh 'rake pcf[--dry-run,--diff]'
+              sh './toolbox pcf --dry-run --diff'
             }
           }
         }
@@ -105,7 +105,7 @@ pipeline {
         stage('PHPStan') {
           steps {
             ansiColor('xterm') {
-              sh 'rake ps[-v]'
+              sh './toolbox ps -v'
             }
           }
         }
@@ -113,7 +113,7 @@ pipeline {
         stage('Rector') {
           steps {
             ansiColor('xterm') {
-              sh 'rake rector[--dry-run]'
+              sh './toolbox rector --dry-run'
             }
           }
         }

@@ -63,30 +63,34 @@ function error() {
 }
 
 function usage() {
-    echo 'Usage:'
-    echo "    $0 ACTION [arguments ...]"
-    echo ''
-    echo 'Available actions:'
-    echo ''
-    echo '    setup        Setup and/or fix required filesystem items and/or settings'
-    echo ''
-    echo '    docker-up    "ups" the Docker Compose project'
-    echo '    docker-down  "downs" the Docker Compose project'
-    echo ''
-    echo '    composer     run Composer'
-    echo ''
-    echo '    console      run Symfony console command'
-    echo ''
-    echo '    cc           clear cache'
-    echo ''
-    echo '    pu           run PHPUnit tests'
-    echo '    pus          run PHPUnit tests, "small" group'
-    echo '    pum          run PHPUnit tests, "medium" group'
-    echo '    pul          run PHPUnit tests, "large" group'
-    echo ''
-    echo '    pcf          run PHP CS Fixer'
-    echo '    ps           run PHPStan'
-    echo '    rector       run Rector'
+    cat << EOF
+Usage:
+    $0 ACTION [arguments ...]
+
+Available actions:
+
+    setup        Setup and/or fix required filesystem items and/or settings
+
+    docker-up    "ups" the Docker Compose project
+    docker-down  "downs" the Docker Compose project
+
+    yep          execute 'yarn encore production'
+
+    composer     run Composer
+
+    console      run Symfony console command
+
+    cc           clear cache
+
+    pu           run PHPUnit tests
+    pus          run PHPUnit tests, "small" group
+    pum          run PHPUnit tests, "medium" group
+    pul          run PHPUnit tests, "large" group
+
+    pcf          run PHP CS Fixer
+    ps           run PHPStan
+    rector       run Rector
+EOF
 }
 
 function action() {
@@ -99,6 +103,8 @@ function action() {
         'setup')        run_setup ;;
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
+
+        'yep')          yarn encore production ;;
 
         'composer')     run_composer "$@" ;;
 

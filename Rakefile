@@ -164,8 +164,6 @@ end
 
 task(:composer_upgrade) { run_docker('composer', '--no-cache', 'upgrade') } # No cache in the container
 task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
-task(:yarn_encore_production) { run_shell('yarn', 'encore', 'production') }
-task yep: [:yarn_encore_production]
 
 #
 # COMMISSIONS STATUS UPDATES
