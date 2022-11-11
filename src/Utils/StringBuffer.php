@@ -7,7 +7,8 @@ namespace App\Utils;
 use RuntimeException;
 use Symfony\Component\String\AbstractString;
 use Symfony\Component\String\UnicodeString;
-use TRegx\SafeRegex\Exception\PregException;
+use TRegx\CleanRegex\Pattern;
+use TRegx\Exception\MalformedPatternException;
 use TRegx\SafeRegex\preg;
 use UnexpectedValueException;
 
@@ -16,9 +17,9 @@ class StringBuffer
     private AbstractString $buffer;
 
     /**
-     * @var array<string, string>
+     * @var array<string, Pattern>
      */
-    private array $delimitedCache = [];
+    private array $terminatorPatternCache = [];
 
     public function __construct(string $buffer)
     {
@@ -65,13 +66,10 @@ class StringBuffer
     public function readUntilRegexp(string $terminator, bool $trimWhitespaceAfterwards = true): string
     {
         try {
-            $delimitedPattern = $this->delimitedCache[$terminator] ??= pattern($terminator)->delimited();
+            $pattern = $this->terminatorPatternCache[$terminator] ??= pattern($terminator);
 
-            /**
-             * @var string[] $parts
-             */
-            $parts = preg::split($delimitedPattern, $this->buffer->toString(), 2);
-        } catch (PregException $e) {
+            $parts = $pattern->splitStart($this->buffer->toString(), 1);
+        } catch (MalformedPatternException $e) {
             throw new RuntimeException("Terminator '$terminator' is not a valid regexp: {$e->getMessage()}");
         }
 
