@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Service\DataOnDemand\ArtisansDOD;
+use App\Utils\Artisan\SmartAccessDecorator;
 use App\ValueObject\Routing\RouteName;
+use Psr\Cache\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
+
+use function Psl\Vec\map;
+use function Psl\Vec\values;
 
 class RestApiController extends AbstractController
 {
@@ -45,11 +50,30 @@ class RestApiController extends AbstractController
         }
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisans(ArtisanRepository $artisanRepository): JsonResponse
+    public function artisans(ArtisansDOD $artisans, TagAwareCacheInterface $cache): JsonResponse
     {
-        return new JsonResponse(Artisan::wrapAll($artisanRepository->getAll()));
+        $result = $cache->get('restapi.artisans', fn () => $artisans->getAll());
+
+        return new JsonResponse($result);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
+    #[Cache(maxage: 3600, public: true)]
+    public function artisansArray(ArtisansDOD $artisans, TagAwareCacheInterface $cache): JsonResponse
+    {
+        $result = $cache->get('restapi.artisans-array', function () use ($artisans) {
+            return map($artisans->getAll(), fn ($artisan) => values($artisan->getPublicData()));
+        });
+
+        return new JsonResponse($result);
     }
 
     #[Route(path: '/api/old_to_new_maker_ids_map.json', name: RouteName::API_OLD_TO_NEW_MAKER_IDS_MAP)]

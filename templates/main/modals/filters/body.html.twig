@@ -15,6 +15,7 @@
     </div>
 </div>
 
+<form id="filters">
 {{ macros.body_other('countries',               'helphints/countries.html.twig',          'countries.html.twig', filters) }}
 {{ macros.body_multiselect('states',            'helphints/states.html.twig',             filters.states, 'state') }}
 {{ macros.body_multiselect('languages',         'helphints/languages.html.twig',          filters.languages, 'language') }}
@@ -25,3 +26,4 @@
 {{ macros.body_multiselect('commissionsStatus', 'helphints/commissions_status.html.twig', filters.commissionsStatuses, 'commissionStatus') }}
 {{ macros.body_other('species', 'helphints/species.html.twig', 'species.html.twig', filters) }}
 {{ macros.body_multiselect('paymentPlans',      'helphints/payment_plans.html.twig',      filters.paymentPlans, 'paymentPlan') }}
+</form>

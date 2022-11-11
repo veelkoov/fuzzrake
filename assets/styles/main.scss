@@ -50,7 +50,7 @@
   }
 }
 
-#artisans_wrapper { /* Override anything DataTables */
+#artisans_wrapper { /* Override anything DataTables TODO */
   > div.row:nth-child(2) > div.col-sm-12 {
     overflow-x: auto;
   }
@@ -89,7 +89,7 @@ table#artisans {
 
     td {
       cursor: pointer;
-      display: none;
+      //display: none;
       vertical-align: middle;
     }
 

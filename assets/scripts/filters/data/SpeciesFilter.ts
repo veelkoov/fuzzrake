@@ -6,8 +6,6 @@ import AnySetUnOtFilter from './AnySetUnOtFilter';
 import Artisan from '../../class/Artisan';
 import FilterInterface from './FilterInterface';
 import OtherValue from './special/OtherValue';
-import Specie from '../../species/Specie';
-import Species from '../../species/Species';
 import StatusWriter from '../StatusWriter';
 import UnknownValueTwoFields from './special/UnknownValueTwoFields';
 
@@ -18,7 +16,7 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
     private readonly other: OtherValue;
     private recalculationRequired = true;
 
-    public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string, private readonly species: Species) {
+    public constructor(private readonly fieldNameIn: string, private readonly fieldNameOut: string) {
         super();
         this.inFilter = new AnySetUnOtFilter<string>(fieldNameIn);
         this.outFilter = new AllSetUnOtFilter<string>(fieldNameOut);
@@ -84,16 +82,16 @@ export default class SpeciesFilter extends AbstractBaseFilter<string> {
         this.outFilter.clear();
 
         for (let selected of this.selectedValues) {
-            this.selectSpecieAndAncestors(this.species.flat[selected], this.inFilter);
+            // this.selectSpecieAndAncestors(this.species.flat[selected], this.inFilter);
             this.outFilter.select(selected, '');
         }
     }
 
-    private selectSpecieAndAncestors(specie: Specie, filter: FilterInterface): void {
-        filter.select(specie.name, '');
-
-        for (let subspecie of specie.parents) {
-            this.selectSpecieAndAncestors(subspecie, filter);
-        }
-    }
+    // private selectSpecieAndAncestors(specie: Specie, filter: FilterInterface): void {
+    //     filter.select(specie.name, '');
+    //
+    //     for (let subspecie of specie.parents) {
+    //         this.selectSpecieAndAncestors(subspecie, filter);
+    //     }
+    // }
 }

@@ -1,6 +1,6 @@
 {% macro filter_checkbox(group_name, id_part, value, label, count, label_html_prefix = '') %}
     <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="{{ group_name }}CheckBox{{ id_part }}"
+        <input class="form-check-input" type="checkbox" id="{{ group_name }}CheckBox{{ id_part }}" name="{{ group_name }}[]"
                value="{{ value }}" data-label="{{ label }}" />
         <label class="form-check-label" for="{{ group_name }}CheckBox{{ id_part }}">
             {{ label_html_prefix|raw }} {{ label }} <span class="count">({{ count }})</span>

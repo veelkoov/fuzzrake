@@ -7,7 +7,7 @@
         "@types/jquery": "^3.5.14",
         "core-js": "^3.0.0",
         "handlebars": "^4.7.7",
-        "handlebars-loader": "^1.7.0",
+        "handlebars-loader": "^1.7.2",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.54.5",
         "sass-loader": "^12.0.0",
@@ -27,8 +27,6 @@
         "@fortawesome/fontawesome-free": "^6.1.1",
         "@popperjs/core": "^2.11.5",
         "bootstrap": "^5.1.3",
-        "datatables.net-bs5": "^1.11.5",
-        "datatables.net-buttons-bs5": "^2.2.2",
         "jquery": "^3.6.0",
         "moment": "^2.29.1",
         "tocbot": "^4.18.2"

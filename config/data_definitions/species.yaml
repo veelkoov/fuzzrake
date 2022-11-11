@@ -5,7 +5,7 @@
 parameters:
   species_definitions:
     valid_choices:
-      "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
+      "Most species":
         "Real life animals":
           Birds:
             Ducks:

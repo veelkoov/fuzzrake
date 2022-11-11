@@ -1,10 +1,6 @@
-import Artisan from './Artisan';
-
 declare const DATA_BRIDGE: { [key: string]: string };
 
-declare const ARTISANS: Artisan[];
 declare const MAKER_IDS_MAP: object;
-declare const SPECIES: object;
 
 export default abstract class DataBridge {
     public static getTrackingUrl(): string {
@@ -31,15 +27,7 @@ export default abstract class DataBridge {
         return DATA_BRIDGE.googleRecaptchaSiteKey;
     }
 
-    public static getArtisans(): Artisan[] {
-        return ARTISANS;
-    }
-
     public static getMakerIdsMap(): object {
         return MAKER_IDS_MAP;
-    }
-
-    public static getSpecies(): object {
-        return SPECIES;
     }
 }

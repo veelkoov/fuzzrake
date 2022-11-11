@@ -1,4 +1,5 @@
-{% cache 'table_body.html' %}
+<button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal"></button>
+<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">Legend</button>
 
 <table id="artisans" class="table table-striped table-sm table-hover">
     <thead class="table-dark">
@@ -19,7 +20,7 @@
     </thead>
 
     <tbody>
-    {% for artisan in artisans.all %}
+    {% for artisan in [] %} {# TODO #}
         <tr class="fursuit-maker artisan-data {% if artisan.inactiveReason %}inactive{% endif %}" {% if artisan.makerId %}id="{{ artisan.makerId }}"{% endif %}>
             {%- apply spaceless %}
                 <td class="name" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
@@ -88,5 +89,3 @@
     {% endfor %}
     </tbody>
 </table>
-
-{% endcache %}

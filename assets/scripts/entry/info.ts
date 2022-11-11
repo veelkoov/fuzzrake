@@ -1,4 +1,4 @@
-import DataBridge from '../class/DataBridge';
+import DataBridge from '../data/DataBridge';
 
 grecaptcha.ready((): void => {
     grecaptcha.execute(DataBridge.getGoogleRecaptchaSiteKey(), { action: 'info_emailHtml' }).then((token: string): void => {

@@ -1,13 +1,12 @@
 import AbstractBaseFilterVis from './AbstractBaseFilterVis';
-import Species from '../../species/Species';
 import SpeciesFilter from '../data/SpeciesFilter';
 
 export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private readonly markersByDescendantSpecie: { [specieName: string]: JQuery<HTMLSpanElement> };
     private readonly markers: JQuery<HTMLSpanElement>;
 
-    public constructor(idPart: string, fieldNameIn: string, fieldNameOut: string, private readonly species: Species) {
-        super(idPart, new SpeciesFilter(fieldNameIn, fieldNameOut, species));
+    public constructor(idPart: string, fieldNameIn: string, fieldNameOut: string) {
+        super(idPart, new SpeciesFilter(fieldNameIn, fieldNameOut));
 
         this.markersByDescendantSpecie = this.getMarkersByDescendantSpecies();
         this.markers = this.grabMarkers();
@@ -64,11 +63,11 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private getMarkersForDescentantSpecie(specieName: string, markersBySpecie: { [specieName: string]: JQuery<HTMLSpanElement> }): JQuery<HTMLSpanElement> {
         let result = jQuery<HTMLSpanElement>();
 
-        if (this.species.flat.hasOwnProperty(specieName)) {
-            for (let ancestor of this.species.flat[specieName].getAncestors()) {
-                result = result.add(markersBySpecie[ancestor.name].toArray());
-            }
-        }
+        // if (this.species.flat.hasOwnProperty(specieName)) {
+        //     for (let ancestor of this.species.flat[specieName].getAncestors()) {
+        //         result = result.add(markersBySpecie[ancestor.name].toArray());
+        //     }
+        // }
 
         return result;
     }
@@ -76,9 +75,9 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private getMarkersBySpecie(): { [specieName: string]: JQuery<HTMLSpanElement> } {
         let result = {};
 
-        for (let specie in this.species.flat) {
-            result[specie] = this.$checkboxes.filter(`[value="${specie}"]`).siblings('label').find('span.descendants-indicator');
-        }
+        // for (let specie in this.species.flat) {
+        //     result[specie] = this.$checkboxes.filter(`[value="${specie}"]`).siblings('label').find('span.descendants-indicator');
+        // }
 
         return result;
     }
