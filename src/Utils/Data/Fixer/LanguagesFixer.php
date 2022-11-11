@@ -13,8 +13,9 @@ use TRegx\CleanRegex\Pattern;
 
 class LanguagesFixer extends StringFixer
 {
-    private readonly Pattern $pattern;
+    private readonly Pattern $replacementPattern;
     private readonly Replacements $replacements;
+    private readonly Pattern $splitPattern;
 
     /**
      * @param psLanguagesFixerConfig $languages
@@ -24,7 +25,8 @@ class LanguagesFixer extends StringFixer
     {
         parent::__construct($strings);
 
-        $this->pattern = pattern($languages['regexp'], 'i');
+        $this->splitPattern = pattern('[\n,;&]|[, ]and ');
+        $this->replacementPattern = pattern($languages['regexp'], 'i');
         $this->replacements = new Replacements($languages['replacements'], 'i', $languages['regex_prefix'], $languages['regex_suffix']);
     }
 
@@ -32,12 +34,12 @@ class LanguagesFixer extends StringFixer
     {
         $subject = parent::fix($subject);
 
-        $subject = pattern('[\n,;&]|[, ]and ')->split($subject);
+        $subject = $this->splitPattern->split($subject);
         $subject = array_filter(array_map('trim', $subject));
         $subject = array_map(function (string $language): string {
             $language = $this->replacements->do($language);
 
-            return $this->pattern->replace($language)->first()->callback(function (Detail $detail): string {
+            return $this->replacementPattern->replace($language)->first()->callback(function (Detail $detail): string {
                 try {
                     $language = $detail->get('language');
                     $limited = $detail->matched('prefix') || $detail->matched('suffix');

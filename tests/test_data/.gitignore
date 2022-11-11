@@ -1,2 +1,1 @@
-/statuses/*
-!/statuses/.gitkeep
+/statuses/[0123456789]*
