@@ -7,7 +7,6 @@ namespace App\Utils;
 use RuntimeException;
 use Symfony\Component\String\AbstractString;
 use Symfony\Component\String\UnicodeString;
-use TRegx\CleanRegex\Exception\UnevenCutException;
 use TRegx\CleanRegex\Pattern;
 use TRegx\Exception\MalformedPatternException;
 use TRegx\SafeRegex\preg;
@@ -69,20 +68,22 @@ class StringBuffer
         try {
             $pattern = $this->terminatorPatternCache[$terminator] ??= pattern($terminator);
 
-            [$one, $two] = $pattern->cut($this->buffer->toString());
+            $parts = $pattern->splitStart($this->buffer->toString(), 1);
         } catch (MalformedPatternException $e) {
             throw new RuntimeException("Terminator '$terminator' is not a valid regexp: {$e->getMessage()}");
-        } catch (UnevenCutException $e) {
+        }
+
+        if (count($parts) < 2) {
             throw new UnexpectedValueException("Unable to find '$terminator' in the remaining buffer '$this->buffer'");
         }
 
-        $this->buffer = new UnicodeString($two);
+        $this->buffer = new UnicodeString($parts[1]);
 
         if ($trimWhitespaceAfterwards) {
             $this->skipWhitespace();
         }
 
-        return $one;
+        return $parts[0];
     }
 
     public function readCharacter(): string
