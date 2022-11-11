@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21566489e1470e4ccebef141db3e1d92",
+    "content-hash": "f5265681a7d530647a82a7371bb6c291",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -2379,16 +2379,16 @@
         },
         {
             "name": "rawr/t-regx",
-            "version": "0.38.0",
+            "version": "0.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/T-Regx/T-Regx.git",
-                "reference": "d79e4c2a154ffdfda8c9838fb0064db162c5061f"
+                "reference": "97541ea146f2af803930fdaf26c1a421ba10a671"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/d79e4c2a154ffdfda8c9838fb0064db162c5061f",
-                "reference": "d79e4c2a154ffdfda8c9838fb0064db162c5061f",
+                "url": "https://api.github.com/repos/T-Regx/T-Regx/zipball/97541ea146f2af803930fdaf26c1a421ba10a671",
+                "reference": "97541ea146f2af803930fdaf26c1a421ba10a671",
                 "shasum": ""
             },
             "require": {
@@ -2442,7 +2442,7 @@
             ],
             "support": {
                 "issues": "https://github.com/T-Regx/T-Regx/issues",
-                "source": "https://github.com/T-Regx/T-Regx/tree/0.38.0"
+                "source": "https://github.com/T-Regx/T-Regx/tree/0.39.0"
             },
             "funding": [
                 {
@@ -2450,7 +2450,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-10-23T11:29:32+00:00"
+            "time": "2022-11-11T15:06:29+00:00"
         },
         {
             "name": "revolt/event-loop",
