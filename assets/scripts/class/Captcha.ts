@@ -1,5 +1,3 @@
-import * as assert from "assert";
-
 export default class Captcha {
     public static setupOnForm(formSelector: string): void {
         const $form = $(formSelector);

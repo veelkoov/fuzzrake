@@ -1,0 +1,171 @@
+<tr data-index="{{ index }}"
+    class="fursuit-maker artisan-data {% if artisan.inactiveReason %}inactive{% endif %}"
+    {{# if artisan.makerId }}id="{{ artisan.makerId }}"{{/ if }}
+>
+    <td class="name" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{# if artisan.country }}
+            <span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>&nbsp;
+        {{/ if }}
+
+        {{# if artisan.inactiveReason }}
+            <span class="hidden" aria-hidden="true">~</span>{{ artisan.name }} [inactive]{# grep-inactive-mark #}
+        {{ else }}
+            {{ artisan.name }}
+        {{/ if }}
+
+        <span class="text-nowrap">
+            {{!- artisan|ages_for_table -}}
+
+            {{# if artisan.isNew }}
+                &nbsp;<span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>
+            {{/ if }}
+        </span>
+    </td>
+
+    <td class="maker-id" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{ artisan.makerId }}
+    </td>
+    <td class="state" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{ artisan.state }}
+    </td>
+    <td class="languages" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{ commaSeparated artisan.languages }}
+    </td>
+    <td class="production-models" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{ commaSeparated artisan.productionModels }}
+    </td>
+    <td class="styles" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{!- artisan.styles|other(artisan.otherStyles) -}}
+    </td>
+    <td class="types" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{!- artisan.orderTypes|other(artisan.otherOrderTypes) -}}
+    </td>
+    <td class="features" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{!- artisan.features|other(artisan.otherFeatures) -}}
+    </td>
+    <td class="species" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{# if artisan.gotSpeciesInfo }}
+        <ul>
+            {{# each artisan.speciesDoes }}
+                <li class="yes"><i class="fas fa-check"></i>&nbsp;{{ . }}</li>
+            {{/ each }}
+            {{# each artisan.speciesDoesnt }}
+                <li class="no"><i class="fas fa-times"></i>&nbsp;{{ . }}</li>
+            {{/ each }}
+        </ul>
+        {{/ if }}
+    </td>
+    <td class="commissions" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+        {{# if artisan.isTracked }}
+            <ul>
+                {{# if artisan.cstIssueText }}
+                    <li class="inaccurate"><i class="far fa-question-circle"></i>&nbsp;{{ artisan.cstIssueText }}</li>
+                {{/ if }}
+
+                {{# each artisan.openFor }}
+                    <li class="yes"><i class="fas fa-check"></i>&nbsp;{{ . }}</li>
+                {{/ each }}
+
+                {{# each artisan.closedFor }}
+                    <li class="no"><i class="fas fa-times"></i>&nbsp;{{ . }}</li>
+                {{/ each }}
+            </ul>
+        {{/ if }}
+    </td>
+
+    <td class="links">
+        <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
+            {{!% if isDevOrTestEnv() %}
+                <a class="btn btn-warning" href="{{! path('mx_artisan_edit', { id: artisan.id }) }"><i class="fas fa-edit"></i></a>
+            {% endif %}}
+
+            {{# if artisan.fursuitReviewUrl }}
+                <a class="u-tbl u-fsr btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
+            {{/ if }}
+
+            <a class="u-tbl u-ab btn btn-secondary" href="https://bewares.getfursu.it/#search:{{! artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
+
+            {{# if artisan.websiteUrl }}
+                <a class="u-tbl u-website btn btn-secondary" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
+            {{/ if }}
+
+            <div class="btn-group" role="group">
+                {{!% set btnGroupDropLinksId = 'drpdwnmn' ~ loop.index0 %}}
+
+                <button id="{{ btnGroupDropLinksId }}" type="button" class="btn btn-secondary dropdown-toggle"                data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="{{ btnGroupDropLinksId }}">
+                    <li><a class="u-tbl u-ab dropdown-item" href="https://bewares.getfursu.it/#search:{{! artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"> <i class="fa-solid fa-spell-check"></i> Check on Artists Beware</a></li>
+                    {{# if artisan.fursuitReviewUrl }}
+                        <li><a class="u-tbl u-fsr dropdown-item" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a></li>
+                    {{/ if }}
+                    {{# if artisan.websiteUrl }}
+                        <li><a class="u-tbl u-website dropdown-item" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i> Official website</a></li>
+                    {{/ if }}
+                    {{# each artisan.pricesUrls }}
+                        <li><a class="u-tbl u-prices dropdown-item" href="{{ . }}" target="_blank"><i class="fas fa-dollar-sign"></i> Prices</a></li>
+                    {{/ each }}
+                    {{# if artisan.faqUrl }}
+                        <li><a class="u-tbl u-faq dropdown-item" href="{{ artisan.faqUrl }}" target="_blank"><i class="fas fa-comments"></i> FAQ</a></li>
+                    {{/ if }}
+                    {{# if artisan.queueUrl }}
+                        <li><a class="u-tbl u-queue dropdown-item" href="{{ artisan.queueUrl }}" target="_blank"><i class="fas fa-clipboard-list"></i> Queue</a></li>
+                    {{/ if }}
+                    {{# if artisan.furAffinityUrl }}
+                        <li><a class="u-tbl u-fa dropdown-item" href="{{ artisan.furAffinityUrl }}" target="_blank"><i class="fas fa-image"></i> FurAffinity</a></li>
+                    {{/ if }}
+                    {{# if artisan.deviantArtUrl }}
+                        <li><a class="u-tbl u-da dropdown-item" href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a></li>
+                    {{/ if }}
+                    {{# if artisan.twitterUrl }}
+                        <li><a class="u-tbl u-twitter dropdown-item" href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    {{/ if }}
+                    {{# if artisan.facebookUrl }}
+                        <li><a class="u-tbl u-facebook dropdown-item" href="{{ artisan.facebookUrl }}" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    {{/ if }}
+                    {{# if artisan.tumblrUrl }}
+                        <li><a class="u-tbl u-tumblr dropdown-item" href="{{ artisan.tumblrUrl }}" target="_blank"><i class="fab fa-tumblr"></i> Tumblr</a></li>
+                    {{/ if }}
+                    {{# if artisan.youtubeUrl }}
+                        <li><a class="u-tbl u-youtube dropdown-item" href="{{ artisan.youtubeurl }}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
+                    {{/ if }}
+                    {{# if artisan.instagramUrl }}
+                        <li><a class="u-tbl u-instagram dropdown-item" href="{{ artisan.instagramUrl }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    {{/ if }}
+                    {{# if artisan.etsyUrl }}
+                        <li><a class="u-tbl u-etsy dropdown-item" href="{{ artisan.etsyUrl }}" target="_blank"><i class="fab fa-etsy"></i> Etsy</a></li>
+                    {{/ if }}
+                    {{# if artisan.theDealersDenUrl }}
+                        <li><a class="u-tbl u-tdd dropdown-item" href="{{ artisan.theDealersDenUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> The Dealers Den</a></li>
+                    {{/ if }}
+                    {{# if artisan.otherShopUrl }}
+                        <li><a class="u-tbl u-shop dropdown-item" href="{{ artisan.otherShopUrl }}" target="_blank"><i class="fas fa-shopping-cart"></i> On-line shop</a></li>
+                    {{/ if }}
+                    {{# if artisan.furryAminoUrl }}
+                        <li><a class="u-tbl u-amino dropdown-item" href="{{ artisan.furryAminoUrl }}" target="_blank"><i class="fas fa-paw"></i> Furry Amino</a></li>
+                    {{/ if }}
+                    {{# if artisan.scritchUrl }}
+                        <li><a class="u-tbl u-scritch dropdown-item" href="{{ artisan.scritchUrl }}" target="_blank"><i class="fas fa-camera"></i> Scritch</a></li>
+                    {{/ if }}
+                    {{# if artisan.furtrackUrl }}
+                        <li><a class="u-tbl u-furtrack dropdown-item" href="{{ artisan.furtrackUrl }}" target="_blank"><i class="fas fa-camera"></i> Furtrack</a></li>
+                    {{/ if }}
+                    {{# if artisan.linklistUrl }}
+                        <li><a class="u-tbl u-links dropdown-item" href="{{ artisan.linklistUrl }}" target="_blank"><i class="fas fa-link"></i> List of links</a></li>
+                    {{/ if }}
+                    <li>
+                        <a class="u-tbl u-report dropdown-item" data-bs-toggle="modal" data-bs-target="#artisanUpdatesModal">
+                            <i class="fas fa-exclamation-triangle"></i> Data outdated/inaccurate?
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </td>
+
+    <td class="hidden">
+        {{ artisan.formerly }}
+        {{ artisan.formerMakerIds }}
+    </td>
+</tr>

@@ -10,7 +10,7 @@ export default class CardPopUpManager {
         private readonly dataManager: DataManager,
         private readonly $contents: JQuery,
     ) {
-        this.template = require('../../templates/artisan.handlebars');
+        this.template = require('../../templates/artisan_card.handlebars');
     }
 
     private showPopUpCallback(event: JQuery.Event): void {

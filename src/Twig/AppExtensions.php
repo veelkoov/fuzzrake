@@ -33,8 +33,9 @@ class AppExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
-            new TwigFilter('list', $this->listFilter(...)),
-            new TwigFilter('other', $this->otherFilter(...)),
+            // TODO
+//            new TwigFilter('list', $this->listFilter(...)),
+//            new TwigFilter('other', $this->otherFilter(...)),
             new TwigFilter('event_url', $this->friendly->shortUrl(...)),
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
             new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
@@ -82,28 +83,30 @@ class AppExtensions extends AbstractExtension
         return new Counter();
     }
 
-    public function otherFilter(string $primaryList, string $otherList): string
-    {
-        $primaryList = str_replace("\n", ', ', $primaryList);
-
-        if ('' !== $otherList) {
-            if ('' !== $primaryList) {
-                return "$primaryList, Other";
-            } else {
-                return 'Other';
-            }
-        } else {
-            return $primaryList;
-        }
-    }
+    // TODO
+//    public function otherFilter(string $primaryList, string $otherList): string
+//    {
+//        $primaryList = str_replace("\n", ', ', $primaryList);
+//
+//        if ('' !== $otherList) {
+//            if ('' !== $primaryList) {
+//                return "$primaryList, Other";
+//            } else {
+//                return 'Other';
+//            }
+//        } else {
+//            return $primaryList;
+//        }
+//    }
 
     /**
      * @return string[]
      */
-    public function listFilter(string $input): array
-    {
-        return StringList::unpack($input);
-    }
+    // TODO
+//    public function listFilter(string $input): array
+//    {
+//        return StringList::unpack($input);
+//    }
 
     /**
      * @throws JsonException

@@ -4,6 +4,8 @@ export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_GOOD = 65;
     public static readonly DATA_COMPLETE_LEVEL_OK = 50;
 
+    public static readonly NEW_ARTISANS_MAX_AGE_SECONDS = 42 * 24 * 60 * 60; // grep-amount-of-days-considered-new
+
     readonly location: string;
     readonly lcCountry: string;
     readonly allStyles: string[];
@@ -13,6 +15,10 @@ export default class Artisan {
     readonly completenessGood: boolean;
 
     readonly isStatusKnown: boolean;
+    readonly isNew: boolean;
+    readonly isTracked: boolean;
+    readonly cstIssueText: string;
+    readonly gotSpeciesInfo: boolean;
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -105,6 +111,19 @@ export default class Artisan {
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
         this.isStatusKnown = this.openFor.length + this.closedFor.length > 0;
         this.abSearchJson = this.getAbSearchJson();
+
+        // TODO: Send null instead of "unknown" for dates
+        // TODO: Date.parse() is not recommended?
+        const dateAddedParsedMs = Date.parse(dateAdded);
+        const cutoffDateMs = Date.now() - (Artisan.NEW_ARTISANS_MAX_AGE_SECONDS * 1000);
+        this.isNew = dateAdded !== 'unknown' && cutoffDateMs < dateAddedParsedMs;
+
+        this.isTracked = 0 !== openFor.length || 0 !== closedFor.length || csTrackerIssue;
+        this.cstIssueText = !this.isTracked || !csTrackerIssue ? '' : (
+            0 !== openFor.length || 0 !== closedFor.length ? 'Unsure' : 'Unknown'
+        );
+
+        this.gotSpeciesInfo = 0 !== speciesDoes.length || 0 !== speciesDoesnt.length;
     }
 
     public getLastMakerId(): string {
