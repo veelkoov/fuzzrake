@@ -1,4 +1,4 @@
-import Storage from "./Storage";
+import Storage from './Storage';
 
 export default class AgeAndSfwConfig {
     private static instance: AgeAndSfwConfig = null;

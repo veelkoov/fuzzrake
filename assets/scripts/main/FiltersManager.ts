@@ -8,6 +8,7 @@ import OpenForFilter from "../filters/data/OpenForFilter";
 import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
 import FiltersButtonManager from "./FiltersButtonManager";
 import DataManager from "./DataManager";
+import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 
 export default class FiltersManager {
     private filters: FilterVisInterface[] = [];
@@ -71,6 +72,10 @@ export default class FiltersManager {
     }
 
     private getQuery(): string {
+        if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+            return '';
+        }
+
         return this.$filters.serialize();
     }
 }
