@@ -13,7 +13,6 @@ use App\Utils\DataQuery;
 use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
-use App\Utils\StringList;
 use JsonException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -33,9 +32,6 @@ class AppExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
-            // TODO
-//            new TwigFilter('list', $this->listFilter(...)),
-//            new TwigFilter('other', $this->otherFilter(...)),
             new TwigFilter('event_url', $this->friendly->shortUrl(...)),
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
             new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
@@ -82,31 +78,6 @@ class AppExtensions extends AbstractExtension
     {
         return new Counter();
     }
-
-    // TODO
-//    public function otherFilter(string $primaryList, string $otherList): string
-//    {
-//        $primaryList = str_replace("\n", ', ', $primaryList);
-//
-//        if ('' !== $otherList) {
-//            if ('' !== $primaryList) {
-//                return "$primaryList, Other";
-//            } else {
-//                return 'Other';
-//            }
-//        } else {
-//            return $primaryList;
-//        }
-//    }
-
-    /**
-     * @return string[]
-     */
-    // TODO
-//    public function listFilter(string $input): array
-//    {
-//        return StringList::unpack($input);
-//    }
 
     /**
      * @throws JsonException

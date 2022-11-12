@@ -38,6 +38,7 @@ export default class HandlebarsHelpers {
             since:                HandlebarsHelpers.since,
             nl2br:                HandlebarsHelpers.nl2br,
             describeAges:         HandlebarsHelpers.describeAges,
+            describeAgesShort:    HandlebarsHelpers.describeAgesShort,
             describeCompleteness: HandlebarsHelpers.describeCompleteness,
         };
     }
@@ -154,6 +155,25 @@ export default class HandlebarsHelpers {
         }
 
         return new SafeString(HTML_SIGN_UNKNOWN.toString() + ' <i class="ages fa-solid fa-user"></i>');
+    }
+
+    public static describeAgesShort(artisan: Artisan): TplString {
+        switch (artisan.ages) {
+            case MINORS:
+                return new SafeString('<i class="ages fa-solid fa-user-minus"></i>');
+            case MIXED:
+                return new SafeString('<i class="ages fa-solid fa-user-plus"></i> <i class="ages fa-solid fa-user-minus"></i>');
+            case ADULTS:
+                return '';
+        }
+
+        if (true === artisan.isMinor) {
+            return new SafeString('<i class="ages fa-solid fa-user-minus"></i>');
+        } else if (false === artisan.isMinor) {
+            return '';
+        }
+
+        return new SafeString('<i class="ages fa-solid fa-user"></i>');
     }
 
     private static describeCompleteness(artisan: Artisan): string {

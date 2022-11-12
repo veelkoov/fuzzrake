@@ -1,5 +1,5 @@
 <tr data-index="{{ index }}"
-    class="fursuit-maker artisan-data {% if (has artisan.inactiveReason) %}inactive{% endif %}"
+    class="fursuit-maker artisan-data {{# if (has artisan.inactiveReason) }}inactive{{/ if }}"
     {{# if (has artisan.makerId) }}id="{{ artisan.makerId }}"{{/ if }}
 >
     <td class="name" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
@@ -12,7 +12,7 @@
         {{/ if }}
 
         <span class="text-nowrap">
-            {{!- artisan|ages_for_table -}}
+            {{ describeAgesShort artisan }}
 
             {{# if artisan.isNew }}
                 <span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>
@@ -74,7 +74,7 @@
 
     <td class="links">
         <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-            {{!% if isDevOrTestEnv() %}
+            {{! if isDevOrTestEnv() %} <!-- TODO -->
                 <a class="btn btn-warning" href="{{! path('mx_artisan_edit', { id: artisan.id }) }"><i class="fas fa-edit"></i></a>
             {% endif %}}
 
@@ -82,20 +82,17 @@
                 <a class="u-tbl u-fsr btn btn-secondary" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i></a>
             {{/ if }}
 
-            <a class="u-tbl u-ab btn btn-secondary" href="https://bewares.getfursu.it/#search:{{! artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
+            <a class="u-tbl u-ab btn btn-secondary" href="https://bewares.getfursu.it/#search:{{ artisan.abSearchJson }}" target="_blank"><i class="fa-solid fa-spell-check"></i></a>
 
             {{# if artisan.websiteUrl }}
                 <a class="u-tbl u-website btn btn-secondary" href="{{ artisan.websiteUrl }}" target="_blank"><i class="fas fa-link"></i></a>
             {{/ if }}
 
             <div class="btn-group" role="group">
-                {{!% set btnGroupDropLinksId = 'drpdwnmn' ~ loop.index0 %}}
+                <button id="drpdwnmn{{ index }}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
 
-                <button id="{{ btnGroupDropLinksId }}" type="button" class="btn btn-secondary dropdown-toggle"                data-bs-toggle="dropdown" aria-expanded="false">
-                </button>
-
-                <ul class="dropdown-menu" aria-labelledby="{{ btnGroupDropLinksId }}">
-                    <li><a class="u-tbl u-ab dropdown-item" href="https://bewares.getfursu.it/#search:{{! artisan.allNamesArr|json_encode|escape('url') }}" target="_blank"> <i class="fa-solid fa-spell-check"></i> Check on Artists Beware</a></li>
+                <ul class="dropdown-menu" aria-labelledby="drpdwnmn{{ index }}">
+                    <li><a class="u-tbl u-ab dropdown-item" href="https://bewares.getfursu.it/#search:{{ artisan.abSearchJson }}" target="_blank"> <i class="fa-solid fa-spell-check"></i> Check on Artists Beware</a></li>
                     {{# if artisan.fursuitReviewUrl }}
                         <li><a class="u-tbl u-fsr dropdown-item" href="{{ artisan.fursuitReviewUrl }}" target="_blank"><i class="fas fa-balance-scale"></i> FursuitReview</a></li>
                     {{/ if }}
