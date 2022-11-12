@@ -1,5 +1,4 @@
-import Artisan from '../../../class/Artisan'
-import SpecialValueInterface from './SpecialValueInterface';;
+import SpecialValueInterface from './SpecialValueInterface';
 
 export default abstract class SpecialValue implements SpecialValueInterface {
     protected selected: boolean = false;
@@ -38,6 +37,4 @@ export default abstract class SpecialValue implements SpecialValueInterface {
     public isSelected(): boolean {
         return this.selected;
     }
-
-    public abstract matches(artisan: Artisan): boolean;
 }

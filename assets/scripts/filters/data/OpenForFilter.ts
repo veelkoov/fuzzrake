@@ -1,5 +1,4 @@
 import AbstractSingleFieldFilter from './AbstractSingleFieldFilter';
-import Artisan from '../../class/Artisan';
 import NotTrackedValue from './special/NotTrackedValue';
 import StatusWriter from '../StatusWriter';
 import TrackingIssuesValue from './special/TrackingIssuesValue';
@@ -46,22 +45,6 @@ export default class OpenForFilter<T> extends AbstractSingleFieldFilter<T> {
                 return super.isSelected(value);
             });
         });
-    }
-
-    public matches(artisan: Artisan): boolean {
-        if (!this.isActive() || this.notTracked.matches(artisan) || this.trackingIssues.matches(artisan)) {
-            return true;
-        }
-
-        let target: Set<T> = artisan[this.fieldName];
-
-        for (let value of this.selectedValues.values()) {
-            if (target.has(value)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public getStatus(): string {

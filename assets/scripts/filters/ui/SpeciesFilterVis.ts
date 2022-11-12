@@ -1,12 +1,12 @@
 import AbstractBaseFilterVis from './AbstractBaseFilterVis';
-import SpeciesFilter from '../data/SpeciesFilter';
+import AnySetUnOtFilter from '../data/AnySetUnOtFilter';
 
 export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private readonly markersByDescendantSpecie: { [specieName: string]: JQuery<HTMLSpanElement> };
     private readonly markers: JQuery<HTMLSpanElement>;
 
-    public constructor(idPart: string, fieldNameIn: string, fieldNameOut: string) {
-        super(idPart, new SpeciesFilter(fieldNameIn, fieldNameOut));
+    public constructor(idPart: string, fieldName: string) {
+        super(idPart, new AnySetUnOtFilter(fieldName));
 
         this.markersByDescendantSpecie = this.getMarkersByDescendantSpecies();
         this.markers = this.grabMarkers();

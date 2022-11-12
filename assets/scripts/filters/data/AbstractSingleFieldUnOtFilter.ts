@@ -5,7 +5,7 @@ import OtherValue from './special/OtherValue';
 export default abstract class AbstractSingleFieldUnOtFilter<T> extends AbstractSingleFieldUnFilter<T> {
     private readonly other: OtherValue
 
-    protected constructor(fieldName: string) {
+    public constructor(fieldName: string) {
         super(fieldName);
         this.other = new OtherValue(fieldName);
     }
@@ -39,13 +39,5 @@ export default abstract class AbstractSingleFieldUnOtFilter<T> extends AbstractS
     public clear(): void {
         super.clear();
         this.other.clear();
-    }
-
-    protected matchesOther(artisan: Artisan): boolean {
-        return this.other.matches(artisan);
-    }
-
-    protected matchesUnknown(artisan: Artisan): boolean {
-        return !this.other.hasOtherValue(artisan) && super.matchesUnknown(artisan);
     }
 }

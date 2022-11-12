@@ -1,6 +1,5 @@
-import Artisan from '../../class/Artisan'
 import FilterInterface from '../data/FilterInterface';
-import FilterVisInterface from './FilterVisInterface';;
+import FilterVisInterface from './FilterVisInterface';
 
 export default abstract class AbstractBaseFilterVis implements FilterVisInterface {
     private readonly idPart: string;
@@ -26,10 +25,6 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         this.setupAllNoneInvertLinks();
 
         this.refreshUi();
-    }
-
-    public matches(artisan: Artisan): boolean {
-        return this.filter.matches(artisan);
     }
 
     public restoreChoices(): void {

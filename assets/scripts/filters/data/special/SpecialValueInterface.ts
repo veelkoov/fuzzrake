@@ -1,5 +1,3 @@
-import Artisan from '../../../class/Artisan';
-
 export default interface SpecialValueInterface {
     clear(): void;
 
@@ -10,6 +8,4 @@ export default interface SpecialValueInterface {
     checkSelected(value: string, otherwise: (() => boolean)): boolean;
 
     isSelected(): boolean;
-
-    matches(artisan: Artisan): boolean;
 }

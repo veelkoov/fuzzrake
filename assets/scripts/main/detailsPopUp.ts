@@ -20,14 +20,10 @@ function detailsPopUpShowCallback(event: any): void {
     $contents.data('artisan', artisan);
 }
 
-export function init(dataManager: DataManager): (() => void)[] {
+export function init(dataManager: DataManager): void {
     _dataManager = dataManager;
 
-    return [
-        () => {
-            $contents = jQuery('#artisanDetailsModalContent');
+    $contents = jQuery('#artisanDetailsModalContent');
 
-            jQuery('#artisanDetailsModal').on('show.bs.modal', detailsPopUpShowCallback);
-        },
-    ];
+    jQuery('#artisanDetailsModal').on('show.bs.modal', detailsPopUpShowCallback);
 }

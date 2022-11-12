@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Filters\RequestParser;
+use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
 use App\Service\DataOnDemand\ArtisansDOD;
-use App\Utils\Artisan\SmartAccessDecorator;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Psr\Cache\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -67,11 +69,18 @@ class RestApiController extends AbstractController
      */
     #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisansArray(ArtisansDOD $artisans, TagAwareCacheInterface $cache): JsonResponse
+    public function artisansArray(Request $request, ArtisanRepository $artisans, TagAwareCacheInterface $cache): JsonResponse
     {
-        $result = $cache->get('restapi.artisans-array', function () use ($artisans) {
-            return map($artisans->getAll(), fn ($artisan) => values($artisan->getPublicData()));
-        });
+        $parser = new RequestParser();
+        $choices = $parser->getChoices($request);
+
+//        exit(json_encode($choices));
+
+        $result = map(Artisan::wrapAll($artisans->getFiltered($choices)), fn ($artisan) => values($artisan->getPublicData()));
+        // TODO: Caching
+//        $result = $cache->get('restapi.artisans-array', function () use ($artisans, $choices) {
+//
+//        });
 
         return new JsonResponse($result);
     }

@@ -1,4 +1,3 @@
-import Artisan from '../../class/Artisan';
 import FilterInterface from '../data/FilterInterface';
 
 export default interface FilterVisInterface {
@@ -9,8 +8,6 @@ export default interface FilterVisInterface {
     saveChoices(): void;
 
     getFilterId(): string;
-
-    matches(artisan: Artisan): boolean;
 
     getFilter(): FilterInterface;
 }

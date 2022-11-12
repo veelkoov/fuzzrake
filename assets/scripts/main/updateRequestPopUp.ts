@@ -17,14 +17,10 @@ function updateRequestModalShowCallback(event: any): void {
     }, HandlebarsHelpers.tplCfg()));
 }
 
-export function init(dataManager: DataManager): (() => void)[] {
+export function init(dataManager: DataManager): void {
     _dataManager = dataManager;
 
-    return [
-        () => {
-            $contents = jQuery('#artisanUpdatesModalContent');
+    $contents = jQuery('#artisanUpdatesModalContent');
 
-            jQuery('#artisanUpdatesModal').on('show.bs.modal', updateRequestModalShowCallback);
-        },
-    ];
+    jQuery('#artisanUpdatesModal').on('show.bs.modal', updateRequestModalShowCallback);
 }

@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\ValidationRegexps;
 use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
+use App\Filters\Choices;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
@@ -370,5 +371,27 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+    }
+
+    /**
+     * @return Artisan[]
+     */
+    public function getFiltered(Choices $choices): array
+    {
+        $builder = $this->getArtisansQueryBuilder()
+            ->where('a.inactiveReason = :empty')
+            ->setParameter('empty', '')
+        ;
+
+        if ([] !== $choices->countries) {
+            $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $choices->countries);
+        }
+
+        $result = $builder
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getResult();
+
+        return $result;
     }
 }

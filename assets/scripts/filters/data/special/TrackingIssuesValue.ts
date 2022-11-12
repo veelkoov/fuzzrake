@@ -1,4 +1,3 @@
-import Artisan from '../../../class/Artisan';
 import SpecialValue from './SpecialValue';
 
 export default class TrackingIssuesValue extends SpecialValue {
@@ -6,9 +5,5 @@ export default class TrackingIssuesValue extends SpecialValue {
 
     public constructor() {
         super(TrackingIssuesValue.VALUE);
-    }
-
-    public matches(artisan: Artisan): boolean {
-        return this.selected && artisan.csTrackerIssue;
     }
 }

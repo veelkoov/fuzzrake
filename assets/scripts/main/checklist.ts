@@ -1,7 +1,6 @@
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import Checkbox from '../class/Checkbox';
 import Radio from '../class/fields/Radio';
-import {applyFilters} from './filters';
 import {NO, YES} from '../consts';
 import {toggle} from '../jQueryUtils';
 
@@ -40,8 +39,7 @@ function refreshAll(): void {
 }
 
 function dismissChecklist(): void {
-    applyFilters();
-
+    // TODO: Update/run filters
     jQuery('#checklist-container, #data-table-content-container').toggle();
 
     // Checklist causes the user to be at the bottom of the table when it shows up
@@ -58,41 +56,37 @@ function dismissButtonOnClick(): void {
     }
 }
 
-export function init(): (() => void)[] {
-    return [
-        () => {
-            $ageContainer = jQuery('#checklist-age-container');
-            $wantsSfwContainer = jQuery('#checklist-wants-sfw-container');
-            $dismissButton = jQuery('#checklist-dismiss-btn');
-            $dismissButton.on('click', dismissButtonOnClick);
+export function init(): void {
+    $ageContainer = jQuery('#checklist-age-container');
+    $wantsSfwContainer = jQuery('#checklist-wants-sfw-container');
+    $dismissButton = jQuery('#checklist-dismiss-btn');
+    $dismissButton.on('click', dismissButtonOnClick);
 
-            illBeCareful = new Checkbox('checklist-ill-be-careful', refreshAll);
+    illBeCareful = new Checkbox('checklist-ill-be-careful', refreshAll);
 
-            isAdult = new Radio('checklistIsAdult', refreshAll);
-            wantsSfw = new Radio('checklistWantsSfw', refreshAll);
+    isAdult = new Radio('checklistIsAdult', refreshAll);
+    wantsSfw = new Radio('checklistWantsSfw', refreshAll);
 
-            if (config.getIsFilled()) {
-                illBeCareful.check();
+    if (config.getIsFilled()) {
+        illBeCareful.check();
 
-                if (!config.getIsAdult()) {
-                    isAdult.selectVal(NO);
-                } else {
-                    isAdult.selectVal(YES);
-                    wantsSfw.selectVal(config.getWantsSfw() ? YES : NO);
-                }
-            }
-        },
-        () => {
-            refreshAll();
-        },
-        () => {
-            if (config.getMakerMode()) {
-                dismissChecklist();
-            }
-        },
-    ];
+        if (!config.getIsAdult()) {
+            isAdult.selectVal(NO);
+        } else {
+            isAdult.selectVal(YES);
+            wantsSfw.selectVal(config.getWantsSfw() ? YES : NO);
+        }
+    }
+
+
+    refreshAll();
+
+
+    if (config.getMakerMode()) {
+        dismissChecklist();
+    }
 }
 
-export function getAgeAndSfwConfig(): AgeAndSfwConfig {
+export function getAgeAndSfwConfig(): AgeAndSfwConfig { // TODO: unused?
     return config;
 }

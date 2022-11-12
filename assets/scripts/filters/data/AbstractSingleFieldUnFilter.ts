@@ -1,17 +1,12 @@
 import AbstractSingleFieldFilter from './AbstractSingleFieldFilter';
-import Artisan from '../../class/Artisan';
 import UnknownValue from './special/UnknownValue';
 
 export default abstract class AbstractSingleFieldUnFilter<T> extends AbstractSingleFieldFilter<T> {
     private readonly unknown: UnknownValue;
 
-    protected constructor(fieldName: string) {
+    public constructor(fieldName: string) {
         super(fieldName);
-        this.unknown = new UnknownValue(fieldName);
-    }
-
-    protected matchesUnknown(artisan: Artisan): boolean {
-        return this.unknown.matches(artisan);
+        this.unknown = new UnknownValue();
     }
 
     public clear(): void {

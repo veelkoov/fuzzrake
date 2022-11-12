@@ -1,11 +1,8 @@
-import Artisan from '../../class/Artisan';
 import FilterInterface from './FilterInterface';
 
 export default abstract class AbstractBaseFilter<T> implements FilterInterface {
     protected selectedValues: Set<T> = new Set<T>();
     protected selectedLabels: Set<string> = new Set<string>();
-
-    public abstract matches(artisan: Artisan): boolean;
 
     public abstract getStorageName(): string;
 
