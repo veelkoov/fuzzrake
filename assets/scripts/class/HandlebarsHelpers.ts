@@ -71,7 +71,7 @@ export default class HandlebarsHelpers {
             list = list.concat(['Other'])
         }
 
-        return list.join(', ');
+        return list.join(', ').replace(/ \([^)]+\)/g, ''); // FIXME: #171 Glossary
     }
 
     public static has(subject: any): boolean {
