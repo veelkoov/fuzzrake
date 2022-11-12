@@ -5,10 +5,10 @@
     <td class="name" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         <span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>
 
+        {{ artisan.name }}
+
         {{# if (has artisan.inactiveReason) }}
-            <span class="hidden" aria-hidden="true">~</span>{{ artisan.name }} [inactive]{# grep-inactive-mark #}
-        {{ else }}
-            {{ artisan.name }}
+             [inactive]{{! grep-inactive-mark }}
         {{/ if }}
 
         <span class="text-nowrap">

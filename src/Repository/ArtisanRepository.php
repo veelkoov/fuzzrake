@@ -378,20 +378,19 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function getFiltered(Choices $choices): array
     {
-        $builder = $this->getArtisansQueryBuilder()
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '')
-        ;
+        $builder = $this->getArtisansQueryBuilder();
 
         if ([] !== $choices->countries) {
             $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $choices->countries);
         }
 
         $result = $builder
+            ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
+            ->addOrderBy('LOWER(a.name)')
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();
 
-        return $result;
+        return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 }
