@@ -1,13 +1,11 @@
 <tr data-index="{{ index }}"
-    class="fursuit-maker artisan-data {% if artisan.inactiveReason %}inactive{% endif %}"
-    {{# if artisan.makerId }}id="{{ artisan.makerId }}"{{/ if }}
+    class="fursuit-maker artisan-data {% if (has artisan.inactiveReason) %}inactive{% endif %}"
+    {{# if (has artisan.makerId) }}id="{{ artisan.makerId }}"{{/ if }}
 >
     <td class="name" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
-        {{# if artisan.country }}
-            <span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>&nbsp;
-        {{/ if }}
+        <span class="flag-icon flag-icon-{{ artisan.lcCountry }}"></span>
 
-        {{# if artisan.inactiveReason }}
+        {{# if (has artisan.inactiveReason) }}
             <span class="hidden" aria-hidden="true">~</span>{{ artisan.name }} [inactive]{# grep-inactive-mark #}
         {{ else }}
             {{ artisan.name }}
@@ -17,7 +15,7 @@
             {{!- artisan|ages_for_table -}}
 
             {{# if artisan.isNew }}
-                &nbsp;<span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>
+                <span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>
             {{/ if }}
         </span>
     </td>
@@ -35,14 +33,15 @@
         {{ commaSeparated artisan.productionModels }}
     </td>
     <td class="styles" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
-        {{!- artisan.styles|other(artisan.otherStyles) -}}
+        {{ commaSeparatedOther artisan.styles artisan.otherStyles }}
     </td>
     <td class="types" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
-        {{!- artisan.orderTypes|other(artisan.otherOrderTypes) -}}
+        {{ commaSeparatedOther artisan.orderTypes artisan.otherOrderTypes }}
     </td>
     <td class="features" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
-        {{!- artisan.features|other(artisan.otherFeatures) -}}
+        {{ commaSeparatedOther artisan.features artisan.otherFeatures }}
     </td>
+
     <td class="species" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{# if artisan.gotSpeciesInfo }}
         <ul>

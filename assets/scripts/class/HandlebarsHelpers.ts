@@ -31,6 +31,7 @@ export default class HandlebarsHelpers {
             optional:             HandlebarsHelpers.optional,
             optionalList:         HandlebarsHelpers.optionalList,
             commaSeparated:       HandlebarsHelpers.commaSeparated,
+            commaSeparatedOther:  HandlebarsHelpers.commaSeparatedOther,
             photos:               HandlebarsHelpers.photos,
             hasPhotos:            HandlebarsHelpers.hasPhotos,
             has:                  HandlebarsHelpers.has,
@@ -56,7 +57,7 @@ export default class HandlebarsHelpers {
         };
     }
 
-    public static commaSeparated(list: string[] | Set<string>): string {
+    public static commaSeparated(list: string[]): string {
         if (list instanceof Set) {
             list = Array.from(list);
         }
@@ -64,11 +65,15 @@ export default class HandlebarsHelpers {
         return list.join(', ');
     }
 
-    public static has(subject: any): boolean {
-        if (subject instanceof Set) {
-            return subject.size > 0;
+    public static commaSeparatedOther(list: string[], other: string[]): string {
+        if (0 !== other.length) {
+            list = list.concat(['Other'])
         }
 
+        return list.join(', ');
+    }
+
+    public static has(subject: any): boolean {
         if (subject instanceof Array) {
             return subject.length > 0;
         }
@@ -76,11 +81,7 @@ export default class HandlebarsHelpers {
         return subject !== null && subject !== '';
     }
 
-    public static optional(element: string | string[] | Set<string>): TplString {
-        if (element instanceof Set) {
-            element = Array.from(element);
-        }
-
+    public static optional(element: string | string[]): TplString {
         if (element instanceof Array) {
             element = element.join(', ');
         }
