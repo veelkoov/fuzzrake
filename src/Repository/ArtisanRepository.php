@@ -384,6 +384,10 @@ class ArtisanRepository extends ServiceEntityRepository
             $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $choices->countries);
         }
 
+        if ([] !== $choices->states) {
+            $builder->andWhere('a.state IN (:states)')->setParameter('states', $choices->states);
+        }
+
         $result = $builder
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
             ->addOrderBy('LOWER(a.name)')
