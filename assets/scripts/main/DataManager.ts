@@ -3,8 +3,10 @@ import DataBridge from '../data/DataBridge';
 import TableManager from './TableManager';
 import {artisanFromArray} from './utils';
 
+export type DataRow = string[]|string|number|boolean|null;
+
 export default class DataManager {
-    private data: (string|string[]|boolean|number)[] = []; // TODO: Typehint OK?
+    private data: DataRow[] = [];
 
     public constructor(
         private tableManager: TableManager,
@@ -13,7 +15,7 @@ export default class DataManager {
 
     public updateQuery(newQuery: string): void {
         jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json?${newQuery}`), {
-            success: (newData: any, _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
+            success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
                 this.data = newData;
 
                 this.tableManager.updateWith(this.data);

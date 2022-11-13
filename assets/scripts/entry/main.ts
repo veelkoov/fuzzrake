@@ -1,20 +1,21 @@
 import * as Handlebars from 'handlebars/runtime';
-import CardPopUpManager from "../main/CardPopUpManager";
+import CardPopUpManager from '../main/CardPopUpManager';
 import ChecklistManager from '../main/ChecklistManager';
+import ColumnsManager from '../main/ColumnsManager';
 import DataBridge from '../data/DataBridge';
 import DataManager from '../main/DataManager';
 import FiltersButtonManager from '../main/FiltersButtonManager';
 import FiltersManager from '../main/FiltersManager';
 import HandlebarsHelpers from '../class/HandlebarsHelpers';
 import TableManager from '../main/TableManager';
-import UpdatePopUpManager from "../main/UpdatePopUpManager";
+import UpdatePopUpManager from '../main/UpdatePopUpManager';
 import {makerIdHashRegexp} from '../consts';
 
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
 import '../../styles/main.scss';
 
 function loadFuzzrakeData(): void {
-    // @ts-ignore
+    // @ts-ignore grep-window-load-fuzzrake-data
     window.loadFuzzrakeData();
 }
 
@@ -42,6 +43,7 @@ function dismissChecklistCallback(): void {
 let dataManager: DataManager;
 let filtersManager: FiltersManager;
 let filtersButtonManager: FiltersButtonManager;
+let columnsManager: ColumnsManager;
 let tableManager: TableManager;
 let checklistManager: ChecklistManager;
 let cardPopUpManager: CardPopUpManager;
@@ -66,7 +68,16 @@ jQuery(() => {
         checklistManager.getDismissButtonClickedCallback(),
     );
 
+    columnsManager = new ColumnsManager(
+        jQuery('#columnsControlPanel li'),
+    );
+    jQuery('#columnsControlPanel li').on(
+        'click',
+        columnsManager.getColumnChangedCallback(),
+    );
+
     tableManager = new TableManager(
+        columnsManager,
         jQuery('#artisans tbody'),
     );
 

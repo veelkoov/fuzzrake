@@ -20,29 +20,37 @@
         </span>
     </td>
 
-    <td class="maker-id" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="maker-id {{ colVis visibility 'makerId' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ artisan.makerId }}
     </td>
-    <td class="state" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="state {{ colVis visibility 'state' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ artisan.state }}
     </td>
-    <td class="languages" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="languages {{ colVis visibility 'languages' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ commaSeparated artisan.languages }}
     </td>
-    <td class="production-models" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="production-models {{ colVis visibility 'productionModels' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ commaSeparated artisan.productionModels }}
     </td>
-    <td class="styles" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="styles {{ colVis visibility 'styles' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ commaSeparatedOther artisan.styles artisan.otherStyles }}
     </td>
-    <td class="types" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="types {{ colVis visibility 'types' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ commaSeparatedOther artisan.orderTypes artisan.otherOrderTypes }}
     </td>
-    <td class="features" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="features {{ colVis visibility 'features' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{ commaSeparatedOther artisan.features artisan.otherFeatures }}
     </td>
 
-    <td class="species" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+    <td class="species {{ colVis visibility 'species' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{# if artisan.gotSpeciesInfo }}
         <ul>
             {{# each artisan.speciesDoes }}
@@ -54,7 +62,9 @@
         </ul>
         {{/ if }}
     </td>
-    <td class="commissions" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
+
+    <td class="commissions {{ colVis visibility 'commissions' }}"
+        data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
         {{# if artisan.isTracked }}
             <ul>
                 {{# if artisan.cstIssueText }}
@@ -72,7 +82,7 @@
         {{/ if }}
     </td>
 
-    <td class="links">
+    <td class="links {{ colVis visibility 'links' }}">
         <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
             {{! if isDevOrTestEnv() %} <!-- TODO -->
                 <a class="btn btn-warning" href="{{! path('mx_artisan_edit', { id: artisan.id }) }"><i class="fas fa-edit"></i></a>

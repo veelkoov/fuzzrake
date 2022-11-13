@@ -1,7 +1,12 @@
 import Artisan from '../class/Artisan';
 
-export function getArtisanIndexForEvent(event: any): number {
-    return jQuery(event.relatedTarget).closest('.artisan-data').data('index');
+export function jqTarget(event: JQuery.Event): JQuery {
+    // @ts-ignore 3.6
+    return jQuery(event.relatedTarget);
+}
+
+export function getArtisanIndexForEvent(event: JQuery.Event): number {
+    return jqTarget(event).closest('.artisan-data').data('index');
 }
 
 export function artisanFromArray(data: string | string[] | number | boolean): Artisan {

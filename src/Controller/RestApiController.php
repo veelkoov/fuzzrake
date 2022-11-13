@@ -11,9 +11,12 @@ use App\Service\Captcha;
 use App\Service\DataOnDemand\ArtisansDOD;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
+use Psl\Type\Exception\CoercionException;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +30,7 @@ class RestApiController extends AbstractController
 {
     public function __construct(
         private readonly Captcha $captcha,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -72,9 +76,14 @@ class RestApiController extends AbstractController
     public function artisansArray(Request $request, ArtisanRepository $artisans, TagAwareCacheInterface $cache): JsonResponse
     {
         $parser = new RequestParser();
-        $choices = $parser->getChoices($request);
 
-//        exit(json_encode($choices));
+        try {
+            $choices = $parser->getChoices($request);
+        } catch (CoercionException $exception) {
+            $this->logger->info('Invalid API request received', ['exception' => $exception]);
+
+            return throw new BadRequestException();
+        }
 
         $result = map(Artisan::wrapAll($artisans->getFiltered($choices)), fn ($artisan) => values($artisan->getPublicData()));
         // TODO: Caching

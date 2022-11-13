@@ -1,14 +1,14 @@
-import FilterVisInterface from "../filters/ui/FilterVisInterface";
-import GenericFilterVis from "../filters/ui/GenericFilterVis";
-import ValueUnFilter from "../filters/data/ValueUnFilter";
-import AnySetUnOtFilter from "../filters/data/AnySetUnOtFilter";
-import AllSetUnOtFilter from "../filters/data/AllSetUnOtFilter";
-import AnySetUnFilter from "../filters/data/AnySetUnFilter";
-import OpenForFilter from "../filters/data/OpenForFilter";
-import SpeciesFilterVis from "../filters/ui/SpeciesFilterVis";
-import FiltersButtonManager from "./FiltersButtonManager";
-import DataManager from "./DataManager";
-import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import AllSetUnOtFilter from '../filters/data/AllSetUnOtFilter';
+import AnySetUnFilter from '../filters/data/AnySetUnFilter';
+import AnySetUnOtFilter from '../filters/data/AnySetUnOtFilter';
+import DataManager from './DataManager';
+import FiltersButtonManager from './FiltersButtonManager';
+import FilterVisInterface from '../filters/ui/FilterVisInterface';
+import GenericFilterVis from '../filters/ui/GenericFilterVis';
+import OpenForFilter from '../filters/data/OpenForFilter';
+import SpeciesFilterVis from '../filters/ui/SpeciesFilterVis';
+import ValueUnFilter from '../filters/data/ValueUnFilter';
 
 export default class FiltersManager {
     private filters: FilterVisInterface[] = [];

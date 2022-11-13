@@ -2,7 +2,7 @@
 
 var MAKER_IDS_MAP = null;
 
-window.loadFuzzrakeData = function () {
+window.loadFuzzrakeData = function () { // grep-window-load-fuzzrake-data
     MAKER_IDS_MAP = {
         {% for old, new in makerIdsMap %}
             '{{ old }}': '{{ new }}',

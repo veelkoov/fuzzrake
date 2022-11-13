@@ -1,6 +1,6 @@
 import Captcha from '../class/Captcha';
-import Radio from "../class/fields/Radio";
-import {toggle} from "../jQueryUtils";
+import Radio from '../class/fields/Radio';
+import {toggle} from '../jQueryUtils';
 
 jQuery(() => {
     Captcha.setupOnForm('form[name="feedback"]');
