@@ -3,6 +3,7 @@
 set -euo pipefail
 
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
+IMPORT_DIR_PATH='var/iuFormData/' # Trailing slash required
 
 pushd "$(dirname "$(realpath "$0")")"
 
@@ -69,7 +70,7 @@ Usage:
 
 Available actions:
 
-    setup        Setup and/or fix required filesystem items and/or settings
+    setup        setup and/or fix required filesystem items and/or settings
 
     docker-up    "ups" the Docker Compose project
     docker-down  "downs" the Docker Compose project
@@ -112,6 +113,7 @@ function action() {
 
         # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
         'cc')           run_command sudo rm -rf ./var/cache/* ;;
+        'cc-prod')      run_command ssh getfursu.it sudo rm -rf /var/www/prod/var/cache/prod ;;
 
         'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
         'pus')          action pu --group small  "$@" ;;
@@ -121,6 +123,43 @@ function action() {
         'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
+
+        'cst')          run_console app:status-tracker:run "$@" ;;
+        'cstc')         action cst --commit "$@" ;;
+        'cstr')         action cst --refetch "$@" ;;
+
+        'tidy')         run_console app:data:tidy "$@" ;;
+        'tidyc')        action tidy --commit "$@" ;;
+
+        'release-beta')
+            run_command git branch -D beta
+            run_command git checkout -b beta
+            run_command git push --force origin beta
+            run_command ansible/setup_envs.yaml --limit beta_env
+
+            echo 'Make sure to return to the previous branch' # FIXME: This stupid limitation
+        ;;
+
+        'release-prod')
+            run_command git checkout main
+            run_command git merge --no-edit develop
+            run_command git push
+            run_command git checkout develop
+            run_command git merge main
+            run_command git push
+            run_command ansible/setup_envs.yaml --limit prod_env
+        ;;
+
+        'get-snapshots')
+            run_command rsync --recursive --progress --human-readable --compress --checksum \
+                getfursu.it:/var/www/prod/var/snapshots/ var/snapshots/
+        ;;
+        'get-submissions')
+            . .env.local
+            run_command rsync --recursive --progress --human-readable --compress --checksum \
+                getfursu.it:/var/www/prod/var/iuFormData/ "$IMPORT_DIR_PATH"
+            run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$IMPORT_DIR_PATH"
+        ;;
 
         *) error "Unknown action: '$action'" ;;
     esac

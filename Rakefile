@@ -1,14 +1,5 @@
 # frozen_string_literal: true
 
-def read_iu_submissions_s3_path # Use dotenv or sth if more than this is ever read
-  result = `grep S3_COPIES_BUCKET_URL .env.local | cut -f2 -d'='`.strip!
-  result += '/' unless result.end_with?('/')
-
-  result
-end
-
-IMPORT_DIR_PATH = 'var/iuFormData/' # Trailing slash required
-
 DB_PATH = 'var/db.sqlite'
 DB_TMP_PATH = "#{DB_PATH}.tmp"
 
@@ -25,70 +16,10 @@ IGNORED_TABLES = %w[
   submissions
 ].freeze
 
-#
-# HELPER FUNCTIONS
-#
-
-def mtask(the_task, called_task, *additional_args)
-  task(the_task) do |_t, args|
-    Rake::Task[called_task].invoke(*additional_args, *args)
-  end
-end
-
 def run_shell(*args)
   print("Executing: '#{args.join("' '")}'\n")
   system(*args) || raise('Command returned non-zero exit code')
 end
-
-def docker_compose(*args)
-  project_name = ENV.fetch('FUZZRAKE_DEV_PROJECT_NAME', 'fuzzrake')
-
-  run_shell('docker', 'compose', '--project-directory', 'docker', '--project-name', project_name, *args)
-end
-
-def run_docker(*args)
-  user_and_group = `echo -n $(id -u):$(id -g)`
-
-  docker_compose('exec', '--user', user_and_group, '-ti', 'php', *args)
-end
-
-def run_console(*args)
-  run_docker('./bin/console', *args)
-end
-
-#
-# MISCELLANEOUS TASKS
-#
-
-task(:default)  { run_shell('rake', '--tasks', '--all') }
-task(:console)  { |_t, args| run_console(*args) }
-task(:cl)       { run_shell('sudo', 'truncate', '-s0', 'var/log/dev.log', 'var/log/test.log') }
-task('cc-prod') { run_shell('ssh', 'getfursu.it', 'sudo rm -rf /var/www/prod/var/cache/prod') }
-task(:docker)   { |_t, args| run_docker(*args) }
-
-#
-# TESTING AND DEV
-#
-
-def create_link(file_path, link_path)
-  Dir.chdir(File.dirname(link_path)) do
-    link_name = File.basename(link_path)
-    add_dirs = '../' * link_path.count('/')
-
-    File.delete(link_name) if File.symlink?(link_name)
-    File.symlink(add_dirs + file_path, link_name)
-  end
-end
-
-def fix_phpunit
-  create_link('vendor/symfony/phpunit-bridge', 'vendor/bin/.phpunit/phpunit/vendor/symfony/phpunit-bridge')
-end
-
-task('fix-phpunit')  { fix_phpunit }
-
-#
-# DATABASE MANAGEMENT
-#
 
 task :dbpush do
   run_shell('cp', DB_PATH, DB_TMP_PATH)
@@ -138,59 +69,3 @@ task :dbcommit do
     run_shell('git', 'show', '-q')
   end
 end
-
-#
-# RELEASES MANAGEMENT
-#
-
-task('release-beta') do
-  run_shell('git', 'branch', '-D', 'beta')
-  run_shell('git', 'checkout', '-b', 'beta')
-  run_shell('git', 'push', '--force', 'origin', 'beta')
-  run_shell('ansible/setup_envs.yaml', '--limit', 'beta_env')
-
-  print("Make sure to return to the previous branch\n") # FIXME: This stupid limitation
-end
-
-task('release-prod') do
-  run_shell('git', 'checkout', 'main')
-  run_shell('git', 'merge', '--no-edit', 'develop')
-  run_shell('git', 'push')
-  run_shell('git', 'checkout', 'develop')
-  run_shell('git', 'merge', 'main')
-  run_shell('git', 'push')
-  run_shell('ansible/setup_envs.yaml', '--limit', 'prod_env')
-end
-
-task(:composer_upgrade) { run_docker('composer', '--no-cache', 'upgrade') } # No cache in the container
-task(:yarn_upgrade) { run_shell('yarn', 'upgrade') }
-
-#
-# COMMISSIONS STATUS UPDATES
-#
-
-task 'get-snapshots' do
-  run_shell('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
-            'getfursu.it:/var/www/prod/var/snapshots/', 'var/snapshots/')
-end
-
-mtask(:cst, :console, 'app:status-tracker:run')
-mtask(:cstc, :cst, '--commit')
-mtask(:cstr, :cst, '--refetch')
-
-#
-# IMPORT TASKS
-#
-
-task 'get-submissions' do
-  run_shell('rsync', '--recursive', '--progress', '--human-readable', '--compress', '--checksum',
-            'getfursu.it:/var/www/prod/var/iuFormData/', IMPORT_DIR_PATH)
-  run_shell('aws', 's3', 'sync', '--size-only', read_iu_submissions_s3_path, IMPORT_DIR_PATH)
-end
-
-#
-# DATA TIDY TASKS
-#
-
-mtask(:tidy, :console, 'app:data:tidy')
-mtask(:tidyc, :tidy, '--commit')
