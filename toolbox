@@ -5,7 +5,14 @@ set -euo pipefail
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 IMPORT_DIR_PATH='var/iuFormData/' # Trailing slash required
 
-pushd "$(dirname "$(realpath "$0")")"
+DB_PATH='var/db.sqlite'
+DB_TMP_PATH="$DB_PATH.tmp"
+DB_DUMP_DIR_PATH='db_dump'
+DB_DUMP_TMP_PATH="$DB_DUMP_DIR_PATH/fuzzrake.tmp.sql"
+DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
+
+# Volatile information, easily reproducible
+DB_IGNORED_TABLES=(artisans_commissions_statuses artisans_volatile_data artisans_urls_states tracker_settings submissions)
 
 function run_command() {
     echo "Executing: $*"
@@ -40,7 +47,7 @@ function assure_line_in_file() {
     }
 }
 
-function run_setup() {
+function action_run_setup() {
     # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
     run_command sudo mkdir -p ./var/cache
     run_command sudo mkdir -p ./var/log
@@ -52,6 +59,88 @@ function run_setup() {
 
     assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
     assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+}
+
+function backup_private_data() {
+    run_command sqlite3 "$DB_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
+}
+
+function action_release_prod() {
+    run_command git checkout main
+    run_command git merge --no-edit develop
+    run_command git push
+    run_command git checkout develop
+    run_command git merge main
+    run_command git push
+    run_command ansible/setup_envs.yaml --limit prod_env
+}
+
+function action_release_beta() {
+    run_command git branch -D beta
+    run_command git checkout -b beta
+    run_command git push --force origin beta
+    run_command ansible/setup_envs.yaml --limit beta_env
+
+    echo 'Make sure to return to the previous branch' # FIXME: This stupid limitation
+}
+
+function action_get_snapshots() {
+    run_command rsync --recursive --progress --human-readable --compress --checksum \
+        getfursu.it:/var/www/prod/var/snapshots/ var/snapshots/
+}
+
+function action_get_submissions() {
+    . .env.local
+    run_command rsync --recursive --progress --human-readable --compress --checksum \
+        getfursu.it:/var/www/prod/var/iuFormData/ "$IMPORT_DIR_PATH"
+    run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$IMPORT_DIR_PATH"
+}
+
+function action_dbcommit() {
+    pushd "$DB_DUMP_DIR_PATH"
+
+    run_command git reset HEAD
+    run_command git commit -m 'Updated DB dump' -p
+    run_command git push
+    run_command git show -q
+
+    popd
+}
+
+function action_dbpull() {
+  run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$DB_TMP_PATH"
+  backup_private_data
+  run_command sqlite3 "$DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
+  run_command sqlite3 "$DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
+  run_command chmod a+w "$DB_TMP_PATH"
+  run_command mv "$DB_TMP_PATH" "$DB_PATH"
+}
+
+function action_dbpush() {
+    run_command cp "$DB_PATH" "$DB_TMP_PATH"
+    run_command sqlite3 "$DB_TMP_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';"
+    run_command scp -p "$DB_TMP_PATH" "getfursu.it:/var/www/prod/$DB_PATH"
+    run_command scp -p "$DB_TMP_PATH" "getfursu.it:/var/www/beta/$DB_PATH"
+    run_command rm "$DB_TMP_PATH"
+}
+
+function action_dbdump() {
+    # shellcheck disable=SC2207 # Yes, split by whitespace
+    TABLE_NAMES=($(sqlite3 "$DB_PATH" .tables))
+
+    for TABLE_NAME in "${DB_IGNORED_TABLES[@]}"; do # Sanity check
+        if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
+            error "$TABLE_NAME does not exist in the DB $DB_PATH"
+        fi
+    done
+
+    backup_private_data
+
+    for TABLE_NAME in "${TABLE_NAMES[@]}"; do
+        if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
+            run_command sqlite3 "$DB_PATH" ".output $DB_DUMP_DIR_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+        fi
+    done
 }
 
 function error() {
@@ -101,7 +190,7 @@ function action() {
     shift
 
     case $action in
-        'setup')        run_setup ;;
+        'setup')        action_run_setup ;;
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
 
@@ -131,38 +220,21 @@ function action() {
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;
 
-        'release-beta')
-            run_command git branch -D beta
-            run_command git checkout -b beta
-            run_command git push --force origin beta
-            run_command ansible/setup_envs.yaml --limit beta_env
+        'dbcommit')     action_dbcommit ;;
+        'dbpull')       action_dbpull ;;
+        'dbpush')       action_dbpush ;;
+        'dbdump')       action_dbdump ;;
 
-            echo 'Make sure to return to the previous branch' # FIXME: This stupid limitation
-        ;;
+        'release-beta') action_release_beta ;;
+        'release-prod') action_release_prod ;;
 
-        'release-prod')
-            run_command git checkout main
-            run_command git merge --no-edit develop
-            run_command git push
-            run_command git checkout develop
-            run_command git merge main
-            run_command git push
-            run_command ansible/setup_envs.yaml --limit prod_env
-        ;;
-
-        'get-snapshots')
-            run_command rsync --recursive --progress --human-readable --compress --checksum \
-                getfursu.it:/var/www/prod/var/snapshots/ var/snapshots/
-        ;;
-        'get-submissions')
-            . .env.local
-            run_command rsync --recursive --progress --human-readable --compress --checksum \
-                getfursu.it:/var/www/prod/var/iuFormData/ "$IMPORT_DIR_PATH"
-            run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$IMPORT_DIR_PATH"
-        ;;
+        'get-snapshots')   action_get_snapshots ;;
+        'get-submissions') action_get_submissions ;;
 
         *) error "Unknown action: '$action'" ;;
     esac
 }
+
+pushd "$(dirname "$(realpath "$0")")"
 
 action "$@"
