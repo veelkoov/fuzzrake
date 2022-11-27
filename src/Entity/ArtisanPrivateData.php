@@ -32,7 +32,7 @@ class ArtisanPrivateData
     private string $contactAddress = '';
 
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you previously used a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
+    #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you had a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $password = '';
 

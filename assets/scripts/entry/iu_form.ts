@@ -1,3 +1,5 @@
+import Captcha from '../class/Captcha';
+import Checkbox from '../class/Checkbox';
 import DynamicFields from '../class/fields/DynamicFields';
 import DynamicRadio from '../class/fields/DynamicRadio';
 import Radio from '../class/fields/Radio';
@@ -5,7 +7,6 @@ import {ADULTS, NO, NO_CONTACT_ALLOWED} from '../consts';
 import {toggle} from '../jQueryUtils';
 
 import '../../styles/iu_form.scss';
-import Captcha from '../class/Captcha';
 
 jQuery(() => {
     const caption = $('form[name="iu_form"] input[type="submit"]').val();
@@ -88,11 +89,23 @@ function setup_password_and_contact_page(): void {
 }
 
 function display_password_change_hint_if_checked_forgot(): void {
-    jQuery('#iu_form_changePassword').on('change', (evt) => {
-        jQuery('#forgotten_password_instructions')
-            .removeClass('d-none')
-            .toggle($(evt.target).is(':checked'));
-    }).trigger('change');
+    const $hint = jQuery('#forgotten_password_instructions');
+    const $label = jQuery('label[for="iu_form_password"]');
+
+    new Checkbox('iu_form_changePassword', (checkbox: Checkbox) => {
+        if ($hint.hasClass('d-none')) {
+            $hint.removeClass('d-none');
+            $hint.hide(0);
+        }
+
+        if (checkbox.isChecked()) {
+            $hint.show('fast');
+            $label.text('Choose a new password');
+        } else {
+            $hint.hide('fast');
+            $label.text('Updates password'); // grep-text-updates-password
+        }
+    });
 }
 
 function react_to_contact_allowance_changes(): void {

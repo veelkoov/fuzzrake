@@ -49,14 +49,13 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('formerly', TextareaType::class, [
-                'label'      => 'Formerly known as / also known as',
+                'label'      => 'Formerly / also known as',
                 'help'       => 'What was your studio known as before? Do you use multiple nicknames? You can keep any old names and aliases here. Please: each name on a separate line.',
                 'required'   => false,
                 'empty_data' => '',
             ])
             ->add('since', DateType::class, [ // grep-default-auto-since-day-01
                 'label'        => 'Since when are you crafting (maker\'s experience, NOT studio age)?',
-                'help'         => 'If your studio has more than one maker, please provide information on the experience you give a guarantee for with your products. (e.g. senior maker checks how junior is doing, if all is done well, and will make sure any repairs/improvements will be done - then give senior experience information; two seniors - how about an average?)',
                 'required'     => false,
                 'empty_data'   => '',
                 'widget'       => 'choice',
@@ -374,7 +373,7 @@ class Data extends BaseForm
             ])
             ->add('makerId', TextType::class, [
                 'label'      => '"Maker ID"',
-                'help'       => 'This will be your <strong>Maker ID</strong>, a short identification thingy. Please <a href="'.$makerIdPagePath.'" target="_blank">read about it here</a>. 7 characters, uppercase letters and/or digits. Here are some possible examples: <em>SILVENA</em>, <em>2STFURS</em>, <em>DIRECRT</em>, <em>DHCACTI</em>, <em>NUKECTS</em>, <em>GOFURIT</em>, <em>ALPHADG</em>. You might use abbreviations, state or country codes, etc.',
+                'help'       => '<a href="'.$makerIdPagePath.'" target="_blank">Read about maker IDs here</a>. 7 characters, uppercase letters and/or digits. Examples: <em>VLKVFUR</em>, <em>FUR2022</em>.',
                 'help_html'  => true,
                 'required'   => true,
                 'empty_data' => '',
