@@ -10,6 +10,7 @@ use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
+use App\ValueObject\Texts;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -84,7 +85,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
         $password = $form->get(ContactAndPassword::FLD_PASSWORD);
 
         if (!($changePassword->getData() ?? false) && !Password::verify($state->artisan, $state->previousPassword)) {
-            $password->addError(new FormError('Invalid password supplied.'));
+            $password->addError(new FormError('Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.'));
         }
     }
 

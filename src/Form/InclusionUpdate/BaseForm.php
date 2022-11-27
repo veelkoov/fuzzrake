@@ -28,7 +28,7 @@ abstract class BaseForm extends AbstractType
             ->add(self::BTN_RESET, SubmitType::class, [
                 'label' => 'Start over or withdraw',
                 'attr'  => [
-                    'class'          => 'btn btn-outline btn-outline-danger',
+                    'class'          => 'btn btn-sm btn-outline btn-outline-danger',
                     'formnovalidate' => 'formnovalidate',
                     'onclick'        => 'return confirm("Are you sure you want to discard all your changes?");',
                 ],

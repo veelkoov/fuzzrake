@@ -1,0 +1,39 @@
+{% macro help_modal(id, title, contents) %}
+    <div class="modal" id="{{ id }}HelpModal" tabindex="-1" aria-labelledby="{{ id }}HelpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="{{ id }}HelpModalLabel">{{ title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ contents|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro modal_help(id, button_label, help_title, help_contents) %}
+    <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#{{ id }}HelpModal">
+        {{ button_label }}
+    </button>
+
+    <div class="modal" id="{{ id }}HelpModal" tabindex="-1" aria-labelledby="{{ id }}HelpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="{{ id }}HelpModalLabel">{{ help_title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ help_contents|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro help_link(id, classes, text) %}
+    <a href="#" class="{{ classes }}" data-bs-toggle="modal" data-bs-target="#{{ id }}HelpModal">{{ text }}</a>
+{% endmacro %}

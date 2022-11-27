@@ -7,6 +7,7 @@ namespace App\Form\InclusionUpdate;
 use App\DataDefinitions\ContactPermit;
 use App\DataDefinitions\Fields\Validation;
 use App\Form\Transformers\ContactPermitTransformer;
+use App\ValueObject\Texts;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -33,8 +34,8 @@ class ContactAndPassword extends BaseForm
                 'expanded'   => true,
             ])
             ->add('contactInfoObfuscated', TextType::class, [
-                'label'     => 'How can I contact you',
-                'help'      => 'Please provide your e-mail address. No other possibilities, sorry! If you are updating your data and you see asterisks here, but the e-mail address looks OK, and you don\'t want to change it - just leave it as it is. <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.',
+                'label'     => 'Your e-mail address',
+                'help'      => 'If you are updating your data, and you see asterisks here, but the e-mail address looks OK, and you don\'t want to change it - just leave it as it is. <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.',
                 'help_html' => true,
                 'attr'      => [
                     'placeholder' => 'E-MAIL: e-mail@address',
@@ -43,7 +44,7 @@ class ContactAndPassword extends BaseForm
                 'empty_data' => '',
             ])
             ->add(self::FLD_PASSWORD, PasswordType::class, [
-                'label'      => 'Updates password', // grep-updates-password-field-name
+                'label'      => Texts::UPDATES_PASSWORD,
                 'help'       => '8 or more characters. <span class="badge bg-warning text-dark">PRIVATE</span> Your password will be kept in a secure way and never shared.', // grep-password-length
                 'help_html'  => true,
                 'required'   => true,
@@ -53,7 +54,7 @@ class ContactAndPassword extends BaseForm
                 ],
             ])
             ->add(self::FLD_CHANGE_PASSWORD, CheckboxType::class, [
-                'label'     => 'I want to change my password / I forgot my password',
+                'label'     => Texts::WANT_TO_CHANGE_PASSWORD,
                 'required'  => false,
                 'mapped'    => false,
             ])

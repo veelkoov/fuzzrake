@@ -3,11 +3,11 @@ export default class Checkbox {
 
     constructor(
         private id: string,
-        private changeCallback: () => void,
+        private changeCallback: (Checkbox) => void,
     ) {
         this.$elems = jQuery(`#${id}`);
 
-        this.$elems.on('change', () => changeCallback());
+        this.$elems.on('change', () => changeCallback(this));
     }
 
     public val(): null|string {

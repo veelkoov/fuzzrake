@@ -1,5 +1,7 @@
 {% extends '_base.html.twig' %}
 
+{% import 'iu_form/shared_parts/macros.html.twig' as macros %}
+
 {% block title %}inclusion/update request{% endblock %}
 
 {% block javascripts %}
@@ -27,8 +29,17 @@
 
     <h2 class="mt-4">General info</h2>
 
+    {{ macros.help_modal('sinceForMultipleMakers', 'What if my studio has multiple makers?', "
+        <p>
+            Since it's not possible to provide this information more than once, you will need to decide what information to provide to be fair to your clients.
+        </p>
+        <p>
+            Does your studio have a senior, who supervises the work and handles all reparis/improvements? Would it be OK to state their experience if they guarantee their quality? Do you have multiple cooperating makers with rather similar experience - can you provide their average? Or you could just choose the younger maker's experience to state.
+        </p>
+    ") }}
+
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-7">
             <div class="mandatory">
                 {{ form_row(form.name) }}
             </div>
@@ -38,15 +49,16 @@
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div class="mandatory">
                 {{ form_row(form.makerId) }}
             </div>
-        </div>
-
-        <div class="col-lg-4">
             <div class="recommended">
                 {{ form_row(form.since) }}
+
+                <p class="form-text help-text form-help-pull-up">
+                    {{ macros.help_link('sinceForMultipleMakers', 'text-decoration-none fw-light', 'What if my studio has multiple makers?') }}
+                </p>
             </div>
         </div>
     </div>
@@ -77,9 +89,9 @@
     </div>
 
     <hr class="mt-4" />
-    <h2>Links to websites</h2>
+    <h2 class="mandatory">Links to websites</h2>
 
-    <div class="mandatory">
+    <div>
         <ol>
             <li>You must provide at least one link to a website/social media.</li>
             <li>Instant messaging (i.a. Telegram, Messenger), e-mail addresses, and other direct contact measures are not allowed anywhere here. getfursu.it can only link to websites, on which you can post such information.</li>
@@ -180,24 +192,30 @@
         </div>
     </div>
 
-    <div class="helphints-toggle">
-        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#agesExplanation" aria-expanded="false" aria-controls="agesExplanation">What? Why?</button>
-    </div>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agesExplanationModal">
+        What? Why?
+    </button>
 
-    <div class="collapse helphints-contents" id="agesExplanation">
-        <div class="card">
-            <div class="card-body">
-                <p>
-                    getfursu.it welcomes both artists and visitors of many kinds. Some of you run full-blown fursuit studios with dedicated websites and dedicated social media. Some of you treat fursuit building as a side hobby, and don't have the time to keep dedicated websites and social media accounts. There are artists, who keep both their art and fursuit portfolios in one place. Some use the same, day-to-day accounts, for both private and fursuit building related stuff.
-                </p>
+    <div class="modal" id="agesExplanationModal" tabindex="-1" aria-labelledby="agesExplanationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agesExplanationModalLabel">Age &amp; related</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        getfursu.it welcomes both artists and visitors of many kinds. Some of you run full-blown fursuit studios with dedicated websites and dedicated social media. Some of you treat fursuit building as a side hobby, and don't have the time to keep dedicated websites and social media accounts. There are artists, who keep both their art and fursuit portfolios in one place. Some use the same, day-to-day accounts, for both private and fursuit building related stuff.
+                    </p>
 
-                <p>
-                    And there are many kinds of visitors, who may be interested in different stuff. Those also may happen to not be interested in the particular stuff of yours, even when there may be many, who love what you do. Worth mentioning, some makers on getfursu.it are willing to work with minors.
-                </p>
+                    <p>
+                        And there are many kinds of visitors, who may be interested in different stuff. Those also may happen to not be interested in the particular stuff of yours, even when there may be many, who love what you do. Worth mentioning, some makers on getfursu.it are willing to work with minors.
+                    </p>
 
-                <p>
-                    <strong>Goal:</strong> getfursu.it must be <strong>minors-friendly by default, while still welcoming everybody</strong>. The questions below are especially important to be answered accurately, to avoid any user to unwillingly run into any content they would rather not see, or should not see due to their age. Please act responsibly!
-                </p>
+                    <p>
+                        <strong>Goal:</strong> getfursu.it must be <strong>minors-friendly by default, while still welcoming everybody</strong>. The questions below are especially important to be answered accurately, to avoid any user to unwillingly run into any content they would rather not see, or should not see due to their age. Please act responsibly!
+                    </p>
+                </div>
             </div>
         </div>
     </div>

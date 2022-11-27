@@ -91,7 +91,7 @@ class IuNavigationTest extends AbstractTestWithEM
             'iu_form[contactInfoObfuscated]' => 'test-some-contactInfoObfuscated',
         ]);
 
-        self::assertSelectorTextContains('h2', 'General info', "Haven't been redirected back");
+        self::assertSelectorTextContains('h2', 'Few instructions and tips', "Haven't been redirected back");
         self::assertInputValueSame('iu_form[name]', 'test-some-name', 'Previously set "name" value not preserved');
 
         $this::submitValidForm($client, 'Continue', []);

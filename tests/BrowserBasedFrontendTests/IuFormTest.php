@@ -37,11 +37,10 @@ class IuFormTest extends PantherTestCaseWithEM
     public function testIForgotPasswordShowsHelp(): void
     {
         $this->getToLastPage();
-        usleep(600000); // Let all the animations end
 
-        self::assertSelectorIsNotVisible('#forgotten_password_instructions');
+        self::waitUntilHides('#forgotten_password_instructions');
         $this->client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
-        self::assertSelectorIsVisible('#forgotten_password_instructions');
+        self::waitUntilShows('#forgotten_password_instructions');
     }
 
     /**
