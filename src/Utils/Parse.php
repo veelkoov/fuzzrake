@@ -8,25 +8,11 @@ use App\Utils\Traits\UtilityClass;
 
 /**
  * Methods prefixes:
- *   t - trims input (if string provided as the argument),
  *   n - returns null instead of throwing exception on failure.
  */
 final class Parse
 {
     use UtilityClass;
-
-    public static function tInt(null|int|float|string $input): int
-    {
-        if (is_int($input)) {
-            return $input;
-        }
-
-        if (is_string($input)) {
-            $input = trim($input);
-        }
-
-        return self::int($input ?? '');
-    }
 
     public static function int(null|int|float|string $input): int
     {

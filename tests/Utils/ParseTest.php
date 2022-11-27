@@ -14,45 +14,42 @@ use PHPUnit\Framework\TestCase;
 class ParseTest extends TestCase
 {
     /**
-     * @dataProvider intAndTIntDataProvider
+     * @dataProvider intDataProvider
      */
-    public function testIntAndTInt(null|float|int|string $input, int|false $expectedInt, int|false $expectedTInt): void
+    public function testInt(null|float|int|string $input, int|false $expectedInt): void
     {
         try {
             self::assertSame($expectedInt, Parse::int($input));
         } catch (ParseException) {
             self::assertFalse($expectedInt);
         }
-
-        try {
-            self::assertSame($expectedTInt, Parse::tInt($input));
-        } catch (ParseException) {
-            self::assertFalse($expectedTInt);
-        }
     }
 
-    public function intAndTIntDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return array<array{null|int|float|string, false|int}>
+     */
+    public function intDataProvider(): array
     {
         return [
-            [null,   false, false],
-            [0,      0,     0],
-            [1,      1,     1],
-            [-1,     -1,    -1],
-            [0.1,    false, false],
-            [1.1,    false, false],
-            [-1.1,   false, false],
-            ['',     false, false],
-            [' ',    false, false],
-            ['0',    0,     0],
-            ['0 ',   false, 0],
-            ['1',    1,     1],
-            [' 1',   false, 1],
-            ['-1',   -1,    -1],
-            ['-1 ',  false, -1],
-            ['1a',   false, false],
-            ['1a ',  false, false],
-            ['1.0',  false, false],
-            [' 1.0', false, false],
+            [null,   false],
+            [0,      0],
+            [1,      1],
+            [-1,     -1],
+            [0.1,    false],
+            [1.1,    false],
+            [-1.1,   false],
+            ['',     false],
+            [' ',    false],
+            ['0',    0],
+            ['0 ',   false],
+            ['1',    1],
+            [' 1',   false],
+            ['-1',   -1],
+            ['-1 ',  false],
+            ['1a',   false],
+            ['1a ',  false],
+            ['1.0',  false],
+            [' 1.0', false],
         ];
     }
 
