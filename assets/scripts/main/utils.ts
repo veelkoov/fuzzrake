@@ -2,7 +2,7 @@ import Artisan from '../class/Artisan';
 
 export function jqTarget(event: JQuery.Event): JQuery {
     // @ts-ignore 3.6
-    return jQuery(event.relatedTarget);
+    return jQuery(event.relatedTarget || event.target);
 }
 
 export function getArtisanIndexForEvent(event: JQuery.Event): number {

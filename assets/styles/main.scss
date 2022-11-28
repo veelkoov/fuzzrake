@@ -103,7 +103,7 @@ table#artisans {
       text-align: left;
     }
 
-    td.features, td.types, td.styles, td.production-models, td.languages, td.species, td.commissions {
+    td.features, td.types, td.styles, td.productionModels, td.languages, td.species, td.commissions {
       text-align: left;
       display: table-cell;
       font-size: 75%;
@@ -138,7 +138,7 @@ table#artisans {
       text-align: center;
     }
 
-    td.maker-id {
+    td.makerId {
       display: table-cell;
       font-family: monospace;
     }
