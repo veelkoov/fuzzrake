@@ -1,6 +1,6 @@
 import ColumnsManager from './ColumnsManager';
-import DataBridge from '../data/DataBridge';
 import HandlebarsHelpers from '../class/HandlebarsHelpers';
+import MessageBus from './MessageBus';
 import {artisanFromArray} from './utils';
 import {DataRow} from './DataManager';
 
@@ -8,13 +8,16 @@ export default class TableManager {
     private readonly template: HandlebarsTemplateDelegate;
 
     public constructor(
+        messageBus: MessageBus,
         private readonly columnsManager: ColumnsManager,
         private readonly $body: JQuery,
     ) {
         this.template = require('../../templates/artisan_row.handlebars');
+
+        messageBus.listenDataChanges((newData: DataRow[]) => this.updateWith(newData));
     }
 
-    public updateWith(data: DataRow[]): void {
+    private updateWith(data: DataRow[]): void {
         this.$body.empty();
 
         const columnsVisibility = this.columnsManager.getColumnsVisibility();

@@ -1,6 +1,6 @@
 import Artisan from '../class/Artisan';
 import DataBridge from '../data/DataBridge';
-import TableManager from './TableManager';
+import MessageBus from './MessageBus';
 import {artisanFromArray} from './utils';
 
 export type DataRow = string[]|string|number|boolean|null;
@@ -9,16 +9,17 @@ export default class DataManager {
     private data: DataRow[] = [];
 
     public constructor(
-        private tableManager: TableManager,
+        private readonly messageBus: MessageBus,
     ) {
+        messageBus.listenQueryUpdate((newQuery: string) => this.queryUpdate(newQuery));
     }
 
-    public updateQuery(newQuery: string): void {
+    private queryUpdate(newQuery: string): void {
         jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json?${newQuery}`), {
             success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
                 this.data = newData;
 
-                this.tableManager.updateWith(this.data);
+                this.messageBus.notifyDataChanges(this.data);
             },
             error: (jqXHR: JQuery.jqXHR<any>, textStatus: string, errorThrown: string): void => {
                 alert('ERROR'); // TODO

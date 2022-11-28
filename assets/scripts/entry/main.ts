@@ -7,6 +7,7 @@ import DataManager from '../main/DataManager';
 import FiltersButtonManager from '../main/FiltersButtonManager';
 import FiltersManager from '../main/FiltersManager';
 import HandlebarsHelpers from '../class/HandlebarsHelpers';
+import MessageBus from '../main/MessageBus';
 import TableManager from '../main/TableManager';
 import UpdatePopUpManager from '../main/UpdatePopUpManager';
 import {makerIdHashRegexp} from '../consts';
@@ -40,6 +41,7 @@ function dismissChecklistCallback(): void {
     window.scrollTo(0, offset.top - 5);
 }
 
+let messageBus: MessageBus;
 let dataManager: DataManager;
 let filtersManager: FiltersManager;
 let filtersButtonManager: FiltersButtonManager;
@@ -53,6 +55,8 @@ jQuery(() => {
     Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister());
 
     loadFuzzrakeData();
+
+    messageBus = new MessageBus();
 
     checklistManager = new ChecklistManager(
         jQuery('#checklist-age-container'),
@@ -77,24 +81,24 @@ jQuery(() => {
     );
 
     tableManager = new TableManager(
+        messageBus,
         columnsManager,
         jQuery('#artisans tbody'),
     );
 
     dataManager = new DataManager(
-        tableManager,
+        messageBus,
     );
 
     filtersButtonManager = new FiltersButtonManager(
+        messageBus,
         jQuery('#filtersButton'),
     );
 
     filtersManager = new FiltersManager(
-        filtersButtonManager,
-        dataManager,
+        messageBus,
         jQuery('#filters'),
     );
-
     jQuery('#filtersModal').on(
         'hidden.bs.modal',
         filtersManager.getTriggerUpdateCallback(),

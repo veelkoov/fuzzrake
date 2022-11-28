@@ -2,10 +2,9 @@ import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import AllSetUnOtFilter from '../filters/data/AllSetUnOtFilter';
 import AnySetUnFilter from '../filters/data/AnySetUnFilter';
 import AnySetUnOtFilter from '../filters/data/AnySetUnOtFilter';
-import DataManager from './DataManager';
-import FiltersButtonManager from './FiltersButtonManager';
 import FilterVisInterface from '../filters/ui/FilterVisInterface';
 import GenericFilterVis from '../filters/ui/GenericFilterVis';
+import MessageBus from './MessageBus';
 import OpenForFilter from '../filters/data/OpenForFilter';
 import SpeciesFilterVis from '../filters/ui/SpeciesFilterVis';
 import ValueUnFilter from '../filters/data/ValueUnFilter';
@@ -14,16 +13,10 @@ export default class FiltersManager {
     private filters: FilterVisInterface[] = [];
 
     public constructor(
-        private readonly filtersButtonManager: FiltersButtonManager,
-        private readonly dataManager: DataManager,
+        private readonly messageBus: MessageBus,
         private readonly $filters: JQuery,
     ) {
         this.initFilters();
-
-        for (let filter of this.filters) {
-            filter.restoreChoices();
-        }
-
         this.setupSpeciesFiltersToggleButtons();
     }
 
@@ -38,6 +31,10 @@ export default class FiltersManager {
         this.filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
         this.filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
         this.filters.push(new SpeciesFilterVis('species', 'speciesDoes'));
+
+        for (let filter of this.filters) {
+            filter.restoreChoices();
+        }
     }
 
     private setupSpeciesFiltersToggleButtons(): void { // TODO: Improve
@@ -46,25 +43,12 @@ export default class FiltersManager {
         });
     }
 
-    public getActiveCount(): number {
-        let count: number = 0;
-
-        for (let filterId in this.filters) {
-            if (this.filters[filterId].isActive()) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
     public getTriggerUpdateCallback(): () => void {
         return () => this.triggerUpdate();
     }
 
     public triggerUpdate(): void {
-        this.filtersButtonManager.refreshButton(this.getActiveCount());
-        this.dataManager.updateQuery(this.getQuery());
+        this.messageBus.notifyQueryUpdate(this.getQuery(), this.getActiveCount());
 
         for (let filter of this.filters) {
             filter.saveChoices();
@@ -77,5 +61,17 @@ export default class FiltersManager {
         }
 
         return this.$filters.serialize();
+    }
+
+    private getActiveCount(): number {
+        let count: number = 0;
+
+        for (let filterId in this.filters) {
+            if (this.filters[filterId].isActive()) {
+                count++;
+            }
+        }
+
+        return count;
     }
 }
