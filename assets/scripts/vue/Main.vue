@@ -10,7 +10,7 @@
     </div>
 
     <button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal">
-      <!-- Caption is dynamic -->
+      Filters <span v-if="activeFiltersCount" class="badge rounded-pill text-bg-light">{{ activeFiltersCount }}</span>
     </button>
     <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">
       Legend
@@ -193,6 +193,7 @@ const messageBus = getMessageBus();
 export default class Main extends Vue {
   private readonly columns: ColumnsManager;
   private artisans: Artisan[] = [];
+  private activeFiltersCount: number = 0;
 
   constructor(...args: any[]) {
     super(...args);
@@ -200,15 +201,8 @@ export default class Main extends Vue {
     this.columns = new ColumnsManager();
     this.columns.load();
 
-    messageBus.listenDataChanges((newData: DataRow[]) => this.updateWith(newData));
-  }
-
-  private updateWith(data: DataRow[]): void {
-    let newArtisans = [];
-
-    data.forEach((item) => newArtisans.push(artisanFromArray(item)));
-
-    this.artisans = newArtisans;
+    messageBus.listenDataChanges((newData: DataRow[]) => this.artisans = newData.map(item => artisanFromArray(item)));
+    messageBus.listenQueryUpdate((_: string, newCount: number) => this.activeFiltersCount = newCount);
   }
 
   private commaSeparated(list: string[]): string {

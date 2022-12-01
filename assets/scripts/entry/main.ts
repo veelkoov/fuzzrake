@@ -5,7 +5,6 @@ import CardPopUpManager from '../main/CardPopUpManager';
 import ChecklistManager from '../main/ChecklistManager';
 import DataBridge from '../data/DataBridge';
 import DataManager from '../main/DataManager';
-import FiltersButtonManager from '../main/FiltersButtonManager';
 import FiltersManager from '../main/FiltersManager';
 import HandlebarsHelpers from '../class/HandlebarsHelpers';
 import Main from '../vue/Main.vue';
@@ -65,11 +64,6 @@ jQuery(() => {
 
     const dataManager = new DataManager(
         messageBus,
-    );
-
-    const filtersButtonManager = new FiltersButtonManager(
-        messageBus,
-        jQuery('#filtersButton'),
     );
 
     const filtersManager = new FiltersManager(
