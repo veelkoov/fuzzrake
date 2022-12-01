@@ -47,11 +47,11 @@
           </template>
 
           <span class="text-nowrap">
-<!--   TODO         {{ describeAgesShort artisan }}-->
+            <i v-for="item in agesClasses(artisan)" class="ages" :class="item"/>
 
-            <template v-if="artisan.isNew">
-              <span class="new-artisan"><i class="fa-solid fa-leaf"></i> recently added</span>
-            </template>
+            <span v-if="artisan.isNew" class="new-artisan">
+              <i class="fa-solid fa-leaf"></i> recently added
+            </span>
           </span>
         </td>
 
@@ -94,6 +94,7 @@
             data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
           <ul v-if="artisan.gotSpeciesInfo">
             <li v-for="item in artisan.speciesDoes" class="yes"><i class="fas fa-check"></i>&nbsp;{{ item }}</li>
+
             <li v-for="item in artisan.speciesDoesnt" class="no"><i class="fas fa-times"></i>&nbsp;{{ item }}</li>
           </ul>
         </td>
@@ -122,128 +123,34 @@
             <a v-if="artisan.websiteUrl" class="u-tbl u-website btn btn-secondary" :href="artisan.websiteUrl" target="_blank"><i class="fas fa-link"></i></a>
 
             <div class="btn-group" role="group">
-              <button :id="'drpdwnmn' + index " type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+              <button :id="'drpdwnmn' + index.toString()" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
 
-              <ul class="dropdown-menu" :aria-labelledby="'drpdwnmn' + index ">
+              <ul class="dropdown-menu" :aria-labelledby="'drpdwnmn' + index.toString()">
                 <li>
                   <a class="u-tbl u-ab dropdown-item" :href="'https://bewares.getfursu.it/#search:' + artisan.abSearchJson" target="_blank">
                     <i class="fa-solid fa-spell-check"></i> Check on Artists Beware
                   </a>
                 </li>
 
-                <li v-if="artisan.fursuitReviewUrl">
-                  <a class="u-tbl u-fsr dropdown-item" :href="artisan.fursuitReviewUrl" target="_blank">
-                    <i class="fas fa-balance-scale"></i> FursuitReview
-                  </a>
-                </li>
-
-                <li v-if="artisan.websiteUrl">
-                  <a class="u-tbl u-website dropdown-item" :href="artisan.websiteUrl" target="_blank">
-                    <i class="fas fa-link"></i> Official website
-                  </a>
-                </li>
-
-                <li v-for="item in artisan.pricesUrls">
-                  <a class="u-tbl u-prices dropdown-item" :href="item" target="_blank">
-                    <i class="fas fa-dollar-sign"></i> Prices
-                  </a>
-                </li>
-
-                <li v-if="artisan.faqUrl">
-                  <a class="u-tbl u-faq dropdown-item" :href="artisan.faqUrl" target="_blank">
-                    <i class="fas fa-comments"></i> FAQ
-                  </a>
-                </li>
-
-                <li v-if="artisan.queueUrl">
-                  <a class="u-tbl u-queue dropdown-item" :href="artisan.queueUrl" target="_blank">
-                    <i class="fas fa-clipboard-list"></i> Queue
-                  </a>
-                </li>
-
-                <li v-if="artisan.furAffinityUrl">
-                  <a class="u-tbl u-fa dropdown-item" :href="artisan.furAffinityUrl" target="_blank">
-                    <i class="fas fa-image"></i> FurAffinity
-                  </a>
-                </li>
-
-                <li v-if="artisan.deviantArtUrl">
-                  <a class="u-tbl u-da dropdown-item" :href="artisan.deviantArtUrl" target="_blank">
-                    <i class="fab fa-deviantart"></i> DeviantArt
-                  </a>
-                </li>
-
-                <li v-if="artisan.twitterUrl">
-                  <a class="u-tbl u-twitter dropdown-item" :href="artisan.twitterUrl" target="_blank">
-                    <i class="fab fa-twitter"></i> Twitter
-                  </a>
-                </li>
-
-                <li v-if="artisan.facebookUrl">
-                  <a class="u-tbl u-facebook dropdown-item" :href="artisan.facebookUrl" target="_blank">
-                    <i class="fab fa-facebook"></i> Facebook
-                  </a>
-                </li>
-
-                <li v-if="artisan.tumblrUrl">
-                  <a class="u-tbl u-tumblr dropdown-item" :href="artisan.tumblrUrl" target="_blank">
-                    <i class="fab fa-tumblr"></i> Tumblr
-                  </a>
-                </li>
-
-                <li v-if="artisan.youtubeUrl">
-                  <a class="u-tbl u-youtube dropdown-item" :href="artisan.youtubeUrl" target="_blank">
-                    <i class="fab fa-youtube"></i> YouTube
-                  </a>
-                </li>
-
-                <li v-if="artisan.instagramUrl">
-                  <a class="u-tbl u-instagram dropdown-item" :href="artisan.instagramUrl" target="_blank">
-                    <i class="fab fa-instagram"></i> Instagram
-                  </a>
-                </li>
-
-                <li v-if="artisan.etsyUrl">
-                  <a class="u-tbl u-etsy dropdown-item" :href="artisan.etsyUrl" target="_blank">
-                    <i class="fab fa-etsy"></i> Etsy
-                  </a>
-                </li>
-
-                <li v-if="artisan.theDealersDenUrl">
-                  <a class="u-tbl u-tdd dropdown-item" :href="artisan.theDealersDenUrl" target="_blank">
-                    <i class="fas fa-shopping-cart"></i> The Dealers Den
-                  </a>
-                </li>
-
-                <li v-if="artisan.otherShopUrl">
-                  <a class="u-tbl u-shop dropdown-item" :href="artisan.otherShopUrl" target="_blank">
-                    <i class="fas fa-shopping-cart"></i> On-line shop
-                  </a>
-                </li>
-
-                <li v-if="artisan.furryAminoUrl">
-                  <a class="u-tbl u-amino dropdown-item" :href="artisan.furryAminoUrl" target="_blank">
-                    <i class="fas fa-paw"></i> Furry Amino
-                  </a>
-                </li>
-
-                <li v-if="artisan.scritchUrl">
-                  <a class="u-tbl u-scritch dropdown-item" :href="artisan.scritchUrl" target="_blank">
-                    <i class="fas fa-camera"></i> Scritch
-                  </a>
-                </li>
-
-                <li v-if="artisan.furtrackUrl">
-                  <a class="u-tbl u-furtrack dropdown-item" :href="artisan.furtrackUrl" target="_blank">
-                    <i class="fas fa-camera"></i> Furtrack
-                  </a>
-                </li>
-
-                <li v-if="artisan.linklistUrl">
-                  <a class="u-tbl u-links dropdown-item" :href="artisan.linklistUrl" target="_blank">
-                    <i class="fas fa-link"></i> List of links
-                  </a>
-                </li>
+                <Link :url=artisan.fursuitReviewUrl iconClass="fas fa-balance-scale" label="FursuitReview"/>
+                <Link :url=artisan.websiteUrl iconClass="fas fa-link" label="Official website"/>
+                <Link v-for="item in artisan.pricesUrls" :url=item iconClass="fas fa-dollar-sign" label="Prices"/>
+                <Link :url=artisan.faqUrl iconClass="fas fa-comments" label="FAQ"/>
+                <Link :url=artisan.queueUrl iconClass="fas fa-clipboard-list" label="Queue"/>
+                <Link :url=artisan.furAffinityUrl iconClass="fas fa-image" label="FurAffinity"/>
+                <Link :url=artisan.deviantArtUrl iconClass="fab fa-deviantart" label="DeviantArt"/>
+                <Link :url=artisan.twitterUrl iconClass="fab fa-twitter" label="Twitter"/>
+                <Link :url=artisan.facebookUrl iconClass="fab fa-facebook" label="Facebook"/>
+                <Link :url=artisan.tumblrUrl iconClass="fab fa-tumblr" label="Tumblr"/>
+                <Link :url=artisan.youtubeUrl iconClass="fab fa-youtube" label="YouTube"/>
+                <Link :url=artisan.instagramUrl iconClass="fab fa-instagram" label="Instagram"/>
+                <Link :url=artisan.etsyUrl iconClass="fab fa-etsy" label="Etsy"/>
+                <Link :url=artisan.theDealersDenUrl iconClass="fas fa-shopping-cart" label="The Dealers Den"/>
+                <Link :url=artisan.otherShopUrl iconClass="fas fa-shopping-cart" label="On-line shop"/>
+                <Link :url=artisan.furryAminoUrl iconClass="fas fa-paw" label="Furry Amino"/>
+                <Link :url=artisan.scritchUrl iconClass="fas fa-camera" label="Scritch"/>
+                <Link :url=artisan.furtrackUrl iconClass="fas fa-camera" label="Furtrack"/>
+                <Link :url=artisan.linklistUrl iconClass="fas fa-link" label="List of links"/>
 
                 <li>
                   <a class="u-tbl u-report dropdown-item" data-bs-toggle="modal" data-bs-target="#artisanUpdatesModal">
@@ -265,19 +172,22 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import Artisan from '../class/Artisan';
 import ColumnsController from './ColumnsController.vue';
 import ColumnsManager from '../main/ColumnsManager';
-import Artisan from '../class/Artisan';
+import Link from './Link.vue';
+import {ADULTS, MINORS, MIXED} from '../consts';
+import {artisanFromArray} from '../main/utils';
 import {DataRow} from '../main/DataManager';
 import {getMessageBus} from '../main/MessageBus';
-import {artisanFromArray} from "../main/utils";
+import {Options, Vue} from 'vue-class-component';
 
 const messageBus = getMessageBus();
 
 @Options({
   components: {
     ColumnsController,
+    Link,
   },
 })
 export default class Main extends Vue {
@@ -311,6 +221,25 @@ export default class Main extends Vue {
     }
 
     return list.join(', ').replace(/ \([^)]+\)/g, ''); // FIXME: #171 Glossary
+  }
+
+  private agesClasses(artisan: Artisan): string[] {
+      switch (artisan.ages) {
+        case MINORS:
+          return ['fa-solid fa-user-minus'];
+        case MIXED:
+          return ['fa-solid fa-user-plus', 'fa-solid fa-user-minus'];
+        case ADULTS:
+          return [];
+      }
+
+      if (true === artisan.isMinor) {
+        return ['fa-solid fa-user-minus'];
+      } else if (false === artisan.isMinor) {
+        return [];
+      }
+
+      return ['fa-solid fa-user'];
   }
 }
 </script>

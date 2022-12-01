@@ -31,14 +31,12 @@ export default class HandlebarsHelpers {
             optional:             HandlebarsHelpers.optional,
             optionalList:         HandlebarsHelpers.optionalList,
             commaSeparated:       HandlebarsHelpers.commaSeparated,
-            commaSeparatedOther:  HandlebarsHelpers.commaSeparatedOther,
             photos:               HandlebarsHelpers.photos,
             hasPhotos:            HandlebarsHelpers.hasPhotos,
             has:                  HandlebarsHelpers.has,
             since:                HandlebarsHelpers.since,
             nl2br:                HandlebarsHelpers.nl2br,
             describeAges:         HandlebarsHelpers.describeAges,
-            describeAgesShort:    HandlebarsHelpers.describeAgesShort,
             describeCompleteness: HandlebarsHelpers.describeCompleteness,
         };
     }
@@ -64,14 +62,6 @@ export default class HandlebarsHelpers {
         }
 
         return list.join(', ');
-    }
-
-    public static commaSeparatedOther(list: string[], other: string[]): string {
-        if (0 !== other.length) {
-            list = list.concat(['Other'])
-        }
-
-        return list.join(', ').replace(/ \([^)]+\)/g, ''); // FIXME: #171 Glossary
     }
 
     public static has(subject: any): boolean {
@@ -155,25 +145,6 @@ export default class HandlebarsHelpers {
         }
 
         return new SafeString(HTML_SIGN_UNKNOWN.toString() + ' <i class="ages fa-solid fa-user"></i>');
-    }
-
-    public static describeAgesShort(artisan: Artisan): TplString {
-        switch (artisan.ages) {
-            case MINORS:
-                return new SafeString('<i class="ages fa-solid fa-user-minus"></i>');
-            case MIXED:
-                return new SafeString('<i class="ages fa-solid fa-user-plus"></i> <i class="ages fa-solid fa-user-minus"></i>');
-            case ADULTS:
-                return '';
-        }
-
-        if (true === artisan.isMinor) {
-            return new SafeString('<i class="ages fa-solid fa-user-minus"></i>');
-        } else if (false === artisan.isMinor) {
-            return '';
-        }
-
-        return new SafeString('<i class="ages fa-solid fa-user"></i>');
     }
 
     private static describeCompleteness(artisan: Artisan): string {
