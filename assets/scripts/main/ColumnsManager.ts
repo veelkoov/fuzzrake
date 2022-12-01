@@ -1,115 +1,63 @@
-import {jqTarget} from './utils';
-
 export default class ColumnsManager {
+    public readonly columns = {
+        'makerId':          'Maker ID',
+        'state':            'State',
+        'languages':        'Languages',
+        'productionModels': 'Production models',
+        'styles':           'Styles',
+        'types':            'Types',
+        'features':         'Features',
+        'species':          'Species',
+        'commissions':      'Commissions',
+        'links':            'Links',
+    }
+
+    private readonly visible: Set<string> = new Set(['styles', 'commissions', 'links']);
+
     private static readonly STORAGE_VERSION: string = '2';
-    private readonly visibility: ColumnsVisibility;
 
-    public constructor(
-        private readonly $switches: JQuery,
-    ) {
-        this.visibility = new ColumnsVisibility();
-        this.restoreColumnsVisibility();
-        this.refreshColumns();
+    public count(): number {
+        return Object.keys(this.columns).length
     }
 
-    public getColumnsVisibility(): ColumnsVisibility {
-        return this.visibility;
+    public isVisible(columnName: string): boolean {
+        return this.visible.has(columnName);
     }
 
-    public getColumnChangedCallback(): (event: JQuery.Event) => void {
-        return (event: JQuery.Event) => this.columnChanged(event);
-    }
-
-    private columnChanged(event: JQuery.Event): void {
-        event.preventDefault();
-        const colName = jqTarget(event).closest('li').data('colName');
-        this.visibility.toggle(colName);
-
-        this.refreshColumns();
-        this.recordColumnsVisibility();
-    }
-
-    private refreshColumns(): void {
-        this.$switches.each((index, element) => {
-            const $element = jQuery(element);
-
-            const colName = $element.data('colName');
-
-            if (this.visibility.isVisible(colName)) {
-                $element.children().addClass('active');
-            } else {
-                $element.children().removeClass('active');
-            }
-        });
-
-        for (let colName in this.visibility.getValues()) {
-            const $cells = jQuery(`#artisans th.${colName}, #artisans td.${colName}`)
-
-            if (this.visibility.isVisible(colName)) {
-                $cells.removeClass('d-none');
-            } else {
-                $cells.addClass('d-none');
-            }
+    public toggle(columnName: string): void {
+        if (this.isVisible(columnName)) {
+            this.visible.delete(columnName);
+        } else {
+            this.visible.add(columnName);
         }
     }
 
-    private recordColumnsVisibility(): void {
+    public save(): void {
         try {
             localStorage['columns/version'] = ColumnsManager.STORAGE_VERSION;
-            localStorage['columns/state'] = this.visibility.toString();
+            localStorage['columns/state'] = this.toString();
         } catch (e) {
             // Not allowed? - I don't care then
         }
     }
 
-    private restoreColumnsVisibility(): void {
-        let states: string = localStorage['columns/state'];
+    public load(): void {
+        let state: string = localStorage['columns/state'];
 
-        if (localStorage['columns/version'] === ColumnsManager.STORAGE_VERSION && states) {
-            for (let state of states.split(',')) {
-                let parts = state.split('=');
+        if (localStorage['columns/version'] === ColumnsManager.STORAGE_VERSION && state) {
+            this.visible.clear();
 
-                this.visibility.setVisible(parts[0], parts[1] === 'true');
-            }
+            state.split(',').forEach((item) => {
+                if (item in this.columns) this.visible.add(item);
+            });
         }
-    }
-}
-
-export class ColumnsVisibility {
-    private values: {[key: string]: boolean} = {
-        'makerId': false,
-        'state': false,
-        'languages': false,
-        'productionModels': false,
-        'styles': true,
-        'types': false,
-        'features': false,
-        'species': false,
-        'commissions': true,
-        'links': true,
-    };
-
-    public isVisible(colName: string): boolean {
-        return this.values[colName];
-    }
-
-    public toggle(colName: string): void {
-        this.values[colName] = !this.values[colName];
-    }
-
-    public setVisible(colName: string, isVisible: boolean): void {
-        this.values[colName] = isVisible;
-    }
-
-    public getValues(): {[key: string]: boolean} {
-        return this.values;
     }
 
     public toString(): string {
         let result = [];
 
-        for (let key in this.values) {
-            result.push(`${key}=${this.values[key]}`);
+        for (let value of this.visible.values()) {
+            result.push(value);
         }
 
         return result.join(',');

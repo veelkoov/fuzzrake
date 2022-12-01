@@ -80,7 +80,11 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
 
-    .enableHandlebarsLoader()
+    .enableHandlebarsLoader() // TODO: Remove
+    .enableVueLoader(() => {}, {
+        runtimeCompilerBuild: true,
+        version: 3,
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();

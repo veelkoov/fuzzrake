@@ -23,3 +23,9 @@ export default class MessageBus {
         this.dataChangesListeners.forEach(callback => callback(newData));
     }
 }
+
+const messageBus = new MessageBus();
+
+export function getMessageBus(): MessageBus {
+    return messageBus;
+}

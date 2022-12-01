@@ -1,7 +1,6 @@
 import * as Handlebars from 'handlebars/runtime';
 import Artisan from './Artisan';
 import {ADULTS, ADULTS_DESC, MINORS, MINORS_DESC, MIXED, MIXED_DESC} from '../consts';
-import {ColumnsVisibility} from '../main/ColumnsManager';
 import {SafeString} from 'handlebars/runtime';
 
 type TplString = string | SafeString;
@@ -41,7 +40,6 @@ export default class HandlebarsHelpers {
             describeAges:         HandlebarsHelpers.describeAges,
             describeAgesShort:    HandlebarsHelpers.describeAgesShort,
             describeCompleteness: HandlebarsHelpers.describeCompleteness,
-            colVis:               HandlebarsHelpers.colVis,
         };
     }
 
@@ -190,9 +188,5 @@ export default class HandlebarsHelpers {
         } else {
             return 'Yikes! :( Updates needed!';
         }
-    }
-
-    private static colVis(visibility: ColumnsVisibility, colName: string): string {
-        return visibility.isVisible(colName) ? '' : 'd-none';
     }
 }

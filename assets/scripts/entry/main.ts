@@ -1,19 +1,18 @@
+import '../../3rd-party/flag-icon-css/css/flag-icon.css';
+import '../../styles/main.scss';
 import * as Handlebars from 'handlebars/runtime';
 import CardPopUpManager from '../main/CardPopUpManager';
 import ChecklistManager from '../main/ChecklistManager';
-import ColumnsManager from '../main/ColumnsManager';
 import DataBridge from '../data/DataBridge';
 import DataManager from '../main/DataManager';
 import FiltersButtonManager from '../main/FiltersButtonManager';
 import FiltersManager from '../main/FiltersManager';
 import HandlebarsHelpers from '../class/HandlebarsHelpers';
-import MessageBus from '../main/MessageBus';
-import TableManager from '../main/TableManager';
+import Main from '../vue/Main.vue';
 import UpdatePopUpManager from '../main/UpdatePopUpManager';
+import { createApp } from 'vue'
+import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
-
-import '../../3rd-party/flag-icon-css/css/flag-icon.css';
-import '../../styles/main.scss';
 
 function loadFuzzrakeData(): void {
     // @ts-ignore grep-window-load-fuzzrake-data
@@ -41,24 +40,16 @@ function dismissChecklistCallback(): void {
     window.scrollTo(0, offset.top - 5);
 }
 
-let messageBus: MessageBus;
-let dataManager: DataManager;
-let filtersManager: FiltersManager;
-let filtersButtonManager: FiltersButtonManager;
-let columnsManager: ColumnsManager;
-let tableManager: TableManager;
-let checklistManager: ChecklistManager;
-let cardPopUpManager: CardPopUpManager;
-let updatePopUpManager: UpdatePopUpManager;
+const messageBus = getMessageBus();
 
 jQuery(() => {
     Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister());
 
     loadFuzzrakeData();
 
-    messageBus = new MessageBus();
+    createApp(Main).mount('#data-table-container');
 
-    checklistManager = new ChecklistManager(
+    const checklistManager = new ChecklistManager(
         jQuery('#checklist-age-container'),
         jQuery('#checklist-wants-sfw-container'),
         jQuery('#checklist-dismiss-btn'),
@@ -72,30 +63,16 @@ jQuery(() => {
         checklistManager.getDismissButtonClickedCallback(),
     );
 
-    columnsManager = new ColumnsManager(
-        jQuery('#columnsControlPanel li'),
-    );
-    jQuery('#columnsControlPanel li').on(
-        'click',
-        columnsManager.getColumnChangedCallback(),
-    );
-
-    tableManager = new TableManager(
-        messageBus,
-        columnsManager,
-        jQuery('#artisans tbody'),
-    );
-
-    dataManager = new DataManager(
+    const dataManager = new DataManager(
         messageBus,
     );
 
-    filtersButtonManager = new FiltersButtonManager(
+    const filtersButtonManager = new FiltersButtonManager(
         messageBus,
         jQuery('#filtersButton'),
     );
 
-    filtersManager = new FiltersManager(
+    const filtersManager = new FiltersManager(
         messageBus,
         jQuery('#filters'),
     );
@@ -106,7 +83,7 @@ jQuery(() => {
 
     filtersManager.triggerUpdate();
 
-    updatePopUpManager = new UpdatePopUpManager(
+    const updatePopUpManager = new UpdatePopUpManager(
         dataManager,
         jQuery('#artisanUpdatesModalContent'),
     );
@@ -115,7 +92,7 @@ jQuery(() => {
         updatePopUpManager.getShowCallback(),
     );
 
-    cardPopUpManager = new CardPopUpManager(
+    const cardPopUpManager = new CardPopUpManager(
         dataManager,
         jQuery('#artisanDetailsModalContent'),
     );
