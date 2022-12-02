@@ -3,6 +3,10 @@ declare const DATA_BRIDGE: { [key: string]: string };
 declare const MAKER_IDS_MAP: object;
 
 export default abstract class DataBridge {
+    public static getMainUrl(): string {
+        return DATA_BRIDGE.mainUrl;
+    }
+
     public static getTrackingUrl(): string {
         return DATA_BRIDGE.trackingUrl;
     }

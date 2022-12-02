@@ -46,7 +46,7 @@ jQuery(() => {
 
     loadFuzzrakeData();
 
-    createApp(Main).mount('#data-table-container');
+    createApp(Main).mount('#main-primary-component');
 
     const checklistManager = new ChecklistManager(
         jQuery('#checklist-age-container'),

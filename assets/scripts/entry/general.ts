@@ -5,7 +5,6 @@ window.$ = window.jQuery = jQuery
 import 'bootstrap';
 import * as moment from 'moment';
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
-import {toggle} from '../jQueryUtils';
 
 import '../../styles/general.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -30,20 +29,10 @@ jQuery(() => {
 });
 
 jQuery(() => {
-    let config = AgeAndSfwConfig.getInstance();
-
-    function setMakerModeState(enabled: boolean) {
-        config.setMakerMode(enabled);
-        config.save();
-    }
-
-    toggle('#maker-mode-warning', config.getMakerMode());
-
     jQuery('a.disable-filters-goto-main-page').on('click', () => {
-        setMakerModeState(true);
-    });
+        const config = AgeAndSfwConfig.getInstance();
 
-    jQuery('#btn-reenable-filters').on('click', () => {
-        setMakerModeState(false);
+        config.setMakerMode(true);
+        config.save();
     });
 });
