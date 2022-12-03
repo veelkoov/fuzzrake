@@ -14,27 +14,33 @@
     </div>
 
     <div id="data-table-container" style="display: none;">
-      <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-            Columns
-          </button>
-          <ul class="dropdown-menu">
-            <ColumnsController :columns=columns />
-          </ul>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                Columns
+              </button>
+              <ul class="dropdown-menu">
+                <ColumnsController :columns=columns />
+              </ul>
+            </div>
+
+            <button id="filtersButton" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#filtersModal">
+              Filters <span v-if="activeFiltersCount" class="badge rounded-pill text-bg-light">{{ activeFiltersCount }}</span>
+            </button>
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">
+              Legend
+            </button>
+          </div>
         </div>
 
-        <button id="filtersButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtersModal">
-          Filters <span v-if="activeFiltersCount" class="badge rounded-pill text-bg-light">{{ activeFiltersCount }}</span>
-        </button>
-        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">
-          Legend
-        </button>
-
-        <!-- TODO: Text-based search, see CSS.searchable -->
+        <div class="col-md-6 text-md-end">
+          <input class="my-1" type="text" @input="event => searchTrimmedLc = event.target.value.trim().toLowerCase()" />
+        </div>
       </div>
 
-      <Table :columns=columns />
+      <Table :searchTrimmedLc=searchTrimmedLc :columns=columns />
     </div>
   </div>
 </template>
@@ -67,6 +73,7 @@ export default class Main extends Vue {
   private readonly columns: ColumnsManager;
   private activeFiltersCount: number = 0;
   private readonly config: AgeAndSfwConfig;
+  private searchTrimmedLc: string = '';
 
   constructor(...args: any[]) {
     super(...args);

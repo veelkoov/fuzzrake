@@ -7,15 +7,14 @@
         <th v-for="(label, name, index) of columns.columns"
             v-show="columns.isVisible(name)"
             :class="[name, index === columns.count() - 1 ? 'text-end' : 'text-center']">{{ label }}</th>
-        <th class="hidden searchable">Data for searching</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr v-for="(artisan, index) of artisans" :data-index=index
-          :id="artisan.makerId ? artisan.makerId : null"
-          class="fursuit-maker artisan-data"
-          :class="{inactive: artisan.inactiveReason}"
+      <template v-for="(artisan, index) of artisans"><tr
+          v-if="matches(artisan)"
+          :data-index=index :id="artisan.makerId ? artisan.makerId : null"
+          class="fursuit-maker artisan-data" :class="{inactive: artisan.inactiveReason}"
       >
         <td class="name" @click="setSubject(artisan)" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
           <span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry"></span>
@@ -137,12 +136,7 @@
             </div>
           </div>
         </td>
-
-        <td class="hidden">
-          {{ artisan.formerly }}
-          {{ artisan.formerMakerIds }}
-        </td>
-      </tr>
+      </tr></template>
     </tbody>
   </table>
 </template>
@@ -162,11 +156,19 @@ import AgesDescription from "./AgesDescription.vue";
     TblLink,
   },
   props: {
-    columns: ColumnsManager,
+    columns: {
+      type: ColumnsManager,
+      required: true,
+    },
+    searchTrimmedLc: {
+      type: String,
+      required: true,
+    },
   },
 })
 export default class Table extends Vue {
   private columns!: ColumnsManager;
+  private searchTrimmedLc!: string;
   private artisans: Artisan[] = [];
   private messageBus: MessageBus;
 
@@ -176,6 +178,14 @@ export default class Table extends Vue {
     this.messageBus = getMessageBus();
 
     this.messageBus.listenDataChanges((newData: DataRow[]) => this.artisans = newData.map(item => Artisan.fromArray(item)));
+  }
+
+  private matches(artisan: Artisan): boolean {
+    if ('' === this.searchTrimmedLc) {
+      return true;
+    }
+
+    return artisan.searchableText.includes(this.searchTrimmedLc);
   }
 
   private setSubject(newSubjectArtisan: Artisan): void {

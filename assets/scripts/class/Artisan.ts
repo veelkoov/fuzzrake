@@ -18,6 +18,7 @@ export default class Artisan {
     readonly isTracked: boolean;
     readonly cstIssueText: string;
     readonly gotSpeciesInfo: boolean;
+    readonly searchableText: string;
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -120,6 +121,8 @@ export default class Artisan {
         );
 
         this.gotSpeciesInfo = 0 !== speciesDoes.length || 0 !== speciesDoesnt.length;
+
+        this.searchableText = `${name}\n${formerly}\n${makerId}\n${formerMakerIds}`.toLowerCase();
     }
 
     public getAges(): string {

@@ -6,7 +6,7 @@
           <h5 class="modal-title">
             <a v-if="artisan.makerId" id="makerId" :href="'#' + artisan.makerId"><span class="badge bg-secondary"><i
                 class="fas fa-link"></i> {{ artisan.makerId }}</span></a>
-
+            <!-- FIXME: spacing -->
             <span id="artisanName">{{ artisan.name }}</span>&nbsp;<span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry"></span>
 
             <small>
