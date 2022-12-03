@@ -28,10 +28,10 @@
 </template>
 
 <script lang="ts">
-import {Options, Vue} from 'vue-class-component';
 import Artisan from '../class/Artisan';
 import DataBridge from '../data/DataBridge';
 import {getMessageBus} from '../main/MessageBus';
+import {Options, Vue} from 'vue-class-component';
 
 @Options({
   computed: {

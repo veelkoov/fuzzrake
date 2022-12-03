@@ -59,14 +59,14 @@ import {Options, Vue} from 'vue-class-component';
 @Options({
   computed: {
     DataBridge() {
-      return DataBridge
-    }
+      return DataBridge;
+    },
   },
   components: {
     ArtisanCardPopUp,
-    UpdatesPopUp,
     ColumnsController,
     Table,
+    UpdatesPopUp,
   },
 })
 export default class Main extends Vue {

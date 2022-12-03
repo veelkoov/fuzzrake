@@ -3,9 +3,7 @@
     {{ items.join(', ') }}
   </template>
 
-  <template v-else>
-    <Unknown />
-  </template>
+  <Unknown v-else />
 </template>
 
 <script lang="ts">

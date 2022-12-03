@@ -1,4 +1,3 @@
-import Artisan from '../class/Artisan';
 import DataBridge from '../data/DataBridge';
 import MessageBus from './MessageBus';
 
@@ -24,9 +23,5 @@ export default class DataManager {
                 alert('ERROR'); // TODO
             },
         });
-    }
-
-    public getArtisanByIndex(index: number): Artisan {
-        return Artisan.fromArray(this.data[index]);
     }
 }

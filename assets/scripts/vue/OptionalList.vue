@@ -11,14 +11,12 @@
     </ul>
   </template>
 
-  <template v-else>
-    <Unknown />
-  </template>
+  <Unknown v-else />
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
 import Unknown from './Unknown.vue';
+import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
