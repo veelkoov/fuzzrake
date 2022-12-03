@@ -11,12 +11,12 @@ export default abstract class DataBridge {
         return DATA_BRIDGE.trackingUrl;
     }
 
-    public static getIuFormRedirectUrl(): string {
-        return DATA_BRIDGE.iuFormRedirectUrl;
+    public static getIuFormRedirectUrl(artisanId: string): string {
+        return DATA_BRIDGE.iuFormRedirectUrl.replace('MAKER_ID', artisanId);
     }
 
-    public static getFeedbackFormUrl(): string {
-        return DATA_BRIDGE.feedbackFormUrl;
+    public static getFeedbackFormUrl(artisanId: string): string {
+        return DATA_BRIDGE.feedbackFormUrl.replace('MAKER_ID', artisanId);
     }
 
     public static getTrackingFailedImgSrc(): string {

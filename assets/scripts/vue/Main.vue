@@ -1,4 +1,7 @@
 <template>
+  <UpdatesPopUp />
+  <ArtisanCardPopUp />
+
   <div id="data-table-content-container" style="display: none;">
     <div v-if="config.getMakerMode()" class="card border-danger mb-3">
       <div class="card-header">
@@ -38,10 +41,12 @@
 
 <script lang="ts">
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import ArtisanCardPopUp from './ArtisanCardPopUp.vue';
 import ColumnsController from './ColumnsController.vue';
 import ColumnsManager from '../main/ColumnsManager';
 import DataBridge from '../data/DataBridge';
 import Table from './Table.vue';
+import UpdatesPopUp from './UpdatesPopUp.vue';
 import {getMessageBus} from '../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
@@ -52,6 +57,8 @@ import {Options, Vue} from 'vue-class-component';
     }
   },
   components: {
+    ArtisanCardPopUp,
+    UpdatesPopUp,
     ColumnsController,
     Table,
   },
@@ -68,7 +75,7 @@ export default class Main extends Vue {
     this.columns = new ColumnsManager();
     this.columns.load();
 
-    getMessageBus().listenQueryUpdate((_: string, newCount: number) => this.activeFiltersCount = newCount);
+    getMessageBus().listenQueryUpdates((_: string, newCount: number) => this.activeFiltersCount = newCount);
   }
 
   private disableMakerMode(): void {

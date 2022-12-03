@@ -6,8 +6,6 @@
         "@types/grecaptcha": "^3.0.1",
         "@types/jquery": "^3.5.14",
         "core-js": "^3.0.0",
-        "handlebars": "^4.7.7",
-        "handlebars-loader": "^1.7.2",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.54.5",
         "sass-loader": "^12.0.0",

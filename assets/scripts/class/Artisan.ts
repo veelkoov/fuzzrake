@@ -1,3 +1,5 @@
+import {ADULTS, MINORS, MIXED} from '../consts';
+
 export default class Artisan {
     public static readonly DATA_COMPLETE_LEVEL_PERFECT = 100;
     public static readonly DATA_COMPLETE_LEVEL_GREAT = 80;
@@ -8,9 +10,6 @@ export default class Artisan {
 
     readonly location: string;
     readonly lcCountry: string;
-    readonly allStyles: string[];
-    readonly allOrderTypes: string[];
-    readonly allFeatures: string[];
     readonly abSearchJson: string;
     readonly completenessGood: boolean;
 
@@ -105,9 +104,6 @@ export default class Artisan {
     ) {
         this.location = [state, city].filter(i => i).join(', ');
         this.lcCountry = country.toLowerCase();
-        this.allFeatures = Artisan.makeAllList(features, otherFeatures);
-        this.allStyles = Artisan.makeAllList(styles, otherStyles);
-        this.allOrderTypes = Artisan.makeAllList(orderTypes, otherOrderTypes);
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
         this.isStatusKnown = this.openFor.length + this.closedFor.length > 0;
         this.abSearchJson = this.getAbSearchJson();
@@ -124,6 +120,19 @@ export default class Artisan {
         );
 
         this.gotSpeciesInfo = 0 !== speciesDoes.length || 0 !== speciesDoesnt.length;
+    }
+
+    public getAges(): string {
+        switch (this.ages) {
+            case MINORS:
+                return MINORS;
+            case MIXED:
+                return MIXED;
+            case ADULTS:
+                return ADULTS;
+            default:
+                return true === this.isMinor ? MINORS : ''; // TODO: Disregard isMinor already?
+        }
     }
 
     public getLastMakerId(): string {
@@ -145,13 +154,11 @@ export default class Artisan {
         return JSON.stringify(names)
     }
 
-    private static makeAllList(list: string[], other: string[]): string[] {
-        let result = list.slice();
+    public static empty(): Artisan {
+        return new Artisan('', [], '', [], '', '', '', '', [], '', '', '', '', [], '', [], [], '', [], [], '', [], [], [], [], [], '', [], [], null, '', null, null, null, null, null, '', '', [], [], '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', [], [], '', '', '', '', null, [], [], 0, '', '');
+    }
 
-        if (other.length) {
-            result.push(other.join('; '));
-        }
-
-        return result;
+    public static fromArray(data: string[]|string|number|boolean|null): Artisan {
+        return new Artisan(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18], data[19], data[20], data[21], data[22], data[23], data[24], data[25], data[26], data[27], data[28], data[29], data[30], data[31], data[32], data[33], data[34], data[35], data[36], data[37], data[38], data[39], data[40], data[41], data[42], data[43], data[44], data[45], data[46], data[47], data[48], data[49], data[50], data[51], data[52], data[53], data[54], data[55], data[56], data[57], data[58], data[59], data[60], data[61], data[62], data[63], data[64], data[65], data[66], data[67]);
     }
 }

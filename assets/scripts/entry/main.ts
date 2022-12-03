@@ -1,15 +1,11 @@
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
 import '../../styles/main.scss';
-import * as Handlebars from 'handlebars/runtime';
-import CardPopUpManager from '../main/CardPopUpManager';
 import ChecklistManager from '../main/ChecklistManager';
 import DataBridge from '../data/DataBridge';
 import DataManager from '../main/DataManager';
 import FiltersManager from '../main/FiltersManager';
-import HandlebarsHelpers from '../class/HandlebarsHelpers';
 import Main from '../vue/Main.vue';
-import UpdatePopUpManager from '../main/UpdatePopUpManager';
-import { createApp } from 'vue'
+import {createApp} from 'vue';
 import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
 
@@ -42,8 +38,6 @@ function dismissChecklistCallback(): void {
 const messageBus = getMessageBus();
 
 jQuery(() => {
-    Handlebars.registerHelper(HandlebarsHelpers.getHelpersToRegister());
-
     loadFuzzrakeData();
 
     createApp(Main).mount('#main-primary-component');
@@ -76,24 +70,6 @@ jQuery(() => {
     );
 
     filtersManager.triggerUpdate();
-
-    const updatePopUpManager = new UpdatePopUpManager(
-        dataManager,
-        jQuery('#artisanUpdatesModalContent'),
-    );
-    jQuery('#artisanUpdatesModal').on(
-        'show.bs.modal',
-        updatePopUpManager.getShowCallback(),
-    );
-
-    const cardPopUpManager = new CardPopUpManager(
-        dataManager,
-        jQuery('#artisanDetailsModalContent'),
-    );
-    jQuery('#artisanDetailsModal').on(
-        'show.bs.modal',
-        cardPopUpManager.getShowCallback(),
-    );
 
     jQuery('#data-loading-message, #data-table-container').toggle();
 

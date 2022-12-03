@@ -80,7 +80,6 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
 
-    .enableHandlebarsLoader() // TODO: Remove
     .enableVueLoader(() => {}, {
         runtimeCompilerBuild: true,
         version: 3,

@@ -1,13 +1,16 @@
 import {DataRow} from './DataManager';
+import Artisan from '../class/Artisan';
 
 export type QueryUpdateCallback = (newQuery: string, newActiveFiltersCount: number) => void;
-export type DataChangesCallback = (newData: DataRow[]) => void;
+export type DataChangeCallback = (newData: DataRow[]) => void;
+export type SubjectArtisanChangeCallback = (newSubject: Artisan) => void;
 
 export default class MessageBus {
     private queryUpdateListeners: QueryUpdateCallback[] = [];
-    private dataChangesListeners: DataChangesCallback[] = [];
+    private dataChangeListeners: DataChangeCallback[] = [];
+    private subjectArtisanChangeListeners: SubjectArtisanChangeCallback[] = [];
 
-    public listenQueryUpdate(listener: QueryUpdateCallback):void {
+    public listenQueryUpdates(listener: QueryUpdateCallback): void {
         this.queryUpdateListeners.push(listener);
     }
 
@@ -15,12 +18,20 @@ export default class MessageBus {
         this.queryUpdateListeners.forEach(callback => callback(newQuery, newActiveFiltersCount));
     }
 
-    public listenDataChanges(listener: DataChangesCallback):void {
-        this.dataChangesListeners.push(listener);
+    public listenDataChanges(listener: DataChangeCallback): void {
+        this.dataChangeListeners.push(listener);
     }
 
-    public notifyDataChanges(newData: DataRow[]): void {
-        this.dataChangesListeners.forEach(callback => callback(newData));
+    public notifyDataChange(newData: DataRow[]): void {
+        this.dataChangeListeners.forEach(callback => callback(newData));
+    }
+
+    public listenSubjectArtisanChanges(listener: SubjectArtisanChangeCallback) {
+        this.subjectArtisanChangeListeners.push(listener);
+    }
+
+    public notifySubjectArtisanChange(newSubjectArtisan: Artisan): void {
+        this.subjectArtisanChangeListeners.forEach(callback => callback(newSubjectArtisan));
     }
 }
 
