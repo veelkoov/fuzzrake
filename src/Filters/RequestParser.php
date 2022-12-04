@@ -21,25 +21,58 @@ final class RequestParser
         'orderType'        => 'orderTypes',
         'productionModel'  => 'productionModels',
         'commissionStatus' => 'commissionStatuses',
+        'specie'           => 'species',
         'paymentPlan'      => 'paymentPlans',
+    ];
+
+    private const BOOLEANS = [
+        'isAdult',
+        'wantsSfw',
     ];
 
     public function getChoices(Request $request): Choices
     {
-        $dataShape = Type\shape(Dict\from_keys(
-            self::ARRAYS,
-            fn ($_) => Type\vec(Type\string()),
-        ));
+        $dataShape = Type\shape(
+            Dict\merge(
+                Dict\from_keys(
+                    self::ARRAYS,
+                    fn ($_) => Type\vec(Type\string()),
+                ),
+                Dict\from_keys(
+                    self::BOOLEANS,
+                    fn ($_) => Type\bool(),
+                ),
+            ),
+        );
+
         $data = $dataShape->coerce($this->getDataFromRequest($request));
+        $data['states'] = $this->fixStates($data['states']); // @phpstan-ignore-line
 
-        $unknownVal = SpecialItems::newUnknown()->getValue();
-        $data['states'] = Vec\map($data['states'], fn ($value) => $value === $unknownVal ? '' : $value);
-
-        return new Choices(...$data);
+        return new Choices(...$data); // @phpstan-ignore-line
     }
 
     private function getDataFromRequest(Request $request): mixed
     {
-        return Dict\map(Dict\flip(self::ARRAYS), fn ($reqKey) => $request->get($reqKey, []));
+        $result = Dict\merge(
+            Dict\map(Dict\flip(self::ARRAYS), fn ($reqKey) => $request->get($reqKey, [])),
+            Dict\from_keys(
+                self::BOOLEANS,
+                fn ($reqKey) => $request->get($reqKey, false),
+            ),
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param string[] $states
+     *
+     * @return string[]
+     */
+    private function fixStates(mixed $states): array
+    {
+        $unknownVal = SpecialItems::newUnknown()->getValue();
+
+        return Vec\map($states, fn ($value) => $value === $unknownVal ? '' : $value);
     }
 }

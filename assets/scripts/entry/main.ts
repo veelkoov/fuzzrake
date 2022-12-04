@@ -51,9 +51,13 @@ jQuery(() => {
         'checklistIsAdult',
         'checklistWantsSfw',
     );
+    const dismissButtonClickedCallback = checklistManager.getDismissButtonClickedCallback();
     jQuery('#checklist-dismiss-btn').on(
         'click',
-        checklistManager.getDismissButtonClickedCallback(),
+        () => {
+            filtersManager.triggerUpdate();
+            dismissButtonClickedCallback();
+        },
     );
 
     const dataManager = new DataManager(
@@ -68,8 +72,6 @@ jQuery(() => {
         'hidden.bs.modal',
         filtersManager.getTriggerUpdateCallback(),
     );
-
-    filtersManager.triggerUpdate();
 
     jQuery('#data-loading-message, #data-table-container').toggle();
 

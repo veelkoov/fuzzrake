@@ -1,4 +1,3 @@
-import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import AllSetUnOtFilter from '../filters/data/AllSetUnOtFilter';
 import AnySetUnFilter from '../filters/data/AnySetUnFilter';
 import AnySetUnOtFilter from '../filters/data/AnySetUnOtFilter';
@@ -56,10 +55,6 @@ export default class FiltersManager {
     }
 
     private getQuery(): string {
-        if (AgeAndSfwConfig.getInstance().getMakerMode()) {
-            return '';
-        }
-
         return this.$filters.serialize();
     }
 

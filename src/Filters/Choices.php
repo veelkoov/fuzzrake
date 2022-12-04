@@ -15,6 +15,7 @@ class Choices
      * @param string[] $orderTypes
      * @param string[] $productionModels
      * @param string[] $commissionStatuses
+     * @param string[] $species
      * @param string[] $paymentPlans
      */
     public function __construct(
@@ -26,7 +27,10 @@ class Choices
         public readonly array $orderTypes,
         public readonly array $productionModels,
         public readonly array $commissionStatuses,
+        public readonly array $species,
         public readonly array $paymentPlans,
+        public readonly bool $isAdult,
+        public readonly bool $wantsSfw,
     ) {
     }
 }

@@ -98,7 +98,9 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.volatileData', 'vd')->addSelect('vd')
+            ->leftJoin('a.privateData', 'apd')->addSelect('apd')
             ->leftJoin('a.urls', 'u')->addSelect('u')
+            ->leftJoin('u.state', 'us')->addSelect('us')
             ->leftJoin('a.commissions', 'c')->addSelect('c')
             ->leftJoin('a.makerIds', 'mi')->addSelect('mi')
             ->leftJoin('a.values', 'v')->addSelect('v')

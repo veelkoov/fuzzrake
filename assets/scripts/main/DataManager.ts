@@ -1,3 +1,4 @@
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import DataBridge from '../data/DataBridge';
 import MessageBus from './MessageBus';
 
@@ -5,6 +6,7 @@ export type DataRow = string[]|string|number|boolean|null;
 
 export default class DataManager {
     private data: DataRow[] = [];
+    private readonly ageAndSfwConfig: AgeAndSfwConfig = AgeAndSfwConfig.getInstance();
 
     public constructor(
         private readonly messageBus: MessageBus,
@@ -13,7 +15,15 @@ export default class DataManager {
     }
 
     private queryUpdate(newQuery: string): void {
-        jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json?${newQuery}`), {
+        if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+            newQuery = '';
+        }
+
+        if ('' !== newQuery) { // TODO: Improve
+            newQuery = `?${newQuery}&isAdult=${this.ageAndSfwConfig.getIsAdult() ? '1' : '0'}&wantsSfw=${this.ageAndSfwConfig.getWantsSfw() ? '1' : '0'}`
+        }
+
+        jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json${newQuery}`), {
             success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
                 this.data = newData;
 
