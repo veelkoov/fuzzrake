@@ -11,7 +11,7 @@ parameters:
       "china":                                         "CN"
       "costa rica":                                    "CR"
       "croatia":                                       "HR"
-      "czech( republic)?":                             "CZ"
+      "(czech( republic)?|czechia)":                   "CZ"
       "d[ea]nmark":                                    "DK"
       "(germany|Deutschland)":                         "DE"
       "estonia":                                       "EE"
