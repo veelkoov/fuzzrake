@@ -16,7 +16,7 @@
         "google/recaptcha": "^1.2",
         "nette/utils": "^3.2",
         "phpoffice/phpspreadsheet": "^1.17",
-        "rawr/t-regx": "0.39.*",
+        "rawr/t-regx": "0.41.0",
         "sensio/framework-extra-bundle": "*",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "*",
