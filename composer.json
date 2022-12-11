@@ -2,14 +2,14 @@
     "type": "project",
     "license": "AGPL-3.0-only",
     "require": {
-        "php": "8.1.*",
+        "php": "8.2.*",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
-        "azjezz/psl": "^2.0",
+        "azjezz/psl": "^2.3.0",
         "composer/package-versions-deprecated": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
@@ -17,7 +17,6 @@
         "nette/utils": "^3.2",
         "phpoffice/phpspreadsheet": "^1.17",
         "rawr/t-regx": "0.39.*",
-        "sensio/framework-extra-bundle": "*",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "*",
         "symfony/dotenv": "*",
@@ -105,7 +104,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.1.*"
+            "require": "6.2.*"
         }
     }
 }

@@ -49,7 +49,7 @@ class EventsController extends FuzzrakeAbstractController
             return $this->redirectToRoute(RouteName::EVENTS);
         }
 
-        return $this->renderForm('mx/events/edit.html.twig', [
+        return $this->render('mx/events/edit.html.twig', [
             'event'   => $event,
             'form'    => $form,
         ]);

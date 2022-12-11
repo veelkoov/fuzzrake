@@ -54,7 +54,7 @@ class ArtisansController extends FuzzrakeAbstractController
             return $this->redirectToRoute(RouteName::MAIN);
         }
 
-        return $this->renderForm('mx/artisans/edit.html.twig', [
+        return $this->render('mx/artisans/edit.html.twig', [
             'artisan' => $artisan,
             'form'    => $form,
         ]);

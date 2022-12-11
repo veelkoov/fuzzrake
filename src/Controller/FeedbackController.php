@@ -50,7 +50,7 @@ class FeedbackController extends AbstractController
             }
         }
 
-        return $this->renderForm('feedback/feedback.html.twig', [
+        return $this->render('feedback/feedback.html.twig', [
             'form'              => $form,
             'big_error_message' => $big_error_message,
         ]);

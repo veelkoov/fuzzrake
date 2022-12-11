@@ -33,7 +33,7 @@ class QueryController extends FuzzrakeAbstractController
             $query = new DataQuery('');
         }
 
-        return $this->renderForm('mx/query/index.html.twig', [
+        return $this->render('mx/query/index.html.twig', [
             'form'   => $form,
             'query'  => $query,
         ]);

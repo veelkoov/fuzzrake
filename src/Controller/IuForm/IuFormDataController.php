@@ -50,7 +50,7 @@ class IuFormDataController extends AbstractIuFormController
             return $this->redirectToStep(RouteName::IU_FORM_CONTACT_AND_PASSWORD, $state);
         }
 
-        return $this->renderForm('iu_form/data.html.twig', [
+        return $this->render('iu_form/data.html.twig', [
             'form'               => $form,
             'errors'             => $form->getErrors(true),
             'noindex'            => true,

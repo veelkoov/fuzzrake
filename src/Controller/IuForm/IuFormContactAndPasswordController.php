@@ -65,7 +65,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
             }
         }
 
-        return $this->renderForm('iu_form/contact_and_password.html.twig', [
+        return $this->render('iu_form/contact_and_password.html.twig', [
             'form'               => $form,
             'errors'             => $form->getErrors(true),
             'noindex'            => true,
