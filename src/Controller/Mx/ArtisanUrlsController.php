@@ -7,7 +7,7 @@ namespace App\Controller\Mx;
 use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanUrlRepository;
 use App\ValueObject\Routing\RouteName;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

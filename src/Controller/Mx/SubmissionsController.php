@@ -12,7 +12,7 @@ use App\IuHandling\Import\UpdatesService;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

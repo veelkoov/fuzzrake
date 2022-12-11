@@ -15,7 +15,7 @@ use App\Utils\Filters\Set;
 use App\Utils\Species\SpeciesService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,7 +116,7 @@ class StatisticsController extends AbstractController
             $result[$item->getLabel()] = $item->getCount();
         }
 
-        return $result; // @phpstan-ignore-line
+        return $result;
     }
 
     /**

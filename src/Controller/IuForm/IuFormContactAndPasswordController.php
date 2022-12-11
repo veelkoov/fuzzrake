@@ -11,7 +11,7 @@ use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

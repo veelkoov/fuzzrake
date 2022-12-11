@@ -9,7 +9,7 @@ use App\Repository\ArtisanRepository;
 use App\Utils\DataQuery;
 use App\Utils\Enforce;
 use App\ValueObject\Routing\RouteName;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
