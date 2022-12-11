@@ -170,13 +170,9 @@ export default class Table extends Vue {
   private columns!: ColumnsManager;
   private searchTrimmedLc!: string;
   private artisans: Artisan[] = [];
-  private messageBus: MessageBus;
+  private messageBus: MessageBus = getMessageBus();
 
-  constructor(...args: any[]) {
-    super(...args);
-
-    this.messageBus = getMessageBus();
-
+  public created(): void {
     this.messageBus.listenDataChanges((newData: DataRow[]) => this.artisans = newData.map(item => Artisan.fromArray(item)));
   }
 

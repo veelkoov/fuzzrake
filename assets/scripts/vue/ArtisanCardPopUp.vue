@@ -253,12 +253,9 @@ import MessageBus, {getMessageBus} from '../main/MessageBus';
 })
 export default class Link extends Vue {
   private artisan: Artisan = Artisan.empty();
-  private readonly messageBus: MessageBus;
+  private readonly messageBus: MessageBus = getMessageBus();
 
-  constructor(...args: any[]) {
-    super(...args);
-
-    this.messageBus = getMessageBus();
+  public created(): void {
     this.messageBus.listenSubjectArtisanChanges((newSubject: Artisan) => this.artisan = newSubject);
   }
 

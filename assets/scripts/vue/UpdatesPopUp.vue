@@ -43,9 +43,7 @@ import {Options, Vue} from 'vue-class-component';
 export default class UpdatesPopUp extends Vue {
   private artisan: Artisan = Artisan.empty();
 
-  constructor(...args: any[]) {
-    super(...args);
-
+  public created(): void {
     getMessageBus().listenSubjectArtisanChanges((newSubject: Artisan) => this.artisan = newSubject);
   }
 }

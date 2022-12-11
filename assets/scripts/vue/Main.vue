@@ -70,16 +70,12 @@ import {Options, Vue} from 'vue-class-component';
   },
 })
 export default class Main extends Vue {
-  private readonly columns: ColumnsManager;
+  private readonly columns: ColumnsManager = new ColumnsManager();
   private activeFiltersCount: number = 0;
-  private readonly config: AgeAndSfwConfig;
+  private readonly config: AgeAndSfwConfig = AgeAndSfwConfig.getInstance();
   private searchTrimmedLc: string = '';
 
-  constructor(...args: any[]) {
-    super(...args);
-
-    this.config = AgeAndSfwConfig.getInstance();
-    this.columns = new ColumnsManager();
+  public created(): void {
     this.columns.load();
 
     getMessageBus().listenQueryUpdates((_: string, newCount: number) => this.activeFiltersCount = newCount);
