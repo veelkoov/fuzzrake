@@ -9,6 +9,7 @@ use App\DataDefinitions\Fields\ValidationRegexps;
 use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filters\Choices;
+use App\Filters\QueryChoicesAppender;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
@@ -382,13 +383,8 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         $builder = $this->getArtisansQueryBuilder();
 
-        if ([] !== $choices->countries) {
-            $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $choices->countries);
-        }
-
-        if ([] !== $choices->states) {
-            $builder->andWhere('a.state IN (:states)')->setParameter('states', $choices->states);
-        }
+        $appender = new QueryChoicesAppender($choices, $this);
+        $appender->applyChoices($builder);
 
         $result = $builder
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list

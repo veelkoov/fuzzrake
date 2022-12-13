@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filters;
 
+use Psl\Json;
+
 class Choices
 {
     /**
@@ -32,5 +34,10 @@ class Choices
         public readonly bool $isAdult,
         public readonly bool $wantsSfw,
     ) {
+    }
+
+    public function getDigest(): string
+    {
+        return base64_encode(hash('sha256', Json\encode($this), true));
     }
 }

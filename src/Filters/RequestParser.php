@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filters;
 
 use App\Utils\Filters\SpecialItems;
+use App\Utils\Traits\UtilityClass;
 use Psl\Dict;
 use Psl\Type;
 use Psl\Vec;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class RequestParser
 {
+    use UtilityClass;
+
     private const ARRAYS = [
         'country'          => 'countries',
         'state'            => 'states',
@@ -30,7 +33,7 @@ final class RequestParser
         'wantsSfw',
     ];
 
-    public function getChoices(Request $request): Choices
+    public static function getChoices(Request $request): Choices
     {
         $dataShape = Type\shape(
             Dict\merge(
@@ -45,13 +48,13 @@ final class RequestParser
             ),
         );
 
-        $data = $dataShape->coerce($this->getDataFromRequest($request));
-        $data['states'] = $this->fixStates($data['states']); // @phpstan-ignore-line
+        $data = $dataShape->coerce(self::getDataFromRequest($request));
+        $data['states'] = self::fixStates($data['states']); // @phpstan-ignore-line
 
         return new Choices(...$data); // @phpstan-ignore-line
     }
 
-    private function getDataFromRequest(Request $request): mixed
+    private static function getDataFromRequest(Request $request): mixed
     {
         $result = Dict\merge(
             Dict\map(Dict\flip(self::ARRAYS), fn ($reqKey) => $request->get($reqKey, [])),
@@ -65,11 +68,13 @@ final class RequestParser
     }
 
     /**
+     * Changes states selection from unknown value to ''.
+     *
      * @param string[] $states
      *
      * @return string[]
      */
-    private function fixStates(mixed $states): array
+    private static function fixStates(mixed $states): array
     {
         $unknownVal = SpecialItems::newUnknown()->getValue();
 

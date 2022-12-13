@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Filters\CachedFiltered;
 use App\Filters\RequestParser;
-use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
 use App\Service\DataOnDemand\ArtisansDOD;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
 use Psr\Cache\InvalidArgumentException;
@@ -22,9 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
-
-use function Psl\Vec\map;
-use function Psl\Vec\values;
 
 class RestApiController extends AbstractController
 {
@@ -73,25 +69,18 @@ class RestApiController extends AbstractController
      */
     #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisansArray(Request $request, ArtisanRepository $artisans, TagAwareCacheInterface $cache): JsonResponse
+    public function artisansArray(Request $request, CachedFiltered $cachedFiltered): JsonResponse
     {
-        $parser = new RequestParser();
-
         try {
-            $choices = $parser->getChoices($request);
+            $choices = RequestParser::getChoices($request);
+            $result = $cachedFiltered->getPublicDataFor($choices);
+
+            return new JsonResponse($result);
         } catch (CoercionException $exception) {
             $this->logger->info('Invalid API request received', ['exception' => $exception]);
 
             return throw new BadRequestException();
         }
-
-        $result = map(Artisan::wrapAll($artisans->getFiltered($choices)), fn ($artisan) => values($artisan->getPublicData()));
-        // TODO: Caching
-//        $result = $cache->get('restapi.artisans-array', function () use ($artisans, $choices) {
-//
-//        });
-
-        return new JsonResponse($result);
     }
 
     #[Route(path: '/api/old_to_new_maker_ids_map.json', name: RouteName::API_OLD_TO_NEW_MAKER_IDS_MAP)]
