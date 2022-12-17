@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filters;
 
-use App\Utils\Filters\SpecialItems;
 use App\Utils\Traits\UtilityClass;
 use Psl\Dict;
 use Psl\Type;
 use Psl\Vec;
 use Symfony\Component\HttpFoundation\Request;
+
+use function Psl\Iter\contains;
 
 final class RequestParser
 {
@@ -35,40 +36,42 @@ final class RequestParser
 
     public static function getChoices(Request $request): Choices
     {
-        $dataShape = Type\shape(
-            Dict\merge(
-                Dict\from_keys(
-                    self::ARRAYS,
-                    fn ($_) => Type\vec(Type\string()),
-                ),
-                Dict\from_keys(
-                    self::BOOLEANS,
-                    fn ($_) => Type\bool(),
-                ),
-            ),
+        $dataShape = Type\shape(Dict\from_keys(self::ARRAYS, fn ($_) => Type\vec(Type\string())));
+        $strArrays = $dataShape->coerce(self::getStrArraysFromRequest($request));
+
+        $dataShape = Type\shape(Dict\from_keys(self::BOOLEANS, fn ($_) => Type\bool()));
+        $booleans = $dataShape->coerce(self::getBooleansFromRequest($request));
+
+        return new Choices(
+            $strArrays['countries'],
+            self::fixStates($strArrays['states']),
+            $strArrays['languages'],
+            $strArrays['styles'],
+            $strArrays['features'],
+            $strArrays['orderTypes'],
+            $strArrays['productionModels'],
+            $strArrays['commissionStatuses'],
+            $strArrays['species'],
+            contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
+            contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
+            contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
+            $booleans['isAdult'],
+            $booleans['wantsSfw'],
         );
-
-        $data = $dataShape->coerce(self::getDataFromRequest($request));
-        $data['states'] = self::fixStates($data['states']); // @phpstan-ignore-line
-
-        return new Choices(...$data); // @phpstan-ignore-line
     }
 
-    private static function getDataFromRequest(Request $request): mixed
+    private static function getStrArraysFromRequest(Request $request): mixed
     {
-        $result = Dict\merge(
-            Dict\map(Dict\flip(self::ARRAYS), fn ($reqKey) => $request->get($reqKey, [])),
-            Dict\from_keys(
-                self::BOOLEANS,
-                fn ($reqKey) => $request->get($reqKey, false),
-            ),
-        );
+        return Dict\map(Dict\flip(self::ARRAYS), fn ($reqKey) => $request->get($reqKey, []));
+    }
 
-        return $result;
+    private static function getBooleansFromRequest(Request $request): mixed
+    {
+        return Dict\from_keys(self::BOOLEANS, fn ($reqKey) => $request->get($reqKey, false));
     }
 
     /**
-     * Changes states selection from unknown value to ''.
+     * Translates unknown values from filter context to data context: '?' ---> ''.
      *
      * @param string[] $states
      *
@@ -76,8 +79,6 @@ final class RequestParser
      */
     private static function fixStates(mixed $states): array
     {
-        $unknownVal = SpecialItems::newUnknown()->getValue();
-
-        return Vec\map($states, fn ($value) => $value === $unknownVal ? '' : $value);
+        return Vec\map($states, fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
     }
 }

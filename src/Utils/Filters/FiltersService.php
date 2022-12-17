@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Filters;
 
+use App\Filters\Consts;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
@@ -126,12 +127,12 @@ class FiltersService
         $result = new FilterData($unknown);
 
         foreach ($this->artisanRepository->getPaymentPlans() as $paymentPlan) {
-            if ('' === $paymentPlan) {
+            if (Consts::DATA_VALUE_UNKNOWN === $paymentPlan) {
                 $unknown->incCount();
-            } elseif ('None' === $paymentPlan) { // grep-payment-plans-none
-                $result->getItems()->addOrIncItem('Not supported'); // grep-payment-plans-none-label
+            } elseif (Consts::DATA_PAYPLANS_NONE === $paymentPlan) {
+                $result->getItems()->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_NONE);
             } else {
-                $result->getItems()->addOrIncItem('Supported'); // grep-payment-plans-any-label
+                $result->getItems()->addOrIncItem(Consts::FILTER_VALUE_PAYPLANS_SUPPORTED);
             }
         }
 

@@ -14,6 +14,9 @@ use Psl\Vec;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
+const F = false;
+const T = true;
+
 class CachedFilteredTest extends KernelTestCaseWithEM
 {
     /**
@@ -23,22 +26,22 @@ class CachedFilteredTest extends KernelTestCaseWithEM
     {
         self::bootKernel();
 
-        $a1 = Artisan::new()->setMakerId('M000001')->setWorksWithMinors(false);
-        $a2 = Artisan::new()->setMakerId('M000002')->setWorksWithMinors(true);
+        $a1 = Artisan::new()->setMakerId('M000001')->setWorksWithMinors(F);
+        $a2 = Artisan::new()->setMakerId('M000002')->setWorksWithMinors(T);
         $a3 = Artisan::new()->setMakerId('M000003');
 
         foreach ([$a1, $a2, $a3] as $a) {
-            $a->setNsfwSocial(false)->setNsfwWebsite(false)->setDoesNsfw(false);
+            $a->setNsfwSocial(F)->setNsfwWebsite(F)->setDoesNsfw(F);
         }
 
         self::persistAndFlush($a1, $a2, $a3);
 
         $subject = new CachedFiltered(self::getArtisanRepository(), $this->getCacheMock());
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], [], false, false));
+        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], F, F, F, F, F));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], [], false, true));
+        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], F, F, F, F, T));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
     }
 
@@ -49,23 +52,60 @@ class CachedFilteredTest extends KernelTestCaseWithEM
     {
         self::bootKernel();
 
-        $a1 = Artisan::new()->setMakerId('M000001')->setNsfwWebsite(false)->setNsfwSocial(false);
-        $a2 = Artisan::new()->setMakerId('M000002')->setNsfwWebsite(true)->setNsfwSocial(false);
-        $a3 = Artisan::new()->setMakerId('M000003')->setNsfwWebsite(false)->setNsfwSocial(true);
-        $a4 = Artisan::new()->setMakerId('M000004')->setNsfwWebsite(true)->setNsfwSocial(true);
-        $a5 = Artisan::new()->setMakerId('M000005')->setNsfwWebsite(true);
-        $a6 = Artisan::new()->setMakerId('M000006')->setNsfwSocial(true);
+        $a1 = Artisan::new()->setMakerId('M000001')->setNsfwWebsite(F)->setNsfwSocial(F);
+        $a2 = Artisan::new()->setMakerId('M000002')->setNsfwWebsite(T)->setNsfwSocial(F);
+        $a3 = Artisan::new()->setMakerId('M000003')->setNsfwWebsite(F)->setNsfwSocial(T);
+        $a4 = Artisan::new()->setMakerId('M000004')->setNsfwWebsite(T)->setNsfwSocial(T);
+        $a5 = Artisan::new()->setMakerId('M000005')->setNsfwWebsite(T);
+        $a6 = Artisan::new()->setMakerId('M000006')->setNsfwSocial(T);
         $a7 = Artisan::new()->setMakerId('M000007');
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
         $subject = new CachedFiltered(self::getArtisanRepository(), $this->getCacheMock());
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], [], true, true));
+        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], F, F, F, T, T));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], [], true, false));
+        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], F, F, F, T, F));
         self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::makerIdsFromPubData($result));
+    }
+
+    /**
+     * @dataProvider wantsPaymentPlansDataProvider
+     *
+     * @throws InvalidArgumentException
+     */
+    public function testWantsPaymentPlans(bool $unknown, bool $none, bool $any, string $expected): void
+    {
+        self::bootKernel();
+
+        $a1 = Artisan::new()->setMakerId('M000001');
+        $a2 = Artisan::new()->setMakerId('M000002')->setPaymentPlans('None');
+        $a3 = Artisan::new()->setMakerId('M000003')->setPaymentPlans('Some payment plan');
+
+        self::persistAndFlush($a1, $a2, $a3);
+
+        $subject = new CachedFiltered(self::getArtisanRepository(), $this->getCacheMock());
+
+        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], $unknown, $any, $none, T, F));
+        self::assertEquals($expected, self::makerIdsFromPubData($result));
+    }
+
+    /**
+     * @return array<string, array{bool, bool, bool, string}>
+     */
+    public function wantsPaymentPlansDataProvider(): array
+    {
+        return [
+            'Nothing selected'               => [F, F, F, 'M000001, M000002, M000003'],
+            'Unknown selected'               => [T, F, F, 'M000001'],
+            'Unknown and none selected'      => [T, T, F, 'M000001, M000002'],
+            'Any selected'                   => [F, F, T, 'M000003'],
+            'Any and none selected'          => [F, T, T, 'M000002, M000003'],
+            'Any and unknown selected'       => [T, F, T, 'M000001, M000003'],
+            'Any, none and unknown selected' => [T, T, T, 'M000001, M000002, M000003'],
+        ];
     }
 
     /**

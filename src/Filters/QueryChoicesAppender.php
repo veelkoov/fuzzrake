@@ -35,8 +35,9 @@ class QueryChoicesAppender
     {
         $this->applyCountries($builder);
         $this->applyStates($builder);
+        $this->applyPaymentPlans($builder);
         $this->applyWantsSfw($builder);
-        $this->applyIsWorksWithMinors($builder);
+        $this->applyWorksWithMinors($builder);
     }
 
     private function applyWantsSfw(QueryBuilder $builder): void
@@ -59,7 +60,7 @@ class QueryChoicesAppender
         }
     }
 
-    private function applyIsWorksWithMinors(QueryBuilder $builder): void
+    private function applyWorksWithMinors(QueryBuilder $builder): void
     {
         if (true !== $this->choices->isAdult) {
             $builder->andWhere($builder->expr()->exists(
@@ -73,5 +74,56 @@ class QueryChoicesAppender
                 ->setParameter('wwmFieldName', Field::WORKS_WITH_MINORS->value)
                 ->setParameter('a2vTrue', StrUtils::asStr(true));
         }
+    }
+
+    private function applyPaymentPlans(QueryBuilder $builder): void
+    {
+        if ($this->choices->wantsUnknownPaymentPlans) {
+            if ($this->choices->wantsAnyPaymentPlans) {
+                if ($this->choices->wantsNoPaymentPlans) {
+                    // Unknown + ANY + None
+                    return;
+                } else {
+                    // Unknown + ANY
+                    $andWhere = 'a.paymentPlans <> :paymentPlans';
+                    $parameter = Consts::DATA_PAYPLANS_NONE;
+                }
+            } else {
+                if ($this->choices->wantsNoPaymentPlans) {
+                    // Unknown + None
+                    $andWhere = 'a.paymentPlans IN (:paymentPlans)';
+                    $parameter = [Consts::DATA_VALUE_UNKNOWN, Consts::DATA_PAYPLANS_NONE];
+                } else {
+                    // Unknown
+                    $andWhere = 'a.paymentPlans = :paymentPlans';
+                    $parameter = Consts::DATA_VALUE_UNKNOWN;
+                }
+            }
+        } else {
+            if ($this->choices->wantsAnyPaymentPlans) {
+                if ($this->choices->wantsNoPaymentPlans) {
+                    // ANY + None
+                    $andWhere = 'a.paymentPlans <> :paymentPlans';
+                    $parameter = Consts::DATA_VALUE_UNKNOWN;
+                } else {
+                    // ANY
+                    $andWhere = 'a.paymentPlans NOT IN (:paymentPlans)';
+                    $parameter = [Consts::DATA_PAYPLANS_NONE, Consts::DATA_VALUE_UNKNOWN];
+                }
+            } else {
+                if ($this->choices->wantsNoPaymentPlans) {
+                    // None
+                    $andWhere = 'a.paymentPlans = :paymentPlans';
+                    $parameter = Consts::DATA_PAYPLANS_NONE;
+                } else {
+                    // Nothing selected
+                    return;
+                }
+            }
+        }
+
+        $builder
+            ->andWhere($andWhere)
+            ->setParameter('paymentPlans', $parameter);
     }
 }

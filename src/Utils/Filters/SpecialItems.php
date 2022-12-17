@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Filters;
 
+use App\Filters\Consts;
 use App\Utils\Traits\UtilityClass;
 
 final class SpecialItems
@@ -12,7 +13,7 @@ final class SpecialItems
 
     public static function newUnknown(int $initialValue = 0): SpecialItem
     {
-        $result = new SpecialItem('_u', '?', 'Unknown', 'fas fa-question-circle'); // grep-special-value-unknown
+        $result = new SpecialItem('_u', Consts::FILTER_VALUE_UNKNOWN, 'Unknown', 'fas fa-question-circle');
         $result->incCount($initialValue);
 
         return $result;
