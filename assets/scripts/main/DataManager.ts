@@ -15,22 +15,24 @@ export default class DataManager {
     }
 
     private queryUpdate(newQuery: string): void {
+        let usedQuery = `?isAdult=${this.ageAndSfwConfig.getIsAdult() ? '1' : '0'}&wantsSfw=${this.ageAndSfwConfig.getWantsSfw() ? '1' : '0'}`;
+
+        if ('' !== newQuery) {
+            usedQuery += '&' + newQuery;
+        }
+
         if (AgeAndSfwConfig.getInstance().getMakerMode()) {
-            newQuery = '';
+            usedQuery = '';
         }
 
-        if ('' !== newQuery) { // TODO: Improve
-            newQuery = `?${newQuery}&isAdult=${this.ageAndSfwConfig.getIsAdult() ? '1' : '0'}&wantsSfw=${this.ageAndSfwConfig.getWantsSfw() ? '1' : '0'}`
-        }
-
-        jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json${newQuery}`), {
+        jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json${usedQuery}`), {
             success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
                 this.data = newData;
 
                 this.messageBus.notifyDataChange(this.data);
             },
             error: (jqXHR: JQuery.jqXHR<any>, textStatus: string, errorThrown: string): void => {
-                alert('ERROR'); // TODO
+                alert(`ERROR: ${textStatus}; ${errorThrown}`); // TODO
             },
         });
     }
