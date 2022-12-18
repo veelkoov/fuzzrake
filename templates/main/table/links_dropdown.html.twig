@@ -42,6 +42,9 @@
             {%- if artisan.deviantArtUrl -%}
                 <li><a class="u-tbl u-da dropdown-item" href="{{ artisan.deviantArtUrl }}" target="_blank"><i class="fab fa-deviantart"></i> DeviantArt</a></li>
             {%- endif -%}
+            {%- if artisan.mastodonUrl -%}
+                <li><a class="u-tbl u-mastodon dropdown-item" href="{{ artisan.mastodonUrl }}" target="_blank"><i class="fa-brands fa-mastodon"></i> Mastodon</a></li>
+            {%- endif -%}
             {%- if artisan.twitterUrl -%}
                 <li><a class="u-tbl u-twitter dropdown-item" href="{{ artisan.twitterUrl }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
             {%- endif -%}

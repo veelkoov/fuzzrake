@@ -576,6 +576,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Length(max: 1024)]
+    public function getMastodonUrl(): string
+    {
+        return $this->getUrl(Field::URL_MASTODON);
+    }
+
+    public function setMastodonUrl(string $mastodonUrl): self
+    {
+        return $this->setUrl(Field::URL_MASTODON, $mastodonUrl);
+    }
+
+    #[Length(max: 1024)]
     public function getTwitterUrl(): string
     {
         return $this->getUrl(Field::URL_TWITTER);

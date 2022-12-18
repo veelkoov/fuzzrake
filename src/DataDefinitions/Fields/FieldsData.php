@@ -72,6 +72,7 @@ final class FieldsData
         'URL_FAQ'                   => ['  A S P F faqUrl',                  V::GENERIC_URL],
         'URL_FUR_AFFINITY'          => ['  A S P F furAffinityUrl',          V::FA_URL],
         'URL_DEVIANTART'            => ['  A S P F deviantArtUrl',           V::DA_URL],
+        'URL_MASTODON'              => ['  A S P F mastodonUrl',             V::GENERIC_URL],
         'URL_TWITTER'               => ['  A S P F twitterUrl',              V::TWITTER_URL],
         'URL_FACEBOOK'              => ['  A S P F facebookUrl',             V::FACEBOOK_URL],
         'URL_TUMBLR'                => ['  A S P F tumblrUrl',               V::TUMBLR_URL],

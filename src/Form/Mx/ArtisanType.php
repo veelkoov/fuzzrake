@@ -196,6 +196,11 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('mastodonUrl', UrlType::class, [
+                'label'      => 'Mastodon URL',
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('twitterUrl', UrlType::class, [
                 'label'      => 'Twitter URL',
                 'required'   => false,

@@ -81,6 +81,7 @@ export default class Artisan {
                 readonly faqUrl: string,
                 readonly furAffinityUrl: string,
                 readonly deviantArtUrl: string,
+                readonly mastodonUrl: string,
                 readonly twitterUrl: string,
                 readonly facebookUrl: string,
                 readonly tumblrUrl: string,

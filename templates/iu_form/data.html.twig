@@ -132,16 +132,16 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.twitterUrl) }}
+            {{ form_row(form.mastodonUrl) }}
         </div>
         <div class="col-lg-6">
-            {{ form_row(form.facebookUrl) }}
+            {{ form_row(form.twitterUrl) }}
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.tumblrUrl) }}
+            {{ form_row(form.facebookUrl) }}
         </div>
         <div class="col-lg-6">
             {{ form_row(form.instagramUrl) }}
@@ -150,7 +150,16 @@
 
     <div class="row">
         <div class="col-lg-6">
+            {{ form_row(form.tumblrUrl) }}
+        </div>
+        <div class="col-lg-6">
             {{ form_row(form.youtubeUrl) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.furryAminoUrl) }}
         </div>
         <div class="col-lg-6">
             {{ form_row(form.etsyUrl) }}
@@ -162,21 +171,15 @@
             {{ form_row(form.theDealersDenUrl) }}
         </div>
         <div class="col-lg-6">
-            {{ form_row(form.furryAminoUrl) }}
+            {{ form_row(form.otherShopUrl) }}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-6">
-            {{ form_row(form.otherShopUrl) }}
-        </div>
         <div class="col-lg-6">
             {{ form_row(form.linklistUrl) }}
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             {{ form_row(form.otherUrls) }}
         </div>
     </div>

@@ -268,6 +268,11 @@ class Data extends BaseForm
                 'required'   => false,
                 'empty_data' => '',
             ])
+            ->add('mastodonUrl', UrlType::class, [
+                'label'      => 'Got Mastodon? Please copy+paste full link to your profile:',
+                'required'   => false,
+                'empty_data' => '',
+            ])
             ->add('twitterUrl', UrlType::class, [
                 'label'      => 'Got Twitter? Please copy+paste full link to your profile:',
                 'required'   => false,

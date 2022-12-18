@@ -24,6 +24,7 @@ final class CompletenessCalc
         F::URL_WEBSITE,
         F::URL_FUR_AFFINITY,
         F::URL_DEVIANTART,
+        F::URL_MASTODON,
         F::URL_TWITTER,
         F::URL_FACEBOOK,
         F::URL_TUMBLR,

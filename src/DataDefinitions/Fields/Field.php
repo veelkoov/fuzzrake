@@ -52,6 +52,7 @@ enum Field: string
     case URL_FAQ = 'URL_FAQ';
     case URL_FUR_AFFINITY = 'URL_FUR_AFFINITY';
     case URL_DEVIANTART = 'URL_DEVIANTART';
+    case URL_MASTODON = 'URL_MASTODON';
     case URL_TWITTER = 'URL_TWITTER';
     case URL_FACEBOOK = 'URL_FACEBOOK';
     case URL_TUMBLR = 'URL_TUMBLR';
