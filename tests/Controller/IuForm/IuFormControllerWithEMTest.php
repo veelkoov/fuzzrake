@@ -421,7 +421,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         ]);
         self::submitInvalid($client, $form);
 
-        self::assertSelectorTextContains('div.invalid-feedback', 'Invalid password supplied.');
+        self::assertSelectorTextContains('div.invalid-feedback', 'Wrong password. To change your password, please select the "I want to change my password / I forgot my password" checkbox.');
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
             'iu_form[password]'       => 'password-554',
