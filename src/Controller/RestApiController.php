@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Filters\CachedFiltered;
-use App\Filters\RequestParser;
+use App\Filtering\DataProvider\CachedFiltered;
+use App\Filtering\RequestParser;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
 use App\Service\DataOnDemand\ArtisansDOD;

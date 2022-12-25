@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filters;
+namespace App\Filtering;
 
 use Psl\Json;
 

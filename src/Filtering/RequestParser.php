@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Filters;
+namespace App\Filtering;
 
-use App\Utils\Traits\UtilityClass;
 use Psl\Dict;
 use Psl\Type;
 use Psl\Vec;
@@ -12,10 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 use function Psl\Iter\contains;
 
-final class RequestParser
+class RequestParser
 {
-    use UtilityClass;
-
     private const ARRAYS = [
         'country'          => 'countries',
         'state'            => 'states',
@@ -42,7 +39,7 @@ final class RequestParser
         $dataShape = Type\shape(Dict\from_keys(self::BOOLEANS, fn ($_) => Type\bool()));
         $booleans = $dataShape->coerce(self::getBooleansFromRequest($request));
 
-        return new Choices(
+        return new Choices( // TODO: Validate choices
             $strArrays['countries'],
             self::fixStates($strArrays['states']),
             $strArrays['languages'],

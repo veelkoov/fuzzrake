@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filters;
+namespace App\Filtering;
 
 use App\Utils\Traits\UtilityClass;
 
@@ -12,6 +12,7 @@ final class Consts
 
     public const DATA_VALUE_UNKNOWN = '';
     public const FILTER_VALUE_UNKNOWN = '?'; // grep-special-value-unknown
+    public const FILTER_VALUE_OTHER = '*'; // grep-special-value-other
 
     public const DATA_PAYPLANS_NONE = 'None'; // grep-payment-plans-none
 

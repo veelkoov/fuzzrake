@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Filters;
 
-use App\Filters\Consts;
+use App\Filtering\Consts;
 use App\Utils\Traits\UtilityClass;
 
 final class SpecialItems
@@ -21,7 +21,7 @@ final class SpecialItems
 
     public static function newOther(): SpecialItem
     {
-        return new SpecialItem('_o', '*', 'Other', 'fas fa-asterisk'); // grep-special-value-other
+        return new SpecialItem('_o', Consts::FILTER_VALUE_OTHER, 'Other', 'fas fa-asterisk');
     }
 
     public static function newTrackingIssues(int $initialValue): SpecialItem

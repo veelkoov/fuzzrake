@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Filters;
 
-use App\Filters\Consts;
+use App\Filtering\Consts;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
