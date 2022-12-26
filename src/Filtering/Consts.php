@@ -13,6 +13,8 @@ final class Consts
     public const DATA_VALUE_UNKNOWN = '';
     public const FILTER_VALUE_UNKNOWN = '?'; // grep-special-value-unknown
     public const FILTER_VALUE_OTHER = '*'; // grep-special-value-other
+    public const FILTER_VALUE_TRACKING_ISSUES = '!'; // grep-special-value-tracking-issues
+    public const FILTER_VALUE_NOT_TRACKED = '-'; // grep-special-value-not-tracked
 
     public const DATA_PAYPLANS_NONE = 'None'; // grep-payment-plans-none
 

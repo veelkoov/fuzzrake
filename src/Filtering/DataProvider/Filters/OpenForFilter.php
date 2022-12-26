@@ -4,24 +4,46 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataProvider\Filters;
 
+use App\Filtering\Consts;
 use App\Filtering\DataProvider\Filters\ValueChecker\AnythingChecker;
 use App\Filtering\DataProvider\Filters\ValueChecker\ValueCheckerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-class OpenForFilter extends FieldOptionalAndOtherFilter // TODO: Untracked, etc. FIXME: Wrong logic
+use function Psl\Iter\contains;
+use function Psl\Vec\filter;
+
+class OpenForFilter implements FilterInterface
 {
-    protected function getOwnedItems(Artisan $artisan): string
+    private bool $wantsNotTracked;
+    private bool $wantsTrackingIssues;
+    private ValueCheckerInterface $valueChecker;
+
+    /**
+     * @param string[] $wantedItems
+     */
+    public function __construct(array $wantedItems)
     {
-        return $artisan->getOpenFor();
+        $this->wantsNotTracked = contains($wantedItems, Consts::FILTER_VALUE_NOT_TRACKED);
+        $this->wantsTrackingIssues = contains($wantedItems, Consts::FILTER_VALUE_TRACKING_ISSUES);
+
+        $wantedItems = filter($wantedItems, fn (string $item) => !contains([
+            Consts::FILTER_VALUE_NOT_TRACKED,
+            Consts::FILTER_VALUE_TRACKING_ISSUES,
+        ], $item));
+
+        $this->valueChecker = new AnythingChecker($wantedItems);
     }
 
-    protected function getOtherOwnedItems(Artisan $artisan): string
+    public function matches(Artisan $artisan): bool
     {
-        return '';
-    }
+        if ($this->wantsNotTracked && '' === $artisan->getCommissionsUrls()) {
+            return true;
+        }
 
-    protected function getValueChecker(array $wantedItems): ValueCheckerInterface
-    {
-        return new AnythingChecker($wantedItems);
+        if ($this->wantsTrackingIssues && $artisan->getCsTrackerIssue()) {
+            return true;
+        }
+
+        return $this->valueChecker->matches($artisan->getOpenFor(), null); // TODO: Similar statuses could overlap
     }
 }

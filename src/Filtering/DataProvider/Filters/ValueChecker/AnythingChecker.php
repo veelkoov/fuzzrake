@@ -22,6 +22,6 @@ class AnythingChecker implements ValueCheckerInterface
             return true;
         }
 
-        return  [] !== $this->wantedItems && any($this->wantedItems, fn (string $item) => str_contains($items, $item));
+        return [] !== $this->wantedItems && any($this->wantedItems, fn (string $item) => str_contains($items, $item));
     }
 }

@@ -18,7 +18,7 @@ class OrderTypesFilterTest extends TestCase
      *
      * @param string[] $searched
      */
-    public function testMatches($orderTypes, $otherOrderTypes, array $searched, bool $matched): void
+    public function testMatches(string $orderTypes, string $otherOrderTypes, array $searched, bool $matched): void
     {
         $subject = new OrderTypesFilter($searched);
         $artisan = Artisan::new()->setOrderTypes($orderTypes)->setOtherOrderTypes($otherOrderTypes);

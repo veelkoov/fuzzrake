@@ -18,7 +18,7 @@ class FeaturesFilterTest extends TestCase
      *
      * @param string[] $searched
      */
-    public function testMatches($features, $otherFeatures, array $searched, bool $matched): void
+    public function testMatches(string $features, string $otherFeatures, array $searched, bool $matched): void
     {
         $subject = new FeaturesFilter($searched);
         $artisan = Artisan::new()->setFeatures($features)->setOtherFeatures($otherFeatures);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataProvider\Filters;
 
-use App\Filtering\DataProvider\Filters\OrderTypesFilter;
 use App\Filtering\DataProvider\Filters\StylesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +18,7 @@ class StylesFilterTest extends TestCase
      *
      * @param string[] $searched
      */
-    public function testMatches($styles, $otherStyles, array $searched, bool $matched): void
+    public function testMatches(string $styles, string $otherStyles, array $searched, bool $matched): void
     {
         $subject = new StylesFilter($searched);
         $artisan = Artisan::new()->setStyles($styles)->setOtherStyles($otherStyles);

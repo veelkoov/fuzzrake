@@ -18,7 +18,7 @@ class ProductionModelsFilterTest extends TestCase
      *
      * @param string[] $searched
      */
-    public function testMatches($productionModels, array $searched, bool $matched): void
+    public function testMatches(string $productionModels, array $searched, bool $matched): void
     {
         $subject = new ProductionModelsFilter($searched);
         $artisan = Artisan::new()->setProductionModels($productionModels);

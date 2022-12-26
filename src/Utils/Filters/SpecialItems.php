@@ -26,7 +26,7 @@ final class SpecialItems
 
     public static function newTrackingIssues(int $initialValue): SpecialItem
     {
-        $result = new SpecialItem('_ti', '!', 'Tracking issues', 'fa fa-exclamation-triangle'); // grep-special-value-tracking-issues
+        $result = new SpecialItem('_ti', Consts::FILTER_VALUE_TRACKING_ISSUES, 'Tracking issues', 'fa fa-exclamation-triangle');
         $result->incCount($initialValue);
 
         return $result;
@@ -34,7 +34,7 @@ final class SpecialItems
 
     public static function newNotTracked(int $initialValue): SpecialItem
     {
-        $result = new SpecialItem('_nt', '-', 'Not tracked', 'fas fa-question-circle'); // grep-special-value-not-tracked
+        $result = new SpecialItem('_nt', Consts::FILTER_VALUE_NOT_TRACKED, 'Not tracked', 'fas fa-question-circle');
         $result->incCount($initialValue);
 
         return $result;
