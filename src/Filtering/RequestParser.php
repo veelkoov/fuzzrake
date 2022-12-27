@@ -22,7 +22,7 @@ class RequestParser
         'orderType'        => 'orderTypes',
         'productionModel'  => 'productionModels',
         'commissionStatus' => 'commissionStatuses',
-        'specie'           => 'species',
+        'species'          => 'species',
         'paymentPlan'      => 'paymentPlans',
     ];
 

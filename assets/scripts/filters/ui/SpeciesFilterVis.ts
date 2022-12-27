@@ -1,11 +1,12 @@
 import AbstractBaseFilterVis from './AbstractBaseFilterVis';
 import AnySetUnOtFilter from '../data/AnySetUnOtFilter';
+import Species from '../../species/Species';
 
 export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private readonly markersByDescendantSpecie: { [specieName: string]: JQuery<HTMLSpanElement> };
     private readonly markers: JQuery<HTMLSpanElement>;
 
-    public constructor(idPart: string, fieldName: string) {
+    public constructor(idPart: string, fieldName: string, private readonly species: Species) {
         super(idPart, new AnySetUnOtFilter(fieldName));
 
         this.markersByDescendantSpecie = this.getMarkersByDescendantSpecies();
@@ -63,11 +64,11 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private getMarkersForDescentantSpecie(specieName: string, markersBySpecie: { [specieName: string]: JQuery<HTMLSpanElement> }): JQuery<HTMLSpanElement> {
         let result = jQuery<HTMLSpanElement>();
 
-        // if (this.species.flat.hasOwnProperty(specieName)) {
-        //     for (let ancestor of this.species.flat[specieName].getAncestors()) {
-        //         result = result.add(markersBySpecie[ancestor.name].toArray());
-        //     }
-        // }
+        if (this.species.list.hasOwnProperty(specieName)) {
+            for (let ancestor of this.species.list[specieName].getAncestors()) {
+                result = result.add(markersBySpecie[ancestor.name].toArray());
+            }
+        }
 
         return result;
     }
@@ -75,9 +76,9 @@ export default class SpeciesFilterVis extends AbstractBaseFilterVis {
     private getMarkersBySpecie(): { [specieName: string]: JQuery<HTMLSpanElement> } {
         let result = {};
 
-        // for (let specie in this.species.flat) {
-        //     result[specie] = this.$checkboxes.filter(`[value="${specie}"]`).siblings('label').find('span.descendants-indicator');
-        // }
+        for (let specie in this.species.list) {
+            result[specie] = this.$checkboxes.filter(`[value="${specie}"]`).siblings('label').find('span.descendants-indicator');
+        }
 
         return result;
     }

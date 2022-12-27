@@ -5,6 +5,7 @@ import FilterVisInterface from '../filters/ui/FilterVisInterface';
 import GenericFilterVis from '../filters/ui/GenericFilterVis';
 import MessageBus from './MessageBus';
 import OpenForFilter from '../filters/data/OpenForFilter';
+import Species from '../species/Species';
 import SpeciesFilterVis from '../filters/ui/SpeciesFilterVis';
 import ValueUnFilter from '../filters/data/ValueUnFilter';
 
@@ -29,7 +30,7 @@ export default class FiltersManager {
         this.filters.push(new GenericFilterVis<string>('productionModels', new AnySetUnFilter('productionModels')));
         this.filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
         this.filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
-        this.filters.push(new SpeciesFilterVis('species', 'speciesDoes'));
+        this.filters.push(new SpeciesFilterVis('species', 'speciesDoes', Species.get()));
 
         for (let filter of this.filters) {
             filter.restoreChoices();

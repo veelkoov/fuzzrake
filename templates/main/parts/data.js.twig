@@ -8,6 +8,20 @@ window.loadFuzzrakeData = function () { // grep-window-load-fuzzrake-data
             '{{ old }}': '{{ new }}',
         {% endfor %}
     };
+
+    SPECIES = {
+        {% macro species_json(species) %}
+            {% for specie in species %}
+                {% if not specie.ignored %}
+                    '{{ specie.name }}': {
+                        {{ _self.species_json(specie.children) }}
+                    }{% if not loop.last %},{% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endmacro %}
+
+        {{ _self.species_json(species) }}
+    };
 }
 
 {% endcache %}
