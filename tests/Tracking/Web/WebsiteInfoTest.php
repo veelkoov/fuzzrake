@@ -9,6 +9,9 @@ use App\Tracking\Web\WebsiteInfo;
 use App\Utils\DateTime\UtcClock;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class WebsiteInfoTest extends TestCase
 {
     public function testGetChildrenUrlsForWixsite(): void
