@@ -50,19 +50,7 @@
   }
 }
 
-#artisans_wrapper { /* Override anything DataTables TODO */
-  > div.row:nth-child(2) > div.col-sm-12 {
-    overflow-x: auto;
-  }
-
-  div.dataTables_info {
-    white-space: normal !important;
-  }
-
-  #artisans_filter {
-    text-align: right;
-  }
-}
+// TODO: Check all below after DT removal
 
 table#artisans {
   border-collapse: collapse !important;
@@ -89,7 +77,6 @@ table#artisans {
 
     td {
       cursor: pointer;
-      //display: none;
       vertical-align: middle;
     }
 

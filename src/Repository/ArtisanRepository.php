@@ -356,6 +356,21 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countAll(): int
+    {
+        $resultData = $this->createQueryBuilder('a')
+            ->select('COUNT(a)')
+            ->getQuery()
+            ->enableResultCache(3600)
+            ->getSingleScalarResult();
+
+        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+    }
+
+    /**
      * @throws UnexpectedResultException
      */
     public function getCsTrackedCount(): int

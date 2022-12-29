@@ -33,6 +33,12 @@ class StatisticsService
         }
 
         try {
+            $allArtisansCount = $this->artisanRepository->countAll();
+        } catch (UnexpectedResultException) {
+            $allArtisansCount = null;
+        }
+
+        try {
             $countryCount = $this->artisanRepository->getDistinctCountriesCount();
         } catch (UnexpectedResultException) {
             $countryCount = null;
@@ -45,6 +51,7 @@ class StatisticsService
         }
 
         return new MainPageStats(
+            $allArtisansCount,
             $activeArtisansCount,
             $countryCount,
             $lastDataUpdateTimeUtc,

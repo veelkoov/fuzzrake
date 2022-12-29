@@ -1,6 +1,8 @@
 {% cache 'parts_data.js' %}
 
 var MAKER_IDS_MAP = null;
+var SPECIES = null;
+var TOTAL_ARTISANS_COUNT = null;
 
 window.loadFuzzrakeData = function () { // grep-window-load-fuzzrake-data
     MAKER_IDS_MAP = {
@@ -22,6 +24,8 @@ window.loadFuzzrakeData = function () { // grep-window-load-fuzzrake-data
 
         {{ _self.species_json(species) }}
     };
+
+    TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
 }
 
 {% endcache %}

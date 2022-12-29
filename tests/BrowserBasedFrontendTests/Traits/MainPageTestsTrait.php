@@ -31,7 +31,7 @@ trait MainPageTestsTrait
 
         $client->waitForVisibility('#artisans', 5);
 
-        self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans_info'))->getText());
+        self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
     }
 
     /**

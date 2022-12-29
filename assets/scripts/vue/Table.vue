@@ -22,7 +22,7 @@
           {{ artisan.name }}
 
           <template v-if="artisan.inactiveReason">
-            [inactive]<!-- grep-inactive-mark -->
+            [inactive] <!-- grep-inactive-mark -->
           </template>
 
           <span class="text-nowrap">
@@ -139,6 +139,8 @@
       </tr></template>
     </tbody>
   </table>
+
+  <p id="artisans-table-count" class="small">Displaying {{ artisans.length }} out of 559 fursuit makers in the database.</p>
 </template>
 
 <script lang="ts">

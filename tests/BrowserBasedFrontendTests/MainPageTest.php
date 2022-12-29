@@ -45,7 +45,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[@data-action="all"]'))->click();
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
-        $client->waitFor('//div[@id="artisans_info"]/p[contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 5);
+        $client->waitFor('//p[@id="artisans-table-count" and contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 5);
 
         self::openMakerCardByClickingOnTheirNameInTheTable($client, 'Test artisan 1');
         self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
