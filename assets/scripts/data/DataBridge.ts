@@ -2,6 +2,7 @@ declare const DATA_BRIDGE: { [key: string]: string };
 
 declare const MAKER_IDS_MAP: object;
 declare const SPECIES: object;
+declare const TOTAL_ARTISANS_COUNT: number;
 
 export default abstract class DataBridge {
     public static getMainUrl(): string {
@@ -30,6 +31,10 @@ export default abstract class DataBridge {
 
     public static getGoogleRecaptchaSiteKey(): string {
         return DATA_BRIDGE.googleRecaptchaSiteKey;
+    }
+
+    public static getTotalArtisansCount(): number {
+        return TOTAL_ARTISANS_COUNT;
     }
 
     public static getMakerIdsMap(): object {

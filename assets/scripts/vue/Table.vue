@@ -140,19 +140,25 @@
     </tbody>
   </table>
 
-  <p id="artisans-table-count" class="small">Displaying {{ artisans.length }} out of 559 fursuit makers in the database.</p>
+  <p id="artisans-table-count" class="small">Displaying {{ artisans.length }} out of {{ DataBridge.getTotalArtisansCount() }} fursuit makers in the database.</p>
 </template>
 
 <script lang="ts">
+import AgesDescription from './AgesDescription.vue';
 import Artisan from '../class/Artisan';
 import ColumnsManager from '../main/ColumnsManager';
-import TblLink from './TblLink.vue';
+import DataBridge from '../data/DataBridge';
 import MessageBus, {getMessageBus} from '../main/MessageBus';
+import TblLink from './TblLink.vue';
 import {DataRow} from '../main/DataManager';
 import {Options, Vue} from 'vue-class-component';
-import AgesDescription from "./AgesDescription.vue";
 
 @Options({
+  computed: {
+    DataBridge() {
+      return DataBridge
+    }
+  },
   components: {
     AgesDescription,
     TblLink,
