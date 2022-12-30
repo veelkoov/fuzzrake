@@ -114,6 +114,7 @@
                 <TblLink :url=artisan.queueUrl iconClass="fas fa-clipboard-list" label="Queue" />
                 <TblLink :url=artisan.furAffinityUrl iconClass="fas fa-image" label="FurAffinity" />
                 <TblLink :url=artisan.deviantArtUrl iconClass="fab fa-deviantart" label="DeviantArt" />
+                <TblLink :url=artisan.mastodonUrl iconClass="fa-brands fa-mastodon" label="Mastodon" />
                 <TblLink :url=artisan.twitterUrl iconClass="fab fa-twitter" label="Twitter" />
                 <TblLink :url=artisan.facebookUrl iconClass="fab fa-facebook" label="Facebook" />
                 <TblLink :url=artisan.tumblrUrl iconClass="fab fa-tumblr" label="Tumblr" />

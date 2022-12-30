@@ -48,6 +48,10 @@ final class SchemaFixer
 
             case 13:
                 unset($data['BP_LAST_CHECK']);
+
+                if (!array_key_exists(Field::URL_MASTODON->name, $data)) {
+                    $data[Field::URL_MASTODON->name] = '';
+                }
         }
 
         return $data;

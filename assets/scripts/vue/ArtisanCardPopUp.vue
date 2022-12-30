@@ -138,6 +138,7 @@
               <CardLink :url="artisan.queueUrl" label="Queue" icon-class="fas fa-clipboard-list" />
               <CardLink :url="artisan.furAffinityUrl" label="FurAffinity" icon-class="fas fa-image" />
               <CardLink :url="artisan.deviantArtUrl" label="DeviantArt" icon-class="fab fa-deviantart" />
+              <CardLink :url="artisan.mastodonUrl" label="Mastodon" icon-class="fa-brands fa-mastodon" />
               <CardLink :url="artisan.twitterUrl" label="Twitter" icon-class="fab fa-twitter" />
               <CardLink :url="artisan.facebookUrl" label="Facebook" icon-class="fab fa-facebook" />
               <CardLink :url="artisan.tumblrUrl" label="Tumblr" icon-class="fab fa-tumblr" />
