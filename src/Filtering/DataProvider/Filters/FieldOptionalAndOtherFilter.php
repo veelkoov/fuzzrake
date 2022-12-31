@@ -13,9 +13,9 @@ use function Psl\Vec\filter;
 
 abstract class FieldOptionalAndOtherFilter implements FilterInterface
 {
-    private bool $wantsUnknown;
-    private bool $wantsOther;
-    private ValueCheckerInterface $valueChecker;
+    private readonly bool $wantsUnknown;
+    private readonly bool $wantsOther;
+    private readonly ValueCheckerInterface $valueChecker;
 
     /**
      * @param string[] $wantedItems

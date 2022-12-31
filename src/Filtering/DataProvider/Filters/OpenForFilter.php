@@ -14,9 +14,9 @@ use function Psl\Vec\filter;
 
 class OpenForFilter implements FilterInterface
 {
-    private bool $wantsNotTracked;
-    private bool $wantsTrackingIssues;
-    private ValueCheckerInterface $valueChecker;
+    private readonly bool $wantsNotTracked;
+    private readonly bool $wantsTrackingIssues;
+    private readonly ValueCheckerInterface $valueChecker;
 
     /**
      * @param string[] $wantedItems
