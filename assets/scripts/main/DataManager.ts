@@ -1,6 +1,6 @@
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
-import DataBridge from '../data/DataBridge';
 import MessageBus from './MessageBus';
+import Static from '../Static';
 
 export type DataRow = string[]|string|number|boolean|null;
 
@@ -25,7 +25,9 @@ export default class DataManager {
             usedQuery = '';
         }
 
-        jQuery.ajax(DataBridge.getApiUrl(`artisans-array.json${usedQuery}`), {
+        Static.showLoadingIndicator();
+
+        jQuery.ajax(Static.getApiUrl(`artisans-array.json${usedQuery}`), {
             success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
                 this.data = newData;
 

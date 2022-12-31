@@ -1,5 +1,5 @@
-import DataBridge from '../data/DataBridge';
 import Specie from './Specie';
+import Static from '../Static';
 
 export default class Species {
     private static INSTANCE: Species = null;
@@ -8,7 +8,7 @@ export default class Species {
 
     public static get(): Species {
         if (Species.INSTANCE == null) {
-            Species.INSTANCE = new Species(DataBridge.getSpecies());
+            Species.INSTANCE = new Species(Static.getSpecies());
         }
 
         return Species.INSTANCE;

@@ -1,10 +1,10 @@
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
 import '../../styles/main.scss';
 import ChecklistManager from '../main/ChecklistManager';
-import DataBridge from '../data/DataBridge';
 import DataManager from '../main/DataManager';
 import FiltersManager from '../main/FiltersManager';
 import Main from '../vue/Main.vue';
+import Static from '../Static';
 import {createApp} from 'vue';
 import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
@@ -18,8 +18,8 @@ function openArtisanByFragment(): void {
     if (window.location.hash.match(makerIdHashRegexp)) {
         let makerId = window.location.hash.slice(1);
 
-        if (makerId in DataBridge.getMakerIdsMap()) {
-            makerId = DataBridge.getMakerIdsMap()[makerId];
+        if (makerId in Static.getMakerIdsMap()) {
+            makerId = Static.getMakerIdsMap()[makerId];
         }
 
         jQuery('#' + makerId).children().eq(0).trigger('click');
@@ -73,9 +73,8 @@ jQuery(() => {
         filtersManager.getTriggerUpdateCallback(),
     );
 
-    jQuery('#data-loading-message, #data-table-container').toggle();
-    // @ts-ignore
-    window.fliSetLoading(false);
+    jQuery('#data-table-container').toggle();
+    Static.hideLoadingIndicator();
 
     openArtisanByFragment();
 });

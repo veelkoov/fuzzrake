@@ -141,23 +141,25 @@
     </tbody>
   </table>
 
-  <p id="artisans-table-count" class="small">Displaying {{ artisans.length }} out of {{ DataBridge.getTotalArtisansCount() }} fursuit makers in the database.</p>
+  <p id="artisans-table-count" class="small">Displaying {{ artisans.length }} out of {{
+      Static.getTotalArtisansCount()
+    }} fursuit makers in the database.</p>
 </template>
 
 <script lang="ts">
 import AgesDescription from './AgesDescription.vue';
 import Artisan from '../class/Artisan';
 import ColumnsManager from '../main/ColumnsManager';
-import DataBridge from '../data/DataBridge';
 import MessageBus, {getMessageBus} from '../main/MessageBus';
+import Static from '../Static';
 import TblLink from './TblLink.vue';
 import {DataRow} from '../main/DataManager';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
   computed: {
-    DataBridge() {
-      return DataBridge
+    Static() {
+      return Static;
     }
   },
   components: {
@@ -182,7 +184,11 @@ export default class Table extends Vue {
   private messageBus: MessageBus = getMessageBus();
 
   public created(): void {
-    this.messageBus.listenDataChanges((newData: DataRow[]) => this.artisans = newData.map(item => Artisan.fromArray(item)));
+    this.messageBus.listenDataChanges((newData: DataRow[]) => {
+      this.artisans = newData.map(item => Artisan.fromArray(item));
+
+      Static.hideLoadingIndicator();
+    });
   }
 
   private matches(artisan: Artisan): boolean {

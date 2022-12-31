@@ -9,7 +9,7 @@
       </div>
       <div class="card-body">
         <p class="card-text">All filtering has been temporarily disabled to ease searching the whole database. Use the below button to restore them.</p>
-        <a :href=DataBridge.getMainUrl() id="btn-reenable-filters" class="btn btn-light btn-outline-danger" @click=disableMakerMode>Re-enable filters</a>
+        <a :href=Static.getMainUrl() id="btn-reenable-filters" class="btn btn-light btn-outline-danger" @click=disableMakerMode>Re-enable filters</a>
       </div>
     </div>
 
@@ -50,7 +50,7 @@ import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import ArtisanCardPopUp from './ArtisanCardPopUp.vue';
 import ColumnsController from './ColumnsController.vue';
 import ColumnsManager from '../main/ColumnsManager';
-import DataBridge from '../data/DataBridge';
+import Static from '../Static';
 import Table from './Table.vue';
 import UpdatesPopUp from './UpdatesPopUp.vue';
 import {getMessageBus} from '../main/MessageBus';
@@ -58,8 +58,8 @@ import {Options, Vue} from 'vue-class-component';
 
 @Options({
   computed: {
-    DataBridge() {
-      return DataBridge;
+    Static() {
+      return Static;
     },
   },
   components: {

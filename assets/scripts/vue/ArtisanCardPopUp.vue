@@ -161,7 +161,7 @@
           <div v-if="!artisan.commissionsUrls" class="col-md-12 p-1">
             <p>Commissions status is not being tracked.</p>
 
-            <p><a :href="DataBridge.getTrackingUrl()" target="_blank">Learn more</a></p>
+            <p><a :href="Static.getTrackingUrl()" target="_blank">Learn more</a></p>
           </div>
 
           <template v-else>
@@ -190,7 +190,7 @@
                   however the software failed to "understand" the contents. Last time tried on {{ artisan.csLastCheck }} UTC.
                 </p>
 
-                <p><a :href=DataBridge.getTrackingUrl() target="_blank">Learn more</a></p>
+                <p><a :href=Static.getTrackingUrl() target="_blank">Learn more</a></p>
               </template>
             </div>
 
@@ -203,10 +203,10 @@
                   Last time checked on {{ artisan.csLastCheck }} UTC.
                 </p>
 
-                <p><a :href=DataBridge.getTrackingUrl() target="_blank">Learn more</a></p>
+                <p><a :href=Static.getTrackingUrl() target="_blank">Learn more</a></p>
               </template>
 
-              <img v-else :src=DataBridge.getTrackingFailedImgSrc() class="img-fluid tracking-failed" alt="">
+              <img v-else :src=Static.getTrackingFailedImgSrc() class="img-fluid tracking-failed" alt="">
             </div>
           </template>
 
@@ -237,9 +237,9 @@
 import AgesDescription from './AgesDescription.vue';
 import Artisan from '../class/Artisan';
 import CardLink from './CardLink.vue';
-import DataBridge from '../data/DataBridge';
 import Optional from './Optional.vue';
 import OptionalList from './OptionalList.vue';
+import Static from '../Static';
 import Unknown from './Unknown.vue';
 import {Options, Vue} from 'vue-class-component';
 import MessageBus, {getMessageBus} from '../main/MessageBus';
@@ -247,8 +247,8 @@ import MessageBus, {getMessageBus} from '../main/MessageBus';
 @Options({
   components: {AgesDescription, CardLink, Optional, Unknown, OptionalList},
   computed: {
-    DataBridge() {
-      return DataBridge;
+    Static() {
+      return Static;
     },
   },
 })

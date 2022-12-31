@@ -1,6 +1,7 @@
 <script>
     const fliMessageNode = document.getElementById('loading-indicator-message');
     const fliContainerNode = document.getElementById('loading-indicator-container');
+    const naiveTextLength = 50;
 
     const fliMessages = [
         'Chasing the yarn ball...',
@@ -11,10 +12,13 @@
         'Choosing the best sticker to send in response...',
         'Mandatory awooing in progress...',
         'Selecting the next #FursuitFriday photo...',
+        'Laden...',
     ] // https://stackoverflow.com/a/46545530/583786
         .map(message => ({message: message, order: Math.random()}))
         .sort((a, b) => a.order - b.order)
-        .map(({message}) => message);
+        .map(({message}) => message)
+    // Naively make short texts longer to avoid the paragraph height changes on small devices
+        .map(message => message.padEnd(naiveTextLength, ' \u00A0'));
 
     let fliMessageIdx = -1;
     let fliAnimationIdx = 0;
@@ -30,6 +34,10 @@
         }
 
         fliMessageIdx++;
+
+        if (fliMessageIdx >= fliMessages.length) {
+            fliMessageIdx = 0;
+        }
 
         const span = document.createElement('span');
         span.textContent = fliMessages[fliMessageIdx];

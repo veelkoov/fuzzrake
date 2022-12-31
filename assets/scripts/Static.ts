@@ -4,7 +4,7 @@ declare const MAKER_IDS_MAP: object;
 declare const SPECIES: object;
 declare const TOTAL_ARTISANS_COUNT: number;
 
-export default abstract class DataBridge {
+export default abstract class Static {
     public static getMainUrl(): string {
         return DATA_BRIDGE.mainUrl;
     }
@@ -43,5 +43,15 @@ export default abstract class DataBridge {
 
     public static getSpecies(): object {
         return SPECIES;
+    }
+
+    public static showLoadingIndicator(): void {
+        // @ts-ignore
+        window.fliSetLoading(true);
+    }
+
+    public static hideLoadingIndicator(): void {
+        // @ts-ignore
+        window.fliSetLoading(false);
     }
 }

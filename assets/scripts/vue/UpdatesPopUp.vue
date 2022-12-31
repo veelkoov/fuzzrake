@@ -12,10 +12,10 @@
 
         <div class="modal-body">
           <p>
-            <strong>If you are the maker - please</strong> <a :href="DataBridge.getIuFormRedirectUrl(artisan.getLastMakerId())">fill the update form</a>.
+            <strong>If you are the maker - please</strong> <a :href="Static.getIuFormRedirectUrl(artisan.getLastMakerId())">fill the update form</a>.
           </p>
           <p>
-            Otherwise you can <a :href="DataBridge.getFeedbackFormUrl(artisan.getLastMakerId())" target="_blank">submit the feedback form</a>.
+            Otherwise you can <a :href="Static.getFeedbackFormUrl(artisan.getLastMakerId())" target="_blank">submit the feedback form</a>.
           </p>
         </div>
 
@@ -29,14 +29,14 @@
 
 <script lang="ts">
 import Artisan from '../class/Artisan';
-import DataBridge from '../data/DataBridge';
+import Static from '../Static';
 import {getMessageBus} from '../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
   computed: {
-    DataBridge() {
-      return DataBridge;
+    Static() {
+      return Static;
     }
   },
 })
