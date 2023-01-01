@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\DataDefinitions\Ages;
+use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
@@ -14,6 +15,8 @@ use Facebook\WebDriver\WebDriverBy;
  */
 class MakerModeTest extends PantherTestCaseWithEM
 {
+    use MainPageTestsTrait;
+
     /**
      * @throws Exception
      */
@@ -48,6 +51,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         $client->clickLink('Temporarily disable all the filters and open the main page');
         $client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::waitForLoadingIndicatorToDisappear();
 
         // Expect: checklist is hidden and all makers are visible
 
@@ -90,6 +94,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         $client->clickLink('Temporarily disable all the filters and open the main page');
         $client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        self::waitForLoadingIndicatorToDisappear();
 
         // Expect: checklist is hidden and all makers are visible
 

@@ -15,15 +15,7 @@ export default class DataManager {
     }
 
     private queryUpdate(newQuery: string): void {
-        let usedQuery = `?isAdult=${this.ageAndSfwConfig.getIsAdult() ? '1' : '0'}&wantsSfw=${this.ageAndSfwConfig.getWantsSfw() ? '1' : '0'}`;
-
-        if ('' !== newQuery) {
-            usedQuery += '&' + newQuery;
-        }
-
-        if (AgeAndSfwConfig.getInstance().getMakerMode()) {
-            usedQuery = '';
-        }
+        let usedQuery = this.getQueryWithMakerModeAndSfwOptions(newQuery);
 
         Static.showLoadingIndicator();
 
@@ -37,5 +29,19 @@ export default class DataManager {
                 alert(`ERROR: ${textStatus}; ${errorThrown}`); // TODO
             },
         });
+    }
+
+    private getQueryWithMakerModeAndSfwOptions(newQuery: string): string {
+        if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+            return '?isAdult=1&wantsSfw=0';
+        }
+
+        let usedQuery = `?isAdult=${this.ageAndSfwConfig.getIsAdult() ? '1' : '0'}&wantsSfw=${this.ageAndSfwConfig.getWantsSfw() ? '1' : '0'}`;
+
+        if ('' !== newQuery) {
+            usedQuery += '&' + newQuery;
+        }
+
+        return usedQuery;
     }
 }

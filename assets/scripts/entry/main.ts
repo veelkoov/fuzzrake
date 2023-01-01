@@ -1,5 +1,6 @@
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
 import '../../styles/main.scss';
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import ChecklistManager from '../main/ChecklistManager';
 import DataManager from '../main/DataManager';
 import FiltersManager from '../main/FiltersManager';
@@ -9,12 +10,12 @@ import {createApp} from 'vue';
 import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
 
-function loadFuzzrakeData(): void {
+function loadFuzzrakeData(): void { // TODO: Move to static
     // @ts-ignore grep-window-load-fuzzrake-data
     window.loadFuzzrakeData();
 }
 
-function openArtisanByFragment(): void {
+function openArtisanByFragment(): void { // FIXME: Won't work when artisans are partially-loaded
     if (window.location.hash.match(makerIdHashRegexp)) {
         let makerId = window.location.hash.slice(1);
 
@@ -26,8 +27,7 @@ function openArtisanByFragment(): void {
     }
 }
 
-function dismissChecklistCallback(): void {
-    // TODO: Update/run filters
+function dismissChecklist(): void {
     jQuery('#checklist-container, #data-table-content-container').toggle();
 
     // Checklist causes the user to be at the bottom of the table when it shows up
@@ -46,7 +46,7 @@ jQuery(() => {
         jQuery('#checklist-age-container'),
         jQuery('#checklist-wants-sfw-container'),
         jQuery('#checklist-dismiss-btn'),
-        dismissChecklistCallback,
+        dismissChecklist,
         'checklist-ill-be-careful',
         'checklistIsAdult',
         'checklistWantsSfw',
@@ -75,6 +75,10 @@ jQuery(() => {
 
     jQuery('#data-table-container').toggle();
     Static.hideLoadingIndicator();
+
+    if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+        messageBus.notifyQueryUpdate('', 0); // TODO: 0 can be changed back by clicking on filters
+    }
 
     openArtisanByFragment();
 });
