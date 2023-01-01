@@ -47,7 +47,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         self::persistAndFlush($artisan);
         $this->clearCache();
 
-        $client->request('GET', '/');
+        $client->request('GET', '/index.php/');
         self::skipCheckListAdultAllowNsfw($client, 1);
 
         self::openMakerCardByClickingOnTheirNameInTheTable($client, $artisan->getName());

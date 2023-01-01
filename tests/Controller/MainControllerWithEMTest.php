@@ -19,6 +19,6 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
         $client->request('GET', '/');
 
         static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h4', 'Fursuit makers database');
+        static::assertSelectorTextContains('#main-page-intro h4', 'Fursuit makers database');
     }
 }

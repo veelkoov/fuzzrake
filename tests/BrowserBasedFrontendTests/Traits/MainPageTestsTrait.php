@@ -29,9 +29,17 @@ trait MainPageTestsTrait
         self::waitUntilShows('#checklist-dismiss-btn');
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
-        $client->waitForVisibility('#artisans', 5);
+        self::waitForLoadingIndicatorToDisappear();
 
         self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private static function waitForLoadingIndicatorToDisappear(): void
+    {
+        self::waitUntilHides('#loading-indicator-container', 50);
     }
 
     /**
@@ -50,7 +58,7 @@ trait MainPageTestsTrait
      */
     private static function openDataOutdatedPopup(Client $client): void
     {
-        $reportButtonXpath = '//div[@id="artisanDetailsModalContent"]//button[text() = "Data outdated/inaccurate?"]';
+        $reportButtonXpath = '//div[@id="artisanDetailsModalContent"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
         $client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
         $client->waitForVisibility('#artisanUpdatesModalContent', 5);

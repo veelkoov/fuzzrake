@@ -34,7 +34,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->clearCache();
 
-        $client->request('GET', '/');
+        $client->request('GET', '/index.php/');
         self::skipCheckListAdultAllowNsfw($client, 3);
 
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
@@ -45,7 +45,8 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[@data-action="all"]'))->click();
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
-        $client->waitFor('//p[@id="artisans-table-count" and contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 5);
+        self::waitForLoadingIndicatorToDisappear();
+        $client->waitFor('//p[@id="artisans-table-count" and contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 1);
 
         self::openMakerCardByClickingOnTheirNameInTheTable($client, 'Test artisan 1');
         self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');

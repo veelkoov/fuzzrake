@@ -111,7 +111,7 @@ class IuFormTest extends PantherTestCaseWithEM
      */
     private function getToLastPage(): void
     {
-        $this->client->request('GET', '/iu_form/start/MAKERID');
+        $this->client->request('GET', '/index.php/iu_form/start/MAKERID');
 
         self::waitUntilShows('#iu_form_confirmUpdatingTheRightOne_0');
         $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmUpdatingTheRightOne_0'))->click();

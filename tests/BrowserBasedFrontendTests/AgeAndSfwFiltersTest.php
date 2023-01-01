@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\DataDefinitions\Ages;
+use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
@@ -17,6 +18,8 @@ use function Psl\Iter\contains;
  */
 class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 {
+    use MainPageTestsTrait;
+
     /**
      * @return array<array{0: ?Ages, 1: ?bool, 2: ?bool, 3: ?bool, 4: ?bool, 5: bool, 6: bool}>
      */
@@ -97,7 +100,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
         $this->clearCache();
 
-        $client->request('GET', '/');
+        $client->request('GET', '/index.php/');
 
         $infoText = 'Currently '.count($artisans).' makers from 0 countries are listed here.';
         $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
@@ -118,7 +121,7 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
-        self::waitUntilShows('#data-table-container');
+        self::waitForLoadingIndicatorToDisappear();
 
         foreach ($expected as $artisan) {
             self::assertVisible('#'.$artisan->getMakerId(), "Should display {$artisan->getName()}");

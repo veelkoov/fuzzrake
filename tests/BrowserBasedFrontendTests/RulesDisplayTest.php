@@ -69,8 +69,8 @@ class RulesDisplayTest extends PantherTestCaseWithEM
     public function togglingWorksDataProvider(): array
     {
         return [
-            '/rules'         => ['/rules',         false],
-            '/iu_form/start' => ['/iu_form/start', true],
+            '/rules'         => ['/index.php/rules',         false],
+            '/iu_form/start' => ['/index.php/iu_form/start', true],
         ];
     }
 }
