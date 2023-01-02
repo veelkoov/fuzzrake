@@ -7,9 +7,7 @@ export default class UnknownValue extends SpecialValue {
         super(UnknownValue.VALUE);
     }
 
-    public static is(value: any): boolean {
-        return value === null || value === ''
-            || value instanceof Set && value.size === 0
-            || value instanceof Array && value.length === 0;
+    public static is(value: null|string|Array<string>): boolean {
+        return value === null || value === '' || value instanceof Array && value.length === 0;
     }
 }

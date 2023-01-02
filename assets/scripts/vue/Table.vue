@@ -191,7 +191,7 @@ export default class Table extends Vue {
     });
   }
 
-  private matches(artisan: Artisan): boolean {
+  private matches(artisan: Artisan): boolean { // TODO: Restore highlighting by maker ID
     if ('' === this.searchTrimmedLc) {
       return true;
     }
