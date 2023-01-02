@@ -109,21 +109,22 @@ export default class Artisan {
         this.completenessGood = completeness > Artisan.DATA_COMPLETE_LEVEL_GOOD;
         this.isStatusKnown = this.openFor.length + this.closedFor.length > 0;
         this.abSearchJson = this.getAbSearchJson();
+        this.isNew = this.getIsNew(dateAdded);
 
-        // TODO: Send null instead of "unknown" for dates
-        // TODO: Date.parse() is not recommended?
-        const dateAddedParsedMs = Date.parse(dateAdded);
-        const cutoffDateMs = Date.now() - (Artisan.NEW_ARTISANS_MAX_AGE_SECONDS * 1000);
-        this.isNew = dateAdded !== 'unknown' && cutoffDateMs < dateAddedParsedMs;
-
-        this.isTracked = 0 !== openFor.length || 0 !== closedFor.length || csTrackerIssue;
-        this.cstIssueText = !this.isTracked || !csTrackerIssue ? '' : (
-            0 !== openFor.length || 0 !== closedFor.length ? 'Unsure' : 'Unknown'
-        );
+        this.isTracked = 0 !== commissionsUrls.length;
+        this.cstIssueText = this.getCstIssueText();
 
         this.gotSpeciesInfo = 0 !== speciesDoes.length || 0 !== speciesDoesnt.length;
 
         this.searchableText = `${name}\n${formerly}\n${makerId}\n${formerMakerIds}`.toLowerCase();
+    }
+
+    private getCstIssueText(): string {
+        if (!this.isTracked || !this.csTrackerIssue) {
+            return '';
+        }
+
+        return  0 !== this.openFor.length || 0 !== this.closedFor.length ? 'Unsure' : 'Unknown';
     }
 
     public getAges(): string {
@@ -149,6 +150,19 @@ export default class Artisan {
         }
 
         return '';
+    }
+
+    private getIsNew(dateAdded: string): boolean {
+        if ('unknown' === dateAdded) { // TODO: Send null instead of "unknown" for dates
+            return false;
+        }
+
+        dateAdded = dateAdded.replace(' ', 'T') + '.000Z'; // Y-m-d H:i:s ---> YYYY-MM-DDTHH:mm:ss.sssZ
+
+        const dateAddedParsedMs = Date.parse(dateAdded);
+        const cutoffDateMs = Date.now() - (Artisan.NEW_ARTISANS_MAX_AGE_SECONDS * 1000);
+
+        return cutoffDateMs < dateAddedParsedMs;
     }
 
     private getAbSearchJson(): string {
