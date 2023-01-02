@@ -136,7 +136,7 @@ export default class Artisan {
             case ADULTS:
                 return ADULTS;
             default:
-                return true === this.isMinor ? MINORS : ''; // TODO: Disregard isMinor already?
+                return true === this.isMinor ? MINORS : '';
         }
     }
 
@@ -153,7 +153,7 @@ export default class Artisan {
     }
 
     private getIsNew(dateAdded: string): boolean {
-        if ('unknown' === dateAdded) { // TODO: Send null instead of "unknown" for dates
+        if ('unknown' === dateAdded) {
             return false;
         }
 
