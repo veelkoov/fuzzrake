@@ -83,4 +83,20 @@ class MainPageTest extends PantherTestCaseWithEM
         $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
     }
+
+    public function testOpeningArtisanCardByMakerId(): void
+    {
+        $client = static::createPantherClient();
+        self::setWindowSize($client, 1600, 900);
+
+        self::persistAndFlush(self::getArtisan('Test artisan 1', 'TEST001', 'FI'));
+        $this->clearCache();
+
+        $client->request('GET', '/index.php/#TEST001');
+
+        self::waitUntilShows('#artisanDetailsModal #makerId', 1000);
+        self::assertSelectorTextSame('#artisanDetailsModal #makerId', 'TEST001');
+        $client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
+        self::waitUntilHides('#artisanDetailsModal #makerId');
+    }
 }
