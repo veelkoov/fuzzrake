@@ -10,7 +10,7 @@ import {createApp} from 'vue';
 import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
 
-function openArtisanByFragment(): void { // FIXME: Won't work when artisans are partially-loaded
+function openArtisanByFragment(): void {
     if (window.location.hash.match(makerIdHashRegexp)) {
         let makerId = window.location.hash.slice(1);
 

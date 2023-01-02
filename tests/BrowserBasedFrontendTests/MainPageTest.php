@@ -6,7 +6,14 @@ namespace App\Tests\BrowserBasedFrontendTests;
 
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\DateTime\DateTimeException;
+use App\Utils\DateTime\UtcClock;
+use App\Utils\TestUtils\UtcClockMock;
 use Exception;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\TimeoutException;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Panther\Client;
@@ -83,5 +90,49 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
+    }
+
+    /**
+     * @throws DateTimeException
+     * @throws WebDriverException
+     */
+    public function testNewlyAddedIndicators(): void
+    {
+        $client = static::createPantherClient();
+        self::setWindowSize($client, 1600, 900);
+        UtcClockMock::start();
+
+        $maker1 = Artisan::new()->setMakerId('MAKEOLD')->setName('Older maker')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
+        $maker2 = Artisan::new()->setMakerId('MAKENEW')->setName('Newer maker 1')->setCountry('CZ')->setDateAdded(UtcClock::at('-41 days'));
+
+        self::persistAndFlush($maker1, $maker2);
+        $this->clearCache();
+
+        $client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($client, 2);
+
+        self::assertSelectorExists('#MAKENEW span.new-artisan');
+        self::assertSelectorExists('#MAKEOLD');
+        self::assertSelectorNotExists('#MAKEOLD span.new-artisan');
+    }
+
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
+    public function testOpeningArtisanCardByMakerId(): void
+    {
+        $client = static::createPantherClient();
+        self::setWindowSize($client, 1600, 900);
+
+        self::persistAndFlush(self::getArtisan('Test artisan 1', 'TEST001', 'FI'));
+        $this->clearCache();
+
+        $client->request('GET', '/index.php/#TEST001');
+
+        self::waitUntilShows('#artisanDetailsModal #makerId', 1000);
+        self::assertSelectorTextSame('#artisanDetailsModal #makerId', 'TEST001');
+        $client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
+        self::waitUntilHides('#artisanDetailsModal #makerId');
     }
 }
