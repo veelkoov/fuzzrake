@@ -10,11 +10,6 @@ import {createApp} from 'vue';
 import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
 
-function loadFuzzrakeData(): void { // TODO: Move to static
-    // @ts-ignore grep-window-load-fuzzrake-data
-    window.loadFuzzrakeData();
-}
-
 function openArtisanByFragment(): void { // FIXME: Won't work when artisans are partially-loaded
     if (window.location.hash.match(makerIdHashRegexp)) {
         let makerId = window.location.hash.slice(1);
@@ -38,7 +33,7 @@ function dismissChecklist(): void {
 const messageBus = getMessageBus();
 
 jQuery(() => {
-    loadFuzzrakeData();
+    Static.loadFuzzrakeData();
 
     createApp(Main).mount('#main-primary-component');
 

@@ -4,7 +4,7 @@ var MAKER_IDS_MAP = null;
 var SPECIES = null;
 var TOTAL_ARTISANS_COUNT = null;
 
-window.loadFuzzrakeData = function () { // grep-window-load-fuzzrake-data
+window.loadFuzzrakeData = function () {
     MAKER_IDS_MAP = {
         {% for old, new in makerIdsMap %}
             '{{ old }}': '{{ new }}',

@@ -54,4 +54,9 @@ export default abstract class Static {
         // @ts-ignore
         window.fliSetLoading(false);
     }
+
+    public static loadFuzzrakeData(): void {
+        // @ts-ignore
+        window.loadFuzzrakeData();
+    }
 }
