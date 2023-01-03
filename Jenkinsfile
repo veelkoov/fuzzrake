@@ -77,7 +77,7 @@ pipeline {
         stage('PHPUnit') {
           steps {
             ansiColor('xterm') {
-              sh './toolbox pu --log-junit junit-results.xml --coverage-clover clover-results.xml --coverage-html coverage-results]'
+              sh './toolbox pu --log-junit junit-results.xml --coverage-clover clover-results.xml --coverage-html coverage-results'
             }
           }
 
