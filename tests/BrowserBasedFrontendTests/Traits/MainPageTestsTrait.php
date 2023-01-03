@@ -39,7 +39,7 @@ trait MainPageTestsTrait
      */
     private static function waitForLoadingIndicatorToDisappear(): void
     {
-        self::$pantherClient->waitForInvisibility('#loading-indicator-container', 10);
+        self::getPantherClient()->waitForInvisibility('#loading-indicator-container', 10);
     }
 
     /**

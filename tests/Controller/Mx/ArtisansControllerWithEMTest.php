@@ -15,9 +15,21 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
     {
         $client = static::createClient();
 
-        $client->request('GET', '/mx/artisans/new');
+        $crawler = $client->request('GET', '/mx/artisans/new');
+        self::assertResponseStatusCodeSame(200);
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
+        $form = $crawler->selectButton('Save')->form([
+            'artisan[makerId]' => 'MAKERID',
+            'artisan[name]'    => 'New artisan',
+        ]);
+
+        $client->submit($form);
+        $client->followRedirect();
+        self::assertResponseStatusCodeSame(200);
+
+        self::clear();
+
+        self::findArtisanByMakerId('MAKERID');
     }
 
     public function testEditArtisan(): void
@@ -38,6 +50,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
         $client->submit($form);
         $client->followRedirect();
+        self::assertResponseStatusCodeSame(200);
 
         unset($artisan);
         self::clear();
@@ -46,6 +59,27 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Password has changed.');
         self::assertNull($artisan->getWorksWithMinors(), 'Works with minors has changed.');
         self::assertNull($artisan->getIsMinor(), 'Is minor has changed.');
+    }
+
+    public function testDeleteArtisanAnd404Response(): void
+    {
+        $client = static::createClient();
+
+        $artisan = self::getArtisan(makerId: 'MAKERID');
+        self::persistAndFlush($artisan);
+
+        $crawler = $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
+        self::assertResponseStatusCodeSame(200);
+
+        $form = $crawler->selectButton('Delete')->form();
+        $client->submit($form);
+        $client->followRedirect();
+        self::assertResponseStatusCodeSame(200);
+
+        self::clear();
+
+        $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
+        self::assertResponseStatusCodeSame(404);
     }
 
     public function testSubmittingEmptyDoesnt500(): void
@@ -93,7 +127,10 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         self::assertEquals($data['check_address'], $artisan->getContactAddressPlain(), 'Address differs');
     }
 
-    public function contactUpdatesDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return list<array{array{init_original: string, init_obfuscated: string, init_method: string, init_address: string, set_original: string, set_obfuscated: string, check_original: string, check_obfuscated: string, check_method: string, check_address: string}}>
+     */
+    public function contactUpdatesDataProvider(): array
     {
         return [
             [[
