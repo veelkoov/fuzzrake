@@ -658,14 +658,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->getUrl(Field::URL_PRICES);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getPricesUrlsArray(): array
-    {
-        return StringList::unpack($this->getUrl(Field::URL_PRICES));
-    }
-
     public function setPricesUrls(string $pricesUrls): self
     {
         return $this->setUrl(Field::URL_PRICES, $pricesUrls);
