@@ -10,6 +10,7 @@ use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filtering\Choices;
 use App\Filtering\QueryChoicesAppender;
+use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
 use App\Utils\Filters\FilterData;
 use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
@@ -37,9 +38,18 @@ class ArtisanRepository extends ServiceEntityRepository
         parent::__construct($registry, Artisan::class);
     }
 
-    public function add(Artisan $entity, bool $flush = false): void
+    public function add(Artisan|ArtisanSAD $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Artisan|ArtisanSAD $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();

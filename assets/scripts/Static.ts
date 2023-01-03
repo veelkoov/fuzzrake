@@ -21,6 +21,10 @@ export default abstract class Static {
         return DATA_BRIDGE.feedbackFormUrl.replace('MAKER_ID', artisanId);
     }
 
+    public static getArtisanEditUrl(artisanId: string): string {
+        return DATA_BRIDGE.artisanEditUrl.replace('MAKER_ID', artisanId);
+    }
+
     public static getTrackingFailedImgSrc(): string {
         return DATA_BRIDGE.trackingFailedImgSrc;
     }
@@ -31,6 +35,10 @@ export default abstract class Static {
 
     public static getGoogleRecaptchaSiteKey(): string {
         return DATA_BRIDGE.googleRecaptchaSiteKey;
+    }
+
+    public static getEnvironment(): string {
+        return DATA_BRIDGE.environment;
     }
 
     public static getTotalArtisansCount(): number {

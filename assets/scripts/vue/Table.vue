@@ -91,9 +91,7 @@
 
         <td class="links" v-show="columns.isVisible('links')">
           <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-            <!--  TODO      {{! if isDevOrTestEnv() %} -->
-            <!--        <a class="btn btn-warning" href="{{! path('mx_artisan_edit', { id: artisan.id }) }"><i class="fas fa-edit"></i></a>-->
-            <!--        {% endif %}}-->
+            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditUrl(artisan.getLastMakerId())"><i class="fas fa-edit"></i></a>
 
             <a v-if="artisan.fursuitReviewUrl" class="btn btn-secondary" :href="artisan.fursuitReviewUrl" target="_blank"><i class="fas fa-balance-scale"></i></a>
 
@@ -213,6 +211,10 @@ export default class Table extends Vue {
     }
 
     return list.join(', ').replace(/ \([^)]+\)/g, ''); // FIXME: #171 Glossary
+  }
+
+  private isDevEnv(): boolean {
+    return 'dev' === Static.getEnvironment();
   }
 }
 </script>

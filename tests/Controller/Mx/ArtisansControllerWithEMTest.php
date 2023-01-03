@@ -29,7 +29,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match.');
 
-        $crawler = $client->request('GET', "/mx/artisans/{$artisan->getId()}/edit");
+        $crawler = $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
         self::assertResponseStatusCodeSame(200);
 
         $form = $crawler->selectButton('Save')->form([
@@ -76,7 +76,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
             ->setContactAddressPlain($data['init_address']);
         self::persistAndFlush($artisan);
 
-        $client->request('GET', "/mx/artisans/{$artisan->getId()}/edit");
+        $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
 
         self::submitValidForm($client, 'Save', [
             'artisan[contactInfoObfuscated]' => $data['set_obfuscated'],

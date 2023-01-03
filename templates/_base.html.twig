@@ -22,7 +22,9 @@
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
             iuFormRedirectUrl: '{{ path('iu_form_step_start', { makerId: 'MAKER_ID' })|escape('js') }}',
             feedbackFormUrl: '{{ path('feedback_form', { maker: 'MAKER_ID' })|escape('js') }}', {# grep-maker-query-parameter #}
+            artisanEditUrl: '{{ path('mx_artisan_edit', { makerId: 'MAKER_ID' })|escape('js') }}',
             trackingFailedImgSrc: '{{ asset('images/parsing_failed.webp')|escape('js') }}',
+            environment: '{{ isDevEnv() ? 'dev' : 'prod' }}',
         };
     </script>
 
