@@ -36,11 +36,11 @@
         </div>
 
         <div class="col-md-6 text-md-end">
-          <input class="my-1" type="text" @input="event => searchTrimmedLc = event.target.value.trim().toLowerCase()" />
+          <input class="my-1" type="text" @input="event => search.text = event.target.value" />
         </div>
       </div>
 
-      <Table :searchTrimmedLc=searchTrimmedLc :columns=columns />
+      <Table :search=search :columns=columns />
     </div>
   </div>
 </template>
@@ -50,6 +50,7 @@ import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import ArtisanCardPopUp from './ArtisanCardPopUp.vue';
 import ColumnsController from './ColumnsController.vue';
 import ColumnsManager from '../main/ColumnsManager';
+import Search from '../main/Search';
 import Static from '../Static';
 import Table from './Table.vue';
 import UpdatesPopUp from './UpdatesPopUp.vue';
@@ -73,7 +74,7 @@ export default class Main extends Vue {
   private readonly columns: ColumnsManager = new ColumnsManager();
   private activeFiltersCount: number = 0;
   private readonly config: AgeAndSfwConfig = AgeAndSfwConfig.getInstance();
-  private searchTrimmedLc: string = '';
+  private search: Search = new Search();
 
   public created(): void {
     this.columns.load();

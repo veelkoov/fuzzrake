@@ -12,9 +12,14 @@
 
     <tbody>
       <template v-for="(artisan, index) of artisans"><tr
-          v-if="matches(artisan)"
-          :data-index=index :id="artisan.makerId ? artisan.makerId : null"
-          class="fursuit-maker artisan-data" :class="{inactive: artisan.inactiveReason}"
+          v-if="matchesText(artisan)"
+          :data-index=index
+          :id="artisan.makerId ? artisan.makerId : null"
+          class="fursuit-maker artisan-data"
+          :class="{
+            inactive: artisan.inactiveReason,
+            'matched-maker-id': matchedMakerId(artisan),
+          }"
       >
         <td class="name" @click="setSubject(artisan)" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
           <span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry"></span>
@@ -149,6 +154,7 @@ import AgesDescription from './AgesDescription.vue';
 import Artisan from '../class/Artisan';
 import ColumnsManager from '../main/ColumnsManager';
 import MessageBus, {getMessageBus} from '../main/MessageBus';
+import Search from '../main/Search';
 import Static from '../Static';
 import TblLink from './TblLink.vue';
 import {DataRow} from '../main/DataManager';
@@ -169,15 +175,15 @@ import {Options, Vue} from 'vue-class-component';
       type: ColumnsManager,
       required: true,
     },
-    searchTrimmedLc: {
-      type: String,
+    search: {
+      type: Search,
       required: true,
     },
   },
 })
 export default class Table extends Vue {
   private columns!: ColumnsManager;
-  private searchTrimmedLc!: string;
+  private search!: Search;
   private artisans: Artisan[] = [];
   private messageBus: MessageBus = getMessageBus();
 
@@ -189,12 +195,16 @@ export default class Table extends Vue {
     });
   }
 
-  private matches(artisan: Artisan): boolean { // TODO: Restore highlighting by maker ID
-    if ('' === this.searchTrimmedLc) {
+  private matchesText(artisan: Artisan): boolean {
+    if ('' === this.search.textLc) {
       return true;
     }
 
-    return artisan.searchableText.includes(this.searchTrimmedLc);
+    return artisan.searchableText.includes(this.search.textLc);
+  }
+
+  private matchedMakerId(artisan: Artisan): boolean {
+    return this.search.isMakerId && (this.search.textUc === artisan.makerId || artisan.formerMakerIds.includes(this.search.textUc));
   }
 
   private setSubject(newSubjectArtisan: Artisan): void {
