@@ -63,13 +63,12 @@ class HierarchyAwareBuilder
     private function getUpdatedCompleteSpecie(string $flagsAndName, ?Specie $parent, ?array $subspecies): Specie
     {
         [$flags, $name] = $this->splitSpecieFlagsName($flagsAndName);
-
-        $hidden = self::hasHiddenFlag($flags) || (null !== $parent && $parent->isHidden());
+        $hidden = self::hasHiddenFlag($flags);
 
         $specie = $this->completeList[$name] ??= new Specie($name, $hidden);
 
-        if ($specie->isHidden() !== $hidden) {
-            throw new ConflictingFlagsException("$name is both hidden and shown");
+        if ($hidden) {
+            $specie->setHidden(true);
         }
 
         if (null !== $parent) {
@@ -128,20 +127,29 @@ class HierarchyAwareBuilder
     private function createVisibleListAndTree(): void
     {
         foreach ($this->completeTree as $completeSpecie) {
-            if (!$completeSpecie->isHidden()) {
-                $this->visibleTree[] = $this->getUpdatedVisibleSpecie($completeSpecie);
+            $visibleSpecie = $this->getUpdatedVisibleSpecie($completeSpecie);
+
+            if (null !== $visibleSpecie) {
+                $this->visibleTree[] = $visibleSpecie;
             }
         }
     }
 
-    private function getUpdatedVisibleSpecie(Specie $completeSpecie): Specie
+    private function getUpdatedVisibleSpecie(Specie $completeSpecie): ?Specie
     {
-        $name = $completeSpecie->getName();
-        $visibleSpecie = $this->visibleList[$name] ??= new Specie($name, false);
+        if ($completeSpecie->isHidden()) {
+            $visibleSpecie = null;
+        } else {
+            $name = $completeSpecie->getName();
+            $visibleSpecie = $this->visibleList[$name] ??= new Specie($name, false);
+        }
 
         foreach ($completeSpecie->getChildren() as $completeChild) {
-            if (!$completeChild->isHidden()) {
-                $visibleSpecie->addChild($this->getUpdatedVisibleSpecie($completeChild));
+            $visibleChild = $this->getUpdatedVisibleSpecie($completeChild);
+
+            if (null !== $visibleSpecie && null !== $visibleChild) {
+                $visibleSpecie->addChild($visibleChild);
+                $visibleChild->addParent($visibleSpecie);
             }
         }
 

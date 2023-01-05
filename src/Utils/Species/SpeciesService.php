@@ -56,7 +56,9 @@ class SpeciesService
      */
     public function getStats(): array
     {
-        return (new StatsCalculator(Artisan::wrapAll($this->artisanRepository->getActive()), $this->getVisibleList()))->get();
+        $artisans = Artisan::wrapAll($this->artisanRepository->getActive());
+
+        return (new StatsCalculator($artisans, $this->getBuilder()->getCompleteList()))->get();
     }
 
     private function getBuilder(): HierarchyAwareBuilder

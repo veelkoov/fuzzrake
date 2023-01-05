@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use InvalidArgumentException;
+use Psl\Iter;
 use Stringable;
 
 class Specie implements Stringable
@@ -33,15 +34,15 @@ class Specie implements Stringable
         return $this->parents;
     }
 
-    public function addParent(Specie $parent): Specie
+    public function addParent(Specie $parent): void
     {
         if ($parent === $this) {
             throw new InvalidArgumentException("Recursion in specie: $this->name");
         }
 
-        $this->parents[] = $parent;
-
-        return $this;
+        if (!Iter\contains($this->parents, $parent)) {
+            $this->parents[] = $parent;
+        }
     }
 
     /**
@@ -52,14 +53,15 @@ class Specie implements Stringable
         return $this->children;
     }
 
-    public function addChild(Specie $child): Specie
+    public function addChild(Specie $child): void
     {
         if ($child === $this) {
             throw new InvalidArgumentException("Recursion in specie: $this->name");
         }
-        $this->children[] = $child;
 
-        return $this;
+        if (!Iter\contains($this->children, $child)) {
+            $this->children[] = $child;
+        }
     }
 
     /**

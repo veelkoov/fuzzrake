@@ -173,84 +173,84 @@ parameters:
           Pancans: {}
 
         "i_Copyright-related classification?": # FIXME
-          "Copyrighted characters":
-            'Copyrighted characters (e.g. Pokemons)':
-          "Copyrighted species": # Alias of below?
-          "Closed species":
-          "Open species":
-          "Self-made species":
-          "Original species":
-          "I won't do closed species without the permission from the maker itself (some artists don't want their species made into a fursuit!)":
-          "Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
-          "Your own specific species":
-          "Own species":
-          "Most of author's species":
+          "i_Copyrighted characters":
+            'i_Copyrighted characters (e.g. Pokemons)':
+          "i_Copyrighted species": # Alias of below?
+          "i_Closed species":
+          "i_Open species":
+          "i_Self-made species":
+          "i_Original species":
+          "i_I won't do closed species without the permission from the maker itself (some artists don't want their species made into a fursuit!)":
+          "i_Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
+          "i_Your own specific species":
+          "i_Own species":
+          "i_Most of author's species":
 
         "i_Other/Unclassified": # Just to silence the validator, to be fixed/approved/categorized later
-          "Fantasy/original species":
-          "Any mythical or unique species":
-          "Any animal and most mysticals (dragons*, serials, gryphons)":
-          'Any design that does not use faux fur': {}
-          "Rare species":
+          "i_Fantasy/original species":
+          "i_Any mythical or unique species":
+          "i_Any animal and most mysticals (dragons*, serials, gryphons)":
+          'i_Any design that does not use faux fur': {}
+          "i_Rare species":
 
           "i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)": # FIXME: Moving this under "DADs" causes the filter subcategory arrow-button to show up and do nothing, see also #89
           "i_Protogens (for paws and tail ONLY)": # FIXME: see above
 
-          "Some video game characters":
-          "Most any species": # ?!
-          'Most common': {}
+          "i_Some video game characters":
+          "i_Most any species": # ?!
+          'i_Most common': {}
 
-          "Anything cultural appropriation":
-          "Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
-          "Axolotls":
-          "Basic canines, vulpines, angel dragons. (Will consider if unique)":
-          "Cervidae/deer family species with large antlers":
-          "Critters":
-          "Etc.": # De hecc
+          "i_Anything cultural appropriation":
+          "i_Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
+          "i_Axolotls":
+          "i_Basic canines, vulpines, angel dragons. (Will consider if unique)":
+          "i_Cervidae/deer family species with large antlers":
+          "i_Critters":
+          "i_Etc.": # De hecc
 
-          "Complexity-related":
-            "Complex species, as if the species has too many parts and details, I will say so during the quote.":
-            "Extremely intricate anything":
-            "Heavily complicated creatures":
+          "i_Complexity-related":
+            "i_Complex species, as if the species has too many parts and details, I will say so during the quote.":
+            "i_Extremely intricate anything":
+            "i_Heavily complicated creatures":
 
-          "Fur-covered":
-            "All species and all fur based characters":
-            "Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
-            'I am willing to do all types of furry species at the moment': {}
-            "I'm happy to make most species as long as they're covered in fur":
-            "Most anything covered in fur":
+          "i_Fur-covered":
+            "i_All species and all fur based characters":
+            "i_Any species that is furry! (canines, felines, fur dragons, horses, rodents, bats, etc.)":
+            'i_I am willing to do all types of furry species at the moment': {}
+            "i_I'm happy to make most species as long as they're covered in fur":
+            "i_Most anything covered in fur":
 
-          "Furbies":
-          "Gem raptors":
-          "Humanoids":
-            "Humans":
-          "I can also do velvet or minky skinned characters":
-          "I make exceptions on rare occasions":
-          "Invertibrates":
-          'I will not do anything representing satanism': {}
-          "Most furless/featherless species":
-          "No airbrushed / gradient markings on any species (all work is sewn)":
-          "Only because I do not currently have the ability to do the electronic work on them": # This should have been a comment
-          "Others": # Change to the parent category
-          "Please inquire about fantasy creatures":
+          "i_Furbies":
+          "i_Gem raptors":
+          "i_Humanoids":
+            "i_Humans":
+          "i_I can also do velvet or minky skinned characters":
+          "i_I make exceptions on rare occasions":
+          "i_Invertibrates":
+          'i_I will not do anything representing satanism': {}
+          "i_Most furless/featherless species":
+          "i_No airbrushed / gradient markings on any species (all work is sewn)":
+          "i_Only because I do not currently have the ability to do the electronic work on them": # This should have been a comment
+          "i_Others": # Change to the parent category
+          "i_Please inquire about fantasy creatures":
 
-          "Raptor masks":
+          "i_Raptor masks":
 
-          'Saber-toothed tiger': {}
-          "Skull-*":
-            "Skull": # Excuse me?
-            "Skullsuits":
-            "Skull Creatures":
-            "Skulldogs":
+          'i_Saber-toothed tiger': {}
+          "i_Skull-*":
+            "i_Skull": # Excuse me?
+            "i_Skullsuits":
+            "i_Skull Creatures":
+            "i_Skulldogs":
             'i_Skull animals':
-          "Specialises in mythical creatures/monsters":
-          "Species with horizontal pupils":
-          "Things of an adult nature":
-          "Unsafe creations":
+          "i_Specialises in mythical creatures/monsters":
+          "i_Species with horizontal pupils":
+          "i_Things of an adult nature":
+          "i_Unsafe creations":
 
-          "Uncommon species":
-          "Will not work with sequin for characters":
-          "Most real-life aquatics that have a smooth head":
+          "i_Uncommon species":
+          "i_Will not work with sequin for characters":
+          "i_Most real-life aquatics that have a smooth head":
 
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'

@@ -7,26 +7,27 @@ namespace App\Utils\Species;
 use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
+use Psl\Vec;
 
-class StatsCalculator // FIXME: Broken
+class StatsCalculator
 {
     /**
-     * @var SpecieStats[] 'Specie name' => SpecieStats
+     * @var array<string, SpecieStats> Key = specie name
      */
     private array $result;
 
     /**
-     * @var Specie[]
+     * @var array<string, Specie>
      */
-    private readonly array $speciesFlat;
+    private readonly array $completeList;
 
     /**
-     * @param Artisan[] $artisans
-     * @param Specie[]  $speciesFlat
+     * @param Artisan[]             $artisans
+     * @param array<string, Specie> $completeList
      */
-    public function __construct(array $artisans, array $speciesFlat)
+    public function __construct(array $artisans, array $completeList)
     {
-        $this->speciesFlat = $speciesFlat;
+        $this->completeList = $completeList;
 
         $allDoesNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOES);
         $allDoesntNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOESNT);
@@ -48,38 +49,40 @@ class StatsCalculator // FIXME: Broken
     }
 
     /**
-     * @param SpecieStats[] $result  'Specie name' => SpecieStats
-     * @param string[]      $species
+     * @param array<string, SpecieStats> $result      Key = specie name
+     * @param list<string>               $specieNames
      */
-    private function appendSpeciesStats(array $result, array $species, bool $does): void
+    private function appendSpeciesStats(array $result, array $specieNames, bool $does): void
     {
-        foreach ($species as $specie) {
+        foreach ($specieNames as $specieName) {
             if ($does) {
-                $result[$specie]->incDirectDoesCount();
+                $result[$specieName]->incDirectDoesCount();
 
-                foreach ($this->getSpeciesAffectedInStats($specie) as $affectedSpecie) {
-                    $result[$affectedSpecie]->incIndirectDoesCount();
+                foreach ($this->getSpecieNamesAffectedInStats($specieName) as $affectedSpecieName) {
+                    $result[$affectedSpecieName]->incIndirectDoesCount();
                 }
             } else {
-                $result[$specie]->incDirectDoesntCount();
+                $result[$specieName]->incDirectDoesntCount();
 
-                foreach ($this->getSpeciesAffectedInStats($specie) as $affectedSpecie) {
-                    $result[$affectedSpecie]->incIndirectDoesntCount();
+                foreach ($this->getSpecieNamesAffectedInStats($specieName) as $affectedSpecieName) {
+                    $result[$affectedSpecieName]->incIndirectDoesntCount();
                 }
             }
         }
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
-    private function getSpeciesAffectedInStats(string $specieName): array
+    private function getSpecieNamesAffectedInStats(string $specieName): array
     {
-        if (!array_key_exists($specieName, $this->speciesFlat)) {
+        if (!array_key_exists($specieName, $this->completeList)) {
             return [];
         }
 
-        return array_map(fn (Specie $specie): string => $specie->getName(), $this->speciesFlat[$specieName]->getAncestors());
+        $ancestors = $this->completeList[$specieName]->getAncestors();
+
+        return Vec\map($ancestors, fn (Specie $specie) => $specie->getName());
     }
 
     private static function compare(SpecieStats $a, SpecieStats $b): int
@@ -94,18 +97,18 @@ class StatsCalculator // FIXME: Broken
     }
 
     /**
-     * @param string[] $allDoesNames
-     * @param string[] $allDoesntNames
+     * @param list<string> $allDoesNames
+     * @param list<string> $allDoesntNames
      *
-     * @return SpecieStats[] 'Specie name' => SpecieStats
+     * @return array<string, SpecieStats> Key = specie name
      */
     private function createEmptyResult(array $allDoesNames, array $allDoesntNames): array
     {
         $result = [];
 
-        foreach (array_merge($allDoesNames, $allDoesntNames, array_keys($this->speciesFlat)) as $specieName) {
+        foreach (array_merge($allDoesNames, $allDoesntNames, array_keys($this->completeList)) as $specieName) {
             if (!array_key_exists($specieName, $result)) {
-                $result[$specieName] = new SpecieStats($this->speciesFlat[$specieName] ?? new Specie($specieName, true));
+                $result[$specieName] = new SpecieStats($this->completeList[$specieName] ?? new Specie($specieName, true));
             }
         }
 
@@ -113,9 +116,9 @@ class StatsCalculator // FIXME: Broken
     }
 
     /**
-     * @param Artisan[] $artisans
+     * @param list<Artisan> $artisans
      *
-     * @return string[]
+     * @return list<string>
      */
     private static function extractSpecieNamesWithRepetitions(array $artisans, Field $field): array
     {
