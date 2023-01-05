@@ -1,7 +1,7 @@
 {% cache 'parts_data.js' %}
 
 var MAKER_IDS_MAP = null;
-var SPECIES = null;
+var VISIBLE_SPECIES = null;
 var TOTAL_ARTISANS_COUNT = null;
 
 window.loadFuzzrakeData = function () {
@@ -11,10 +11,10 @@ window.loadFuzzrakeData = function () {
         {% endfor %}
     };
 
-    SPECIES = {
+    VISIBLE_SPECIES = {
         {% macro species_json(species) %}
             {% for specie in species %}
-                {% if not specie.ignored %}
+                {% if not specie.hidden %}
                     '{{ specie.name }}': {
                         {{ _self.species_json(specie.children) }}
                     }{% if not loop.last %},{% endif %}

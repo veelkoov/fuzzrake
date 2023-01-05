@@ -108,8 +108,8 @@
             </thead>
             <tbody>
             {% for specieStats in speciesStats %}
-                {% if showIgnored or not specieStats.specie.ignored %}
-                    <tr {% if specieStats.specie.ignored %}class="bg-opacity-25 bg-secondary"{% endif %}>
+                {% if showIgnored or not specieStats.specie.hidden %}
+                    <tr {% if specieStats.specie.hidden %}class="bg-opacity-25 bg-secondary"{% endif %}>
                         <td>
                             {{ specieStats.specie.name }}
 

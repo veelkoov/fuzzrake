@@ -33,7 +33,7 @@ class MainController extends AbstractController
         $filters = $cache->get('mainpage.filters', fn () => $filterService->getFiltersTplData());
         $statistics = $cache->get('mainpage.statistics', fn () => $statisticsService->getMainPageStats());
         $oldToNewMakerIdsMap = $cache->get('mainpage.oldToNewMakerIdsMap', fn () => $makerIdRepository->getOldToNewMakerIdsMap());
-        $species = $cache->get('mainpage.species', fn () => $speciesService->getTree());
+        $species = $cache->get('mainpage.species', fn () => $speciesService->getVisibleTree());
 
         return $this->render('main/main.html.twig', [
             'artisans'            => $artisans,

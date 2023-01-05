@@ -8,7 +8,7 @@ export default class Species {
 
     public static get(): Species {
         if (Species.INSTANCE == null) {
-            Species.INSTANCE = new Species(Static.getSpecies());
+            Species.INSTANCE = new Species(Static.getVisibleSpecies());
         }
 
         return Species.INSTANCE;

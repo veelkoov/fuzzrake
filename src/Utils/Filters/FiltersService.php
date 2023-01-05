@@ -72,7 +72,7 @@ class FiltersService
 
     private function getSpeciesFilterItems(): Set
     {
-        return $this->getSpeciesFilterItemsFromArray($this->species->getTree());
+        return $this->getSpeciesFilterItemsFromArray($this->species->getVisibleTree());
     }
 
     /**
@@ -83,7 +83,7 @@ class FiltersService
         $result = new Set();
 
         foreach ($species as $specie) {
-            if (!$specie->isIgnored()) {
+            if (!$specie->isHidden()) {
                 $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO: #76 Species count
             }
         }
@@ -93,10 +93,10 @@ class FiltersService
 
     private function getSpeciesFilterItem(Specie $specie): Set|string
     {
-        if ($specie->hasChildren()) {
-            return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
-        } else {
+        if ($specie->isLeaf()) {
             return $specie->getName();
+        } else {
+            return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
         }
     }
 

@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class HierarchyAwareBuilderTest extends TestCase
 {
     /**
-     * @param array<string, psSpecie> $species
+     * @param array<string, psSubspecies> $species
      *
      * @dataProvider validNamesDoesntContainDuplicatesDataProvider
      */
@@ -25,7 +25,7 @@ class HierarchyAwareBuilderTest extends TestCase
     }
 
     /**
-     * @return array<int, array{0: array<string, psSpecie>, 1: int}>
+     * @return list<array{array<string, psSubspecies>, int}>
      */
     public function validNamesDoesntContainDuplicatesDataProvider(): array
     {
@@ -62,7 +62,7 @@ class HierarchyAwareBuilderTest extends TestCase
             'f2' => ['g2' => ['h2' => ['i2' => ['j2' => ['k2' => ['l2' => ['m2' => ['n2' => []]]]]]]]],
         ]]]]]]);
 
-        $species = $subject->getFlat();
+        $species = $subject->getVisibleList();
         $species['a']->getDescendants();
         $species['n2']->isDescendantOf($species['a']);
     }

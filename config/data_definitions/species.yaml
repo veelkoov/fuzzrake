@@ -112,7 +112,7 @@ parameters:
             "i_Robotics":
             Synths:
             "i_Species with robotic/cybernetic, or otherwise mechanical appearance":
-            '3D printing & electronics required species (e.g. Protogens, Skullies)':
+            'i_3D printing & electronics required species (e.g. Protogens, Skullies)':
           Crux:
           Drekkubuses:
           "Ghost Bones Dragon":
@@ -124,8 +124,8 @@ parameters:
           Pancans:
           Pokemons:
           Sergals:
-          "Skull animals":
-            '3D printing & electronics required species (e.g. Protogens, Skullies)':
+          'i_Skull animals':
+            'i_3D printing & electronics required species (e.g. Protogens, Skullies)':
           Sparkledogs:
           Wickerbeasts:
 
@@ -242,7 +242,7 @@ parameters:
             "Skullsuits":
             "Skull Creatures":
             "Skulldogs":
-            "Skull animals":
+            'i_Skull animals':
           "Specialises in mythical creatures/monsters":
           "Species with horizontal pupils":
           "Things of an adult nature":

@@ -68,7 +68,7 @@ class GenerateSpeciesDotCommand extends Command
 
         $hidden = '[style = invis]';
 
-        $species = $this->species->getFlat();
+        $species = $this->species->getVisibleList();
         foreach (self::GROUPS_WITH_ARTIFICIAL_PLACEMENT as $specieName) {
             $children = $species[$specieName]->getChildren();
             usort($children, fn (Specie $a, Specie $b): int => count($a->getDescendants()) - count($b->getDescendants()));

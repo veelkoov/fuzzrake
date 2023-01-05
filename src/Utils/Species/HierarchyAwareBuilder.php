@@ -12,138 +12,91 @@ use TRegx\CleanRegex\Pattern;
 class HierarchyAwareBuilder
 {
     private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
-    private const FLAG_IGNORE_THIS_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
+    private const FLAG_HIDDEN_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
     /**
-     * @var array<string, Specie> Associative: key = name, value = Specie object. Species fit for filtering
+     * @var array<string, Specie>
      */
-    private array $flat;
+    private array $completeList = [];
 
     /**
-     * @var Specie[] Species fit for filtering
+     * @var array<string, Specie>
      */
-    private readonly array $tree;
+    private array $visibleList = [];
 
     /**
-     * @var string[] Names of species considered valid by the validator (list of all, not only fit for filtering)
+     * @var list<Specie>
      */
-    private array $validNames;
+    private array $completeTree = [];
+
+    /**
+     * @var list<Specie>
+     */
+    private array $visibleTree = [];
 
     private readonly Pattern $flagPattern;
 
     /**
-     * @param array<string, psSpecie> $species
+     * @param array<string, psSubspecies> $species
      */
     public function __construct(array $species)
     {
         $this->flagPattern = pattern(self::FLAG_PREFIX_REGEXP);
 
-        $this->flat = [];
-        $this->tree = $this->getTreeFor($species);
-
-        $this->validNames = [];
-        $this->addValidNamesFrom($species);
+        $this->fillCompleteListAndTreeFrom($species);
+        $this->createVisibleListAndTree();
     }
 
     /**
-     * @return array<string, Specie>
+     * @param array<string, psSubspecies> $species
      */
-    public function getFlat(): array
+    private function fillCompleteListAndTreeFrom(array $species): void
     {
-        return $this->flat;
-    }
-
-    /**
-     * @return Specie[]
-     */
-    public function getTree(): array
-    {
-        return $this->tree;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getValidNames(): array
-    {
-        return $this->validNames;
-    }
-
-    /**
-     * @param array<string, psSpecie> $species
-     */
-    private function addValidNamesFrom(array $species): void
-    {
-        foreach ($species as $specie => $subspecies) {
-            [, $specie] = $this->splitSpecieFlagsName($specie);
-
-            if (!in_array($specie, $this->validNames)) {
-                $this->validNames[] = $specie;
-            }
-
-            if (is_array($subspecies)) {
-                $this->addValidNamesFrom($this->subspecies($subspecies));
-            }
+        foreach ($species as $flagsAndName => $subspecies) {
+            $this->completeTree[] = $this->getUpdatedCompleteSpecie($flagsAndName, null, $subspecies);
         }
     }
 
     /**
-     * @param array<string, psSpecie> $species
-     *
-     * @return array<string, Specie>
+     * @param psSubspecies $subspecies
      */
-    private function getTreeFor(array $species, Specie $parent = null): array
+    private function getUpdatedCompleteSpecie(string $flagsAndName, ?Specie $parent, ?array $subspecies): Specie
     {
-        $result = [];
+        [$flags, $name] = $this->splitSpecieFlagsName($flagsAndName);
 
-        foreach ($species as $specieName => $subspecies) {
-            [$flags, $specieName] = $this->splitSpecieFlagsName($specieName);
+        $hidden = self::hasHiddenFlag($flags) || (null !== $parent && $parent->isHidden());
 
-            if (null !== $subspecies) {
-                $subspecies = $this->subspecies($subspecies);
-            }
+        $specie = $this->completeList[$name] ??= new Specie($name, $hidden);
 
-            $ignored = self::hasIgnoreFlag($flags);
-
-            $result[$specieName] = $this->getUpdatedSpecie($specieName, $ignored, $parent, $subspecies);
-            $this->validNames[] = $specieName;
+        if ($specie->isHidden() !== $hidden) {
+            throw new ConflictingFlagsException("$name is both hidden and shown");
         }
-
-        return $result;
-    }
-
-    /**
-     * @param array<string, psSubspecie> $subspecies
-     *
-     * @return array<string, psSpecie>
-     */
-    private function subspecies(array $subspecies): array
-    {
-        return $subspecies; // @phpstan-ignore-line - No recursion allowed
-    }
-
-    /**
-     * @param array<string, psSpecie>|null $subspecies
-     */
-    private function getUpdatedSpecie(string $specieName, bool $ignored, ?Specie $parent, ?array $subspecies): Specie
-    {
-        if (null !== $parent && $parent->isIgnored()) {
-            $ignored = true;
-        }
-
-        $specie = $this->flat[$specieName] ??= new Specie($specieName, $ignored);
 
         if (null !== $parent) {
             $specie->addParent($parent);
         }
 
-        if (!empty($subspecies)) {
-            foreach ($this->getTreeFor($subspecies, $specie) as $subspecie) {
-                $specie->addChild($subspecie);
+        if (null !== $subspecies) {
+            foreach ($subspecies as $childFlagsAndName => $childSubspecies) {
+                $child = $this->getUpdatedCompleteSpecie($childFlagsAndName, $specie, $this->subspecies($childSubspecies));
+
+                $specie->addChild($child);
             }
         }
 
         return $specie;
+    }
+
+    /**
+     * Workaround for lack of recursion in type definition.
+     *
+     * @param psNextLevelSubspecies $subspecies
+     *
+     * @return psSubspecies
+     */
+    private function subspecies(?array $subspecies): ?array
+    {
+        return $subspecies; // @phpstan-ignore-line
     }
 
     /**
@@ -162,14 +115,76 @@ class HierarchyAwareBuilder
         } // @codeCoverageIgnoreEnd
     }
 
-    private static function hasIgnoreFlag(string $flags): bool
+    private static function hasHiddenFlag(string $flags): bool
     {
-        return self::flagged($flags, self::FLAG_IGNORE_THIS_FLAG);
+        return self::flagged($flags, self::FLAG_HIDDEN_FLAG);
     }
 
-    /** @noinspection PhpSameParameterValueInspection */
     private static function flagged(string $flags, string $flag): bool
     {
         return str_contains($flags, $flag);
+    }
+
+    private function createVisibleListAndTree(): void
+    {
+        foreach ($this->completeTree as $completeSpecie) {
+            if (!$completeSpecie->isHidden()) {
+                $this->visibleTree[] = $this->getUpdatedVisibleSpecie($completeSpecie);
+            }
+        }
+    }
+
+    private function getUpdatedVisibleSpecie(Specie $completeSpecie): Specie
+    {
+        $name = $completeSpecie->getName();
+        $visibleSpecie = $this->visibleList[$name] ??= new Specie($name, false);
+
+        foreach ($completeSpecie->getChildren() as $completeChild) {
+            if (!$completeChild->isHidden()) {
+                $visibleSpecie->addChild($this->getUpdatedVisibleSpecie($completeChild));
+            }
+        }
+
+        return $visibleSpecie;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getValidNames(): array
+    {
+        return array_keys($this->completeList);
+    }
+
+    /**
+     * @return list<Specie>
+     */
+    public function getCompleteTree(): array
+    {
+        return $this->completeTree;
+    }
+
+    /**
+     * @return list<Specie>
+     */
+    public function getVisibleTree(): array
+    {
+        return $this->visibleTree;
+    }
+
+    /**
+     * @return array<string, Specie>
+     */
+    public function getCompleteList(): array
+    {
+        return $this->completeList;
+    }
+
+    /**
+     * @return array<string, Specie>
+     */
+    public function getVisibleList(): array
+    {
+        return $this->visibleList;
     }
 }

@@ -1,7 +1,7 @@
 declare const DATA_BRIDGE: { [key: string]: string };
 
 declare const MAKER_IDS_MAP: object;
-declare const SPECIES: object;
+declare const VISIBLE_SPECIES: object;
 declare const TOTAL_ARTISANS_COUNT: number;
 
 export default abstract class Static {
@@ -49,8 +49,8 @@ export default abstract class Static {
         return MAKER_IDS_MAP;
     }
 
-    public static getSpecies(): object {
-        return SPECIES;
+    public static getVisibleSpecies(): object {
+        return VISIBLE_SPECIES;
     }
 
     public static showLoadingIndicator(): void {

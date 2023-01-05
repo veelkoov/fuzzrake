@@ -8,7 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 
-class StatsCalculator
+class StatsCalculator // FIXME: Broken
 {
     /**
      * @var SpecieStats[] 'Specie name' => SpecieStats

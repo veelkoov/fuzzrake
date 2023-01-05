@@ -13,7 +13,7 @@ class SpeciesService
     private ?HierarchyAwareBuilder $builder = null;
 
     /**
-     * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: array<string, psSpecie>} $speciesDefinitions
+     * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: array<string, psSubspecies>} $speciesDefinitions
      */
     public function __construct(
         private readonly array $speciesDefinitions,
@@ -22,7 +22,7 @@ class SpeciesService
     }
 
     /**
-     * @return string[] Names of species considered valid by the validator (list of all, not only fit for filtering)
+     * @return list<string>
      */
     public function getValidNames(): array
     {
@@ -30,19 +30,19 @@ class SpeciesService
     }
 
     /**
-     * @return Specie[] Associative: key = name, value = Specie object. Species fit for filtering
+     * @return array<string, Specie>
      */
-    public function getFlat(): array
+    public function getVisibleList(): array
     {
-        return $this->getBuilder()->getFlat();
+        return $this->getBuilder()->getVisibleList();
     }
 
     /**
-     * @return Specie[] Species fit for filtering
+     * @return list<Specie>
      */
-    public function getTree(): array
+    public function getVisibleTree(): array
     {
-        return $this->getBuilder()->getTree();
+        return $this->getBuilder()->getVisibleTree();
     }
 
     public function getListFixerReplacements(): Replacements
@@ -56,7 +56,7 @@ class SpeciesService
      */
     public function getStats(): array
     {
-        return (new StatsCalculator(Artisan::wrapAll($this->artisanRepository->getActive()), $this->getFlat()))->get();
+        return (new StatsCalculator(Artisan::wrapAll($this->artisanRepository->getActive()), $this->getVisibleList()))->get();
     }
 
     private function getBuilder(): HierarchyAwareBuilder
