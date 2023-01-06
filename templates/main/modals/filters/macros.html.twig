@@ -6,7 +6,7 @@
 
     <label class="form-check-label" for="{{ checkboxId }}">
         {{ label_html_prefix|raw }} {{ label }} {{ label_html_suffix|raw }}
-        {% if null != count %}<span class="count">({{ count }})</span>{% endif %}
+        {% if count is not null %}<span class="count">({{ count }})</span>{% endif %}
     </label>
 {% endmacro %}
 

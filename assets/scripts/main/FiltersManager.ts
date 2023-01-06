@@ -29,7 +29,7 @@ export default class FiltersManager {
         this.filters.push(new GenericFilterVis<string>('orderTypes', new AnySetUnOtFilter('orderTypes')));
         this.filters.push(new GenericFilterVis<string>('productionModels', new AnySetUnFilter('productionModels')));
         this.filters.push(new GenericFilterVis<string>('languages', new AnySetUnFilter('languages')));
-        this.filters.push(new GenericFilterVis<boolean>('commissionsStatus', new OpenForFilter('openFor')));
+        this.filters.push(new GenericFilterVis<boolean>('commissionStatuses', new OpenForFilter('openFor')));
         this.filters.push(new SpeciesFilterVis('species', 'speciesDoes', Species.get()));
 
         for (let filter of this.filters) {
