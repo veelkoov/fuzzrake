@@ -22,7 +22,7 @@ class RestApiControllerTest extends WebTestCaseWithEM
             self::getArtisan(makerId: 'MAKER02', country: 'CZ'),
         );
 
-        $client->request('GET', '/api/artisans-array.json?country[]=FI&wantsSfw=0&isAdult=1');
+        $client->request('GET', '/api/artisans-array.json?countries[]=FI&wantsSfw=0&isAdult=1');
         self::assertResponseStatusCodeSame(200);
 
         self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
@@ -39,7 +39,7 @@ class RestApiControllerTest extends WebTestCaseWithEM
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/artisans-array.json?country=FI');
+        $client->request('GET', '/api/artisans-array.json?countries=FI');
         self::assertResponseStatusCodeSame(400);
     }
 }
