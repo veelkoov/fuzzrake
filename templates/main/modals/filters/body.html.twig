@@ -16,14 +16,14 @@
 </div>
 
 <form id="filters">
-{{ macros.body_other('countries',               'helphints/countries.html.twig',          'countries.html.twig', filters) }}
-{{ macros.body_multiselect('states',            'helphints/states.html.twig',             filters.states, 'state') }}
-{{ macros.body_multiselect('languages',         'helphints/languages.html.twig',          filters.languages, 'language') }}
-{{ macros.body_multiselect('styles',            'helphints/styles.html.twig',             filters.styles, 'style') }}
-{{ macros.body_multiselect('features',          'helphints/features.html.twig',           filters.features, 'feature') }}
-{{ macros.body_multiselect('orderTypes',        'helphints/order_types.html.twig',        filters.orderTypes, 'orderType') }}
-{{ macros.body_multiselect('productionModels',  'helphints/production_models.html.twig',  filters.productionModels, 'productionModel') }}
-{{ macros.body_multiselect('commissionsStatus', 'helphints/commissions_status.html.twig', filters.commissionsStatuses, 'commissionStatus') }}
-{{ macros.body_other('species', 'helphints/species.html.twig', 'species.html.twig', filters) }}
-{{ macros.body_multiselect('paymentPlans',      'helphints/payment_plans.html.twig',      filters.paymentPlans, 'paymentPlan') }}
+    {{ macros.body_other('countries',                'countries.html.twig',          'countries.html.twig', filters) }}
+    {{ macros.body_multiselect('states',             'states.html.twig',             filters.states) }}
+    {{ macros.body_multiselect('languages',          'languages.html.twig',          filters.languages) }}
+    {{ macros.body_multiselect('styles',             'styles.html.twig',             filters.styles) }}
+    {{ macros.body_multiselect('features',           'features.html.twig',           filters.features) }}
+    {{ macros.body_multiselect('orderTypes',         'order_types.html.twig',        filters.orderTypes) }}
+    {{ macros.body_multiselect('productionModels',   'production_models.html.twig',  filters.productionModels) }}
+    {{ macros.body_multiselect('commissionStatuses', 'commissions_status.html.twig', filters.commissionStatuses) }}
+    {{ macros.body_other('species',                  'species.html.twig',            'species.html.twig', filters) }}
+    {{ macros.body_multiselect('paymentPlans',       'payment_plans.html.twig',      filters.paymentPlans) }}
 </form>

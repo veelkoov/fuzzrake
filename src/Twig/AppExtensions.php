@@ -21,11 +21,13 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     private readonly HumanFriendly $friendly;
+    private readonly Counter $globalCounter;
 
     public function __construct(
         private readonly EnvironmentsService $environments,
     ) {
         $this->friendly = new HumanFriendly();
+        $this->globalCounter = new Counter();
     }
 
     public function getFilters(): array
@@ -55,7 +57,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
             new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
             new TwigFunction('isTestEnv', $this->isTestEnvFunction(...)),
-            new TwigFunction('getCounter', $this->getCounterFunction(...)),
+            new TwigFunction('get_global_counter', fn () => $this->globalCounter),
         ];
     }
 
@@ -72,11 +74,6 @@ class AppExtensions extends AbstractExtension
     public function isTestEnvFunction(): bool
     {
         return $this->environments->isTest();
-    }
-
-    public function getCounterFunction(): Counter
-    {
-        return new Counter();
     }
 
     /**

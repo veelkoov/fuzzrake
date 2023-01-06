@@ -82,16 +82,16 @@
                 {{ artisan.speciesComment }}<br />
               </span>
 
-              <template v-if="artisan.speciesDoes">
+              <template v-if="0 !== artisan.speciesDoes.length">
                 <strong>Does</strong>: {{ commaSeparated(artisan.speciesDoes) }}
-                <br v-if="artisan.speciesDoesnt" />
+                <br v-if="0 !== artisan.speciesDoesnt.length" />
               </template>
 
-              <template v-if="artisan.speciesDoesnt">
+              <template v-if="0 !== artisan.speciesDoesnt.length">
                 <strong>Doesn't</strong>: {{ commaSeparated(artisan.speciesDoesnt) }}
               </template>
 
-              <Unknown v-else />
+              <Unknown v-if="0 === artisan.speciesDoes.length && 0 === artisan.speciesDoesnt.length" />
             </div>
 
             <h5>Languages</h5>

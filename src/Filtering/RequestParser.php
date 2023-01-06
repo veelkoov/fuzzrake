@@ -14,16 +14,16 @@ use function Psl\Iter\contains;
 class RequestParser
 {
     private const ARRAYS = [
-        'country'          => 'countries',
-        'state'            => 'states',
-        'language'         => 'languages',
-        'style'            => 'styles',
-        'feature'          => 'features',
-        'orderType'        => 'orderTypes',
-        'productionModel'  => 'productionModels',
-        'commissionStatus' => 'commissionStatuses',
-        'species'          => 'species',
-        'paymentPlan'      => 'paymentPlans',
+        'countries',
+        'states',
+        'languages',
+        'styles',
+        'features',
+        'orderTypes',
+        'productionModels',
+        'commissionStatuses',
+        'species',
+        'paymentPlans',
     ];
 
     private const BOOLEANS = [
@@ -59,7 +59,7 @@ class RequestParser
 
     private static function getStrArraysFromRequest(Request $request): mixed
     {
-        return Dict\map(Dict\flip(self::ARRAYS), fn ($reqKey) => $request->get($reqKey, []));
+        return Dict\from_keys(self::ARRAYS, fn ($reqKey) => $request->get($reqKey, []));
     }
 
     private static function getBooleansFromRequest(Request $request): mixed

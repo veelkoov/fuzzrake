@@ -20,6 +20,8 @@ class Specie implements Stringable
      */
     private array $children = [];
 
+    private int $depth = 0;
+
     public function __construct(
         private readonly string $name,
         private bool $hidden,
@@ -42,7 +44,16 @@ class Specie implements Stringable
 
         if (!Iter\contains($this->parents, $parent)) {
             $this->parents[] = $parent;
+
+            if ($parent->depth >= $this->depth) {
+                $this->depth = $parent->depth + 1;
+            }
         }
+    }
+
+    public function getDepth(): int
+    {
+        return $this->depth;
     }
 
     /**
@@ -95,6 +106,14 @@ class Specie implements Stringable
         }
 
         return $result;
+    }
+
+    /**
+     * @return Specie[]
+     */
+    public function getSelfAndDescendants(): array
+    {
+        return [$this, ...$this->getDescendants()];
     }
 
     public function isRoot(): bool
@@ -159,5 +178,11 @@ class Specie implements Stringable
                 $this->addDescendantsRecursionSafely($child, $result);
             }
         }
+    }
+
+    public function addParentTwoWay(Specie $parent): void
+    {
+        $this->addParent($parent);
+        $parent->addChild($this);
     }
 }

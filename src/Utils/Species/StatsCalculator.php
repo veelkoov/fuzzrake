@@ -16,18 +16,14 @@ class StatsCalculator
      */
     private array $result;
 
-    /**
-     * @var array<string, Specie>
-     */
-    private readonly array $completeList;
+    private readonly SpeciesList $completeList;
 
     /**
-     * @param Artisan[]             $artisans
-     * @param array<string, Specie> $completeList
+     * @param Artisan[] $artisans
      */
-    public function __construct(array $artisans, array $completeList)
+    public function __construct(array $artisans, SpeciesList $completeList)
     {
-        $this->completeList = $completeList;
+        $this->completeList = clone $completeList;
 
         $allDoesNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOES);
         $allDoesntNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOESNT);
@@ -41,7 +37,7 @@ class StatsCalculator
     }
 
     /**
-     * @return SpecieStats[] 'Specie name' => SpecieStats
+     * @return array<string, SpecieStats> Key = specie name
      */
     public function get(): array
     {
@@ -76,11 +72,11 @@ class StatsCalculator
      */
     private function getSpecieNamesAffectedInStats(string $specieName): array
     {
-        if (!array_key_exists($specieName, $this->completeList)) {
+        if (!$this->completeList->hasName($specieName)) {
             return [];
         }
 
-        $ancestors = $this->completeList[$specieName]->getAncestors();
+        $ancestors = $this->completeList->getByName($specieName)->getAncestors();
 
         return Vec\map($ancestors, fn (Specie $specie) => $specie->getName());
     }
@@ -106,9 +102,9 @@ class StatsCalculator
     {
         $result = [];
 
-        foreach (array_merge($allDoesNames, $allDoesntNames, array_keys($this->completeList)) as $specieName) {
+        foreach (array_merge($allDoesNames, $allDoesntNames, $this->completeList->getNames()) as $specieName) {
             if (!array_key_exists($specieName, $result)) {
-                $result[$specieName] = new SpecieStats($this->completeList[$specieName] ?? new Specie($specieName, true));
+                $result[$specieName] = new SpecieStats($this->completeList->getByNameOrCreate($specieName, true));
             }
         }
 

@@ -12,7 +12,7 @@ class FiltersData
         public readonly FilterData $paymentPlans,
         public readonly FilterData $features,
         public readonly FilterData $productionModels,
-        public readonly FilterData $commissionsStatuses,
+        public readonly FilterData $commissionStatuses,
         public readonly FilterData $languages,
         public readonly FilterData $countries,
         public readonly FilterData $states,

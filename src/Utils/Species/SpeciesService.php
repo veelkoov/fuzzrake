@@ -26,13 +26,10 @@ class SpeciesService
      */
     public function getValidNames(): array
     {
-        return $this->getBuilder()->getValidNames();
+        return $this->getBuilder()->getCompleteList()->getNames();
     }
 
-    /**
-     * @return array<string, Specie>
-     */
-    public function getVisibleList(): array
+    public function getVisibleList(): SpeciesList
     {
         return $this->getBuilder()->getVisibleList();
     }
@@ -43,6 +40,11 @@ class SpeciesService
     public function getVisibleTree(): array
     {
         return $this->getBuilder()->getVisibleTree();
+    }
+
+    public function getCompleteList(): SpeciesList
+    {
+        return $this->getBuilder()->getCompleteList();
     }
 
     public function getListFixerReplacements(): Replacements
@@ -58,7 +60,7 @@ class SpeciesService
     {
         $artisans = Artisan::wrapAll($this->artisanRepository->getActive());
 
-        return (new StatsCalculator($artisans, $this->getBuilder()->getCompleteList()))->get();
+        return (new StatsCalculator($artisans, $this->getCompleteList()))->get();
     }
 
     private function getBuilder(): HierarchyAwareBuilder

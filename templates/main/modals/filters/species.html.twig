@@ -1,36 +1,21 @@
+{% import "main/modals/filters/macros.html.twig" as macros %}
+
 <fieldset class="species">
     <div class="row">
-        <div class="col">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="specieCheckBoxUnknown" value="?" data-label="Unknown" />
-                <label class="form-check-label" for="specieCheckBoxUnknown">
-                    <i class="fas fa-question-circle"></i> Unknown {# TODO: #76 Species count #}
-                </label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="specieCheckBoxOther" value="*" data-label="Other" />
-                <label class="form-check-label" for="specieCheckBoxOther">
-                    <i class="fas fa-asterisk"></i> Other {# TODO: #76 Species count #}
-                </label>
-            </div>
+        <div class="col"> {# TODO: #76 Species count #}
+            {{ macros.filter_checkbox_wrapped(group_name, '?', 'Unknown', null, '<i class="fas fa-question-circle"></i>') }}
+            {{ macros.filter_checkbox_wrapped(group_name, '*', 'Other', null, '<i class="fas fa-asterisk"></i>') }}
         </div>
     </div>
 
-    {% set counter = getCounter() %}
-
     <div class="row">
         <div class="col">
-            {% macro branch(species, counter) %}
+            {% macro branch(species, group_name) %}
                 {% for item in species.items %}
-                    {% set checkboxId = 'specieCheckBox' ~ counter.next() %}
                     <div class="btn-group specie" role="group">
-                        <span class="btn btn-outline-secondary">
-                            <input type="checkbox" id="{{ checkboxId }}" value="{{ item.label }}" data-label="{{ item.label }}" />
-                            <label for="{{ checkboxId }}">
-                                {{ item.label }} {# TODO: #76 Species count #}
-                                <span class="descendants-indicator"><i class="fas fa-tasks"></i></span>
-                            </label>
+                        <span class="btn btn-outline-secondary"> {# TODO: #76 Species count #}
+                            {{ macros.filter_checkbox(group_name, item.label, item.label, null, '',
+                                '<span class="descendants-indicator"><i class="fas fa-tasks"></i></span>') }}
                         </span>
 
                         {% if item.isComplex() %}
@@ -41,16 +26,16 @@
                     </div>
 
                     {% if item.isComplex() %}
-                        <br />
+                        <br>
                         <fieldset class="subspecies">
-                            {{ _self.branch(item.value, counter) }}
+                            {{ _self.branch(item.value, group_name) }}
                         </fieldset>
                     {% endif %}
                 {% endfor %}
             {% endmacro %}
 
             {% apply spaceless %}
-                {{ _self.branch(filters.species, counter) }}
+                {{ _self.branch(filters.species, group_name) }}
             {% endapply %}
         </div>
     </div>

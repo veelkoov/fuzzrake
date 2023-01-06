@@ -3,7 +3,7 @@
 <fieldset class="region">
     <div class="row">
         <div class="col-sm-12">
-            {{ macros.filter_special_items(filters.countries, 'country') }}
+            {{ macros.filter_special_items_wrapped(filters.countries, group_name) }}
         </div>
     </div>
 </fieldset>
@@ -16,13 +16,13 @@
             <legend>
                 {{ region.label }} <span class="count">({{ region.count }})</span>
 
-                {{ macros.filter_all_none_invert('countries') }}
+                {{ macros.filter_all_none_invert(group_name) }}
             </legend>
 
             <div class="row">
                 {% for country in region.value.items %}
                     <div class="col-sm-6 col-lg-3">
-                        {{ macros.filter_checkbox('country', region_loop.index ~ '_' ~ loop.index, country.value, country.label, country.count, '<span class="flag-icon flag-icon-' ~ country.value|lower ~ '"></span>') }}
+                        {{ macros.filter_checkbox_wrapped(group_name, country.value, country.label, country.count, '<span class="flag-icon flag-icon-' ~ country.value|lower ~ '"></span>') }}
                     </div>
                 {% endfor %}
             </div>

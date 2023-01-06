@@ -14,15 +14,8 @@ class HierarchyAwareBuilder
     private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
     private const FLAG_HIDDEN_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
-    /**
-     * @var array<string, Specie>
-     */
-    private array $completeList = [];
-
-    /**
-     * @var array<string, Specie>
-     */
-    private array $visibleList = [];
+    private SpeciesList $completeList;
+    private SpeciesList $visibleList;
 
     /**
      * @var list<Specie>
@@ -42,6 +35,9 @@ class HierarchyAwareBuilder
     public function __construct(array $species)
     {
         $this->flagPattern = pattern(self::FLAG_PREFIX_REGEXP);
+
+        $this->completeList = new SpeciesList();
+        $this->visibleList = new SpeciesList();
 
         $this->fillCompleteListAndTreeFrom($species);
         $this->createVisibleListAndTree();
@@ -65,7 +61,7 @@ class HierarchyAwareBuilder
         [$flags, $name] = $this->splitSpecieFlagsName($flagsAndName);
         $hidden = self::hasHiddenFlag($flags);
 
-        $specie = $this->completeList[$name] ??= new Specie($name, $hidden);
+        $specie = $this->completeList->getByNameOrCreate($name, $hidden);
 
         if ($hidden) {
             $specie->setHidden(true);
@@ -141,27 +137,18 @@ class HierarchyAwareBuilder
             $visibleSpecie = null;
         } else {
             $name = $completeSpecie->getName();
-            $visibleSpecie = $this->visibleList[$name] ??= new Specie($name, false);
+            $visibleSpecie = $this->visibleList->getByNameOrCreate($name, false);
         }
 
         foreach ($completeSpecie->getChildren() as $completeChild) {
             $visibleChild = $this->getUpdatedVisibleSpecie($completeChild);
 
             if (null !== $visibleSpecie && null !== $visibleChild) {
-                $visibleSpecie->addChild($visibleChild);
-                $visibleChild->addParent($visibleSpecie);
+                $visibleChild->addParentTwoWay($visibleSpecie);
             }
         }
 
         return $visibleSpecie;
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getValidNames(): array
-    {
-        return array_keys($this->completeList);
     }
 
     /**
@@ -180,18 +167,12 @@ class HierarchyAwareBuilder
         return $this->visibleTree;
     }
 
-    /**
-     * @return array<string, Specie>
-     */
-    public function getCompleteList(): array
+    public function getCompleteList(): SpeciesList
     {
         return $this->completeList;
     }
 
-    /**
-     * @return array<string, Specie>
-     */
-    public function getVisibleList(): array
+    public function getVisibleList(): SpeciesList
     {
         return $this->visibleList;
     }

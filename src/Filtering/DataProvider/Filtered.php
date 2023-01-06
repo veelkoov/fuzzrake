@@ -10,6 +10,7 @@ use App\Filtering\DataProvider\Filters\FilterInterface;
 use App\Filtering\DataProvider\Filters\OpenForFilter;
 use App\Filtering\DataProvider\Filters\OrderTypesFilter;
 use App\Filtering\DataProvider\Filters\ProductionModelsFilter;
+use App\Filtering\DataProvider\Filters\SpeciesFilterFactory;
 use App\Filtering\DataProvider\Filters\StylesFilter;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -24,6 +25,7 @@ class Filtered implements FilteredInterface
 {
     public function __construct(
         private readonly ArtisanRepository $repository,
+        private readonly SpeciesFilterFactory $speciesFilterFactory,
     ) {
     }
 
@@ -52,6 +54,11 @@ class Filtered implements FilteredInterface
         if ([] !== $choices->features) {
             $filters[] = new FeaturesFilter($choices->features);
         }
+        if ([] !== $choices->species) {
+            $filters[] = $this->speciesFilterFactory->get($choices->species);
+        }
+
+        // TODO: Languages
 
         $artisans = filter($artisans,
             fn (Artisan $artisan) => all($filters,

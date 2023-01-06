@@ -70,7 +70,7 @@ class GenerateSpeciesDotCommand extends Command
 
         $species = $this->species->getVisibleList();
         foreach (self::GROUPS_WITH_ARTIFICIAL_PLACEMENT as $specieName) {
-            $children = $species[$specieName]->getChildren();
+            $children = $species->getByName($specieName)->getChildren();
             usort($children, fn (Specie $a, Specie $b): int => count($a->getDescendants()) - count($b->getDescendants()));
 
             $childCount = count($children);
@@ -91,7 +91,7 @@ class GenerateSpeciesDotCommand extends Command
             }
         }
 
-        foreach ($species as $specie) {
+        foreach ($species->getAll() as $specie) {
             if (!$specie->isRoot() && $specie->isLeaf()) {
                 continue;
             }

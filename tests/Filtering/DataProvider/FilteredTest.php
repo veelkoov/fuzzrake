@@ -6,6 +6,7 @@ namespace App\Tests\Filtering\DataProvider;
 
 use App\Filtering\Choices;
 use App\Filtering\DataProvider\Filtered;
+use App\Filtering\DataProvider\Filters\SpeciesFilterFactory;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Psl\Str;
@@ -34,7 +35,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new Filtered(self::getArtisanRepository());
+        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
 
         $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], false, false, false, false, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
@@ -60,7 +61,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
-        $subject = new Filtered(self::getArtisanRepository());
+        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
 
         $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], false, false, false, true, true));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
@@ -84,7 +85,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new Filtered(self::getArtisanRepository());
+        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
 
         $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false));
         self::assertEquals($expected, self::makerIdsFromPubData($result));
@@ -114,5 +115,10 @@ class FilteredTest extends KernelTestCaseWithEM
         $makerIds = Vec\map($publicData, fn ($row) => $row[0]);
 
         return Str\join(Vec\sort($makerIds), ', ');
+    }
+
+    private function getSpeciesFilterFactoryMock(): SpeciesFilterFactory
+    {
+        return $this->createMock(SpeciesFilterFactory::class);
     }
 }

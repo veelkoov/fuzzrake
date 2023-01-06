@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Utils\Species;
 
 use App\Utils\Species\HierarchyAwareBuilder;
-use App\Utils\Species\Specie;
+use App\Utils\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
 
@@ -23,7 +23,7 @@ class HierarchyAwareBuilderTest extends TestCase
     {
         $subject = new HierarchyAwareBuilder($species);
 
-        self::assertCount($expectedCount, $subject->getValidNames());
+        self::assertCount($expectedCount, $subject->getCompleteList()->getNames());
     }
 
     /**
@@ -56,8 +56,8 @@ class HierarchyAwareBuilderTest extends TestCase
         ]]]]]]);
 
         $species = $subject->getVisibleList();
-        $species['a']->getDescendants();
-        $species['n2']->isDescendantOf($species['a']);
+        $species->getByName('a')->getDescendants();
+        $species->getByName('n2')->isDescendantOf($species->getByName('a'));
     }
 
     public function testProperlyBuilding(): void
@@ -68,7 +68,7 @@ class HierarchyAwareBuilderTest extends TestCase
             'i_root3' => ['leaf3'  => []],
         ]);
 
-        self::assertEquals(['root1', 'middle', 'leaf1', 'root2', 'leaf2', 'root3', 'leaf3'], $subject->getValidNames());
+        self::assertEquals(['root1', 'middle', 'leaf1', 'root2', 'leaf2', 'root3', 'leaf3'], $subject->getCompleteList()->getNames());
         self::assertEquals(['leaf1', 'leaf2', 'leaf3', 'middle', 'root1', 'root2', 'root3'], self::sortedNames($subject->getCompleteList()));
         self::assertEquals(['leaf1', 'leaf3', 'middle', 'root1'], self::sortedNames($subject->getVisibleList()));
 
@@ -132,12 +132,10 @@ class HierarchyAwareBuilderTest extends TestCase
     }
 
     /**
-     * @param Specie[] $species
-     *
      * @return list<string>
      */
-    private function sortedNames(array $species): array
+    private function sortedNames(SpeciesList $species): array
     {
-        return Vec\sort(Vec\map($species, fn (Specie $specie) => $specie->getName()));
+        return Vec\sort($species->getNames());
     }
 }

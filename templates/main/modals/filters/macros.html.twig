@@ -1,16 +1,24 @@
-{% macro filter_checkbox(group_name, id_part, value, label, count, label_html_prefix = '') %}
+{% macro filter_checkbox(group_name, value, label, count, label_html_prefix = '', label_html_suffix = '') %}
+    {% set checkboxId = group_name ~ 'CheckBox' ~ get_global_counter().next() %}
+
+    <input class="form-check-input" type="checkbox" id="{{ checkboxId }}" name="{{ group_name }}[]"
+           value="{{ value }}" data-label="{{ label }}">
+
+    <label class="form-check-label" for="{{ checkboxId }}">
+        {{ label_html_prefix|raw }} {{ label }} {{ label_html_suffix|raw }}
+        {% if null != count %}<span class="count">({{ count }})</span>{% endif %}
+    </label>
+{% endmacro %}
+
+{% macro filter_checkbox_wrapped(group_name, value, label, count, label_html_prefix = '') %}
     <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="{{ group_name }}CheckBox{{ id_part }}" name="{{ group_name }}[]"
-               value="{{ value }}" data-label="{{ label }}" />
-        <label class="form-check-label" for="{{ group_name }}CheckBox{{ id_part }}">
-            {{ label_html_prefix|raw }} {{ label }} <span class="count">({{ count }})</span>
-        </label>
+        {{ _self.filter_checkbox(group_name, value, label, count, label_html_prefix) }}
     </div>
 {% endmacro %}
 
-{% macro filter_special_items(filter_data, group_name) %}
+{% macro filter_special_items_wrapped(filter_data, group_name) %}
     {% for item in filter_data.specialItems %}
-        {{ _self.filter_checkbox(group_name, item.idPart, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
+        {{ _self.filter_checkbox_wrapped(group_name, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
     {% endfor %}
 {% endmacro %}
 
@@ -33,16 +41,16 @@
     </div>
 {% endmacro %}
 
-{% macro body_other(id_part, helphints_tpl, body_tpl, filters) %}
-    <div id="filter-body-{{ id_part }}" class="collapse" data-bs-parent="#filters-parents">
-        {{ include('main/modals/filters/' ~ helphints_tpl) }}
+{% macro body_other(group_name, helphints_tpl, body_tpl, filters) %}
+    <div id="filter-body-{{ group_name }}" class="collapse" data-bs-parent="#filters-parents">
+        {{ include('main/modals/filters/helphints/' ~ helphints_tpl) }}
         {{ include('main/modals/filters/' ~ body_tpl, { filters: filters }) }}
     </div>
 {% endmacro %}
 
-{% macro body_multiselect(id_part, helphints_tpl, filter_data, group_name) %}
-    <div id="filter-body-{{ id_part }}" class="collapse" data-bs-parent="#filters-parents">
-        {{ include('main/modals/filters/' ~ helphints_tpl) }}
+{% macro body_multiselect(group_name, helphints_tpl, filter_data) %}
+    <div id="filter-body-{{ group_name }}" class="collapse" data-bs-parent="#filters-parents">
+        {{ include('main/modals/filters/helphints/' ~ helphints_tpl) }}
         {{ include('main/modals/filters/multiselect.html.twig') }}
     </div>
 {% endmacro %}
