@@ -23,9 +23,9 @@ class SpeciesFilterTest extends TestCase
     public function testMatches(string $does, string $doesnt, array $searched, bool $matched): void
     {
         $resolver = $this->createMock(SpeciesSearchResolver::class);
-        $resolver->method('resolveDoes')->willReturnCallback(function (string $does, string $doesnt): array {
-            return array_diff(StringList::unpack($does), StringList::unpack($doesnt));
-        });
+        $resolver->method('resolveDoes')->willReturnCallback(
+            fn (string $does, string $doesnt) => array_diff(StringList::unpack($does), StringList::unpack($doesnt))
+        );
 
         $subject = new SpeciesFilter($searched, $resolver);
         $artisan = Artisan::new()->setSpeciesDoes($does)->setSpeciesDoesnt($doesnt);

@@ -14,8 +14,8 @@ class HierarchyAwareBuilder
     private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
     private const FLAG_HIDDEN_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
-    private SpeciesList $completeList;
-    private SpeciesList $visibleList;
+    private readonly SpeciesList $completeList;
+    private readonly SpeciesList $visibleList;
 
     /**
      * @var list<Specie>
