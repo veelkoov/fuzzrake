@@ -20,7 +20,6 @@ export default class ChecklistManager {
         isAdultRadioFieldName: string,
         wantsSfwRadioFieldName: string,
     ) {
-
         this.illBeCareful = new Checkbox(illBeCarefulCheckboxId, () => this.refreshAll());
         this.isAdult = new Radio(isAdultRadioFieldName, () => this.refreshAll());
         this.wantsSfw = new Radio(wantsSfwRadioFieldName, () => this.refreshAll());

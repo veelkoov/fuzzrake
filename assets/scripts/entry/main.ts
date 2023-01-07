@@ -72,7 +72,7 @@ jQuery(() => {
     Static.hideLoadingIndicator();
 
     if (AgeAndSfwConfig.getInstance().getMakerMode()) {
-        messageBus.notifyQueryUpdate('', 0); // TODO: 0 can be changed back by clicking on filters
+        filtersManager.triggerUpdate();
     }
 
     openArtisanByFragment();
