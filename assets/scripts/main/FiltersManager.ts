@@ -20,7 +20,7 @@ export default class FiltersManager {
         this.setupSpeciesFiltersToggleButtons();
     }
 
-    private initFilters(): void {
+    private initFilters(): void { // TODO: https://github.com/veelkoov/fuzzrake/issues/175
         this.filters.push(new GenericFilterVis<string>('countries', new ValueUnFilter('country')));
         this.filters.push(new GenericFilterVis<string>('states', new ValueUnFilter('state')));
         this.filters.push(new GenericFilterVis<string>('paymentPlans', new ValueUnFilter('filterPayPlans')));
@@ -37,7 +37,7 @@ export default class FiltersManager {
         }
     }
 
-    private setupSpeciesFiltersToggleButtons(): void { // TODO: Improve
+    private setupSpeciesFiltersToggleButtons(): void {
         jQuery('#filtersModal .specie .toggle').on('click', function () {
             jQuery(this).parents('.specie').nextAll('.subspecies').first().toggle(250);
         });
