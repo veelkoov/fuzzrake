@@ -8,6 +8,9 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Json;
 use JsonException;
 
+/**
+ * @medium
+ */
 class RestApiControllerTest extends WebTestCaseWithEM
 {
     /**

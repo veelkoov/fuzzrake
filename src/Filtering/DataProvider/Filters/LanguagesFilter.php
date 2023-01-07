@@ -12,23 +12,20 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use function Psl\Iter\contains;
 use function Psl\Vec\filter;
 
-class OpenForFilter implements FilterInterface
+class LanguagesFilter implements FilterInterface
 {
-    private readonly bool $wantsNotTracked;
-    private readonly bool $wantsTrackingIssues;
+    private readonly bool $wantsUnknown;
     private readonly ValueCheckerInterface $valueChecker;
 
     /**
-     * @param string[] $wantedItems
+     * @param list<string> $wantedItems
      */
     public function __construct(array $wantedItems)
     {
-        $this->wantsNotTracked = contains($wantedItems, Consts::FILTER_VALUE_NOT_TRACKED);
-        $this->wantsTrackingIssues = contains($wantedItems, Consts::FILTER_VALUE_TRACKING_ISSUES);
+        $this->wantsUnknown = contains($wantedItems, Consts::FILTER_VALUE_UNKNOWN);
 
         $wantedItems = filter($wantedItems, fn (string $item) => !contains([
-            Consts::FILTER_VALUE_NOT_TRACKED,
-            Consts::FILTER_VALUE_TRACKING_ISSUES,
+            Consts::FILTER_VALUE_UNKNOWN,
         ], $item));
 
         $this->valueChecker = new AnythingChecker($wantedItems);
@@ -36,14 +33,10 @@ class OpenForFilter implements FilterInterface
 
     public function matches(Artisan $artisan): bool
     {
-        if ($this->wantsNotTracked && '' === $artisan->getCommissionsUrls()) {
+        if ($this->wantsUnknown && '' === $artisan->getLanguages()) {
             return true;
         }
 
-        if ($this->wantsTrackingIssues && $artisan->getCsTrackerIssue()) {
-            return true;
-        }
-
-        return $this->valueChecker->matches($artisan->getOpenFor(), null);
+        return $this->valueChecker->matches($artisan->getLanguages(), null);
     }
 }

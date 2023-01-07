@@ -8,7 +8,7 @@ use App\Filtering\DataProvider\Filters\ValueChecker\AnythingChecker;
 use App\Filtering\DataProvider\Filters\ValueChecker\ValueCheckerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-class StylesFilter extends FieldOptionalAndOtherFilter
+class StylesFilter extends AbstractFieldOptionalAndOtherFilter
 {
     protected function getOwnedItems(Artisan $artisan): string
     {

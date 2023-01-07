@@ -7,6 +7,7 @@ namespace App\Filtering\DataProvider;
 use App\Filtering\Choices;
 use App\Filtering\DataProvider\Filters\FeaturesFilter;
 use App\Filtering\DataProvider\Filters\FilterInterface;
+use App\Filtering\DataProvider\Filters\LanguagesFilter;
 use App\Filtering\DataProvider\Filters\OpenForFilter;
 use App\Filtering\DataProvider\Filters\OrderTypesFilter;
 use App\Filtering\DataProvider\Filters\ProductionModelsFilter;
@@ -39,6 +40,13 @@ class Filtered implements FilteredInterface
         $artisans = Artisan::wrapAll($this->repository->getFiltered($choices));
 
         $filters = [];
+
+        if ([] !== $choices->languages) {
+            $filters[] = new LanguagesFilter($choices->languages);
+        }
+        if ([] !== $choices->features) {
+            $filters[] = new FeaturesFilter($choices->features);
+        }
         if ([] !== $choices->styles) {
             $filters[] = new StylesFilter($choices->styles);
         }
@@ -51,14 +59,9 @@ class Filtered implements FilteredInterface
         if ([] !== $choices->commissionStatuses) {
             $filters[] = new OpenForFilter($choices->commissionStatuses);
         }
-        if ([] !== $choices->features) {
-            $filters[] = new FeaturesFilter($choices->features);
-        }
         if ([] !== $choices->species) {
             $filters[] = $this->speciesFilterFactory->get($choices->species);
         }
-
-        // TODO: Languages
 
         $artisans = filter($artisans,
             fn (Artisan $artisan) => all($filters,

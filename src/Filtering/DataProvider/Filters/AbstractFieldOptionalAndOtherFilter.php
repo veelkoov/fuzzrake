@@ -11,7 +11,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use function Psl\Iter\contains;
 use function Psl\Vec\filter;
 
-abstract class FieldOptionalAndOtherFilter implements FilterInterface
+abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
 {
     private readonly bool $wantsUnknown;
     private readonly bool $wantsOther;
