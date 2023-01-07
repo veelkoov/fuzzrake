@@ -25,10 +25,24 @@ export default class DataManager {
 
                 this.messageBus.notifyDataChange(this.data);
             },
-            error: (jqXHR: JQuery.jqXHR<any>, textStatus: string, errorThrown: string): void => {
-                alert(`ERROR: ${textStatus}; ${errorThrown}`); // TODO
-            },
+            error: this.displayError,
         });
+    }
+
+    private displayError(jqXHR: JQuery.jqXHR, textStatus: string|null, errorThrown: string|null): void {
+        let details = '';
+
+        if (errorThrown) {
+            details = errorThrown;
+        } else if (textStatus) {
+            details = textStatus;
+        }
+
+        if ('' !== details) {
+            details = `\n\nThe error was: ${details}`;
+        }
+
+        alert(`Darn it! The server returned unexpected response (or none).\n\nYou may try refreshing the page/clearing the cache/using incognito mode/using different browser/using different network.${details}`);
     }
 
     private getQueryWithMakerModeAndSfwOptions(newQuery: string): string {
