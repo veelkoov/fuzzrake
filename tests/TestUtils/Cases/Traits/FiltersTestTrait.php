@@ -15,18 +15,18 @@ trait FiltersTestTrait
     public function getTestArtisans(): array
     {
         return [
-            $this->artisan('M000001', 'CZ', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000002', 'FI', 'State2', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000003', 'FI', 'State1', 'Lang2', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000004', 'FI', 'State1', 'Lang1', 'Realistic', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000005', 'FI', 'State1', 'Lang1', 'Toony', "LED eyes\nIndoor feet", 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000006', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Tails (as parts/separate)', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000007', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Premades', 'Open1', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000008', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open2', 'Specie1', 'Supported', false, false),
-            $this->artisan('M000009', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie2', 'Supported', false, false),
-            $this->artisan('M000010', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'None', false, false),
-            $this->artisan('M000011', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', true, false),
-            $this->artisan('M000012', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Specie1', 'Supported', false, true),
+            $this->artisan('M000001', 'CZ', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000002', 'FI', 'State2', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000003', 'FI', 'State1', 'Lang2', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000004', 'FI', 'State1', 'Lang1', 'Realistic', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000005', 'FI', 'State1', 'Lang1', 'Toony', "LED eyes\nIndoor feet", 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000006', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Tails (as parts/separate)', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000007', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Premades', 'Open1', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000008', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open2', 'Real life animals', 'Supported', false, false),
+            $this->artisan('M000009', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Fantasy creatures', 'Supported', false, false),
+            $this->artisan('M000010', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'None', false, false),
+            $this->artisan('M000011', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', true, false),
+            $this->artisan('M000012', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, true),
         ];
     }
 
@@ -49,7 +49,7 @@ trait FiltersTestTrait
             [['orderTypes'         => ['Tails (as parts/separate)']], ['M000006']],
             [['productionModels'   => ['Premades']],                  ['M000007']],
             [['commissionStatuses' => ['Open2']],                     ['M000008']],
-            [['species'            => ['Specie2']],                   ['M000009']],
+            [['species'            => ['Fantasy creatures']],         ['M000009']],
             [['paymentPlans'       => ['Not supported']],             ['M000010']],
 
             [[
@@ -75,7 +75,7 @@ trait FiltersTestTrait
                 'languages'          => ['Lang1'],
                 'features'           => ['LED eyes'],
                 'commissionStatuses' => ['Open1'],
-                'species'            => ['Specie1'],
+                'species'            => ['Real life animals'],
                 'paymentPlans'       => ['Supported'],
             ], [
                 'M000001', 'M000002', 'M000004', 'M000005', 'M000006', 'M000007',

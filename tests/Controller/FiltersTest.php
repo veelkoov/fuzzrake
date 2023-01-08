@@ -9,6 +9,9 @@ use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Utils\Json;
 use JsonException;
 
+/**
+ * @medium
+ */
 class FiltersTest extends PantherTestCaseWithEM
 {
     use FiltersTestTrait;
@@ -21,7 +24,7 @@ class FiltersTest extends PantherTestCaseWithEM
      *
      * @throws JsonException
      */
-    public function testFilters(array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersThroughApi(array $filtersSet, array $expectedMakerIds): void
     {
         $client = static::createClient();
 

@@ -18,20 +18,40 @@ trait MainPageTestsTrait
         $infoText = "Currently $numberOfArtisans makers from $numberOfArtisans countries are listed here.";
         $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
+        self::fillChecklist($client, true, false);
+
+        self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private static function fillChecklist(Client $client, bool $isAdult, bool $wantsSfw): void
+    {
+        self::waitForLoadingIndicatorToDisappear();
+
         $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-        self::waitUntilShows('#aasImAdult');
-        $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+        if ($isAdult) {
+            self::waitUntilShows('#aasImAdult');
+            $client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-        self::waitUntilShows('#aasAllowNsfw');
-        $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+            if ($wantsSfw) {
+                self::waitUntilShows('#aasKeepSfw');
+                $client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
+            } else {
+                self::waitUntilShows('#aasAllowNsfw');
+                $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+            }
+        } else {
+            self::waitUntilShows('#aasImNotAdult');
+            $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+        }
 
         self::waitUntilShows('#checklist-dismiss-btn');
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
-
-        self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
     }
 
     /**

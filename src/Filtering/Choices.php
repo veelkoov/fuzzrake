@@ -39,6 +39,6 @@ class Choices
 
     public function getDigest(): string
     {
-        return base64_encode(hash('sha256', Json\encode($this), true));
+        return hash('sha256', Json\encode($this));
     }
 }
