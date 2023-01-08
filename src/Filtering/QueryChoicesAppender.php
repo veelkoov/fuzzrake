@@ -8,6 +8,7 @@ use App\DataDefinitions\Fields\Field;
 use App\Repository\ArtisanRepository;
 use App\Utils\StrUtils;
 use Doctrine\ORM\QueryBuilder;
+use Psl\Vec;
 
 class QueryChoicesAppender
 {
@@ -27,7 +28,10 @@ class QueryChoicesAppender
     private function applyStates(QueryBuilder $builder): void
     {
         if ([] !== $this->choices->states) {
-            $builder->andWhere('a.state IN (:states)')->setParameter('states', $this->choices->states);
+            $states = Vec\map($this->choices->states,
+                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+
+            $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
         }
     }
 

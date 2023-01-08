@@ -69,10 +69,10 @@ class RestApiController extends AbstractController
      */
     #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisansArray(Request $request, CachedFiltered $cachedFiltered): JsonResponse
+    public function artisansArray(Request $request, CachedFiltered $cachedFiltered, RequestParser $requestParser): JsonResponse
     {
         try {
-            $choices = RequestParser::getChoices($request);
+            $choices = $requestParser->getChoices($request);
             $result = $cachedFiltered->getPublicDataFor($choices);
 
             return new JsonResponse($result);

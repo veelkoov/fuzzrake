@@ -36,7 +36,7 @@ class FiltersService
             $this->artisanRepository->getDistinctFeatures(),
             $this->artisanRepository->getDistinctProductionModels(),
             $this->getCommissionsStatuses(),
-            $this->artisanRepository->getDistinctLanguages(),
+            $this->artisanRepository->getDistinctLanguagesForFilters(),
             $this->getCountriesFilterData(),
             $this->artisanRepository->getDistinctStatesToCountAssoc(),
             $this->getSpeciesFilterItems(),

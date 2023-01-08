@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Service\Statistics;
 
+use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanVolatileDataRepository;
-use App\Service\Statistics\StatisticsService;
+use App\Service\DataService;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
 /**
  * @medium
@@ -25,8 +28,10 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
 
         $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
+        $acsRepositoryMock = self::createMock(ArtisanCommissionsStatusRepository::class);
 
-        $subject = new StatisticsService($artisanRepository, $avdRepositoryMock);
+        $subject = new DataService($artisanRepository, $avdRepositoryMock,
+            $acsRepositoryMock, new TagAwareAdapter(new ArrayAdapter()));
         $result = $subject->getMainPageStats();
 
         self::assertEquals(1, $result->countryCount);
@@ -43,8 +48,10 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
 
         $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
+        $acsRepositoryMock = self::createMock(ArtisanCommissionsStatusRepository::class);
 
-        $subject = new StatisticsService($artisanRepository, $avdRepositoryMock);
+        $subject = new DataService($artisanRepository, $avdRepositoryMock,
+            $acsRepositoryMock, new TagAwareAdapter(new ArrayAdapter()));
         $result = $subject->getMainPageStats();
 
         self::assertEquals(2, $result->activeArtisansCount);

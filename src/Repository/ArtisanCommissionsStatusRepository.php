@@ -111,4 +111,19 @@ class ArtisanCommissionsStatusRepository extends ServiceEntityRepository
 
         return Arrays::assoc($resultData, 'offer', 'openCount'); // @phpstan-ignore-line Lack of skill to fix this
     }
+
+    /**
+     * @return list<string>
+     */
+    public function getDistinctOpenFor(): array
+    {
+        $result = $this->createQueryBuilder('acs')
+            ->select('DISTINCT acs.offer')
+            ->where('acs.isOpen = :true')
+            ->setParameter('true', true)
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        return $result; // @phpstan-ignore-line Lack of skill to fix this
+    }
 }

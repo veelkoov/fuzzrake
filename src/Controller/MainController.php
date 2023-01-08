@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\DataOnDemand\ArtisansDOD;
-use App\Service\Statistics\StatisticsService;
+use App\Service\DataService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Filters\FiltersService;
 use App\Utils\Species\SpeciesService;
@@ -27,8 +27,8 @@ class MainController extends AbstractController
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Cache(maxage: 3600, public: true)]
     public function main(ArtisansDOD $artisans, MakerIdRepository $makerIdRepository, FiltersService $filterService,
-        SpeciesService $speciesService, StatisticsService $statisticsService,
-        TagAwareCacheInterface $cache): Response
+                         SpeciesService $speciesService, DataService $statisticsService,
+                         TagAwareCacheInterface $cache): Response
     {
         $filters = $cache->get('mainpage.filters', fn () => $filterService->getFiltersTplData());
         $statistics = $cache->get('mainpage.statistics', fn () => $statisticsService->getMainPageStats());

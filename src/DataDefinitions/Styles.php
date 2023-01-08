@@ -17,13 +17,13 @@ class Styles extends Dictionary
     public static function getValues(): array
     {
         return [
-            self::TOONY          => self::TOONY,
-            self::SEMI_TOONY     => self::SEMI_TOONY,
-            self::SEMI_REALISTIC => self::SEMI_REALISTIC,
-            self::REALISTIC      => self::REALISTIC,
-            self::KEMONO         => self::KEMONO,
-            self::KIGURUMI       => self::KIGURUMI,
-            self::ANIME          => self::ANIME,
+            self::TOONY,
+            self::SEMI_TOONY,
+            self::SEMI_REALISTIC,
+            self::REALISTIC,
+            self::KEMONO,
+            self::KIGURUMI,
+            self::ANIME,
         ];
     }
 }

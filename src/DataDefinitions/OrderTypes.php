@@ -20,16 +20,16 @@ class OrderTypes extends Dictionary
     public static function getValues(): array
     {
         return [
-            self::HEAD             => self::HEAD,
-            self::MINI_PARTIAL     => self::MINI_PARTIAL,
-            self::PARTIAL          => self::PARTIAL,
-            self::FULL_PLANTIGRADE => self::FULL_PLANTIGRADE,
-            self::FULL_DIGITIGRADE => self::FULL_DIGITIGRADE,
-            self::TAILS            => self::TAILS,
-            self::HANDPAWS         => self::HANDPAWS,
-            self::FEETPAWS         => self::FEETPAWS,
-            self::THREE_FOURTH     => self::THREE_FOURTH,
-            self::BODYSUITS        => self::BODYSUITS,
+            self::HEAD,
+            self::MINI_PARTIAL,
+            self::PARTIAL,
+            self::FULL_PLANTIGRADE,
+            self::FULL_DIGITIGRADE,
+            self::TAILS,
+            self::HANDPAWS,
+            self::FEETPAWS,
+            self::THREE_FOURTH,
+            self::BODYSUITS,
         ];
     }
 }
