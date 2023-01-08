@@ -17,7 +17,9 @@ class SpeciesServiceTest extends TestCase
 {
     public function testNoRecursionInConfigAndStatsSmokeTest(): void
     {
-        $artisan = (new Artisan())->setSpeciesDoes("Ducks\nBirds")->setSpeciesDoesnt('Wolves');
+        $artisan = (new Artisan())
+            ->setSpeciesDoes("Ducks\nBirds")
+            ->setSpeciesDoesnt("Wolves\nAaBbCcDdEeFfGgHhJj");
 
         $repositoryMock = $this->createMock(ArtisanRepository::class);
         $repositoryMock->method('getActive')->willReturn([$artisan]);
@@ -31,5 +33,7 @@ class SpeciesServiceTest extends TestCase
         self::assertEquals(2, $result['Birds']->getTotalCount());
         self::assertEquals(1, $result['Birds']->getDirectDoesCount());
         self::assertEquals(1, $result['Wolves']->getTotalCount());
+        self::assertEquals(3, $result['Most species']->getTotalCount());
+        self::assertEquals(1, $result['AaBbCcDdEeFfGgHhJj']->getTotalCount());
     }
 }
