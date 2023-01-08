@@ -48,16 +48,14 @@ class HierarchyAwareBuilderTest extends TestCase
 
     public function testDeepNestedDoesntCauseFatalError(): void
     {
-        self::expectNotToPerformAssertions();
-
         $subject = new HierarchyAwareBuilder(['a' => ['b' => ['c' => ['d' => ['e' => [
             'f'  => ['g' => ['h' => ['i' => ['j' => ['k' => ['l' => ['m' => ['n' => []]]]]]]]],
             'f2' => ['g2' => ['h2' => ['i2' => ['j2' => ['k2' => ['l2' => ['m2' => ['n2' => []]]]]]]]],
         ]]]]]]);
 
-        $species = $subject->getVisibleList();
-        $species->getByName('a')->getDescendants();
-        $species->getByName('n2')->isDescendantOf($species->getByName('a'));
+        $descendants = $subject->getVisibleList()->getByName('a')->getDescendants();
+
+        self::assertCount(22, $descendants);
     }
 
     public function testProperlyBuilding(): void

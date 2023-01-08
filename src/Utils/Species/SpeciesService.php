@@ -54,7 +54,7 @@ class SpeciesService
     }
 
     /**
-     * @return SpecieStats[]
+     * @return array<string, SpecieStats> Key = specie name
      */
     public function getStats(): array
     {

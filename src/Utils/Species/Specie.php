@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace App\Utils\Species;
 
 use InvalidArgumentException;
-use Psl\Iter;
 use Stringable;
 
 class Specie implements Stringable
 {
     /**
-     * @var Specie[]
+     * @var list<Specie>
      */
     private array $parents = [];
 
     /**
-     * @var Specie[]
+     * @var list<Specie>
      */
     private array $children = [];
 
@@ -29,7 +28,7 @@ class Specie implements Stringable
     }
 
     /**
-     * @return Specie[]
+     * @return list<Specie>
      */
     public function getParents(): array
     {
@@ -38,11 +37,11 @@ class Specie implements Stringable
 
     public function addParent(Specie $parent): void
     {
-        if ($parent === $this) {
+        if (in_array($this, $parent->getSelfAndAncestors(), true)) {
             throw new InvalidArgumentException("Recursion in specie: $this->name");
         }
 
-        if (!Iter\contains($this->parents, $parent)) {
+        if (!in_array($parent, $this->parents, true)) {
             $this->parents[] = $parent;
 
             if ($parent->depth >= $this->depth) {
@@ -66,17 +65,17 @@ class Specie implements Stringable
 
     public function addChild(Specie $child): void
     {
-        if ($child === $this) {
+        if (in_array($this, $child->getSelfAndDescendants(), true)) {
             throw new InvalidArgumentException("Recursion in specie: $this->name");
         }
 
-        if (!Iter\contains($this->children, $child)) {
+        if (!in_array($child, $this->children, true)) {
             $this->children[] = $child;
         }
     }
 
     /**
-     * @return Specie[]
+     * @return list<Specie>
      */
     public function getAncestors(): array
     {
@@ -89,13 +88,16 @@ class Specie implements Stringable
         return $result;
     }
 
-    public function isDescendantOf(Specie $ancestor): bool
+    /**
+     * @return list<Specie>
+     */
+    public function getSelfAndAncestors(): array
     {
-        return in_array($ancestor, $this->getAncestors(), true);
+        return [$this, ...$this->getAncestors()];
     }
 
     /**
-     * @return Specie[]
+     * @return list<Specie>
      */
     public function getDescendants(): array
     {
@@ -109,7 +111,7 @@ class Specie implements Stringable
     }
 
     /**
-     * @return Specie[]
+     * @return list<Specie>
      */
     public function getSelfAndDescendants(): array
     {
@@ -147,15 +149,11 @@ class Specie implements Stringable
     }
 
     /**
-     * @param Specie[] $result
+     * @param list<Specie> $result
      */
     private function addAncestorsRecursionSafely(Specie $specie, array &$result): void
     {
         foreach ($specie->getParents() as $parent) {
-            if ($parent === $this) {
-                throw new InvalidArgumentException("Recursion in specie: $this->name");
-            }
-
             if (!in_array($parent, $result, true)) {
                 $result[] = $parent;
                 $this->addAncestorsRecursionSafely($parent, $result);
@@ -164,15 +162,11 @@ class Specie implements Stringable
     }
 
     /**
-     * @param Specie[] $result
+     * @param list<Specie> $result
      */
     private function addDescendantsRecursionSafely(Specie $specie, array &$result): void
     {
         foreach ($specie->getChildren() as $child) {
-            if ($child === $this) {
-                throw new InvalidArgumentException("Recursion in specie: $this->name");
-            }
-
             if (!in_array($child, $result, true)) {
                 $result[] = $child;
                 $this->addDescendantsRecursionSafely($child, $result);
