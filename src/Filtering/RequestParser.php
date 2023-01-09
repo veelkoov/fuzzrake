@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filtering;
 
-use App\DataDefinitions\Features;
-use App\DataDefinitions\OrderTypes;
-use App\DataDefinitions\ProductionModels;
-use App\DataDefinitions\Styles;
-use App\Service\DataService;
-use App\Utils\Species\SpeciesService;
 use Psl\Dict;
 use Psl\Type;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,8 +31,7 @@ class RequestParser
     ];
 
     public function __construct(
-        private readonly DataService $dataService,
-        private readonly SpeciesService $speciesService,
+        private readonly FiltersChoicesFilter $filter,
     ) {
     }
 
@@ -50,65 +43,22 @@ class RequestParser
         $dataShape = Type\shape(Dict\from_keys(self::BOOLEANS, fn ($_) => Type\bool()));
         $booleans = $dataShape->coerce(self::getBooleansFromRequest($request));
 
-        // TODO: test validation
-
-        $countries = self::onlyValidValues($strArrays['countries'], $this->dataService->getCountries(), Consts::FILTER_VALUE_UNKNOWN);
-        $states = self::onlyValidValues($strArrays['states'], $this->dataService->getStates(), Consts::FILTER_VALUE_UNKNOWN);
-        $languages = self::onlyValidValues($strArrays['languages'], $this->dataService->getLanguages());
-
-        $styles = self::onlyValidValues($strArrays['styles'],
-            Styles::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
-        $features = self::onlyValidValues($strArrays['features'],
-            Features::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
-        $orderTypes = self::onlyValidValues($strArrays['orderTypes'],
-            OrderTypes::getValues(), Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
-        $productionModels = self::onlyValidValues($strArrays['productionModels'],
-            ProductionModels::getValues(), ProductionModels::getValues(), Consts::FILTER_VALUE_UNKNOWN);
-
-        $species = self::onlyValidValues($strArrays['species'],
-            $this->speciesService->getValidNames(), Consts::FILTER_VALUE_UNKNOWN);
-
-        $openFor = self::onlyValidValues($strArrays['commissionStatuses'], $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
-
-        return new Choices(
-            $countries,
-            $states,
-            $languages,
-            $styles,
-            $features,
-            $orderTypes,
-            $productionModels,
-            $openFor,
-            $species,
+        return $this->filter->getOnlyAllowed(new Choices(
+            $strArrays['countries'],
+            $strArrays['states'],
+            $strArrays['languages'],
+            $strArrays['styles'],
+            $strArrays['features'],
+            $strArrays['orderTypes'],
+            $strArrays['productionModels'],
+            $strArrays['commissionStatuses'],
+            $strArrays['species'],
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
             $booleans['isAdult'],
             $booleans['wantsSfw'],
-        );
-    }
-
-    /**
-     * @param list<string>        $givenOptions
-     * @param string|list<string> ...$validOptions
-     *
-     * @return list<string>
-     */
-    private static function onlyValidValues(array $givenOptions, string|array ...$validOptions): array
-    {
-        $allowed = [];
-
-        foreach ($validOptions as $options) {
-            if (is_string($options)) {
-                $options = [$options];
-            }
-
-            foreach ($options as $option) {
-                $allowed[] = $option;
-            }
-        }
-
-        return array_intersect($givenOptions, $allowed);
+        ));
     }
 
     private static function getStrArraysFromRequest(Request $request): mixed
