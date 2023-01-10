@@ -8,7 +8,7 @@ use App\Filtering\DataProvider\CachedFiltered;
 use App\Filtering\RequestParser;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
-use App\Service\DataOnDemand\ArtisansDOD;
+use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
 use Psr\Cache\InvalidArgumentException;
@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class RestApiController extends AbstractController
 {
@@ -52,16 +51,11 @@ class RestApiController extends AbstractController
         }
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisans(ArtisansDOD $artisans, TagAwareCacheInterface $cache): JsonResponse
+    public function artisans(DataService $dataService): JsonResponse
     {
-        $result = $cache->get('restapi.artisans', fn () => $artisans->getAll());
-
-        return new JsonResponse($result);
+        return new JsonResponse($dataService->getAllArtisans());
     }
 
     /**

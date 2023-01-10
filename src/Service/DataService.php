@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\StringList;
@@ -26,6 +27,27 @@ class DataService
         private readonly ArtisanCommissionsStatusRepository $acsRepository,
         private readonly TagAwareCacheInterface $cache,
     ) {
+    }
+
+    /**
+     * @template T
+     *
+     * @param list<string>  $tags
+     * @param callable(): T $callback
+     *
+     * @return T
+     */
+    private function getCached(string $key, array $tags, callable $callback): mixed
+    {
+        try {
+            return $this->cache->get($key, function (ItemInterface $item) use ($tags, $callback) {
+                $item->tag($tags);
+
+                return $callback();
+            });
+        } catch (InvalidArgumentException $exception) {
+            throw new RuntimeException(previous: $exception);
+        }
     }
 
     public function getMainPageStats(): MainPageStats
@@ -74,27 +96,6 @@ class DataService
     }
 
     /**
-     * @template T
-     *
-     * @param list<string>  $tags
-     * @param callable(): T $callback
-     *
-     * @return T
-     */
-    private function getCached(string $key, array $tags, callable $callback): mixed
-    {
-        try {
-            return $this->cache->get($key, function (ItemInterface $item) use ($tags, $callback) {
-                $item->tag($tags);
-
-                return $callback();
-            });
-        } catch (InvalidArgumentException $exception) {
-            throw new RuntimeException(previous: $exception);
-        }
-    }
-
-    /**
      * @return list<string>
      */
     public function getCountries(): array
@@ -137,5 +138,14 @@ class DataService
                 return array_unique($result);
             }
         );
+    }
+
+    /**
+     * @return list<Artisan>
+     */
+    public function getAllArtisans(): array
+    {
+        return $this->getCached('DataService.getAllArtisans', [CacheTags::ARTISANS],
+            fn () => Artisan::wrapAll($this->artisanRepository->getAll()));
     }
 }

@@ -6,17 +6,18 @@ namespace App\Controller;
 
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
-use App\Service\DataOnDemand\ArtisansDOD;
 use App\Service\DataService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Filters\FiltersService;
 use App\Utils\Species\SpeciesService;
+use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
 use Psr\Cache\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class MainController extends AbstractController
@@ -26,19 +27,31 @@ class MainController extends AbstractController
      */
     #[Route(path: '/', name: RouteName::MAIN)]
     #[Cache(maxage: 3600, public: true)]
-    public function main(ArtisansDOD $artisans, MakerIdRepository $makerIdRepository, FiltersService $filterService,
-                         SpeciesService $speciesService, DataService $statisticsService,
+    public function main(MakerIdRepository $makerIdRepository, FiltersService $filterService,
+                         SpeciesService $speciesService, DataService $dataService,
                          TagAwareCacheInterface $cache): Response
     {
-        $filters = $cache->get('mainpage.filters', fn () => $filterService->getFiltersTplData());
-        $statistics = $cache->get('mainpage.statistics', fn () => $statisticsService->getMainPageStats());
-        $oldToNewMakerIdsMap = $cache->get('mainpage.oldToNewMakerIdsMap', fn () => $makerIdRepository->getOldToNewMakerIdsMap());
-        $species = $cache->get('mainpage.species', fn () => $speciesService->getVisibleTree());
+        $filters = $cache->get('mainpage.filters', function (ItemInterface $item) use ($filterService) {
+            $item->tag(CacheTags::ARTISANS);
+
+            return $filterService->getFiltersTplData();
+        });
+
+        $oldToNewMakerIdsMap = $cache->get('mainpage.oldToNewMakerIdsMap', function (ItemInterface $item) use ($makerIdRepository) {
+            $item->tag(CacheTags::ARTISANS);
+
+            return $makerIdRepository->getOldToNewMakerIdsMap();
+        });
+
+        $species = $cache->get('mainpage.species', function (ItemInterface $item) use ($speciesService) {
+            $item->tag(CacheTags::CODE);
+
+            return $speciesService->getVisibleTree();
+        });
 
         return $this->render('main/main.html.twig', [
-            'artisans'            => $artisans,
             'makerIdsMap'         => $oldToNewMakerIdsMap,
-            'stats'               => $statistics,
+            'stats'               => $dataService->getMainPageStats(),
             'filters'             => $filters,
             'species'             => $species,
         ]);
