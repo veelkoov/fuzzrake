@@ -36,7 +36,7 @@
         </div>
 
         <div class="col-md-6 text-md-end">
-          <input class="my-1" type="text" @input="event => search.text = event.target.value" />
+          <input class="my-1" type="text" @input="event => search.text = event.target.value" placeholder="Search">
         </div>
       </div>
 

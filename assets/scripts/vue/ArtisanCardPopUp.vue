@@ -7,7 +7,7 @@
             <template v-if="artisan.makerId">
               <a id="makerId" :href="'#' + artisan.makerId">
                 <span class="badge bg-secondary"><i class="fas fa-link"></i> {{ artisan.makerId }}</span>
-              </a>&nbsp;
+              </a> <wbr>
             </template>
 
             <span id="artisanName">{{ artisan.name }}</span>&nbsp;<span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry"></span>
@@ -112,13 +112,13 @@
             <h5>Currencies</h5>
 
             <div class="small pb-2">
-              <OptionalList :items=artisan.currenciesAccepted />
+              <Optional :items=artisan.currenciesAccepted />
             </div>
 
             <h5>Methods</h5>
 
             <div class="small">
-              <OptionalList :items=artisan.paymentMethods />
+              <Optional :items=artisan.paymentMethods />
             </div>
           </div>
 
@@ -127,7 +127,7 @@
 
             <p class="small mb-1">
               Please mention
-              "<mark class="user-select-all">I found you on getfursu.it<template v-if="artisan.completenessGood">
+              "<mark class="user-select-all">I found you on getfursu.it<template v-if="!artisan.completenessGood">
                 (BTW it says your data could use some updates)</template></mark>"
               when contacting the maker, thank you! ❤️
             </p>
@@ -175,14 +175,16 @@
                 </p>
 
                 <table class="table table-sm table-striped table-borderless">
-                  <tr v-for="item in artisan.openFor">
-                    <td>{{ item }}</td>
-                    <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
-                  </tr>
-                  <tr v-for="item in artisan.closedFor">
-                    <td>{{ item }}</td>
-                    <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
-                  </tr>
+                  <tbody>
+                    <tr v-for="item in artisan.openFor">
+                      <td>{{ item }}</td>
+                      <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
+                    </tr>
+                    <tr v-for="item in artisan.closedFor">
+                      <td>{{ item }}</td>
+                      <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
+                    </tr>
+                  </tbody>
                 </table>
               </template>
               <template v-else>

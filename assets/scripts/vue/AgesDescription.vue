@@ -1,6 +1,8 @@
 <template>
   <template v-if="addText">
-    <Optional :items="[getText()]" />
+    {{ getText() }}
+
+    <Unknown v-if="isUnknown()" />
   </template>
 
   <i v-for="item in getClasses()" class="ages" :class="item" />
@@ -8,12 +10,12 @@
 
 <script lang="ts">
 import Artisan from '../class/Artisan';
-import Optional from './Optional.vue';
+import Unknown from './Unknown.vue';
 import {ADULTS, MINORS, MIXED} from '../consts';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
-  components: {Optional},
+  components: {Unknown},
   props: {
     addText: Boolean,
     artisan: Artisan,
@@ -22,6 +24,10 @@ import {Options, Vue} from 'vue-class-component';
 export default class AgesDescription extends Vue {
   private artisan!: Artisan;
   private addText!: boolean;
+
+  private isUnknown(): boolean {
+    return !this.artisan.ages;
+  }
 
   private getClasses(): string[] {
     switch (this.artisan.getAges()) {
