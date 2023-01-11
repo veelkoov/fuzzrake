@@ -79,7 +79,7 @@ export default class Main extends Vue {
   public created(): void {
     this.columns.load();
 
-    getMessageBus().listenQueryUpdates((_: string, newCount: number) => this.activeFiltersCount = newCount);
+    getMessageBus().listenActiveFiltersCountUpdates((newCount: number) => this.activeFiltersCount = newCount);
   }
 
   private disableMakerMode(): void {

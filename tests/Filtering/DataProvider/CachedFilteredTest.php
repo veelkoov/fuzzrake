@@ -21,9 +21,9 @@ class CachedFilteredTest extends TestCase
      */
     public function testGetPublicDataFor(): void
     {
-        $choices1 = new Choices(['FI'], [], [], [], [], [], [], [], [], false, false, false, false, false);
+        $choices1 = new Choices('', ['FI'], [], [], [], [], [], [], [], [], false, false, false, false, false);
         $result1 = [['FI']];
-        $choices2 = new Choices(['CZ'], [], [], [], [], [], [], [], [], false, false, false, false, false);
+        $choices2 = new Choices('', ['CZ'], [], [], [], [], [], [], [], [], false, false, false, false, false);
         $result2 = [['CZ']];
 
         $providerMock = $this->createMock(Filtered::class);

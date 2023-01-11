@@ -43,7 +43,11 @@ class RequestParser
         $dataShape = Type\shape(Dict\from_keys(self::BOOLEANS, fn ($_) => Type\bool()));
         $booleans = $dataShape->coerce(self::getBooleansFromRequest($request));
 
+        $dataShape = Type\string();
+        $makerId = $dataShape->coerce($request->get('makerId', ''));
+
         return $this->filter->getOnlyAllowed(new Choices(
+            $makerId,
             $strArrays['countries'],
             $strArrays['states'],
             $strArrays['languages'],

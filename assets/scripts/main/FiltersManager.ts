@@ -48,11 +48,12 @@ export default class FiltersManager {
     }
 
     public triggerUpdate(): void {
-        this.messageBus.notifyQueryUpdate(this.getQuery(), this.getActiveCount());
-
         for (let filter of this.filters) {
             filter.saveChoices();
         }
+
+        this.messageBus.notifyActiveFiltersCountUpdate(this.getActiveCount());
+        this.messageBus.requestDataLoad(this.getQuery(), false)
     }
 
     private getQuery(): string {

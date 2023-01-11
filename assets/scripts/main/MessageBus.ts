@@ -1,21 +1,25 @@
 import {DataRow} from './DataManager';
 import Artisan from '../class/Artisan';
 
-export type QueryUpdateCallback = (newQuery: string, newActiveFiltersCount: number) => void;
+export type ActiveFiltersCountUpdateCallback = (newActiveFiltersCount: number) => void;
+export type DataLoadRequestCallback = (newQuery: string, isExhaustive: boolean) => void;
 export type DataChangeCallback = (newData: DataRow[]) => void;
 export type SubjectArtisanChangeCallback = (newSubject: Artisan) => void;
+export type TableUpdatedCallback = () => void;
 
 export default class MessageBus {
-    private queryUpdateListeners: QueryUpdateCallback[] = [];
+    private activeFiltersCountUpdateListeners: ActiveFiltersCountUpdateCallback[] = [];
     private dataChangeListeners: DataChangeCallback[] = [];
+    private dataLoadRequestListeners: DataLoadRequestCallback[] = [];
     private subjectArtisanChangeListeners: SubjectArtisanChangeCallback[] = [];
+    private tableUpdatedListeners: TableUpdatedCallback[] = [];
 
-    public listenQueryUpdates(listener: QueryUpdateCallback): void {
-        this.queryUpdateListeners.push(listener);
+    public listenActiveFiltersCountUpdates(listener: ActiveFiltersCountUpdateCallback): void {
+        this.activeFiltersCountUpdateListeners.push(listener);
     }
 
-    public notifyQueryUpdate(newQuery: string, newActiveFiltersCount: number): void {
-        this.queryUpdateListeners.forEach(callback => callback(newQuery, newActiveFiltersCount));
+    public notifyActiveFiltersCountUpdate(newActiveFiltersCount: number): void {
+        this.activeFiltersCountUpdateListeners.forEach(callback => callback(newActiveFiltersCount));
     }
 
     public listenDataChanges(listener: DataChangeCallback): void {
@@ -32,6 +36,22 @@ export default class MessageBus {
 
     public notifySubjectArtisanChange(newSubjectArtisan: Artisan): void {
         this.subjectArtisanChangeListeners.forEach(callback => callback(newSubjectArtisan));
+    }
+
+    public requestDataLoad(newQuery: string, appendAgeAndSfw: boolean): void {
+        this.dataLoadRequestListeners.forEach(callback => callback(newQuery, appendAgeAndSfw));
+    }
+
+    public listenDataLoadRequests(listener: DataLoadRequestCallback): void {
+        this.dataLoadRequestListeners.push(listener);
+    }
+
+    public notifyTableUpdated(): void {
+        this.tableUpdatedListeners.forEach(callback => callback());
+    }
+
+    public listenTableUpdated(listener: TableUpdatedCallback): void {
+        this.tableUpdatedListeners.push(listener);
     }
 }
 

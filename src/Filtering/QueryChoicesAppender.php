@@ -18,6 +18,23 @@ class QueryChoicesAppender
     ) {
     }
 
+    public function applyChoices(QueryBuilder $builder): void
+    {
+        $this->applyMakerId($builder);
+        $this->applyCountries($builder);
+        $this->applyStates($builder);
+        $this->applyPaymentPlans($builder);
+        $this->applyWantsSfw($builder);
+        $this->applyWorksWithMinors($builder);
+    }
+
+    private function applyMakerId(QueryBuilder $builder): void
+    {
+        if ('' !== $this->choices->makerId) {
+            $builder->andWhere('a.makerId = :makerId')->setParameter('makerId', $this->choices->makerId);
+        }
+    }
+
     private function applyCountries(QueryBuilder $builder): void
     {
         if ([] !== $this->choices->countries) {
@@ -33,15 +50,6 @@ class QueryChoicesAppender
 
             $builder->andWhere('a.state IN (:states)')->setParameter('states', $states);
         }
-    }
-
-    public function applyChoices(QueryBuilder $builder): void
-    {
-        $this->applyCountries($builder);
-        $this->applyStates($builder);
-        $this->applyPaymentPlans($builder);
-        $this->applyWantsSfw($builder);
-        $this->applyWorksWithMinors($builder);
     }
 
     private function applyWantsSfw(QueryBuilder $builder): void

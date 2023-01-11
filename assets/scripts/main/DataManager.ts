@@ -11,11 +11,11 @@ export default class DataManager {
     public constructor(
         private readonly messageBus: MessageBus,
     ) {
-        messageBus.listenQueryUpdates((newQuery: string) => this.queryUpdate(newQuery));
+        messageBus.listenDataLoadRequests((newQuery: string, isExhaustive: boolean) => this.queryUpdate(newQuery, isExhaustive));
     }
 
-    private queryUpdate(newQuery: string): void {
-        let usedQuery = this.getQueryWithMakerModeAndSfwOptions(newQuery);
+    private queryUpdate(newQuery: string, isExhaustive: boolean): void {
+        let usedQuery = isExhaustive ? `?${newQuery}` : this.getQueryWithMakerModeAndSfwOptions(newQuery);
 
         Static.showLoadingIndicator();
 

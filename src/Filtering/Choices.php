@@ -20,6 +20,7 @@ class Choices
      * @param string[] $species
      */
     public function __construct(
+        public readonly string $makerId,
         public readonly array $countries,
         public readonly array $states,
         public readonly array $languages,

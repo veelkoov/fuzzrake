@@ -31,6 +31,7 @@ class FiltersChoicesFilterTest extends KernelTestCaseWithEM
         self::assertInstanceOf(FiltersChoicesFilter::class, $subject);
 
         $choices = new Choices(
+            '',
             ['FI', '?', 'UK', '*'],
             ['Liquid', '?', 'Solid', '*'],
             ['Finnish', 'Czech', '?', 'English', '*'],

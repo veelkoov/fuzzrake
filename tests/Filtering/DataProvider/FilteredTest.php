@@ -37,10 +37,10 @@ class FilteredTest extends KernelTestCaseWithEM
 
         $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], false, false, false, false, false));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], false, false, false, false, true));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, true));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
     }
 
@@ -63,10 +63,10 @@ class FilteredTest extends KernelTestCaseWithEM
 
         $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], false, false, false, true, true));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], false, false, false, true, false));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, false));
         self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::makerIdsFromPubData($result));
     }
 
@@ -87,7 +87,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
 
-        $result = $subject->getPublicDataFor(new Choices([], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false));
         self::assertEquals($expected, self::makerIdsFromPubData($result));
     }
 

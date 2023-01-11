@@ -11,14 +11,28 @@ import {getMessageBus} from '../main/MessageBus';
 import {makerIdHashRegexp} from '../consts';
 
 function openArtisanByFragment(): void {
-    if (window.location.hash.match(makerIdHashRegexp)) {
-        let makerId = window.location.hash.slice(1);
+    if (!window.location.hash.match(makerIdHashRegexp)) {
+        return;
+    }
 
-        if (makerId in Static.getMakerIdsMap()) {
-            makerId = Static.getMakerIdsMap()[makerId];
+    let makerId = window.location.hash.slice(1);
+
+    if (makerId in Static.getMakerIdsMap()) {
+        makerId = Static.getMakerIdsMap()[makerId];
+    }
+
+    let opened: boolean = false;
+
+    messageBus.listenTableUpdated(() => {
+        if (!opened) {
+            opened = true;
+
+            jQuery('#' + makerId).children().eq(0).trigger('click');
         }
+    });
 
-        jQuery('#' + makerId).children().eq(0).trigger('click');
+    if (!AgeAndSfwConfig.getInstance().getMakerMode()) {
+        messageBus.requestDataLoad('makerId=' + makerId, true);
     }
 }
 

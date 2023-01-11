@@ -44,6 +44,7 @@ class FiltersChoicesFilter
             $this->dataService->getOpenFor(), Consts::FILTER_VALUE_NOT_TRACKED, Consts::FILTER_VALUE_TRACKING_ISSUES);
 
         return new Choices(
+            $choices->makerId,
             $countries,
             $states,
             $languages,

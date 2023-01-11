@@ -195,6 +195,10 @@ export default class Table extends Vue {
     });
   }
 
+  public updated(): void {
+    this.messageBus.notifyTableUpdated();
+  }
+
   private matchesText(artisan: Artisan): boolean {
     if ('' === this.search.textLc) {
       return true;
