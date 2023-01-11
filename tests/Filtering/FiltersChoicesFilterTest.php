@@ -40,7 +40,7 @@ class FiltersChoicesFilterTest extends KernelTestCaseWithEM
             ['Full plantigrade', '?', '*', 'Pancakes', '!'],
             ['Standard commissions', '?', 'Waffles', '*'],
             ['Pancakes', '!', '-', 'Kettles', '*'],
-            ['Birds', '?', 'Furniture', '*'], // TODO: Other/unknown is not implemented
+            ['Birds', '?', 'Furniture', '*'],
             false, false, false, false, false);
 
         $result = $subject->getOnlyAllowed($choices);

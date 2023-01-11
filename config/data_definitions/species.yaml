@@ -78,7 +78,7 @@ parameters:
             Dinosaurs: # Introduce "Extinct" group?
             Lizards:
             "i_Most reptiles":
-            "i_Reptiles (not including dragons)": # FIXME: Change to doesn't Reptiles does Dragons after making sure the filters work DOES - DOESN'T - DOES, not DOES - DOESN'T - DOESN'T - see #88
+            "i_Reptiles (not including dragons)": {}
 
           Bugs:
             Arachnids:
@@ -251,6 +251,7 @@ parameters:
           "i_Uncommon species":
           "i_Will not work with sequin for characters":
           "i_Most real-life aquatics that have a smooth head":
+      Other: {} # grep-species-other
 
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'

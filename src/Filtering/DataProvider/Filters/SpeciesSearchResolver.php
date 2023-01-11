@@ -15,10 +15,12 @@ class SpeciesSearchResolver
      * @var array<string, list<string>>
      */
     private array $selfAndDescendantsCache = [];
+    private readonly Specie $other;
 
     public function __construct(
         private readonly SpeciesList $species,
     ) {
+        $this->other = $this->species->getByName('Other'); // grep-species-other
     }
 
     /**
@@ -65,6 +67,10 @@ class SpeciesSearchResolver
             ...Vec\map($speciesDoes, fn (string $specie) => [$this->species->getByNameOrCreate($specie, false), true]),
             ...Vec\map($speciesDoesnt, fn (string $specie) => [$this->species->getByNameOrCreate($specie, false), false]),
         ];
+
+        $result = Vec\map($result, function (array $specie) {
+            return [$specie[0]->isRoot() && $specie[0]->isLeaf() ? $this->other : $specie[0], $specie[1]];
+        });
 
         usort($result, function (array $pair1, array $pair2) {
             $depthDiff = (int) ($pair1[0]->getDepth() - $pair2[0]->getDepth()); // Redundant cast to (int) for PHPStan

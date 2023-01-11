@@ -32,7 +32,7 @@ class SpeciesSearchResolverTest extends TestCase
         $D->addParentTwoWay($C);
 
         $list = new SpeciesList();
-        $list->add($A, $B, $C, $D);
+        $list->add($A, $B, $C, $D, new Specie('Other', false));
 
         $subject = new SpeciesSearchResolver($list);
 
@@ -94,6 +94,7 @@ class SpeciesSearchResolverTest extends TestCase
      *   - Deers
      * - With antlers
      *   - Deers
+     * - Other ("the Other")
      */
     private function getTestSpecies(): SpeciesList
     {
@@ -121,6 +122,7 @@ class SpeciesSearchResolverTest extends TestCase
         $result = new SpeciesList();
         $result->add($mammals, ...$mammals->getDescendants());
         $result->add($withAntlers, ...$withAntlers->getDescendants());
+        $result->add(new Specie('Other', false));
 
         return $result;
     }
