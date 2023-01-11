@@ -1,3 +1,22 @@
+.intro-updated-info {
+  color: #6c757d;
+  font-size: 0.7em;
+}
+
+.ages {
+  &.fa-user-minus {
+    color: #ffcc00;
+  }
+
+  &.fa-user-plus {
+    color: #4cae4c;
+  }
+
+  &.fa-user {
+    color: #bbb;
+  }
+}
+
 #filters-parents {
   .species {
     .specie {
@@ -50,27 +69,24 @@
   }
 }
 
-// TODO: Check all below after DT removal
-
 table#artisans {
-  border-collapse: collapse !important;
-  text-align: left;
-
-  .hidden {
-    display: none;
-  }
-
   thead {
     th {
       vertical-align: middle;
     }
   }
 
-  tbody {
-    tr.inactive {
-      color: #888;
-    }
+  &.table-striped > tbody > tr.inactive:nth-of-type(odd) > *,
+  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * { // odd+even suppress table-striped
+    color: #888;
+  }
 
+  &.table-striped > tbody > tr.inactive:hover:nth-of-type(odd) > *,
+  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * { // odd+even suppress table-striped
+    color: #212529
+  }
+
+  tbody {
     tr.matched-maker-id td {
       background-color: #99cb84;
     }
@@ -80,19 +96,7 @@ table#artisans {
       vertical-align: middle;
     }
 
-    td.name {
-      display: table-cell;
-      text-align: left;
-    }
-
-    td.state {
-      display: table-cell;
-      text-align: left;
-    }
-
     td.features, td.types, td.styles, td.productionModels, td.languages, td.species, td.commissions {
-      text-align: left;
-      display: table-cell;
       font-size: 75%;
     }
 
@@ -121,23 +125,16 @@ table#artisans {
     }
 
     td.commissions {
-      display: table-cell;
       text-align: center;
     }
 
     td.makerId {
-      display: table-cell;
       font-family: monospace;
     }
 
     td.links {
-      display: table-cell;
       text-align: right;
       cursor: default;
-
-      a.request-update {
-        cursor: pointer;
-      }
     }
   }
 }
@@ -146,32 +143,18 @@ table#artisans {
   color: #007bff;
 }
 
-.ages {
-  &.fa-user-minus {
-    color: #ffcc00;
-  }
-
-  &.fa-user-plus {
-    color: #4cae4c;
-  }
-
-  &.fa-user {
-    color: #bbb;
-  }
-}
-
-#makerId {
-  font-size: 80%;
-  font-family: monospace;
-  font-style: italic;
-  color: #aaa;
-}
-
-#makerId:empty {
-  display: none;
-}
-
 #artisanDetailsModal {
+  #makerId {
+    font-size: 80%;
+    font-family: monospace;
+    font-style: italic;
+    color: #aaa;
+  }
+
+  #makerId:empty {
+    display: none;
+  }
+
   img.tracking-failed {
     max-height: 10em;
   }
@@ -278,9 +261,4 @@ table#artisans {
   .inaccurate {
     color: #ffc107;
   }
-}
-
-.intro-updated-info {
-  color: #6c757d;
-  font-size: 0.7em;
 }
