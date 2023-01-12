@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests;
 
+use App\Entity\Artisan;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
@@ -21,17 +22,18 @@ class FiltersTest extends PantherTestCaseWithEM
     /**
      * @dataProvider filterChoicesDataProvider
      *
+     * @param list<Artisan>                    $artisans
      * @param array<string, list<string>|bool> $filtersSet
      * @param list<string>                     $expectedMakerIds
      *
      * @throws WebDriverException
      */
-    public function testFiltersInBrowser(array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersInBrowser(array $artisans, array $filtersSet, array $expectedMakerIds): void
     {
         $client = static::createPantherClient();
         self::setWindowSize($client, 1600, 900);
 
-        self::persistAndFlush(...$this->getTestArtisans());
+        self::persistAndFlush(...$artisans);
         $this->clearCache();
 
         $client->request('GET', '/index.php/');

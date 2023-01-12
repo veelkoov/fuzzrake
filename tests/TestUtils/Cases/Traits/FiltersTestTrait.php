@@ -12,7 +12,7 @@ trait FiltersTestTrait
     /**
      * @return list<Artisan>
      */
-    public function getTestArtisans(): array
+    private function getCombinedFiltersTestSet(): array
     {
         return [
             $this->artisan('M000001', 'CZ', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, false),
@@ -31,56 +31,57 @@ trait FiltersTestTrait
     }
 
     /**
-     * @return list<array{array<string, list<string>|bool>, list<string>}>
+     * @return list<array{list<Artisan>, array<string, list<string>|bool>, list<string>}>
      */
     public function filterChoicesDataProvider(): array
     {
         return [
-            [[
-            ], [
-                'M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000011', 'M000012',
-            ]],
+            [
+                self::getCombinedFiltersTestSet(),
+                [],
+                ['M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000011', 'M000012'],
+            ],
 
-            [['countries'          => ['CZ']],                        ['M000001']],
-            [['states'             => ['State2']],                    ['M000002']],
-            [['languages'          => ['Lang2']],                     ['M000003']],
-            [['styles'             => ['Realistic']],                 ['M000004']],
-            [['features'           => ['LED eyes', 'Indoor feet']],   ['M000005']],
-            [['orderTypes'         => ['Tails (as parts/separate)']], ['M000006']],
-            [['productionModels'   => ['Premades']],                  ['M000007']],
-            [['commissionStatuses' => ['Open2']],                     ['M000008']],
-            [['species'            => ['Fantasy creatures']],         ['M000009']],
-            [['paymentPlans'       => ['Not supported']],             ['M000010']],
+            [self::getCombinedFiltersTestSet(), ['countries'          => ['CZ']],                        ['M000001']],
+            [self::getCombinedFiltersTestSet(), ['states'             => ['State2']],                    ['M000002']],
+            [self::getCombinedFiltersTestSet(), ['languages'          => ['Lang2']],                     ['M000003']],
+            [self::getCombinedFiltersTestSet(), ['styles'             => ['Realistic']],                 ['M000004']],
+            [self::getCombinedFiltersTestSet(), ['features'           => ['LED eyes', 'Indoor feet']],   ['M000005']],
+            [self::getCombinedFiltersTestSet(), ['orderTypes'         => ['Tails (as parts/separate)']], ['M000006']],
+            [self::getCombinedFiltersTestSet(), ['productionModels'   => ['Premades']],                  ['M000007']],
+            [self::getCombinedFiltersTestSet(), ['commissionStatuses' => ['Open2']],                     ['M000008']],
+            [self::getCombinedFiltersTestSet(), ['species'            => ['Fantasy creatures']],         ['M000009']],
+            [self::getCombinedFiltersTestSet(), ['paymentPlans'       => ['Not supported']],             ['M000010']],
 
-            [[
-                'wantsSfw' => true,
-            ], [
-                'M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010',
-                'M000012',
-            ]],
+            [
+                self::getCombinedFiltersTestSet(),
+                ['wantsSfw' => true],
+                ['M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000012'],
+            ],
 
-            [[
-                'isAdult' => false,
-            ], [
-                'M000012',
-            ]],
+            [
+                self::getCombinedFiltersTestSet(),
+                ['isAdult' => false],
+                ['M000012'],
+            ],
 
-            [[
-                'countries'        => ['FI', 'CZ'],
-                'states'           => ['State1', 'State2'],
-                'styles'           => ['Toony', 'Realistic'],
-                'orderTypes'       => ['Tails (as parts/separate)', 'Full plantigrade'],
-                'productionModels' => ['Premades', 'Standard commissions'],
+            [
+                self::getCombinedFiltersTestSet(),
+                [
+                    'countries'        => ['FI', 'CZ'],
+                    'states'           => ['State1', 'State2'],
+                    'styles'           => ['Toony', 'Realistic'],
+                    'orderTypes'       => ['Tails (as parts/separate)', 'Full plantigrade'],
+                    'productionModels' => ['Premades', 'Standard commissions'],
 
-                'languages'          => ['Lang1'],
-                'features'           => ['LED eyes'],
-                'commissionStatuses' => ['Open1'],
-                'species'            => ['Real life animals'],
-                'paymentPlans'       => ['Supported'],
-            ], [
-                'M000001', 'M000002', 'M000004', 'M000005', 'M000006', 'M000007',
-                'M000011', 'M000012',
-            ]],
+                    'languages'          => ['Lang1'],
+                    'features'           => ['LED eyes'],
+                    'commissionStatuses' => ['Open1'],
+                    'species'            => ['Real life animals'],
+                    'paymentPlans'       => ['Supported'],
+                ],
+                ['M000001', 'M000002', 'M000004', 'M000005', 'M000006', 'M000007', 'M000011', 'M000012'],
+            ],
         ];
     }
 

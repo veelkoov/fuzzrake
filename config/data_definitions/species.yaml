@@ -172,6 +172,7 @@ parameters:
           Birds: {}
           Pancans: {}
 
+      Other: # grep-species-other
         "i_Copyright-related classification?": # FIXME
           "i_Copyrighted characters":
             'i_Copyrighted characters (e.g. Pokemons)':
@@ -251,7 +252,6 @@ parameters:
           "i_Uncommon species":
           "i_Will not work with sequin for characters":
           "i_Most real-life aquatics that have a smooth head":
-      Other: {} # grep-species-other
 
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'

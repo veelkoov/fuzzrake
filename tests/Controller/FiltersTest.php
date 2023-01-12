@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Entity\Artisan;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Utils\Json;
@@ -19,16 +20,17 @@ class FiltersTest extends PantherTestCaseWithEM
     /**
      * @dataProvider filterChoicesDataProvider
      *
+     * @param list<Artisan>                    $artisans
      * @param array<string, list<string>|bool> $filtersSet
      * @param list<string>                     $expectedMakerIds
      *
      * @throws JsonException
      */
-    public function testFiltersThroughApi(array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersThroughApi(array $artisans, array $filtersSet, array $expectedMakerIds): void
     {
         $client = static::createClient();
 
-        self::persistAndFlush(...$this->getTestArtisans());
+        self::persistAndFlush(...$artisans);
 
         $queryParts = [];
 
