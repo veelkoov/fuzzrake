@@ -1,10 +1,10 @@
-FROM php:8.1.2-fpm-alpine3.15
+FROM php:8.1.14-fpm-alpine3.17
 
 ARG DEV_MACHINE=no
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev linux-headers
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -47,8 +47,6 @@ RUN if [ "$DEV_MACHINE" == "yes" ]; then \
 # It's OK for production image
 ENV PANTHER_CHROME_DRIVER_BINARY /usr/lib/chromium/chromedriver
 ENV PANTHER_NO_SANDBOX 1
-ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
-
 
 RUN diff  "/tmp/php.ini-production.dist" "$PHP_INI_DIR/php.ini-production" \
     && mv "/tmp/php.ini"                 "$PHP_INI_DIR/php.ini" \
