@@ -60,7 +60,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     {
         usleep($millisecondsForAnimation * 1000);
         self::assertSelectorExists($locator);
-        self::getPantherClient()->waitForVisibility($locator, 1);
+        self::getPantherClient()->waitForVisibility($locator, 5);
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     {
         usleep($millisecondsForAnimation * 1000);
         self::assertSelectorExists($locator);
-        self::getPantherClient()->waitForInvisibility($locator, 1);
+        self::getPantherClient()->waitForInvisibility($locator, 5);
     }
 
     protected static function assertVisible(string $locator, string $message = null): void
@@ -78,7 +78,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         $exception = null;
 
         try {
-            self::getPantherClient()->waitForVisibility($locator, 1);
+            self::getPantherClient()->waitForVisibility($locator, 5);
         } catch (NoSuchElementException|TimeoutException $caught) {
             $exception = $caught;
         }
@@ -91,7 +91,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         $exception = null;
 
         try {
-            self::getPantherClient()->waitForInvisibility($locator, 1);
+            self::getPantherClient()->waitForInvisibility($locator, 5);
         } catch (NoSuchElementException|TimeoutException $caught) {
             $exception = $caught;
         }

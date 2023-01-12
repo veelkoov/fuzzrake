@@ -38,7 +38,10 @@ class QueryChoicesAppender
     private function applyCountries(QueryBuilder $builder): void
     {
         if ([] !== $this->choices->countries) {
-            $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $this->choices->countries);
+            $countries = Vec\map($this->choices->countries,
+                fn ($value) => Consts::FILTER_VALUE_UNKNOWN === $value ? Consts::DATA_VALUE_UNKNOWN : $value);
+
+            $builder->andWhere('a.country IN (:countries)')->setParameter('countries', $countries);
         }
     }
 

@@ -28,6 +28,10 @@ class SpeciesSearchResolver
      */
     public function resolveDoes(string $speciesDoes, string $speciesDoesnt): array
     {
+        if ('' === $speciesDoes && '' !== $speciesDoesnt) {
+            $speciesDoes = 'Most species'; // grep-assumed-does-specie-when-artisan-has-only-doesnt
+        }
+
         $speciesDoes = StringList::unpack($speciesDoes);
         $speciesDoesnt = StringList::unpack($speciesDoesnt);
 
@@ -68,8 +72,9 @@ class SpeciesSearchResolver
             ...Vec\map($speciesDoesnt, fn (string $specie) => [$this->species->getByNameOrCreate($specie, false), false]),
         ];
 
+        // Change all non-usual species a "does Other"
         $result = Vec\map($result, function (array $specie) {
-            return [$specie[0]->isRoot() && $specie[0]->isLeaf() ? $this->other : $specie[0], $specie[1]];
+            return $specie[0]->isRoot() && $specie[0]->isLeaf() ? [$this->other, true] : [$specie[0], $specie[1]];
         });
 
         usort($result, function (array $pair1, array $pair2) {

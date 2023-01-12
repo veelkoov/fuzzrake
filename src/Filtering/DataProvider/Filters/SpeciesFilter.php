@@ -34,7 +34,7 @@ class SpeciesFilter implements FilterInterface
 
     public function matches(Artisan $artisan): bool
     {
-        if ([] === $this->wantedItems) {
+        if (!$this->wantsUnknown && [] === $this->wantedItems) {
             return false;
         }
 

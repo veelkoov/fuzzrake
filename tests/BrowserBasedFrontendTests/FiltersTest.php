@@ -10,6 +10,7 @@ use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
+use Symfony\Component\Panther\Client;
 
 /**
  * @large
@@ -55,8 +56,7 @@ class FiltersTest extends PantherTestCaseWithEM
             self::waitUntilShows("#filter-body-$filter");
 
             if ('species' === $filter) {
-                $client->findElement(WebDriverBy::cssSelector('#filter-body-species > fieldset div[role=group] span.toggle'))->click();
-                self::waitUntilShows('#filter-body-species > fieldset fieldset.subspecies');
+                $this->toggleSpecies($client, 'Most species', 'Real life animals', 'Mammals');
             }
 
             foreach ($values as $value) {
@@ -72,6 +72,20 @@ class FiltersTest extends PantherTestCaseWithEM
 
         foreach ($expectedMakerIds as $makerId) {
             self::assertSelectorIsVisible("tr#$makerId");
+        }
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function toggleSpecies(Client $client, string ...$specieNames): void
+    {
+        foreach ($specieNames as $specieName) {
+            $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/span[contains(@class, "toggle")]';
+            $client->findElement(WebDriverBy::xpath($xpath))->click();
+
+            $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/following-sibling::fieldset';
+            self::waitUntilShows($xpath);
         }
     }
 }
