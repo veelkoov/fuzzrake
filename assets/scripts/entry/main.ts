@@ -32,7 +32,7 @@ function openArtisanByFragment(): void {
     });
 
     if (!AgeAndSfwConfig.getInstance().getMakerMode()) {
-        messageBus.requestDataLoad('makerId=' + makerId, true);
+        messageBus.requestDataLoad('wantsSfw=0&isAdult=1&makerId=' + makerId, true);
     }
 }
 
