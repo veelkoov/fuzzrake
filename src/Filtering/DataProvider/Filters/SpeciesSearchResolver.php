@@ -73,9 +73,8 @@ class SpeciesSearchResolver
         ];
 
         // Change all non-usual species a "does Other"
-        $result = Vec\map($result, function (array $specie) {
-            return $specie[0]->isRoot() && $specie[0]->isLeaf() ? [$this->other, true] : [$specie[0], $specie[1]];
-        });
+        $result = Vec\map($result, fn (array $specie) => $specie[0]->isRoot() && $specie[0]->isLeaf()
+            ? [$this->other, true] : [$specie[0], $specie[1]]);
 
         usort($result, function (array $pair1, array $pair2) {
             $depthDiff = (int) ($pair1[0]->getDepth() - $pair2[0]->getDepth()); // Redundant cast to (int) for PHPStan
