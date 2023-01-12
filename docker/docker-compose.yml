@@ -23,3 +23,4 @@ services:
     volumes: # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
       - ..:/var/www/html
       - '${FUZZRAKE_COMPOSER_HOME:-../var/composer}:/composer'
+      - /dev/shm:/dev/shm
