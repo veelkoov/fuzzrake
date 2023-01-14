@@ -14,10 +14,6 @@ use App\Utils\StringList;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
-use Psr\Cache\InvalidArgumentException;
-use RuntimeException;
-use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class DataService
 {
@@ -25,34 +21,13 @@ class DataService
         private readonly ArtisanRepository $artisanRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly ArtisanCommissionsStatusRepository $acsRepository,
-        private readonly TagAwareCacheInterface $cache,
+        private readonly Cache $cache,
     ) {
-    }
-
-    /**
-     * @template T
-     *
-     * @param list<string>  $tags
-     * @param callable(): T $callback
-     *
-     * @return T
-     */
-    private function getCached(string $key, array $tags, callable $callback): mixed
-    {
-        try {
-            return $this->cache->get($key, function (ItemInterface $item) use ($tags, $callback) {
-                $item->tag($tags);
-
-                return $callback();
-            });
-        } catch (InvalidArgumentException $exception) {
-            throw new RuntimeException(previous: $exception);
-        }
     }
 
     public function getMainPageStats(): MainPageStats
     {
-        return $this->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING],
+        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING],
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
@@ -100,7 +75,7 @@ class DataService
      */
     public function getCountries(): array
     {
-        return $this->getCached('DataService.getCountries', [CacheTags::ARTISANS],
+        return $this->cache->getCached('DataService.getCountries', CacheTags::ARTISANS,
             fn () => $this->artisanRepository->getDistinctCountries());
     }
 
@@ -109,7 +84,7 @@ class DataService
      */
     public function getStates(): array
     {
-        return $this->getCached('DataService.getStates', [CacheTags::ARTISANS],
+        return $this->cache->getCached('DataService.getStates', CacheTags::ARTISANS,
             fn () => $this->artisanRepository->getDistinctStates());
     }
 
@@ -118,7 +93,7 @@ class DataService
      */
     public function getOpenFor(): array
     {
-        return $this->getCached('DataService.getOpenFor', [CacheTags::ARTISANS, CacheTags::TRACKING],
+        return $this->cache->getCached('DataService.getOpenFor', [CacheTags::ARTISANS, CacheTags::TRACKING],
             fn () => $this->acsRepository->getDistinctOpenFor());
     }
 
@@ -127,7 +102,7 @@ class DataService
      */
     public function getLanguages(): array
     {
-        return $this->getCached('DataService.getLanguages', [CacheTags::ARTISANS, CacheTags::TRACKING],
+        return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS, CacheTags::TRACKING],
             function () {
                 $result = [];
 
@@ -145,7 +120,7 @@ class DataService
      */
     public function getAllArtisans(): array
     {
-        return $this->getCached('DataService.getAllArtisans', [CacheTags::ARTISANS],
+        return $this->cache->getCached('DataService.getAllArtisans', CacheTags::ARTISANS,
             fn () => Artisan::wrapAll($this->artisanRepository->getAll()));
     }
 }

@@ -53,13 +53,13 @@ class RulesDisplayTest extends PantherTestCaseWithEM
             $button = $crawler->filterXPath('//button[@type="button" and text()="More info" and @data-bs-target="#rule-'.$rule.'"]');
 
             $button->click();
-            self::assertVisible("#rule-$rule");
+            self::waitUntilShows("#rule-$rule");
         }
 
         foreach ($rules as $rule) {
             $button = $crawler->filterXPath('//button[@type="button" and text()="More info" and @data-bs-target="#rule-'.$rule.'"]');
             $button->click();
-            self::assertInvisible("#rule-$rule");
+            self::waitUntilHides("#rule-$rule");
         }
     }
 

@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace App\Filtering;
 
 use App\DataDefinitions\Fields\Field;
-use App\Repository\ArtisanRepository;
+use App\Entity\Artisan;
+use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
 use Doctrine\ORM\QueryBuilder;
 use Psl\Vec;
 
-class QueryChoicesAppender
+class QueryChoicesAppender implements CacheDigestProvider
 {
-    public function __construct(
-        private readonly Choices $choices,
-        private readonly ArtisanRepository $repository,
-    ) {
+    private readonly Choices $choices;
+
+    public function __construct(Choices $choices)
+    {
+        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], [], $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw);
+    }
+
+    public function getCacheDigest(): string
+    {
+        return $this->choices->getCacheDigest();
     }
 
     public function applyChoices(QueryBuilder $builder): void
@@ -26,6 +33,11 @@ class QueryChoicesAppender
         $this->applyPaymentPlans($builder);
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
+    }
+
+    private function createSubqueryBuilder(QueryBuilder $builder, string $alias): QueryBuilder
+    {
+        return $builder->getEntityManager()->getRepository(Artisan::class)->createQueryBuilder($alias);
     }
 
     private function applyMakerId(QueryBuilder $builder): void
@@ -59,7 +71,7 @@ class QueryChoicesAppender
     {
         if (true !== $this->choices->isAdult || false !== $this->choices->wantsSfw) {
             $builder->andWhere($builder->expr()->exists(
-                $this->repository->createQueryBuilder('a3')
+                $this->createSubqueryBuilder($builder, 'a3')
                     ->select('1')
                     ->join('a3.values', 'a3v1')
                     ->join('a3.values', 'a3v2')
@@ -79,7 +91,7 @@ class QueryChoicesAppender
     {
         if (true !== $this->choices->isAdult) {
             $builder->andWhere($builder->expr()->exists(
-                $this->repository->createQueryBuilder('a2')
+                $this->createSubqueryBuilder($builder, 'a2')
                     ->select('1')
                     ->join('a2.values', 'a2v')
                     ->where('a2.id = a.id')

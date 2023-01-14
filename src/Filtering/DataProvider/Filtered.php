@@ -13,31 +13,44 @@ use App\Filtering\DataProvider\Filters\OrderTypesFilter;
 use App\Filtering\DataProvider\Filters\ProductionModelsFilter;
 use App\Filtering\DataProvider\Filters\SpeciesFilterFactory;
 use App\Filtering\DataProvider\Filters\StylesFilter;
+use App\Filtering\QueryChoicesAppender;
 use App\Repository\ArtisanRepository;
+use App\Service\Cache;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use Psr\Cache\InvalidArgumentException;
+use App\ValueObject\CacheTags;
 
 use function Psl\Iter\all;
 use function Psl\Vec\filter;
 use function Psl\Vec\map;
 use function Psl\Vec\values;
 
-class Filtered implements FilteredInterface
+class Filtered
 {
     public function __construct(
         private readonly ArtisanRepository $repository,
         private readonly SpeciesFilterFactory $speciesFilterFactory,
+        private readonly Cache $cache,
     ) {
     }
 
     /**
      * @return array<array<psJsonFieldValue>>
-     *
-     * @throws InvalidArgumentException
      */
     public function getPublicDataFor(Choices $choices): array
     {
-        $artisans = Artisan::wrapAll($this->repository->getFiltered($choices));
+        return $this->cache->getCached('Filtered.artisans.'.$choices->getCacheDigest(),
+            CacheTags::ARTISANS, fn () => $this->retrievePublicDataFor($choices));
+    }
+
+    /**
+     * @return array<array<psJsonFieldValue>>
+     */
+    private function retrievePublicDataFor(Choices $choices): array
+    {
+        $appender = new QueryChoicesAppender($choices);
+
+        $artisans = $this->cache->getCached('Filtered.query.'.$appender->getCacheDigest(),
+            CacheTags::ARTISANS, fn () => Artisan::wrapAll($this->repository->getFiltered($appender)));
 
         $filters = [];
 

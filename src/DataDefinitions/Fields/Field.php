@@ -95,7 +95,7 @@ enum Field: string
 
     public function validationPattern(): ?Pattern
     {
-        return $this->getData()->validationPattern;
+        return $this->getData()->getValidationPattern();
     }
 
     public function isList(): bool

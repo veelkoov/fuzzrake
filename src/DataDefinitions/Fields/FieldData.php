@@ -8,13 +8,13 @@ use TRegx\CleanRegex\Pattern;
 
 class FieldData
 {
-    public readonly ?Pattern $validationPattern;
+    private ?Pattern $validationPattern = null;
     public readonly bool $isValidated;
 
     public function __construct(
         public readonly string $name,
         public readonly string $modelName,
-        ?string $validationRegexp,
+        private readonly ?string $validationRegexp,
         public readonly bool $isList,
         public readonly bool $isFreeForm,
         public readonly bool $inStats,
@@ -23,7 +23,11 @@ class FieldData
         public readonly bool $isDate,
         public readonly bool $isPersisted,
     ) {
-        $this->validationPattern = null !== $validationRegexp ? pattern($validationRegexp) : null;
-        $this->isValidated = null !== $this->validationPattern;
+        $this->isValidated = null !== $this->validationRegexp;
+    }
+
+    public function getValidationPattern(): ?Pattern
+    {
+        return null === $this->validationRegexp ? null : ($this->validationPattern ??= pattern($this->validationRegexp));
     }
 }

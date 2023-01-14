@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Filtering\DataProvider\CachedFiltered;
+use App\Filtering\DataProvider\Filtered;
 use App\Filtering\RequestParser;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
 use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
-use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,16 +57,13 @@ class RestApiController extends AbstractController
         return new JsonResponse($dataService->getAllArtisans());
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisansArray(Request $request, CachedFiltered $cachedFiltered, RequestParser $requestParser): JsonResponse
+    public function artisansArray(Request $request, Filtered $Filtered, RequestParser $requestParser): JsonResponse
     {
         try {
             $choices = $requestParser->getChoices($request);
-            $result = $cachedFiltered->getPublicDataFor($choices);
+            $result = $Filtered->getPublicDataFor($choices);
 
             return new JsonResponse($result);
         } catch (CoercionException $exception) {

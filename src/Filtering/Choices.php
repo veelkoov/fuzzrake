@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filtering;
 
+use App\Service\CacheDigestProvider;
 use Psl\Json;
 
-class Choices
+class Choices implements CacheDigestProvider
 {
     /**
      * @param string[] $countries
@@ -38,7 +39,7 @@ class Choices
     ) {
     }
 
-    public function getDigest(): string
+    public function getCacheDigest(): string
     {
         return hash('sha256', Json\encode($this));
     }

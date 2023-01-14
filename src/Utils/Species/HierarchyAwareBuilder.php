@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Species;
 
-use App\Utils\UnbelievableRuntimeException;
-use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Detail;
-use TRegx\CleanRegex\Pattern;
-
 class HierarchyAwareBuilder
 {
-    private const FLAG_PREFIX_REGEXP = '^(?<flags>[a-z]{1,2})_(?<specie>.+)$';
     private const FLAG_HIDDEN_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
     private readonly SpeciesList $completeList;
@@ -27,15 +21,11 @@ class HierarchyAwareBuilder
      */
     private array $visibleTree = [];
 
-    private readonly Pattern $flagPattern;
-
     /**
      * @param array<string, psSubspecies> $species
      */
     public function __construct(array $species)
     {
-        $this->flagPattern = pattern(self::FLAG_PREFIX_REGEXP);
-
         $this->completeList = new SpeciesList();
         $this->visibleList = new SpeciesList();
 
@@ -95,19 +85,13 @@ class HierarchyAwareBuilder
     }
 
     /**
-     * @return array{0: string, 1: string}
+     * @return array{string, string}
      */
     private function splitSpecieFlagsName(string $specie): array
     {
-        try {
-            return $this->flagPattern->match($specie)
-                ->findFirst()->map(fn (Detail $match): array => [
-                    $match->group('flags')->text(),
-                    $match->group('specie')->text(),
-                ])->orReturn(['', $specie]);
-        } catch (NonexistentGroupException $exception) { // @codeCoverageIgnoreStart
-            throw new UnbelievableRuntimeException($exception);
-        } // @codeCoverageIgnoreEnd
+        $parts = explode('_', $specie, 2);
+
+        return 1 === count($parts) ? ['', $parts[0]] : [$parts[0], $parts[1]];
     }
 
     private static function hasHiddenFlag(string $flags): bool

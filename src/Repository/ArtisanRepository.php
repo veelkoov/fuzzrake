@@ -8,7 +8,6 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\ValidationRegexps;
 use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
-use App\Filtering\Choices;
 use App\Filtering\QueryChoicesAppender;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
 use App\Utils\Filters\FilterData;
@@ -443,11 +442,10 @@ class ArtisanRepository extends ServiceEntityRepository
     /**
      * @return Artisan[]
      */
-    public function getFiltered(Choices $choices): array
+    public function getFiltered(QueryChoicesAppender $appender): array
     {
         $builder = $this->getArtisansQueryBuilder();
 
-        $appender = new QueryChoicesAppender($choices, $this);
         $appender->applyChoices($builder);
 
         $result = $builder

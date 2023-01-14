@@ -17,8 +17,6 @@ use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\MakerId;
-use App\Utils\Artisan\Fields\CommissionAccessor;
-use App\Utils\Artisan\Fields\UrlAccessor;
 use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
@@ -46,6 +44,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
     private ArtisanE $artisan;
+    private ?SmartUrlAccessor $urlAccessor = null;
 
     public function __construct(ArtisanE $artisan = null)
     {
@@ -57,9 +56,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return new self();
     }
 
+    private function getUrlAccessor(): SmartUrlAccessor
+    {
+        return $this->urlAccessor ??= new SmartUrlAccessor($this);
+    }
+
     public function __clone()
     {
         $this->artisan = clone $this->artisan;
+        $this->urlAccessor = null;
     }
 
     public function __toString(): string
@@ -438,40 +443,24 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     public function getOpenFor(): string
     {
-        return CommissionAccessor::get($this, true);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getOpenForArray(): array
-    {
-        return CommissionAccessor::getList($this, true);
+        return SmartOfferStatusAccessor::getPacked($this, true);
     }
 
     public function setOpenFor(string $openFor): self
     {
-        CommissionAccessor::set($this, true, $openFor);
+        SmartOfferStatusAccessor::setPacked($this, true, $openFor);
 
         return $this;
     }
 
     public function getClosedFor(): string
     {
-        return CommissionAccessor::get($this, false);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getClosedForArray(): array
-    {
-        return CommissionAccessor::getList($this, false);
+        return SmartOfferStatusAccessor::getPacked($this, false);
     }
 
     public function setClosedFor(string $closedFor): self
     {
-        CommissionAccessor::set($this, false, $closedFor);
+        SmartOfferStatusAccessor::setPacked($this, false, $closedFor);
 
         return $this;
     }
@@ -789,17 +778,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getUrlObjs(Field $urlField): array
     {
-        return UrlAccessor::getObjs($this, $urlField->name);
+        return $this->getUrlAccessor()->getObjects($urlField->name);
     }
 
     private function getUrl(Field $urlField): string
     {
-        return UrlAccessor::get($this, $urlField->name);
+        return $this->getUrlAccessor()->getPacked($urlField->name);
     }
 
     private function setUrl(Field $urlField, string $newUrl): self
     {
-        UrlAccessor::set($this, $urlField->name, $newUrl);
+        $this->getUrlAccessor()->setPacked($urlField->name, $newUrl);
 
         return $this;
     }

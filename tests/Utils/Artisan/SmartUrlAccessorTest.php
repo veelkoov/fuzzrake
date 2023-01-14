@@ -2,21 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Artisan\Fields;
+namespace App\Tests\Utils\Artisan;
 
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
+use App\Tests\TestUtils\Cases\TestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use PHPUnit\Framework\TestCase;
 
 /**
- * @see AbstractAccessor
- * @see UrlAccessor
- *
- * @medium
+ * @small
  */
-class UrlAccessorTest extends TestCase
+class SmartUrlAccessorTest extends TestCase
 {
     public function testSet(): void
     {
@@ -29,7 +26,8 @@ class UrlAccessorTest extends TestCase
 
         self::assertEquals([
             'URL_COMMISSIONS commissions1',
-            "URL_OTHER other\nanother",
+            'URL_OTHER another',
+            'URL_OTHER other',
             'URL_PRICES cost2',
             'URL_PRICES price1',
             'URL_WEBSITE website',
@@ -53,7 +51,8 @@ class UrlAccessorTest extends TestCase
             ->setFaqUrl("question\nwhy_new_line");
 
         self::assertEquals([
-            "URL_FAQ question\nwhy_new_line",
+            'URL_FAQ question',
+            'URL_FAQ why_new_line',
             'URL_OTHER other',
             'URL_PRICES another',
             'URL_PRICES price1',

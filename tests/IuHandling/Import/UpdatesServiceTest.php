@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
+use App\DataDefinitions\Fields\Field;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Import\UpdateInput;
@@ -222,6 +223,7 @@ class UpdatesServiceTest extends TestCase
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
         self::assertEquals([$artisan1, $artisan2], $result->matchedArtisans);
 
+        $artisan1->getUrlObjs(Field::URL_OTHER); // Force initialization of URL accessor
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id MAKER01')));
         self::assertEquals([$artisan1], $result->matchedArtisans);
     }

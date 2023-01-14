@@ -7,6 +7,7 @@ namespace App\Tests\Filtering\DataProvider;
 use App\Filtering\Choices;
 use App\Filtering\DataProvider\Filtered;
 use App\Filtering\DataProvider\Filters\SpeciesFilterFactory;
+use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Psl\Str;
@@ -35,7 +36,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
+        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
@@ -44,9 +45,6 @@ class FilteredTest extends KernelTestCaseWithEM
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function testWantsSfw(): void
     {
         self::bootKernel();
@@ -61,7 +59,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
-        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
+        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
@@ -72,8 +70,6 @@ class FilteredTest extends KernelTestCaseWithEM
 
     /**
      * @dataProvider wantsPaymentPlansDataProvider
-     *
-     * @throws InvalidArgumentException
      */
     public function testWantsPaymentPlans(bool $unknown, bool $none, bool $any, string $expected): void
     {
@@ -85,7 +81,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock());
+        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false));
         self::assertEquals($expected, self::makerIdsFromPubData($result));
