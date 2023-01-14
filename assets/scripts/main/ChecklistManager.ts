@@ -53,21 +53,18 @@ export default class ChecklistManager {
         this.config.setWantsSfw(!this.wantsSfw.isVal(NO));
         this.config.setIsAdult(this.isAdult.isVal(YES));
 
-        let label: string, addClass: string, removeClass: string;
+        let label: string, disabled: boolean;
 
         if (this.isReady()) {
             label = 'I will now click this button';
-            addClass = 'btn-primary';
-            removeClass = 'btn-secondary';
+            disabled = false;
         } else {
             label = "I can't click this button yet";
-            removeClass = 'btn-primary';
-            addClass = 'btn-secondary';
+            disabled = true;
         }
 
         this.$dismissButton.val(label);
-        this.$dismissButton.addClass(addClass);
-        this.$dismissButton.removeClass(removeClass);
+        this.$dismissButton.prop('disabled', disabled);
     }
 
     public getDismissButtonClickedCallback(): () => void {

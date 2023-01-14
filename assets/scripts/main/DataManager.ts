@@ -6,6 +6,7 @@ export type DataRow = string[]|string|number|boolean|null;
 
 export default class DataManager {
     private data: DataRow[] = [];
+    private prevQuery: string|null = null;
     private readonly ageAndSfwConfig: AgeAndSfwConfig = AgeAndSfwConfig.getInstance();
 
     public constructor(
@@ -15,7 +16,13 @@ export default class DataManager {
     }
 
     private queryUpdate(newQuery: string, isExhaustive: boolean): void {
-        let usedQuery = isExhaustive ? `?${newQuery}` : this.getQueryWithMakerModeAndSfwOptions(newQuery);
+        const usedQuery = isExhaustive ? `?${newQuery}` : this.getQueryWithMakerModeAndSfwOptions(newQuery);
+
+        if (this.prevQuery === usedQuery) {
+            return;
+        }
+
+        this.prevQuery = usedQuery;
 
         Static.showLoadingIndicator();
 
@@ -29,7 +36,7 @@ export default class DataManager {
         });
     }
 
-    private displayError(jqXHR: JQuery.jqXHR, textStatus: string|null, errorThrown: string|null): void {
+    private displayError(_: JQuery.jqXHR, textStatus: string|null, errorThrown: string|null): void {
         let details = '';
 
         if (errorThrown) {

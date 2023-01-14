@@ -17,11 +17,13 @@
 {% endblock %}
 
 {% block body %}
-    <div id="loading-indicator-container" class="fixed-bottom text-center">
-        <div class="container p-md-5 pb-2 pb-md-2 text-start">
-            <div  class="alert alert-primary shadow" role="alert">
+    <div id="loading-indicator-container" class="fixed-top text-center">
+        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);"></div>
+
+        <div class="container p-2 text-start">
+            <div class="alert alert-light border-primary shadow" role="alert">
                 <h4 class="alert-heading">
-                    Loading, please wait. <small class="text-muted" id="loading-indicator-message"></small>
+                    <span class="badge bg-primary">Loading, please wait</span> <small class="text-muted" id="loading-indicator-message"></small>
                 </h4>
 
                 <hr>

@@ -69,6 +69,10 @@
   }
 }
 
+div#data-table-container {
+  overflow-x: auto;
+}
+
 table#artisans {
   thead {
     th {
