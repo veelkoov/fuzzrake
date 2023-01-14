@@ -12,12 +12,12 @@
 
     <tbody>
       <template v-for="(artisan, index) of artisans"><tr
-          v-if="matchesText(artisan)"
           :data-index=index
           :id="artisan.makerId ? artisan.makerId : null"
           class="fursuit-maker artisan-data"
           :class="{
-            inactive: artisan.inactiveReason,
+            'hidden':           !matchesText(artisan),
+            'inactive':         artisan.inactiveReason,
             'matched-maker-id': matchedMakerId(artisan),
           }"
       >

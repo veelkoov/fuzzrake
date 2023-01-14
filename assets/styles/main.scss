@@ -87,6 +87,10 @@ table#artisans {
   }
 
   tbody {
+    tr.hidden {
+      display: none;
+    }
+
     tr.matched-maker-id td {
       background-color: #99cb84;
     }
