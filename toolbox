@@ -8,7 +8,6 @@ IMPORT_DIR_PATH='var/iuFormData/' # Trailing slash required
 DB_PATH='var/db.sqlite'
 DB_TMP_PATH="$DB_PATH.tmp"
 DB_DUMP_DIR_PATH='db_dump'
-DB_DUMP_TMP_PATH="$DB_DUMP_DIR_PATH/fuzzrake.tmp.sql"
 DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
 
 # Volatile information, easily reproducible
@@ -143,6 +142,27 @@ function action_dbdump() {
     done
 }
 
+function action_cloc() {
+    local exclude_list
+    exclude_list="$(cat <<- EXCLUDE
+		assets/3rd-party
+		src/Kernel.php
+		tests/test_data
+		tests/bootstrap.php
+		tests/console-application.php
+		tests/object-manager.php
+		EXCLUDE
+    )"
+
+    echo '>>> INCLUDING TESTS'
+    cloc --exclude-list-file=<(echo "$exclude_list") assets src templates tests \
+        --counted=cloc-files-including-tests.nocommit.txt "$@"
+
+    echo '>>> WITHOUT TESTS'
+    cloc --exclude-list-file=<(echo "$exclude_list") assets src templates \
+        --counted=cloc-files-without-tests.nocommit.txt "$@"
+}
+
 function error() {
     local message="$1"
 
@@ -180,6 +200,8 @@ Available actions:
     pcf          run PHP CS Fixer
     ps           run PHPStan
     rector       run Rector
+
+    cloc         run Cloc
 EOF
 }
 
@@ -230,6 +252,8 @@ function action() {
 
         'get-snapshots')   action_get_snapshots ;;
         'get-submissions') action_get_submissions ;;
+
+        'cloc')         action_cloc "$@" ;;
 
         *) error "Unknown action: '$action'" ;;
     esac
