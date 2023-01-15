@@ -42,7 +42,7 @@ class DataCheckUrlsCommand extends Command
         if ($limit <= 0 || $limit > 100) {
             $io->error('Value of "'.self::OPT_LIMIT.'" must be a number between 1 and 100');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $task = $this->factory->get($io);
@@ -51,6 +51,6 @@ class DataCheckUrlsCommand extends Command
         $this->entityManager->flush();
         $io->success('Finished');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

@@ -59,7 +59,7 @@ class GenerateSpeciesDotCommand extends Command
             throw new ProcessFailedException($process);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function getDotFileContents(): string

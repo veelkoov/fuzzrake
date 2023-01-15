@@ -8,11 +8,11 @@ use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class ArtisanUrlInspectionFactory
+final readonly class ArtisanUrlInspectionFactory
 {
     public function __construct(
-        private readonly ArtisanUrlRepository $artisanUrlRepository,
-        private readonly WebpageSnapshotManager $webpageSnapshotManager,
+        private ArtisanUrlRepository $artisanUrlRepository,
+        private WebpageSnapshotManager $webpageSnapshotManager,
     ) {
     }
 

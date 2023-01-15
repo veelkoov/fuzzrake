@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand('app:data:export')]
+#[AsCommand('app:data:export', 'Export data to XLSX')]
 class DataExportCommand extends Command
 {
     public function __construct(
@@ -27,9 +27,6 @@ class DataExportCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Export data to XLSX')
-        ;
     }
 
     /**
