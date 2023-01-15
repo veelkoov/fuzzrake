@@ -37,4 +37,16 @@ class Cache
             throw new RuntimeException(previous: $exception);
         }
     }
+
+    /**
+     * @param list<string>|string $tags
+     */
+    public function invalidate(array|string $tags): void
+    {
+        try {
+            $this->cache->invalidateTags(is_string($tags) ? [$tags] : $tags);
+        } catch (InvalidArgumentException $exception) {
+            throw new RuntimeException(previous: $exception);
+        }
+    }
 }

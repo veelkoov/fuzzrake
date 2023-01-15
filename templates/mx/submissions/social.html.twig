@@ -1,0 +1,72 @@
+{% extends 'mx/_base.html.twig' %}
+
+{% block title %}Social{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1>
+
+    <div class="row">
+        <div class="col">
+            <h4>Tumblr</h4>
+
+            <h5>Markdown text</h5>
+
+            <p class="user-select-all">
+                # Fursuit makers added
+
+                <br><br>
+
+                {% for artisan in artisans %}
+                    - [getfursu.it/#{{ artisan.makerId }}](https://getfursu.it/#{{ artisan.makerId }})<br><br>
+                {% endfor %}
+
+                <br>
+
+                Join / see all recently joined: [getfursu.it/new](https://getfursu.it/new)
+            </p>
+
+            <h6>Emoji</h6>
+            <p class="user-select-all">🦖</p>
+
+            <h6>Hashtags</h6>
+            <p><i>#<span class="user-select-all">fursuit maker</span> #<span class="user-select-all">furry</span></i></p>
+        </div>
+
+        <div class="col">
+            <h4>Twitter</h4>
+
+            <h5>Tweet</h5>
+            <p class="user-select-all">
+                <i>#fursuitmaker #furry</i>
+
+                {% for artisan in artisans %}
+                    https://getfursu.it/#{{ artisan.makerId }}
+                {% endfor %}
+
+                https://getfursu.it/new
+            </p>
+
+            <h5>Tags</h5>
+            <p class="user-select-all">
+                {% for artisan in artisans %}
+                    {% if '' != artisan.twitterUrl %}
+                        @{{ artisan.twitterUrl|split('/')[3] }}
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            <h4 class="pt-4">Instagram</h4>
+
+            <h5>Tags and hashtags</h5>
+            <p class="user-select-all">
+                {% for artisan in artisans %}
+                    {% if '' != artisan.instagramUrl %}
+                        @{{ artisan.instagramUrl|split('/')[3] }}
+                    {% endif %}
+                {% endfor %}
+
+                <i>#fursuitmaker #furry</i>
+            </p>
+        </div>
+    </div>
+{% endblock %}
