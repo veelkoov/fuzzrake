@@ -79,7 +79,7 @@ class RegexPersistence implements RegexesProvider
             $this->entityManager->persist($setting);
         }
 
-        foreach ($this->patternFactory->getGroupTranslations() as $groupName => $translations) {
+        foreach ($this->patternFactory->getGroupsTranslations() as $groupName => $translations) {
             foreach ($translations as $translation) {
                 $setting = (new TrackerSetting())
                     ->setGroup(self::GROUP_TRANSLATIONS)

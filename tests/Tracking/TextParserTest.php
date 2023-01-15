@@ -39,7 +39,7 @@ class TextParserTest extends TestCase
         $regexes = new Regexes(
             $factory->getFalsePositives(),
             $factory->getOfferStatuses(),
-            $factory->getGroupTranslations(),
+            $factory->getGroupsTranslations(),
             $factory->getCleaners(),
         );
 

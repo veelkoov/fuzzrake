@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Tracking\Exception\TrackerException;
+use App\Tracking\OfferStatus\GroupsTranslator;
 use App\Tracking\OfferStatus\OfferStatus;
 use App\Tracking\Regex\PatternProvider;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
@@ -12,21 +13,16 @@ use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Match\Group;
 use TRegx\CleanRegex\Pattern;
 
-use function Psl\Vec\filter;
 use function Psl\Vec\map;
 
 class TextParser
 {
     /**
-     * @var Pattern[]
+     * @var list<Pattern>
      */
     private readonly array $offerStatusPatterns;
 
-    /**
-     * @var string[][]
-     */
-    private readonly array $groupTranslations;
-
+    private readonly GroupsTranslator $translator;
     private readonly TextPreprocessor $preprocessor;
 
     public function __construct(
@@ -34,7 +30,7 @@ class TextParser
     ) {
         $this->offerStatusPatterns = $provider->getOfferStatuses();
         $this->preprocessor = new TextPreprocessor($provider->getFalsePositives(), $provider->getCleaners());
-        $this->groupTranslations = $provider->getGroupTranslations();
+        $this->translator = $provider->getGroupsTranslator();
     }
 
     /**
@@ -56,7 +52,7 @@ class TextParser
     }
 
     /**
-     * @return Text[]
+     * @return list<Text>
      *
      * @throws TrackerException
      */
@@ -66,7 +62,7 @@ class TextParser
     }
 
     /**
-     * @return OfferStatus[]
+     * @return list<OfferStatus>
      *
      * @throws TrackerException
      */
@@ -78,7 +74,7 @@ class TextParser
             $statusPattern->match($text->getUnused())->forEach(function (Detail $match) use (&$result, $text): void {
                 $text->use($match->byteOffset(), $match->byteTail());
 
-                $this->appendOfferStatuses($match, $result);
+                $this->appendDetectedOfferStatuses($match, $result);
             });
         }
 
@@ -86,21 +82,21 @@ class TextParser
     }
 
     /**
-     * @param OfferStatus[] $result
+     * @param list<OfferStatus> $result
      *
      * @throws TrackerException
      */
-    private function appendOfferStatuses(Detail $match, array &$result): void
+    private function appendDetectedOfferStatuses(Detail $match, array &$result): void
     {
         $status = null;
         $offers = [];
 
-        $nonEmptyGroupNames = filter(map($match->namedGroups(), fn (Group $group) => $group->matched() ? $group->name() : null));
+        $matchedGroupNames = array_filter(map($match->namedGroups(), fn (Group $group) => $group->matched() ? $group->name() : null));
 
-        $detail = "{$match->text()} (groups: ".implode(', ', $nonEmptyGroupNames).')';
+        $detail = "{$match->text()} (groups: ".implode(', ', $matchedGroupNames).')';
 
-        foreach ($nonEmptyGroupNames as $groupName) {
-            foreach ($this->groupTranslations[$groupName] as $translation) {
+        foreach ($matchedGroupNames as $groupName) {
+            foreach ($this->translator->getOffersOrStatus($groupName) as $translation) {
                 if (str_starts_with($translation, 'STATUS:')) { // grep-offer-status-constants
                     if (null !== $status) {
                         throw new TrackerException("Double status caught in: $detail");

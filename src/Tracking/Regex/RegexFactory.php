@@ -33,7 +33,7 @@ class RegexFactory
     /**
      * @var array<string, string[]>
      */
-    private readonly array $groupTranslations;
+    private readonly array $groupsTranslations;
 
     /**
      * @var string[]
@@ -47,9 +47,9 @@ class RegexFactory
 
     public function __construct(array $trackerRegexes) // @phpstan-ignore-line TODO: Typehint that
     {
-        $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
+        $this->namedGroup = pattern('^\?P<(?P<name>[a-z_]+)>$', 'i');
 
-        $this->groupTranslations = $trackerRegexes['group_translations'];
+        $this->groupsTranslations = $trackerRegexes['matched_group_name_to_offers_or_status'];
         $this->loadPlaceholders($trackerRegexes['placeholders']);
         $this->loadFalsePositives($trackerRegexes['false_positives']);
         $this->loadOfferStatuses($trackerRegexes['offer_statuses']);
@@ -76,9 +76,9 @@ class RegexFactory
     /**
      * @return array<string, string[]>
      */
-    public function getGroupTranslations(): array
+    public function getGroupsTranslations(): array
     {
-        return $this->groupTranslations;
+        return $this->groupsTranslations;
     }
 
     /**
@@ -126,7 +126,7 @@ class RegexFactory
             try {
                 $groupName = $detail->get('name');
 
-                if (!array_key_exists($groupName, $this->groupTranslations)) {
+                if (!array_key_exists($groupName, $this->groupsTranslations)) {
                     throw new ConfigurationException("Unknown group under path: $path");
                 }
 
@@ -217,7 +217,7 @@ class RegexFactory
 
     private function validateGroupTranslations(): void
     {
-        foreach ($this->groupTranslations as $key => $translations) {
+        foreach ($this->groupsTranslations as $key => $translations) {
             if (!in_array($key, $this->usedGroupNames, true)) {
                 throw new ConfigurationException("Group translations for '$key' are not used");
             }

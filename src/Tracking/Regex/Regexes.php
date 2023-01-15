@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Tracking\Regex;
 
-class Regexes
+use App\Tracking\OfferStatus\GroupsTranslator;
+
+readonly class Regexes
 {
     /**
-     * @param string[]                $falsePositives
-     * @param string[]                $offerStatuses
-     * @param array<string, string[]> $groupTranslations
-     * @param string[]                $cleaners
+     * @param list<string>                $falsePositives
+     * @param list<string>                $offerStatuses
+     * @param array<string, list<string>> $groupsTranslations
+     * @param array<string, string>       $cleaners
      */
     public function __construct(
-        private readonly array $falsePositives,
-        private readonly array $offerStatuses,
-        private readonly array $groupTranslations,
-        private readonly array $cleaners,
+        public array $falsePositives,
+        public array $offerStatuses,
+        public array $groupsTranslations,
+        public array $cleaners,
     ) {
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getFalsePositives(): array
     {
@@ -29,7 +31,7 @@ class Regexes
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getOfferStatuses(): array
     {
@@ -37,18 +39,23 @@ class Regexes
     }
 
     /**
-     * @return array<string, string[]>
+     * @return array<string, list<string>>
      */
     public function getGroupTranslations(): array
     {
-        return $this->groupTranslations;
+        return $this->groupsTranslations;
     }
 
     /**
-     * @return string[]
+     * @return array<string, string>
      */
     public function getCleaners(): array
     {
         return $this->cleaners;
+    }
+
+    public function getGroupsTranslator(): GroupsTranslator
+    {
+        return new GroupsTranslator($this->groupsTranslations);
     }
 }

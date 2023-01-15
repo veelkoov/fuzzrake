@@ -4,63 +4,51 @@ declare(strict_types=1);
 
 namespace App\Tracking\Regex;
 
+use App\Tracking\OfferStatus\GroupsTranslator;
 use App\Utils\Regexp\Replacements;
 use TRegx\CleanRegex\Pattern;
+use TRegx\CleanRegex\PatternList;
 
 use function Psl\Vec\map;
 
-class PatternProvider
+readonly class PatternProvider
 {
     /**
-     * @var Pattern[]
+     * @var list<Pattern> TODO
      */
-    private readonly array $falsePositives;
+    private array $offerStatuses;
 
-    /**
-     * @var Pattern[]
-     */
-    private readonly array $offerStatuses;
-
-    /**
-     * @var string[][]
-     */
-    private readonly array $groupTranslations;
-
-    private readonly Replacements $cleaners;
+    private PatternList $falsePositives;
+    private GroupsTranslator $groupsTranslator;
+    private Replacements $cleaners;
 
     public function __construct(
         RegexesProvider $regexPersistence,
     ) {
         $regexes = $regexPersistence->getRegexes();
 
-        $this->groupTranslations = $regexes->getGroupTranslations();
-        $this->falsePositives = map($regexes->getFalsePositives(), fn ($item) => pattern($item, 'sn'));
+        $this->groupsTranslator = $regexes->getGroupsTranslator();
+        $this->falsePositives = Pattern::list(map($regexes->getFalsePositives(), fn ($item) => pattern($item, 'sn')));
         $this->offerStatuses = map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 'sn'));
         $this->cleaners = new Replacements($regexes->getCleaners(), 's', '', '');
     }
 
     /**
-     * @return Pattern[]
+     * @return list<Pattern>
      */
     public function getOfferStatuses(): array
     {
         return $this->offerStatuses;
     }
 
-    /**
-     * @return Pattern[]
-     */
-    public function getFalsePositives(): array
+    public function getFalsePositives(): PatternList
     {
         return $this->falsePositives;
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getGroupTranslations(): array
+    public function getGroupsTranslator(): GroupsTranslator
     {
-        return $this->groupTranslations;
+        return $this->groupsTranslator;
     }
 
     public function getCleaners(): Replacements
