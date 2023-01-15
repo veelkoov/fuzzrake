@@ -23,7 +23,7 @@ class HumanFriendly
     public function __construct()
     {
         $this->regexPatterns = Pattern::list(map(self::REGEX_PATTERNS, fn ($item) => pattern($item, 'i')));
-        $this->shortUrlPattern = Pattern::of('^https?://(www\.)?|/?$');
+        $this->shortUrlPattern = Pattern::of('^https?://(www\.)?|/?$', 'n');
     }
 
     public function shortUrl(string $url): string

@@ -28,6 +28,6 @@ class FieldData
 
     public function getValidationPattern(): ?Pattern
     {
-        return null === $this->validationRegexp ? null : ($this->validationPattern ??= pattern($this->validationRegexp));
+        return null === $this->validationRegexp ? null : ($this->validationPattern ??= pattern($this->validationRegexp, 'n'));
     }
 }
