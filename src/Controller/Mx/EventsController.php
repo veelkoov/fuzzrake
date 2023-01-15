@@ -11,10 +11,10 @@ use App\Form\Mx\EventType;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/events')]
@@ -49,7 +49,7 @@ class EventsController extends FuzzrakeAbstractController
             return $this->redirectToRoute(RouteName::EVENTS);
         }
 
-        return $this->renderForm('mx/events/edit.html.twig', [
+        return $this->render('mx/events/edit.html.twig', [
             'event'   => $event,
             'form'    => $form,
         ]);

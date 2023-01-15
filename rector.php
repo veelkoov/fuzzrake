@@ -12,6 +12,7 @@ use Rector\PHPUnit\Rector\MethodCall\GetMockBuilderGetMockToCreateMockRector;
 use Rector\PHPUnit\Set\PHPUnitLevelSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
+use Rector\Symfony\Rector\MethodCall\SimplifyFormRenderingRector;
 use Rector\Symfony\Set\SymfonyLevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\Transform\Rector\Attribute\AttributeKeyToClassConstFetchRector;
@@ -23,12 +24,12 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_81,
+        LevelSetList::UP_TO_PHP_82,
 
-        SymfonyLevelSetList::UP_TO_SYMFONY_60,
+        SymfonyLevelSetList::UP_TO_SYMFONY_62,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-        SymfonySetList::SYMFONY_STRICT,
+        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
 
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
         DoctrineSetList::DOCTRINE_DBAL_30,
@@ -47,5 +48,6 @@ return static function (RectorConfig $rectorConfig): void {
         GetMockBuilderGetMockToCreateMockRector::class, // Using createPartialMock leaves uninitialized properties
         AddDoesNotPerformAssertionToNonAssertingTestRector::class, // TODO
         ArraySpreadInsteadOfArrayMergeRector::class, // TODO
+        SimplifyFormRenderingRector::class, // TODO
     ]);
 };

@@ -11,11 +11,11 @@ use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Utils\Password;
 use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -65,7 +65,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
             }
         }
 
-        return $this->renderForm('iu_form/contact_and_password.html.twig', [
+        return $this->render('iu_form/contact_and_password.html.twig', [
             'form'               => $form,
             'errors'             => $form->getErrors(true),
             'noindex'            => true,

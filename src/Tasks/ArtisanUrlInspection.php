@@ -10,12 +10,12 @@ use App\Service\WebpageSnapshotManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
-final class ArtisanUrlInspection
+final readonly class ArtisanUrlInspection
 {
     public function __construct(
-        private readonly ArtisanUrlRepository $artisanUrlRepository,
-        private readonly WebpageSnapshotManager $webpageSnapshotManager,
-        private readonly SymfonyStyle $io,
+        private ArtisanUrlRepository $artisanUrlRepository,
+        private WebpageSnapshotManager $webpageSnapshotManager,
+        private SymfonyStyle $io,
     ) {
     }
 

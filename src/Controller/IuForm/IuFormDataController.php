@@ -9,11 +9,11 @@ use App\Form\InclusionUpdate\Data;
 use App\Utils\ArrayReader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -50,7 +50,7 @@ class IuFormDataController extends AbstractIuFormController
             return $this->redirectToStep(RouteName::IU_FORM_CONTACT_AND_PASSWORD, $state);
         }
 
-        return $this->renderForm('iu_form/data.html.twig', [
+        return $this->render('iu_form/data.html.twig', [
             'form'               => $form,
             'errors'             => $form->getErrors(true),
             'noindex'            => true,

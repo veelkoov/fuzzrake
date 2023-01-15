@@ -51,6 +51,6 @@ class StatusTrackerRunCommand extends Command
             $io->success('Finished without saving');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

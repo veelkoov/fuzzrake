@@ -1,10 +1,10 @@
-FROM php:8.1.14-fpm-alpine3.17
+FROM php:8.2.1-fpm-alpine3.17
 
 ARG DEV_MACHINE=no
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev linux-headers
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \

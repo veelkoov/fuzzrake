@@ -28,6 +28,6 @@ class DataRebuildRegexesCommand extends Command
 
         $io->success('Finished');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
