@@ -35,7 +35,7 @@ final class ValidationRegexps
     private const PAY_COMMENT = '( \([^)]+\))?';
     private const PAY_METHODS_LIST = 'Apple Pay|Bank transfers|BLIK'
         .'|Cash|Cash App|Checks|Cashier\'s checks|Crypto'
-        .'|Credit/debit cards'.'|Credit cards'.'|Debit cards'
+        .'|Credit/debit cards|Credit cards|Debit cards'
         .'|Depop|Etsy Payments|E-transfers|Google Pay|Interac e-Transfer|Ko-fi|Money orders|Other'
         .'|PayID|PayPal|Revolut|SEPA|Square|Stripe|Swish|Venmo|Vipps|VISA|Wise|Zelle';
     final public const PAY_METHODS = '^((?<=\n|^)('.self::PAY_METHODS_LIST.')'.self::PAY_COMMENT.'(\n|(?=$)))*$';

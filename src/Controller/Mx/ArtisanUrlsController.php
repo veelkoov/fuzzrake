@@ -7,8 +7,8 @@ namespace App\Controller\Mx;
 use App\DataDefinitions\Fields\Fields;
 use App\Repository\ArtisanUrlRepository;
 use App\ValueObject\Routing\RouteName;
-use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/mx/artisan_urls')]

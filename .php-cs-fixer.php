@@ -9,11 +9,13 @@ $finder = (new PhpCsFixer\Finder())
 
 return (new PhpCsFixer\Config())
     ->setRules([
-        '@Symfony'               => true,
-        'binary_operator_spaces' => [
-            'operators' => ['=>' => 'align_single_space'],
+        '@Symfony'                => true,
+        'binary_operator_spaces'  => false,
+        'global_namespace_import' => true, // Added to @Symfony, lots of changes, consider after learning "why"
+        'ordered_imports'         => [
+            'sort_algorithm' => 'alpha',
+            'imports_order'  => ['const', 'class', 'function'],
         ],
-        'ordered_imports' => ['sort_algorithm' => 'alpha', 'imports_order' => ['const', 'class', 'function']],
     ])
     ->setFinder($finder)
 ;
