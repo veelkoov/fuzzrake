@@ -37,19 +37,19 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
-    public function testLast20SubmissionsBeingShown(): void
+    public function testLast50SubmissionsBeingShown(): void
     {
         $client = self::createClient();
 
-        $this->generateRandomFakeSubmissions(19);
+        $this->generateRandomFakeSubmissions(49);
 
         $crawler = $client->request('GET', '/mx/submissions/');
-        self::assertCount(19, $crawler->filter('table tbody tr'));
+        self::assertCount(49, $crawler->filter('table tbody tr'));
 
         $this->generateRandomFakeSubmissions(2);
 
         $crawler = $client->request('GET', '/mx/submissions/');
-        self::assertCount(20, $crawler->filter('table tbody tr'));
+        self::assertCount(50, $crawler->filter('table tbody tr'));
     }
 
     /**
