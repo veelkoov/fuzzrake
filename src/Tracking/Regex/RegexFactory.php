@@ -13,7 +13,6 @@ use TRegx\CleanRegex\Pattern;
 
 class RegexFactory
 {
-    private readonly Pattern $unnamed;
     private readonly Pattern $namedGroup;
 
     /**
@@ -49,7 +48,6 @@ class RegexFactory
     public function __construct(array $trackerRegexes) // @phpstan-ignore-line TODO: Typehint that
     {
         $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
-        $this->unnamed = pattern('(?<!\\\\\\\\\\\\)(?<!\\\\)\\((?!\\?)'); // Known issue: can't be more than 3 "\" before the "("
 
         $this->groupTranslations = $trackerRegexes['group_translations'];
         $this->loadPlaceholders($trackerRegexes['placeholders']);
@@ -191,7 +189,6 @@ class RegexFactory
     {
         $this->falsePositives = $falsePositives;
         $this->resolvePlaceholders($this->falsePositives);
-        $this->setUnnamedToNoncaptured($this->falsePositives);
         $this->validateRegexes($this->falsePositives);
     }
 
@@ -202,7 +199,6 @@ class RegexFactory
     {
         $this->offerStatuses = $offerStatuses;
         $this->resolvePlaceholders($this->offerStatuses);
-        $this->setUnnamedToNoncaptured($this->offerStatuses);
         $this->validateRegexes($this->offerStatuses);
     }
 
@@ -239,16 +235,6 @@ class RegexFactory
                     throw new ConfigurationException("Group translations for '$key' contain non-string items");
                 }
             }
-        }
-    }
-
-    /**
-     * @param string[] $regexes
-     */
-    private function setUnnamedToNoncaptured(array &$regexes): void
-    {
-        foreach ($regexes as &$regex) {
-            $regex = $this->unnamed->replace($regex)->with('(?:');
         }
     }
 

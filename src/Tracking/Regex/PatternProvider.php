@@ -34,8 +34,8 @@ class PatternProvider
         $regexes = $regexPersistence->getRegexes();
 
         $this->groupTranslations = $regexes->getGroupTranslations();
-        $this->falsePositives = map($regexes->getFalsePositives(), fn ($item) => pattern($item, 's'));
-        $this->offerStatuses = map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 's'));
+        $this->falsePositives = map($regexes->getFalsePositives(), fn ($item) => pattern($item, 'sn'));
+        $this->offerStatuses = map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 'sn'));
         $this->cleaners = new Replacements($regexes->getCleaners(), 's', '', '');
     }
 

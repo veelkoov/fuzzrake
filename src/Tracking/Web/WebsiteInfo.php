@@ -20,7 +20,7 @@ class WebsiteInfo
     private const FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING = '<title>System Error</title>';
 
     private const TRELLO_BOARD_URL_REGEXP = '^https?://trello.com/b/(?<boardId>[a-zA-Z0-9]+)/';
-    private const INSTAGRAM_URL_REGEXP = '^https?://(?:www\.)?instagram\.com/(?<username>[^/]+)/?$';
+    private const INSTAGRAM_URL_REGEXP = '^https?://(www\.)?instagram\.com/(?<username>[^/]+)/?$';
 
     private readonly Detector $detector;
     private readonly Pattern $trelloBoardUrlPattern;
@@ -30,8 +30,8 @@ class WebsiteInfo
     {
         $this->detector = new Detector();
 
-        $this->trelloBoardUrlPattern = pattern(self::TRELLO_BOARD_URL_REGEXP);
-        $this->instagramUrlPattern = pattern(WebsiteInfo::INSTAGRAM_URL_REGEXP);
+        $this->trelloBoardUrlPattern = pattern(self::TRELLO_BOARD_URL_REGEXP, 'n');
+        $this->instagramUrlPattern = pattern(WebsiteInfo::INSTAGRAM_URL_REGEXP, 'n');
     }
 
     public static function getTrelloBoardDataUrl(string $boardId): string
