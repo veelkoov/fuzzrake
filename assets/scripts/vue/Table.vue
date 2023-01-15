@@ -1,4 +1,5 @@
 <template>
+  <div id="data-table-container-closest">
   <table id="artisans" class="table table-striped table-sm table-hover">
     <thead class="table-dark">
       <tr>
@@ -143,6 +144,7 @@
       </tr></template>
     </tbody>
   </table>
+  </div>
 
   <p id="artisans-table-count" class="small">Displaying {{ artisans.length }} out of {{
       Static.getTotalArtisansCount()

@@ -161,7 +161,7 @@
             <h5>Commissions status</h5>
           </div>
 
-          <div v-if="!artisan.commissionsUrls" class="col-md-12 p-1">
+          <div v-if="0 === artisan.commissionsUrls.length" class="col-md-12 p-1">
             <p>Commissions status is not being tracked.</p>
 
             <p><a :href="Static.getTrackingUrl()" target="_blank">Learn more</a></p>
