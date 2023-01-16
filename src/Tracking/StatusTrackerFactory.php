@@ -6,7 +6,7 @@ namespace App\Tracking;
 
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
-use App\Tracking\OfferStatus\OfferStatusProcessor;
+use App\Tracking\OfferStatus\OffersStatusesProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -18,7 +18,7 @@ class StatusTrackerFactory
         private readonly ArtisanRepository $artisanRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly WebpageSnapshotManager $webpageSnapshotManager,
-        private readonly OfferStatusProcessor $offerStatusProcessor,
+        private readonly OffersStatusesProcessor $offerStatusProcessor,
     ) {
     }
 

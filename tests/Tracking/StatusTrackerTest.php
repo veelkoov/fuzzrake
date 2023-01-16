@@ -8,8 +8,8 @@ use App\Entity\ArtisanCommissionsStatus;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
 use App\Tests\TestUtils\Cases\TestCase;
+use App\Tracking\OfferStatus\OffersStatusesProcessor;
 use App\Tracking\OfferStatus\OfferStatus;
-use App\Tracking\OfferStatus\OfferStatusProcessor;
 use App\Tracking\StatusTracker;
 use App\Tracking\TextParser;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
@@ -201,7 +201,7 @@ class StatusTrackerTest extends TestCase
 
         $emMock = $this->createMock(EntityManagerInterface::class);
 
-        $processor = new OfferStatusProcessor($parserMock);
+        $processor = new OffersStatusesProcessor($parserMock);
         $ioMock = $this->createMock(SymfonyStyle::class);
 
         return new StatusTracker($loggerMock, $emMock, $artisanRepoMock, $processor, $snapshotsMock, false, $ioMock);

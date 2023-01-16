@@ -14,7 +14,7 @@ use function Psl\Vec\map;
 readonly class PatternProvider
 {
     /**
-     * @var list<Pattern> TODO
+     * @var list<Pattern>
      */
     private array $offerStatuses;
 

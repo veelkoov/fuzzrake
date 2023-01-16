@@ -20,7 +20,7 @@ class RegexPersistence implements RegexesProvider
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly TrackerSettingRepository $settingRepository,
-        private readonly RegexFactory $patternFactory,
+        private readonly RegexFactory $regexFactory,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -61,7 +61,7 @@ class RegexPersistence implements RegexesProvider
     {
         $this->settingRepository->removeAll();
 
-        foreach ($this->patternFactory->getOfferStatuses() as $regex) {
+        foreach ($this->regexFactory->getOfferStatuses() as $regex) {
             $setting = (new TrackerSetting())
                 ->setGroup(self::GROUP_REGEXES)
                 ->setKey(self::KEY_OFFER_STATUS)
@@ -70,7 +70,7 @@ class RegexPersistence implements RegexesProvider
             $this->entityManager->persist($setting);
         }
 
-        foreach ($this->patternFactory->getFalsePositives() as $regex) {
+        foreach ($this->regexFactory->getFalsePositives() as $regex) {
             $setting = (new TrackerSetting())
                 ->setGroup(self::GROUP_REGEXES)
                 ->setKey(self::KEY_FALSE_POSITIVE)
@@ -79,7 +79,7 @@ class RegexPersistence implements RegexesProvider
             $this->entityManager->persist($setting);
         }
 
-        foreach ($this->patternFactory->getGroupsTranslations() as $groupName => $translations) {
+        foreach ($this->regexFactory->getGroupsTranslations() as $groupName => $translations) {
             foreach ($translations as $translation) {
                 $setting = (new TrackerSetting())
                     ->setGroup(self::GROUP_TRANSLATIONS)
@@ -90,7 +90,7 @@ class RegexPersistence implements RegexesProvider
             }
         }
 
-        foreach ($this->patternFactory->getCleaners() as $subject => $replacement) {
+        foreach ($this->regexFactory->getCleaners() as $subject => $replacement) {
             $setting = (new TrackerSetting())
                 ->setGroup(self::GROUP_CLEANERS)
                 ->setKey($subject)

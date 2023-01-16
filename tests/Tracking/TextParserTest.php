@@ -34,7 +34,7 @@ class TextParserTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $trackerRegexes = DataDefinitions::get('tracker_regexes.yaml', 'tracker_regexes');
-        $factory = new RegexFactory($trackerRegexes);
+        $factory = new RegexFactory($trackerRegexes); // @phpstan-ignore-line - Data structures
 
         $regexes = new Regexes(
             $factory->getFalsePositives(),

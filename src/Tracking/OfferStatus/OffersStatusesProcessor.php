@@ -10,7 +10,7 @@ use App\Tracking\TextParser;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use TRegx\SafeRegex\Exception\RuntimePregException;
 
-class OfferStatusProcessor
+class OffersStatusesProcessor
 {
     public function __construct(
         private readonly TextParser $parser,
@@ -18,9 +18,9 @@ class OfferStatusProcessor
     }
 
     /**
-     * @param Snapshot[] $snapshots
+     * @param list<Snapshot> $snapshots
      */
-    public function getOfferStatuses(array $snapshots): OfferStatusResult
+    public function getOffersStatuses(array $snapshots): OffersStatusesResult
     {
         $intermediate = $this->getAllOfferStatuses($snapshots);
 
@@ -28,9 +28,9 @@ class OfferStatusProcessor
     }
 
     /**
-     * @param Snapshot[] $snapshots
+     * @param list<Snapshot> $snapshots
      */
-    private function getAllOfferStatuses(array $snapshots): OfferStatusResult
+    private function getAllOfferStatuses(array $snapshots): OffersStatusesResult
     {
         $statuses = [];
         $issues = [];
@@ -49,24 +49,23 @@ class OfferStatusProcessor
                 }
 
                 array_push($statuses, ...$allOfferStatuses);
-            } /* @noinspection PhpRedundantCatchClauseInspection */
-            catch (TrackerException|RuntimePregException $exception) {
+            } catch (TrackerException|RuntimePregException $exception) {
                 $issues[] = new Issue('Exception caught while detecting statuses in URL', url: $snapshot->url, exception: $exception);
                 $csTrackerIssue = true;
             }
         }
 
-        return new OfferStatusResult($statuses, $lastCsUpdate, $csTrackerIssue, $issues);
+        return new OffersStatusesResult($statuses, $lastCsUpdate, $csTrackerIssue, $issues);
     }
 
-    private function getResolvedOfferStatuses(OfferStatusResult $input): OfferStatusResult
+    private function getResolvedOfferStatuses(OffersStatusesResult $input): OffersStatusesResult
     {
         $statuses = [];
         $issues = $input->issues;
         $lastCsUpdate = $input->lastCsUpdate;
         $csTrackerIssue = $input->csTrackerIssue;
 
-        foreach ($input->offerStatuses as $offerStatus) {
+        foreach ($input->offersStatuses as $offerStatus) {
             if (!array_key_exists($offerStatus->offer, $statuses)) {
                 // This is a status for an offer we didn't have previously
                 $statuses[$offerStatus->offer] = $offerStatus;
@@ -97,6 +96,8 @@ class OfferStatusProcessor
             }
         }
 
-        return new OfferStatusResult(array_filter($statuses), $lastCsUpdate, $csTrackerIssue, $issues);
+        $statuses = array_values(array_filter($statuses)); // Get rid of any nulls coming from contradicting statuses
+
+        return new OffersStatusesResult($statuses, $lastCsUpdate, $csTrackerIssue, $issues);
     }
 }

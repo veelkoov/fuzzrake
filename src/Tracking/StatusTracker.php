@@ -10,9 +10,9 @@ use App\Entity\EventFactory;
 use App\IuHandling\Changes\Description;
 use App\Repository\ArtisanRepository;
 use App\Service\WebpageSnapshotManager;
+use App\Tracking\OfferStatus\OffersStatusesProcessor;
+use App\Tracking\OfferStatus\OffersStatusesResult;
 use App\Tracking\OfferStatus\OfferStatus;
-use App\Tracking\OfferStatus\OfferStatusProcessor;
-use App\Tracking\OfferStatus\OfferStatusResult;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
@@ -34,7 +34,7 @@ class StatusTracker
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly ArtisanRepository $repository,
-        private readonly OfferStatusProcessor $processor,
+        private readonly OffersStatusesProcessor $processor,
         private readonly WebpageSnapshotManager $snapshots,
         private readonly bool $refetch,
         private readonly SymfonyStyle $io,
@@ -51,7 +51,7 @@ class StatusTracker
             $urls = $artisan->getUrlObjs(Field::URL_COMMISSIONS);
             $snapshots = map($urls, fn (ArtisanUrl $url): Snapshot => $this->snapshots->get($url, false));
 
-            $offerStatusResult = $this->processor->getOfferStatuses($snapshots);
+            $offerStatusResult = $this->processor->getOffersStatuses($snapshots);
             $this->logIssues($offerStatusResult, $artisan);
 
             $updates = $this->applyUpdatesFor($artisan, $offerStatusResult);
@@ -59,7 +59,7 @@ class StatusTracker
         }
     }
 
-    private function applyUpdatesFor(Artisan $artisan, OfferStatusResult $offerStatuses): Description
+    private function applyUpdatesFor(Artisan $artisan, OffersStatusesResult $offerStatuses): Description
     {
         $before = clone $artisan;
 
@@ -67,7 +67,7 @@ class StatusTracker
         $artisan->setCsLastCheck($offerStatuses->lastCsUpdate);
 
         foreach ([true, false] as $status) {
-            $offersMatchingStatus = array_filter($offerStatuses->offerStatuses, fn (OfferStatus $item): bool => $item->status === $status);
+            $offersMatchingStatus = array_filter($offerStatuses->offersStatuses, fn (OfferStatus $item): bool => $item->status === $status);
 
             $newValue = StringList::pack(map($offersMatchingStatus, fn (OfferStatus $item): string => ucfirst(strtolower($item->offer))));
 
@@ -92,7 +92,7 @@ class StatusTracker
         ));
     }
 
-    private function logIssues(OfferStatusResult $resolvedOfferStatuses, Artisan $artisan): void
+    private function logIssues(OffersStatusesResult $resolvedOfferStatuses, Artisan $artisan): void
     {
         foreach ($resolvedOfferStatuses->issues as $issue) {
             $context = merge($issue->toLogContext(), ['artisan' => (string) $artisan]);

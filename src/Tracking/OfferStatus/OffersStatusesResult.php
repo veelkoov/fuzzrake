@@ -7,14 +7,14 @@ namespace App\Tracking\OfferStatus;
 use App\Tracking\Issue;
 use DateTimeImmutable;
 
-class OfferStatusResult
+class OffersStatusesResult
 {
     /**
-     * @param OfferStatus[] $offerStatuses
-     * @param Issue[]       $issues
+     * @param list<OfferStatus> $offersStatuses
+     * @param list<Issue>       $issues
      */
     public function __construct(
-        public readonly array $offerStatuses,
+        public readonly array $offersStatuses,
         public readonly ?DateTimeImmutable $lastCsUpdate,
         public readonly bool $csTrackerIssue,
         public readonly array $issues,

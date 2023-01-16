@@ -17,7 +17,7 @@ parameters:
       - 'OFFER status: STATUS_ANY ?</h1>\s*<h1[^>]*> ?MONTHS'
       - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
 
-    offer_statuses:
+    offers_statuses:
       - "(?P<status_open>you can still submit a QUOTES form if you're interested)"
       - 'WE_ARE STATUS_ANY COMMISSIONS'
       - '(C___S\s*[:-]\s*)?STATUS_ANY for (new )?OFFER'
@@ -40,73 +40,71 @@ parameters:
         - 'STATUS_OPEN'
         - 'STATUS_CLOSED'
 
-      'STATUS_OPEN':
-        - '?P<status_open>' # TODO: make the group name in some other way...
+      '?P<status_open>STATUS_OPEN':
         - 'open(?!ing)'
         - 'only making'
         - 'taking'
 
-      'STATUS_CLOSED':
-        - '?P<status_closed>'
+      '?P<status_closed>STATUS_CLOSED':
         - 'closed?'
         - 'not (NOW )?(taking on|accepting|open for)'
         - "don't (do|take|provide)"
 
       'OFFER':
-        - 'HANDPAWS&SOCKPAWS':
-            - '?P<hadpaws_and_sockpaws_commissions>'
-            - 'handpaws_AND_sockpaws C___S'
-        - 'PARTS&REFURBISHMENTS':
-            - '?P<parts_and_refurbishments>'
-            - 'parts_AND_refurbishments C___S'
-        - 'COMMISSIONS&QUOTES':
-            - '?P<commissions_and_quotes>'
-            - '(C___S_AND_quotes?)'
-            - '(quotes?_AND_C___S)'
-        - 'FULLSUIT_COMMISSIONS':
-            - '?P<fullsuit_commissions>'
-            - 'fullsuit C___S'
-        - 'PARTIAL_COMMISSIONS':
-            - '?P<partial_commissions>'
-            - 'partial C___S'
-        - 'HEAD_COMMISSIONS':
-            - '?P<head_commissions>'
-            - 'head C___S'
-        - 'PARTS':
-            - '?P<parts>'
-            - '(fursuit )?parts? C___S'
-        - 'COMMISSIONS':
-            - '?P<commissions>'
-            - '(custom )?(costume |fursuit )?C___S'
-            - '(custom |C___S )?slots?'
-            - 'fursuits?( queue)?'
-            - 'comms'
-            - 'current mode' # tc052
-            - 'projects'
-        - 'TRADES':
-            - '?P<trades>'
-            - 'trades?'
-        - 'REFURBISHMENTS':
-            - '?P<refurbishments>'
-            - 'refurbishments?'
-        - 'PRE-MADES':
-            - '?P<premades>'
-            - 'pre-?mades?( designs?)?'
-        - 'ARTISTIC_LIBERTY':
-            - '?P<artistic_liberty>'
-            - 'artistic liberty'
-        - 'QUOTES':
-            - '?P<quotes>'
-            - 'quotes?'
-        - 'ORDERS':
-            - '?P<orders>'
-            - '(custom )?orders?'
+        '?P<hadpaws_and_sockpaws_commissions>HANDPAWS&SOCKPAWS':
+          - 'handpaws_AND_sockpaws C___S'
+
+        '?P<parts_and_refurbishments>PARTS&REFURBISHMENTS':
+          - 'parts_AND_refurbishments C___S'
+
+        '?P<commissions_and_quotes>COMMISSIONS&QUOTES':
+          - '(C___S_AND_quotes?)'
+          - '(quotes?_AND_C___S)'
+
+        '?P<fullsuit_commissions>FULLSUIT_COMMISSIONS':
+          - 'fullsuit C___S'
+
+        '?P<partial_commissions>PARTIAL_COMMISSIONS':
+          - 'partial C___S'
+
+        '?P<head_commissions>HEAD_COMMISSIONS':
+          - 'head C___S'
+
+        '?P<parts>PARTS':
+          - '(fursuit )?parts? C___S'
+
+        '?P<commissions>COMMISSIONS':
+          - '(custom )?(costume |fursuit )?C___S'
+          - '(custom |C___S )?slots?'
+          - 'fursuits?( queue)?'
+          - 'comms'
+          - 'current mode' # tc052
+          - 'projects'
+
+        '?P<trades>TRADES':
+          - 'trades?'
+
+        '?P<refurbishments>REFURBISHMENTS':
+          - 'refurbishments?'
+
+        '?P<premades>PRE-MADES':
+          - 'pre-?mades?( designs?)?'
+
+        '?P<artistic_liberty>ARTISTIC_LIBERTY':
+          - 'artistic liberty'
+
+        '?P<quotes>QUOTES':
+          - 'quotes?'
+
+        '?P<orders>ORDERS':
+          - '(custom )?orders?'
 
       '_AND_':
         - ' and '
         - ' ?(&amp;|/) ?'
 
-      'C___S': 'comm?iss?ions?' # Not including "comms"
+      'C___S':
+        - 'comm?iss?ions?' # Not including "comms"
 
       'NOW':
         - 'currently'

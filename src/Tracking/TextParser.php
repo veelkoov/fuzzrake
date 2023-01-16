@@ -34,7 +34,7 @@ class TextParser
     }
 
     /**
-     * @return OfferStatus[]
+     * @return list<OfferStatus>
      *
      * @throws TrackerException
      */
