@@ -142,7 +142,7 @@ class Data extends BaseForm
             ->add('productionModels', ChoiceType::class, [
                 'label'    => 'What do you do?',
                 'required' => false,
-                'choices'  => ProductionModels::getValues(),
+                'choices'  => ProductionModels::getFormChoices(),
                 'multiple' => true,
                 'expanded' => true,
             ])
@@ -156,7 +156,7 @@ class Data extends BaseForm
             ->add('styles', ChoiceType::class, [
                 'label'    => 'What styles do you manufacture?',
                 'required' => false,
-                'choices'  => Styles::getValues(),
+                'choices'  => Styles::getFormChoices(),
                 'multiple' => true,
                 'expanded' => true,
             ])
@@ -177,7 +177,7 @@ class Data extends BaseForm
             ->add('orderTypes', ChoiceType::class, [
                 'label'    => 'What kind of fursuits/items do you sell?',
                 'required' => false,
-                'choices'  => OrderTypes::getValues(),
+                'choices'  => OrderTypes::getFormChoices(),
                 'multiple' => true,
                 'expanded' => true,
             ])
@@ -198,7 +198,7 @@ class Data extends BaseForm
             ->add('features', ChoiceType::class, [
                 'label'    => 'What features do you support?',
                 'required' => false,
-                'choices'  => Features::getValues(),
+                'choices'  => Features::getFormChoices(),
                 'multiple' => true,
                 'expanded' => true,
             ])
