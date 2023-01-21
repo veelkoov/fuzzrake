@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import ColumnsManager from '../main/ColumnsManager';
+import {Options, Vue} from 'vue-class-component';
+import ColumnsManager from '../../main/ColumnsManager';
 
 @Options({
   props: {

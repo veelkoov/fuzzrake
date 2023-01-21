@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts">
-import Artisan from '../class/Artisan';
+import Artisan from '../../class/Artisan';
 import Unknown from './Unknown.vue';
-import {ADULTS, MINORS, MIXED} from '../consts';
+import {ADULTS, MINORS, MIXED} from '../../consts';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({

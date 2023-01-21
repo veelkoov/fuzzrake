@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts">
-import Artisan from '../class/Artisan';
-import Static from '../Static';
-import {getMessageBus} from '../main/MessageBus';
+import Artisan from '../../class/Artisan';
+import Static from '../../Static';
+import {getMessageBus} from '../../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({

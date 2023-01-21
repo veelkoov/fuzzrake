@@ -1,6 +1,7 @@
 <template>
+  <FiltersPopUp />
   <UpdatesPopUp />
-  <ArtisanCardPopUp />
+  <CardPopUp />
 
   <div id="data-table-content-container" style="display: none;">
     <div v-if="config.getMakerMode()" class="card border-danger mb-3">
@@ -40,20 +41,21 @@
         </div>
       </div>
 
-      <Table :search=search :columns=columns />
+      <DataTable :search=search :columns=columns />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
-import ArtisanCardPopUp from './ArtisanCardPopUp.vue';
-import ColumnsController from './ColumnsController.vue';
+import CardPopUp from './main/card/CardPopUp.vue';
+import ColumnsController from './main/ColumnsController.vue';
 import ColumnsManager from '../main/ColumnsManager';
+import DataTable from './main/table/DataTable.vue';
+import FiltersPopUp from './main/filters/FiltersPopUp.vue';
 import Search from '../main/Search';
 import Static from '../Static';
-import Table from './Table.vue';
-import UpdatesPopUp from './UpdatesPopUp.vue';
+import UpdatesPopUp from './main/UpdatesPopUp.vue';
 import {getMessageBus} from '../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
@@ -64,9 +66,10 @@ import {Options, Vue} from 'vue-class-component';
     },
   },
   components: {
-    ArtisanCardPopUp,
+    CardPopUp,
     ColumnsController,
-    Table,
+    DataTable,
+    FiltersPopUp,
     UpdatesPopUp,
   },
 })

@@ -239,15 +239,15 @@
 </template>
 
 <script lang="ts">
-import AgesDescription from './AgesDescription.vue';
-import Artisan from '../class/Artisan';
+import AgesDescription from '../AgesDescription.vue';
+import Artisan from '../../../class/Artisan';
 import CardLink from './CardLink.vue';
-import Optional from './Optional.vue';
-import OptionalList from './OptionalList.vue';
-import Static from '../Static';
-import Unknown from './Unknown.vue';
+import Optional from './../Optional.vue';
+import OptionalList from './../OptionalList.vue';
+import Static from '../../../Static';
+import Unknown from './../Unknown.vue';
 import {Options, Vue} from 'vue-class-component';
-import MessageBus, {getMessageBus} from '../main/MessageBus';
+import MessageBus, {getMessageBus} from '../../../main/MessageBus';
 
 @Options({
   components: {AgesDescription, CardLink, Optional, Unknown, OptionalList},

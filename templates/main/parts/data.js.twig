@@ -1,11 +1,12 @@
-{% cache 'parts_data.js' %}
+{# TODO: Cache? #}
 
 var MAKER_IDS_MAP = null;
 var VISIBLE_SPECIES = null;
 var TOTAL_ARTISANS_COUNT = null;
+var REGIONS = null;
 
 window.loadFuzzrakeData = function () {
-    MAKER_IDS_MAP = {
+    MAKER_IDS_MAP = { {# TODO: Remove necessity for maker IDs map https://github.com/veelkoov/fuzzrake/issues/180 #}
         {% for old, new in makerIdsMap %}
             '{{ old }}': '{{ new }}',
         {% endfor %}
@@ -13,19 +14,35 @@ window.loadFuzzrakeData = function () {
 
     VISIBLE_SPECIES = {
         {% macro species_json(species) %}
-            {% for specie in species %}
-                {% if not specie.hidden %}
+            {%- for specie in species -%}
+                {%- if not specie.hidden -%}
                     '{{ specie.name }}': {
                         {{ _self.species_json(specie.children) }}
-                    }{% if not loop.last %},{% endif %}
-                {% endif %}
-            {% endfor %}
+                    },
+                {%- endif -%}
+            {%- endfor -%}
         {% endmacro %}
 
         {{ _self.species_json(species) }}
     };
 
+    REGIONS = [
+        {%- for region in filters.countries.items -%}
+            {
+                'name': '{{ region.label }}',
+                'm_count': '{{ region.count }}',
+                'countries': [
+                    {%- for country in region.value.items -%}
+                        {
+                            'value': '{{ country.value }}',
+                            'label': '{{ country.label }}',
+                            'm_count': {{ country.count }}
+                        },
+                    {%- endfor -%}
+                ]
+            },
+        {%- endfor -%}
+    ];
+
     TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
 }
-
-{% endcache %}

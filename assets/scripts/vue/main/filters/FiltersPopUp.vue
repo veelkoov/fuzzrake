@@ -1,0 +1,31 @@
+<template>
+  <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content" id="filters-top">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filtersTitle">
+            Filters
+          </h5>
+          <span>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
+          </span>
+        </div>
+        <div class="modal-body" id="filters-body">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {Options, Vue} from 'vue-class-component';
+
+@Options({
+  props: {
+  }
+})
+export default class CardLink extends Vue {
+
+}
+</script>

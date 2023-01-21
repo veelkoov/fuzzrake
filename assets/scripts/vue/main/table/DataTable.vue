@@ -152,14 +152,14 @@
 </template>
 
 <script lang="ts">
-import AgesDescription from './AgesDescription.vue';
-import Artisan from '../class/Artisan';
-import ColumnsManager from '../main/ColumnsManager';
-import MessageBus, {getMessageBus} from '../main/MessageBus';
-import Search from '../main/Search';
-import Static from '../Static';
+import AgesDescription from '../AgesDescription.vue';
+import Artisan from '../../../class/Artisan';
+import ColumnsManager from '../../../main/ColumnsManager';
+import MessageBus, {getMessageBus} from '../../../main/MessageBus';
+import Search from '../../../main/Search';
+import Static from '../../../Static';
 import TblLink from './TblLink.vue';
-import {DataRow} from '../main/DataManager';
+import {DataRow} from '../../../main/DataManager';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
