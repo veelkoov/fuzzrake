@@ -2,7 +2,10 @@ declare const DATA_BRIDGE: { [key: string]: string };
 
 declare const MAKER_IDS_MAP: object;
 declare const VISIBLE_SPECIES: object;
+declare const REGIONS: object;
 declare const TOTAL_ARTISANS_COUNT: number;
+
+export type Regions = [{ 'name': String, 'm_count': Number, 'countries': [{ 'value': String, 'label': String, 'm_count': Number }] }];
 
 export default abstract class Static {
     public static getMainUrl(): string {
@@ -51,6 +54,11 @@ export default abstract class Static {
 
     public static getVisibleSpecies(): object {
         return VISIBLE_SPECIES;
+    }
+
+    public static getRegions(): Regions {
+        // @ts-ignore
+        return REGIONS;
     }
 
     public static showLoadingIndicator(): void {

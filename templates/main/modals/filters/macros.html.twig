@@ -1,33 +1,7 @@
-{% macro filter_checkbox(group_name, value, label, count, label_html_prefix = '', label_html_suffix = '') %}
-    {% set checkboxId = group_name ~ 'CheckBox' ~ get_global_counter().next() %}
-
-    <input class="form-check-input" type="checkbox" id="{{ checkboxId }}" name="{{ group_name }}[]"
-           value="{{ value }}" data-label="{{ label }}">
-
-    <label class="form-check-label" for="{{ checkboxId }}">
-        {{ label_html_prefix|raw }} {{ label }} {{ label_html_suffix|raw }}
-        {% if count is not null %}<span class="count">({{ count }})</span>{% endif %}
-    </label>
-{% endmacro %}
-
-{% macro filter_checkbox_wrapped(group_name, value, label, count, label_html_prefix = '') %}
-    <div class="form-check form-check-inline">
-        {{ _self.filter_checkbox(group_name, value, label, count, label_html_prefix) }}
-    </div>
-{% endmacro %}
-
 {% macro filter_special_items_wrapped(filter_data, group_name) %}
     {% for item in filter_data.specialItems %}
         {{ _self.filter_checkbox_wrapped(group_name, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
     {% endfor %}
-{% endmacro %}
-
-{% macro filter_all_none_invert(class) %}
-    <span class="allNoneInvert {{ class }}" aria-hidden="true">
-        select: <a data-action="all" href="">all</a>
-        &bull; <a data-action="none" href="">none</a>
-        &bull; <a data-action="invert" href="">invert</a>
-    </span>
 {% endmacro %}
 
 {% macro ctrl_button(id_part, label) %}
