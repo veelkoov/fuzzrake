@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Filtering\FiltersData\Builder\MutableItem;
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\Counter;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
-use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
@@ -85,15 +85,15 @@ class AppExtensions extends AbstractExtension
     }
 
     /**
-     * @param Item[] $items
+     * @param MutableItem[] $items
      *
-     * @return Item[]
+     * @return MutableItem[]
      */
     public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         $pattern = Patterns::getI($matchWord);
 
-        return array_filter($items, fn (Item $item) => $pattern->test($item->getLabel()));
+        return array_filter($items, fn (MutableItem $item) => $pattern->test($item->label));
     }
 
     public function filterFilterByQuery(string $input, DataQuery $query): string

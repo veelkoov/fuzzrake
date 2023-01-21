@@ -11,7 +11,7 @@ import {Options, Vue} from 'vue-class-component';
 
 @Options({
   props: {
-    class: String,
+    class: {type: String, required: true},
   },
 })
 export default class AllNoneInvertLinks extends Vue {

@@ -3,7 +3,7 @@
 var MAKER_IDS_MAP = null;
 var VISIBLE_SPECIES = null;
 var TOTAL_ARTISANS_COUNT = null;
-var REGIONS = null;
+var FILTERS_DATA = null;
 
 window.loadFuzzrakeData = function () {
     MAKER_IDS_MAP = { {# TODO: Remove necessity for maker IDs map https://github.com/veelkoov/fuzzrake/issues/180 #}
@@ -26,23 +26,7 @@ window.loadFuzzrakeData = function () {
         {{ _self.species_json(species) }}
     };
 
-    REGIONS = [
-        {%- for region in filters.countries.items -%}
-            {
-                'name': '{{ region.label }}',
-                'm_count': '{{ region.count }}',
-                'countries': [
-                    {%- for country in region.value.items -%}
-                        {
-                            'value': '{{ country.value }}',
-                            'label': '{{ country.label }}',
-                            'm_count': {{ country.count }}
-                        },
-                    {%- endfor -%}
-                ]
-            },
-        {%- endfor -%}
-    ];
+    FILTERS_DATA = {{ filters|json_encode|raw }};
 
     TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
-}
+};

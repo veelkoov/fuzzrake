@@ -5,7 +5,6 @@
   <label class="form-check-label" :for="id">
     <span v-if="'' !== labelHtmlPrefix" v-html="labelHtmlPrefix"></span>
     {{ label }}
-    <span v-if="'' !== labelHtmlSuffix" v-html="labelHtmlSuffix"></span>
 
     <span v-if="null !== count" class="count">({{ count }})</span>
   </label>
@@ -23,7 +22,6 @@ import {PropType} from 'vue';
     count: {type: Object as PropType<number|null>, required: true},
     labelHtmlPrefix: {type: String, required: false},
     label: {type: String, required: true},
-    labelHtmlSuffix: {type: String, required: false},
   }
 })
 export default class CheckBox extends Vue {

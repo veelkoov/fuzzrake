@@ -53,6 +53,5 @@ import CountriesFilters from './CountriesFilters.vue';
   components: {CountriesFilters},
 })
 export default class FiltersPopUp extends Vue {
-
 }
 </script>

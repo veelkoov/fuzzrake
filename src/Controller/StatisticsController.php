@@ -6,12 +6,11 @@ namespace App\Controller;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
+use App\Filtering\FiltersData\FilterData;
+use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Filters\FilterData;
-use App\Utils\Filters\Item;
-use App\Utils\Filters\Set;
 use App\Utils\Species\SpeciesService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -74,11 +73,11 @@ class StatisticsController extends AbstractController
             'countries'        => $this->prepareTableData($countries),
             'productionModels' => $this->prepareTableData($productionModels),
             'orderTypes'       => $this->prepareTableData($orderTypes),
-            'otherOrderTypes'  => $this->prepareListData($otherOrderTypes->getItems()),
+            'otherOrderTypes'  => $this->prepareListData($otherOrderTypes->items),
             'styles'           => $this->prepareTableData($styles),
-            'otherStyles'      => $this->prepareListData($otherStyles->getItems()),
+            'otherStyles'      => $this->prepareListData($otherStyles->items),
             'features'         => $this->prepareTableData($features),
-            'otherFeatures'    => $this->prepareListData($otherFeatures->getItems()),
+            'otherFeatures'    => $this->prepareListData($otherFeatures->items),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness'     => $this->prepareCompletenessData($artisans),
             'providedInfo'     => $this->prepareProvidedInfoData($artisans),
@@ -95,14 +94,12 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach ($input->getItems() as $item) {
-            $count = (int) $item->getCount();
-
-            if (!array_key_exists($count, $result)) {
-                $result[$count] = [];
+        foreach ($input->items as $item) {
+            if (!array_key_exists($item->count, $result)) {
+                $result[$item->count] = [];
             }
 
-            $result[$count][] = $item->getLabel();
+            $result[$item->count][] = $item->label;
         }
 
         foreach ($result as $item => $items) {
@@ -112,29 +109,29 @@ class StatisticsController extends AbstractController
         $result = array_flip($result); // @phpstan-ignore-line
         arsort($result);
 
-        foreach ($input->getSpecialItems() as $item) {
-            $result[$item->getLabel()] = $item->getCount();
+        foreach ($input->specialItems as $item) {
+            $result[$item->label] = $item->count;
         }
 
         return $result;
     }
 
     /**
-     * @return Item[]
+     * @param array<Item> $items
+     *
+     * @return array<Item>
      */
-    private function prepareListData(Set $items): array
+    private function prepareListData(array $items): array
     {
-        $result = $items->getItems();
-
-        uksort($result, function ($keyA, $keyB) use ($items) {
-            if ($items[$keyA]->getCount() !== $items[$keyB]->getCount()) {
-                return $items[$keyB]->getCount() - $items[$keyA]->getCount();
+        usort($items, function (Item $itemA, Item $itemB) {
+            if ($itemA->count !== $itemB->count) {
+                return $itemB->count - $itemA->count;
             }
 
-            return strcmp($items[$keyA]->getLabel(), $items[$keyB]->getLabel());
+            return strcmp($itemA->label, $itemB->label);
         });
 
-        return $result;
+        return $items;
     }
 
     /**

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Filtering\FiltersData\FiltersService;
 use App\Repository\ArtisanRepository;
 use App\Repository\MakerIdRepository;
 use App\Service\DataService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Filters\FiltersService;
 use App\Utils\Species\SpeciesService;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;

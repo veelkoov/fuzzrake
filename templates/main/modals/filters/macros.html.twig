@@ -1,9 +1,3 @@
-{% macro filter_special_items_wrapped(filter_data, group_name) %}
-    {% for item in filter_data.specialItems %}
-        {{ _self.filter_checkbox_wrapped(group_name, item.value, item.label, item.count, '<i class="' ~ item.faIcon ~ '"></i>') }}
-    {% endfor %}
-{% endmacro %}
-
 {% macro ctrl_button(id_part, label) %}
     <div id="filter-ctrl-{{ id_part }}" class="btn-group my-1" role="group">
         <button data-bs-target="#filter-body-{{ id_part }}" class="btn btn-outline-secondary" data-bs-toggle="collapse">

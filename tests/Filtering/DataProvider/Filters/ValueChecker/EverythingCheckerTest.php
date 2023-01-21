@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataProvider\Filters\ValueChecker;
 
-use App\Filtering\DataProvider\Filters\ValueChecker\EverythingChecker;
+use App\Filtering\DataRequests\Filters\ValueChecker\EverythingChecker;
 use PHPUnit\Framework\TestCase;
 
 /**

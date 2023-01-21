@@ -1,11 +1,31 @@
 declare const DATA_BRIDGE: { [key: string]: string };
 
+export type SpecialItem = { 'value': String, 'label': String, 'count': Number, 'faIcon': String };
+export type SpecialItems = Array<SpecialItem>;
+export type StringItem = { 'value': String, 'label': String, 'count': Number };
+export type StringItemsItem = { 'value': Array<StringItem>, 'label': String, 'count': Number };
+
+export type Countries = {
+    'items': StringItemsItem,
+    'specialItems': SpecialItems,
+};
+export type FiltersData = {
+    'orderTypes': object,
+    'styles': object,
+    'paymentPlans': object,
+    'features': object,
+    'productionModels': object,
+    'commissionStatuses': object,
+    'languages': object,
+    'countries': Countries,
+    'states': object,
+    'species': object,
+};
+
 declare const MAKER_IDS_MAP: object;
 declare const VISIBLE_SPECIES: object;
-declare const REGIONS: object;
+declare const FILTERS_DATA: FiltersData;
 declare const TOTAL_ARTISANS_COUNT: number;
-
-export type Regions = [{ 'name': String, 'm_count': Number, 'countries': [{ 'value': String, 'label': String, 'm_count': Number }] }];
 
 export default abstract class Static {
     public static getMainUrl(): string {
@@ -56,9 +76,8 @@ export default abstract class Static {
         return VISIBLE_SPECIES;
     }
 
-    public static getRegions(): Regions {
-        // @ts-ignore
-        return REGIONS;
+    public static getFiltersData(): FiltersData {
+        return FILTERS_DATA;
     }
 
     public static showLoadingIndicator(): void {

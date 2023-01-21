@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Filtering\DataProvider\Filtered;
-use App\Filtering\RequestParser;
+use App\Filtering\DataRequests\FilteredDataProvider;
+use App\Filtering\DataRequests\RequestParser;
 use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
 use App\Service\DataService;
@@ -59,7 +59,7 @@ class RestApiController extends AbstractController
 
     #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisansArray(Request $request, Filtered $Filtered, RequestParser $requestParser): JsonResponse
+    public function artisansArray(Request $request, FilteredDataProvider $Filtered, RequestParser $requestParser): JsonResponse
     {
         try {
             $choices = $requestParser->getChoices($request);
