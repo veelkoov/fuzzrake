@@ -19,7 +19,7 @@ import {PropType} from 'vue';
   props: {
     groupName: {type: String, required: true},
     value: {type: String, required: true},
-    count: {type: Object as PropType<number|null>, required: true},
+    count: {type: Number, required: true},
     labelHtmlPrefix: {type: String, required: false},
     label: {type: String, required: true},
   }
