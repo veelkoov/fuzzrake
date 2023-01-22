@@ -5,9 +5,12 @@ export type SpecialItems = Array<SpecialItem>;
 export type StringItem = { 'value': String, 'label': String, 'count': Number };
 export type StringItems = Array<StringItem>;
 export type StringItemsItem = { 'value': StringItems, 'label': String, 'count': Number };
+export type SpecieItem = { 'value': String|SpecieItems, 'label': String, 'count': Number };
+export type SpecieItems = Array<SpecieItem>;
 
-export type MultiselectFilterData = { 'items': StringItems, 'specialItems': SpecialItems, };
-export type CountriesFilterData = { 'items': StringItemsItem, 'specialItems': SpecialItems, };
+export type MultiselectFilterData = { 'items': StringItems, 'specialItems': SpecialItems };
+export type CountriesFilterData = { 'items': StringItemsItem, 'specialItems': SpecialItems };
+export type SpeciesFilterData = { 'items': SpecieItems, 'specialItems': SpecialItems };
 
 export type FiltersData = {
     'orderTypes': MultiselectFilterData,
@@ -19,7 +22,7 @@ export type FiltersData = {
     'languages': MultiselectFilterData,
     'countries': CountriesFilterData,
     'states': MultiselectFilterData,
-    'species': object, // TODO
+    'species': SpeciesFilterData,
 };
 
 declare const MAKER_IDS_MAP: object;

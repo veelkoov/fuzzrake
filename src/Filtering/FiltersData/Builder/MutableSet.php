@@ -30,7 +30,7 @@ class MutableSet implements IteratorAggregate, ArrayAccess
         $this->items[$key]->incCount();
     }
 
-    public function addComplexItem(string $key, string|MutableSet $value, string $label, int $count): void
+    public function addComplexItem(string $key, string|MutableSet $value, string $label, ?int $count): void
     {
         $this->items[$key] = new MutableItem($value, $label, $count);
     }

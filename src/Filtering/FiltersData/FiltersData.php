@@ -6,9 +6,6 @@ namespace App\Filtering\FiltersData;
 
 readonly class FiltersData
 {
-    /**
-     * @param list<Item> $species
-     */
     public function __construct(
         public FilterData $orderTypes,
         public FilterData $styles,
@@ -19,7 +16,7 @@ readonly class FiltersData
         public FilterData $languages,
         public FilterData $countries,
         public FilterData $states,
-        public array $species,
+        public FilterData $species,
     ) {
     }
 }

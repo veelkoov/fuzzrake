@@ -43,7 +43,7 @@ class FiltersService
             $this->artisanRepository->getDistinctLanguagesForFilters(),
             $this->getCountriesFilterData(),
             $this->artisanRepository->getDistinctStatesToCountAssoc(),
-            $this->getSpeciesFilterItems(),
+            $this->getSpeciesFilterData(),
         );
     }
 
@@ -74,12 +74,15 @@ class FiltersService
         return new FilterData($result);
     }
 
-    /**
-     * @return list<Item>
-     */
-    private function getSpeciesFilterItems(): array
+    private function getSpeciesFilterData(): FilterData
     {
-        return $this->getSpeciesFilterItemsFromArray($this->species->getVisibleTree())->getReadonlyList();
+        $result = new MutableFilterData(SpecialItems::newUnknown(null));
+
+        foreach ($this->getSpeciesFilterItemsFromArray($this->species->getVisibleTree()) as $item) {
+            $result->items->addComplexItem($item->label, $item->value, $item->label, $item->getCount());
+        }
+
+        return new FilterData($result);
     }
 
     /**
@@ -91,7 +94,7 @@ class FiltersService
 
         foreach ($species as $specie) {
             if (!$specie->isHidden()) {
-                $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO: #76 Species count
+                $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), null); // TODO: #76 Species count
             }
         }
 

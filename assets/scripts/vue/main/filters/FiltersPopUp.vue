@@ -1,11 +1,4 @@
 <template>
-  <!-- TODO {% macro body_other(group_name, helphints_tpl, body_tpl, filters) %}-->
-  <!--  <div id="filter-body-{{ group_name }}" class="collapse" data-bs-parent="#filters-body">-->
-  <!--    {{ include('main/modals/filters/helphints/' ~ helphints_tpl) }}-->
-  <!--    {{ include('main/modals/filters/' ~ body_tpl, { filters: filters }) }}-->
-  <!--  </div>-->
-  <!--  {% endmacro %}-->
-
   <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content" id="filters-top">
@@ -61,7 +54,8 @@
             <BodyContainer filter-component="MultiselectFilter" help-component="PaymentPlansHelp"
                            group-name="paymentPlans" :filter-data="filtersData.paymentPlans"/>
 
-            <!--            { { macros.body_other('species', 'species.html.twig', 'species.html.twig', filters) }}-->
+            <BodyContainer filter-component="SpeciesFilter" help-component="SpeciesHelp"
+                           group-name="species"/>
           </form>
         </div>
       </div>

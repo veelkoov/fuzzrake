@@ -5,6 +5,7 @@
   <label class="form-check-label" :for="id">
     <span v-if="'' !== labelHtmlPrefix" v-html="labelHtmlPrefix"></span>
     {{ label }}
+    <span v-if="'' !== labelHtmlSuffix" v-html="labelHtmlSuffix"></span>
 
     <span v-if="null !== count" class="count">({{ count }})</span>
   </label>
@@ -13,15 +14,15 @@
 <script lang="ts">
 import getUniqueInt from '../../../class/Counter';
 import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
 
 @Options({
   props: {
+    count: {type: Number, required: true}, // FIXME: Nullable
     groupName: {type: String, required: true},
-    value: {type: String, required: true},
-    count: {type: Number, required: true},
-    labelHtmlPrefix: {type: String, required: false},
     label: {type: String, required: true},
+    labelHtmlPrefix: {type: String, required: false},
+    labelHtmlSuffix: {type: String, required: false},
+    value: {type: String, required: true},
   }
 })
 export default class CheckBox extends Vue {

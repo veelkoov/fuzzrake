@@ -36,6 +36,7 @@ import OpenForHelp from './help/OpenForHelp.vue';
 import OrderTypesHelp from './help/OrderTypesHelp.vue';
 import PaymentPlansHelp from './help/PaymentPlansHelp.vue';
 import ProductionModelsHelp from './help/ProductionModelsHelp.vue';
+import SpeciesFilter from './body/SpeciesFilter.vue';
 import SpeciesHelp from './help/SpeciesHelp.vue';
 import StatesHelp from './help/StatesHelp.vue';
 import Static, {MultiselectFilterData} from '../../../Static';
@@ -45,7 +46,7 @@ import {PropType} from 'vue';
 
 @Options({
   components: {
-    CountriesFilter, MultiselectFilter,
+    CountriesFilter, MultiselectFilter, SpeciesFilter,
     CountriesHelp, FeaturesHelp, LanguagesHelp, OpenForHelp, OrderTypesHelp, PaymentPlansHelp, ProductionModelsHelp, SpeciesHelp, StatesHelp, StylesHelp,
   },
   props: {

@@ -8,7 +8,7 @@ use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 
 readonly class SpecialItem
 {
-    public int $count;
+    public ?int $count; // TODO: #76 Species count, should not be nullable
     public string $value;
     public string $label;
     public string $faIcon;
