@@ -36,7 +36,7 @@ import {Options, Vue} from 'vue-class-component';
     groupName: {type: String, required: true},
   }
 })
-export default class CountriesFilters extends Vue {
+export default class CountriesFilter extends Vue {
   private getHtmlPrefix(country: StringItem): string {
     return `<span class="flag-icon flag-icon-${country.value.toLowerCase()}"></span>`;
   }

@@ -1,12 +1,12 @@
 <template>
-<!--  {% macro body_other(group_name, helphints_tpl, body_tpl, filters) %}-->
+<!-- TODO {% macro body_other(group_name, helphints_tpl, body_tpl, filters) %}-->
 <!--  <div id="filter-body-{{ group_name }}" class="collapse" data-bs-parent="#filters-parents">-->
 <!--    {{ include('main/modals/filters/helphints/' ~ helphints_tpl) }}-->
 <!--    {{ include('main/modals/filters/' ~ body_tpl, { filters: filters }) }}-->
 <!--  </div>-->
 <!--  {% endmacro %}-->
 
-<!--  {% macro body_multiselect(group_name, helphints_tpl, filter_data) %}-->
+<!-- TODO {% macro body_multiselect(group_name, helphints_tpl, filter_data) %}-->
 <!--  <div id="filter-body-{{ group_name }}" class="collapse" data-bs-parent="#filters-parents">-->
 <!--    {{ include('main/modals/filters/helphints/' ~ helphints_tpl) }}-->
 <!--    {{ include('main/modals/filters/multiselect.html.twig') }}-->
@@ -41,7 +41,7 @@
           </div>
 
           <form id="filters">
-            <FilterBodyContainer component="CountriesFilters" group-name="countries"/>
+            <BodyContainer group-name="countries" filter-component="CountriesFilter" help-component="CountriesHelp"/>
 <!--            { { macros.body_other('countries',                'countries.html.twig',          'countries.html.twig', filters) }}-->
 <!--            { { macros.body_multiselect('states',             'states.html.twig',             filters.states) }}-->
 <!--            { { macros.body_multiselect('languages',          'languages.html.twig',          filters.languages) }}-->
@@ -60,12 +60,12 @@
 </template>
 
 <script lang="ts">
+import BodyContainer from './BodyContainer.vue';
 import CtrlButton from './CtrlButton.vue';
-import FilterBodyContainer from './FilterBodyContainer.vue';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
-  components: {FilterBodyContainer, CtrlButton},
+  components: {BodyContainer, CtrlButton},
 })
 export default class FiltersPopUp extends Vue {
 }
