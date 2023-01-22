@@ -11,7 +11,7 @@
     <legend>
       {{ region.label }} <span class="count">({{ region.count }})</span>
 
-      <AllNoneInvertLinks :class="groupName"/>
+      <AllNoneInvertLinks class="countries"/>
     </legend>
 
     <div class="row">
@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
-import Static, {Countries, StringItem} from '../../../../Static';
+import Static, {CountriesFilterData, StringItem} from '../../../../Static';
 import WrappedCheckBox from '../WrappedCheckBox.vue';
 import WrappedSpecialItems from '../WrappedSpecialItems.vue';
 import {Options, Vue} from 'vue-class-component';
@@ -41,7 +41,7 @@ export default class CountriesFilter extends Vue {
     return `<span class="flag-icon flag-icon-${country.value.toLowerCase()}"></span>`;
   }
 
-  get countriesData(): Countries {
+  get countriesData(): CountriesFilterData {
     return Static.getFiltersData().countries;
   }
 }

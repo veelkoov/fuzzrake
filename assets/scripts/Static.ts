@@ -3,23 +3,23 @@ declare const DATA_BRIDGE: { [key: string]: string };
 export type SpecialItem = { 'value': String, 'label': String, 'count': Number, 'faIcon': String };
 export type SpecialItems = Array<SpecialItem>;
 export type StringItem = { 'value': String, 'label': String, 'count': Number };
-export type StringItemsItem = { 'value': Array<StringItem>, 'label': String, 'count': Number };
+export type StringItems = Array<StringItem>;
+export type StringItemsItem = { 'value': StringItems, 'label': String, 'count': Number };
 
-export type Countries = {
-    'items': StringItemsItem,
-    'specialItems': SpecialItems,
-};
+export type MultiselectFilterData = { 'items': StringItems, 'specialItems': SpecialItems, };
+export type CountriesFilterData = { 'items': StringItemsItem, 'specialItems': SpecialItems, };
+
 export type FiltersData = {
-    'orderTypes': object,
-    'styles': object,
-    'paymentPlans': object,
-    'features': object,
-    'productionModels': object,
-    'commissionStatuses': object,
-    'languages': object,
-    'countries': Countries,
-    'states': object,
-    'species': object,
+    'orderTypes': MultiselectFilterData,
+    'styles': MultiselectFilterData,
+    'paymentPlans': MultiselectFilterData,
+    'features': MultiselectFilterData,
+    'productionModels': MultiselectFilterData,
+    'commissionStatuses': MultiselectFilterData,
+    'languages': MultiselectFilterData,
+    'countries': CountriesFilterData,
+    'states': MultiselectFilterData,
+    'species': object, // TODO
 };
 
 declare const MAKER_IDS_MAP: object;

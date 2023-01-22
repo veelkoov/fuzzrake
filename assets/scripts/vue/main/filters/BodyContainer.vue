@@ -1,5 +1,5 @@
 <template>
-  <div :id="'filter-body-' + groupName" class="collapse" data-bs-parent="#filters-parents">
+  <div :id="'filter-body-' + groupName" class="collapse" data-bs-parent="#filters-body">
     <div class="text-end helphints-toggle">
       <button class="btn btn-success" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + helpContainerId" aria-expanded="false" :aria-controls="helpContainerId">Help and hints</button>
     </div>
@@ -22,24 +22,37 @@
       </div>
     </div>
 
-    <component :is="filterComponent" :group-name="groupName"/>
+    <component :is="filterComponent" :group-name="groupName" :filter-data="filterData"/>
   </div>
 </template>
 
 <script lang="ts">
 import CountriesFilter from './body/CountriesFilter.vue';
 import CountriesHelp from './help/CountriesHelp.vue';
-import Static from '../../../Static';
+import FeaturesHelp from './help/FeaturesHelp.vue';
+import LanguagesHelp from './help/LanguagesHelp.vue';
+import MultiselectFilter from './body/MultiselectFilter.vue';
+import OpenForHelp from './help/OpenForHelp.vue';
+import OrderTypesHelp from './help/OrderTypesHelp.vue';
+import PaymentPlansHelp from './help/PaymentPlansHelp.vue';
+import ProductionModelsHelp from './help/ProductionModelsHelp.vue';
+import SpeciesHelp from './help/SpeciesHelp.vue';
+import StatesHelp from './help/StatesHelp.vue';
+import Static, {MultiselectFilterData} from '../../../Static';
+import StylesHelp from './help/StylesHelp.vue';
 import {Options, Vue} from 'vue-class-component';
+import {PropType} from 'vue';
 
 @Options({
   components: {
-    CountriesFilter, CountriesHelp,
+    CountriesFilter, MultiselectFilter,
+    CountriesHelp, FeaturesHelp, LanguagesHelp, OpenForHelp, OrderTypesHelp, PaymentPlansHelp, ProductionModelsHelp, SpeciesHelp, StatesHelp, StylesHelp,
   },
   props: {
     groupName: {type: String, required: true},
     filterComponent: {type: String, required: true},
     helpComponent: {type: String, required: true},
+    filterData: {type: Object as PropType<MultiselectFilterData>, required: false},
   }
 })
 export default class BodyContainer extends Vue {
