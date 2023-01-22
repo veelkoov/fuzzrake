@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <component :is="filterComponent" :group-name="groupName" :filter-data="filterData"/>
+    <component :is="filterComponent" :group-name="groupName" :filter-data="filterData" :state="state"/>
   </div>
 </template>
 
@@ -30,6 +30,7 @@
 import CountriesFilter from './body/CountriesFilter.vue';
 import CountriesHelp from './help/CountriesHelp.vue';
 import FeaturesHelp from './help/FeaturesHelp.vue';
+import FilterState from '../../../main/FilterState';
 import LanguagesHelp from './help/LanguagesHelp.vue';
 import MultiselectFilter from './body/MultiselectFilter.vue';
 import OpenForHelp from './help/OpenForHelp.vue';
@@ -39,7 +40,7 @@ import ProductionModelsHelp from './help/ProductionModelsHelp.vue';
 import SpeciesFilter from './body/SpeciesFilter.vue';
 import SpeciesHelp from './help/SpeciesHelp.vue';
 import StatesHelp from './help/StatesHelp.vue';
-import Static, {MultiselectFilterData} from '../../../Static';
+import Static, {AnyFilterData} from '../../../Static';
 import StylesHelp from './help/StylesHelp.vue';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
@@ -50,10 +51,11 @@ import {PropType} from 'vue';
     CountriesHelp, FeaturesHelp, LanguagesHelp, OpenForHelp, OrderTypesHelp, PaymentPlansHelp, ProductionModelsHelp, SpeciesHelp, StatesHelp, StylesHelp,
   },
   props: {
-    groupName: {type: String, required: true},
     filterComponent: {type: String, required: true},
+    filterData: {type: Object as PropType<AnyFilterData>, required: false},
+    groupName: {type: String, required: true},
     helpComponent: {type: String, required: true},
-    filterData: {type: Object as PropType<MultiselectFilterData>, required: false},
+    state: {type: FilterState, required: true},
   }
 })
 export default class BodyContainer extends Vue {

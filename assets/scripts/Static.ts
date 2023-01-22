@@ -11,6 +11,7 @@ export type SpecieItems = Array<SpecieItem>;
 export type MultiselectFilterData = { 'items': StringItems, 'specialItems': SpecialItems };
 export type CountriesFilterData = { 'items': StringItemsItem, 'specialItems': SpecialItems };
 export type SpeciesFilterData = { 'items': SpecieItems, 'specialItems': SpecialItems };
+export type AnyFilterData = MultiselectFilterData|CountriesFilterData|SpeciesFilterData;
 
 export type FiltersData = {
     'orderTypes': MultiselectFilterData,

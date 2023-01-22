@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts">
+import FilterState from '../../../main/FilterState';
 import getUniqueInt from '../../../class/Counter';
 import {Options, Vue} from 'vue-class-component';
 
@@ -22,6 +23,7 @@ import {Options, Vue} from 'vue-class-component';
     label: {type: String, required: true},
     labelHtmlPrefix: {type: String, required: false},
     labelHtmlSuffix: {type: String, required: false},
+    state: {type: FilterState, required: true},
     value: {type: String, required: true},
   }
 })

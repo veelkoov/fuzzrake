@@ -13,49 +13,20 @@
         <div class="modal-body" id="filters-body">
           <div class="row">
             <div class="col">
-              <CtrlButton group-name="countries"        label="Countries"/> <wbr>
-              <CtrlButton group-name="states"           label="States"/> <wbr>
-              <CtrlButton group-name="languages"        label="Languages"/> <wbr>
-              <CtrlButton group-name="styles"           label="Styles"/> <wbr>
-              <CtrlButton group-name="features"         label="Features"/> <wbr>
-              <CtrlButton group-name="orderTypes"       label="Order types"/> <wbr>
-              <CtrlButton group-name="productionModels" label="Production models"/> <wbr>
-              <CtrlButton group-name="openFor"          label="Open for"/> <wbr>
-              <CtrlButton group-name="species"          label="Species"/> <wbr>
-              <CtrlButton group-name="paymentPlans"     label="Payment plans"/> <wbr>
+              <template v-for="filter in filters">
+                <CtrlButton :group-name="filter.groupName" :label="filter.label" :state="filter.state"/> <wbr>
+              </template>
             </div>
           </div>
 
           <form id="filters">
-            <BodyContainer filter-component="CountriesFilter" help-component="CountriesHelp"
-                           group-name="countries"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="StatesHelp"
-                           group-name="states" :filter-data="filtersData.states"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="LanguagesHelp"
-                           group-name="languages" :filter-data="filtersData.languages"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="StylesHelp"
-                           group-name="styles" :filter-data="filtersData.styles"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="FeaturesHelp"
-                           group-name="features" :filter-data="filtersData.features"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="OrderTypesHelp"
-                           group-name="orderTypes" :filter-data="filtersData.orderTypes"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="ProductionModelsHelp"
-                           group-name="productionModels" :filter-data="filtersData.productionModels"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="OpenForHelp"
-                           group-name="openFor" :filter-data="filtersData.commissionStatuses"/>
-
-            <BodyContainer filter-component="MultiselectFilter" help-component="PaymentPlansHelp"
-                           group-name="paymentPlans" :filter-data="filtersData.paymentPlans"/>
-
-            <BodyContainer filter-component="SpeciesFilter" help-component="SpeciesHelp"
-                           group-name="species"/>
+            <BodyContainer v-for="filter in filters"
+                           :filter-component="filter.filterComponentName"
+                           :help-component="filter.helpComponentName"
+                           :group-name="filter.groupName"
+                           :state="filter.state"
+                           :filter-data="filter.data"
+            />
           </form>
         </div>
       </div>
@@ -66,15 +37,40 @@
 <script lang="ts">
 import BodyContainer from './BodyContainer.vue';
 import CtrlButton from './CtrlButton.vue';
-import Static, {FiltersData} from '../../../Static';
+import FilterDef from '../../../main/FilterDef';
+import FilterState from '../../../main/FilterState';
+import Static from '../../../Static';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
   components: {BodyContainer, CtrlButton},
 })
 export default class FiltersPopUp extends Vue {
-  get filtersData(): FiltersData {
-    return Static.getFiltersData();
+  private filters: Array<FilterDef>;
+
+  public created(): void {
+    this.filters = [
+      new FilterDef('countries', 'Countries', 'CountriesFilter',
+          'CountriesHelp', Static.getFiltersData().countries),
+      new FilterDef('states', 'States', 'MultiselectFilter',
+          'StatesHelp', Static.getFiltersData().states),
+      new FilterDef('languages', 'Languages', 'MultiselectFilter',
+          'LanguagesHelp', Static.getFiltersData().languages),
+      new FilterDef('styles', 'Styles', 'MultiselectFilter',
+          'StylesHelp', Static.getFiltersData().styles),
+      new FilterDef('features', 'Features', 'MultiselectFilter',
+          'FeaturesHelp', Static.getFiltersData().features),
+      new FilterDef('orderTypes', 'Order types', 'MultiselectFilter',
+          'OrderTypesHelp', Static.getFiltersData().orderTypes),
+      new FilterDef('productionModels', 'Production models', 'MultiselectFilter',
+          'ProductionModelsHelp', Static.getFiltersData().productionModels),
+      new FilterDef('openFor', 'Open for', 'MultiselectFilter',
+          'OpenForHelp', Static.getFiltersData().commissionStatuses),
+      new FilterDef('species', 'Species', 'SpeciesFilter',
+          'SpeciesHelp', Static.getFiltersData().species),
+      new FilterDef('paymentPlans', 'Payment plans', 'MultiselectFilter',
+          'PaymentPlansHelp', Static.getFiltersData().paymentPlans),
+    ];
   }
 }
 </script>
