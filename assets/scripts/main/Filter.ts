@@ -1,8 +1,9 @@
 import FilterState from './FilterState';
 import {AnyOptions} from '../Static';
+import {Ref, ref} from 'vue';
 
 export default class Filter<T extends AnyOptions> {
-    public readonly state: FilterState = new FilterState();
+    public readonly state: Ref<FilterState> = ref(new FilterState());
 
     constructor(
         public readonly groupName: string,

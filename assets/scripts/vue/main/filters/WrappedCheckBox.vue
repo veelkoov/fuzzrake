@@ -12,7 +12,7 @@ import {Options, Vue} from 'vue-class-component';
 @Options({
   components: {CheckBox},
   props: {
-    count: {type: Number, required: false}, // FIXME: Nullable
+    count: {type: Number, required: false}, // TODO: #76 Species count, should not be nullable
     filter: {type: Filter, required: true},
     label: {type: String, required: true},
     labelHtmlPrefix: {type: String, required: false},
