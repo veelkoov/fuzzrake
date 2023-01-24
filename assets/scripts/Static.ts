@@ -8,27 +8,27 @@ export type StringItemsItem = { 'value': StringItems, 'label': String, 'count': 
 export type SpecieItem = { 'value': String|SpecieItems, 'label': String, 'count': Number };
 export type SpecieItems = Array<SpecieItem>;
 
-export type MultiselectFilterData = { 'items': StringItems, 'specialItems': SpecialItems };
-export type CountriesFilterData = { 'items': StringItemsItem, 'specialItems': SpecialItems };
-export type SpeciesFilterData = { 'items': SpecieItems, 'specialItems': SpecialItems };
-export type AnyFilterData = MultiselectFilterData|CountriesFilterData|SpeciesFilterData;
+export type MultiselectOptions = { 'items': StringItems, 'specialItems': SpecialItems };
+export type CountriesOptions = { 'items': StringItemsItem, 'specialItems': SpecialItems };
+export type SpeciesOptions = { 'items': SpecieItems, 'specialItems': SpecialItems };
+export type AnyOptions = MultiselectOptions|CountriesOptions|SpeciesOptions;
 
-export type FiltersData = {
-    'orderTypes': MultiselectFilterData,
-    'styles': MultiselectFilterData,
-    'paymentPlans': MultiselectFilterData,
-    'features': MultiselectFilterData,
-    'productionModels': MultiselectFilterData,
-    'commissionStatuses': MultiselectFilterData,
-    'languages': MultiselectFilterData,
-    'countries': CountriesFilterData,
-    'states': MultiselectFilterData,
-    'species': SpeciesFilterData,
+export type FiltersOptions = {
+    'orderTypes': MultiselectOptions,
+    'styles': MultiselectOptions,
+    'paymentPlans': MultiselectOptions,
+    'features': MultiselectOptions,
+    'productionModels': MultiselectOptions,
+    'commissionStatuses': MultiselectOptions,
+    'languages': MultiselectOptions,
+    'countries': CountriesOptions,
+    'states': MultiselectOptions,
+    'species': SpeciesOptions,
 };
 
 declare const MAKER_IDS_MAP: object;
 declare const VISIBLE_SPECIES: object;
-declare const FILTERS_DATA: FiltersData;
+declare const FILTERS_OPTIONS: FiltersOptions;
 declare const TOTAL_ARTISANS_COUNT: number;
 
 export default abstract class Static {
@@ -80,8 +80,8 @@ export default abstract class Static {
         return VISIBLE_SPECIES;
     }
 
-    public static getFiltersData(): FiltersData {
-        return FILTERS_DATA;
+    public static getFiltersOptions(): FiltersOptions {
+        return FILTERS_OPTIONS;
     }
 
     public static showLoadingIndicator(): void {

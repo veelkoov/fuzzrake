@@ -3,7 +3,7 @@
 var MAKER_IDS_MAP = null;
 var VISIBLE_SPECIES = null;
 var TOTAL_ARTISANS_COUNT = null;
-var FILTERS_DATA = null;
+var FILTERS_OPTIONS = null;
 
 window.loadFuzzrakeData = function () {
     MAKER_IDS_MAP = { {# TODO: Remove necessity for maker IDs map https://github.com/veelkoov/fuzzrake/issues/180 #}
@@ -26,7 +26,7 @@ window.loadFuzzrakeData = function () {
         {{ _self.species_json(species) }}
     };
 
-    FILTERS_DATA = {{ filters|json_encode|raw }};
+    FILTERS_OPTIONS = {{ filters|json_encode|raw }};
 
     TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
 };

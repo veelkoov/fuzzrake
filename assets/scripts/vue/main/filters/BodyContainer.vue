@@ -1,5 +1,5 @@
 <template>
-  <div :id="'filter-body-' + groupName" class="collapse" data-bs-parent="#filters-body">
+  <div :id="'filter-body-' + filter.groupName" class="collapse" data-bs-parent="#filters-body">
     <div class="text-end helphints-toggle">
       <button class="btn btn-success" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + helpContainerId" aria-expanded="false" :aria-controls="helpContainerId">Help and hints</button>
     </div>
@@ -8,7 +8,7 @@
       <div class="card">
         <div class="card-body">
           <ul>
-            <component :is="helpComponent"/>
+            <component :is="filter.helpComponentName"/>
 
             <li class="small">
               You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supplied some information), you can ask them to fill the missing information, e.g.:
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <component :is="filterComponent" :group-name="groupName" :filter-data="filterData" :state="state"/>
+    <component :is="filter.bodyComponentName" :filter="filter"/>
   </div>
 </template>
 
@@ -30,7 +30,7 @@
 import CountriesFilter from './body/CountriesFilter.vue';
 import CountriesHelp from './help/CountriesHelp.vue';
 import FeaturesHelp from './help/FeaturesHelp.vue';
-import FilterState from '../../../main/FilterState';
+import Filter from '../../../main/Filter';
 import LanguagesHelp from './help/LanguagesHelp.vue';
 import MultiselectFilter from './body/MultiselectFilter.vue';
 import OpenForHelp from './help/OpenForHelp.vue';
@@ -40,10 +40,9 @@ import ProductionModelsHelp from './help/ProductionModelsHelp.vue';
 import SpeciesFilter from './body/SpeciesFilter.vue';
 import SpeciesHelp from './help/SpeciesHelp.vue';
 import StatesHelp from './help/StatesHelp.vue';
-import Static, {AnyFilterData} from '../../../Static';
+import Static, {AnyOptions} from '../../../Static';
 import StylesHelp from './help/StylesHelp.vue';
 import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
 
 @Options({
   components: {
@@ -51,18 +50,14 @@ import {PropType} from 'vue';
     CountriesHelp, FeaturesHelp, LanguagesHelp, OpenForHelp, OrderTypesHelp, PaymentPlansHelp, ProductionModelsHelp, SpeciesHelp, StatesHelp, StylesHelp,
   },
   props: {
-    filterComponent: {type: String, required: true},
-    filterData: {type: Object as PropType<AnyFilterData>, required: false},
-    groupName: {type: String, required: true},
-    helpComponent: {type: String, required: true},
-    state: {type: FilterState, required: true},
+    filter: {type: Filter, required: true},
   }
 })
 export default class BodyContainer extends Vue {
-  private groupName!: string;
+  private filter!: Filter<AnyOptions>;
 
   get helpContainerId(): string {
-    return `${this.groupName}Help`;
+    return `${this.filter.groupName}Help`;
   }
 
   get iuFormUrl(): string {

@@ -1,5 +1,5 @@
 <template>
-  <input class="form-check-input" type="checkbox" :id="id" :name="groupName + '[]'" :value="value"
+  <input class="form-check-input" type="checkbox" :id="id" :name="filter.groupName + '[]'" :value="value"
          data-label="{{ label }}"/>
 
   <label class="form-check-label" :for="id">
@@ -12,18 +12,17 @@
 </template>
 
 <script lang="ts">
-import FilterState from '../../../main/FilterState';
+import Filter from '../../../main/Filter';
 import getUniqueInt from '../../../class/Counter';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
   props: {
-    count: {type: Number, required: true}, // FIXME: Nullable
-    groupName: {type: String, required: true},
+    count: {type: Number, required: false}, // FIXME: Nullable
+    filter: {type: Filter, required: true},
     label: {type: String, required: true},
     labelHtmlPrefix: {type: String, required: false},
     labelHtmlSuffix: {type: String, required: false},
-    state: {type: FilterState, required: true},
     value: {type: String, required: true},
   }
 })

@@ -4,14 +4,13 @@
       <div class="col-sm-12">
         <AllNoneInvertLinks class="simple"/>
 
-        <WrappedSpecialItems :group-name="groupName" :items="filterData.specialItems" :state="state"/>
+        <WrappedSpecialItems :filter="filter"/>
       </div>
     </div>
 
     <div class="row">
-      <div v-for="item in filterData.items" class="col-sm-6 col-lg-3">
-        <WrappedCheckBox :group-name="groupName" :value="item.value" :count="item.count" :state="state"
-                         :label="item.label"/>
+      <div v-for="item in filter.options.items" class="col-sm-6 col-lg-3">
+        <WrappedCheckBox :filter="filter" :value="item.value" :count="item.count" :label="item.label"/>
       </div>
     </div>
   </fieldset>
@@ -19,19 +18,17 @@
 
 <script lang="ts">
 import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
-import FilterState from '../../../../main/FilterState';
+import Filter from '../../../../main/Filter';
 import WrappedCheckBox from '../WrappedCheckBox.vue';
 import WrappedSpecialItems from '../WrappedSpecialItems.vue';
-import {MultiselectFilterData} from '../../../../Static';
+import {MultiselectOptions} from '../../../../Static';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
   components: {WrappedSpecialItems, WrappedCheckBox, AllNoneInvertLinks},
   props: {
-    filterData: {type: Object as PropType<MultiselectFilterData>, required: false},
-    groupName: {type: String, required: true},
-    state: {type: FilterState, required: true},
+    filter: {type: Object as PropType<Filter<MultiselectOptions>>, required: true},
   }
 })
 export default class MultiselectFilter extends Vue {

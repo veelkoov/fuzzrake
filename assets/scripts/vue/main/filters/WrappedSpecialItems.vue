@@ -1,21 +1,18 @@
 <template>
-  <WrappedCheckBox v-for="item in items" :group-name="groupName" :value="item.value" :count="item.count"
-                   :label="item.label" :label-html-prefix="getHtmlPrefix(item)" :state="state"/>
+  <WrappedCheckBox v-for="item in filter.options.specialItems" :filter="filter" :value="item.value" :count="item.count"
+                   :label="item.label" :label-html-prefix="getHtmlPrefix(item)"/>
 </template>
 
 <script lang="ts">
+import Filter from '../../../main/Filter';
 import WrappedCheckBox from './WrappedCheckBox.vue';
 import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
-import {SpecialItem, SpecialItems} from '../../../Static';
-import FilterState from '../../../main/FilterState';
+import {SpecialItem} from '../../../Static';
 
 @Options({
   components: {WrappedCheckBox},
   props: {
-    groupName: {type: String, required: true},
-    items: {type: Object as PropType<SpecialItems>, required: true},
-    state: {type: FilterState, required: true},
+    filter: {type: Filter, required: true},
   }
 })
 export default class WrappedSpecialItems extends Vue {

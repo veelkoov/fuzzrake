@@ -2,7 +2,7 @@
   <template v-for="specie in species">
     <div class="btn-group specie" role="group">
         <span class="btn btn-outline-secondary"> <!-- TODO: #76 Species count -->
-          <CheckBox :group-name="groupName" :count="specie.count" :label="specie.label" :value="specie.label" :state="state"
+          <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label"
                     label-html-suffix='<span class="descendants-indicator"><i class="fas fa-tasks"></i></span>'/>
         </span>
 
@@ -14,7 +14,7 @@
     <template v-if="hasSubspecies(specie)">
       <br>
       <fieldset class="subspecies">
-        <SpeciesChoices :group-name="groupName" :species="getSubspecies(specie)" :state="state"/>
+        <SpeciesChoices :filter="filter" :species="getSubspecies(specie)"/>
       </fieldset>
     </template>
   </template>
@@ -22,17 +22,16 @@
 
 <script lang="ts">
 import CheckBox from '../CheckBox.vue';
-import FilterState from '../../../../main/FilterState';
+import Filter from '../../../../main/Filter';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
-import {SpecieItem, SpecieItems} from '../../../../Static';
+import {SpecieItem, SpecieItems, SpeciesOptions} from '../../../../Static';
 
 @Options({
   components: {CheckBox, SpeciesChoices},
   props: {
-    groupName: {type: String, required: true},
+    filter: {type: Object as PropType<Filter<SpeciesOptions>>, required: true},
     species: {type: Object as PropType<SpecieItems>, required: true},
-    state: {type: FilterState, required: true},
   }
 })
 export default class SpeciesChoices extends Vue {
