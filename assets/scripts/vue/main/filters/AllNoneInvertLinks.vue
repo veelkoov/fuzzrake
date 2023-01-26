@@ -1,8 +1,8 @@
 <template>
   <span class="allNoneInvert" :class="this.class" aria-hidden="true">
-        select: <a data-action="all" href="#" @click="emit">all</a>
-        &bull; <a data-action="none" href="#" @click="emit">none</a>
-        &bull; <a data-action="invert" href="#" @click="emit">invert</a>
+        select: <a href="#" @click.prevent="$emit('all')">all</a>
+        &bull; <a href="#" @click.prevent="$emit('none')">none</a>
+        &bull; <a href="#" @click.prevent="$emit('invert')">invert</a>
     </span>
 </template>
 
@@ -16,10 +16,5 @@ import {Options, Vue} from 'vue-class-component';
   emits: ['all', 'none', 'invert']
 })
 export default class AllNoneInvertLinks extends Vue {
-  private emit(event: Event): void {
-    event.preventDefault();
-
-    this.$emit((event.target as HTMLElement).dataset['action']);
-  }
 }
 </script>

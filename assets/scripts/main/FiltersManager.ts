@@ -19,32 +19,15 @@ export default class FiltersManager {
         });
     }
 
-    public getTriggerUpdateCallback(): () => void {
-        return () => this.triggerUpdate();
-    }
-
     public triggerUpdate(): void {
         // for (let filter of this.filters) {
         //     filter.saveChoices();
         // }
 
-        this.messageBus.notifyActiveFiltersCountUpdate(this.getActiveCount());
-        this.messageBus.requestDataLoad(this.getQuery(), false)
+        this.messageBus.requestDataLoad(this.getQuery(), false);
     }
 
     private getQuery(): string {
         return ''; // FIXME
-    }
-
-    private getActiveCount(): number {
-        let count: number = 0;
-
-        // for (let filterId in this.filters) { FIXME
-        //     if (this.filters[filterId].isActive()) {
-        //         count++;
-        //     }
-        // }
-
-        return count;
     }
 }

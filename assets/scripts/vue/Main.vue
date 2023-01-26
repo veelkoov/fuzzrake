@@ -1,5 +1,5 @@
 <template>
-  <FiltersPopUp />
+  <FiltersPopUp @active-count-changed="(newCount: number) => this.activeFiltersCount = newCount"/>
   <UpdatesPopUp />
   <CardPopUp />
 
@@ -56,7 +56,6 @@ import FiltersPopUp from './main/filters/FiltersPopUp.vue';
 import Search from '../main/Search';
 import Static from '../Static';
 import UpdatesPopUp from './main/UpdatesPopUp.vue';
-import {getMessageBus} from '../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
@@ -81,8 +80,6 @@ export default class Main extends Vue {
 
   public created(): void {
     this.columns.load();
-
-    getMessageBus().listenActiveFiltersCountUpdates((newCount: number) => this.activeFiltersCount = newCount);
   }
 
   private disableMakerMode(): void {

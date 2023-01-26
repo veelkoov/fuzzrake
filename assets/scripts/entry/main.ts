@@ -76,10 +76,6 @@ jQuery(() => {
     const filtersManager = new FiltersManager(
         messageBus,
     );
-    jQuery('#filtersModal').on(
-        'hidden.bs.modal',
-        filtersManager.getTriggerUpdateCallback(),
-    );
 
     jQuery('#data-table-container').toggle();
     Static.hideLoadingIndicator();

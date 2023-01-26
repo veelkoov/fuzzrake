@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
+  <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-xl">
       <div class="modal-content" id="filters-top">
         <div class="modal-header">
@@ -37,6 +37,11 @@ import {Options, Vue} from 'vue-class-component';
 
 @Options({
   components: {BodyContainer, CtrlButton},
+  emits: {
+    activeCountChanged(_: number): boolean {
+        return true;
+    },
+  },
 })
 export default class FiltersPopUp extends Vue {
   private filters: Array<Filter<AnyOptions>>;
@@ -64,6 +69,16 @@ export default class FiltersPopUp extends Vue {
       new Filter('paymentPlans', 'Payment plans', 'MultiselectFilter',
           'PaymentPlansHelp', Static.getFiltersOptions().paymentPlans),
     ];
+  }
+
+  public mounted(): void {
+    (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.refreshFilters())
+  }
+
+  private refreshFilters(): void {
+    const count = this.filters.map(filter => filter.state.value.isActive ? 1 : 0).reduce((sum, val) => sum + val, 0);
+
+    this.$emit('activeCountChanged', count);
   }
 }
 </script>
