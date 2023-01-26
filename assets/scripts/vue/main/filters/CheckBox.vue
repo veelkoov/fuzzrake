@@ -1,5 +1,5 @@
 <template>
-  <input class="form-check-input" type="checkbox" :id="id" :name="filter.groupName + '[]'" data-label="{{ label }}"
+  <input class="form-check-input" type="checkbox" :id="id" :name="filter.groupName + '[]'" :data-label="label"
          :value="value" @input="changed" :checked="isChecked"/>
 
   <label class="form-check-label" :for="id">

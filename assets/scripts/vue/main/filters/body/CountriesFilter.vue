@@ -2,7 +2,7 @@
   <fieldset class="region">
     <div class="row">
       <div class="col-sm-12">
-        <WrappedSpecialItems :filter="filter"/>
+        <SpecialItems :filter="filter"/>
       </div>
     </div>
   </fieldset>
@@ -16,8 +16,10 @@
 
     <div class="row">
       <div v-for="country in region.value" class="col-sm-6 col-lg-3">
-        <WrappedCheckBox :filter="filter" :value="country.value" :count="country.count"
-                         :label="country.label" :label-html-prefix="getHtmlPrefix(country)"/>
+        <div class="form-check form-check-inline">
+          <CheckBox :filter="filter" :value="country.value" :count="country.count"
+                    :label="country.label" :label-html-prefix="getHtmlPrefix(country)"/>
+        </div>
       </div>
     </div>
   </fieldset>
@@ -26,14 +28,14 @@
 <script lang="ts">
 import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
 import Filter from '../../../../main/Filter';
-import WrappedCheckBox from '../WrappedCheckBox.vue';
-import WrappedSpecialItems from '../WrappedSpecialItems.vue';
+import CheckBox from '../CheckBox.vue';
+import SpecialItems from '../SpecialItems.vue';
 import {CountriesOptions, StringItem} from '../../../../Static';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
-  components: {WrappedSpecialItems, WrappedCheckBox, AllNoneInvertLinks},
+  components: {SpecialItems, CheckBox, AllNoneInvertLinks},
   props: {
     filter: {type: Object as PropType<Filter<CountriesOptions>>, required: true},
   }

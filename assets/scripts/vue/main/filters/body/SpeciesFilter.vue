@@ -2,7 +2,7 @@
   <fieldset class="species">
     <div class="row">
       <div class="col">
-        <WrappedSpecialItems :filter="filter"/>
+        <SpecialItems :filter="filter"/>
       </div>
     </div>
 
@@ -21,16 +21,15 @@
 </template>
 
 <script lang="ts">
-import CheckBox from '../CheckBox.vue';
 import Filter from '../../../../main/Filter';
 import SpeciesChoices from './SpeciesChoices.vue';
-import WrappedSpecialItems from '../WrappedSpecialItems.vue';
+import SpecialItems from '../SpecialItems.vue';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 import {SpeciesOptions} from '../../../../Static';
 
 @Options({
-  components: {SpeciesChoices, WrappedSpecialItems, CheckBox},
+  components: {SpeciesChoices, SpecialItems},
   props: {
     filter: {type: Object as PropType<Filter<SpeciesOptions>>, required: true},
   }
