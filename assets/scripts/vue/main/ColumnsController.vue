@@ -1,5 +1,5 @@
 <template>
-  <li v-for="(label, name) in columns.columns" :data-col-name="name" @click="toggle(name, $event)">
+  <li v-for="(label, name) in columns.columns" :data-col-name="name" @click.prevent="toggle(name, $event)">
     <a class="dropdown-item" :class="{ active: columns.isVisible(name) }" href="#">{{ label }}</a>
   </li>
 </template>
@@ -17,8 +17,6 @@ export default class ColumnsController extends Vue {
   private columns!: ColumnsManager;
 
   private toggle(columnName: string, event: UIEvent): void {
-    event.preventDefault();
-
     this.columns.toggle(columnName);
     this.columns.save();
   }

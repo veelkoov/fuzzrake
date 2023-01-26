@@ -28,8 +28,8 @@ export default class MessageBus {
         this.subjectArtisanChangeListeners.forEach(callback => callback(newSubjectArtisan));
     }
 
-    public requestDataLoad(newQuery: string, appendAgeAndSfw: boolean): void {
-        this.dataLoadRequestListeners.forEach(callback => callback(newQuery, appendAgeAndSfw));
+    public requestDataLoad(newQuery: string, isExhaustive: boolean): void {
+        this.dataLoadRequestListeners.forEach(callback => callback(newQuery, isExhaustive));
     }
 
     public listenDataLoadRequests(listener: DataLoadRequestCallback): void {

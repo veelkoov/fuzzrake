@@ -7,6 +7,14 @@ export default class Storage {
     private constructor() {
     }
 
+    public static getString(key: string, defaultValue: string = null): string|null {
+        return this.get(key) ?? defaultValue;
+    }
+
+    public static saveString(key: string, value: string, expireSeconds: number = null): void {
+        this.save(key, value, expireSeconds);
+    }
+
     public static getBoolean(key: string, defaultValue: boolean = null): boolean|null {
         const result = this.get(key);
 

@@ -1,4 +1,5 @@
 import FilterState from './FilterState';
+import Storage from '../../../class/Storage';
 import {AnyOptions} from '../../../Static';
 import {Ref, ref} from 'vue';
 
@@ -15,26 +16,21 @@ export default class Filter<T extends AnyOptions> {
     ) {
     }
 
-    // public restoreChoices(): void { TODO
-    //     let stored: string = localStorage[`filters/${this.filter.getStorageName()}/choices`];
-    //
-    //     if (stored) {
-    //         let values: string[] = stored.split('\n');
-    //
-    //         this.$checkboxes.each((index: number, element: HTMLInputElement): void => {
-    //             element.checked = values.includes(element.value);
-    //         });
-    //
-    //         this.dataFromUiToModel();
-    //         this.refreshUi();
-    //     }
-    // }
-    //
-    // public saveChoices(): void {
-    //     try {
-    //         localStorage[`filters/${this.filter.getStorageName()}/choices`] = this.getSelectedChoices().join('\n');
-    //     } catch (e) {
-    //         // Not allowed? - I don't care then
-    //     }
-    // }
+    public restoreChoices(): void {
+        let stored: string = Storage.getString(`filters/${this.groupName}/choices`);
+
+        if (stored) {
+            let values = Array.from(stored.split('\n'));
+
+            values.forEach(value => this.state.value.set(value, '', true)); // TODO: Validate and restore labels as well
+        }
+    }
+
+    public saveChoices(): void {
+        try {
+            Storage.saveString(`filters/${this.groupName}/choices`, Array.from(this.state.value.valuesToLabels.keys()).join('\n'));
+        } catch (e) {
+            // Not allowed? - I don't care then
+        }
+    }
 }

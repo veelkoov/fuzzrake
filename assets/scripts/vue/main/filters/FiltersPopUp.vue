@@ -34,6 +34,7 @@ import CtrlButton from './CtrlButton.vue';
 import Filter from './Filter';
 import Static, {AnyOptions} from '../../../Static';
 import {Options, Vue} from 'vue-class-component';
+import {getMessageBus} from '../../../main/MessageBus';
 
 @Options({
   components: {BodyContainer, CtrlButton},
@@ -73,12 +74,18 @@ export default class FiltersPopUp extends Vue {
 
   public mounted(): void {
     (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.refreshFilters())
+
+    this.filters.forEach(filter => filter.restoreChoices());
   }
 
   private refreshFilters(): void {
+    this.filters.forEach(filter => filter.saveChoices());
+
     const count = this.filters.map(filter => filter.state.value.isActive ? 1 : 0).reduce((sum, val) => sum + val, 0);
 
     this.$emit('activeCountChanged', count);
+
+    getMessageBus().requestDataLoad($('#filters').serialize(), false);
   }
 }
 </script>
