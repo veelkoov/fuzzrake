@@ -16,13 +16,10 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         this.ctrlSelector = this.getCtrlSelector();
         this.bodySelector = this.getBodySelector();
 
-        this.$clearButton = this.getClearButton();
         this.$statusDisplay = this.getStatusDisplay();
         this.$checkboxes = this.getCheckboxes();
 
         this.setupCheckboxes();
-        this.setupClearButton();
-        this.setupAllNoneInvertLinks();
 
         this.refreshUi();
     }
@@ -96,59 +93,8 @@ export default abstract class AbstractBaseFilterVis implements FilterVisInterfac
         return jQuery(`${this.ctrlSelector} .status`);
     }
 
-    private getClearButton(): JQuery<HTMLElement> {
-        return jQuery(`${this.ctrlSelector} button.filter-ctrl-remove`);
-    }
-
     private getCheckboxes(): JQuery<HTMLInputElement> {
         return jQuery(`${this.bodySelector} input[type=checkbox]`);
-    }
-
-    private setupClearButton(): void {
-        this.$clearButton.on('click', (event: JQuery.ClickEvent) => {
-            event.stopImmediatePropagation();
-
-            this.filter.clear();
-            this.dataFromModelToUi();
-            this.refreshUi();
-        });
-    }
-
-    private setupAllNoneInvertLinks(): void {
-        let _this = this;
-
-        jQuery(`${this.bodySelector} .allNoneInvert a`).each((_, element) => {
-            let $a = jQuery(element);
-            let $checkboxes = $a.parents('fieldset').find('input:checkbox');
-            let valueFunction: any = AbstractBaseFilterVis.getValueFunction($a.data('action'));
-
-            $a.on('click', function (event, __) {
-                event.preventDefault();
-
-                $checkboxes.prop('checked', valueFunction);
-                _this.dataFromUiToModel();
-                _this.refreshUi();
-            });
-        });
-    }
-
-    private static getValueFunction(action: string): any {
-        switch (action) {
-            case 'none':
-                return false; // "function"
-            case 'all':
-                return true; // "function"
-            case 'invert':
-                return (_, checked) => !checked;
-            default:
-                throw new Error();
-        }
-    }
-
-    private dataFromModelToUi(): void {
-        this.$checkboxes.each((index, element) => {
-            element.checked = this.filter.isSelected(element.value);
-        });
     }
 
     private dataFromUiToModel(): void {

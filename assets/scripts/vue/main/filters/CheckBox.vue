@@ -1,6 +1,6 @@
 <template>
   <input class="form-check-input" type="checkbox" :id="id" :name="filter.groupName + '[]'" :data-label="label"
-         :value="value" @input="changed" :checked="isChecked"/>
+         :value="value" @input="changed" :checked="checked"/>
 
   <label class="form-check-label" :for="id">
     <span v-if="'' !== labelHtmlPrefix" v-html="labelHtmlPrefix"></span>
@@ -34,13 +34,28 @@ export default class CheckBox extends Vue {
   private value!: string;
 
   private changed(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-
-    this.filter.state.value.set(this.value, this.label, checkbox.checked);
+    this.checked = (event.target as HTMLInputElement).checked;
   }
 
-  get isChecked(): boolean {
+  private set checked(checked: boolean)
+  {
+    this.filter.state.value.set(this.value, this.label, checked);
+  }
+
+  public get checked(): boolean {
     return this.filter.state.value.get(this.value);
+  }
+
+  public check(): void {
+    this.checked = true;
+  }
+
+  public uncheck(): void {
+    this.checked = false;
+  }
+
+  public invert(): void {
+    this.checked = !this.checked;
   }
 }
 </script>
