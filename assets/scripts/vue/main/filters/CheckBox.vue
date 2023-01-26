@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import Filter from '../../../main/Filter';
+import Filter from './Filter';
 import getUniqueInt from '../../../class/Counter';
 import {AnyOptions} from '../../../Static';
 import {Options, Vue} from 'vue-class-component';

@@ -31,7 +31,7 @@
 <script lang="ts">
 import BodyContainer from './BodyContainer.vue';
 import CtrlButton from './CtrlButton.vue';
-import Filter from '../../../main/Filter';
+import Filter from './Filter';
 import Static, {AnyOptions} from '../../../Static';
 import {Options, Vue} from 'vue-class-component';
 
@@ -52,7 +52,7 @@ export default class FiltersPopUp extends Vue {
       new Filter('styles', 'Styles', 'MultiselectFilter',
           'StylesHelp', Static.getFiltersOptions().styles),
       new Filter('features', 'Features', 'MultiselectFilter',
-          'FeaturesHelp', Static.getFiltersOptions().features),
+          'FeaturesHelp', Static.getFiltersOptions().features, true),
       new Filter('orderTypes', 'Order types', 'MultiselectFilter',
           'OrderTypesHelp', Static.getFiltersOptions().orderTypes),
       new Filter('productionModels', 'Production models', 'MultiselectFilter',

@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import CheckBox from './CheckBox.vue';
-import Filter from '../../../main/Filter';
+import Filter from './Filter';
 import {Options, Vue} from 'vue-class-component';
 import {SpecialItem} from '../../../Static';
 

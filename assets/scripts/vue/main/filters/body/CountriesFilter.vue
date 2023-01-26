@@ -32,7 +32,7 @@
 import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
 import CheckBox from '../CheckBox.vue';
 import CheckBoxes from '../CheckBoxes';
-import Filter from '../../../../main/Filter';
+import Filter from '../Filter';
 import SpecialItems from '../SpecialItems.vue';
 import {CountriesOptions, StringItem} from '../../../../Static';
 import {Options, Vue} from 'vue-class-component';

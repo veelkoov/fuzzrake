@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import Filter from '../../../main/Filter';
+import Filter from './Filter';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({

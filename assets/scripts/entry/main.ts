@@ -75,7 +75,6 @@ jQuery(() => {
 
     const filtersManager = new FiltersManager(
         messageBus,
-        jQuery('#filters'),
     );
     jQuery('#filtersModal').on(
         'hidden.bs.modal',
