@@ -1,11 +1,11 @@
 declare const DATA_BRIDGE: { [key: string]: string };
 
-export type SpecialItem = { 'value': String, 'label': String, 'count': Number, 'faIcon': String };
+export type SpecialItem = { 'value': string, 'label': string, 'count': number, 'faIcon': string };
 export type SpecialItems = Array<SpecialItem>;
-export type StringItem = { 'value': String, 'label': String, 'count': Number };
+export type StringItem = { 'value': string, 'label': string, 'count': number };
 export type StringItems = Array<StringItem>;
-export type StringItemsItem = { 'value': StringItems, 'label': String, 'count': Number };
-export type SpecieItem = { 'value': String|SpecieItems, 'label': String, 'count': Number };
+export type StringItemsItem = { 'value': StringItems, 'label': string, 'count': number };
+export type SpecieItem = { 'value': string|SpecieItems, 'label': string, 'count': number };
 export type SpecieItems = Array<SpecieItem>;
 
 export type MultiselectOptions = { 'items': StringItems, 'specialItems': SpecialItems };
@@ -19,7 +19,7 @@ export type FiltersOptions = {
     'paymentPlans': MultiselectOptions,
     'features': MultiselectOptions,
     'productionModels': MultiselectOptions,
-    'commissionStatuses': MultiselectOptions,
+    'openFor': MultiselectOptions,
     'languages': MultiselectOptions,
     'countries': CountriesOptions,
     'states': MultiselectOptions,

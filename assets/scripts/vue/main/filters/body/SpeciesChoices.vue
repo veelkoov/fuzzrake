@@ -2,8 +2,11 @@
   <template v-for="specie in species">
     <div class="btn-group specie" role="group">
         <span class="btn btn-outline-secondary"> <!-- TODO: #76 Species count -->
-          <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label"
-                    label-html-suffix='<span class="descendants-indicator"><i class="fas fa-tasks"></i></span>'/>
+          <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label"/>
+
+          <span v-if="anySubspecieChecked(specie)" class="descendants-indicator">
+            <wbr> <i class="fas fa-tasks"></i>
+          </span>
         </span>
 
       <span v-if="hasSubspecies(specie)" class="btn btn-outline-secondary toggle">
@@ -35,13 +38,54 @@ import {SpecieItem, SpecieItems, SpeciesOptions} from '../../../../Static';
   }
 })
 export default class SpeciesChoices extends Vue {
+  private filter!: Filter<SpeciesOptions>;
+
   private hasSubspecies(specie: SpecieItem): boolean {
     return 'string' !== typeof(specie.value);
   }
 
   private getSubspecies(specie: SpecieItem): SpecieItems {
-    // @ts-ignore TODO: Should be able to check it
-    return specie.value;
+    return specie.value as SpecieItems;
+  }
+
+  private anySubspecieChecked(specie: SpecieItem): boolean {
+    if (!this.hasSubspecies(specie)) {
+      return false;
+    }
+
+    for (const subspecie of (specie.value as SpecieItems)) {
+      if (this.filter.state.get(subspecie.label)) {
+        return true;
+      }
+
+      if (this.hasSubspecies(subspecie) && this.anySubspecieChecked(subspecie)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 </script>
+
+<style scoped lang="scss">
+.species {
+  .specie {
+    margin: 0.5ex 0.5ex 0 0;
+
+    ::v-deep(label) {
+      margin: 0 0 0 1ex;
+    }
+
+    button.toggle {
+      padding-left: 2ex;
+      padding-right: 2ex;
+    }
+  }
+
+  .subspecies {
+    margin-left: 1.5em;
+    display: none;
+  }
+}
+</style>

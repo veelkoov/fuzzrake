@@ -3,9 +3,8 @@
          :value="value" @input="changed" :checked="checked"/>
 
   <label class="form-check-label" :for="id">
-    <span v-if="'' !== labelHtmlPrefix" v-html="labelHtmlPrefix"></span>
+    <span v-if="labelHtmlPrefix" v-html="labelHtmlPrefix"></span>
     {{ label }}
-    <span v-if="'' !== labelHtmlSuffix" v-html="labelHtmlSuffix"></span>
 
     <span v-if="null !== count" class="count">({{ count }})</span>
   </label>
@@ -23,7 +22,6 @@ import {Options, Vue} from 'vue-class-component';
     filter: {type: Filter, required: true},
     label: {type: String, required: true},
     labelHtmlPrefix: {type: String, required: false},
-    labelHtmlSuffix: {type: String, required: false},
     value: {type: String, required: true},
   },
 })

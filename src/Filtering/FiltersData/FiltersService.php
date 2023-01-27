@@ -39,7 +39,7 @@ class FiltersService
             $this->getPaymentPlans(),
             $this->artisanRepository->getDistinctFeatures(),
             $this->artisanRepository->getDistinctProductionModels(),
-            $this->getCommissionsStatuses(),
+            $this->getOpenFor(),
             $this->artisanRepository->getDistinctLanguagesForFilters(),
             $this->getCountriesFilterData(),
             $this->artisanRepository->getDistinctStatesToCountAssoc(),
@@ -113,7 +113,7 @@ class FiltersService
     /**
      * @throws UnexpectedResultException
      */
-    private function getCommissionsStatuses(): FilterData
+    private function getOpenFor(): FilterData
     {
         $trackedCount = $this->artisanRepository->getCsTrackedCount();
         $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();

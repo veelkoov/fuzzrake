@@ -20,7 +20,7 @@ class RequestParser
         'features',
         'orderTypes',
         'productionModels',
-        'commissionStatuses',
+        'openFor',
         'species',
         'paymentPlans',
     ];
@@ -55,7 +55,7 @@ class RequestParser
             $strArrays['features'],
             $strArrays['orderTypes'],
             $strArrays['productionModels'],
-            $strArrays['commissionStatuses'],
+            $strArrays['openFor'],
             $strArrays['species'],
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),

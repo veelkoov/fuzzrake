@@ -64,7 +64,7 @@ export default class FiltersPopUp extends Vue {
       new Filter('productionModels', 'Production models', 'MultiselectFilter',
           'ProductionModelsHelp', Static.getFiltersOptions().productionModels),
       new Filter('openFor', 'Open for', 'MultiselectFilter',
-          'OpenForHelp', Static.getFiltersOptions().commissionStatuses),
+          'OpenForHelp', Static.getFiltersOptions().openFor),
       new Filter('species', 'Species', 'SpeciesFilter',
           'SpeciesHelp', Static.getFiltersOptions().species),
       new Filter('paymentPlans', 'Payment plans', 'MultiselectFilter',
@@ -92,3 +92,17 @@ export default class FiltersPopUp extends Vue {
   }
 }
 </script>
+
+<style scoped lang="scss">
+::v-deep(fieldset legend) {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding-top: .5rem;
+}
+
+::v-deep(.count) {
+  font-size: 90%;
+  color: #aaa;
+}
+</style>

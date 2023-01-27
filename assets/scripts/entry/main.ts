@@ -16,10 +16,6 @@ jQuery(() => {
 
     createApp(Main).mount('#main-primary-component');
 
-    jQuery('#filtersModal .specie .toggle').on('click', function () { // TODO
-        jQuery(this).parents('.specie').nextAll('.subspecies').first().toggle(250);
-    });
-
     const dataManager = new DataManager(messageBus);
 
     jQuery('#data-table-container').toggle();

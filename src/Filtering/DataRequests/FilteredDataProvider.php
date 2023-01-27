@@ -67,8 +67,8 @@ class FilteredDataProvider
         if ([] !== $choices->orderTypes) {
             $filters[] = new OrderTypesFilter($choices->orderTypes);
         }
-        if ([] !== $choices->commissionStatuses) {
-            $filters[] = new OpenForFilter($choices->commissionStatuses);
+        if ([] !== $choices->openFor) {
+            $filters[] = new OpenForFilter($choices->openFor);
         }
         if ([] !== $choices->species) {
             $filters[] = $this->speciesFilterFactory->get($choices->species);

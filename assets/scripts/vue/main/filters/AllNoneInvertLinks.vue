@@ -18,3 +18,19 @@ import {Options, Vue} from 'vue-class-component';
 export default class AllNoneInvertLinks extends Vue {
 }
 </script>
+
+<style scoped lang="scss">
+.allNoneInvert {
+  font-size: 90%;
+  font-weight: normal;
+  color: #aaa;
+}
+
+.allNoneInvert.countries {
+  padding-left: 1em;
+}
+
+.allNoneInvert.simple {
+  float: right;
+}
+</style>

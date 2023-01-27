@@ -17,7 +17,7 @@ class Choices implements CacheDigestProvider
      * @param list<string> $features
      * @param list<string> $orderTypes
      * @param list<string> $productionModels
-     * @param list<string> $commissionStatuses
+     * @param list<string> $openFor
      * @param list<string> $species
      */
     public function __construct(
@@ -29,7 +29,7 @@ class Choices implements CacheDigestProvider
         public readonly array $features,
         public readonly array $orderTypes,
         public readonly array $productionModels,
-        public readonly array $commissionStatuses,
+        public readonly array $openFor,
         public readonly array $species,
         public readonly bool $wantsUnknownPaymentPlans,
         public readonly bool $wantsAnyPaymentPlans,

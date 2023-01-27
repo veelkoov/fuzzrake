@@ -52,7 +52,7 @@ class FiltersChoicesFilterTest extends KernelTestCaseWithEM
         self::assertEquals(['LED eyes', '?', '*'], $result->features);
         self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes);
         self::assertEquals(['Standard commissions', '?'], $result->productionModels);
-        self::assertEquals(['Pancakes', '!', '-'], $result->commissionStatuses);
+        self::assertEquals(['Pancakes', '!', '-'], $result->openFor);
         self::assertEquals(['Birds', '?'], $result->species);
     }
 }

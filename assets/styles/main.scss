@@ -17,58 +17,6 @@
   }
 }
 
-#filters-body {
-  .species {
-    .specie {
-      margin: 0.5ex 0.5ex 0 0;
-
-      label {
-        margin: 0 0 0 1ex;
-      }
-
-      button.toggle {
-        padding-left: 2ex;
-        padding-right: 2ex;
-      }
-    }
-
-    .subspecies {
-      margin-left: 1.5em;
-      display: none;
-    }
-
-    .descendants-indicator {
-      display: none;
-    }
-  }
-
-  .allNoneInvert {
-    font-size: 90%;
-    font-weight: normal;
-    color: #aaa;
-  }
-
-  .allNoneInvert.countries {
-    padding-left: 1em;
-  }
-
-  .allNoneInvert.simple {
-    float: right;
-  }
-
-  fieldset legend {
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 0;
-    padding-top: .5rem;
-  }
-
-  .count {
-    font-size: 90%;
-    color: #aaa;
-  }
-}
-
 div#data-table-container-closest {
   overflow-x: auto;
 }
