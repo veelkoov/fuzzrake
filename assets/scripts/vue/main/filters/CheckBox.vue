@@ -39,11 +39,11 @@ export default class CheckBox extends Vue {
 
   private set checked(checked: boolean)
   {
-    this.filter.state.value.set(this.value, this.label, checked);
+    this.filter.state.set(this.value, this.label, checked);
   }
 
   public get checked(): boolean {
-    return this.filter.state.value.get(this.value);
+    return this.filter.state.get(this.value);
   }
 
   public check(): void {

@@ -5,7 +5,6 @@ import Static from '../Static';
 export type DataRow = string[]|string|number|boolean|null;
 
 export default class DataManager {
-    private data: DataRow[] = [];
     private prevQuery: string|null = null;
     private readonly ageAndSfwConfig: AgeAndSfwConfig = AgeAndSfwConfig.getInstance();
 
@@ -28,9 +27,7 @@ export default class DataManager {
 
         jQuery.ajax(Static.getApiUrl(`artisans-array.json${usedQuery}`), {
             success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
-                this.data = newData;
-
-                this.messageBus.notifyDataChange(this.data);
+                this.messageBus.notifyDataChange(newData);
             },
             error: this.displayError,
         });

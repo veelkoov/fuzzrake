@@ -32,23 +32,23 @@
 import BodyContainer from './BodyContainer.vue';
 import CtrlButton from './CtrlButton.vue';
 import Filter from './Filter';
+import MainState from '../MainState';
 import Static, {AnyOptions} from '../../../Static';
-import {Options, Vue} from 'vue-class-component';
 import {getMessageBus} from '../../../main/MessageBus';
+import {Options, Vue} from 'vue-class-component';
 
 @Options({
   components: {BodyContainer, CtrlButton},
-  emits: {
-    activeCountChanged(_: number): boolean {
-        return true;
-    },
-  },
+  props: {
+    state: {type: MainState, required: true},
+  }
 })
 export default class FiltersPopUp extends Vue {
-  private filters: Array<Filter<AnyOptions>>;
+  private state!: MainState;
+  private filters = new Array<Filter<AnyOptions>>();
 
   public created(): void {
-    this.filters = [
+    this.filters.push(...[
       new Filter('countries', 'Countries', 'CountriesFilter',
           'CountriesHelp', Static.getFiltersOptions().countries),
       new Filter('states', 'States', 'MultiselectFilter',
@@ -69,23 +69,26 @@ export default class FiltersPopUp extends Vue {
           'SpeciesHelp', Static.getFiltersOptions().species),
       new Filter('paymentPlans', 'Payment plans', 'MultiselectFilter',
           'PaymentPlansHelp', Static.getFiltersOptions().paymentPlans),
-    ];
+    ]);
+
+    this.filters.forEach(filter => filter.restoreChoices());
   }
 
   public mounted(): void {
-    (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.refreshFilters())
-
-    this.filters.forEach(filter => filter.restoreChoices());
+    (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.refreshFilters());
   }
 
   private refreshFilters(): void {
     this.filters.forEach(filter => filter.saveChoices());
 
-    const count = this.filters.map(filter => filter.state.value.isActive ? 1 : 0).reduce((sum, val) => sum + val, 0);
+    this.state.activeFiltersCount = this.getActiveFiltersCount();
+    this.state.query = $('#filters').serialize(); // TODO: Optimize to avoid error 413
 
-    this.$emit('activeCountChanged', count);
+    getMessageBus().requestDataLoad(this.state.query, false);
+  }
 
-    getMessageBus().requestDataLoad($('#filters').serialize(), false);
+  private getActiveFiltersCount(): number {
+    return this.filters.map(filter => filter.state.isActive ? 1 : 0).reduce((sum, val) => sum + val, 0);
   }
 }
 </script>
