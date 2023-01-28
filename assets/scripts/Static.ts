@@ -5,11 +5,12 @@ export type SpecialItems = Array<SpecialItem>;
 export type StringItem = { 'value': string, 'label': string, 'count': number };
 export type StringItems = Array<StringItem>;
 export type StringItemsItem = { 'value': StringItems, 'label': string, 'count': number };
+export type StringItemsItems = Array<StringItemsItem>;
 export type SpecieItem = { 'value': string|SpecieItems, 'label': string, 'count': number };
 export type SpecieItems = Array<SpecieItem>;
 
 export type MultiselectOptions = { 'items': StringItems, 'specialItems': SpecialItems };
-export type CountriesOptions = { 'items': StringItemsItem, 'specialItems': SpecialItems };
+export type CountriesOptions = { 'items': StringItemsItems, 'specialItems': SpecialItems };
 export type SpeciesOptions = { 'items': SpecieItems, 'specialItems': SpecialItems };
 export type AnyOptions = MultiselectOptions|CountriesOptions|SpeciesOptions;
 

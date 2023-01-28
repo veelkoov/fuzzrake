@@ -1,5 +1,5 @@
 <template>
-  <CheckList v-if="!aasDismissed" @dismissed="dismissChecklist()"/>
+  <CheckList v-if="!aasDismissed" @dismissed="onChecklistDismissal()"/>
   <FiltersPopUp :state="state"/>
   <UpdatesPopUp :state="state"/>
   <CardPopUp :state="state"/>
@@ -83,7 +83,7 @@ export default class Main extends Vue {
     this.messageBus.listenSetupFinished(() => this.onSetupFinished());
   }
 
-  private dismissChecklist(): void {
+  private onChecklistDismissal(): void {
     this.aasDismissed = true;
 
     // Checklist causes the user to be at the bottom of the table when it shows up
@@ -103,14 +103,12 @@ export default class Main extends Vue {
       this.messageBus.requestDataLoad('', false);
     }
 
-    if (!window.location.hash.match(makerIdHashRegexp)) {
-      return;
-    }
+    if (window.location.hash.match(makerIdHashRegexp)) {
+      this.state.openCardForMakerId = window.location.hash.slice(1);
 
-    this.state.openCardForMakerId = window.location.hash.slice(1);
-
-    if (!this.aasConfig.getMakerMode()) {
-      this.messageBus.requestDataLoad('wantsSfw=0&isAdult=1&makerId=' + this.state.openCardForMakerId, true);
+      if (!this.aasConfig.getMakerMode()) {
+        this.messageBus.requestDataLoad('wantsSfw=0&isAdult=1&makerId=' + this.state.openCardForMakerId, true);
+      }
     }
   }
 }

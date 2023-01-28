@@ -1,7 +1,6 @@
 import FilterState from './FilterState';
 import Storage from '../../../class/Storage';
-import {AnyOptions} from '../../../Static';
-import {Ref, ref} from 'vue';
+import {AnyOptions, SpecieItems, StringItems} from '../../../Static';
 
 export default class Filter<T extends AnyOptions> {
     public readonly state: FilterState = new FilterState(this.isAndRelation);
@@ -16,17 +15,48 @@ export default class Filter<T extends AnyOptions> {
     ) {
     }
 
+    public saveChoices(): void {
+        Storage.saveString(`filters/${this.groupName}/choices`, Array.from(this.state.valuesToLabels.keys()).join('\n'));
+    }
+
     public restoreChoices(): void {
-        let stored: string = Storage.getString(`filters/${this.groupName}/choices`);
+        const stored: string = Storage.getString(`filters/${this.groupName}/choices`, '');
 
         if (stored) {
-            let values = Array.from(stored.split('\n'));
+            const values = Array.from(stored.split('\n'));
+            const validPairs = this.getValidValueLabelPairsFromOptions(this.options);
 
-            values.forEach(value => this.state.set(value, '', true)); // TODO: Validate and restore labels as well
+            values.forEach(value => {
+                if (validPairs.has(value)) {
+                    this.state.set(value, validPairs.get(value), true);
+                }
+            });
         }
     }
 
-    public saveChoices(): void {
-        Storage.saveString(`filters/${this.groupName}/choices`, Array.from(this.state.valuesToLabels.keys()).join('\n'));
+    private getValidValueLabelPairsFromOptions(options: AnyOptions): Map<string, string> {
+        const result = new Map<string, string>();
+
+        options.specialItems.forEach(option => result.set(option.value, option.label));
+
+        this.getValidValueLabelPairsFromItems(options.items)
+            .forEach((value, key) => result.set(key, value));
+
+        return result;
+    }
+
+    private getValidValueLabelPairsFromItems(options: StringItems|SpecieItems): Map<string, string> {
+        const result = new Map<string, string>();
+
+        options.forEach(option => {
+            if ('string' === typeof(option.value)) {
+                result.set(option.value, option.label);
+            } else {
+                this.getValidValueLabelPairsFromItems(option.value)
+                    .forEach((value, key) => result.set(key, value));
+            }
+        });
+
+        return result;
     }
 }

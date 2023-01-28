@@ -75,16 +75,20 @@ export default class FiltersPopUp extends Vue {
   }
 
   public mounted(): void {
-    (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.refreshFilters());
+    (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.onModalClosed());
+
+    this.updateState();
   }
 
-  private refreshFilters(): void {
+  private onModalClosed(): void {
     this.filters.forEach(filter => filter.saveChoices());
+    this.updateState();
+    getMessageBus().requestDataLoad(this.state.query, false);
+  }
 
+  private updateState(): void {
     this.state.activeFiltersCount = this.getActiveFiltersCount();
     this.state.query = $('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
-
-    getMessageBus().requestDataLoad(this.state.query, false);
   }
 
   private getActiveFiltersCount(): number {
