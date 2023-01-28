@@ -27,10 +27,6 @@ export default class Filter<T extends AnyOptions> {
     }
 
     public saveChoices(): void {
-        try {
-            Storage.saveString(`filters/${this.groupName}/choices`, Array.from(this.state.valuesToLabels.keys()).join('\n'));
-        } catch (e) {
-            // Not allowed? - I don't care then
-        }
+        Storage.saveString(`filters/${this.groupName}/choices`, Array.from(this.state.valuesToLabels.keys()).join('\n'));
     }
 }

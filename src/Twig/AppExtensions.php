@@ -89,7 +89,7 @@ class AppExtensions extends AbstractExtension
      *
      * @return MutableItem[]
      */
-    public function filterItemsMatchingFilter(array $items, string $matchWord): array
+    public function filterItemsMatchingFilter(array $items, string $matchWord): array // TODO: https://github.com/veelkoov/fuzzrake/issues/80 Don't use mutable in view
     {
         $pattern = Patterns::getI($matchWord);
 

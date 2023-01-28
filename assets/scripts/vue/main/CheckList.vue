@@ -10,7 +10,7 @@
       </p>
 
       <p class="card-text">
-        The <!-- FIXME --><a href="{ { path('should_know') }}">What you should know</a> page contains some helpful information,
+        The <a :href="Static.getShouldKnowPath()">What you should know</a> page contains some helpful information,
         tips, and links to external resources. It includes a <em>Learn about <strong>the risk</strong></em> <!--
         grep-learn-about-the-risk --> section.
         <br/>
@@ -90,10 +90,16 @@
 </template>
 
 <script lang="ts">
-import {Options, Vue} from 'vue-class-component';
 import AgeAndSfwConfig from '../../class/AgeAndSfwConfig';
+import Static from '../../Static';
+import {Options, Vue} from 'vue-class-component';
 
 @Options({
+  computed: {
+    Static() {
+      return Static;
+    },
+  },
   emits: ['dismissed'],
 })
 export default class CheckList extends Vue {

@@ -82,7 +82,7 @@ export default class FiltersPopUp extends Vue {
     this.filters.forEach(filter => filter.saveChoices());
 
     this.state.activeFiltersCount = this.getActiveFiltersCount();
-    this.state.query = $('#filters').serialize(); // TODO: Optimize to avoid error 413
+    this.state.query = $('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
 
     getMessageBus().requestDataLoad(this.state.query, false);
   }

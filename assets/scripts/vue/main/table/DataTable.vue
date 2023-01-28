@@ -97,7 +97,7 @@
 
         <td class="links" v-show="columns.isVisible('links')">
           <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditUrl(artisan.getLastMakerId())"><i class="fas fa-edit"></i></a>
+            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditPath(artisan.getLastMakerId())"><i class="fas fa-edit"></i></a>
 
             <a v-if="artisan.fursuitReviewUrl" class="btn btn-secondary" :href="artisan.fursuitReviewUrl" target="_blank"><i class="fas fa-balance-scale"></i></a>
 

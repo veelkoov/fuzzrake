@@ -164,7 +164,7 @@
           <div v-if="0 === artisan.commissionsUrls.length" class="col-md-12 p-1">
             <p>Commissions status is not being tracked.</p>
 
-            <p><a :href="Static.getTrackingUrl()" target="_blank">Learn more</a></p>
+            <p><a :href="Static.getTrackingPath()" target="_blank">Learn more</a></p>
           </div>
 
           <template v-else>
@@ -195,7 +195,7 @@
                   however the software failed to "understand" the contents. Last time tried on {{ artisan.csLastCheck }} UTC.
                 </p>
 
-                <p><a :href=Static.getTrackingUrl() target="_blank">Learn more</a></p>
+                <p><a :href=Static.getTrackingPath() target="_blank">Learn more</a></p>
               </template>
             </div>
 
@@ -208,7 +208,7 @@
                   Last time checked on {{ artisan.csLastCheck }} UTC.
                 </p>
 
-                <p><a :href=Static.getTrackingUrl() target="_blank">Learn more</a></p>
+                <p><a :href=Static.getTrackingPath() target="_blank">Learn more</a></p>
               </template>
 
               <img v-else :src=Static.getTrackingFailedImgSrc() class="img-fluid tracking-failed" alt="">

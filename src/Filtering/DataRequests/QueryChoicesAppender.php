@@ -40,7 +40,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         return $builder->getEntityManager()->getRepository(Artisan::class)->createQueryBuilder($alias);
     }
 
-    private function applyMakerId(QueryBuilder $builder): void
+    private function applyMakerId(QueryBuilder $builder): void // TODO: Test https://github.com/veelkoov/fuzzrake/issues/183
     {
         if ('' !== $this->choices->makerId) {
             $builder->andWhere($builder->expr()->exists(

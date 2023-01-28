@@ -30,24 +30,32 @@ declare const FILTERS_OPTIONS: FiltersOptions;
 declare const TOTAL_ARTISANS_COUNT: number;
 
 export default abstract class Static {
-    public static getMainUrl(): string {
-        return DATA_BRIDGE.mainUrl;
+    public static getMainPath(): string {
+        return DATA_BRIDGE.mainPath;
     }
 
-    public static getTrackingUrl(): string {
-        return DATA_BRIDGE.trackingUrl;
+    public static getShouldKnowPath(): string {
+        return DATA_BRIDGE.shouldKnowPath;
+    }
+
+    public static getTrackingPath(): string {
+        return DATA_BRIDGE.trackingPath;
+    }
+
+    public static getTrackingLimitationsPath(): string {
+        return DATA_BRIDGE.trackingLimitationsPath;
     }
 
     public static getIuFormRedirectUrl(artisanId: string): string {
         return DATA_BRIDGE.iuFormRedirectUrl.replace('MAKER_ID', artisanId);
     }
 
-    public static getFeedbackFormUrl(artisanId: string): string {
-        return DATA_BRIDGE.feedbackFormUrl.replace('MAKER_ID', artisanId);
+    public static getFeedbackFormPath(artisanId: string): string {
+        return DATA_BRIDGE.feedbackFormPath.replace('MAKER_ID', artisanId);
     }
 
-    public static getArtisanEditUrl(artisanId: string): string {
-        return DATA_BRIDGE.artisanEditUrl.replace('MAKER_ID', artisanId);
+    public static getArtisanEditPath(artisanId: string): string {
+        return DATA_BRIDGE.artisanEditPath.replace('MAKER_ID', artisanId);
     }
 
     public static getTrackingFailedImgSrc(): string {

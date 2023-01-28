@@ -1,9 +1,11 @@
 <template>
-  <li>Many makers still haven't supplied the information about species they are (not) willing to do. You might want to
-    try <em>Unknown</em> option as well.
+  <li>
+    Many makers still haven't supplied the information about species they are (not) willing to do. You might want to try <em>Unknown</em> option as well.
   </li>
-  <li>If you don't see a specie you are interested in, try finding a group, to which the specie would belong. A lot of
-    makers claim they would work with (almost) all species.
+  <li>
+    If you don't see a specie you are interested in, try finding a group, to which the specie would belong. A lot of makers claim they would work with (almost) all species.
   </li>
-  <li><i class="fas fa-tasks"></i> &xlarr; this mark means the item has at least one descendant selected.</li>
+  <li>
+    <i class="fas fa-tasks"></i> &xlarr; this mark means the item has at least one descendant selected.
+  </li>
 </template>

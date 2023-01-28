@@ -13,7 +13,7 @@
             <li class="small">
               You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supplied some information), you can ask them to fill the missing information, e.g.:
 
-              <em>I found you on getfursu.it, but some information is missing there. Please consider sending updates: <a :href="iuFormUrl" target="_blank">{{ iuFormUrl }}</a> .</em><!-- FIXME: Full URL -->
+              <em>I found you on getfursu.it, but some information is missing there. Please consider sending updates: <a :href="iuFormUrl" target="_blank">{{ iuFormUrl }}</a> .</em>
 
               Thank you! <i class="fas fa-heart"></i>
             </li>

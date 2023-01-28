@@ -1,3 +1,5 @@
+import Storage from '../../class/Storage';
+
 export default class ColumnsManager {
     public readonly columns = {
         'makerId':          'Maker ID',
@@ -33,18 +35,14 @@ export default class ColumnsManager {
     }
 
     public save(): void {
-        try {
-            localStorage['columns/version'] = ColumnsManager.STORAGE_VERSION;
-            localStorage['columns/state'] = this.toString();
-        } catch (e) {
-            // Not allowed? - I don't care then
-        }
+        Storage.saveString('columns/version', ColumnsManager.STORAGE_VERSION);
+        Storage.saveString('columns/state', this.toString());
     }
 
     public load(): void {
-        let state: string = localStorage['columns/state']; // FIXME: Use Storage class
+        let state: string = Storage.getString('columns/state');
 
-        if (localStorage['columns/version'] === ColumnsManager.STORAGE_VERSION && state) {
+        if (state && ColumnsManager.STORAGE_VERSION === Storage.getString('columns/version')) {
             this.visible.clear();
 
             state.split(',').forEach((item) => {
