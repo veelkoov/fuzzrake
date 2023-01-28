@@ -42,7 +42,7 @@ export default class ColumnsManager {
     }
 
     public load(): void {
-        let state: string = localStorage['columns/state'];
+        let state: string = localStorage['columns/state']; // FIXME: Use Storage class
 
         if (localStorage['columns/version'] === ColumnsManager.STORAGE_VERSION && state) {
             this.visible.clear();

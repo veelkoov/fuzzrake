@@ -26,8 +26,6 @@ export type FiltersOptions = {
     'species': SpeciesOptions,
 };
 
-declare const MAKER_IDS_MAP: object;
-declare const VISIBLE_SPECIES: object;
 declare const FILTERS_OPTIONS: FiltersOptions;
 declare const TOTAL_ARTISANS_COUNT: number;
 
@@ -70,14 +68,6 @@ export default abstract class Static {
 
     public static getTotalArtisansCount(): number {
         return TOTAL_ARTISANS_COUNT;
-    }
-
-    public static getMakerIdsMap(): object {
-        return MAKER_IDS_MAP;
-    }
-
-    public static getVisibleSpecies(): object {
-        return VISIBLE_SPECIES;
     }
 
     public static getFiltersOptions(): FiltersOptions {

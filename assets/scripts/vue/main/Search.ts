@@ -1,4 +1,4 @@
-import {makerIdRegexp} from '../consts';
+import {makerIdRegexp} from '../../consts';
 
 export default class Search {
     private _textLc: string = '';

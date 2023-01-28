@@ -43,7 +43,14 @@ class QueryChoicesAppender implements CacheDigestProvider
     private function applyMakerId(QueryBuilder $builder): void
     {
         if ('' !== $this->choices->makerId) {
-            $builder->andWhere('a.makerId = :makerId')->setParameter('makerId', $this->choices->makerId);
+            $builder->andWhere($builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, 'a4')
+                    ->select('1')
+                    ->join('a4.makerIds', 'a4mi')
+                    ->where('a4.id = a.id')
+                    ->andWhere('a4mi.makerId = :makerId')
+            ))
+                ->setParameter('makerId', $this->choices->makerId);
         }
     }
 

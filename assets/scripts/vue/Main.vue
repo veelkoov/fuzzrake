@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div id="data-table-container" style="display: none;">
+    <div id="data-table-container">
       <div class="row">
         <div class="col-md-6">
           <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
@@ -24,7 +24,7 @@
                 Columns
               </button>
               <ul class="dropdown-menu">
-                <ColumnsController :columns=columns />
+                <ColumnsController :columns="columns" />
               </ul>
             </div>
 
@@ -38,11 +38,11 @@
         </div>
 
         <div class="col-md-6 text-md-end">
-          <input class="my-1" type="text" @input="event => search.text = event.target.value" placeholder="Search">
+          <input class="my-1" type="text" @input="event => state.search.text = event.target.value" placeholder="Search">
         </div>
       </div>
 
-      <DataTable :search=search :columns=columns />
+      <DataTable :columns="columns" :state="state" />
     </div>
   </div>
 </template>
@@ -52,14 +52,14 @@ import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import CardPopUp from './main/card/CardPopUp.vue';
 import CheckList from './main/CheckList.vue';
 import ColumnsController from './main/ColumnsController.vue';
-import ColumnsManager from '../main/ColumnsManager';
+import ColumnsManager from './main/ColumnsManager';
 import DataTable from './main/table/DataTable.vue';
 import FiltersPopUp from './main/filters/FiltersPopUp.vue';
 import MainState from './main/MainState';
 import MessageBus, {getMessageBus} from '../main/MessageBus';
-import Search from '../main/Search';
 import Static from '../Static';
 import UpdatesPopUp from './main/UpdatesPopUp.vue';
+import {makerIdHashRegexp} from '../consts';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
@@ -74,12 +74,13 @@ export default class Main extends Vue {
   private readonly state = new MainState();
   private readonly aasConfig: AgeAndSfwConfig = AgeAndSfwConfig.getInstance();
   private readonly columns: ColumnsManager = new ColumnsManager();
-  private readonly search: Search = new Search();
   private readonly messageBus: MessageBus = getMessageBus();
   private aasDismissed: boolean = this.aasConfig.getMakerMode();
 
   public created(): void {
     this.columns.load();
+
+    this.messageBus.listenSetupFinished(() => this.onSetupFinished());
   }
 
   private dismissChecklist(): void {
@@ -95,6 +96,22 @@ export default class Main extends Vue {
   private disableMakerMode(): void {
     this.aasConfig.setMakerMode(false);
     this.aasConfig.save();
+  }
+
+  private onSetupFinished(): void {
+    if (this.aasConfig.getMakerMode()) {
+      this.messageBus.requestDataLoad('', false);
+    }
+
+    if (!window.location.hash.match(makerIdHashRegexp)) {
+      return;
+    }
+
+    this.state.openCardForMakerId = window.location.hash.slice(1);
+
+    if (!this.aasConfig.getMakerMode()) {
+      this.messageBus.requestDataLoad('wantsSfw=0&isAdult=1&makerId=' + this.state.openCardForMakerId, true);
+    }
   }
 }
 </script>

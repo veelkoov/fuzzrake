@@ -154,12 +154,13 @@
 <script lang="ts">
 import AgesDescription from '../AgesDescription.vue';
 import Artisan from '../../../class/Artisan';
-import ColumnsManager from '../../../main/ColumnsManager';
+import ColumnsManager from '../ColumnsManager';
+import MainState from '../MainState';
 import MessageBus, {getMessageBus} from '../../../main/MessageBus';
-import Search from '../../../main/Search';
 import Static from '../../../Static';
 import TblLink from './TblLink.vue';
 import {DataRow} from '../../../main/DataManager';
+import {nextTick} from 'vue';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
@@ -169,48 +170,32 @@ import {Options, Vue} from 'vue-class-component';
     }
   },
   components: {
-    AgesDescription,
-    TblLink,
+    AgesDescription, TblLink,
   },
   props: {
-    columns: {
-      type: ColumnsManager,
-      required: true,
-    },
-    search: {
-      type: Search,
-      required: true,
-    },
+    columns: {type: ColumnsManager, required: true},
+    state: {type: MainState, required: true},
   },
 })
 export default class Table extends Vue {
-  private columns!: ColumnsManager;
-  private search!: Search;
+  private state!: MainState;
   private artisans: Artisan[] = [];
   private messageBus: MessageBus = getMessageBus();
 
   public created(): void {
-    this.messageBus.listenDataChanges((newData: DataRow[]) => {
-      this.artisans = newData.map(item => Artisan.fromArray(item));
-
-      Static.hideLoadingIndicator();
-    });
-  }
-
-  public updated(): void {
-    this.messageBus.notifyTableUpdated();
+    this.messageBus.listenDataChanges(newData => this.onDataChanged(newData));
   }
 
   private matchesText(artisan: Artisan): boolean {
-    if ('' === this.search.textLc) {
+    if ('' === this.state.search.textLc) {
       return true;
     }
 
-    return artisan.searchableText.includes(this.search.textLc);
+    return artisan.searchableText.includes(this.state.search.textLc);
   }
 
   private matchedMakerId(artisan: Artisan): boolean {
-    return this.search.isMakerId && (this.search.textUc === artisan.makerId || artisan.formerMakerIds.includes(this.search.textUc));
+    return this.state.search.isMakerId && artisan.hasMakerId(this.state.search.textUc);
   }
 
   private setSubject(newSubjectArtisan: Artisan): void {
@@ -231,6 +216,29 @@ export default class Table extends Vue {
 
   private isDevEnv(): boolean {
     return 'dev' === Static.getEnvironment();
+  }
+
+  private onDataChanged(newData: DataRow[]): void {
+    this.artisans = newData.map(item => Artisan.fromArray(item));
+
+    this.handleCardOpeningOnMakerIdInUrlsHash();
+
+    Static.hideLoadingIndicator();
+  }
+
+  private handleCardOpeningOnMakerIdInUrlsHash() {
+    if ('' === this.state.openCardForMakerId) {
+      return;
+    }
+
+    const makerId = this.state.openCardForMakerId;
+    this.state.openCardForMakerId = '';
+
+    if (1 !== this.artisans.length || !this.artisans[0].hasMakerId(makerId)) {
+      console.log(`Failed opening card for ${this.state.openCardForMakerId}, loaded ${this.artisans.length} records`);
+    } else {
+      nextTick(() => jQuery('#artisans tbody tr:first-child td:first-child').trigger('click'));
+    }
   }
 }
 </script>

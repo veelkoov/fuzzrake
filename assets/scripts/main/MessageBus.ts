@@ -4,13 +4,13 @@ import Artisan from '../class/Artisan';
 export type DataLoadRequestCallback = (newQuery: string, isExhaustive: boolean) => void;
 export type DataChangeCallback = (newData: DataRow[]) => void;
 export type SubjectArtisanChangeCallback = (newSubject: Artisan) => void;
-export type TableUpdatedCallback = () => void;
+export type SetupFinishedCallback = () => void;
 
 export default class MessageBus {
     private dataChangeListeners: DataChangeCallback[] = [];
     private dataLoadRequestListeners: DataLoadRequestCallback[] = [];
-    private subjectArtisanChangeListeners: SubjectArtisanChangeCallback[] = [];
-    private tableUpdatedListeners: TableUpdatedCallback[] = [];
+    private subjectArtisanChangeListeners: SubjectArtisanChangeCallback[] = []; // TODO: Move to MainState
+    private setupFinishedListeners: SetupFinishedCallback[] = [];
 
     public listenDataChanges(listener: DataChangeCallback): void {
         this.dataChangeListeners.push(listener);
@@ -36,12 +36,12 @@ export default class MessageBus {
         this.dataLoadRequestListeners.push(listener);
     }
 
-    public notifyTableUpdated(): void {
-        this.tableUpdatedListeners.forEach(callback => callback());
+    public notifySetupFinished(): void {
+        this.setupFinishedListeners.forEach(callback => callback());
     }
 
-    public listenTableUpdated(listener: TableUpdatedCallback): void {
-        this.tableUpdatedListeners.push(listener);
+    public listenSetupFinished(listener: SetupFinishedCallback): void {
+        this.setupFinishedListeners.push(listener);
     }
 }
 
