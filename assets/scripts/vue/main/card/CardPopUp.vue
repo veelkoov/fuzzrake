@@ -226,8 +226,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-light border border-warning"
-                  @click="setSubject(artisan)" data-bs-target="#artisanUpdatesModal" data-bs-toggle="modal">
+          <button type="button" class="btn btn-light border border-warning" data-bs-target="#artisanUpdatesModal" data-bs-toggle="modal">
             Data outdated/inaccurate? <!-- grep-updates-button -->
           </button>
 
@@ -242,12 +241,12 @@
 import AgesDescription from '../AgesDescription.vue';
 import Artisan from '../../../class/Artisan';
 import CardLink from './CardLink.vue';
+import MainState from '../MainState';
 import Optional from './../Optional.vue';
 import OptionalList from './../OptionalList.vue';
 import Static from '../../../Static';
 import Unknown from './../Unknown.vue';
 import {Options, Vue} from 'vue-class-component';
-import MessageBus, {getMessageBus} from '../../../main/MessageBus';
 
 @Options({
   components: {AgesDescription, CardLink, Optional, Unknown, OptionalList},
@@ -256,14 +255,12 @@ import MessageBus, {getMessageBus} from '../../../main/MessageBus';
       return Static;
     },
   },
+  props: {
+    state: {type: MainState, required: true},
+  },
 })
 export default class Link extends Vue {
-  private artisan: Artisan = Artisan.empty();
-  private readonly messageBus: MessageBus = getMessageBus();
-
-  public created(): void {
-    this.messageBus.listenSubjectArtisanChanges((newSubject: Artisan) => this.artisan = newSubject);
-  }
+  private state!: MainState;
 
   private static readonly MONTHS = {
     '01': 'Jan',
@@ -280,8 +277,8 @@ export default class Link extends Vue {
     '12': 'Dec',
   };
 
-  private setSubject(newSubjectArtisan: Artisan): void {
-    this.messageBus.notifySubjectArtisanChange(newSubjectArtisan);
+  private get artisan(): Artisan {
+    return this.state.subjectArtisan;
   }
 
   private commaSeparated(list: string[]): string {

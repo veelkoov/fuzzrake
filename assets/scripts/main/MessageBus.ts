@@ -3,13 +3,11 @@ import Artisan from '../class/Artisan';
 
 export type DataLoadRequestCallback = (newQuery: string, isExhaustive: boolean) => void;
 export type DataChangeCallback = (newData: DataRow[]) => void;
-export type SubjectArtisanChangeCallback = (newSubject: Artisan) => void;
 export type SetupFinishedCallback = () => void;
 
 export default class MessageBus {
     private dataChangeListeners: DataChangeCallback[] = [];
     private dataLoadRequestListeners: DataLoadRequestCallback[] = [];
-    private subjectArtisanChangeListeners: SubjectArtisanChangeCallback[] = []; // TODO: Move to MainState
     private setupFinishedListeners: SetupFinishedCallback[] = [];
 
     public listenDataChanges(listener: DataChangeCallback): void {
@@ -18,14 +16,6 @@ export default class MessageBus {
 
     public notifyDataChange(newData: DataRow[]): void {
         this.dataChangeListeners.forEach(callback => callback(newData));
-    }
-
-    public listenSubjectArtisanChanges(listener: SubjectArtisanChangeCallback) {
-        this.subjectArtisanChangeListeners.push(listener);
-    }
-
-    public notifySubjectArtisanChange(newSubjectArtisan: Artisan): void {
-        this.subjectArtisanChangeListeners.forEach(callback => callback(newSubjectArtisan));
     }
 
     public requestDataLoad(newQuery: string, isExhaustive: boolean): void {

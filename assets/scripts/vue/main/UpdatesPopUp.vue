@@ -29,22 +29,25 @@
 
 <script lang="ts">
 import Artisan from '../../class/Artisan';
+import MainState from './MainState';
 import Static from '../../Static';
-import {getMessageBus} from '../../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
   computed: {
     Static() {
       return Static;
-    }
+    },
+  },
+  props: {
+    state: {type: MainState, required: true},
   },
 })
 export default class UpdatesPopUp extends Vue {
-  private artisan: Artisan = Artisan.empty();
+  private state!: MainState;
 
-  public created(): void {
-    getMessageBus().listenSubjectArtisanChanges((newSubject: Artisan) => this.artisan = newSubject);
+  private get artisan(): Artisan {
+    return this.state.subjectArtisan;
   }
 }
 </script>

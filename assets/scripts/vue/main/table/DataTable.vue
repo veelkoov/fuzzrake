@@ -198,8 +198,8 @@ export default class Table extends Vue {
     return this.state.search.isMakerId && artisan.hasMakerId(this.state.search.textUc);
   }
 
-  private setSubject(newSubjectArtisan: Artisan): void {
-    this.messageBus.notifySubjectArtisanChange(newSubjectArtisan);
+  private setSubject(newSubject: Artisan): void {
+    this.state.subjectArtisan = newSubject;
   }
 
   private commaSeparated(list: string[]): string {

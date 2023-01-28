@@ -1,8 +1,8 @@
 <template>
   <CheckList v-if="!aasDismissed" @dismissed="dismissChecklist()"/>
   <FiltersPopUp :state="state"/>
-  <UpdatesPopUp />
-  <CardPopUp />
+  <UpdatesPopUp :state="state"/>
+  <CardPopUp :state="state"/>
 
   <div id="data-table-content-container" :style="{'display': aasDismissed ? 'block' : 'none'}">
     <div v-if="aasConfig.getMakerMode()" class="card border-danger mb-3">

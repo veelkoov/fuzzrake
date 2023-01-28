@@ -1,3 +1,4 @@
+import Artisan from '../../class/Artisan';
 import Search from './Search';
 
 export default class MainState {
@@ -5,5 +6,6 @@ export default class MainState {
     public query: string = '';
     public activeFiltersCount: number = 0;
 
-    public search = new Search();
+    public readonly search: Search = new Search();
+    public subjectArtisan: Artisan = Artisan.empty();
 }
