@@ -1,4 +1,4 @@
-{# TODO: Cache? #}
+{% cache 'parts_data.js' tags(['artisans', 'tracking']) %} {# grep-cache-tags #}
 
 var TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
 var FILTERS_OPTIONS = null;
@@ -6,3 +6,5 @@ var FILTERS_OPTIONS = null;
 window.loadFuzzrakeData = function () {
     FILTERS_OPTIONS = {{ filters|json_encode|raw }};
 };
+
+{% endcache %}

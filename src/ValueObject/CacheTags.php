@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class CacheTags
+final class CacheTags // grep-cache-tags
 {
     public const ARTISANS = 'artisans';
     public const CODE = 'code';
