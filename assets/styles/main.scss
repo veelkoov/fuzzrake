@@ -181,9 +181,9 @@ table#artisans {
         object-fit: cover;
       }
 
-      img[src$="#r90"] {
-        transform: rotate(90deg);
-      }
+      img[src$="#r90"]  { transform: rotate(90deg); }
+      img[src$="#r180"] { transform: rotate(180deg); }
+      img[src$="#r270"] { transform: rotate(270deg); }
 
       img[src$="#0050r90"] {
         transform: rotate(90deg);
