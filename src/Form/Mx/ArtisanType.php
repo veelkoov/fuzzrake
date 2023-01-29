@@ -69,7 +69,7 @@ class ArtisanType extends AbstractTypeWithDelete
             ])
             ->add('productionModels', ChoiceType::class, [
                 'required' => false,
-                'choices'  => ProductionModels::getValues(),
+                'choices'  => ProductionModels::getFormChoices(),
                 'multiple' => true,
             ])
             ->add('productionModelsComment', TextareaType::class, [
@@ -78,7 +78,7 @@ class ArtisanType extends AbstractTypeWithDelete
             ])
             ->add('styles', ChoiceType::class, [
                 'required' => false,
-                'choices'  => Styles::getValues(),
+                'choices'  => Styles::getFormChoices(),
                 'multiple' => true,
             ])
             ->add('otherStyles', TextareaType::class, [
@@ -91,7 +91,7 @@ class ArtisanType extends AbstractTypeWithDelete
             ])
             ->add('orderTypes', ChoiceType::class, [
                 'required' => false,
-                'choices'  => OrderTypes::getValues(),
+                'choices'  => OrderTypes::getFormChoices(),
                 'multiple' => true,
             ])
             ->add('otherOrderTypes', TextareaType::class, [
@@ -104,7 +104,7 @@ class ArtisanType extends AbstractTypeWithDelete
             ])
             ->add('features', ChoiceType::class, [
                 'required' => false,
-                'choices'  => Features::getValues(),
+                'choices'  => Features::getFormChoices(),
                 'multiple' => true,
             ])
             ->add('otherFeatures', TextareaType::class, [
