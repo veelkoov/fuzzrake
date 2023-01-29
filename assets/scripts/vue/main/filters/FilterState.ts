@@ -56,7 +56,7 @@ export default class FilterState {
         }
 
         let parts: string[] = [];
-        parts.push(frontLabels.join(', '));
+        parts.push(frontLabels.sort().join(', '));
         parts.push(this.formatLabels(normalLabels));
 
         return parts.filter(value => value.length > 0).join(' or ');
@@ -76,7 +76,7 @@ export default class FilterState {
         if (labels.length > FilterState.MAX_LABELS) {
             return relation + ' ' + labels.length + ' selected';
         } else {
-            return relation + ': ' + labels.map((label) => label.replace(/ \(.+?\)$/, '')).join(', '); // FIXME: #171 Glossary
+            return relation + ': ' + labels.map((label) => label.replace(/ \(.+?\)$/, '')).sort().join(', '); // FIXME: #171 Glossary
         }
     }
 }

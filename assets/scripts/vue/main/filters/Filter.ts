@@ -34,7 +34,7 @@ export default class Filter<T extends AnyOptions> {
         }
     }
 
-    private getValidValueLabelPairsFromOptions(options: AnyOptions): Map<string, string> {
+    private getValidValueLabelPairsFromOptions(options: AnyOptions): Map<string, string> { // Species fail here FIXME
         const result = new Map<string, string>();
 
         options.specialItems.forEach(option => result.set(option.value, option.label));

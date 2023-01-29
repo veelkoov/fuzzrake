@@ -60,6 +60,7 @@ import MessageBus, {getMessageBus} from '../main/MessageBus';
 import Static from '../Static';
 import UpdatesPopUp from './main/UpdatesPopUp.vue';
 import {makerIdHashRegexp} from '../consts';
+import {nextTick} from 'vue';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
@@ -86,9 +87,10 @@ export default class Main extends Vue {
   private onChecklistDismissal(): void {
     this.aasDismissed = true;
 
-    // Checklist causes the user to be at the bottom of the table when it shows up
-    let offset = jQuery('#data-table-content-container').offset() || {'top': 5};
-    window.scrollTo(0, offset.top - 5);
+    nextTick(() => { // Checklist causes the user to be at the bottom of the table when it shows up
+      const offset = jQuery('#data-table-content-container').offset() || {'top': 5};
+      window.scrollTo(0, offset.top - 5);
+    });
 
     this.messageBus.requestDataLoad(this.state.query, false);
   }

@@ -27,7 +27,7 @@ class MainController extends AbstractController
     public function main(FiltersService $filterService, DataService $dataService, CacheService $cache): Response
     {
         $filters = $cache->getCached('mainpage.filters', CacheTags::ARTISANS,
-            fn() => $filterService->getFiltersTplData());
+            fn () => $filterService->getFiltersTplData());
 
         return $this->render('main/main.html.twig', [
             'stats'   => $dataService->getMainPageStats(),

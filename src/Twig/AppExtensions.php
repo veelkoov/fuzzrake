@@ -21,7 +21,6 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     private readonly HumanFriendly $friendly;
-    private readonly Counter $globalCounter;
 
     public function __construct(
         private readonly EnvironmentsService $environments,
@@ -57,7 +56,6 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
             new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
             new TwigFunction('isTestEnv', $this->isTestEnvFunction(...)),
-            new TwigFunction('get_global_counter', fn () => $this->globalCounter),
         ];
     }
 
