@@ -6,7 +6,6 @@ namespace App\Twig;
 
 use App\Filtering\FiltersData\Builder\MutableItem;
 use App\Service\EnvironmentsService;
-use App\Twig\Utils\Counter;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -26,7 +25,6 @@ class AppExtensions extends AbstractExtension
         private readonly EnvironmentsService $environments,
     ) {
         $this->friendly = new HumanFriendly();
-        $this->globalCounter = new Counter();
     }
 
     public function getFilters(): array

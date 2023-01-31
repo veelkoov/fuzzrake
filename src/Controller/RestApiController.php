@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Filtering\DataRequests\RequestParser;
-use App\Repository\MakerIdRepository;
 use App\Service\Captcha;
 use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
@@ -71,12 +70,5 @@ class RestApiController extends AbstractController
 
             return throw new BadRequestException();
         }
-    }
-
-    #[Route(path: '/api/old_to_new_maker_ids_map.json', name: RouteName::API_OLD_TO_NEW_MAKER_IDS_MAP)]
-    #[Cache(maxage: 3600, public: true)]
-    public function oldToNewMakerIdsMap(MakerIdRepository $makerIdRepository): JsonResponse
-    {
-        return new JsonResponse($makerIdRepository->getOldToNewMakerIdsMap());
     }
 }
