@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Mx;
 
+use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
 /**
@@ -11,6 +12,29 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
  */
 class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 {
+    use FormsChoicesValuesAndLabelsTestTrait;
+
+    /**
+     * @param list<array{value: string, label: string}> $choices
+     *
+     * @dataProvider formsChoicesValuesAndLabelsDataProvider
+     */
+    public function testFormsChoicesValuesAndLabels(array $choices): void
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/mx/artisans/new');
+        self::assertResponseStatusCodeSame(200);
+
+        foreach ($choices as $choice) {
+            $label = $choice['label'];
+            $value = $choice['value'];
+
+            $optionXPath = "//option[@value = \"$value\"][text() = \"$label\"]";
+            self::assertCount(1, $crawler->filterXPath($optionXPath), "Absent: $optionXPath");
+        }
+    }
+
     public function testNewArtisan(): void
     {
         $client = static::createClient();

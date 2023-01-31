@@ -47,10 +47,10 @@
             </p>
 
             <h5>Tags</h5>
-            <p class="user-select-all">
+            <p>
                 {% for artisan in artisans %}
                     {% if '' != artisan.twitterUrl %}
-                        @{{ artisan.twitterUrl|split('/')[3] }}
+                        <span class="user-select-all">@{{ artisan.twitterUrl|split('/')[3] }}</span>
                     {% endif %}
                 {% endfor %}
             </p>

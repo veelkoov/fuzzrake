@@ -6,6 +6,7 @@ namespace App\Tests\Controller\IuForm;
 
 use App\DataDefinitions\Ages;
 use App\DataDefinitions\ContactPermit;
+use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 
@@ -15,6 +16,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 class IuFormControllerWithEMTest extends WebTestCaseWithEM
 {
     use IuFormTrait;
+    use FormsChoicesValuesAndLabelsTestTrait;
 
     public function testIuFormLoadsForExistingMakers(): void
     {
@@ -428,5 +430,30 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'iu_form[changePassword]' => '1',
         ]);
         self::submitValid($client, $form);
+    }
+
+    /**
+     * @param list<array{value: string, label: string}> $choices
+     *
+     * @dataProvider formsChoicesValuesAndLabelsDataProvider
+     */
+    public function testFormsChoicesValuesAndLabels(array $choices): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($client);
+        $crawler = $client->getCrawler();
+
+        foreach ($choices as $choice) {
+            $label = $choice['label'];
+            $value = $choice['value'];
+
+            $inputXPath = "//input[@type = \"checkbox\"][@value = \"$value\"]";
+            self::assertCount(1, $crawler->filterXPath($inputXPath), "Absent: $inputXPath");
+
+            $labelXPath = "//label[text() = \"$label\"]";
+            self::assertCount(1, $crawler->filterXPath($labelXPath), "Absent: $labelXPath");
+        }
     }
 }

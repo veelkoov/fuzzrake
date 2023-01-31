@@ -223,7 +223,7 @@ function action() {
         'console')      run_console "$@" ;;
 
         # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-        'cc')           run_command sudo rm -rf ./var/cache/* ;;
+        'cc')           run_command sudo rm -rf ./var/cache/* && sudo chmod a+w ./var/cache ;;
         'cc-prod')      run_command ssh getfursu.it sudo rm -rf /var/www/prod/var/cache/prod ;;
 
         'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
