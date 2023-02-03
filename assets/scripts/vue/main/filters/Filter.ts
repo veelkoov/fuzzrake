@@ -34,7 +34,7 @@ export default class Filter<T extends AnyOptions> {
         }
     }
 
-    private getValidValueLabelPairsFromOptions(options: AnyOptions): Map<string, string> { // Species fail here FIXME
+    private getValidValueLabelPairsFromOptions(options: AnyOptions): Map<string, string> {
         const result = new Map<string, string>();
 
         options.specialItems.forEach(option => result.set(option.value, option.label));
@@ -52,6 +52,8 @@ export default class Filter<T extends AnyOptions> {
             if ('string' === typeof(option.value)) {
                 result.set(option.value, option.label);
             } else {
+                result.set(option.label, option.label);
+
                 this.getValidValueLabelPairsFromItems(option.value)
                     .forEach((value, key) => result.set(key, value));
             }
