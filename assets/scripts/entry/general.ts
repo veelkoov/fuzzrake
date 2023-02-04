@@ -1,7 +1,3 @@
-import * as jQuery from 'jquery';
-// @ts-ignore ¯\_(ツ)_/¯
-window.$ = window.jQuery = jQuery
-
 import 'bootstrap';
 import * as moment from 'moment';
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
