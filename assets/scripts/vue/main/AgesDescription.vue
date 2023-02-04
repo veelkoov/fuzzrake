@@ -2,20 +2,20 @@
   <template v-if="addText">
     {{ getText() }}
 
-    <Unknown v-if="isUnknown()" />
+    <UnknownValue v-if="isUnknown()" />
   </template>
 
-  <i v-for="item in getClasses()" class="ages" :class="item" />
+  <i v-for="item in getClasses()" :key="item" class="ages" :class="item" />
 </template>
 
 <script lang="ts">
 import Artisan from '../../class/Artisan';
-import Unknown from './Unknown.vue';
+import UnknownValue from './UnknownValue.vue';
 import {ADULTS, MINORS, MIXED} from '../../consts';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
-  components: {Unknown},
+  components: {UnknownValue},
   props: {
     addText: Boolean,
     artisan: Artisan,

@@ -88,6 +88,8 @@ export default class Main extends Vue {
     this.aasDismissed = true;
 
     nextTick(() => { // Checklist causes the user to be at the bottom of the table when it shows up
+      // FIXME
+      // eslint-disable-next-line no-undef
       const offset = jQuery('#data-table-content-container').offset() || {'top': 5};
       window.scrollTo(0, offset.top - 5);
     });

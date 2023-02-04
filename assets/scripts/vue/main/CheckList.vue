@@ -103,7 +103,7 @@ import {Options, Vue} from 'vue-class-component';
   emits: ['dismissed'],
 })
 export default class CheckList extends Vue {
-  private illBeCareful: boolean = false;
+  private illBeCareful = false;
   private isAdult: boolean = null;
   private wantsSfw: boolean = null;
   private aasConfig = AgeAndSfwConfig.getInstance();

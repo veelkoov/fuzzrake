@@ -7,7 +7,7 @@
     </div>
   </fieldset>
 
-  <fieldset v-for="region in filter.options.items" class="region">
+  <fieldset v-for="region in filter.options.items" :key="region.label" class="region">
     <legend>
       {{ region.label }} <span class="count">({{ region.count }})</span>
 
@@ -18,7 +18,7 @@
     </legend>
 
     <div class="row">
-      <div v-for="country in region.value" class="col-sm-6 col-lg-3">
+      <div v-for="country in region.value" :key="country.value" class="col-sm-6 col-lg-3">
         <div class="form-check form-check-inline">
           <CheckBox :filter="filter" :value="country.value" :count="country.count" :ref="region.label"
                     :label="country.label" :label-html-prefix="getHtmlPrefix(country)"/>
