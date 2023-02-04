@@ -1,6 +1,6 @@
 export default class Captcha {
     public static setupOnForm(formSelector: string): void {
-        const $form = $(formSelector);
+        const $form = jQuery(formSelector);
 
         if (1 !== $form.length) {
             console.error(`Failed to match form selector: '${formSelector}'`);

@@ -1,9 +1,9 @@
 import {makerIdRegexp} from '../../consts';
 
 export default class Search {
-    private _textLc: string = '';
-    private _textUc: string = '';
-    private _isMakerId: boolean = false;
+    private _textLc = '';
+    private _textUc = '';
+    private _isMakerId = false;
 
     set text(value: string) {
         this._textLc = value.trim().toLowerCase();

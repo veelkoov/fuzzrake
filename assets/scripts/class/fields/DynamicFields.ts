@@ -4,7 +4,7 @@ import {toggle} from '../../jQueryUtils';
 export default class DynamicFields implements ToggleableInterface {
     private readonly $fields: JQuery<HTMLElement>;
     private readonly $container: JQuery<HTMLElement>;
-    private available: boolean = true; // Initial value assumed
+    private available = true; // Initial value assumed
 
     constructor(
         fieldsSelector: string,

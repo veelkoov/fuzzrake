@@ -1,4 +1,8 @@
 declare const DATA_BRIDGE: { [key: string]: string };
+declare const FILTERS_OPTIONS: FiltersOptions;
+declare const TOTAL_ARTISANS_COUNT: number;
+declare const fliSetLoading: (bool) => void;
+declare const loadFuzzrakeData: () => void;
 
 export type SpecialItem = { 'value': string, 'label': string, 'count': number, 'faIcon': string };
 export type SpecialItems = Array<SpecialItem>;
@@ -26,9 +30,6 @@ export type FiltersOptions = {
     'states': MultiselectOptions,
     'species': SpeciesOptions,
 };
-
-declare const FILTERS_OPTIONS: FiltersOptions;
-declare const TOTAL_ARTISANS_COUNT: number;
 
 export default abstract class Static {
     public static getMainPath(): string {
@@ -84,17 +85,14 @@ export default abstract class Static {
     }
 
     public static showLoadingIndicator(): void {
-        // @ts-ignore
-        window.fliSetLoading(true);
+        fliSetLoading(true);
     }
 
     public static hideLoadingIndicator(): void {
-        // @ts-ignore
-        window.fliSetLoading(false);
+        fliSetLoading(false);
     }
 
     public static loadFuzzrakeData(): void {
-        // @ts-ignore
-        window.loadFuzzrakeData();
+        loadFuzzrakeData();
     }
 }

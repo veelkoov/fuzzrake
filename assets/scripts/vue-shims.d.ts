@@ -1,5 +1,7 @@
 declare module '*.vue' {
-    // @ts-ignore This just works and I have no clue how to "fix" this.
+    // FIXME
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore https://github.com/symfony/webpack-encore/issues/702
     import Vue from 'vue';
     export default Vue;
 }

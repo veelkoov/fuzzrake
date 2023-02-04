@@ -55,7 +55,7 @@ export default class FilterState {
             }
         }
 
-        let parts: string[] = [];
+        const parts: string[] = [];
         parts.push(frontLabels.sort().join(', '));
         parts.push(this.formatLabels(normalLabels));
 

@@ -1,4 +1,4 @@
-let nextInteger: number = 0;
+let nextInteger = 0;
 
 export default function getUniqueInt(): number
 {

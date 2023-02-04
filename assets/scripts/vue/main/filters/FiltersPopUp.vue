@@ -88,7 +88,7 @@ export default class FiltersPopUp extends Vue {
 
   private updateState(): void {
     this.state.activeFiltersCount = this.getActiveFiltersCount();
-    this.state.query = $('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
+    this.state.query = jQuery('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
   }
 
   private getActiveFiltersCount(): number {

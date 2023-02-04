@@ -1,5 +1,4 @@
 import {DataRow} from './DataManager';
-import Artisan from '../class/Artisan';
 
 export type DataLoadRequestCallback = (newQuery: string, isExhaustive: boolean) => void;
 export type DataChangeCallback = (newData: DataRow[]) => void;

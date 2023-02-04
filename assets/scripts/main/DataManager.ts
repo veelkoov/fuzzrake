@@ -26,7 +26,7 @@ export default class DataManager {
         Static.showLoadingIndicator();
 
         jQuery.ajax(Static.getApiUrl(`artisans-array.json${usedQuery}`), {
-            success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
+            success: (newData: DataRow[]): void => {
                 this.messageBus.notifyDataChange(newData);
             },
             error: this.displayError,

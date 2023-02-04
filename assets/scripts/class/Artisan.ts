@@ -170,10 +170,10 @@ export default class Artisan {
     }
 
     private getAbSearchJson(): string {
-        let names = [this.name];
+        const names = [this.name];
         names.push(...this.formerly);
 
-        return JSON.stringify(names)
+        return JSON.stringify(names);
     }
 
     public static empty(): Artisan {
