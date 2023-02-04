@@ -1,10 +1,13 @@
 export default class Storage {
-    public static readonly FILLED = 'filled';
-    public static readonly IS_ADULT = 'isAdult';
-    public static readonly WANTS_SFW = 'wantsSfw';
-    public static readonly MAKER_MODE = 'makerMode';
-
     private constructor() {
+    }
+
+    public static getString(key: string, defaultValue: string = null): string|null {
+        return this.get(key) ?? defaultValue;
+    }
+
+    public static saveString(key: string, value: string, expireSeconds: number = null): void {
+        this.save(key, value, expireSeconds);
     }
 
     public static getBoolean(key: string, defaultValue: boolean = null): boolean|null {

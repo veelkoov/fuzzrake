@@ -13,7 +13,6 @@ final class RouteName
     final public const API = 'api';
     final public const API_ARTISANS = 'api_artisans';
     final public const API_ARTISANS_ARRAY = 'api_artisans_array';
-    final public const API_OLD_TO_NEW_MAKER_IDS_MAP = 'api_old_to_new_maker_ids_map';
     final public const DONATE = 'donate';
     final public const EVENTS = 'events';
     final public const EVENTS_ATOM = 'events_atom';

@@ -8,10 +8,11 @@ use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\ValidationRegexps;
 use App\DataDefinitions\NewArtisan;
 use App\Entity\Artisan;
-use App\Filtering\QueryChoicesAppender;
+use App\Filtering\DataRequests\QueryChoicesAppender;
+use App\Filtering\FiltersData\Builder\MutableFilterData;
+use App\Filtering\FiltersData\Builder\SpecialItems;
+use App\Filtering\FiltersData\FilterData;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
-use App\Utils\Filters\FilterData;
-use App\Utils\Filters\SpecialItems;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
@@ -251,14 +252,14 @@ class ArtisanRepository extends ServiceEntityRepository
             $special[] = $other;
         }
 
-        $result = new FilterData(...$special);
+        $result = new MutableFilterData(...$special);
 
         foreach ($rows as $row) {
             $items = explode("\n", $row['items']);
 
             foreach ($items as $item) {
                 if ($item = trim($item)) {
-                    $result->getItems()->addOrIncItem($item);
+                    $result->items->addOrIncItem($item);
                 }
             }
 
@@ -271,9 +272,9 @@ class ArtisanRepository extends ServiceEntityRepository
             }
         }
 
-        $result->getItems()->sort();
+        $result->items->sort();
 
-        return $result;
+        return new FilterData($result);
     }
 
     /**

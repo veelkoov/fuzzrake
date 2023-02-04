@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\MakerId;
-use App\Utils\Arrays;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,29 +21,5 @@ class MakerIdRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MakerId::class);
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getOldToNewMakerIdsMap(): array
-    {
-        /**
-         * @var array<array<string>> $rows
-         */
-        $rows = $this->createQueryBuilder('m')
-            ->join('m.artisan', 'a')
-            ->select('m.makerId AS former')
-            ->addSelect('a.makerId AS current')
-            ->where('a.makerId <> :empty')
-            ->andWhere('m.makerId <> a.makerId')
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->enableResultCache(3600)
-            ->getArrayResult();
-
-        $resultData = Arrays::assoc($rows, 'former', 'current');
-
-        return $resultData; // @phpstan-ignore-line
     }
 }

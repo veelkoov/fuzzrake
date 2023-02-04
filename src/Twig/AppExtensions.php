@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Filtering\FiltersData\Builder\MutableItem;
 use App\Service\EnvironmentsService;
-use App\Twig\Utils\Counter;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DataQuery;
-use App\Utils\Filters\Item;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
@@ -21,13 +20,11 @@ use Twig\TwigFunction;
 class AppExtensions extends AbstractExtension
 {
     private readonly HumanFriendly $friendly;
-    private readonly Counter $globalCounter;
 
     public function __construct(
         private readonly EnvironmentsService $environments,
     ) {
         $this->friendly = new HumanFriendly();
-        $this->globalCounter = new Counter();
     }
 
     public function getFilters(): array
@@ -57,7 +54,6 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
             new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
             new TwigFunction('isTestEnv', $this->isTestEnvFunction(...)),
-            new TwigFunction('get_global_counter', fn () => $this->globalCounter),
         ];
     }
 
@@ -85,15 +81,15 @@ class AppExtensions extends AbstractExtension
     }
 
     /**
-     * @param Item[] $items
+     * @param MutableItem[] $items
      *
-     * @return Item[]
+     * @return MutableItem[]
      */
-    public function filterItemsMatchingFilter(array $items, string $matchWord): array
+    public function filterItemsMatchingFilter(array $items, string $matchWord): array // TODO: https://github.com/veelkoov/fuzzrake/issues/80 Don't use mutable in view
     {
         $pattern = Patterns::getI($matchWord);
 
-        return array_filter($items, fn (Item $item) => $pattern->test($item->getLabel()));
+        return array_filter($items, fn (MutableItem $item) => $pattern->test($item->label));
     }
 
     public function filterFilterByQuery(string $input, DataQuery $query): string

@@ -152,6 +152,10 @@ export default class Artisan {
         return '';
     }
 
+    public hasMakerId(makerId: string): boolean {
+        return makerId === this.makerId || -1 !== this.formerMakerIds.indexOf(makerId);
+    }
+
     private getIsNew(dateAdded: string): boolean {
         if ('unknown' === dateAdded) {
             return false;

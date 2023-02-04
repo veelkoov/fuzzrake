@@ -50,7 +50,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
         $client->waitForVisibility('input[type=checkbox][value=CZ]', 5);
 
-        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[@data-action="all"]'))->click();
+        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "all"]'))->click();
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
         self::waitForLoadingIndicatorToDisappear();
         $client->waitFor('//p[@id="artisans-table-count" and contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 1);
