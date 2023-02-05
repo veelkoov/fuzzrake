@@ -1,5 +1,5 @@
 <template>
-  <template v-for="specie in species">
+  <template v-for="specie in species" :key="specie.label">
     <div class="btn-group specie" role="group">
         <span class="btn btn-outline-secondary"> <!-- TODO: #76 Species count -->
           <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label"/>

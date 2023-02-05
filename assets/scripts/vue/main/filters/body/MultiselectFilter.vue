@@ -9,7 +9,7 @@
     </div>
 
     <div class="row">
-      <div v-for="item in filter.options.items" class="col-sm-6 col-lg-3">
+      <div v-for="item in filter.options.items" :key="item.value" class="col-sm-6 col-lg-3">
         <div class="form-check form-check-inline">
           <CheckBox :filter="filter" :value="item.value" :count="item.count" :label="item.label" ref="checkboxes"/>
         </div>

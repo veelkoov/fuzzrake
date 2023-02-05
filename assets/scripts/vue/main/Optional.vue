@@ -3,16 +3,16 @@
     {{ items.join(', ') }}
   </template>
 
-  <Unknown v-else />
+  <UnknownValue v-else />
 </template>
 
 <script lang="ts">
-import Unknown from './Unknown.vue';
+import UnknownValue from './UnknownValue.vue';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
-  components: {Unknown},
+  components: {UnknownValue},
   props: {
     items: {
       type: Object as PropType<string[]>,
@@ -21,6 +21,5 @@ import {PropType} from 'vue';
   },
 })
 export default class Optional extends Vue {
-  private items!: string[];
 }
 </script>

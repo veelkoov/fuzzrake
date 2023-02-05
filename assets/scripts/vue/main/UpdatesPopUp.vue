@@ -12,10 +12,10 @@
 
         <div class="modal-body">
           <p>
-            <strong>If you are the maker - please</strong> <a :href="Static.getIuFormRedirectUrl(artisan.getLastMakerId())">fill the update form</a>.
+            <strong>If you are the maker - please</strong> <a :href="Static.getIuFormRedirectUrl(artisan.lastMakerId)">fill the update form</a>.
           </p>
           <p>
-            Otherwise you can <a :href="Static.getFeedbackFormPath(artisan.getLastMakerId())" target="_blank">submit the feedback form</a>.
+            Otherwise you can <a :href="Static.getFeedbackFormPath(artisan.lastMakerId)" target="_blank">submit the feedback form</a>.
           </p>
         </div>
 

@@ -31,7 +31,7 @@
           </div>
 
           <div v-if="hasPhotos()" class="col-md-12 p-1 overflow-auto imgs-container">
-            <div v-for="(item, index) in artisan.photoUrls">
+            <div v-for="(item, index) in artisan.photoUrls" :key="item">
               <a :href="item" target="_blank"><img :src="artisan.miniatureUrls[index]" alt=""></a>
             </div>
           </div>
@@ -91,14 +91,13 @@
                 <strong>Doesn't</strong>: {{ commaSeparated(artisan.speciesDoesnt) }}
               </template>
 
-              <Unknown v-if="0 === artisan.speciesDoes.length && 0 === artisan.speciesDoesnt.length" />
+              <UnknownValue v-if="0 === artisan.speciesDoes.length && 0 === artisan.speciesDoesnt.length" />
             </div>
 
             <h5>Languages</h5>
 
             <div class="small">
-              <Optional v-if="artisan.languages" :items="artisan.languages" />
-              <Unknown v-else />
+              <Optional :items="artisan.languages" />
             </div>
           </div>
 
@@ -136,7 +135,7 @@
               <CardLink :url="'https://bewares.getfursu.it/#search:' + artisan.abSearchJson" label="Check Artists Beware records" icon-class="fas fa-balance-scale" add-btn-class="border border-primary" />
               <CardLink :url="artisan.fursuitReviewUrl" label="FursuitReview" icon-class="fas fa-balance-scale" add-btn-class="border border-primary" />
               <CardLink :url="artisan.websiteUrl" label="Official website" icon-class="fas fa-link" />
-              <CardLink v-for="item in artisan.pricesUrls" :href="item" label="Prices" icon-class="fas fa-dollar-sign" />
+              <CardLink v-for="item in artisan.pricesUrls" :key="item" :href="item" label="Prices" icon-class="fas fa-dollar-sign" />
               <CardLink :url="artisan.faqUrl" label="FAQ" icon-class="fas fa-comments" />
               <CardLink :url="artisan.queueUrl" label="Queue" icon-class="fas fa-clipboard-list" />
               <CardLink :url="artisan.furAffinityUrl" label="FurAffinity" icon-class="fas fa-image" />
@@ -176,11 +175,11 @@
 
                 <table class="table table-sm table-striped table-borderless">
                   <tbody>
-                    <tr v-for="item in artisan.openFor">
+                    <tr v-for="item in artisan.openFor" :key="item">
                       <td>{{ item }}</td>
                       <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
                     </tr>
-                    <tr v-for="item in artisan.closedFor">
+                    <tr v-for="item in artisan.closedFor" :key="item">
                       <td>{{ item }}</td>
                       <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
                     </tr>
@@ -191,7 +190,7 @@
                 <p>
                   <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
                   It should be tracked and updated automatically based on the contents of:
-                  <a v-for="item in artisan.commissionsUrls" :href="item" target="_blank">{{ item }}</a>,
+                  <a v-for="item in artisan.commissionsUrls" :key="item" :href="item" target="_blank">{{ item }}</a>,
                   however the software failed to "understand" the contents. Last time tried on {{ artisan.csLastCheck }} UTC.
                 </p>
 
@@ -203,7 +202,7 @@
               <template v-if="artisan.isStatusKnown">
                 <p>
                   Status is tracked and updated automatically based on the contents of:
-                  <a v-for="item in artisan.commissionsUrls" :href="item" target="_blank">{{ item }}</a>
+                  <a v-for="item in artisan.commissionsUrls" :key="item" :href="item" target="_blank">{{ item }}</a>
                   <br />
                   Last time checked on {{ artisan.csLastCheck }} UTC.
                 </p>
@@ -245,11 +244,11 @@ import MainState from '../MainState';
 import Optional from './../Optional.vue';
 import OptionalList from './../OptionalList.vue';
 import Static from '../../../Static';
-import Unknown from './../Unknown.vue';
+import UnknownValue from './../UnknownValue.vue';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
-  components: {AgesDescription, CardLink, Optional, Unknown, OptionalList},
+  components: {AgesDescription, CardLink, Optional, UnknownValue, OptionalList},
   computed: {
     Static() {
       return Static;

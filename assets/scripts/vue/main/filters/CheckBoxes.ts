@@ -7,19 +7,19 @@ export default class CheckBoxes {
     }
 
     public all(): void {
-        for (let checkbox of this.checkboxes) {
+        for (const checkbox of this.checkboxes) {
             checkbox.check();
         }
     }
 
     public none(): void {
-        for (let checkbox of this.checkboxes) {
+        for (const checkbox of this.checkboxes) {
             checkbox.uncheck();
         }
     }
 
     public invert(): void {
-        for (let checkbox of this.checkboxes) {
+        for (const checkbox of this.checkboxes) {
             checkbox.invert();
         }
     }

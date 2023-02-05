@@ -6,13 +6,14 @@
         <th class="name text-start">Fursuit maker /&nbsp;studio name</th>
 
         <th v-for="(label, name, index) of columns.columns"
+            :key="name"
             v-show="columns.isVisible(name)"
             :class="[name, index === columns.count() - 1 ? 'text-end' : 'text-center']">{{ label }}</th>
       </tr>
     </thead>
 
     <tbody>
-      <template v-for="(artisan, index) of artisans"><tr
+      <template v-for="(artisan, index) of artisans" :key="artisan.lastMakerId"><tr
           :data-index=index
           :id="artisan.makerId ? artisan.makerId : null"
           class="fursuit-maker artisan-data"
@@ -78,9 +79,9 @@
         <td class="species" v-show="columns.isVisible('species')"
             @click="setSubject(artisan)" data-bs-toggle="modal" data-bs-target="#artisanDetailsModal">
           <ul v-if="artisan.gotSpeciesInfo">
-            <li v-for="item in artisan.speciesDoes" class="yes"><i class="fas fa-check"></i>&nbsp;{{ item }}</li>
+            <li v-for="item in artisan.speciesDoes" :key="item" class="yes"><i class="fas fa-check"></i>&nbsp;{{ item }}</li>
 
-            <li v-for="item in artisan.speciesDoesnt" class="no"><i class="fas fa-times"></i>&nbsp;{{ item }}</li>
+            <li v-for="item in artisan.speciesDoesnt" :key="item" class="no"><i class="fas fa-times"></i>&nbsp;{{ item }}</li>
           </ul>
         </td>
 
@@ -89,15 +90,15 @@
           <ul v-if="artisan.isTracked">
             <li v-if="artisan.cstIssueText" class="inaccurate"><i class="far fa-question-circle"></i>&nbsp;{{ artisan.cstIssueText }}</li>
 
-            <li v-for="item in artisan.openFor" class="yes"><i class="fas fa-check"></i>&nbsp;{{ item }}</li>
+            <li v-for="item in artisan.openFor" :key="item" class="yes"><i class="fas fa-check"></i>&nbsp;{{ item }}</li>
 
-            <li v-for="item in artisan.closedFor" class="no"><i class="fas fa-times"></i>&nbsp;{{ item }}</li>
+            <li v-for="item in artisan.closedFor" :key="item" class="no"><i class="fas fa-times"></i>&nbsp;{{ item }}</li>
           </ul>
         </td>
 
         <td class="links" v-show="columns.isVisible('links')">
           <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditPath(artisan.getLastMakerId())"><i class="fas fa-edit"></i></a>
+            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditPath(artisan.lastMakerId)"><i class="fas fa-edit"></i></a>
 
             <a v-if="artisan.fursuitReviewUrl" class="btn btn-secondary" :href="artisan.fursuitReviewUrl" target="_blank"><i class="fas fa-balance-scale"></i></a>
 
@@ -113,7 +114,7 @@
                          iconClass="fa-solid fa-spell-check" label="Check on Artists Beware" />
                 <TblLink :url=artisan.fursuitReviewUrl iconClass="fas fa-balance-scale" label="FursuitReview" />
                 <TblLink :url=artisan.websiteUrl iconClass="fas fa-link" label="Official website" />
-                <TblLink v-for="item in artisan.pricesUrls" :url=item iconClass="fas fa-dollar-sign" label="Prices" />
+                <TblLink v-for="item in artisan.pricesUrls" :key="item" :url=item iconClass="fas fa-dollar-sign" label="Prices" />
                 <TblLink :url=artisan.faqUrl iconClass="fas fa-comments" label="FAQ" />
                 <TblLink :url=artisan.queueUrl iconClass="fas fa-clipboard-list" label="Queue" />
                 <TblLink :url=artisan.furAffinityUrl iconClass="fas fa-image" label="FurAffinity" />
@@ -237,6 +238,8 @@ export default class Table extends Vue {
     if (1 !== this.artisans.length || !this.artisans[0].hasMakerId(makerId)) {
       console.log(`Failed opening card for ${this.state.openCardForMakerId}, loaded ${this.artisans.length} records`);
     } else {
+      // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
+      // eslint-disable-next-line no-undef
       nextTick(() => jQuery('#artisans tbody tr:first-child td:first-child').trigger('click'));
     }
   }

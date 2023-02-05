@@ -13,6 +13,8 @@ jQuery(() => {
 
     createApp(Main).mount('#main-primary-component');
 
+    // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const dataManager = new DataManager(messageBus);
 
     Static.hideLoadingIndicator();

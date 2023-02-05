@@ -1,5 +1,5 @@
 <template>
-    <div v-for="item in filter.options.specialItems" class="form-check form-check-inline">
+    <div v-for="item in filter.options.specialItems" :key="item.value" class="form-check form-check-inline">
         <CheckBox :filter="filter" :value="item.value" :count="item.count"
                   :label="item.label" :label-html-prefix="getHtmlPrefix(item)"/>
     </div>

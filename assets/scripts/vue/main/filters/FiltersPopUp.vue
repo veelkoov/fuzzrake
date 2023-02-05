@@ -13,14 +13,14 @@
         <div class="modal-body" id="filters-body">
           <div class="row">
             <div class="col">
-              <template v-for="filter in filters">
+              <template v-for="filter in filters" :key="filter.groupName">
                 <CtrlButton :filter="filter"/> <wbr>
               </template>
             </div>
           </div>
 
           <form id="filters">
-            <BodyContainer v-for="filter in filters" :filter="filter"/>
+            <BodyContainer v-for="filter in filters" :key="filter.groupName" :filter="filter"/>
           </form>
         </div>
       </div>
@@ -88,7 +88,9 @@ export default class FiltersPopUp extends Vue {
 
   private updateState(): void {
     this.state.activeFiltersCount = this.getActiveFiltersCount();
-    this.state.query = $('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
+    // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
+    // eslint-disable-next-line no-undef
+    this.state.query = jQuery('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
   }
 
   private getActiveFiltersCount(): number {

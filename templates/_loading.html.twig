@@ -1,7 +1,7 @@
 <script>
     const fliMessageNode = document.getElementById('loading-indicator-message');
     const fliContainerNode = document.getElementById('loading-indicator-container');
-    const naiveTextLength = 50;
+    const fliNaiveTextLength = 50;
 
     const fliMessages = [
         'Chasing the yarn ball...',
@@ -18,7 +18,7 @@
         .sort((a, b) => a.order - b.order)
         .map(({message}) => message)
     // Naively make short texts longer to avoid the paragraph height changes on small devices
-        .map(message => message.padEnd(naiveTextLength, ' \u00A0'));
+        .map(message => message.padEnd(fliNaiveTextLength, ' \u00A0'));
 
     let fliMessageIdx = -1;
     let fliAnimationIdx = 0;

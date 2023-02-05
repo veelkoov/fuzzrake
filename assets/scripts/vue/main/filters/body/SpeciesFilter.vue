@@ -36,7 +36,11 @@ import {SpeciesOptions} from '../../../../Static';
 })
 export default class SpeciesFilter extends Vue {
   mounted() {
+    // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
+    // eslint-disable-next-line no-undef
     jQuery('#filtersModal .specie .toggle').on('click', function (): void {
+      // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
+      // eslint-disable-next-line no-undef
       jQuery(this).parents('.specie').nextAll('.subspecies').first().toggle(250);
     });
   }

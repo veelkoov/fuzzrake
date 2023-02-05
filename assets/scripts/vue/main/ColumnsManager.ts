@@ -40,7 +40,7 @@ export default class ColumnsManager {
     }
 
     public load(): void {
-        let state: string = Storage.getString('columns/state');
+        const state: string = Storage.getString('columns/state');
 
         if (state && ColumnsManager.STORAGE_VERSION === Storage.getString('columns/version')) {
             this.visible.clear();
@@ -52,9 +52,9 @@ export default class ColumnsManager {
     }
 
     public toString(): string {
-        let result = [];
+        const result = [];
 
-        for (let value of this.visible.values()) {
+        for (const value of this.visible.values()) {
             result.push(value);
         }
 

@@ -1,4 +1,5 @@
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import Error from '../Error';
 import MessageBus from './MessageBus';
 import Static from '../Static';
 
@@ -26,7 +27,7 @@ export default class DataManager {
         Static.showLoadingIndicator();
 
         jQuery.ajax(Static.getApiUrl(`artisans-array.json${usedQuery}`), {
-            success: (newData: DataRow[], _: JQuery.Ajax.SuccessTextStatus, __: JQuery.jqXHR): void => {
+            success: (newData: DataRow[]): void => {
                 this.messageBus.notifyDataChange(newData);
             },
             error: this.displayError,
@@ -43,10 +44,10 @@ export default class DataManager {
         }
 
         if ('' !== details) {
-            details = `\n\nThe error was: ${details}`;
+            details = ` The error was: ${details}`;
         }
 
-        alert(`Darn it! The server returned unexpected response (or none).\n\nYou may try refreshing the page/clearing the cache/using incognito mode/using different browser/using different network.${details}`);
+        Error.report(`The server returned unexpected response (or none).${details}`, '', false);
     }
 
     private getQueryWithMakerModeAndSfwOptions(newQuery: string): string {

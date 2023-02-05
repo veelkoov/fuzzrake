@@ -1,5 +1,6 @@
 export default class Storage {
     private constructor() {
+        throw new TypeError('Trying to instantiate an utility class');
     }
 
     public static getString(key: string, defaultValue: string = null): string|null {

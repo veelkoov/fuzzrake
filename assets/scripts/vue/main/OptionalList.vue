@@ -5,22 +5,22 @@
 
   <template v-if="items.length || otherItems.length">
     <ul>
-      <li v-for="item in items">{{ item }}</li>
+      <li v-for="item in items" :key="item">{{ item }}</li>
 
       <li v-if="otherItems.length">{{ otherItems.join('; ') }}</li>
     </ul>
   </template>
 
-  <Unknown v-else />
+  <UnknownValue v-else />
 </template>
 
 <script lang="ts">
-import Unknown from './Unknown.vue';
+import UnknownValue from './UnknownValue.vue';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
-  components: {Unknown},
+  components: {UnknownValue},
   props: {
     comment: {
       type: String,
