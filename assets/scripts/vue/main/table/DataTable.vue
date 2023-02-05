@@ -238,7 +238,7 @@ export default class Table extends Vue {
     if (1 !== this.artisans.length || !this.artisans[0].hasMakerId(makerId)) {
       console.log(`Failed opening card for ${this.state.openCardForMakerId}, loaded ${this.artisans.length} records`);
     } else {
-      // FIXME
+      // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
       // eslint-disable-next-line no-undef
       nextTick(() => jQuery('#artisans tbody tr:first-child td:first-child').trigger('click'));
     }

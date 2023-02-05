@@ -88,7 +88,7 @@ export default class FiltersPopUp extends Vue {
 
   private updateState(): void {
     this.state.activeFiltersCount = this.getActiveFiltersCount();
-    // FIXME
+    // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
     // eslint-disable-next-line no-undef
     this.state.query = jQuery('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
   }
