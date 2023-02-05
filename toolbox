@@ -241,7 +241,7 @@ function action() {
         ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan --xdebug analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
-        'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue ;;
+        'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
 
         'cst')          run_console app:status-tracker:run "$@" ;;
         'cstc')         action cst --commit "$@" ;;
