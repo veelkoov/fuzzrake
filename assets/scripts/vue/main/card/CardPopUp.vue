@@ -31,7 +31,7 @@
           </div>
 
           <div v-if="hasPhotos()" class="col-md-12 p-1 overflow-auto imgs-container">
-            <div v-for="(item, index) in artisan.photoUrls" :key="index">
+            <div v-for="(item, index) in artisan.photoUrls" :key="item">
               <a :href="item" target="_blank"><img :src="artisan.miniatureUrls[index]" alt=""></a>
             </div>
           </div>

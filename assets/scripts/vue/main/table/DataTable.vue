@@ -6,14 +6,14 @@
         <th class="name text-start">Fursuit maker /&nbsp;studio name</th>
 
         <th v-for="(label, name, index) of columns.columns"
-            :key="index"
+            :key="name"
             v-show="columns.isVisible(name)"
             :class="[name, index === columns.count() - 1 ? 'text-end' : 'text-center']">{{ label }}</th>
       </tr>
     </thead>
 
     <tbody>
-      <template v-for="(artisan, index) of artisans" :key="index"><tr
+      <template v-for="(artisan, index) of artisans" :key="artisan.lastMakerId"><tr
           :data-index=index
           :id="artisan.makerId ? artisan.makerId : null"
           class="fursuit-maker artisan-data"
@@ -98,7 +98,7 @@
 
         <td class="links" v-show="columns.isVisible('links')">
           <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditPath(artisan.getLastMakerId())"><i class="fas fa-edit"></i></a>
+            <a v-if="isDevEnv()" class="btn btn-warning" :href="Static.getArtisanEditPath(artisan.lastMakerId)"><i class="fas fa-edit"></i></a>
 
             <a v-if="artisan.fursuitReviewUrl" class="btn btn-secondary" :href="artisan.fursuitReviewUrl" target="_blank"><i class="fas fa-balance-scale"></i></a>
 

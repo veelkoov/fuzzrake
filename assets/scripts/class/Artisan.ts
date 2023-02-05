@@ -1,3 +1,4 @@
+import Error from '../Error';
 import {ADULTS, MINORS, MIXED} from '../consts';
 
 export default class Artisan {
@@ -19,6 +20,7 @@ export default class Artisan {
     readonly cstIssueText: string;
     readonly gotSpeciesInfo: boolean;
     readonly searchableText: string;
+    readonly lastMakerId: string;
 
     constructor(readonly makerId: string,
                 readonly formerMakerIds: string[],
@@ -117,6 +119,14 @@ export default class Artisan {
         this.gotSpeciesInfo = 0 !== speciesDoes.length || 0 !== speciesDoesnt.length;
 
         this.searchableText = `${name}\n${formerly}\n${makerId}\n${formerMakerIds}`.toLowerCase();
+
+        if (this.makerId !== '') {
+            this.lastMakerId = this.makerId;
+        } else if (this.formerMakerIds.length !== 0) {
+            this.lastMakerId = this.formerMakerIds[0];
+        } else {
+            Error.report('Data integrity failed. Both maker ID and last maker ID are empty.', `Artisan: ${this.name}`, true);
+        }
     }
 
     private getCstIssueText(): string {
@@ -138,18 +148,6 @@ export default class Artisan {
             default:
                 return true === this.isMinor ? MINORS : '';
         }
-    }
-
-    public getLastMakerId(): string {
-        if (this.makerId !== '') {
-            return this.makerId;
-        }
-
-        if (this.formerMakerIds.length !== 0) {
-            return this.formerMakerIds[0];
-        }
-
-        return '';
     }
 
     public hasMakerId(makerId: string): boolean {
@@ -177,7 +175,7 @@ export default class Artisan {
     }
 
     public static empty(): Artisan {
-        return new Artisan('', [], '', [], '', '', '', '', [], '', '', '', '', [], '', [], [], '', [], [], '', [], [], [], [], [], '', [], [], null, '', null, null, null, null, null, '', '', [], [], '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', [], [], '', '', '', '', null, [], [], 0, '', '');
+        return new Artisan('-', [], '', [], '', '', '', '', [], '', '', '', '', [], '', [], [], '', [], [], '', [], [], [], [], [], '', [], [], null, '', null, null, null, null, null, '', '', [], [], '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', [], [], '', '', '', '', null, [], [], 0, '', '');
     }
 
     public static fromArray(data: string[]|string|number|boolean|null): Artisan {
