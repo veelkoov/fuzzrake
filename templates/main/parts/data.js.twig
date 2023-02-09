@@ -1,31 +1,10 @@
-{% cache 'parts_data.js' %}
+{% cache 'parts_data.js' tags(['artisans', 'tracking']) %} {# grep-cache-tags #}
 
-var MAKER_IDS_MAP = null;
-var VISIBLE_SPECIES = null;
-var TOTAL_ARTISANS_COUNT = null;
+var TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
+var FILTERS_OPTIONS = null;
 
 window.loadFuzzrakeData = function () {
-    MAKER_IDS_MAP = {
-        {% for old, new in makerIdsMap %}
-            '{{ old }}': '{{ new }}',
-        {% endfor %}
-    };
-
-    VISIBLE_SPECIES = {
-        {% macro species_json(species) %}
-            {% for specie in species %}
-                {% if not specie.hidden %}
-                    '{{ specie.name }}': {
-                        {{ _self.species_json(specie.children) }}
-                    }{% if not loop.last %},{% endif %}
-                {% endif %}
-            {% endfor %}
-        {% endmacro %}
-
-        {{ _self.species_json(species) }}
-    };
-
-    TOTAL_ARTISANS_COUNT = {{ stats.totalArtisansCount }};
-}
+    FILTERS_OPTIONS = {{ filters|json_encode|raw }};
+};
 
 {% endcache %}

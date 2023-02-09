@@ -84,7 +84,8 @@ class UtcClockTest extends TestCase
     {
         UtcClockMock::start();
 
-        self::forTestGetXyzLaterYmd(UtcClock::getMonthLaterYmd(), 30, 1);
+        $daysInThisMonth = (int) UtcClock::now()->format('t');
+        self::forTestGetXyzLaterYmd(UtcClock::getMonthLaterYmd(), $daysInThisMonth);
     }
 
     /**
@@ -94,7 +95,7 @@ class UtcClockTest extends TestCase
     {
         UtcClockMock::start();
 
-        self::forTestGetXyzLaterYmd(UtcClock::getWeekLaterYmd(), 7, 0);
+        self::forTestGetXyzLaterYmd(UtcClock::getWeekLaterYmd(), 7);
     }
 
     /**
@@ -104,32 +105,34 @@ class UtcClockTest extends TestCase
     {
         UtcClockMock::start();
 
-        self::forTestGetXyzLaterYmd(UtcClock::getTomorrowYmd(), 1, 0);
+        self::forTestGetXyzLaterYmd(UtcClock::getTomorrowYmd(), 1);
     }
 
     /**
      * @throws DateTimeException
      */
-    public function forTestGetXyzLaterYmd(string $subject, int $daysMin, int $addDaysMax): void
+    public function forTestGetXyzLaterYmd(string $actualYmd, int $daysCount): void
     {
         $todayYmd = UtcClock::now()->format('Y-m-d');
 
-        self::assertTrue($subject > $todayYmd, "False: $subject > $todayYmd");
+        self::assertTrue($actualYmd > $todayYmd, "False: $actualYmd > $todayYmd");
 
         $timestampMidnight = UtcClock::at($todayYmd)->getTimestamp();
         $timestampNow = UtcClock::now()->getTimestamp();
 
         $secondsSinceMidnight = $timestampNow - $timestampMidnight;
 
-        UtcClockMock::passMs(1000 * (24 * 60 * 60 * $daysMin - $secondsSinceMidnight - 1));
+        // Pass time to one second before the midnight, $daysCount days in advance
+        UtcClockMock::passMs(1000 * (24 * 60 * 60 * $daysCount - $secondsSinceMidnight - 1));
 
         $todayYmd = UtcClock::now()->format('Y-m-d');
-        self::assertTrue($subject > $todayYmd, "False: $subject > $todayYmd");
+        self::assertTrue($actualYmd > $todayYmd, "False: $actualYmd > $todayYmd");
 
-        UtcClockMock::passMs(1000 * (60 * 60 * 24 * $addDaysMax + 2));
+        // Pass time to one second after the midnight
+        UtcClockMock::passMs(1000 * 2);
 
         $todayYmd = UtcClock::now()->format('Y-m-d');
-        self::assertTrue($todayYmd >= $subject, "False: $subject > $todayYmd");
+        self::assertTrue($todayYmd >= $actualYmd, "False: $actualYmd > $todayYmd");
     }
 
     /**

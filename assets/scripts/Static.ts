@@ -1,28 +1,63 @@
 declare const DATA_BRIDGE: { [key: string]: string };
-
-declare const MAKER_IDS_MAP: object;
-declare const VISIBLE_SPECIES: object;
+declare const FILTERS_OPTIONS: FiltersOptions;
 declare const TOTAL_ARTISANS_COUNT: number;
+declare const fliSetLoading: (bool) => void;
+declare const loadFuzzrakeData: () => void;
+
+export type SpecialItem = { 'value': string, 'label': string, 'count': number, 'faIcon': string };
+export type SpecialItems = Array<SpecialItem>;
+export type StringItem = { 'value': string, 'label': string, 'count': number };
+export type StringItems = Array<StringItem>;
+export type StringItemsItem = { 'value': StringItems, 'label': string, 'count': number };
+export type StringItemsItems = Array<StringItemsItem>;
+export type SpecieItem = { 'value': string|SpecieItems, 'label': string, 'count': number };
+export type SpecieItems = Array<SpecieItem>;
+
+export type MultiselectOptions = { 'items': StringItems, 'specialItems': SpecialItems };
+export type CountriesOptions = { 'items': StringItemsItems, 'specialItems': SpecialItems };
+export type SpeciesOptions = { 'items': SpecieItems, 'specialItems': SpecialItems };
+export type AnyOptions = MultiselectOptions|CountriesOptions|SpeciesOptions;
+
+export type FiltersOptions = {
+    'orderTypes': MultiselectOptions,
+    'styles': MultiselectOptions,
+    'paymentPlans': MultiselectOptions,
+    'features': MultiselectOptions,
+    'productionModels': MultiselectOptions,
+    'openFor': MultiselectOptions,
+    'languages': MultiselectOptions,
+    'countries': CountriesOptions,
+    'states': MultiselectOptions,
+    'species': SpeciesOptions,
+};
 
 export default abstract class Static {
-    public static getMainUrl(): string {
-        return DATA_BRIDGE.mainUrl;
+    public static getMainPath(): string {
+        return DATA_BRIDGE.mainPath;
     }
 
-    public static getTrackingUrl(): string {
-        return DATA_BRIDGE.trackingUrl;
+    public static getShouldKnowPath(): string {
+        return DATA_BRIDGE.shouldKnowPath;
+    }
+
+    public static getTrackingPath(): string {
+        return DATA_BRIDGE.trackingPath;
+    }
+
+    public static getTrackingLimitationsPath(): string {
+        return DATA_BRIDGE.trackingLimitationsPath;
     }
 
     public static getIuFormRedirectUrl(artisanId: string): string {
         return DATA_BRIDGE.iuFormRedirectUrl.replace('MAKER_ID', artisanId);
     }
 
-    public static getFeedbackFormUrl(artisanId: string): string {
-        return DATA_BRIDGE.feedbackFormUrl.replace('MAKER_ID', artisanId);
+    public static getFeedbackFormPath(artisanId: string): string {
+        return DATA_BRIDGE.feedbackFormPath.replace('MAKER_ID', artisanId);
     }
 
-    public static getArtisanEditUrl(artisanId: string): string {
-        return DATA_BRIDGE.artisanEditUrl.replace('MAKER_ID', artisanId);
+    public static getArtisanEditPath(artisanId: string): string {
+        return DATA_BRIDGE.artisanEditPath.replace('MAKER_ID', artisanId);
     }
 
     public static getTrackingFailedImgSrc(): string {
@@ -45,26 +80,19 @@ export default abstract class Static {
         return TOTAL_ARTISANS_COUNT;
     }
 
-    public static getMakerIdsMap(): object {
-        return MAKER_IDS_MAP;
-    }
-
-    public static getVisibleSpecies(): object {
-        return VISIBLE_SPECIES;
+    public static getFiltersOptions(): FiltersOptions {
+        return FILTERS_OPTIONS;
     }
 
     public static showLoadingIndicator(): void {
-        // @ts-ignore
-        window.fliSetLoading(true);
+        fliSetLoading(true);
     }
 
     public static hideLoadingIndicator(): void {
-        // @ts-ignore
-        window.fliSetLoading(false);
+        fliSetLoading(false);
     }
 
     public static loadFuzzrakeData(): void {
-        // @ts-ignore
-        window.loadFuzzrakeData();
+        loadFuzzrakeData();
     }
 }

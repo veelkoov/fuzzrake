@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering;
 
-use App\Filtering\Choices;
-use App\Filtering\FiltersChoicesFilter;
+use App\Filtering\DataRequests\Choices;
+use App\Filtering\DataRequests\FiltersChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
@@ -52,7 +52,7 @@ class FiltersChoicesFilterTest extends KernelTestCaseWithEM
         self::assertEquals(['LED eyes', '?', '*'], $result->features);
         self::assertEquals(['Full plantigrade', '?', '*'], $result->orderTypes);
         self::assertEquals(['Standard commissions', '?'], $result->productionModels);
-        self::assertEquals(['Pancakes', '!', '-'], $result->commissionStatuses);
+        self::assertEquals(['Pancakes', '!', '-'], $result->openFor);
         self::assertEquals(['Birds', '?'], $result->species);
     }
 }

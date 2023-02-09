@@ -1,4 +1,4 @@
-interface RadioInterface {
+export default interface RadioInterface {
     val(): null|string;
 
     isVal(value: string): boolean;

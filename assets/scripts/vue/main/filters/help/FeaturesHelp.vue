@@ -1,0 +1,8 @@
+<template>
+  <li>
+    Different than most of the filters, when selecting multiple values this will return makers, who can provide <em>ALL</em> of the selected features.
+  </li>
+  <li>
+    Many makers still don't have the features information supplied. You might want to try <em>Unknown</em> option as well.
+  </li>
+</template>

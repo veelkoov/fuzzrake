@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataProvider;
 
-use App\Filtering\Choices;
-use App\Filtering\DataProvider\Filtered;
-use App\Filtering\DataProvider\Filters\SpeciesFilterFactory;
+use App\Filtering\DataRequests\Choices;
+use App\Filtering\DataRequests\FilteredDataProvider;
+use App\Filtering\DataRequests\Filters\SpeciesFilterFactory;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -36,7 +36,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
@@ -59,7 +59,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
-        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
@@ -81,7 +81,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new Filtered(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false));
         self::assertEquals($expected, self::makerIdsFromPubData($result));

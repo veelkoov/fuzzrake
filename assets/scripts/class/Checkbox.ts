@@ -11,7 +11,7 @@ export default class Checkbox {
     }
 
     public val(): null|string {
-        let $checked = this.$elems.filter(':checked');
+        const $checked = this.$elems.filter(':checked');
 
         if (0 === $checked.length) {
             return null;

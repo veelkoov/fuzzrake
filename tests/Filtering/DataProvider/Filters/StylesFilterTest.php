@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataProvider\Filters;
 
-use App\Filtering\DataProvider\Filters\StylesFilter;
+use App\Filtering\DataRequests\Filters\StylesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataProvider\Filters;
 
-use App\Filtering\DataProvider\Filters\SpeciesFilter;
-use App\Filtering\DataProvider\Filters\SpeciesSearchResolver;
+use App\Filtering\DataRequests\Filters\SpeciesFilter;
+use App\Filtering\DataRequests\Filters\SpeciesSearchResolver;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use PHPUnit\Framework\TestCase;

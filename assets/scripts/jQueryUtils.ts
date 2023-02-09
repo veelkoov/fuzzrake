@@ -15,7 +15,7 @@ export function toggle(
         }
     } else {
         $elements.each((index, element) => {
-            let $element = jQuery(element);
+            const $element = jQuery(element);
 
             toggle($element, visible(index, $element), duration);
         });

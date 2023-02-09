@@ -223,7 +223,7 @@ function action() {
         'console')      run_console "$@" ;;
 
         # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-        'cc')           run_command sudo rm -rf ./var/cache/* ;;
+        'cc')           run_command sudo rm -rf ./var/cache/* && sudo chmod a+w ./var/cache ;;
         'cc-prod')      run_command ssh getfursu.it sudo rm -rf /var/www/prod/var/cache/prod ;;
 
         'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
@@ -241,6 +241,7 @@ function action() {
         ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan --xdebug analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
+        'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
 
         'cst')          run_console app:status-tracker:run "$@" ;;
         'cstc')         action cst --commit "$@" ;;

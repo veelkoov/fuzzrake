@@ -35,7 +35,11 @@ pipeline {
     stage('Merge develop') {
       when {
         not {
-          branch 'develop'
+          anyOf {
+            branch 'develop'
+            branch 'main'
+            branch 'beta'
+          }
         }
       }
 
@@ -114,6 +118,14 @@ pipeline {
           steps {
             ansiColor('xterm') {
               sh './toolbox rector --dry-run'
+            }
+          }
+        }
+
+        stage('ESLint') {
+          steps {
+            ansiColor('xterm') {
+              sh './toolbox el'
             }
           }
         }

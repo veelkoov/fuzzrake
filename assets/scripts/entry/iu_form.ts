@@ -9,7 +9,7 @@ import {toggle} from '../jQueryUtils';
 import '../../styles/iu_form.scss';
 
 jQuery(() => {
-    const caption = $('form[name="iu_form"] input[type="submit"]').val();
+    const caption = jQuery('form[name="iu_form"] input[type="submit"]').val();
 
     switch (caption) {
         case 'Agree and continue':
@@ -114,15 +114,15 @@ function react_to_contact_allowance_changes(): void {
     const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
     const contactInfoField = new DynamicFields('#iu_form_contactInfoObfuscated', '#contact_info', true);
 
-    function refresh(immediate: boolean = false): void {
+    function refresh(immediate = false): void {
         contactInfoField.toggle(contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED));
 
-        let duration: JQuery.Duration = immediate ? 0 : 'fast';
-        let level = contactAllowed.selectedIdx();
+        const duration: JQuery.Duration = immediate ? 0 : 'fast';
+        const level = contactAllowed.selectedIdx();
 
         toggle($prosCons, function (idx, el): boolean {
-            return $(el).data('min-level') <= level
-                && $(el).data('max-level') >= level;
+            return jQuery(el).data('min-level') <= level
+                && jQuery(el).data('max-level') >= level;
         }, duration);
     }
 

@@ -1,5 +1,6 @@
 import DynamicFields from './DynamicFields';
 import Radio from './Radio';
+import RadioInterface from './RadioInterface';
 import ToggleableInterface from './ToggleableInterface';
 
 export default class DynamicRadio implements RadioInterface, ToggleableInterface {

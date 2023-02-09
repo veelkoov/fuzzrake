@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataProvider\Filters;
 
-use App\Filtering\DataProvider\Filters\SpeciesSearchResolver;
+use App\Filtering\DataRequests\Filters\SpeciesSearchResolver;
 use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;

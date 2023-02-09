@@ -10,11 +10,11 @@ jQuery(() => {
 
 function react_to_subject_changes(): void {
     const subject = new Radio('feedback[subject]', refresh);
-    const $feedbackSubjectNotice = $('#feedback-subject-notice');
-    const $feedbackSubmitOption = $('#feedback-submit-option');
+    const $feedbackSubjectNotice = jQuery('#feedback-subject-notice');
+    const $feedbackSubmitOption = jQuery('#feedback-submit-option');
 
-    function refresh(immediate: boolean = false): void {
-        let message: string = '';
+    function refresh(immediate= false): void {
+        let message = '';
 
         switch (subject.val()) {
             case 'Help me get a fursuit':
