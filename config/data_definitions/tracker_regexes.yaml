@@ -58,7 +58,7 @@ parameters:
         - "don't (do|take|provide|accept)"
 
       'OFFER':
-        '?P<hadpaws_and_sockpaws_commissions>HANDPAWS_AND_SOCKPAWS':
+        '?P<handpaws_cms_and_sockpaws_cms>HANDPAWS_AND_SOCKPAWS':
           - 'handpaws AND sockpaws COMMISSIONS'
 
         '?P<parts_and_refurbishments>PARTS_AND_REFURBISHMENTS':
@@ -94,7 +94,7 @@ parameters:
         '?P<refurbishments>REFURBISHMENTS':
           - 'refurbishments?'
 
-        '?P<premades>PRE_MADES':
+        '?P<pre_mades>PRE_MADES':
           - 'pre-?mades?( designs?)?'
 
         '?P<artistic_liberty>ARTISTIC_LIBERTY':
@@ -142,46 +142,6 @@ parameters:
         - 'open for'
         - 'taking'
         - 'take'
-
-    matched_group_name_to_offers_or_status:
-      'status_open':
-        - 'STATUS:OPEN' # grep-offer-status-constants
-      'status_closed':
-        - 'STATUS:CLOSED' # grep-offer-status-constants
-
-      'hadpaws_and_sockpaws_commissions':
-        - 'HANDPAWS COMMISSIONS'
-        - 'SOCKPAWS COMMISSIONS'
-      'parts_and_refurbishments':
-        - 'PARTS'
-        - 'REFURBISHMENTS'
-      'commissions_and_quotes':
-        - 'COMMISSIONS'
-        - 'QUOTES'
-      'fullsuit_commissions':
-        - 'FULLSUIT COMMISSIONS'
-      'partial_commissions':
-        - 'PARTIAL COMMISSIONS'
-      'head_commissions':
-        - 'HEAD COMMISSIONS'
-      'parts':
-        - 'PARTS'
-      'commissions':
-        - 'COMMISSIONS'
-      'trades':
-        - 'TRADES'
-      'projects':
-        - 'PROJECTS'
-      'refurbishments':
-        - 'REFURBISHMENTS'
-      'premades':
-        - 'PRE-MADES'
-      'artistic_liberty':
-        - 'ARTISTIC LIBERTY'
-      'quotes':
-        - 'QUOTES'
-      'orders':
-        - 'ORDERS'
 
     cleaners: # Used to remove noise / simplify information
       '(?<![a-z])(currently|basically always|always)(?![a-z])': 'now'

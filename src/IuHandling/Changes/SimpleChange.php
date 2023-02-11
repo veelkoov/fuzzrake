@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\DataDefinitions\Fields\Field;
+use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
+use DateTimeImmutable;
 
 class SimpleChange implements ChangeInterface
 {
@@ -51,7 +53,9 @@ class SimpleChange implements ChangeInterface
 
     public function isActuallyAChange(): bool
     {
-        return $this->old !== $this->new;
+        return $this->old instanceof DateTimeImmutable && $this->new instanceof DateTimeImmutable // TODO: Look for ::equal usages, extract
+            ? DateTimeUtils::equal($this->old, $this->new)
+            : $this->old !== $this->new;
     }
 
     /**

@@ -41,7 +41,6 @@ class TextParserTest extends TestCase
         $regexes = new Regexes(
             $factory->getFalsePositives(),
             $factory->getOfferStatuses(),
-            $factory->getGroupsTranslations(),
             $factory->getCleaners(),
         );
 
@@ -92,8 +91,8 @@ class TextParserTest extends TestCase
         }
 
         $now = UtcClock::now();
-        $caseSeparator = "\n" . str_repeat('=', 64) . "\n";
-        $infoSeparator = "\n" . str_repeat('-', 32) . "\n";
+        $caseSeparator = "\n".str_repeat('=', 64)."\n";
+        $infoSeparator = "\n".str_repeat('-', 32)."\n";
 
         $cases = explode($caseSeparator, read(Paths::getTestDataPath('/statuses.txt')));
 

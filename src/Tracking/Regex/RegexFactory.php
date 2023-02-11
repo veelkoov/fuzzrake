@@ -20,11 +20,6 @@ class RegexFactory
     private array $offerStatuses = [];
 
     /**
-     * @var array<string, list<string>>
-     */
-    private readonly array $groupsTranslations;
-
-    /**
      * @var array<string, string>
      */
     private array $cleaners = [];
@@ -37,11 +32,9 @@ class RegexFactory
     {
         $this->resolver = new PlaceholdersResolver($trackerRegexes['placeholders']);
 
-        $this->groupsTranslations = $trackerRegexes['matched_group_name_to_offers_or_status'];
         $this->loadFalsePositives($trackerRegexes['false_positives']);
         $this->loadOfferStatuses($trackerRegexes['offers_statuses']);
         $this->loadCleaners($trackerRegexes['cleaners']);
-        $this->validateGroupTranslations();
     }
 
     /**
@@ -58,14 +51,6 @@ class RegexFactory
     public function getFalsePositives(): array
     {
         return $this->falsePositives;
-    }
-
-    /**
-     * @return array<string, list<string>>
-     */
-    public function getGroupsTranslations(): array
-    {
-        return $this->groupsTranslations;
     }
 
     /**
@@ -107,29 +92,6 @@ class RegexFactory
         $this->validateRegexes($regexes);
 
         $this->cleaners = array_combine($regexes, array_values($cleaners));
-    }
-
-    private function validateGroupTranslations(): void
-    {
-        foreach ($this->groupsTranslations as $key => $translations) {
-            if (!in_array($key, $this->resolver->getUsedGroupNames(), true)) {
-                throw new ConfigurationException("Group translations for '$key' are not used");
-            }
-
-            if (!is_array($translations)) {
-                throw new ConfigurationException("Group translations data for '$key' is not an array");
-            }
-
-            if ([] === $translations) {
-                throw new ConfigurationException("Group translations for '$key' are empty");
-            }
-
-            foreach ($translations as $translation) {
-                if (!is_string($translation)) {
-                    throw new ConfigurationException("Group translations for '$key' contain non-string items");
-                }
-            }
-        }
     }
 
     /**

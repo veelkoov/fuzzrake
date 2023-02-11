@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Tracking\Exception\TrackerException;
-use App\Tracking\OfferStatus\GroupsTranslator;
 use App\Tracking\OfferStatus\OfferStatus;
 use App\Tracking\Regex\PatternProvider;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
@@ -22,7 +21,6 @@ class TextParser
      */
     private readonly array $offerStatusPatterns;
 
-    private readonly GroupsTranslator $translator;
     private readonly TextPreprocessor $preprocessor;
 
     public function __construct(
@@ -30,7 +28,6 @@ class TextParser
     ) {
         $this->offerStatusPatterns = $provider->getOfferStatuses();
         $this->preprocessor = new TextPreprocessor($provider->getFalsePositives(), $provider->getCleaners());
-        $this->translator = $provider->getGroupsTranslator();
     }
 
     /**
@@ -96,7 +93,7 @@ class TextParser
         $detail = "{$match->text()} (groups: ".implode(', ', $matchedGroupNames).')';
 
         foreach ($matchedGroupNames as $groupName) {
-            foreach ($this->translator->getOffersOrStatus($groupName) as $translation) {
+            foreach ($this->getOffersOrStatus($groupName) as $translation) {
                 if (str_starts_with($translation, 'STATUS:')) { // grep-offer-status-constants
                     if (null !== $status) {
                         throw new TrackerException("Double status caught in: $detail");
@@ -120,5 +117,25 @@ class TextParser
         foreach ($offers as $offer) {
             $result[] = new OfferStatus($offer, $status);
         }
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getOffersOrStatus(string $capturedGroupName): array
+    {
+        $result = [];
+        $parts = explode('_and_', $capturedGroupName);
+
+        foreach ($parts as $part) {
+            $result[] = match ($part) {
+                'status_open' => 'STATUS:OPEN', // grep-offer-status-constants
+                'status_closed' => 'STATUS:CLOSED', // grep-offer-status-constants
+                'pre_mades' => 'PRE-MADES',
+                default => str_replace(['CMS', '_'], ['COMMISSIONS', ' '], strtoupper($part)),
+            };
+        }
+
+        return $result;
     }
 }
