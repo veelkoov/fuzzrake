@@ -24,6 +24,7 @@ class RegexFactory
      */
     private array $cleaners = [];
     private readonly PlaceholdersResolver $resolver;
+    private readonly WorkaroundJ $workaroundJ;
 
     /**
      * @param psTrackerRegexes $trackerRegexes
@@ -31,6 +32,7 @@ class RegexFactory
     public function __construct(array $trackerRegexes)
     {
         $this->resolver = new PlaceholdersResolver($trackerRegexes['placeholders']);
+        $this->workaroundJ = new WorkaroundJ();
 
         $this->loadFalsePositives($trackerRegexes['false_positives']);
         $this->loadOfferStatuses($trackerRegexes['offers_statuses']);
@@ -78,6 +80,11 @@ class RegexFactory
     {
         $this->offerStatuses = $offerStatuses;
         $this->resolver->resolve($this->offerStatuses);
+
+        foreach ($this->offerStatuses as &$resolved) {
+            $resolved = $this->workaroundJ->apply($resolved);
+        }
+
         $this->validateRegexes($this->offerStatuses, Regexes::OFFER_STATUSES_FLAGS);
     }
 

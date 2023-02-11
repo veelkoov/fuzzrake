@@ -24,8 +24,8 @@ parameters:
       - 'OFFER( are| status)?(\s+now)? ?[:-]\s*STATUS_ANY'
 
       # Inverted order - careful!
-      - '(WE_ARE|now) STATUS_ANY(\s+for|\s+new)?\s+OFFER'
-      - 'STATUS_ANY(\s+for(\s+new)?|\s+new)\s+OFFER'
+      - '(WE_ARE|now) STATUS_ANY(\s+for(\s+new)?|\s+new)?\s+OFFER(\s+and\s+OFFER)?'
+      -              'STATUS_ANY(\s+for(\s+new)?|\s+new)\s+OFFER(\s+and\s+OFFER)?'
 
       - 'OPEN_TAG\s*OFFER( status:?| ?:)?\s*END_OPEN_TAGS(\s*now)?\s*STATUS_ANY'
 
@@ -47,63 +47,63 @@ parameters:
         - 'STATUS_OPEN'
         - 'STATUS_CLOSED'
 
-      '?P<status_open>STATUS_OPEN':
+      'STATUS_OPEN=status_open':
         - 'open(?!ing)'
         - 'only making'
         - 'taking'
 
-      '?P<status_closed>STATUS_CLOSED':
+      'STATUS_CLOSED=status_closed':
         - 'closed?'
         - 'not (taking( on)?|accepting|open)'
         - "don't (do|take|provide|accept)"
 
       'OFFER':
-        '?P<handpaws_cms_and_sockpaws_cms>HANDPAWS_AND_SOCKPAWS':
+        'HANDPAWS_AND_SOCKPAWS=handpaws_cms_and_sockpaws_cms':
           - 'handpaws AND sockpaws COMMISSIONS'
 
-        '?P<parts_and_refurbishments>PARTS_AND_REFURBISHMENTS':
+        'PARTS_AND_REFURBISHMENTS=parts_and_refurbishments':
           - 'parts AND refurbishments COMMISSIONS'
 
-        '?P<commissions_and_quotes>COMMISSIONS_AND_QUOTES':
+        'COMMISSIONS_AND_QUOTES=commissions_and_quotes':
           - '(COMMISSIONS AND quotes?)'
           - '(quotes? AND COMMISSIONS)'
 
-        '?P<fullsuit_commissions>FULLSUIT_COMMISSIONS':
+        'FULLSUIT_COMMISSIONS=fullsuit_commissions':
           - 'fullsuit COMMISSIONS'
 
-        '?P<partial_commissions>PARTIAL_COMMISSIONS':
+        'PARTIAL_COMMISSIONS=partial_commissions':
           - 'partial COMMISSIONS'
 
-        '?P<head_commissions>HEAD_COMMISSIONS':
+        'HEAD_COMMISSIONS=head_commissions':
           - 'head COMMISSIONS'
 
-        '?P<parts>PARTS':
+        'PARTS=parts':
           - '(fursuit )?parts? COMMISSIONS'
 
-        '?P<commissions>COMPLEX_COMMISSIONS_WORDING':
+        'COMPLEX_COMMISSIONS_WORDING=commissions':
           - '(custom )?(costume |fursuit )?COMMISSIONS'
           - '(custom |COMMISSIONS )?slots?'
           - 'fursuits?( queue)?'
 
-        '?P<projects>PROJECTS':
+        'PROJECTS=projects':
           - 'projects?'
 
-        '?P<trades>TRADES':
+        'TRADES=trades':
           - 'trades?'
 
-        '?P<refurbishments>REFURBISHMENTS':
+        'REFURBISHMENTS=refurbishments':
           - 'refurbishments?'
 
-        '?P<pre_mades>PRE_MADES':
+        'PRE_MADES=pre_mades':
           - 'pre-?mades?( designs?)?'
 
-        '?P<artistic_liberty>ARTISTIC_LIBERTY':
+        'ARTISTIC_LIBERTY=artistic_liberty':
           - 'artistic liberty'
 
-        '?P<quotes>QUOTES':
+        'QUOTES=quotes':
           - 'quotes?'
 
-        '?P<orders>ORDERS':
+        'ORDERS=orders':
           - '(custom )?orders?'
 
       ' AND ':
@@ -144,12 +144,6 @@ parameters:
         - 'take'
 
     cleaners: # Used to remove noise / simplify information
-      '(?<![a-z])(currently|basically always|always)(?![a-z])': 'now'
-
-      # Change order to reduce number of alterations
-      '(?<![a-z])we are now(?![a-z])': 'now we are'
-      '(?<![a-z])not now(?![a-z])':    'now not'
-
       '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
       '(?<=return|delete) (?=this)':                                           '_'
       '<script[^>]*>[^ ]+</script>':                                           ' '
@@ -171,13 +165,20 @@ parameters:
       '  +':   ' '
       '\n\n+': "\n"
 
+      # square.site
+      # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
+      ',"attributes":\{[^}]*\}': ''
+      '"\},\{"insert":"':        ''
+
+      # always / currently / now
+      '(?<![a-z])(currently|basically always|always)(?![a-z])': 'now'
+
+      # Change order to reduce number of alterations
+      '(?<![a-z])we are now(?![a-z])': 'now we are'
+      '(?<![a-z])not now(?![a-z])':    'now not'
+
       # [ Commissions . . . Open ]
       '\[ ([a-z]+) ?\.(?: ?\.)+ ?([a-z]+) \]': '$1: $2'
 
       # | - Commissions: - CLOSED |
       '\| - ([a-z]+): - ([a-z]+) \|': '$1: $2'
-
-      # square.site
-      # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
-      ',"attributes":\{[^}]*\}': ''
-      '"\},\{"insert":"':        ''

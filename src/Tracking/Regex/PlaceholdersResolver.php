@@ -6,12 +6,10 @@ namespace App\Tracking\Regex;
 
 use App\Tracking\Exception\ConfigurationException;
 use Psl\Type;
-use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class PlaceholdersResolver
 {
-    private readonly Pattern $namedGroup;
     private readonly Pattern $placeholder;
 
     /**
@@ -25,16 +23,10 @@ class PlaceholdersResolver
     private array $placeholders = [];
 
     /**
-     * @var list<string>
-     */
-    private array $usedGroupNames = [];
-
-    /**
      * @param psTrckRgxsPlaceholders $placeholders
      */
     public function __construct(array $placeholders)
     {
-        $this->namedGroup = pattern('^\?P<(?P<group_name>[a-z_]+)>(?P<placeholder>.+)$', 'i');
         $this->placeholder = pattern('^ ?[A-Z_&-]+ ?$', 'n');
 
         $this->loadPlaceholders($placeholders);
@@ -61,14 +53,6 @@ class PlaceholdersResolver
         if ($changed) {
             $this->resolve($subject);
         }
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getUsedGroupNames(): array
-    {
-        return $this->usedGroupNames;
     }
 
     /**
@@ -116,17 +100,9 @@ class PlaceholdersResolver
         $placeholders = [];
 
         foreach ($input as $placeholder => $contents) {
-            $subItemNamedGroup = '';
-
-            $this->namedGroup->match($placeholder)->findFirst()
-                ->map(function (Detail $detail) use (&$placeholder, &$subItemNamedGroup) {
-                    $placeholder = $detail->group('placeholder')->text();
-                    $subItemNamedGroup = $detail->group('group_name')->text();
-
-                    if (!in_array($subItemNamedGroup, $this->usedGroupNames, true)) {
-                        $this->usedGroupNames[] = $subItemNamedGroup;
-                    }
-                });
+            $parts = explode('=', $placeholder);
+            $placeholder = $parts[0];
+            $subItemNamedGroup = count($parts) > 1 ? $parts[1] : '';
 
             if (array_key_exists($placeholder, $this->placeholders)) {
                 throw new ConfigurationException("Duplicated placeholder: '$placeholder'");

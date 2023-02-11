@@ -159,3 +159,10 @@ Commissions basically always open
 --------------------------------
 Case 22
 +COMMISSIONS
+================================================================
+<br /><strong>Commission status: CLOSED! </strong><br />we are currently<strong> closed </strong>for new projects and quotes.<br />
+--------------------------------
+Case 23
+-COMMISSIONS
+-PROJECTS
+-QUOTES
