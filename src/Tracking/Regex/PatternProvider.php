@@ -25,9 +25,11 @@ readonly class PatternProvider
     ) {
         $regexes = $regexPersistence->getRegexes();
 
-        $this->falsePositives = Pattern::list(map($regexes->getFalsePositives(), fn ($item) => pattern($item, 'sn')));
-        $this->offerStatuses = map($regexes->getOfferStatuses(), fn ($item) => pattern($item, 'sn'));
-        $this->cleaners = new Replacements($regexes->getCleaners(), 's', '', '');
+        $this->falsePositives = Pattern::list(map($regexes->getFalsePositives(),
+            fn ($item) => pattern($item, Regexes::FALSE_POSITIVES_FLAGS)));
+        $this->offerStatuses = map($regexes->getOfferStatuses(),
+            fn ($item) => pattern($item, Regexes::OFFER_STATUSES_FLAGS));
+        $this->cleaners = new Replacements($regexes->getCleaners(), Regexes::CLEANERS_FLAGS, '', '');
     }
 
     /**

@@ -68,7 +68,7 @@ class RegexFactory
     {
         $this->falsePositives = $falsePositives;
         $this->resolver->resolve($this->falsePositives);
-        $this->validateRegexes($this->falsePositives);
+        $this->validateRegexes($this->falsePositives, Regexes::FALSE_POSITIVES_FLAGS);
     }
 
     /**
@@ -78,7 +78,7 @@ class RegexFactory
     {
         $this->offerStatuses = $offerStatuses;
         $this->resolver->resolve($this->offerStatuses);
-        $this->validateRegexes($this->offerStatuses);
+        $this->validateRegexes($this->offerStatuses, Regexes::OFFER_STATUSES_FLAGS);
     }
 
     /**
@@ -89,7 +89,7 @@ class RegexFactory
         $regexes = array_keys($cleaners);
 
         $this->resolver->resolve($regexes);
-        $this->validateRegexes($regexes);
+        $this->validateRegexes($regexes, Regexes::CLEANERS_FLAGS);
 
         $this->cleaners = array_combine($regexes, array_values($cleaners));
     }
@@ -97,10 +97,10 @@ class RegexFactory
     /**
      * @param list<string> $regexes
      */
-    private function validateRegexes(array $regexes): void
+    private function validateRegexes(array $regexes, string $flags): void
     {
         foreach ($regexes as $regex) {
-            if (!Pattern::of($regex)->valid()) {
+            if (!Pattern::of($regex, $flags)->valid()) {
                 throw new ConfigurationException("Invalid regex: $regex");
             }
         }
