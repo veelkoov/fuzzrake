@@ -5,19 +5,10 @@ declare(strict_types=1);
 namespace App\Tracking\Regex;
 
 use App\Tracking\Exception\ConfigurationException;
-use Psl\Type;
-use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class RegexFactory
 {
-    private readonly Pattern $namedGroup;
-
-    /**
-     * @var array<string, string>
-     */
-    private array $placeholders = [];
-
     /**
      * @var list<string>
      */
@@ -34,24 +25,19 @@ class RegexFactory
     private readonly array $groupsTranslations;
 
     /**
-     * @var list<string>
-     */
-    private array $usedGroupNames = [];
-
-    /**
      * @var array<string, string>
      */
     private array $cleaners = [];
+    private readonly PlaceholdersResolver $resolver;
 
     /**
      * @param psTrackerRegexes $trackerRegexes
      */
     public function __construct(array $trackerRegexes)
     {
-        $this->namedGroup = pattern('^\?P<(?P<group_name>[a-z_]+)>(?P<placeholder>.+)$', 'in');
+        $this->resolver = new PlaceholdersResolver($trackerRegexes['placeholders']);
 
         $this->groupsTranslations = $trackerRegexes['matched_group_name_to_offers_or_status'];
-        $this->loadPlaceholders($trackerRegexes['placeholders']);
         $this->loadFalsePositives($trackerRegexes['false_positives']);
         $this->loadOfferStatuses($trackerRegexes['offers_statuses']);
         $this->loadCleaners($trackerRegexes['cleaners']);
@@ -91,111 +77,12 @@ class RegexFactory
     }
 
     /**
-     * @param psTrckRgxsPlaceholders $placeholders
-     */
-    private function loadPlaceholders(array $placeholders): void
-    {
-        $shape = Type\non_empty_dict(
-            Type\non_empty_string(),
-            Type\union(
-                Type\non_empty_vec(Type\non_empty_string()),
-                Type\non_empty_dict(
-                    Type\non_empty_string(),
-                    Type\non_empty_vec(Type\non_empty_string()),
-                ),
-            ),
-        );
-
-        $placeholders = $shape->assert($placeholders);
-
-        $this->loadPlaceholderItem($placeholders, '', '');
-        $this->resolvePlaceholders($this->placeholders);
-    }
-
-    /**
-     * @param psTrckRgxsPlaceholders|array<string, list<string>>|list<string> $input
-     */
-    private function loadPlaceholderItem(array $input, string $groupName, string $path): string
-    {
-        if (array_is_list($input)) {
-            /** @var list<string> $input grep-phpstan-var-typing */
-
-            return $this->alternative($input, $groupName);
-        }
-
-        /** @var psTrckRgxsPlaceholders|array<string, list<string>> $input grep-phpstan-var-typing */
-        return $this->loadMapPlaceholderItem($input, $groupName, $path);
-    }
-
-    /**
-     * @param psTrckRgxsPlaceholders|array<string, list<string>> $input
-     */
-    private function loadMapPlaceholderItem(array $input, string $groupName, string $path): string
-    {
-        $placeholders = [];
-
-        foreach ($input as $placeholder => $contents) {
-            $subItemNamedGroup = '';
-
-            $this->namedGroup->match($placeholder)->findFirst()
-                ->map(function (Detail $detail) use (&$placeholder, &$subItemNamedGroup) {
-                    $placeholder = $detail->group('placeholder')->text();
-                    $subItemNamedGroup = $detail->group('group_name')->text();
-
-                    if (!in_array($subItemNamedGroup, $this->usedGroupNames, true)) {
-                        $this->usedGroupNames[] = $subItemNamedGroup;
-                    }
-                });
-
-            if (array_key_exists($placeholder, $this->placeholders)) {
-                throw new ConfigurationException("Duplicated placeholder: '$placeholder'");
-            }
-
-            $placeholders[] = $placeholder;
-
-            $this->placeholders[$placeholder] = $this->loadPlaceholderItem($contents, $subItemNamedGroup, "$path/$placeholder");
-        }
-
-        return $this->alternative($placeholders, $groupName);
-    }
-
-    /**
-     * @param list<string> $items
-     */
-    private function alternative(array $items, string $groupName): string
-    {
-        $groupName = '' === $groupName ? '' : "?P<$groupName>";
-
-        return "($groupName".implode('|', $items).')';
-    }
-
-    /**
-     * @param array<string, string|array<string, string>> $subject
-     */
-    private function resolvePlaceholders(array &$subject): void
-    {
-        $changed = false;
-
-        foreach ($subject as &$resolved) {
-            foreach ($this->placeholders as $placeholder => $replacement) {
-                $resolved = str_replace($placeholder, $replacement, $resolved, $count);
-
-                $changed = $changed || $count > 0;
-            }
-        }
-
-        if ($changed) {
-            $this->resolvePlaceholders($subject);
-        }
-    }
-
-    /**
      * @param list<string> $falsePositives
      */
     private function loadFalsePositives(array $falsePositives): void
     {
         $this->falsePositives = $falsePositives;
-        $this->resolvePlaceholders($this->falsePositives);
+        $this->resolver->resolve($this->falsePositives);
         $this->validateRegexes($this->falsePositives);
     }
 
@@ -205,7 +92,7 @@ class RegexFactory
     private function loadOfferStatuses(array $offerStatuses): void
     {
         $this->offerStatuses = $offerStatuses;
-        $this->resolvePlaceholders($this->offerStatuses);
+        $this->resolver->resolve($this->offerStatuses);
         $this->validateRegexes($this->offerStatuses);
     }
 
@@ -216,7 +103,7 @@ class RegexFactory
     {
         $regexes = array_keys($cleaners);
 
-        $this->resolvePlaceholders($regexes);
+        $this->resolver->resolve($regexes);
         $this->validateRegexes($regexes);
 
         $this->cleaners = array_combine($regexes, array_values($cleaners));
@@ -225,7 +112,7 @@ class RegexFactory
     private function validateGroupTranslations(): void
     {
         foreach ($this->groupsTranslations as $key => $translations) {
-            if (!in_array($key, $this->usedGroupNames, true)) {
+            if (!in_array($key, $this->resolver->getUsedGroupNames(), true)) {
                 throw new ConfigurationException("Group translations for '$key' are not used");
             }
 
