@@ -145,3 +145,17 @@ Case 19
 --------------------------------
 Case 20
 +COMMISSIONS
+================================================================
+</h4>
+<br>
+<div class="hello_box">Commissions status - closed.<br>
+The current queue can be viewed <a
+ href="http://
+--------------------------------
+Case 21
+-COMMISSIONS
+================================================================
+Commissions basically always open
+--------------------------------
+Case 22
++COMMISSIONS

@@ -21,7 +21,7 @@ parameters:
     offers_statuses:
       # Commissions/Quotes Currently Closed
       - 'OFFER(\s+are)?(\s+now)?\s+STATUS_ANY'
-      - 'OFFER( are| status)?(\s+now)? ?:\s*STATUS_ANY'
+      - 'OFFER( are| status)?(\s+now)? ?[:-]\s*STATUS_ANY'
 
       # Inverted order - careful!
       - '(WE_ARE|now) STATUS_ANY(\s+for|\s+new)?\s+OFFER'
@@ -31,25 +31,6 @@ parameters:
 
       # Separators which should be handled safely
       - 'OPEN_TAG\s*OFFER\s+[|]\s+STATUS_ANY\s*END_TAG'
-      # (<(h[123456]|p|div)[^>]*>)\s*((?P<hadpaws_and_sockpaws_commissions>handpaws( and | ?(&amp;|/) ?)sockpaws (comm?iss?ions?|comms))|(?P<parts_and_refurbishments>parts( and | ?(&amp;|/) ?)refurbishments (comm?iss?ions?|comms))|(?P<commissions_and_quotes>((comm?iss?ions?|comms)( and | ?(&amp;|/) ?)quotes?)|(quotes?( and | ?(&amp;|/) ?)(comm?iss?ions?|comms)))|(?P<fullsuit_commissions>fullsuit (comm?iss?ions?|comms))|(?P<partial_commissions>partial (comm?iss?ions?|comms))|(?P<head_commissions>head (comm?iss?ions?|comms))|(?P<parts>(fursuit )?parts? (comm?iss?ions?|comms))|(?P<commissions>(custom )?(costume |fursuit )?(comm?iss?ions?|comms)|(custom |(comm?iss?ions?|comms) )?slots?|fursuits?( queue)?)|(?P<projects>projects?)|(?P<trades>trades?)|(?P<refurbishments>refurbishments?)|(?P<premades>pre-?mades?( designs?)?)|(?P<artistic_liberty>artistic liberty)|(?P<quotes>quotes?)|(?P<orders>(custom )?orders?))\s+[|]\s+STATUS\s*(</(h[123456]|p|div)>)
-
-      # Weird, dedicated
-      - "(?P<status_open>you can still submit a QUOTES form if you're interested)" # tc077
-      - 'we are STATUS_ANY for a handful of OFFER' # tc006
-
-#      - '(COMMISSIONS\s*[:-]\s*)?STATUS_ANY for (new )?OFFER'
-#      - 'OFFER( status| NOW)?([ :_-]+\s*?)STATUS_ANY' # - and _ should work for attributes as well
-#      - 'OFFER\s+(are:?|basically)\s+(NOW:?\s+)?(&gt;&gt;)?STATUS_ANY' # "(&gt;&gt;)?" - tc057
-#      - 'STATUS_ANY new OFFER'
-#      - 'NOW\s+STATUS_ANY\s+(new\s+|for\s+)?OFFER'
-#      - 'we STATUS_ANY OFFER'
-#      - '\[ OFFER[. ]+STATUS_ANY \]' # tc045
-#      - '<h2[^>]*> ?OFFER \| STATUS_ANY ?</h2>'
-#      - '<h2[^>]*> ?OFFER(( status:?| ?:)) ?</h2>\s*<h2[^>]*> ?STATUS_ANY' # No closing </h2> for any comments
-#      - '<h4[^>]*> ?OFFER(( status:?| ?:))? ?</h4>\s*<h4[^>]*> ?STATUS_ANY' # No closing </h4> for any comments
-#      - '<p[^>]*> ?OFFER(( status:?| ?:))? ?</p>\s*<p[^>]*> ?(NOW )?STATUS_ANY' # No closing </p> for any comments
-#      - '<h2[^>]*> ?OFFER(( status:?| ?:))? ?</h2>\s*<p[^>]*> ?(NOW )?STATUS_ANY' # No closing </p> for any comments
-#      - 'OFFER(( status:?| ?:))?\s*</h1>\s*</div>\s*<div[^>]*>\s*<p[^>]*>\s*STATUS_ANY'
 
     placeholders:
       'OPEN_TAG':
@@ -73,7 +54,7 @@ parameters:
 
       '?P<status_closed>STATUS_CLOSED':
         - 'closed?'
-        - 'not (taking( on)?|accepting|open( for)?)'
+        - 'not (taking( on)?|accepting|open)'
         - "don't (do|take|provide|accept)"
 
       'OFFER':
@@ -203,7 +184,7 @@ parameters:
         - 'ORDERS'
 
     cleaners: # Used to remove noise / simplify information
-      '(?<![a-z])(currently|always)(?![a-z])': 'now'
+      '(?<![a-z])(currently|basically always|always)(?![a-z])': 'now'
 
       # Change order to reduce number of alterations
       '(?<![a-z])we are now(?![a-z])': 'now we are'
