@@ -20,16 +20,22 @@ parameters:
 
     offers_statuses:
       # Commissions/Quotes Currently Closed
-      - 'OFFER(\s+are)?(\s+NOW)?(\s+are)?\s+STATUS_ANY'
-      - 'OFFER( are| status)?(\s+NOW)? ?:\s*STATUS_ANY'
-      - 'STATUS_ANY for( new)? OFFER'
-      - '((WE_ARE( NOW)?)|NOW)\s+STATUS_ANY(\s+for)?(\s+new)?\s+OFFER'
+      - 'OFFER(\s+are)?(\s+now)?\s+STATUS_ANY'
+      - 'OFFER( are| status)?(\s+now)? ?:\s*STATUS_ANY'
 
-      - 'OPEN_TAG ?OFFER( status:?| ?:)? ?END_OPEN_TAGS( ?NOW)? ?STATUS_ANY'
+      # Inverted order - careful!
+      - '(WE_ARE|now) STATUS_ANY(\s+for|\s+new)?\s+OFFER'
+      - 'STATUS_ANY(\s+for(\s+new)?|\s+new)\s+OFFER'
 
+      - 'OPEN_TAG\s*OFFER( status:?| ?:)?\s*END_OPEN_TAGS(\s*now)?\s*STATUS_ANY'
+
+      # Separators which should be handled safely
+      - 'OPEN_TAG\s*OFFER\s+[|]\s+STATUS_ANY\s*END_TAG'
+      # (<(h[123456]|p|div)[^>]*>)\s*((?P<hadpaws_and_sockpaws_commissions>handpaws( and | ?(&amp;|/) ?)sockpaws (comm?iss?ions?|comms))|(?P<parts_and_refurbishments>parts( and | ?(&amp;|/) ?)refurbishments (comm?iss?ions?|comms))|(?P<commissions_and_quotes>((comm?iss?ions?|comms)( and | ?(&amp;|/) ?)quotes?)|(quotes?( and | ?(&amp;|/) ?)(comm?iss?ions?|comms)))|(?P<fullsuit_commissions>fullsuit (comm?iss?ions?|comms))|(?P<partial_commissions>partial (comm?iss?ions?|comms))|(?P<head_commissions>head (comm?iss?ions?|comms))|(?P<parts>(fursuit )?parts? (comm?iss?ions?|comms))|(?P<commissions>(custom )?(costume |fursuit )?(comm?iss?ions?|comms)|(custom |(comm?iss?ions?|comms) )?slots?|fursuits?( queue)?)|(?P<projects>projects?)|(?P<trades>trades?)|(?P<refurbishments>refurbishments?)|(?P<premades>pre-?mades?( designs?)?)|(?P<artistic_liberty>artistic liberty)|(?P<quotes>quotes?)|(?P<orders>(custom )?orders?))\s+[|]\s+STATUS\s*(</(h[123456]|p|div)>)
+
+      # Weird, dedicated
       - "(?P<status_open>you can still submit a QUOTES form if you're interested)" # tc077
-#      - '\| - OFFER: - STATUS_ANY \|' # tc 076
-      - 'NOW we are STATUS_ANY for a handful of OFFER' # tc006
+      - 'we are STATUS_ANY for a handful of OFFER' # tc006
 
 #      - '(COMMISSIONS\s*[:-]\s*)?STATUS_ANY for (new )?OFFER'
 #      - 'OFFER( status| NOW)?([ :_-]+\s*?)STATUS_ANY' # - and _ should work for attributes as well
@@ -67,7 +73,7 @@ parameters:
 
       '?P<status_closed>STATUS_CLOSED':
         - 'closed?'
-        - 'not (NOW )?(taking( on)?|accepting|open( for)?)'
+        - 'not (taking( on)?|accepting|open( for)?)'
         - "don't (do|take|provide|accept)"
 
       'OFFER':
@@ -127,14 +133,10 @@ parameters:
         - 'comm?iss?ions?'
         - 'comms'
 
-      'NOW':
-        - 'currently'
-        - 'now'
-        - 'always'
-
       'WE_ARE':
         - "we( are|'re| will)?"
         - "i( am|'m| will)?"
+        - "STUDIO_NAME (is|are)"
 
       'OUR':
         - 'my'
@@ -201,6 +203,12 @@ parameters:
         - 'ORDERS'
 
     cleaners: # Used to remove noise / simplify information
+      '(?<![a-z])(currently|always)(?![a-z])': 'now'
+
+      # Change order to reduce number of alterations
+      '(?<![a-z])we are now(?![a-z])': 'now we are'
+      '(?<![a-z])not now(?![a-z])':    'now not'
+
       '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
       '(?<=return|delete) (?=this)':                                           '_'
       '<script[^>]*>[^ ]+</script>':                                           ' '
