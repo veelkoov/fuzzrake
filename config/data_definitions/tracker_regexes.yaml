@@ -19,7 +19,9 @@ parameters:
       - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
 
     offers_statuses:
-      # Commissions/Quotes Currently Closed
+      # Start with statuses "nicely" organized into paragraphs/sentences - single spaces, no newlines, etc.
+      - 'STATUS_ANY for OFFER'
+
       - 'OFFER(\s+are)?(\s+now)?\s+STATUS_ANY'
       - 'OFFER( are| status)?(\s+now)? ?[:-]\s*STATUS_ANY'
 

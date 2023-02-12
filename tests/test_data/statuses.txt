@@ -166,3 +166,19 @@ Case 23
 -COMMISSIONS
 -PROJECTS
 -QUOTES
+================================================================
+<span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0"> Art Comms Closed, Fursuits closed </span>
+--------------------------------
+Case 24
+-COMMISSIONS
+================================================================
+<h2>Commission Status: Open for Quotes!</h2>
+--------------------------------
+Case 25
++QUOTES
+================================================================
+<p id="text12" class="style2"><span class="p">Closed for Commissions<br /> Closed for Quotes<br /> Approximate Wait Time is 2-4 Months on Small Parts</span></p>
+--------------------------------
+Case 26
+-COMMISSIONS
+-QUOTES
