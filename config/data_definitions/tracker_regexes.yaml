@@ -164,9 +164,9 @@ parameters:
 
       '&#(?:39|8217);': "'"
 
-      '\t':    ' '
-      '  +':   ' '
-      '\n\n+': "\n"
+      '\t':     ' '
+      ' {2,}':  ' '
+      '\n{2,}': "\n"
 
       # square.site
       # {"content":{"quill":{"ops":[{"insert":"Fursuit commissions are currently OPEN\n"}]}}}
