@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Tracking\Regex;
 
-class Regexes
+readonly class Regexes
 {
+    final public const FALSE_POSITIVES_FLAGS = 'sn';
+    final public const OFFER_STATUSES_FLAGS = 'sn';
+    final public const CLEANERS_FLAGS = 's';
+
     /**
-     * @param string[]                $falsePositives
-     * @param string[]                $offerStatuses
-     * @param array<string, string[]> $groupTranslations
-     * @param string[]                $cleaners
+     * @param list<string>          $falsePositives
+     * @param list<string>          $offerStatuses
+     * @param array<string, string> $cleaners
      */
     public function __construct(
-        private readonly array $falsePositives,
-        private readonly array $offerStatuses,
-        private readonly array $groupTranslations,
-        private readonly array $cleaners,
+        public array $falsePositives,
+        public array $offerStatuses,
+        public array $cleaners,
     ) {
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getFalsePositives(): array
     {
@@ -29,7 +31,7 @@ class Regexes
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getOfferStatuses(): array
     {
@@ -37,15 +39,7 @@ class Regexes
     }
 
     /**
-     * @return array<string, string[]>
-     */
-    public function getGroupTranslations(): array
-    {
-        return $this->groupTranslations;
-    }
-
-    /**
-     * @return string[]
+     * @return array<string, string>
      */
     public function getCleaners(): array
     {

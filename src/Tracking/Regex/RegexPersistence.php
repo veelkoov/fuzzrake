@@ -14,13 +14,12 @@ class RegexPersistence implements RegexesProvider
     private const GROUP_REGEXES = 'REGEXES';
     private const KEY_OFFER_STATUS = 'OFFER_STATUS';
     private const KEY_FALSE_POSITIVE = 'FALSE-POSITIVE';
-    private const GROUP_TRANSLATIONS = 'TRANSLATIONS';
     private const GROUP_CLEANERS = 'CLEANERS';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly TrackerSettingRepository $settingRepository,
-        private readonly RegexFactory $patternFactory,
+        private readonly RegexFactory $regexFactory,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -29,7 +28,6 @@ class RegexPersistence implements RegexesProvider
     {
         $falsePositives = [];
         $offerStatuses = [];
-        $groupTranslations = [];
         $cleaners = [];
 
         foreach ($this->settingRepository->findAll() as $setting) {
@@ -41,12 +39,6 @@ class RegexPersistence implements RegexesProvider
                 } else {
                     $this->logger->warning('Retrieved unsupported regex item from the settings table', ['entity' => $setting]);
                 }
-            } elseif (self::GROUP_TRANSLATIONS === $setting->getGroup()) {
-                if (!array_key_exists($setting->getKey(), $groupTranslations)) {
-                    $groupTranslations[$setting->getKey()] = [];
-                }
-
-                $groupTranslations[$setting->getKey()][] = $setting->getValue();
             } elseif (self::GROUP_CLEANERS === $setting->getGroup()) {
                 $cleaners[$setting->getKey()] = $setting->getValue();
             } else {
@@ -54,14 +46,14 @@ class RegexPersistence implements RegexesProvider
             }
         }
 
-        return new Regexes($falsePositives, $offerStatuses, $groupTranslations, $cleaners);
+        return new Regexes($falsePositives, $offerStatuses, $cleaners);
     }
 
     public function rebuild(): void
     {
         $this->settingRepository->removeAll();
 
-        foreach ($this->patternFactory->getOfferStatuses() as $regex) {
+        foreach ($this->regexFactory->getOfferStatuses() as $regex) {
             $setting = (new TrackerSetting())
                 ->setGroup(self::GROUP_REGEXES)
                 ->setKey(self::KEY_OFFER_STATUS)
@@ -70,7 +62,7 @@ class RegexPersistence implements RegexesProvider
             $this->entityManager->persist($setting);
         }
 
-        foreach ($this->patternFactory->getFalsePositives() as $regex) {
+        foreach ($this->regexFactory->getFalsePositives() as $regex) {
             $setting = (new TrackerSetting())
                 ->setGroup(self::GROUP_REGEXES)
                 ->setKey(self::KEY_FALSE_POSITIVE)
@@ -79,18 +71,7 @@ class RegexPersistence implements RegexesProvider
             $this->entityManager->persist($setting);
         }
 
-        foreach ($this->patternFactory->getGroupTranslations() as $groupName => $translations) {
-            foreach ($translations as $translation) {
-                $setting = (new TrackerSetting())
-                    ->setGroup(self::GROUP_TRANSLATIONS)
-                    ->setKey($groupName)
-                    ->setValue($translation);
-
-                $this->entityManager->persist($setting);
-            }
-        }
-
-        foreach ($this->patternFactory->getCleaners() as $subject => $replacement) {
+        foreach ($this->regexFactory->getCleaners() as $subject => $replacement) {
             $setting = (new TrackerSetting())
                 ->setGroup(self::GROUP_CLEANERS)
                 ->setKey($subject)

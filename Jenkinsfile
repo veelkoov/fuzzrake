@@ -58,10 +58,6 @@ pipeline {
 
       steps {
         ansiColor('xterm') {
-          dir('tests/test_data/statuses') {
-            git(branch: 'main', poll: false, url: env.FUZZRAKE_STATUSES_TEST_DATA_GIT_URI)
-          }
-
           sh 'rm -f .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY" >> .env.test.local'
           sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'

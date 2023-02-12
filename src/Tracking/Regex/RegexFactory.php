@@ -5,60 +5,42 @@ declare(strict_types=1);
 namespace App\Tracking\Regex;
 
 use App\Tracking\Exception\ConfigurationException;
-use App\Utils\UnbelievableRuntimeException;
-use Nette\Utils\Arrays;
-use TRegx\CleanRegex\Exception\NonexistentGroupException;
-use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 
 class RegexFactory
 {
-    private readonly Pattern $namedGroup;
-
     /**
-     * @var string[]
-     */
-    private array $placeholders = [];
-
-    /**
-     * @var string[]
+     * @var list<string>
      */
     private array $falsePositives = [];
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private array $offerStatuses = [];
 
     /**
-     * @var array<string, string[]>
-     */
-    private readonly array $groupTranslations;
-
-    /**
-     * @var string[]
-     */
-    private array $usedGroupNames = [];
-
-    /**
-     * @var string[]
+     * @var array<string, string>
      */
     private array $cleaners = [];
+    private readonly PlaceholdersResolver $resolver;
+    private readonly WorkaroundJ $workaroundJ;
 
-    public function __construct(array $trackerRegexes) // @phpstan-ignore-line TODO: Typehint that
+    /**
+     * @param psTrackerRegexes $trackerRegexes
+     */
+    public function __construct(array $trackerRegexes)
     {
-        $this->namedGroup = pattern('^\$(?P<name>[a-z_]+)\$$', 'i');
+        $this->resolver = new PlaceholdersResolver($trackerRegexes['placeholders']);
+        $this->workaroundJ = new WorkaroundJ();
 
-        $this->groupTranslations = $trackerRegexes['group_translations'];
-        $this->loadPlaceholders($trackerRegexes['placeholders']);
         $this->loadFalsePositives($trackerRegexes['false_positives']);
-        $this->loadOfferStatuses($trackerRegexes['offer_statuses']);
+        $this->loadOfferStatuses($trackerRegexes['offers_statuses']);
         $this->loadCleaners($trackerRegexes['cleaners']);
-        $this->validateGroupTranslations();
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getOfferStatuses(): array
     {
@@ -66,7 +48,7 @@ class RegexFactory
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function getFalsePositives(): array
     {
@@ -74,177 +56,58 @@ class RegexFactory
     }
 
     /**
-     * @return array<string, string[]>
-     */
-    public function getGroupTranslations(): array
-    {
-        return $this->groupTranslations;
-    }
-
-    /**
-     * @return string[]
+     * @return array<string, string>
      */
     public function getCleaners(): array
     {
         return $this->cleaners;
     }
 
-    private function loadPlaceholders(array $placeholders): void // @phpstan-ignore-line TODO: Typehint that
-    {
-        $this->loadPlaceholderItem($placeholders, '');
-        $this->resolvePlaceholders($this->placeholders);
-    }
-
-    private function loadPlaceholderItem(mixed $input, string $path): string
-    {
-        if (is_string($input)) {
-            return $input;
-        }
-
-        if (!is_array($input)) {
-            throw new ConfigurationException("Item of an unexpected type under path: $path");
-        }
-
-        if (0 === count($input)) {
-            throw new ConfigurationException("Empty item under path: $path");
-        }
-
-        if (array_is_list($input)) {
-            return $this->loadListPlaceholderItem($input, $path);
-        }
-
-        return $this->loadMapPlaceholderItem($input, $path);
-    }
-
-    private function loadListPlaceholderItem(array $input, string $path): string // @phpstan-ignore-line TODO: Typehint that
-    {
-        $items = Arrays::map($input, fn ($item, $idx, $arr) => $this->loadPlaceholderItem($item, "$path/$idx"));
-
-        $group = '';
-
-        $this->namedGroup->match($items[0])->findFirst()->map(function (Detail $detail) use (&$group, &$items, $path): void {
-            try {
-                $groupName = $detail->get('name');
-
-                if (!array_key_exists($groupName, $this->groupTranslations)) {
-                    throw new ConfigurationException("Unknown group under path: $path");
-                }
-
-                if (!in_array($groupName, $this->usedGroupNames, true)) {
-                    $this->usedGroupNames[] = $groupName;
-                }
-
-                $group = '?P<'.$groupName.'>';
-            } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
-                throw new UnbelievableRuntimeException($e);
-            } // @codeCoverageIgnoreEnd
-
-            array_shift($items);
-        });
-
-        if (0 === count($items)) {
-            throw new ConfigurationException("Empty item under path: $path");
-        }
-
-        return "($group".implode('|', $items).')';
-    }
-
-    private function loadMapPlaceholderItem(array $input, string $path): string // @phpstan-ignore-line TODO: Typehint that
-    {
-        foreach ($input as $placeholder => $contents) {
-            if (array_key_exists($placeholder, $this->placeholders)) {
-                throw new ConfigurationException("Duplicated placeholder: '$placeholder'");
-            }
-
-            $this->placeholders[$placeholder] = $this->loadPlaceholderItem($contents, "$path/$placeholder");
-        }
-
-        return '('.implode('|', array_keys($input)).')';
-    }
-
     /**
-     * @param array<string, string|array<string, string>> $subject
-     */
-    private function resolvePlaceholders(array &$subject): void
-    {
-        $changed = false;
-
-        foreach ($subject as &$resolved) {
-            foreach ($this->placeholders as $placeholder => $replacement) {
-                $resolved = str_replace($placeholder, $replacement, $resolved, $count);
-
-                $changed = $changed || $count > 0;
-            }
-        }
-
-        if ($changed) {
-            $this->resolvePlaceholders($subject);
-        }
-    }
-
-    /**
-     * @param string[] $falsePositives
+     * @param list<string> $falsePositives
      */
     private function loadFalsePositives(array $falsePositives): void
     {
         $this->falsePositives = $falsePositives;
-        $this->resolvePlaceholders($this->falsePositives);
-        $this->validateRegexes($this->falsePositives);
+        $this->resolver->resolve($this->falsePositives);
+        $this->validateRegexes($this->falsePositives, Regexes::FALSE_POSITIVES_FLAGS);
     }
 
     /**
-     * @param string[] $offerStatuses
+     * @param list<string> $offerStatuses
      */
     private function loadOfferStatuses(array $offerStatuses): void
     {
         $this->offerStatuses = $offerStatuses;
-        $this->resolvePlaceholders($this->offerStatuses);
-        $this->validateRegexes($this->offerStatuses);
+        $this->resolver->resolve($this->offerStatuses);
+
+        foreach ($this->offerStatuses as &$resolved) {
+            $resolved = $this->workaroundJ->apply($resolved);
+        }
+
+        $this->validateRegexes($this->offerStatuses, Regexes::OFFER_STATUSES_FLAGS);
     }
 
     /**
-     * @param string[] $cleaners
+     * @param array<string, string> $cleaners
      */
     private function loadCleaners(array $cleaners): void
     {
         $regexes = array_keys($cleaners);
 
-        $this->resolvePlaceholders($regexes);
-        $this->validateRegexes($regexes);
+        $this->resolver->resolve($regexes);
+        $this->validateRegexes($regexes, Regexes::CLEANERS_FLAGS);
 
         $this->cleaners = array_combine($regexes, array_values($cleaners));
     }
 
-    private function validateGroupTranslations(): void
-    {
-        foreach ($this->groupTranslations as $key => $translations) {
-            if (!in_array($key, $this->usedGroupNames, true)) {
-                throw new ConfigurationException("Group translations for '$key' are not used");
-            }
-
-            if (!is_array($translations)) {
-                throw new ConfigurationException("Group translations data for '$key' is not an array");
-            }
-
-            if ([] === $translations) {
-                throw new ConfigurationException("Group translations for '$key' are empty");
-            }
-
-            foreach ($translations as $translation) {
-                if (!is_string($translation)) {
-                    throw new ConfigurationException("Group translations for '$key' contain non-string items");
-                }
-            }
-        }
-    }
-
     /**
-     * @param string[] $regexes
+     * @param list<string> $regexes
      */
-    private function validateRegexes(array $regexes): void
+    private function validateRegexes(array $regexes, string $flags): void
     {
         foreach ($regexes as $regex) {
-            if (!Pattern::of($regex)->valid()) {
+            if (!Pattern::of($regex, $flags)->valid()) {
                 throw new ConfigurationException("Invalid regex: $regex");
             }
         }
