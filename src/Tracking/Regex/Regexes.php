@@ -6,9 +6,9 @@ namespace App\Tracking\Regex;
 
 readonly class Regexes
 {
-    public const FALSE_POSITIVES_FLAGS = 'sn';
-    public const OFFER_STATUSES_FLAGS = 'sn';
-    public const CLEANERS_FLAGS = 's';
+    final public const FALSE_POSITIVES_FLAGS = 'sn';
+    final public const OFFER_STATUSES_FLAGS = 'sn';
+    final public const CLEANERS_FLAGS = 's';
 
     /**
      * @param list<string>          $falsePositives
