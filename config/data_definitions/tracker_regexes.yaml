@@ -1,22 +1,28 @@
 parameters:
   tracker_regexes:
     false_positives:
-      - 'next COMMISSIONS opening'
+      - 'when will you start taking new COMMISSIONS'
+      - 'when WE_ARE (open for|taking|take)'
+      - 'when do you open for'
       - '(if|when|while)( OUR)? OFFER( are)? STATUS_ANY'
 
-      - 'when will you start taking new COMMISSIONS'
-      - 'when WE_ARE DOING_STUFF_FALSE_POSITVES'
-      - 'when do you open for'
+      - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
       - '(when|if) (my |our |the )(COMMISSIONS|QUOTES) (are )?open'
       - 'after the commissions close'
+
+      # as soon / as ... open
+      - 'as (soon as WE_ARE|slots) open'
+
+      # even though / although
       - "even though you're closed for COMMISSIONS"
       - 'although (fursuit )?COMMISSIONS are closed'
-      - '(quotes|COMMISSIONS) open (in |(in )?MONTHS)'
-      - 'OFFER (are )?open in'
-      - 'as (soon as WE_ARE|slots) open'
-      - '[^a-z]art(work)? COMMISSIONS' # "art commissions"
-      - 'OFFER status: STATUS_ANY ?</h1>\s*<h1[^>]*> ?MONTHS'
-      - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'
+
+      # open in / next opening
+      - 'OFFER (are )?open (in |(in )?MONTHS)'
+      - 'next COMMISSIONS opening'
+
+      # "art commissions"
+      - '[^a-z]art(work)? COMMISSIONS'
 
     offers_statuses:
       # Start with statuses "nicely" organized into paragraphs/sentences - single spaces, no newlines, etc.
@@ -139,11 +145,6 @@ parameters:
         - 'oct(ober)?'
         - 'nov(ember)?'
         - 'dec(ember)?'
-
-      'DOING_STUFF_FALSE_POSITVES':
-        - 'open for'
-        - 'taking'
-        - 'take'
 
     cleaners: # Used to remove noise / simplify information
       '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
