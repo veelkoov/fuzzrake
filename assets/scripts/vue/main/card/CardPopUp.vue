@@ -202,7 +202,9 @@
               <template v-if="artisan.isStatusKnown">
                 <p>
                   Status is tracked and updated automatically based on the contents of:
-                  <a v-for="item in artisan.commissionsUrls" :key="item" :href="item" target="_blank">{{ item }}</a>
+                  <template v-for="item in artisan.commissionsUrls" :key="item">
+                    <a :href="item" target="_blank">{{ item }}</a> <wbr>
+                  </template>
                   <br />
                   Last time checked on {{ artisan.csLastCheck }} UTC.
                 </p>
