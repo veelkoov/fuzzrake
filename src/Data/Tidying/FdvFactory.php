@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\DataTidying;
+namespace App\Data\Tidying;
 
 use App\Data\Fixer\Fixer;
 use App\Data\Validator\Validator;

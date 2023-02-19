@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\DataTidying;
+namespace App\Data\Tidying;
 
 use App\Utils\StrUtils;
 use Symfony\Component\Console\Style\SymfonyStyle;
