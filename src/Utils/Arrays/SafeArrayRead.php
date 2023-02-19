@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Utils\Arrays;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\FieldsList;

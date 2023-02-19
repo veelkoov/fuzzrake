@@ -6,7 +6,7 @@ namespace App\Utils\DataTidying;
 
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Fixer\Fixer;
-use App\Utils\Data\Validator;
+use App\Data\Validator\Validator;
 
 class FixerDifferValidator
 {

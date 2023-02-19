@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tasks\Miniatures\Queries;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
-use App\Utils\ArrayReader;
+use App\Utils\Arrays\ArrayReader;
 use App\Utils\Json;
 
 class FurtrackQuery extends AbstractQuery

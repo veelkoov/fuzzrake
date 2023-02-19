@@ -6,7 +6,7 @@ namespace App\Controller\IuForm;
 
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\Data;
-use App\Utils\ArrayReader;
+use App\Utils\Arrays\ArrayReader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\FormError;

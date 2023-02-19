@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Utils\Arrays;
 
+use App\Utils\Enforce;
 use InvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;

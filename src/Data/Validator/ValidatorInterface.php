@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data\Validator;
+namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
 

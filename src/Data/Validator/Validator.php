@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Validator\GenericValidator;
-use App\Utils\Data\Validator\SpeciesListValidator;
-use App\Utils\Data\Validator\ValidatorInterface;
 
 class Validator
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils;
 
-use App\Utils\Arrays;
+use App\Utils\Arrays\Arrays;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

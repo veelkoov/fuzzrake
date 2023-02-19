@@ -10,7 +10,7 @@ use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\ArtisanRepository;
-use App\Utils\Arrays;
+use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;

@@ -6,12 +6,12 @@ namespace App\Twig;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
+use App\Data\Validator\Validator;
 use App\Entity\Artisan as ArtisanE;
 use App\IuHandling\Import\SubmissionData;
 use App\Repository\SubmissionRepository;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Validator;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\NonUniqueResultException;
