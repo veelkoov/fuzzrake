@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\DataDefinitions\Fields;
+namespace App\Data\Definitions\Fields;
 
-use App\DataDefinitions\Fields\Field as F;
-use App\DataDefinitions\Fields\ValidationRegexps as V;
+use App\Data\Definitions\Fields\Field as F;
+use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Utils\Traits\UtilityClass;
 
 use function Psl\Iter\contains;

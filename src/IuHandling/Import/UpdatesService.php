@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
+use App\Data\Definitions\Fields\Fields;
+use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
-use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\FieldsList;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\ArtisanRepository;

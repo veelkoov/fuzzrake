@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\ContactPermit;
 use App\IuHandling\Import\UpdateContact;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

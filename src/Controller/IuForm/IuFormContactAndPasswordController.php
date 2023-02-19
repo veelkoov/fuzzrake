@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\IuState;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\ContactPermit;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Utils\Password;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\ContactPermit;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Contact;
 

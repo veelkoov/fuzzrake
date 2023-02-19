@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\DataDefinitions\Fields;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\FieldsData;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\FieldsData;
 use PHPUnit\Framework\TestCase;
 
 /**

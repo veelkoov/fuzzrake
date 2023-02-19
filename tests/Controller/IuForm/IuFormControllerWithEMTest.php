@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\IuForm;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;

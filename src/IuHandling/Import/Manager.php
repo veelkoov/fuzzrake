@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringBuffer;

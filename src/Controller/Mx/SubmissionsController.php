@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Fields;
 use App\Form\Mx\SubmissionType;
 use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Import\SubmissionsService;

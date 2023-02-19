@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\DataDefinitions\Features;
-use App\DataDefinitions\OrderTypes;
-use App\DataDefinitions\ProductionModels;
-use App\DataDefinitions\Styles;
+use App\Data\Definitions\Features;
+use App\Data\Definitions\OrderTypes;
+use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Styles;
 use App\Service\DataService;
 use App\Utils\Species\SpeciesService;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataDefinitions;
+namespace App\Data\Definitions;
 
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;

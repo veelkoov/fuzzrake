@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Fields;
 use App\Entity\ArtisanUrl;
 use App\Utils\StringList;
 

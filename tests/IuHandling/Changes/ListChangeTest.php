@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Changes;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\IuHandling\Changes\ListChange;
 use PHPUnit\Framework\TestCase;
 

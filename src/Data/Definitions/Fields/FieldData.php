@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataDefinitions\Fields;
+namespace App\Data\Definitions\Fields;
 
 use TRegx\CleanRegex\Pattern;
 

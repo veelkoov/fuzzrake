@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Traits\UtilityClass;
 use DateTimeImmutable;

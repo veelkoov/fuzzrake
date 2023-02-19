@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\SecureValues;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\IuHandling\Import\SubmissionData;
 use App\Repository\SubmissionRepository;

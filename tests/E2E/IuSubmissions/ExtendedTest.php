@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\JsonArtisanDataLoader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

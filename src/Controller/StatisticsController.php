@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanCommissionsStatusRepository;

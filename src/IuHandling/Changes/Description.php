@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Changes;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\SecureValues;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
+use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Enforce;
 

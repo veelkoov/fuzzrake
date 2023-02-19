@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 
 /**

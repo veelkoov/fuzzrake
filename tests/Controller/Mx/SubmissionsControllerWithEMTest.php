@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Mx;
 
-use App\DataDefinitions\ContactPermit;
-use App\DataDefinitions\Features;
-use App\DataDefinitions\ProductionModels;
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Features;
+use App\Data\Definitions\ProductionModels;
 use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Data;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\FieldsList;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\FieldsList;
 use App\Utils\Artisan\SmartAccessDecorator;
 use App\Utils\Enforce;
 use App\Utils\StringList;

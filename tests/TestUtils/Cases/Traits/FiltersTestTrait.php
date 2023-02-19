@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use App\DataDefinitions\Ages;
+use App\Data\Definitions\Ages;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 trait FiltersTestTrait

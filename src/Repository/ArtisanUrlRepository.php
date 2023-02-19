@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DataDefinitions\Fields\FieldsList;
+use App\Data\Definitions\Fields\FieldsList;
 use App\Entity\Artisan;
 use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;

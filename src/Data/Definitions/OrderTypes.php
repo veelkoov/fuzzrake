@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataDefinitions;
+namespace App\Data\Definitions;
 
 class OrderTypes extends Dictionary
 {

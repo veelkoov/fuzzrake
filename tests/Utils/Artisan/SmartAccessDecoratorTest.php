@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Artisan;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;

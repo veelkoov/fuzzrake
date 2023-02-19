@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Artisan;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\Cases\TestCase;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tasks;
 
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Fields;
 use App\Repository\ArtisanUrlRepository;
 use App\Service\WebpageSnapshotManager;
 use Symfony\Component\Console\Style\SymfonyStyle;
