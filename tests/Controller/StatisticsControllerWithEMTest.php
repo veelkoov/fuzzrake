@@ -20,7 +20,11 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
     public function testStatisticsPageLoads(): void
     {
         $client = static::createClient();
-        self::addSimpleArtisan();
+        self::persistAndFlush(self::getArtisan()
+            ->setOtherFeatures('Smoke detector')
+            ->setSpeciesDoes('Wolves')
+            ->setSpeciesDoesnt('Coyotes')
+        );
 
         $client->request('GET', '/stats');
 
