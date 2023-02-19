@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils\Species;
 
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Regexp\Replacements;
 
 class SpeciesService
@@ -17,7 +15,6 @@ class SpeciesService
      */
     public function __construct(
         private readonly array $speciesDefinitions,
-        private readonly ArtisanRepository $artisanRepository,
     ) {
     }
 
@@ -51,16 +48,6 @@ class SpeciesService
     {
         return new Replacements($this->speciesDefinitions['replacements'], 'i',
             $this->speciesDefinitions['regex_prefix'], $this->speciesDefinitions['regex_suffix']);
-    }
-
-    /**
-     * @return array<string, SpecieStats> Key = specie name
-     */
-    public function getStats(): array
-    {
-        $artisans = Artisan::wrapAll($this->artisanRepository->getActive());
-
-        return (new StatsCalculator($artisans, $this->getCompleteList()))->get();
     }
 
     private function getBuilder(): HierarchyAwareBuilder

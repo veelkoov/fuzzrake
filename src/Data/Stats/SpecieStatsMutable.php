@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Species;
+namespace App\Data\Stats;
 
-class SpecieStats
+use App\Utils\Species\Specie;
+
+class SpecieStatsMutable
 {
     private int $directDoesCount = 0;
     private int $directDoesntCount = 0;
@@ -17,7 +19,7 @@ class SpecieStats
     private int $totalCount = 0;
 
     public function __construct(
-        private readonly Specie $specie,
+        public readonly Specie $specie,
     ) {
     }
 
