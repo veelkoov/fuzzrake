@@ -14,7 +14,7 @@ class MutableItem
     public function __construct(
         public readonly string|MutableSet $value,
         string $label = '',
-        private ?int $count = 0, // TODO: #76 Species count, should not be nullable
+        private int $count = 0,
     ) {
         if ('' === $label) {
             if (!is_string($value)) {
@@ -32,15 +32,13 @@ class MutableItem
         return Enforce::objectOf($this->value, MutableSet::class);
     }
 
-    public function getCount(): ?int
+    public function getCount(): int
     {
         return $this->count;
     }
 
-    public function incCount(?int $number = 1): void
+    public function incCount(int $number = 1): void
     {
-        if (null !== $this->count && null !== $number) {
-            $this->count += $number;
-        }
+        $this->count += $number;
     }
 }

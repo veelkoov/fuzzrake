@@ -14,7 +14,7 @@ readonly class Item
      * @var string|list<Item>
      */
     public string|array $value;
-    public ?int $count; // TODO: #76 Species count, should not be nullable
+    public int $count;
 
     public function __construct(MutableItem $source)
     {

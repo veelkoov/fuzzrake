@@ -95,7 +95,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach ($input->items as $item) {
-            $count = $item->count ?? 0; // TODO: #76 Species count, should not be nullable
+            $count = $item->count;
 
             if (!array_key_exists($count, $result)) {
                 $result[$count] = [];
@@ -112,7 +112,7 @@ class StatisticsController extends AbstractController
         arsort($result);
 
         foreach ($input->specialItems as $item) {
-            $result[$item->label] = $item->count ?? 0; // TODO: #76 Species count, should not be nullable
+            $result[$item->label] = $item->count;
         }
 
         return $result;

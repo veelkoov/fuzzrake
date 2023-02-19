@@ -76,7 +76,7 @@ class FiltersService
 
     private function getSpeciesFilterData(): FilterData
     {
-        $result = new MutableFilterData(SpecialItems::newUnknown(null));
+        $result = new MutableFilterData(SpecialItems::newUnknown(0)); // TODO
 
         foreach ($this->getSpeciesFilterItemsFromArray($this->species->getVisibleTree()) as $item) {
             $result->items->addComplexItem($item->label, $item->value, $item->label, $item->getCount());
@@ -94,7 +94,7 @@ class FiltersService
 
         foreach ($species as $specie) {
             if (!$specie->isHidden()) {
-                $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), null); // TODO: #76 Species count
+                $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO
             }
         }
 
