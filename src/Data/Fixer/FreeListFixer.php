@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data\Fixer;
+namespace App\Data\Fixer;
 
-class DefinedListFixer extends AbstractListFixer
+class FreeListFixer extends AbstractListFixer
 {
     protected static function shouldSort(): bool
     {
-        return true;
+        return false;
     }
 
     protected static function getSeparatorRegexp(): string
     {
-        return '[;\n]';
+        return "\n";
     }
 }

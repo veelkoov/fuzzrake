@@ -2,25 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Data;
+namespace App\Data\Fixer;
 
 use App\DataDefinitions\Fields\Field;
 use App\DataDefinitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Fixer\CountryFixer;
-use App\Utils\Data\Fixer\CurrencyFixer;
-use App\Utils\Data\Fixer\DefinedListFixer;
-use App\Utils\Data\Fixer\FixerInterface;
-use App\Utils\Data\Fixer\FreeListFixer;
-use App\Utils\Data\Fixer\LanguagesFixer;
-use App\Utils\Data\Fixer\NoopFixer;
-use App\Utils\Data\Fixer\PayMethodFixer;
-use App\Utils\Data\Fixer\PayPlanFixer;
-use App\Utils\Data\Fixer\SinceFixer;
-use App\Utils\Data\Fixer\SpeciesListFixer;
-use App\Utils\Data\Fixer\StateFixer;
-use App\Utils\Data\Fixer\StringFixer;
-use App\Utils\Data\Fixer\UrlFixer;
 
 class Fixer
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\DataTidying;
 
+use App\Data\Fixer\Fixer;
 use App\DataDefinitions\Fields\Fields;
-use App\Utils\Data\Fixer;
 use App\Utils\Data\Validator;
 
 class FixerDifferValidator

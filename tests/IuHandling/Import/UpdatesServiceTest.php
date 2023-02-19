@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
+use App\Data\Fixer\Fixer;
 use App\DataDefinitions\Fields\Field;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
@@ -13,7 +14,6 @@ use App\Repository\ArtisanRepository;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Fixer;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
