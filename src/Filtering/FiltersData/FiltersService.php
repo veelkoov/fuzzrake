@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
+use App\Data\Stats\SpeciesStatsService;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\MutableSet;
@@ -13,7 +14,6 @@ use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\CountriesDataService;
 use App\Utils\Enforce;
-use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesService;
 use Doctrine\ORM\UnexpectedResultException;
 
@@ -25,6 +25,7 @@ class FiltersService
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly SpeciesService $species,
+        private readonly SpeciesStatsService $speciesStats,
     ) {
     }
 
@@ -76,38 +77,7 @@ class FiltersService
 
     private function getSpeciesFilterData(): FilterData
     {
-        $result = new MutableFilterData(SpecialItems::newUnknown(0)); // TODO
-
-        foreach ($this->getSpeciesFilterItemsFromArray($this->species->getVisibleTree()) as $item) {
-            $result->items->addComplexItem($item->label, $item->value, $item->label, $item->getCount());
-        }
-
-        return new FilterData($result);
-    }
-
-    /**
-     * @param list<Specie> $species
-     */
-    private function getSpeciesFilterItemsFromArray(array $species): MutableSet
-    {
-        $result = new MutableSet();
-
-        foreach ($species as $specie) {
-            if (!$specie->isHidden()) {
-                $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(), 0); // TODO
-            }
-        }
-
-        return $result;
-    }
-
-    private function getSpeciesFilterItem(Specie $specie): MutableSet|string
-    {
-        if ($specie->isLeaf()) {
-            return $specie->getName();
-        } else {
-            return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
-        }
+        return SpeciesFilterDataCalculator::from($this->species->getVisibleTree(), $this->speciesStats->getStats())->get();
     }
 
     /**

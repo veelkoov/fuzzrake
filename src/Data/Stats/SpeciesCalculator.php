@@ -39,13 +39,17 @@ class SpeciesCalculator
         $allDoesntNames = self::extractSpecieNamesWithRepetitions($artisans, Field::SPECIES_DOESNT);
         $this->appendSpeciesStats(false, $allDoesntNames);
 
+        if ([] === $allDoesNames && [] === $allDoesntNames) {
+            $this->result->incUnknownCount(); // FIXME: Doesn't work
+        }
+
 // TODO
 //        uasort($this->result, fn (SpecieStatsMutable $a, SpecieStatsMutable $b) => self::compare($a, $b));
 
         return $this;
     }
 
-    public function get(): SpeciesStats
+    public function get(): SpeciesStats // FIXME: Invalid calculations
     {
         return new SpeciesStats($this->result);
     }

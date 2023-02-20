@@ -10,6 +10,7 @@ readonly class SpeciesStats
      * @var array<string, SpecieStats>
      */
     private array $nameToStats;
+    public int $unknownCount;
 
     public function __construct(SpeciesStatsMutable $source)
     {
@@ -19,6 +20,7 @@ readonly class SpeciesStats
             $nameToStats[$specieStats->specie->getName()] = new SpecieStats($specieStats);
         }
 
+        $this->unknownCount = $source->getUnknownCount();
         $this->nameToStats = $nameToStats;
     }
 

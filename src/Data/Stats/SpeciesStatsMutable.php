@@ -12,6 +12,7 @@ class SpeciesStatsMutable
      * @var array<string, SpecieStatsMutable>
      */
     private array $nameToStats;
+    private int $unknownCount = 0;
 
     public function get(Specie $specie): SpecieStatsMutable
     {
@@ -24,5 +25,15 @@ class SpeciesStatsMutable
     public function getAll(): array
     {
         return array_values($this->nameToStats);
+    }
+
+    public function incUnknownCount(): void
+    {
+        $this->unknownCount++;
+    }
+
+    public function getUnknownCount(): int
+    {
+        return $this->unknownCount;
     }
 }
