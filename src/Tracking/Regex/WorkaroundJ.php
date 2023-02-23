@@ -20,12 +20,8 @@ readonly class WorkaroundJ
 
     public function apply(string $regex): string
     {
-        $i = 0;
-
-        return $this->namedGroup->replace($regex)->callback(function (Detail $match) use (&$i) {
-            ++$i;
-
-            return '(?P<'.$match->group('group_name')->text().'_'.$i.'>';
+        return $this->namedGroup->replace($regex)->callback(function (Detail $match): string {
+            return '(?P<'.$match->get('group_name').'_'.($match->index()+1).'>';
         });
     }
 
