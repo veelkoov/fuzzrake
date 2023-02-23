@@ -74,11 +74,11 @@ class TextParser
         $result = [];
 
         foreach ($this->offerStatusPatterns as $statusPattern) {
-            $statusPattern->match($text->getUnused())->forEach(function (Detail $match) use (&$result, $text): void {
+            foreach ($statusPattern->match($text->getUnused()) as $match) {
                 $text->use($match->byteOffset(), $match->byteTail());
 
                 $this->appendDetectedOfferStatuses($match, $result);
-            });
+            }
         }
 
         return $result;
