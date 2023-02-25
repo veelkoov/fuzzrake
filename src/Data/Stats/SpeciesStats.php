@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Data\Stats;
 
+use App\Data\Stats\Compute\SpeciesStatsMutable;
+
 readonly class SpeciesStats
 {
     /**

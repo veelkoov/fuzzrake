@@ -32,11 +32,11 @@ class SpeciesServiceTest extends TestCase
 
         $result = $subject->getStats();
         // TODO: Nullable?
-        self::assertEquals(1, $result->get('Ducks')?->totalCount);
-        self::assertEquals(2, $result->get('Birds')?->totalCount);
-        self::assertEquals(1, $result->get('Birds')?->directDoesCount);
-        self::assertEquals(1, $result->get('Wolves')?->totalCount);
-        self::assertEquals(3, $result->get('Most species')?->totalCount);
-        self::assertEquals(1, $result->get('AaBbCcDdEeFfGgHhJj')?->totalCount);
+        self::assertEquals(1, $result->get('Ducks')?->total);
+        self::assertEquals(2, $result->get('Birds')?->total);
+        self::assertEquals(1, $result->get('Birds')?->directDoes);
+        self::assertEquals(1, $result->get('Wolves')?->total);
+        self::assertEquals(3, $result->get('Most species')?->total);
+        self::assertEquals(1, $result->get('AaBbCcDdEeFfGgHhJj')?->total);
     }
 }

@@ -48,7 +48,7 @@ class SpeciesFilterDataCalculator
         foreach ($species as $specie) {
             if (!$specie->isHidden()) {
                 $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(),
-                    $this->stats->get($specie->getName())?->totalDoesCount ?? 0);
+                    $this->stats->get($specie->getName())?->totalDoes ?? 0);
             }
         }
 

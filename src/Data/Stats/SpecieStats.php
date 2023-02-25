@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace App\Data\Stats;
 
+use App\Data\Stats\Compute\SpecieStatsMutable;
+
 readonly class SpecieStats
 {
-    public int $directDoesCount;
-    public int $directDoesntCount;
-    public int $directTotalCount;
-    public int $indirectDoesCount;
-    public int $indirectDoesntCount;
-    public int $indirectTotalCount;
-    public int $totalDoesCount;
-    public int $totalDoesntCount;
-    public int $totalCount;
+    public int $directDoes;
+    public int $directDoesnt;
+    public int $directTotal;
+    public int $indirectDoes;
+    public int $indirectDoesnt;
+    public int $indirectTotal;
+    public int $totalDoes;
+    public int $totalDoesnt;
+    public int $total;
 
     public function __construct(
         SpecieStatsMutable $source,
     ) {
-        $this->directDoesCount = $source->getDirectDoesCount();
-        $this->directDoesntCount = $source->getDirectDoesntCount();
-        $this->directTotalCount = $source->getDirectTotalCount();
-        $this->indirectDoesCount = $source->getIndirectDoesCount();
-        $this->indirectDoesntCount = $source->getIndirectDoesntCount();
-        $this->indirectTotalCount = $source->getIndirectTotalCount();
-        $this->totalDoesCount = $source->getTotalDoesCount();
-        $this->totalDoesntCount = $source->getTotalDoesntCount();
-        $this->totalCount = $source->getTotalCount();
+        $this->directDoes = $source->getDirectDoes();
+        $this->directDoesnt = $source->getDirectDoesnt();
+        $this->directTotal = $source->getDirectTotal();
+        $this->indirectDoes = $source->getIndirectDoes();
+        $this->indirectDoesnt = $source->getIndirectDoesnt();
+        $this->indirectTotal = $source->getIndirectTotal();
+        $this->totalDoes = $source->getTotalDoes();
+        $this->totalDoesnt = $source->getTotalDoesnt();
+        $this->total = $source->getTotal();
     }
 }

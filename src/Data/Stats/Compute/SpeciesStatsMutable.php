@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Stats;
+namespace App\Data\Stats\Compute;
 
 use App\Utils\Species\Specie;
 
@@ -11,7 +11,7 @@ class SpeciesStatsMutable
     /**
      * @var array<string, SpecieStatsMutable>
      */
-    private array $nameToStats;
+    private array $nameToStats = [];
     private int $unknownCount = 0;
 
     public function get(Specie $specie): SpecieStatsMutable
@@ -29,7 +29,7 @@ class SpeciesStatsMutable
 
     public function incUnknownCount(): void
     {
-        $this->unknownCount++;
+        ++$this->unknownCount;
     }
 
     public function getUnknownCount(): int
