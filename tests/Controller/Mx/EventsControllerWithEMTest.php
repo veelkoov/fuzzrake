@@ -16,7 +16,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $client->request('GET', '/mx/events/new');
-        static::assertResponseStatusCodeSame(200);
+        static::assertResponseStatusCodeIs($client, 200);
 
         $client->submitForm('Save', [
             'event[newMakersCount]'             => 2,
@@ -25,11 +25,11 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         ]);
 
         $client->followRedirect();
-        static::assertResponseStatusCodeSame(200);
+        static::assertResponseStatusCodeIs($client, 200);
         static::assertSelectorTextContains('#events-list p', '2 new makers based on received I/U requests.');
 
         $client->click($client->getCrawler()->filter('i.fa-edit')->ancestors()->link());
-        static::assertResponseStatusCodeSame(200);
+        static::assertResponseStatusCodeIs($client, 200);
 
         $client->submitForm('Save', [
             'event[newMakersCount]'             => 0,
@@ -38,7 +38,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
         ]);
 
         $client->followRedirect();
-        static::assertResponseStatusCodeSame(200);
+        static::assertResponseStatusCodeIs($client, 200);
         static::assertSelectorTextContains('#events-list p', '1 updated maker based on received I/U request.');
         static::assertSelectorTextContains('#events-list p', '1 maker updated after report sent by a visitor(s). Thank you for your contribution!');
     }

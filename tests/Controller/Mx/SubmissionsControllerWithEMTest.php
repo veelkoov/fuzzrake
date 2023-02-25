@@ -230,11 +230,11 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         // With multiple makers matched, will be displayed as a new maker
         self::assertSelectorTextContains('p.text-body', 'Added CITY: "Oulu"');
 
-        $client->submitForm('Update', [
+        $client->submitForm('Import', [
             'submission[directives]' => 'match-maker-id MAKERID',
         ]);
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
         self::assertSelectorNotExists('.invalid-feedback');
 
         // With a single maker selected, display actual difference
@@ -244,7 +244,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @throws JsonException
      */
-    public function testUpdatingExistingSubmission(): void
+    public function testUpdatingExistingSubmissionWithoutImport(): void
     {
         $client = self::createClient();
 
@@ -265,19 +265,22 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $client->request('GET', "/mx/submissions/$id");
 
+        self::assertSelectorTextSame('p', 'Creating a new maker.');
+        self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_comment', 'Old comment');
         self::assertSelectorTextSame('#submission_directives', 'Old directives');
 
-        $client->submitForm('Update', [
+        $client->submitForm('Save', [
             'submission[comment]'    => 'New comment',
             'submission[directives]' => 'New directives',
         ]);
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         // Reload to make sure saved is OK
         $client->request('GET', "/mx/submissions/$id");
 
+        self::assertSelectorTextSame('p', 'Creating a new maker.');
         self::assertSelectorTextSame('#submission_comment', 'New comment');
         self::assertSelectorTextSame('#submission_directives', 'New directives');
     }
@@ -301,12 +304,12 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorTextSame('#submission_comment', '');
         self::assertSelectorTextSame('#submission_directives', '');
 
-        $client->submitForm('Update', [
+        $client->submitForm('Import', [
             'submission[comment]'    => 'Added comment',
             'submission[directives]' => 'Added directives',
         ]);
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         // Reload to make sure saved is OK
         $client->request('GET', "/mx/submissions/$id");
@@ -374,11 +377,11 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 
         $client->request('GET', "/mx/submissions/$id");
 
-        $client->submitForm('Update', [
+        $client->submitForm('Import', [
             'submission[directives]' => 'invalid-directive',
         ]);
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
         self::assertSelectorTextSame('.invalid-feedback', "The directives have been ignored completely due to an error. Unknown command: 'invalid-directive'");
     }
 
@@ -404,7 +407,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         $this->persistAndFlush($submission);
 
         $client->request('GET', "/mx/submissions/$id");
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
         self::assertSelectorTextContains('.invalid-feedback', 'The directives have been ignored completely due to an error.');
     }
 
@@ -538,7 +541,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         Submissions::submit(Artisan::new()); // Only to have the submissions directory existing
         $client->request('GET', '/mx/submissions/wrongId');
 
-        self::assertResponseStatusCodeSame(404);
+        self::assertResponseStatusCodeIs($client, 404);
     }
 
     /**

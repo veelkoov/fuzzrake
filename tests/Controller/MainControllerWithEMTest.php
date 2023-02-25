@@ -42,7 +42,7 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
         $this->clearCache();
 
         $crawler = $client->request('GET', '/new');
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older maker"]'));
         self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer maker 1"]'));

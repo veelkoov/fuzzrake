@@ -55,7 +55,7 @@ class FiltersTest extends PantherTestCaseWithEM
         $query = implode('&', $queryParts);
 
         $client->request('GET', '/api/artisans-array.json?'.$query);
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
         $content = $client->getResponse()->getContent();

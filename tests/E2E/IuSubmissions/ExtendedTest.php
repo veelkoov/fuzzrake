@@ -163,6 +163,7 @@ class ExtendedTest extends AbstractTestWithEM
     private static function validateIuFormOldDataSubmitNew(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
     {
         $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
+        self::assertResponseStatusCodeIs($client, 200);
         self::skipRulesAndCaptcha($client);
 
         self::assertNotFalse($client->getResponse()->getContent());
@@ -246,7 +247,7 @@ class ExtendedTest extends AbstractTestWithEM
         $expected = StringList::unpack($value);
 
         foreach ($expected as $item) {
-            self::assertArrayHasKey($item, $selected, "'$item' is not available in the form.");
+            self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->name'.");
             self::assertTrue($selected[$item], "'$item' is not checked.");
 
             unset($selected[$item]);
@@ -278,7 +279,7 @@ class ExtendedTest extends AbstractTestWithEM
             if ('' === $value) {
                 self::assertStringNotContainsStringIgnoringCase('selected="selected"', $matchedText);
             } else {
-                $valuePart = explode('-', $value)['year' === $sfName ? 0 : 1];
+                $valuePart = ltrim(explode('-', $value)['year' === $sfName ? 0 : 1], '0');
                 self::assertStringContainsStringIgnoringCase("<option value=\"$valuePart\" selected=\"selected\">", $matchedText);
             }
         }

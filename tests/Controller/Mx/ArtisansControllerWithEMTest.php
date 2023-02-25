@@ -24,7 +24,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/mx/artisans/new');
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         foreach ($choices as $choice) {
             $label = $choice['label'];
@@ -40,7 +40,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/mx/artisans/new');
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $crawler->selectButton('Save')->form([
             'artisan[makerId]' => 'MAKERID',
@@ -49,7 +49,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
         $client->submit($form);
         $client->followRedirect();
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::clear();
 
@@ -66,7 +66,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match.');
 
         $crawler = $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $crawler->selectButton('Save')->form([
             'artisan[makerId]' => 'MAKERID',
@@ -74,7 +74,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
         $client->submit($form);
         $client->followRedirect();
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         unset($artisan);
         self::clear();
@@ -93,17 +93,17 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush($artisan);
 
         $crawler = $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $crawler->selectButton('Delete')->form();
         $client->submit($form);
         $client->followRedirect();
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::clear();
 
         $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
-        self::assertResponseStatusCodeSame(404);
+        self::assertResponseStatusCodeIs($client, 404);
     }
 
     public function testSubmittingEmptyDoesnt500(): void
@@ -114,7 +114,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         $form = $client->getCrawler()->selectButton('Save')->form();
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame(422);
+        self::assertResponseStatusCodeIs($client, 422);
     }
 
     /**

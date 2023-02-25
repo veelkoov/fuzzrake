@@ -13,6 +13,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SubmissionType extends AbstractType
 {
+    final public const BTN_IMPORT = 'import';
+    final public const BTN_SAVE = 'save';
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -24,8 +27,17 @@ class SubmissionType extends AbstractType
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('update', SubmitType::class, [
-                'label' => 'Update',
+            ->add(self::BTN_SAVE, SubmitType::class, [
+                'label' => 'Save',
+                'attr' => [
+                    'class' => 'btn-secondary',
+                ],
+            ])
+            ->add(self::BTN_IMPORT, SubmitType::class, [
+                'label' => 'Import',
+                'attr' => [
+                    'onclick' => 'return confirm("Import?");',
+                ],
             ])
         ;
     }

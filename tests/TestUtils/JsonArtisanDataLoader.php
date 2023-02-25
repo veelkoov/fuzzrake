@@ -83,7 +83,9 @@ class JsonArtisanDataLoader
         }
 
         if ([] !== $data) {
-            throw new UnexpectedValueException("'$fileName' contains unknown keys: ".implode(array_keys($data)));
+            $csKeys = implode(', ', array_keys($data));
+
+            throw new UnexpectedValueException("'$fileName' contains unknown keys: $csKeys");
         }
 
         return $result;
