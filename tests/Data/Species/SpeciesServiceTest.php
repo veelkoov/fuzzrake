@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Species;
+namespace App\Tests\Data\Species;
 
+use App\Data\Species\SpeciesService;
 use App\Data\Stats\SpeciesStatsService;
 use App\Entity\Artisan;
 use App\Repository\ArtisanRepository;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Tests\TestUtils\DataDefinitions;
-use App\Utils\Species\SpeciesService;
 
 /**
  * @small

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
-use App\Utils\Species\SpeciesService;
+use App\Data\Species\SpeciesService;
 use App\Utils\StringList;
 
 class SpeciesListValidator implements ValidatorInterface

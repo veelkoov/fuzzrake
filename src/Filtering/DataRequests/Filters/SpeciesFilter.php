@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests\Filters;
 
 use App\Data\Species\CreatorSpeciesResolver;
+use App\Data\Species\SpeciesList;
 use App\Filtering\DataRequests\Consts;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Species\SpeciesList;
 use Psl\Iter;
 use Psl\Vec;
 

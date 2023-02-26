@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Species;
+namespace App\Tests\Data\Species;
 
-use App\Utils\Species\HierarchyAwareBuilder;
-use App\Utils\Species\SpeciesList;
+use App\Data\Species\HierarchyAwareBuilder;
+use App\Data\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
 

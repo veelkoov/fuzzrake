@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Species;
+namespace App\Tests\Data\Species;
 
-use App\Utils\Species\MissingSpecieException;
-use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesList;
+use App\Data\Species\MissingSpecieException;
+use App\Data\Species\Specie;
+use App\Data\Species\SpeciesList;
 use Exception;
 use PHPUnit\Framework\TestCase;
 

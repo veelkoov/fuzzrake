@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters;
 
-use App\Utils\Species\SpeciesService;
+use App\Data\Species\SpeciesService;
 
 class SpeciesFilterFactory
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Stats\Compute;
 
-use App\Utils\Species\Specie;
+use App\Data\Species\Specie;
 
 class SpecieStatsMutable
 {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Data\Stats;
 
+use App\Data\Species\SpeciesService;
 use App\Data\Stats\SpeciesStatsService;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Tests\TestUtils\DataDefinitions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Species\SpeciesService;
 
 class SpeciesStatsServiceTest extends KernelTestCaseWithEM
 {

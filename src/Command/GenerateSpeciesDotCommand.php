@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesService;
+use App\Data\Species\Specie;
+use App\Data\Species\SpeciesService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

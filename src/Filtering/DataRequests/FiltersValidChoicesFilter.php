@@ -8,8 +8,8 @@ use App\Data\Definitions\Features;
 use App\Data\Definitions\OrderTypes;
 use App\Data\Definitions\ProductionModels;
 use App\Data\Definitions\Styles;
+use App\Data\Species\SpeciesService;
 use App\Service\DataService;
-use App\Utils\Species\SpeciesService;
 
 class FiltersValidChoicesFilter
 {

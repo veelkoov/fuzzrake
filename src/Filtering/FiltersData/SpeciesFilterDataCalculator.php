@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
+use App\Data\Species\Specie;
 use App\Data\Stats\SpeciesStats;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\MutableSet;
 use App\Filtering\FiltersData\Builder\SpecialItems;
-use App\Utils\Species\Specie;
 
 class SpeciesFilterDataCalculator
 {

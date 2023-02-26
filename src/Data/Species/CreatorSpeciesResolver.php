@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Data\Species;
 
-use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesList;
 use App\Utils\StringList;
 use Psl\Vec;
 

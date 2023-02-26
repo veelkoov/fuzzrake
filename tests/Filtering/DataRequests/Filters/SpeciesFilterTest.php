@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataRequests\Filters;
 
+use App\Data\Species\Specie;
+use App\Data\Species\SpeciesList;
 use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 
 /**

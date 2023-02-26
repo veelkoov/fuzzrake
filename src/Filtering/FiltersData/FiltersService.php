@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
+use App\Data\Species\SpeciesService;
 use App\Data\Stats\SpeciesStatsService;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
@@ -14,7 +15,6 @@ use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Service\CountriesDataService;
 use App\Utils\Enforce;
-use App\Utils\Species\SpeciesService;
 use Doctrine\ORM\UnexpectedResultException;
 
 class FiltersService

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Data\Species;
 
 use App\Data\Species\CreatorSpeciesResolver;
-use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesList;
+use App\Data\Species\Specie;
+use App\Data\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
 

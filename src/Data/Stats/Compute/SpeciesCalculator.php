@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Data\Stats\Compute;
 
 use App\Data\Species\CreatorSpeciesResolver;
+use App\Data\Species\Specie;
+use App\Data\Species\SpeciesList;
 use App\Data\Stats\SpeciesStats;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Species\Specie;
-use App\Utils\Species\SpeciesList;
 use App\Utils\StringList;
 
 class SpeciesCalculator

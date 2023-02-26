@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils\Species;
+namespace App\Tests\Data\Species;
 
-use App\Utils\Species\Specie;
+use App\Data\Species\Specie;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
