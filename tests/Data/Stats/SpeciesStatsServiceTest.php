@@ -16,15 +16,17 @@ class SpeciesStatsServiceTest extends KernelTestCaseWithEM
     {
         $a1u = Artisan::new();
         $a2ui = Artisan::new()->setInactiveReason('Inactive')->getArtisan();
-
-        $a3 = Artisan::new()->setSpeciesDoes('Wolves');
-        $a4 = Artisan::new()->setSpeciesDoesnt('Canines');
-        $a5i = Artisan::new()->setSpeciesDoes('Coyotes')
+        $a5i = Artisan::new()->setSpeciesDoes("Coyotes\nOther1")
             ->setInactiveReason('Inactive');
-        $a6 = Artisan::new()->setSpeciesDoes("Real life animals\nCanines")
-            ->setSpeciesDoesnt('Mammals');
 
-        self::persistAndFlush($a1u, $a2ui, $a3, $a4, $a5i, $a6);
+        $a3 = Artisan::new()->setSpeciesDoes("Wolves\nOther3");
+        $a4 = Artisan::new() // Assumed does most species
+            ->setSpeciesDoesnt('Canines');
+        $a6 = Artisan::new()->setSpeciesDoes("Real life animals\nCanines")
+            ->setSpeciesDoesnt("Mammals\nOther2");
+        $a7 = Artisan::new()->setSpeciesDoes('Other4');
+
+        self::persistAndFlush($a1u, $a2ui, $a3, $a4, $a5i, $a6, $a7);
 
         $speciesDefinitions = DataDefinitions::get('species.yaml', 'species_definitions');
         $speciesService = new SpeciesService($speciesDefinitions); // @phpstan-ignore-line - Data structures
@@ -32,13 +34,14 @@ class SpeciesStatsServiceTest extends KernelTestCaseWithEM
 
         self::assertEquals(1, $result->unknownCount);
 
-        $expected = [ // direct(does doesnt total) indirect(does doesnt total) total(does doesnt 1)
-            'Wolves'            => [1, 0, 1, 0, 0, 0, 1, 0, 1],
-            'Canines'           => [1, 1, 2, 1, 0, 1, 2, 1, 3],
-            'Mammals'           => [0, 1, 1, 2, 1, 3, 2, 2, 4],
-            'Real life animals' => [1, 0, 1, 2, 2, 4, 3, 2, 5],
-            'Coyotes'           => [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            'Most species'      => [0, 0, 0, 3, 2, 5, 3, 2, 5],
+        $expected = [ // direct(does, doesnt, total), indirect(does, doesnt, total), total(does, doesnt, 1), real does
+            'Most species'      => [0, 0, 0, 3, 2, 5, 3, 2, 5, 1],
+            'Real life animals' => [1, 0, 1, 2, 2, 4, 3, 2, 5, 2],
+            'Mammals'           => [0, 1, 1, 2, 1, 3, 2, 2, 4, 1],
+            'Canines'           => [1, 1, 2, 1, 0, 1, 2, 1, 3, 1],
+            'Wolves'            => [1, 0, 1, 0, 0, 0, 1, 0, 1, 2],
+            'Coyotes'           => [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            'Other'             => [0, 0, 0, 2, 1, 3, 2, 1, 3, 0],
         ];
 
         foreach ($expected as $specieName => $specieStats) {
@@ -56,9 +59,8 @@ class SpeciesStatsServiceTest extends KernelTestCaseWithEM
             self::assertEquals($specieStats[6], $specie->totalDoes, "$specieName total does count wrong");
             self::assertEquals($specieStats[7], $specie->totalDoesnt, "$specieName total doesn't count wrong");
             self::assertEquals($specieStats[8], $specie->total, "$specieName total count wrong");
-        }
 
-        // TODO: Other
-        // TODO: Actual
+            self::assertEquals($specieStats[9], $specie->realDoes, "$specieName real does count wrong");
+        }
     }
 }

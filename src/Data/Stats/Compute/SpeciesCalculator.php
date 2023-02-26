@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Stats\Compute;
 
 use App\Data\Stats\SpeciesStats;
+use App\Filtering\DataRequests\Filters\SpeciesSearchResolver;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesList;
@@ -14,10 +15,12 @@ class SpeciesCalculator
 {
     private readonly SpeciesList $completeList;
     private readonly SpeciesStatsMutable $result;
+    private readonly SpeciesSearchResolver $resolver;
 
     public function __construct(SpeciesList $completeList)
     {
         $this->completeList = clone $completeList;
+        $this->resolver = new SpeciesSearchResolver($this->completeList);
 
         $this->result = new SpeciesStatsMutable();
 
@@ -37,32 +40,40 @@ class SpeciesCalculator
     public function add(array $artisans): self
     {
         foreach ($artisans as $artisan) {
-            if ('' === $artisan->getSpeciesDoes() && '' === $artisan->getSpeciesDoesnt()) {
+            $speciesDoes = $artisan->getSpeciesDoes();
+            $speciesDoesnt = $artisan->getSpeciesDoesnt();
+
+            if ('' === $speciesDoes && '' === $speciesDoesnt) {
                 $this->result->incUnknownCount();
                 continue;
             }
 
-            foreach (StringList::unpack($artisan->getSpeciesDoes()) as $specieName) {
-                $this->result->get($this->getSpecie($specieName))->incDirectDoesCount();
+            foreach (StringList::unpack($speciesDoes) as $specieName) {
+                $this->result->get($this->getSpecie($specieName))->incDirectDoes();
 
                 foreach ($this->getSpecieNamesAffectedInStats($specieName) as $affectedSpecieName) {
-                    $this->result->get($this->getSpecie($affectedSpecieName))->incIndirectDoesCount();
+                    $this->result->get($this->getSpecie($affectedSpecieName))->incIndirectDoes();
                 }
             }
 
-            foreach (StringList::unpack($artisan->getSpeciesDoesnt()) as $specieName) {
-                $this->result->get($this->getSpecie($specieName))->incDirectDoesntCount();
+            foreach (StringList::unpack($speciesDoesnt) as $specieName) {
+                $this->result->get($this->getSpecie($specieName))->incDirectDoesnt();
 
                 foreach ($this->getSpecieNamesAffectedInStats($specieName) as $affectedSpecieName) {
-                    $this->result->get($this->getSpecie($affectedSpecieName))->incIndirectDoesntCount();
+                    $this->result->get($this->getSpecie($affectedSpecieName))->incIndirectDoesnt();
                 }
+            }
+
+            $resolvedDoes = $this->resolver->resolveDoes($speciesDoes, $speciesDoesnt);
+            foreach ($resolvedDoes as $specieName) {
+                $this->result->get($this->getSpecie($specieName))->incRealDoes();
             }
         }
 
         return $this;
     }
 
-    public function get(): SpeciesStats // FIXME: Invalid calculations
+    public function get(): SpeciesStats
     {
         return new SpeciesStats($this->result);
     }
@@ -83,6 +94,12 @@ class SpeciesCalculator
 
     private function getSpecie(string $name): Specie
     {
-        return $this->completeList->getByNameOrCreate($name, true);
+        $specie = $this->completeList->getByNameOrCreate($name, true);
+
+        if ($specie->isHidden() && [] === $specie->getParents()) {
+            $specie->addParent($this->completeList->getByName('Other')); // grep-species-other
+        }
+
+        return $specie;
     }
 }

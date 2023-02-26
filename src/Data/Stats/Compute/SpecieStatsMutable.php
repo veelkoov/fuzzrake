@@ -11,19 +11,23 @@ class SpecieStatsMutable
     private int $directDoes = 0;
     private int $directDoesnt = 0;
     private int $directTotal = 0;
+
     private int $indirectDoes = 0;
     private int $indirectDoesnt = 0;
     private int $indirectTotal = 0;
+
     private int $totalDoes = 0;
     private int $totalDoesnt = 0;
     private int $total = 0;
+
+    private int $realDoes = 0;
 
     public function __construct(
         public readonly Specie $specie,
     ) {
     }
 
-    public function incDirectDoesCount(): void
+    public function incDirectDoes(): void
     {
         ++$this->directDoes;
         ++$this->directTotal;
@@ -31,7 +35,7 @@ class SpecieStatsMutable
         ++$this->total;
     }
 
-    public function incDirectDoesntCount(): void
+    public function incDirectDoesnt(): void
     {
         ++$this->directDoesnt;
         ++$this->directTotal;
@@ -39,7 +43,7 @@ class SpecieStatsMutable
         ++$this->total;
     }
 
-    public function incIndirectDoesCount(): void
+    public function incIndirectDoes(): void
     {
         ++$this->indirectDoes;
         ++$this->indirectTotal;
@@ -47,12 +51,17 @@ class SpecieStatsMutable
         ++$this->total;
     }
 
-    public function incIndirectDoesntCount(): void
+    public function incIndirectDoesnt(): void
     {
         ++$this->indirectDoesnt;
         ++$this->indirectTotal;
         ++$this->totalDoesnt;
         ++$this->total;
+    }
+
+    public function incRealDoes(): void
+    {
+        ++$this->realDoes;
     }
 
     public function getSpecie(): Specie
@@ -103,5 +112,10 @@ class SpecieStatsMutable
     public function getTotal(): int
     {
         return $this->total;
+    }
+
+    public function getRealDoes(): int
+    {
+        return $this->realDoes;
     }
 }

@@ -48,7 +48,7 @@ class SpeciesFilterDataCalculator
         foreach ($species as $specie) {
             if (!$specie->isHidden()) {
                 $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(),
-                    $this->stats->get($specie->getName())?->totalDoes ?? 0);
+                    $this->stats->get($specie->getName())?->realDoes ?? 0); // FIXME: "Other" don't work properly
             }
         }
 

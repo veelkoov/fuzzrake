@@ -9,7 +9,7 @@ use App\Utils\Species\SpeciesList;
 use App\Utils\StringList;
 use Psl\Vec;
 
-class SpeciesSearchResolver
+class SpeciesSearchResolver // TODO: Move
 {
     /**
      * @var array<string, list<string>>
@@ -40,8 +40,10 @@ class SpeciesSearchResolver
         /** @var array<string, boolean> Key = specie name, value = true */
         $result = [];
 
-        /** @var Specie $specie */
-        /** @var bool $does */
+        /**
+         * @var Specie $specie
+         * @var bool   $does
+         */
         foreach ($ordered as [$specie, $does]) {
             $descendants = $this->getSelfAndDescendants($specie);
 
