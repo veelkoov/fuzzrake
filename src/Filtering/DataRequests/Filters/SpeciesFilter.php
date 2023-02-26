@@ -36,7 +36,13 @@ class SpeciesFilter implements FilterInterface
             Consts::FILTER_VALUE_UNKNOWN,
         ], $item));
 
-        $this->wantedItems = $wantedItems;
+        foreach ($wantedItems as $specieName) {
+            foreach ($this->completeList->getByName($specieName)->getDescendants() as $subspecie) {
+                $wantedItems[] = $subspecie->name;
+            }
+        }
+
+        $this->wantedItems = array_unique($wantedItems);
     }
 
     public function matches(Artisan $artisan): bool

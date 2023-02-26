@@ -22,8 +22,8 @@ class Specie implements Stringable
     private int $depth = 0;
 
     public function __construct(
-        private readonly string $name,
-        private bool $hidden,
+        public readonly string $name,
+        public bool $hidden,
     ) {
     }
 
