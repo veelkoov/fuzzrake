@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider\Filters;
+namespace App\Tests\Data\Species;
 
-use App\Filtering\DataRequests\Filters\SpeciesSearchResolver;
+use App\Data\Species\CreatorSpeciesResolver;
 use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +13,7 @@ use Psl\Vec;
 /**
  * @small
  */
-class SpeciesSearchResolverTest extends TestCase
+class CreatorSpeciesResolverTest extends TestCase
 {
     /**
      * @dataProvider getOrderedDoesDoesntDataProvider
@@ -34,7 +34,7 @@ class SpeciesSearchResolverTest extends TestCase
         $list = new SpeciesList();
         $list->add($A, $B, $C, $D, new Specie('Other', false));
 
-        $subject = new SpeciesSearchResolver($list);
+        $subject = new CreatorSpeciesResolver($list);
 
         $result = $subject->getOrderedDoesDoesnt($speciesDoes, $speciesDoesnt);
         $result = implode(' ', Vec\map($result, fn (array $pair) => ($pair[1] ? '+' : '-').$pair[0]->getName()));
@@ -60,7 +60,7 @@ class SpeciesSearchResolverTest extends TestCase
      */
     public function testResolveDoes(string $expected, string $speciesDoes, string $speciesDoesnt): void
     {
-        $subject = new SpeciesSearchResolver($this->getTestSpecies());
+        $subject = new CreatorSpeciesResolver($this->getTestSpecies());
 
         $result = implode(', ', $subject->resolveDoes($speciesDoes, $speciesDoesnt));
 

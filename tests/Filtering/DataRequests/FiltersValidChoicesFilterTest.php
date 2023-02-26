@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering;
+namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
-use App\Filtering\DataRequests\FiltersChoicesFilter;
+use App\Filtering\DataRequests\FiltersValidChoicesFilter;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
 
-class FiltersChoicesFilterTest extends KernelTestCaseWithEM
+class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
 {
     /**
      * @throws Exception
@@ -27,8 +27,8 @@ class FiltersChoicesFilterTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($artisan);
 
-        $subject = self::getContainer()->get(FiltersChoicesFilter::class);
-        self::assertInstanceOf(FiltersChoicesFilter::class, $subject);
+        $subject = self::getContainer()->get(FiltersValidChoicesFilter::class);
+        self::assertInstanceOf(FiltersValidChoicesFilter::class, $subject);
 
         $choices = new Choices(
             '',
@@ -43,7 +43,7 @@ class FiltersChoicesFilterTest extends KernelTestCaseWithEM
             ['Birds', '?', 'Furniture', '*'],
             false, false, false, false, false);
 
-        $result = $subject->getOnlyAllowed($choices);
+        $result = $subject->getOnlyValidChoices($choices);
 
         self::assertEquals(['FI', '?'], $result->countries);
         self::assertEquals(['Liquid', '?'], $result->states);

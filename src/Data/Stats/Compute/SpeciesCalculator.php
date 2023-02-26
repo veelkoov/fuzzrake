@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Data\Stats\Compute;
 
+use App\Data\Species\CreatorSpeciesResolver;
 use App\Data\Stats\SpeciesStats;
-use App\Filtering\DataRequests\Filters\SpeciesSearchResolver;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesList;
@@ -15,12 +15,12 @@ class SpeciesCalculator
 {
     private readonly SpeciesList $completeList;
     private readonly SpeciesStatsMutable $result;
-    private readonly SpeciesSearchResolver $resolver;
+    private readonly CreatorSpeciesResolver $resolver;
 
     public function __construct(SpeciesList $completeList)
     {
         $this->completeList = clone $completeList;
-        $this->resolver = new SpeciesSearchResolver($this->completeList);
+        $this->resolver = new CreatorSpeciesResolver($this->completeList);
 
         $this->result = new SpeciesStatsMutable();
 

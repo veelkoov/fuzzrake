@@ -11,7 +11,7 @@ use App\Data\Definitions\Styles;
 use App\Service\DataService;
 use App\Utils\Species\SpeciesService;
 
-class FiltersChoicesFilter
+class FiltersValidChoicesFilter
 {
     public function __construct(
         private readonly DataService $dataService,
@@ -19,7 +19,7 @@ class FiltersChoicesFilter
     ) {
     }
 
-    public function getOnlyAllowed(Choices $choices): Choices
+    public function getOnlyValidChoices(Choices $choices): Choices
     {
         $countries = self::onlyValidValues($choices->countries,
             $this->dataService->getCountries(), Consts::FILTER_VALUE_UNKNOWN);

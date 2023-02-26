@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider\Filters;
+namespace App\Tests\Filtering\DataRequests\Filters;
 
-use App\Filtering\DataRequests\Filters\StylesFilter;
+use App\Filtering\DataRequests\Filters\FeaturesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @small
  */
-class StylesFilterTest extends TestCase
+class FeaturesFilterTest extends TestCase
 {
     /**
      * @dataProvider matchesProvider
      *
      * @param string[] $searched
      */
-    public function testMatches(string $styles, string $otherStyles, array $searched, bool $matched): void
+    public function testMatches(string $features, string $otherFeatures, array $searched, bool $matched): void
     {
-        $subject = new StylesFilter($searched);
-        $artisan = Artisan::new()->setStyles($styles)->setOtherStyles($otherStyles);
+        $subject = new FeaturesFilter($searched);
+        $artisan = Artisan::new()->setFeatures($features)->setOtherFeatures($otherFeatures);
 
         self::assertEquals($matched, $subject->matches($artisan));
     }
@@ -35,7 +35,7 @@ class StylesFilterTest extends TestCase
             ["Item1\nItem2", '', [], false],
             ["Item1\nItem2", '', ['Item1'], true],
             ["Item1\nItem2", '', ['Item1', 'Item2'], true],
-            ['Item1', '', ['Item1', 'Item2'], true],
+            ['Item1', '', ['Item1', 'Item2'], false],
 
             ['', '', ['?'], true],
             ['', '', ['?', 'Item1'], true],
@@ -45,14 +45,14 @@ class StylesFilterTest extends TestCase
             ['', 'OtherItem1', ['*'], true],
             ['Item1', '', ['*'], false],
             ['Item1', 'OtherItem1', ['Item1', '*'], true],
-            ['Item1', '', ['Item1', '*'], true],
-            ['', 'OtherItem1', ['Item1', '*'], true],
+            ['Item1', '', ['Item1', '*'], false],
+            ['', 'OtherItem1', ['Item1', '*'], false],
 
             ['', '', ['?', '*'], true],
             ['', 'OtherItem1', ['?', '*'], true],
             ['Item1', 'OtherItem1', ['?', '*'], true],
             ['Item1', 'OtherItem1', ['?', '*', 'Item1'], true],
-            ['Item1', '', ['?', '*', 'Item1'], true],
+            ['Item1', '', ['?', '*', 'Item1'], false],
         ];
     }
 }

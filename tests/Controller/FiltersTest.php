@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Json;
 use JsonException;
 
 /**
  * @medium
  */
-class FiltersTest extends PantherTestCaseWithEM
+class FiltersTest extends WebTestCaseWithEM
 {
     use FiltersTestTrait;
 

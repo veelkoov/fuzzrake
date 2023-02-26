@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters;
 
+use App\Data\Species\CreatorSpeciesResolver;
 use App\Filtering\DataRequests\Consts;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Species\SpeciesList;
 use Psl\Iter;
 use Psl\Vec;
 
@@ -17,19 +19,24 @@ class SpeciesFilter implements FilterInterface
      * @var list<string>
      */
     private readonly array $wantedItems;
+    private readonly CreatorSpeciesResolver $resolver;
 
     /**
      * @param list<string> $wantedItems
      */
     public function __construct(
         array $wantedItems,
-        private readonly SpeciesSearchResolver $resolver,
+        private readonly SpeciesList $completeList,
     ) {
+        $this->resolver = new CreatorSpeciesResolver($this->completeList);
+
         $this->wantsUnknown = Iter\contains($wantedItems, Consts::FILTER_VALUE_UNKNOWN);
 
-        $this->wantedItems = Vec\filter($wantedItems, fn (string $item) => !Iter\contains([
+        $wantedItems = Vec\filter($wantedItems, fn (string $item) => !Iter\contains([
             Consts::FILTER_VALUE_UNKNOWN,
         ], $item));
+
+        $this->wantedItems = $wantedItems;
     }
 
     public function matches(Artisan $artisan): bool

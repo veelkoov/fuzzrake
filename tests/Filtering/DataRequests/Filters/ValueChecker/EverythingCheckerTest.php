@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider\Filters\ValueChecker;
+namespace App\Tests\Filtering\DataRequests\Filters\ValueChecker;
 
-use App\Filtering\DataRequests\Filters\ValueChecker\AnythingChecker;
+use App\Filtering\DataRequests\Filters\ValueChecker\EverythingChecker;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @small
  */
-class AnythingCheckerTest extends TestCase
+class EverythingCheckerTest extends TestCase
 {
     /**
      * @dataProvider matchesDataProvider
      */
     public function testMatches(string $items, ?bool $matchedOther, bool $expected): void
     {
-        $subject = new AnythingChecker(['A', 'B']);
+        $subject = new EverythingChecker(['A', 'B']);
 
         self::assertEquals($expected, $subject->matches($items, $matchedOther));
     }
@@ -28,24 +28,24 @@ class AnythingCheckerTest extends TestCase
     public function matchesDataProvider(): array
     {
         return [ // items, matchedOther, expected
-            ['', true,  true],
+            ['', true,  false],
             ['', false, false],
             ['', null,  false],
 
-            ['A', true,  true],
-            ['A', false, true],
-            ['A', null,  true],
+            ['A', true,  false],
+            ['A', false, false],
+            ['A', null,  false],
 
-            ['B', true,  true],
-            ['B', false, true],
-            ['B', null,  true],
+            ['B', true,  false],
+            ['B', false, false],
+            ['B', null,  false],
 
-            ['AB', true,  true],
+            ['AB', true,  false],
             ['AB', false, false],
             ['AB', null,  false],
 
             ["A\nB", true,  true],
-            ["A\nB", false, true],
+            ["A\nB", false, false],
             ["A\nB", null,  true],
         ];
     }

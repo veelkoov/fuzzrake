@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Filtering\DataRequests\Filters;
+namespace App\Data\Species;
 
 use App\Utils\Species\Specie;
 use App\Utils\Species\SpeciesList;
 use App\Utils\StringList;
 use Psl\Vec;
 
-class SpeciesSearchResolver // TODO: Move
+class CreatorSpeciesResolver
 {
     /**
      * @var array<string, list<string>>

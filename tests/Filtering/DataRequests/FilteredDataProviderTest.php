@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider;
+namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FilteredDataProvider;
@@ -17,7 +17,7 @@ use Psr\Cache\InvalidArgumentException;
 /**
  * @medium
  */
-class FilteredTest extends KernelTestCaseWithEM
+class FilteredDataProviderTest extends KernelTestCaseWithEM
 {
     /**
      * @throws InvalidArgumentException
@@ -72,7 +72,7 @@ class FilteredTest extends KernelTestCaseWithEM
      * @dataProvider wantsPaymentPlansDataProvider
      */
     public function testWantsPaymentPlans(bool $unknown, bool $none, bool $any, string $expected): void
-    {
+    { // TODO: Isn't this duplicated in FiltersTest?
         self::bootKernel();
 
         $a1 = Artisan::new()->setMakerId('M000001');

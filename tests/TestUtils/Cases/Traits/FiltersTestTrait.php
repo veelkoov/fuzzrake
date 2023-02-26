@@ -249,6 +249,7 @@ trait FiltersTestTrait
             [self::getSpeciesFiltersTestSet(), ['species' => ['Canines']],  ['SPCDNOT', 'SPECSDS']],
             [self::getSpeciesFiltersTestSet(), ['species' => ['Raccoons']], ['SPCDNOT', 'SPCDSNT']],
             [self::getSpeciesFiltersTestSet(), ['species' => ['Other']],    ['SPCDNOT', 'SPCOTHR']],
+            [self::getSpeciesFiltersTestSet(), ['species' => ['Mammals']],  ['SPECSDS', 'SPCDNOT', 'SPCDSNT']],
         ];
     }
 

@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider\Filters;
+namespace App\Tests\Filtering\DataRequests\Filters;
 
-use App\Filtering\DataRequests\Filters\OrderTypesFilter;
+use App\Filtering\DataRequests\Filters\StylesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @small
  */
-class OrderTypesFilterTest extends TestCase
+class StylesFilterTest extends TestCase
 {
     /**
      * @dataProvider matchesProvider
      *
      * @param string[] $searched
      */
-    public function testMatches(string $orderTypes, string $otherOrderTypes, array $searched, bool $matched): void
+    public function testMatches(string $styles, string $otherStyles, array $searched, bool $matched): void
     {
-        $subject = new OrderTypesFilter($searched);
-        $artisan = Artisan::new()->setOrderTypes($orderTypes)->setOtherOrderTypes($otherOrderTypes);
+        $subject = new StylesFilter($searched);
+        $artisan = Artisan::new()->setStyles($styles)->setOtherStyles($otherStyles);
 
         self::assertEquals($matched, $subject->matches($artisan));
     }

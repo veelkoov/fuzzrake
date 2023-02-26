@@ -33,9 +33,11 @@ Examples below are based on the following species tree:
 
 2.  If a creator has _does_ list empty and the _doesn't_ list not empty, then in all calculations the _does_ list is populated with the "Most species" entry.
 
+    Given:
+
         { does: [], doesn't: [Canines] }
 
-    is equal to
+    Get:
 
         { does: [Most species], doesn't: [Canines] }
 
@@ -52,7 +54,7 @@ Examples below are based on the following species tree:
         -Felines (1)
         -Dogs (2)
 
-    Sorted (lower depths first, `+` before `-`):
+    Sorted (shallowest first, `+` before `-`):
 
         +Most species (0)
         -Felines (1)

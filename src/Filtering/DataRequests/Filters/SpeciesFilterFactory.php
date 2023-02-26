@@ -18,6 +18,6 @@ class SpeciesFilterFactory
      */
     public function get(array $wantedItems): SpeciesFilter
     {
-        return new SpeciesFilter($wantedItems, new SpeciesSearchResolver($this->speciesService->getCompleteList()));
+        return new SpeciesFilter($wantedItems, $this->speciesService->getCompleteList());
     }
 }
