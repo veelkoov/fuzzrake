@@ -35,7 +35,7 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         foreach ($links as $link) {
             $crawler = $client->request('GET', $link->getUri());
 
-            $form = $crawler->selectButton('Update')->form([
+            $form = $crawler->selectButton('Import')->form([
                 'submission[directives]' => $acceptAll ? 'accept' : '',
             ]);
 

@@ -17,7 +17,7 @@ class FeedbackControllerTest extends WebTestCase
         $client = $this->createClient();
         $client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
@@ -28,7 +28,7 @@ class FeedbackControllerTest extends WebTestCase
 
         TestsBridge::setSkipSingleCaptcha();
         $client->submit($form);
-        self::assertResponseStatusCodeSame(302);
+        self::assertResponseStatusCodeIs($client, 302);
         $client->followRedirect();
 
         self::assertSelectorTextSame('h1', 'Feedback submitted');
@@ -40,7 +40,7 @@ class FeedbackControllerTest extends WebTestCase
         $client = $this->createClient();
         $client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
@@ -50,7 +50,7 @@ class FeedbackControllerTest extends WebTestCase
         ]);
 
         $client->submit($form);
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::assertSelectorTextSame('h1', 'Feedback form');
         self::assertSelectorTextContains('div.alert', 'Captcha failed. Please retry submitting.');
@@ -61,12 +61,12 @@ class FeedbackControllerTest extends WebTestCase
         $client = $this->createClient();
         $client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $client->getCrawler()->selectButton('Send')->form();
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame(422);
+        self::assertResponseStatusCodeIs($client, 422);
         self::assertSelectorTextSame('#feedback_subject + .invalid-feedback', 'This is required.');
         self::assertSelectorTextSame('#feedback_noContactBack_help + .invalid-feedback', 'This is required.');
         self::assertSelectorTextSame('#feedback_details + .invalid-feedback', 'This is required.');
@@ -80,7 +80,7 @@ class FeedbackControllerTest extends WebTestCase
         $client = $this->createClient();
         $client->request('GET', '/feedback');
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $form = $client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
@@ -94,7 +94,7 @@ class FeedbackControllerTest extends WebTestCase
         }
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame($shouldBlock ? 422 : 302);
+        self::assertResponseStatusCodeIs($client, $shouldBlock ? 422 : 302);
     }
 
     /**

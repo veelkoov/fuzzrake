@@ -27,8 +27,8 @@ class LegacyRedirectionsTest extends WebTestCaseWithEM
     {
         $this->client->request('GET', $oldUri);
 
-        static::assertResponseStatusCodeSame(200);
-        static::assertSelectorTextContains($checkedSelector, $expectedText);
+        self::assertResponseStatusCodeIs($this->client, 200);
+        self::assertSelectorTextContains($checkedSelector, $expectedText);
     }
 
     public function legacyRedirectionDataProvider(): array // @phpstan-ignore-line

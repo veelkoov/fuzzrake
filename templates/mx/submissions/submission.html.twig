@@ -112,7 +112,8 @@
             </div>
         </div>
         <div class="text-end">
-            {{ form_row(form.update) }}
+            {{ form_widget(form.save) }}
+            {{ form_widget(form.import) }}
         </div>
 
         {{ form_rest(form) }}

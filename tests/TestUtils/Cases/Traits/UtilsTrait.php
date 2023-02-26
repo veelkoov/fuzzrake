@@ -7,6 +7,7 @@ namespace App\Tests\TestUtils\Cases\Traits;
 use App\Tests\TestUtils\Paths;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -74,11 +75,21 @@ trait UtilsTrait
     {
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame(422);
+        self::assertResponseStatusCodeIs($client, 422);
     }
 
     protected function clearCache(): void
     {
         (new Filesystem())->remove(Paths::getCachePoolsDir());
+    }
+
+    /**
+     * Error output of the default makes result analysis difficult because the whole response is compared instead of just the code.
+     *
+     * @see BrowserKitAssertionsTrait::assertResponseStatusCodeIs()
+     */
+    public static function assertResponseStatusCodeIs(AbstractBrowser $client, int $expectedCode): void
+    {
+        self::assertEquals($expectedCode, $client->getInternalResponse()->getStatusCode(), 'Unexpected HTTP response status code');
     }
 }

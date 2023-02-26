@@ -17,6 +17,6 @@ class ArtisansUrlsControllerWithEMTest extends WebTestCaseWithEM
 
         $client->request('GET', '/mx/artisan_urls/');
 
-        static::assertResponseStatusCodeSame(200);
+        static::assertResponseStatusCodeIs($client, 200);
     }
 }
