@@ -26,7 +26,7 @@ final class FieldsData
             if ($case::class !== ReflectionEnumBackedCase::class) {
                 throw new TypeError('I expected backed enum, and what is this?');
             }
-            
+
             foreach ($case->getAttributes() as $attribute) {
                 /** @var Properties $data */
                 $data = $attribute->newInstance();
@@ -34,14 +34,13 @@ final class FieldsData
                 self::$fields[$case->name] = new FieldData(
                     $case->name,
                     $data->modelName,
+                    $data->type,
                     $data->validationRegex,
-                    $data->isList,
                     $data->freeForm,
                     $data->inStats,
                     $data->public,
                     $data->inIuForm,
-                    $data->date,
-                    $data->dynamic,
+                    $data->persisted,
                     $data->affectedByIuForm,
                     $data->notInspectedUrl,
                 );

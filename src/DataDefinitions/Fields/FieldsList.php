@@ -23,7 +23,7 @@ class FieldsList implements IteratorAggregate
     private array $fields = [];
 
     /**
-     * @param list<Field> $fields
+     * @param Field[] $fields
      */
     public function __construct(
         array $fields,

@@ -11,14 +11,14 @@ readonly class Properties // TODO: Not repeatable
 {
     public function __construct(
         public string $modelName,
-        public bool   $public = true,
-        public bool   $inIuForm = true,
-        public bool   $inStats = true,
-        public bool   $freeForm = true,
-        public ?string $validationRegex = '',
-        public bool   $isList = false,
-        public bool   $dynamic = false,
-        public bool   $date = false,
+        public Type $type = Type::STRING,
+        public bool $public = true,
+        public bool $inIuForm = true,
+        public bool $inStats = true,
+        public bool $freeForm = true,
+        public ?string $validationRegex = null,
+        public bool $isList = false,
+        public bool $persisted = true,
         public bool $affectedByIuForm = false,
         public bool $notInspectedUrl = false,
     ) {

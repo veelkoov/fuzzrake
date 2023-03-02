@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\DataDefinitions\Fields;
 
-use TRegx\CleanRegex\Pattern;
-use App\DataDefinitions\Fields\ValidationRegexps as V;
 use App\DataDefinitions\Fields\Properties as Props;
+use App\DataDefinitions\Fields\ValidationRegexps as V;
+use TRegx\CleanRegex\Pattern;
 
 enum Field: string
 {
     #[Props('makerId', validationRegex: V::MAKER_ID)]
     case MAKER_ID = 'MAKER_ID';
 
-    #[Props('formerMakerIds', inIuForm: false, freeForm: false, validationRegex: V::FORMER_MAKER_IDS, isList: true, affectedByIuForm: true)]
+    #[Props('formerMakerIds', type: Type::STR_LIST, inIuForm: false, freeForm: false, validationRegex: V::FORMER_MAKER_IDS, affectedByIuForm: true)]
     case FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
 
     #[Props('name', validationRegex: V::NON_EMPTY)]
     case NAME = 'NAME';
 
-    #[Props('formerly', isList: true)]
+    #[Props('formerly', type: Type::STR_LIST)]
     case FORMERLY = 'FORMERLY';
 
-    #[Props('dateAdded', inIuForm: false, inStats: false, freeForm: false, date: true, affectedByIuForm: true)]
+    #[Props('dateAdded', type: Type::DATE, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
     case DATE_ADDED = 'DATE_ADDED';
 
-    #[Props('dateUpdated', inIuForm: false, inStats: false, freeForm: false, date: true, affectedByIuForm: true)]
+    #[Props('dateUpdated', type: Type::DATE, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
     case DATE_UPDATED = 'DATE_UPDATED';
 
     #[Props('intro')]
@@ -34,7 +34,7 @@ enum Field: string
     #[Props('since', freeForm: false, validationRegex: V::SINCE)]
     case SINCE = 'SINCE';
 
-    #[Props('languages', isList: true)]
+    #[Props('languages', type: Type::STR_LIST)]
     case LANGUAGES = 'LANGUAGES';
 
     #[Props('country', freeForm: false, validationRegex: V::COUNTRY)]
@@ -49,51 +49,52 @@ enum Field: string
     #[Props('productionModelsComment', inStats: false)]
     case PRODUCTION_MODELS_COMMENT = 'PRODUCTION_MODELS_COMMENT';
 
-    #[Props('productionModels', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
+    #[Props('productionModels', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
     case PRODUCTION_MODELS = 'PRODUCTION_MODELS';
 
     #[Props('stylesComment', inStats: false)]
     case STYLES_COMMENT = 'STYLES_COMMENT';
 
-    #[Props('styles', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
+    #[Props('styles', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
     case STYLES = 'STYLES';
 
-    #[Props('otherStyles', validationRegex: V::LIST_VALIDATION, isList: true)]
+    #[Props('otherStyles', type: Type::STR_LIST, validationRegex: V::LIST_VALIDATION)]
     case OTHER_STYLES = 'OTHER_STYLES';
+
     #[Props('orderTypesComment', inStats: false)]
-
     case ORDER_TYPES_COMMENT = 'ORDER_TYPES_COMMENT';
-    #[Props('orderTypes', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
 
+    #[Props('orderTypes', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
     case ORDER_TYPES = 'ORDER_TYPES';
-    #[Props('otherOrderTypes', validationRegex: V::LIST_VALIDATION, isList: true)]
 
+    #[Props('otherOrderTypes', type: Type::STR_LIST, validationRegex: V::LIST_VALIDATION)]
     case OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
+
     #[Props('featuresComment', inStats: false)]
-
     case FEATURES_COMMENT = 'FEATURES_COMMENT';
-    #[Props('features', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
 
+    #[Props('features', type: Type::STR_LIST, freeForm: false, validationRegex: V::LIST_VALIDATION)]
     case FEATURES = 'FEATURES';
-    #[Props('otherFeatures', validationRegex: V::LIST_VALIDATION, isList: true)]
 
+    #[Props('otherFeatures', type: Type::STR_LIST, validationRegex: V::LIST_VALIDATION)]
     case OTHER_FEATURES = 'OTHER_FEATURES';
-    #[Props('paymentPlans', isList: true)]
 
+    #[Props('paymentPlans', type: Type::STR_LIST)]
     case PAYMENT_PLANS = 'PAYMENT_PLANS';
-    #[Props('paymentMethods', validationRegex: V::PAY_METHODS, isList: true)]
+
+    #[Props('paymentMethods', type: Type::STR_LIST, validationRegex: V::PAY_METHODS)]
     case PAYMENT_METHODS = 'PAYMENT_METHODS';
 
-    #[Props('currenciesAccepted', validationRegex: V::CURRENCIES, isList: true)]
+    #[Props('currenciesAccepted', type: Type::STR_LIST, validationRegex: V::CURRENCIES)]
     case CURRENCIES_ACCEPTED = 'CURRENCIES_ACCEPTED';
 
     #[Props('speciesComment')]
     case SPECIES_COMMENT = 'SPECIES_COMMENT';
 
-    #[Props('speciesDoes', isList: true)]
+    #[Props('speciesDoes', type: Type::STR_LIST)]
     case SPECIES_DOES = 'SPECIES_DOES';
 
-    #[Props('speciesDoesnt', isList: true)]
+    #[Props('speciesDoesnt', type: Type::STR_LIST)]
     case SPECIES_DOESNT = 'SPECIES_DOESNT';
 
     #[Props('isMinor', inIuForm: false, inStats: false, freeForm: false)]
@@ -111,13 +112,13 @@ enum Field: string
     #[Props('doesNsfw', inStats: false, freeForm: false)]
     case DOES_NSFW = 'DOES_NSFW';
 
-    #[Props('safeDoesNsfw', inIuForm: false, inStats: false, freeForm: false, dynamic: true)]
+    #[Props('safeDoesNsfw', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case SAFE_DOES_NSFW = 'SAFE_DOES_NSFW';
 
     #[Props('worksWithMinors', public: false, inStats: false, freeForm: false)]
     case WORKS_WITH_MINORS = 'WORKS_WITH_MINORS';
 
-    #[Props('safeWorksWithMinors', inIuForm: false, inStats: false, freeForm: false, dynamic: true)]
+    #[Props('safeWorksWithMinors', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case SAFE_WORKS_WITH_MINORS = 'SAFE_WORKS_WITH_MINORS';
 
     #[Props('fursuitReviewUrl', validationRegex: V::FSR_URL)]
@@ -126,10 +127,10 @@ enum Field: string
     #[Props('websiteUrl', validationRegex: V::GENERIC_URL)]
     case URL_WEBSITE = 'URL_WEBSITE';
 
-    #[Props('pricesUrls', validationRegex: V::GENERIC_URL_LIST, isList: true)]
+    #[Props('pricesUrls', type: Type::STR_LIST, validationRegex: V::GENERIC_URL_LIST)]
     case URL_PRICES = 'URL_PRICES';
 
-    #[Props('commissionsUrls', validationRegex: V::GENERIC_URL_LIST, isList: true)]
+    #[Props('commissionsUrls', type: Type::STR_LIST, validationRegex: V::GENERIC_URL_LIST)]
     case URL_COMMISSIONS = 'URL_COMMISSIONS';
 
     #[Props('faqUrl', validationRegex: V::GENERIC_URL)]
@@ -183,10 +184,10 @@ enum Field: string
     #[Props('furtrackUrl', validationRegex: V::FURTRACK_URL, notInspectedUrl: true)]
     case URL_FURTRACK = 'URL_FURTRACK';
 
-    #[Props('photoUrls', validationRegex: V::PHOTO_URL_LIST, isList: true, notInspectedUrl: true)]
+    #[Props('photoUrls', type: Type::STR_LIST, validationRegex: V::PHOTO_URL_LIST, notInspectedUrl: true)]
     case URL_PHOTOS = 'URL_PHOTOS';
 
-    #[Props('miniatureUrls', inIuForm: false, validationRegex: V::MINIATURE_URL_LIST, isList: true, notInspectedUrl: true)]
+    #[Props('miniatureUrls', type: Type::STR_LIST, inIuForm: false, validationRegex: V::MINIATURE_URL_LIST, notInspectedUrl: true)]
     case URL_MINIATURES = 'URL_MINIATURES';
 
     #[Props('otherUrls', notInspectedUrl: true)]
@@ -207,13 +208,13 @@ enum Field: string
     #[Props('csTrackerIssue', inIuForm: false, inStats: false, freeForm: false)]
     case CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
 
-    #[Props('openFor', inIuForm: false, inStats: false, freeForm: false, isList: true)]
+    #[Props('openFor', type: Type::STR_LIST, inIuForm: false, inStats: false, freeForm: false)]
     case OPEN_FOR = 'OPEN_FOR';
 
-    #[Props('closedFor', inIuForm: false, inStats: false, freeForm: false, isList: true)]
+    #[Props('closedFor', type: Type::STR_LIST, inIuForm: false, inStats: false, freeForm: false)]
     case CLOSED_FOR = 'CLOSED_FOR';
 
-    #[Props('completeness', inIuForm: false, inStats: false, freeForm: false, dynamic: true)]
+    #[Props('completeness', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case COMPLETENESS = 'COMPLETENESS';
 
     #[Props('contactAllowed', inStats: false, freeForm: false)]
@@ -248,12 +249,12 @@ enum Field: string
 
     public function isList(): bool
     {
-        return $this->getData()->isList;
+        return $this->getData()->type === Type::STR_LIST;
     }
 
     public function isDate(): bool
     {
-        return $this->getData()->isDate;
+        return $this->getData()->type === Type::DATE;
     }
 
     public function isPersisted(): bool
