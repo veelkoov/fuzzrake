@@ -41,7 +41,7 @@ final class Fields
 
     public static function iuFormAffected(): FieldsList
     {
-        return self::$iuFormAffected ??= self::inIuForm()->plus(FieldsData::IU_FORM_AFFECTED);
+        return self::$iuFormAffected ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm() || $field->affectedByIuForm());
     }
 
     public static function inStats(): FieldsList
@@ -56,6 +56,6 @@ final class Fields
 
     public static function nonInspectedUrls(): FieldsList
     {
-        return self::$nonInspected ??= self::urls()->filtered(fn (Field $field): bool => in_array($field, FieldsData::NON_INSPECTED_URLS, true));
+        return self::$nonInspected ??= self::all()->filtered(fn (Field $field): bool => $field->notInspectedUrl());
     }
 }

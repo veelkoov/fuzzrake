@@ -5,82 +5,230 @@ declare(strict_types=1);
 namespace App\DataDefinitions\Fields;
 
 use TRegx\CleanRegex\Pattern;
+use App\DataDefinitions\Fields\ValidationRegexps as V;
+use App\DataDefinitions\Fields\Properties as Props;
 
 enum Field: string
 {
+    #[Props('makerId', validationRegex: V::MAKER_ID)]
     case MAKER_ID = 'MAKER_ID';
+
+    #[Props('formerMakerIds', inIuForm: false, freeForm: false, validationRegex: V::FORMER_MAKER_IDS, isList: true, affectedByIuForm: true)]
     case FORMER_MAKER_IDS = 'FORMER_MAKER_IDS';
+
+    #[Props('name', validationRegex: V::NON_EMPTY)]
     case NAME = 'NAME';
+
+    #[Props('formerly', isList: true)]
     case FORMERLY = 'FORMERLY';
+
+    #[Props('dateAdded', inIuForm: false, inStats: false, freeForm: false, date: true, affectedByIuForm: true)]
     case DATE_ADDED = 'DATE_ADDED';
+
+    #[Props('dateUpdated', inIuForm: false, inStats: false, freeForm: false, date: true, affectedByIuForm: true)]
     case DATE_UPDATED = 'DATE_UPDATED';
+
+    #[Props('intro')]
     case INTRO = 'INTRO';
+
+    #[Props('since', freeForm: false, validationRegex: V::SINCE)]
     case SINCE = 'SINCE';
+
+    #[Props('languages', isList: true)]
     case LANGUAGES = 'LANGUAGES';
+
+    #[Props('country', freeForm: false, validationRegex: V::COUNTRY)]
     case COUNTRY = 'COUNTRY';
+
+    #[Props('state', validationRegex: V::STATE)]
     case STATE = 'STATE';
+
+    #[Props('city')]
     case CITY = 'CITY';
+
+    #[Props('productionModelsComment', inStats: false)]
     case PRODUCTION_MODELS_COMMENT = 'PRODUCTION_MODELS_COMMENT';
+
+    #[Props('productionModels', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
     case PRODUCTION_MODELS = 'PRODUCTION_MODELS';
+
+    #[Props('stylesComment', inStats: false)]
     case STYLES_COMMENT = 'STYLES_COMMENT';
+
+    #[Props('styles', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
     case STYLES = 'STYLES';
+
+    #[Props('otherStyles', validationRegex: V::LIST_VALIDATION, isList: true)]
     case OTHER_STYLES = 'OTHER_STYLES';
+    #[Props('orderTypesComment', inStats: false)]
+
     case ORDER_TYPES_COMMENT = 'ORDER_TYPES_COMMENT';
+    #[Props('orderTypes', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
+
     case ORDER_TYPES = 'ORDER_TYPES';
+    #[Props('otherOrderTypes', validationRegex: V::LIST_VALIDATION, isList: true)]
+
     case OTHER_ORDER_TYPES = 'OTHER_ORDER_TYPES';
+    #[Props('featuresComment', inStats: false)]
+
     case FEATURES_COMMENT = 'FEATURES_COMMENT';
+    #[Props('features', freeForm: false, validationRegex: V::LIST_VALIDATION, isList: true)]
+
     case FEATURES = 'FEATURES';
+    #[Props('otherFeatures', validationRegex: V::LIST_VALIDATION, isList: true)]
+
     case OTHER_FEATURES = 'OTHER_FEATURES';
+    #[Props('paymentPlans', isList: true)]
+
     case PAYMENT_PLANS = 'PAYMENT_PLANS';
+    #[Props('paymentMethods', validationRegex: V::PAY_METHODS, isList: true)]
     case PAYMENT_METHODS = 'PAYMENT_METHODS';
+
+    #[Props('currenciesAccepted', validationRegex: V::CURRENCIES, isList: true)]
     case CURRENCIES_ACCEPTED = 'CURRENCIES_ACCEPTED';
+
+    #[Props('speciesComment')]
     case SPECIES_COMMENT = 'SPECIES_COMMENT';
+
+    #[Props('speciesDoes', isList: true)]
     case SPECIES_DOES = 'SPECIES_DOES';
+
+    #[Props('speciesDoesnt', isList: true)]
     case SPECIES_DOESNT = 'SPECIES_DOESNT';
+
+    #[Props('isMinor', inIuForm: false, inStats: false, freeForm: false)]
     case IS_MINOR = 'IS_MINOR'; // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/103
+
+    #[Props('ages', freeForm: false)]
     case AGES = 'AGES';
+
+    #[Props('nsfwWebsite', inStats: false, freeForm: false)]
     case NSFW_WEBSITE = 'NSFW_WEBSITE';
+
+    #[Props('nsfwSocial', inStats: false, freeForm: false)]
     case NSFW_SOCIAL = 'NSFW_SOCIAL';
+
+    #[Props('doesNsfw', inStats: false, freeForm: false)]
     case DOES_NSFW = 'DOES_NSFW';
+
+    #[Props('safeDoesNsfw', inIuForm: false, inStats: false, freeForm: false, dynamic: true)]
     case SAFE_DOES_NSFW = 'SAFE_DOES_NSFW';
+
+    #[Props('worksWithMinors', public: false, inStats: false, freeForm: false)]
     case WORKS_WITH_MINORS = 'WORKS_WITH_MINORS';
+
+    #[Props('safeWorksWithMinors', inIuForm: false, inStats: false, freeForm: false, dynamic: true)]
     case SAFE_WORKS_WITH_MINORS = 'SAFE_WORKS_WITH_MINORS';
+
+    #[Props('fursuitReviewUrl', validationRegex: V::FSR_URL)]
     case URL_FURSUITREVIEW = 'URL_FURSUITREVIEW';
+
+    #[Props('websiteUrl', validationRegex: V::GENERIC_URL)]
     case URL_WEBSITE = 'URL_WEBSITE';
+
+    #[Props('pricesUrls', validationRegex: V::GENERIC_URL_LIST, isList: true)]
     case URL_PRICES = 'URL_PRICES';
+
+    #[Props('commissionsUrls', validationRegex: V::GENERIC_URL_LIST, isList: true)]
     case URL_COMMISSIONS = 'URL_COMMISSIONS';
+
+    #[Props('faqUrl', validationRegex: V::GENERIC_URL)]
     case URL_FAQ = 'URL_FAQ';
+
+    #[Props('furAffinityUrl', validationRegex: V::FA_URL)]
     case URL_FUR_AFFINITY = 'URL_FUR_AFFINITY';
+
+    #[Props('deviantArtUrl', validationRegex: V::DA_URL)]
     case URL_DEVIANTART = 'URL_DEVIANTART';
+
+    #[Props('mastodonUrl', validationRegex: V::GENERIC_URL)]
     case URL_MASTODON = 'URL_MASTODON';
+
+    #[Props('twitterUrl', validationRegex: V::TWITTER_URL)]
     case URL_TWITTER = 'URL_TWITTER';
+
+    #[Props('facebookUrl', validationRegex: V::FACEBOOK_URL)]
     case URL_FACEBOOK = 'URL_FACEBOOK';
+
+    #[Props('tumblrUrl', validationRegex: V::TUMBLR_URL)]
     case URL_TUMBLR = 'URL_TUMBLR';
+
+    #[Props('instagramUrl', validationRegex: V::INSTAGRAM_URL)]
     case URL_INSTAGRAM = 'URL_INSTAGRAM';
+
+    #[Props('youtubeUrl', validationRegex: V::YOUTUBE_URL)]
     case URL_YOUTUBE = 'URL_YOUTUBE';
+
+    #[Props('linklistUrl', validationRegex: V::GENERIC_URL)]
     case URL_LINKLIST = 'URL_LINKLIST';
+
+    #[Props('furryAminoUrl', validationRegex: V::GENERIC_URL)]
     case URL_FURRY_AMINO = 'URL_FURRY_AMINO';
+
+    #[Props('etsyUrl', validationRegex: V::GENERIC_URL)]
     case URL_ETSY = 'URL_ETSY';
+
+    #[Props('theDealersDenUrl', validationRegex: V::GENERIC_URL)]
     case URL_THE_DEALERS_DEN = 'URL_THE_DEALERS_DEN';
+
+    #[Props('otherShopUrl', validationRegex: V::GENERIC_URL)]
     case URL_OTHER_SHOP = 'URL_OTHER_SHOP';
+
+    #[Props('queueUrl', validationRegex: V::GENERIC_URL)]
     case URL_QUEUE = 'URL_QUEUE';
+
+    #[Props('scritchUrl', validationRegex: V::SCRITCH_URL, notInspectedUrl: true)]
     case URL_SCRITCH = 'URL_SCRITCH';
+
+    #[Props('furtrackUrl', validationRegex: V::FURTRACK_URL, notInspectedUrl: true)]
     case URL_FURTRACK = 'URL_FURTRACK';
+
+    #[Props('photoUrls', validationRegex: V::PHOTO_URL_LIST, isList: true, notInspectedUrl: true)]
     case URL_PHOTOS = 'URL_PHOTOS';
+
+    #[Props('miniatureUrls', inIuForm: false, validationRegex: V::MINIATURE_URL_LIST, isList: true, notInspectedUrl: true)]
     case URL_MINIATURES = 'URL_MINIATURES';
+
+    #[Props('otherUrls', notInspectedUrl: true)]
     case URL_OTHER = 'URL_OTHER';
+
+    #[Props('notes', inStats: false)]
     case NOTES = 'NOTES';
+
+    #[Props('inactiveReason', inIuForm: false, freeForm: false)]
     case INACTIVE_REASON = 'INACTIVE_REASON';
+
+    #[Props('password', public: false, inStats: false, freeForm: false)]
     case PASSWORD = 'PASSWORD';
+
+    #[Props('csLastCheck', inIuForm: false, inStats: false, freeForm: false)]
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
+
+    #[Props('csTrackerIssue', inIuForm: false, inStats: false, freeForm: false)]
     case CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
+
+    #[Props('openFor', inIuForm: false, inStats: false, freeForm: false, isList: true)]
     case OPEN_FOR = 'OPEN_FOR';
+
+    #[Props('closedFor', inIuForm: false, inStats: false, freeForm: false, isList: true)]
     case CLOSED_FOR = 'CLOSED_FOR';
+
+    #[Props('completeness', inIuForm: false, inStats: false, freeForm: false, dynamic: true)]
     case COMPLETENESS = 'COMPLETENESS';
+
+    #[Props('contactAllowed', inStats: false, freeForm: false)]
     case CONTACT_ALLOWED = 'CONTACT_ALLOWED';
+
+    #[Props('contactMethod', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
     case CONTACT_METHOD = 'CONTACT_METHOD';
+
+    #[Props('contactAddressPlain', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
     case CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
+
+    #[Props('contactInfoObfuscated', inStats: false, freeForm: false)]
     case CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
+
+    #[Props('contactInfoOriginal', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
     case CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
 
     public function getData(): FieldData
@@ -121,6 +269,16 @@ enum Field: string
     public function isInIuForm(): bool
     {
         return $this->getData()->isInIuForm;
+    }
+
+    public function affectedByIuForm(): bool
+    {
+        return $this->getData()->affectedByIuForm;
+    }
+
+    public function notInspectedUrl(): bool
+    {
+        return $this->getData()->notInspectedUrl;
     }
 
     public function public(): bool

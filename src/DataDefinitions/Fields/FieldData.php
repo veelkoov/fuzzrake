@@ -22,6 +22,8 @@ class FieldData
         public readonly bool $isInIuForm,
         public readonly bool $isDate,
         public readonly bool $isPersisted,
+        public readonly bool $affectedByIuForm,
+        public readonly bool $notInspectedUrl,
     ) {
         $this->isValidated = null !== $this->validationRegexp;
     }

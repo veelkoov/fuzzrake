@@ -23,7 +23,7 @@ class FieldsList implements IteratorAggregate
     private array $fields = [];
 
     /**
-     * @param Field[] $fields
+     * @param list<Field> $fields
      */
     public function __construct(
         array $fields,
@@ -34,7 +34,7 @@ class FieldsList implements IteratorAggregate
     }
 
     /**
-     * @param Field[] $fields
+     * @param list<Field> $fields
      */
     public function plus(array $fields): self
     {
@@ -55,7 +55,7 @@ class FieldsList implements IteratorAggregate
     }
 
     /**
-     * @return Field[] ['FIELD_NAME' => Field, ...]
+     * @return array<string, Field> ['FIELD_NAME' => Field, ...]
      */
     public function asArray(): array
     {
@@ -63,7 +63,7 @@ class FieldsList implements IteratorAggregate
     }
 
     /**
-     * @return string[] ['FIELD_NAME', ...]
+     * @return list<string> ['FIELD_NAME', ...]
      */
     public function names(): array
     {
