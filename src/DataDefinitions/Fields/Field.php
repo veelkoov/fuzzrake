@@ -249,12 +249,12 @@ enum Field: string
 
     public function isList(): bool
     {
-        return $this->getData()->type === Type::STR_LIST;
+        return Type::STR_LIST === $this->getData()->type;
     }
 
     public function isDate(): bool
     {
-        return $this->getData()->type === Type::DATE;
+        return Type::DATE === $this->getData()->type;
     }
 
     public function isPersisted(): bool

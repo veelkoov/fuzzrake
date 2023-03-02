@@ -6,8 +6,6 @@ namespace App\DataDefinitions\Fields;
 
 use App\Utils\Traits\UtilityClass;
 use ReflectionEnum;
-use ReflectionEnumBackedCase;
-use TypeError;
 
 final class FieldsData
 {
@@ -23,15 +21,11 @@ final class FieldsData
         self::$fields = [];
 
         foreach ((new ReflectionEnum(Field::class))->getCases() as $case) {
-            if ($case::class !== ReflectionEnumBackedCase::class) {
-                throw new TypeError('I expected backed enum, and what is this?');
-            }
-
             foreach ($case->getAttributes() as $attribute) {
                 /** @var Properties $data */
                 $data = $attribute->newInstance();
 
-                self::$fields[$case->name] = new FieldData(
+                self::$fields[(string) $case->name] = new FieldData(
                     $case->name,
                     $data->modelName,
                     $data->type,
