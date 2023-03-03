@@ -7,7 +7,7 @@ namespace App\DataDefinitions\Fields;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_ALL)]
-readonly class Properties // TODO: Not repeatable
+readonly class Properties
 {
     public function __construct(
         public string $modelName,
