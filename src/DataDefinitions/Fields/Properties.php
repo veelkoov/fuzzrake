@@ -6,7 +6,7 @@ namespace App\DataDefinitions\Fields;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_ALL)]
+#[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 readonly class Properties
 {
     public function __construct(
