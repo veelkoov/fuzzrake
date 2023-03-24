@@ -24,7 +24,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --env PHP_CS_FIXER_IGNORE_ENV=True --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
+    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
 }
 
 function run_composer() {
@@ -231,14 +231,7 @@ function action() {
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;
 
-        'pcf')
-            if [[ "$(date +%Y-%m-%d)" > "2023-03-01" ]]; then
-                echo 'Can PHP_CS_FIXER_IGNORE_ENV be removed now?'
-                sleep 10
-            fi
-
-            run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@"
-        ;;
+        'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan --xdebug analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
