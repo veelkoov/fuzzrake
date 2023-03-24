@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Species;
 
 use App\Utils\Regexp\Replacements;
+use RuntimeException;
 
 class SpeciesService
 {
@@ -52,6 +53,31 @@ class SpeciesService
 
     private function getBuilder(): HierarchyAwareBuilder
     {
-        return $this->builder ??= new HierarchyAwareBuilder($this->speciesDefinitions['valid_choices']);
+        if (null === $this->builder) {
+            $this->builder = new HierarchyAwareBuilder($this->speciesDefinitions['valid_choices']);
+
+            $this->validateTopSpeciesAreSeparateTrees();
+        }
+
+        return $this->builder; // @phpstan-ignore-line False-positive
+    }
+
+    private function validateTopSpeciesAreSeparateTrees(): void
+    {
+        $speciesTrees = array_map(
+            fn (Specie $specie) => $specie->getSelfAndDescendants(),
+            $this->getBuilder()->getCompleteTree(),
+        );
+
+        $specieNamesTrees = array_map(
+            fn (array $species) => array_map(fn (Specie $specie) => $specie->getName(), $species),
+            $speciesTrees,
+        );
+
+        $sharedSpecieNames = array_intersect(...$specieNamesTrees);
+
+        if ([] !== $sharedSpecieNames) {
+            throw new RuntimeException('Species configuration error: species shared between root species: '.implode(', ', $sharedSpecieNames));
+        }
     }
 }

@@ -124,7 +124,12 @@ parameters:
           Pancans:
           Pokemons:
           Sergals:
-          'i_Skull animals':
+          'i_Skull-*':
+            'i_Skull':
+            'i_Skullsuits':
+            'i_Skull Creatures':
+            'i_Skulldogs':
+            'i_Skull animals':
             'i_3D printing & electronics required species (e.g. Protogens, Skullies)':
           Sparkledogs:
           Wickerbeasts:
@@ -238,12 +243,6 @@ parameters:
           "i_Raptor masks":
 
           'i_Saber-toothed tiger': {}
-          "i_Skull-*":
-            "i_Skull": # Excuse me?
-            "i_Skullsuits":
-            "i_Skull Creatures":
-            "i_Skulldogs":
-            'i_Skull animals':
           "i_Specialises in mythical creatures/monsters":
           "i_Species with horizontal pupils":
           "i_Things of an adult nature":
@@ -251,7 +250,6 @@ parameters:
 
           "i_Uncommon species":
           "i_Will not work with sequin for characters":
-          "i_Most real-life aquatics that have a smooth head":
 
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'
