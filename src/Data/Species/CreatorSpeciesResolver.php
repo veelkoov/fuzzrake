@@ -72,9 +72,9 @@ class CreatorSpeciesResolver
             ...Vec\map($speciesDoesnt, fn (string $specie) => [$this->species->getByNameOrCreate($specie, false), false]),
         ];
 
-        // Change all non-usual species a "does Other"
+        // Change all non-usual species to "Other"
         $result = Vec\map($result, fn (array $specie) => $specie[0]->isRoot() && $specie[0]->isLeaf()
-            ? [$this->other, true] : [$specie[0], $specie[1]]);
+            ? [$this->other, $specie[1]] : [$specie[0], $specie[1]]);
 
         usort($result, function (array $pair1, array $pair2) {
             $depthDiff = (int) ($pair1[0]->getDepth() - $pair2[0]->getDepth()); // Redundant cast to (int) for PHPStan

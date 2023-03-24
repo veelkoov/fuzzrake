@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
+use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Json;
@@ -15,6 +16,7 @@ use JsonException;
  */
 class FiltersTest extends WebTestCaseWithEM
 {
+    use AssertsTrait;
     use FiltersTestTrait;
 
     /**
@@ -70,6 +72,6 @@ class FiltersTest extends WebTestCaseWithEM
             $resultMakerIds[] = $artisanData[0];
         }
 
-        self::assertEquals($expectedMakerIds, $resultMakerIds, "$query query failed.");
+        self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }
 }

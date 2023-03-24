@@ -51,8 +51,8 @@ class SpeciesFilter implements FilterInterface
             return false;
         }
 
-        if ($this->wantsUnknown && '' === $artisan->getSpeciesDoes() && '' === $artisan->getSpeciesDoesnt()) {
-            return true;
+        if ('' === $artisan->getSpeciesDoes() && '' === $artisan->getSpeciesDoesnt()) {
+            return $this->wantsUnknown;
         }
 
         $resolvedDoes = $this->resolver->resolveDoes($artisan->getSpeciesDoes(), $artisan->getSpeciesDoesnt());

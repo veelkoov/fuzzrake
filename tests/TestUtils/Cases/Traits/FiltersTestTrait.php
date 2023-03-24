@@ -179,36 +179,36 @@ trait FiltersTestTrait
     public function filterChoicesDataProvider(): array
     {
         return [
-            [
+            'c1' => [
                 self::getCombinedFiltersTestSet(),
                 [],
                 ['M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000011', 'M000012'],
             ],
 
-            [self::getCombinedFiltersTestSet(), ['countries'        => ['CZ']],                        ['M000001']],
-            [self::getCombinedFiltersTestSet(), ['states'           => ['State2']],                    ['M000002']],
-            [self::getCombinedFiltersTestSet(), ['languages'        => ['Lang2']],                     ['M000003']],
-            [self::getCombinedFiltersTestSet(), ['styles'           => ['Realistic']],                 ['M000004']],
-            [self::getCombinedFiltersTestSet(), ['features'         => ['LED eyes', 'Indoor feet']],   ['M000005']],
-            [self::getCombinedFiltersTestSet(), ['orderTypes'       => ['Tails (as parts/separate)']], ['M000006']],
-            [self::getCombinedFiltersTestSet(), ['productionModels' => ['Premades']],                  ['M000007']],
-            [self::getCombinedFiltersTestSet(), ['openFor'          => ['Open2']],                     ['M000008']],
-            [self::getCombinedFiltersTestSet(), ['species'          => ['Fantasy creatures']],         ['M000009']],
-            [self::getCombinedFiltersTestSet(), ['paymentPlans'     => ['Not supported']],             ['M000010']],
+            'c2'  => [self::getCombinedFiltersTestSet(), ['countries'        => ['CZ']],                        ['M000001']],
+            'c3'  => [self::getCombinedFiltersTestSet(), ['states'           => ['State2']],                    ['M000002']],
+            'c4'  => [self::getCombinedFiltersTestSet(), ['languages'        => ['Lang2']],                     ['M000003']],
+            'c5'  => [self::getCombinedFiltersTestSet(), ['styles'           => ['Realistic']],                 ['M000004']],
+            'c6'  => [self::getCombinedFiltersTestSet(), ['features'         => ['LED eyes', 'Indoor feet']],   ['M000005']],
+            'c7'  => [self::getCombinedFiltersTestSet(), ['orderTypes'       => ['Tails (as parts/separate)']], ['M000006']],
+            'c8'  => [self::getCombinedFiltersTestSet(), ['productionModels' => ['Premades']],                  ['M000007']],
+            'c9'  => [self::getCombinedFiltersTestSet(), ['openFor'          => ['Open2']],                     ['M000008']],
+            'c10' => [self::getCombinedFiltersTestSet(), ['species'          => ['Fantasy creatures']],         ['M000009']],
+            'c11' => [self::getCombinedFiltersTestSet(), ['paymentPlans'     => ['Not supported']],             ['M000010']],
 
-            [
+            'c12' => [
                 self::getCombinedFiltersTestSet(),
                 ['wantsSfw' => true],
                 ['M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000012'],
             ],
 
-            [
+            'c13' => [
                 self::getCombinedFiltersTestSet(),
                 ['isAdult' => false],
                 ['M000012'],
             ],
 
-            [
+            'c14' => [
                 self::getCombinedFiltersTestSet(),
                 [
                     'countries'        => ['FI', 'CZ'],
@@ -226,30 +226,30 @@ trait FiltersTestTrait
                 ['M000001', 'M000002', 'M000004', 'M000005', 'M000006', 'M000007', 'M000011', 'M000012'],
             ],
 
-            [self::getSpecialFiltersTestSet(), ['countries'        => ['?']], ['NOCNTRY']],
-            [self::getSpecialFiltersTestSet(), ['states'           => ['?']], ['NOSTATE']],
-            [self::getSpecialFiltersTestSet(), ['languages'        => ['?']], ['NOLANGG']],
-            [self::getSpecialFiltersTestSet(), ['styles'           => ['?']], ['NOSTLES']],
-            [self::getSpecialFiltersTestSet(), ['styles'           => ['*']], ['BOTHSTL', 'OTHRSTL']],
-            [self::getSpecialFiltersTestSet(), ['features'         => ['?']], ['NOFTRES']],
-            [self::getSpecialFiltersTestSet(), ['features'         => ['*']], ['BOTHFTR', 'OTHRFTR']],
-            [self::getSpecialFiltersTestSet(), ['orderTypes'       => ['?']], ['NOORTPS']],
-            [self::getSpecialFiltersTestSet(), ['orderTypes'       => ['*']], ['BOTHORT', 'OTHRORT']],
-            [self::getSpecialFiltersTestSet(), ['productionModels' => ['?']], ['NOPRDMD']],
+            's1'  => [self::getSpecialFiltersTestSet(), ['countries'        => ['?']], ['NOCNTRY']],
+            's2'  => [self::getSpecialFiltersTestSet(), ['states'           => ['?']], ['NOSTATE']],
+            's3'  => [self::getSpecialFiltersTestSet(), ['languages'        => ['?']], ['NOLANGG']],
+            's4'  => [self::getSpecialFiltersTestSet(), ['styles'           => ['?']], ['NOSTLES']],
+            's5'  => [self::getSpecialFiltersTestSet(), ['styles'           => ['*']], ['BOTHSTL', 'OTHRSTL']],
+            's6'  => [self::getSpecialFiltersTestSet(), ['features'         => ['?']], ['NOFTRES']],
+            's7'  => [self::getSpecialFiltersTestSet(), ['features'         => ['*']], ['BOTHFTR', 'OTHRFTR']],
+            's8'  => [self::getSpecialFiltersTestSet(), ['orderTypes'       => ['?']], ['NOORTPS']],
+            's9'  => [self::getSpecialFiltersTestSet(), ['orderTypes'       => ['*']], ['BOTHORT', 'OTHRORT']],
+            's10' => [self::getSpecialFiltersTestSet(), ['productionModels' => ['?']], ['NOPRDMD']],
 
-            [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['?']],             ['UNKPAYP']],
-            [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Not supported']], ['NOPAYPL']],
-            [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported']],     ['PAYPLNS']],
+            'p1' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['?']],             ['UNKPAYP']],
+            'p2' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Not supported']], ['NOPAYPL']],
+            'p3' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported']],     ['PAYPLNS']],
 
-            [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],        ['NTTRCKD']],
-            [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],        ['TRACKIS', 'TRKFAIL']],
-            [self::getTrackingFiltersTestSet(), ['openFor' => ['Open for']], ['TRACKIS', 'TRACKOK']],
+            't1' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],        ['NTTRCKD']],
+            't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],        ['TRACKIS', 'TRKFAIL']],
+            't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Open for']], ['TRACKIS', 'TRACKOK']],
 
-            [self::getSpeciesFiltersTestSet(), ['species' => ['?']],        ['NOSPECS']],
-            [self::getSpeciesFiltersTestSet(), ['species' => ['Canines']],  ['SPCDNOT', 'SPECSDS']],
-            [self::getSpeciesFiltersTestSet(), ['species' => ['Raccoons']], ['SPCDNOT', 'SPCDSNT']],
-            [self::getSpeciesFiltersTestSet(), ['species' => ['Other']],    ['SPCDNOT', 'SPCOTHR']],
-            [self::getSpeciesFiltersTestSet(), ['species' => ['Mammals']],  ['SPECSDS', 'SPCDNOT', 'SPCDSNT']],
+            'sp1' => [self::getSpeciesFiltersTestSet(), ['species' => ['?']],        ['NOSPECS']],
+            'sp2' => [self::getSpeciesFiltersTestSet(), ['species' => ['Canines']],  ['SPCDNOT', 'SPECSDS']],
+            'sp3' => [self::getSpeciesFiltersTestSet(), ['species' => ['Raccoons']], ['SPCDNOT', 'SPCDSNT']],
+            'sp4' => [self::getSpeciesFiltersTestSet(), ['species' => ['Other']],    ['SPCOTHR']],
+            'sp5' => [self::getSpeciesFiltersTestSet(), ['species' => ['Mammals']],  ['SPECSDS', 'SPCDNOT', 'SPCDSNT']],
         ];
     }
 
