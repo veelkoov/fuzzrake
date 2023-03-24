@@ -174,7 +174,7 @@ trait FiltersTestTrait
     }
 
     /**
-     * @return list<array{list<Artisan>, array<string, list<string>|bool>, list<string>}>
+     * @return array<string, array{list<Artisan>, array<string, list<string>|bool>, list<string>}>
      */
     public function filterChoicesDataProvider(): array
     {

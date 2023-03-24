@@ -28,6 +28,10 @@ trait AssertsTrait
         self::assertEquals($expectedHtml, $actualHtml);
     }
 
+    /**
+     * @param mixed[] $expected
+     * @param mixed[] $actual
+     */
     protected function assertArrayItemsSameOrderIgnored(array $expected, array $actual, string $message = ''): void
     {
         sort($expected);

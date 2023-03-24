@@ -7,11 +7,8 @@ namespace App\Tests\TestUtils\Cases\Traits;
 use App\Tests\TestUtils\Paths;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Filesystem\Filesystem;
-
-use function pattern;
 
 trait UtilsTrait
 {
