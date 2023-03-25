@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider\Filters;
+namespace App\Tests\Filtering\DataRequests\Filters;
 
 use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Filtering\DataRequests\Filters\SpeciesSearchResolver;

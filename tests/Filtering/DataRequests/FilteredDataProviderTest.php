@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Filtering\DataProvider;
+namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FilteredDataProvider;
@@ -17,7 +17,7 @@ use Psr\Cache\InvalidArgumentException;
 /**
  * @medium
  */
-class FilteredTest extends KernelTestCaseWithEM
+class FilteredDataProviderTest extends KernelTestCaseWithEM
 {
     /**
      * @throws InvalidArgumentException
@@ -38,10 +38,10 @@ class FilteredTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, true));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
     }
 
@@ -61,10 +61,10 @@ class FilteredTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, false));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false));
         self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::makerIdsFromPubData($result));
     }
 
@@ -83,7 +83,7 @@ class FilteredTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false));
+        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false, false));
         self::assertEquals($expected, self::makerIdsFromPubData($result));
     }
 

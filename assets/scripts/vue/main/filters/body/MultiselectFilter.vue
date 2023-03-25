@@ -2,7 +2,13 @@
   <fieldset>
     <div class="row">
       <div class="col-sm-12">
-        <AllNoneInvertLinks class="simple" @all="checkboxes.all()" @none="checkboxes.none()" @invert="checkboxes.invert()" />
+        <AllNoneInvertLinks
+            v-if="0 !== filter.options.items.length"
+            class="simple"
+            @all="checkboxes.all()"
+            @none="checkboxes.none()"
+            @invert="checkboxes.invert()"
+        />
 
         <SpecialItems :filter="filter"/>
       </div>

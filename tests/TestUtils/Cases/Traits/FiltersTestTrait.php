@@ -174,6 +174,23 @@ trait FiltersTestTrait
     }
 
     /**
+     * @return list<Artisan>
+     */
+    private function getInactiveFiltersTestSet(): array
+    {
+        return [
+            $this->artisan('ACTIVE1', 'FI', 'State', 'Language',
+                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
+                'Open for', 'Canines', 'Supported', false, false),
+
+            $this->artisan('INACTIV', 'FI', 'State', 'Language',
+                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
+                'Open for', 'Canines', 'Supported', false, false,
+                inactiveReason: 'Inactive'),
+        ];
+    }
+
+    /**
      * @return list<array{list<Artisan>, array<string, list<string>|bool>, list<string>}>
      */
     public function filterChoicesDataProvider(): array
@@ -207,6 +224,9 @@ trait FiltersTestTrait
                 ['isAdult' => false],
                 ['M000012'],
             ],
+
+            [self::getInactiveFiltersTestSet(), ['inactive' => []], ['ACTIVE1']],
+            [self::getInactiveFiltersTestSet(), ['inactive' => ['.']], ['ACTIVE1', 'INACTIV']],
 
             [
                 self::getCombinedFiltersTestSet(),
@@ -252,7 +272,7 @@ trait FiltersTestTrait
         ];
     }
 
-    private function artisan(string $makerIdAndName, string $country, string $state, string $languages, string $styles, string $features, string $orderTypes, string $productionModels, string $openFor, string $speciesDoes, string $paymentPlans, bool $nsfw, bool $worksWithMinors, string $otherStyles = '', string $otherFeatures = '', string $otherOrderTypes = '', string $speciesDoesnt = ''): Artisan
+    private function artisan(string $makerIdAndName, string $country, string $state, string $languages, string $styles, string $features, string $orderTypes, string $productionModels, string $openFor, string $speciesDoes, string $paymentPlans, bool $nsfw, bool $worksWithMinors, string $otherStyles = '', string $otherFeatures = '', string $otherOrderTypes = '', string $speciesDoesnt = '', string $inactiveReason = ''): Artisan
     {
         return Artisan::new()
             ->setMakerId($makerIdAndName)
@@ -276,6 +296,7 @@ trait FiltersTestTrait
             ->setOtherFeatures($otherFeatures)
             ->setOtherOrderTypes($otherOrderTypes)
             ->setSpeciesDoesnt($speciesDoesnt)
+            ->setInactiveReason($inactiveReason)
         ;
     }
 }

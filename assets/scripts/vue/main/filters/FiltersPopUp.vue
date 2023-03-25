@@ -69,6 +69,8 @@ export default class FiltersPopUp extends Vue {
           'SpeciesHelp', Static.getFiltersOptions().species),
       new Filter('paymentPlans', 'Payment plans', 'MultiselectFilter',
           'PaymentPlansHelp', Static.getFiltersOptions().paymentPlans),
+      new Filter('inactive', 'Inactive', 'MultiselectFilter',
+          'InactiveHelp', Static.getFiltersOptions().inactive),
     ]);
 
     this.filters.forEach(filter => filter.restoreChoices());
