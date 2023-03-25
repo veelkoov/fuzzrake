@@ -23,6 +23,7 @@ class RequestParser
         'openFor',
         'species',
         'paymentPlans',
+        'inactive',
     ];
 
     private const BOOLEANS = [
@@ -62,6 +63,7 @@ class RequestParser
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
             $booleans['isAdult'],
             $booleans['wantsSfw'],
+            contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
         ));
     }
 

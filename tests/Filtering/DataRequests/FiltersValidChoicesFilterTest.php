@@ -41,7 +41,7 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
             ['Standard commissions', '?', 'Waffles', '*'],
             ['Pancakes', '!', '-', 'Kettles', '*'],
             ['Birds', '?', 'Furniture', '*'],
-            false, false, false, false, false);
+            false, false, false, false, false, false);
 
         $result = $subject->getOnlyValidChoices($choices);
 

@@ -29,6 +29,7 @@ export type FiltersOptions = {
     'countries': CountriesOptions,
     'states': MultiselectOptions,
     'species': SpeciesOptions,
+    'inactive': MultiselectOptions,
 };
 
 export default abstract class Static {

@@ -45,6 +45,7 @@ class FiltersService
             $this->getCountriesFilterData(),
             $this->artisanRepository->getDistinctStatesToCountAssoc(),
             $this->getSpeciesFilterData(),
+            $this->getInactiveFilterData(),
         );
     }
 
@@ -117,5 +118,15 @@ class FiltersService
         }
 
         return new FilterData($result);
+    }
+
+    /**
+     * @throws UnexpectedResultException
+     */
+    private function getInactiveFilterData(): FilterData
+    {
+        $inactiveCount = $this->artisanRepository->countAll() - $this->artisanRepository->countActive();
+
+        return new FilterData(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
     }
 }

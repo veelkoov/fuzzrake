@@ -59,6 +59,7 @@ class FiltersValidChoicesFilter
             $choices->wantsNoPaymentPlans,
             $choices->isAdult,
             $choices->wantsSfw,
+            $choices->wantsInactive,
         );
     }
 

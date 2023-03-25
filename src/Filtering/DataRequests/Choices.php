@@ -36,6 +36,7 @@ class Choices implements CacheDigestProvider
         public readonly bool $wantsNoPaymentPlans,
         public readonly bool $isAdult,
         public readonly bool $wantsSfw,
+        public readonly bool $wantsInactive,
     ) {
     }
 
