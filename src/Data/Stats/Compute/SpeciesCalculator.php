@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Data\Stats\Compute;
 
-use App\Data\Species\CreatorSpeciesResolver;
 use App\Data\Species\Specie;
 use App\Data\Species\SpeciesList;
 use App\Data\Stats\SpeciesStats;
+use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 
@@ -15,12 +15,10 @@ class SpeciesCalculator
 {
     private readonly SpeciesList $completeList;
     private readonly SpeciesStatsMutable $result;
-    private readonly CreatorSpeciesResolver $resolver;
 
     public function __construct(SpeciesList $completeList)
     {
         $this->completeList = clone $completeList;
-        $this->resolver = new CreatorSpeciesResolver($this->completeList);
 
         $this->result = new SpeciesStatsMutable();
 
@@ -63,10 +61,19 @@ class SpeciesCalculator
                     $this->result->get($this->getSpecie($affectedSpecieName))->incIndirectDoesnt();
                 }
             }
+        }
 
-            $resolvedDoes = $this->resolver->resolveDoes($speciesDoes, $speciesDoesnt);
-            foreach ($resolvedDoes as $specieName) {
-                $this->result->get($this->getSpecie($specieName))->incRealDoes();
+        foreach ($this->completeList->getAll() as $specie) {
+            if ($specie->isHidden()) {
+                continue;
+            }
+
+            $filter = new SpeciesFilter([$specie->getName()], $this->completeList);
+
+            foreach ($artisans as $artisan) {
+                if ($filter->matches($artisan)) {
+                    $this->result->get($specie)->incRealDoes();
+                }
             }
         }
 

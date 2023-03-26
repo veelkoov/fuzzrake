@@ -42,7 +42,9 @@ class SpeciesList
     }
 
     /**
-     * @return list<Specie>
+     * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getAll(): array
     {
