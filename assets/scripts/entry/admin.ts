@@ -8,6 +8,16 @@ jQuery(function () {
         const field = $valueRow.data('field');
         const value = $valueRow.data('value');
 
-        directivesTextarea.val(`${directivesTextarea.val()}set ${field} "${value}"\n`);
+        const currentDirectives = directivesTextarea.val().toString().trimEnd();
+
+        directivesTextarea.val(`${currentDirectives}\nset ${field} "${value}"\n`);
+    });
+
+    jQuery('#open-all-new-links').on('click', function (event) {
+        event.preventDefault();
+
+       jQuery('tr.after.changing[data-field^="URL_"]')
+           .map((_, domElement) => domElement.dataset['value'].split('\n'))
+           .each((index, url) => { window.open(url, `url_window_${index}`); });
     });
 });

@@ -72,7 +72,7 @@ class Fixer
 
             Field::FORMER_MAKER_IDS, Field::OTHER_FEATURES, Field::OTHER_ORDER_TYPES, Field::OTHER_STYLES, Field::URL_PHOTOS, Field::URL_MINIATURES, => $this->freeListFixer,
 
-            Field::URL_COMMISSIONS, Field::URL_DEVIANTART, Field::URL_FACEBOOK, Field::URL_FAQ, Field::URL_FUR_AFFINITY, Field::URL_FURSUITREVIEW, Field::URL_INSTAGRAM, Field::URL_PRICES, Field::URL_TUMBLR, Field::URL_TWITTER, Field::URL_YOUTUBE, Field::URL_WEBSITE, Field::URL_QUEUE, Field::URL_ETSY, Field::URL_FURTRACK => $this->urlFixer,
+            Field::URL_COMMISSIONS, Field::URL_DEVIANTART, Field::URL_FACEBOOK, Field::URL_FAQ, Field::URL_FUR_AFFINITY, Field::URL_FURSUITREVIEW, Field::URL_INSTAGRAM, Field::URL_PRICES, Field::URL_TUMBLR, Field::URL_TWITTER, Field::URL_YOUTUBE, Field::URL_WEBSITE, Field::URL_QUEUE, Field::URL_ETSY, Field::URL_FURTRACK, Field::URL_LINKLIST => $this->urlFixer,
 
             Field::SINCE               => $this->sinceFixer,
             Field::COUNTRY             => $this->countryFixer,

@@ -3,12 +3,14 @@ parameters:
     regex_prefix: '^'
     regex_suffix: '$'
     replacements:
+      '(.+)\?fbclid=[^&]+(.+)?': '$1?$2'
+
       'no': ''
 
       '(?:https?://)?(?:www\.)?instagram\.com/(.+)?': 'https://www.instagram.com/$1'
       'https://www\.instagram\.com/([^?/]+)/?(?:\?.+)?': 'https://www.instagram.com/$1/'
 
-      '(?:(?:(?:https?://)?(?:www\.|mobile\.)?twitter(?:\.com)?/)|@)([^/?]+)/?(?:\?(?:lang=[a-z]{2,3}|s=\d+))?': 'https://twitter.com/$1'
+      '(?:https?://)?(?:www\.|mobile\.)?twitter\.com/([^/?]+).*': 'https://twitter.com/$1'
 
       '(?:https?://)?(?:www\.|m\.|business\.)?facebook\.com/(pg/)?([^/?]+)(/posts|/about)?/?(\?(?!id=)[a-z_]+=[a-z_0-9]+)?': 'https://www.facebook.com/$1$2$3/'
       'https://www\.facebook\.com/profile\.php\?id=(\d+)&ref=tn_tnmn': 'https://www.facebook.com/profile.php?id=$1'
@@ -26,3 +28,5 @@ parameters:
       '(?:https?://)?(?:www\.)?fursuitreview\.com/maker/([^/]+)/': 'https://fursuitreview.com/m/$1/'
 
       '(?:https?://)?(?:www\.)?furtrack\.com/user/([^/]+)(?:/uploads|/)?': 'https://www.furtrack.com/user/$1'
+
+      '(.+)\?': '$1'
