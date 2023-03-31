@@ -37,20 +37,19 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 
-<body class="{% block body_class %}{% endblock %}">
+<body>
+    {% include '_menu.html.twig' %}
 
-{% include '_menu.html.twig' %}
+    <div class="container">
+        {% block body %}{% endblock %}
 
-<div class="container">
-    {% block body %}{% endblock %}
+        <hr class="my-5" />
 
-    <hr class="my-5" />
+        {% include '_footer.html.twig' %}
+    </div>
 
-    {% include '_legal.html.twig' %}
-</div>
-
-{% block javascripts %}
-    {{ encore_entry_script_tags('general') }}
-{% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('general') }}
+    {% endblock %}
 </body>
 </html>

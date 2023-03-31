@@ -22,12 +22,12 @@ class FeedbackType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $router = self::getRouter($options);
-        $infoPageUrl = htmlspecialchars($router->generate(RouteName::INFO, ['_fragment' => 'contact']));
+        $contactPageUrl = htmlspecialchars($router->generate(RouteName::CONTACT));
 
         $builder
             ->add('noContactBack', CheckboxType::class, [
                 'label'     => 'I acknowledge and accept the fact, that I will NOT be contacted back.',
-                'help'      => "If you need a response, please contact me using any means listed on <a href=\"$infoPageUrl\">this page</a>.",
+                'help'      => "If you need a response, please contact me using any means listed on <a href=\"$contactPageUrl\">this page</a>.",
                 'help_html' => true,
             ])
             ->add('maker', TextType::class, [
