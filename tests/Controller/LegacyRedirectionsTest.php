@@ -31,13 +31,16 @@ class LegacyRedirectionsTest extends WebTestCaseWithEM
         self::assertSelectorTextContains($checkedSelector, $expectedText);
     }
 
-    public function legacyRedirectionDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return array<string, array{string, string, string}>
+     */
+    public function legacyRedirectionDataProvider(): array
     {
         return [
             '/index.html'       => ['/index.html', '#main-page-intro h4', 'Fursuit makers database'],
             '/new.html'         => ['/new.html', 'h1', 'Recently added makers/studios'],
             '/events.html'      => ['/events.html', 'p', 'See all recently added makers'],
-            '/info.html'        => ['/info.html', 'h1', 'General information'],
+            '/info.html'        => ['/info.html', 'h1', 'general information'],
             '/tracking.html'    => ['/tracking.html', 'h1', 'Automated tracking and status updates'],
             '/maker_ids.html'   => ['/maker_ids.html', 'h1', 'Fursuit makers IDs'],
             '/donate.html'      => ['/donate.html', 'h1', 'TL;DR'],

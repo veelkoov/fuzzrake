@@ -10,7 +10,7 @@ use Facebook\WebDriver\Exception\WebDriverException;
 /**
  * @large
  */
-class InfoPageTest extends PantherTestCaseWithEM
+class ContactPageTest extends PantherTestCaseWithEM
 {
     /**
      * @throws WebDriverException
@@ -18,7 +18,7 @@ class InfoPageTest extends PantherTestCaseWithEM
     public function testRecaptchaWorksAndEmailAddressAppears(): void
     {
         $client = static::createPantherClient();
-        $client->request('GET', '/index.php/info');
+        $client->request('GET', '/index.php/contact');
 
         // E-mail address link is not visible by default
         self::assertSelectorNotExists('#protected-contact-info a');
