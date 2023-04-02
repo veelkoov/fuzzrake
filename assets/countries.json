@@ -101,6 +101,11 @@
     "region": "Europe"
   },
   {
+    "name": "Japan",
+    "code": "JP",
+    "region": "Africa & Asia"
+  },
+  {
     "name": "Mexico",
     "code": "MX",
     "region": "Americas"
