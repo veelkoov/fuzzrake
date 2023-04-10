@@ -21,7 +21,6 @@
 
 ### Rules thoughts dump
 
-
 * Inclusion requirements
   * Problems:
     * Maker has only a social media account, and they e.g. share work of others (*as a requirement to enter their raffle, not steal/impersonate*), a social account filled with non-fursuit-related stuff (hard to find the right photo)
@@ -35,3 +34,16 @@
   * Possibly require one website dedicated (at leas mostly) to the fursuit stuff?
     * Allow marking "primary fursuit websites"?
   * Allow posting other stuff to let show their talents and possibly attitude/values?
+
+* Do not allow to mention other makers studios
+  * Could be used to fool search function
+    * Which could mislead the user
+  * Would require some kind of verification
+    * Limited workforce
+  * The other studio/maker could allow this, but
+    * That increases communication and process
+      * Limited workforce
+
+* Using photos with creation of other makers
+  * Could mislead a user
+  * Would require verification from the user
