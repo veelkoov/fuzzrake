@@ -28,5 +28,6 @@ parameters:
       '(?:https?://)?(?:www\.)?fursuitreview\.com/maker/([^/]+)/': 'https://fursuitreview.com/m/$1/'
 
       '(?:https?://)?(?:www\.)?furtrack\.com/user/([^/]+)(?:/uploads|/)?': 'https://www.furtrack.com/user/$1'
+      'https://www.furtrack.com/index/maker:[^/]+/(\d+)': 'https://www.furtrack.com/p/$1'
 
       '(.+)\?': '$1'
