@@ -45,6 +45,14 @@ class SpeciesService
         return $this->getBuilder()->getCompleteList();
     }
 
+    /**
+     * @return list<Specie>
+     */
+    public function getCompleteTree(): array
+    {
+        return $this->getBuilder()->getCompleteTree();
+    }
+
     public function getListFixerReplacements(): Replacements
     {
         return new Replacements($this->speciesDefinitions['replacements'], 'i',

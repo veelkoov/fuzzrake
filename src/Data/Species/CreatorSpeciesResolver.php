@@ -76,6 +76,9 @@ class CreatorSpeciesResolver
         $result = Vec\map($result, fn (array $specie) => $specie[0]->isRoot() && $specie[0]->isLeaf()
             ? [$this->other, $specie[1]] : [$specie[0], $specie[1]]);
 
+        // Remove any "doesn't do" "Other"
+        $result = Vec\filter($result, fn (array $specie) => $this->other !== $specie[0] || true === $specie[1]);
+
         usort($result, function (array $pair1, array $pair2) {
             $depthDiff = (int) ($pair1[0]->getDepth() - $pair2[0]->getDepth()); // Redundant cast to (int) for PHPStan
 

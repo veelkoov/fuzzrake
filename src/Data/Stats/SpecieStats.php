@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Data\Stats;
 
+use App\Data\Species\Specie;
 use App\Data\Stats\Compute\SpecieStatsMutable;
 
 readonly class SpecieStats
 {
+    public Specie $specie;
+
     public int $directDoes;
     public int $directDoesnt;
     public int $directTotal;
@@ -25,6 +28,8 @@ readonly class SpecieStats
     public function __construct(
         SpecieStatsMutable $source,
     ) {
+        $this->specie = $source->specie;
+
         $this->directDoes = $source->getDirectDoes();
         $this->directDoesnt = $source->getDirectDoesnt();
         $this->directTotal = $source->getDirectTotal();

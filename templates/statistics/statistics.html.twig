@@ -113,21 +113,21 @@
                         <td>
                             {{ specieStats.specie.name }}
 
-                            {% if 0 != specieStats.totalDoesCount %}
-                                <span class="text-success">+{{ specieStats.totalDoesCount }}</span>
+                            {% if 0 != specieStats.totalDoes %}
+                                <span class="text-success">+{{ specieStats.totalDoes }}</span>
                             {% endif %}
 
-                            {% if 0 != specieStats.totalDoesntCount %}
-                                <span class="text-danger">-{{ specieStats.totalDoesntCount }}</span>
+                            {% if 0 != specieStats.totalDoesnt %}
+                                <span class="text-danger">-{{ specieStats.totalDoesnt }}</span>
                             {% endif %}
                         </td>
-                        <td>{{ specieStats.totalCount }}</td>
-                        <td>{{ specieStats.directTotalCount }}</td>
-                        <td>{{ specieStats.indirectTotalCount }}</td>
-                        <td>{{ specieStats.directDoesCount }}</td>
-                        <td>{{ specieStats.directDoesntCount }}</td>
-                        <td>{{ specieStats.indirectDoesCount }}</td>
-                        <td>{{ specieStats.indirectDoesntCount }}</td>
+                        <td>{{ specieStats.total }}</td>
+                        <td>{{ specieStats.directTotal }}</td>
+                        <td>{{ specieStats.indirectTotal }}</td>
+                        <td>{{ specieStats.directDoes }}</td>
+                        <td>{{ specieStats.directDoesnt }}</td>
+                        <td>{{ specieStats.indirectDoes }}</td>
+                        <td>{{ specieStats.indirectDoesnt }}</td>
                     </tr>
                 {% endif %}
             {% endfor %}

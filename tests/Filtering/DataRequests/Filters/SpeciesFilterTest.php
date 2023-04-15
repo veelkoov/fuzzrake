@@ -43,7 +43,17 @@ class SpeciesFilterTest extends TestCase
             ["Canines\nFelines", 'Tigers', ['Mammals'], true],
             ["Canines\nFelines", 'Tigers', ['Canines'], true],
             ["Canines\nFelines", 'Tigers', ['Wolves'],  true],
+
             ["Canines\nFelines", 'Tigers', ['Tigers'],  false],
+            ["Canines\nFelines", 'Tigers', ['Felines'], true],
+
+            ['Tigers', '',                   ['Other'], false],
+            ["Tigers\nOther", '',            ['Other'], true],
+            ["Tigers\nOtherXYZ", '',         ['Other'], true],
+
+            ['Tigers', 'Other',              ['Other'], false],
+            ['Tigers', 'OtherXYZ',           ['Other'], false],
+            ["Tigers\nOtherABC", 'OtherXYZ', ['Other'], true],
         ];
     }
 

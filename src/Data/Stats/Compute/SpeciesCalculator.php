@@ -13,16 +13,17 @@ use App\Utils\StringList;
 
 class SpeciesCalculator
 {
-    private readonly SpeciesList $completeList;
+    private readonly SpeciesList $supplementedList;
     private readonly SpeciesStatsMutable $result;
 
-    public function __construct(SpeciesList $completeList)
-    {
-        $this->completeList = clone $completeList;
+    public function __construct(
+        private readonly SpeciesList $completeList
+    ) {
+        $this->supplementedList = clone $completeList;
 
         $this->result = new SpeciesStatsMutable();
 
-        foreach ($this->completeList->getAll() as $specie) {
+        foreach ($this->supplementedList->getAll() as $specie) {
             $this->result->get($specie);
         }
     }
@@ -63,7 +64,7 @@ class SpeciesCalculator
             }
         }
 
-        foreach ($this->completeList->getAll() as $specie) {
+        foreach ($this->supplementedList->getAll() as $specie) {
             if ($specie->isHidden()) {
                 continue;
             }
@@ -90,21 +91,17 @@ class SpeciesCalculator
      */
     private function getSpecieNamesAffectedInStats(string $specieName): array
     {
-        if (!$this->completeList->hasName($specieName)) {
-            return [];
-        }
-
-        $ancestors = $this->completeList->getByName($specieName)->getAncestors();
+        $ancestors = $this->supplementedList->getByName($specieName)->getAncestors();
 
         return array_map(fn (Specie $specie) => $specie->getName(), $ancestors);
     }
 
     private function getSpecie(string $name): Specie
     {
-        $specie = $this->completeList->getByNameOrCreate($name, true);
+        $specie = $this->supplementedList->getByNameOrCreate($name, true);
 
         if ($specie->isHidden() && [] === $specie->getParents()) {
-            $specie->addParent($this->completeList->getByName('Other')); // grep-species-other
+            $specie->addParent($this->supplementedList->getByName('Other')); // grep-species-other
         }
 
         return $specie;

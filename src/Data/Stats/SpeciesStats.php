@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace App\Data\Stats;
 
 use App\Data\Stats\Compute\SpeciesStatsMutable;
+use ArrayIterator;
+use IteratorAggregate;
+use Traversable;
 
-readonly class SpeciesStats
+/**
+ * @implements IteratorAggregate<string, SpecieStats>
+ */
+readonly class SpeciesStats implements IteratorAggregate
 {
     /**
      * @var array<string, SpecieStats>
@@ -29,5 +35,13 @@ readonly class SpeciesStats
     public function get(string $name): ?SpecieStats
     {
         return $this->nameToStats[$name] ?? null;
+    }
+
+    /**
+     * @return Traversable<string, SpecieStats>
+     */
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->nameToStats);
     }
 }
