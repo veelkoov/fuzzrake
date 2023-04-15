@@ -7,8 +7,6 @@ parameters:
     valid_choices:
       "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
         "Real life animals":
-          Birds:
-
           'i_Existing species': {}
 
           Fishes:
@@ -85,21 +83,43 @@ parameters:
             Insects: {}
 
           Amphibians:
+            'Axolotls': {}
+
+          Birds: {}
 
         "Fantasy creatures":
           'i_Any mythical or unique species': {}
+          'i_Avalis': {}
+          'i_Demon cats': {}
           'i_Fantasy / mythical creatures': {}
           'i_Fantasy': {}
           'i_Fantasy/original species': {}
           'i_Mythical': {}
           'i_Please inquire about fantasy creatures': {}
+          'i_Specialises in mythical creatures/monsters':
 
-          'i_Avalis': {}
-          'i_Demon cats': {}
           Dragons:
             "Angel Dragons":
-              "Dutch Angel Dragons": {}
+              'Dutch Angel Dragons':
+                'i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)': {}
             "i_*Extremely intricate dragons": {}
+          Robotic/cybernetic/mechanical:
+            'i_Any mechanical/inorganic species': {}
+            'i_Anything electronic': {}
+            'i_Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)': {}
+            'i_Ask for mechanic/electronic creatures': {}
+            'i_Cyborgs': {}
+            'i_Full robospecies': {}
+            'i_Mechanical species (protogens and the like)': {}
+            'i_Robots': {}
+            'i_Robotics': {}
+            'i_Species with robotic/cybernetic, or otherwise mechanical appearance': {}
+            'i_3D printing & electronics required species (e.g. Protogens, Skullies)': {}
+            Ampwaves: {}
+            Primagens: {}
+            Protogens:
+              'i_Protogens (for paws and tail ONLY)': {}
+            Synths: {}
           Crux:
           Drekkubuses:
           "Ghost Bones Dragon":
@@ -109,21 +129,6 @@ parameters:
           MLP:
           Monsters:
           Pokemons:
-          Robotic/cybernetic/mechanical:
-            Ampwaves: {}
-            'i_Any mechanical/inorganic species': {}
-            'i_Anything electronic': {}
-            'i_Ask for mechanic/electronic creatures': {}
-            'i_Cyborgs': {}
-            'i_Full robospecies': {}
-            'i_Mechanical species (protogens and the like)': {}
-            Primagens: {}
-            Protogens: {}
-            'i_Robots': {}
-            'i_Robotics': {}
-            Synths: {}
-            'i_Species with robotic/cybernetic, or otherwise mechanical appearance': {}
-            'i_3D printing & electronics required species (e.g. Protogens, Skullies)': {}
           Sergals:
           'i_Skull-*':
             'i_Skull':
@@ -146,11 +151,6 @@ parameters:
           MLP: {}
           "i_Pony": # Does it mean lil horse or MLP?
 
-        Hybrids:
-          "i_All hybrids":
-          "i_Hybrids of these":
-          "i_Mixed species":
-
         Scalies: # Fill
           Dragons: {}
           'i_Most scalies': {}
@@ -158,9 +158,9 @@ parameters:
           'i_Some scalies': {}
 
         Winged: # Fill
+          Dragons: {} # Has descendants
           Bats: {}
           Birds: {}
-          Dragons: {}
           Gryphons: {}
 
         With antlers: # Fill
@@ -169,6 +169,11 @@ parameters:
 
         With beak:
           Birds: {}
+
+        Hybrids:
+          'i_All hybrids':
+          'i_Hybrids of these':
+          'i_Mixed species':
 
       Other: # grep-species-other
         "i_Copyright-related classification?": # FIXME
@@ -188,16 +193,12 @@ parameters:
         "i_Other/Unclassified": # Just to silence the validator, to be fixed/approved/categorized later
           "i_Any animal and most mysticals (dragons*, serials, gryphons)":
           "i_Rare species":
-
-          "i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)": # FIXME: Moving this under "DADs" causes the filter subcategory arrow-button to show up and do nothing, see also #89
-          "i_Protogens (for paws and tail ONLY)": # FIXME: see above
+          'i_Uncommon species':
 
           "i_Some video game characters":
           "i_Most any species": # ?!
 
           "i_Anything cultural appropriation":
-          "i_Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
-          "i_Axolotls":
           "i_Basic canines, vulpines, angel dragons. (Will consider if unique)":
           "i_Cervidae/deer family species with large antlers":
           "i_Critters":
@@ -213,27 +214,25 @@ parameters:
             'i_I am willing to do all types of furry species at the moment': {}
             "i_I'm happy to make most species as long as they're covered in fur":
             "i_Most anything covered in fur":
+          'i_I can also do velvet or minky skinned characters':
+          'i_Most furless/featherless species':
 
           "i_Furbies":
           "i_Gem raptors":
           "i_Humanoids":
             "i_Humans":
-          "i_I can also do velvet or minky skinned characters":
           "i_I make exceptions on rare occasions":
           "i_Invertibrates":
           'i_I will not do anything representing satanism': {}
-          "i_Most furless/featherless species":
           "i_No airbrushed / gradient markings on any species (all work is sewn)":
 
           "i_Raptor masks":
 
           'i_Saber-toothed tiger': {}
-          "i_Specialises in mythical creatures/monsters":
           "i_Species with horizontal pupils":
           "i_Things of an adult nature":
           "i_Unsafe creations":
 
-          "i_Uncommon species":
           "i_Will not work with sequin for characters":
 
     regex_prefix: '(?<=^|\n)'
