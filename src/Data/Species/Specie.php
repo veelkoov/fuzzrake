@@ -23,7 +23,7 @@ class Specie implements Stringable
 
     public function __construct(
         public readonly string $name,
-        public bool $hidden,
+        private bool $hidden,
     ) {
     }
 

@@ -7,7 +7,7 @@ namespace App\Tests\TestUtils\Cases;
 use App\Tests\TestUtils\Cases\Traits\EntityManagerTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-abstract class WebTestCaseWithEM extends WebTestCase // TODO: Why is this slower than Panther tests?
+abstract class WebTestCaseWithEM extends WebTestCase
 {
     use EntityManagerTrait;
 
