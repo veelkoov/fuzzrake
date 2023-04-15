@@ -31,7 +31,7 @@ class AdminExtensions extends AbstractExtension
         private readonly Validator $validator,
         private readonly SubmissionRepository $submissionRepository,
     ) {
-        $this->linkPattern = pattern('https?://[^ ,;\n<>"]+', 'i');
+        $this->linkPattern = pattern('https?://[^ ,\n<>"]+', 'i');
     }
 
     public function getFilters(): array
@@ -74,8 +74,9 @@ class AdminExtensions extends AbstractExtension
         if (!$field->isList()) {
             $value = $this->getOptionallyRedactedValue($field, $subject);
             $class = "text-$classSuffix";
+            $text = htmlspecialchars(StrUtils::asStr($value));
 
-            return '<span class="'.$class.'">'.htmlspecialchars(StrUtils::asStr($value)).'</span>';
+            return "<span class=\"$class\">$text</span>";
         }
 
         $bsClass = "badge-outline-$classSuffix";
@@ -98,9 +99,9 @@ class AdminExtensions extends AbstractExtension
     public function linkUrls(string $input): string
     {
         return $this->linkPattern->replace($input)->callback(function (Detail $detail): string {
-            $url = htmlspecialchars($detail->text());
+            $url = $detail->text();
 
-            return "<a href=\"$url\">$url</a>";
+            return "<a href=\"$url\" target=\"_blank\">$url</a>";
         });
     }
 

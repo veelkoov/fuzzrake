@@ -11,64 +11,58 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class PagesControllerTest extends WebTestCase
 {
-    public function testInfo(): void
+    /**
+     * @dataProvider pageDataProvider
+     *
+     * @param array<string, string> $texts
+     */
+    public function testPage(string $uri, array $texts): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
-        $client->request('GET', '/info');
+        $client->request('GET', $uri);
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h3#contact', 'Contact maintainer');
-        static::assertSelectorTextContains('h3#data-updates', 'How to add/update your studio/maker info');
+        self::assertEquals(200, $client->getResponse()->getStatusCode());
+
+        foreach ($texts as $selector => $text) {
+            self::assertSelectorTextContains($selector, $text);
+        }
     }
 
-    public function testTracking(): void
+    /**
+     * @return array<string, array{string, array<string, string>}>
+     */
+    public function pageDataProvider(): array
     {
-        $client = static::createClient();
+        return [
+            'contact' => ['/contact', [
+                'h1' => 'Contact',
+            ]],
 
-        $client->request('GET', '/tracking');
+            'info' => ['/info', [
+                'h3#contact' => 'Contact maintainer',
+                'h3#data-updates' => 'How to add/update your studio/maker info',
+            ]],
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Automated tracking and status updates');
-    }
+            'tracking' => ['/tracking', [
+                'h1' => 'Automated tracking and status updates',
+            ]],
 
-    public function testMakerIds(): void
-    {
-        $client = static::createClient();
+            'maker-ids' => ['/maker-ids', [
+                'h1' => 'Fursuit makers IDs',
+            ]],
 
-        $client->request('GET', '/maker-ids');
+            'donate' => ['/donate', [
+                'h2' => 'Please donate',
+            ]],
 
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Fursuit makers IDs');
-    }
+            'rules' => ['/rules', [
+                'h1' => 'Rules for makers/studios',
+            ]],
 
-    public function testDonate(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/donate');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h2', 'Please donate');
-    }
-
-    public function testRules(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/rules');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'Rules for makers/studios');
-    }
-
-    public function testShouldKnow(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/should-know');
-
-        static::assertEquals(200, $client->getResponse()->getStatusCode());
-        static::assertSelectorTextContains('h1', 'What you should know');
+            'should-know' => ['/should-know', [
+                'h1' => 'What you should know',
+            ]],
+        ];
     }
 }

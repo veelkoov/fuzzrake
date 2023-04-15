@@ -34,9 +34,9 @@ class RestApiController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route(path: '/api/info/email.part.html')]
+    #[Route(path: '/api/contact/email-part.html')]
     #[Cache(maxage: 0, public: false)]
-    public function info_emailHtml(Request $request, string $contactEmail): Response
+    public function contactEmailHtml(Request $request, string $contactEmail): Response
     {
         $ok = $this->captcha->isValid($request, 'info_emailHtml');
 

@@ -17,5 +17,6 @@
     name: "{{ php_fpm_container_name }}"
     published_ports: "{{ php_fpm_container_port }}:9000"
     restart_policy: unless-stopped
+    user: '1000:1000'
     volumes:
       - "{{ deployment_path }}:/var/www/html"

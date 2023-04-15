@@ -59,6 +59,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
                     'isNew'          => $state->isNew() ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
                     'contactAllowed' => $isContactAllowed ? ($state->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                    // TODO 'submissionId'   =>
                 ]);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));

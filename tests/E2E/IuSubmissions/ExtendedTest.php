@@ -180,7 +180,7 @@ class ExtendedTest extends AbstractTestWithEM
         self::setValuesInForm($form, $newData, true);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('h4', 'Your submission has been recorded');
+        self::assertIuSubmittedAnyResult($client);
     }
 
     private static function getIuFormUrlForMakerId(string $urlMakerId): string

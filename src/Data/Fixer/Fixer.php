@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Fixer;
 
-use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Field as F;
 use App\Data\Definitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
@@ -16,6 +16,7 @@ class Fixer
         private readonly FreeListFixer $freeListFixer,
         private readonly SpeciesListFixer $speciesListFixer,
         private readonly UrlFixer $urlFixer,
+        private readonly UrlListFixer $urlListFixer,
         private readonly CountryFixer $countryFixer,
         private readonly LanguagesFixer $languagesFixer,
         private readonly SinceFixer $sinceFixer,
@@ -38,7 +39,7 @@ class Fixer
         return $result;
     }
 
-    public function fix(Artisan $artisan, Field $field): void
+    public function fix(Artisan $artisan, F $field): void
     {
         $value = $artisan->get($field);
 
@@ -47,28 +48,28 @@ class Fixer
         }
     }
 
-    private function getFixer(Field $field): FixerInterface
+    private function getFixer(F $field): FixerInterface
     {
         return match ($field) {
-            Field::NAME, Field::FORMERLY, Field::CITY, Field::NOTES => $this->stringFixer,
+            F::NAME, F::FORMERLY, F::CITY, F::NOTES => $this->stringFixer,
 
-            Field::SPECIES_DOES, Field::SPECIES_DOESNT => $this->speciesListFixer,
+            F::SPECIES_DOES, F::SPECIES_DOESNT => $this->speciesListFixer,
 
-            Field::PRODUCTION_MODELS, Field::FEATURES, Field::STYLES, Field::ORDER_TYPES => $this->definedListFixer,
+            F::PRODUCTION_MODELS, F::FEATURES, F::STYLES, F::ORDER_TYPES => $this->definedListFixer,
 
-            Field::FORMER_MAKER_IDS, Field::OTHER_FEATURES, Field::OTHER_ORDER_TYPES, Field::OTHER_STYLES, Field::URL_PHOTOS, Field::URL_MINIATURES, => $this->freeListFixer,
+            F::FORMER_MAKER_IDS, F::OTHER_FEATURES, F::OTHER_ORDER_TYPES, F::OTHER_STYLES, F::URL_MINIATURES, => $this->freeListFixer,
 
-            Field::URL_COMMISSIONS, Field::URL_DEVIANTART, Field::URL_FACEBOOK, Field::URL_FAQ, Field::URL_FUR_AFFINITY, Field::URL_FURSUITREVIEW, Field::URL_INSTAGRAM, Field::URL_PRICES, Field::URL_TUMBLR, Field::URL_TWITTER, Field::URL_YOUTUBE, Field::URL_WEBSITE, Field::URL_QUEUE, Field::URL_ETSY, Field::URL_FURTRACK => $this->urlFixer,
+            F::URL_COMMISSIONS, F::URL_DEVIANTART, F::URL_FACEBOOK, F::URL_FAQ, F::URL_FUR_AFFINITY, F::URL_FURSUITREVIEW, F::URL_INSTAGRAM, F::URL_PRICES, F::URL_TUMBLR, F::URL_TWITTER, F::URL_YOUTUBE, F::URL_WEBSITE, F::URL_QUEUE, F::URL_ETSY, F::URL_FURTRACK, F::URL_LINKLIST, F::URL_PHOTOS => ($field->isList() ? $this->urlListFixer : $this->urlFixer),
 
-            Field::SINCE               => $this->sinceFixer,
-            Field::COUNTRY             => $this->countryFixer,
-            Field::STATE               => $this->stateFixer,
-            Field::LANGUAGES           => $this->languagesFixer,
-            Field::PAYMENT_PLANS       => $this->payPlanFixer,
-            Field::PAYMENT_METHODS     => $this->payMethodFixer,
-            Field::CURRENCIES_ACCEPTED => $this->currencyFixer,
+            F::SINCE               => $this->sinceFixer,
+            F::COUNTRY             => $this->countryFixer,
+            F::STATE               => $this->stateFixer,
+            F::LANGUAGES           => $this->languagesFixer,
+            F::PAYMENT_PLANS       => $this->payPlanFixer,
+            F::PAYMENT_METHODS     => $this->payMethodFixer,
+            F::CURRENCIES_ACCEPTED => $this->currencyFixer,
 
-            default                    => $this->noopFixer,
+            default => $this->noopFixer,
         };
     }
 }
