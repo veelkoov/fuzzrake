@@ -97,7 +97,7 @@ class CreatorSpeciesResolver
             ??= Vec\map($self->getSelfAndDescendants(), fn (Specie $specie) => $specie->name);
     }
 
-    private function getSpecie(string $specieName): Specie
+    private function getSpecieOrOtherForUnusual(string $specieName): Specie
     {
         if ($this->species->hasName($specieName)) {
             return $this->species->getByName($specieName);

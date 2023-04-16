@@ -50,6 +50,14 @@ class SpeciesService
     {
         $result = (new SpeciesBuilder($this->speciesDefinitions['valid_choices']))->get();
 
+        // No specie is allowed to be both under "Most species" and "Other"
+        $this->assureNoSpecieHasTwoAncestorRoots($result);
+
+        return $result;
+    }
+
+    private function assureNoSpecieHasTwoAncestorRoots(Species $result): void
+    {
         $speciesTrees = array_map(
             fn (Specie $specie) => $specie->getSelfAndDescendants(),
             $result->tree,
@@ -65,8 +73,6 @@ class SpeciesService
         if ([] !== $sharedSpecieNames) {
             throw new SharedRootSpecieException($sharedSpecieNames);
         }
-
-        return $result;
     }
 
     public function getStats(): SpeciesStats
