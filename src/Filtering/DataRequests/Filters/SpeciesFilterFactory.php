@@ -9,7 +9,7 @@ use App\Data\Species\SpeciesService;
 class SpeciesFilterFactory
 {
     public function __construct(
-        private readonly SpeciesService $speciesService,
+        private readonly SpeciesService $speciesSrv,
     ) {
     }
 
@@ -18,6 +18,6 @@ class SpeciesFilterFactory
      */
     public function get(array $wantedItems): SpeciesFilter
     {
-        return new SpeciesFilter($wantedItems, $this->speciesService->getCompleteList());
+        return new SpeciesFilter($wantedItems, $this->speciesSrv->getSpecies()->list);
     }
 }

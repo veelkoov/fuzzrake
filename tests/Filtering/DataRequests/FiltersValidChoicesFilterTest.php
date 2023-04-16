@@ -10,6 +10,9 @@ use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Exception;
 
+/**
+ * @medium
+ */
 class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
 {
     /**

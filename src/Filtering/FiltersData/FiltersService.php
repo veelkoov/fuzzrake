@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData;
 
 use App\Data\Species\SpeciesService;
-use App\Data\Stats\SpeciesStatsService;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\MutableSet;
@@ -25,7 +24,6 @@ class FiltersService
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly SpeciesService $species,
-        private readonly SpeciesStatsService $speciesStats,
     ) {
     }
 
@@ -78,7 +76,7 @@ class FiltersService
 
     private function getSpeciesFilterData(): FilterData
     {
-        return SpeciesFilterDataCalculator::from($this->species->getVisibleTree(), $this->speciesStats->getStats())->get();
+        return (new SpeciesFilterDataBuilder($this->species->getSpecies(), $this->species->getStats()))->get();
     }
 
     /**

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Stats;
+namespace App\Data\Species\Stats;
 
-use App\Data\Stats\Compute\SpeciesStatsMutable;
 use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
@@ -20,12 +19,12 @@ readonly class SpeciesStats implements IteratorAggregate
     private array $nameToStats;
     public int $unknownCount;
 
-    public function __construct(SpeciesStatsMutable $source)
+    public function __construct(MutableSpeciesStats $source)
     {
         $nameToStats = [];
 
         foreach ($source->getAll() as $specieStats) {
-            $nameToStats[$specieStats->specie->getName()] = new SpecieStats($specieStats);
+            $nameToStats[$specieStats->specie->name] = new SpecieStats($specieStats);
         }
 
         $this->unknownCount = $source->getUnknownCount();

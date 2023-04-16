@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Tests\Data\Species;
 
-use App\Data\Species\Specie;
+use App\Data\Species\Exceptions\RecursionSpecieException;
+use App\Data\Species\MutableSpecie;
 use Exception;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
 
 /**
  * @small
  */
-class SpecieTest extends TestCase
+class MutableSpecieTest extends TestCase
 {
     public function testChildrenParentsAncestorsDescendantsRootsAndLeavesWork(): void
     {
-        $root1 = new Specie('Root1', false);
-        $root2 = new Specie('Root2', false);
-        $middle = new Specie('Middle', false);
-        $leaf1 = new Specie('Leaf1', false);
-        $leaf2 = new Specie('Leaf2', false);
+        $root1 = new MutableSpecie('Root1', false);
+        $root2 = new MutableSpecie('Root2', false);
+        $middle = new MutableSpecie('Middle', false);
+        $leaf1 = new MutableSpecie('Leaf1', false);
+        $leaf2 = new MutableSpecie('Leaf2', false);
 
         $root1->addChild($middle);
         $root2->addChild($middle);
@@ -39,37 +39,37 @@ class SpecieTest extends TestCase
         self::assertFalse($leaf1->isRoot());
         self::assertTrue($leaf1->isLeaf());
 
-        $children = Vec\map($middle->getChildren(), fn (Specie $specie) => $specie->getName());
+        $children = Vec\map($middle->getChildren(), fn (MutableSpecie $specie) => $specie->name);
         self::assertEquals(['Leaf1', 'Leaf2'], $children);
 
-        $parents = Vec\map($middle->getParents(), fn (Specie $specie) => $specie->getName());
+        $parents = Vec\map($middle->getParents(), fn (MutableSpecie $specie) => $specie->name);
         self::assertEquals(['Root1', 'Root2'], $parents);
 
-        $ancestors = Vec\map($leaf1->getAncestors(), fn (Specie $specie) => $specie->getName());
+        $ancestors = Vec\map($leaf1->getAncestors(), fn (MutableSpecie $specie) => $specie->name);
         self::assertEquals(['Middle', 'Root1', 'Root2'], $ancestors);
 
-        $ancestors = Vec\map($leaf1->getSelfAndAncestors(), fn (Specie $specie) => $specie->getName());
+        $ancestors = Vec\map($leaf1->getSelfAndAncestors(), fn (MutableSpecie $specie) => $specie->name);
         self::assertEquals(['Leaf1', 'Middle', 'Root1', 'Root2'], $ancestors);
 
-        $descendants = Vec\map($root1->getDescendants(), fn (Specie $specie) => $specie->getName());
+        $descendants = Vec\map($root1->getDescendants(), fn (MutableSpecie $specie) => $specie->name);
         self::assertEquals(['Middle', 'Leaf1', 'Leaf2'], $descendants);
 
-        $descendants = Vec\map($root1->getSelfAndDescendants(), fn (Specie $specie) => $specie->getName());
+        $descendants = Vec\map($root1->getSelfAndDescendants(), fn (MutableSpecie $specie) => $specie->name);
         self::assertEquals(['Root1', 'Middle', 'Leaf1', 'Leaf2'], $descendants);
     }
 
     public function testRecursionSafetyInAddChild(): void
     {
-        $a = new Specie('a', false);
-        $b = new Specie('b', false);
-        $c = new Specie('c', false);
+        $a = new MutableSpecie('a', false);
+        $b = new MutableSpecie('b', false);
+        $c = new MutableSpecie('c', false);
 
         $exception = null;
         try {
             $a->addChild($a);
         } catch (Exception $exception) {
         }
-        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertInstanceOf(RecursionSpecieException::class, $exception);
 
         $a->addChild($b);
 
@@ -78,7 +78,7 @@ class SpecieTest extends TestCase
             $b->addChild($a);
         } catch (Exception $exception) {
         }
-        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertInstanceOf(RecursionSpecieException::class, $exception);
 
         $a->addChild($b);
         $b->addChild($c);
@@ -88,21 +88,21 @@ class SpecieTest extends TestCase
             $c->addChild($a);
         } catch (Exception $exception) {
         }
-        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertInstanceOf(RecursionSpecieException::class, $exception);
     }
 
     public function testRecursionSafetyInAddParent(): void
     {
-        $a = new Specie('a', false);
-        $b = new Specie('b', false);
-        $c = new Specie('c', false);
+        $a = new MutableSpecie('a', false);
+        $b = new MutableSpecie('b', false);
+        $c = new MutableSpecie('c', false);
 
         $exception = null;
         try {
             $a->addParent($a);
         } catch (Exception $exception) {
         }
-        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertInstanceOf(RecursionSpecieException::class, $exception);
 
         $a->addParent($b);
 
@@ -111,7 +111,7 @@ class SpecieTest extends TestCase
             $b->addParent($a);
         } catch (Exception $exception) {
         }
-        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertInstanceOf(RecursionSpecieException::class, $exception);
 
         $a->addParent($b);
         $b->addParent($c);
@@ -121,6 +121,6 @@ class SpecieTest extends TestCase
             $c->addParent($a);
         } catch (Exception $exception) {
         }
-        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertInstanceOf(RecursionSpecieException::class, $exception);
     }
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Filtering\DataRequests\Filters;
 
-use App\Data\Species\Specie;
+use App\Data\Species\MutableSpecie;
+use App\Data\Species\MutableSpeciesList;
 use App\Data\Species\SpeciesList;
 use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -59,20 +60,20 @@ class SpeciesFilterTest extends TestCase
 
     private function getSpeciesList(): SpeciesList
     {
-        $result = new SpeciesList();
+        $result = new MutableSpeciesList();
 
-        $mammals = new Specie('Mammals', false);
-        $canines = new Specie('Canines', false);
+        $mammals = new MutableSpecie('Mammals', false);
+        $canines = new MutableSpecie('Canines', false);
         $canines->addParentTwoWay($mammals);
-        $wolves = new Specie('Wolves', false);
+        $wolves = new MutableSpecie('Wolves', false);
         $wolves->addParentTwoWay($canines);
-        $felines = new Specie('Felines', false);
+        $felines = new MutableSpecie('Felines', false);
         $felines->addParentTwoWay($mammals);
-        $tigers = new Specie('Tigers', false);
+        $tigers = new MutableSpecie('Tigers', false);
         $tigers->addParentTwoWay($felines);
 
-        $result->add($mammals, $canines, $wolves, $felines, $tigers, new Specie('Other', false));
+        $result->add($mammals, $canines, $wolves, $felines, $tigers, new MutableSpecie('Other', false));
 
-        return $result;
+        return $result->toList();
     }
 }

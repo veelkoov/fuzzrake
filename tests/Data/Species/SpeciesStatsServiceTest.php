@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Data\Stats;
+namespace App\Tests\Data\Species;
 
 use App\Data\Species\SpeciesService;
-use App\Data\Stats\SpeciesStatsService;
 use App\Repository\ArtisanRepository;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\TestCase;
@@ -41,9 +40,8 @@ class SpeciesStatsServiceTest extends TestCase
         ]);
 
         $speciesDefinitions = DataDefinitions::get('species.yaml', 'species_definitions');
-        $speciesService = new SpeciesService($speciesDefinitions); // @phpstan-ignore-line - Data structures
 
-        $subject = new SpeciesStatsService($artisanRepositoryMock, $speciesService, CacheUtils::getArrayBased());
+        $subject = new SpeciesService($speciesDefinitions, $artisanRepositoryMock, CacheUtils::getArrayBased()); // @phpstan-ignore-line - Data structures
         $result = $subject->getStats();
 
         self::assertEquals(1, $result->unknownCount);

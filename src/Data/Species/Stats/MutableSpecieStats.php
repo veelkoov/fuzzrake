@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Stats\Compute;
+namespace App\Data\Species\Stats;
 
 use App\Data\Species\Specie;
 
-class SpecieStatsMutable
+class MutableSpecieStats
 {
     private int $directDoes = 0;
     private int $directDoesnt = 0;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Data\Species;
 
-use App\Data\Species\HierarchyAwareBuilder;
+use App\Data\Species\SpeciesBuilder;
 use App\Data\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
@@ -12,7 +12,7 @@ use Psl\Vec;
 /**
  * @small
  */
-class HierarchyAwareBuilderTest extends TestCase
+class SpeciesBuilderTest extends TestCase
 {
     /**
      * @param array<string, psSubspecies> $species
@@ -21,9 +21,9 @@ class HierarchyAwareBuilderTest extends TestCase
      */
     public function testValidNamesDoesntContainDuplicates(array $species, int $expectedCount): void
     {
-        $subject = new HierarchyAwareBuilder($species);
+        $subject = new SpeciesBuilder($species);
 
-        self::assertCount($expectedCount, $subject->getCompleteList()->getNames());
+        self::assertCount($expectedCount, $subject->get()->list->getNames());
     }
 
     /**
@@ -48,41 +48,40 @@ class HierarchyAwareBuilderTest extends TestCase
 
     public function testDeepNestedDoesntCauseFatalError(): void
     {
-        $subject = new HierarchyAwareBuilder(['a' => ['b' => ['c' => ['d' => ['e' => [
+        $subject = new SpeciesBuilder(['a' => ['b' => ['c' => ['d' => ['e' => [
             'f'  => ['g' => ['h' => ['i' => ['j' => ['k' => ['l' => ['m' => ['n' => []]]]]]]]],
             'f2' => ['g2' => ['h2' => ['i2' => ['j2' => ['k2' => ['l2' => ['m2' => ['n2' => []]]]]]]]],
         ]]]]]]);
 
-        $descendants = $subject->getVisibleList()->getByName('a')->getDescendants();
+        $descendants = $subject->get()->list->getByName('a')->getDescendants();
 
         self::assertCount(22, $descendants);
     }
 
     public function testProperlyBuilding(): void
     {
-        $subject = new HierarchyAwareBuilder([
+        $subject = new SpeciesBuilder([
             'root1'   => ['middle' => ['leaf1' => []]],
             'i_root2' => ['middle' => ['i_leaf2' => []]],
             'i_root3' => ['leaf3'  => []],
         ]);
 
-        self::assertEquals(['root1', 'middle', 'leaf1', 'root2', 'leaf2', 'root3', 'leaf3'], $subject->getCompleteList()->getNames());
-        self::assertEquals(['leaf1', 'leaf2', 'leaf3', 'middle', 'root1', 'root2', 'root3'], self::sortedNames($subject->getCompleteList()));
-        self::assertEquals(['leaf1', 'leaf3', 'middle', 'root1'], self::sortedNames($subject->getVisibleList()));
+        self::assertEquals(['root1', 'middle', 'leaf1', 'root2', 'leaf2', 'root3', 'leaf3'], $subject->get()->list->getNames());
+        self::assertEquals(['leaf1', 'leaf2', 'leaf3', 'middle', 'root1', 'root2', 'root3'], self::sortedNames($subject->get()->list));
 
-        self::assertCount(3, $subject->getCompleteTree());
+        self::assertCount(3, $subject->get()->tree);
 
-        $cRoot1 = $subject->getCompleteTree()[0];
+        $cRoot1 = $subject->get()->tree[0];
         self::assertEquals('root1', $cRoot1);
         self::assertEmpty($cRoot1->getParents());
         self::assertCount(1, $cRoot1->getChildren());
 
-        $cRoot2 = $subject->getCompleteTree()[1];
+        $cRoot2 = $subject->get()->tree[1];
         self::assertEquals('root2', $cRoot2);
         self::assertEmpty($cRoot2->getParents());
         self::assertEquals($cRoot1->getChildren(), $cRoot2->getChildren());
 
-        $cRoot3 = $subject->getCompleteTree()[2];
+        $cRoot3 = $subject->get()->tree[2];
         self::assertEquals('root3', $cRoot3);
         self::assertEmpty($cRoot3->getParents());
         self::assertCount(1, $cRoot3->getChildren());
@@ -107,26 +106,6 @@ class HierarchyAwareBuilderTest extends TestCase
         self::assertEquals('leaf3', $cLeaf3);
         self::assertEquals([$cRoot3], $cLeaf3->getParents());
         self::assertEmpty($cLeaf3->getChildren());
-
-        self::assertCount(1, $subject->getVisibleTree());
-
-        $vRoot1 = $subject->getVisibleTree()[0];
-        self::assertNotEquals($vRoot1, $cRoot1);
-        self::assertEquals('root1', $vRoot1);
-        self::assertEmpty($vRoot1->getParents());
-        self::assertCount(1, $vRoot1->getChildren());
-
-        $vMiddle = $vRoot1->getChildren()[0];
-        self::assertNotEquals($vMiddle, $cMiddle);
-        self::assertEquals('middle', $vMiddle);
-        self::assertEquals([$vRoot1], $vMiddle->getParents());
-        self::assertCount(1, $vMiddle->getChildren());
-
-        $vLeaf1 = $vMiddle->getChildren()[0];
-        self::assertNotEquals($vLeaf1, $cLeaf1);
-        self::assertEquals('leaf1', $vLeaf1);
-        self::assertEquals([$vMiddle], $vLeaf1->getParents());
-        self::assertEmpty($vLeaf1->getChildren());
     }
 
     /**

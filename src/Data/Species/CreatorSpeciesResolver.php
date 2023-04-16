@@ -68,8 +68,8 @@ class CreatorSpeciesResolver
     public function getOrderedDoesDoesnt(array $speciesDoes, array $speciesDoesnt): array
     {
         $result = [
-            ...Vec\map($speciesDoes, fn (string $specie) => [$this->species->getByNameOrCreate($specie, false), true]),
-            ...Vec\map($speciesDoesnt, fn (string $specie) => [$this->species->getByNameOrCreate($specie, false), false]),
+            ...Vec\map($speciesDoes, fn (string $specieName) => [$this->getSpecie($specieName), true]),
+            ...Vec\map($speciesDoesnt, fn (string $specieName) => [$this->getSpecie($specieName), false]),
         ];
 
         // Change all non-usual species to "Other"
@@ -80,7 +80,7 @@ class CreatorSpeciesResolver
         $result = Vec\filter($result, fn (array $specie) => $this->other !== $specie[0] || true === $specie[1]);
 
         usort($result, function (array $pair1, array $pair2) {
-            $depthDiff = (int) ($pair1[0]->getDepth() - $pair2[0]->getDepth()); // Redundant cast to (int) for PHPStan
+            $depthDiff = (int) ($pair1[0]->depth - $pair2[0]->depth); // Redundant cast to (int) for PHPStan
 
             return 0 !== $depthDiff ? $depthDiff : (int) $pair2[1] - (int) $pair1[1];
         });
@@ -93,7 +93,16 @@ class CreatorSpeciesResolver
      */
     private function getSelfAndDescendants(Specie $self): array
     {
-        return $this->selfAndDescendantsCache[$self->getName()]
-            ??= Vec\map($self->getSelfAndDescendants(), fn (Specie $specie) => $specie->getName());
+        return $this->selfAndDescendantsCache[$self->name]
+            ??= Vec\map($self->getSelfAndDescendants(), fn (Specie $specie) => $specie->name);
+    }
+
+    private function getSpecie(string $specieName): Specie
+    {
+        if ($this->species->hasName($specieName)) {
+            return $this->species->getByName($specieName);
+        } else {
+            return $this->other;
+        }
     }
 }

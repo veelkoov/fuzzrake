@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace App\Data\Species;
 
+use App\Data\Species\Exceptions\SharedRootSpecieException;
+use App\Data\Species\Stats\SpeciesStats;
+use App\Data\Species\Stats\SpeciesStatsBuilder;
+use App\Repository\ArtisanRepository;
+use App\Service\Cache;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Regexp\Replacements;
-use RuntimeException;
+use App\ValueObject\CacheTags;
 
 class SpeciesService
 {
-    private ?HierarchyAwareBuilder $builder = null;
+    private ?Species $species = null;
 
     /**
      * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: array<string, psSubspecies>} $speciesDefinitions
      */
     public function __construct(
         private readonly array $speciesDefinitions,
+        private readonly ArtisanRepository $artisanRepository,
+        private readonly Cache $cache,
     ) {
     }
 
@@ -24,33 +32,7 @@ class SpeciesService
      */
     public function getValidNames(): array
     {
-        return $this->getBuilder()->getCompleteList()->getNames();
-    }
-
-    public function getVisibleList(): SpeciesList
-    {
-        return $this->getBuilder()->getVisibleList();
-    }
-
-    /**
-     * @return list<Specie>
-     */
-    public function getVisibleTree(): array
-    {
-        return $this->getBuilder()->getVisibleTree();
-    }
-
-    public function getCompleteList(): SpeciesList
-    {
-        return $this->getBuilder()->getCompleteList();
-    }
-
-    /**
-     * @return list<Specie>
-     */
-    public function getCompleteTree(): array
-    {
-        return $this->getBuilder()->getCompleteTree();
+        return $this->getSpecies()->list->getNames();
     }
 
     public function getListFixerReplacements(): Replacements
@@ -59,33 +41,40 @@ class SpeciesService
             $this->speciesDefinitions['regex_prefix'], $this->speciesDefinitions['regex_suffix']);
     }
 
-    private function getBuilder(): HierarchyAwareBuilder
+    public function getSpecies(): Species
     {
-        if (null === $this->builder) {
-            $this->builder = new HierarchyAwareBuilder($this->speciesDefinitions['valid_choices']);
-
-            $this->validateTopSpeciesAreSeparateTrees();
-        }
-
-        return $this->builder; // @phpstan-ignore-line False-positive
+        return $this->species ??= $this->createSpecies();
     }
 
-    private function validateTopSpeciesAreSeparateTrees(): void
+    private function createSpecies(): Species
     {
+        $result = (new SpeciesBuilder($this->speciesDefinitions['valid_choices']))->get();
+
         $speciesTrees = array_map(
             fn (Specie $specie) => $specie->getSelfAndDescendants(),
-            $this->getBuilder()->getCompleteTree(),
+            $result->tree,
         );
 
         $specieNamesTrees = array_map(
-            fn (array $species) => array_map(fn (Specie $specie) => $specie->getName(), $species),
+            fn (array $species) => array_map(fn (Specie $specie) => $specie->name, $species),
             $speciesTrees,
         );
 
         $sharedSpecieNames = array_intersect(...$specieNamesTrees);
 
         if ([] !== $sharedSpecieNames) {
-            throw new RuntimeException('Species configuration error: species shared between root species: '.implode(', ', $sharedSpecieNames));
+            throw new SharedRootSpecieException($sharedSpecieNames);
         }
+
+        return $result;
+    }
+
+    public function getStats(): SpeciesStats
+    {
+        return $this->cache->getCached('SpeciesService.getStats', CacheTags::ARTISANS, function (): SpeciesStats {
+            $artisans = Artisan::wrapAll($this->artisanRepository->getActive());
+
+            return SpeciesStatsBuilder::for($this->getSpecies()->list)->add($artisans)->get();
+        });
     }
 }

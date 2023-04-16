@@ -2,25 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Stats\Compute;
+namespace App\Data\Species\Stats;
 
 use App\Data\Species\Specie;
 
-class SpeciesStatsMutable
+class MutableSpeciesStats
 {
     /**
-     * @var array<string, SpecieStatsMutable>
+     * @var array<string, MutableSpecieStats>
      */
     private array $nameToStats = [];
     private int $unknownCount = 0;
 
-    public function get(Specie $specie): SpecieStatsMutable
+    public function get(Specie $specie): MutableSpecieStats
     {
-        return $this->nameToStats[$specie->getName()] ??= new SpecieStatsMutable($specie);
+        return $this->nameToStats[$specie->name] ??= new MutableSpecieStats($specie);
     }
 
     /**
-     * @return list<SpecieStatsMutable>
+     * @return MutableSpecieStats[]
+     *
+     * @phpstan-return list<MutableSpecieStats>
      */
     public function getAll(): array
     {

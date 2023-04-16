@@ -5,25 +5,23 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData;
 
 use App\Data\Species\Specie;
-use App\Data\Stats\SpeciesStats;
+use App\Data\Species\Species;
+use App\Data\Species\Stats\SpeciesStats;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\MutableSet;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 
-class SpeciesFilterDataCalculator
+class SpeciesFilterDataBuilder
 {
     private readonly FilterData $result;
 
-    /**
-     * @param list<Specie> $visibleTree
-     */
     public function __construct(
-        private readonly array $visibleTree,
+        private readonly Species $species,
         private readonly SpeciesStats $stats,
     ) {
         $result = new MutableFilterData(SpecialItems::newUnknown($this->stats->unknownCount));
 
-        foreach ($this->getSpeciesFilterItemsFromArray($this->visibleTree) as $item) {
+        foreach ($this->getSpeciesFilterItemsFromArray($this->species->tree) as $item) {
             $result->items->addComplexItem($item->label, $item->value, $item->label, $item->getCount());
         }
 
@@ -31,24 +29,18 @@ class SpeciesFilterDataCalculator
     }
 
     /**
-     * @param list<Specie> $visibleTree
-     */
-    public static function from(array $visibleTree, SpeciesStats $stats): self
-    {
-        return new self($visibleTree, $stats);
-    }
-
-    /**
-     * @param list<Specie> $species
+     * @param Specie[] $species
+     *
+     * @phpstan-param list<Specie> $species
      */
     private function getSpeciesFilterItemsFromArray(array $species): MutableSet
     {
         $result = new MutableSet();
 
         foreach ($species as $specie) {
-            if (!$specie->isHidden()) {
-                $result->addComplexItem($specie->getName(), $this->getSpeciesFilterItem($specie), $specie->getName(),
-                    $this->stats->get($specie->getName())?->realDoes ?? 0);
+            if (!$specie->hidden) {
+                $result->addComplexItem($specie->name, $this->getSpeciesFilterItem($specie), $specie->name,
+                    $this->stats->get($specie->name)?->realDoes ?? 0);
             }
         }
 
@@ -58,7 +50,7 @@ class SpeciesFilterDataCalculator
     private function getSpeciesFilterItem(Specie $specie): MutableSet|string
     {
         if ($specie->isLeaf()) {
-            return $specie->getName();
+            return $specie->name;
         } else {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
         }

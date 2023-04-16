@@ -4,32 +4,29 @@ declare(strict_types=1);
 
 namespace App\Data\Species;
 
+use App\Data\Species\Exceptions\MissingSpecieException;
+
 class SpeciesList
 {
     /**
-     * @var array<string, Specie> Key = specie name
+     * @param Specie[] $items Key = specie name
+     *
+     * @phpstan-param array<string, Specie> $items Key = specie name
      */
-    private array $items = [];
-
-    public function add(Specie ...$species): void
-    {
-        foreach ($species as $specie) {
-            $this->items[$specie->getName()] = $specie;
-        }
+    public function __construct(
+        public readonly array $items,
+    ) {
     }
 
     public function getByName(string $name): Specie
     {
-        return $this->items[$name] ?? throw new MissingSpecieException("Specie '$name' does not exist");
-    }
-
-    public function getByNameOrCreate(string $name, bool $hidden): Specie
-    {
-        return $this->items[$name] ??= new Specie($name, $hidden);
+        return $this->items[$name] ?? throw new MissingSpecieException($name);
     }
 
     /**
-     * @return list<string>
+     * @return string[]
+     *
+     * @phpstan-return list<string>
      */
     public function getNames(): array
     {
@@ -39,15 +36,5 @@ class SpeciesList
     public function hasName(string $specieName): bool
     {
         return array_key_exists($specieName, $this->items);
-    }
-
-    /**
-     * @return Specie[]
-     *
-     * @phpstan-return list<Specie>
-     */
-    public function getAll(): array
-    {
-        return array_values($this->items);
     }
 }

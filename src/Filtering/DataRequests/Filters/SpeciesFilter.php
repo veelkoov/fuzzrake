@@ -26,9 +26,9 @@ class SpeciesFilter implements FilterInterface
      */
     public function __construct(
         array $wantedItems,
-        private readonly SpeciesList $completeList,
+        private readonly SpeciesList $speciesList,
     ) {
-        $this->resolver = new CreatorSpeciesResolver($this->completeList);
+        $this->resolver = new CreatorSpeciesResolver($this->speciesList);
 
         $this->wantsUnknown = Iter\contains($wantedItems, Consts::FILTER_VALUE_UNKNOWN);
 
@@ -37,7 +37,7 @@ class SpeciesFilter implements FilterInterface
         ], $item));
 
         foreach ($wantedItems as $specieName) {
-            foreach ($this->completeList->getByName($specieName)->getDescendants() as $subspecie) {
+            foreach ($this->speciesList->getByName($specieName)->getDescendants() as $subspecie) {
                 $wantedItems[] = $subspecie->name;
             }
         }

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Data\Species;
 
 use App\Data\Species\CreatorSpeciesResolver;
-use App\Data\Species\Specie;
+use App\Data\Species\MutableSpecie;
+use App\Data\Species\MutableSpeciesList;
 use App\Data\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
@@ -23,21 +24,21 @@ class CreatorSpeciesResolverTest extends TestCase
      */
     public function testGetOrderedDoesDoesnt(string $expected, array $speciesDoes, array $speciesDoesnt): void
     {
-        $A = new Specie('A', false);
-        $B = new Specie('B', false);
+        $A = new MutableSpecie('A', false);
+        $B = new MutableSpecie('B', false);
         $B->addParentTwoWay($A);
-        $C = new Specie('C', false);
+        $C = new MutableSpecie('C', false);
         $C->addParentTwoWay($B);
-        $D = new Specie('D', false);
+        $D = new MutableSpecie('D', false);
         $D->addParentTwoWay($C);
 
-        $list = new SpeciesList();
-        $list->add($A, $B, $C, $D, new Specie('Other', false));
+        $list = new MutableSpeciesList();
+        $list->add($A, $B, $C, $D, new MutableSpecie('Other', false));
 
-        $subject = new CreatorSpeciesResolver($list);
+        $subject = new CreatorSpeciesResolver($list->toList());
 
         $result = $subject->getOrderedDoesDoesnt($speciesDoes, $speciesDoesnt);
-        $result = implode(' ', Vec\map($result, fn (array $pair) => ($pair[1] ? '+' : '-').$pair[0]->getName()));
+        $result = implode(' ', Vec\map($result, fn (array $pair) => ($pair[1] ? '+' : '-').$pair[0]->name));
 
         self::assertEquals($expected, $result);
     }
@@ -101,32 +102,32 @@ class CreatorSpeciesResolverTest extends TestCase
      */
     private function getTestSpecies(): SpeciesList
     {
-        $mammals = new Specie('Mammals', false);
-        $withAntlers = new Specie('With antlers', false);
+        $mammals = new MutableSpecie('Mammals', false);
+        $withAntlers = new MutableSpecie('With antlers', false);
 
-        $canines = new Specie('Canines', false);
+        $canines = new MutableSpecie('Canines', false);
         $canines->addParentTwoWay($mammals);
 
-        $dogs = new Specie('Dogs', false);
+        $dogs = new MutableSpecie('Dogs', false);
         $dogs->addParentTwoWay($canines);
 
-        $corgis = new Specie('Corgis', false);
+        $corgis = new MutableSpecie('Corgis', false);
         $corgis->addParentTwoWay($dogs);
-        $dalmatians = new Specie('Dalmatians', false);
+        $dalmatians = new MutableSpecie('Dalmatians', false);
         $dalmatians->addParentTwoWay($dogs);
 
-        $wolves = new Specie('Wolves', false);
+        $wolves = new MutableSpecie('Wolves', false);
         $wolves->addParentTwoWay($canines);
 
-        $deers = new Specie('Deers', false);
+        $deers = new MutableSpecie('Deers', false);
         $deers->addParentTwoWay($mammals);
         $deers->addParentTwoWay($withAntlers);
 
-        $result = new SpeciesList();
+        $result = new MutableSpeciesList();
         $result->add($mammals, ...$mammals->getDescendants());
         $result->add($withAntlers, ...$withAntlers->getDescendants());
-        $result->add(new Specie('Other', false));
+        $result->add(new MutableSpecie('Other', false));
 
-        return $result;
+        return $result->toList();
     }
 }

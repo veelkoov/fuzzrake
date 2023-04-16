@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Data\Stats\SpeciesStatsService;
+use App\Data\Species\SpeciesService;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanCommissionsStatusRepository;
@@ -55,7 +55,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, SpeciesStatsService $species): Response
+    public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, SpeciesService $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();

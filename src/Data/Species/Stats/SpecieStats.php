@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Stats;
+namespace App\Data\Species\Stats;
 
 use App\Data\Species\Specie;
-use App\Data\Stats\Compute\SpecieStatsMutable;
 
 readonly class SpecieStats
 {
@@ -26,7 +25,7 @@ readonly class SpecieStats
     public int $realDoes;
 
     public function __construct(
-        SpecieStatsMutable $source,
+        MutableSpecieStats $source,
     ) {
         $this->specie = $source->specie;
 

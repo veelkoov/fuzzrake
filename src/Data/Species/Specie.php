@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Data\Species;
 
-use InvalidArgumentException;
 use Stringable;
 
 class Specie implements Stringable
@@ -12,70 +11,60 @@ class Specie implements Stringable
     /**
      * @var list<Specie>
      */
-    private array $parents = [];
+    private array $parents;
 
     /**
      * @var list<Specie>
      */
-    private array $children = [];
-
-    private int $depth = 0;
+    private array $children;
 
     public function __construct(
         public readonly string $name,
-        private bool $hidden,
+        public readonly bool $hidden,
+        public readonly int $depth,
     ) {
     }
 
     /**
-     * @return list<Specie>
+     * @param list<Specie> $parents
+     */
+    public function setParents(array $parents): void
+    {
+        $this->parents = $parents;
+    }
+
+    /**
+     * @param list<Specie> $children
+     */
+    public function setChildren(array $children): void
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getParents(): array
     {
         return $this->parents;
     }
 
-    public function addParent(Specie $parent): void
-    {
-        if (in_array($this, $parent->getSelfAndAncestors(), true)) {
-            throw new InvalidArgumentException("Recursion in specie: $this->name");
-        }
-
-        if (!in_array($parent, $this->parents, true)) {
-            $this->parents[] = $parent;
-
-            if ($parent->depth >= $this->depth) {
-                $this->depth = $parent->depth + 1;
-            }
-        }
-    }
-
-    public function getDepth(): int
-    {
-        return $this->depth;
-    }
-
     /**
      * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getChildren(): array
     {
         return $this->children;
     }
 
-    public function addChild(Specie $child): void
-    {
-        if (in_array($this, $child->getSelfAndDescendants(), true)) {
-            throw new InvalidArgumentException("Recursion in specie: $this->name");
-        }
-
-        if (!in_array($child, $this->children, true)) {
-            $this->children[] = $child;
-        }
-    }
-
     /**
-     * @return list<Specie>
+     * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getAncestors(): array
     {
@@ -89,7 +78,9 @@ class Specie implements Stringable
     }
 
     /**
-     * @return list<Specie>
+     * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getSelfAndAncestors(): array
     {
@@ -97,7 +88,9 @@ class Specie implements Stringable
     }
 
     /**
-     * @return list<Specie>
+     * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getDescendants(): array
     {
@@ -111,7 +104,9 @@ class Specie implements Stringable
     }
 
     /**
-     * @return list<Specie>
+     * @return Specie[]
+     *
+     * @phpstan-return list<Specie>
      */
     public function getSelfAndDescendants(): array
     {
@@ -133,27 +128,12 @@ class Specie implements Stringable
         return $this->name;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setHidden(bool $hidden): void
-    {
-        $this->hidden = $hidden;
-    }
-
-    public function isHidden(): bool
-    {
-        return $this->hidden;
-    }
-
     /**
      * @param list<Specie> $result
      */
     private function addAncestorsRecursionSafely(Specie $specie, array &$result): void
     {
-        foreach ($specie->getParents() as $parent) {
+        foreach ($specie->parents as $parent) {
             if (!in_array($parent, $result, true)) {
                 $result[] = $parent;
                 $this->addAncestorsRecursionSafely($parent, $result);
@@ -166,17 +146,11 @@ class Specie implements Stringable
      */
     private function addDescendantsRecursionSafely(Specie $specie, array &$result): void
     {
-        foreach ($specie->getChildren() as $child) {
+        foreach ($specie->children as $child) {
             if (!in_array($child, $result, true)) {
                 $result[] = $child;
                 $this->addDescendantsRecursionSafely($child, $result);
             }
         }
-    }
-
-    public function addParentTwoWay(Specie $parent): void
-    {
-        $this->addParent($parent);
-        $parent->addChild($this);
     }
 }

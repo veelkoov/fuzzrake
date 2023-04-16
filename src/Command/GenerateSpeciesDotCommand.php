@@ -39,7 +39,7 @@ class GenerateSpeciesDotCommand extends Command
     private readonly Filesystem $fs;
 
     public function __construct(
-        private readonly SpeciesService $species,
+        private readonly SpeciesService $speciesSrv,
     ) {
         parent::__construct();
 
@@ -68,7 +68,8 @@ class GenerateSpeciesDotCommand extends Command
 
         $hidden = '[style = invis]';
 
-        $species = $this->species->getVisibleList();
+        $species = $this->speciesSrv->getSpecies()->list;
+
         foreach (self::GROUPS_WITH_ARTIFICIAL_PLACEMENT as $specieName) {
             $children = $species->getByName($specieName)->getChildren();
             usort($children, fn (Specie $a, Specie $b): int => count($a->getDescendants()) - count($b->getDescendants()));
@@ -80,27 +81,27 @@ class GenerateSpeciesDotCommand extends Command
                 $res .= '{ rank = same; ';
 
                 for ($ir = 0; $ir < $colNum && $ci < $childCount; $ir++, $ci++) {
-                    $res .= '"'.$children[$ci]->getName().'"; ';
+                    $res .= '"'.$children[$ci]->name.'"; ';
                 }
 
                 $res .= "}\n";
             }
 
             for ($ci = $colNum; $ci < $childCount; ++$ci) {
-                $res .= '"'.$children[$ci - $colNum]->getName().'" -- "'.$children[$ci]->getName().'" '.$hidden."\n";
+                $res .= '"'.$children[$ci - $colNum]->name.'" -- "'.$children[$ci]->name.'" '.$hidden."\n";
             }
         }
 
-        foreach ($species->getAll() as $specie) {
-            if (!$specie->isRoot() && $specie->isLeaf()) {
+        foreach ($species->items as $specie) {
+            if ($specie->hidden || (!$specie->isRoot() && $specie->isLeaf())) {
                 continue;
             }
 
-            if (in_array($specie->getName(), self::BOLD_GROUPS)) {
-                $res .= "\"{$specie->getName()}\" [penwidth=5]\n";
+            if (in_array($specie->name, self::BOLD_GROUPS, true)) {
+                $res .= "\"{$specie->name}\" [penwidth=5]\n";
             }
 
-            $res .= "\"{$specie->getName()}\"";
+            $res .= "\"{$specie->name}\"";
 
             $children = implode('", "', $specie->getChildren());
             if ('' !== $children) {
