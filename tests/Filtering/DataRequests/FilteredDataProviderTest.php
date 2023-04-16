@@ -69,41 +69,6 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
     }
 
     /**
-     * @dataProvider wantsPaymentPlansDataProvider
-     */
-    public function testWantsPaymentPlans(bool $unknown, bool $none, bool $any, string $expected): void
-    { // TODO: Isn't this duplicated in FiltersTest?
-        self::bootKernel();
-
-        $a1 = Artisan::new()->setMakerId('M000001');
-        $a2 = Artisan::new()->setMakerId('M000002')->setPaymentPlans('None');
-        $a3 = Artisan::new()->setMakerId('M000003')->setPaymentPlans('Some payment plan');
-
-        self::persistAndFlush($a1, $a2, $a3);
-
-        $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
-
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], $unknown, $any, $none, true, false, false));
-        self::assertEquals($expected, self::makerIdsFromPubData($result));
-    }
-
-    /**
-     * @return array<string, array{bool, bool, bool, string}>
-     */
-    public function wantsPaymentPlansDataProvider(): array
-    {
-        return [
-            'Nothing selected'               => [false, false, false, 'M000001, M000002, M000003'],
-            'Unknown selected'               => [true, false, false, 'M000001'],
-            'Unknown and none selected'      => [true, true, false, 'M000001, M000002'],
-            'Any selected'                   => [false, false, true, 'M000003'],
-            'Any and none selected'          => [false, true, true, 'M000002, M000003'],
-            'Any and unknown selected'       => [true, false, true, 'M000001, M000003'],
-            'Any, none and unknown selected' => [true, true, true, 'M000001, M000002, M000003'],
-        ];
-    }
-
-    /**
      * @param array<array<psJsonFieldValue>> $publicData
      */
     private static function makerIdsFromPubData(array $publicData): string

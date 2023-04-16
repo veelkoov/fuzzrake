@@ -68,13 +68,9 @@ class CreatorSpeciesResolver
     public function getOrderedDoesDoesnt(array $speciesDoes, array $speciesDoesnt): array
     {
         $result = [
-            ...Vec\map($speciesDoes, fn (string $specieName) => [$this->getSpecie($specieName), true]),
-            ...Vec\map($speciesDoesnt, fn (string $specieName) => [$this->getSpecie($specieName), false]),
+            ...Vec\map($speciesDoes, fn (string $specieName) => [$this->getSpecieOrOtherForUnusual($specieName), true]),
+            ...Vec\map($speciesDoesnt, fn (string $specieName) => [$this->getSpecieOrOtherForUnusual($specieName), false]),
         ];
-
-        // Change all non-usual species to "Other"
-        $result = Vec\map($result, fn (array $specie) => $specie[0]->isRoot() && $specie[0]->isLeaf()
-            ? [$this->other, $specie[1]] : [$specie[0], $specie[1]]);
 
         // Remove any "doesn't do" "Other"
         $result = Vec\filter($result, fn (array $specie) => $this->other !== $specie[0] || true === $specie[1]);

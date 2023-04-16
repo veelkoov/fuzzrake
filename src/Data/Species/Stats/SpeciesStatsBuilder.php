@@ -18,10 +18,6 @@ class SpeciesStatsBuilder
         private readonly SpeciesList $completeList
     ) {
         $this->result = new MutableSpeciesStats();
-
-        foreach ($this->completeList->items as $specie) { // TODO: Is this needed?
-            $this->result->get($specie);
-        }
     }
 
     public static function for(SpeciesList $completeList): self
