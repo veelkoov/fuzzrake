@@ -64,11 +64,6 @@ class MutableSpecieStats
         ++$this->realDoes;
     }
 
-    public function getSpecie(): Specie
-    {
-        return $this->specie;
-    }
-
     public function getDirectDoes(): int
     {
         return $this->directDoes;
