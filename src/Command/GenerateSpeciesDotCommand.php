@@ -71,7 +71,7 @@ class GenerateSpeciesDotCommand extends Command
         $species = $this->speciesSrv->getSpecies()->list;
 
         foreach (self::GROUPS_WITH_ARTIFICIAL_PLACEMENT as $specieName) {
-            $children = $species->getByName($specieName)->getChildren();
+            $children = $this->visible($species->getByName($specieName)->getChildren());
             usort($children, fn (Specie $a, Specie $b): int => count($a->getDescendants()) - count($b->getDescendants()));
 
             $childCount = count($children);
@@ -103,7 +103,7 @@ class GenerateSpeciesDotCommand extends Command
 
             $res .= "\"{$specie->name}\"";
 
-            $children = implode('", "', $specie->getChildren());
+            $children = implode('", "', $this->visible($specie->getChildren()));
             if ('' !== $children) {
                 $res .= " -- { \"$children\" }";
             }
@@ -114,5 +114,15 @@ class GenerateSpeciesDotCommand extends Command
         $res .= '}';
 
         return $res;
+    }
+
+    /**
+     * @param Specie[] $species
+     *
+     * @return Specie[]
+     */
+    private function visible(array $species): array
+    {
+        return array_filter($species, fn (Specie $specie) => !$specie->hidden);
     }
 }
