@@ -76,7 +76,7 @@ class FiltersService
 
     private function getSpeciesFilterData(): FilterData
     {
-        return (new SpeciesFilterDataBuilder($this->species->getSpecies(), $this->species->getStats()))->get();
+        return SpeciesFilterDataBuilder::for($this->species->getSpecies(), $this->species->getStats());
     }
 
     /**

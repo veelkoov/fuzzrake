@@ -10,25 +10,39 @@ use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 
-class SpeciesStatsBuilder
+final class SpeciesStatsBuilder
 {
     private readonly MutableSpeciesStats $result;
 
-    public function __construct(
-        private readonly SpeciesList $completeList
-    ) {
-        $this->result = new MutableSpeciesStats();
-    }
-
-    public static function for(SpeciesList $completeList): self
+    /**
+     * @param list<Artisan> $artisans
+     */
+    public static function for(SpeciesList $completeList, array $artisans): SpeciesStats
     {
-        return new self($completeList);
+        return (new self($completeList, $artisans))->get();
     }
 
     /**
      * @param list<Artisan> $artisans
      */
-    public function add(array $artisans): self
+    private function __construct(
+        private readonly SpeciesList $completeList,
+        array $artisans,
+    ) {
+        $this->result = new MutableSpeciesStats();
+
+        $this->add($artisans);
+    }
+
+    private function get(): SpeciesStats
+    {
+        return new SpeciesStats($this->result);
+    }
+
+    /**
+     * @param list<Artisan> $artisans
+     */
+    private function add(array $artisans): void
     {
         foreach ($artisans as $artisan) {
             $speciesDoes = $artisan->getSpeciesDoes();
@@ -71,13 +85,6 @@ class SpeciesStatsBuilder
                 }
             }
         }
-
-        return $this;
-    }
-
-    public function get(): SpeciesStats
-    {
-        return new SpeciesStats($this->result);
     }
 
     private function getSpecie(string $name): Specie

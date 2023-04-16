@@ -11,11 +11,16 @@ use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\MutableSet;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 
-class SpeciesFilterDataBuilder
+final class SpeciesFilterDataBuilder
 {
     private readonly FilterData $result;
 
-    public function __construct(
+    public static function for(Species $species, SpeciesStats $stats): FilterData
+    {
+        return (new self($species, $stats))->get();
+    }
+
+    private function __construct(
         private readonly Species $species,
         private readonly SpeciesStats $stats,
     ) {
@@ -26,6 +31,11 @@ class SpeciesFilterDataBuilder
         }
 
         $this->result = new FilterData($result);
+    }
+
+    private function get(): FilterData
+    {
+        return $this->result;
     }
 
     /**
@@ -54,10 +64,5 @@ class SpeciesFilterDataBuilder
         } else {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
         }
-    }
-
-    public function get(): FilterData
-    {
-        return $this->result;
     }
 }

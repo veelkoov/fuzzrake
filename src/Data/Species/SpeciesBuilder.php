@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Species;
 
-class SpeciesBuilder
+final class SpeciesBuilder
 {
     private const FLAG_HIDDEN_FLAG = 'i'; // Marks species considered valid, but which won't e.g. be available for filtering
 
@@ -13,14 +13,22 @@ class SpeciesBuilder
     /**
      * @param array<string, psSubspecies> $species
      */
-    public function __construct(array $species)
+    public static function for(array $species): Species
+    {
+        return (new self($species))->get();
+    }
+
+    /**
+     * @param array<string, psSubspecies> $species
+     */
+    private function __construct(array $species)
     {
         $this->created = new MutableSpecies();
 
         $this->fillCompleteListAndTreeFrom($species);
     }
 
-    public function get(): Species
+    private function get(): Species
     {
         $list = $this->created->list->toList();
         $tree = array_map(fn (MutableSpecie $specie) => $list->getByName($specie->name), $this->created->tree);

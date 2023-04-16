@@ -48,7 +48,7 @@ class SpeciesService
 
     private function createSpecies(): Species
     {
-        $result = (new SpeciesBuilder($this->speciesDefinitions['valid_choices']))->get();
+        $result = SpeciesBuilder::for($this->speciesDefinitions['valid_choices']);
 
         // No specie is allowed to be both under "Most species" and "Other"
         $this->assureNoSpecieHasTwoAncestorRoots($result);
@@ -80,7 +80,7 @@ class SpeciesService
         return $this->cache->getCached('SpeciesService.getStats', CacheTags::ARTISANS, function (): SpeciesStats {
             $artisans = Artisan::wrapAll($this->artisanRepository->getActive());
 
-            return SpeciesStatsBuilder::for($this->getSpecies()->list)->add($artisans)->get();
+            return SpeciesStatsBuilder::for($this->getSpecies()->list, $artisans);
         });
     }
 }

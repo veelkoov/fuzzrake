@@ -21,9 +21,9 @@ class SpeciesBuilderTest extends TestCase
      */
     public function testValidNamesDoesntContainDuplicates(array $species, int $expectedCount): void
     {
-        $subject = new SpeciesBuilder($species);
+        $result = SpeciesBuilder::for($species)->list->getNames();
 
-        self::assertCount($expectedCount, $subject->get()->list->getNames());
+        self::assertCount($expectedCount, $result);
     }
 
     /**
@@ -48,40 +48,43 @@ class SpeciesBuilderTest extends TestCase
 
     public function testDeepNestedDoesntCauseFatalError(): void
     {
-        $subject = new SpeciesBuilder(['a' => ['b' => ['c' => ['d' => ['e' => [
-            'f'  => ['g' => ['h' => ['i' => ['j' => ['k' => ['l' => ['m' => ['n' => []]]]]]]]],
-            'f2' => ['g2' => ['h2' => ['i2' => ['j2' => ['k2' => ['l2' => ['m2' => ['n2' => []]]]]]]]],
-        ]]]]]]);
+        $species = ['a' => ['b' => ['c' => ['d' => ['e' => ['f' => ['g' => ['h' => ['i' => ['j' => ['k' => ['l' => [
+            'm' => ['n' => []]]]]]]]], 'f2' => ['g2' => ['h2' => ['i2' => ['j2' => ['k2' => ['l2' => ['m2' => [
+            'n2' => []]]]]]]]]]]]]]];
 
-        $descendants = $subject->get()->list->getByName('a')->getDescendants();
+        $result = SpeciesBuilder::for($species);
+
+        $descendants = $result->list->getByName('a')->getDescendants();
 
         self::assertCount(22, $descendants);
     }
 
     public function testProperlyBuilding(): void
     {
-        $subject = new SpeciesBuilder([
-            'root1'   => ['middle' => ['leaf1' => []]],
+        $species = [
+            'root1' => ['middle' => ['leaf1' => []]],
             'i_root2' => ['middle' => ['i_leaf2' => []]],
-            'i_root3' => ['leaf3'  => []],
-        ]);
+            'i_root3' => ['leaf3' => []],
+        ];
 
-        self::assertEquals(['root1', 'middle', 'leaf1', 'root2', 'leaf2', 'root3', 'leaf3'], $subject->get()->list->getNames());
-        self::assertEquals(['leaf1', 'leaf2', 'leaf3', 'middle', 'root1', 'root2', 'root3'], self::sortedNames($subject->get()->list));
+        $result = SpeciesBuilder::for($species);
 
-        self::assertCount(3, $subject->get()->tree);
+        self::assertEquals(['root1', 'middle', 'leaf1', 'root2', 'leaf2', 'root3', 'leaf3'], $result->list->getNames());
+        self::assertEquals(['leaf1', 'leaf2', 'leaf3', 'middle', 'root1', 'root2', 'root3'], self::sortedNames($result->list));
 
-        $cRoot1 = $subject->get()->tree[0];
+        self::assertCount(3, $result->tree);
+
+        $cRoot1 = $result->tree[0];
         self::assertEquals('root1', $cRoot1);
         self::assertEmpty($cRoot1->getParents());
         self::assertCount(1, $cRoot1->getChildren());
 
-        $cRoot2 = $subject->get()->tree[1];
+        $cRoot2 = $result->tree[1];
         self::assertEquals('root2', $cRoot2);
         self::assertEmpty($cRoot2->getParents());
         self::assertEquals($cRoot1->getChildren(), $cRoot2->getChildren());
 
-        $cRoot3 = $subject->get()->tree[2];
+        $cRoot3 = $result->tree[2];
         self::assertEquals('root3', $cRoot3);
         self::assertEmpty($cRoot3->getParents());
         self::assertCount(1, $cRoot3->getChildren());
