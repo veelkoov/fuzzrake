@@ -123,4 +123,11 @@ class MutableSpecieTest extends TestCase
         }
         self::assertInstanceOf(RecursionSpecieException::class, $exception);
     }
+
+    public function testStringable(): void
+    {
+        $subject = new MutableSpecie('A specie', false);
+
+        $this->assertEquals('A specie', (string) $subject);
+    }
 }

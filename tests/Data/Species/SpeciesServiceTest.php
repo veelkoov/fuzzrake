@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Data\Species;
 
+use App\Data\Species\Exceptions\SharedRootSpecieException;
 use App\Data\Species\SpeciesService;
 use App\Repository\ArtisanRepository;
 use App\Tests\TestUtils\CacheUtils;
@@ -14,7 +15,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 /**
  * @small
  */
-class SpeciesStatsServiceTest extends TestCase
+class SpeciesServiceTest extends TestCase
 {
     public function testSpeciesStatsComputations(): void
     {
@@ -74,5 +75,32 @@ class SpeciesStatsServiceTest extends TestCase
 
             self::assertEquals($specieStats[9], $specie->realDoes, "$specieName real does count wrong");
         }
+    }
+
+    public function testSharedSpecieRootsAreNotAllowed(): void
+    {
+        $speciesDefinitions = [
+            'valid_choices' => [
+                'Most species' => [
+                    'Fantasy species' => [
+                        'Oops' => [],
+                    ],
+                ],
+                'Other' => [
+                    'Oops' => [],
+                ],
+            ],
+            'replacements' => [],
+            'regex_prefix' => '',
+            'regex_suffix' => '',
+            'leave_unchanged' => [],
+        ];
+        $artisanRepositoryMock = $this->createMock(ArtisanRepository::class);
+        $cache = CacheUtils::getArrayBased();
+
+        $subject = new SpeciesService($speciesDefinitions, $artisanRepositoryMock, $cache);
+
+        $this->expectException(SharedRootSpecieException::class);
+        $subject->getSpecies();
     }
 }

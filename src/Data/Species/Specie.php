@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace App\Data\Species;
 
+use App\Data\Species\Exceptions\IncompleteSpecieException;
 use Stringable;
 
 class Specie implements Stringable
 {
     /**
-     * @var list<Specie>
+     * @var list<Specie>|null
      */
-    private array $parents;
+    private ?array $parents = null;
 
     /**
-     * @var list<Specie>
+     * @var list<Specie>|null
      */
-    private array $children;
+    private ?array $children = null;
 
     public function __construct(
         public readonly string $name,
@@ -48,7 +49,7 @@ class Specie implements Stringable
      */
     public function getParents(): array
     {
-        return $this->parents;
+        return $this->parents ?? throw new IncompleteSpecieException($this->name);
     }
 
     /**
@@ -58,7 +59,7 @@ class Specie implements Stringable
      */
     public function getChildren(): array
     {
-        return $this->children;
+        return $this->children ?? throw new IncompleteSpecieException($this->name);
     }
 
     /**
@@ -70,7 +71,7 @@ class Specie implements Stringable
     {
         $result = $this->parents;
 
-        foreach ($this->parents as $parent) {
+        foreach ($this->getParents() as $parent) {
             $this->addAncestorsRecursionSafely($parent, $result);
         }
 
@@ -96,7 +97,7 @@ class Specie implements Stringable
     {
         $result = $this->children;
 
-        foreach ($this->children as $child) {
+        foreach ($this->getChildren() as $child) {
             $this->addDescendantsRecursionSafely($child, $result);
         }
 
@@ -115,12 +116,12 @@ class Specie implements Stringable
 
     public function isRoot(): bool
     {
-        return [] === $this->parents;
+        return [] === $this->getParents();
     }
 
     public function isLeaf(): bool
     {
-        return [] === $this->children;
+        return [] === $this->getChildren();
     }
 
     public function __toString(): string
@@ -133,7 +134,7 @@ class Specie implements Stringable
      */
     private function addAncestorsRecursionSafely(Specie $specie, array &$result): void
     {
-        foreach ($specie->parents as $parent) {
+        foreach ($specie->getParents() as $parent) {
             if (!in_array($parent, $result, true)) {
                 $result[] = $parent;
                 $this->addAncestorsRecursionSafely($parent, $result);
@@ -146,7 +147,7 @@ class Specie implements Stringable
      */
     private function addDescendantsRecursionSafely(Specie $specie, array &$result): void
     {
-        foreach ($specie->children as $child) {
+        foreach ($specie->getChildren() as $child) {
             if (!in_array($child, $result, true)) {
                 $result[] = $child;
                 $this->addDescendantsRecursionSafely($child, $result);
