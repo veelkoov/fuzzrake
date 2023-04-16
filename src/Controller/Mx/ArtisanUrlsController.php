@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Fields;
 use App\Repository\ArtisanUrlRepository;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Response;

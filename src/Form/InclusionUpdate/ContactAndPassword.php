@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
-use App\DataDefinitions\ContactPermit;
-use App\DataDefinitions\Fields\Validation;
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Validation;
 use App\Form\Transformers\ContactPermitTransformer;
 use App\ValueObject\Texts;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

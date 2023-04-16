@@ -11,7 +11,7 @@ final class SpecialItems
 {
     use UtilityClass;
 
-    public static function newUnknown(?int $initialValue = 0): MutableSpecialItem // TODO: #76 Species count, should not be nullable
+    public static function newUnknown(int $initialValue = 0): MutableSpecialItem
     {
         return new MutableSpecialItem(Consts::FILTER_VALUE_UNKNOWN, 'Unknown',
             'fas fa-question-circle', $initialValue);

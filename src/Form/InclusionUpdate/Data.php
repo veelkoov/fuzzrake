@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Form\InclusionUpdate;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\Features;
-use App\DataDefinitions\Fields\Validation;
-use App\DataDefinitions\OrderTypes;
-use App\DataDefinitions\ProductionModels;
-use App\DataDefinitions\Styles;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\Features;
+use App\Data\Definitions\Fields\Validation;
+use App\Data\Definitions\OrderTypes;
+use App\Data\Definitions\ProductionModels;
+use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;

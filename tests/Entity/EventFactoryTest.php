@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\Entity\EventFactory;
 use App\IuHandling\Changes\ChangeInterface;
 use App\IuHandling\Changes\ListChange;

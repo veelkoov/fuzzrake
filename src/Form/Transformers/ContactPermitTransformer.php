@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Transformers;
 
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\ContactPermit;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**

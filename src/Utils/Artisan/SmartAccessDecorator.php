@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\FieldsList;
-use App\DataDefinitions\Fields\Validation;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
+use App\Data\Definitions\Fields\FieldsList;
+use App\Data\Definitions\Fields\Validation;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanPrivateData;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Data\Fixer;
 
-use App\Utils\Data\Fixer\SinceFixer;
+use App\Data\Fixer\SinceFixer;
 use PHPUnit\Framework\TestCase;
 
 /**

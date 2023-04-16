@@ -32,7 +32,7 @@ class RequestParser
     ];
 
     public function __construct(
-        private readonly FiltersChoicesFilter $filter,
+        private readonly FiltersValidChoicesFilter $filter,
     ) {
     }
 
@@ -47,7 +47,7 @@ class RequestParser
         $dataShape = Type\string();
         $makerId = $dataShape->coerce($request->get('makerId', ''));
 
-        return $this->filter->getOnlyAllowed(new Choices(
+        return $this->filter->getOnlyValidChoices(new Choices(
             $makerId,
             $strArrays['countries'],
             $strArrays['states'],

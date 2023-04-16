@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Field;
 use App\IuHandling\SchemaFixer;
 use App\Utils\DataInputException;
 use App\Utils\DateTime\DateTimeException;

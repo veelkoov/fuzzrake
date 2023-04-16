@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;

@@ -6,7 +6,7 @@ namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
-use App\DataDefinitions\Fields\SecureValues;
+use App\Data\Definitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\ArtisanRepository;

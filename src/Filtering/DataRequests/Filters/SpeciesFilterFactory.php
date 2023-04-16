@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters;
 
-use App\Utils\Species\SpeciesService;
+use App\Data\Species\SpeciesService;
 
 class SpeciesFilterFactory
 {
     public function __construct(
-        private readonly SpeciesService $speciesService,
+        private readonly SpeciesService $speciesSrv,
     ) {
     }
 
@@ -18,6 +18,6 @@ class SpeciesFilterFactory
      */
     public function get(array $wantedItems): SpeciesFilter
     {
-        return new SpeciesFilter($wantedItems, new SpeciesSearchResolver($this->speciesService->getCompleteList()));
+        return new SpeciesFilter($wantedItems, $this->speciesSrv->getSpecies()->list);
     }
 }

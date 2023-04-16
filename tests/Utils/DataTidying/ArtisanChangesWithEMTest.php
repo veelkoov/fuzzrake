@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\DataTidying;
 
+use App\Data\Tidying\ArtisanChanges;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\DataTidying\ArtisanChanges;
 
 /**
  * @medium

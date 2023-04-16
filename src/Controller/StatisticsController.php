@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
+use App\Data\Species\SpeciesService;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Species\SpeciesService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -95,7 +95,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach ($input->items as $item) {
-            $count = $item->count ?? 0; // TODO: #76 Species count, should not be nullable
+            $count = $item->count;
 
             if (!array_key_exists($count, $result)) {
                 $result[$count] = [];
@@ -112,7 +112,7 @@ class StatisticsController extends AbstractController
         arsort($result);
 
         foreach ($input->specialItems as $item) {
-            $result[$item->label] = $item->count ?? 0; // TODO: #76 Species count, should not be nullable
+            $result[$item->label] = $item->count;
         }
 
         return $result;

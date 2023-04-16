@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
