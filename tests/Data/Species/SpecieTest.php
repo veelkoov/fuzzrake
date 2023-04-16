@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Data\Species;
 
+use App\Data\Species\Exceptions\IncompleteSpecieException;
 use App\Data\Species\Specie;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
@@ -65,5 +66,27 @@ class SpecieTest extends TestCase
         $subject = new Specie('A specie', false, 0);
 
         $this->assertEquals('A specie', (string) $subject);
+    }
+
+    public function testhandlingUninitializedChildren(): void
+    {
+        $subject = new Specie('A specie', false, 0);
+        $subject->setParents([]);
+
+        $subject->isRoot();
+
+        $this->expectException(IncompleteSpecieException::class);
+        $subject->isLeaf();
+    }
+
+    public function testhandlingUninitializedParents(): void
+    {
+        $subject = new Specie('A specie', false, 0);
+        $subject->setChildren([]);
+
+        $subject->isLeaf();
+
+        $this->expectException(IncompleteSpecieException::class);
+        $subject->isRoot();
     }
 }
