@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
-use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\PHPUnit\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\PHPUnit\Rector\MethodCall\GetMockBuilderGetMockToCreateMockRector;
 use Rector\PHPUnit\Set\PHPUnitLevelSetList;
@@ -42,12 +42,12 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->parallel();
 
     $rectorConfig->skip([
-        ClassPropertyAssignToConstructorPromotionRector::class, // Breaks annotations
+        ClassPropertyAssignToConstructorPromotionRector::class, // Breaks some annotations
         AttributeKeyToClassConstFetchRector::class, // Ignores imports
         AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
         GetMockBuilderGetMockToCreateMockRector::class, // Using createPartialMock leaves uninitialized properties
-        AddDoesNotPerformAssertionToNonAssertingTestRector::class, // TODO
-        ArraySpreadInsteadOfArrayMergeRector::class, // TODO
+        AddDoesNotPerformAssertionToNonAssertingTestRector::class, // Some assertions happen in called helper methods
         SimplifyFormRenderingRector::class, // TODO
+        ReadOnlyClassRector::class, // Let me decide when
     ]);
 };
