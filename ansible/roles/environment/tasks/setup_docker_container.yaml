@@ -1,22 +1,22 @@
 ---
-- name: build PHP-FPM Docker image
-  docker_image:
+- name: 'Build PHP-FPM Docker image'
+  community.docker.docker_image:
     build:
-      path: "{{ deployment_path }}/docker/php-fpm"
-      pull: yes
-    force_source: yes
-    name: "{{ php_fpm_docker_image_name }}"
-    source: build
-    state: present
-  run_once: yes # This obviously will fail if envs were on separate machines
+      path: '{{ deployment_path }}/docker/php-fpm'
+      pull: true
+    force_source: true
+    name:   '{{ php_fpm_docker_image_name }}'
+    source: 'build'
+    state:  'present'
+  run_once: true # This obviously will fail if envs were on separate machines
 
-- name: setup PHP-FPM Docker container
-  docker_container:
-    container_default_behavior: no_defaults
-    image: "{{ php_fpm_docker_image_name }}"
-    name: "{{ php_fpm_container_name }}"
-    published_ports: "{{ php_fpm_container_port }}:9000"
-    restart_policy: unless-stopped
+- name: 'Setup PHP-FPM Docker container'
+  community.docker.docker_container:
+    container_default_behavior: 'no_defaults'
+    image: '{{ php_fpm_docker_image_name }}'
+    name:  '{{ php_fpm_container_name }}'
+    published_ports: '{{ php_fpm_container_port }}:9000'
+    restart_policy:  'unless-stopped'
     user: '1000:1000'
     volumes:
-      - "{{ deployment_path }}:/var/www/html"
+      - '{{ deployment_path }}:/var/www/html'

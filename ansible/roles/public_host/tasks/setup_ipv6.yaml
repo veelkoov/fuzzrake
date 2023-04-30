@@ -1,28 +1,29 @@
 ---
-- name: setup IPv6-related stuff in sysctl
-  template:
-    dest: "/etc/sysctl.d/05-ipv6.conf"
-    src:  "etc/sysctl.d/05-ipv6.conf"
+- name: 'Setup IPv6-related stuff in sysctl'
+  ansible.builtin.template:
+    dest: '/etc/sysctl.d/05-ipv6.conf'
+    mode: '0644'
+    src:  'etc/sysctl.d/05-ipv6.conf'
   notify:
-    - reboot system
+    - 'Reload system'
 
-- name: setup IPv6
-  lineinfile:
-    line:  "{{ item.name }}={{ item.value }}"
-    path:  "/etc/sysconfig/network-scripts/ifcfg-eth0"
-    regex: "^{{ item.name }}"
+- name: 'Setup IPv6'
+  ansible.builtin.lineinfile:
+    line:  '{{ item.name }}={{ item.value }}'
+    path:  '/etc/sysconfig/network-scripts/ifcfg-eth0'
+    regex: '^{{ item.name }}'
   notify:
-    - reboot system
+    - 'Reload system'
   loop:
-    - name:  "IPV6INIT"
-      value: "yes"
-    - name:  "IPV6_AUTOCONF"
-      value: "no"
-    - name:  "IPV6_DEFROUTE"
-      value: "yes"
-    - name:  "IPV6_FAILURE_FATAL"
-      value: "no"
-    - name:  "IPV6ADDR"
-      value: "{{ ipv6_addr }}"
-    - name:  "IPV6_DEFAULTGW"
-      value: "{{ ipv6_defaultgw }}"
+    - name:  'IPV6INIT'
+      value: 'yes'
+    - name:  'IPV6_AUTOCONF'
+      value: 'no'
+    - name:  'IPV6_DEFROUTE'
+      value: 'yes'
+    - name:  'IPV6_FAILURE_FATAL'
+      value: 'no'
+    - name:  'IPV6ADDR'
+      value: '{{ ipv6_addr }}'
+    - name:  'IPV6_DEFAULTGW'
+      value: '{{ ipv6_defaultgw }}'

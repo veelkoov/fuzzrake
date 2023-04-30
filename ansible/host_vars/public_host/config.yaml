@@ -1,7 +1,7 @@
 ---
-fqdn:           "getfursu.it"
-ipv6_addr:      "2607:5300:201:3100::265b"
-ipv6_defaultgw: "2607:5300:201:3100::1"
+fqdn:           'getfursu.it'
+ipv6_addr:      '2607:5300:201:3100::265b'
+ipv6_defaultgw: '2607:5300:201:3100::1'
 
-bewares_host:   "bewares.{{ fqdn }}"
-bewares_path:   "/var/www/bewares"
+bewares_host:   'bewares.{{ fqdn }}'
+bewares_path:   '/var/www/bewares'

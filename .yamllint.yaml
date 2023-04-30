@@ -1,0 +1,8 @@
+---
+rules:
+  colons:
+    max-spaces-after: -1 # Allow manual indentation of properties
+
+  quoted-strings:
+    quote-type:          single
+    allow-quoted-quotes: true

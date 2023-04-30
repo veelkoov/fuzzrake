@@ -1,31 +1,31 @@
 ---
-- name: assure directory exists
-  file:
-    group: root
-    mode:  0755
-    owner: root
-    path:  "{{ deployment_path }}"
-    state: directory
+- name: 'Assure directory exists'
+  ansible.builtin.file:
+    group: 'root'
+    mode:  '0755'
+    owner: 'root'
+    path:  '{{ deployment_path }}'
+    state: 'directory'
 
-- name: checkout sources
-  git:
-    dest: "{{ deployment_path }}"
-    force: yes
-    repo: https://github.com/veelkoov/fuzzrake.git
-    version: "{{ branch }}"
+- name: 'Checkout sources'
+  ansible.builtin.git:
+    dest:    '{{ deployment_path }}'
+    force:   true
+    repo:    'https://github.com/veelkoov/fuzzrake.git'
+    version: '{{ branch }}'
 
-- name: assure var directory is writable
-  file:
-    group: root
-    mode:  0777
-    owner: root
-    path:  "{{ deployment_path }}/var"
-    state: directory
+- name: 'Assure var directory is writable'
+  ansible.builtin.file:
+    group: 'root'
+    mode:  '0777'
+    owner: 'root'
+    path:  '{{ deployment_path }}/var'
+    state: 'directory'
 
-- name: update .env.local
-  template:
-    dest: "{{ deployment_path }}/.env.local"
-    group: root
-    mode: 0644
-    owner: root
-    src: ".env.local.j2"
+- name: 'Update .env.local'
+  ansible.builtin.template:
+    dest:  '{{ deployment_path }}/.env.local'
+    group: 'root'
+    mode:  '0644'
+    owner: 'root'
+    src:   '.env.local.j2'

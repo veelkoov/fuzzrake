@@ -1,104 +1,107 @@
 ---
-- name: install packages
-  yum:
+- name: 'Install packages'
+  ansible.builtin.yum:
     name:
-      - brotli
-      - brotli-devel
-      - httpd
-      - httpd-devel
-      - mod_ssl
-    state: installed
+      - 'brotli'
+      - 'brotli-devel'
+      - 'httpd'
+      - 'httpd-devel'
+      - 'mod_ssl'
+    state: 'installed'
 
-- name: enable Apache
-  service:
-    enabled: yes
-    name: httpd
-    state: started
+- name: 'Enable Apache'
+  ansible.builtin.service:
+    enabled: true
+    name:    'httpd'
+    state:   'started'
 
-- name: setup firewalld for Apache
-  firewalld:
-    immediate: yes
-    permanent: yes
-    service: "{{ item }}"
-    state: enabled
+- name: 'Setup firewalld for Apache'
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    service:   '{{ item }}'
+    state:     'enabled'
   loop:
-    - http
-    - https
+    - 'http'
+    - 'https'
 
-- name: create empty WWW dir
-  file:
-    group: root
-    mode: 0755
-    owner: root
-    path: "/var/www/empty"
-    state: directory
+- name: 'Create empty WWW dir'
+  ansible.builtin.file:
+    group: 'root'
+    mode:  '0755'
+    owner: 'root'
+    path:  '/var/www/empty'
+    state: 'directory'
 
-- name: create empty WWW index.html
-  copy:
-    content: ""
-    dest: "/var/www/empty/index.html"
-    group: root
-    mode: 0644
-    owner: root
+- name: 'Create empty WWW index.html'
+  ansible.builtin.copy:
+    content: ''
+    dest:    '/var/www/empty/index.html'
+    group:   'root'
+    mode:    '0644'
+    owner:   'root'
 
-- name: create bewares dir
-  file:
-    group: centos
-    mode:  0775
-    owner: root
-    path:  "{{ bewares_path }}"
-    state: directory
+- name: 'Create bewares dir'
+  ansible.builtin.file:
+    group: 'centos'
+    mode:  '0775'
+    owner: 'root'
+    path:  '{{ bewares_path }}'
+    state: 'directory'
 
-- name: create /opt/mod_brotli directory
-  file:
-    group: root
-    mode:  0755
-    owner: root
-    path:  "/opt/mod_brotli"
-    state: directory
+- name: 'Create /opt/mod_brotli directory'
+  ansible.builtin.file:
+    group: 'root'
+    mode:  '0755'
+    owner: 'root'
+    path:  '/opt/mod_brotli'
+    state: 'directory'
 
-- name: get mod_brotli.c
-  get_url:
-    dest: "/opt/mod_brotli/mod_brotli.c"
-    url:  "https://raw.githubusercontent.com/apache/httpd/2.4.x/modules/filters/mod_brotli.c"
+- name: 'Get mod_brotli.c'
+  ansible.builtin.get_url:
+    dest: '/opt/mod_brotli/mod_brotli.c'
+    mode: '0644'
+    url:  'https://raw.githubusercontent.com/apache/httpd/2.4.x/modules/filters/mod_brotli.c'
 
-- name: compile & install mod_brotli
-  command: apxs -i -c -l brotlienc mod_brotli.c
+- name: 'Compile & install mod_brotli'
+  ansible.builtin.command: 'apxs -i -c -l brotlienc mod_brotli.c'
   args:
-    chdir: "/opt/mod_brotli"
+    chdir: '/opt/mod_brotli'
   # TODO: changed_when
 
-- name: update Apache configuration
-  template:
-    src: "etc/httpd/{{ item }}"
-    dest: "/etc/httpd/{{ item|regex_replace('\\.j2\\.conf$', '.conf') }}"
+- name: 'Update Apache configuration'
+  ansible.builtin.template:
+    src:  'etc/httpd/{{ item }}'
+    dest: '/etc/httpd/{{ item | regex_replace("\.j2\.conf$", ".conf") }}'
+    mode: '0644'
   with_items:
-    - "conf/httpd.j2.conf"
-    - "conf.d/autoindex.j2.conf"
-    - "conf.d/bewares.j2.conf"
-    - "conf.d/fuzzrake.j2.conf"
-    - "conf.d/welcome.j2.conf"
-    - "conf.modules.d/00-base.j2.conf"
-    - "conf.modules.d/00-brotli.j2.conf"
-    - "conf.modules.d/00-dav.j2.conf"
-    - "conf.modules.d/00-lua.j2.conf"
-    - "conf.modules.d/00-mpm.j2.conf"
+    - 'conf/httpd.j2.conf'
+    - 'conf.d/autoindex.j2.conf'
+    - 'conf.d/bewares.j2.conf'
+    - 'conf.d/fuzzrake.j2.conf'
+    - 'conf.d/welcome.j2.conf'
+    - 'conf.modules.d/00-base.j2.conf'
+    - 'conf.modules.d/00-brotli.j2.conf'
+    - 'conf.modules.d/00-dav.j2.conf'
+    - 'conf.modules.d/00-lua.j2.conf'
+    - 'conf.modules.d/00-mpm.j2.conf'
   notify:
-    - restart Apache
+    - 'Reload Apache'
 
-- name: update logrotate.d/httpd
-  template:
-    src:    "etc/logrotate.d/httpd.j2"
-    dest:   "/etc/logrotate.d/httpd"
-    backup: yes
+- name: 'Update logrotate.d/httpd'
+  ansible.builtin.template:
+    src:    'etc/logrotate.d/httpd.j2'
+    dest:   '/etc/logrotate.d/httpd'
+    mode:   '0644'
+    backup: true
 
-- name: install certbot
-  snap:
-    name:    "certbot"
-    classic: yes
+- name: 'Install certbot'
+  community.general.snap:
+    name:    'certbot'
+    classic: true
 
-- name: link certbot in $PATH
-  file:
-    path:  "/usr/bin/certbot"
-    src:   "/snap/bin/certbot"
-    state: link
+- name: 'Link certbot in $PATH'
+  ansible.builtin.file:
+    path:  '/usr/bin/certbot'
+    src:   '/snap/bin/certbot'
+    state: 'link'

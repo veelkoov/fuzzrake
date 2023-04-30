@@ -1,13 +1,13 @@
 ---
-- name: create update script
-  template:
-    dest: "{{ update_script_path }}"
-    mode: 0744
-    src:  "update.sh.j2"
+- name: 'Create the update script'
+  ansible.builtin.template:
+    dest: '{{ update_script_path }}'
+    mode: '0744'
+    src:  'update.sh.j2'
 
-- name: setup update cronjob
-  cron:
-    hour:   "0,12"
-    name:   "tracker - commissions"
+- name: 'Setup the update cronjob'
+  ansible.builtin.cron:
+    hour:   '0,12'
+    name:   'tracker - commissions'
     minute: 0
-    value:  "{{ update_script_path|quote }} >> {{ update_log_path|quote }} 2>&1"
+    value:  '{{ update_script_path | quote }} >> {{ update_log_path | quote }} 2>&1'

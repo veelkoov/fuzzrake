@@ -1,18 +1,18 @@
 ---
-- name: composer install
-  command: docker exec -ti {{ php_fpm_container_name|quote }} composer install
+- name: 'Execute: composer install'
+  ansible.builtin.command: 'docker exec -ti {{ php_fpm_container_name | quote }} composer install'
   args:
-    chdir: "{{ deployment_path }}"
+    chdir: '{{ deployment_path }}'
   # TODO: changed_when
 
-- name: yarn install
-  command: yarn --cache-folder "{{ deployment_path }}/var/yarn-cache" install
+- name: 'Execute: yarn install'
+  ansible.builtin.command: 'yarn --cache-folder {{ (deployment_path + "/var/yarn-cache") | quote }} install' # TODO: Var for the folder, deduplicate
   args:
-    chdir: "{{ deployment_path }}"
+    chdir: '{{ deployment_path }}'
   # TODO: changed_when
 
-- name: yarn encore production
-  command: yarn --cache-folder "{{ deployment_path }}/var/yarn-cache" encore production
+- name: 'Execute: yarn encore production'
+  ansible.builtin.command: 'yarn --cache-folder {{ (deployment_path + "/var/yarn-cache") | quote }} encore production'
   args:
-    chdir: "{{ deployment_path }}"
+    chdir: '{{ deployment_path }}'
   # TODO: changed_when (if possible)
