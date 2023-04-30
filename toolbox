@@ -47,10 +47,8 @@ function assure_line_in_file() {
 }
 
 function action_run_setup() {
-    # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-    run_command sudo mkdir -p ./var/cache
-    run_command sudo mkdir -p ./var/log
-    run_command sudo chmod -R a+w ./var
+    run_command mkdir -p ./var/cache
+    run_command mkdir -p ./var/log
     run_command touch ./var/db.sqlite
 
     assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
@@ -222,9 +220,9 @@ function action() {
 
         'console')      run_console "$@" ;;
 
-        # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-        'cc')           run_command sudo rm -rf ./var/cache/* && sudo chmod a+w ./var/cache ;;
-        'cc-prod')      run_command ssh getfursu.it sudo docker exec fuzzrake-prod bin/console cache:clear ;;
+        'cc')           run_command run_console cache:clear ;;
+        'cc-beta')      run_command ssh getfursu.it docker exec fuzzrake-beta bin/console cache:clear ;;
+        'cc-prod')      run_command ssh getfursu.it docker exec fuzzrake-prod bin/console cache:clear ;;
 
         'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
         'pus')          action pu --group small  "$@" ;;
