@@ -1,4 +1,4 @@
 ---
 - name: 'Clear cache'
-  ansible.builtin.shell: 'docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear'
+  ansible.builtin.command: 'docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear'
   changed_when: 'not ansible_check_mode'
