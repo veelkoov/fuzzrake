@@ -8,9 +8,17 @@ if [ "$DEV_MACHINE" = "yes" ]; then
     echo "	host.docker.internal" >> /etc/hosts
 fi
 
-setfacl  -R -m u:www-data:rwX -m u:"$DOCKER_UID":rwX /var/www/html/var
-setfacl -dR -m u:www-data:rwX -m u:"$DOCKER_UID":rwX /var/www/html/var
-setfacl  -R -m u:www-data:rwX -m u:"$DOCKER_UID":rwX /composer
-setfacl -dR -m u:www-data:rwX -m u:"$DOCKER_UID":rwX /composer
+mkdir -p -m 700 ./var
+mkdir -p -m 700 ./var/cache
+mkdir -p -m 700 ./var/log
+mkdir -p -m 700 ./var/sessions
+
+for TARGET in \
+        /var/www/html/var \
+        /composer \
+; do
+    setfacl  -R -m u:www-data:rwX -m u:"$DOCKER_UID":rwX "$TARGET"
+    setfacl -dR -m u:www-data:rwX -m u:"$DOCKER_UID":rwX "$TARGET"
+done
 
 exec php-fpm

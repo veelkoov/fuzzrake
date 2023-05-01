@@ -72,6 +72,7 @@ CMD /entrypoint.sh
 
 RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'
 WORKDIR /var/www/html
+VOLUME /var/www/html
 
 #
 # Allow setting Composer home to a volume, to preserve cache e.g. between Jenkins jobs
@@ -87,16 +88,3 @@ VOLUME /composer
 
 ENV PANTHER_CHROME_DRIVER_BINARY /usr/lib/chromium/chromedriver
 ENV PANTHER_NO_SANDBOX 1
-
-#
-# Setup volume to be used on the dev machine
-#
-
-VOLUME /var/www/html
-
-#
-# Setup volume to be used on production
-#
-
-RUN mkdir /var/www/html/var
-VOLUME /var/www/html/var

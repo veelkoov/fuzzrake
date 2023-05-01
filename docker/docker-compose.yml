@@ -23,6 +23,5 @@ services:
     restart: 'unless-stopped'
     volumes:
       - '..:/var/www/html'
-      - '../var:/var/www/html/var'
       - '${FUZZRAKE_COMPOSER_HOME:-../var/composer}:/composer'
       - '/dev/shm:/dev/shm'
