@@ -1,10 +1,18 @@
-FROM php:8.2.1-fpm-alpine3.17
+FROM php:8.2.5-fpm-alpine3.17
 
 ARG DEV_MACHINE=no
+ENV DEV_MACHINE "$DEV_MACHINE"
+
+ARG DOCKER_UID=1000
+ENV DOCKER_UID "$DOCKER_UID"
+
+#
+# Packages installation
+#
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev
+RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev acl
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -24,13 +32,16 @@ RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         echo "Setting up develop software" \
         && pecl install xdebug \
         && docker-php-ext-enable xdebug.so \
-        && sed -r -i'' 's/set -e/set -e\ncd \/etc\nsed \/host.docker.internal\/d hosts > hosts.new\ncat hosts.new > hosts\nip r | grep "default via" | cut -f3 -d" " | tr -d "\\n" >> hosts\necho " host.docker.internal" >> hosts\ncd -\n/' /usr/local/bin/docker-php-entrypoint \
         && apk add --no-cache chromium chromium-chromedriver; \
     else \
         echo "Skipping develop software"; \
     fi
 
 RUN apk del .build-deps
+
+#
+# Set up configuration files
+#
 
 COPY php.ini-production.dist php.ini docker-php-ext-xdebug.ini docker-php-ext-xdebug.ini.dist /tmp/
 
@@ -44,19 +55,36 @@ RUN if [ "$DEV_MACHINE" == "yes" ]; then \
         && rm "/tmp/docker-php-ext-xdebug.ini.dist" "/tmp/docker-php-ext-xdebug.ini"; \
     fi
 
-# It's OK for production image
-ENV PANTHER_CHROME_DRIVER_BINARY /usr/lib/chromium/chromedriver
-ENV PANTHER_NO_SANDBOX 1
-
 RUN diff  "/tmp/php.ini-production.dist" "$PHP_INI_DIR/php.ini-production" \
     && mv "/tmp/php.ini"                 "$PHP_INI_DIR/php.ini" \
     && rm "/tmp/php.ini-production.dist"
 
-# FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-VOLUME /var/www/html
-WORKDIR /var/www/html
-RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'
+#
+# Set up entrypoint
+#
 
-# FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-VOLUME /composer
+COPY entrypoint.sh /entrypoint.sh
+CMD /entrypoint.sh
+
+#
+# Set up working directory
+#
+
+RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'
+WORKDIR /var/www/html
+VOLUME /var/www/html
+
+#
+# Allow setting Composer home to a volume, to preserve cache e.g. between Jenkins jobs
+#
+
+RUN mkdir /composer
 ENV COMPOSER_HOME /composer
+VOLUME /composer
+
+#
+# Development stuff, but OK to be included in production image
+#
+
+ENV PANTHER_CHROME_DRIVER_BINARY /usr/lib/chromium/chromedriver
+ENV PANTHER_NO_SANDBOX 1

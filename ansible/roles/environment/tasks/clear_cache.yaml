@@ -1,5 +1,4 @@
 ---
-- name: 'Clear cache' # FIXME: This ruins all sessions
-  ansible.builtin.shell: 'rm -rf var/cache/*'
-  args:
-    chdir: '{{ deployment_path }}'
+- name: 'Clear cache'
+  ansible.builtin.command: 'docker exec {{ php_fpm_container_name | quote }} bin/console cache:clear'
+  changed_when: 'not ansible_check_mode'
