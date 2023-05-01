@@ -19,6 +19,7 @@ services:
       context: 'php-fpm'
       args:
         DEV_MACHINE: 'yes'
+        DOCKER_UID:  '${FUZZRAKE_DOCKER_UID:-1000}'
     restart: 'unless-stopped'
     volumes:
       - '..:/var/www/html'

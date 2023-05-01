@@ -67,7 +67,6 @@ pipeline {
           sh 'yarn install'
           sh './toolbox yep'
           sh './toolbox pu --version'
-          sh './toolbox console cache:clear'
           sh './toolbox console doctrine:schema:create'
         }
       }
