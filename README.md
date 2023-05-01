@@ -6,7 +6,7 @@ See [getfursu.it/info](https://getfursu.it/info)
 ## Requirements
 
 * Docker w/Compose plugin
-* sudo
+* ACL-enabled filesystem
 * Yarn (to be able to do more than run tests in the `@small` group)
 
 
