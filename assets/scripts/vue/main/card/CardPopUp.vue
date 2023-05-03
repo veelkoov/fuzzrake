@@ -190,7 +190,9 @@
                 <p>
                   <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
                   It should be tracked and updated automatically based on the contents of:
-                  <a v-for="item in artisan.commissionsUrls" :key="item" :href="item" target="_blank">{{ item }}</a>,
+                    <template v-for="item in artisan.commissionsUrls" :key="item">
+                      <a :href="item" target="_blank">{{ item }}</a>, <wbr>
+                    </template>
                   however the software failed to "understand" the contents. Last time tried on {{ artisan.csLastCheck }} UTC.
                 </p>
 
