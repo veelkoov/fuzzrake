@@ -11,17 +11,21 @@ use App\Utils\Regexp\Replacements;
 use JsonException;
 use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;
+use TRegx\CleanRegex\Pattern;
 use TRegx\CleanRegex\PatternList;
 
 readonly class TextPreprocessor
 {
     private Detector $detector;
+    private Pattern $instaBio;
 
     public function __construct(
         private PatternList $falsePositives,
         private Replacements $replacements,
     ) {
         $this->detector = new Detector();
+        // TODO: Naive (fixed formatting, bio without "), possibly find a better place
+        $this->instaBio = Pattern::of('"graphql":\{"user":\{"biography":(?<bio>"[^"]+")');
     }
 
     /**
@@ -29,12 +33,12 @@ readonly class TextPreprocessor
      */
     public function getText(string $inputText, string $url, string $artisanName): Text
     {
-        $contents = $this->extractFromJson($inputText);
+        $contents = $this->applyFilters($url, $inputText);
+        $contents = $this->extractFromJson($contents);
         $contents = strtolower($contents);
         $contents = $this->applyReplacements($contents);
         $contents = self::replaceArtisanName($artisanName, $contents);
         $contents = $this->falsePositives->prune($contents);
-        $contents = $this->applyFilters($url, $contents);
 
         return new Text($inputText, $contents);
     }
@@ -103,6 +107,21 @@ readonly class TextPreprocessor
             }
 
             return $filtered->html();
+        }
+
+        if ($this->detector->isInstagram($url)) {
+            $match = $this->instaBio->match($inputText);
+
+            if ($match->test()) {
+                $unparsed = $parsed = $match->first()->get('bio');
+
+                try {
+                    $parsed = Json::decode($unparsed);
+                } catch (JsonException) {
+                }
+
+                return is_string($parsed) ? $parsed : $unparsed;
+            }
         }
 
         return $inputText;

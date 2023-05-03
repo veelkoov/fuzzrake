@@ -13,7 +13,10 @@ use App\Service\WebpageSnapshotManager;
 use App\Tracking\OfferStatus\OffersStatusesProcessor;
 use App\Tracking\OfferStatus\OffersStatusesResult;
 use App\Tracking\OfferStatus\OfferStatus;
+use App\Tracking\Web\Url\CoercedUrl;
+use App\Tracking\Web\Url\Fetchable;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
+use App\Tracking\Web\WebsiteInfo;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +33,8 @@ class StatusTracker
      */
     private readonly array $artisans;
 
+    private readonly WebsiteInfo $websiteInfo;
+
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
@@ -40,16 +45,19 @@ class StatusTracker
         private readonly SymfonyStyle $io,
     ) {
         $this->artisans = Artisan::wrapAll($this->repository->findAll());
+        $this->websiteInfo = new WebsiteInfo();
     }
 
     public function performUpdates(): void
     {
         $urls = $this->getUrlsToFetch();
+        $urls = $this->coerceUrlsToFetch($urls);
         $this->snapshots->prefetchUrls($urls, $this->refetch, $this->io);
 
         foreach ($this->artisans as $artisan) {
             $urls = $artisan->getUrlObjs(Field::URL_COMMISSIONS);
-            $snapshots = map($urls, fn (ArtisanUrl $url): Snapshot => $this->snapshots->get($url, false));
+            $urls = $this->coerceUrlsToFetch($urls);
+            $snapshots = map($urls, fn (Fetchable $url): Snapshot => $this->snapshots->get($url, false));
 
             $offerStatusResult = $this->processor->getOffersStatuses($snapshots);
             $this->logIssues($offerStatusResult, $artisan);
@@ -110,5 +118,23 @@ class StatusTracker
                 $this->entityManager->persist(EventFactory::forStatusTracker($change, $artisan));
             }
         }
+    }
+
+    /**
+     * @param ArtisanUrl[] $urls
+     *
+     * @return Fetchable[]
+     */
+    private function coerceUrlsToFetch(array $urls): array
+    {
+        return array_map(function (ArtisanUrl $url): Fetchable {
+            $coercedUrl = $this->websiteInfo->coerceTrackingUrl($url->getUrl());
+
+            if ($coercedUrl === $url->getUrl()) {
+                return $url;
+            } else {
+                return new CoercedUrl($url, $coercedUrl);
+            }
+        }, $urls);
     }
 }

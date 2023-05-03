@@ -38,6 +38,14 @@ class WebsiteInfoTest extends TestCase
 
         $subject = new WebsiteInfo();
 
-        self::assertEquals(['https://i.instagram.com/api/v1/users/web_profile_info/?username=getfursu.it'], $subject->getChildrenUrls($snapshots));
+        self::assertEquals([], $subject->getChildrenUrls($snapshots));
+    }
+
+    public function testCoerceTrackingInstagramUrl(): void
+    {
+        $subject = new WebsiteInfo();
+        $result = $subject->coerceTrackingUrl('https://www.instagram.com/getfursu.it/');
+
+        self::assertEquals('https://www.instagram.com/getfursu.it/?__a=1&__d=dis', $result);
     }
 }

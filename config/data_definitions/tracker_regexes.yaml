@@ -18,7 +18,7 @@ parameters:
       - 'although (fursuit )?COMMISSIONS are closed'
 
       # open in / next opening
-      - 'OFFER (are )?open (in |(in )?MONTHS)'
+      - 'OFFER:? (are )?opens? (in |(in )?TIME_DESC)'
       - 'next COMMISSIONS opening'
 
       # "art commissions"
@@ -116,7 +116,7 @@ parameters:
 
       ' AND ':
         - ' and '
-        - ' ?(&amp;|/) ?'
+        - ' ?(&amp;|[/+]) ?'
 
       'COMMISSIONS':
         - 'comm?iss?ions?'
@@ -132,7 +132,7 @@ parameters:
         - 'mine'
         - 'ours?'
 
-      'MONTHS':
+      'TIME_DESC':
         - 'jan(uary)?'
         - 'feb(ruary)?'
         - 'mar(ch)?'
@@ -145,6 +145,7 @@ parameters:
         - 'oct(ober)?'
         - 'nov(ember)?'
         - 'dec(ember)?'
+        - 'spring|summer|autumn|winter|late|early'
 
     cleaners: # Used to remove noise / simplify information
       '(?<=function|try|if|catch|else[;,{})]) (?=function|catch|else[{}\$(])': '_'
@@ -154,12 +155,13 @@ parameters:
 
       '&nbsp;':                                          ' '
       "\u00A0":                                          ' ' # NBSP
+      '❗':                                              '!' # Emoji exclamation mark
       '<br */?>':                                        "\n"
       '<style[^>]*>.*?</style>':                         ' '
       '<!--.*?-->':                                      ' '
       '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>': ''
-      '\*\*\*open\*\*\*':                                'open'
-      '&gt;&gt;open&lt;&lt;':                            'open'
+      '(\*\*\*|!)(open|closed)(\*\*\*|!)':               '$2'
+      '&gt;&gt;(open|closed)&lt;&lt;':                   '$1'
       '(<[^>]+ )style="[^"]*"([^>]*>)':                  '$1$2'
 
       '&#(?:39|8217);': "'"

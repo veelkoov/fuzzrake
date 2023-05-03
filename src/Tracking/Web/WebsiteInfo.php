@@ -34,14 +34,39 @@ class WebsiteInfo
         $this->instagramUrlPattern = pattern(WebsiteInfo::INSTAGRAM_URL_REGEXP, 'n');
     }
 
-    public static function getTrelloBoardDataUrl(string $boardId): string
+    private static function getTrelloBoardDataUrl(string $boardId): string
     {
         return "https://trello.com/1/Boards/$boardId?lists=open&list_fields=name&cards=visible&card_attachments=false&card_stickers=false&card_fields=desc%2CdescData%2Cname&card_checklists=none&members=none&member_fields=none&membersInvited=none&membersInvited_fields=none&memberships_orgMemberType=false&checklists=none&organization=false&organization_fields=none%2CdisplayName%2Cdesc%2CdescData%2Cwebsite&organization_tags=false&myPrefs=false&fields=name%2Cdesc%2CdescData";
     }
 
-    public function getInstagramUserProfileDataUrl(string $username): string
+    private function getInstagramUserProfileDataUrl(string $username): string
     {
-        return "https://i.instagram.com/api/v1/users/web_profile_info/?username=$username";
+        // Credit: https://github.com/postaddictme/instagram-php-scraper/blob/fcc7207f300aa55fa08dd01db31ba694d020f26f/src/InstagramScraper/Endpoints.php#L13
+        return "https://www.instagram.com/$username/?__a=1&__d=dis";
+    }
+
+    public function coerceTrackingUrl(string $url): string
+    {
+        if ($this->detector->isInstagram($url)) {
+            return $this->coerceInstagramTrackingUrl($url);
+        } else {
+            return $url;
+        }
+    }
+
+    private function coerceInstagramTrackingUrl(string $url): string
+    {
+        return $this->instagramUrlPattern
+            ->match($url)
+            ->findFirst()
+            ->map(function (Detail $detail): string {
+                try {
+                    return self::getInstagramUserProfileDataUrl($detail->get('username'));
+                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
+                    throw new UnbelievableRuntimeException($e);
+                } // @codeCoverageIgnoreEnd
+            })
+            ->orReturn($url);
     }
 
     /**
@@ -92,17 +117,8 @@ class WebsiteInfo
      */
     private function getInstagramDependencyUrls(Snapshot $webpageSnapshot): array
     {
-        return $this->instagramUrlPattern
-            ->match($webpageSnapshot->url)
-            ->findFirst()
-            ->map(function (Detail $detail): array {
-                try {
-                    return [self::getInstagramUserProfileDataUrl($detail->get('username'))];
-                } catch (NonexistentGroupException $e) { // @codeCoverageIgnoreStart
-                    throw new UnbelievableRuntimeException($e);
-                } // @codeCoverageIgnoreEnd
-            })
-            ->orReturn([]);
+        // Instead of downloading a "child", we now coerce Instagram URL.
+        return [];
     }
 
     public function getLatentCode(string $url, string $content): ?int

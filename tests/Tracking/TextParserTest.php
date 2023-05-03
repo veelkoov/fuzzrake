@@ -80,12 +80,16 @@ class TextParserTest extends TestCase
 
         foreach ($cases as $caseText) {
             [$inputText, $results] = explode($infoSeparator, $caseText, 2);
-            [$name, $results] = explode("\n", $results, 2);
+            $parts = explode("\n", $results, 2);
+            $name = $parts[0];
+            $results = $parts[1] ?? '';
 
             $snapshot = new Snapshot($inputText, '', $now, 'TheStudioName', 200, [], []);
             $expected = [];
 
-            foreach (explode("\n", trim($results)) as $resultItem) {
+            $resultsArr = array_filter(explode("\n", trim($results)));
+
+            foreach ($resultsArr as $resultItem) {
                 $expected[] = [
                     substr($resultItem, 1),
                     match ($resultItem[0]) {

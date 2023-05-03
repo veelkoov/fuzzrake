@@ -101,12 +101,12 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-  run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$DB_TMP_PATH"
-  backup_private_data
-  run_command sqlite3 "$DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
-  run_command sqlite3 "$DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
-  run_command chmod a+w "$DB_TMP_PATH"
-  run_command mv "$DB_TMP_PATH" "$DB_PATH"
+    run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$DB_TMP_PATH"
+    backup_private_data
+    run_command sqlite3 "$DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
+    run_command sqlite3 "$DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
+    run_command chmod a+w "$DB_TMP_PATH"
+    run_command mv "$DB_TMP_PATH" "$DB_PATH"
 }
 
 function action_dbpush() {

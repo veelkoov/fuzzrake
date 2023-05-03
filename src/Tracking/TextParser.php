@@ -55,7 +55,9 @@ class TextParser
     }
 
     /**
-     * @return list<Text>
+     * @return Text[]
+     *
+     * @phpstan-return list<Text>
      *
      * @throws TrackerException
      */
