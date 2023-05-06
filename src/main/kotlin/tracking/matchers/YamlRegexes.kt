@@ -5,18 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class YamlRegexes(
     @JsonProperty("false_positives")
     val falsePositives: List<String>,
+
     @JsonProperty("offers_statuses")
     val offersStatuses: List<String>,
 
     val placeholders: YamlPlaceholdersMap,
+
     val cleaners: Map<String, String>,
 )
 
 abstract class YamlPlaceholders {}
 
-class YamlPlaceholdersMap(
-    value: Map<Any?, Any?>,
-) : YamlPlaceholders() {
+class YamlPlaceholdersMap(value: Map<Any?, Any?>) : YamlPlaceholders() {
     private val items: Map<String, YamlPlaceholders>
 
     init {
@@ -31,15 +31,13 @@ class YamlPlaceholdersMap(
             itemKey to when (itemVal) {
                 is Map<*, *> -> YamlPlaceholdersMap(itemVal.toMap())
                 is List<*> -> YamlPlaceholdersList(itemVal.toList())
-                else -> throw IllegalArgumentException()// TODO: Debug message
+                else -> throw IllegalArgumentException() // TODO: Debug message
             }
         }
     }
 }
 
-class YamlPlaceholdersList(
-    value: List<Any?>,
-) : YamlPlaceholders() {
+class YamlPlaceholdersList(value: List<Any?>) : YamlPlaceholders() {
     private val items: List<String>
 
     init {

@@ -1,5 +1,5 @@
 package tracking
 
 data class Creator(
-    val name: String,
+    val aliases: List<String>,
 )

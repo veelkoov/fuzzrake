@@ -16,7 +16,7 @@ object Factory {
     }
 
     fun getCleaners(): Matchers {
-        val options = setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE)
+        val options = setOf(RegexOption.MULTILINE)
 
         val replacements = regexes.cleaners.map { (pattern, replacement) ->
             RgxReplace(pattern, options, replacement)

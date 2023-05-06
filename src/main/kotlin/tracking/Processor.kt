@@ -13,14 +13,13 @@ class Processor {
     private val updater = Updater()
 
     fun run() {
-        provider.get().map { items ->
-            val texts = items.items.map { item ->
-                Text(item.contents, preprocessor.preprocess(item.contents))
-            }
+        provider.get().map { snapshots ->
+            val texts = snapshots.items.map { Text(it.contents) }
+            texts.forEach { it.unused = preprocessor.preprocess(it.unused, snapshots.creator.aliases) }
 
-            CreatorItems(items.creator, texts)
-        }.map { items ->
-            detector.detect(items)
+            CreatorItems(snapshots.creator, texts)
+        }.map { texts ->
+            detector.detect(texts)
         }.map { statuses ->
             updater.save(statuses)
         }
