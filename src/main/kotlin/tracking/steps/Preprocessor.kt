@@ -16,7 +16,6 @@ class Preprocessor {
         result = result.lowercase()
         result = cleaners.replaceIn(result)
         result = replaceCreatorAliases(result, creatorAliases)
-//        $contents = self::replaceArtisanName($artisanName, $contents); // TODO
 //        $contents = $this->falsePositives->prune($contents); // TODO
 
         return result
