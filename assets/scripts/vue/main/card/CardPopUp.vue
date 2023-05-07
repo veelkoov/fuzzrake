@@ -135,7 +135,7 @@
               <CardLink :url="'https://bewares.getfursu.it/#search:' + artisan.abSearchJson" label="Check Artists Beware records" icon-class="fas fa-balance-scale" add-btn-class="border border-primary" />
               <CardLink :url="artisan.fursuitReviewUrl" label="FursuitReview" icon-class="fas fa-balance-scale" add-btn-class="border border-primary" />
               <CardLink :url="artisan.websiteUrl" label="Official website" icon-class="fas fa-link" />
-              <CardLink v-for="item in artisan.pricesUrls" :key="item" :href="item" label="Prices" icon-class="fas fa-dollar-sign" />
+              <CardLink v-for="item in artisan.pricesUrls" :key="item" :url="item" label="Prices" icon-class="fas fa-dollar-sign" />
               <CardLink :url="artisan.faqUrl" label="FAQ" icon-class="fas fa-comments" />
               <CardLink :url="artisan.queueUrl" label="Queue" icon-class="fas fa-clipboard-list" />
               <CardLink :url="artisan.furAffinityUrl" label="FurAffinity" icon-class="fas fa-image" />
