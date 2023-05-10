@@ -1,8 +1,8 @@
-package tracking.matchers
+package tracking.matchers.placeholders
 
-class Placeholders(value: Any?) {
+class PhTree(value: Any?) {
     private val itemsList: List<String>?
-    private val itemsMap: Map<String, Placeholders>?
+    private val itemsMap: Map<String, PhTree>?
 
     init {
         when (value) {
@@ -24,7 +24,7 @@ class Placeholders(value: Any?) {
                         throw IllegalArgumentException() // TODO: Debug message
                     }
 
-                    itemKey to Placeholders(it.value)
+                    itemKey to PhTree(it.value)
                 }
             }
 
@@ -47,7 +47,7 @@ class Placeholders(value: Any?) {
         return itemsList
     }
 
-    fun getMap(): Map<String, Placeholders>
+    fun getMap(): Map<String, PhTree>
     {
         if (null == itemsMap) {
             throw UnsupportedOperationException() // TODO: Debug message

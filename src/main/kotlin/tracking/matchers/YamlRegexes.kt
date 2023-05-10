@@ -1,6 +1,7 @@
 package tracking.matchers
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import tracking.matchers.placeholders.PhTree
 
 data class YamlRegexes(
     @JsonProperty("false_positives")
@@ -9,7 +10,7 @@ data class YamlRegexes(
     @JsonProperty("offers_statuses")
     val offersStatuses: List<String>,
 
-    val placeholders: Placeholders,
+    val placeholders: PhTree,
 
     val cleaners: Map<String, String>,
 )

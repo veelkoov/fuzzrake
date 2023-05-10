@@ -54,63 +54,63 @@ placeholders:
     - 'STATUS_OPEN'
     - 'STATUS_CLOSED'
 
-  'STATUS_OPEN=status_open':
+  'STATUS_OPEN=StatusOpen':
     - 'open(?!ing)'
     - 'only making'
     - 'taking'
 
-  'STATUS_CLOSED=status_closed':
+  'STATUS_CLOSED=StatusClosed':
     - 'closed?'
     - 'not (taking( on)?|accepting|open)'
     - "don't (do|take|provide|accept)"
 
   'OFFER':
-    'HANDPAWS_AND_SOCKPAWS=handpaws_cms_and_sockpaws_cms':
+    'HANDPAWS_AND_SOCKPAWS=HandpawsCmsAndSockpawsCms':
       - 'handpaws AND sockpaws COMMISSIONS'
 
-    'PARTS_AND_REFURBISHMENTS=parts_and_refurbishments':
+    'PARTS_AND_REFURBISHMENTS=PartsAndRefurbishments':
       - 'parts AND refurbishments COMMISSIONS'
 
-    'COMMISSIONS_AND_QUOTES=commissions_and_quotes':
+    'COMMISSIONS_AND_QUOTES=CommissionsAndQuotes':
       - '(COMMISSIONS AND quotes?)'
       - '(quotes? AND COMMISSIONS)'
 
-    'FULLSUIT_COMMISSIONS=fullsuit_commissions':
+    'FULLSUIT_COMMISSIONS=FullsuitCommissions':
       - 'fullsuit COMMISSIONS'
 
-    'PARTIAL_COMMISSIONS=partial_commissions':
+    'PARTIAL_COMMISSIONS=PartialCommissions':
       - 'partial COMMISSIONS'
 
-    'HEAD_COMMISSIONS=head_commissions':
+    'HEAD_COMMISSIONS=HeadCommissions':
       - 'head COMMISSIONS'
 
-    'PARTS=parts':
+    'PARTS=Parts':
       - '(fursuit )?parts? COMMISSIONS'
 
-    'COMPLEX_COMMISSIONS_WORDING=commissions':
+    'COMPLEX_COMMISSIONS_WORDING=Commissions':
       - '(custom )?(costume |fursuit )?COMMISSIONS'
       - '(custom |COMMISSIONS )?slots?'
       - 'fursuits?( queue)?'
 
-    'PROJECTS=projects':
+    'PROJECTS=Projects':
       - 'projects?'
 
-    'TRADES=trades':
+    'TRADES=Trades':
       - 'trades?'
 
-    'REFURBISHMENTS=refurbishments':
+    'REFURBISHMENTS=Refurbishments':
       - 'refurbishments?'
 
-    'PRE_MADES=pre_mades':
+    'PRE_MADES=PreMades':
       - 'pre-?mades?( designs?)?'
 
-    'ARTISTIC_LIBERTY=artistic_liberty':
+    'ARTISTIC_LIBERTY=ArtisticLiberty':
       - 'artistic liberty'
 
-    'QUOTES=quotes':
+    'QUOTES=Quotes':
       - 'quotes?'
 
-    'ORDERS=orders':
+    'ORDERS=Orders':
       - '(custom )?orders?'
 
   ' AND ':
@@ -124,7 +124,7 @@ placeholders:
   'WE_ARE':
     - "we( are|'re| will)?"
     - "i( am|'m| will)?"
-    - "STUDIO_NAME (is|are)"
+    - "CREATOR_NAME (is|are)"
 
   'OUR':
     - 'my'
