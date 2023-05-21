@@ -63,3 +63,9 @@ legacy_statistics:
   controller: *redirect
   defaults:
     route: statistics
+
+legacy_data_updates:
+  path: /data_updates.html
+  controller: *redirect
+  defaults:
+    route: iu_form_step_start
