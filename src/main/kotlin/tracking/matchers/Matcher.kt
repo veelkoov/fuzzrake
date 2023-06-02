@@ -2,7 +2,7 @@ package tracking.matchers
 
 import kotlin.text.Regex
 
-class Match(
+class Matcher(
     private val regex: Regex,
 ) : Usable {
     private var wasUsed = false

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tracking.statuses.OfferStatusException
 
-class MatchedGroupsTest {
+class GroupNamesAnalyserTest {
     @Test
     fun `Exception thrown in corner cases`() {
-        val subject = MatchedGroups()
+        val subject = GroupNamesAnalyser()
 
         val ex1 = assertThrows<OfferStatusException> {
             subject.detectIn(listOf("StatusOpen" to "asdf"))

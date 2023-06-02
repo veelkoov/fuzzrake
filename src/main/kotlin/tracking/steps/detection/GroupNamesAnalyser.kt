@@ -5,7 +5,7 @@ import tracking.statuses.OfferStatus
 import tracking.statuses.OfferStatusException
 import tracking.statuses.Status
 
-class MatchedGroups {
+class GroupNamesAnalyser {
     fun detectIn(matchedGroups: List<Pair<String, String>>): List<OfferStatus> {
         var offers: List<Offer>? = null
         var status: Status? = null

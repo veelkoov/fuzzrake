@@ -37,13 +37,13 @@ object Factory {
         })
     }
 
-    fun getOffersStatuses(): List<Match> {
+    fun getOffersStatuses(): Matchers {
         val options = setOf(RegexOption.DOT_MATCHES_ALL) // TODO: Other?
 
         val result = regexes.offersStatuses.map { pattern ->
-            Match(pattern, options)
+            Matcher(pattern, options)
         }
 
-        return result
+        return Matchers(result)
     }
 }

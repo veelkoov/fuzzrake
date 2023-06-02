@@ -3,78 +3,90 @@ package tracking.steps
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
 import tracking.creator.CreatorItems
-import tracking.steps.detection.MatchedGroups
 import tracking.matchers.Factory
 import tracking.matchers.Workarounds
 import tracking.statuses.*
+import tracking.steps.detection.GroupNamesAnalyser
 
 private val logger = KotlinLogging.logger {}
 
 class Detector {
     private val matchers = Factory.getOffersStatuses()
-    private val groups = MatchedGroups()
+    private val analyser = GroupNamesAnalyser()
 
-    fun detectIn(items: CreatorItems<ProcessedItem>): OffersStatuses {
-        var issues = false
+    fun detectIn(input: CreatorItems<ProcessedItem>): OffersStatuses {
         val offerToStatus = mutableMapOf<Offer, ProcessedStatus>()
+        var issues = false
 
-        items.items.forEach { item ->
-            val itemResult = detectIn(item)
-            issues = issues || itemResult.issues
+        input.items.forEach { item ->
+            val allDetectedOs = detectIn(item)
+            issues = issues || allDetectedOs.issues
 
-            itemResult.items.forEach { offerStatus ->
-                val offer = offerStatus.offer
-                val status = ProcessedStatus.from(offerStatus.status)
+            allDetectedOs.items.forEach { oneDetectedOs ->
+                val nextOffer = oneDetectedOs.offer
+                val nextStatus = ProcessedStatus.from(oneDetectedOs.status)
 
-                // LOG
-                if (offerToStatus.containsKey(offer)) {
-                    if (offerToStatus[offer] != status) {
-                        offerToStatus[offer] = ProcessedStatus.CONFLICT
-                        issues = true
+                when (offerToStatus[nextOffer]) {
+                    null -> {
+                        offerToStatus[nextOffer] = nextStatus
                     }
-                } else {
-                    offerToStatus[offer] = status
+
+                    ProcessedStatus.CONFLICT -> {
+                    }
+
+                    nextStatus -> { // Two different URLs hold the same offer status - OK
+                    }
+
+                    else -> {
+                        offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
+                        issues = true
+                        logger.warn("Contradicting offer statuses for '$nextOffer'") // TODO: Add creator ID
+                    }
                 }
             }
         }
 
-        return OffersStatuses(items.creator, osMapToList(offerToStatus), issues)
+        return OffersStatuses(input.creator, osMapToList(offerToStatus), issues)
     }
 
-    private fun detectIn(item: ProcessedItem): OffersStatuses {
-        var contents = item.contents
+    private fun detectIn(input: ProcessedItem): OffersStatuses {
         val offerToStatus = mutableMapOf<Offer, ProcessedStatus>()
         var issues = false
 
-        matchers.forEach { matcher ->
-            while (true) {
-                val match = matcher.matchIn(contents) ?: break
-                contents = contents.replaceFirst(match.value, "")
+        input.contents = matchers.matchIn(input.contents) { match, matcher ->
+            val groups = Workarounds.getMatchedGroups(match, matcher.groups)
+            val allDetectedOs: List<OfferStatus>
 
-                val groups = Workarounds.matchedGroups(match, matcher.groups)
-                val detected: List<OfferStatus>
+            try {
+                allDetectedOs = analyser.detectIn(groups)
+            } catch (exception: OfferStatusException) {
+                issues = true
+                logger.warn("${input.sourceUrl}: ${exception.requireMessage()}")
 
-                try {
-                    detected = this.groups.detectIn(groups)
-                } catch (exception: OfferStatusException) {
-                    logger.warn("${item.sourceUrl}: ${exception.requireMessage()}")
-                    issues = true
-                    continue
-                }
+                return@matchIn
+            }
 
-                detected.forEach {
-                    when (offerToStatus[it.offer]) {
-                        null -> offerToStatus[it.offer] = ProcessedStatus.from(it.status)
-                        ProcessedStatus.CONFLICT -> {}
-                        ProcessedStatus.from(it.status) -> {
-                            issues = true
-                            // TODO: Log duplicated offer status
-                        }
-                        else -> {
-                            issues = true
-                            offerToStatus[it.offer] = ProcessedStatus.CONFLICT
-                            // TODO: Log contradicting offer statuses
-                        }
+            allDetectedOs.forEach { oneDetectedOs ->
+                val nextOffer = oneDetectedOs.offer
+                val nextStatus = ProcessedStatus.from(oneDetectedOs.status)
+
+                when (offerToStatus[nextOffer]) {
+                    null -> {
+                        offerToStatus[nextOffer] = nextStatus
+                    }
+
+                    ProcessedStatus.CONFLICT -> {
+                    }
+
+                    nextStatus -> {
+                        issues = true
+                        logger.warn("${input.sourceUrl}: Duplicated offer status for '$nextOffer'")
+                    }
+
+                    else -> {
+                        offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
+                        issues = true
+                        logger.warn("${input.sourceUrl}: Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
@@ -82,10 +94,10 @@ class Detector {
 
         if (offerToStatus.isEmpty()) {
             issues = true
-            logger.warn("No statuses detected in '${item.sourceUrl}'")
+            logger.warn("${input.sourceUrl}: No statuses detected")
         }
 
-        return OffersStatuses(item.creator, osMapToList(offerToStatus), issues)
+        return OffersStatuses(input.creator, osMapToList(offerToStatus), issues)
     }
 
     private fun osMapToList(offerToStatus: MutableMap<Offer, ProcessedStatus>): List<OfferStatus> {
