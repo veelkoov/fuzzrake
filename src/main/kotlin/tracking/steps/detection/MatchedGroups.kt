@@ -1,4 +1,4 @@
-package tracking.detection
+package tracking.steps.detection
 
 import tracking.statuses.Offer
 import tracking.statuses.OfferStatus
@@ -19,7 +19,7 @@ class MatchedGroups {
                 status = Status.fromGroupName(name)
             } else {
                 if (null != offers) {
-                    throw OfferStatusException.multipleOffers() // TODO: Which offers?
+                    throw OfferStatusException.multipleOffers()
                 }
 
                 offers = GroupNamesResolver().offersFrom(name)

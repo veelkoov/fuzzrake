@@ -3,7 +3,7 @@ package tracking.steps
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
 import tracking.creator.CreatorItems
-import tracking.detection.MatchedGroups
+import tracking.steps.detection.MatchedGroups
 import tracking.matchers.Factory
 import tracking.matchers.Workarounds
 import tracking.statuses.*
@@ -49,6 +49,8 @@ class Detector {
         matchers.forEach { matcher ->
             while (true) {
                 val match = matcher.matchIn(contents) ?: break
+                contents = contents.replaceFirst(match.value, "")
+
                 val groups = Workarounds.matchedGroups(match, matcher.groups)
                 val detected: List<OfferStatus>
 
@@ -75,14 +77,12 @@ class Detector {
                         }
                     }
                 }
-
-                contents = contents.replaceFirst(match.value, "")
             }
         }
 
         if (offerToStatus.isEmpty()) {
             issues = true
-            logger.warn("No statuses detected in '${item.sourceUrl}'") // TODO: Add maker and url
+            logger.warn("No statuses detected in '${item.sourceUrl}'")
         }
 
         return OffersStatuses(item.creator, osMapToList(offerToStatus), issues)

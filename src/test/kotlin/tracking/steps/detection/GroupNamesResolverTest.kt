@@ -1,4 +1,4 @@
-package tracking.detection
+package tracking.steps.detection
 
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
