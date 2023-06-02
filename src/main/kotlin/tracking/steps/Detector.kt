@@ -3,7 +3,7 @@ package tracking.steps
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
 import tracking.creator.CreatorItems
-import tracking.detection.GroupNamesResolver
+import tracking.detection.MatchedGroups
 import tracking.matchers.Factory
 import tracking.matchers.Workarounds
 import tracking.statuses.*
@@ -12,6 +12,7 @@ private val logger = KotlinLogging.logger {}
 
 class Detector {
     private val matchers = Factory.getOffersStatuses()
+    private val groups = MatchedGroups()
 
     fun detectIn(items: CreatorItems<ProcessedItem>): OffersStatuses {
         var issues = false
@@ -52,7 +53,7 @@ class Detector {
                 val detected: List<OfferStatus>
 
                 try {
-                    detected = detectIn(groups)
+                    detected = this.groups.detectIn(groups)
                 } catch (exception: OfferStatusException) {
                     logger.warn("${item.sourceUrl}: ${exception.requireMessage()}")
                     issues = true
@@ -85,37 +86,6 @@ class Detector {
         }
 
         return OffersStatuses(item.creator, osMapToList(offerToStatus), issues)
-    }
-
-    private fun detectIn(matchedGroups: Map<String, String>): List<OfferStatus> {
-        var offers: List<Offer>? = null
-        var status: Status? = null
-
-        matchedGroups.forEach { (name, _) ->
-            if (Status.isStatusGroup(name)) {
-                if (null != status) {
-                    throw OfferStatusException.multipleStatuses()
-                }
-
-                status = Status.fromGroupName(name)
-            } else {
-                if (null != offers) {
-                    throw OfferStatusException.multipleOffers() // TODO: Which offers?
-                }
-
-                offers = GroupNamesResolver().offersFrom(name)
-            }
-        }
-
-        if (offers == null) {
-            throw OfferStatusException.missingOffer()
-        }
-
-        if (status == null) {
-            throw OfferStatusException.missingStatus()
-        }
-
-        return offers!!.map { OfferStatus(it, status!!) }
     }
 
     private fun osMapToList(offerToStatus: MutableMap<Offer, ProcessedStatus>): List<OfferStatus> {
