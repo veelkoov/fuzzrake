@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tracking.statuses.OfferStatusException
+import tracking.statuses.Status
 
 class GroupNamesAnalyserTest {
     @Test
@@ -29,5 +30,18 @@ class GroupNamesAnalyserTest {
             subject.detectIn(listOf("Commissions" to "asdf", "Commissions" to "qwer", "StatusOpen" to "asdf"))
         }
         assertEquals("Detected multiple offers", ex4.requireMessage())
+    }
+
+    @Test
+    fun detectIn() {
+        val subject = GroupNamesAnalyser()
+
+        val result = subject.detectIn(listOf("StatusClosed" to "asdf", "CommissionsAndQuotes" to "qwer"))
+
+        assertEquals(2, result.size)
+        assertEquals(Status.CLOSED, result[0].status)
+        assertEquals("Commissions", result[0].offer)
+        assertEquals(Status.CLOSED, result[1].status)
+        assertEquals("Quotes", result[1].offer)
     }
 }
