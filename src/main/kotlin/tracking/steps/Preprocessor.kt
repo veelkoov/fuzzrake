@@ -1,5 +1,6 @@
 package tracking.steps
 
+import tracking.contents.ProcessedItem
 import tracking.matchers.Factory
 
 private const val CREATOR_NAME = "CREATOR_NAME"
@@ -8,18 +9,14 @@ class Preprocessor {
     private val cleaners = Factory.getCleaners()
     private val falsePositives = Factory.getFalsePositives()
 
-    fun preprocess(input: String, creatorAliases: List<String>): String
+    fun preprocess(item: ProcessedItem)
     {
-        var result = input
-
-//        $contents = $this->applyFilters($url, $inputText); // TODO
+        item.contents = item.strategy.filter(item.contents)
 //        $contents = $this->extractFromJson($contents); // TODO
-        result = result.lowercase()
-        result = cleaners.replaceIn(result)
-        result = replaceCreatorAliases(result, creatorAliases)
-        result = falsePositives.replaceIn(result)
-
-        return result
+        item.contents = item.contents.lowercase()
+        item.contents = cleaners.replaceIn(item.contents)
+        item.contents = replaceCreatorAliases(item.contents, item.creator.aliases)
+        item.contents = falsePositives.replaceIn(item.contents)
     }
 
     private fun replaceCreatorAliases(input: String, aliases: List<String>): String {

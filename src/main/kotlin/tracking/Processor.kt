@@ -1,10 +1,13 @@
 package tracking
 
-import tracking.snapshots.CreatorItems
+import tracking.contents.ProcessedItem
+import tracking.creator.CreatorItems
 import tracking.steps.SnapshotsProvider
 import tracking.steps.Detector
 import tracking.steps.Updater
 import tracking.steps.Preprocessor
+import tracking.website.Strategy
+import java.util.stream.Collectors
 
 class Processor {
     private val provider = SnapshotsProvider()
@@ -13,15 +16,28 @@ class Processor {
     private val updater = Updater()
 
     fun run() {
-        provider.get().map { snapshots ->
-            val texts = snapshots.items.map { Text(it.contents) }
-            texts.forEach { it.unused = preprocessor.preprocess(it.unused, snapshots.creator.aliases) }
+        provider.get()
+            .map { snapshots ->
+                val items = snapshots.items.map {
+                    ProcessedItem(
+                        it.url,
+                        it.contents,
+                        snapshots.creator,
+                        Strategy.forUrl(it.url)
+                    )
+                }
+                // TODO: Reject texts > 1 MiB
 
-            CreatorItems(snapshots.creator, texts)
-        }.map { texts ->
-            detector.detect(texts)
-        }.map { statuses ->
-            updater.save(statuses)
-        }
+                items.forEach { preprocessor.preprocess(it) }
+
+                CreatorItems(snapshots.creator, items)
+            }
+            .map { texts ->
+                detector.detectIn(texts)
+            }
+            .map { statuses ->
+                updater.save(statuses)
+            }
+            .collect(Collectors.toList())
     }
 }

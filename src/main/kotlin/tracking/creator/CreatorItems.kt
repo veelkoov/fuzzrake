@@ -1,6 +1,4 @@
-package tracking.snapshots
-
-import tracking.Creator
+package tracking.creator
 
 data class CreatorItems<T>(
     val creator: Creator,

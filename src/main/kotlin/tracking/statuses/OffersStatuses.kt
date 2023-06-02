@@ -1,9 +1,9 @@
 package tracking.statuses
 
-import tracking.Creator
+import tracking.creator.Creator
 
 data class OffersStatuses(
     val creator: Creator,
-    val items: Map<String, OfferStatus>,
-    val unsure: Boolean,
+    val items: List<OfferStatus>,
+    val issues: Boolean,
 )

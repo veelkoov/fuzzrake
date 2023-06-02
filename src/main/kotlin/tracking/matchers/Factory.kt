@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import tracking.matchers.placeholders.Resolver
 import tracking.matchers.placeholders.ResolverFactory
-import tracking.matchers.replace.RgxReplace
 
 object Factory {
     private val regexes: YamlRegexes
@@ -20,21 +19,31 @@ object Factory {
         resolver = ResolverFactory().create(regexes.placeholders)
     }
 
-    fun getCleaners(): Matchers {
-        val options = setOf(RegexOption.MULTILINE)
+    fun getCleaners(): Replacements {
+        val options = setOf(RegexOption.MULTILINE) // TODO: DOT_MATCHES_ALL?
 
         val replacements = regexes.cleaners.map { (pattern, replacement) ->
-            RgxReplace(pattern, options, replacement)
+            Replacement(pattern, options, replacement)
         }
 
-        return Matchers(replacements)
+        return Replacements(replacements)
     }
 
-    fun getFalsePositives(): Matchers {
-        val options = setOf(RegexOption.MULTILINE)
+    fun getFalsePositives(): Replacements {
+        val options = setOf(RegexOption.MULTILINE) // TODO: DOT_MATCHES_ALL?
 
-        return Matchers(resolver.resolverIn(regexes.falsePositives).map { pattern ->
-            RgxReplace(pattern, options, "")
+        return Replacements(resolver.resolveIn(regexes.falsePositives).map { pattern ->
+            Replacement(pattern, options, "")
         })
+    }
+
+    fun getOffersStatuses(): List<Match> {
+        val options = setOf(RegexOption.DOT_MATCHES_ALL) // TODO: Other?
+
+        val result = regexes.offersStatuses.map { pattern ->
+            Match(pattern, options)
+        }
+
+        return result
     }
 }

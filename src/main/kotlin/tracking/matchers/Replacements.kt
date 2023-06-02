@@ -1,7 +1,7 @@
 package tracking.matchers
 
-class Matchers(
-    private val items: List<Matchable>,
+class Replacements(
+    private val items: List<Replacement>,
 ) {
     fun replaceIn(subject: String): String {
         var result = subject

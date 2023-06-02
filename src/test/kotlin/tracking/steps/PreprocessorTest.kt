@@ -2,6 +2,9 @@ package tracking.steps
 
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
+import tracking.contents.ProcessedItem
+import tracking.creator.Creator
+import tracking.website.StandardStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -12,20 +15,22 @@ class PreprocessorTest {
     fun `Cleaner regexes are working`() = mapOf(
         "***open***" to "open",
         "!closed!" to "closed",
-        " ❗&nbsp;" to " ! ",
+        " ❗&nbsp;" to " ! ", // Unicode NBSP, emoticon !, HTML entity NBSP
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val result = subject.preprocess(input, listOf())
+            val testItem = ProcessedItem("", input, Creator(listOf()), StandardStrategy)
+            subject.preprocess(testItem)
 
-            assertEquals(expected, result)
+            assertEquals(expected, testItem.contents)
         }
     }
 
     @Test
     fun `Input gets converted to lowercase`() {
-        val result = subject.preprocess("AaBbCcDdEeFf", listOf())
+        val testItem = ProcessedItem("", "AaBbCcDdEeFf", Creator(listOf()), StandardStrategy)
+        subject.preprocess(testItem)
 
-        assertEquals("aabbccddeeff", result)
+        assertEquals("aabbccddeeff", testItem.contents)
     }
 
     @TestFactory
@@ -52,9 +57,10 @@ class PreprocessorTest {
         ),
     ).map { (input, aliases, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val result = subject.preprocess(input, aliases)
+            val testItem = ProcessedItem("", input, Creator(aliases), StandardStrategy)
+            subject.preprocess(testItem)
 
-            assertEquals(expected, result)
+            assertEquals(expected, testItem.contents)
         }
     }
 
@@ -75,9 +81,10 @@ class PreprocessorTest {
         "when will you start taking new commissions?" to "?",
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val result = subject.preprocess(input, listOf("The Creator"))
+            val testItem = ProcessedItem("", input, Creator(listOf("The Creator")), StandardStrategy)
+            subject.preprocess(testItem)
 
-            assertEquals(expected, result)
+            assertEquals(expected, testItem.contents)
         }
     }
 }

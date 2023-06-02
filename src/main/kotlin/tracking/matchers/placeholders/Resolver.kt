@@ -25,7 +25,7 @@ class Resolver(
         return result
     }
 
-    fun resolverIn(subject: List<String>) = subject.map(::resolve)
+    fun resolveIn(subject: List<String>) = subject.map(::resolve)
 
     /**
      * Returns a regex which matches the given placeholder, ensuring we won't match anything
