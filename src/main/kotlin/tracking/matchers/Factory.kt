@@ -32,15 +32,17 @@ object Factory {
     fun getFalsePositives(): Replacements {
         val options = setOf(RegexOption.MULTILINE) // TODO: DOT_MATCHES_ALL?
 
-        return Replacements(resolver.resolveIn(regexes.falsePositives).map { pattern ->
+        val result = resolver.resolveIn(regexes.falsePositives).map { pattern ->
             Replacement(pattern, options, "")
-        })
+        }
+
+        return Replacements(result)
     }
 
     fun getOffersStatuses(): Matchers {
         val options = setOf(RegexOption.DOT_MATCHES_ALL) // TODO: Other?
 
-        val result = regexes.offersStatuses.map { pattern ->
+        val result = resolver.resolveIn(regexes.offersStatuses).map { pattern ->
             Matcher(pattern, options)
         }
 

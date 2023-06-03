@@ -1,4 +1,6 @@
-package tracking.statuses
+package tracking.statuses.processed
+
+import tracking.statuses.Status
 
 enum class ProcessedStatus {
     OPEN,

@@ -3,7 +3,7 @@ package tracking.statuses
 import tracking.creator.Creator
 
 data class OffersStatuses(
-    val creator: Creator,
+    val creator: Creator, // TODO: Try to eliminate, wrap in CreatorItems?
     val items: List<OfferStatus>,
     val issues: Boolean,
 )

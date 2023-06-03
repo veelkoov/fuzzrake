@@ -6,6 +6,7 @@ import tracking.creator.CreatorItems
 import tracking.matchers.Factory
 import tracking.matchers.Workarounds
 import tracking.statuses.*
+import tracking.statuses.processed.*
 import tracking.steps.detection.GroupNamesAnalyser
 
 private val logger = KotlinLogging.logger {}
@@ -24,7 +25,7 @@ class Detector {
 
             allDetectedOs.items.forEach { oneDetectedOs ->
                 val nextOffer = oneDetectedOs.offer
-                val nextStatus = ProcessedStatus.from(oneDetectedOs.status)
+                val nextStatus = oneDetectedOs.status
 
                 when (offerToStatus[nextOffer]) {
                     null -> {
@@ -49,7 +50,7 @@ class Detector {
         return OffersStatuses(input.creator, osMapToList(offerToStatus), issues)
     }
 
-    private fun detectIn(input: ProcessedItem): OffersStatuses {
+    private fun detectIn(input: ProcessedItem): ProcessedOffersStatuses {
         val offerToStatus = mutableMapOf<Offer, ProcessedStatus>()
         var issues = false
 
@@ -97,7 +98,11 @@ class Detector {
             logger.warn("${input.sourceUrl}: No statuses detected")
         }
 
-        return OffersStatuses(input.creator, osMapToList(offerToStatus), issues)
+        return ProcessedOffersStatuses(input.creator, posMapToList(offerToStatus), issues)
+    }
+
+    private fun posMapToList(offerToStatus: MutableMap<Offer, ProcessedStatus>): List<ProcessedOfferStatus> {
+        return offerToStatus.map { (offer, status) -> ProcessedOfferStatus(offer, status) }
     }
 
     private fun osMapToList(offerToStatus: MutableMap<Offer, ProcessedStatus>): List<OfferStatus> {
