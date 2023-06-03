@@ -2,6 +2,8 @@ plugins {
     kotlin("jvm") version "1.8.20"
     kotlin("plugin.serialization") version "1.8.20"
     application
+
+    id("org.jetbrains.kotlinx.kover") version "0.7.1"
 }
 
 group = "it.getfursu"
