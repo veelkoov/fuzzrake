@@ -1,17 +1,16 @@
 package tracking.matchers
 
-import kotlin.text.Regex
+import tracking.matchers.regex.RegexJ
+import tracking.matchers.regex.MatchResultJ
 
 class Matcher(
-    private val regex: Regex,
+    private val regex: RegexJ,
 ) : Usable {
     private var wasUsed = false
-    val groups = Workarounds.possibleGroups(regex)
 
+    constructor(pattern: String, options: Set<RegexOption>): this(RegexJ(pattern, options))
 
-    constructor(pattern: String, options: Set<RegexOption>): this(Regex(pattern, options))
-
-    fun matchIn(subject: String): MatchResult? {
+    fun matchIn(subject: String): MatchResultJ? {
         val result = regex.find(subject)
 
         if (result != null) {

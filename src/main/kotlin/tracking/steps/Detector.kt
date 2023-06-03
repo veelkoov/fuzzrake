@@ -4,9 +4,13 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
 import tracking.creator.CreatorItems
 import tracking.matchers.Factory
-import tracking.matchers.Workarounds
-import tracking.statuses.*
-import tracking.statuses.processed.*
+import tracking.statuses.Offer
+import tracking.statuses.OfferStatus
+import tracking.statuses.OfferStatusException
+import tracking.statuses.OffersStatuses
+import tracking.statuses.processed.ProcessedOfferStatus
+import tracking.statuses.processed.ProcessedOffersStatuses
+import tracking.statuses.processed.ProcessedStatus
 import tracking.steps.detection.GroupNamesAnalyser
 
 private val logger = KotlinLogging.logger {}
@@ -54,12 +58,11 @@ class Detector {
         val offerToStatus = mutableMapOf<Offer, ProcessedStatus>()
         var issues = false
 
-        input.contents = matchers.matchIn(input.contents) { match, matcher ->
-            val groups = Workarounds.getMatchedGroups(match, matcher.groups)
+        input.contents = matchers.matchIn(input.contents) { match ->
             val allDetectedOs: List<OfferStatus>
 
             try {
-                allDetectedOs = analyser.detectIn(groups)
+                allDetectedOs = analyser.detectIn(match.groups)
             } catch (exception: OfferStatusException) {
                 issues = true
                 logger.warn("${input.sourceUrl}: ${exception.requireMessage()}")
