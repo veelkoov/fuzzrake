@@ -27,7 +27,7 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
     }
 
     @Test
@@ -46,8 +46,8 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(2, result.items.size)
-        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
-        assertEquals(OfferStatus("Quotes", Status.OPEN), result.items[1])
+        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("QUOTES", Status.OPEN), result.items[1])
     }
 
     @Test
@@ -75,7 +75,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Quotes", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("QUOTES", Status.OPEN), result.items[0])
     }
 
     @Test
@@ -85,7 +85,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Quotes", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("QUOTES", Status.OPEN), result.items[0])
     }
 
     @Test
@@ -95,7 +95,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
     }
 
     @Test
@@ -105,7 +105,7 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
     }
 
     @Test
@@ -115,8 +115,8 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(2, result.items.size)
-        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
-        assertEquals(OfferStatus("Quotes", Status.CLOSED), result.items[1])
+        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("QUOTES", Status.CLOSED), result.items[1])
     }
 
     @Test
@@ -126,7 +126,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
     }
 
     @Test
@@ -145,7 +145,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("Quotes", Status.CLOSED), result.items[0])
+        assertEquals(OfferStatus("QUOTES", Status.CLOSED), result.items[0])
     }
 
     @Test

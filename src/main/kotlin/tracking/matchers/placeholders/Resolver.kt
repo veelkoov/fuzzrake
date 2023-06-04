@@ -3,7 +3,9 @@ package tracking.matchers.placeholders
 class Resolver(
     placeholders: Map<String, String>
 ) {
-    private val placeholders = placeholders.mapKeys { getPlaceholderRegex(it.key) }
+    private val placeholders = placeholders
+        .mapKeys { getPlaceholderRegex(it.key) }
+        .mapValues { Regex.escapeReplacement(it.value) }
 
     fun resolve(subject: String): String {
         var result = subject

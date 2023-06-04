@@ -20,7 +20,7 @@ object Factory {
     }
 
     fun getCleaners(): Replacements {
-        val options = setOf(RegexOption.MULTILINE) // TODO: DOT_MATCHES_ALL?
+        val options = setOf(RegexOption.DOT_MATCHES_ALL)
 
         val replacements = regexes.cleaners.map { (pattern, replacement) ->
             Replacement(pattern, options, replacement)
@@ -30,7 +30,7 @@ object Factory {
     }
 
     fun getFalsePositives(): Replacements {
-        val options = setOf(RegexOption.MULTILINE) // TODO: DOT_MATCHES_ALL?
+        val options = setOf(RegexOption.DOT_MATCHES_ALL)
 
         val result = resolver.resolveIn(regexes.falsePositives).map { pattern ->
             Replacement(pattern, options, "")
@@ -40,7 +40,7 @@ object Factory {
     }
 
     fun getOffersStatuses(): Matchers {
-        val options = setOf(RegexOption.DOT_MATCHES_ALL) // TODO: Other?
+        val options = setOf(RegexOption.DOT_MATCHES_ALL)
 
         val result = resolver.resolveIn(regexes.offersStatuses).map { pattern ->
             Matcher(pattern, options)

@@ -7,7 +7,7 @@ import tracking.statuses.Status
 
 class GroupNamesAnalyser {
     fun detectIn(matchedGroups: List<Pair<String, String>>): List<OfferStatus> {
-        var offers: List<Offer>? = null
+        val offers: MutableList<Offer> = mutableListOf()
         var status: Status? = null
 
         matchedGroups.forEach { (name, _) ->
@@ -18,15 +18,11 @@ class GroupNamesAnalyser {
 
                 status = Status.fromGroupName(name)
             } else {
-                if (null != offers) {
-                    throw OfferStatusException.multipleOffers()
-                }
-
-                offers = GroupNamesResolver().offersFrom(name)
+                offers.addAll(GroupNamesResolver().offersFrom(name))
             }
         }
 
-        if (offers == null) {
+        if (offers.isEmpty()) {
             throw OfferStatusException.missingOffer()
         }
 
@@ -34,6 +30,6 @@ class GroupNamesAnalyser {
             throw OfferStatusException.missingStatus()
         }
 
-        return offers!!.map { OfferStatus(it, status!!) }
+        return offers.map { OfferStatus(it, status!!) }
     }
 }
