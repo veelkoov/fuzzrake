@@ -4,6 +4,6 @@ import tracking.creator.Creator
 
 data class ProcessedOffersStatuses(
     val creator: Creator,
-    val items: List<ProcessedOfferStatus>,
+    val items: Set<ProcessedOfferStatus>,
     val issues: Boolean,
 )

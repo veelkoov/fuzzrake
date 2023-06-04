@@ -7,6 +7,7 @@ import tracking.creator.CreatorItems
 import tracking.statuses.OfferStatus
 import tracking.statuses.Status
 import tracking.website.StandardStrategy
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertFalse
@@ -27,7 +28,7 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
+        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
     }
 
     @Test
@@ -46,8 +47,8 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(2, result.items.size)
-        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
-        assertEquals(OfferStatus("QUOTES", Status.OPEN), result.items[1])
+        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
+        assertContains(result.items, OfferStatus("QUOTES", Status.OPEN))
     }
 
     @Test
@@ -75,7 +76,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("QUOTES", Status.OPEN), result.items[0])
+        assertContains(result.items, OfferStatus("QUOTES", Status.OPEN))
     }
 
     @Test
@@ -85,7 +86,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("QUOTES", Status.OPEN), result.items[0])
+        assertContains(result.items, OfferStatus("QUOTES", Status.OPEN))
     }
 
     @Test
@@ -95,7 +96,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
+        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
     }
 
     @Test
@@ -105,7 +106,7 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
+        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
     }
 
     @Test
@@ -115,8 +116,8 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(2, result.items.size)
-        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
-        assertEquals(OfferStatus("QUOTES", Status.CLOSED), result.items[1])
+        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
+        assertContains(result.items, OfferStatus("QUOTES", Status.CLOSED))
     }
 
     @Test
@@ -126,7 +127,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("COMMISSIONS", Status.OPEN), result.items[0])
+        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
     }
 
     @Test
@@ -145,7 +146,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertEquals(OfferStatus("QUOTES", Status.CLOSED), result.items[0])
+        assertContains(result.items, OfferStatus("QUOTES", Status.CLOSED))
     }
 
     @Test

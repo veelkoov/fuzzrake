@@ -50,7 +50,7 @@ class Detector {
             }
         }
 
-        return OffersStatuses(input.creator, osMapToList(offerToStatus), issues)
+        return OffersStatuses(input.creator, osMapToSet(offerToStatus), issues)
     }
 
     private fun detectIn(input: ProcessedItem): ProcessedOffersStatuses {
@@ -100,14 +100,14 @@ class Detector {
             logger.warn("${input.sourceUrl}: No statuses detected")
         }
 
-        return ProcessedOffersStatuses(input.creator, posMapToList(offerToStatus), issues)
+        return ProcessedOffersStatuses(input.creator, posMapToSet(offerToStatus), issues)
     }
 
-    private fun posMapToList(offerToStatus: MutableMap<Offer, ProcessedStatus>): List<ProcessedOfferStatus> {
-        return offerToStatus.map { (offer, status) -> ProcessedOfferStatus(offer, status) }
+    private fun posMapToSet(offerToStatus: MutableMap<Offer, ProcessedStatus>): Set<ProcessedOfferStatus> {
+        return offerToStatus.map { (offer, status) -> ProcessedOfferStatus(offer, status) }.toSet()
     }
 
-    private fun osMapToList(offerToStatus: MutableMap<Offer, ProcessedStatus>): List<OfferStatus> {
+    private fun osMapToSet(offerToStatus: MutableMap<Offer, ProcessedStatus>): Set<OfferStatus> {
         return offerToStatus
             .filterNot { (_, status) ->
                 status == ProcessedStatus.CONFLICT
@@ -115,5 +115,6 @@ class Detector {
             .map { (offer, status) ->
                 OfferStatus(offer, status.asStatus())
             }
+            .toSet()
     }
 }

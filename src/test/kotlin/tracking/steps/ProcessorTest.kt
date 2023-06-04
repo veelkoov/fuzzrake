@@ -24,8 +24,8 @@ class ProcessorTest {
 
                 val result = subject.process(input)
 
-                // assertFalse(result.issues) TODO: Allow checking/expecting this
-                assertEquals(caseData.offersStatuses, result.items.toSet()) // TODO: Consider this being a set by design
+                assertEquals(caseData.expectIssues, result.issues)
+                assertEquals(caseData.offersStatuses, result.items) // TODO: Consider this being a set by design
             }
         }
     }
@@ -40,6 +40,7 @@ class ProcessorTest {
                     val metadataLines = metadata.trimEnd().split("\n").toMutableList()
 
                     val name = metadataLines.removeFirst()
+                    val expectIssues = name.endsWith(" (issues expected)")
 
                     val offersStatuses = metadataLines.map {
                         when (it[0]) {
@@ -49,7 +50,7 @@ class ProcessorTest {
                         }
                     }.toSet()
 
-                    ProcessorTestCaseData(name, input, offersStatuses)
+                    ProcessorTestCaseData(name, input, offersStatuses, expectIssues)
                 } catch (exception: RuntimeException) {
                     throw IllegalArgumentException("Wrong case data text: '$caseDataText'", exception)
                 }
