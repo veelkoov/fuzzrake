@@ -1,4 +1,4 @@
-package tracking.steps
+package tracking.processing
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
@@ -11,7 +11,6 @@ import tracking.statuses.OffersStatuses
 import tracking.statuses.processed.ProcessedOfferStatus
 import tracking.statuses.processed.ProcessedOffersStatuses
 import tracking.statuses.processed.ProcessedStatus
-import tracking.steps.detection.GroupNamesAnalyser
 
 private val logger = KotlinLogging.logger {}
 

@@ -1,4 +1,4 @@
-package tracking.steps.detection
+package tracking.processing
 
 import tracking.statuses.Offer
 import tracking.statuses.OfferStatus

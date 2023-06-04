@@ -1,6 +1,5 @@
-package tracking.steps
+package tracking.processing
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import tracking.contents.ProcessedItem
 import tracking.creator.Creator

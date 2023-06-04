@@ -11,7 +11,7 @@ import java.util.stream.Stream
 import kotlin.streams.asStream
 
 class SnapshotsProvider { // FIXME: All of it
-    fun get(): Stream<CreatorItems<Snapshot>> {
+    fun getSnapshotsStream(): Stream<CreatorItems<Snapshot>> {
         val inputDir = File("/home/fuzzrake/var/snapshots")
 
         if (!inputDir.isDirectory) {

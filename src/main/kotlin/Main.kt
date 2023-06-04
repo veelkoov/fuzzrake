@@ -1,7 +1,7 @@
-import tracking.Processor
+import tracking.Tracker
 
 fun main(@Suppress("UNUSED_PARAMETER") args: Array<String>) {
-    val processor = Processor()
+    val tracker = Tracker()
 
-    processor.run()
+    tracker.run()
 }
