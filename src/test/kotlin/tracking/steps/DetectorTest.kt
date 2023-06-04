@@ -61,6 +61,15 @@ class DetectorTest {
     }
 
     @Test
+    fun `Single page, conflicting 3 times`() {
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions are open, however commissions are closed, but we are unsure if commissions are closed"))
+
+        assertTrue(result.issues)
+        assertEquals(0, result.items.size)
+    }
+
+    @Test
     fun `Single page, joined status partially conflicting`() {
         val subject = Detector()
         val result = subject.detectIn(getTestInput("commissions and quotes are open, however commissions are closed"))
@@ -91,22 +100,61 @@ class DetectorTest {
     }
 
     @Test
-    fun `Two pages, both OK`() {
-        TODO()
+    fun `Two pages, both OK, same offer and status`() {
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions are open", "we are open for commissions"))
+
+        assertFalse(result.issues)
+        assertEquals(1, result.items.size)
+        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+    }
+
+    @Test
+    fun `Two pages, both OK, different offer and status`() {
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions are open", "quotes are closed"))
+
+        assertFalse(result.issues)
+        assertEquals(2, result.items.size)
+        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+        assertEquals(OfferStatus("Quotes", Status.CLOSED), result.items[1])
     }
 
     @Test
     fun `Two pages, one OK, one empty`() {
-        TODO()
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions are open", "quotes are unknown"))
+
+        assertTrue(result.issues)
+        assertEquals(1, result.items.size)
+        assertEquals(OfferStatus("Commissions", Status.OPEN), result.items[0])
+    }
+
+    @Test
+    fun `Two pages, simple conflict`() {
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions are closed", "we are open for commissions"))
+
+        assertTrue(result.issues)
+        assertEquals(0, result.items.size)
     }
 
     @Test
     fun `Two pages, one with 2 statuses, one single status, conflicting`() {
-        TODO()
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions and quotes are closed", "we are open for commissions"))
+
+        assertTrue(result.issues)
+        assertEquals(1, result.items.size)
+        assertEquals(OfferStatus("Quotes", Status.CLOSED), result.items[0])
     }
 
     @Test
     fun `Two pages, one with conflict, one single status for same offer`() {
-        TODO()
+        val subject = Detector()
+        val result = subject.detectIn(getTestInput("commissions are closed, however commissions are open", "we are open for commissions"))
+
+        assertTrue(result.issues)
+        assertEquals(0, result.items.size)
     }
 }

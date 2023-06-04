@@ -4,6 +4,7 @@ plugins {
     application
 
     id("org.jetbrains.kotlinx.kover") version "0.7.1"
+    id("jacoco")
 }
 
 group = "it.getfursu"
@@ -26,6 +27,22 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.required.set(false)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.10"
 }
 
 kotlin {
