@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertEquals
 
-class RegexJTest {
+class JWorkaroundTest {
     @Test
     fun find() {
-        val subject = RegexJ("(?<letters>[a-z]+)(?<digits>[0-9]+)|(?<digits>[0-9]+)(?<letters>[a-z]+)")
+        val letters = "(?<letters>[a-z]+)"
+        val digits = "(?<digits>[0-9]+)"
+        val regex = RegexJ("$letters$digits|$digits$letters")
 
-        val result1 = subject.find("---word1234---")
+        val result1 = regex.find("---word1234---")
 
         assertNotNull(result1)
         assertEquals("word1234", result1.value)
@@ -18,7 +20,7 @@ class RegexJTest {
         assertEquals("1234", result1.groups.toMap()["digits"])
         assertEquals("word", result1.groups.toMap()["letters"])
 
-        val result2 = subject.find("---1234word---")
+        val result2 = regex.find("---1234word---")
 
         assertNotNull(result2)
         assertEquals("1234word", result2.value)

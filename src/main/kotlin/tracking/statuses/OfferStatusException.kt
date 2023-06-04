@@ -7,6 +7,6 @@ class OfferStatusException(message: String) : Exception(message) {
         fun missingStatus() = OfferStatusException("Did not detect status")
         fun missingOffer() = OfferStatusException("Did not detect offer")
         fun multipleStatuses() = OfferStatusException("Detected multiple statuses")
-        fun multipleOffers() = OfferStatusException("Detected multiple offers")
+        fun repeatedOffer() = OfferStatusException("The same offer has been matched multiple times")
     }
 }

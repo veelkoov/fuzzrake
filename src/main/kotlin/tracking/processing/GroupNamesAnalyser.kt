@@ -7,7 +7,7 @@ import tracking.statuses.Status
 
 class GroupNamesAnalyser {
     fun detectIn(matchedGroups: List<Pair<String, String>>): List<OfferStatus> {
-        val offers: MutableList<Offer> = mutableListOf()
+        val offers: MutableSet<Offer> = mutableSetOf()
         var status: Status? = null
 
         matchedGroups.forEach { (name, _) ->
@@ -18,7 +18,13 @@ class GroupNamesAnalyser {
 
                 status = Status.fromGroupName(name)
             } else {
-                offers.addAll(GroupNamesResolver().offersFrom(name))
+                val nextOffers = GroupNamesResolver().offersFrom(name)
+
+                if (nextOffers.any(offers::contains)) {
+                    throw OfferStatusException.repeatedOffer()
+                }
+
+                offers.addAll(nextOffers)
             }
         }
 

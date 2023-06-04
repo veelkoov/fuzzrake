@@ -7,29 +7,50 @@ import tracking.statuses.OfferStatusException
 import tracking.statuses.Status
 
 class GroupNamesAnalyserTest {
+    private val subject = GroupNamesAnalyser()
+
     @Test
-    fun `Exception thrown in corner cases`() {
-        val subject = GroupNamesAnalyser()
-
-        val ex1 = assertThrows<OfferStatusException> {
-            subject.detectIn(listOf("StatusOpen" to "asdf"))
+    fun `Every match must have the offer group`() {
+        val exception = assertThrows<OfferStatusException> {
+            subject.detectIn(listOf("StatusOpen" to "some_text"))
         }
-        assertEquals("Did not detect offer", ex1.requireMessage())
 
-        val ex2 = assertThrows<OfferStatusException> {
-            subject.detectIn(listOf("Commissions" to "asdf"))
-        }
-        assertEquals("Did not detect status", ex2.requireMessage())
+        assertEquals("Did not detect offer", exception.requireMessage())
+    }
 
-        val ex3 = assertThrows<OfferStatusException> {
-            subject.detectIn(listOf("StatusOpen" to "asdf", "StatusOpen" to "qwer", "Quotes" to "asdf"))
+    @Test
+    fun `Every match must have the status group`() {
+        val exception = assertThrows<OfferStatusException> {
+            subject.detectIn(listOf("Commissions" to "some_text"))
         }
-        assertEquals("Detected multiple statuses", ex3.requireMessage())
 
-        val ex4 = assertThrows<OfferStatusException> { // TODO: Fix this. The SAME offer SHOULD cause exception
-            subject.detectIn(listOf("Commissions" to "asdf", "Commissions" to "qwer", "StatusOpen" to "asdf"))
+        assertEquals("Did not detect status", exception.requireMessage())
+    }
+
+    @Test
+    fun `No match can have more than one status`() {
+        val exception = assertThrows<OfferStatusException> {
+            subject.detectIn(listOf(
+                "StatusOpen" to "some_text_1",
+                "StatusOpen" to "some_text_2",
+                "Quotes" to "some_text_3",
+            ))
         }
-        assertEquals("Detected multiple offers", ex4.requireMessage())
+
+        assertEquals("Detected multiple statuses", exception.requireMessage())
+    }
+
+    @Test
+    fun `No match can have the same offer captured more than once`() {
+        val exception = assertThrows<OfferStatusException> {
+            subject.detectIn(listOf(
+                "Commissions" to "some_text_1",
+                "Commissions" to "some_text_2",
+                "StatusOpen" to "some_text_3",
+            ))
+        }
+
+        assertEquals("The same offer has been matched multiple times", exception.requireMessage())
     }
 
     @Test
@@ -37,9 +58,9 @@ class GroupNamesAnalyserTest {
         val subject = GroupNamesAnalyser()
 
         val result = subject.detectIn(listOf(
-            "StatusClosed" to "asdf",
-            "CommissionsAndQuotes" to "qwer",
-            "Projects" to "zxcv",
+            "StatusClosed" to "some_text_1",
+            "CommissionsAndQuotes" to "some_text_2",
+            "Projects" to "some_text_3",
         ))
 
         assertEquals(3, result.size)
