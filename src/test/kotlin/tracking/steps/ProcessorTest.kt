@@ -25,7 +25,7 @@ class ProcessorTest {
                 val result = subject.process(input)
 
                 assertEquals(caseData.expectIssues, result.issues)
-                assertEquals(caseData.offersStatuses, result.items) // TODO: Consider this being a set by design
+                assertEquals(caseData.offersStatuses, result.items)
             }
         }
     }
