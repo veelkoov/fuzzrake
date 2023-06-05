@@ -21,7 +21,7 @@ object Manager {
 
             Snapshot(contents, jsonData.url)
         } catch (_: FileNotFoundException) { // FIXME: This is not how it should be
-            Snapshot("", "")
+            Snapshot("", "MISSING")
         }
     }
 

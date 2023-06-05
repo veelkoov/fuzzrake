@@ -3,6 +3,7 @@ package tracking.processing
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
 import data.CreatorItems
+import data.lastCreatorId
 import tracking.matchers.Factory
 import tracking.statuses.Offer
 import tracking.statuses.OfferStatus
@@ -44,7 +45,7 @@ class Detector {
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("Contradicting offer statuses for '$nextOffer'") // TODO: Add creator ID
+                        logger.warn("${input.creator.lastCreatorId()} Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
@@ -64,7 +65,7 @@ class Detector {
                 allDetectedOs = analyser.detectIn(match.groups)
             } catch (exception: OfferStatusException) {
                 issues = true
-                logger.warn("${input.sourceUrl}: ${exception.requireMessage()}")
+                logger.warn("${input.creator.lastCreatorId()} ${input.sourceUrl}: ${exception.requireMessage()}")
 
                 return@matchIn
             }
@@ -83,13 +84,13 @@ class Detector {
 
                     nextStatus -> {
                         issues = true
-                        logger.warn("${input.sourceUrl}: Duplicated offer status for '$nextOffer'")
+                        logger.warn("${input.creator.lastCreatorId()} ${input.sourceUrl}: Duplicated offer status for '$nextOffer'")
                     }
 
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("${input.sourceUrl}: Contradicting offer statuses for '$nextOffer'")
+                        logger.warn("${input.creator.lastCreatorId()} ${input.sourceUrl}: Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
@@ -97,10 +98,10 @@ class Detector {
 
         if (offerToStatus.isEmpty()) {
             issues = true
-            logger.warn("${input.sourceUrl}: No statuses detected")
+            logger.warn("${input.creator.lastCreatorId()} ${input.sourceUrl}: No statuses detected")
         }
 
-        return ProcessedOffersStatuses(input.creator, posMapToSet(offerToStatus), issues)
+        return ProcessedOffersStatuses(posMapToSet(offerToStatus), issues)
     }
 
     private fun posMapToSet(offerToStatus: MutableMap<Offer, ProcessedStatus>): Set<ProcessedOfferStatus> {

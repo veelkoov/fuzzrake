@@ -1,6 +1,6 @@
 package tracking.processing
 
-import data.getAliases
+import data.aliases
 import tracking.contents.ProcessedItem
 import tracking.matchers.Factory
 
@@ -16,7 +16,7 @@ class Preprocessor {
 //        $contents = $this->extractFromJson($contents); // TODO
         item.contents = item.contents.lowercase()
         item.contents = cleaners.replaceIn(item.contents)
-        item.contents = replaceCreatorAliases(item.contents, item.creator.getAliases())
+        item.contents = replaceCreatorAliases(item.contents, item.creator.aliases())
         item.contents = falsePositives.replaceIn(item.contents)
     }
 
