@@ -1,6 +1,6 @@
 package tracking.contents
 
-import tracking.creator.Creator
+import database.Creator
 import tracking.website.Strategy
 
 data class ProcessedItem(

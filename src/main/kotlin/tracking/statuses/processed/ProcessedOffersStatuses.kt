@@ -1,6 +1,6 @@
 package tracking.statuses.processed
 
-import tracking.creator.Creator
+import database.Creator
 
 data class ProcessedOffersStatuses(
     val creator: Creator,

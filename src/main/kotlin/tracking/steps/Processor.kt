@@ -1,7 +1,7 @@
 package tracking.steps
 
 import tracking.contents.ProcessedItem
-import tracking.creator.CreatorItems
+import data.CreatorItems
 import tracking.statuses.OffersStatuses
 import tracking.processing.Detector
 import tracking.processing.Preprocessor

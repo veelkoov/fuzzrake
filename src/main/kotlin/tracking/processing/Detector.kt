@@ -2,7 +2,7 @@ package tracking.processing
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
-import tracking.creator.CreatorItems
+import data.CreatorItems
 import tracking.matchers.Factory
 import tracking.statuses.Offer
 import tracking.statuses.OfferStatus
@@ -50,7 +50,7 @@ class Detector {
             }
         }
 
-        return OffersStatuses(input.creator, osMapToSet(offerToStatus), issues)
+        return OffersStatuses(osMapToSet(offerToStatus), issues)
     }
 
     private fun detectIn(input: ProcessedItem): ProcessedOffersStatuses {

@@ -6,18 +6,23 @@ import kotlinx.serialization.json.Json
 import tracking.contents.JsonSnapshot
 import tracking.contents.Snapshot
 import java.io.File
+import java.io.FileNotFoundException
 import java.net.URL
 
 object Manager {
-    val basePath = "/home/fuzzrake/var/snapshots"
+    private const val basePath = "/home/fuzzrake/var/snapshots"
 
     fun get(url: String): Snapshot {
         val baseDir = getBaseDir(url)
-        val jsonString = File("$baseDir/metadata.json").readText().replace(",\"headers\":[],", ",\"headers\":{},")
-        val jsonData = Json.decodeFromString<JsonSnapshot>(jsonString)
-        val contents = File("$baseDir/contents.data").readText()
+        return try {
+            val jsonString = File("$baseDir/metadata.json").readText().replace(",\"headers\":[],", ",\"headers\":{},")
+            val jsonData = Json.decodeFromString<JsonSnapshot>(jsonString)
+            val contents = File("$baseDir/contents.data").readText()
 
-        return Snapshot(contents, jsonData.url)
+            Snapshot(contents, jsonData.url)
+        } catch (_: FileNotFoundException) { // FIXME: This is not how it should be
+            Snapshot("", "")
+        }
     }
 
     private fun getBaseDir(url: String): String

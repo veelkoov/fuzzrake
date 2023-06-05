@@ -2,7 +2,7 @@ package tracking
 
 import tracking.contents.ProcessedItem
 import tracking.contents.Snapshot
-import tracking.creator.CreatorItems
+import data.CreatorItems
 import tracking.steps.Processor
 import tracking.steps.SnapshotsProvider
 import tracking.steps.Updater

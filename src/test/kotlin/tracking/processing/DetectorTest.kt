@@ -3,7 +3,7 @@ package tracking.processing
 import org.junit.jupiter.api.Test
 import tracking.contents.ProcessedItem
 import tracking.creator.Creator
-import tracking.creator.CreatorItems
+import data.CreatorItems
 import tracking.statuses.OfferStatus
 import tracking.statuses.Status
 import tracking.website.StandardStrategy
