@@ -1,37 +1,28 @@
 package tracking.steps
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import tracking.contents.JsonSnapshot
+import database.CreatorUrl
+import database.CreatorUrls
+import database.Database
+import org.jetbrains.exposed.sql.transactions.transaction
 import tracking.contents.Snapshot
 import tracking.creator.Creator
 import tracking.creator.CreatorItems
-import java.io.File
+import web.snapshots.Manager
 import java.util.stream.Stream
 import kotlin.streams.asStream
 
 class SnapshotsProvider { // FIXME: All of it
     fun getSnapshotsStream(): Stream<CreatorItems<Snapshot>> {
-        val inputDir = File("/home/fuzzrake/var/snapshots")
-
-        if (!inputDir.isDirectory) {
-            throw IllegalArgumentException("${inputDir.absolutePath} is not a valid directory")
+        val creators = transaction(Database.get()) {
+            CreatorUrl
+                .find { CreatorUrls.type eq "URL_COMMISSIONS" } // TODO: Enum!
+                .groupBy { it.creator }
         }
 
-        return inputDir.walk()
+        return creators.asSequence()
             .asStream().parallel()
-            .filter { it.isFile && "metadata.json" == it.name }
-            .map { it.absolutePath }
-            .sorted()
-            .map { filePath ->
-                val jsonString = File(filePath).readText().replace(",\"headers\":[],", ",\"headers\":{},")
-                val jsonData = Json.decodeFromString<JsonSnapshot>(jsonString)
-                val contents = File(filePath.removeSuffix("metadata.json") + "contents.data").readText()
-
-                val creator = Creator(listOf(jsonData.ownerName))
-                val snapshot = Snapshot(contents, jsonData.url)
-
-                CreatorItems(creator, listOf(snapshot))
+            .map { (creator, urls) ->
+                CreatorItems(Creator(listOf(creator.name)), urls.map { Manager.get(it.url) }) // TODO: Aliases
             }
     }
 }
