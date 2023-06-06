@@ -20,7 +20,7 @@ class Tracker {
             .map(::filterAndConvertSnapshotsToProcessedItems)
             .map(processor::process)
             .map(updater::save)
-            .collect(Collectors.toList())
+            .collect(Collectors.counting())
     }
 
     private fun filterAndConvertSnapshotsToProcessedItems(snapshots: CreatorItems<Snapshot>): CreatorItems<ProcessedItem> {
