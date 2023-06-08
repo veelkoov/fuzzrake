@@ -1,5 +1,6 @@
 package database
 
+import data.lastCreatorId
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -49,4 +50,8 @@ class Creator(id: EntityID<Int>) : IntEntity(id) {
     var contactAllowed by Creators.contactAllowed
     var contactMethod by Creators.contactMethod
     var contactInfoObfuscated by Creators.contactInfoObfuscated
+
+    override fun toString(): String {
+        return "${id.value}/${lastCreatorId()}/${super.toString()}"
+    }
 }

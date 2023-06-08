@@ -4,6 +4,8 @@ enum class Status {
     OPEN,
     CLOSED;
 
+    fun isOpen() = this == OPEN
+
     companion object {
         private const val groupNamePrefix = "Status"
 

@@ -1,8 +1,11 @@
 package database
 
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.sql.Connection
+import org.jetbrains.exposed.sql.transactions.transaction as exposedTransaction
 
 object Database {
     private const val dbPath = "/home/fuzzrake/var/db.sqlite" // TODO: Parameters
@@ -14,5 +17,11 @@ object Database {
         TransactionManager.manager.defaultIsolationLevel = isolationLevel
     }
 
-    fun get() = database
+    fun <T> transaction(function: () -> T): T {
+        return exposedTransaction(database) {
+            this.addLogger(StdOutSqlLogger)
+
+            function()
+        }
+    }
 }
