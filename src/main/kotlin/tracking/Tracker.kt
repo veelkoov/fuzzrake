@@ -1,26 +1,30 @@
 package tracking
 
+import data.CreatorItems
 import tracking.contents.ProcessedItem
 import tracking.contents.Snapshot
-import data.CreatorItems
 import tracking.steps.Processor
 import tracking.steps.SnapshotsProvider
 import tracking.steps.Updater
+import tracking.updating.DbState
 import tracking.website.Strategy
 import java.util.stream.Collectors
 
 class Tracker {
-    private val provider = SnapshotsProvider()
-    private val processor = Processor()
-    private val updater = Updater()
-
     fun run() {
+        val provider = SnapshotsProvider()
+        val processor = Processor()
+        val dbState = DbState.getAsOfNow()
+        val updater = Updater(dbState)
+
         provider
             .getSnapshotsStream()
             .map(::filterAndConvertSnapshotsToProcessedItems)
             .map(processor::process)
             .map(updater::save)
             .collect(Collectors.counting())
+
+        dbState.finalize()
     }
 
     private fun filterAndConvertSnapshotsToProcessedItems(snapshots: CreatorItems<Snapshot>): CreatorItems<ProcessedItem> {
