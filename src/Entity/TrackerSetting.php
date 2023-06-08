@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrackerSettingRepository::class)]
 #[ORM\Table(name: 'tracker_settings')]
-class TrackerSetting
+class TrackerSetting // TODO
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -8,66 +8,21 @@ use App\Data\Definitions\Fields\Field;
 use App\Entity\ArtisanUrl;
 use App\Entity\EventFactory;
 use App\IuHandling\Changes\Description;
-use App\Repository\ArtisanRepository;
-use App\Service\WebpageSnapshotManager;
 use App\Tracking\OfferStatus\OffersStatusesProcessor;
 use App\Tracking\OfferStatus\OffersStatusesResult;
 use App\Tracking\OfferStatus\OfferStatus;
 use App\Tracking\Web\Url\CoercedUrl;
 use App\Tracking\Web\Url\Fetchable;
-use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Tracking\Web\WebsiteInfo;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-
-use function Psl\Dict\merge;
 use function Psl\Vec\map;
 
 class StatusTracker
 {
-    /**
-     * @var Artisan[]
-     */
-    private readonly array $artisans;
-
     private readonly WebsiteInfo $websiteInfo;
 
-    public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly ArtisanRepository $repository,
-        private readonly OffersStatusesProcessor $processor,
-        private readonly WebpageSnapshotManager $snapshots,
-        private readonly bool $refetch,
-        private readonly SymfonyStyle $io,
-    ) {
-        $this->artisans = Artisan::wrapAll($this->repository->findAll());
-        $this->websiteInfo = new WebsiteInfo();
-    }
-
-    public function performUpdates(): void
-    {
-        $urls = $this->getUrlsToFetch();
-        $urls = $this->coerceUrlsToFetch($urls);
-        $this->snapshots->prefetchUrls($urls, $this->refetch, $this->io);
-
-        foreach ($this->artisans as $artisan) {
-            $urls = $artisan->getUrlObjs(Field::URL_COMMISSIONS);
-            $urls = $this->coerceUrlsToFetch($urls);
-            $snapshots = map($urls, fn (Fetchable $url): Snapshot => $this->snapshots->get($url, false));
-
-            $offerStatusResult = $this->processor->getOffersStatuses($snapshots);
-            $this->logIssues($offerStatusResult, $artisan);
-
-            $updates = $this->applyUpdatesFor($artisan, $offerStatusResult);
-            $this->logArtisanUpdates($updates, $artisan);
-        }
-    }
-
-    private function applyUpdatesFor(Artisan $artisan, OffersStatusesResult $offerStatuses): Description
+    private function applyUpdatesFor(Artisan $artisan, OffersStatusesResult $offerStatuses): Description // TODO: Translate into plain logging
     {
         $before = clone $artisan;
 
@@ -87,26 +42,6 @@ class StatusTracker
         }
 
         return new Description($before, $artisan);
-    }
-
-    /**
-     * @return ArtisanUrl[]
-     */
-    private function getUrlsToFetch(): array
-    {
-        return array_merge(...map(
-            $this->artisans,
-            fn (Artisan $artisan): array => $artisan->getUrlObjs(Field::URL_COMMISSIONS),
-        ));
-    }
-
-    private function logIssues(OffersStatusesResult $resolvedOfferStatuses, Artisan $artisan): void
-    {
-        foreach ($resolvedOfferStatuses->issues as $issue) {
-            $context = merge($issue->toLogContext(), ['artisan' => (string) $artisan]);
-
-            $this->logger->notice($issue->description, $context);
-        }
     }
 
     private function logArtisanUpdates(Description $updates, Artisan $artisan): void

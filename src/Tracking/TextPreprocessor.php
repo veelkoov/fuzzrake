@@ -5,54 +5,20 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Tracking\Exception\TrackerException;
-use App\Tracking\Web\Detector;
 use App\Utils\Json;
-use App\Utils\Regexp\Replacements;
 use JsonException;
 use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;
 use TRegx\CleanRegex\Pattern;
-use TRegx\CleanRegex\PatternList;
 
 readonly class TextPreprocessor
 {
-    private Detector $detector;
     private Pattern $instaBio;
 
     public function __construct(
-        private PatternList $falsePositives,
-        private Replacements $replacements,
     ) {
-        $this->detector = new Detector();
         // TODO: Naive (fixed formatting, bio without "), possibly find a better place
         $this->instaBio = Pattern::of('"graphql":\{"user":\{"biography":(?<bio>"[^"]+")');
-    }
-
-    /**
-     * @throws TrackerException
-     */
-    public function getText(string $inputText, string $url, string $artisanName): Text
-    {
-        $contents = $this->applyFilters($url, $inputText);
-        $contents = $this->extractFromJson($contents);
-        $contents = strtolower($contents);
-        $contents = $this->applyReplacements($contents);
-        $contents = self::replaceArtisanName($artisanName, $contents);
-        $contents = $this->falsePositives->prune($contents);
-
-        return new Text($inputText, $contents);
-    }
-
-    public static function replaceArtisanName(string $artisanName, string $inputText): string
-    {
-        $inputText = str_ireplace($artisanName, 'STUDIO_NAME', $inputText);
-
-        if (strlen($artisanName) > 2 && 's' === strtolower(substr($artisanName, -1))) {
-            /* Thank you, English language, I am enjoying this */
-            $inputText = str_ireplace(substr($artisanName, 0, -1)."'s", 'STUDIO_NAME', $inputText);
-        }
-
-        return $inputText;
     }
 
     private function extractFromJson(string $webpage): string
@@ -125,10 +91,5 @@ readonly class TextPreprocessor
         }
 
         return $inputText;
-    }
-
-    private function applyReplacements(string $contents): string
-    {
-        return $this->replacements->do($contents);
     }
 }

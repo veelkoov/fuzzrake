@@ -9,7 +9,7 @@ use App\Repository\TrackerSettingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class RegexPersistence implements RegexesProvider
+class RegexPersistence implements RegexesProvider // TODO?
 {
     private const GROUP_REGEXES = 'REGEXES';
     private const KEY_OFFER_STATUS = 'OFFER_STATUS';

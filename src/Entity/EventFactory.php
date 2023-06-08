@@ -11,7 +11,7 @@ use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 
-class EventFactory
+class EventFactory // TODO
 {
     use UtilityClass;
 
