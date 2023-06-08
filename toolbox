@@ -233,6 +233,7 @@ function action() {
         'cst')          run_console app:status-tracker:run "$@" ;;
         'cstc')         action cst --commit "$@" ;;
         'cstr')         action cst --refetch "$@" ;;
+        'cstc-prod')    run_command ssh getfursu.it docker exec fuzzrake-prod bin/console app:status-tracker:run --commit ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;
