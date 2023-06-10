@@ -1,14 +1,17 @@
 package tracking.processing
 
+import data.pack
+import database.Creator
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
+import testUtils.disposableTransaction
 import tracking.contents.ProcessedItem
-import tracking.creator.Creator
 import tracking.website.StandardStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PreprocessorTest {
+    private val creator = disposableTransaction { Creator.new {} }
     private val subject = Preprocessor()
 
     @TestFactory
@@ -18,7 +21,7 @@ class PreprocessorTest {
         " ❗&nbsp;" to " ! ", // Unicode NBSP, emoticon !, HTML entity NBSP
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", input, Creator(listOf()), StandardStrategy)
+            val testItem = ProcessedItem("", input, creator, StandardStrategy)
             subject.preprocess(testItem)
 
             assertEquals(expected, testItem.contents)
@@ -27,7 +30,7 @@ class PreprocessorTest {
 
     @Test
     fun `Input gets converted to lowercase`() {
-        val testItem = ProcessedItem("", "AaBbCcDdEeFf", Creator(listOf()), StandardStrategy)
+        val testItem = ProcessedItem("", "AaBbCcDdEeFf", creator, StandardStrategy)
         subject.preprocess(testItem)
 
         assertEquals("aabbccddeeff", testItem.contents)
@@ -50,14 +53,17 @@ class PreprocessorTest {
             listOf("Intergalactic Pancake"),
             "about CREATOR_NAME's work",
         ),
-        Triple( // Multiple aliases, 's form, case-insensitive, "creator" in aliases
+        Triple(
+            // Multiple aliases, 's form, case-insensitive, "creator" in aliases
             "asdf Studio's uiop Creator asdf Studios zxcv",
             listOf("StUdIoS", "cReatOR"),
             "asdf CREATOR_NAME uiop CREATOR_NAME asdf CREATOR_NAME zxcv",
         ),
     ).map { (input, aliases, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", input, Creator(aliases), StandardStrategy)
+            val creator = disposableTransaction { Creator.new { formerly = aliases.pack() } }
+            val testItem = ProcessedItem("", input, creator, StandardStrategy)
+
             subject.preprocess(testItem)
 
             assertEquals(expected, testItem.contents)
@@ -81,7 +87,9 @@ class PreprocessorTest {
         "when will you start taking new commissions?" to "?",
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", input, Creator(listOf("The Creator")), StandardStrategy)
+            val creator = disposableTransaction { Creator.new { name = "The Creator" } }
+            val testItem = ProcessedItem("", input, creator, StandardStrategy)
+
             subject.preprocess(testItem)
 
             assertEquals(expected, testItem.contents)

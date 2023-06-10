@@ -1,31 +1,33 @@
 package tracking.steps
 
+import data.CreatorItems
+import database.Creator
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.ProcessorTestCaseData
+import testUtils.disposableTransaction
 import tracking.contents.ProcessedItem
-import tracking.creator.Creator
-import data.CreatorItems
 import tracking.statuses.OfferStatus
 import tracking.statuses.Status
 import tracking.website.StandardStrategy
 import kotlin.test.assertEquals
 
 class ProcessorTest {
+    private val creator = disposableTransaction { Creator.new {} }
+
     @TestFactory
     fun process(): List<DynamicTest> {
         val subject = Processor()
 
         return getTestCases().map { caseData ->
             DynamicTest.dynamicTest(caseData.name) {
-                val creator = Creator(listOf())
                 val processedItem = ProcessedItem("", caseData.input, creator, StandardStrategy)
                 val input = CreatorItems(creator, listOf(processedItem))
 
                 val result = subject.process(input)
 
-                assertEquals(caseData.expectIssues, result.issues)
-                assertEquals(caseData.offersStatuses, result.items)
+                assertEquals(caseData.expectIssues, result.item.issues)
+                assertEquals(caseData.offersStatuses, result.item.items)
             }
         }
     }

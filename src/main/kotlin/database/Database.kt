@@ -3,18 +3,17 @@ package database
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.transactionManager
 import java.sql.Connection
 import org.jetbrains.exposed.sql.transactions.transaction as exposedTransaction
 
-object Database {
-    private const val dbPath = "/home/fuzzrake/var/db.sqlite" // TODO: Parameters
-    private const val isolationLevel = Connection.TRANSACTION_SERIALIZABLE // or TRANSACTION_READ_UNCOMMITTED
+class Database(dbPath: String) {
+    private val isolationLevel = Connection.TRANSACTION_SERIALIZABLE // or TRANSACTION_READ_UNCOMMITTED
 
     private val database = Database.connect("jdbc:sqlite:$dbPath", "org.sqlite.JDBC")
 
     init {
-        TransactionManager.manager.defaultIsolationLevel = isolationLevel
+        database.transactionManager.defaultIsolationLevel = isolationLevel
     }
 
     fun <T> transaction(function: () -> T): T {

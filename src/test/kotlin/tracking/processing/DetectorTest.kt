@@ -2,8 +2,9 @@ package tracking.processing
 
 import org.junit.jupiter.api.Test
 import tracking.contents.ProcessedItem
-import tracking.creator.Creator
 import data.CreatorItems
+import database.Creator
+import testUtils.disposableTransaction
 import tracking.statuses.OfferStatus
 import tracking.statuses.Status
 import tracking.website.StandardStrategy
@@ -13,8 +14,9 @@ import kotlin.test.assertTrue
 import kotlin.test.assertFalse
 
 class DetectorTest {
+    private val creator = disposableTransaction { Creator.new {} }
+
     private fun getTestInput(vararg contents: String): CreatorItems<ProcessedItem> {
-        val creator = Creator(listOf())
         val sourceUrl = ""
         val strategy = StandardStrategy
 

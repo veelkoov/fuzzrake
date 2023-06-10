@@ -6,7 +6,7 @@ import database.Creator
  * Return creator's current name and former names.
  */
 fun Creator.aliases(): List<String> {
-    return listOf(name).plus(formerly.unpack())
+    return listOf(name).plus(formerly.unpack()).filterNot { it == "" }
 }
 
 /**

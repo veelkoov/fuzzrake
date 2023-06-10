@@ -13,7 +13,9 @@ import java.util.stream.Collectors
 
 class Tracker {
     fun run() {
-        Database.transaction {
+        val database = Database("/home/fuzzrake/var/db.sqlite") // TODO: Parametrize
+
+        database.transaction {
             val provider = SnapshotsProvider()
             val processor = Processor()
             val updater = Updater(DbState.getAsOfNow(provider.getCreators()))
