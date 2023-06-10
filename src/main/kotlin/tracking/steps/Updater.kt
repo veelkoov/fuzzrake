@@ -25,7 +25,7 @@ class Updater(private val dbState: DbState) {
         val dbEntity: CreatorVolatileData = dbState.getVolatileDataOf(creator)
 
         dbEntity.csTrackerIssue = newOffersStatuses.issues
-        dbEntity.lastCsUpdateUtc = UTC.Now.dateTime()
+        dbEntity.lastCsUpdateUtc = UTC.Now.dateTime() // TODO: Should this come from the snapshot retrieval time?
     }
 
     private fun updateOffersStatuses(creator: Creator, newOffersStatuses: OffersStatuses) {

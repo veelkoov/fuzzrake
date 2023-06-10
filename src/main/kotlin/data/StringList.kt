@@ -5,5 +5,5 @@ fun List<String>.pack(): String {
 }
 
 fun String.unpack(): List<String> {
-    return this.split("\n")
+    return if (this == "") listOf() else this.split("\n")
 }
