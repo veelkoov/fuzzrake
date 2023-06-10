@@ -28,8 +28,7 @@ parameters:
       # Start with statuses "nicely" organized into paragraphs/sentences - single spaces, no newlines, etc.
       - 'STATUS_ANY for OFFER'
 
-      - 'OFFER(\s+are)?(\s+now)?\s+STATUS_ANY'
-      - 'OFFER( are| status)?(\s+now)? ?[:-]\s*STATUS_ANY'
+      - 'OFFER(\s+are|\s+status)?(\s+now)?(\s+|\s*[:-]\s*)STATUS_ANY'
 
       # Inverted order - careful!
       - '(WE_ARE|now) STATUS_ANY(\s+for(\s+new)?|\s+new)?\s+OFFER(\s+and\s+OFFER)?'
@@ -161,7 +160,7 @@ parameters:
       '<!--.*?-->':                                      ' '
       '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>': ''
       '(\*\*\*|!)(open|closed)(\*\*\*|!)':               '$2'
-      '&gt;&gt;(open|closed)&lt;&lt;':                   '$1'
+      '&gt;&gt; ?(open|closed) ?&lt;&lt;':               '$1'
       '(<[^>]+ )style="[^"]*"([^>]*>)':                  '$1$2'
 
       '&#(?:39|8217);': "'"
