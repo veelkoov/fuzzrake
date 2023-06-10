@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.8.20"
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("jvm") version "1.8.22"
+    kotlin("plugin.serialization") version "1.8.22"
     application
 
     id("org.jetbrains.kotlinx.kover") version "0.7.1"
@@ -15,6 +15,7 @@ repositories {
 }
 
 val exposedVersion: String by project
+val mockkVersion: String by project
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
@@ -30,6 +31,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.30.1")
 
     testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 tasks.test {
