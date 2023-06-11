@@ -206,3 +206,14 @@ Commission status<br />
 --------------------------------
 Case 30
 -COMMISSIONS
+================================================================
+Commission status: permanently closed
+--------------------------------
+Case 31
+-COMMISSIONS
+================================================================
+uncommon species. Dm’s are always open! Quote/com status: CLOSED
+--------------------------------
+Case 32
+-COMMISSIONS
+-QUOTES

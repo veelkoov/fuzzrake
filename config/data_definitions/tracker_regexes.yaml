@@ -28,7 +28,7 @@ parameters:
       # Start with statuses "nicely" organized into paragraphs/sentences - single spaces, no newlines, etc.
       - 'STATUS_ANY for OFFER'
 
-      - 'OFFER(\s+are|\s+status)?(\s+now)?(\s+|\s*[:-]\s*)STATUS_ANY'
+      - 'OFFER(\s+are|\s+status)?(\s+now)?(\s+|\s*[:-]\s*)(now\s+)?STATUS_ANY'
 
       # Inverted order - careful!
       - '(WE_ARE|now) STATUS_ANY(\s+for(\s+new)?|\s+new)?\s+OFFER(\s+and\s+OFFER)?'
@@ -63,6 +63,7 @@ parameters:
         - 'closed?'
         - 'not (taking( on)?|accepting|open)'
         - "don't (do|take|provide|accept)"
+        # TODO: sometimes I sell parts / I DO NOT TAKE COMMISSIONS // Personal account:
 
       'OFFER':
         'HANDPAWS_AND_SOCKPAWS=handpaws_cms_and_sockpaws_cms':
@@ -74,6 +75,7 @@ parameters:
         'COMMISSIONS_AND_QUOTES=commissions_and_quotes':
           - '(COMMISSIONS AND quotes?)'
           - '(quotes? AND COMMISSIONS)'
+          - 'quote/com' # Hmmm... FIXME?
 
         'FULLSUIT_COMMISSIONS=fullsuit_commissions':
           - 'fullsuit COMMISSIONS'
@@ -174,8 +176,9 @@ parameters:
       ',"attributes":\{[^}]*\}': ''
       '"\},\{"insert":"':        ''
 
-      # always / currently / now
-      '(?<![a-z])(currently|basically always|always)(?![a-z])': 'now'
+      # currently / now
+      # always, permanently, forever, indefinitely means "now" too
+      '(?<![a-z])(currently|basically always|always|permanently|forever|indefinitely)(?![a-z])': 'now'
 
       # Change order to reduce number of alterations
       '(?<![a-z])we are now(?![a-z])': 'now we are'
