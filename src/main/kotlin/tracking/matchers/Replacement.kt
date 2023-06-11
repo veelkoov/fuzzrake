@@ -1,17 +1,17 @@
 package tracking.matchers
 
-import kotlin.text.Regex
+import tracking.matchers.regex.RegexJ
 
 class Replacement(
-    private val regex: Regex,
+    private val regex: RegexJ,
     private val replacement: String,
 ) : Usable {
     private var wasUsed = false
 
-    constructor(pattern: String, options: Set<RegexOption>, replacement: String): this(Regex(pattern, options), replacement)
+    constructor(pattern: String, options: Set<RegexOption>, replacement: String): this(RegexJ(pattern, options), replacement)
 
     fun replaceIn(subject: String): String {
-        val result = subject.replace(regex, replacement)
+        val result = regex.replace(subject, replacement)
 
         if (result != subject) {
             wasUsed = true
