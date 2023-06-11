@@ -65,10 +65,10 @@ class GroupNamesAnalyserTest {
 
         assertEquals(3, result.size)
         assertEquals(Status.CLOSED, result[0].status)
-        assertEquals("COMMISSIONS", result[0].offer)
+        assertEquals("Commissions", result[0].offer)
         assertEquals(Status.CLOSED, result[1].status)
-        assertEquals("QUOTES", result[1].offer)
+        assertEquals("Quotes", result[1].offer)
         assertEquals(Status.CLOSED, result[2].status)
-        assertEquals("PROJECTS", result[2].offer)
+        assertEquals("Projects", result[2].offer)
     }
 }

@@ -18,5 +18,9 @@ enum class Status {
                 else -> throw IllegalArgumentException("Cannot match a status to the group name: '$name'")
             }
         }
+
+        fun fromBoolean(isOpen: Boolean): Status {
+            return if (isOpen) OPEN else CLOSED
+        }
     }
 }

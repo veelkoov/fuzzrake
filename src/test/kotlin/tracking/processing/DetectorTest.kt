@@ -30,7 +30,7 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
+        assertContains(result.items, OfferStatus("Commissions", Status.OPEN))
     }
 
     @Test
@@ -49,8 +49,8 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(2, result.items.size)
-        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
-        assertContains(result.items, OfferStatus("QUOTES", Status.OPEN))
+        assertContains(result.items, OfferStatus("Commissions", Status.OPEN))
+        assertContains(result.items, OfferStatus("Quotes", Status.OPEN))
     }
 
     @Test
@@ -78,7 +78,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("QUOTES", Status.OPEN))
+        assertContains(result.items, OfferStatus("Quotes", Status.OPEN))
     }
 
     @Test
@@ -88,7 +88,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("QUOTES", Status.OPEN))
+        assertContains(result.items, OfferStatus("Quotes", Status.OPEN))
     }
 
     @Test
@@ -98,7 +98,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
+        assertContains(result.items, OfferStatus("Commissions", Status.OPEN))
     }
 
     @Test
@@ -108,7 +108,7 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
+        assertContains(result.items, OfferStatus("Commissions", Status.OPEN))
     }
 
     @Test
@@ -118,8 +118,8 @@ class DetectorTest {
 
         assertFalse(result.issues)
         assertEquals(2, result.items.size)
-        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
-        assertContains(result.items, OfferStatus("QUOTES", Status.CLOSED))
+        assertContains(result.items, OfferStatus("Commissions", Status.OPEN))
+        assertContains(result.items, OfferStatus("Quotes", Status.CLOSED))
     }
 
     @Test
@@ -129,7 +129,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("COMMISSIONS", Status.OPEN))
+        assertContains(result.items, OfferStatus("Commissions", Status.OPEN))
     }
 
     @Test
@@ -148,7 +148,7 @@ class DetectorTest {
 
         assertTrue(result.issues)
         assertEquals(1, result.items.size)
-        assertContains(result.items, OfferStatus("QUOTES", Status.CLOSED))
+        assertContains(result.items, OfferStatus("Quotes", Status.CLOSED))
     }
 
     @Test

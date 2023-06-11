@@ -101,7 +101,7 @@ placeholders:
     'REFURBISHMENTS=Refurbishments':
       - 'refurbishments?'
 
-    'PRE_MADES=PreMades':
+    'PREMADES=Premades':
       - 'pre-?mades?( designs?)?'
 
     'ARTISTIC_LIBERTY=ArtisticLiberty':

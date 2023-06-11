@@ -8,8 +8,14 @@ class GroupNamesResolverTest {
     fun offersFrom() {
         val subject = GroupNamesResolver()
 
-        assertEquals(listOf("HANDPAWS COMMISSIONS", "SOCKPAWS COMMISSIONS"), subject.offersFrom("HandpawsCmsAndSockpawsCms"))
+        assertEquals(
+            listOf("Handpaws commissions", "Sockpaws commissions"),
+            subject.offersFrom("HandpawsCmsAndSockpawsCms"),
+        )
 
-        assertEquals(listOf("COMMISSIONS", "QUOTES"), subject.offersFrom("CommissionsAndQuotes"))
+        assertEquals(
+            listOf("Commissions", "Quotes"),
+            subject.offersFrom("CommissionsAndQuotes"),
+        )
     }
 }

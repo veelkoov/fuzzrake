@@ -10,14 +10,18 @@ class GroupNamesResolver {
     }
 
     companion object {
-        private val prettyNames = mapOf( // TODO: Consider using actually pretty names (capitalized?)
-            "Cms"         to "COMMISSIONS",
-            "Commissions" to "COMMISSIONS",
-            "Quotes"      to "QUOTES",
-            "Projects"    to "PROJECTS",
-            "PreMades"    to "PRE-MADES",
-            "HandpawsCms" to "HANDPAWS COMMISSIONS",
-            "SockpawsCms" to "SOCKPAWS COMMISSIONS",
+        private val prettyNames = mapOf( // TODO... This now just don't make much sense
+            "Cms"                 to "Commissions",
+            "Commissions"         to "Commissions",
+            "Quotes"              to "Quotes",
+            "Projects"            to "Projects",
+            "Premades"            to "Premades",
+            "HandpawsCms"         to "Handpaws commissions",
+            "SockpawsCms"         to "Sockpaws commissions",
+            "FullsuitCommissions" to "Fullsuit commissions",
+            "PartialCommissions"  to "Partial commissions",
+            "HeadCommissions"     to "Head commissions",
+            "ArtisticLiberty"     to "Artistic liberty",
         )
 
         private fun prettify(input: String) = prettyNames.getOrDefault(input, input)

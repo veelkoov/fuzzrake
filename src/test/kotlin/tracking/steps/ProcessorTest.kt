@@ -5,6 +5,7 @@ import database.Creator
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.ProcessorTestCaseData
+import testUtils.Resource
 import testUtils.disposableTransaction
 import tracking.contents.ProcessedItem
 import tracking.statuses.OfferStatus
@@ -33,8 +34,7 @@ class ProcessorTest {
     }
 
     private fun getTestCases(): List<ProcessorTestCaseData> {
-        return javaClass
-            .getResource("/tracking/processor_test_cases_data.txt")!!.readText()
+        return Resource.read("/tracking/processor_test_cases_data.txt")
             .split("\n================================================================\n")
             .map { caseDataText ->
                 try {
