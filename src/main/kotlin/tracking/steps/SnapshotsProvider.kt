@@ -5,11 +5,12 @@ import database.Creator
 import database.CreatorUrl
 import database.CreatorUrls
 import org.jetbrains.exposed.dao.with
-import tracking.contents.Snapshot
-import web.snapshots.Manager
+import web.snapshots.Snapshot
+import tracking.website.Strategy
+import web.snapshots.SnapshotsManager
 import java.util.stream.Stream
 
-class SnapshotsProvider {
+class SnapshotsProvider(private val snapshotsManager: SnapshotsManager) {
     private val creators: Map<Creator, List<CreatorUrl>> = CreatorUrl
         .find { CreatorUrls.type eq "URL_COMMISSIONS" } // TODO: Enum!
         .with(CreatorUrl::creator)
@@ -19,7 +20,13 @@ class SnapshotsProvider {
         return creators.entries
             .parallelStream()
             .map { (creator, urls) ->
-                CreatorItems(creator, urls.map { Manager.get(it.url) })
+                CreatorItems(creator, urls.map {
+                    val url = Strategy
+                        .forUrl(it.url)
+                        .coerceUrl(it.url)
+
+                    snapshotsManager.get(url)
+                })
             }
     }
 

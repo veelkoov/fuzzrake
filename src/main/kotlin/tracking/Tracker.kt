@@ -3,12 +3,13 @@ package tracking
 import data.CreatorItems
 import database.Database
 import tracking.contents.ProcessedItem
-import tracking.contents.Snapshot
+import web.snapshots.Snapshot
 import tracking.steps.Processor
 import tracking.steps.SnapshotsProvider
 import tracking.steps.Updater
 import tracking.updating.DbState
 import tracking.website.Strategy
+import web.snapshots.SnapshotsManager
 import java.util.stream.Collectors
 
 class Tracker {
@@ -16,7 +17,8 @@ class Tracker {
         val database = Database("/home/fuzzrake/var/db.sqlite") // TODO: Parametrize
 
         database.transaction {
-            val provider = SnapshotsProvider()
+            val snapshotsManager = SnapshotsManager("/home/fuzzrake/var/snapshots") // TODO: Parametrize
+            val provider = SnapshotsProvider(snapshotsManager)
             val processor = Processor()
             val updater = Updater(DbState.getAsOfNow(provider.getCreators()))
 
@@ -34,10 +36,10 @@ class Tracker {
     private fun filterAndConvertSnapshotsToProcessedItems(snapshots: CreatorItems<Snapshot>): CreatorItems<ProcessedItem> {
         val items = snapshots.items.map {
             ProcessedItem(
-                it.url,
+                it.metadata.url,
                 it.contents,
                 snapshots.creator,
-                Strategy.forUrl(it.url)
+                Strategy.forUrl(it.metadata.url)
             )
         }
         // TODO: Reject texts > 1 MiB
