@@ -7,15 +7,18 @@ interface Strategy {
 
     companion object {
         fun forUrl(url: String): Strategy {
-            if (TwitterProfileStrategy.isSuitableFor(url)) {
-                return TwitterProfileStrategy
-            }
+            return when {
+                TwitterProfileStrategy
+                    .isSuitableFor(url) -> TwitterProfileStrategy
 
-            if (InstagramProfileStrategy.isSuitableFor(url)) {
-                return InstagramProfileStrategy
-            }
+                InstagramProfileStrategy
+                    .isSuitableFor(url) -> InstagramProfileStrategy
 
-            return StandardStrategy
+                TrelloStrategy
+                    .isSuitableFor(url) -> TrelloStrategy
+
+                else -> StandardStrategy
+            }
         }
     }
 }
