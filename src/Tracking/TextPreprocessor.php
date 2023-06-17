@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tracking;
 
 use App\Tracking\Exception\TrackerException;
+use App\Tracking\Web\Detector;
 use App\Utils\Json;
 use JsonException;
 use Nette\Utils\Arrays;
@@ -13,10 +14,12 @@ use TRegx\CleanRegex\Pattern;
 
 readonly class TextPreprocessor
 {
+    private Detector $detector;
     private Pattern $instaBio;
 
     public function __construct(
     ) {
+        $this->detector = new Detector();
         // TODO: Naive (fixed formatting, bio without "), possibly find a better place
         $this->instaBio = Pattern::of('"graphql":\{"user":\{"biography":(?<bio>"[^"]+")');
     }
@@ -62,17 +65,6 @@ readonly class TextPreprocessor
             }
 
             return $inputText;
-        }
-
-        if ($this->detector->isTwitter($inputText)) {
-            $crawler = new Crawler($inputText);
-            $filtered = $crawler->filterXPath('//main//nav/preceding-sibling::div');
-
-            if (1 !== $filtered->count()) {
-                throw new TrackerException('Failed to filter Twitter profile, nodes count: '.$filtered->count());
-            }
-
-            return $filtered->html();
         }
 
         if ($this->detector->isInstagram($url)) {
