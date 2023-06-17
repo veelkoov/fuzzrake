@@ -5,13 +5,17 @@ import java.io.FileNotFoundException
 class SnapshotsManager(private val storeDirPath: String) {
     private val pathProvider = FileSystemPathProvider()
 
-    fun get(url: String): Snapshot {
-        val snapshotDirPath = pathProvider.getSnapshotDirPath(url)
+    fun get(url: String, retrieve: (url: String) -> Snapshot): Snapshot {
+        val snapshotDirPath = "$storeDirPath/" + pathProvider.getSnapshotDirPath(url)
 
         return try {
-            return Snapshot.loadFrom("$storeDirPath/$snapshotDirPath")
-        } catch (_: FileNotFoundException) { // FIXME: This is not how it should be
-            Snapshot("", SnapshotMetadata(url, "UNKNOWN", "", 0, mapOf(), 0, listOf()))
+            return Snapshot.loadFrom(snapshotDirPath)
+        } catch (_: FileNotFoundException) {
+            val snapshot = retrieve(url)
+
+            snapshot.saveTo(snapshotDirPath)
+
+            snapshot
         }
     }
 }

@@ -16,6 +16,7 @@ repositories {
 
 val exposedVersion: String by project
 val mockkVersion: String by project
+val ktorVersion: String by project
 
 dependencies {
     // JSON and YAML support
@@ -37,6 +38,12 @@ dependencies {
 
     // HTML parsing
     implementation("org.jsoup:jsoup:1.16.1")
+
+    // HTTP client
+    implementation("io.ktor:ktor-client-apache5:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-client-encoding:$ktorVersion")
 
     // Tests
     testImplementation(kotlin("test"))

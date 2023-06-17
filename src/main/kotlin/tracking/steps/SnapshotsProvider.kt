@@ -5,12 +5,15 @@ import database.Creator
 import database.CreatorUrl
 import database.CreatorUrls
 import org.jetbrains.exposed.dao.with
-import web.snapshots.Snapshot
 import tracking.website.Strategy
+import web.client.GentleHttpClient
+import web.snapshots.Snapshot
 import web.snapshots.SnapshotsManager
 import java.util.stream.Stream
 
 class SnapshotsProvider(private val snapshotsManager: SnapshotsManager) {
+    private val httpClient = GentleHttpClient()
+
     private val creators: Map<Creator, List<CreatorUrl>> = CreatorUrl
         .find { CreatorUrls.type eq "URL_COMMISSIONS" } // TODO: Enum!
         .with(CreatorUrl::creator)
@@ -25,7 +28,7 @@ class SnapshotsProvider(private val snapshotsManager: SnapshotsManager) {
                         .forUrl(it.url)
                         .coerceUrl(it.url)
 
-                    snapshotsManager.get(url)
+                    snapshotsManager.get(url, httpClient::get)
                 })
             }
     }
