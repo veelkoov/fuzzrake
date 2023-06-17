@@ -1,5 +1,6 @@
 package tracking
 
+import config.Configuration
 import data.CreatorItems
 import database.Database
 import tracking.contents.ProcessedItem
@@ -12,12 +13,12 @@ import tracking.website.Strategy
 import web.snapshots.SnapshotsManager
 import java.util.stream.Collectors
 
-class Tracker {
+class Tracker(private val config: Configuration) {
     fun run() {
-        val database = Database("/home/fuzzrake/var/db.sqlite") // TODO: Parametrize
+        val database = Database(config.databasePath)
 
         database.transaction {
-            val snapshotsManager = SnapshotsManager("/home/fuzzrake/var/snapshots") // TODO: Parametrize
+            val snapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
             val provider = SnapshotsProvider(snapshotsManager)
             val processor = Processor()
             val updater = Updater(DbState.getAsOfNow(provider.getCreators()))

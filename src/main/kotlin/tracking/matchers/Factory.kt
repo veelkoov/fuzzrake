@@ -1,23 +1,16 @@
 package tracking.matchers
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import data.Resource
+import data.Yaml
 import tracking.matchers.placeholders.Resolver
 import tracking.matchers.placeholders.ResolverFactory
 
 object Factory {
-    private val regexes: YamlRegexes
-    private val resolver: Resolver
+    private val regexes: YamlRegexes =
+        Yaml.parse(Resource.read("/tracking/regexes.yaml"), YamlRegexes::class.java)
 
-    init {
-        val mapper = ObjectMapper(YAMLFactory())
-        mapper.registerModule(KotlinModule.Builder().build())
-
-        regexes = mapper.readValue(javaClass.getResource("/tracking/regexes.yaml"), YamlRegexes::class.java)
-
-        resolver = ResolverFactory().create(regexes.placeholders)
-    }
+    private val resolver: Resolver =
+        ResolverFactory().create(regexes.placeholders)
 
     fun getCleaners(): Replacements {
         val options = setOf(RegexOption.DOT_MATCHES_ALL)

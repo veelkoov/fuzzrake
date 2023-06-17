@@ -1,7 +1,10 @@
+import config.ConfigLoader
 import tracking.Tracker
 
-fun main(@Suppress("UNUSED_PARAMETER") args: Array<String>) {
-    val tracker = Tracker()
+fun main(args: Array<String>) {
+    val config = ConfigLoader()
+        .locateAndLoad()
+    val tracker = Tracker(config)
 
     tracker.run()
 }

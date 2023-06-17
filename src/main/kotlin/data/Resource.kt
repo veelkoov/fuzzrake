@@ -1,4 +1,4 @@
-package testUtils
+package data
 
 object Resource {
     fun read(name: String): String {
