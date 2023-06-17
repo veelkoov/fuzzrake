@@ -1,5 +1,5 @@
 ---
-- name: 'Setup IPv6-related stuff in sysctl'
+- name: 'Setup IPv6-related stuff in sysctl'  # TODO
   ansible.builtin.template:
     dest: '/etc/sysctl.d/05-ipv6.conf'
     mode: '0644'
@@ -7,10 +7,10 @@
   notify:
     - 'Reload system'
 
-- name: 'Setup IPv6'
+- name: 'Setup IPv6'  # TODO
   ansible.builtin.lineinfile:
     line:  '{{ item.name }}={{ item.value }}'
-    path:  '/etc/sysconfig/network-scripts/ifcfg-eth0'
+    path:  '/etc/NetworkManager/system-connections/{{ default_ipv4["interface"] }}.nmconnection'
     regex: '^{{ item.name }}'
   notify:
     - 'Reload system'
