@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache5.*
+import io.ktor.client.network.sockets.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.cookies.*
@@ -13,6 +14,7 @@ import kotlinx.coroutines.runBlocking
 import time.UTC
 import web.snapshots.Snapshot
 import web.snapshots.SnapshotMetadata
+import java.net.UnknownHostException
 
 private val logger = KotlinLogging.logger {}
 
@@ -25,7 +27,7 @@ class FastHttpClient : HttpClientInterface {
         // }
         install(HttpCookies)
         install(ContentEncoding) {
-            deflate(1.0F)
+            // deflate(1.0F)
             gzip(0.9F)
         }
         install(UserAgent) {
@@ -41,25 +43,39 @@ class FastHttpClient : HttpClientInterface {
     override fun get(url: String): Snapshot {
         logger.info("Retrieving: '$url'")
 
-        val result = runBlocking {
-            val response = client.request(url)
+        try {
+            val result = runBlocking {
+                val response = client.request(url)
 
-            val contents = response.body<String>()
-            val metadata = SnapshotMetadata(
-                url,
-                "", // FIXME
-                UTC.Now.dateTime().toString(), // FIXME
-                response.status.value,
-                response.headers.toMap(),
-                0, // FIXME
-                listOf(), // FIXME
-            )
+                val contents = response.body<String>()
+                val metadata = SnapshotMetadata(
+                    url,
+                    "", // FIXME
+                    UTC.Now.dateTime().toString(), // FIXME
+                    response.status.value,
+                    response.headers.toMap(),
+                    0, // FIXME
+                    listOf(), // FIXME
+                )
 
-            Snapshot(contents, metadata)
+                Snapshot(contents, metadata)
+            }
+
+            logger.info("Retrieved: '$url'")
+
+            return result
+        } catch (exception: UnknownHostException) {
+            return getFromException(url, exception)
+        } catch (exception: ConnectTimeoutException) {
+            return getFromException(url, exception)
+        } catch (exception: SocketTimeoutException) {
+            return getFromException(url, exception)
         }
+    }
 
-        logger.info("Retrieved: '$url'")
+    private fun getFromException(url: String, exception: Throwable): Snapshot {
+        logger.info("Failed retrieving: '$url'; $exception")
 
-        return result
+        return Snapshot.forError(url, "", exception.message ?: exception.toString())
     }
 }

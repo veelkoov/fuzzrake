@@ -2,6 +2,7 @@ package web.client
 
 import time.UTC
 import java.net.URI
+import java.util.concurrent.ConcurrentHashMap
 
 private const val DELAY_FOR_HOST_SEC = 10
 
@@ -9,7 +10,7 @@ class HostCallsQueue {
     /**
      * Key = hostname. Value = Next allowed call timestamp (epoch sec).
      */
-    private val hostnameToTime: MutableMap<String, Long> = mutableMapOf()
+    private val hostnameToTime = ConcurrentHashMap<String, Long>()
 
     fun <T> patiently(url: String, call: () -> T): T {
         val hostname = URI(url).host // FIXME: This should not be done here

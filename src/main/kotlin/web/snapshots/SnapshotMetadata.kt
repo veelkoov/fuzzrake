@@ -1,6 +1,7 @@
 package web.snapshots
 
 import kotlinx.serialization.Serializable
+import time.UTC
 
 @Serializable
 data class SnapshotMetadata(
@@ -11,4 +12,10 @@ data class SnapshotMetadata(
     val headers: Map<String, List<String>>,
     val childCount: Int,
     val errors: List<String>,
-)
+) {
+    companion object {
+        fun forError(url: String, owner: String, error: String) = SnapshotMetadata(
+            url, owner, UTC.Now.dateTime().toString(), 0, mapOf(), 0, listOf(error)
+        )
+    }
+}
