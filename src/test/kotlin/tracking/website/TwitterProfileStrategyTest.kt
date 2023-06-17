@@ -1,17 +1,46 @@
 package tracking.website
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import testUtils.Resource
 
 class TwitterProfileStrategyTest {
+    val subject = TwitterProfileStrategy
+
     @Test
-    fun filter() {
-        val subject = TwitterProfileStrategy
-        val expected = "JOIN: https://t.co/3g0nZbnhqL \uD83D\uDC40\n\nSingle-wolf (tired) powered service running on pancakes.\n\n\uD83C\uDFB6 \uD83C\uDFA4 \uD83E\uDD96 \uD83C\uDFB8 \uD83C\uDFB9 \uD83E\uDD41 \uD83E\uDD18 \uD83C\uDFB6"
+    fun `Real-life, working scenario`() {
         val result = subject.filterContents(Resource.read("/tracking/twitter_getfursuit_contents.txt"))
 
-        assertEquals(expected, result)
+        assertEquals("JOIN: https://t.co/3g0nZbnhqL 👀\n\nSingle-wolf (tired) powered service running on pancakes.\n\n🎶 🎤 🦖 🎸 🎹 🥁 🤘 🎶", result)
+    }
+
+    @Test
+    fun `Simplified, working scenario`() {
+        val result = subject.filterContents("<html><head><meta property=\"og:description\" content=\"Expected description\"></head></html>")
+
+        assertEquals("Expected description", result)
+    }
+
+    @Test
+    fun `Empty description`() {
+        val result = subject.filterContents("<html><head><meta property=\"og:description\" content=\"\"></head></html>")
+
+        assertEquals("", result)
+    }
+
+    @Test
+    fun `Unparseable input`() {
+        assertEquals(
+            "{\"oops\": \"This is not a HTML\"}",
+            subject.filterContents("{\"oops\": \"This is not a HTML\"}"),
+        )
+    }
+
+    @Test
+    fun `Missing og_description meta element`() {
+        assertEquals(
+            "<html><head></head></html>",
+            subject.filterContents("<html><head></head></html>"),
+        )
     }
 }

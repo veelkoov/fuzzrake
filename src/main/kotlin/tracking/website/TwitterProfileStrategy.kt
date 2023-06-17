@@ -1,6 +1,9 @@
 package tracking.website
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jsoup.Jsoup
+
+private val logger = KotlinLogging.logger {}
 
 object TwitterProfileStrategy : Strategy {
     private val profileUrlRegex = Regex("https?://(m\\.|www\\.)?twitter\\.com/[^/?]+(\\?.*)?")
@@ -8,9 +11,18 @@ object TwitterProfileStrategy : Strategy {
     override fun isSuitableFor(url: String) = profileUrlRegex.matches(url)
 
     override fun filterContents(contents: String): String {
-        return Jsoup.parse(contents)
+        val document = Jsoup.parse(contents)
+
+        val descriptionNode = document
             .head()
             .selectXpath("//meta[@property='og:description']")
-            .attr("content")
+
+        return if (!descriptionNode.isEmpty() && descriptionNode.hasAttr("content")) {
+            descriptionNode.attr("content")
+        } else {
+            logger.warn("Failed to parse Twitter meta description content")
+
+            contents
+        }
     }
 }
