@@ -1,12 +1,4 @@
 ---
-# TODO: Try setting up Python 3 instead of the default 2
-
-#- name: 'Enable EPEL repository'
-#  ansible.builtin.dnf:
-#    name:
-#      - 'epel-release'
-#    state: 'installed'
-
 - name: 'Setup Yarn 1 repository'
   ansible.builtin.yum_repository:
     baseurl:     'https://dl.yarnpkg.com/rpm/'
