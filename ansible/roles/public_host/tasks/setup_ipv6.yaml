@@ -1,5 +1,5 @@
 ---
-- name: 'Setup IPv6-related stuff in sysctl'  # TODO
+- name: 'Setup IPv6-related stuff in sysctl'
   ansible.builtin.template:
     dest: '/etc/sysctl.d/05-ipv6.conf'
     mode: '0644'
@@ -7,23 +7,12 @@
   notify:
     - 'Reload system'
 
-- name: 'Setup IPv6'  # TODO
-  ansible.builtin.lineinfile:
-    line:  '{{ item.name }}={{ item.value }}'
-    path:  '/etc/NetworkManager/system-connections/{{ default_ipv4["interface"] }}.nmconnection'
-    regex: '^{{ item.name }}'
+- name: 'Setup IPv6'
+  community.general.nmcli:
+    conn_name: '{{ ansible_facts["default_ipv4"]["interface"] }}'
+    gw6:       '{{ ipv6_defaultgw }}'
+    ip6:       '{{ ipv6_addr }}'
+    method6:   'manual'
+    state:     'present'
   notify:
     - 'Reload system'
-  loop:
-    - name:  'IPV6INIT'
-      value: 'yes'
-    - name:  'IPV6_AUTOCONF'
-      value: 'no'
-    - name:  'IPV6_DEFROUTE'
-      value: 'yes'
-    - name:  'IPV6_FAILURE_FATAL'
-      value: 'no'
-    - name:  'IPV6ADDR'
-      value: '{{ ipv6_addr }}'
-    - name:  'IPV6_DEFAULTGW'
-      value: '{{ ipv6_defaultgw }}'
