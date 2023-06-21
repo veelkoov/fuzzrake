@@ -37,14 +37,15 @@ class Tracker(private val config: Configuration) {
     private fun filterAndConvertSnapshotsToProcessedItems(snapshots: CreatorItems<Snapshot>): CreatorItems<ProcessedItem> {
         val items = snapshots.items.map {
             ProcessedItem(
-                it.metadata.url,
-                it.contents,
                 snapshots.creator,
-                Strategy.forUrl(it.metadata.url)
+                snapshots.creatorId,
+                it.metadata.url,
+                Strategy.forUrl(it.metadata.url),
+                it.contents
             )
         }
         // TODO: Reject texts > 1 MiB
 
-        return CreatorItems(snapshots.creator, items)
+        return CreatorItems(snapshots.creator, snapshots.creatorId, items)
     }
 }

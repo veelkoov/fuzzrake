@@ -1,6 +1,6 @@
 package tracking.processing
 
-import data.aliases
+import database.helpers.aliases
 import tracking.contents.ProcessedItem
 import tracking.matchers.Factory
 

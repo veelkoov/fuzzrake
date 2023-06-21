@@ -1,11 +1,11 @@
 package tracking.steps
 
 import data.CreatorItem
-import data.lastCreatorId
-import database.Creator
-import database.CreatorOfferStatus
-import database.CreatorVolatileData
-import database.toOfferStatus
+import database.helpers.lastCreatorId
+import database.entities.Creator
+import database.entities.CreatorOfferStatus
+import database.entities.CreatorVolatileData
+import database.helpers.toOfferStatus
 import io.github.oshai.kotlinlogging.KotlinLogging
 import time.UTC
 import tracking.statuses.Offer

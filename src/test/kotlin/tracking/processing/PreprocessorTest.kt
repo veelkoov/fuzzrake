@@ -1,7 +1,7 @@
 package tracking.processing
 
 import data.pack
-import database.Creator
+import database.entities.Creator
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.disposableTransaction

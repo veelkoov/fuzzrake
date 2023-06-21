@@ -14,6 +14,6 @@ class Processor {
     fun process(items: CreatorItems<ProcessedItem>): CreatorItem<OffersStatuses> {
         items.items.forEach { preprocessor.preprocess(it) }
 
-        return CreatorItem(items.creator, detector.detectIn(items))
+        return CreatorItem(items.creator, items.creatorId, detector.detectIn(items))
     }
 }

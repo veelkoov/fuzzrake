@@ -13,7 +13,7 @@ class ConfigLoader {
     }
 
     private fun searchConfigFilePath(): File {
-        var candidatePath = File("build/classes").absoluteFile.canonicalFile
+        var candidatePath = File("").absoluteFile.canonicalFile
 
         while (true) {
             val candidateFile = candidatePath.resolve(CFG_FILE_NAME)

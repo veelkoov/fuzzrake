@@ -1,5 +1,6 @@
-package database
+package database.entities
 
+import database.tables.CreatorOffersStatuses
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

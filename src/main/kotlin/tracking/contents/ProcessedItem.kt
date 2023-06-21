@@ -1,11 +1,12 @@
 package tracking.contents
 
-import database.Creator
+import database.entities.Creator
 import tracking.website.Strategy
 
 data class ProcessedItem(
-    val sourceUrl: String,
-    var contents: String,
     val creator: Creator,
+    val creatorId: String,
+    val sourceUrl: String,
     val strategy: Strategy,
+    var contents: String,
 )

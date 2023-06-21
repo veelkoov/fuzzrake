@@ -1,10 +1,11 @@
 package tracking.steps
 
 import data.CreatorItems
-import database.Creator
-import database.CreatorUrl
-import database.CreatorUrls
-import org.jetbrains.exposed.dao.with
+import database.entities.Creator
+import database.entities.CreatorUrl
+import database.helpers.findCommissions
+import database.helpers.lastCreatorId
+import database.tables.CreatorUrls
 import tracking.website.Strategy
 import web.client.GentleHttpClient
 import web.snapshots.Snapshot
@@ -13,24 +14,33 @@ import java.util.stream.Stream
 
 class SnapshotsProvider(private val snapshotsManager: SnapshotsManager) {
     private val httpClient = GentleHttpClient()
+    private val creators = getCreatorsMap()
 
-    private val creators: Map<Creator, List<CreatorUrl>> = CreatorUrl
-        .find { CreatorUrls.type eq "URL_COMMISSIONS" } // TODO: Enum!
-        .with(CreatorUrl::creator)
-        .groupBy { it.creator }
+    private fun getCreatorsMap(): Map<Creator, List<CreatorUrl>> {
+        return CreatorUrls
+            .findCommissions()
+            .groupBy { it.creator }
+    }
 
     fun getSnapshotsStream(): Stream<CreatorItems<Snapshot>> { // FIXME: All of it
         return creators.entries
-            .parallelStream()
-            .map { (creator, urls) ->
-                CreatorItems(creator, urls.map {
-                    val url = Strategy
-                        .forUrl(it.url)
-                        .coerceUrl(it.url)
-
-                    snapshotsManager.get(url, httpClient::get)
-                })
+            .map { (creator, creatorUrls) ->
+                CreatorItems(creator, creator.lastCreatorId(), creatorUrls)
             }
+            .parallelStream()
+            .map(::urlsToSnapshots)
+    }
+
+    private fun urlsToSnapshots(input: CreatorItems<CreatorUrl>): CreatorItems<Snapshot> {
+        val snapshots = input.items.map {
+            val url = Strategy
+                .forUrl(it.url)
+                .coerceUrl(it.url)
+
+            snapshotsManager.get(url, httpClient::get)
+        }
+
+        return CreatorItems(input.creator, input.creatorId, snapshots)
     }
 
     fun getCreators() = creators.keys

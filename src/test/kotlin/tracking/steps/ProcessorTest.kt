@@ -2,7 +2,7 @@ package tracking.steps
 
 import data.CreatorItems
 import data.Resource
-import database.Creator
+import database.entities.Creator
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.ProcessorTestCaseData

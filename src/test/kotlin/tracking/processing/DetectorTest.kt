@@ -3,7 +3,7 @@ package tracking.processing
 import org.junit.jupiter.api.Test
 import tracking.contents.ProcessedItem
 import data.CreatorItems
-import database.Creator
+import database.entities.Creator
 import testUtils.disposableTransaction
 import tracking.statuses.OfferStatus
 import tracking.statuses.Status
