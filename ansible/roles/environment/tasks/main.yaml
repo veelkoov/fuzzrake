@@ -11,13 +11,13 @@
   ansible.builtin.import_tasks: 'setup_apache_vhost.yaml'
   tags: 'vhost'
 
-- name: 'Clear cache'
-  ansible.builtin.import_tasks: 'clear_cache.yaml'
-  tags: 'cache'
-
 - name: 'Build/install/compile'
   ansible.builtin.import_tasks: 'build.yaml'
   tags: 'build'
+
+- name: 'Clear cache'
+  ansible.builtin.import_tasks: 'clear_cache.yaml'
+  tags: 'cache'
 
 - name: 'Setup cronjobs'
   when: 'setup_cronjobs | default(false)'

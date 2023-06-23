@@ -8,22 +8,12 @@
     - 'Reload system'
 
 - name: 'Setup IPv6'
-  ansible.builtin.lineinfile:
-    line:  '{{ item.name }}={{ item.value }}'
-    path:  '/etc/sysconfig/network-scripts/ifcfg-eth0'
-    regex: '^{{ item.name }}'
+  community.general.nmcli:
+    conn_name: '{{ ansible_facts["default_ipv4"]["interface"] }}'
+    gw6:       '{{ ipv6_defaultgw }}'
+    ip6:       '{{ ipv6_addr }}'
+    method6:   'manual'
+    type:      'ethernet'
+    state:     'present'
   notify:
     - 'Reload system'
-  loop:
-    - name:  'IPV6INIT'
-      value: 'yes'
-    - name:  'IPV6_AUTOCONF'
-      value: 'no'
-    - name:  'IPV6_DEFROUTE'
-      value: 'yes'
-    - name:  'IPV6_FAILURE_FATAL'
-      value: 'no'
-    - name:  'IPV6ADDR'
-      value: '{{ ipv6_addr }}'
-    - name:  'IPV6_DEFAULTGW'
-      value: '{{ ipv6_defaultgw }}'

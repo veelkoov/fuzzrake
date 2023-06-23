@@ -1,19 +1,28 @@
 ---
-- name: 'Install packages'
-  ansible.builtin.yum:
+- name: 'Install Certbot'
+  ansible.builtin.pip:
     name:
-      - 'brotli'
-      - 'brotli-devel'
-      - 'httpd'
-      - 'httpd-devel'
-      - 'mod_ssl'
+      - 'certbot'
+      - 'certbot-apache'
+    virtualenv:         '/opt/certbot/'
+    virtualenv_command: 'python3 -m venv'
+
+- name: 'Link Certbot into /usr/bin/'
+  ansible.builtin.file:
+    state: 'link'
+    path:  '/usr/bin/certbot'
+    src:   '/opt/certbot/bin/certbot'
+
+- name: 'Install Apache HTTP'
+  ansible.builtin.dnf:
+    name:  'httpd'
     state: 'installed'
 
-- name: 'Enable Apache'
-  ansible.builtin.service:
-    enabled: true
-    name:    'httpd'
-    state:   'started'
+- name: '{{ "Install" if ssl_ready else "Uninstall" }} mod_ssl' # Easier
+  ansible.builtin.dnf:
+    name:  'mod_ssl'
+    state: '{{ "present" if ssl_ready else "absent" }}'
+  notify: 'Reload Apache'
 
 - name: 'Setup firewalld for Apache'
   ansible.posix.firewalld:
@@ -43,31 +52,11 @@
 
 - name: 'Create bewares dir'
   ansible.builtin.file:
-    group: 'centos'
+    group: '{{ user_group }}'
     mode:  '0775'
     owner: 'root'
     path:  '{{ bewares_path }}'
     state: 'directory'
-
-- name: 'Create /opt/mod_brotli directory'
-  ansible.builtin.file:
-    group: 'root'
-    mode:  '0755'
-    owner: 'root'
-    path:  '/opt/mod_brotli'
-    state: 'directory'
-
-- name: 'Get mod_brotli.c'
-  ansible.builtin.get_url:
-    dest: '/opt/mod_brotli/mod_brotli.c'
-    mode: '0644'
-    url:  'https://raw.githubusercontent.com/apache/httpd/2.4.x/modules/filters/mod_brotli.c'
-
-- name: 'Compile & install mod_brotli'
-  ansible.builtin.command: 'apxs -i -c -l brotlienc mod_brotli.c'
-  args:
-    chdir: '/opt/mod_brotli'
-  # TODO: changed_when
 
 - name: 'Update Apache configuration'
   ansible.builtin.template:
@@ -85,8 +74,19 @@
     - 'conf.modules.d/00-dav.j2.conf'
     - 'conf.modules.d/00-lua.j2.conf'
     - 'conf.modules.d/00-mpm.j2.conf'
-  notify:
-    - 'Reload Apache'
+  notify: 'Reload Apache'
+
+- name: 'Remove unused, default directories'
+  ansible.builtin.file:
+    state: 'absent'
+    path:  '/var/www/{{ item }}'
+  loop: ['html', 'cgi-bin']
+
+- name: 'Enable Apache'
+  ansible.builtin.service:
+    enabled: true
+    name:    'httpd'
+    state:   'started'
 
 - name: 'Update logrotate.d/httpd'
   ansible.builtin.template:
@@ -94,14 +94,3 @@
     dest:   '/etc/logrotate.d/httpd'
     mode:   '0644'
     backup: true
-
-- name: 'Install certbot'
-  community.general.snap:
-    name:    'certbot'
-    classic: true
-
-- name: 'Link certbot in $PATH'
-  ansible.builtin.file:
-    path:  '/usr/bin/certbot'
-    src:   '/snap/bin/certbot'
-    state: 'link'
