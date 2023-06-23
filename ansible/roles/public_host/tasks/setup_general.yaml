@@ -12,13 +12,21 @@
   ansible.builtin.dnf:
     name:
       - '@nodejs:18/common'
-      - 'git'
-      - 'yarn'
-      - 'vim'
-      - 'python3-pip'
       - 'augeas-libs'
+      - 'firewalld'
+      - 'git'
+      - 'python3-firewall'
+      - 'python3-pip'
       - 'python3-requests'
+      - 'vim'
+      - 'yarn'
     state: 'installed'
+
+- name: 'Enable firewalld'
+  ansible.builtin.service:
+    enabled: true
+    name:    'firewalld'
+    state:   'started'
 
 - name: 'Disable SELinux'
   ansible.builtin.lineinfile:

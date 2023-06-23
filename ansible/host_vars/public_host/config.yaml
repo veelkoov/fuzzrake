@@ -3,8 +3,8 @@ fqdn:           'getfursu.it'
 ipv6_addr:      '2607:5300:201:3100::265b'
 ipv6_defaultgw: '2607:5300:201:3100::1'
 
-user_group:     'getfursu.it'  # TODO
-ssl_ready:      false  # TODO
+user_group:     'rocky'
+ssl_ready:      true
 
 bewares_host:   'bewares.{{ fqdn }}'
 bewares_path:   '/var/www/bewares'

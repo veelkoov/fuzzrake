@@ -13,6 +13,7 @@
     gw6:       '{{ ipv6_defaultgw }}'
     ip6:       '{{ ipv6_addr }}'
     method6:   'manual'
+    type:      'ethernet'
     state:     'present'
   notify:
     - 'Reload system'
