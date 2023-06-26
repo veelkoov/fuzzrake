@@ -1,4 +1,4 @@
-package tracking.matchers
+package tracking.patterns
 
 class Replacements(
     private val items: List<Replacement>,

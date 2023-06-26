@@ -1,4 +1,4 @@
-package tracking.matchers.placeholders
+package tracking.patterns.placeholders
 
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Test

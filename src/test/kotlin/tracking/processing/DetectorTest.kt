@@ -3,6 +3,7 @@ package tracking.processing
 import org.junit.jupiter.api.Test
 import tracking.contents.ProcessedItem
 import data.CreatorItems
+import data.ThreadSafe
 import database.entities.Creator
 import testUtils.disposableTransaction
 import tracking.statuses.OfferStatus
@@ -14,13 +15,16 @@ import kotlin.test.assertTrue
 import kotlin.test.assertFalse
 
 class DetectorTest {
-    private val creator = disposableTransaction { Creator.new {} }
+    private val creator = ThreadSafe(disposableTransaction { Creator.new {} })
 
     private fun getTestInput(vararg contents: String): CreatorItems<ProcessedItem> {
         val sourceUrl = ""
+        val creatorId = ""
+        val aliases = listOf<String>()
         val strategy = StandardStrategy
 
-        return CreatorItems(creator, contents.map { ProcessedItem(sourceUrl, it, creator, strategy) })
+        return CreatorItems(creator, creatorId,
+            aliases, contents.map { ProcessedItem(creatorId, aliases, sourceUrl, strategy, it) })
     }
 
     @Test

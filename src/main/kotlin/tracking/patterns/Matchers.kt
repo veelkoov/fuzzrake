@@ -1,6 +1,6 @@
-package tracking.matchers
+package tracking.patterns
 
-import tracking.matchers.regex.MatchResultJ
+import tracking.patterns.regex.MatchResultJ
 
 
 class Matchers(

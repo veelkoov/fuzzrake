@@ -1,7 +1,7 @@
-package tracking.matchers
+package tracking.patterns
 
-import tracking.matchers.regex.RegexJ
-import tracking.matchers.regex.MatchResultJ
+import tracking.patterns.regex.RegexJ
+import tracking.patterns.regex.MatchResultJ
 
 class Matcher(
     private val regex: RegexJ,

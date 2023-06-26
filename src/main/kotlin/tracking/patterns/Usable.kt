@@ -1,4 +1,4 @@
-package tracking.matchers
+package tracking.patterns
 
 interface Usable {
     fun wasUsed(): Boolean

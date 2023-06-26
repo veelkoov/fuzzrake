@@ -1,8 +1,7 @@
 package tracking.processing
 
-import database.helpers.aliases
 import tracking.contents.ProcessedItem
-import tracking.matchers.Factory
+import tracking.patterns.Factory
 
 private const val CREATOR_NAME = "CREATOR_NAME"
 
@@ -16,7 +15,7 @@ class Preprocessor {
 //        $contents = $this->extractFromJson($contents); // TODO
         item.contents = item.contents.lowercase()
         item.contents = cleaners.replaceIn(item.contents)
-        item.contents = replaceCreatorAliases(item.contents, item.creator.aliases())
+        item.contents = replaceCreatorAliases(item.contents, item.creatorAliases)
         item.contents = falsePositives.replaceIn(item.contents)
     }
 

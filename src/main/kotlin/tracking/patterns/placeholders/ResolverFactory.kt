@@ -1,4 +1,4 @@
-package tracking.matchers.placeholders
+package tracking.patterns.placeholders
 
 class ResolverFactory {
     private val validPlaceholder = Regex("^ ?[A-Z_&-]+ ?$")

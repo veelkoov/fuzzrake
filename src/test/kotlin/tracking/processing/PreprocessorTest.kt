@@ -1,17 +1,13 @@
 package tracking.processing
 
-import data.pack
-import database.entities.Creator
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
-import testUtils.disposableTransaction
 import tracking.contents.ProcessedItem
 import tracking.website.StandardStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PreprocessorTest {
-    private val creator = disposableTransaction { Creator.new {} }
     private val subject = Preprocessor()
 
     @TestFactory
@@ -21,7 +17,7 @@ class PreprocessorTest {
         " ❗&nbsp;" to " ! ", // Unicode NBSP, emoticon !, HTML entity NBSP
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", input, creator, StandardStrategy)
+            val testItem = ProcessedItem("", listOf(), "", StandardStrategy, input)
             subject.preprocess(testItem)
 
             assertEquals(expected, testItem.contents)
@@ -30,7 +26,7 @@ class PreprocessorTest {
 
     @Test
     fun `Input gets converted to lowercase`() {
-        val testItem = ProcessedItem("", "AaBbCcDdEeFf", creator, StandardStrategy)
+        val testItem = ProcessedItem("", listOf(), "", StandardStrategy, "AaBbCcDdEeFf")
         subject.preprocess(testItem)
 
         assertEquals("aabbccddeeff", testItem.contents)
@@ -61,8 +57,7 @@ class PreprocessorTest {
         ),
     ).map { (input, aliases, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val creator = disposableTransaction { Creator.new { formerly = aliases.pack() } }
-            val testItem = ProcessedItem("", input, creator, StandardStrategy)
+            val testItem = ProcessedItem("", aliases, "", StandardStrategy, input)
 
             subject.preprocess(testItem)
 
@@ -87,8 +82,7 @@ class PreprocessorTest {
         "when will you start taking new commissions?" to "?",
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val creator = disposableTransaction { Creator.new { name = "The Creator" } }
-            val testItem = ProcessedItem("", input, creator, StandardStrategy)
+            val testItem = ProcessedItem("", listOf("The Creator"), "", StandardStrategy, input)
 
             subject.preprocess(testItem)
 

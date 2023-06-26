@@ -1,9 +1,9 @@
-package tracking.matchers
+package tracking.patterns
 
 import data.Resource
 import data.Yaml
-import tracking.matchers.placeholders.Resolver
-import tracking.matchers.placeholders.ResolverFactory
+import tracking.patterns.placeholders.Resolver
+import tracking.patterns.placeholders.ResolverFactory
 
 object Factory {
     private val regexes: YamlRegexes =

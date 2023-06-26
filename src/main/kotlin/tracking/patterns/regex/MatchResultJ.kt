@@ -1,4 +1,4 @@
-package tracking.matchers.regex
+package tracking.patterns.regex
 
 data class MatchResultJ(
     private val wrapped: MatchResult,

@@ -3,7 +3,7 @@ package tracking.processing
 import data.CreatorItems
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
-import tracking.matchers.Factory
+import tracking.patterns.Factory
 import tracking.statuses.Offer
 import tracking.statuses.OfferStatus
 import tracking.statuses.OfferStatusException

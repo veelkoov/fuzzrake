@@ -1,4 +1,4 @@
-package tracking.matchers.regex
+package tracking.patterns.regex
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

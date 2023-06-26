@@ -1,6 +1,6 @@
-package tracking.matchers
+package tracking.patterns
 
-import tracking.matchers.regex.RegexJ
+import tracking.patterns.regex.RegexJ
 
 class Replacement(
     private val regex: RegexJ,

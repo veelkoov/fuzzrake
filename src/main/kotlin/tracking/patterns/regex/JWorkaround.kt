@@ -1,4 +1,4 @@
-package tracking.matchers.regex
+package tracking.patterns.regex
 
 class JWorkaround(
     private val pattern: String,

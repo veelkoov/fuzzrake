@@ -1,7 +1,7 @@
-package tracking.matchers
+package tracking.patterns
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import tracking.matchers.placeholders.PhTree
+import tracking.patterns.placeholders.PhTree
 
 data class YamlRegexes(
     @JsonProperty("false_positives")

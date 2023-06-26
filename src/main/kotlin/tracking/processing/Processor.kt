@@ -1,10 +1,8 @@
-package tracking.steps
+package tracking.processing
 
 import data.CreatorItem
 import data.CreatorItems
 import tracking.contents.ProcessedItem
-import tracking.processing.Detector
-import tracking.processing.Preprocessor
 import tracking.statuses.OffersStatuses
 
 class Processor {

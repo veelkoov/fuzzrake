@@ -1,4 +1,4 @@
-package tracking.matchers.placeholders
+package tracking.patterns.placeholders
 
 class Resolver(
     placeholders: Map<String, String>

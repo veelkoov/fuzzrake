@@ -1,7 +1,8 @@
-package tracking.steps
+package tracking.processing
 
 import data.CreatorItems
 import data.Resource
+import data.ThreadSafe
 import database.entities.Creator
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -14,26 +15,29 @@ import tracking.website.StandardStrategy
 import kotlin.test.assertEquals
 
 class ProcessorTest {
-    private val creator = disposableTransaction { Creator.new {} }
+    private val creator = ThreadSafe(disposableTransaction { Creator.new {} })
+    private val subject = Processor()
 
     @TestFactory
-    fun process(): List<DynamicTest> {
-        val subject = Processor()
+    fun process() = getProcessTestData().map { caseData ->
+        val creatorId = ""
+        val creatorAliases = listOf<String>()
+        val sourceUrl = ""
+        val strategy = StandardStrategy
 
-        return getTestCases().map { caseData ->
-            DynamicTest.dynamicTest(caseData.name) {
-                val processedItem = ProcessedItem("", caseData.input, creator, StandardStrategy)
-                val input = CreatorItems(creator, listOf(processedItem))
+        DynamicTest.dynamicTest(caseData.name) {
+            val input = CreatorItems(creator, creatorId, creatorAliases, listOf(
+                ProcessedItem(creatorId, creatorAliases, sourceUrl, strategy, caseData.input),
+            ))
 
-                val result = subject.process(input)
+            val result = subject.process(input)
 
-                assertEquals(caseData.expectIssues, result.item.issues)
-                assertEquals(caseData.offersStatuses, result.item.items)
-            }
+            assertEquals(caseData.expectIssues, result.item.issues)
+            assertEquals(caseData.offersStatuses, result.item.items)
         }
     }
 
-    private fun getTestCases(): List<ProcessorTestCaseData> {
+    private fun getProcessTestData(): List<ProcessorTestCaseData> {
         return Resource.read("/tracking/processor_test_cases_data.txt")
             .split("\n================================================================\n")
             .map { caseDataText ->

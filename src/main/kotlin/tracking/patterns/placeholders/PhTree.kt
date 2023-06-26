@@ -1,4 +1,4 @@
-package tracking.matchers.placeholders
+package tracking.patterns.placeholders
 
 class PhTree(value: Any?) {
     private val itemsList: List<String>?

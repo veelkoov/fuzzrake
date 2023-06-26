@@ -2,30 +2,37 @@ package tracking
 
 import config.Configuration
 import data.CreatorItems
+import data.ThreadSafe
 import database.Database
-import tracking.contents.ProcessedItem
-import web.snapshots.Snapshot
-import tracking.steps.Processor
-import tracking.steps.SnapshotsProvider
-import tracking.steps.Updater
+import database.entities.Creator
+import database.entities.CreatorUrl
+import database.helpers.aliases
+import database.helpers.findTracking
+import database.helpers.lastCreatorId
+import database.tables.CreatorUrls
+import tracking.contents.TrackedContentsProvider
+import tracking.processing.Processor
+import tracking.updating.Updater
 import tracking.updating.DbState
-import tracking.website.Strategy
-import web.snapshots.SnapshotsManager
 import java.util.stream.Collectors
 
 class Tracker(private val config: Configuration) {
+    private val provider = TrackedContentsProvider(config)
+    private val processor = Processor()
+
     fun run() {
         val database = Database(config.databasePath)
 
         database.transaction {
-            val snapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
-            val provider = SnapshotsProvider(snapshotsManager)
-            val processor = Processor()
-            val updater = Updater(DbState.getAsOfNow(provider.getCreators()))
+            val creatorsTrackingUrls: Map<Creator, List<CreatorUrl>> =
+                CreatorUrls.findTracking().groupBy { it.creator }
 
-            provider
-                .getSnapshotsStream()
-                .map(::filterAndConvertSnapshotsToProcessedItems)
+            val updater = Updater(DbState.getAsOfNow(creatorsTrackingUrls.keys))
+
+            creatorsTrackingUrls
+                .map { (creator, urls) -> getCreatorItemsUrlsFrom(creator, urls) }
+                .parallelStream()
+                .map(provider::createProcessesItems)
                 .map(processor::process)
                 .collect(Collectors.toList())
                 .map(updater::save)
@@ -34,18 +41,7 @@ class Tracker(private val config: Configuration) {
         }
     }
 
-    private fun filterAndConvertSnapshotsToProcessedItems(snapshots: CreatorItems<Snapshot>): CreatorItems<ProcessedItem> {
-        val items = snapshots.items.map {
-            ProcessedItem(
-                snapshots.creator,
-                snapshots.creatorId,
-                it.metadata.url,
-                Strategy.forUrl(it.metadata.url),
-                it.contents
-            )
-        }
-        // TODO: Reject texts > 1 MiB
-
-        return CreatorItems(snapshots.creator, snapshots.creatorId, items)
+    private fun getCreatorItemsUrlsFrom(creator: Creator, urls: List<CreatorUrl>): CreatorItems<CreatorUrl> {
+        return CreatorItems(ThreadSafe(creator), creator.lastCreatorId(), creator.aliases(), urls)
     }
 }

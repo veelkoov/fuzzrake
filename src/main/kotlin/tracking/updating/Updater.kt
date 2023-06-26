@@ -1,4 +1,4 @@
-package tracking.steps
+package tracking.updating
 
 import data.CreatorItem
 import database.helpers.lastCreatorId
@@ -10,15 +10,14 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import time.UTC
 import tracking.statuses.Offer
 import tracking.statuses.OffersStatuses
-import tracking.updating.DbState
 import java.util.Objects
 
 private val logger = KotlinLogging.logger {}
 
 class Updater(private val dbState: DbState) {
     fun save(statuses: CreatorItem<OffersStatuses>) {
-        updateOffersStatuses(statuses.creator, statuses.item)
-        updateVolatileData(statuses.creator, statuses.item)
+        updateOffersStatuses(statuses.creator.get(), statuses.item)
+        updateVolatileData(statuses.creator.get(), statuses.item)
     }
 
     private fun updateVolatileData(creator: Creator, newOffersStatuses: OffersStatuses) {
