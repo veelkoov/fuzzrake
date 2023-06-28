@@ -1,7 +1,7 @@
-package web.client
+package web.client.utils
 
 import time.UTC
-import java.net.URI
+import web.url.Url
 import java.util.concurrent.ConcurrentHashMap
 
 private const val DELAY_FOR_HOST_SEC = 10
@@ -12,14 +12,12 @@ class HostCallsQueue {
      */
     private val hostnameToTime = ConcurrentHashMap<String, Long>()
 
-    fun <T> patiently(url: String, call: () -> T): T {
-        val hostname = URI(url).host // FIXME: This should not be done here
-
-        waitUtilCallAllowed(hostname)
+    fun <T> patiently(url: Url, call: () -> T): T {
+        waitUtilCallAllowed(url.getHost())
 
         val result = call()
 
-        hostnameToTime[hostname] = UTC.Now.epochSec() + DELAY_FOR_HOST_SEC
+        hostnameToTime[url.getHost()] = UTC.Now.epochSec() + DELAY_FOR_HOST_SEC
 
         return result
     }

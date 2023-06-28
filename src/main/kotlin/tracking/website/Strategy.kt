@@ -1,9 +1,12 @@
 package tracking.website
 
+import web.url.Url
+
 interface Strategy {
     fun isSuitableFor(url: String): Boolean
     fun filterContents(contents: String): String = contents
-    fun coerceUrl(url: String): String = url
+    fun getUrlForTracking(url: Url): Url = url
+    fun getCookieInitUrl(): Url? = null
 
     companion object {
         fun forUrl(url: String): Strategy {

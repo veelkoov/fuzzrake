@@ -14,6 +14,7 @@ import kotlinx.coroutines.runBlocking
 import time.UTC
 import web.snapshots.Snapshot
 import web.snapshots.SnapshotMetadata
+import web.url.Url
 import java.net.UnknownHostException
 
 private val logger = KotlinLogging.logger {}
@@ -34,22 +35,22 @@ class FastHttpClient : HttpClientInterface {
             agent = "Mozilla/5.0 (compatible; GetFursuitBot/0.10; Ktor/Apache5; +https://getfursu.it/)"
         }
         engine {
-            socketTimeout = 10_000
+            socketTimeout = 30_000
             connectTimeout = 10_000
-            connectionRequestTimeout = 20_000
+            connectionRequestTimeout = 10_000
         }
     }
 
-    override fun get(url: String): Snapshot {
-        logger.info("Retrieving: '$url'")
+    override fun get(url: Url): Snapshot {
+        logger.info("Retrieving: '${url.getUrl()}'")
 
         try {
             val result = runBlocking {
-                val response = client.request(url)
+                val response = client.request(url.getUrl())
 
                 val contents = response.body<String>()
                 val metadata = SnapshotMetadata(
-                    url,
+                    url.getUrl(),
                     "", // FIXME
                     UTC.Now.dateTime().toString(), // FIXME
                     response.status.value,
@@ -61,7 +62,7 @@ class FastHttpClient : HttpClientInterface {
                 Snapshot(contents, metadata)
             }
 
-            logger.info("Retrieved: '$url'")
+            logger.info("Retrieved: '${url.getUrl()}'")
 
             return result
         } catch (exception: UnknownHostException) {
@@ -73,9 +74,9 @@ class FastHttpClient : HttpClientInterface {
         }
     }
 
-    private fun getFromException(url: String, exception: Throwable): Snapshot {
-        logger.info("Failed retrieving: '$url'; $exception")
+    private fun getFromException(url: Url, exception: Throwable): Snapshot {
+        logger.info("Failed retrieving: '${url.getUrl()}'; $exception")
 
-        return Snapshot.forError(url, "", exception.message ?: exception.toString())
+        return Snapshot.forError(url.getUrl(), "", exception.message ?: exception.toString())
     }
 }

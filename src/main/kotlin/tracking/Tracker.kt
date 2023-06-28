@@ -5,7 +5,6 @@ import data.CreatorItems
 import data.ThreadSafe
 import database.Database
 import database.entities.Creator
-import database.entities.CreatorUrl
 import database.helpers.aliases
 import database.helpers.findTracking
 import database.helpers.lastCreatorId
@@ -14,7 +13,10 @@ import tracking.contents.TrackedContentsProvider
 import tracking.processing.Processor
 import tracking.updating.Updater
 import tracking.updating.DbState
+import web.url.CreatorUrl
+import web.url.Url
 import java.util.stream.Collectors
+import database.entities.CreatorUrl as CreatorUrlEntity
 
 class Tracker(private val config: Configuration) {
     private val provider = TrackedContentsProvider(config)
@@ -24,7 +26,7 @@ class Tracker(private val config: Configuration) {
         val database = Database(config.databasePath)
 
         database.transaction {
-            val creatorsTrackingUrls: Map<Creator, List<CreatorUrl>> =
+            val creatorsTrackingUrls: Map<Creator, List<CreatorUrlEntity>> =
                 CreatorUrls.findTracking().groupBy { it.creator }
 
             val updater = Updater(DbState.getAsOfNow(creatorsTrackingUrls.keys))
@@ -41,7 +43,7 @@ class Tracker(private val config: Configuration) {
         }
     }
 
-    private fun getCreatorItemsUrlsFrom(creator: Creator, urls: List<CreatorUrl>): CreatorItems<CreatorUrl> {
-        return CreatorItems(ThreadSafe(creator), creator.lastCreatorId(), creator.aliases(), urls)
+    private fun getCreatorItemsUrlsFrom(creator: Creator, urls: List<CreatorUrlEntity>): CreatorItems<Url> {
+        return CreatorItems(ThreadSafe(creator), creator.lastCreatorId(), creator.aliases(), urls.map { CreatorUrl(it) })
     }
 }

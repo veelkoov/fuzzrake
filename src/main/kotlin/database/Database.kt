@@ -1,8 +1,6 @@
 package database
 
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transactionManager
 import java.sql.Connection
 import org.jetbrains.exposed.sql.transactions.transaction as exposedTransaction
@@ -18,8 +16,6 @@ class Database(dbPath: String) {
 
     fun <T> transaction(function: () -> T): T {
         return exposedTransaction(database) {
-            this.addLogger(StdOutSqlLogger)
-
             function()
         }
     }
