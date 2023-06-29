@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TwitterProfileStrategyTest {
-    val subject = TwitterProfileStrategy
+    private val subject = TwitterProfileStrategy
 
     @Test
     fun `Real-life, working scenario`() {
@@ -30,17 +30,15 @@ class TwitterProfileStrategyTest {
 
     @Test
     fun `Unparseable input`() {
-        assertEquals(
-            "{\"oops\": \"This is not a HTML\"}",
-            subject.filterContents("{\"oops\": \"This is not a HTML\"}"),
-        )
+        val result = subject.filterContents("{\"oops\": \"This is not a HTML\"}")
+
+        assertEquals("{\"oops\": \"This is not a HTML\"}", result)
     }
 
     @Test
     fun `Missing og_description meta element`() {
-        assertEquals(
-            "<html><head></head></html>",
-            subject.filterContents("<html><head></head></html>"),
-        )
+        val result = subject.filterContents("<html><head></head></html>")
+
+        assertEquals("<html><head></head></html>", result)
     }
 }

@@ -4,7 +4,7 @@ import web.url.Url
 
 interface Strategy {
     fun isSuitableFor(url: String): Boolean
-    fun filterContents(contents: String): String = contents
+    fun filterContents(input: String): String = input
     fun getUrlForTracking(url: Url): Url = url
     fun getCookieInitUrl(): Url? = null
 

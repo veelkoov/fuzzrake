@@ -12,8 +12,8 @@ object TwitterProfileStrategy : Strategy {
 
     override fun isSuitableFor(url: String) = profileUrlRegex.matches(url)
 
-    override fun filterContents(contents: String): String {
-        val document = Jsoup.parse(contents)
+    override fun filterContents(input: String): String {
+        val document = Jsoup.parse(input)
 
         val descriptionNode = document
             .head()
@@ -24,7 +24,7 @@ object TwitterProfileStrategy : Strategy {
         } else {
             logger.warn("Failed to parse Twitter meta description content")
 
-            contents
+            input
         }
     }
 
