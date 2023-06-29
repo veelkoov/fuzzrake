@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
 use App\Tracking\Web\TimedUrlQueue;
-use App\Tracking\Web\Url\DependencyUrl;
 use App\Tracking\Web\Url\Fetchable;
 use App\Tracking\Web\WebpageSnapshot\Cache;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
@@ -118,9 +117,7 @@ class WebpageSnapshotManager
 
     private function fetchChildren(Snapshot $webpageSnapshot, Fetchable $url): void
     {
-        foreach ($this->websiteInfo->getChildrenUrls($webpageSnapshot) as $childUrl) {
-            $webpageSnapshot->addChild($this->fetch(new DependencyUrl($childUrl, $url)));
-        }
+        // Here be no longer even dragons
     }
 
     /**

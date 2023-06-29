@@ -10,21 +10,17 @@ use App\Utils\Json;
 use JsonException;
 use Nette\Utils\Arrays;
 use Symfony\Component\DomCrawler\Crawler;
-use TRegx\CleanRegex\Pattern;
 
 readonly class TextPreprocessor
 {
     private Detector $detector;
-    private Pattern $instaBio;
 
     public function __construct(
     ) {
         $this->detector = new Detector();
-        // TODO: Naive (fixed formatting, bio without "), possibly find a better place
-        $this->instaBio = Pattern::of('"graphql":\{"user":\{"biography":(?<bio>"[^"]+")');
     }
 
-    private function extractFromJson(string $webpage): string
+    private function extractFromJson(string $webpage): string // Translate only if proves needed
     {
         if (empty($webpage) || '{' !== $webpage[0]) {
             return $webpage;
@@ -65,21 +61,6 @@ readonly class TextPreprocessor
             }
 
             return $inputText;
-        }
-
-        if ($this->detector->isInstagram($url)) {
-            $match = $this->instaBio->match($inputText);
-
-            if ($match->test()) {
-                $unparsed = $parsed = $match->first()->get('bio');
-
-                try {
-                    $parsed = Json::decode($unparsed);
-                } catch (JsonException) {
-                }
-
-                return is_string($parsed) ? $parsed : $unparsed;
-            }
         }
 
         return $inputText;
