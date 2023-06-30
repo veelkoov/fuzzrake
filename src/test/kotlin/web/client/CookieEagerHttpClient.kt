@@ -11,7 +11,7 @@ import web.url.Url
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class GentleHttpClientTest {
+class CookieEagerHttpClientTest {
     private val getTestCases = mapOf(
         listOf(
             "https://www.instagram.com/getfursu.it/",

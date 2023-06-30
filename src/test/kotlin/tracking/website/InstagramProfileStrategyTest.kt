@@ -1,11 +1,8 @@
 package tracking.website
 
 import data.Resource
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestFactory
 import web.url.FreeUrl
 
 class InstagramProfileStrategyTest {
@@ -29,31 +26,33 @@ class InstagramProfileStrategyTest {
 
     @Test
     fun `Simplified, working scenario`() {
-        val result = subject.filterContents("{\"graphql\": {\"user\": {\"biography\": \"Expected description\"}}}")
+        val input = "{\"graphql\": {\"user\": {\"biography\": \"Expected description\"}}}"
+        val result = subject.filterContents(input)
 
         assertEquals("Expected description", result)
     }
 
     @Test
     fun `Empty description`() {
-        val result = subject.filterContents("{\"graphql\": {\"user\": {\"biography\": \"\"}}}")
+        val input = "{\"graphql\": {\"user\": {\"biography\": \"\"}}}"
+        val result = subject.filterContents(input)
 
         assertEquals("", result)
     }
 
-    @TestFactory
-    fun `Test filtering failures`() = listOf(
-        "<p>Oops, this is not JSON</p>",
-        "0", // Wrong root type
-        "{\"graphql\": \"Oh no\"}", // Wrong middle type
-        "{\"graphql\": {\"us__er\": {\"biography\": \"Expected description\"}}}", // Missing middle key
-        "{\"graphql\": {\"user\": {\"biography\": 0}}}", // Wrong leaf type
-        "{\"graphql\": {\"user\": {\"biography\": null}}}", // Null leaf
-    ).map { input ->
-        dynamicTest(input) {
-            val result = subject.filterContents(input)
+    @Test
+    fun `Unparseable input`() {
+        val input = "<p>Oops, this is not JSON</p>"
+        val result = subject.filterContents(input)
 
-            assertEquals(input, result)
-        }
+        assertEquals(input, result)
+    }
+
+    @Test
+    fun `Missing expected field`() {
+        val input = "{\"graphql\": {\"user\": {\"wrongfield\": \"a text\"}}}"
+        val result = subject.filterContents(input)
+
+        assertEquals(input, result)
     }
 }

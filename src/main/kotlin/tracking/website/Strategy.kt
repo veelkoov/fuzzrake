@@ -20,6 +20,9 @@ interface Strategy {
                 TrelloStrategy
                     .isSuitableFor(url) -> TrelloStrategy
 
+                FurAffinityProfileStrategy
+                    .isSuitableFor(url) -> FurAffinityProfileStrategy
+
                 else -> StandardStrategy
             }
         }

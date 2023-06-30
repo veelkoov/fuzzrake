@@ -1,8 +1,7 @@
 package tracking.website
 
-import com.fasterxml.jackson.core.JsonFactory
-import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.databind.ObjectMapper
+import data.JsonException
+import data.JsonNavigator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import web.url.FreeUrl
 import web.url.Url
@@ -13,7 +12,6 @@ private val logger = KotlinLogging.logger {}
 object InstagramProfileStrategy : Strategy {
     private val cookieInitUrl = FreeUrl("https://www.instagram.com/", StandardStrategy)
     private val instagramProfileUrl = Regex("^https?://(www\\.)?instagram\\.com/(?<username>[^/]+)/?$")
-    private val mapper = ObjectMapper(JsonFactory())
 
     override fun isSuitableFor(url: String) = instagramProfileUrl.matches(url)
 
@@ -27,13 +25,8 @@ object InstagramProfileStrategy : Strategy {
 
     override fun filterContents(input: String): String {
         return try {
-            mapper.readTree(input)
-                .get("graphql")
-                ?.get("user")
-                ?.get("biography")
-                ?.textValue()
-                ?: input
-        } catch (exception: JsonParseException) {
+            JsonNavigator(input).getString("graphql/user/biography")
+        } catch (exception: JsonException) {
             logger.warn("Failed to parse Instagram user profile data", exception)
 
             input

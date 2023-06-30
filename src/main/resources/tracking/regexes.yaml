@@ -27,8 +27,7 @@ offers_statuses:
   # Start with statuses "nicely" organized into paragraphs/sentences - single spaces, no newlines, etc.
   - 'STATUS_ANY for OFFER'
 
-  - 'OFFER(\s+are)?(\s+now)?\s+STATUS_ANY'
-  - 'OFFER( are| status)?(\s+now)? ?[:-]\s*STATUS_ANY'
+  - 'OFFER(\s+are|\s+status)?(\s+now)?[\s:-]+(now\s+)?STATUS_ANY'
 
   # Inverted order - careful!
   - '(WE_ARE|now) STATUS_ANY(\s+for(\s+new)?|\s+new)?\s+OFFER(\s+and\s+OFFER)?'
@@ -74,6 +73,7 @@ placeholders:
     'COMMISSIONS_AND_QUOTES=CommissionsAndQuotes':
       - '(COMMISSIONS AND quotes?)'
       - '(quotes? AND COMMISSIONS)'
+      - 'quote/com' # Hmmm... FIXME?
 
     'FULLSUIT_COMMISSIONS=FullsuitCommissions':
       - 'fullsuit COMMISSIONS'
@@ -115,7 +115,7 @@ placeholders:
 
   ' AND ':
     - ' and '
-    - ' ?(&amp;|[/+]) ?'
+    - ' ?(&|&amp;|[/+]) ?'
 
   'COMMISSIONS':
     - 'comm?iss?ions?'
@@ -160,7 +160,7 @@ cleaners: # Used to remove noise / simplify information
   '<!--.*?-->':                                      ' '
   '</?(?:strong|b|i|span|center|u|a|em|font)[^>]*>': ''
   '(\*\*\*|!)(open|closed)(\*\*\*|!)':               '$2'
-  '&gt;&gt;(open|closed)&lt;&lt;':                   '$1'
+  '&gt;&gt; ?(open|closed) ?&lt;&lt;':               '$1'
   '(<[^>]+ )style="[^"]*"([^>]*>)':                  '$1$2'
 
   '&#(?:39|8217);': "'"
@@ -175,7 +175,7 @@ cleaners: # Used to remove noise / simplify information
   '"\},\{"insert":"':        ''
 
   # always / currently / now
-  '(?<![a-z])(currently|basically always|always)(?![a-z])': 'now'
+  '(?<![a-z])(currently|basically always|always|permanently)(?![a-z])': 'now'
 
   # Change order to reduce number of alterations
   '(?<![a-z])we are now(?![a-z])': 'now we are'

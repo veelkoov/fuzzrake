@@ -199,3 +199,27 @@ Case 28 (issues expected)
 Case 29
 -Commissions
 +Quotes
+================================================================
+Realistic fursuits | Commission status: permanently closed
+--------------------------------
+Case 30
+-Commissions
+================================================================
+Feel free to check out my website: <a class="auto_link named_url" href="https://www.example.com">www.example.com</a><br />
+Commission status<br />
+&gt;&gt; closed &lt;&lt;            </div>
+--------------------------------
+Case 31
+-Commissions
+================================================================
+uncommon species. Dm’s are always open! Quote/com status: CLOSED
+--------------------------------
+Case 32
+-Commissions
+-Quotes
+================================================================
+Quotes & commission CLOSED
+--------------------------------
+Case 33
+-Quotes
+-Commissions

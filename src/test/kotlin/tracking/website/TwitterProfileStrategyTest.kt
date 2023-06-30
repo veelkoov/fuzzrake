@@ -11,34 +11,46 @@ class TwitterProfileStrategyTest {
     fun `Real-life, working scenario`() {
         val result = subject.filterContents(Resource.read("/tracking/twitter_getfursuit_contents.txt"))
 
-        assertEquals("JOIN: https://t.co/3g0nZbnhqL 👀\n\nSingle-wolf (tired) powered service running on pancakes.\n\n🎶 🎤 🦖 🎸 🎹 🥁 🤘 🎶", result)
+        assertEquals("getfursu.it 🥌\nJOIN: https://t.co/3g0nZbnhqL 👀\n\nSingle-wolf (tired) powered service running on pancakes.\n\n🎶 🎤 🦖 🎸 🎹 🥁 🤘 🎶\nBeauharnois (the webserver)", result)
     }
 
     @Test
     fun `Simplified, working scenario`() {
-        val result = subject.filterContents("<html><head><meta property=\"og:description\" content=\"Expected description\"></head></html>")
+        val input = "<html><head><script type=\"application/ld+json\">{\"@type\":\"ProfilePage\",\"author\":{\"description\":\"Expected description\",\"givenName\":\"Expected name\",\"homeLocation\":{\"name\":\"Expected location\"}}}</script></head></html>"
+        val result = subject.filterContents(input)
 
-        assertEquals("Expected description", result)
+        assertEquals("Expected name\nExpected description\nExpected location", result)
     }
 
     @Test
     fun `Empty description`() {
-        val result = subject.filterContents("<html><head><meta property=\"og:description\" content=\"\"></head></html>")
+        val input = "<html><head><script type=\"application/ld+json\">{\"@type\":\"ProfilePage\",\"author\":{\"description\":\"\",\"givenName\":\"\",\"homeLocation\":{\"name\":\"\"}}}</script></head></html>"
+        val result = subject.filterContents(input)
 
-        assertEquals("", result)
+        assertEquals("\n\n", result)
     }
 
     @Test
     fun `Unparseable input`() {
-        val result = subject.filterContents("{\"oops\": \"This is not a HTML\"}")
+        val input = "{\"oops\": \"This is not a HTML\"}"
+        val result = subject.filterContents(input)
 
-        assertEquals("{\"oops\": \"This is not a HTML\"}", result)
+        assertEquals(input, result)
     }
 
     @Test
-    fun `Missing og_description meta element`() {
-        val result = subject.filterContents("<html><head></head></html>")
+    fun `Missing script ld+json meta element`() {
+        val input = "<html><head></head></html>"
+        val result = subject.filterContents(input)
 
-        assertEquals("<html><head></head></html>", result)
+        assertEquals(input, result)
+    }
+
+    @Test
+    fun `Missing expected ld+json field`() {
+        val input = "<html><head><script type=\"application/ld+json\">{\"@type\":\"ProfilePage\",\"author\":{\"description\":\"Description\",\"givenName\":\"Name\",\"homeLocation\":{\"wrongfieldname\":\"Location\"}}}</script></head></html>"
+        val result = subject.filterContents(input)
+
+        assertEquals(input, result)
     }
 }

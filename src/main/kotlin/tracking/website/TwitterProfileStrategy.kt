@@ -1,5 +1,7 @@
 package tracking.website
 
+import data.JsonException
+import data.JsonNavigator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jsoup.Jsoup
 import web.url.FreeUrl
@@ -15,14 +17,25 @@ object TwitterProfileStrategy : Strategy {
     override fun filterContents(input: String): String {
         val document = Jsoup.parse(input)
 
-        val descriptionNode = document
+        val ldJsonNodes = document
             .head()
-            .selectXpath("//meta[@property='og:description']")
+            .selectXpath("//script[@type='application/ld+json'][contains(text(), 'ProfilePage')]")
 
-        return if (!descriptionNode.isEmpty() && descriptionNode.hasAttr("content")) {
-            descriptionNode.attr("content")
-        } else {
-            logger.warn("Failed to parse Twitter meta description content")
+        if (ldJsonNodes.isEmpty()) {
+            logger.warn("Failed to XPath Twitter ProfilePage schema script node")
+
+            return input
+        }
+
+        return try {
+            val ldJsonData = JsonNavigator(ldJsonNodes.html())
+
+            ldJsonData.getString("author/givenName") +
+                    "\n" + ldJsonData.getString("author/description") +
+                    "\n" + ldJsonData.getString("author/homeLocation/name")
+
+        } catch (exception: JsonException) {
+            logger.warn("Failed reading ProfilePage schema JSON", exception)
 
             input
         }
