@@ -10,12 +10,8 @@ class GroupNamesResolver {
     }
 
     companion object {
-        private val prettyNames = mapOf( // TODO... This now just don't make much sense
+        private val prettyNames = mapOf(
             "Cms"                 to "Commissions",
-            "Commissions"         to "Commissions",
-            "Quotes"              to "Quotes",
-            "Projects"            to "Projects",
-            "Premades"            to "Premades",
             "HandpawsCms"         to "Handpaws commissions",
             "SockpawsCms"         to "Sockpaws commissions",
             "FullsuitCommissions" to "Fullsuit commissions",

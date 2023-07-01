@@ -30,7 +30,7 @@ object FurAffinityProfileStrategy : Strategy {
         }
     }
 
-    override fun getLatentCode(url: Url, contents: String, originalCode: Int): Int { // TODO: Test this
+    override fun getLatentCode(url: Url, contents: String, originalCode: Int): Int { // TODO: Test this; translated but no known cases currently
         if (originalCode == 200) {
             return originalCode
         }
