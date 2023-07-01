@@ -12,7 +12,6 @@ class Preprocessor {
     fun preprocess(item: ProcessedItem)
     {
         item.contents = item.strategy.filterContents(item.contents)
-//        $contents = $this->extractFromJson($contents); // TODO
         item.contents = item.contents.lowercase()
         item.contents = cleaners.replaceIn(item.contents)
         item.contents = replaceCreatorAliases(item.contents, item.creatorAliases)
