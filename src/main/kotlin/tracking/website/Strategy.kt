@@ -7,6 +7,7 @@ interface Strategy {
     fun filterContents(input: String): String = input
     fun getUrlForTracking(url: Url): Url = url
     fun getCookieInitUrl(): Url? = null
+    fun getLatentCode(url: Url, contents: String, originalCode: Int): Int = originalCode
 
     companion object {
         fun forUrl(url: String): Strategy {

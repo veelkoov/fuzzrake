@@ -49,14 +49,16 @@ class FastHttpClient : HttpClientInterface {
                 val response = client.request(url.getUrl())
 
                 val contents = response.body<String>()
+                val httpCode = url.getStrategy().getLatentCode(url, contents, response.status.value)
+
                 val metadata = SnapshotMetadata(
                     url.getUrl(),
                     "", // FIXME
                     UTC.Now.dateTime().toString(), // FIXME
-                    response.status.value,
+                    httpCode,
                     response.headers.toMap(),
-                    0, // FIXME
-                    listOf(), // FIXME
+                    0, // No chained retrievals currently
+                    listOf(), // No errors
                 )
 
                 Snapshot(contents, metadata)
