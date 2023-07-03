@@ -42,43 +42,58 @@ class FastHttpClient : HttpClientInterface {
     }
 
     override fun get(url: Url): Snapshot {
-        logger.info("Retrieving: '${url.getUrl()}'")
+        var contents = ""
+        var headers = mapOf<String, List<String>>()
+        var httpCode = 0
+        val errors = mutableListOf<String>()
+        var exception: Throwable? = null
 
         try {
-            val result = runBlocking {
+            logger.info("Retrieving: '${url.getUrl()}'")
+
+            runBlocking {
                 val response = client.request(url.getUrl())
 
-                val contents = response.body<String>()
-                val httpCode = url.getStrategy().getLatentCode(url, contents, response.status.value)
-
-                val metadata = SnapshotMetadata(
-                    url.getUrl(),
-                    "", // FIXME
-                    UTC.Now.dateTime().toString(), // FIXME
-                    httpCode,
-                    response.headers.toMap(),
-                    0, // No chained retrievals currently
-                    listOf(), // No errors
-                )
-
-                Snapshot(contents, metadata)
+                contents = response.body<String>()
+                headers = response.headers.toMap()
+                httpCode = url.getStrategy().getLatentCode(url, contents, response.status.value)
             }
 
             logger.info("Retrieved: '${url.getUrl()}'")
-
-            return result
-        } catch (exception: UnknownHostException) {
-            return getFromException(url, exception)
-        } catch (exception: ConnectTimeoutException) {
-            return getFromException(url, exception)
-        } catch (exception: SocketTimeoutException) {
-            return getFromException(url, exception)
+        } catch (caught: UnknownHostException) {
+            exception = caught
+        } catch (caught: ConnectTimeoutException) {
+            exception = caught
+        } catch (caught: SocketTimeoutException) {
+            exception = caught
         }
-    }
 
-    private fun getFromException(url: Url, exception: Throwable): Snapshot {
-        logger.info("Failed retrieving: '${url.getUrl()}'; $exception")
+        if (exception != null) {
+            logger.info("Failed retrieving: '${url.getUrl()}'; $exception")
 
-        return Snapshot.forError(url.getUrl(), "", exception.message ?: exception.toString())
+            errors.add("Exception: ${exception.message ?: exception.toString()}")
+        } else if (200 != httpCode) {
+            logger.info("Non-200 HTTP code ($httpCode): '${url.getUrl()}'")
+
+            errors.add("HTTP status code $httpCode")
+        }
+
+        if (errors.isEmpty()) {
+            url.recordSuccessfulFetch()
+        } else {
+            url.recordFailedFetch(httpCode, errors.joinToString(" / "))
+        }
+
+        val metadata = SnapshotMetadata(
+            url.getUrl(),
+            "", // FIXME
+            UTC.Now.dateTime().toString(), // FIXME
+            httpCode,
+            headers,
+            0, // No chained retrievals currently
+            errors.toList(),
+        )
+
+        return Snapshot(contents, metadata)
     }
 }
