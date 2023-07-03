@@ -25,9 +25,10 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
 
     // Logging
-    implementation("io.github.oshai:kotlin-logging-jvm:4.0.0-beta-29")
-    implementation("org.slf4j:slf4j-simple:2.0.7") // TODO: Use file logging
-    implementation("ch.qos.logback:logback-core:1.3.5") // TODO: Use file logging
+    implementation("io.github.oshai:kotlin-logging-jvm:4.0.1")
+    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.20.0")
 
     // Database
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
