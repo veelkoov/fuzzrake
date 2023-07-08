@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Tracking\Web\HttpClient\GentleHttpClient;
-use App\Tracking\Web\TimedUrlQueue;
 use App\Tracking\Web\Url\Fetchable;
 use App\Tracking\Web\WebpageSnapshot\Cache;
 use App\Tracking\Web\WebpageSnapshot\Snapshot;
 use App\Tracking\Web\WebsiteInfo;
 use App\Utils\DateTime\UtcClock;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -42,24 +40,6 @@ class WebpageSnapshotManager
         $this->updateUrlHealthStatus($url, $result);
 
         return $result;
-    }
-
-    /**
-     * @param Fetchable[] $urls
-     */
-    public function prefetchUrls(array $urls, bool $refetch, StyleInterface $progressReportIo): void
-    {
-        $queue = new TimedUrlQueue($urls, $this->httpClient->timing);
-
-        $progressReportIo->progressStart(count($urls));
-
-        while ($url = $queue->pop()) {
-            $this->get($url, $refetch);
-
-            $progressReportIo->progressAdvance();
-        }
-
-        $progressReportIo->progressFinish();
     }
 
     private function fetch(Fetchable $url): Snapshot

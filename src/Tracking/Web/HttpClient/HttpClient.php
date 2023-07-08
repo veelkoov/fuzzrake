@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tracking\Web\HttpClient;
 
-use App\Tracking\Web\Detector;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\CurlHttpClient;

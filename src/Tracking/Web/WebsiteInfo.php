@@ -13,16 +13,9 @@ class WebsiteInfo
     private const FA_USER_NOT_FOUND_CONTENTS_SEARCH_STRING = 'This user cannot be found.';
     private const FA_SYSTEM_ERROR_CONTENTS_SEARCH_STRING = '<title>System Error</title>';
 
-    private readonly Detector $detector;
-
-    public function __construct()
-    {
-        $this->detector = new Detector();
-    }
-
     public function getLatentCode(string $url, string $content): ?int
     {
-        if ($this->detector->isFurAffinity($url)) {
+        if (contains_ci($url, 'furaffinity.net/')) { // FIXME: This is actually wrong
             if (contains_ci($content, self::FA_ACCOUNT_DISABLED_CONTENTS_SEARCH_STRING)) {
                 return 410;
             } elseif (contains_ci($content, self::FA_ACCOUNT_LOGIN_REQUIRED_CONTENTS_SEARCH_STRING)) {
