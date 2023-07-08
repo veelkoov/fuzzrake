@@ -14,7 +14,7 @@ import java.util.Objects
 
 private val logger = KotlinLogging.logger {}
 
-class Updater(private val dbState: DbState) {
+class Updater(private val dbState: DbState) { // TODO: Create events
     fun save(statuses: CreatorItem<OffersStatuses>) {
         updateOffersStatuses(statuses.creator.get(), statuses.item)
         updateVolatileData(statuses.creator.get(), statuses.item)

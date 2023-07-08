@@ -4,11 +4,12 @@ import tracking.website.Strategy
 import java.net.URL
 
 abstract class AbstractUrl(
-    url: String,
+    private val url: String,
     private val strategy: Strategy,
 ) : Url {
-    private val url = URL(url)
+    private val netUrl = URL(url)
 
+    override fun getUrl() = url
     override fun getStrategy() = strategy
-    override fun getHost(): String = url.host
+    override fun getHost(): String = netUrl.host
 }

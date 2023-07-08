@@ -1,14 +1,16 @@
 package database.entities
 
-import database.tables.CreatorUrls
+import database.tables.CreatorUrlStates
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
 class CreatorUrlState(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<CreatorUrlState>(CreatorUrls)
+    companion object : IntEntityClass<CreatorUrlState>(CreatorUrlStates)
 
-    var creator by Creator referencedOn CreatorUrls.creator
-    var type by CreatorUrls.type // TODO: Enum!
-    var url by CreatorUrls.url
+    var url by CreatorUrl referencedOn CreatorUrlStates.url
+    var lastSuccess by CreatorUrlStates.lastSuccess
+    var lastFailure by CreatorUrlStates.lastFailure
+    var lastFailureCode by CreatorUrlStates.lastFailureCode
+    var lastFailureReason by CreatorUrlStates.lastFailureReason
 }

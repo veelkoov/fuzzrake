@@ -8,4 +8,4 @@ import org.jetbrains.exposed.sql.SizedIterable
 
 fun CreatorUrls.findTracking(): SizedIterable<CreatorUrl> = CreatorUrl
     .find { type eq "URL_COMMISSIONS" } // TODO: Enum!
-    .with(CreatorUrl::creator, Creator::creatorIds)
+    .with(CreatorUrl::creator, Creator::creatorIds, CreatorUrl::states)
