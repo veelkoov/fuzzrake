@@ -1,6 +1,6 @@
 package tracking.updating
 
-import data.CreatorItem
+import tracking.contents.CreatorItem
 import data.ListChange
 import data.pack
 import database.entities.Creator
@@ -19,7 +19,7 @@ private val logger = KotlinLogging.logger {}
 
 class Updater {
     fun save(statuses: CreatorItem<OffersStatuses>) {
-        val creator = statuses.creator.get()
+        val creator = statuses.creatorData.creator.get()
         val volatileData: CreatorVolatileData = creator.getVolatileData()
         val encounteredIssues = statuses.item.issues
 
@@ -60,7 +60,7 @@ class Updater {
 
         if (openForChange.changed()) {
             Event.new {
-                checkedUrls = "" // TODO
+                checkedUrls = statuses.item.sourceUrls.pack()
                 noLongerOpenFor = openForChange.removed.pack()
                 nowOpenFor = openForChange.added.pack()
                 timestamp = UTC.Now.dateTime()

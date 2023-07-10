@@ -1,7 +1,7 @@
 package tracking.processing
 
-import data.CreatorItem
-import data.CreatorItems
+import tracking.contents.CreatorItem
+import tracking.contents.CreatorItems
 import tracking.contents.ProcessedItem
 import tracking.statuses.OffersStatuses
 
@@ -12,6 +12,6 @@ class Processor {
     fun process(items: CreatorItems<ProcessedItem>): CreatorItem<OffersStatuses> {
         items.items.forEach { preprocessor.preprocess(it) }
 
-        return CreatorItem(items.creator, items.creatorId, detector.detectIn(items))
+        return CreatorItem(items.creatorData, detector.detectIn(items))
     }
 }

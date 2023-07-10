@@ -14,7 +14,7 @@ class Preprocessor {
         item.contents = item.strategy.filterContents(item.contents)
         item.contents = item.contents.lowercase()
         item.contents = cleaners.replaceIn(item.contents)
-        item.contents = replaceCreatorAliases(item.contents, item.creatorAliases)
+        item.contents = replaceCreatorAliases(item.contents, item.creatorData.creatorAliases)
         item.contents = falsePositives.replaceIn(item.contents)
     }
 

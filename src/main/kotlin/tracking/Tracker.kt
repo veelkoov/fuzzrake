@@ -1,7 +1,7 @@
 package tracking
 
 import config.Configuration
-import data.CreatorItems
+import tracking.contents.CreatorItems
 import data.ThreadSafe
 import database.Database
 import database.entities.Creator
@@ -10,6 +10,7 @@ import database.helpers.lastCreatorId
 import database.tables.CreatorUrls
 import database.tables.Creators
 import org.jetbrains.exposed.dao.with
+import tracking.contents.CreatorData
 import tracking.contents.TrackedContentsProvider
 import tracking.processing.Processor
 import tracking.updating.Updater
@@ -33,7 +34,7 @@ class Tracker(private val config: Configuration) {
                 .map { (creator, urls) -> getCreatorItemsUrlsFrom(creator, urls) }
                 // Multithreading starts. Since now, no DB operations can take place.
                 .parallelStream()
-                .map(provider::createProcessesItems)
+                .map(provider::createProcessedItems)
                 .map(processor::process)
                 .collect(Collectors.toList())
                 // Multithreading ends. DB operations allowed.
@@ -58,6 +59,6 @@ class Tracker(private val config: Configuration) {
     }
 
     private fun getCreatorItemsUrlsFrom(creator: Creator, urls: List<CreatorUrl>): CreatorItems<Url> {
-        return CreatorItems(ThreadSafe(creator), creator.lastCreatorId(), creator.aliases(), urls)
+        return CreatorItems(CreatorData(creator.lastCreatorId(), creator.aliases(), ThreadSafe(creator)), urls)
     }
 }

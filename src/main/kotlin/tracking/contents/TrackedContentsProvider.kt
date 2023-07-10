@@ -1,7 +1,6 @@
 package tracking.contents
 
 import config.Configuration
-import data.CreatorItems
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.website.Strategy
 import web.client.CookieEagerHttpClient
@@ -20,10 +19,10 @@ class TrackedContentsProvider(config: Configuration) {
     private val httpClient = CookieEagerHttpClient(GentleHttpClient(FastHttpClient()))
     private val snapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
 
-    fun createProcessesItems(urls: CreatorItems<Url>): CreatorItems<ProcessedItem> {
+    fun createProcessedItems(urls: CreatorItems<Url>): CreatorItems<ProcessedItem> {
         val items = getProcessedItems(urls)
 
-        return CreatorItems(urls.creator, urls.creatorId, urls.creatorAliases, items)
+        return CreatorItems(urls.creatorData, items)
     }
 
     private fun getProcessedItems(urls: CreatorItems<Url>): List<ProcessedItem> {
@@ -43,8 +42,7 @@ class TrackedContentsProvider(config: Configuration) {
                 }
 
                 ProcessedItem(
-                    urls.creatorId,
-                    urls.creatorAliases,
+                    urls.creatorData,
                     it.metadata.url,
                     Strategy.forUrl(it.metadata.url),
                     contents

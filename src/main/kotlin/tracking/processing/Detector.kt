@@ -1,6 +1,6 @@
 package tracking.processing
 
-import data.CreatorItems
+import tracking.contents.CreatorItems
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.contents.ProcessedItem
 import tracking.patterns.Factory
@@ -44,13 +44,13 @@ class Detector {
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("${input.creatorId} Contradicting offer statuses for '$nextOffer'")
+                        logger.warn("${input.getCreatorId()} Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
         }
 
-        return OffersStatuses(osMapToSet(offerToStatus), issues)
+        return OffersStatuses(osMapToSet(offerToStatus), issues, input.items.map { it.sourceUrl })
     }
 
     private fun detectIn(input: ProcessedItem): ProcessedOffersStatuses {
@@ -64,7 +64,7 @@ class Detector {
                 allDetectedOs = analyser.detectIn(match.groups)
             } catch (exception: OfferStatusException) {
                 issues = true
-                logger.warn("${input.creatorId} ${input.sourceUrl}: ${exception.requireMessage()}")
+                logger.warn("${input.getCreatorId()} ${input.sourceUrl}: ${exception.requireMessage()}")
 
                 return@matchIn
             }
@@ -83,13 +83,13 @@ class Detector {
 
                     nextStatus -> {
                         issues = true
-                        logger.warn("${input.creatorId} ${input.sourceUrl}: Duplicated offer status for '$nextOffer'")
+                        logger.warn("${input.getCreatorId()} ${input.sourceUrl}: Duplicated offer status for '$nextOffer'")
                     }
 
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("${input.creatorId} ${input.sourceUrl}: Contradicting offer statuses for '$nextOffer'")
+                        logger.warn("${input.getCreatorId()} ${input.sourceUrl}: Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
@@ -97,7 +97,7 @@ class Detector {
 
         if (offerToStatus.isEmpty()) {
             issues = true
-            logger.warn("${input.creatorId} ${input.sourceUrl}: No statuses detected")
+            logger.warn("${input.getCreatorId()} ${input.sourceUrl}: No statuses detected")
         }
 
         return ProcessedOffersStatuses(posMapToSet(offerToStatus), issues)

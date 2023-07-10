@@ -2,7 +2,7 @@ package tracking.processing
 
 import org.junit.jupiter.api.Test
 import tracking.contents.ProcessedItem
-import data.CreatorItems
+import tracking.contents.CreatorItems
 import data.ThreadSafe
 import database.entities.Creator
 import testUtils.disposableTransaction

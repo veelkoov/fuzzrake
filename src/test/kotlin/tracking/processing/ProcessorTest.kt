@@ -1,6 +1,6 @@
 package tracking.processing
 
-import data.CreatorItems
+import tracking.contents.CreatorItems
 import data.Resource
 import data.ThreadSafe
 import database.entities.Creator
