@@ -2,6 +2,8 @@ package database.entities
 
 import database.helpers.lastCreatorId
 import database.tables.CreatorIds
+import database.tables.CreatorOffersStatuses
+import database.tables.CreatorVolatileDatas
 import database.tables.Creators
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -54,6 +56,8 @@ class Creator(id: EntityID<Int>) : IntEntity(id) {
     var contactInfoObfuscated by Creators.contactInfoObfuscated
 
     val creatorIds by CreatorId referrersOn CreatorIds.creator
+    val offersStatuses by CreatorOfferStatus referrersOn CreatorOffersStatuses.creator
+    val volatileData by CreatorVolatileData referrersOn CreatorVolatileDatas.creator // TODO: 1:1
 
     override fun toString(): String {
         return "${id.value}/${lastCreatorId()}/${super.toString()}"

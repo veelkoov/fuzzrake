@@ -1,38 +1,46 @@
 package tracking.updating
 
 import data.CreatorItem
-import database.helpers.lastCreatorId
+import data.ListChange
+import data.pack
 import database.entities.Creator
 import database.entities.CreatorOfferStatus
 import database.entities.CreatorVolatileData
-import database.helpers.toOfferStatus
+import database.entities.Event
+import database.helpers.*
 import io.github.oshai.kotlinlogging.KotlinLogging
 import time.UTC
 import tracking.statuses.Offer
+import tracking.statuses.OfferStatus
 import tracking.statuses.OffersStatuses
 import java.util.Objects
 
 private val logger = KotlinLogging.logger {}
 
-class Updater(private val dbState: DbState) { // TODO: Create events
+class Updater {
     fun save(statuses: CreatorItem<OffersStatuses>) {
-        updateOffersStatuses(statuses.creator.get(), statuses.item)
-        updateVolatileData(statuses.creator.get(), statuses.item)
-    }
+        val creator = statuses.creator.get()
+        val volatileData: CreatorVolatileData = creator.getVolatileData()
+        val encounteredIssues = statuses.item.issues
 
-    private fun updateVolatileData(creator: Creator, newOffersStatuses: OffersStatuses) {
-        val dbEntity: CreatorVolatileData = dbState.getVolatileDataOf(creator)
+        val newOffersStatuses: Set<OfferStatus> = statuses.item.items
+        val newOffers: Set<Offer> = newOffersStatuses.map { it.offer }.toSet()
 
-        dbEntity.csTrackerIssue = getNewValLogged(creator, dbEntity.csTrackerIssue, newOffersStatuses.issues, "Encountered issues")
-        dbEntity.lastCsUpdateUtc = UTC.Now.dateTime() // This is technically the time it got updated even though the webpage was checked a few minutes ago
-    }
+        val newOpenFor = newOffersStatuses.filter { it.status.isOpen() }.map { it.offer }
+        val openForChange = ListChange(creator.getOpenFor(), newOpenFor)
 
-    private fun updateOffersStatuses(creator: Creator, newOffersStatuses: OffersStatuses) {
-        val remainingExistingEntities: MutableMap<Offer, CreatorOfferStatus> =
-            dbState.consumeCreatorOfferStatuses(creator).associateBy { it.offer }.toMutableMap()
+        volatileData.csTrackerIssue = getNewValLogged(creator, volatileData.csTrackerIssue, encounteredIssues, "Encountered issues")
+        volatileData.lastCsUpdateUtc = UTC.Now.dateTime() // This is technically the time it got updated even though the webpage was checked a few minutes ago
 
-        newOffersStatuses.items.forEach { newOfferStatus ->
-            val entity = remainingExistingEntities.remove(newOfferStatus.offer)
+        creator.offersStatuses.forEach {
+            if (!newOffers.contains(it.offer)) {
+                getNewValLogged(creator, it.toOfferStatus(), null, "Offer status")
+                it.delete()
+            }
+        }
+
+        newOffersStatuses.forEach { newOfferStatus ->
+            val entity = creator.offersStatuses.singleOrNull { it.offer == newOfferStatus.offer }
 
             if (entity == null) {
                 getNewValLogged(creator, null, newOfferStatus, "Offer status")
@@ -50,9 +58,16 @@ class Updater(private val dbState: DbState) { // TODO: Create events
             }
         }
 
-        remainingExistingEntities.forEach { (_, entity) ->
-            getNewValLogged(creator, entity.toOfferStatus(), null, "Offer status")
-            entity.delete()
+        if (openForChange.changed()) {
+            Event.new {
+                checkedUrls = "" // TODO
+                noLongerOpenFor = openForChange.removed.pack()
+                nowOpenFor = openForChange.added.pack()
+                timestamp = UTC.Now.dateTime()
+                trackingIssues = encounteredIssues
+                type = "CS_UPDATED" // TODO: Enum
+                artisanName = creator.name
+            }
         }
     }
 
@@ -70,9 +85,5 @@ class Updater(private val dbState: DbState) { // TODO: Create events
         }
 
         return newValue
-    }
-
-    fun finalize() {
-        dbState.getUnconsumedCreatorOfferStatuses().map(CreatorOfferStatus::delete)
     }
 }

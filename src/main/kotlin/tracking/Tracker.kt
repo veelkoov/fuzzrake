@@ -6,43 +6,55 @@ import data.ThreadSafe
 import database.Database
 import database.entities.Creator
 import database.helpers.aliases
-import database.helpers.findTracking
 import database.helpers.lastCreatorId
 import database.tables.CreatorUrls
+import database.tables.Creators
+import org.jetbrains.exposed.dao.with
 import tracking.contents.TrackedContentsProvider
 import tracking.processing.Processor
 import tracking.updating.Updater
-import tracking.updating.DbState
 import web.url.CreatorUrl
 import web.url.Url
 import java.util.stream.Collectors
+import database.entities.CreatorUrl as CreatorUrlEntity
 
 class Tracker(private val config: Configuration) {
     private val provider = TrackedContentsProvider(config)
     private val processor = Processor()
+    private val updater = Updater()
 
     fun run() {
         val database = Database(config.databasePath)
 
         database.transaction {
-            val creatorsTrackingUrls: Map<Creator, List<CreatorUrl>> =
-                CreatorUrls.findTracking().groupBy { it.creator }.mapValues { (_, urls) ->
-                    urls.map { CreatorUrl(ThreadSafe(it), it.url) }
-                }
-
-            val updater = Updater(DbState.getAsOfNow(creatorsTrackingUrls.keys))
+            val creatorsTrackingUrls = getCreatorsTrackingUrls()
 
             creatorsTrackingUrls
                 .map { (creator, urls) -> getCreatorItemsUrlsFrom(creator, urls) }
+                // Multithreading starts. Since now, no DB operations can take place.
                 .parallelStream()
                 .map(provider::createProcessesItems)
                 .map(processor::process)
                 .collect(Collectors.toList())
+                // Multithreading ends. DB operations allowed.
                 .map(updater::save)
 
-            updater.finalize()
             creatorsTrackingUrls.forEach { (_, urls) -> urls.forEach(CreatorUrl::commit) }
         }
+    }
+
+    private fun getCreatorsTrackingUrls(): Map<Creator, List<CreatorUrl>> { // TODO: Yuck
+        val withUrls: Map<Creator, List<CreatorUrl>> =
+            CreatorUrlEntity.find { CreatorUrls.type eq "URL_COMMISSIONS" } // TODO: Enum!
+                .with(CreatorUrlEntity::creator, CreatorUrlEntity::states, Creator::creatorIds, Creator::volatileData, Creator::offersStatuses)
+                .groupBy { it.creator }.mapValues { (_, urls) -> urls.map { CreatorUrl(ThreadSafe(it), it.url) } }
+
+        val withoutUrls: Map<Creator, List<CreatorUrl>> =
+            Creator.find { Creators.id notInList withUrls.keys.map { it.id } }
+                .with(Creator::offersStatuses, Creator::volatileData)
+                .associateWith { listOf() }
+
+        return withUrls.plus(withoutUrls)
     }
 
     private fun getCreatorItemsUrlsFrom(creator: Creator, urls: List<CreatorUrl>): CreatorItems<Url> {

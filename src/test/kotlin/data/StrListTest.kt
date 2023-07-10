@@ -3,7 +3,7 @@ package data
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class StringListTest {
+class StrListTest {
     @Test
     fun `Unpacking empty string results in an empty list and vice versa`() {
         assertEquals(listOf(), "".unpack())
