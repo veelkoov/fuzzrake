@@ -29,28 +29,28 @@ class TrackedContentsProvider(config: Configuration) {
         return urls.items
             .map(::getUrlForTracking)
             .map(::getSnapshotFromUrl)
-            .map {
-                val httpCode = it.metadata.httpCode
-                val size = it.contents.length // TODO: These are not bytes
+            .map { (url, snapshot) ->
+                val httpCode = snapshot.metadata.httpCode
+                val size = snapshot.contents.length // TODO: These are not bytes
 
                 val contents = if (size > MAX_SIZE || httpCode != 200) {
-                    logger.warn("Skipping contents for ${it.metadata.url} with HTTP code $httpCode and size $size")
+                    logger.warn("Skipping contents for ${snapshot.metadata.url} with HTTP code $httpCode and size $size")
 
                     ""
                 } else {
-                    it.contents
+                    snapshot.contents
                 }
 
                 ProcessedItem(
                     urls.creatorData,
-                    it.metadata.url,
-                    Strategy.forUrl(it.metadata.url),
+                    url,
+                    Strategy.forUrl(snapshot.metadata.url),
                     contents
                 )
             }
     }
 
-    private fun getSnapshotFromUrl(url: Url): Snapshot = snapshotsManager.get(url, httpClient::get)
+    private fun getSnapshotFromUrl(url: Url): Pair<Url, Snapshot> = url to snapshotsManager.get(url, httpClient::get)
 
     private fun getUrlForTracking(url: Url): Url = url.getStrategy().getUrlForTracking(url)
 }

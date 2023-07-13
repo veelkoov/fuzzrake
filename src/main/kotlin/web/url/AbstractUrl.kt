@@ -9,6 +9,7 @@ abstract class AbstractUrl(
 ) : Url {
     private val netUrl = URL(url)
 
+    override fun getOriginalUrl() = url
     override fun getUrl() = url
     override fun getStrategy() = strategy
     override fun getHost(): String = netUrl.host

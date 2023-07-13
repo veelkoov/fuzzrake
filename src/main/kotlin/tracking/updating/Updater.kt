@@ -60,7 +60,7 @@ class Updater {
 
         if (openForChange.changed()) {
             Event.new {
-                checkedUrls = statuses.item.sourceUrls.pack()
+                checkedUrls = statuses.item.sourceUrls.map { it.getOriginalUrl() }.pack()
                 noLongerOpenFor = openForChange.removed.pack()
                 nowOpenFor = openForChange.added.pack()
                 timestamp = UTC.Now.dateTime()
