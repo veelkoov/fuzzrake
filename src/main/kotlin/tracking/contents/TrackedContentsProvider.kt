@@ -2,6 +2,7 @@ package tracking.contents
 
 import config.Configuration
 import io.github.oshai.kotlinlogging.KotlinLogging
+import tracking.TrackerOptions
 import tracking.website.Strategy
 import web.client.CookieEagerHttpClient
 import web.client.FastHttpClient
@@ -15,7 +16,10 @@ private val MAX_SIZE: Int = (1.5 * 1024 * 1024).roundToInt()
 
 private val logger = KotlinLogging.logger {}
 
-class TrackedContentsProvider(config: Configuration) {
+class TrackedContentsProvider(
+    config: Configuration,
+    private val options: TrackerOptions,
+) {
     private val httpClient = CookieEagerHttpClient(GentleHttpClient(FastHttpClient()))
     private val snapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
 
@@ -50,7 +54,9 @@ class TrackedContentsProvider(config: Configuration) {
             }
     }
 
-    private fun getSnapshotFromUrl(url: Url): Pair<Url, Snapshot> = url to snapshotsManager.get(url, httpClient::get)
+    private fun getSnapshotFromUrl(url: Url): Pair<Url, Snapshot> {
+        return url to snapshotsManager.get(url, httpClient::get, options.refetch)
+    }
 
     private fun getUrlForTracking(url: Url): Url = url.getStrategy().getUrlForTracking(url)
 }

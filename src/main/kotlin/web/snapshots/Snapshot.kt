@@ -43,9 +43,5 @@ data class Snapshot(
 
         private fun metadataPath(snapshotDirPath: String) = "$snapshotDirPath/metadata.json"
         private fun contentsPath(snapshotDirPath: String) = "$snapshotDirPath/contents.data"
-
-        fun forError(url: String, owner: String, error: String) = Snapshot(
-            "", SnapshotMetadata.forError(url, owner, error)
-        )
     }
 }

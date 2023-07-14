@@ -19,8 +19,8 @@ import web.url.Url
 import java.util.stream.Collectors
 import database.entities.CreatorUrl as CreatorUrlEntity
 
-class Tracker(private val config: Configuration) {
-    private val provider = TrackedContentsProvider(config)
+class Tracker(private val config: Configuration, options: TrackerOptions) {
+    private val provider = TrackedContentsProvider(config, options)
     private val processor = Processor()
     private val updater = Updater()
 

@@ -19,6 +19,9 @@ val mockkVersion: String by project
 val ktorVersion: String by project
 
 dependencies {
+    // Command-line parsing
+    implementation("com.github.ajalt.clikt:clikt:4.1.0")
+
     // JSON and YAML support
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
@@ -76,5 +79,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("FuzzrakeKt")
 }
