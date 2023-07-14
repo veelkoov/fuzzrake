@@ -2,32 +2,33 @@ package tracking.processing
 
 import tracking.contents.CreatorItems
 import data.Resource
-import data.ThreadSafe
-import database.entities.Creator
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.ProcessorTestCaseData
-import testUtils.disposableTransaction
+import testUtils.getCreatorData
+import testUtils.getUrl
 import tracking.contents.ProcessedItem
 import tracking.statuses.OfferStatus
 import tracking.statuses.Status
 import tracking.website.StandardStrategy
+import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 class ProcessorTest {
-    private val creator = ThreadSafe(disposableTransaction { Creator.new {} })
-    private val subject = Processor()
+    private lateinit var subject: Processor
+
+    @BeforeTest
+    fun beforeTest() {
+        subject = Processor()
+    }
 
     @TestFactory
     fun process() = getProcessTestData().map { caseData ->
-        val creatorId = ""
-        val creatorAliases = listOf<String>()
-        val sourceUrl = ""
-        val strategy = StandardStrategy
-
         DynamicTest.dynamicTest(caseData.name) {
-            val input = CreatorItems(creator, creatorId, creatorAliases, listOf(
-                ProcessedItem(creatorId, creatorAliases, sourceUrl, strategy, caseData.input),
+            val creatorData = getCreatorData()
+
+            val input = CreatorItems(creatorData, listOf(
+                ProcessedItem(creatorData, getUrl(), StandardStrategy, caseData.input),
             ))
 
             val result = subject.process(input)

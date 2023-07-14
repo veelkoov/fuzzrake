@@ -2,13 +2,21 @@ package tracking.processing
 
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
+import testUtils.getCreatorData
+import testUtils.getUrl
 import tracking.contents.ProcessedItem
 import tracking.website.StandardStrategy
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PreprocessorTest {
-    private val subject = Preprocessor()
+    private lateinit var subject: Preprocessor
+
+    @BeforeTest
+    fun beforeTest() {
+        subject = Preprocessor()
+    }
 
     @TestFactory
     fun `Cleaner regexes are working`() = mapOf(
@@ -17,7 +25,8 @@ class PreprocessorTest {
         " ❗&nbsp;" to " ! ", // Unicode NBSP, emoticon !, HTML entity NBSP
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", listOf(), "", StandardStrategy, input)
+            val testItem = ProcessedItem(getCreatorData(), getUrl(), StandardStrategy, input)
+
             subject.preprocess(testItem)
 
             assertEquals(expected, testItem.contents)
@@ -26,7 +35,8 @@ class PreprocessorTest {
 
     @Test
     fun `Input gets converted to lowercase`() {
-        val testItem = ProcessedItem("", listOf(), "", StandardStrategy, "AaBbCcDdEeFf")
+        val testItem = ProcessedItem(getCreatorData(), getUrl(), StandardStrategy, "AaBbCcDdEeFf")
+
         subject.preprocess(testItem)
 
         assertEquals("aabbccddeeff", testItem.contents)
@@ -57,7 +67,7 @@ class PreprocessorTest {
         ),
     ).map { (input, aliases, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", aliases, "", StandardStrategy, input)
+            val testItem = ProcessedItem(getCreatorData(aliases = aliases), getUrl(), StandardStrategy, input)
 
             subject.preprocess(testItem)
 
@@ -82,7 +92,7 @@ class PreprocessorTest {
         "when will you start taking new commissions?" to "?",
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
-            val testItem = ProcessedItem("", listOf("The Creator"), "", StandardStrategy, input)
+            val testItem = ProcessedItem(getCreatorData(aliases = listOf("The Creator")), getUrl(), StandardStrategy, input)
 
             subject.preprocess(testItem)
 
