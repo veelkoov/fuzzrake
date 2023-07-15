@@ -19,6 +19,8 @@ class Detector {
     private val analyser = GroupNamesAnalyser()
 
     fun detectIn(input: CreatorItems<ProcessedItem>): OffersStatuses {
+        val theCreatorId = input.getCreatorId()
+
         val offerToStatus = mutableMapOf<Offer, ProcessedStatus>()
         var issues = false
 
@@ -44,16 +46,19 @@ class Detector {
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("${input.getCreatorId()} Contradicting offer statuses for '$nextOffer'")
+                        logger.warn("$theCreatorId Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
         }
 
-        return OffersStatuses(osMapToSet(offerToStatus), issues, input.items.map { it.sourceUrl })
+        return OffersStatuses(osMapToSet(offerToStatus), issues, input.items.map { it.url })
     }
 
     private fun detectIn(input: ProcessedItem): ProcessedOffersStatuses {
+        val theCreatorId = input.getCreatorId()
+        val theUrl = input.url.getUrl()
+
         val offerToStatus = mutableMapOf<Offer, ProcessedStatus>()
         var issues = false
 
@@ -64,7 +69,7 @@ class Detector {
                 allDetectedOs = analyser.detectIn(match.groups)
             } catch (exception: OfferStatusException) {
                 issues = true
-                logger.warn("${input.getCreatorId()} ${input.sourceUrl}: ${exception.requireMessage()}")
+                logger.warn("$theCreatorId $theUrl: ${exception.requireMessage()}")
 
                 return@matchIn
             }
@@ -83,13 +88,13 @@ class Detector {
 
                     nextStatus -> {
                         issues = true
-                        logger.warn("${input.getCreatorId()} ${input.sourceUrl}: Duplicated offer status for '$nextOffer'")
+                        logger.warn("$theCreatorId $theUrl: Duplicated offer status for '$nextOffer'")
                     }
 
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("${input.getCreatorId()} ${input.sourceUrl}: Contradicting offer statuses for '$nextOffer'")
+                        logger.warn("$theCreatorId $theUrl: Contradicting offer statuses for '$nextOffer'")
                     }
                 }
             }
@@ -97,7 +102,7 @@ class Detector {
 
         if (offerToStatus.isEmpty()) {
             issues = true
-            logger.warn("${input.getCreatorId()} ${input.sourceUrl}: No statuses detected")
+            logger.warn("$theCreatorId $theUrl: No statuses detected")
         }
 
         return ProcessedOffersStatuses(posMapToSet(offerToStatus), issues)

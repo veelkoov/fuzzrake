@@ -5,7 +5,7 @@ import web.url.Url
 
 data class ProcessedItem(
     val creatorData: CreatorData,
-    val sourceUrl: Url,
+    val url: Url,
     val strategy: Strategy,
     var contents: String,
 ) {
