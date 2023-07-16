@@ -24,34 +24,80 @@ import web.url.Url
 import kotlin.test.*
 
 class TrackerTest {
+    private val failingUrl = "http://localhost/failing" to "nothing to detect here"
+    private val commissionsOpenUrl = "http://localhost/success1" to "commissions: open"
+    private val tradesClosedUrl = "http://localhost/success2" to "trades: closed"
+    private val commissionsAndQuotesOpenUrl = "http://localhost/success3" to "commissions: open ; quotes: open"
+    private val commissionsClosedUrl = "http://localhost/success4" to "commissions: closed"
+
     @TestFactory
     fun `Tracker tests`() = mapOf(
 
         "Everything gets reset when there are no tracked URLs" to TrackerTestCaseData(
             mapOf(),
-            true,
-            listOf(),
+            hadIssuesPreviously = true,
+
+            expectedIssues = false,
+            expectedOffersStatuses = listOf(),
         ) {
-            assertFalse(it.getVolatileData().csTrackerIssue)
             assertNull(it.getVolatileData().lastCsUpdateUtc)
-            assertTrue(it.offersStatuses.empty())
         },
 
         "After a check, time of last update is not null" to TrackerTestCaseData(
-            mapOf("http://localhost/" to "whatever, doesn't need to be successful"),
-            false,
-            listOf(),
+            mapOf(failingUrl),
         ) {
             assertNotNull(it.getVolatileData().lastCsUpdateUtc)
         },
 
-        "A successful check resets the error state and returns proper results" to TrackerTestCaseData(
-            mapOf("http://localhost/" to "commissions: open"),
-            true,
-            listOf("+Commissions"),
-        ) {
-            assertFalse(it.getVolatileData().csTrackerIssue)
-        },
+        "A successful check resets the error state" to TrackerTestCaseData(
+            mapOf(commissionsOpenUrl),
+            hadIssuesPreviously = true,
+
+            expectedIssues = false,
+        ),
+
+        "A successful check of a single URL returns proper results" to TrackerTestCaseData(
+            mapOf(commissionsOpenUrl),
+
+            expectedOffersStatuses = listOf("+Commissions"),
+        ),
+
+        "Empty result from single URL sets error state" to TrackerTestCaseData(
+            mapOf(failingUrl),
+            hadIssuesPreviously = false,
+
+            expectedIssues = true,
+        ),
+
+        "One failed URL of multiple sets error state" to TrackerTestCaseData(
+            mapOf(failingUrl, commissionsOpenUrl),
+            hadIssuesPreviously = false,
+
+            expectedIssues = true,
+        ),
+
+        "Results from two urls are properly gathered" to TrackerTestCaseData(
+            mapOf(tradesClosedUrl, commissionsAndQuotesOpenUrl),
+
+            expectedIssues = false,
+            expectedOffersStatuses = listOf("-Trades", "+Commissions", "+Quotes")
+        ),
+
+        "Contradicting offer statuses remove the offer and set error state" to TrackerTestCaseData(
+            mapOf(commissionsClosedUrl, commissionsAndQuotesOpenUrl),
+            hadIssuesPreviously = false,
+
+            expectedIssues = true,
+            expectedOffersStatuses = listOf("+Quotes")
+        ),
+
+        "Duplicated offer statuses in different URL are OK" to TrackerTestCaseData(
+            mapOf(commissionsOpenUrl, commissionsAndQuotesOpenUrl),
+            hadIssuesPreviously = false,
+
+            expectedIssues = false,
+            expectedOffersStatuses = listOf("+Quotes", "+Commissions")
+        ),
 
     ).map { (displayName, caseData) ->
         dynamicTest(displayName) {
@@ -98,10 +144,18 @@ class TrackerTest {
                 assertNotNull(result)
                 caseData.asserts(result)
 
-                assertEquals(
-                    caseData.expectedOffersStatuses.map { it.toOfferStatus() }.toSet(),
-                    result.offersStatuses.map { it.toOfferStatus() }.toSet(),
-                )
+                caseData.expectedIssues?.let { expected ->
+                    assertEquals(expected, result.getVolatileData().csTrackerIssue,
+                        "Tacker issues status is wrong")
+                }
+
+                caseData.expectedOffersStatuses?.let { expected ->
+                    assertEquals(
+                        expected.map { it.toOfferStatus() }.toSet(),
+                        result.offersStatuses.map { it.toOfferStatus() }.toSet(),
+                        "Detected offers statuses are wrong",
+                    )
+                }
 
                 verify(exactly = 1) { provider.createProcessedItems(any()) }
                 confirmVerified(provider)
