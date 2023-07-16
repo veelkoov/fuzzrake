@@ -1,15 +1,14 @@
 package tracking.processing
 
-import tracking.contents.CreatorItems
 import data.Resource
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.ProcessorTestCaseData
 import testUtils.getCreatorData
 import testUtils.getUrl
+import testUtils.toOfferStatus
+import tracking.contents.CreatorItems
 import tracking.contents.ProcessedItem
-import tracking.statuses.OfferStatus
-import tracking.statuses.Status
 import tracking.website.StandardStrategy
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
@@ -50,11 +49,7 @@ class ProcessorTest {
                     val expectIssues = name.endsWith(" (issues expected)")
 
                     val offersStatuses = metadataLines.map {
-                        when (it[0]) {
-                            '+' -> OfferStatus(it.drop(1), Status.OPEN)
-                            '-' -> OfferStatus(it.drop(1), Status.CLOSED)
-                            else -> throw IllegalArgumentException()
-                        }
+                        it.toOfferStatus()
                     }.toSet()
 
                     ProcessorTestCaseData(name, input, offersStatuses, expectIssues)

@@ -11,7 +11,7 @@ class FuzzrakeCmd : CliktCommand(name="fuzzrake") {
 }
 
 class TrackerCmd: CliktCommand(name="tracker", help="Run commissions tracking") {
-    val refetch by option("--refetch", "-r").flag(default = false)
+    private val refetch by option("--refetch", "-r").flag(default = false)
 
     override fun run() {
         val config = ConfigLoader()

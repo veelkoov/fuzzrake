@@ -1,6 +1,6 @@
 package data
 
-class ThreadSafe<T>(
+data class ThreadSafe<T>(
     private val protectedItem: T,
 ) {
     // Assumption: ID-name pair won't be reused

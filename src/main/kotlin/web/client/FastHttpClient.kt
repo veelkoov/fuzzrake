@@ -4,7 +4,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.java.*
-import io.ktor.client.network.sockets.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.cookies.*
@@ -15,8 +14,7 @@ import time.UTC
 import web.snapshots.Snapshot
 import web.snapshots.SnapshotMetadata
 import web.url.Url
-import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
+import java.io.IOException
 
 private val logger = KotlinLogging.logger {}
 
@@ -37,6 +35,10 @@ class FastHttpClient : HttpClientInterface {
         }
         install(HttpTimeout) {
             requestTimeoutMillis = 30_000
+        }
+        install(HttpRequestRetry) {
+            retryOnServerErrors(maxRetries = 3)
+            constantDelay(millis = 6_000, randomizationMs = 2_000)
         }
     }
 
@@ -59,13 +61,7 @@ class FastHttpClient : HttpClientInterface {
                 headers = response.headers.toMap()
                 httpCode = url.getStrategy().getLatentCode(url, contents, response.status.value)
             }
-        } catch (caught: UnknownHostException) {
-            exception = caught
-        } catch (caught: ConnectTimeoutException) {
-            exception = caught
-        } catch (caught: SocketTimeoutException) {
-            exception = caught
-        } catch (caught: SSLHandshakeException) {
+        } catch (caught: IOException) {
             exception = caught
         }
 

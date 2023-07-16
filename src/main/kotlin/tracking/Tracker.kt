@@ -13,20 +13,21 @@ import org.jetbrains.exposed.dao.with
 import tracking.contents.CreatorData
 import tracking.contents.TrackedContentsProvider
 import tracking.processing.Processor
-import tracking.updating.Updater
 import web.url.CreatorUrl
 import web.url.Url
 import java.util.stream.Collectors
 import database.entities.CreatorUrl as CreatorUrlEntity
 
-class Tracker(private val config: Configuration, options: TrackerOptions) {
-    private val provider = TrackedContentsProvider(config, options)
+class Tracker(
+    private val config: Configuration,
+    private val options: TrackerOptions,
+    private val provider: TrackedContentsProvider = TrackedContentsProvider(config, options),
+    private val database: Database = Database(config.databasePath)
+) {
     private val processor = Processor()
     private val updater = Updater()
 
     fun run() {
-        val database = Database(config.databasePath)
-
         database.transaction {
             val creatorsTrackingUrls = getCreatorsTrackingUrls()
 

@@ -1,16 +1,23 @@
 package testUtils
 
-import database.*
-import database.tables.CreatorOffersStatuses
-import database.tables.CreatorUrls
-import database.tables.CreatorVolatileDatas
-import database.tables.Creators
+import database.Database
+import database.tables.*
 import org.jetbrains.exposed.sql.SchemaUtils
 
-fun <T>disposableTransaction(block: () -> T): T {
-    return Database(":memory:").transaction {
-        SchemaUtils.create(Creators, CreatorOffersStatuses, CreatorUrls, CreatorVolatileDatas)
+fun disposableDatabase(block: (database: Database) -> Unit) {
+    val database = Database(":memory:")
 
-        block()
+    database.transaction {
+        SchemaUtils.create(
+            CreatorIds,
+            CreatorOffersStatuses,
+            Creators,
+            CreatorUrls,
+            CreatorUrlStates,
+            CreatorVolatileDatas,
+            Events,
+        )
+
+        block(database)
     }
 }

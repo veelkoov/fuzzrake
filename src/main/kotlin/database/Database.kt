@@ -1,9 +1,12 @@
 package database
 
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.transactionManager
 import java.sql.Connection
 import org.jetbrains.exposed.sql.transactions.transaction as exposedTransaction
+//import org.jetbrains.exposed.sql.StdOutSqlLogger
+//import org.jetbrains.exposed.sql.addLogger
 
 class Database(dbPath: String) {
     private val isolationLevel = Connection.TRANSACTION_SERIALIZABLE // or TRANSACTION_READ_UNCOMMITTED
@@ -14,9 +17,11 @@ class Database(dbPath: String) {
         database.transactionManager.defaultIsolationLevel = isolationLevel
     }
 
-    fun <T> transaction(function: () -> T): T {
+    fun <T> transaction(function: (transaction: Transaction) -> T): T {
         return exposedTransaction(database) {
-            function()
+            //this.addLogger(StdOutSqlLogger)
+
+            function(this)
         }
     }
 }

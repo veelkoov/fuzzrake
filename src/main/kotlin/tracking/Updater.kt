@@ -1,19 +1,22 @@
-package tracking.updating
+package tracking
 
-import tracking.contents.CreatorItem
 import data.ListChange
 import data.pack
 import database.entities.Creator
 import database.entities.CreatorOfferStatus
 import database.entities.CreatorVolatileData
 import database.entities.Event
-import database.helpers.*
+import database.helpers.getOpenFor
+import database.helpers.getVolatileData
+import database.helpers.lastCreatorId
+import database.helpers.toOfferStatus
 import io.github.oshai.kotlinlogging.KotlinLogging
 import time.UTC
+import tracking.contents.CreatorItem
 import tracking.statuses.Offer
 import tracking.statuses.OfferStatus
 import tracking.statuses.OffersStatuses
-import java.util.Objects
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -30,7 +33,11 @@ class Updater {
         val openForChange = ListChange(creator.getOpenFor(), newOpenFor)
 
         volatileData.csTrackerIssue = getNewValLogged(creator, volatileData.csTrackerIssue, encounteredIssues, "Encountered issues")
-        volatileData.lastCsUpdateUtc = UTC.Now.dateTime() // This is technically the time it got updated even though the webpage was checked a few minutes ago
+        volatileData.lastCsUpdateUtc = if (statuses.item.sourceUrls.isNotEmpty()) {
+            UTC.Now.dateTime() // This is technically the time it got updated even though the webpage was checked a few minutes ago
+        } else {
+            null
+        }
 
         creator.offersStatuses.forEach {
             if (!newOffers.contains(it.offer)) {
