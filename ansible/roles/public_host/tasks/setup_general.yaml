@@ -1,17 +1,5 @@
 ---
-# TODO: Try setting up Python 3 instead of the default 2
-
-- name: 'Enable EPEL repository'
-  ansible.builtin.yum:
-    name:
-      - 'epel-release'
-    state: 'installed'
-
-- name: 'Setup Node.js repository'
-  ansible.builtin.yum:
-    name: 'https://rpm.nodesource.com/pub_14.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm'
-
-- name: 'Setup Yarn repository'
+- name: 'Setup Yarn 1 repository'
   ansible.builtin.yum_repository:
     baseurl:     'https://dl.yarnpkg.com/rpm/'
     description: 'Yarn Repository'
@@ -21,35 +9,30 @@
     name:        'yarn'
 
 - name: 'Install required packages'
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
+      - '@nodejs:18/common'
+      - 'augeas-libs'
+      - 'firewalld'
       - 'git'
-      - 'nodejs'
-      - 'python-docker-py'
-      - 'snapd'
-      - 'yarn'
+      - 'python3-firewall'
+      - 'python3-pip'
+      - 'python3-requests'
       - 'vim'
+      - 'yarn'
     state: 'installed'
+
+- name: 'Enable firewalld'
+  ansible.builtin.service:
+    enabled: true
+    name:    'firewalld'
+    state:   'started'
 
 - name: 'Disable SELinux'
   ansible.builtin.lineinfile:
     line:  'SELINUX=disabled'
     path:  '/etc/selinux/config'
     regex: '^SELINUX='
-  notify:
-    - 'Reload system'
-
-- name: 'Enable snapd'
-  ansible.builtin.service:
-    enabled: true
-    name:    'snapd.socket'
-    state:   'started'
-
-- name: 'Enable classic snap support'
-  ansible.builtin.file:
-    path:  '/snap'
-    src:   '/var/lib/snapd/snap'
-    state: 'link'
   notify:
     - 'Reload system'
 

@@ -34,7 +34,7 @@ class UpdatesService
         $errors = filter([$directivesError]);
 
         $originalInput = new Artisan();
-        $this->updateWith($originalInput, $input->submissionData, Fields::inIuForm());
+        $this->updateWith($originalInput, $input->submissionData, Fields::readFromSubmissionData());
 
         $matchedArtisans = $this->getArtisans($originalInput, $manager->getMatchedMakerId());
 

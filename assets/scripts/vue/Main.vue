@@ -111,7 +111,7 @@ export default class Main extends Vue {
       this.state.openCardForMakerId = window.location.hash.slice(1);
 
       if (!this.aasConfig.getMakerMode()) {
-        this.messageBus.requestDataLoad('wantsSfw=0&isAdult=1&makerId=' + this.state.openCardForMakerId, true);
+        this.messageBus.requestDataLoad('wantsSfw=0&isAdult=1&inactive[]=.&makerId=' + this.state.openCardForMakerId, true);
       }
     }
   }

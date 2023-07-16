@@ -39,6 +39,11 @@ final class Fields
         return self::$inIuForm ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm());
     }
 
+    public static function readFromSubmissionData(): FieldsList
+    {
+        return self::inIuForm()->plus([Field::FORMER_MAKER_IDS]);
+    }
+
     public static function iuFormAffected(): FieldsList
     {
         return self::$iuFormAffected ??= self::all()->filtered(fn (Field $field): bool => $field->isInIuForm() || $field->affectedByIuForm());

@@ -1,6 +1,6 @@
 ---
 - name: 'Remove distro Docker packages'
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
       - 'docker'
       - 'docker-client'
@@ -22,7 +22,7 @@
     name:        'docker-ce-stable'
 
 - name: 'Install Docker packages'
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     update_cache: true
     name:
       - 'docker-ce'
