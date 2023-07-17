@@ -4,12 +4,12 @@
     group: 'root'
     mode:  '0755'
     owner: 'root'
-    path:  '{{ deployment_path }}'
+    path:  '{{ frontend_deployment_path }}'
     state: 'directory'
 
 - name: 'Checkout sources'
   ansible.builtin.git:
-    dest:    '{{ deployment_path }}'
+    dest:    '{{ frontend_deployment_path }}'
     force:   true
     repo:    'https://github.com/veelkoov/fuzzrake.git'
     version: '{{ branch }}'
@@ -19,12 +19,12 @@
     group: 'root'
     mode:  '0777'
     owner: 'root'
-    path:  '{{ deployment_path }}/var'
+    path:  '{{ frontend_deployment_path }}/var'
     state: 'directory'
 
 - name: 'Update .env.local'
   ansible.builtin.template:
-    dest:  '{{ deployment_path }}/.env.local'
+    dest:  '{{ frontend_deployment_path }}/.env.local'
     group: 'root'
     mode:  '0644'
     owner: 'root'

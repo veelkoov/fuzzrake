@@ -2,7 +2,7 @@
 - name: 'Build PHP-FPM Docker image'
   community.docker.docker_image:
     build:
-      path: '{{ deployment_path }}/docker/php-fpm'
+      path: '{{ frontend_deployment_path }}/docker/php-fpm'
       pull: true
     force_source: true
     name:   '{{ php_fpm_docker_image_name }}'
@@ -19,4 +19,4 @@
     restart_policy:  'unless-stopped'
     user: 'root:root'
     volumes:
-      - '{{ deployment_path }}:/var/www/html'
+      - '{{ frontend_deployment_path }}:/var/www/html'

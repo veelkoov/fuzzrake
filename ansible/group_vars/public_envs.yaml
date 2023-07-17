@@ -1,2 +1,0 @@
----
-yarn_cache_dirpath: '{{ deployment_path }}/var/yarn-cache'

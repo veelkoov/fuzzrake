@@ -1,5 +1,6 @@
 ---
-deployment_path: '/var/www/prod'
+frontend_deployment_path: '/var/www/prod'
+backend_deployment_path:  '/opt/prod'
 
 branch:      'main'
 app_env:     'prod'
@@ -8,6 +9,4 @@ server_name: 'getfursu.it'
 php_fpm_container_port: 9557
 php_fpm_container_name: 'fuzzrake-prod'
 
-setup_cronjobs:     true
-update_script_path: '/var/www/update.sh'
-update_log_path:    '/var/www/update.log'
+setup_tracking: true

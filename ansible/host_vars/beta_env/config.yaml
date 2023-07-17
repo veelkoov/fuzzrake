@@ -1,5 +1,6 @@
 ---
-deployment_path: '/var/www/beta'
+frontend_deployment_path: '/var/www/beta'
+backend_deployment_path:  '/opt/beta'
 
 branch:      'beta'
 app_env:     'beta'

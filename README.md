@@ -3,6 +3,13 @@
 See [getfursu.it/info](https://getfursu.it/info)
 
 
+## Related repositories
+
+* [veelkoov/fuzzrake](https://github.com/veelkoov/fuzzrake) (this repository)
+* [veelkoov/fuzzrake-backend](https://github.com/veelkoov/fuzzrake-backend) (backend parts written in a programming language)
+* [veelkoov/fuzzrake-data](https://github.com/veelkoov/fuzzrake-data) (periodically updated SQL dumps of the database)
+
+
 ## Requirements
 
 * Docker w/Compose plugin

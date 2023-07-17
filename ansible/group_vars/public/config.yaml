@@ -1,4 +1,0 @@
----
-ansible_ssh_host: 158.69.0.250
-ansible_ssh_port: 33520
-ansible_ssh_user: rocky
