@@ -18,7 +18,7 @@ import web.url.Url
 import java.util.stream.Collectors
 import database.entities.CreatorUrl as CreatorUrlEntity
 
-class Tracker(
+class Tracker( // TODO: Remove the leftovers in the database
     private val config: Configuration,
     private val options: TrackerOptions,
     private val provider: TrackedContentsProvider = TrackedContentsProvider(config, options),
