@@ -31,14 +31,7 @@ data class Snapshot(
         private fun loadMetadata(snapshotDirPath: String): SnapshotMetadata {
             val jsonString = File(metadataPath(snapshotDirPath)).readText()
 
-            return Json.decodeFromString<SnapshotMetadata>(patchPhpJsonArrays(jsonString))
-        }
-
-        private fun patchPhpJsonArrays(json: String): String { // TODO: Eliminate
-            return json.replace(
-                ",\"headers\":[],",
-                ",\"headers\":{},",
-            )
+            return Json.decodeFromString<SnapshotMetadata>(jsonString)
         }
 
         private fun metadataPath(snapshotDirPath: String) = "$snapshotDirPath/metadata.json"
