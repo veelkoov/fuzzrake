@@ -4,9 +4,6 @@ import config.Configuration
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tracking.TrackerOptions
 import tracking.website.Strategy
-import web.client.CookieEagerHttpClient
-import web.client.FastHttpClient
-import web.client.GentleHttpClient
 import web.snapshots.Snapshot
 import web.snapshots.SnapshotsManager
 import web.url.Url
@@ -20,7 +17,6 @@ class TrackedContentsProvider(
     config: Configuration,
     private val options: TrackerOptions,
 ) {
-    private val httpClient = CookieEagerHttpClient(GentleHttpClient(FastHttpClient()))
     private val snapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
 
     fun createProcessedItems(urls: CreatorItems<Url>): CreatorItems<ProcessedItem> {
@@ -55,7 +51,7 @@ class TrackedContentsProvider(
     }
 
     private fun getSnapshotFromUrl(url: Url): Pair<Url, Snapshot> {
-        return url to snapshotsManager.get(url, httpClient::get, options.refetch)
+        return url to snapshotsManager.get(url, options.refetch)
     }
 
     private fun getUrlForTracking(url: Url): Url = url.getStrategy().getUrlForTracking(url)
