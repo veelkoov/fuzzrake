@@ -32,23 +32,4 @@ class UrlUtilsTest extends TestCase
             ['httpsaaa!!!fff/', 'invalid_host'],
         ];
     }
-
-    /**
-     * @dataProvider safeFileNameFromUrlDataProvider
-     */
-    public function testSafeFileNameFromUrl(string $input, string $expected): void
-    {
-        self::assertEquals($expected, UrlUtils::safeFileNameFromUrl($input));
-    }
-
-    /**
-     * @return array<array{string, string}>
-     */
-    public function safeFileNameFromUrlDataProvider(): array
-    {
-        return [
-            ['https://getfursu.it/data_updates.html#anchor', 'getfursu.it_data_updates.html'],
-            ['!@&$asdf$%&^asdf!@&$', 'asdf_asdf'],
-        ];
-    }
 }

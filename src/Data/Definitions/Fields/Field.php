@@ -178,10 +178,10 @@ enum Field: string
     #[Props('queueUrl', validationRegex: V::GENERIC_URL)]
     case URL_QUEUE = 'URL_QUEUE';
 
-    #[Props('scritchUrl', validationRegex: V::SCRITCH_URL, notInspectedUrl: true)]
+    #[Props('scritchUrl', validationRegex: V::SCRITCH_URL)]
     case URL_SCRITCH = 'URL_SCRITCH';
 
-    #[Props('furtrackUrl', validationRegex: V::FURTRACK_URL, notInspectedUrl: true)]
+    #[Props('furtrackUrl', validationRegex: V::FURTRACK_URL)]
     case URL_FURTRACK = 'URL_FURTRACK';
 
     #[Props('photoUrls', type: Type::STR_LIST, validationRegex: V::PHOTO_URL_LIST, notInspectedUrl: true)]

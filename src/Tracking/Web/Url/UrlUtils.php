@@ -17,12 +17,4 @@ final class UrlUtils
     {
         return strip_prefix(parse_url($url, PHP_URL_HOST) ?: 'invalid_host', 'www.');
     }
-
-    public static function safeFileNameFromUrl(string $url): string
-    {
-        $result = Patterns::getI('^https?://(www\.)?|(\?|#).+$')->prune($url);
-        $result = Patterns::getI('[^a-z0-9_.-]+')->replace($result)->with('_');
-
-        return trim($result, '_');
-    }
 }
