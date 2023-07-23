@@ -8,6 +8,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import time.UTC
@@ -18,8 +19,10 @@ import java.io.IOException
 
 private val logger = KotlinLogging.logger {}
 
-class FastHttpClient : HttpClientInterface {
-    private val client = HttpClient(Java) {
+class FastHttpClient(
+    client: HttpClient? = null,
+) : HttpClientInterface {
+    private val client: HttpClient = client ?: HttpClient(Java) {
         /*install(Logging) {
             this.sanitizeHeader {
                 it.equals("content-security-policy", true) // SPAM
@@ -42,7 +45,7 @@ class FastHttpClient : HttpClientInterface {
         }
     }
 
-    override fun get(url: Url): Snapshot {
+    override fun fetch(url: Url): Snapshot {
         var contents = ""
         var headers = mapOf<String, List<String>>()
         var httpCode = 0
@@ -59,7 +62,7 @@ class FastHttpClient : HttpClientInterface {
 
                 contents = response.body<String>()
                 headers = response.headers.toMap()
-                httpCode = url.getStrategy().getLatentCode(url, contents, response.status.value)
+                httpCode = correctHttpCode(url, contents, response)
             }
         } catch (caught: IOException) {
             exception = caught
@@ -92,5 +95,16 @@ class FastHttpClient : HttpClientInterface {
         )
 
         return Snapshot(contents, metadata)
+    }
+
+    private fun correctHttpCode(url: Url, contents: String, response: HttpResponse): Int {
+        val originalCode = response.status.value
+        val correctedCode = url.getStrategy().getLatentCode(url, contents, originalCode)
+
+        if (correctedCode != originalCode) {
+            logger.info("Correcting HTTP code from $originalCode to 404 for ${url.getUrl()}")
+        }
+
+        return correctedCode
     }
 }

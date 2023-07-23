@@ -1,10 +1,7 @@
 package database.entities
 
 import database.helpers.lastCreatorId
-import database.tables.CreatorIds
-import database.tables.CreatorOffersStatuses
-import database.tables.CreatorVolatileDatas
-import database.tables.Creators
+import database.tables.*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -56,6 +53,7 @@ class Creator(id: EntityID<Int>) : IntEntity(id) {
     var contactInfoObfuscated by Creators.contactInfoObfuscated
 
     val creatorIds by CreatorId referrersOn CreatorIds.creator
+    val creatorUrls by CreatorUrl referrersOn CreatorUrls.creator
     val offersStatuses by CreatorOfferStatus referrersOn CreatorOffersStatuses.creator
     val volatileData by CreatorVolatileData referrersOn CreatorVolatileDatas.creator // TODO: 1:1
 

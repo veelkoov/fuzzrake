@@ -30,8 +30,8 @@ class ThreadSafeCreatorUrl(
     fun commit() {
         val state = entity.get().getState()
 
-        lastSuccess?.let { state.lastSuccess = it }
-        lastFailure?.let { state.lastFailure = it }
+        lastSuccess?.let { state.lastSuccessUtc = it }
+        lastFailure?.let { state.lastFailureUtc = it }
         lastFailureCode?.let { state.lastFailureCode = it }
         lastFailureReason?.let { state.lastFailureReason = it }
     }

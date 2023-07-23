@@ -1,11 +1,10 @@
 package web.client
 
-import io.mockk.*
-
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
-import web.snapshots.Snapshot
-import web.snapshots.SnapshotMetadata
+import testUtils.getSnapshot
 import web.url.FreeUrl
 import web.url.Url
 import kotlin.test.assertEquals
@@ -37,20 +36,20 @@ class CookieEagerHttpClientTest {
             val result = mutableListOf<String>()
 
             val clientMock = mockk<FastHttpClient>()
-            every { clientMock.get(any<Url>()) } answers {
+            every { clientMock.fetch(any<Url>()) } answers {
                 val arg1 = it.invocation.args[0]!!
                 assertIs<Url>(arg1)
                 val url = arg1.getUrl()
 
                 result.add(url)
 
-                Snapshot("", SnapshotMetadata(url, "", "", 0, mapOf(), 0, listOf()))
+                getSnapshot(url = url)
             }
 
             val subject = CookieEagerHttpClient(clientMock)
 
             requested.forEach {
-                subject.get(FreeUrl(it))
+                subject.fetch(FreeUrl(it))
             }
 
             assertEquals(expected, result)

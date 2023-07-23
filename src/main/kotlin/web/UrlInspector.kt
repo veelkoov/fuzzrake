@@ -15,8 +15,8 @@ class UrlInspector(
     private val config: Configuration,
     private val options: UrlInspectorOptions,
     private val database: Database = Database(config.databasePath),
+    private val snapshotsManager: SnapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
 ) {
-    private val snapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
     private val notInspectedUrlTypes = listOf("URL_PHOTOS", "URL_MINIATURES", "URL_OTHER")
 
     fun run() {
@@ -33,4 +33,3 @@ class UrlInspector(
         }
     }
 }
-

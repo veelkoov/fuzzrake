@@ -10,12 +10,12 @@ class CreatorUrl(
     strategy: Strategy = Strategy.forUrl(entity.url),
 ): AbstractUrl(entity.url, strategy) {
     override fun recordSuccessfulFetch() {
-        entity.getState().lastSuccess = UTC.Now.dateTime()
+        entity.getState().lastSuccessUtc = UTC.Now.dateTime()
     }
 
     override fun recordFailedFetch(code: Int, reason: String) {
         with(entity.getState()) {
-            lastFailure = UTC.Now.dateTime()
+            lastFailureUtc = UTC.Now.dateTime()
             lastFailureCode = code
             lastFailureReason = reason
         }

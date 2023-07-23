@@ -101,7 +101,7 @@ class TrackerTest {
 
     ).map { (displayName, caseData) ->
         dynamicTest(displayName) {
-            disposableDatabase { database ->
+            disposableDatabase { database, _ ->
                 val creator = Creator.new {
                     creatorId = "CREATOR"
                 }

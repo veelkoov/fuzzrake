@@ -24,7 +24,7 @@ class SnapshotsManager(
             }
         }
 
-        val snapshot = httpClient.get(url)
+        val snapshot = httpClient.fetch(url)
         snapshot.saveTo(snapshotDirPath)
 
         return snapshot

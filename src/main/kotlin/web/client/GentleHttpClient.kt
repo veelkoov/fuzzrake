@@ -7,9 +7,9 @@ import web.url.Url
 class GentleHttpClient(private val client: HttpClientInterface) : HttpClientInterface {
     private val queue = HostCallsQueue()
 
-    override fun get(url: Url): Snapshot {
+    override fun fetch(url: Url): Snapshot {
         return queue.patiently(url) {
-            client.get(url)
+            client.fetch(url)
         }
     }
 }
