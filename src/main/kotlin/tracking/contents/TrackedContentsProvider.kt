@@ -9,7 +9,7 @@ import web.snapshots.SnapshotsManager
 import web.url.Url
 import kotlin.math.roundToInt
 
-private val MAX_SIZE: Int = (1.5 * 1024 * 1024).roundToInt()
+private val MAX_SIZE: Int = (1.0 * 1024 * 1024).roundToInt()
 
 private val logger = KotlinLogging.logger {}
 
@@ -33,10 +33,14 @@ class TrackedContentsProvider(
                 val httpCode = snapshot.metadata.httpCode
                 val size = snapshot.contents.length // TODO: These are not bytes
 
-                val contents = if (size > MAX_SIZE || httpCode != 200) {
-                    logger.warn("Skipping contents for ${snapshot.metadata.url} with HTTP code $httpCode and size $size")
+                val contents = if (httpCode != 200) {
+                    logger.warn("Skipping contents of ${snapshot.metadata.url} with HTTP code $httpCode")
 
                     ""
+                } else if (size > MAX_SIZE) {
+                    logger.warn("Truncating contents of ${snapshot.metadata.url} from $size to $MAX_SIZE")
+
+                    snapshot.contents.take(MAX_SIZE)
                 } else {
                     snapshot.contents
                 }
