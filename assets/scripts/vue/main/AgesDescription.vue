@@ -2,7 +2,9 @@
   <template v-if="addText">
     {{ getText() }}
 
-    <UnknownValue v-if="isUnknown()" />
+    <template v-if="isUnknown()">
+      <UnknownValue /> <wbr>
+    </template>
   </template>
 
   <i v-for="item in getClasses()" :key="item" class="ages" :class="item" />

@@ -194,6 +194,7 @@ Available actions:
     pcf          run PHP CS Fixer
     ps           run PHPStan
     rector       run Rector
+    el           run eslint
 
     cloc         run Cloc
 EOF

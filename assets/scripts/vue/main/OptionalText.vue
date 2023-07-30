@@ -1,6 +1,6 @@
 <template>
-  <template v-if="0 !== items.length">
-    {{ items.join(', ') }}
+  <template v-if="null !== item && '' !== item">
+    {{ item }}
   </template>
 
   <UnknownValue v-else />
@@ -9,17 +9,16 @@
 <script lang="ts">
 import UnknownValue from './UnknownValue.vue';
 import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
 
 @Options({
   components: {UnknownValue},
   props: {
-    items: {
-      type: Object as PropType<string[]>,
+    item: {
+      type: String,
       required: true,
     },
   },
 })
-export default class Optional extends Vue {
+export default class OptionalText extends Vue {
 }
 </script>
