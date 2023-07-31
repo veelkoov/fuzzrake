@@ -21,4 +21,4 @@
 
 - name: 'Setup backend'
   ansible.builtin.import_tasks: 'setup_backend.yaml'
-  tags: 'tracking'
+  tags: 'backend'
