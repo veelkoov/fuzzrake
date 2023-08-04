@@ -23,6 +23,10 @@
 
 #mx-submission {
   tr {
+    td:nth-child(2) {
+      overflow-wrap: anywhere;
+    }
+
     &.not-fixed.not-changing {
       color: #bbb;
       display: none;
