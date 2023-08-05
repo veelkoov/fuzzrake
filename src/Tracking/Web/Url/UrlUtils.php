@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tracking\Web\Url;
 
-use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 
 use function Psl\Str\Byte\strip_prefix;
