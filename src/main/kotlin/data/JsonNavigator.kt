@@ -45,6 +45,15 @@ class JsonNavigator(input: String) {
             ?: throw JsonException("Path $currentPath is not a string")
     }
 
+    fun getNonEmptyString(path: String): String {
+        val result = getString(path)
+
+        if ("" == result) {
+            throw JsonException("Path $path is an empty string")
+        }
+
+        return result
+    }
 
     companion object {
         private val mapper = ObjectMapper(JsonFactory())

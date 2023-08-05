@@ -3,13 +3,13 @@ package web.snapshots
 import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.assertEquals
 import testUtils.disposableDirectory
 import testUtils.getSnapshot
 import web.client.HttpClientInterface
 import web.url.FreeUrl
 import java.time.LocalDateTime
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class SnapshotsManagerTest {
     @Test

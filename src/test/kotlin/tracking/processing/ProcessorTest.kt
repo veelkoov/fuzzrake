@@ -1,7 +1,7 @@
 package tracking.processing
 
 import data.Resource
-import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.ProcessorTestCaseData
 import testUtils.getCreatorData
@@ -23,7 +23,7 @@ class ProcessorTest {
 
     @TestFactory
     fun process() = getProcessTestData().map { caseData ->
-        DynamicTest.dynamicTest(caseData.name) {
+        dynamicTest(caseData.name) {
             val creatorData = getCreatorData()
 
             val input = CreatorItems(creatorData, listOf(

@@ -3,12 +3,15 @@ package web.client
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.engine.*
 import io.ktor.client.engine.java.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.cookies.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import time.UTC
@@ -22,30 +25,9 @@ private val logger = KotlinLogging.logger {}
 class FastHttpClient(
     client: HttpClient? = null,
 ) : HttpClientInterface {
-    private val client: HttpClient = client ?: HttpClient(Java) {
-        /*install(Logging) {
-            this.sanitizeHeader {
-                it.equals("content-security-policy", true) // SPAM
-            }
-        }*/
-        install(HttpCookies)
-        install(ContentEncoding) {
-            // deflate(1.0F)
-            gzip(0.9F)
-        }
-        install(UserAgent) {
-            agent = "Mozilla/5.0 (compatible; GetFursuitBot/0.10; Ktor/Apache5; +https://getfursu.it/)"
-        }
-        install(HttpTimeout) {
-            requestTimeoutMillis = 30_000
-        }
-        install(HttpRequestRetry) {
-            retryOnServerErrors(maxRetries = 3)
-            constantDelay(millis = 6_000, randomizationMs = 2_000)
-        }
-    }
+    private val client: HttpClient = client ?: HttpClient(Java, getConfig())
 
-    override fun fetch(url: Url): Snapshot {
+    override fun fetch(url: Url, method: HttpMethod, addHeaders: Map<String, String>, payload: String?): Snapshot {
         var contents = ""
         var headers = mapOf<String, List<String>>()
         var httpCode = 0
@@ -56,7 +38,13 @@ class FastHttpClient(
             runBlocking {
                 logger.info("Retrieving: '${url.getUrl()}'")
 
-                val response = client.request(url.getUrl())
+                val response = client.request(url.getUrl()) {
+                    this.method = method
+
+                    addHeaders.forEach { (name, value) -> this.headers.append(name, value) }
+
+                    payload?.let { setBody(it) }
+                }
 
                 logger.info("Got response: '${url.getUrl()}'")
 
@@ -97,6 +85,14 @@ class FastHttpClient(
         return Snapshot(contents, metadata)
     }
 
+    override fun getSingleCookieValue(url: String, cookieName: String): String? = runBlocking {
+        client.cookies(url)
+            .filter { it.name.equals(cookieName, true) }
+            .map { it.value }
+            .singleOrNull()
+            ?.decodeURLPart()
+    }
+
     private fun correctHttpCode(url: Url, contents: String, response: HttpResponse): Int {
         val originalCode = response.status.value
         val correctedCode = url.getStrategy().getLatentCode(url, contents, originalCode)
@@ -106,5 +102,40 @@ class FastHttpClient(
         }
 
         return correctedCode
+    }
+
+    companion object {
+        fun getConfig(
+            logging: Boolean = false,
+            retries: Boolean = false,
+        ): HttpClientConfig<out HttpClientEngineConfig>.() -> Unit {
+            return {
+                if (logging) {
+                    install(Logging) {
+                        this.sanitizeHeader {
+                            it.equals("content-security-policy", true) // SPAM
+                        }
+                        this.level = LogLevel.ALL
+                    }
+                }
+                install(HttpCookies)
+                install(ContentEncoding) {
+                    // deflate(1.0F)
+                    gzip(0.9F)
+                }
+                install(UserAgent) {
+                    agent = "Mozilla/5.0 (compatible; GetFursuitBot/0.10; Ktor/Java; +https://getfursu.it/)"
+                }
+                install(HttpTimeout) {
+                    requestTimeoutMillis = 30_000
+                }
+                if (retries) {
+                    install(HttpRequestRetry) {
+                        retryOnServerErrors(maxRetries = 1)
+                        constantDelay(millis = 6_000, randomizationMs = 2_000)
+                    }
+                }
+            }
+        }
     }
 }

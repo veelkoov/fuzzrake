@@ -5,7 +5,7 @@ import time.UTC
 import web.url.Url
 import java.util.concurrent.ConcurrentHashMap
 
-private const val DELAY_FOR_HOST_SEC = 10
+private const val DELAY_FOR_HOST_SEC = 5
 
 private val logger = KotlinLogging.logger {}
 

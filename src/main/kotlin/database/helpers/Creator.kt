@@ -2,8 +2,10 @@ package database.helpers
 
 import data.DataIntegrityFailure
 import data.StrList
+import data.UrlType
 import data.unpack
 import database.entities.Creator
+import database.entities.CreatorUrl
 import database.entities.CreatorVolatileData
 import io.github.oshai.kotlinlogging.KotlinLogging
 
@@ -46,4 +48,12 @@ fun Creator.getOpenFor(): StrList {
 
 fun Creator.getClosedFor(): StrList {
     return offersStatuses.filterNot { it.isOpen }.map { it.offer }
+}
+
+fun Creator.getPhotoUrls(): List<CreatorUrl> {
+    return creatorUrls.filter { it.type == UrlType.URL_PHOTOS.name }
+}
+
+fun Creator.getMiniatureUrls(): List<CreatorUrl> {
+    return creatorUrls.filter { it.type == UrlType.URL_MINIATURES.name }
 }

@@ -1,6 +1,5 @@
 package e2e
 
-import config.Configuration
 import database.entities.Creator
 import database.entities.CreatorOfferStatus
 import database.entities.CreatorUrl
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import testUtils.TrackerTestCaseData
 import testUtils.disposableDatabase
+import testUtils.getNullConfiguration
 import testUtils.toOfferStatus
 import time.UTC
 import tracking.Tracker
@@ -21,7 +21,9 @@ import tracking.contents.ProcessedItem
 import tracking.contents.TrackedContentsProvider
 import tracking.website.StandardStrategy
 import web.url.Url
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class TrackerTest {
     private val failingUrl = "http://localhost/failing" to "nothing to detect here"
@@ -131,7 +133,7 @@ class TrackerTest {
                 val provider = getProviderMock(caseData)
 
                 val subject = Tracker(
-                    Configuration("/dev/null", "/dev/null"),
+                    getNullConfiguration(),
                     TrackerOptions(false),
                     provider,
                     database,

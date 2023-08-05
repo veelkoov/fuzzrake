@@ -1,17 +1,17 @@
 package tracking.processing
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import tracking.statuses.OfferStatusException
 import tracking.statuses.Status
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class GroupNamesAnalyserTest {
     private val subject = GroupNamesAnalyser()
 
     @Test
     fun `Every match must have the offer group`() {
-        val exception = assertThrows<OfferStatusException> {
+        val exception = assertFailsWith<OfferStatusException> {
             subject.detectIn(listOf("StatusOpen" to "some_text"))
         }
 
@@ -20,7 +20,7 @@ class GroupNamesAnalyserTest {
 
     @Test
     fun `Every match must have the status group`() {
-        val exception = assertThrows<OfferStatusException> {
+        val exception = assertFailsWith<OfferStatusException> {
             subject.detectIn(listOf("Commissions" to "some_text"))
         }
 
@@ -29,7 +29,7 @@ class GroupNamesAnalyserTest {
 
     @Test
     fun `No match can have more than one status`() {
-        val exception = assertThrows<OfferStatusException> {
+        val exception = assertFailsWith<OfferStatusException> {
             subject.detectIn(listOf(
                 "StatusOpen" to "some_text_1",
                 "StatusOpen" to "some_text_2",
@@ -42,7 +42,7 @@ class GroupNamesAnalyserTest {
 
     @Test
     fun `No match can have the same offer captured more than once`() {
-        val exception = assertThrows<OfferStatusException> {
+        val exception = assertFailsWith<OfferStatusException> {
             subject.detectIn(listOf(
                 "Commissions" to "some_text_1",
                 "Commissions" to "some_text_2",

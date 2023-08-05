@@ -1,5 +1,6 @@
 package testUtils
 
+import config.Configuration
 import data.ThreadSafe
 import database.entities.Creator
 import io.mockk.mockk
@@ -35,3 +36,5 @@ fun getUrl(
 ): Url {
     return FreeUrl(url)
 }
+
+fun getNullConfiguration() = Configuration("/dev/null", "/dev/null")

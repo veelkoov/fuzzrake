@@ -1,6 +1,5 @@
 package tracking.processing
 
-import org.junit.jupiter.api.Test
 import testUtils.getCreatorData
 import testUtils.getUrl
 import tracking.contents.CreatorItems

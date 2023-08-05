@@ -1,15 +1,15 @@
 package data
 
 import com.fasterxml.jackson.core.JsonParseException
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 class JsonNavigatorTest {
     @Test
     fun `Exception on parsing empty string`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("")
         }
 
@@ -18,7 +18,7 @@ class JsonNavigatorTest {
 
     @Test
     fun `Exception on unparseable JSON`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("?")
         }
 
@@ -27,7 +27,7 @@ class JsonNavigatorTest {
 
     @Test
     fun `Exception on traversing through a scalar`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("{\"scalar\": 0}").getString("scalar/inexistent")
         }
 
@@ -36,7 +36,7 @@ class JsonNavigatorTest {
 
     @Test
     fun `Exception on non-existent item, level 0`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("{\"not this\": {}}").getString("inexistent")
         }
 
@@ -45,7 +45,7 @@ class JsonNavigatorTest {
 
     @Test
     fun `Exception on non-existent item, level 1`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("{\"path1\": {\"not this\": 0}}").getString("path1/inexistent")
         }
 
@@ -54,7 +54,7 @@ class JsonNavigatorTest {
 
     @Test
     fun `Exception on non-string item`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("{\"path1\": 0}").getString("path1")
         }
 
@@ -63,7 +63,7 @@ class JsonNavigatorTest {
 
     @Test
     fun `Exception on null item`() {
-        val exception = assertThrows<JsonException> {
+        val exception = assertFailsWith<JsonException> {
             JsonNavigator("{\"path1\": null}").getString("path1")
         }
 

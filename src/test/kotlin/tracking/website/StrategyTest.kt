@@ -1,8 +1,10 @@
 package tracking.website
 
-import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNull
 
 class StrategyTest {
     @Test

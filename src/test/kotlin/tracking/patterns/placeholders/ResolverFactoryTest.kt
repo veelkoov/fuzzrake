@@ -1,15 +1,15 @@
 package tracking.patterns.placeholders
 
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class ResolverFactoryTest {
     @Test
     fun `Building on flat list throws`() {
         val input = PhTree("a", "b", "c")
 
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             ResolverFactory().create(input)
         }
     }
@@ -23,7 +23,7 @@ class ResolverFactoryTest {
             ),
         )
 
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             ResolverFactory().create(input)
         }
     }
@@ -37,7 +37,7 @@ class ResolverFactoryTest {
             ),
         )
 
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             ResolverFactory().create(input)
         }
     }
@@ -48,7 +48,7 @@ class ResolverFactoryTest {
             "PLACehoLDER=group1" to listOf("a", "b", "c"),
         )
 
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             ResolverFactory().create(input)
         }
     }

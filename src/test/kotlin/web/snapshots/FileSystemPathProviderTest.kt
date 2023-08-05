@@ -1,9 +1,9 @@
 package web.snapshots
 
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import web.url.FreeUrl
+import kotlin.test.assertTrue
 
 class FileSystemPathProviderTest {
     private val subject = FileSystemPathProvider()

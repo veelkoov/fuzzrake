@@ -1,4 +1,4 @@
-package web
+package tasks
 
 import config.Configuration
 import database.Database
@@ -11,13 +11,13 @@ import web.snapshots.SnapshotsManager
 import web.url.CreatorUrl
 import database.entities.CreatorUrl as CreatorUrlEntity
 
-class UrlInspector(
+class UrlsInspection(
     private val config: Configuration,
-    private val options: UrlInspectorOptions,
+    private val options: UrlsInspectionOptions,
     private val database: Database = Database(config.databasePath),
     private val snapshotsManager: SnapshotsManager = SnapshotsManager(config.snapshotsStoreDirPath)
 ) {
-    private val notInspectedUrlTypes = listOf("URL_PHOTOS", "URL_MINIATURES", "URL_OTHER")
+    private val notInspectedUrlTypes = listOf("URL_PHOTOS", "URL_MINIATURES", "URL_OTHER") // TODO: Doesn't belong here
 
     fun run() {
         database.transaction {

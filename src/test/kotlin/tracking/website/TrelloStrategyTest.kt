@@ -1,9 +1,9 @@
 package tracking.website
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import web.url.FreeUrl
+import kotlin.test.assertEquals
 
 class TrelloStrategyTest {
     private val subject = TrelloStrategy

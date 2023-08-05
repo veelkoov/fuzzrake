@@ -1,9 +1,9 @@
 package tracking.website
 
 import data.Resource
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import web.url.FreeUrl
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class InstagramProfileStrategyTest {
     private val subject = InstagramProfileStrategy

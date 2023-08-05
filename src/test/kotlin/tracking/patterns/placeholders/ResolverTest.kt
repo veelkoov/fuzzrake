@@ -1,8 +1,8 @@
 package tracking.patterns.placeholders
 
 import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ResolverTest {
