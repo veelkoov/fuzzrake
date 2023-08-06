@@ -9,6 +9,7 @@ use App\Form\InclusionUpdate\Data;
 use App\Utils\Arrays\ArrayReader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
+use Doctrine\ORM\NoResultException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ class IuFormDataController extends AbstractIuFormController
             'router'                      => $this->router,
         ]);
         $this->validatePhotosCopyright($form, $state->artisan);
+        $this->validateMakerId($form, $state->artisan);
 
         if (self::clicked($form, BaseForm::BTN_RESET)) {
             $state->reset();
@@ -69,6 +71,20 @@ class IuFormDataController extends AbstractIuFormController
 
         if ('' !== $artisan->getPhotoUrls() && !$isOK) {
             $field->addError(new FormError('You must not use any photos without permission from the photographer.'));
+        }
+    }
+
+    private function validateMakerId(FormInterface $form, Artisan $artisan): void
+    {
+        try {
+            $makerIdOwner = $this->artisanRepository->findByMakerId($artisan->getMakerId());
+
+            if ($makerIdOwner->getId() !== $artisan->getId()) {
+                $form->get(Data::FLD_MAKER_ID)
+                    ->addError(new FormError('This maker ID has been already used by another maker.'));
+            }
+        } catch (NoResultException) {
+            // Unused ID = OK
         }
     }
 }

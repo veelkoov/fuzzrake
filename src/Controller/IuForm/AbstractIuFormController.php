@@ -30,7 +30,7 @@ abstract class AbstractIuFormController extends AbstractController
         protected readonly LoggerInterface $logger,
         protected readonly SubmissionService $iuFormService,
         protected readonly RouterInterface $router,
-        private readonly ArtisanRepository $artisanRepository,
+        protected readonly ArtisanRepository $artisanRepository,
     ) {
     }
 

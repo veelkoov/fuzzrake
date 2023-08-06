@@ -456,4 +456,60 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             self::assertCount(1, $crawler->filterXPath($labelXPath), "Absent: $labelXPath");
         }
     }
+
+    public function testOneMakerCannotUseOtherMakersMakerId(): void
+    {
+        $client = static::createClient();
+
+        self::persistAndFlush(
+            self::getArtisan(makerId: 'OTHERID'),
+            self::getArtisan(makerId: 'MAKERID', ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false,
+                doesNsfw: false, worksWithMinors: false),
+        );
+
+        $client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]' => 'OTHERID',
+        ]);
+        self::submitInvalid($client, $form);
+        self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
+            'This maker ID has been already used by another maker.');
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]' => 'ANOTHER',
+        ]);
+        self::submitValid($client, $form);
+    }
+
+    public function testNewMakerCannotUseOtherMakersMakerId(): void
+    {
+        $client = static::createClient();
+
+        self::persistAndFlush(
+            self::getArtisan(makerId: 'OTHERID'),
+        );
+
+        $client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]'         => 'OTHERID',
+            'iu_form[name]'            => 'test-maker-555',
+            'iu_form[country]'         => 'Finland',
+            'iu_form[ages]'            => 'MINORS',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[worksWithMinors]' => 'NO',
+        ]);
+        self::submitInvalid($client, $form);
+        self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
+            'This maker ID has been already used by another maker.');
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]' => 'ANOTHER',
+        ]);
+        self::submitValid($client, $form);
+    }
 }

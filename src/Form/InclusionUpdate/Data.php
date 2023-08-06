@@ -31,6 +31,7 @@ class Data extends BaseForm
 
     final public const OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
     final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
+    final public const FLD_MAKER_ID = 'makerId';
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -376,7 +377,7 @@ class Data extends BaseForm
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('makerId', TextType::class, [
+            ->add(self::FLD_MAKER_ID, TextType::class, [
                 'label'      => '"Maker ID"',
                 'help'       => '<a href="'.$makerIdPagePath.'" target="_blank">Read about maker IDs here</a>. 7 characters, uppercase letters and/or digits. Examples: <em>VLKVFUR</em>, <em>FUR2022</em>.',
                 'help_html'  => true,
