@@ -19,7 +19,6 @@
   ansible.builtin.import_tasks: 'clear_cache.yaml'
   tags: 'cache'
 
-- name: 'Setup cronjobs'
-  when: 'setup_cronjobs | default(false)'
-  ansible.builtin.import_tasks: 'setup_cronjobs.yaml'
-  tags: 'cronjobs'
+- name: 'Setup backend'
+  ansible.builtin.import_tasks: 'setup_backend.yaml'
+  tags: 'backend'
