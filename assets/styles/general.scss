@@ -1,9 +1,20 @@
+@import '../../node_modules/bootstrap/scss/bootstrap';
+
 html { // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
   scroll-behavior: auto !important;
 }
 
-.navbar-dark .navbar-nav .nav-link .always-full-opacity {
-  color: #fff;
+nav.navbar .navbar-nav .nav-link .always-full-opacity {
+  color: var(--bs-navbar-hover-color);
+}
+
+#navbarNav:not(.show) + ul.top-menu-right {
+  flex-direction: row;
+
+  li > a {
+    padding-right: var(--bs-navbar-nav-link-padding-x);
+    padding-left: var(--bs-navbar-nav-link-padding-x);
+  }
 }
 
 div.footer {
@@ -24,10 +35,6 @@ p.item-pills {
 
 .img-tracking img {
   max-height: 15em;
-}
-
-ul.top-menu-right {
-  flex-direction: row;
 }
 
 .helphints-toggle {
