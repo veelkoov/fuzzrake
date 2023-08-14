@@ -6,6 +6,7 @@ namespace App\Tests\Filtering\DataRequests\Filters\ValueChecker;
 
 use App\Filtering\DataRequests\Filters\ValueChecker\AnythingChecker;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -22,31 +23,29 @@ class AnythingCheckerTest extends TestCase
         self::assertEquals($expected, $subject->matches($items, $matchedOther));
     }
 
-    /**
-     * @return list<array{string, ?bool, bool}>
-     */
-    public function matchesDataProvider(): array
+    public function matchesDataProvider(): DataProvider
     {
-        return [ // items, matchedOther, expected
-            ['', true,  true],
+        return DataProvider::tuples(
+        // items, matchedOther, expected
+            ['', true, true],
             ['', false, false],
-            ['', null,  false],
+            ['', null, false],
 
-            ['A', true,  true],
+            ['A', true, true],
             ['A', false, true],
-            ['A', null,  true],
+            ['A', null, true],
 
-            ['B', true,  true],
+            ['B', true, true],
             ['B', false, true],
-            ['B', null,  true],
+            ['B', null, true],
 
-            ['AB', true,  true],
+            ['AB', true, true],
             ['AB', false, false],
-            ['AB', null,  false],
+            ['AB', null, false],
 
-            ["A\nB", true,  true],
+            ["A\nB", true, true],
             ["A\nB", false, true],
-            ["A\nB", null,  true],
-        ];
+            ["A\nB", null, true],
+        );
     }
 }

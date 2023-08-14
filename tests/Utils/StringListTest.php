@@ -6,6 +6,7 @@ namespace App\Tests\Utils;
 
 use App\Utils\StringList;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -23,14 +24,16 @@ class StringListTest extends TestCase
         self::assertEquals($expectedResult, StringList::split($input, $separatorRegexp, $nonsplittables));
     }
 
-    public function splitDataProvider(): array // @phpstan-ignore-line
+    public function splitDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [
-                'dog, wolf, fox, big and small cats, birds, bats, dragons, skullsuits...', "[\n,.]", ['skullsuits...'],
+                'dog, wolf, fox, big and small cats, birds, bats, dragons, skullsuits...',
+                "[\n,.]",
+                ['skullsuits...'],
                 ['dog', ' wolf', ' fox', ' big and small cats', ' birds', ' bats', ' dragons', ' skullsuits...'],
-            ],
-        ];
+            ]
+        );
     }
 
     /**
@@ -41,15 +44,15 @@ class StringListTest extends TestCase
         self::assertEquals($expected, StringList::sameElements($input1, $input2));
     }
 
-    public function sameElementsDataProvider(): array // @phpstan-ignore-line
+    public function sameElementsDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [true, 'abc', 'abc'],
             [true, "abc\ndef", "abc\ndef"],
             [true, "abc\ndef\nghi", "def\nghi\nabc"],
             [false, "abc\ndef", "abc\ndef\nghi"],
             [false, "abc\ndef\nghi", "def\nghi"],
             [false, "abc\ndef", "abC\ndef"],
-        ];
+        );
     }
 }
