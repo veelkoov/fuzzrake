@@ -6,5 +6,6 @@
     "target": "ES6",
     "moduleResolution": "Node",
     "experimentalDecorators": true,
+    "rootDir": "./assets/scripts"
   }
 }

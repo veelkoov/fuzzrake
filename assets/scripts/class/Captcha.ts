@@ -1,3 +1,5 @@
+import Error from '../Error'
+
 declare global {
     interface Window { formRecaptchaValidationCallback: (token: string) => void; }
 }
@@ -28,7 +30,7 @@ export default class Captcha {
                 const $tokenField = jQuery('#form_recaptcha_token');
 
                 if (1 !== $tokenField.length) {
-                    Captcha.error('Token field has not been found.');
+                    Error.report('Token field has not been found.', null, false);
                     return;
                 }
 
@@ -37,18 +39,14 @@ export default class Captcha {
                 const $form = $tokenField.parents('form');
 
                 if (1 !== $form.length) {
-                    Captcha.error('Token field\'s form has not been found.');
+                    Error.report('Token field\'s form has not been found.', null, false);
                     return;
                 }
 
                 $_form.trigger('submit', [true]);
             } catch (exception) {
-                Captcha.error(exception);
+                Error.report('Automatic captcha failed for unknown reason.', exception, false);
             }
         };
-    }
-
-    private static error(message: string): void {
-        alert('ERROR! Sending form failed. ' + message);
     }
 }

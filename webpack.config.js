@@ -59,7 +59,7 @@ Encore
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader((config) => {
-        config.configFile = '../tsconfig.json'; // Relative to the entrypoint
+        config.configFile = '../../../tsconfig.json'; // Relative to the entrypoint
     })
 
     // uncomment if you use React

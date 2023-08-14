@@ -8,7 +8,7 @@ jQuery(function () {
         const field = $valueRow.data('field');
         const value = $valueRow.data('value');
 
-        const currentDirectives = directivesTextarea.val().toString().trimEnd();
+        const currentDirectives = (directivesTextarea.val() || '').toString().trimEnd();
 
         directivesTextarea.val(`${currentDirectives}\nset ${field} "${value}"\n`);
     });
@@ -17,7 +17,7 @@ jQuery(function () {
         event.preventDefault();
 
        jQuery('tr.after.changing[data-field^="URL_"]')
-           .map((_, domElement) => domElement.dataset['value'].split('\n'))
+           .map((_, domElement) => (domElement.dataset['value'] || '').split('\n'))
            .each((index, url) => { window.open(url, `url_window_${index}`); });
     });
 });

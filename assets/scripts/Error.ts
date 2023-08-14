@@ -1,10 +1,10 @@
 export default class Error {
     private static alreadyReported = new Set<string>();
 
-    public static report(message: string, consoleOnlyDetails: string, alertOnlyOnce: boolean): void {
+    public static report(message: string, consoleOnlyDetails: unknown, alertOnlyOnce: boolean): void {
         let consoleMessage = `ERROR: ${message}`;
 
-        if ('' !== consoleOnlyDetails) {
+        if (consoleOnlyDetails) {
             consoleMessage += ` | DETAILS: ${consoleOnlyDetails}`;
         }
 

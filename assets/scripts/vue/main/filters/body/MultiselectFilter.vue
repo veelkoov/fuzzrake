@@ -44,7 +44,7 @@ export default class MultiselectFilter extends Vue {
   private checkboxes!: CheckBoxes;
 
   public mounted(): void {
-    this.checkboxes = new CheckBoxes(this.$refs['checkboxes'] as Array<CheckBox>);
+    this.checkboxes = new CheckBoxes(this.$refs['checkboxes'] as Array<typeof CheckBox>);
   }
 }
 </script>
