@@ -28,7 +28,8 @@ export default class Radio implements RadioInterface {
             return null;
         }
 
-        return $checked.val().toString();
+        const val = $checked.val();
+        return undefined !== val ? val.toString() : null;
     }
 
     public isVal(value: string): boolean {

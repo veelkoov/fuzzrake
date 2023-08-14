@@ -52,7 +52,7 @@ export default class CountriesFilter extends Vue {
     for (const index in this.filter.options.items) {
       const region = this.filter.options.items[index];
 
-      this.checkboxes[region['label']] = new CheckBoxes(this.$refs[region['label']] as CheckBox[]);
+      this.checkboxes.set(region['label'], new CheckBoxes(this.$refs[region['label']] as Array<CheckBox>));
     }
   }
 

@@ -1,3 +1,7 @@
+declare global {
+    interface Window { formRecaptchaValidationCallback: (token: string) => void; }
+}
+
 export default class Captcha {
     public static setupOnForm(formSelector: string): void {
         const $form = jQuery(formSelector);
@@ -16,7 +20,7 @@ export default class Captcha {
         });
     }
 
-    private static setupValidationCallback($form): void {
+    private static setupValidationCallback($form: JQuery): void {
         const $_form = $form;
 
         window['formRecaptchaValidationCallback'] = function (token: string): void {
@@ -39,7 +43,7 @@ export default class Captcha {
 
                 $_form.trigger('submit', [true]);
             } catch (exception) {
-                Captcha.error(exception.toString());
+                Captcha.error(exception);
             }
         };
     }

@@ -96,7 +96,7 @@ export default class FiltersPopUp extends Vue {
   }
 
   private getActiveFiltersCount(): number {
-    return this.filters.map(filter => filter.state.isActive ? 1 : 0).reduce((sum, val) => sum + val, 0);
+    return this.filters.map(filter => filter.state.isActive ? 1 : 0).reduce((sum: number, val: number) => sum + val, 0);
   }
 }
 </script>

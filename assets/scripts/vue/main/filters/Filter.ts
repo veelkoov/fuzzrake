@@ -27,8 +27,10 @@ export default class Filter<T extends AnyOptions> {
             const validPairs = this.getValidValueLabelPairsFromOptions(this.options);
 
             values.forEach(value => {
-                if (validPairs.has(value)) {
-                    this.state.set(value, validPairs.get(value), true);
+                const label = validPairs.get(value);
+
+                if (undefined !== label) {
+                    this.state.set(value, label, true);
                 }
             });
         }

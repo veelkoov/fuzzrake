@@ -1,23 +1,24 @@
 export default class Checkbox {
-    private $elems: JQuery<HTMLElement>;
+    private $elems: JQuery
 
     constructor(
         private id: string,
-        private changeCallback: (Checkbox) => void,
+        private changeCallback: (checkbox: Checkbox) => void,
     ) {
         this.$elems = jQuery(`#${id}`);
 
         this.$elems.on('change', () => changeCallback(this));
     }
 
-    public val(): null|string {
+    public val(): null | string {
         const $checked = this.$elems.filter(':checked');
 
         if (0 === $checked.length) {
             return null;
         }
 
-        return $checked.val().toString();
+        const val = $checked.val();
+        return undefined !== val ? val.toString() : null;
     }
 
     public isChecked(): boolean {

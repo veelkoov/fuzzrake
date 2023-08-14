@@ -40,9 +40,9 @@ export default class ColumnsManager {
     }
 
     public load(): void {
-        const state: string = Storage.getString('columns/state');
+        const state: string = Storage.getString('columns/state', '');
 
-        if (state && ColumnsManager.STORAGE_VERSION === Storage.getString('columns/version')) {
+        if ('' !== state && ColumnsManager.STORAGE_VERSION === Storage.getString('columns/version', '')) {
             this.visible.clear();
 
             state.split(',').forEach((item) => {

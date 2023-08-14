@@ -1,7 +1,7 @@
 declare const DATA_BRIDGE: { [key: string]: string };
 declare const FILTERS_OPTIONS: FiltersOptions;
 declare const TOTAL_ARTISANS_COUNT: number;
-declare const fliSetLoading: (bool) => void;
+declare const fliSetLoading: (isLoading: boolean) => void;
 declare const loadFuzzrakeData: () => void;
 
 export type SpecialItem = { 'value': string, 'label': string, 'count': number, 'faIcon': string };
