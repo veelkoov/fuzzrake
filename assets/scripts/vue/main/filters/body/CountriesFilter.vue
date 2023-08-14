@@ -12,9 +12,9 @@
       {{ region.label }} <span class="count">({{ region.count }})</span>
 
       <AllNoneInvertLinks class="countries"
-                          @all="checkboxes[region['label']].all()"
-                          @none="checkboxes[region['label']].none()"
-                          @invert="checkboxes[region['label']].invert()"/>
+                          @all="checkboxes.get(region['label'])?.all()"
+                          @none="checkboxes.get(region['label'])?.none()"
+                          @invert="checkboxes.get(region['label'])?.invert()"/>
     </legend>
 
     <div class="row">

@@ -13,6 +13,7 @@ jQuery(() => {
 
     createApp(Main).mount('#main-primary-component');
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const dataManager = new DataManager(messageBus);
 
     Static.hideLoadingIndicator();

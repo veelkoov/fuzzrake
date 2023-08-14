@@ -125,14 +125,12 @@ export default class CheckList extends Vue {
   }
 
   public confirm(): void {
-    if (null !== this.isAdult && null !== this.wantsSfw) {
-      this.aasConfig.setIsAdult(this.isAdult);
-      this.aasConfig.setWantsSfw(this.wantsSfw);
-      this.aasConfig.setIsFilled(true);
-      this.aasConfig.save();
+    this.aasConfig.setIsAdult(this.isAdult ?? false);
+    this.aasConfig.setWantsSfw(this.wantsSfw ?? true);
+    this.aasConfig.setIsFilled(true);
+    this.aasConfig.save();
 
-      this.$emit('dismissed');
-    }
+    this.$emit('dismissed');
   }
 }
 </script>
