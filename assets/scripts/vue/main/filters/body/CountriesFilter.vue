@@ -1,7 +1,6 @@
 <script lang="ts">
 import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
 import CheckBox from '../CheckBox.vue';
-import CheckBoxes from '../CheckBoxes';
 import Filter from '../Filter';
 import SpecialItems from '../SpecialItems.vue';
 import {CountriesOptions, StringItem} from '../../../../Static';
@@ -19,7 +18,7 @@ export default defineComponent({
 
   data() {
     return {
-      checkboxes: new Map<string, CheckBoxes>(),
+      checkboxes: new Map<string, Array<typeof CheckBox>>(),
     }
   },
 
@@ -27,7 +26,7 @@ export default defineComponent({
     for (const index in this.filter.options.items) {
       const region = this.filter.options.items[index];
 
-      this.checkboxes.set(region['label'], new CheckBoxes(this.$refs[region['label']] as Array<typeof CheckBox>));
+      this.checkboxes.set(region['label'], this.$refs[region['label']] as Array<typeof CheckBox>);
     }
   },
 
@@ -57,10 +56,8 @@ export default defineComponent({
       {{ region.label }} <span class="count">({{ region.count }})</span>
 
       <AllNoneInvertLinks
+        :checkboxes="checkboxes.get(region['label'])"
         class="countries"
-        @all="checkboxes.get(region['label'])?.all()"
-        @none="checkboxes.get(region['label'])?.none()"
-        @invert="checkboxes.get(region['label'])?.invert()"
       />
     </legend>
 

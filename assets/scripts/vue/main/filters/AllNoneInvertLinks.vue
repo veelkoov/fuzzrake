@@ -1,10 +1,19 @@
 <script lang="ts">
-export default {
+import CheckBox from './CheckBox.vue';
+import {defineComponent} from 'vue';
+
+export default defineComponent({
   props: {
     class: {type: String, required: true},
+    checkboxes: {type: Array<typeof CheckBox>, required: true},
   },
-  emits: ['all', 'none', 'invert'],
-}
+
+  methods: {
+    withAllCheckBoxes(method: (checkbox: typeof CheckBox) => void): void {
+      this.checkboxes.forEach((item) => method(item));
+    },
+  }
+})
 </script>
 
 <template>
@@ -15,17 +24,17 @@ export default {
   >
     select: <a
       href="#"
-      @click.prevent="$emit('all')"
+      @click.prevent="withAllCheckBoxes(it => it.check())"
     >all</a>
 
     &bull; <a
       href="#"
-      @click.prevent="$emit('none')"
+      @click.prevent="withAllCheckBoxes(it => it.uncheck())"
     >none</a>-
 
     &bull; <a
       href="#"
-      @click.prevent="$emit('invert')"
+      @click.prevent="withAllCheckBoxes(it => it.invert())"
     >invert</a>
   </span>
 </template>

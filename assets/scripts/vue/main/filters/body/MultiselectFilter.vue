@@ -1,7 +1,6 @@
 <script lang="ts">
 import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
 import CheckBox from '../CheckBox.vue';
-import CheckBoxes from '../CheckBoxes';
 import Filter from '../Filter';
 import SpecialItems from '../SpecialItems.vue';
 import {defineComponent, PropType} from 'vue';
@@ -11,12 +10,15 @@ export default defineComponent({
   components: {SpecialItems, CheckBox, AllNoneInvertLinks},
 
   props: {
-    filter: {type: Object as PropType<Filter<MultiselectOptions>>, required: true},
+    filter: {
+      type: Object as PropType<Filter<MultiselectOptions>>,
+      required: true,
+    },
   },
 
   data() {
     return {
-      checkboxes: new CheckBoxes(this.$refs['checkboxes'] as Array<typeof CheckBox>),
+      checkboxes: this.$refs['checkboxes'] as Array<typeof CheckBox>,
     }
   },
 })
@@ -28,10 +30,8 @@ export default defineComponent({
       <div class="col-sm-12">
         <AllNoneInvertLinks
           v-if="0 !== filter.options.items.length"
+          :checkboxes="checkboxes"
           class="simple"
-          @all="checkboxes.all()"
-          @none="checkboxes.none()"
-          @invert="checkboxes.invert()"
         />
 
         <SpecialItems :filter="filter" />
