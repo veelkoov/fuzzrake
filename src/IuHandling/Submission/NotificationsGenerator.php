@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Submission;
 
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Fields;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
 use App\Utils\Traits\UtilityClass;

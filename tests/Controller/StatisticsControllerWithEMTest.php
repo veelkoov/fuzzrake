@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\DataDefinitions\Features;
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\OrderTypes;
-use App\DataDefinitions\ProductionModels;
+use App\Data\Definitions\Features;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\OrderTypes;
+use App\Data\Definitions\ProductionModels;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\DomCrawler\Crawler;
@@ -20,7 +20,11 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
     public function testStatisticsPageLoads(): void
     {
         $client = static::createClient();
-        self::addSimpleArtisan();
+        self::persistAndFlush(self::getArtisan()
+            ->setOtherFeatures('Smoke detector')
+            ->setSpeciesDoes('Wolves')
+            ->setSpeciesDoesnt('Coyotes')
+        );
 
         $client->request('GET', '/stats');
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\ValidationRegexps;
-use App\DataDefinitions\NewArtisan;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\ValidationRegexps;
+use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Filtering\FiltersData\Builder\MutableFilterData;

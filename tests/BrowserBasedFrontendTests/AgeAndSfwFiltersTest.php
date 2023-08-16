@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests;
 
-use App\DataDefinitions\Ages;
+use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

@@ -22,18 +22,7 @@
         </div>
 
         <ul class="navbar-nav d-flex top-menu-right">
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.tumblr.com/getfursuit" title="Tumblr" aria-label="Tumblr"> &nbsp; <i class="fa-brands fa-tumblr"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" rel="me" href="https://furries.club/@getfursuit" title="Mastodon" aria-label="Mastodon"> &nbsp; <i class="fab fa-mastodon"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.instagram.com/getfursu.it/" title="Instagram" aria-label="Instagram"> &nbsp; <i class="fab fa-instagram"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://twitter.com/getfursuit" title="Twitter" aria-label="Twitter"> &nbsp; <i class="fab fa-twitter"></i> &nbsp; </a>
-            </li>
+            {% include '_menu_item.html.twig' with {'name': 'contact', 'pretty_name': '<i class="fa-solid fa-envelope"></i> Contact' } %}
             {% include '_menu_item.html.twig' with {'name': 'donate', 'pretty_name': '<span class="always-full-opacity">🥌</span>️ Donate' } %}
         </ul>
     </div>

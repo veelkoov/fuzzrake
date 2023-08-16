@@ -23,6 +23,7 @@ class RequestParser
         'openFor',
         'species',
         'paymentPlans',
+        'inactive',
     ];
 
     private const BOOLEANS = [
@@ -31,7 +32,7 @@ class RequestParser
     ];
 
     public function __construct(
-        private readonly FiltersChoicesFilter $filter,
+        private readonly FiltersValidChoicesFilter $filter,
     ) {
     }
 
@@ -46,7 +47,7 @@ class RequestParser
         $dataShape = Type\string();
         $makerId = $dataShape->coerce($request->get('makerId', ''));
 
-        return $this->filter->getOnlyAllowed(new Choices(
+        return $this->filter->getOnlyValidChoices(new Choices(
             $makerId,
             $strArrays['countries'],
             $strArrays['states'],
@@ -62,6 +63,7 @@ class RequestParser
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
             $booleans['isAdult'],
             $booleans['wantsSfw'],
+            contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
         ));
     }
 

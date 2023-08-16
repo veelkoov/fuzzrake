@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 
 /**
@@ -29,7 +29,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
         ]);
         $this::submitValid($client, $form);
 
-        self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
+        self::assertIuSubmittedCorrectPassword();
 
         self::performImport($client, true, 1);
         self::flushAndClear();
@@ -69,7 +69,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
         ]);
         $this::submitValid($client, $form);
 
-        self::assertSelectorTextContains('h4', 'Your submission has been recorded!');
+        self::assertIuSubmittedCorrectPassword();
 
         self::performImport($client, true, 1);
         self::flushAndClear();
@@ -111,7 +111,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
         ]);
         $this::submitValid($client, $form);
 
-        self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
+        self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
         self::performImport($client, true, 1);
         self::flushAndClear();
@@ -154,7 +154,7 @@ class PasswordHandlingTest extends AbstractTestWithEM
         ]);
         $this::submitValid($client, $form);
 
-        self::assertSelectorTextContains('h4', 'Your submission has been recorded, but...');
+        self::assertIuSubmittedWrongPasswordContactNotAllowed();
 
         self::performImport($client, false, 1);
         self::flushAndClear();

@@ -23,6 +23,8 @@ parameters:
       "hungary":                                       "HU"
       "ireland":                                       "IE"
       "(italia|italy)":                                "IT"
+      "japan":                                         "JP"
+      "latvia":                                        "LV"
       "mexico":                                        "MX"
       "(the )?netherlands":                            "NL"
       "new zealand":                                   "NZ"

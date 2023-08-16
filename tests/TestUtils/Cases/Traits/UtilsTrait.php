@@ -10,19 +10,9 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Filesystem\Filesystem;
 
-use function pattern;
-
 trait UtilsTrait
 {
-    protected static function assertEqualsIgnoringWhitespace(string $expectedHtml, string $actualHtml): void
-    {
-        $pattern = pattern('\s+');
-
-        $expectedHtml = trim($pattern->replace($expectedHtml)->with(' '));
-        $actualHtml = trim($pattern->replace($actualHtml)->with(' '));
-
-        self::assertEquals($expectedHtml, $actualHtml);
-    }
+    use AssertsTrait;
 
     /**
      * @param array<string, string> $formData
@@ -74,7 +64,7 @@ trait UtilsTrait
     {
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame(422);
+        self::assertResponseStatusCodeIs($client, 422);
     }
 
     protected function clearCache(): void

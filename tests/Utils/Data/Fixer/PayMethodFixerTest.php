@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Data\Fixer;
 
+use App\Data\Fixer\PayMethodFixer;
 use App\Tests\TestUtils\DataDefinitions;
-use App\Utils\Data\Fixer\PayMethodFixer;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Twig;
 
+use App\Data\Validator\Validator;
 use App\Repository\SubmissionRepository;
 use App\Twig\AdminExtensions;
-use App\Utils\Data\Validator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,10 +38,10 @@ class AdminExtensionsTest extends TestCase
                 'just plain text',
             ], [
                 'prefix http://getfursu.it/new suffix',
-                'prefix <a href="http://getfursu.it/new">http://getfursu.it/new</a> suffix',
+                'prefix <a href="http://getfursu.it/new" target="_blank">http://getfursu.it/new</a> suffix',
             ], [
                 'prefix http://getfursu.it/new middle https://getfursu.it/info suffix',
-                'prefix <a href="http://getfursu.it/new">http://getfursu.it/new</a> middle <a href="https://getfursu.it/info">https://getfursu.it/info</a> suffix',
+                'prefix <a href="http://getfursu.it/new" target="_blank">http://getfursu.it/new</a> middle <a href="https://getfursu.it/info" target="_blank">https://getfursu.it/info</a> suffix',
             ],
         ];
     }

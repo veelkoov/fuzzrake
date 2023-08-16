@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Filtering\FiltersData\Builder\MutableItem;
+use App\Filtering\FiltersData\Item;
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
@@ -81,15 +81,15 @@ class AppExtensions extends AbstractExtension
     }
 
     /**
-     * @param MutableItem[] $items
+     * @param Item[] $items
      *
-     * @return MutableItem[]
+     * @return Item[]
      */
-    public function filterItemsMatchingFilter(array $items, string $matchWord): array // TODO: https://github.com/veelkoov/fuzzrake/issues/80 Don't use mutable in view
+    public function filterItemsMatchingFilter(array $items, string $matchWord): array
     {
         $pattern = Patterns::getI($matchWord);
 
-        return array_filter($items, fn (MutableItem $item) => $pattern->test($item->label));
+        return array_filter($items, fn (Item $item) => $pattern->test($item->label));
     }
 
     public function filterFilterByQuery(string $input, DataQuery $query): string

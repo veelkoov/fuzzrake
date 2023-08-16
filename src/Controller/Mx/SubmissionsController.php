@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
-use App\DataDefinitions\Fields\Fields;
+use App\Controller\Traits\ButtonClickedTrait;
+use App\Data\Definitions\Fields\Fields;
 use App\Form\Mx\SubmissionType;
 use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Import\SubmissionsService;
@@ -27,6 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/mx/submissions')]
 class SubmissionsController extends FuzzrakeAbstractController
 {
+    use ButtonClickedTrait;
+
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly SubmissionsService $submissions,
@@ -91,7 +94,8 @@ class SubmissionsController extends FuzzrakeAbstractController
             $this->submissions->updateEntity($update);
         }
 
-        if ($form->isSubmitted() && $form->isValid() && $update->isAccepted) {
+        if ($form->isSubmitted() && $this->clicked($form, SubmissionType::BTN_IMPORT)
+                && $form->isValid() && $update->isAccepted) {
             $this->updates->import($update);
             $this->cache->invalidate(CacheTags::ARTISANS);
 

@@ -11,7 +11,7 @@ final class SpecialItems
 {
     use UtilityClass;
 
-    public static function newUnknown(?int $initialValue = 0): MutableSpecialItem // TODO: #76 Species count, should not be nullable
+    public static function newUnknown(int $initialValue = 0): MutableSpecialItem
     {
         return new MutableSpecialItem(Consts::FILTER_VALUE_UNKNOWN, 'Unknown',
             'fas fa-question-circle', $initialValue);
@@ -33,6 +33,14 @@ final class SpecialItems
     public static function newNotTracked(int $initialValue): MutableSpecialItem
     {
         $result = new MutableSpecialItem(Consts::FILTER_VALUE_NOT_TRACKED, 'Not tracked', 'fas fa-question-circle');
+        $result->incCount($initialValue);
+
+        return $result;
+    }
+
+    public static function newInactive(int $initialValue): MutableSpecialItem
+    {
+        $result = new MutableSpecialItem(Consts::FILTER_VALUE_INCLUDE_INACTIVE, 'Include', 'fa fa-play-pause');
         $result->incCount($initialValue);
 
         return $result;

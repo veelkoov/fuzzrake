@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\IuSubmissions;
 
-use App\DataDefinitions\Fields\Field;
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\JsonArtisanDataLoader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -92,7 +92,8 @@ class ExtendedTest extends AbstractTestWithEM
      * 1. Updated maker with full info, changes in all possible fields,
      * 2. New maker with full info,
      * 3. Updated maker with minimal starting info, full info after update,
-     * 4. New maker with minimal info.
+     * 4. New maker with minimal info,
+     * 5. Updated maker where the only identification mean is the former maker ID.
      *
      * @throws Exception
      */
@@ -106,11 +107,24 @@ class ExtendedTest extends AbstractTestWithEM
         $repo = self::getArtisanRepository();
         $loader = new JsonArtisanDataLoader('extended_test');
 
-        $oldArtisan1 = $loader->getArtisanData('a1.1-persisted');
-        $oldArtisan3 = $loader->getArtisanData('a3.1-persisted');
+        $initialArtisans = [
+            $loader->getArtisanData('a1.1-persisted'),
+            $loader->getArtisanData('a3.1-persisted'),
+            $loader->getArtisanData('a5.1-persisted'),
+        ];
+        $initialCount = count($initialArtisans);
 
-        self::persistAndFlush($oldArtisan1, $oldArtisan3);
-        self::assertCount(2, $repo->findAll(), 'Two artisans in the DB before import');
+        $expectedArtisans = [
+            $loader->getArtisanData('a1.3-check'),
+            $loader->getArtisanData('a2.3-check'),
+            $loader->getArtisanData('a3.3-check'),
+            $loader->getArtisanData('a4.3-check'),
+            $loader->getArtisanData('a5.3-check'),
+        ];
+        $finalCount = count($expectedArtisans);
+
+        self::persistAndFlush(...$initialArtisans);
+        self::assertCount($initialCount, $repo->findAll(), "Expected $initialCount artisans in the DB before import");
 
         $oldData1 = $loader->getArtisanData('a1.1-persisted');
         $newData1 = $loader->getArtisanData('a1.2-send', self::NOT_IN_FORM);
@@ -132,17 +146,15 @@ class ExtendedTest extends AbstractTestWithEM
         $makerId4 = '';
         self::validateIuFormOldDataSubmitNew($client, $makerId4, $oldData4, $newData4);
 
-        $expectedArtisans = [
-            $loader->getArtisanData('a1.3-check'),
-            $loader->getArtisanData('a2.3-check'),
-            $loader->getArtisanData('a3.3-check'),
-            $loader->getArtisanData('a4.3-check'),
-        ];
+        $oldData5 = $loader->getArtisanData('a5.1-persisted');
+        $newData5 = $loader->getArtisanData('a5.2-send', self::NOT_IN_FORM);
+        $makerId5 = $oldData5->getLastMakerId();
+        self::validateIuFormOldDataSubmitNew($client, $makerId5, $oldData5, $newData5);
 
-        $this->performImport($client, true, 4);
+        $this->performImport($client, true, $finalCount);
 
         self::flush();
-        self::assertCount(4, $repo->findAll(), 'Expected four artisans in the DB after import');
+        self::assertCount($finalCount, $repo->findAll(), "Expected $finalCount artisans in the DB after import");
 
         foreach ($expectedArtisans as $expectedArtisan) {
             self::validateArtisanAfterImport($expectedArtisan);
@@ -163,6 +175,7 @@ class ExtendedTest extends AbstractTestWithEM
     private static function validateIuFormOldDataSubmitNew(KernelBrowser $client, string $urlMakerId, Artisan $oldData, Artisan $newData): void
     {
         $client->request('GET', self::getIuFormUrlForMakerId($urlMakerId));
+        self::assertResponseStatusCodeIs($client, 200);
         self::skipRulesAndCaptcha($client);
 
         self::assertNotFalse($client->getResponse()->getContent());
@@ -179,7 +192,7 @@ class ExtendedTest extends AbstractTestWithEM
         self::setValuesInForm($form, $newData, true);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('h4', 'Your submission has been recorded');
+        self::assertIuSubmittedAnyResult($client);
     }
 
     private static function getIuFormUrlForMakerId(string $urlMakerId): string
@@ -246,7 +259,7 @@ class ExtendedTest extends AbstractTestWithEM
         $expected = StringList::unpack($value);
 
         foreach ($expected as $item) {
-            self::assertArrayHasKey($item, $selected, "'$item' is not available in the form.");
+            self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->name'.");
             self::assertTrue($selected[$item], "'$item' is not checked.");
 
             unset($selected[$item]);
@@ -278,7 +291,7 @@ class ExtendedTest extends AbstractTestWithEM
             if ('' === $value) {
                 self::assertStringNotContainsStringIgnoringCase('selected="selected"', $matchedText);
             } else {
-                $valuePart = explode('-', $value)['year' === $sfName ? 0 : 1];
+                $valuePart = ltrim(explode('-', $value)['year' === $sfName ? 0 : 1], '0');
                 self::assertStringContainsStringIgnoringCase("<option value=\"$valuePart\" selected=\"selected\">", $matchedText);
             }
         }

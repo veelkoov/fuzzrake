@@ -26,7 +26,7 @@ class RestApiControllerTest extends WebTestCaseWithEM
         );
 
         $client->request('GET', '/api/artisans-array.json?countries[]=FI&wantsSfw=0&isAdult=1');
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
         $content = $client->getResponse()->getContent();
@@ -43,6 +43,6 @@ class RestApiControllerTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $client->request('GET', '/api/artisans-array.json?countries=FI');
-        self::assertResponseStatusCodeSame(400);
+        self::assertResponseStatusCodeIs($client, 400);
     }
 }

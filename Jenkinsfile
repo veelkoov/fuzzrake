@@ -63,7 +63,7 @@ pipeline {
           sh 'echo "GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET" >> .env.test.local'
 
           sh './toolbox docker-up'
-          sh './toolbox composer install'
+          sh './toolbox composer install --no-progress'
           sh 'yarn install'
           sh './toolbox yep'
           sh './toolbox pu --version'

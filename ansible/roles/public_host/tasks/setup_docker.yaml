@@ -1,36 +1,42 @@
 ---
-- name: remove distro Docker packages
-  yum:
+- name: 'Remove distro Docker packages'
+  ansible.builtin.dnf:
     name:
-      - docker
-      - docker-client
-      - docker-client-latest
-      - docker-common
-      - docker-latest
-      - docker-latest-logrotate
-      - docker-logrotate
-      - docker-engine
-    state: absent
+      - 'docker'
+      - 'docker-client'
+      - 'docker-client-latest'
+      - 'docker-common'
+      - 'docker-latest'
+      - 'docker-latest-logrotate'
+      - 'docker-logrotate'
+      - 'docker-engine'
+    state: 'absent'
 
-- name: setup Docker repository
-  yum_repository:
-    baseurl:     "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
-    description: "Docker CE Stable - $basearch"
-    enabled:     "1"
-    gpgcheck:    "1"
-    gpgkey:      "https://download.docker.com/linux/centos/gpg"
-    name:        "docker-ce-stable"
+- name: 'Setup Docker repository'
+  ansible.builtin.yum_repository:
+    baseurl:     'https://download.docker.com/linux/centos/$releasever/$basearch/stable'
+    description: 'Docker CE Stable - $basearch'
+    enabled:     '1'
+    gpgcheck:    '1'
+    gpgkey:      'https://download.docker.com/linux/centos/gpg'
+    name:        'docker-ce-stable'
 
-- name: install Docker packages
-  yum:
-    update_cache: yes
+- name: 'Install Docker packages'
+  ansible.builtin.dnf:
+    update_cache: true
     name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+      - 'docker-ce'
+      - 'docker-ce-cli'
+      - 'containerd.io'
 
-- name: start Docker
-  service:
-    enabled: yes
-    name: docker
-    state: started
+- name: 'Start Docker'
+  ansible.builtin.service:
+    enabled: true
+    name:    'docker'
+    state:   'started'
+
+- name: 'Add user to the "docker" group'
+  ansible.builtin.user:
+    append: true
+    name:   '{{ ansible_ssh_user }}'
+    groups: 'docker'

@@ -7,16 +7,12 @@ parameters:
     valid_choices:
       "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
         "Real life animals":
-          Birds:
-            Ducks:
-
           'i_Existing species': {}
 
           Fishes:
             Sharks:
 
           Mammals:
-            "i_Most Mammals":
             Bears:
               Giant pandas:
             Canines:
@@ -87,32 +83,43 @@ parameters:
             Insects: {}
 
           Amphibians:
+            'Axolotls': {}
+
+          Birds: {}
 
         "Fantasy creatures":
+          'i_Any mythical or unique species': {}
           'i_Avalis': {}
           'i_Demon cats': {}
+          'i_Fantasy / mythical creatures': {}
           'i_Fantasy': {}
-          "i_Fantasy / mythical creatures":
+          'i_Fantasy/original species': {}
           'i_Mythical': {}
+          'i_Please inquire about fantasy creatures': {}
+          'i_Specialises in mythical creatures/monsters':
+
           Dragons:
             "Angel Dragons":
-              "Dutch Angel Dragons": {}
+              'Dutch Angel Dragons':
+                'i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)': {}
             "i_*Extremely intricate dragons": {}
           Robotic/cybernetic/mechanical:
-            Ampwaves:
-            "i_Any mechanical/inorganic species":
+            'i_Any mechanical/inorganic species': {}
             'i_Anything electronic': {}
-            "i_Ask for mechanic/electronic creatures":
-            'i_Cyborgs':
-            "i_Full robospecies":
+            'i_Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified "toony" version)': {}
+            'i_Ask for mechanic/electronic creatures': {}
+            'i_Cyborgs': {}
+            'i_Full robospecies': {}
             'i_Mechanical species (protogens and the like)': {}
-            Primagens:
+            'i_Robots': {}
+            'i_Robotics': {}
+            'i_Species with robotic/cybernetic, or otherwise mechanical appearance': {}
+            'i_3D printing & electronics required species (e.g. Protogens, Skullies)': {}
+            Ampwaves: {}
+            Primagens: {}
             Protogens:
-            "i_Robots":
-            "i_Robotics":
-            Synths:
-            "i_Species with robotic/cybernetic, or otherwise mechanical appearance":
-            'i_3D printing & electronics required species (e.g. Protogens, Skullies)':
+              'i_Protogens (for paws and tail ONLY)': {}
+            Synths: {}
           Crux:
           Drekkubuses:
           "Ghost Bones Dragon":
@@ -121,22 +128,22 @@ parameters:
           Manokits:
           MLP:
           Monsters:
-          Pancans:
           Pokemons:
           Sergals:
-          'i_Skull animals':
+          'i_Skull-*':
+            'i_Skull':
+            'i_Skullsuits':
+            'i_Skull Creatures':
+            'i_Skulldogs':
+            'i_Skull animals':
             'i_3D printing & electronics required species (e.g. Protogens, Skullies)':
           Sparkledogs:
           Wickerbeasts:
 
         Aquatic: # Fill
-          "i_Creatures that live solely in water":
-          "i_Dolphins":
           Fishes:
-          "i_Most real-life aquatics that have a smooth head":
           Otters:
           "i_Sea creatures": # Aquatic?
-          "i_Whales":
 
         Hooved: # Fill
           Ungulates: {}
@@ -144,25 +151,17 @@ parameters:
           MLP: {}
           "i_Pony": # Does it mean lil horse or MLP?
 
-        Hybrids:
-          "i_All hybrids":
-          "i_Complex hybrids":
-          "i_Hybrids of these":
-          "i_Mixed species":
-          Pancans: {}
-
         Scalies: # Fill
           Dragons: {}
-          "i_Most Scalies":
+          'i_Most scalies': {}
           Reptiles: {}
-          "i_Some scalies":
+          'i_Some scalies': {}
 
         Winged: # Fill
-          Birds: {}
-          Dragons: {}
+          Dragons: {} # Has descendants
           Bats: {}
+          Birds: {}
           Gryphons: {}
-          Pancans: {}
 
         With antlers: # Fill
           Cervines: {}
@@ -170,7 +169,11 @@ parameters:
 
         With beak:
           Birds: {}
-          Pancans: {}
+
+        Hybrids:
+          'i_All hybrids':
+          'i_Hybrids of these':
+          'i_Mixed species':
 
       Other: # grep-species-other
         "i_Copyright-related classification?": # FIXME
@@ -188,29 +191,20 @@ parameters:
           "i_Most of author's species":
 
         "i_Other/Unclassified": # Just to silence the validator, to be fixed/approved/categorized later
-          "i_Fantasy/original species":
-          "i_Any mythical or unique species":
           "i_Any animal and most mysticals (dragons*, serials, gryphons)":
-          'i_Any design that does not use faux fur': {}
           "i_Rare species":
-
-          "i_Dutch Angel Dragons (Tail, paws and feet paws ONLY)": # FIXME: Moving this under "DADs" causes the filter subcategory arrow-button to show up and do nothing, see also #89
-          "i_Protogens (for paws and tail ONLY)": # FIXME: see above
+          'i_Uncommon species':
 
           "i_Some video game characters":
           "i_Most any species": # ?!
-          'i_Most common': {}
 
           "i_Anything cultural appropriation":
-          "i_Anything requiring extensive electronics (ex: true-to-species protogens, though we could do a simplified \"toony\" version)":
-          "i_Axolotls":
           "i_Basic canines, vulpines, angel dragons. (Will consider if unique)":
           "i_Cervidae/deer family species with large antlers":
           "i_Critters":
           "i_Etc.": # De hecc
 
           "i_Complexity-related":
-            "i_Complex species, as if the species has too many parts and details, I will say so during the quote.":
             "i_Extremely intricate anything":
             "i_Heavily complicated creatures":
 
@@ -220,48 +214,37 @@ parameters:
             'i_I am willing to do all types of furry species at the moment': {}
             "i_I'm happy to make most species as long as they're covered in fur":
             "i_Most anything covered in fur":
+          'i_I can also do velvet or minky skinned characters':
+          'i_Most furless/featherless species':
 
           "i_Furbies":
           "i_Gem raptors":
           "i_Humanoids":
             "i_Humans":
-          "i_I can also do velvet or minky skinned characters":
           "i_I make exceptions on rare occasions":
           "i_Invertibrates":
           'i_I will not do anything representing satanism': {}
-          "i_Most furless/featherless species":
           "i_No airbrushed / gradient markings on any species (all work is sewn)":
-          "i_Only because I do not currently have the ability to do the electronic work on them": # This should have been a comment
-          "i_Others": # Change to the parent category
-          "i_Please inquire about fantasy creatures":
 
           "i_Raptor masks":
 
           'i_Saber-toothed tiger': {}
-          "i_Skull-*":
-            "i_Skull": # Excuse me?
-            "i_Skullsuits":
-            "i_Skull Creatures":
-            "i_Skulldogs":
-            'i_Skull animals':
-          "i_Specialises in mythical creatures/monsters":
           "i_Species with horizontal pupils":
           "i_Things of an adult nature":
           "i_Unsafe creations":
 
-          "i_Uncommon species":
           "i_Will not work with sequin for characters":
-          "i_Most real-life aquatics that have a smooth head":
 
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'
     replacements:
-      '^(any|all|most)( species)?$':                         'Most species'
+      '^(any|all|most)( spi?ecies)?$':                       'Most species'
 
       "AD's|(Ange?le? dragons?)":                            'Angel Dragons'
       'Amphibians?':                                         'Amphibians'
       'Antelopes?':                                          'Antelopes'
-      'Avians?':                                             'Birds'
+      # 'Avians?':                                           'Birds'
+      'Badgers?':                                            'Badgers'
       'Bats?':                                               'Bats'
       'Bears?':                                              'Bears'
       'Big/small felines':                                   "Big felines\nSmall felines"
@@ -269,6 +252,7 @@ parameters:
       'Big (cats|felines)( in general)?':                    "Big cats"
       'Birds?':                                              'Birds'
       'Birds/avians in general':                             'Birds'
+      'Bisons?':                                             'Bisons'
       'Bovines?':                                            'Bovines'
       'Bunn(y|ies)':                                         'Rabbits'
       'Caracles|Caracals?':                                  'Caracals'
@@ -276,6 +260,7 @@ parameters:
       'Canines?( in)? ?(\(?general\)?)?':                    'Canines'
       'Caribous?':                                           'Caribous'
       'Cervines?':                                           'Cervines'
+      'Cheetahs?':                                           'Cheetahs'
       'copyrighted characters?[ !]*':                        'Copyrighted characters'
       '(any )?Closed? species?':                             'Closed species'
       'Coyotes?':                                            'Coyotes'
@@ -312,10 +297,12 @@ parameters:
       'Mammals?( in general)?':                              'Mammals'
       'Mann?okits?':                                         'Manokits'
       'Monkeys?( in general)?':                              'Monkeys'
+      'Most Scalies':                                        'Most scalies'
       'Mouse':                                               'Mice'
       'Open species?':                                       'Open species'
       'Opossums?':                                           'Opossums'
       'Otters?':                                             'Otters'
+      'Others?':                                             'Other'
       'Pandas?':                                             'Giant pandas'
       'Pinnipeds?( in general)?':                            'Pinnipeds'
       'Primagens and protogens':                             "Primagens\nProtogens"
@@ -341,6 +328,7 @@ parameters:
       'Small felines?':                                      'Small cats'
       'Snow leopards?':                                      'Snow leopards'
       'Synths/protogens':                                    "Synths\nProtogens"
+      'Tigers?':                                             'Tigers'
       'Weasels?':                                            'Weasels'
       'Wicker ?beas?ts?':                                    'Wickerbeasts'
       'Wolf':                                                'Wolves'

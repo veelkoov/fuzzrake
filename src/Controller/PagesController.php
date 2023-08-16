@@ -19,6 +19,13 @@ class PagesController extends AbstractController
         return $this->render('pages/information.html.twig', []);
     }
 
+    #[Route(path: '/contact', name: RouteName::CONTACT)]
+    #[Cache(maxage: 21600, public: true)]
+    public function contact(): Response
+    {
+        return $this->render('pages/contact.html.twig', []);
+    }
+
     #[Route(path: '/tracking', name: RouteName::TRACKING)]
     #[Cache(maxage: 21600, public: true)]
     public function tracking(): Response

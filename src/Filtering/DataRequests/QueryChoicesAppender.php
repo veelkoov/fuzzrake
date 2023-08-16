@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
@@ -17,7 +17,7 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function __construct(Choices $choices)
     {
-        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], [], $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw);
+        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], [], $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
     }
 
     public function getCacheDigest(): string
@@ -33,6 +33,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyPaymentPlans($builder);
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
+        $this->applyWantsInactive($builder);
     }
 
     private function createSubqueryBuilder(QueryBuilder $builder, string $alias): QueryBuilder
@@ -159,5 +160,14 @@ class QueryChoicesAppender implements CacheDigestProvider
         $builder
             ->andWhere($andWhere)
             ->setParameter('paymentPlans', $parameter);
+    }
+
+    private function applyWantsInactive(QueryBuilder $builder): void
+    {
+        if (!$this->choices->wantsInactive) {
+            $builder
+                ->andWhere('a.inactiveReason = :emptyInactiveReason')
+                ->setParameter('emptyInactiveReason', '');
+        }
     }
 }

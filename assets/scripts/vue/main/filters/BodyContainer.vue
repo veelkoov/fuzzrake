@@ -31,6 +31,7 @@ import CountriesFilter from './body/CountriesFilter.vue';
 import CountriesHelp from './help/CountriesHelp.vue';
 import FeaturesHelp from './help/FeaturesHelp.vue';
 import Filter from './Filter';
+import InactiveHelp from './help/InactiveHelp.vue';
 import LanguagesHelp from './help/LanguagesHelp.vue';
 import MultiselectFilter from './body/MultiselectFilter.vue';
 import OpenForHelp from './help/OpenForHelp.vue';
@@ -47,7 +48,7 @@ import {Options, Vue} from 'vue-class-component';
 @Options({
   components: {
     CountriesFilter, MultiselectFilter, SpeciesFilter,
-    CountriesHelp, FeaturesHelp, LanguagesHelp, OpenForHelp, OrderTypesHelp, PaymentPlansHelp, ProductionModelsHelp, SpeciesHelp, StatesHelp, StylesHelp,
+    CountriesHelp, FeaturesHelp, LanguagesHelp, OpenForHelp, OrderTypesHelp, PaymentPlansHelp, ProductionModelsHelp, SpeciesHelp, StatesHelp, StylesHelp, InactiveHelp,
   },
   props: {
     filter: {type: Filter, required: true},

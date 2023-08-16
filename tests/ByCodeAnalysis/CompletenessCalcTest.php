@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\ByCodeAnalysis;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\Fields\Fields;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\Fields\Fields;
 use App\Tests\TestUtils\Paths;
 use App\Utils\Artisan\CompletenessCalc;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;

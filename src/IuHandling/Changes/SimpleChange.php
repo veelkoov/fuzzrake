@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Changes;
 
-use App\DataDefinitions\Fields\Field;
+use App\Data\Definitions\Fields\Field;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
 use DateTimeImmutable;

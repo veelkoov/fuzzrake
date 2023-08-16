@@ -1,15 +1,20 @@
 ---
-- import_tasks: setup_general.yaml
-  tags: general
+- name: 'Setup general stuff'
+  ansible.builtin.import_tasks: 'setup_general.yaml'
+  tags: 'general'
 
-- import_tasks: setup_sshd.yaml
-  tags: sshd
+- name: 'Setup sshd'
+  ansible.builtin.import_tasks: 'setup_sshd.yaml'
+  tags: 'sshd'
 
-- import_tasks: setup_apache.yaml
-  tags: apache
+- name: 'Setup Apache'
+  ansible.builtin.import_tasks: 'setup_apache.yaml'
+  tags: 'apache'
 
-- import_tasks: setup_docker.yaml
-  tags: docker
+- name: 'Setup Docker'
+  ansible.builtin.import_tasks: 'setup_docker.yaml'
+  tags: 'docker'
 
-- import_tasks: setup_ipv6.yaml
-  tags: ipv6
+- name: 'Setup IPv6'
+  ansible.builtin.import_tasks: 'setup_ipv6.yaml'
+  tags: 'ipv6'

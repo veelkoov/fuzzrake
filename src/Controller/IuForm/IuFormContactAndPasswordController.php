@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\IuState;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\ContactPermit;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\ContactAndPassword;
 use App\Utils\Password;
@@ -59,6 +59,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
                     'isNew'          => $state->isNew() ? 'yes' : 'no',
                     'passwordOk'     => $submittedPasswordOk ? 'yes' : 'no',
                     'contactAllowed' => $isContactAllowed ? ($state->wasContactAllowed ? 'yes' : 'was_no') : 'is_no',
+                    // TODO 'submissionId'   =>
                 ]);
             } else {
                 $form->addError(new FormError('There was an error while trying to submit the form. Please note the time of seeing this message and contact the website maintainer. I am terribly sorry for the inconvenience!'));

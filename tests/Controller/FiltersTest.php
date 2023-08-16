@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Artisan;
-use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
+use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
+use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\Json;
 use JsonException;
 
 /**
  * @medium
  */
-class FiltersTest extends PantherTestCaseWithEM
+class FiltersTest extends WebTestCaseWithEM
 {
+    use AssertsTrait;
     use FiltersTestTrait;
 
     /**
@@ -55,7 +57,7 @@ class FiltersTest extends PantherTestCaseWithEM
         $query = implode('&', $queryParts);
 
         $client->request('GET', '/api/artisans-array.json?'.$query);
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
         $content = $client->getResponse()->getContent();
@@ -70,6 +72,6 @@ class FiltersTest extends PantherTestCaseWithEM
             $resultMakerIds[] = $artisanData[0];
         }
 
-        self::assertEquals($expectedMakerIds, $resultMakerIds, "$query query failed.");
+        self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }
 }

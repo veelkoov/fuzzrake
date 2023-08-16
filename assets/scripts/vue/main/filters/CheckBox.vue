@@ -18,7 +18,7 @@ import {Options, Vue} from 'vue-class-component';
 
 @Options({
   props: {
-    count: {type: Number, required: false}, // TODO: #76 Species count, should not be nullable
+    count: {type: Number, required: true},
     filter: {type: Filter, required: true},
     label: {type: String, required: true},
     labelHtmlPrefix: {type: String, required: false},

@@ -52,7 +52,7 @@ export default class DataManager {
 
     private getQueryWithMakerModeAndSfwOptions(newQuery: string): string {
         if (AgeAndSfwConfig.getInstance().getMakerMode()) {
-            return '?isAdult=1&wantsSfw=0';
+            return '?isAdult=1&wantsSfw=0&wantsInactive=1';
         }
 
         let usedQuery = `?isAdult=${this.ageAndSfwConfig.getIsAdult() ? '1' : '0'}&wantsSfw=${this.ageAndSfwConfig.getWantsSfw() ? '1' : '0'}`;

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
-use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\FieldsList;
+use App\Data\Definitions\Fields\Fields;
+use App\Data\Definitions\Fields\FieldsList;
+use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Repository\ArtisanRepository;
-use App\Utils\Arrays;
+use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\Fixer;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\FieldReadInterface;
 use App\Utils\StringList;
@@ -34,7 +34,7 @@ class UpdatesService
         $errors = filter([$directivesError]);
 
         $originalInput = new Artisan();
-        $this->updateWith($originalInput, $input->submissionData, Fields::inIuForm());
+        $this->updateWith($originalInput, $input->submissionData, Fields::readFromSubmissionData());
 
         $matchedArtisans = $this->getArtisans($originalInput, $manager->getMatchedMakerId());
 

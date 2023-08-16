@@ -24,7 +24,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --env PHP_CS_FIXER_IGNORE_ENV=True --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
+    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
 }
 
 function run_composer() {
@@ -47,12 +47,6 @@ function assure_line_in_file() {
 }
 
 function action_run_setup() {
-    # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-    run_command sudo mkdir -p ./var/cache
-    run_command sudo mkdir -p ./var/log
-    run_command sudo chmod -R a+w ./var
-    run_command touch ./var/db.sqlite
-
     assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
     assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 
@@ -107,12 +101,12 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-  run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$DB_TMP_PATH"
-  backup_private_data
-  run_command sqlite3 "$DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
-  run_command sqlite3 "$DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
-  run_command chmod a+w "$DB_TMP_PATH"
-  run_command mv "$DB_TMP_PATH" "$DB_PATH"
+    run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$DB_TMP_PATH"
+    backup_private_data
+    run_command sqlite3 "$DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
+    run_command sqlite3 "$DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
+    run_command chmod a+w "$DB_TMP_PATH"
+    run_command mv "$DB_TMP_PATH" "$DB_PATH"
 }
 
 function action_dbpush() {
@@ -200,6 +194,7 @@ Available actions:
     pcf          run PHP CS Fixer
     ps           run PHPStan
     rector       run Rector
+    el           run eslint
 
     cloc         run Cloc
 EOF
@@ -222,23 +217,16 @@ function action() {
 
         'console')      run_console "$@" ;;
 
-        # FIXME: https://github.com/veelkoov/fuzzrake/issues/168
-        'cc')           run_command sudo rm -rf ./var/cache/* && sudo chmod a+w ./var/cache ;;
-        'cc-prod')      run_command ssh getfursu.it sudo rm -rf /var/www/prod/var/cache/prod ;;
+        'cc')           run_command run_console cache:clear ;;
+        'cc-beta')      run_command ssh getfursu.it docker exec fuzzrake-beta bin/console cache:clear ;;
+        'cc-prod')      run_command ssh getfursu.it docker exec fuzzrake-prod bin/console cache:clear ;;
 
         'pu')           run_docker_compose_exec ./bin/phpunit --testdox "$@" ;;
         'pus')          action pu --group small  "$@" ;;
         'pum')          action pu --group medium "$@" ;;
         'pul')          action pu --group large  "$@" ;;
 
-        'pcf')
-            if [[ "$(date +%Y-%m-%d)" > "2023-03-01" ]]; then
-                echo 'Can PHP_CS_FIXER_IGNORE_ENV be removed now?'
-                sleep 10
-            fi
-
-            run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@"
-        ;;
+        'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan --xdebug analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
@@ -246,6 +234,7 @@ function action() {
         'cst')          run_console app:status-tracker:run "$@" ;;
         'cstc')         action cst --commit "$@" ;;
         'cstr')         action cst --refetch "$@" ;;
+        'cstc-prod')    run_command ssh getfursu.it docker exec fuzzrake-prod bin/console app:status-tracker:run --commit ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;

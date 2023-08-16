@@ -6,25 +6,23 @@ namespace App\Filtering\FiltersData\Builder;
 
 class MutableSpecialItem
 {
-    private ?int $count; // TODO: #76 Species count, should not be nullable
+    private int $count;
 
     public function __construct(
         public readonly string $value,
         public readonly string $label,
         public readonly string $faIcon,
-        ?int $count = 0,
+        int $count = 0,
     ) {
         $this->count = $count;
     }
 
-    public function incCount(?int $number = 1): void
+    public function incCount(int $number = 1): void
     {
-        if (null !== $this->count && null !== $number) {
-            $this->count += $number;
-        }
+        $this->count += $number;
     }
 
-    public function getCount(): ?int
+    public function getCount(): int
     {
         return $this->count;
     }

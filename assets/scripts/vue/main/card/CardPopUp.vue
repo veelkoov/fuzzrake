@@ -13,8 +13,8 @@
             <span id="artisanName">{{ artisan.name }}</span>&nbsp;<span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry"></span>
 
             <small>
-              Based in <Optional :items="[artisan.location]" />;
-              crafting since <Optional :items="[getSinceText()]" />
+              Based in <OptionalText :item="artisan.location" />;
+              crafting since <OptionalText :item="getSinceText()" />
 
               <template v-if="artisan.formerly.length">
                 <br />Formerly/a.k.a. {{ commaSeparated(artisan.formerly) }}
@@ -97,7 +97,7 @@
             <h5>Languages</h5>
 
             <div class="small">
-              <Optional :items="artisan.languages" />
+              <OptionalComSep :items="artisan.languages" />
             </div>
           </div>
 
@@ -111,13 +111,13 @@
             <h5>Currencies</h5>
 
             <div class="small pb-2">
-              <Optional :items=artisan.currenciesAccepted />
+              <OptionalComSep :items=artisan.currenciesAccepted />
             </div>
 
             <h5>Methods</h5>
 
             <div class="small">
-              <Optional :items=artisan.paymentMethods />
+              <OptionalComSep :items=artisan.paymentMethods />
             </div>
           </div>
 
@@ -135,7 +135,7 @@
               <CardLink :url="'https://bewares.getfursu.it/#search:' + artisan.abSearchJson" label="Check Artists Beware records" icon-class="fas fa-balance-scale" add-btn-class="border border-primary" />
               <CardLink :url="artisan.fursuitReviewUrl" label="FursuitReview" icon-class="fas fa-balance-scale" add-btn-class="border border-primary" />
               <CardLink :url="artisan.websiteUrl" label="Official website" icon-class="fas fa-link" />
-              <CardLink v-for="item in artisan.pricesUrls" :key="item" :href="item" label="Prices" icon-class="fas fa-dollar-sign" />
+              <CardLink v-for="item in artisan.pricesUrls" :key="item" :url="item" label="Prices" icon-class="fas fa-dollar-sign" />
               <CardLink :url="artisan.faqUrl" label="FAQ" icon-class="fas fa-comments" />
               <CardLink :url="artisan.queueUrl" label="Queue" icon-class="fas fa-clipboard-list" />
               <CardLink :url="artisan.furAffinityUrl" label="FurAffinity" icon-class="fas fa-image" />
@@ -190,7 +190,9 @@
                 <p>
                   <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
                   It should be tracked and updated automatically based on the contents of:
-                  <a v-for="item in artisan.commissionsUrls" :key="item" :href="item" target="_blank">{{ item }}</a>,
+                    <template v-for="item in artisan.commissionsUrls" :key="item">
+                      <a :href="item" target="_blank">{{ item }}</a>, <wbr>
+                    </template>
                   however the software failed to "understand" the contents. Last time tried on {{ artisan.csLastCheck }} UTC.
                 </p>
 
@@ -202,7 +204,9 @@
               <template v-if="artisan.isStatusKnown">
                 <p>
                   Status is tracked and updated automatically based on the contents of:
-                  <a v-for="item in artisan.commissionsUrls" :key="item" :href="item" target="_blank">{{ item }}</a>
+                  <template v-for="item in artisan.commissionsUrls" :key="item">
+                    <a :href="item" target="_blank">{{ item }}</a> <wbr>
+                  </template>
                   <br />
                   Last time checked on {{ artisan.csLastCheck }} UTC.
                 </p>
@@ -241,14 +245,17 @@ import AgesDescription from '../AgesDescription.vue';
 import Artisan from '../../../class/Artisan';
 import CardLink from './CardLink.vue';
 import MainState from '../MainState';
-import Optional from './../Optional.vue';
+import OptionalComSep from '../OptionalComSep.vue';
 import OptionalList from './../OptionalList.vue';
+import OptionalText from '../OptionalText.vue';
 import Static from '../../../Static';
 import UnknownValue from './../UnknownValue.vue';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
-  components: {AgesDescription, CardLink, Optional, UnknownValue, OptionalList},
+  components: {
+    OptionalComSep,
+    OptionalText, AgesDescription, CardLink, Optional: OptionalComSep, UnknownValue, OptionalList},
   computed: {
     Static() {
       return Static;

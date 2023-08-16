@@ -1,9 +1,10 @@
 ---
-deployment_path: "/var/www/beta"
+frontend_deployment_path: '/var/www/beta'
+backend_deployment_path:  '/opt/beta'
 
-branch:      "beta"
-app_env:     "beta"
-server_name: "beta.getfursu.it"
+branch:      'beta'
+app_env:     'beta'
+server_name: 'beta.getfursu.it'
 
 php_fpm_container_port: 9556
-php_fpm_container_name: "fuzzrake-beta"
+php_fpm_container_name: 'fuzzrake-beta'

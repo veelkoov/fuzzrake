@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\IuForm;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
@@ -113,8 +113,8 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         ]);
         self::submitInvalid($client, $form);
 
-        self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
-        self::assertSelectorTextContains('#iu_form_password + .help-text + .invalid-feedback', 'Password is required.');
+        self::assertFieldErrorContactInfoMustNotBeBlank();
+        self::assertFieldErrorPasswordIsRequired();
     }
 
     /**
@@ -130,12 +130,12 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::skipRulesAndCaptcha($client);
 
         $form = $client->getCrawler()->selectButton('Continue')->form([
-            'iu_form[name]'            => 'test-maker-555',
-            'iu_form[country]'         => 'Finland',
-            'iu_form[makerId]'         => 'MAKERID',
-            'iu_form[ages]'            => $ages,
-            'iu_form[nsfwWebsite]'     => $nsfwWebsite,
-            'iu_form[nsfwSocial]'      => $nsfwSocial,
+            'iu_form[name]'        => 'test-maker-555',
+            'iu_form[country]'     => 'Finland',
+            'iu_form[makerId]'     => 'MAKERID',
+            'iu_form[ages]'        => $ages,
+            'iu_form[nsfwWebsite]' => $nsfwWebsite,
+            'iu_form[nsfwSocial]'  => $nsfwSocial,
         ]);
 
         if (null !== $doesNsfw) {
@@ -159,7 +159,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         }
     }
 
-    public function ageStuffFieldsDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return list<array{string, string, string, ?string, ?string, array<string, string>}>
+     */
+    public function ageStuffFieldsDataProvider(): array
     {
         return [
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
@@ -221,21 +224,20 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::skipData($client, true);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]'  => 'FEEDBACK',
-            'iu_form[password]'        => 'why-so-serious',
+            'iu_form[contactAllowed]' => 'FEEDBACK',
+            'iu_form[password]'       => 'why-so-serious',
         ]);
         self::submitInvalid($client, $form);
 
-        self::assertSelectorTextContains('#iu_form_contactInfoObfuscated_help + div.invalid-feedback', 'This value should not be blank.');
+        self::assertFieldErrorContactInfoMustNotBeBlank();
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactInfoObfuscated]' => 'email@address',
-            'iu_form[password]'              => 'why-so-serious',
+            'iu_form[contactAllowed]' => 'NO',
+            'iu_form[password]'       => 'why-so-serious',
         ]);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('.alert-success h4', 'Your submission has been recorded!');
-        self::assertSelectorTextContains('.alert-success', 'Submissions are typically processed once a week, during the weekend. If you don\'t see your changes on-line after 7 days');
+        self::assertIuSubmittedCorrectPassword();
     }
 
     public function testConfirmationNewMaker(): void
@@ -247,13 +249,12 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::skipData($client, true);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]'  => 'NO',
-            'iu_form[password]'        => 'why-so-serious',
+            'iu_form[contactAllowed]' => 'NO',
+            'iu_form[password]'       => 'why-so-serious',
         ]);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('.alert-success h4', 'Your submission has been recorded!');
-        self::assertSelectorTextContains('.alert-success', 'Submissions are typically processed once a week, during the weekend. If you don\'t see your changes on-line after 7 days');
+        self::assertIuSubmittedCorrectPassword();
     }
 
     public function testConfirmationValidPassword(): void
@@ -279,8 +280,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         ]);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('.alert-success h4', 'Your submission has been recorded!');
-        self::assertSelectorTextContains('.alert-success', 'Submissions are typically processed once a week, during the weekend. If you don\'t see your changes on-line after 7 days');
+        self::assertIuSubmittedCorrectPassword();
     }
 
     public function testConfirmationInvalidPasswordContactAllowed(): void
@@ -308,8 +308,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         ]);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('.alert-warning h4', 'Your submission has been recorded, but...');
-        self::assertSelectorTextContains('.alert-warning', 'The password you provided didn\'t match, so expect to be contacted by the maintainer to confirm your changes.');
+        self::assertIuSubmittedWrongPasswordContactAllowed();
     }
 
     public function testConfirmationInvalidPasswordContactIsNotAllowed(): void
@@ -319,7 +318,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
             password: 'password-555',
-            contactAllowed: ContactPermit::NO,
+            contactAllowed: ContactPermit::ANNOUNCEMENTS, // Contact was allowed
             ages: Ages::MIXED,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -331,15 +330,13 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::skipData($client, false);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'              => 'password-554',
-            'iu_form[contactAllowed]'        => 'ANNOUNCEMENTS',
-            'iu_form[contactInfoObfuscated]' => 'email@address',
-            'iu_form[changePassword]'        => '1',
+            'iu_form[password]'       => 'password-554',
+            'iu_form[contactAllowed]' => 'NO', // Contact is no longer allowed
+            'iu_form[changePassword]' => '1',
         ]);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('.alert-danger h4', 'Your submission has been recorded, but...');
-        self::assertSelectorTextContains('.alert-danger', 'The password you provided didn\'t match, and you previously didn\'t agree to be contacted');
+        self::assertIuSubmittedWrongPasswordContactNotAllowed();
     }
 
     public function testConfirmationInvalidPasswordContactWasNotAllowed(): void
@@ -349,7 +346,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan(
             makerId: 'MAKERID',
             password: 'password-555',
-            contactAllowed: ContactPermit::CORRECTIONS,
+            contactAllowed: ContactPermit::NO, // Contact was not allowed
             ages: Ages::MINORS,
             nsfwWebsite: false,
             nsfwSocial: false,
@@ -361,14 +358,14 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::skipData($client, false);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'       => 'password-554',
-            'iu_form[contactAllowed]' => 'NO',
-            'iu_form[changePassword]' => '1',
+            'iu_form[password]'              => 'password-554',
+            'iu_form[contactAllowed]'        => 'CORRECTIONS', // Contact is allowed now
+            'iu_form[changePassword]'        => '1',
+            'iu_form[contactInfoObfuscated]' => 'email@address',
         ]);
         self::submitValid($client, $form);
 
-        self::assertSelectorTextContains('.alert-danger h4', 'Your submission has been recorded, but...');
-        self::assertSelectorTextContains('.alert-danger', 'The password you provided didn\'t match, and you didn\'t agree to be contacted');
+        self::assertIuSubmittedWrongPasswordContactWasNotAllowed();
     }
 
     /**
@@ -388,7 +385,10 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::assertMatchesRegularExpression("#/iu_form/start$slashedMakerId\$#", $uri);
     }
 
-    public function cannotSkipUnfinishedStepsDataProvider(): array // @phpstan-ignore-line
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public function cannotSkipUnfinishedStepsDataProvider(): array
     {
         return [
             'New maker, pass+cont'      => ['contact_and_password', ''],
@@ -437,7 +437,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
      *
      * @dataProvider formsChoicesValuesAndLabelsDataProvider
      */
-    public function testFormsChoicesValuesAndLabels(array $choices): void
+    public function testFormsDisplayChoicesProperlyWithValuesAndLabels(array $choices): void
     {
         $client = static::createClient();
 
@@ -455,5 +455,61 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             $labelXPath = "//label[text() = \"$label\"]";
             self::assertCount(1, $crawler->filterXPath($labelXPath), "Absent: $labelXPath");
         }
+    }
+
+    public function testOneMakerCannotUseOtherMakersMakerId(): void
+    {
+        $client = static::createClient();
+
+        self::persistAndFlush(
+            self::getArtisan(makerId: 'OTHERID'),
+            self::getArtisan(makerId: 'MAKERID', ages: Ages::ADULTS, nsfwWebsite: false, nsfwSocial: false,
+                doesNsfw: false, worksWithMinors: false),
+        );
+
+        $client->request('GET', '/iu_form/start/MAKERID');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]' => 'OTHERID',
+        ]);
+        self::submitInvalid($client, $form);
+        self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
+            'This maker ID has been already used by another maker.');
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]' => 'ANOTHER',
+        ]);
+        self::submitValid($client, $form);
+    }
+
+    public function testNewMakerCannotUseOtherMakersMakerId(): void
+    {
+        $client = static::createClient();
+
+        self::persistAndFlush(
+            self::getArtisan(makerId: 'OTHERID'),
+        );
+
+        $client->request('GET', '/iu_form/start');
+        self::skipRulesAndCaptcha($client);
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]'         => 'OTHERID',
+            'iu_form[name]'            => 'test-maker-555',
+            'iu_form[country]'         => 'Finland',
+            'iu_form[ages]'            => 'MINORS',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[worksWithMinors]' => 'NO',
+        ]);
+        self::submitInvalid($client, $form);
+        self::assertSelectorTextContains('#iu_form_makerId_help + .invalid-feedback',
+            'This maker ID has been already used by another maker.');
+
+        $form = $client->getCrawler()->selectButton('Continue')->form([
+            'iu_form[makerId]' => 'ANOTHER',
+        ]);
+        self::submitValid($client, $form);
     }
 }

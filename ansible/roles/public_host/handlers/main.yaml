@@ -1,14 +1,11 @@
 ---
-- name: reload sshd
-  service:
-    name: sshd
-    state: reloaded
+- name: 'Reload sshd'
+  ansible.builtin.service:
+    name:  'sshd'
+    state: 'reloaded'
 
-- name: restart Apache # grep-restart-apache-handler TODO: deduplicate?
-  shell: apachectl configtest && apachectl graceful
+- name: 'Reload Apache' # grep-restart-apache-handler TODO: deduplicate?
+  ansible.builtin.shell: 'apachectl configtest && apachectl graceful'
 
-- name: reload systemd
-  command: systemctl daemon-reload
-
-- name: reboot system
-  reboot:
+- name: 'Reload system'
+  ansible.builtin.reboot:

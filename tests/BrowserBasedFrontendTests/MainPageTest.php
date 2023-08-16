@@ -125,7 +125,9 @@ class MainPageTest extends PantherTestCaseWithEM
         $client = static::createPantherClient();
         self::setWindowSize($client, 1600, 900);
 
-        self::persistAndFlush(self::getArtisan('Test artisan 1', 'TEST001', 'FI'));
+        $artisan = self::getArtisan('Test artisan 1', 'TEST001', 'FI');
+        $artisan->setInactiveReason('Testing'); // Must show up even if deactivated
+        self::persistAndFlush($artisan);
         $this->clearCache();
 
         $client->request('GET', '/index.php/#TEST001');

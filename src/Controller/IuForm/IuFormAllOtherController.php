@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
+use App\Utils\DateTime\UtcClock;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,7 @@ class IuFormAllOtherController extends AbstractIuFormController
             'password_ok'            => 'yes' === $request->get('passwordOk', 'no'),
             'contact_allowed'        => 'yes' === $request->get('contactAllowed', 'is_no'),
             'no_selected_previously' => 'was_no' === $request->get('contactAllowed', 'is_no'),
+            'submission_id'          => $request->get('submissionId', UtcClock::now()->format(DATE_RFC3339)),
         ]);
     }
 

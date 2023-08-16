@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use App\DataDefinitions\Fields\Field as F;
-use App\DataDefinitions\ProductionModels;
+use App\Data\Definitions\Fields\Field as F;
+use App\Data\Definitions\ProductionModels;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;

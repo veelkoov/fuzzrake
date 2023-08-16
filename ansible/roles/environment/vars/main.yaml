@@ -1,2 +1,2 @@
 ---
-php_fpm_docker_image_name: fuzzrake/php-fpm:latest
+php_fpm_docker_image_name: 'fuzzrake/php-fpm:latest'

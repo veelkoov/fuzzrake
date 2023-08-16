@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ArtisanUrlRepository;
-use App\Tracking\Web\Url\Fetchable;
-use App\Utils\DateTime\UtcClock;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 
 #[ORM\Entity(repositoryClass: ArtisanUrlRepository::class)]
 #[ORM\Table(name: 'artisans_urls')]
-class ArtisanUrl implements Fetchable, Stringable
+class ArtisanUrl implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -97,25 +95,6 @@ class ArtisanUrl implements Fetchable, Stringable
         return $this;
     }
 
-    public function isDependency(): bool
-    {
-        return false;
-    }
-
-    public function recordSuccessfulFetch(): void
-    {
-        $this->getState()
-            ->setLastSuccessUtc(UtcClock::now());
-    }
-
-    public function recordFailedFetch(int $code, string $reason): void
-    {
-        $this->getState()
-            ->setLastFailureUtc(UtcClock::now())
-            ->setLastFailureCode($code)
-            ->setLastFailureReason($reason);
-    }
-
     public function resetFetchResults(): void
     {
         $this->getState()
@@ -123,11 +102,6 @@ class ArtisanUrl implements Fetchable, Stringable
             ->setLastSuccessUtc(null)
             ->setLastFailureReason('')
             ->setLastFailureCode(0);
-    }
-
-    public function getOwnerName(): string
-    {
-        return $this->artisan->getName();
     }
 
     public function __toString(): string

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\TestUtils\Cases\Traits;
 
-use App\DataDefinitions\Ages;
-use App\DataDefinitions\ContactPermit;
+use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\Event;
 use App\Repository\ArtisanRepository;

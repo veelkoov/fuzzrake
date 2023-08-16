@@ -38,7 +38,7 @@ final class Enforce
             throw new InvalidArgumentException('Expected array of strings');
         }
 
-        return $input; // @phpstan-ignore-line Regression in 1.9.0
+        return $input;
     }
 
     public static function bool(mixed $input): bool

@@ -17,7 +17,7 @@ class RestApiControllerWithEMTest extends WebTestCaseWithEM
         self::persistAndFlush(self::getArtisan('API testing artisan', 'APIARTS', 'FI'));
 
         $client->request('GET', '/api/artisans.json');
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeIs($client, 200);
 
         $text = $client->getResponse()->getContent();
         self::assertNotFalse($text);

@@ -1,7 +1,8 @@
 ---
-- name: update Apache vhost configuration
-  template:
-    src: "vhost.j2.conf"
-    dest: "/etc/httpd/conf.d/{{ server_name }}.conf"
+- name: 'Update Apache vhost configuration'
+  ansible.builtin.template:
+    src:  'vhost.j2.conf'
+    dest: '/etc/httpd/conf.d/{{ server_name }}.conf'
+    mode: '0644'
   notify:
-    - restart Apache
+    - 'Reload Apache'

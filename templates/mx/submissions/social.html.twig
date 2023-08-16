@@ -30,9 +30,30 @@
 
             <h6>Hashtags</h6>
             <p><i>#<span class="user-select-all">fursuit maker</span> #<span class="user-select-all">furry</span></i></p>
+
+            <h4>Image ALT</h4>
+            <p class="user-select-all small">
+                Screenshot of a Tumblr post announcing the addition of __CHANGE_HERE__ new makers
+                to the getfursu.it website, and encouraging to check the list of all recently added makers,
+                or to join the list. Below the text, two large emoticons/characters are shown:
+                __CHANGE_HERE__ and a T. rex looking in __CHANGE_HERE__ direction.
+            </p>
         </div>
 
         <div class="col">
+            <h4>Mastodon</h4>
+
+            <h5>Toot</h5>
+            <p class="user-select-all">
+                <i>#fursuitmaker #furry</i>
+
+                {% for artisan in artisans %}
+                    https://getfursu.it/#{{ artisan.makerId }}
+                {% endfor %}
+
+                https://getfursu.it/new
+            </p>
+
             <h4>Twitter</h4>
 
             <h5>Tweet</h5>

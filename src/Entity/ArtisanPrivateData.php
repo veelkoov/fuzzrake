@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\DataDefinitions\Fields\Validation;
+use App\Data\Definitions\Fields\Validation;
 use App\Repository\ArtisanPrivateDataRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

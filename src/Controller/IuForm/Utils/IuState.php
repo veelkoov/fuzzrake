@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm\Utils;
 
-use App\DataDefinitions\ContactPermit;
-use App\DataDefinitions\Fields\Fields;
-use App\DataDefinitions\Fields\SecureValues;
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Fields;
+use App\Data\Definitions\Fields\SecureValues;
+use App\Utils\Arrays\SafeArrayRead;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Data\SafeArrayRead;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
