@@ -49,6 +49,8 @@ class ArtisanFieldsTest extends TestCase
         $fieldsInJson = Fields::public()->asArray();
 
         foreach ($matches as $detail) {
+            static::assertInstanceOf(Detail::class, $detail); // Silence PHPStan
+
             $field = array_shift($fieldsInJson);
 
             static::assertNotNull($field);
