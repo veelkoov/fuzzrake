@@ -48,13 +48,15 @@ class ArtisanFieldsTest extends TestCase
 
         $fieldsInJson = Fields::public()->asArray();
 
-        $matches->forEach(function (Detail $detail) use (&$fieldsInJson): void {
+        foreach ($matches as $detail) {
+            static::assertInstanceOf(Detail::class, $detail); // Silence PHPStan
+
             $field = array_shift($fieldsInJson);
 
             static::assertNotNull($field);
             static::assertEquals($field->modelName(), $detail->get('name'));
             static::assertEquals($field->isList(), $detail->matched('is_list'), "{$field->modelName()} should be a list");
-        });
+        }
 
         static::assertEmpty($fieldsInJson);
     }
