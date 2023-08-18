@@ -44,6 +44,7 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('link_urls', $this->linkUrls(...), SafeFor::HTML),
             new TwigFilter('is_valid', $this->isValid(...)),
             new TwigFilter('get_comments', $this->getComment(...)),
+            new TwigFilter('mastodon_at', $this->mastodonAt(...)),
         ];
     }
 
@@ -128,5 +129,12 @@ class AdminExtensions extends AbstractExtension
         } else {
             return $subject->get($field);
         }
+    }
+
+    private function mastodonAt(string $mastodonUrl): string
+    {
+        return Pattern::of('^https://([^/]+)/([^/#?]+).*')
+            ->replace($mastodonUrl)
+            ->withReferences('$2@$1');
     }
 }

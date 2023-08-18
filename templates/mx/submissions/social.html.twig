@@ -54,6 +54,15 @@
                 https://getfursu.it/new
             </p>
 
+            <h5>Tags</h5>
+            <p>
+                {% for artisan in artisans %}
+                    {% if '' != artisan.mastodonUrl %}
+                        <span class="user-select-all">{{ artisan.mastodonUrl | mastodon_at }}</span>
+                    {% endif %}
+                {% endfor %}
+            </p>
+
             <h4>Twitter</h4>
 
             <h5>Tweet</h5>
