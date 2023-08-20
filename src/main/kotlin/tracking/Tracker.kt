@@ -9,6 +9,7 @@ import database.helpers.aliases
 import database.helpers.lastCreatorId
 import database.tables.CreatorUrls
 import database.tables.Creators
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.dao.with
 import tracking.contents.CreatorData
 import tracking.contents.TrackedContentsProvider
@@ -17,6 +18,8 @@ import web.url.ThreadSafeCreatorUrl
 import web.url.Url
 import java.util.stream.Collectors
 import database.entities.CreatorUrl as CreatorUrlEntity
+
+private val logger = KotlinLogging.logger {}
 
 class Tracker( // TODO: Remove the leftovers in the database
     private val config: Configuration,
@@ -28,6 +31,8 @@ class Tracker( // TODO: Remove the leftovers in the database
     private val updater = Updater()
 
     fun run() = database.transaction {
+        logger.info { "Beginning tracking." }
+
         val creatorsTrackingUrls = getCreatorsTrackingUrls()
 
         creatorsTrackingUrls
@@ -41,6 +46,8 @@ class Tracker( // TODO: Remove the leftovers in the database
             .map(updater::save)
 
         creatorsTrackingUrls.forEach { (_, urls) -> urls.forEach(ThreadSafeCreatorUrl::commit) }
+
+        logger.info { "Finished tracking." }
     }
 
     private fun getCreatorsTrackingUrls(): Map<Creator, List<ThreadSafeCreatorUrl>> { // TODO: Yuck
