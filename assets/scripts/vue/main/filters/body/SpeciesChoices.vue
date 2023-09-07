@@ -1,23 +1,23 @@
 <template>
   <template v-for="specie in species" :key="specie.label">
     <div class="btn-group specie" role="group">
-        <span class="btn btn-outline-secondary">
-          <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label"/>
+      <span class="btn btn-outline-secondary">
+        <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label" />
 
-          <span v-if="anySubspecieChecked(specie)" class="descendants-indicator">
-            <wbr> <i class="fas fa-tasks"></i>
-          </span>
+        <span v-if="anySubspecieChecked(specie)" class="descendants-indicator">
+          <wbr> <i class="fas fa-tasks" />
         </span>
+      </span>
 
       <span v-if="hasSubspecies(specie)" class="btn btn-outline-secondary toggle">
-        <i class="fas fa-caret-right"></i>
+        <i class="fas fa-caret-right" />
       </span>
     </div>
 
     <template v-if="hasSubspecies(specie)">
       <br>
       <fieldset class="subspecies">
-        <SpeciesChoices :filter="filter" :species="getSubspecies(specie)"/>
+        <SpeciesChoices :filter="filter" :species="getSubspecies(specie)" />
       </fieldset>
     </template>
   </template>

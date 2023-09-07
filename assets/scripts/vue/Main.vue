@@ -1,8 +1,8 @@
 <template>
-  <CheckList v-if="!aasDismissed" @dismissed="onChecklistDismissal()"/>
-  <FiltersPopUp :state="state"/>
-  <UpdatesPopUp :state="state"/>
-  <CardPopUp :state="state"/>
+  <CheckList v-if="!aasDismissed" @dismissed="onChecklistDismissal()" />
+  <FiltersPopUp :state="state" />
+  <UpdatesPopUp :state="state" />
+  <CardPopUp :state="state" />
 
   <div id="data-table-content-container" :style="{'display': aasDismissed ? 'block' : 'none'}">
     <div v-if="aasConfig.getMakerMode()" class="card border-danger mb-3">
@@ -10,8 +10,10 @@
         Filters disabled
       </div>
       <div class="card-body">
-        <p class="card-text">All filtering has been temporarily disabled to ease searching the whole database. Use the below button to restore them.</p>
-        <a :href=Static.getMainPath() id="btn-reenable-filters" class="btn btn-light btn-outline-danger" @click=disableMakerMode>Re-enable filters</a>
+        <p class="card-text">
+          All filtering has been temporarily disabled to ease searching the whole database. Use the below button to restore them.
+        </p>
+        <a id="btn-reenable-filters" :href="Static.getMainPath()" class="btn btn-light btn-outline-danger" @click="disableMakerMode">Re-enable filters</a>
       </div>
     </div>
 
@@ -38,7 +40,7 @@
         </div>
 
         <div class="col-md-6 text-md-end">
-          <input class="my-1" type="text" @input="runSearch();" placeholder="Search">
+          <input class="my-1" type="text" placeholder="Search" @input="runSearch();">
         </div>
       </div>
 

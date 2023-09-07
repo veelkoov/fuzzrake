@@ -1,28 +1,30 @@
 <template>
   <div :id="'filter-body-' + filter.groupName" class="collapse" data-bs-parent="#filters-body">
     <div class="text-end helphints-toggle">
-      <button class="btn btn-success" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + helpContainerId" aria-expanded="false" :aria-controls="helpContainerId">Help and hints</button>
+      <button class="btn btn-success" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + helpContainerId" aria-expanded="false" :aria-controls="helpContainerId">
+        Help and hints
+      </button>
     </div>
 
-    <div class="collapse helphints-contents" :id="helpContainerId">
+    <div :id="helpContainerId" class="collapse helphints-contents">
       <div class="card">
         <div class="card-body">
           <ul>
-            <component :is="filter.helpComponentName"/>
+            <component :is="filter.helpComponentName" />
 
             <li class="small">
               You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supplied some information), you can ask them to fill the missing information, e.g.:
 
               <em>I found you on getfursu.it, but some information is missing there. Please consider sending updates: <a :href="iuFormUrl" target="_blank">{{ iuFormUrl }}</a> .</em>
 
-              Thank you! <i class="fas fa-heart"></i>
+              Thank you! <i class="fas fa-heart" />
             </li>
           </ul>
         </div>
       </div>
     </div>
 
-    <component :is="filter.bodyComponentName" :filter="filter"/>
+    <component :is="filter.bodyComponentName" :filter="filter" />
   </div>
 </template>
 

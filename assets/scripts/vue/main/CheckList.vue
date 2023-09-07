@@ -11,9 +11,9 @@
 
       <p class="card-text">
         The <a :href="Static.getShouldKnowPath()">What you should know</a> page contains some helpful information,
-        tips, and links to external resources. It includes a <em>Learn about <strong>the risk</strong></em> <!--
-        grep-learn-about-the-risk --> section.
-        <br/>
+        tips, and links to external resources. It includes a <em>Learn about <strong>the risk</strong></em>
+        <!-- grep-learn-about-the-risk --> section.
+        <br>
 
         <span class="small">
           <strong class="text-danger">You will most probably not get your fursuit in the next weeks, so reading a bit will not hurt.</strong> Slow down.
@@ -22,7 +22,7 @@
 
       <div class="card-text">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="checklist-ill-be-careful" v-model="illBeCareful"/>
+          <input id="checklist-ill-be-careful" v-model="illBeCareful" class="form-check-input" type="checkbox">
 
           <label class="form-check-label" for="checklist-ill-be-careful">
             I understand the risk and know where to look for more information
@@ -31,12 +31,12 @@
       </div>
 
       <div v-if="illBeCareful" class="card-text">
-        <hr/>
+        <hr>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="aasImNotAdult" v-model="isAdult" :value="false"/>
+              <input id="aasImNotAdult" v-model="isAdult" class="form-check-input" type="radio" :value="false">
 
               <label class="form-check-label" for="aasImNotAdult">
                 I am under 18 years old. <small class="text-muted">I am looking for a maker who accepts commissions from underage people.</small>
@@ -45,7 +45,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="aasImAdult" v-model="isAdult" :value="true"/>
+              <input id="aasImAdult" v-model="isAdult" class="form-check-input" type="radio" :value="true">
 
               <label class="form-check-label" for="aasImAdult">
                 I am at least 18 years old. <small class="text-muted">Yes, lying about my age would be a stupid idea and could get me banned from commissioning my beloved fursuit maker, ever.</small>
@@ -56,12 +56,12 @@
       </div>
 
       <div v-if="illBeCareful && isAdult" class="card-text">
-        <hr/>
+        <hr>
 
         <div class="row">
           <div class="col-md-6">
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="aasKeepSfw" v-model="wantsSfw" :value="true"/>
+              <input id="aasKeepSfw" v-model="wantsSfw" class="form-check-input" type="radio" :value="true">
 
               <label class="form-check-label" for="aasKeepSfw">
                 I prefer makers with "family-friendly" websites and social media.
@@ -70,7 +70,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="aasAllowNsfw" v-model="wantsSfw" :value="false"/>
+              <input id="aasAllowNsfw" v-model="wantsSfw" class="form-check-input" type="radio" :value="false">
 
               <label class="form-check-label" for="aasAllowNsfw">
                 I don't mind running occasionally into NSFW stuff.
@@ -80,10 +80,10 @@
         </div>
       </div>
 
-      <hr/>
+      <hr>
 
       <p class="card-text text-end">
-        <input type="button" id="checklist-dismiss-btn" class="btn btn-primary" :disabled="buttonDisabled" :value="buttonText" @click="confirm()"/>
+        <input id="checklist-dismiss-btn" type="button" class="btn btn-primary" :disabled="buttonDisabled" :value="buttonText" @click="confirm()">
       </p>
     </div>
   </div>

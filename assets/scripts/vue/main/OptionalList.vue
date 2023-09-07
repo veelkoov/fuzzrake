@@ -5,9 +5,13 @@
 
   <template v-if="items.length || otherItems.length">
     <ul>
-      <li v-for="item in items" :key="item">{{ item }}</li>
+      <li v-for="item in items" :key="item">
+        {{ item }}
+      </li>
 
-      <li v-if="otherItems.length">{{ otherItems.join('; ') }}</li>
+      <li v-if="otherItems.length">
+        {{ otherItems.join('; ') }}
+      </li>
     </ul>
   </template>
 

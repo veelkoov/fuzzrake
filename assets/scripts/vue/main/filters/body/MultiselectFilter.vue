@@ -3,21 +3,21 @@
     <div class="row">
       <div class="col-sm-12">
         <AllNoneInvertLinks
-            v-if="0 !== filter.options.items.length"
-            class="simple"
-            @all="checkboxes.all()"
-            @none="checkboxes.none()"
-            @invert="checkboxes.invert()"
+          v-if="0 !== filter.options.items.length"
+          class="simple"
+          @all="checkboxes.all()"
+          @none="checkboxes.none()"
+          @invert="checkboxes.invert()"
         />
 
-        <SpecialItems :filter="filter"/>
+        <SpecialItems :filter="filter" />
       </div>
     </div>
 
     <div class="row">
       <div v-for="item in filter.options.items" :key="item.value" class="col-sm-6 col-lg-3">
         <div class="form-check form-check-inline">
-          <CheckBox :filter="filter" :value="item.value" :count="item.count" :label="item.label" ref="checkboxes"/>
+          <CheckBox ref="checkboxes" :filter="filter" :value="item.value" :count="item.count" :label="item.label" />
         </div>
       </div>
     </div>

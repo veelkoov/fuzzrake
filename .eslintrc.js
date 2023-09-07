@@ -2,7 +2,7 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
-        'plugin:vue/vue3-essential', // TODO: https://github.com/veelkoov/fuzzrake/pull/187/files Upgrade ---> strongly-recommended ---> recommended
+        'plugin:vue/vue3-recommended',
     ],
     'parser': 'vue-eslint-parser',
     'parserOptions': {
@@ -10,4 +10,10 @@ module.exports = {
     },
     plugins: ['@typescript-eslint'],
     root: true,
+    'rules': {
+        'vue/max-attributes-per-line': 'off', // FIXME: Optionally. Too much noise for now.
+        'vue/no-multi-spaces': ['warn', {
+            'ignoreProperties': true, // Allow e.g. alignment for classes
+        }],
+    },
 };

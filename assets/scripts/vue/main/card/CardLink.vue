@@ -1,7 +1,7 @@
 <template>
   <template v-if="url">
     <a class="btn btn-light" :class="addBtnClass" :href="url" target="_blank">
-      <i :class="iconClass"></i> {{ label }}
+      <i :class="iconClass" /> {{ label }}
     </a> <wbr>
   </template>
 </template>
