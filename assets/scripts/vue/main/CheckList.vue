@@ -104,8 +104,8 @@ import {Options, Vue} from 'vue-class-component';
 })
 export default class CheckList extends Vue {
   private illBeCareful = false;
-  private isAdult: boolean = null;
-  private wantsSfw: boolean = null;
+  private isAdult: boolean | null = null;
+  private wantsSfw: boolean | null = null;
   private aasConfig = AgeAndSfwConfig.getInstance();
 
   public created() {
@@ -117,7 +117,7 @@ export default class CheckList extends Vue {
   }
 
   private get buttonDisabled(): boolean {
-    return !this.illBeCareful || null === this.isAdult || (true === this.isAdult && null === this.wantsSfw);
+    return !this.illBeCareful || null === this.isAdult || (this.isAdult && null === this.wantsSfw);
   }
 
   private get buttonText(): string {
@@ -125,8 +125,8 @@ export default class CheckList extends Vue {
   }
 
   public confirm(): void {
-    this.aasConfig.setIsAdult(this.isAdult);
-    this.aasConfig.setWantsSfw(this.wantsSfw);
+    this.aasConfig.setIsAdult(this.isAdult ?? false);
+    this.aasConfig.setWantsSfw(this.wantsSfw ?? true);
     this.aasConfig.setIsFilled(true);
     this.aasConfig.save();
 

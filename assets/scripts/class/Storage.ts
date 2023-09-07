@@ -3,15 +3,15 @@ export default class Storage {
         throw new TypeError('Trying to instantiate an utility class');
     }
 
-    public static getString(key: string, defaultValue: string = null): string|null {
+    public static getString(key: string, defaultValue: string): string {
         return this.get(key) ?? defaultValue;
     }
 
-    public static saveString(key: string, value: string, expireSeconds: number = null): void {
+    public static saveString(key: string, value: string, expireSeconds: number | null = null): void {
         this.save(key, value, expireSeconds);
     }
 
-    public static getBoolean(key: string, defaultValue: boolean = null): boolean|null {
+    public static getBoolean(key: string, defaultValue: boolean): boolean {
         const result = this.get(key);
 
         switch (result) {
@@ -21,7 +21,7 @@ export default class Storage {
         }
     }
 
-    public static saveBoolean(key: string, value: boolean, expireSeconds: number = null): void {
+    public static saveBoolean(key: string, value: boolean, expireSeconds: number | null = null): void {
         this.save(key, value ? '1' : '0', expireSeconds);
     }
 
@@ -39,7 +39,7 @@ export default class Storage {
         }
     }
 
-    protected static save(key: string, value: string, expireSeconds: number = null): void {
+    protected static save(key: string, value: string, expireSeconds: number | null = null): void {
         try {
             localStorage.setItem(this.dataPath(key), value.toString());
 

@@ -2,7 +2,7 @@ import CheckBox from './CheckBox.vue';
 
 export default class CheckBoxes {
     public constructor(
-        private readonly checkboxes: CheckBox[],
+        private readonly checkboxes: typeof CheckBox[],
     ) {
     }
 

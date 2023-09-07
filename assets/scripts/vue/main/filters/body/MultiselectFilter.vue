@@ -41,10 +41,10 @@ import {PropType} from 'vue';
   }
 })
 export default class MultiselectFilter extends Vue {
-  private checkboxes: CheckBoxes;
+  private checkboxes!: CheckBoxes;
 
   public mounted(): void {
-    this.checkboxes = new CheckBoxes(this.$refs['checkboxes'] as CheckBox[]);
+    this.checkboxes = new CheckBoxes(this.$refs['checkboxes'] as typeof CheckBox[]);
   }
 }
 </script>

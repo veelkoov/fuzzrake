@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
-    "strict": false,
+    "strict": true,
     "downlevelIteration": true,
     "target": "ES6",
     "moduleResolution": "Node",
     "experimentalDecorators": true,
+    "rootDir": "./assets/scripts"
   }
 }

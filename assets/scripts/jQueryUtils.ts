@@ -1,5 +1,5 @@
 export function toggle(
-    $elements: JQuery<HTMLElement>|string,
+    $elements: JQuery<HTMLElement> | string,
     visible: boolean | ((index: number, element: JQuery<HTMLElement>) => boolean),
     duration: JQuery.Duration = 'fast',
 ): void {
@@ -20,4 +20,14 @@ export function toggle(
             toggle($element, visible(index, $element), duration);
         });
     }
+}
+
+export function singleStrValOrNull($element: JQuery): string | null {
+    if (1 !== $element.length) {
+        return null;
+    }
+
+    const value = $element.val();
+
+    return undefined === value ? null : value.toString();
 }

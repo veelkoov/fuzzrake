@@ -268,7 +268,7 @@ import {Options, Vue} from 'vue-class-component';
 export default class Link extends Vue {
   private state!: MainState;
 
-  private static readonly MONTHS = {
+  private static readonly MONTHS: { [key: string]: string; } = {
     '01': 'Jan',
     '02': 'Feb',
     '03': 'Mar',
