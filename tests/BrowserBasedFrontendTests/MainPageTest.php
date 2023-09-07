@@ -44,13 +44,30 @@ class MainPageTest extends PantherTestCaseWithEM
         $client->request('GET', '/index.php/');
         self::skipCheckListAdultAllowNsfw($client, 3);
 
+        // Open filters pop-up
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
         $client->waitForVisibility('#filtersTitle', 5);
 
+        // Open "countries" filter
         $client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
         $client->waitForVisibility('input[type=checkbox][value=CZ]', 5);
 
+        // Mark Czechia
+        $client->findElement(WebDriverBy::cssSelector('input[type=checkbox][value=CZ]'))->click();
+        $this->checkCountriesFilterSelections(['CZ'], ['DE', 'CA']);
+
+        // Click "invert" on Europe
+        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "invert"]'))->click();
+        $this->checkCountriesFilterSelections(['DE'], ['CZ', 'CA']);
+
+        // Click "none" on Europe
+        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "none"]'))->click();
+        $this->checkCountriesFilterSelections([], ['CZ', 'DE', 'CA']);
+
+        // Click "all" on Europe
         $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "all"]'))->click();
+        $this->checkCountriesFilterSelections(['CZ', 'DE'], ['CA']);
+
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
         self::waitForLoadingIndicatorToDisappear();
         $client->waitFor('//p[@id="artisans-table-count" and contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 1);
@@ -76,6 +93,21 @@ class MainPageTest extends PantherTestCaseWithEM
         $client->waitForVisibility('#artisanUpdatesModalContent', 5);
 
         self::assertStringContainsString('Test artisan 3', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+    }
+
+    /**
+     * @param list<string> $selected
+     * @param list<string> $notSelected
+     */
+    private function checkCountriesFilterSelections(array $selected, array $notSelected): void
+    {
+        foreach ($selected as $country) {
+            self::assertSelectorExists("input[type=checkbox][value=$country]:checked");
+        }
+
+        foreach ($notSelected as $country) {
+            self::assertSelectorExists("input[type=checkbox][value=$country]:not(:checked)");
+        }
     }
 
     /**
