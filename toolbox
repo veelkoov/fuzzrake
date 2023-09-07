@@ -132,6 +132,16 @@ function action_dbdump() {
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
         if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
             run_command sqlite3 "$DB_PATH" ".output $DB_DUMP_DIR_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+
+            echo 'Dumping to JSON...'
+
+            if grep 'CREATE TABLE' "$DB_DUMP_DIR_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
+                order_by='artisan_id'
+            else
+                order_by='id'
+            fi
+
+            sqlite3 -json "$DB_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_PATH/$TABLE_NAME.json"
         fi
     done
 }
