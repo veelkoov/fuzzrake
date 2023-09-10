@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6eedf309cb2cda5a370b05cbdd4f4ac0",
+    "content-hash": "5eb4cff24353e84556a2d524d93ce704",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -7515,6 +7515,55 @@
                 "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.23"
             },
             "time": "2023-02-06T10:42:02+00:00"
+        },
+        {
+            "name": "rawr/phpunit-data-provider",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/t-regx/phpunit-data-provider.git",
+                "reference": "6de1a315c71a50945f7da712f3cada1ca079120e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/t-regx/phpunit-data-provider/zipball/6de1a315c71a50945f7da712f3cada1ca079120e",
+                "reference": "6de1a315c71a50945f7da712f3cada1ca079120e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5.4 || ^8.0 || ^7.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TRegx\\PhpUnit\\DataProviders\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Wilkowski",
+                    "homepage": "https://t-regx.com/"
+                }
+            ],
+            "description": "Lightweight builder for PhpUnit data providers",
+            "support": {
+                "issues": "https://github.com/t-regx/phpunit-data-provider/issues",
+                "source": "https://github.com/t-regx/phpunit-data-provider/tree/3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/danon",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-08-14T10:18:25+00:00"
         },
         {
             "name": "rector/rector",
