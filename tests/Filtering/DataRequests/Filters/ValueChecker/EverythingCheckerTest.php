@@ -25,27 +25,26 @@ class EverythingCheckerTest extends TestCase
 
     public function matchesDataProvider(): DataProvider
     {
-        return DataProvider::tuples(
-            // items, matchedOther, expected
-            ['', true, false],
+        return DataProvider::tuples( // items, matchedOther, expected
+            ['', true,  false],
             ['', false, false],
-            ['', null, false],
+            ['', null,  false],
 
-            ['A', true, false],
+            ['A', true,  false],
             ['A', false, false],
-            ['A', null, false],
+            ['A', null,  false],
 
-            ['B', true, false],
+            ['B', true,  false],
             ['B', false, false],
-            ['B', null, false],
+            ['B', null,  false],
 
-            ['AB', true, false],
+            ['AB', true,  false],
             ['AB', false, false],
-            ['AB', null, false],
+            ['AB', null,  false],
 
-            ["A\nB", true, true],
+            ["A\nB", true,  true],
             ["A\nB", false, false],
-            ["A\nB", null, true],
+            ["A\nB", null,  true],
         );
     }
 }

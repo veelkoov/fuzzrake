@@ -70,14 +70,14 @@ class CreatorSpeciesResolverTest extends TestCase
     {
         return DataProvider::tuples( // expected, does, doesn't
             ['', '', ''],
-            ['Mammals, Corgis', "Mammals\nCorgis", "Canines\nWith antlers"],
-            ['Mammals, Canines, Wolves', 'Mammals', "With antlers\nDogs"],
-            ['Mammals, Canines, Wolves, Deers', "Mammals\nDeers", "With antlers\nDogs"],
+            ['Mammals, Corgis',                               "Mammals\nCorgis",    "Canines\nWith antlers"],
+            ['Mammals, Canines, Wolves',                      'Mammals',            "With antlers\nDogs"],
+            ['Mammals, Canines, Wolves, Deers',               "Mammals\nDeers",     "With antlers\nDogs"],
             ['With antlers, Deers, Dogs, Corgis, Dalmatians', "Dogs\nWith antlers", ''],
-            ['With antlers, Dogs, Corgis, Dalmatians', "Dogs\nWith antlers", 'Deers'],
+            ['With antlers, Dogs, Corgis, Dalmatians',        "Dogs\nWith antlers", 'Deers'],
 
             ['Other, Dogs, Corgis, Dalmatians', "Dogs\nPancakes", ''],
-            ['Other, Dogs, Corgis', "Dogs\nOther", 'Dalmatians'],
+            ['Other, Dogs, Corgis',             "Dogs\nOther",    'Dalmatians'],
         );
     }
 
