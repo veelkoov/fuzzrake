@@ -6,6 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCase;
 use App\Utils\TestUtils\TestsBridge;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
@@ -97,12 +98,9 @@ class FeedbackControllerTest extends WebTestCase
         self::assertResponseStatusCodeIs($client, $shouldBlock ? 422 : 302);
     }
 
-    /**
-     * @return array<array{string, bool}>
-     */
-    public function blockedOptionsDataProvider(): array
+    public function blockedOptionsDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             ['Help me get a fursuit', true],
             ["Maker's commissions info (open/closed) is inaccurate", true],
             ["Maker's website/social account is no longer working", false],
@@ -111,6 +109,6 @@ class FeedbackControllerTest extends WebTestCase
             ['Report a technical problem/bug with this website', false],
             ['Suggest an improvement to this website', false],
             ['Other (please provide adequate details and context)', false],
-        ];
+        );
     }
 }

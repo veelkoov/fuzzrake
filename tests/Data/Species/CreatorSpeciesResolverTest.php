@@ -10,6 +10,7 @@ use App\Data\Species\MutableSpeciesList;
 use App\Data\Species\SpeciesList;
 use PHPUnit\Framework\TestCase;
 use Psl\Vec;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -43,17 +44,14 @@ class CreatorSpeciesResolverTest extends TestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return list<array{string, list<string>, list<string>}>
-     */
-    public function getOrderedDoesDoesntDataProvider(): array
+    public function getOrderedDoesDoesntDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             ['+A -B +C -D', ['A', 'C'], ['B', 'D']],
             ['+A -B +C -D', ['C', 'A'], ['D', 'B']],
             ['-A +B -C +D', ['B', 'D'], ['A', 'C']],
             ['-A +B -C +D', ['D', 'B'], ['C', 'A']],
-        ];
+        );
     }
 
     /**
@@ -68,13 +66,10 @@ class CreatorSpeciesResolverTest extends TestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return list<array{string, string, string}>
-     */
-    public function resolveDoesDataProvider(): array
+    public function resolveDoesDataProvider(): DataProvider
     {
-        return [ // expected, does, doesn't
-            ['',                                              '',                   ''],
+        return DataProvider::tuples( // expected, does, doesn't
+            ['', '', ''],
             ['Mammals, Corgis',                               "Mammals\nCorgis",    "Canines\nWith antlers"],
             ['Mammals, Canines, Wolves',                      'Mammals',            "With antlers\nDogs"],
             ['Mammals, Canines, Wolves, Deers',               "Mammals\nDeers",     "With antlers\nDogs"],
@@ -83,7 +78,7 @@ class CreatorSpeciesResolverTest extends TestCase
 
             ['Other, Dogs, Corgis, Dalmatians', "Dogs\nPancakes", ''],
             ['Other, Dogs, Corgis',             "Dogs\nOther",    'Dalmatians'],
-        ];
+        );
     }
 
     /**

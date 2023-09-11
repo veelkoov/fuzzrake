@@ -7,6 +7,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @large
@@ -63,14 +64,11 @@ class RulesDisplayTest extends PantherTestCaseWithEM
         }
     }
 
-    /**
-     * @return array<string, array{0: string, 1: bool}>
-     */
-    public function togglingWorksDataProvider(): array
+    public function togglingWorksDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::of([
             '/rules'         => ['/index.php/rules',         false],
             '/iu_form/start' => ['/index.php/iu_form/start', true],
-        ];
+        ]);
     }
 }

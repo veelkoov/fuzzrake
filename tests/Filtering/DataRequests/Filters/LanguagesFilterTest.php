@@ -7,6 +7,7 @@ namespace App\Tests\Filtering\DataRequests\Filters;
 use App\Filtering\DataRequests\Filters\LanguagesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -26,12 +27,9 @@ class LanguagesFilterTest extends TestCase
         self::assertEquals($matched, $subject->matches($artisan));
     }
 
-    /**
-     * @return list<array{string, list<string>, bool}>
-     */
-    public function matchesProvider(): array
+    public function matchesProvider(): DataProvider
     {
-        return [ // languages, searched, matched
+        return DataProvider::tuples( // languages, searched, matched
             ['',                           [],                             false],
             ["Finnish\nFinnish (limited)", [],                             false],
             ["Finnish\nFinnish (limited)", ['Finnish'],                    true],
@@ -45,6 +43,6 @@ class LanguagesFilterTest extends TestCase
             ["Finnish\nFinnish (limited)", ['?', 'Finnish (limited)'],          true],
             ["Finnish\nFinnish (limited)", ['?', 'Czech', 'Finnish (limited)'], true],
             ['Finnish (limited)',          ['?', 'Finnish'],                    false],
-        ];
+        );
     }
 }

@@ -9,6 +9,7 @@ use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
@@ -41,9 +42,9 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
     }
 
     /** @noinspection HtmlUnknownTarget */
-    public function eventDescriptionDataProvider(): array // @phpstan-ignore-line
+    public function eventDescriptionDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [
                 (new Event())
                     ->setArtisanName('Artisan name 1')
@@ -87,7 +88,7 @@ class EventsControllerWithEMTest extends WebTestCaseWithEM
                 Checked contents of:
                 <a href="http://just-one-website/doc.php" target="_blank">just-one-website/doc.php</a>.',
             ],
-        ];
+        );
     }
 
     public function testAtomFeedLoadsWithoutAnyEvents(): void
