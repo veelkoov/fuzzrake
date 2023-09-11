@@ -44,17 +44,14 @@ class CreatorSpeciesResolverTest extends TestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return list<array{string, list<string>, list<string>}>
-     */
-    public function getOrderedDoesDoesntDataProvider(): array
+    public function getOrderedDoesDoesntDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             ['+A -B +C -D', ['A', 'C'], ['B', 'D']],
             ['+A -B +C -D', ['C', 'A'], ['D', 'B']],
             ['-A +B -C +D', ['B', 'D'], ['A', 'C']],
             ['-A +B -C +D', ['D', 'B'], ['C', 'A']],
-        ];
+        );
     }
 
     /**

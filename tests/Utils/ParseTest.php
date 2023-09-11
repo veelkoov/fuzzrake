@@ -7,6 +7,7 @@ namespace App\Tests\Utils;
 use App\Utils\Parse;
 use App\Utils\ParseException;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -25,12 +26,9 @@ class ParseTest extends TestCase
         }
     }
 
-    /**
-     * @return array<array{null|int|float|string, false|int}>
-     */
-    public function intDataProvider(): array
+    public function intDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             [null,   false],
             [0,      0],
             [1,      1],
@@ -50,7 +48,7 @@ class ParseTest extends TestCase
             ['1a ',  false],
             ['1.0',  false],
             [' 1.0', false],
-        ];
+        );
     }
 
     /**
@@ -61,9 +59,9 @@ class ParseTest extends TestCase
         self::assertEquals($expected, Parse::nBool($input));
     }
 
-    public function nBoolDataProvider(): array // @phpstan-ignore-line
+    public function nBoolDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             ['1',       true],
             ['true',    true],
             ['tRue',    true],
@@ -88,6 +86,6 @@ class ParseTest extends TestCase
             ['null',    null],
             ['unknown', null],
             ['2',       null],
-        ];
+        );
     }
 }

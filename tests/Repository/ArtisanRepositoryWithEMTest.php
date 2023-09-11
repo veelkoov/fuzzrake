@@ -9,6 +9,7 @@ use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NoResultException;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
@@ -41,13 +42,13 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
         static::assertEquals($artisans[$resultIdx], $result);
     }
 
-    public function findByMakerIdDataProvider(): array // @phpstan-ignore-line
+    public function findByMakerIdDataProvider(): DataProvider
     {
         Artisan::wrap($m1 = new ArtisanE())->setMakerId('MAKER11');
         Artisan::wrap($m2 = new ArtisanE())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');
         Artisan::wrap($m3 = new ArtisanE())->setMakerId('MAKER31')->setFormerMakerIds("MAKER32\nMAKER33");
 
-        return [
+        return DataProvider::tuples(
             [[$m1], 'MAKER11', 0],
             [[$m1], 'MAKER12', null],
             [[$m1], 'MAKER',   null],
@@ -66,7 +67,7 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
             [[$m3], 'MAKER32',   0],
             [[$m3], 'MAKER33',   0],
             [[$m3], "MER2\nFOR", null],
-        ];
+        );
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Data\Species\SpeciesList;
 use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -29,12 +30,9 @@ class SpeciesFilterTest extends TestCase
         self::assertEquals($matched, $subject->matches($artisan));
     }
 
-    /**
-     * @return list<array{string, string, list<string>, bool}>
-     */
-    public function matchesProvider(): array
+    public function matchesProvider(): DataProvider
     {
-        return [ // does, doesn't, searched, matched
+        return DataProvider::tuples( // does, doesn't, searched, matched
             ['',                 '',       [],          false],
             ['Mammals',          '',       [],          false],
             ['Mammals',          '',       ['Mammals'], true],
@@ -55,7 +53,7 @@ class SpeciesFilterTest extends TestCase
             ['Tigers', 'Other',              ['Other'], false],
             ['Tigers', 'OtherXYZ',           ['Other'], false],
             ["Tigers\nOtherABC", 'OtherXYZ', ['Other'], true],
-        ];
+        );
     }
 
     private function getSpeciesList(): SpeciesList

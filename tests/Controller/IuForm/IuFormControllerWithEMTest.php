@@ -9,6 +9,7 @@ use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @medium
@@ -159,12 +160,9 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         }
     }
 
-    /**
-     * @return list<array{string, string, string, ?string, ?string, array<string, string>}>
-     */
-    public function ageStuffFieldsDataProvider(): array
+    public function ageStuffFieldsDataProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             // AGES    NSFW   NSFW    DOES   WORKS     EXPECTED
             //         WEB.   SOCIAL  NSFW   W/MINORS  ERRORS
             ['MINORS', 'NO',  'NO',   null,  null,     [
@@ -212,7 +210,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             ['ADULTS', 'YES', 'YES',  'NO',  null,     []],
             ['ADULTS', 'YES', 'YES',  'YES', null,     []],
             ['ADULTS', 'YES', 'YES',  'YES', null,     []],
-        ];
+        );
     }
 
     public function testContactMethodNotRequiredWhenContactNotAllowed(): void

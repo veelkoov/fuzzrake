@@ -7,6 +7,7 @@ namespace App\Tests\Filtering\DataRequests\Filters;
 use App\Filtering\DataRequests\Filters\OpenForFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use PHPUnit\Framework\TestCase;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @small
@@ -26,12 +27,9 @@ class OpenForFilterTest extends TestCase
         self::assertEquals($matched, $subject->matches($artisan));
     }
 
-    /**
-     * @return list<array{string, string, bool, string[], bool}>
-     */
-    public function matchesProvider(): array
+    public function matchesProvider(): DataProvider
     {
-        return [
+        return DataProvider::tuples(
             ['', '', false, [], false],
 
             ['', '', false, ['-'], true],
@@ -48,6 +46,6 @@ class OpenForFilterTest extends TestCase
             ["Item1\nItem2", 'Address1', false, ['Item1', 'Item2'], true],
             ['Item1', 'Address1', false, ['Item1', 'Item2'], true],
             ["Item1\nItem2", 'Address1', false, ['Item3'], false],
-        ];
+        );
     }
 }

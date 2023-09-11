@@ -26,7 +26,7 @@ class AnythingCheckerTest extends TestCase
     public function matchesDataProvider(): DataProvider
     {
         return DataProvider::tuples(
-        // items, matchedOther, expected
+            // items, matchedOther, expected
             ['', true, true],
             ['', false, false],
             ['', null, false],
