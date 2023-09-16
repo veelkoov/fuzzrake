@@ -40,7 +40,7 @@
         </div>
 
         <div class="col-md-6 text-md-end">
-          <input class="my-1" type="text" placeholder="Search" @input="runSearch();">
+          <input id="search-text-field" v-model="state.search.text" class="my-1" type="text" placeholder="Search">
         </div>
       </div>
 
@@ -116,10 +116,6 @@ export default class Main extends Vue {
         this.messageBus.requestDataLoad('wantsSfw=0&isAdult=1&inactive[]=.&makerId=' + this.state.openCardForMakerId, true);
       }
     }
-  }
-
-  private runSearch(event: Event) {
-    return this.state.search.text = event.target.value;
   }
 }
 </script>

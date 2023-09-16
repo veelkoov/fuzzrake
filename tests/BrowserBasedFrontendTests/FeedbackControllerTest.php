@@ -51,7 +51,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         self::skipCheckListAdultAllowNsfw($client, 1);
 
         self::openMakerCardByClickingOnTheirNameInTheTable($client, $artisan->getName());
-        self::openDataOutdatedPopup($client);
+        self::openDataOutdatedPopupFromTheMakerCard($client);
 
         $client->clickLink('submit the feedback form');
 
