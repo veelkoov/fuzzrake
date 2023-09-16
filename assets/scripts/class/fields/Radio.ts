@@ -1,4 +1,5 @@
 import RadioInterface from './RadioInterface';
+import {singleStrValOrNull} from '../../jQueryUtils';
 
 export default class Radio implements RadioInterface {
     private readonly $elements: JQuery<HTMLElement>;
@@ -21,14 +22,10 @@ export default class Radio implements RadioInterface {
         return `input[type=radio][name="${fieldName}"]`;
     }
 
-    public val(): null|string {
+    public val(): null | string {
         const $checked = this.$elements.filter(':checked');
 
-        if (0 === $checked.length) {
-            return null;
-        }
-
-        return $checked.val().toString();
+        return singleStrValOrNull($checked);
     }
 
     public isVal(value: string): boolean {

@@ -4,7 +4,7 @@
       {{ filter.label }}: {{ filter.state.description }}
     </button>
     <button v-if="filter.state.isActive" type="button" class="filter-ctrl-remove btn btn-outline-danger" @click="filter.state.reset()">
-      <i class="fas fa-trash-alt"></i>
+      <i class="fas fa-trash-alt" />
     </button>
   </div>
 </template>

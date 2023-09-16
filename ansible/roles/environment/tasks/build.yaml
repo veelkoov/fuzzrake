@@ -1,13 +1,13 @@
 ---
 - name: 'Execute: composer install'
-  ansible.builtin.command: 'docker exec -ti {{ php_fpm_container_name | quote }} composer install'
+  ansible.builtin.command: 'docker exec -ti {{ php_fpm_container_name | quote }} composer install --no-dev'
   args:
     chdir: '{{ frontend_deployment_path }}'
   register:     'cmd_out'
   changed_when: '"Nothing to install, update or remove" not in cmd_out.stdout'
 
 - name: 'Execute: yarn install'
-  ansible.builtin.command: 'yarn --cache-folder {{ yarn_cache_dirpath | quote }} install'
+  ansible.builtin.command: 'yarn --cache-folder {{ yarn_cache_dirpath | quote }} install --prod'
   args:
     chdir: '{{ frontend_deployment_path }}'
   register:     'cmd_out'

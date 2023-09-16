@@ -2,13 +2,13 @@
   <fieldset class="species">
     <div class="row">
       <div class="col">
-        <SpecialItems :filter="filter"/>
+        <SpecialItems :filter="filter" />
       </div>
     </div>
 
     <div class="row">
       <div class="col">
-        <SpeciesChoices :species="filter.options.items" :filter="filter"/>
+        <SpeciesChoices :species="filter.options.items" :filter="filter" />
       </div>
     </div>
 

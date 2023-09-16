@@ -2,7 +2,7 @@
   <fieldset class="region">
     <div class="row">
       <div class="col-sm-12">
-        <SpecialItems :filter="filter"/>
+        <SpecialItems :filter="filter" />
       </div>
     </div>
   </fieldset>
@@ -11,17 +11,21 @@
     <legend>
       {{ region.label }} <span class="count">({{ region.count }})</span>
 
-      <AllNoneInvertLinks class="countries"
-                          @all="checkboxes[region['label']].all()"
-                          @none="checkboxes[region['label']].none()"
-                          @invert="checkboxes[region['label']].invert()"/>
+      <AllNoneInvertLinks
+        class="countries"
+        @all="checkboxes.get(region['label'])!.all()"
+        @none="checkboxes.get(region['label'])!.none()"
+        @invert="checkboxes.get(region['label'])!.invert()"
+      />
     </legend>
 
     <div class="row">
       <div v-for="country in region.value" :key="country.value" class="col-sm-6 col-lg-3">
         <div class="form-check form-check-inline">
-          <CheckBox :filter="filter" :value="country.value" :count="country.count" :ref="region.label"
-                    :label="country.label" :label-html-prefix="getHtmlPrefix(country)"/>
+          <CheckBox
+            :ref="region.label" :filter="filter" :value="country.value" :count="country.count"
+            :label="country.label" :label-html-prefix="getHtmlPrefix(country)"
+          />
         </div>
       </div>
     </div>
@@ -52,7 +56,7 @@ export default class CountriesFilter extends Vue {
     for (const index in this.filter.options.items) {
       const region = this.filter.options.items[index];
 
-      this.checkboxes[region['label']] = new CheckBoxes(this.$refs[region['label']] as CheckBox[]);
+      this.checkboxes.set(region['label'], new CheckBoxes(this.$refs[region['label']] as typeof CheckBox[]));
     }
   }
 

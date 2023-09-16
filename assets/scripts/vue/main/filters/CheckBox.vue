@@ -1,9 +1,12 @@
 <template>
-  <input class="form-check-input" type="checkbox" :id="id" :name="filter.groupName + '[]'" :data-label="label"
-         :value="value" @input="changed" :checked="checked"/>
+  <input
+    :id="id" class="form-check-input" type="checkbox" :name="filter.groupName + '[]'"
+    :data-label="label" :value="value" :checked="checked" @input="changed"
+  >
 
   <label class="form-check-label" :for="id">
-    <span v-if="labelHtmlPrefix" v-html="labelHtmlPrefix"></span>
+    <!-- eslint-disable-next-line vue/no-v-html Not user input -->
+    <span v-if="labelHtmlPrefix" v-html="labelHtmlPrefix" />
     {{ label }}
 
     <span v-if="null !== count" class="count">({{ count }})</span>

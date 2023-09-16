@@ -1,7 +1,7 @@
 <template>
   <li v-if="url">
     <a class="dropdown-item" :href="url" target="_blank">
-      <i :class="iconClass"></i> {{ label }}
+      <i :class="iconClass" /> {{ label }}
     </a>
   </li>
 </template>

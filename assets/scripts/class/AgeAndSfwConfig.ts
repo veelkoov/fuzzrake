@@ -6,7 +6,7 @@ export default class AgeAndSfwConfig {
     public static readonly WANTS_SFW =  'aasc/wantsSfw';
     public static readonly MAKER_MODE = 'aasc/makerMode';
 
-    private static instance: AgeAndSfwConfig = null;
+    private static instance: AgeAndSfwConfig | null = null;
 
     private _isFilled: boolean;
     private _isAdult: boolean;

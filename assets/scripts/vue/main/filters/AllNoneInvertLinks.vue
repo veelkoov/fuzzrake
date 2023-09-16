@@ -1,9 +1,9 @@
 <template>
   <span class="allNoneInvert" :class="this.class" aria-hidden="true">
-        select: <a href="#" @click.prevent="$emit('all')">all</a>
-        &bull; <a href="#" @click.prevent="$emit('none')">none</a>
-        &bull; <a href="#" @click.prevent="$emit('invert')">invert</a>
-    </span>
+    select: <a href="#" @click.prevent="$emit('all')">all</a>
+    &bull; <a href="#" @click.prevent="$emit('none')">none</a>
+    &bull; <a href="#" @click.prevent="$emit('invert')">invert</a>
+  </span>
 </template>
 
 <script lang="ts">

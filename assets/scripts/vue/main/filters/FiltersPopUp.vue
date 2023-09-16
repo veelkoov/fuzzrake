@@ -1,26 +1,26 @@
 <template>
-  <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true" ref="modal">
+  <div id="filtersModal" ref="modal" class="modal fade" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-      <div class="modal-content" id="filters-top">
+      <div id="filters-top" class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="filtersTitle">
+          <h5 id="filtersTitle" class="modal-title">
             Filters
           </h5>
           <span>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
           </span>
         </div>
-        <div class="modal-body" id="filters-body">
+        <div id="filters-body" class="modal-body">
           <div class="row">
             <div class="col">
               <template v-for="filter in filters" :key="filter.groupName">
-                <CtrlButton :filter="filter"/> <wbr>
+                <CtrlButton :filter="filter" /> <wbr>
               </template>
             </div>
           </div>
 
           <form id="filters">
-            <BodyContainer v-for="filter in filters" :key="filter.groupName" :filter="filter"/>
+            <BodyContainer v-for="filter in filters" :key="filter.groupName" :filter="filter" />
           </form>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default class FiltersPopUp extends Vue {
   }
 
   private getActiveFiltersCount(): number {
-    return this.filters.map(filter => filter.state.isActive ? 1 : 0).reduce((sum, val) => sum + val, 0);
+    return this.filters.map(filter => filter.state.isActive ? 1 : 0).reduce((sum: number, val: number) => sum + val, 0);
   }
 }
 </script>

@@ -76,11 +76,20 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private static function openDataOutdatedPopup(Client $client): void
+    private static function openDataOutdatedPopupFromTheMakerCard(Client $client): void
     {
         $reportButtonXpath = '//div[@id="artisanDetailsModalContent"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
         $client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
         $client->waitForVisibility('#artisanUpdatesModalContent', 5);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private static function closeDataOutdatedPopUpByClickingTheCloseButton(Client $client): void
+    {
+        $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
+        $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
     }
 }

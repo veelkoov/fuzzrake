@@ -1,28 +1,28 @@
 <template>
-  <div class="modal fade" id="artisanDetailsModal" tabindex="-1" aria-hidden="true">
+  <div id="artisanDetailsModal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-      <div class="modal-content artisan-data" id="artisanDetailsModalContent">
+      <div id="artisanDetailsModalContent" class="modal-content artisan-data">
         <div class="modal-header">
           <h5 class="modal-title">
             <template v-if="artisan.makerId">
               <a id="makerId" :href="'#' + artisan.makerId">
-                <span class="badge bg-secondary"><i class="fas fa-link"></i> {{ artisan.makerId }}</span>
+                <span class="badge bg-secondary"><i class="fas fa-link" /> {{ artisan.makerId }}</span>
               </a> <wbr>
             </template>
 
-            <span id="artisanName">{{ artisan.name }}</span>&nbsp;<span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry"></span>
+            <span id="artisanName">{{ artisan.name }}</span>&nbsp;<span class="flag-icon" :class="'flag-icon-' + artisan.lcCountry" />
 
             <small>
               Based in <OptionalText :item="artisan.location" />;
               crafting since <OptionalText :item="getSinceText()" />
 
               <template v-if="artisan.formerly.length">
-                <br />Formerly/a.k.a. {{ commaSeparated(artisan.formerly) }}
+                <br>Formerly/a.k.a. {{ commaSeparated(artisan.formerly) }}
               </template>
             </small>
           </h5>
 
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
         </div>
 
         <div class="modal-body row px-4 py-2">
@@ -37,11 +37,15 @@
           </div>
 
           <div v-if="artisan.intro" class="col-md-12 p-1">
-            <p class="lead nl2br">{{ artisan.intro }}</p>
+            <p class="lead nl2br">
+              {{ artisan.intro }}
+            </p>
           </div>
 
           <div class="col-md-12 p-1">
-            <p class="mb-0 small">Ages of studio members: <AgesDescription :add-text="true" :artisan="artisan" /></p>
+            <p class="mb-0 small">
+              Ages of studio members: <AgesDescription :add-text="true" :artisan="artisan" />
+            </p>
           </div>
 
           <div class="col-md-3 p-1">
@@ -77,14 +81,14 @@
           <div class="col-md-6 p-1">
             <h5>Species</h5>
 
-            <div class="small pb-2" id="artisanSpecies">
+            <div id="artisanSpecies" class="small pb-2">
               <span v-if="artisan.speciesComment" class="nl2br">
-                {{ artisan.speciesComment }}<br />
+                {{ artisan.speciesComment }}<br>
               </span>
 
               <template v-if="0 !== artisan.speciesDoes.length">
                 <strong>Does</strong>: {{ commaSeparated(artisan.speciesDoes) }}
-                <br v-if="0 !== artisan.speciesDoesnt.length" />
+                <br v-if="0 !== artisan.speciesDoesnt.length">
               </template>
 
               <template v-if="0 !== artisan.speciesDoesnt.length">
@@ -105,19 +109,19 @@
             <h5>Payment plans</h5>
 
             <div class="small pb-2">
-              <OptionalList :items=artisan.paymentPlans />
+              <OptionalList :items="artisan.paymentPlans" />
             </div>
 
             <h5>Currencies</h5>
 
             <div class="small pb-2">
-              <OptionalComSep :items=artisan.currenciesAccepted />
+              <OptionalComSep :items="artisan.currenciesAccepted" />
             </div>
 
             <h5>Methods</h5>
 
             <div class="small">
-              <OptionalComSep :items=artisan.paymentMethods />
+              <OptionalComSep :items="artisan.paymentMethods" />
             </div>
           </div>
 
@@ -170,33 +174,33 @@
             <div class="p-1" :class="[artisan.isStatusKnown ? 'col-md-6' : 'col-md-8']">
               <template v-if="artisan.isStatusKnown">
                 <p v-if="artisan.csTrackerIssue">
-                  <i class="inaccurate fas fa-question-circle"></i> Note: the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/<wbr>incomplete.
+                  <i class="inaccurate fas fa-question-circle" /> Note: the software encountered apparent difficulties while figuring out the status; the information is most probably inaccurate/<wbr>incomplete.
                 </p>
 
                 <table class="table table-sm table-striped table-borderless">
                   <tbody>
                     <tr v-for="item in artisan.openFor" :key="item">
                       <td>{{ item }}</td>
-                      <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
+                      <td><i class="fas fa-check-square" />&nbsp;Open</td>
                     </tr>
                     <tr v-for="item in artisan.closedFor" :key="item">
                       <td>{{ item }}</td>
-                      <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
+                      <td><i class="fas fa-times-circle" />&nbsp;Closed</td>
                     </tr>
                   </tbody>
                 </table>
               </template>
               <template v-else>
                 <p>
-                  <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
+                  <i class="inaccurate fas fa-question-circle" /> Failed to automatically determine commissions status.
                   It should be tracked and updated automatically based on the contents of:
-                    <template v-for="item in artisan.commissionsUrls" :key="item">
-                      <a :href="item" target="_blank">{{ item }}</a>, <wbr>
-                    </template>
+                  <template v-for="item in artisan.commissionsUrls" :key="item">
+                    <a :href="item" target="_blank">{{ item }}</a>, <wbr>
+                  </template>
                   however the software failed to "understand" the contents. Last time tried on {{ artisan.csLastCheck }} UTC.
                 </p>
 
-                <p><a :href=Static.getTrackingPath() target="_blank">Learn more</a></p>
+                <p><a :href="Static.getTrackingPath()" target="_blank">Learn more</a></p>
               </template>
             </div>
 
@@ -207,14 +211,14 @@
                   <template v-for="item in artisan.commissionsUrls" :key="item">
                     <a :href="item" target="_blank">{{ item }}</a> <wbr>
                   </template>
-                  <br />
+                  <br>
                   Last time checked on {{ artisan.csLastCheck }} UTC.
                 </p>
 
-                <p><a :href=Static.getTrackingPath() target="_blank">Learn more</a></p>
+                <p><a :href="Static.getTrackingPath()" target="_blank">Learn more</a></p>
               </template>
 
-              <img v-else :src=Static.getTrackingFailedImgSrc() class="img-fluid tracking-failed" alt="">
+              <img v-else :src="Static.getTrackingFailedImgSrc()" class="img-fluid tracking-failed" alt="">
             </div>
           </template>
 
@@ -233,7 +237,9 @@
             Data outdated/inaccurate? <!-- grep-updates-button -->
           </button>
 
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -268,7 +274,7 @@ import {Options, Vue} from 'vue-class-component';
 export default class Link extends Vue {
   private state!: MainState;
 
-  private static readonly MONTHS = {
+  private static readonly MONTHS: { [key: string]: string; } = {
     '01': 'Jan',
     '02': 'Feb',
     '03': 'Mar',
