@@ -2,6 +2,8 @@
 
 {% block title %}Social{% endblock %}
 
+{% set maker_s = artisans | length > 1 ? 'makers' : 'maker' %}
+
 {% block body %}
     <h1>{{ block('title') }}</h1>
 
@@ -12,7 +14,7 @@
             <h5>Markdown text</h5>
 
             <p class="user-select-all">
-                # Fursuit makers added
+                # Fursuit {{ maker_s }} added
 
                 <br><br>
 
@@ -33,7 +35,7 @@
 
             <h4>Image ALT</h4>
             <p class="user-select-all small">
-                Screenshot of a Tumblr post announcing the addition of __CHANGE_HERE__ new makers
+                Screenshot of a Tumblr post announcing the addition of {{ artisans | length }} new {{ maker_s }}
                 to the getfursu.it website, and encouraging to check the list of all recently added makers,
                 or to join the list. Below the text, two large emoticons/characters are shown:
                 __CHANGE_HERE__ and a T. rex looking in __CHANGE_HERE__ direction.
