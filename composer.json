@@ -24,6 +24,7 @@
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
         "symfony/monolog-bundle": "^3.6",
+        "symfony/process": "*",
         "symfony/runtime": "*",
         "symfony/security-csrf": "*",
         "symfony/serializer": "*",
