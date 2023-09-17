@@ -29,7 +29,7 @@ final class ValidationRegexps
     final public const NON_EMPTY = '.';
     final public const SINCE = '^(\d{4}-\d{2})?$';
     final public const COUNTRY = '^([A-Z]{2})?$';
-    final public const STATE = '^([A-Za-zé ]{4,})?$';
+    final public const STATE = '^(Alabama|Alaska|Alberta|Arizona|Arkansas|British Columbia|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Manitoba|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Brunswick|New Hampshire|New Jersey|New Mexico|New York|Newfoundland|North Carolina|North Dakota|Nova Scotia|Ohio|Oklahoma|Ontario|Oregon|Pennsylvania|Prince Edward Island|Quebec|Rhode Island|Saskatchewan|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)?$';
 
     final public const CURRENCIES = '^([A-Z]{3}(\n[A-Z]{3})*)?$';
     private const PAY_COMMENT = '( \([^)]+\))?';
