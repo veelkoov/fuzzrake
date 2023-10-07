@@ -7579,16 +7579,16 @@
         },
         {
             "name": "rawr/phpunit-data-provider",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/t-regx/phpunit-data-provider.git",
-                "reference": "6de1a315c71a50945f7da712f3cada1ca079120e"
+                "reference": "3b607cbd77680b33fad4c79ea18cff6384e0c2a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/t-regx/phpunit-data-provider/zipball/6de1a315c71a50945f7da712f3cada1ca079120e",
-                "reference": "6de1a315c71a50945f7da712f3cada1ca079120e",
+                "url": "https://api.github.com/repos/t-regx/phpunit-data-provider/zipball/3b607cbd77680b33fad4c79ea18cff6384e0c2a4",
+                "reference": "3b607cbd77680b33fad4c79ea18cff6384e0c2a4",
                 "shasum": ""
             },
             "require": {
@@ -7616,7 +7616,7 @@
             "description": "Lightweight builder for PhpUnit data providers",
             "support": {
                 "issues": "https://github.com/t-regx/phpunit-data-provider/issues",
-                "source": "https://github.com/t-regx/phpunit-data-provider/tree/3.1.0"
+                "source": "https://github.com/t-regx/phpunit-data-provider/tree/3.2.0"
             },
             "funding": [
                 {
@@ -7624,7 +7624,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-14T10:18:25+00:00"
+            "time": "2023-09-11T20:21:14+00:00"
         },
         {
             "name": "rector/rector",
