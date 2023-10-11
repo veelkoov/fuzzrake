@@ -32,11 +32,19 @@ class MiniaturesUpdateTest {
             listOf("CREAT03_miniature_1", "CREAT03_miniature_2"))
 
         val miniatureRemainWhenOnePhotoIsUnsupportedId = setupCreatorGetId("CREAT04",
-            listOf("http://CREAT04_scritch_1", "http://CREAT04_furtrack_1", "http://CREAT04_oops"),
+            listOf("http://pic_CREAT04_scritch_1", "http://pic_CREAT04_furtrack_1", "http://bad_CREAT04"),
             listOf("CREAT04_miniature_1"))
 
         val successfulMixedRetrievalsId = setupCreatorGetId("CREAT05",
-            listOf("http://CREAT05_furtrack_1", "http://CREAT05_scritch_1", "http://CREAT05_furtrack_2"), listOf())
+            listOf("http://pic_CREAT05_furtrack_1", "http://pic_CREAT05_scritch_1", "http://pic_CREAT05_furtrack_2"), listOf())
+
+        val removeAndAddId = setupCreatorGetId("CREAT06",
+            listOf("http://pic_CREAT06_scritch_1", "http://pic_CREAT06_furtrack_4"), // The number needs to differ, otherwise it won't notice any difference
+            listOf("http://min_CREAT06_scritch_1", "http://min_CREAT06_furtrack_2", "http://min_CREAT06_furtrack_3"))
+
+        val duplicatedPhotosAreIgnoredId = setupCreatorGetId("CREAT07",
+            listOf("http://pic_CREAT07_scritch_1", "http://pic_CREAT07_scritch_1"),
+            listOf("CREAT07_from_duplicate"))
 
         transaction.commit()
         transaction.entityCache.flush()
@@ -44,13 +52,13 @@ class MiniaturesUpdateTest {
         val scritch = mockk<ScritchMiniatureUrlResolver>()
         every { scritch.supports(any())} answers { (it.invocation.args[0] as String).contains("scritch") }
         every { scritch.getMiniatureUrl(any())} answers {
-            (it.invocation.args[0] as Url).getUrl().replace("http://", "min_")
+            (it.invocation.args[0] as Url).getUrl().replace("pic_", "min_")
         }
 
         val furtrack = mockk<FurtrackMiniatureUrlResolver>()
         every { furtrack.supports(any())} answers { (it.invocation.args[0] as String).contains("furtrack") }
         every { furtrack.getMiniatureUrl(any())} answers {
-            (it.invocation.args[0] as Url).getUrl().replace("http://", "min_")
+            (it.invocation.args[0] as Url).getUrl().replace("pic_", "min_")
         }
 
         // Execution
@@ -72,12 +80,20 @@ class MiniaturesUpdateTest {
         validateCreator(miniaturesClearedWhenPhotosEmptyId, setOf(), setOf())
 
         validateCreator(miniatureRemainWhenOnePhotoIsUnsupportedId,
-            setOf("http://CREAT04_scritch_1", "http://CREAT04_furtrack_1", "http://CREAT04_oops"),
+            setOf("http://pic_CREAT04_scritch_1", "http://pic_CREAT04_furtrack_1", "http://bad_CREAT04"),
             setOf("CREAT04_miniature_1"))
 
         validateCreator(successfulMixedRetrievalsId,
-            setOf("http://CREAT05_furtrack_1", "http://CREAT05_scritch_1", "http://CREAT05_furtrack_2"),
-            setOf("min_CREAT05_furtrack_1", "min_CREAT05_scritch_1", "min_CREAT05_furtrack_2"))
+            setOf("http://pic_CREAT05_furtrack_1", "http://pic_CREAT05_scritch_1", "http://pic_CREAT05_furtrack_2"),
+            setOf("http://min_CREAT05_furtrack_1", "http://min_CREAT05_scritch_1", "http://min_CREAT05_furtrack_2"))
+
+        validateCreator(removeAndAddId,
+            setOf("http://pic_CREAT06_scritch_1", "http://pic_CREAT06_furtrack_4"),
+            setOf("http://min_CREAT06_scritch_1", "http://min_CREAT06_furtrack_4"))
+
+        validateCreator(duplicatedPhotosAreIgnoredId,
+            setOf("http://pic_CREAT07_scritch_1"),
+            setOf("CREAT07_from_duplicate"))
     }
 
     private fun setupCreatorGetId(creatorId: String, photos: List<String>, miniatures: List<String>): EntityID<Int> {

@@ -11,6 +11,7 @@ import database.tables.CreatorUrls
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.dao.with
 import tasks.miniaturesUpdate.FurtrackMiniatureUrlResolver
+import tasks.miniaturesUpdate.MiniatureUrlResolverException
 import tasks.miniaturesUpdate.ScritchMiniatureUrlResolver
 import database.entities.CreatorUrl as CreatorUrlEntity
 
@@ -26,12 +27,18 @@ class MiniaturesUpdate(
         database.transaction {
             val creators: List<Creator> = getCreatorsWithPhotoOrMiniatureUrls()
 
-            creators.forEach(::updatePhotos)
+            creators.forEach { creator ->
+                try {
+                    updatePhotos(creator)
+                } catch (exception: MiniatureUrlResolverException) {
+                    logger.error { "Failed retrieving miniatures for ${creator.lastCreatorId()}" }
+                }
+            }
         }
     }
 
     private fun updatePhotos(creator: Creator) {
-        val pictureUrls = creator.getPhotoUrls()
+        val pictureUrls = creator.getPhotoUrls().associateBy { it.url }.values.toList() // Removing duplicate URLs
         val miniatureUrls = creator.getMiniatureUrls().associateBy { it.url }
 
         if (pictureUrls.isEmpty()) {
@@ -52,6 +59,8 @@ class MiniaturesUpdate(
             return
         }
 
+        logger.info { "Retrieving miniatures for ${creator.lastCreatorId()}" }
+
         val newUrls = retrieveMiniatureUrls(pictureUrls)
         miniatureUrls.minus(newUrls.toSet()).forEach { (_, entity) ->
             logger.info("Removing old miniature of ${creator.lastCreatorId()}: '${entity.url}'")
@@ -68,6 +77,8 @@ class MiniaturesUpdate(
                 url = it
             }
         }
+
+        logger.info { "Successfully updated ${creator.lastCreatorId()}" }
     }
 
     private fun getCreatorsWithPhotoOrMiniatureUrls(): List<Creator> {
