@@ -5,6 +5,7 @@ parameters:
     replacements:
       '^argentina$':                                     'AR'
       '^australia$':                                     'AU'
+      '^austria$':                                       'AT'
       '^belgium$':                                       'BE'
       '^brazil$':                                        'BR'
       '^canada$':                                        'CA'
@@ -19,7 +20,7 @@ parameters:
       '^European Union$':                                'EU'
       '^finland$':                                       'FI'
       '^france$':                                        'FR'
-      '^(uk|england|united kingdom)$':                   'GB'
+      '^(uk|england|united kingdom|Great Britain)$':     'GB'
       '^hungary$':                                       'HU'
       '^ireland$':                                       'IE'
       '^(italia|italy)$':                                'IT'

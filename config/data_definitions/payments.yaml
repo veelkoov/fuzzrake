@@ -38,4 +38,5 @@ parameters:
       'Money ?orders?':                     'Money orders'
       'Pay ?Pal( only)?':                   'PayPal'
       'PayPal invoices?':                   'PayPal (invoices)'
+      'Vipps':                              'Vipps'
       '(Transfer)?Wise(\.com)?':            'Wise'
