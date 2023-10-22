@@ -19,18 +19,22 @@
                 <br><br>
 
                 {% for artisan in artisans %}
-                    - [getfursu.it/#{{ artisan.makerId }}](https://getfursu.it/#{{ artisan.makerId }})<br><br>
+                    - [getfursu.it/#{{ artisan.makerId }}](https://getfursu.it/#{{ artisan.makerId }})
+                    {% if '' != artisan.tumblrUrl %}
+                        {{ artisan.tumblrUrl | tumblr_at }}
+                    {% endif %}
+                    <br><br>
                 {% endfor %}
 
                 <br>
 
-                Join / see all recently joined: [getfursu.it/new](https://getfursu.it/new)
+                Join/see all recently joined: [getfursu.it/new](https://getfursu.it/new)
             </p>
 
-            <h6>Emoji</h6>
+            <h5>Emoji</h5>
             <p class="user-select-all">🦖</p>
 
-            <h6>Hashtags</h6>
+            <h5>Hashtags</h5>
             <p><i>#<span class="user-select-all">fursuit maker</span> #<span class="user-select-all">furry</span></i></p>
 
             <h4>Image ALT</h4>

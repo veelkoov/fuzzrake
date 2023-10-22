@@ -45,6 +45,7 @@ class AdminExtensions extends AbstractExtension
             new TwigFilter('is_valid', $this->isValid(...)),
             new TwigFilter('get_comments', $this->getComment(...)),
             new TwigFilter('mastodon_at', $this->mastodonAt(...)),
+            new TwigFilter('tumblr_at', $this->tumblrAt(...)),
         ];
     }
 
@@ -136,5 +137,12 @@ class AdminExtensions extends AbstractExtension
         return Pattern::of('^https://([^/]+)/([^/#?]+).*')
             ->replace($mastodonUrl)
             ->withReferences('$2@$1');
+    }
+
+    private function tumblrAt(string $mastodonUrl): string
+    {
+        return Pattern::of('^https://www\.tumblr\.com/([^/#?]+).*')
+            ->replace($mastodonUrl)
+            ->withReferences('@$1 _FIX_');
     }
 }
