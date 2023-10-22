@@ -57,6 +57,6 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getSingleScalarResult();
 
-        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return (int) $resultData;
     }
 }

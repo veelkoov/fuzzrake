@@ -41,9 +41,6 @@ class SubmissionData implements FieldReadInterface
         return $this->timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function get(Field $field): mixed
     {
         $fieldName = $field->name;

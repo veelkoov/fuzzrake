@@ -18,7 +18,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -66,7 +65,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData;
     }
 
     /**
@@ -84,7 +83,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData;
     }
 
     /**
@@ -99,7 +98,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData;
     }
 
     private function getArtisansQueryBuilder(): QueryBuilder
@@ -129,7 +128,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getSingleScalarResult();
 
-        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return (int) $resultData;
     }
 
     /**
@@ -302,7 +301,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
         $resultData = $builder->getQuery()->getResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData;
     }
 
     /**
@@ -398,7 +397,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getSingleScalarResult();
 
-        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return (int) $resultData;
     }
 
     /**
@@ -413,7 +412,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getSingleScalarResult();
 
-        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return (int) $resultData;
     }
 
     /**
@@ -434,7 +433,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getSingleScalarResult();
 
-        return (int) $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return (int) $resultData;
     }
 
     /**

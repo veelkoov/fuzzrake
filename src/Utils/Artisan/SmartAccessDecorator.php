@@ -105,9 +105,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function get(Field $field): mixed
     {
         $callback = [$this, 'get'.ucfirst($field->modelName())];
@@ -118,7 +115,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
         $result = call_user_func($callback);
 
-        return $result; // @phpstan-ignore-line
+        return $result;
     }
 
     public function equals(Field $field, self $other): bool

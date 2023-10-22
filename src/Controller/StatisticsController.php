@@ -105,7 +105,7 @@ class StatisticsController extends AbstractController
         }
 
         foreach ($result as $item => $items) {
-            $result[$item] = implode(', ', $items); // @phpstan-ignore-line
+            $result[$item] = implode(', ', $items);
         }
 
         $result = array_flip($result); // @phpstan-ignore-line

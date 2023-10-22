@@ -38,6 +38,7 @@ class SafeArrayRead
 
         if (!is_array($source)) {
             $this->addError('Input data is not an array.');
+            $this->source = [];
         } else {
             $this->source = $source;
             $this->copyFields();
