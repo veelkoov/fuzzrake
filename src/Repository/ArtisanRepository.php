@@ -63,7 +63,6 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         $resultData = $this->getArtisansQueryBuilder()
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
 
@@ -82,7 +81,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
             ->orderBy('v.value', Criteria::DESC)
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
 
@@ -98,7 +96,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->enableResultCache(3600)
             ->getResult();
 
