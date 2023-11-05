@@ -46,7 +46,7 @@ class Detector {
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("$theCreatorId Contradicting offer statuses for '$nextOffer'")
+                        logger.warn { "$theCreatorId Contradicting offer statuses for '$nextOffer'" }
                     }
                 }
             }
@@ -69,7 +69,7 @@ class Detector {
                 allDetectedOs = analyser.detectIn(match.groups)
             } catch (exception: OfferStatusException) {
                 issues = true
-                logger.warn("$theCreatorId $theUrl: ${exception.requireMessage()}")
+                logger.warn { "$theCreatorId $theUrl: ${exception.requireMessage()}" }
 
                 return@matchIn
             }
@@ -88,13 +88,13 @@ class Detector {
 
                     nextStatus -> {
                         issues = true
-                        logger.warn("$theCreatorId $theUrl: Duplicated offer status for '$nextOffer'")
+                        logger.warn { "$theCreatorId $theUrl: Duplicated offer status for '$nextOffer'" }
                     }
 
                     else -> {
                         offerToStatus[nextOffer] = ProcessedStatus.CONFLICT
                         issues = true
-                        logger.warn("$theCreatorId $theUrl: Contradicting offer statuses for '$nextOffer'")
+                        logger.warn { "$theCreatorId $theUrl: Contradicting offer statuses for '$nextOffer'" }
                     }
                 }
             }
@@ -102,7 +102,7 @@ class Detector {
 
         if (offerToStatus.isEmpty()) {
             issues = true
-            logger.warn("$theCreatorId $theUrl: No statuses detected")
+            logger.warn { "$theCreatorId $theUrl: No statuses detected" }
         }
 
         return ProcessedOffersStatuses(posMapToSet(offerToStatus), issues)

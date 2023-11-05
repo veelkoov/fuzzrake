@@ -34,11 +34,11 @@ class TrackedContentsProvider(
                 val size = snapshot.contents.length // TODO: These are not bytes
 
                 val contents = if (httpCode != 200) {
-                    logger.warn("Skipping contents of ${snapshot.metadata.url} with HTTP code $httpCode")
+                    logger.warn { "Skipping contents of ${snapshot.metadata.url} with HTTP code $httpCode" }
 
                     ""
                 } else if (size > MAX_SIZE) {
-                    logger.warn("Truncating contents of ${snapshot.metadata.url} from $size to $MAX_SIZE")
+                    logger.warn { "Truncating contents of ${snapshot.metadata.url} from $size to $MAX_SIZE" }
 
                     snapshot.contents.take(MAX_SIZE)
                 } else {

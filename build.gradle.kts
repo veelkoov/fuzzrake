@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.serialization") version "1.8.22"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.20"
     application
 
-    id("org.jetbrains.kotlinx.kover") version "0.7.3"
+    id("org.jetbrains.kotlinx.kover") version "0.7.4"
     id("jacoco")
 }
 
@@ -20,18 +20,18 @@ val ktorVersion: String by project
 
 dependencies {
     // Command-line parsing
-    implementation("com.github.ajalt.clikt:clikt:4.1.0")
+    implementation("com.github.ajalt.clikt:clikt:4.2.1")
 
     // JSON and YAML support
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.3")
 
     // Logging
-    implementation("io.github.oshai:kotlin-logging-jvm:4.0.1")
-    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
-    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0")
+    implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("org.apache.logging.log4j:log4j-api:2.21.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.21.1")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.21.1")
 
     // Database
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
@@ -72,7 +72,7 @@ tasks.jacocoTestReport {
 }
 
 jacoco {
-    toolVersion = "0.8.10"
+    toolVersion = "0.8.11"
 }
 
 kotlin {

@@ -26,7 +26,7 @@ object FurAffinityProfileStrategy : Strategy {
         return if (!element.isEmpty()) {
             element.html()
         } else {
-            logger.warn("Failed to parse Fur Affinity user profile content")
+            logger.warn { "Failed to parse Fur Affinity user profile content" }
 
             input
         }

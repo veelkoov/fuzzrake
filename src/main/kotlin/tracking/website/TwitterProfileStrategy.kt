@@ -24,7 +24,7 @@ object TwitterProfileStrategy : Strategy {
             .selectXpath("//script[@type='application/ld+json'][contains(text(), 'ProfilePage')]")
 
         if (ldJsonNodes.isEmpty()) {
-            logger.warn("Failed to XPath Twitter ProfilePage schema script node")
+            logger.warn { "Failed to XPath Twitter ProfilePage schema script node" }
 
             return input
         }
@@ -37,7 +37,7 @@ object TwitterProfileStrategy : Strategy {
                     "\n" + ldJsonData.getString("author/homeLocation/name")
 
         } catch (exception: JsonException) {
-            logger.warn("Failed reading ProfilePage schema JSON", exception)
+            logger.warn(exception) { "Failed reading ProfilePage schema JSON" }
 
             input
         }

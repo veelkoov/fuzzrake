@@ -84,11 +84,11 @@ class Updater {
         }
 
         if (oldValue == null) {
-            logger.info("${creator.lastCreatorId()} $description: added $newValue")
+            logger.info { "${creator.lastCreatorId()} $description: added $newValue" }
         } else if (newValue == null) {
-            logger.info("${creator.lastCreatorId()} $description: removed $oldValue")
+            logger.info { "${creator.lastCreatorId()} $description: removed $oldValue" }
         } else {
-            logger.info("${creator.lastCreatorId()} $description: changed from $oldValue to $newValue")
+            logger.info { "${creator.lastCreatorId()} $description: changed from $oldValue to $newValue" }
         }
 
         return newValue

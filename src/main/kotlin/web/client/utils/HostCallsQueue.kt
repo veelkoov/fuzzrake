@@ -31,7 +31,7 @@ class HostCallsQueue {
         val secondsToWait = waitUntilEpochSec - UTC.Now.epochSec()
 
         if (secondsToWait > 0) {
-            logger.info("Pausing for $secondsToWait seconds for ${url.getUrl()}")
+            logger.info { "Pausing for $secondsToWait seconds for ${url.getUrl()}" }
 
             Thread.sleep(secondsToWait * 1000)
         }

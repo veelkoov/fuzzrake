@@ -32,7 +32,7 @@ fun Creator.lastCreatorId(): String {
 
 fun Creator.getVolatileData(): CreatorVolatileData { // grep-code-optional-1-to-1-retrieval
     return if (volatileData.empty()) {
-        logger.info("${CreatorVolatileData::class} does not exist for ${this@getVolatileData}, creating...")
+        logger.info { "${CreatorVolatileData::class} does not exist for ${this@getVolatileData}, creating..." }
 
         CreatorVolatileData.new {
             this.creator = this@getVolatileData

@@ -43,7 +43,7 @@ class MiniaturesUpdate(
 
         if (pictureUrls.isEmpty()) {
             if (miniatureUrls.isNotEmpty()) {
-                logger.info("Removing miniatures of ${creator.lastCreatorId()}")
+                logger.info { "Removing miniatures of ${creator.lastCreatorId()}" }
 
                 miniatureUrls.forEach { (_, entity) -> entity.delete() }
             }
@@ -63,13 +63,13 @@ class MiniaturesUpdate(
 
         val newUrls = retrieveMiniatureUrls(pictureUrls)
         miniatureUrls.minus(newUrls.toSet()).forEach { (_, entity) ->
-            logger.info("Removing old miniature of ${creator.lastCreatorId()}: '${entity.url}'")
+            logger.info { "Removing old miniature of ${creator.lastCreatorId()}: '${entity.url}'" }
 
             entity.delete()
         }
 
         newUrls.minus(miniatureUrls.keys).forEach {
-            logger.info("Adding new miniature of ${creator.lastCreatorId()}: '${it}'")
+            logger.info { "Adding new miniature of ${creator.lastCreatorId()}: '${it}'" }
 
             CreatorUrlEntity.new {
                 this.creator = creator
@@ -98,7 +98,7 @@ class MiniaturesUpdate(
         var result = true
 
         pictureUrls.filterNot { furtrack.supports(it.url) || scritch.supports(it.url) }.forEach {
-            logger.warn("Unsupported URL for ${it.creator.lastCreatorId()}: '${it.url}'")
+            logger.warn { "Unsupported URL for ${it.creator.lastCreatorId()}: '${it.url}'" }
 
             result = false
         }

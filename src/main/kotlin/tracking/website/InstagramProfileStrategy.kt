@@ -27,7 +27,7 @@ object InstagramProfileStrategy : Strategy {
         return try {
             JsonNavigator(input).getString("graphql/user/biography")
         } catch (exception: JsonException) {
-            logger.warn("Failed to parse Instagram user profile data", exception)
+            logger.warn(exception) { "Failed to parse Instagram user profile data" }
 
             input
         }

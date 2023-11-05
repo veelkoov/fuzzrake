@@ -13,7 +13,7 @@ class CookieEagerHttpClient(private val client: HttpClientInterface) : HttpClien
     override fun fetch(url: Url, method: HttpMethod, addHeaders: Map<String, String>, payload: String?): Snapshot {
         url.getStrategy().getCookieInitUrl()?.let { cookieUrl ->
             if (!prefetched.contains(cookieUrl.getUrl())) {
-                logger.info("${url.getUrl()} requires prefetch of ${cookieUrl.getUrl()}")
+                logger.info { "${url.getUrl()} requires prefetch of ${cookieUrl.getUrl()}" }
 
                 client.fetch(cookieUrl)
                 prefetched.add(cookieUrl.getUrl())

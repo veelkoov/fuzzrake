@@ -36,7 +36,7 @@ class FastHttpClient(
 
         try {
             runBlocking {
-                logger.info("Retrieving: '${url.getUrl()}'")
+                logger.info { "Retrieving: '${url.getUrl()}'" }
 
                 val response = client.request(url.getUrl()) {
                     this.method = method
@@ -46,7 +46,7 @@ class FastHttpClient(
                     payload?.let { setBody(it) }
                 }
 
-                logger.info("Got response: '${url.getUrl()}'")
+                logger.info { "Got response: '${url.getUrl()}'" }
 
                 contents = response.body<String>()
                 headers = response.headers.toMap()
@@ -57,11 +57,11 @@ class FastHttpClient(
         }
 
         if (exception != null) {
-            logger.info("Exception caught during retrieving: '${url.getUrl()}'; $exception")
+            logger.info { "Exception caught during retrieving: '${url.getUrl()}'; $exception" }
 
             errors.add("Exception: ${exception.message ?: exception.toString()}")
         } else if (200 != httpCode) {
-            logger.info("Non-200 HTTP code ($httpCode): '${url.getUrl()}'")
+            logger.info { "Non-200 HTTP code ($httpCode): '${url.getUrl()}'" }
 
             errors.add("HTTP status code $httpCode")
         }
@@ -98,7 +98,7 @@ class FastHttpClient(
         val correctedCode = url.getStrategy().getLatentCode(url, contents, originalCode)
 
         if (correctedCode != originalCode) {
-            logger.info("Correcting HTTP code from $originalCode to 404 for ${url.getUrl()}")
+            logger.info { "Correcting HTTP code from $originalCode to 404 for ${url.getUrl()}" }
         }
 
         return correctedCode
