@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Data\Species;
 
 use App\Data\Species\Exceptions\IncompleteSpecieException;
+use Psl\Iter;
 use Stringable;
 
 class Specie implements Stringable
@@ -122,6 +123,11 @@ class Specie implements Stringable
     public function isLeaf(): bool
     {
         return [] === $this->getChildren();
+    }
+
+    public function isVisibleLeaf(): bool
+    {
+        return Iter\all($this->getChildren(), fn (Specie $child) => $child->hidden);
     }
 
     public function __toString(): string

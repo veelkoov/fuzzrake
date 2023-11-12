@@ -59,7 +59,7 @@ final class SpeciesFilterDataBuilder
 
     private function getSpeciesFilterItem(Specie $specie): MutableSet|string
     {
-        if ($specie->isLeaf()) {
+        if ($specie->isVisibleLeaf()) {
             return $specie->name;
         } else {
             return $this->getSpeciesFilterItemsFromArray($specie->getChildren());
