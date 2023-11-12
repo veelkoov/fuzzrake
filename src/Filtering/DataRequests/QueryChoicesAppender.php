@@ -6,6 +6,7 @@ namespace App\Filtering\DataRequests;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
+use App\Entity\CreatorSpecie;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
 use Doctrine\ORM\QueryBuilder;
@@ -17,7 +18,7 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function __construct(Choices $choices)
     {
-        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], [], $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
+        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], $choices->species, $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
     }
 
     public function getCacheDigest(): string
@@ -31,6 +32,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyCountries($builder);
         $this->applyStates($builder);
         $this->applyPaymentPlans($builder);
+        $this->applySpecies($builder);
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
         $this->applyWantsInactive($builder);
@@ -169,5 +171,23 @@ class QueryChoicesAppender implements CacheDigestProvider
                 ->andWhere('a.inactiveReason = :emptyInactiveReason')
                 ->setParameter('emptyInactiveReason', '');
         }
+    }
+
+    private function applySpecies(QueryBuilder $builder): void
+    {
+        if ([] === $this->choices->species) {
+            return;
+        }
+
+        $builder->andWhere($builder->expr()->exists(
+            $builder->getEntityManager()
+                ->getRepository(CreatorSpecie::class)
+                ->createQueryBuilder('cs1')
+                ->select('1')
+                ->join('cs1.specie', 'sp1')
+                ->where('sp1.name IN (:specieNames)')
+                ->andWhere('cs1.creator = a')
+        ))
+            ->setParameter('specieNames', $this->choices->species);
     }
 }
