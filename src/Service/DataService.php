@@ -107,7 +107,7 @@ class DataService
                 $result = [];
 
                 foreach ($this->artisanRepository->getDistinctLanguages() as $languages) {
-                    $result = array_merge($result, StringList::unpack($languages));
+                    $result = [...$result, ...StringList::unpack($languages)];
                 }
 
                 return array_unique($result);

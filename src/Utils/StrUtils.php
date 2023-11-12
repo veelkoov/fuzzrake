@@ -23,10 +23,7 @@ final class StrUtils
             $makerIds = array_merge($artisan->getAllMakerIdsArr(), $makerIds);
         }
 
-        return self::strSafeForCli(implode(' / ', array_merge(
-            array_filter(array_unique($names)),
-            array_filter(array_unique($makerIds))
-        )));
+        return self::strSafeForCli(implode(' / ', [...array_filter(array_unique($names)), ...array_filter(array_unique($makerIds))]));
     }
 
     public static function strSafeForCli(string $input): string

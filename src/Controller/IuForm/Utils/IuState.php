@@ -118,6 +118,6 @@ class IuState
      */
     private function getLogContext(array $additionalContext = []): array
     {
-        return array_merge(['iu_session' => $this->session->getId()], $additionalContext);
+        return ['iu_session' => $this->session->getId(), ...$additionalContext];
     }
 }
