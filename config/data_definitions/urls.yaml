@@ -19,7 +19,9 @@ parameters:
 
       '^(?:https?://)?(?:www\.)?furaffinity(?:\.net|\.com)?/(?:user/|gallery/)?([^/]+)/?$': 'https://www.furaffinity.net/user/$1/'
 
-      '^(?:https?://)?(?:(?:www|m)\.)?youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured|/videos)?(/|\?view_as=subscriber)?$': 'https://www.youtube.com/$1'
+      '^(?:https?://)?(?:(?:www|m)\.)?youtube\.com/': 'https://www.youtube.com/'
+      '^https://www\.youtube\.com/((?:channel|user|c)/[^/?]+)(?:/featured|/videos)?(/|\?view_as=subscriber)?$': 'https://www.youtube.com/$1'
+      '^https://www\.youtube\.com/@([^?]+).+$': 'https://www.youtube.com/@$1'
 
       '^(?:https?://)?(?:www\.)?deviantart(?:\.net|\.com)?/([^/]+)(?:/gallery)?/?$': 'https://www.deviantart.com/$1'
       '^(?:https?://)?(?:www\.)?([^.]+)\.deviantart(?:\.net|\.com)?/?$': 'https://$1.deviantart.com/'
