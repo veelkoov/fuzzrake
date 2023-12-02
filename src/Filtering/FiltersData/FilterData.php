@@ -10,18 +10,20 @@ use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 readonly class FilterData
 {
     /**
-     * @var list<Item>
+     * @param list<Item>        $items
+     * @param list<SpecialItem> $specialItems
      */
-    public array $items;
+    public function __construct(
+        public array $items,
+        public array $specialItems,
+    ) {
+    }
 
-    /**
-     * @var list<SpecialItem>
-     */
-    public array $specialItems;
-
-    public function __construct(MutableFilterData $source)
+    public static function from(MutableFilterData $source): self
     {
-        $this->items = $source->items->getReadonlyList();
-        $this->specialItems = array_map(fn (MutableSpecialItem $item) => new SpecialItem($item), $source->specialItems);
+        return new FilterData(
+            $source->items->getReadonlyList(),
+            array_map(fn ($item) => SpecialItem::from($item), $source->specialItems),
+        );
     }
 }

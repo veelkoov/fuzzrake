@@ -20,8 +20,6 @@ class MutableSpecieStats
     private int $totalDoesnt = 0;
     private int $total = 0;
 
-    private int $realDoes = 0;
-
     public function __construct(
         public readonly Specie $specie,
     ) {
@@ -57,11 +55,6 @@ class MutableSpecieStats
         ++$this->indirectTotal;
         ++$this->totalDoesnt;
         ++$this->total;
-    }
-
-    public function incRealDoes(): void
-    {
-        ++$this->realDoes;
     }
 
     public function getDirectDoes(): int
@@ -107,10 +100,5 @@ class MutableSpecieStats
     public function getTotal(): int
     {
         return $this->total;
-    }
-
-    public function getRealDoes(): int
-    {
-        return $this->realDoes;
     }
 }

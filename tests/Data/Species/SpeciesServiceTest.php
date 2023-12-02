@@ -72,8 +72,6 @@ class SpeciesServiceTest extends TestCase
             self::assertEquals($specieStats[6], $specie->totalDoes, "$specieName total does count wrong");
             self::assertEquals($specieStats[7], $specie->totalDoesnt, "$specieName total doesn't count wrong");
             self::assertEquals($specieStats[8], $specie->total, "$specieName total count wrong");
-
-            self::assertEquals($specieStats[9], $specie->realDoes, "$specieName real does count wrong");
         }
     }
 

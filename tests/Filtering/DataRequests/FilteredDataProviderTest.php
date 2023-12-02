@@ -6,7 +6,6 @@ namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
 use App\Filtering\DataRequests\FilteredDataProvider;
-use App\Filtering\DataRequests\Filters\SpeciesFilterFactory;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -36,7 +35,7 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3);
 
-        $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false));
         self::assertEquals('M000002', self::makerIdsFromPubData($result));
@@ -59,7 +58,7 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         self::persistAndFlush($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 
-        $subject = new FilteredDataProvider(self::getArtisanRepository(), $this->getSpeciesFilterFactoryMock(), CacheUtils::getArrayBased());
+        $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
         $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false));
         self::assertEquals('M000001', self::makerIdsFromPubData($result));
@@ -76,10 +75,5 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
         $makerIds = Vec\map($publicData, fn ($row) => $row[0]);
 
         return Str\join(Vec\sort($makerIds), ', ');
-    }
-
-    private function getSpeciesFilterFactoryMock(): SpeciesFilterFactory
-    {
-        return $this->createMock(SpeciesFilterFactory::class);
     }
 }

@@ -6,7 +6,6 @@ namespace App\Data\Species\Stats;
 
 use App\Data\Species\Specie;
 use App\Data\Species\SpeciesList;
-use App\Filtering\DataRequests\Filters\SpeciesFilter;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 
@@ -68,20 +67,6 @@ final class SpeciesStatsBuilder
 
                 foreach ($specie->getAncestors() as $ancestor) {
                     $this->result->get($ancestor)->incIndirectDoesnt();
-                }
-            }
-        }
-
-        foreach ($this->completeList->items as $specie) {
-            if ($specie->hidden) {
-                continue;
-            }
-
-            $filter = new SpeciesFilter([$specie->name], $this->completeList);
-
-            foreach ($artisans as $artisan) {
-                if ($filter->matches($artisan)) {
-                    $this->result->get($specie)->incRealDoes();
                 }
             }
         }

@@ -22,8 +22,6 @@ readonly class SpecieStats
     public int $totalDoesnt;
     public int $total;
 
-    public int $realDoes;
-
     public function __construct(
         MutableSpecieStats $source,
     ) {
@@ -40,7 +38,5 @@ readonly class SpecieStats
         $this->totalDoes = $source->getTotalDoes();
         $this->totalDoesnt = $source->getTotalDoesnt();
         $this->total = $source->getTotal();
-
-        $this->realDoes = $source->getRealDoes();
     }
 }

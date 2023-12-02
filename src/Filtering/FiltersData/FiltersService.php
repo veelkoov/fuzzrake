@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
-use App\Data\Species\SpeciesService;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
-use App\Filtering\FiltersData\Builder\MutableSet;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Repository\KotlinDataRepository;
 use App\Service\CountriesDataService;
 use App\Utils\Enforce;
 use Doctrine\ORM\UnexpectedResultException;
@@ -23,7 +22,7 @@ class FiltersService
         private readonly ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
-        private readonly SpeciesService $species,
+        private readonly KotlinDataRepository $kotlinDataRepository,
     ) {
     }
 
@@ -55,7 +54,7 @@ class FiltersService
         $result = new MutableFilterData($unknown);
 
         foreach ($this->countriesDataService->getRegions() as $regionName) {
-            $result->items->addComplexItem($regionName, new MutableSet(), $regionName, 0);
+            $result->items->addComplexItem($regionName, $regionName, 0);
         }
 
         foreach ($artisansCountries->items as $country) {
@@ -64,19 +63,70 @@ class FiltersService
             $name = $this->countriesDataService->getNameFor($code);
 
             $result->items[$region]->incCount($country->count);
-            $result->items[$region]->getValueSet()->addComplexItem($code, $code, $name, $country->count);
+            $result->items[$region]->subitems->addComplexItem($code, $name, $country->count);
         }
 
         foreach ($result->items as $item) {
-            $item->getValueSet()->sort();
+            $item->subitems->sort();
         }
 
-        return new FilterData($result);
+        return FilterData::from($result);
     }
 
     private function getSpeciesFilterData(): FilterData
     {
-        return SpeciesFilterDataBuilder::for($this->species->getSpecies(), $this->species->getStats());
+        $rawFilterData = $this->kotlinDataRepository->get(KotlinDataRepository::SPECIES_FILTER);
+
+        $filterData = $this->rawToFilterData($rawFilterData);
+
+        return $filterData;
+    }
+
+    /**
+     * @param array<mixed> $rawFilterData
+     */
+    private function rawToFilterData(array $rawFilterData): FilterData
+    {
+        $specialItems = [];
+
+        foreach (Enforce::array($rawFilterData['specialItems'] ?? []) as $rawSpecialItem) {
+            $rawSpecialItem = Enforce::array($rawSpecialItem);
+
+            $specialItems[] = new SpecialItem(
+                Enforce::string($rawSpecialItem['value'] ?? ''),
+                Enforce::string($rawSpecialItem['label'] ?? ''),
+                SpecialItems::faIconFromType(Enforce::string($rawSpecialItem['type'] ?? '')),
+                Enforce::int($rawSpecialItem['count'] ?? 0),
+            );
+        }
+
+        $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
+
+        $filterData = new FilterData($items, $specialItems);
+        return $filterData;
+    }
+
+    /**
+     * @param array<mixed> $rawItems
+     *
+     * @return list<Item>
+     */
+    private function rawToItems(array $rawItems): array
+    {
+        $result = [];
+
+        foreach (Enforce::array($rawItems['items'] ?? []) as $rawItem) {
+            $rawItem = Enforce::array($rawItem);
+
+            $result[] = new Item(
+                Enforce::string($rawItem['value'] ?? ''),
+                Enforce::string($rawItem['label'] ?? ''),
+                Enforce::int($rawItem['count'] ?? 0),
+                $this->rawToItems(Enforce::array($rawItems['subitems'] ?? [])),
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -94,10 +144,10 @@ class FiltersService
         $result = new MutableFilterData($trackingIssues, $notTracked);
 
         foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
-            $result->items->addComplexItem($offer, $offer, $offer, (int) $openCount);
+            $result->items->addComplexItem($offer, $offer, (int) $openCount);
         }
 
-        return new FilterData($result);
+        return FilterData::from($result);
     }
 
     private function getPaymentPlans(): FilterData
@@ -115,7 +165,7 @@ class FiltersService
             }
         }
 
-        return new FilterData($result);
+        return FilterData::from($result);
     }
 
     /**
@@ -125,6 +175,6 @@ class FiltersService
     {
         $inactiveCount = $this->artisanRepository->countAll() - $this->artisanRepository->countActive();
 
-        return new FilterData(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
+        return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
     }
 }

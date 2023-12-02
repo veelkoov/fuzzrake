@@ -5,21 +5,27 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData;
 
 use App\Filtering\FiltersData\Builder\MutableItem;
-use App\Filtering\FiltersData\Builder\MutableSet;
 
 readonly class Item
 {
-    public string $label;
     /**
-     * @var string|list<Item>
+     * @param list<Item> $subitems
      */
-    public string|array $value;
-    public int $count;
+    public function __construct(
+        public string $value,
+        public string $label,
+        public int $count,
+        public array $subitems,
+    ) {
+    }
 
-    public function __construct(MutableItem $source)
+    public static function from(MutableItem $source): self
     {
-        $this->value = $source->value instanceof MutableSet ? $source->value->getReadonlyList() : $source->value;
-        $this->label = $source->label;
-        $this->count = $source->getCount();
+        return new self(
+            $source->value,
+            $source->label,
+            $source->getCount(),
+            $source->subitems->getReadonlyList(),
+        );
     }
 }

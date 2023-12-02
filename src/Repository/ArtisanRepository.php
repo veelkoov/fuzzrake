@@ -270,7 +270,7 @@ class ArtisanRepository extends ServiceEntityRepository
 
         $result->items->sort();
 
-        return new FilterData($result);
+        return FilterData::from($result);
     }
 
     /**

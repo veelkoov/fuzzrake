@@ -9,27 +9,12 @@ use InvalidArgumentException;
 
 class MutableItem
 {
-    public readonly string $label;
-
     public function __construct(
-        public readonly string|MutableSet $value,
-        string $label = '',
+        public readonly string $value,
+        public readonly string $label,
         private int $count = 0,
+        public readonly MutableSet $subitems = new MutableSet(),
     ) {
-        if ('' === $label) {
-            if (!is_string($value)) {
-                throw new InvalidArgumentException('Label required for non-string items');
-            }
-
-            $label = $value;
-        }
-
-        $this->label = $label;
-    }
-
-    public function getValueSet(): MutableSet
-    {
-        return Enforce::objectOf($this->value, MutableSet::class);
     }
 
     public function getCount(): int
