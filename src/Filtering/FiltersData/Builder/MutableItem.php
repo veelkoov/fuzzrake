@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData\Builder;
 
-use App\Utils\Enforce;
-use InvalidArgumentException;
-
 class MutableItem
 {
     public function __construct(

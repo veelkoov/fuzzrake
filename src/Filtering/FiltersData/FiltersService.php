@@ -77,9 +77,7 @@ class FiltersService
     {
         $rawFilterData = $this->kotlinDataRepository->get(KotlinDataRepository::SPECIES_FILTER);
 
-        $filterData = $this->rawToFilterData($rawFilterData);
-
-        return $filterData;
+        return $this->rawToFilterData($rawFilterData);
     }
 
     /**
@@ -103,6 +101,7 @@ class FiltersService
         $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
 
         $filterData = new FilterData($items, $specialItems);
+
         return $filterData;
     }
 

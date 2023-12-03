@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filtering\FiltersData;
 
 use App\Filtering\FiltersData\Builder\MutableFilterData;
-use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 
 readonly class FilterData
 {

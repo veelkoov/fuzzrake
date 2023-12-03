@@ -32,6 +32,7 @@ class Specie
     public function setName(string $name): Specie
     {
         $this->name = $name;
+
         return $this;
     }
 }

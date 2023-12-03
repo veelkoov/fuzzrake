@@ -29,6 +29,7 @@ class KotlinDataRepository extends ServiceEntityRepository
 
     /**
      * @param array<mixed> $default
+     *
      * @return array<mixed>
      */
     public function get(string $name, array $default = []): array
