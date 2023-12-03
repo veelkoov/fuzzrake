@@ -17,7 +17,7 @@ final class ValidationRegexps
     final public const FACEBOOK_URL = '^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$';
     final public const FSR_URL = '^(https://fursuitreview.com/m/[^/]+/)?$';
     final public const FA_URL = '^(https://(www|sfw)\.furaffinity\.net/user/[^/]+/)?$';
-    final public const YOUTUBE_URL = '^(https://www\.youtube\.com/(((channel|user|c)/)?[^/?]+)|(@[a-z]+))?$';
+    final public const YOUTUBE_URL = '^(https://www\.youtube\.com/(((channel|user|c)/)?[^/?]+)|(@[a-zA-Z]+))?$';
 
     final public const INSTAGRAM_URL = '^(https://www\.instagram\.com/[^/]+/)?$';
     final public const TUMBLR_URL = '^((https://[^.]+\.tumblr\.com/)|(https://www\.tumblr\.com/[^/?]+)|(https://pupdates.matrices.net/))?$'; // FIXME: Allow custom-domain exceptions. Improve URL validation regexps #79

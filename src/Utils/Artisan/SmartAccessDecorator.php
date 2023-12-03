@@ -158,7 +158,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     public function setFormerMakerIds(string $formerMakerIdsToSet): self
     {
         $formerMakerIdsToSet = StringList::unpack($formerMakerIdsToSet);
-        $allMakerIdsToSet = array_merge($formerMakerIdsToSet, [$this->artisan->getMakerId()]);
+        $allMakerIdsToSet = [...$formerMakerIdsToSet, $this->artisan->getMakerId()];
 
         foreach ($this->artisan->getMakerIds() as $makerId) {
             if (!in_array($makerId->getMakerId(), $allMakerIdsToSet)) {
@@ -189,7 +189,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getAllMakerIdsArr(): array
     {
-        return array_filter(array_merge([$this->artisan->getMakerId()], $this->getFormerMakerIdsArr()));
+        return array_filter([$this->artisan->getMakerId(), ...$this->getFormerMakerIdsArr()]);
     }
 
     //
@@ -332,7 +332,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getAllNamesArr(): array
     {
-        return array_filter(array_merge([$this->artisan->getName()], $this->getFormerlyArr()));
+        return array_filter([$this->artisan->getName(), ...$this->getFormerlyArr()]);
     }
 
     public function getCompleteness(): int
