@@ -47,14 +47,14 @@ class SpeciesServiceTest extends TestCase
 
         self::assertEquals(1, $result->unknownCount);
 
-        $expected = [ // direct(does, doesnt, total), indirect(does, doesnt, total), total(does, doesnt, 1), real does
-            'Most species'      => [0, 0, 0, 3, 2, 5, 3, 2, 5, 3],
-            'Real life animals' => [1, 0, 1, 2, 2, 4, 3, 2, 5, 3],
-            'Mammals'           => [0, 1, 1, 2, 1, 3, 2, 2, 4, 3],
-            'Canines'           => [1, 1, 2, 1, 0, 1, 2, 1, 3, 2],
-            'Wolves'            => [1, 0, 1, 0, 0, 0, 1, 0, 1, 2],
-            'Coyotes'           => [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            'Other'             => [0, 0, 0, 2, 1, 3, 2, 1, 3, 2],
+        $expected = [ // direct(does, doesnt, total), indirect(does, doesnt, total), total(does, doesnt, 1)
+            'Most species'      => [0, 0, 0, 3, 2, 5, 3, 2, 5],
+            'Real life animals' => [1, 0, 1, 2, 2, 4, 3, 2, 5],
+            'Mammals'           => [0, 1, 1, 2, 1, 3, 2, 2, 4],
+            'Canines'           => [1, 1, 2, 1, 0, 1, 2, 1, 3],
+            'Wolves'            => [1, 0, 1, 0, 0, 0, 1, 0, 1],
+            'Coyotes'           => [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            'Other'             => [0, 0, 0, 2, 1, 3, 2, 1, 3],
         ];
 
         foreach ($expected as $specieName => $specieStats) {
