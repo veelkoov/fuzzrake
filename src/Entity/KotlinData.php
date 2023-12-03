@@ -33,7 +33,7 @@ class KotlinData
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -45,7 +45,7 @@ class KotlinData
         return $this->json;
     }
 
-    public function setJson(string $json): static
+    public function setJson(string $json): self
     {
         $this->json = $json;
 

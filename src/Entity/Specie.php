@@ -29,7 +29,7 @@ class Specie
         return $this->name;
     }
 
-    public function setName(string $name): Specie
+    public function setName(string $name): self
     {
         $this->name = $name;
 

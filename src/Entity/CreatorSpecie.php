@@ -35,7 +35,7 @@ class CreatorSpecie
         return $this->specie;
     }
 
-    public function setSpecie(Specie $specie): CreatorSpecie
+    public function setSpecie(Specie $specie): self
     {
         $this->specie = $specie;
 
@@ -47,7 +47,7 @@ class CreatorSpecie
         return $this->creator;
     }
 
-    public function setCreator(Artisan $creator): CreatorSpecie
+    public function setCreator(Artisan $creator): self
     {
         $this->creator = $creator;
 
