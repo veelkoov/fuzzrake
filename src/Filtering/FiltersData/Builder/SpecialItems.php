@@ -40,7 +40,7 @@ final class SpecialItems
 
     public static function newInactive(int $initialValue): MutableSpecialItem
     {
-        $result = new MutableSpecialItem(Consts::FILTER_VALUE_INCLUDE_INACTIVE, 'Include', 'fa fa-play-pause');
+        $result = new MutableSpecialItem(Consts::FILTER_VALUE_INCLUDE_INACTIVE, 'Show', 'fa fa-play-pause');
         $result->incCount($initialValue);
 
         return $result;

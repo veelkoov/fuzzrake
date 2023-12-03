@@ -1,8 +1,8 @@
 <template>
   <li>
-    You may include (for any reason) makers and studios marked as "inactive".
+    You may choose to see hidden makers and studios.
   </li>
   <li>
-    A maker/studio could've been marked "inactive" for many reasons, not necessarily going out of business, but e.g. changing names and their website addresses, and forgetting to update their data here.
+    A maker/studio may get hidden if they e.g. rebranded and did not update their addresses here (making all their links broken), or they are no longer active at all.
   </li>
 </template>

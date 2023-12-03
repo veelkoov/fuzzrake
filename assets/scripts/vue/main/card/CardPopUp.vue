@@ -27,7 +27,8 @@
 
         <div class="modal-body row px-4 py-2">
           <div v-if="artisan.inactiveReason" class="col-md-12 p-1 alert alert-warning" role="alert">
-            <strong>This maker has been marked as inactive</strong>, reason: {{ artisan.inactiveReason }}
+            <strong>This maker has been hidden for the following reason:</strong> <br>
+            {{ artisan.inactiveReason }}
           </div>
 
           <div v-if="hasPhotos()" class="col-md-12 p-1 overflow-auto imgs-container">

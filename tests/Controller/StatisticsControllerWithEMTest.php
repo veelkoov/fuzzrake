@@ -48,7 +48,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         ;
         $a3 = self::getArtisan('A3', 'AAAAAAA3')
             ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
-            ->setInactiveReason('Inactive')
+            ->setInactiveReason('Hidden')
             ->setCountry('IT')
         ;
 

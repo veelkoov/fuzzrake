@@ -69,7 +69,7 @@ export default class FiltersPopUp extends Vue {
           'SpeciesHelp', Static.getFiltersOptions().species),
       new Filter('paymentPlans', 'Payment plans', 'MultiselectFilter',
           'PaymentPlansHelp', Static.getFiltersOptions().paymentPlans),
-      new Filter('inactive', 'Inactive', 'MultiselectFilter',
+      new Filter('inactive', 'Hidden', 'MultiselectFilter',
           'InactiveHelp', Static.getFiltersOptions().inactive),
     ]);
 

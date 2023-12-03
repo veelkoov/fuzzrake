@@ -40,7 +40,7 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
     {
         $a1 = (new Artisan())->setInactiveReason(''); // Active should be counted
         $a2 = (new Artisan())->setInactiveReason(''); // Active should be counted
-        $a3 = (new Artisan())->setInactiveReason('This is an inactive maker'); // Inactive should not be counted
+        $a3 = (new Artisan())->setInactiveReason('This is a hidden maker'); // Hidden should not be counted
 
         self::bootKernel();
         self::persistAndFlush($a1, $a2, $a3);
