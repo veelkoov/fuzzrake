@@ -3,6 +3,7 @@ false_positives:
   - 'when will you start taking new COMMISSIONS'
   - 'when WE_ARE (open for|taking|take)'
   - 'when do you open for'
+  - 'when (we|i) open commissions'
   - '(if|when|while)( OUR)? OFFER( are)? STATUS_ANY'
 
   - 'WE_ARE (now )?opening for quotes a few weeks before commission slots open'

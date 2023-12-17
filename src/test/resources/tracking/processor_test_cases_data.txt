@@ -223,3 +223,7 @@ Quotes & commission CLOSED
 Case 33
 -Quotes
 -Commissions
+================================================================
+If you are interested in this, please email me at <em>address@example.com</em> when I open commissions with your character reference and your price offer in $ USD.
+--------------------------------
+Case 34 (issues expected)
