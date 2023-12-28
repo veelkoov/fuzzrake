@@ -43,7 +43,7 @@ import ProductionModelsHelp from './help/ProductionModelsHelp.vue';
 import SpeciesFilter from './body/SpeciesFilter.vue';
 import SpeciesHelp from './help/SpeciesHelp.vue';
 import StatesHelp from './help/StatesHelp.vue';
-import Static, {AnyOptions} from '../../../Static';
+import Static from '../../../Static';
 import StylesHelp from './help/StylesHelp.vue';
 import {Options, Vue} from 'vue-class-component';
 
@@ -57,7 +57,7 @@ import {Options, Vue} from 'vue-class-component';
   }
 })
 export default class BodyContainer extends Vue {
-  private filter!: Filter<AnyOptions>;
+  private filter!: Filter;
 
   get helpContainerId(): string {
     return `${this.filter.groupName}Help`;
