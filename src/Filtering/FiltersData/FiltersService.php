@@ -114,14 +114,14 @@ class FiltersService
     {
         $result = [];
 
-        foreach (Enforce::array($rawItems['items'] ?? []) as $rawItem) {
+        foreach ($rawItems as $rawItem) {
             $rawItem = Enforce::array($rawItem);
 
             $result[] = new Item(
                 Enforce::string($rawItem['value'] ?? ''),
                 Enforce::string($rawItem['label'] ?? ''),
                 Enforce::int($rawItem['count'] ?? 0),
-                $this->rawToItems(Enforce::array($rawItems['subitems'] ?? [])),
+                $this->rawToItems(Enforce::array($rawItem['subItems'] ?? [])),
             );
         }
 
