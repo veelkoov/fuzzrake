@@ -5,10 +5,49 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
+use App\Entity\CreatorSpecie;
+use App\Entity\Specie;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\StringList;
+use InvalidArgumentException;
+use Psl\Dict;
+use Psl\Iter;
+use Psl\Vec;
 
 trait FiltersTestTrait
 {
+    /**
+     * @param list<Artisan> $artisans
+     *
+     * @return list<Specie|CreatorSpecie>
+     */
+    private function speciesEntitiesFrom(array $artisans): array
+    {
+        if (Iter\any($artisans, fn (Artisan $artisan) => '' !== $artisan->getSpeciesDoesnt())) {
+            // Since resolving species takes place on Kotlin side, we can only test simple cases
+            throw new InvalidArgumentException('Cannot test the "species doesn\'t"');
+        }
+
+        $specieNames = array_unique(Iter\reduce(
+            Vec\map($artisans, fn (Artisan $artisan) => StringList::unpack($artisan->getSpeciesDoes())),
+            fn (array $a1, array $a2) => [...$a1, ...$a2],
+            [],
+        ));
+
+        $species = Dict\from_keys($specieNames, fn (string $name) => (new Specie())->setName($name));
+
+        $creatorSpecies = [];
+
+        foreach ($artisans as $artisan) {
+            $creatorSpecies = [...$creatorSpecies, ...Vec\map(
+                StringList::unpack($artisan->getSpeciesDoes()),
+                fn (string $name) => (new CreatorSpecie())->setSpecie($species[$name])->setCreator($artisan->getArtisan()),
+            )];
+        }
+
+        return Vec\values([...$species, ...$creatorSpecies]);
+    }
+
     /**
      * @return list<Artisan>
      */
@@ -146,36 +185,6 @@ trait FiltersTestTrait
     /**
      * @return list<Artisan>
      */
-    private function getSpeciesFiltersTestSet(): array
-    {
-        return [
-            $this->artisan('NOSPECS', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                '', '', 'Supported', false, false),
-
-            $this->artisan('SPECSDS', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Canines', 'Supported', false, false),
-
-            $this->artisan('SPCDSNT', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', '', 'Supported', false, false,
-                speciesDoesnt: 'Canines'),
-
-            $this->artisan('SPCOTHR', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Unusual specie', 'Supported', false, false),
-
-            $this->artisan('SPCDNOT', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', '', 'Supported', false, false,
-                speciesDoesnt: 'Unusual specie'),
-        ];
-    }
-
-    /**
-     * @return list<Artisan>
-     */
     private function getInactiveFiltersTestSet(): array
     {
         return [
@@ -275,12 +284,6 @@ trait FiltersTestTrait
             't1' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],        ['NTTRCKD']],
             't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],        ['TRACKIS', 'TRKFAIL']],
             't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Open for']], ['TRACKIS', 'TRACKOK']],
-
-            'sp1' => [self::getSpeciesFiltersTestSet(), ['species' => ['?']],        ['NOSPECS']],
-            'sp2' => [self::getSpeciesFiltersTestSet(), ['species' => ['Canines']],  ['SPCDNOT', 'SPECSDS']],
-            'sp3' => [self::getSpeciesFiltersTestSet(), ['species' => ['Raccoons']], ['SPCDNOT', 'SPCDSNT']],
-            'sp4' => [self::getSpeciesFiltersTestSet(), ['species' => ['Other']],    ['SPCOTHR']],
-            'sp5' => [self::getSpeciesFiltersTestSet(), ['species' => ['Mammals']],  ['SPECSDS', 'SPCDNOT', 'SPCDSNT']],
         ];
     }
 

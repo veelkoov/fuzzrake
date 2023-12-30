@@ -4,8 +4,8 @@
 
 parameters:
   species_definitions:
-    valid_choices:
-      "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
+    valid_choices:  # At this point it is just a copy from Kotlin, used only to generate list of recognized names.
+      "Most species":
         "Real life animals":
           'i_Existing species': {}
 

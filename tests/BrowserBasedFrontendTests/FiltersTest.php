@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests;
 
-use App\Entity\Artisan;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
@@ -34,7 +34,7 @@ class FiltersTest extends PantherTestCaseWithEM
         $client = static::createPantherClient();
         self::setWindowSize($client, 1600, 900);
 
-        self::persistAndFlush(...$artisans);
+        self::persistAndFlush(...$artisans, ...self::speciesEntitiesFrom($artisans));
         $this->clearCache();
 
         $client->request('GET', '/index.php/');
