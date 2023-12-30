@@ -34,7 +34,7 @@ class DataTidyCommand extends Command
     {
         $this
             ->addOption(self::OPT_COMMIT, null, null, 'Save changes in the database')
-            ->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include inactive artisans')
+            ->addOption(self::OPT_WITH_INACTIVE, null, null, 'Include hidden creators')
         ;
     }
 

@@ -34,7 +34,7 @@
               {{ artisan.name }}
 
               <template v-if="artisan.inactiveReason">
-                [inactive] <!-- grep-inactive-mark -->
+                [hidden] <!-- grep-inactive-mark -->
               </template>
 
               <span class="text-nowrap">
