@@ -7,6 +7,7 @@ namespace App\Filtering\DataRequests;
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
 use App\Entity\CreatorSpecie;
+use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
 use Doctrine\ORM\QueryBuilder;
@@ -179,15 +180,39 @@ class QueryChoicesAppender implements CacheDigestProvider
             return;
         }
 
-        $builder->andWhere($builder->expr()->exists(
-            $builder->getEntityManager()
-                ->getRepository(CreatorSpecie::class)
-                ->createQueryBuilder('cs1')
-                ->select('1')
-                ->join('cs1.specie', 'sp1')
-                ->where('sp1.name IN (:specieNames)')
-                ->andWhere('cs1.creator = a')
-        ))
-            ->setParameter('specieNames', $this->choices->species);
+        $conditions = [];
+
+        $items = new SpecialItemsExtractor($this->choices->species, Consts::FILTER_VALUE_UNKNOWN);
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
+            $conditions[] = $builder->expr()->not($builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorSpecie::class)
+                    ->createQueryBuilder('cs1')
+                    ->select('1')
+                    ->join('cs1.specie', 'sp1')
+                    ->where('cs1.creator = a')
+            ));
+        }
+
+        if ([] !== $items->getCommon()) {
+            $conditions[] = $builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorSpecie::class)
+                    ->createQueryBuilder('cs2')
+                    ->select('1')
+                    ->join('cs2.specie', 'sp2')
+                    ->where('sp2.name IN (:specieNames)')
+                    ->andWhere('cs2.creator = a')
+            );
+
+            $builder->setParameter('specieNames', $items->getCommon());
+        }
+
+        if (count($conditions) > 1) {
+            $conditions = $builder->expr()->orX(...$conditions);
+        }
+
+        $builder->andWhere(...$conditions);
     }
 }

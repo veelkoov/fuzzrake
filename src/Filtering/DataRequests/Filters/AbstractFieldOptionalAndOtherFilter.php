@@ -8,9 +8,6 @@ use App\Filtering\DataRequests\Consts;
 use App\Filtering\DataRequests\Filters\ValueChecker\ValueCheckerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
-use function Psl\Iter\contains;
-use function Psl\Vec\filter;
-
 abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
 {
     private readonly bool $wantsUnknown;
@@ -22,15 +19,12 @@ abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
      */
     public function __construct(array $wantedItems)
     {
-        $this->wantsUnknown = contains($wantedItems, Consts::FILTER_VALUE_UNKNOWN);
-        $this->wantsOther = contains($wantedItems, Consts::FILTER_VALUE_OTHER);
+        $extractor = new SpecialItemsExtractor($wantedItems, Consts::FILTER_VALUE_UNKNOWN, Consts::FILTER_VALUE_OTHER);
 
-        $wantedItems = filter($wantedItems, fn (string $item) => !contains([
-            Consts::FILTER_VALUE_UNKNOWN,
-            Consts::FILTER_VALUE_OTHER,
-        ], $item));
+        $this->wantsUnknown = $extractor->hasSpecial(Consts::FILTER_VALUE_UNKNOWN);
+        $this->wantsOther = $extractor->hasSpecial(Consts::FILTER_VALUE_OTHER);
 
-        $this->valueChecker = $this->getValueChecker($wantedItems);
+        $this->valueChecker = $this->getValueChecker($extractor->getCommon());
     }
 
     public function matches(Artisan $artisan): bool
