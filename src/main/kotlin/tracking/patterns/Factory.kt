@@ -23,7 +23,7 @@ object Factory {
     }
 
     fun getFalsePositives(): Replacements {
-        val options = setOf(RegexOption.DOT_MATCHES_ALL)
+        val options = setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.COMMENTS)
 
         val result = resolver.resolveIn(regexes.falsePositives).map { pattern ->
             Replacement(pattern, options, "")
@@ -33,7 +33,7 @@ object Factory {
     }
 
     fun getOffersStatuses(): Matchers {
-        val options = setOf(RegexOption.DOT_MATCHES_ALL)
+        val options = setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.COMMENTS)
 
         val result = resolver.resolveIn(regexes.offersStatuses).map { pattern ->
             Matcher(pattern, options)

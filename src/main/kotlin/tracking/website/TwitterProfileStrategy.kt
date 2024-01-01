@@ -4,6 +4,7 @@ import data.JsonException
 import data.JsonNavigator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import web.url.FreeUrl
 import web.url.Url
 
@@ -19,14 +20,34 @@ object TwitterProfileStrategy : Strategy {
     override fun filterContents(input: String): String {
         val document = Jsoup.parse(input)
 
+        return tryFromLdJsonProfilePage(document) ?: tryFromMeta(document) ?: input
+    }
+
+    private fun tryFromMeta(document: Document): String? {
+        val ogDescriptionNodes = document.head().selectXpath("//meta[@property='og:description']") // grep-code-og-description-removal
+        val ogTitleNodes = document.head().selectXpath("//meta[@property='og:title']")
+
+        val ogTitle: String? = ogTitleNodes.attr("content")
+        val ogDescription: String? = ogDescriptionNodes.attr("content")
+
+        if (ogTitle == null || ogDescription == null) {
+            logger.warn { "Failed reading og:title and/or og:description nodes" }
+
+            return null
+        }
+
+        return ogTitle + "\n" + ogDescription
+    }
+
+    private fun tryFromLdJsonProfilePage(document: Document): String? {
         val ldJsonNodes = document
             .head()
             .selectXpath("//script[@type='application/ld+json'][contains(text(), 'ProfilePage')]")
 
         if (ldJsonNodes.isEmpty()) {
-            logger.warn { "Failed to XPath Twitter ProfilePage schema script node" }
+            logger.info { "Failed to XPath Twitter ProfilePage schema script node" }
 
-            return input
+            return null
         }
 
         return try {
@@ -35,11 +56,10 @@ object TwitterProfileStrategy : Strategy {
             ldJsonData.getString("author/givenName") +
                     "\n" + ldJsonData.getString("author/description") +
                     "\n" + ldJsonData.getString("author/homeLocation/name")
-
         } catch (exception: JsonException) {
             logger.warn(exception) { "Failed reading ProfilePage schema JSON" }
 
-            input
+            null
         }
     }
 

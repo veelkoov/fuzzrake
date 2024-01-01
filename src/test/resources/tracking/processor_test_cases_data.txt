@@ -227,3 +227,19 @@ Case 33
 If you are interested in this, please email me at <em>address@example.com</em> when I open commissions with your character reference and your price offer in $ USD.
 --------------------------------
 Case 34 (issues expected)
+================================================================
+<h2 id="text14">fursuit commissions</h2><hr id="divider08"><p id="text17">status: <strong>closed</strong></p>
+--------------------------------
+Case 35
+-Commissions
+================================================================
+2024 Commissions and Quotes are open from 1st of February to 29th of February.
+--------------------------------
+Case 37 (issues expected)
+================================================================
+<h2 id="text38">Art commissions</h2><hr id="divider09"><p id="text10">status: <strong>OPEN</strong></p>
+<h2 id="text14">fursuit commissions</h2><hr id="divider08"><p id="text17">status: <strong>closed</strong></p>
+<img src="data:image/svg+xml;base64,abacabacoda" data-src="assets/images/gallery06/820dfeb7.jpg?v=357df04b" alt="blue goat fursuit closeup" />
+--------------------------------
+Case 38
+-Commissions

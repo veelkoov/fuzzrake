@@ -23,6 +23,7 @@ class PreprocessorTest {
         "***open***" to "open",
         "!closed!" to "closed",
         " ❗&nbsp;" to " ! ", // Unicode NBSP, emoticon !, HTML entity NBSP
+        "\t" to " ",
     ).map { (input, expected) ->
         dynamicTest("Test input: '${input}'") {
             val testItem = ProcessedItem(getCreatorData(), getUrl(), StandardStrategy, input)
