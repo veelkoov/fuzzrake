@@ -465,7 +465,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->addOrderBy('lastUpdateDatetime', 'DESC') // Put recently updated makers on top
 
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return array_column($result, 0); // Return only first column = entity; ignore last update time column
