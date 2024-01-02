@@ -230,6 +230,10 @@
               This maker/studio has {{ artisan.completeness }}% data completeness. {{ getCompletenessText() }}
               Click the button below to check update options.
             </p>
+
+            <p class="small">
+              Last time the information here was updated was: {{ getLastTimeUpdatedStr() }}.
+            </p>
           </div>
         </div>
 
@@ -323,6 +327,18 @@ export default class Link extends Vue {
       return 'Some updates might be helpful...';
     } else {
       return 'Yikes! :( Updates needed!';
+    }
+  }
+
+  private getLastTimeUpdatedStr(): string {
+    // TODO: Should not check for 'unknown'; https://github.com/veelkoov/fuzzrake/issues/174
+
+    if (this.artisan.dateUpdated && this.artisan.dateUpdated !== 'unknown') {
+      return this.artisan.dateUpdated + ' UTC';
+    } else if (this.artisan.dateAdded && this.artisan.dateAdded !== 'unknown') {
+      return this.artisan.dateAdded + ' UTC';
+    } else {
+      return 'before 2021-01-10';
     }
   }
 }

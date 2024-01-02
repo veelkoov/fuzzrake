@@ -18,6 +18,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -446,12 +447,28 @@ class ArtisanRepository extends ServiceEntityRepository
         $appender->applyChoices($builder);
 
         $result = $builder
-            ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
-            ->addOrderBy('LOWER(a.name)')
+            // Retrieve datetime added for sorting by last update time
+            ->leftJoin('a.values', 'vAddDate', Join::WITH,
+                'vAddDate.artisan = a AND vAddDate.fieldName = :dateAddedFieldName')
+            ->setParameter('dateAddedFieldName', Field::DATE_ADDED->name)
+
+            // Retrieve datetime updated for sorting by last update time
+            ->leftJoin('a.values', 'vUpdDate', Join::WITH,
+                'vUpdDate.artisan = a AND vUpdDate.fieldName = :dateUpdatedFieldName')
+            ->setParameter('dateUpdatedFieldName', Field::DATE_UPDATED->name)
+
+            // SELECT last update time to be used in the WHERE clause
+            ->addSelect('COALESCE(vUpdDate.value, vAddDate.value, :beforeAddUpdateDates) AS lastUpdateDatetime')
+            ->setParameter('beforeAddUpdateDates', '2000-01-01 00:00:00')
+
+            ->orderBy('ZERO_LENGTH(a.inactiveReason)')       // Put inactive makers at the end of the list
+            ->addOrderBy('lastUpdateDatetime', 'DESC') // Put recently updated makers on top
+
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        // Return only first column = entity; ignore last update time column
+        return array_column($result, 0); // @phpstan-ignore-line Lack of skill to fix this
     }
 }
