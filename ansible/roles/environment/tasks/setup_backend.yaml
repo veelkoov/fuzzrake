@@ -45,7 +45,6 @@
 - name: 'Setup the tracking cronjob'
   when: 'setup_tracking | default(false)'
   ansible.builtin.cron:
-    state:  'absent'
     hour:   '0,12'
     name:   'tracker - commissions'
     minute: 0
