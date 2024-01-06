@@ -237,7 +237,7 @@ function action() {
         'pul')          action pu --group large  "$@" ;;
 
         'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
-        'ps')           run_docker_compose_exec ./vendor/bin/phpstan --xdebug analyse -c phpstan.neon "$@" ;;
+        'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
 

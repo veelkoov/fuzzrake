@@ -381,7 +381,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData;
     }
 
     /**
@@ -467,7 +467,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
-        // Return only first column = entity; ignore last update time column
-        return array_column($result, 0); // @phpstan-ignore-line Lack of skill to fix this
+        return array_column($result, 0); // Return only first column = entity; ignore last update time column
     }
 }
