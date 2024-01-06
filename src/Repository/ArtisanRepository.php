@@ -380,7 +380,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getResult();
 
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $resultData;
     }
 
     /**
@@ -452,6 +452,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->enableResultCache(3600)
             ->getResult();
 
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
+        return $result;
     }
 }
