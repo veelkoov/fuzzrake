@@ -30,7 +30,10 @@ trait EntityManagerTrait
     {
         $result = parent::bootKernel($options);
 
-        self::$entityManager = null;
+        if (null !== self::$entityManager) {
+            self::$entityManager->clear();
+            self::$entityManager = null;
+        }
         self::resetDB();
 
         return $result;
