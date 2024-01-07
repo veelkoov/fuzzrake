@@ -20,7 +20,7 @@ use JsonException;
  */
 class KotlinDataRepository extends ServiceEntityRepository
 {
-    public const SPECIES_FILTER = 'species-filter';
+    final public const SPECIES_FILTER = 'species-filter';
 
     public function __construct(ManagerRegistry $registry)
     {

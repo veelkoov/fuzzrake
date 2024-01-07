@@ -12,7 +12,7 @@ class SpeciesService
     /**
      * @var list<string>
      */
-    private array $validNames;
+    private readonly array $validNames;
 
     /**
      * @param array{replacements: array<string, string>, regex_prefix: string, regex_suffix: string, leave_unchanged: string[], valid_choices: array<string, mixed>} $speciesDefinitions
