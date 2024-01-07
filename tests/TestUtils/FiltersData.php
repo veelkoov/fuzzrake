@@ -87,6 +87,7 @@ class FiltersData
 
     /**
      * @param list<string> $specieNames
+     *
      * @throws JsonException
      */
     private static function getSpeciesFilterKotlinData(array $specieNames): KotlinData

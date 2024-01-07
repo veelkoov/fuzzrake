@@ -11,6 +11,7 @@ use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
 use Doctrine\ORM\QueryBuilder;
+use Psl\Iter;
 use Psl\Vec;
 
 class QueryChoicesAppender implements CacheDigestProvider
@@ -209,10 +210,12 @@ class QueryChoicesAppender implements CacheDigestProvider
             $builder->setParameter('specieNames', $items->getCommon());
         }
 
-        if (count($conditions) > 1) {
-            $conditions = $builder->expr()->orX(...$conditions);
+        if (1 === count($conditions)) {
+            $condition = Iter\first($conditions);
+        } else {
+            $condition = $builder->expr()->orX(...$conditions);
         }
 
-        $builder->andWhere(...$conditions);
+        $builder->andWhere($condition);
     }
 }
