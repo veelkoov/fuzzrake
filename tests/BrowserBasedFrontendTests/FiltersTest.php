@@ -7,9 +7,11 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
+use App\Tests\TestUtils\FiltersData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
+use JsonException;
 use Symfony\Component\Panther\Client;
 
 /**
@@ -27,14 +29,14 @@ class FiltersTest extends PantherTestCaseWithEM
      * @param array<string, list<string>|bool> $filtersSet
      * @param list<string>                     $expectedMakerIds
      *
-     * @throws WebDriverException
+     * @throws WebDriverException|JsonException
      */
     public function testFiltersInBrowser(array $artisans, array $filtersSet, array $expectedMakerIds): void
     {
         $client = static::createPantherClient();
         self::setWindowSize($client, 1600, 900);
 
-        self::persistAndFlush(...$artisans, ...self::speciesEntitiesFrom($artisans));
+        self::persistAndFlush(...$artisans, ...FiltersData::entitiesFrom($artisans));
         $this->clearCache();
 
         $client->request('GET', '/index.php/');
@@ -56,7 +58,7 @@ class FiltersTest extends PantherTestCaseWithEM
             self::waitUntilShows("#filter-body-$filter");
 
             if ('species' === $filter) {
-                $this->toggleSpecies($client, 'Most species', 'Real life animals', 'Mammals');
+                $this->toggleSpecies($client, 'Most species');
             }
 
             foreach ($values as $value) {

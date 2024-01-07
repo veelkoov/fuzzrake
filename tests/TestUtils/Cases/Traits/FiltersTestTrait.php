@@ -5,49 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\TestUtils\Cases\Traits;
 
 use App\Data\Definitions\Ages;
-use App\Entity\CreatorSpecie;
-use App\Entity\Specie;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\StringList;
-use InvalidArgumentException;
-use Psl\Dict;
-use Psl\Iter;
-use Psl\Vec;
 
 trait FiltersTestTrait
 {
-    /**
-     * @param list<Artisan> $artisans
-     *
-     * @return list<Specie|CreatorSpecie>
-     */
-    private function speciesEntitiesFrom(array $artisans): array
-    {
-        if (Iter\any($artisans, fn (Artisan $artisan) => '' !== $artisan->getSpeciesDoesnt())) {
-            // Since resolving species takes place on Kotlin side, we can only test simple cases
-            throw new InvalidArgumentException('Cannot test the "species doesn\'t"');
-        }
-
-        $specieNames = array_unique(Iter\reduce(
-            Vec\map($artisans, fn (Artisan $artisan) => StringList::unpack($artisan->getSpeciesDoes())),
-            fn (array $a1, array $a2) => [...$a1, ...$a2],
-            [],
-        ));
-
-        $species = Dict\from_keys($specieNames, fn (string $name) => (new Specie())->setName($name));
-
-        $creatorSpecies = [];
-
-        foreach ($artisans as $artisan) {
-            $creatorSpecies = [...$creatorSpecies, ...Vec\map(
-                StringList::unpack($artisan->getSpeciesDoes()),
-                fn (string $name) => (new CreatorSpecie())->setSpecie($species[$name])->setCreator($artisan->getArtisan()),
-            )];
-        }
-
-        return Vec\values([...$species, ...$creatorSpecies]);
-    }
-
     /**
      * @return list<Artisan>
      */
