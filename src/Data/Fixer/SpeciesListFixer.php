@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Fixer;
 
-use App\Data\Species\SpeciesService;
+use App\Service\SpeciesService;
 use App\Utils\Regexp\Replacements;
 
 class SpeciesListFixer extends AbstractListFixer

@@ -6,11 +6,11 @@ namespace App\Controller;
 
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Data\Species\SpeciesService;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
+use App\Service\SpeciesService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -81,7 +81,6 @@ class StatisticsController extends AbstractController
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
             'completeness'     => $this->prepareCompletenessData($artisans),
             'providedInfo'     => $this->prepareProvidedInfoData($artisans),
-            'speciesStats'     => $species->getStats(),
             'matchWords'       => self::MATCH_WORDS,
             'showIgnored'      => filter_var($request->get('showIgnored', 0), FILTER_VALIDATE_BOOL),
         ]);

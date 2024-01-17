@@ -13,12 +13,12 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private static function skipCheckListAdultAllowNsfw(Client $client, int $numberOfArtisans): void
+    private static function skipCheckListAdultAllowNsfw(Client $client, int $numberOfArtisans, bool $expectFilled = false): void
     {
         $infoText = "Currently $numberOfArtisans makers from $numberOfArtisans countries are listed here.";
         $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
-        self::fillChecklist($client, true, false);
+        self::fillChecklist($client, true, false, $expectFilled);
 
         self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
     }
@@ -26,26 +26,28 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private static function fillChecklist(Client $client, bool $isAdult, bool $wantsSfw): void
+    private static function fillChecklist(Client $client, bool $isAdult, bool $wantsSfw, bool $expectFilled = false): void
     {
         self::waitForLoadingIndicatorToDisappear();
 
-        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        if (!$expectFilled) {
+            $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-        if ($isAdult) {
-            self::waitUntilShows('#aasImAdult');
-            $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+            if ($isAdult) {
+                self::waitUntilShows('#aasImAdult');
+                $client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-            if ($wantsSfw) {
-                self::waitUntilShows('#aasKeepSfw');
-                $client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
+                if ($wantsSfw) {
+                    self::waitUntilShows('#aasKeepSfw');
+                    $client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
+                } else {
+                    self::waitUntilShows('#aasAllowNsfw');
+                    $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+                }
             } else {
-                self::waitUntilShows('#aasAllowNsfw');
-                $client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
+                self::waitUntilShows('#aasImNotAdult');
+                $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
             }
-        } else {
-            self::waitUntilShows('#aasImNotAdult');
-            $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         }
 
         self::waitUntilShows('#checklist-dismiss-btn');

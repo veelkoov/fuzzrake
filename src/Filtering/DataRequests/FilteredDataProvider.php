@@ -10,7 +10,6 @@ use App\Filtering\DataRequests\Filters\LanguagesFilter;
 use App\Filtering\DataRequests\Filters\OpenForFilter;
 use App\Filtering\DataRequests\Filters\OrderTypesFilter;
 use App\Filtering\DataRequests\Filters\ProductionModelsFilter;
-use App\Filtering\DataRequests\Filters\SpeciesFilterFactory;
 use App\Filtering\DataRequests\Filters\StylesFilter;
 use App\Repository\ArtisanRepository;
 use App\Service\Cache;
@@ -26,7 +25,6 @@ class FilteredDataProvider
 {
     public function __construct(
         private readonly ArtisanRepository $repository,
-        private readonly SpeciesFilterFactory $speciesFilterFactory,
         private readonly Cache $cache,
     ) {
     }
@@ -69,9 +67,6 @@ class FilteredDataProvider
         }
         if ([] !== $choices->openFor) {
             $filters[] = new OpenForFilter($choices->openFor);
-        }
-        if ([] !== $choices->species) {
-            $filters[] = $this->speciesFilterFactory->get($choices->species);
         }
 
         $artisans = filter($artisans,

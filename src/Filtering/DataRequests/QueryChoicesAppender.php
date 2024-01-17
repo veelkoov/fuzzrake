@@ -6,9 +6,12 @@ namespace App\Filtering\DataRequests;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
+use App\Entity\CreatorSpecie;
+use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
 use Doctrine\ORM\QueryBuilder;
+use Psl\Iter;
 use Psl\Vec;
 
 class QueryChoicesAppender implements CacheDigestProvider
@@ -17,7 +20,7 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function __construct(Choices $choices)
     {
-        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], [], $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
+        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], $choices->species, $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
     }
 
     public function getCacheDigest(): string
@@ -31,6 +34,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyCountries($builder);
         $this->applyStates($builder);
         $this->applyPaymentPlans($builder);
+        $this->applySpecies($builder);
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
         $this->applyWantsInactive($builder);
@@ -169,5 +173,49 @@ class QueryChoicesAppender implements CacheDigestProvider
                 ->andWhere('a.inactiveReason = :emptyInactiveReason')
                 ->setParameter('emptyInactiveReason', '');
         }
+    }
+
+    private function applySpecies(QueryBuilder $builder): void
+    {
+        if ([] === $this->choices->species) {
+            return;
+        }
+
+        $conditions = [];
+
+        $items = new SpecialItemsExtractor($this->choices->species, Consts::FILTER_VALUE_UNKNOWN);
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
+            $conditions[] = $builder->expr()->not($builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorSpecie::class)
+                    ->createQueryBuilder('cs1')
+                    ->select('1')
+                    ->join('cs1.specie', 'sp1')
+                    ->where('cs1.creator = a')
+            ));
+        }
+
+        if ([] !== $items->getCommon()) {
+            $conditions[] = $builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorSpecie::class)
+                    ->createQueryBuilder('cs2')
+                    ->select('1')
+                    ->join('cs2.specie', 'sp2')
+                    ->where('sp2.name IN (:specieNames)')
+                    ->andWhere('cs2.creator = a')
+            );
+
+            $builder->setParameter('specieNames', $items->getCommon());
+        }
+
+        if (1 === count($conditions)) {
+            $condition = Iter\first($conditions);
+        } else {
+            $condition = $builder->expr()->orX(...$conditions);
+        }
+
+        $builder->andWhere($condition);
     }
 }

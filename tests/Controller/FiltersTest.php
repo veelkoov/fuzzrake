@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Entity\Artisan;
 use App\Tests\TestUtils\Cases\Traits\AssertsTrait;
 use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use App\Tests\TestUtils\FiltersData;
+use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Json;
 use JsonException;
 
@@ -32,7 +33,7 @@ class FiltersTest extends WebTestCaseWithEM
     {
         $client = static::createClient();
 
-        self::persistAndFlush(...$artisans);
+        self::persistAndFlush(...$artisans, ...FiltersData::entitiesFrom($artisans));
 
         $queryParts = [];
 

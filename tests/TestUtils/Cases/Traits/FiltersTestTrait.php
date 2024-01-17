@@ -24,7 +24,7 @@ trait FiltersTestTrait
             $this->artisan('M000007', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Premades', 'Open1', 'Real life animals', 'Supported', false, false),
             $this->artisan('M000008', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open2', 'Real life animals', 'Supported', false, false),
             $this->artisan('M000009', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Fantasy creatures', 'Supported', false, false),
-            $this->artisan('M000010', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'None', false, false),
+            $this->artisan('M000010', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', '', 'None', false, false),
             $this->artisan('M000011', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', true, false),
             $this->artisan('M000012', 'FI', 'State1', 'Lang1', 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions', 'Open1', 'Real life animals', 'Supported', false, true),
         ];
@@ -146,36 +146,6 @@ trait FiltersTestTrait
     /**
      * @return list<Artisan>
      */
-    private function getSpeciesFiltersTestSet(): array
-    {
-        return [
-            $this->artisan('NOSPECS', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                '', '', 'Supported', false, false),
-
-            $this->artisan('SPECSDS', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Canines', 'Supported', false, false),
-
-            $this->artisan('SPCDSNT', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', '', 'Supported', false, false,
-                speciesDoesnt: 'Canines'),
-
-            $this->artisan('SPCOTHR', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Unusual specie', 'Supported', false, false),
-
-            $this->artisan('SPCDNOT', 'FI', 'State', 'Language',
-                'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', '', 'Supported', false, false,
-                speciesDoesnt: 'Unusual specie'),
-        ];
-    }
-
-    /**
-     * @return list<Artisan>
-     */
     private function getInactiveFiltersTestSet(): array
     {
         return [
@@ -276,11 +246,7 @@ trait FiltersTestTrait
             't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],        ['TRACKIS', 'TRKFAIL']],
             't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Open for']], ['TRACKIS', 'TRACKOK']],
 
-            'sp1' => [self::getSpeciesFiltersTestSet(), ['species' => ['?']],        ['NOSPECS']],
-            'sp2' => [self::getSpeciesFiltersTestSet(), ['species' => ['Canines']],  ['SPCDNOT', 'SPECSDS']],
-            'sp3' => [self::getSpeciesFiltersTestSet(), ['species' => ['Raccoons']], ['SPCDNOT', 'SPCDSNT']],
-            'sp4' => [self::getSpeciesFiltersTestSet(), ['species' => ['Other']],    ['SPCOTHR']],
-            'sp5' => [self::getSpeciesFiltersTestSet(), ['species' => ['Mammals']],  ['SPECSDS', 'SPCDNOT', 'SPCDSNT']],
+            'u1' => [self::getCombinedFiltersTestSet(), ['species' => ['?']], ['M000010']],
         ];
     }
 

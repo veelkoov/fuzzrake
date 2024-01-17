@@ -30,14 +30,13 @@ import CheckBox from '../CheckBox.vue';
 import CheckBoxes from '../CheckBoxes';
 import Filter from '../Filter';
 import SpecialItems from '../SpecialItems.vue';
-import {MultiselectOptions} from '../../../../Static';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
   components: {SpecialItems, CheckBox, AllNoneInvertLinks},
   props: {
-    filter: {type: Object as PropType<Filter<MultiselectOptions>>, required: true},
+    filter: {type: Object as PropType<Filter>, required: true},
   }
 })
 export default class MultiselectFilter extends Vue {

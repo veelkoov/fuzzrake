@@ -21,18 +21,18 @@ class MutableSet implements IteratorAggregate, ArrayAccess
      */
     private array $items = [];
 
-    public function addOrIncItem(string $key): void
+    public function addOrIncItem(string $valueAndLabel): void
     {
-        if (!array_key_exists($key, $this->items)) {
-            $this->items[$key] = new MutableItem($key);
+        if (!array_key_exists($valueAndLabel, $this->items)) {
+            $this->items[$valueAndLabel] = new MutableItem($valueAndLabel, $valueAndLabel);
         }
 
-        $this->items[$key]->incCount();
+        $this->items[$valueAndLabel]->incCount();
     }
 
-    public function addComplexItem(string $key, string|MutableSet $value, string $label, int $count): void
+    public function addComplexItem(string $value, string $label, int $count, MutableSet $subitems = new MutableSet()): void
     {
-        $this->items[$key] = new MutableItem($value, $label, $count);
+        $this->items[$value] = new MutableItem($value, $label, $count, $subitems);
     }
 
     /**
@@ -48,7 +48,7 @@ class MutableSet implements IteratorAggregate, ArrayAccess
      */
     public function getReadonlyList(): array
     {
-        return array_map(fn (MutableItem $item) => new Item($item), array_values($this->items));
+        return array_map(fn (MutableItem $item) => Item::from($item), array_values($this->items));
     }
 
     public function sort(): void

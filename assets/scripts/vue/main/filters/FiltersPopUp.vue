@@ -33,7 +33,7 @@ import BodyContainer from './BodyContainer.vue';
 import CtrlButton from './CtrlButton.vue';
 import Filter from './Filter';
 import MainState from '../MainState';
-import Static, {AnyOptions} from '../../../Static';
+import Static from '../../../Static';
 import {getMessageBus} from '../../../main/MessageBus';
 import {Options, Vue} from 'vue-class-component';
 
@@ -45,7 +45,7 @@ import {Options, Vue} from 'vue-class-component';
 })
 export default class FiltersPopUp extends Vue {
   private state!: MainState;
-  private filters = new Array<Filter<AnyOptions>>();
+  private filters = new Array<Filter>();
 
   public created(): void {
     this.filters.push(...[
