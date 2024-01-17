@@ -80,6 +80,18 @@ final class Enforce
     }
 
     /**
+     * @return array<mixed>
+     */
+    public static function array(mixed $input): array
+    {
+        if (!is_array($input)) {
+            throw new InvalidArgumentException('Expected an array');
+        }
+
+        return $input;
+    }
+
+    /**
      * @template T of object
      *
      * @param class-string<T> $class
@@ -93,5 +105,14 @@ final class Enforce
         }
 
         throw new InvalidArgumentException("Expected object of class $class, got ".get_debug_type($input));
+    }
+
+    public static function int(mixed $input): int
+    {
+        if (!is_int($input)) {
+            throw new InvalidArgumentException('Expected an integer');
+        }
+
+        return $input;
     }
 }

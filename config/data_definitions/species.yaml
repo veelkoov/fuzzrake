@@ -4,8 +4,8 @@
 
 parameters:
   species_definitions:
-    valid_choices:
-      "Most species": # grep-assumed-does-specie-when-artisan-has-only-doesnt
+    valid_choices:  # At this point it is just a copy from Kotlin, used only to generate list of recognized names.
+      "Most species":
         "Real life animals":
           'i_Existing species': {}
 
@@ -14,24 +14,24 @@ parameters:
 
           Mammals:
             Bears:
-              Giant pandas:
+              i_Giant pandas: {}
             Canines:
-              Lupines:
-                Wolves:
-              Vulpines:
-                Foxes:
+              Wolves:
+                i_Lupines: {}  # Under "wolves" because we don't have anyone creating lupines BUT wolves
+              Foxes:
+                i_Vulpines: {}  # Under "foxes" because we don't have anyone creating vulpines BUT foxes
               Dogs:
-                'Domestic dogs':
-                  'Border collies': {}
-                  'Welsh corgis': {}
+                'i_Domestic dogs':
+                  'i_Border collies': {}
+                  'i_Welsh corgis': {}
               Coyotes: {}
-              Jackals: {}
+              i_Jackals: {}
             Felines:
               "Big cats":
-                Caracals:
+                i_Caracals: {}
                 Lions:
-                Lynxes:
-                Tigers:
+                i_Lynxes: {}
+                i_Tigers: {}
               "Small cats":
                 "Domestic cats":
             Marsupials:
@@ -45,18 +45,18 @@ parameters:
               Apes:
               Monkeys:
             Rodents:
-              Mice:
+              i_Mice: {}
               Rats:
             Ungulates:
               "i_Ungulates (tests now)":
               Bovines:
-                Antelopes: {}
-                Cows:
+                i_Antelopes: {}
+                i_Cows: {}
               Cervines:
                 Deers:
-                  Caribous: {}
-              Equines: # Avoid?
-                Donkeys: {}
+                  i_Caribous: {}
+              Equines:  # Avoid?
+                i_Donkeys: {}
                 Horses:
               Goats:
               Rhinos:
@@ -64,14 +64,14 @@ parameters:
             Bats:
             Elephants:
             Hyenas:
-            Pinnipeds:
+            i_Pinnipeds: {}
             Rabbits:
             Raccoons:
             Red pandas:
-            Sloths:
+            i_Sloths: {}
 
           Reptiles:
-            Dinosaurs: # Introduce "Extinct" group?
+            Dinosaurs:  # Introduce "Extinct" group?
             Lizards:
             "i_Most reptiles":
             "i_Reptiles (not including dragons)": {}
@@ -124,7 +124,7 @@ parameters:
           Drekkubuses:
           "Ghost Bones Dragon":
           Gryphons:
-          Lloteer: # WAT
+          Lloteer:  # WAT
           Manokits:
           MLP:
           Monsters:
@@ -140,30 +140,29 @@ parameters:
           Sparkledogs:
           Wickerbeasts:
 
-        Aquatic: # Fill
+        Aquatic:  # Fill
           Fishes:
           Otters:
-          "i_Sea creatures": # Aquatic?
+          "i_Sea creatures":  # Aquatic?
 
-        Hooved: # Fill
+        Hooved:  # Fill
           Ungulates: {}
           "i_Deer&similar":
           MLP: {}
-          "i_Pony": # Does it mean lil horse or MLP?
+          "i_Pony":  # Does it mean lil horse or MLP?
 
-        Scalies: # Fill
+        Scalies:  # Fill
           Dragons: {}
-          'i_Most scalies': {}
           Reptiles: {}
           'i_Some scalies': {}
 
-        Winged: # Fill
-          Dragons: {} # Has descendants
+        Winged:  # Fill
+          Dragons: {}  # Has descendants
           Bats: {}
           Birds: {}
           Gryphons: {}
 
-        With antlers: # Fill
+        With antlers:  # Fill
           Cervines: {}
           Goats: {}
 
@@ -175,34 +174,34 @@ parameters:
           'i_Hybrids of these':
           'i_Mixed species':
 
-      Other: # grep-species-other
-        "i_Copyright-related classification?": # FIXME
+      Other:  # grep-species-other
+        "i_Copyright-related classification?":  # FIXME
           "i_Copyrighted characters":
             'i_Copyrighted characters (e.g. Pokemons)':
-          "i_Copyrighted species": # Alias of below?
+          "i_Copyrighted species":  # Alias of below?
           "i_Closed species":
           "i_Open species":
           "i_Self-made species":
           "i_Original species":
           "i_I won't do closed species without the permission from the maker itself (some artists don't want their species made into a fursuit!)":
-          "i_Will not do a closed species without permission": # TODO: Should be equal to closed species; getfursu.it will not help steal designs
+          "i_Will not do a closed species without permission":  # TODO: Should be equal to closed species; getfursu.it will not help steal designs
           "i_Your own specific species":
           "i_Own species":
           "i_Most of author's species":
 
-        "i_Other/Unclassified": # Just to silence the validator, to be fixed/approved/categorized later
+        "i_Other/Unclassified":  # Just to silence the validator, to be fixed/approved/categorized later
           "i_Any animal and most mysticals (dragons*, serials, gryphons)":
           "i_Rare species":
           'i_Uncommon species':
 
           "i_Some video game characters":
-          "i_Most any species": # ?!
+          "i_Most any species":  # ?!
 
           "i_Anything cultural appropriation":
           "i_Basic canines, vulpines, angel dragons. (Will consider if unique)":
           "i_Cervidae/deer family species with large antlers":
           "i_Critters":
-          "i_Etc.": # De hecc
+          "i_Etc.":  # De hecc
 
           "i_Complexity-related":
             "i_Extremely intricate anything":
@@ -218,7 +217,6 @@ parameters:
           'i_Most furless/featherless species':
 
           "i_Furbies":
-          "i_Gem raptors":
           "i_Humanoids":
             "i_Humans":
           "i_I make exceptions on rare occasions":

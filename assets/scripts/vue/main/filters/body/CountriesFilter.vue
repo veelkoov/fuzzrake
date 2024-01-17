@@ -20,7 +20,7 @@
     </legend>
 
     <div class="row">
-      <div v-for="country in region.value" :key="country.value" class="col-sm-6 col-lg-3">
+      <div v-for="country in region.subitems" :key="country.value" class="col-sm-6 col-lg-3">
         <div class="form-check form-check-inline">
           <CheckBox
             :ref="region.label" :filter="filter" :value="country.value" :count="country.count"
@@ -38,18 +38,18 @@ import CheckBox from '../CheckBox.vue';
 import CheckBoxes from '../CheckBoxes';
 import Filter from '../Filter';
 import SpecialItems from '../SpecialItems.vue';
-import {CountriesOptions, StringItem} from '../../../../Static';
+import {Item} from '../../../../Static';
 import {Options, Vue} from 'vue-class-component';
 import {PropType} from 'vue';
 
 @Options({
   components: {SpecialItems, CheckBox, AllNoneInvertLinks},
   props: {
-    filter: {type: Object as PropType<Filter<CountriesOptions>>, required: true},
+    filter: {type: Object as PropType<Filter>, required: true},
   }
 })
 export default class CountriesFilter extends Vue {
-  private filter!: Filter<CountriesOptions>;
+  private filter!: Filter;
   private readonly checkboxes = new Map<string, CheckBoxes>();
 
   public mounted(): void {
@@ -60,7 +60,7 @@ export default class CountriesFilter extends Vue {
     }
   }
 
-  private getHtmlPrefix(country: StringItem): string {
+  private getHtmlPrefix(country: Item): string {
     return `<span class="flag-icon flag-icon-${country.value.toLowerCase()}"></span>`;
   }
 }

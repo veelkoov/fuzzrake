@@ -1,8 +1,8 @@
 import FilterState from './FilterState';
 import Storage from '../../../class/Storage';
-import {AnyOptions, SpecieItems, StringItems} from '../../../Static';
+import {FilterOptions, Items} from '../../../Static';
 
-export default class Filter<T extends AnyOptions> {
+export default class Filter {
     public readonly state: FilterState = new FilterState(this.isAndRelation);
 
     constructor(
@@ -10,7 +10,7 @@ export default class Filter<T extends AnyOptions> {
         public readonly label: string,
         public readonly bodyComponentName: string,
         public readonly helpComponentName: string,
-        public readonly options: T,
+        public readonly options: FilterOptions,
         public readonly isAndRelation: boolean = false,
     ) {
     }
@@ -36,7 +36,7 @@ export default class Filter<T extends AnyOptions> {
         }
     }
 
-    private getValidValueLabelPairsFromOptions(options: AnyOptions): Map<string, string> {
+    private getValidValueLabelPairsFromOptions(options: FilterOptions): Map<string, string> {
         const result = new Map<string, string>();
 
         options.specialItems.forEach(option => result.set(option.value, option.label));
@@ -47,18 +47,14 @@ export default class Filter<T extends AnyOptions> {
         return result;
     }
 
-    private getValidValueLabelPairsFromItems(options: StringItems|SpecieItems): Map<string, string> {
+    private getValidValueLabelPairsFromItems(options: Items): Map<string, string> {
         const result = new Map<string, string>();
 
         options.forEach(option => {
-            if ('string' === typeof(option.value)) {
-                result.set(option.value, option.label);
-            } else {
-                result.set(option.label, option.label);
+            result.set(option.value, option.label);
 
-                this.getValidValueLabelPairsFromItems(option.value)
-                    .forEach((value, key) => result.set(key, value));
-            }
+            this.getValidValueLabelPairsFromItems(option.subitems)
+                .forEach((value, key) => result.set(key, value));
         });
 
         return result;

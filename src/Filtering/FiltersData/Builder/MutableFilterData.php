@@ -11,7 +11,7 @@ class MutableFilterData
     /**
      * @var MutableSpecialItem[]
      */
-    public readonly array $specialItems;
+    public array $specialItems;
 
     public function __construct(
         MutableSpecialItem ...$specialItems,

@@ -8,16 +8,21 @@ use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 
 readonly class SpecialItem
 {
-    public int $count;
-    public string $value;
-    public string $label;
-    public string $faIcon;
+    public function __construct(
+        public string $value,
+        public string $label,
+        public string $faIcon,
+        public int $count,
+    ) {
+    }
 
-    public function __construct(MutableSpecialItem $source)
+    public static function from(MutableSpecialItem $source): self
     {
-        $this->count = $source->getCount();
-        $this->value = $source->value;
-        $this->label = $source->label;
-        $this->faIcon = $source->faIcon;
+        return new self(
+            $source->value,
+            $source->label,
+            $source->faIcon,
+            $source->getCount(),
+        );
     }
 }

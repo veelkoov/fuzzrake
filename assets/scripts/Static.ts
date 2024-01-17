@@ -6,30 +6,23 @@ declare const loadFuzzrakeData: () => void;
 
 export type SpecialItem = { 'value': string, 'label': string, 'count': number, 'faIcon': string };
 export type SpecialItems = Array<SpecialItem>;
-export type StringItem = { 'value': string, 'label': string, 'count': number };
-export type StringItems = Array<StringItem>;
-export type StringItemsItem = { 'value': StringItems, 'label': string, 'count': number };
-export type StringItemsItems = Array<StringItemsItem>;
-export type SpecieItem = { 'value': string|SpecieItems, 'label': string, 'count': number };
-export type SpecieItems = Array<SpecieItem>;
+export type Item = { 'value': string, 'label': string, 'count': number, 'subitems': Items };
+export type Items = Array<Item>;
 
-export type MultiselectOptions = { 'items': StringItems, 'specialItems': SpecialItems };
-export type CountriesOptions = { 'items': StringItemsItems, 'specialItems': SpecialItems };
-export type SpeciesOptions = { 'items': SpecieItems, 'specialItems': SpecialItems };
-export type AnyOptions = MultiselectOptions|CountriesOptions|SpeciesOptions;
+export type FilterOptions = { 'items': Items, 'specialItems': SpecialItems };
 
 export type FiltersOptions = {
-    'orderTypes': MultiselectOptions,
-    'styles': MultiselectOptions,
-    'paymentPlans': MultiselectOptions,
-    'features': MultiselectOptions,
-    'productionModels': MultiselectOptions,
-    'openFor': MultiselectOptions,
-    'languages': MultiselectOptions,
-    'countries': CountriesOptions,
-    'states': MultiselectOptions,
-    'species': SpeciesOptions,
-    'inactive': MultiselectOptions,
+    'orderTypes': FilterOptions,
+    'styles': FilterOptions,
+    'paymentPlans': FilterOptions,
+    'features': FilterOptions,
+    'productionModels': FilterOptions,
+    'openFor': FilterOptions,
+    'languages': FilterOptions,
+    'countries': FilterOptions,
+    'states': FilterOptions,
+    'species': FilterOptions,
+    'inactive': FilterOptions,
 };
 
 export default abstract class Static {

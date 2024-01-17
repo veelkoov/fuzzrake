@@ -25,14 +25,19 @@ class MainPageTest extends PantherTestCaseWithEM
 {
     use MainPageTestsTrait;
 
+    private Client $client;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createPantherClient();
+        self::setWindowSize($this->client, 1600, 900);
+    }
+
     /**
      * @throws Exception
      */
     public function testMainPageUiSmoke(): void
     {
-        $client = static::createPantherClient();
-        self::setWindowSize($client, 1600, 900);
-
         self::persistAndFlush(
             self::getArtisan('Test artisan 1 CZ', 'TEST001', 'CZ'),
             self::getArtisan('Test artisan 2 CA', 'TEST002', 'CA'),
@@ -41,67 +46,60 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->clearCache();
 
-        $client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($client, 3);
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 3);
 
-        // Open filters pop-up
-        $client->findElement(WebDriverBy::id('filtersButton'))->click();
-        $client->waitForVisibility('#filtersTitle', 5);
+        $this->openFiltersPopUp();
+        $this->openCountriesFilter();
 
-        // Open "countries" filter
-        $client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
-        $client->waitForVisibility('input[type=checkbox][value=CZ]', 5);
-
-        // Mark Czechia
-        $client->findElement(WebDriverBy::cssSelector('input[type=checkbox][value=CZ]'))->click();
+        $this->selectCountryInFilters('CZ');
         $this->assertCountriesFilterSelections(['CZ'], ['DE', 'CA']);
 
         // Click "invert" on Europe
-        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "invert"]'))->click();
+        $this->client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "invert"]'))->click();
         $this->assertCountriesFilterSelections(['DE'], ['CZ', 'CA']);
 
         // Click "none" on Europe
-        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "none"]'))->click();
+        $this->client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "none"]'))->click();
         $this->assertCountriesFilterSelections([], ['CZ', 'DE', 'CA']);
 
         // Click "all" on Europe
-        $client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "all"]'))->click();
+        $this->client->findElement(WebDriverBy::xpath('//legend[contains(text(), "Europe")]//a[text() = "all"]'))->click();
         $this->assertCountriesFilterSelections(['CZ', 'DE'], ['CA']);
 
-        // Apply the filters
-        $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
-        self::waitForLoadingIndicatorToDisappear();
-        $client->waitFor('//p[@id="artisans-table-count" and contains(text(), "Displaying 2 out of 3 fursuit makers in the database.")]', 1);
+        $this->clickApplyInTheFiltersPopUp();
 
-        self::openMakerCardByClickingOnTheirNameInTheTable($client, 'Test artisan 1 CZ');
+        $this->expectLoadedCreatorsTable(2, 3);
+
+        self::openMakerCardByClickingOnTheirNameInTheTable($this->client, 'Test artisan 1 CZ');
         self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
 
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
+        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::openDataOutdatedPopupFromTheMakerCard($client);
-        self::assertStringContainsString('Test artisan 1 CZ', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+        self::openDataOutdatedPopupFromTheMakerCard($this->client);
+        self::assertStringContainsString('Test artisan 1 CZ', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
+        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::closeDataOutdatedPopUpByClickingTheCloseButton($client);
+        self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
 
         // Open the links dropdown
-        $client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
-        $client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
+        $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
+        $this->client->waitForVisibility('#TEST003 td.links div.btn-group > ul li:last-child > a', 5);
 
         // Click the last link - data outdated
-        $client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
-        $client->waitForVisibility('#artisanUpdatesModalContent', 5);
-        self::assertStringContainsString('Test artisan 3 DE', $client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
+        $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
+        $this->client->waitForVisibility('#artisanUpdatesModalContent', 5);
+        self::assertStringContainsString('Test artisan 3 DE', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
-        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen($client);
+        $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::closeDataOutdatedPopUpByClickingTheCloseButton($client);
+        self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
 
         // Check if text search works
-        $client->findElement(WebDriverBy::id('search-text-field'))->sendKeys('CZ');
+        $this->client->findElement(WebDriverBy::id('search-text-field'))->sendKeys('CZ');
         $this->assertMakersVisibility(['TEST001'], ['TEST003']); // TEST002 doesn't exist in DOM
-        $client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys('DE');
+        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys('DE');
         $this->assertMakersVisibility(['TEST003'], ['TEST001']); // TEST002 doesn't exist in DOM
     }
 
@@ -112,11 +110,11 @@ class MainPageTest extends PantherTestCaseWithEM
     private function assertCountriesFilterSelections(array $selected, array $notSelected): void
     {
         foreach ($selected as $country) {
-            self::assertSelectorExists("input[type=checkbox][value=$country]:checked");
+            self::assertSelectorExists("input[type=checkbox][value='$country']:checked");
         }
 
         foreach ($notSelected as $country) {
-            self::assertSelectorExists("input[type=checkbox][value=$country]:not(:checked)");
+            self::assertSelectorExists("input[type=checkbox][value='$country']:not(:checked)");
         }
     }
 
@@ -140,12 +138,12 @@ class MainPageTest extends PantherTestCaseWithEM
      *
      * @throws Exception
      */
-    private function aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen(Client $client): void
+    private function aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen(): void
     {
-        $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        $this->client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
 
-        $client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        $this->client->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         usleep(100000);
     }
 
@@ -155,8 +153,6 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testNewlyAddedIndicators(): void
     {
-        $client = static::createPantherClient();
-        self::setWindowSize($client, 1600, 900);
         UtcClockMock::start();
 
         $maker1 = Artisan::new()->setMakerId('MAKEOLD')->setName('Older maker')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
@@ -165,8 +161,8 @@ class MainPageTest extends PantherTestCaseWithEM
         self::persistAndFlush($maker1, $maker2);
         $this->clearCache();
 
-        $client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($client, 2);
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 2);
 
         self::assertSelectorExists('#MAKENEW span.new-artisan');
         self::assertSelectorExists('#MAKEOLD');
@@ -179,19 +175,94 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testOpeningArtisanCardByMakerId(): void
     {
-        $client = static::createPantherClient();
-        self::setWindowSize($client, 1600, 900);
-
         $artisan = self::getArtisan('Test artisan 1', 'TEST001', 'FI');
         $artisan->setInactiveReason('Testing'); // Must show up even if deactivated
         self::persistAndFlush($artisan);
         $this->clearCache();
 
-        $client->request('GET', '/index.php/#TEST001');
+        $this->client->request('GET', '/index.php/#TEST001');
 
         self::waitUntilShows('#artisanDetailsModal #makerId', 1000);
         self::assertSelectorTextSame('#artisanDetailsModal #makerId', 'TEST001');
-        $client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
         self::waitUntilHides('#artisanDetailsModal #makerId');
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    public function testFilterChoicesGetSavedAndRestored(): void
+    {
+        self::persistAndFlush(self::getArtisan(country: 'FI'));
+        $this->clearCache();
+
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1);
+
+        $this->openFiltersPopUp();
+        $this->openCountriesFilter();
+
+        $this->selectCountryInFilters('FI');
+        $this->selectCountryInFilters('?');
+        $this->assertCountriesFilterSelections(['FI', '?'], []);
+        $this->clickApplyInTheFiltersPopUp();
+
+        $this->expectLoadedCreatorsTable(1, 1);
+
+        usleep(500_000); // Lame
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1, true);
+
+        $this->openFiltersPopUp();
+        $this->openCountriesFilter();
+        $this->assertCountriesFilterSelections(['FI', '?'], []);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function openCountriesFilter(): void
+    {
+        $this->client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
+        $this->client->waitForVisibility('input[type=checkbox][name="countries[]"]', 5);
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    private function selectCountryInFilters(string $countryCode): void
+    {
+        $selector = "input[type=checkbox][name='countries[]'][value='$countryCode']";
+
+        $this->client->findElement(WebDriverBy::cssSelector($selector))->click();
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function openFiltersPopUp(): void
+    {
+        $this->client->findElement(WebDriverBy::id('filtersButton'))->click();
+        $this->client->waitForVisibility('#filtersTitle', 5);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function clickApplyInTheFiltersPopUp(): void
+    {
+        $this->client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
+
+        self::waitForLoadingIndicatorToDisappear();
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    private function expectLoadedCreatorsTable(int $displaying, int $outOf): void
+    {
+        $locator = "//p[@id=\"artisans-table-count\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
+
+        $this->client->waitFor($locator, 1);
     }
 }

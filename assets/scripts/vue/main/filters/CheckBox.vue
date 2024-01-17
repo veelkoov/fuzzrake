@@ -9,14 +9,13 @@
     <span v-if="labelHtmlPrefix" v-html="labelHtmlPrefix" />
     {{ label }}
 
-    <span v-if="null !== count" class="count">({{ count }})</span>
+    <span class="count">({{ count }})</span>
   </label>
 </template>
 
 <script lang="ts">
 import Filter from './Filter';
 import getUniqueInt from '../../../class/Counter';
-import {AnyOptions} from '../../../Static';
 import {Options, Vue} from 'vue-class-component';
 
 @Options({
@@ -30,7 +29,7 @@ import {Options, Vue} from 'vue-class-component';
 })
 export default class CheckBox extends Vue {
   private id: string = 'checkbox' + getUniqueInt();
-  private filter!: Filter<AnyOptions>;
+  private filter!: Filter;
   private label!: string;
   private value!: string;
 
