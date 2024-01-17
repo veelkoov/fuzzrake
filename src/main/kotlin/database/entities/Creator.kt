@@ -56,8 +56,9 @@ class Creator(id: EntityID<Int>) : IntEntity(id) {
     val creatorUrls by CreatorUrl referrersOn CreatorUrls.creator
     val offersStatuses by CreatorOfferStatus referrersOn CreatorOffersStatuses.creator
     val volatileData by CreatorVolatileData referrersOn CreatorVolatileDatas.creator // TODO: 1:1
+    val species by CreatorSpecie referrersOn CreatorSpecies.creator
 
     override fun toString(): String {
-        return "${id.value}/${lastCreatorId()}/${super.toString()}"
+        return "${lastCreatorId()}[${id.value}]"
     }
 }
