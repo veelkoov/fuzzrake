@@ -6,7 +6,9 @@ namespace App\Form\InclusionUpdate;
 
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Validation;
+use App\Form\RouterDependentTrait;
 use App\Form\Transformers\ContactPermitTransformer;
+use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,7 +20,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContactAndPassword extends BaseForm
 {
+    use RouterDependentTrait;
+
     final public const FLD_CHANGE_PASSWORD = 'changePassword';
+    final public const FLD_CONTACT_ALLOWED = 'contactAllowed';
+    final public const FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
     final public const FLD_PASSWORD = 'password';
     final public const BTN_BACK = 'back';
 
@@ -26,8 +32,11 @@ class ContactAndPassword extends BaseForm
     {
         parent::buildForm($builder, $options);
 
+        $router = self::getRouter($options);
+        $contactPath = htmlspecialchars($router->generate(RouteName::CONTACT));
+
         $builder
-            ->add('contactAllowed', ChoiceType::class, [
+            ->add(self::FLD_CONTACT_ALLOWED, ChoiceType::class, [
                 'label'      => 'When is contact allowed?',
                 'required'   => true,
                 'choices'    => ContactPermit::getChoices(false),
@@ -58,6 +67,12 @@ class ContactAndPassword extends BaseForm
                 'required'  => false,
                 'mapped'    => false,
             ])
+            ->add(self::FLD_VERIFICATION_ACKNOWLEDGEMENT, CheckboxType::class, [
+                'label'      => 'I acknowledge that I am required to <a href="'.$contactPath.'" target="_blank">contact the maintainer</a> to confirm the submission. I realize that not doing so will result in the submission being rejected.',
+                'required'   => false,
+                'mapped'     => false,
+                'label_html' => true,
+            ])
             ->add(self::BTN_BACK, SubmitType::class, [
                 'label' => 'Back',
                 'attr'  => [
@@ -67,12 +82,13 @@ class ContactAndPassword extends BaseForm
             ])
         ;
 
-        $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
+        $builder->get(self::FLD_CONTACT_ALLOWED)->addModelTransformer(new ContactPermitTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
+        self::configureRouterOption($resolver);
 
         $resolver->setDefaults([
             'validation_groups' => ['Default', Validation::GRP_CONTACT_AND_PASSWORD],

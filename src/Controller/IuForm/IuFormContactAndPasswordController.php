@@ -30,7 +30,9 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
     {
         $state = $this->prepareState($makerId, $request);
 
-        $form = $this->handleForm($request, $state, ContactAndPassword::class, []);
+        $form = $this->handleForm($request, $state, ContactAndPassword::class, [
+            'router' => $this->router,
+        ]);
         $this->validatePassword($form, $state);
 
         if (self::clicked($form, BaseForm::BTN_RESET)) {
@@ -67,26 +69,38 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
         }
 
         return $this->render('iu_form/contact_and_password.html.twig', [
-            'form'               => $form,
-            'errors'             => $form->getErrors(true),
-            'noindex'            => true,
-            'is_update'          => !$state->isNew(),
-            'session_start_time' => $state->getStarted(),
-            'big_error_message'  => $this->getRestoreFailedMessage($state),
+            'form'                => $form,
+            'errors'              => $form->getErrors(true),
+            'noindex'             => true,
+            'is_update'           => !$state->isNew(),
+            'was_contact_allowed' => $state->wasContactAllowed,
+            'session_start_time'  => $state->getStarted(),
+            'big_error_message'   => $this->getRestoreFailedMessage($state),
         ]);
     }
 
     private function validatePassword(FormInterface $form, IuState $state): void
     {
-        if (!$form->isSubmitted() || $state->isNew()) {
+        if (!$form->isSubmitted()) {
             return;
         }
 
-        $changePassword = $form->get(ContactAndPassword::FLD_CHANGE_PASSWORD);
-        $password = $form->get(ContactAndPassword::FLD_PASSWORD);
+        $verificationAcknowledgmentField = $form->get(ContactAndPassword::FLD_VERIFICATION_ACKNOWLEDGEMENT);
 
-        if (!($changePassword->getData() ?? false) && !Password::verify($state->artisan, $state->previousPassword)) {
-            $password->addError(new FormError('Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.'));
+        $wantsPasswordChange = $form->get(ContactAndPassword::FLD_CHANGE_PASSWORD)->getData() ?? false;
+        $contactAllowed = ContactPermit::NO !== $form->get(ContactAndPassword::FLD_CONTACT_ALLOWED)->getData();
+        $verificationAcknowledgment = $verificationAcknowledgmentField->getData() ?? false;
+
+        if ($wantsPasswordChange && (!$contactAllowed || !$state->wasContactAllowed) && !$verificationAcknowledgment) {
+            $verificationAcknowledgmentField->addError(new FormError('Your action is required; your submission will be rejected otherwise.'));
+        }
+
+        if ($state->isNew()) {
+            return;
+        }
+
+        if (!$wantsPasswordChange && !Password::verify($state->artisan, $state->previousPassword)) {
+            $form->get(ContactAndPassword::FLD_PASSWORD)->addError(new FormError('Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.'));
         }
     }
 

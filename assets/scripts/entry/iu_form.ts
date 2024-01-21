@@ -84,49 +84,54 @@ function setup_data_page(): void {
 }
 
 function setup_password_and_contact_page(): void {
-    react_to_contact_allowance_changes();
-    display_password_change_hint_if_checked_forgot();
-}
+    const $forgottenPassHint = jQuery('#forgotten_password_instructions');
+    const $forgottenPassLabel = jQuery('label[for="iu_form_password"]');
+    const $validationAcknowledgement = jQuery('#verification_acknowledgement');
 
-function display_password_change_hint_if_checked_forgot(): void {
-    const $hint = jQuery('#forgotten_password_instructions');
-    const $label = jQuery('label[for="iu_form_password"]');
-
-    new Checkbox('iu_form_changePassword', (checkbox: Checkbox) => {
-        if ($hint.hasClass('d-none')) {
-            $hint.removeClass('d-none');
-            $hint.hide(0);
+    const changePasswordCheckbox = new Checkbox('iu_form_changePassword', (checkbox: Checkbox) => {
+        if ($forgottenPassHint.hasClass('d-none')) {
+            $forgottenPassHint.removeClass('d-none');
+            $forgottenPassHint.hide(0);
         }
 
         if (checkbox.isChecked()) {
-            $hint.show('fast');
-            $label.text('Choose a new password');
+            $forgottenPassHint.show('fast');
+            $forgottenPassLabel.text('Choose a new password');
         } else {
-            $hint.hide('fast');
-            $label.text('Updates password'); // grep-text-updates-password
+            $forgottenPassHint.hide('fast');
+            $forgottenPassLabel.text('Updates password'); // grep-text-updates-password
         }
+
+        refreshValidationAcknowledgementVisibility();
     });
-}
 
-function react_to_contact_allowance_changes(): void {
-    const $prosCons = jQuery('.pros-cons-contact-options');
+    function refreshValidationAcknowledgementVisibility(): void {
+        toggle($validationAcknowledgement, changePasswordCheckbox.isChecked()
+            && ($validationAcknowledgement.hasClass('contact-was-not-allowed')
+                || contactAllowed.isVal(NO_CONTACT_ALLOWED))
+        );
+    }
 
-    const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
+    const $contactLevelProsCons = jQuery('.pros-cons-contact-options');
+
+    const contactAllowed = new Radio('iu_form[contactAllowed]', refreshContactLevelProsCons);
     const contactInfoField = new DynamicFields('#iu_form_contactInfoObfuscated', '#contact_info', true);
 
-    function refresh(immediate = false): void {
+    function refreshContactLevelProsCons(immediate = false): void {
         contactInfoField.toggle(contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED));
 
         const duration: JQuery.Duration = immediate ? 0 : 'fast';
         const level = contactAllowed.selectedIdx();
 
-        toggle($prosCons, function (idx, el): boolean {
+        toggle($contactLevelProsCons, function (idx, el): boolean {
             return jQuery(el).data('min-level') <= level
                 && jQuery(el).data('max-level') >= level;
         }, duration);
+
+        refreshValidationAcknowledgementVisibility();
     }
 
-    refresh(true);
+    refreshContactLevelProsCons(true);
 }
 
 function setup_date_field_automation(): void {
