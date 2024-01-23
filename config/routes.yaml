@@ -46,11 +46,17 @@ legacy_donate:
   defaults:
     route: donate
 
-legacy_rules:
+legacy_guidelines_1:
   path: /rules.html
   controller: *redirect
   defaults:
-    route: rules
+    route: guidelines
+
+legacy_guidelines_2:
+  path: /rules
+  controller: *redirect
+  defaults:
+    route: guidelines
 
 legacy_should_know:
   path: /should_know.html
