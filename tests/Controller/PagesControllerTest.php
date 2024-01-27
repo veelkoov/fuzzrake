@@ -56,8 +56,8 @@ class PagesControllerTest extends WebTestCase
                 'h2' => 'Please donate',
             ]],
 
-            'rules' => ['/rules', [
-                'h1' => 'Rules for makers/studios',
+            'guidelines' => ['/guidelines', [
+                'h1' => 'Guidelines for makers/studios',
             ]],
 
             'should-know' => ['/should-know', [

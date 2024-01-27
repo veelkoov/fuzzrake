@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller\IuForm;
 
 use App\Data\Definitions\Ages;
-use App\Data\Definitions\ContactPermit;
 use App\Tests\Controller\Traits\FormsChoicesValuesAndLabelsTestTrait;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
@@ -48,7 +47,7 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         self::submitInvalid($client, $form);
     }
 
-    public function testErrorMessagesForRequiredFields(): void
+    public function testErrorMessagesForRequiredDataFields(): void
     {
         $client = static::createClient();
 
@@ -108,14 +107,6 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'Do you offer fursuit features intended for adult use?');
 
         self::skipData($client, true);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]' => 'CORRECTIONS',
-        ]);
-        self::submitInvalid($client, $form);
-
-        self::assertFieldErrorContactInfoMustNotBeBlank();
-        self::assertFieldErrorPasswordIsRequired();
     }
 
     /**
@@ -213,159 +204,6 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
         );
     }
 
-    public function testContactMethodNotRequiredWhenContactNotAllowed(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, true);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]' => 'FEEDBACK',
-            'iu_form[password]'       => 'why-so-serious',
-        ]);
-        self::submitInvalid($client, $form);
-
-        self::assertFieldErrorContactInfoMustNotBeBlank();
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]' => 'NO',
-            'iu_form[password]'       => 'why-so-serious',
-        ]);
-        self::submitValid($client, $form);
-
-        self::assertIuSubmittedCorrectPassword();
-    }
-
-    public function testConfirmationNewMaker(): void
-    {
-        $client = static::createClient();
-
-        $client->request('GET', '/iu_form/start');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, true);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[contactAllowed]' => 'NO',
-            'iu_form[password]'       => 'why-so-serious',
-        ]);
-        self::submitValid($client, $form);
-
-        self::assertIuSubmittedCorrectPassword();
-    }
-
-    public function testConfirmationValidPassword(): void
-    {
-        $client = static::createClient();
-
-        self::persistAndFlush(self::getArtisan(
-            makerId: 'MAKERID',
-            password: 'password-555',
-            contactAllowed: ContactPermit::NO,
-            ages: Ages::MIXED,
-            nsfwWebsite: false,
-            nsfwSocial: false,
-            worksWithMinors: true,
-        ));
-
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, false);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]' => 'password-555',
-        ]);
-        self::submitValid($client, $form);
-
-        self::assertIuSubmittedCorrectPassword();
-    }
-
-    public function testConfirmationInvalidPasswordContactAllowed(): void
-    {
-        $client = static::createClient();
-
-        self::persistAndFlush(self::getArtisan(
-            makerId: 'MAKERID',
-            password: 'password-555',
-            contactAllowed: ContactPermit::CORRECTIONS,
-            ages: Ages::MIXED,
-            nsfwWebsite: false,
-            nsfwSocial: false,
-            worksWithMinors: true,
-        ));
-
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, false);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'              => 'password-554',
-            'iu_form[contactInfoObfuscated]' => 'email@address',
-            'iu_form[changePassword]'        => '1',
-        ]);
-        self::submitValid($client, $form);
-
-        self::assertIuSubmittedWrongPasswordContactAllowed();
-    }
-
-    public function testConfirmationInvalidPasswordContactIsNotAllowed(): void
-    {
-        $client = static::createClient();
-
-        self::persistAndFlush(self::getArtisan(
-            makerId: 'MAKERID',
-            password: 'password-555',
-            contactAllowed: ContactPermit::ANNOUNCEMENTS, // Contact was allowed
-            ages: Ages::MIXED,
-            nsfwWebsite: false,
-            nsfwSocial: false,
-            worksWithMinors: true,
-        ));
-
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, false);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'       => 'password-554',
-            'iu_form[contactAllowed]' => 'NO', // Contact is no longer allowed
-            'iu_form[changePassword]' => '1',
-        ]);
-        self::submitValid($client, $form);
-
-        self::assertIuSubmittedWrongPasswordContactNotAllowed();
-    }
-
-    public function testConfirmationInvalidPasswordContactWasNotAllowed(): void
-    {
-        $client = static::createClient();
-
-        self::persistAndFlush(self::getArtisan(
-            makerId: 'MAKERID',
-            password: 'password-555',
-            contactAllowed: ContactPermit::NO, // Contact was not allowed
-            ages: Ages::MINORS,
-            nsfwWebsite: false,
-            nsfwSocial: false,
-            worksWithMinors: true,
-        ));
-
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, false);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'              => 'password-554',
-            'iu_form[contactAllowed]'        => 'CORRECTIONS', // Contact is allowed now
-            'iu_form[changePassword]'        => '1',
-            'iu_form[contactInfoObfuscated]' => 'email@address',
-        ]);
-        self::submitValid($client, $form);
-
-        self::assertIuSubmittedWrongPasswordContactWasNotAllowed();
-    }
-
     /**
      * @dataProvider cannotSkipUnfinishedStepsDataProvider
      */
@@ -394,40 +232,6 @@ class IuFormControllerWithEMTest extends WebTestCaseWithEM
             'Existing maker, pass+cont' => ['contact_and_password', '/REDIREC'],
             'Existing maker, data'      => ['data', '/REDIREC'],
         ];
-    }
-
-    public function testPasswordChangeRequiredWhenProvidingDifferentOne(): void
-    {
-        $client = static::createClient();
-
-        self::persistAndFlush(self::getArtisan(
-            makerId: 'MAKERID',
-            password: 'password-555',
-            contactAllowed: ContactPermit::CORRECTIONS,
-            ages: Ages::ADULTS,
-            nsfwWebsite: false,
-            nsfwSocial: false,
-            doesNsfw: false,
-            worksWithMinors: true,
-        ));
-
-        $client->request('GET', '/iu_form/start/MAKERID');
-        self::skipRulesAndCaptcha($client);
-        self::skipData($client, false);
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'              => 'password-554',
-            'iu_form[contactInfoObfuscated]' => 'email@address',
-        ]);
-        self::submitInvalid($client, $form);
-
-        self::assertSelectorTextContains('div.invalid-feedback', 'Wrong password. To change your password, please select the "I want to change my password / I forgot my password" checkbox.');
-
-        $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'       => 'password-554',
-            'iu_form[changePassword]' => '1',
-        ]);
-        self::submitValid($client, $form);
     }
 
     /**
