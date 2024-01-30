@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests;
 
-use App\Data\Definitions\Ages;
+use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
+use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
  * @large
@@ -22,25 +24,47 @@ class IuFormTest extends PantherTestCaseWithEM
         $this->client = static::createPantherClient();
         $this->client->getCookieJar()->clear();
         self::setWindowSize($this->client, 1600, 900);
+    }
 
-        self::persistAndFlush(self::getArtisan(
-            makerId: 'MAKERID',
-            ages: Ages::MINORS, // ages === MINORS & nsfwSocial === true tests dynamic "doesNsfw" and "worksWithMinors"
-            nsfwWebsite: false,
-            nsfwSocial: true,
-        ));
+    public function passwordCheckBoxesDataProvider(): DataProvider
+    {
+        return DataProvider::tuples(
+            [null,                    ContactPermit::FEEDBACK, false, false],
+            [ContactPermit::FEEDBACK, ContactPermit::FEEDBACK, true,  false],
+            [ContactPermit::NO,       ContactPermit::FEEDBACK, true,  true],
+            [ContactPermit::FEEDBACK, ContactPermit::NO,       true,  true],
+        );
     }
 
     /**
-     * @throws Exception
+     * @dataProvider passwordCheckBoxesDataProvider
+     *
+     * @throws WebDriverException
      */
-    public function testIForgotPasswordShowsHelp(): void
+    public function testPasswordCheckboxes(?ContactPermit $previousContactPermitIfUpdate, ContactPermit $contactPermit,
+        bool $passwordChangePossible, bool $confirmationAcknowledgementAvailable): void
     {
-        $this->getToLastPage();
+        $isUpdate = null !== $previousContactPermitIfUpdate;
 
-        self::waitUntilHides('#forgotten_password_instructions');
-        $this->client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
-        self::waitUntilShows('#forgotten_password_instructions');
+        $this->setupIuTestGoToTheLastPage($previousContactPermitIfUpdate);
+        self::waitUntilHides($isUpdate ? '#forgotten_password_instructions' : '#contact_info');
+
+        $this->client->getCrawler()->selectButton('Submit')->form()->setValues([
+            'iu_form[contactAllowed]' => $contactPermit->name,
+        ]);
+
+        if ($passwordChangePossible) {
+            $this->client->findElement(WebDriverBy::id('iu_form_changePassword'))->click();
+            self::waitUntilShows('#forgotten_password_instructions');
+        } else {
+            self::waitUntilHides('#iu_form_changePassword');
+        }
+
+        if ($confirmationAcknowledgementAvailable) {
+            self::waitUntilShows('#iu_form_verificationAcknowledgement');
+        } else {
+            self::waitUntilHides('#iu_form_verificationAcknowledgement');
+        }
     }
 
     /**
@@ -48,7 +72,7 @@ class IuFormTest extends PantherTestCaseWithEM
      */
     public function testContactMethodNotRequiredAndHiddenWhenContactNotAllowed(): void
     {
-        $this->getToLastPage();
+        $this->setupIuTestGoToTheLastPage();
 
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
@@ -74,7 +98,8 @@ class IuFormTest extends PantherTestCaseWithEM
      */
     public function testContactAllowanceProsConsAreToggling(): void
     {
-        $this->getToLastPage();
+        $this->setupIuTestGoToTheLastPage();
+
         $form = $this->client->getCrawler()->selectButton('Submit')->form();
 
         $noSelectionYet = '.pros-cons-contact-options[data-min-level="-1"][data-max-level="-1"]';
@@ -107,26 +132,47 @@ class IuFormTest extends PantherTestCaseWithEM
     }
 
     /**
-     * @throws Exception
+     * @throws WebDriverException
      */
-    private function getToLastPage(): void
+    private function setupIuTestGoToTheLastPage(?ContactPermit $previousContactPermitIfUpdate = null): void
     {
-        $this->client->request('GET', '/index.php/iu_form/start/MAKERID');
+        $isUpdate = null !== $previousContactPermitIfUpdate;
 
-        self::waitUntilShows('#iu_form_confirmUpdatingTheRightOne_0');
-        $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmUpdatingTheRightOne_0'))->click();
+        if ($isUpdate) {
+            self::persistAndFlush(self::getArtisan(makerId: 'MAKERID', contactAllowed: $previousContactPermitIfUpdate));
+        }
 
-        self::waitUntilShows('#iu_form_confirmYouAreTheMaker_0');
-        $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmYouAreTheMaker_0'))->click();
+        $iuFormStartUri = $isUpdate ? '/index.php/iu_form/start/MAKERID' : '/index.php/iu_form/start';
+        $this->client->request('GET', $iuFormStartUri);
 
-        self::waitUntilShows('#iu_form_confirmNoPendingUpdates_0');
-        $this->client->findElement(WebDriverBy::cssSelector('#iu_form_confirmNoPendingUpdates_0'))->click();
+        $waitThenClick = $isUpdate ? [
+            '#iu_form_confirmUpdatingTheRightOne_0',
+            '#iu_form_confirmYouAreTheMaker_0',
+            '#iu_form_confirmNoPendingUpdates_0',
+        ] : [
+            '#iu_form_confirmAddingANewOne_0',
+            '#iu_form_ensureStudioIsNotThereAlready_0',
+            '#iu_form_confirmYouAreTheMaker_0',
+            '#iu_form_confirmNoPendingUpdates_0',
+        ];
+
+        foreach ($waitThenClick as $cssSelector) {
+            self::waitUntilShows($cssSelector);
+            $this->client->findElement(WebDriverBy::cssSelector($cssSelector))->click();
+        }
 
         self::waitUntilShows('#rulesAndContinueButton');
         $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
 
         $this->client->waitForVisibility('#iu_form_name', 5);
-        $this->client->findElement(WebDriverBy::cssSelector('input[type=submit]'))->click();
+        $this->client->submitForm('Continue', [
+            'iu_form[name]'            => 'Testing',
+            'iu_form[makerId]'         => 'MAKERID',
+            'iu_form[country]'         => 'FI',
+            'iu_form[ages]'            => 'MIXED',
+            'iu_form[nsfwWebsite]'     => 'YES',
+            'iu_form[nsfwSocial]'      => 'NO',
+        ]);
 
         $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
     }

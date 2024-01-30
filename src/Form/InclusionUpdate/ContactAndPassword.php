@@ -46,9 +46,6 @@ class ContactAndPassword extends BaseForm
                 'label'     => 'Your e-mail address',
                 'help'      => 'If you are updating your data, and you see asterisks here, but the e-mail address looks OK, and you don\'t want to change it - just leave it as it is. <span class="badge bg-warning text-dark">PRIVATE</span> Your address will never be shared with anyone without your permission.',
                 'help_html' => true,
-                'attr'      => [
-                    'placeholder' => 'E-MAIL: e-mail@address',
-                ],
                 'required'   => true,
                 'empty_data' => '',
             ])

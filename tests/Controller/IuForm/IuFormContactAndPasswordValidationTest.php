@@ -79,15 +79,15 @@ class IuFormContactAndPasswordValidationTest extends WebTestCaseWithEM
                 },
             ],
             [
-                ContactPermit::CORRECTIONS, // Contact is allowed
+                ContactPermit::NO, // Contact is allowed
                 'new-password', // Providing a new password
                 null, // Not changing contact permit
                 'address@example.com',
-                false, // Request password change
+                true, // Request password change
                 false, // ERROR: Not acknowledging confirmation necessity
                 false, // Failure expected
                 function () {
-                    self::assertSelectorTextContains('div.invalid-feedback',
+                    self::assertSelectorTextContains('#verification_acknowledgement div.invalid-feedback',
                         'Your action is required; your submission will be rejected otherwise.');
                 },
             ],
