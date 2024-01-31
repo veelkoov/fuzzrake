@@ -81,7 +81,7 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
 
     private function validatePassword(FormInterface $form, IuState $state): void
     {
-        if (!$form->isSubmitted()) {
+        if (!$form->isSubmitted() || $state->isNew()) {
             return;
         }
 
@@ -92,15 +92,13 @@ class IuFormContactAndPasswordController extends AbstractIuFormController
         $verificationAcknowledgment = $verificationAcknowledgmentField->getData() ?? false;
 
         if ($wantsPasswordChange && (!$contactAllowed || !$state->wasContactAllowed) && !$verificationAcknowledgment) {
-            $verificationAcknowledgmentField->addError(new FormError('Your action is required; your submission will be rejected otherwise.'));
-        }
-
-        if ($state->isNew()) {
-            return;
+            $errorMessage = 'Your action is required; your submission will be rejected otherwise.';
+            $verificationAcknowledgmentField->addError(new FormError($errorMessage));
         }
 
         if (!$wantsPasswordChange && !Password::verify($state->artisan, $state->previousPassword)) {
-            $form->get(ContactAndPassword::FLD_PASSWORD)->addError(new FormError('Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.'));
+            $errorMessage = 'Wrong password. To change your password, please select the "'.Texts::WANT_TO_CHANGE_PASSWORD.'" checkbox.';
+            $form->get(ContactAndPassword::FLD_PASSWORD)->addError(new FormError($errorMessage));
         }
     }
 
