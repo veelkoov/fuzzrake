@@ -84,46 +84,46 @@ function setup_data_page(): void {
 }
 
 function setup_password_and_contact_page(): void {
-    react_to_contact_allowance_changes();
-    display_password_change_hint_if_checked_forgot();
-}
+    const $forgottenPassHint = jQuery('#forgotten_password_instructions');
+    const $forgottenPassLabel = jQuery('label[for="iu_form_password"]');
+    const $validationAcknowledgement = jQuery('#verification_acknowledgement');
 
-function display_password_change_hint_if_checked_forgot(): void {
-    const $hint = jQuery('#forgotten_password_instructions');
-    const $label = jQuery('label[for="iu_form_password"]');
+    const changePasswordCheckbox = new Checkbox('iu_form_changePassword',
+        (_) => { refresh(); }); // eslint-disable-line @typescript-eslint/no-unused-vars
 
-    new Checkbox('iu_form_changePassword', (checkbox: Checkbox) => {
-        if ($hint.hasClass('d-none')) {
-            $hint.removeClass('d-none');
-            $hint.hide(0);
-        }
-
-        if (checkbox.isChecked()) {
-            $hint.show('fast');
-            $label.text('Choose a new password');
-        } else {
-            $hint.hide('fast');
-            $label.text('Updates password'); // grep-text-updates-password
-        }
-    });
-}
-
-function react_to_contact_allowance_changes(): void {
-    const $prosCons = jQuery('.pros-cons-contact-options');
-
+    const $contactLevelProsCons = jQuery('.pros-cons-contact-options');
     const contactAllowed = new Radio('iu_form[contactAllowed]', refresh);
     const contactInfoField = new DynamicFields('#iu_form_contactInfoObfuscated', '#contact_info', true);
 
     function refresh(immediate = false): void {
+        const animationsDuration: JQuery.Duration = immediate ? 0 : 'fast';
+
+        const contactAllowedIdx = contactAllowed.selectedIdx();
+
+        toggle($contactLevelProsCons, function (idx, el): boolean {
+            return jQuery(el).data('min-level') <= contactAllowedIdx
+                && jQuery(el).data('max-level') >= contactAllowedIdx;
+        }, animationsDuration);
+
         contactInfoField.toggle(contactAllowed.isAnySelected() && !contactAllowed.isVal(NO_CONTACT_ALLOWED));
 
-        const duration: JQuery.Duration = immediate ? 0 : 'fast';
-        const level = contactAllowed.selectedIdx();
+        if ($forgottenPassHint.hasClass('d-none')) {
+            $forgottenPassHint.removeClass('d-none');
+            $forgottenPassHint.hide(0);
+        }
 
-        toggle($prosCons, function (idx, el): boolean {
-            return jQuery(el).data('min-level') <= level
-                && jQuery(el).data('max-level') >= level;
-        }, duration);
+        if (changePasswordCheckbox.isChecked()) {
+            $forgottenPassHint.show(animationsDuration);
+            $forgottenPassLabel.text('Choose a new password');
+        } else {
+            $forgottenPassHint.hide(animationsDuration);
+            $forgottenPassLabel.text('Updates password'); // grep-text-updates-password
+        }
+
+        toggle($validationAcknowledgement, changePasswordCheckbox.isChecked()
+            && ($validationAcknowledgement.hasClass('contact-was-not-allowed')
+                || contactAllowed.isVal(NO_CONTACT_ALLOWED)),
+            animationsDuration);
     }
 
     refresh(true);

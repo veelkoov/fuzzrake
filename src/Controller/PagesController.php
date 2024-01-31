@@ -47,11 +47,11 @@ class PagesController extends AbstractController
         return $this->render('pages/donate.html.twig', []);
     }
 
-    #[Route(path: '/rules', name: RouteName::RULES)]
+    #[Route(path: '/guidelines', name: RouteName::GUIDELINES)]
     #[Cache(maxage: 21600, public: true)]
-    public function rules(): Response
+    public function guidelines(): Response
     {
-        return $this->render('pages/rules.html.twig', []);
+        return $this->render('pages/guidelines.html.twig', []);
     }
 
     #[Route(path: '/should-know', name: RouteName::SHOULD_KNOW)]

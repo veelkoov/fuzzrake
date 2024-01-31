@@ -391,14 +391,11 @@ class ExtendedTest extends AbstractTestWithEM
         }
 
         if ($secondPage) {
-            $field = Enforce::objectOf($form['iu_form[changePassword]'], FormField::class);
-
-            $field->setValue('1'); // Eagerly
+            // Select them both always "just in case"
+            self::selectCheckbox($form['iu_form[changePassword]']);
+            self::selectCheckbox($form['iu_form[verificationAcknowledgement]']);
         } else {
-            $fields = $form['iu_form[photosCopyright]'];
-            self::assertTrue(is_array($fields) && $fields[0] instanceof ChoiceFormField);
-
-            $fields[0]->tick();
+            self::selectInChoiceFormField($form['iu_form[photosCopyright]'], 0);
         }
     }
 
@@ -460,5 +457,25 @@ class ExtendedTest extends AbstractTestWithEM
     private static function assertFieldIsNotPresentInForm(Field $field, string $htmlBody): void
     {
         self::assertStringNotContainsStringIgnoringCase($field->modelName(), $htmlBody);
+    }
+
+    /**
+     * @param FormField|array<mixed> $checkbox
+     */
+    public static function selectCheckbox(FormField|array $checkbox): void
+    {
+        self::assertInstanceOf(FormField::class, $checkbox);
+
+        $checkbox->setValue('1');
+    }
+
+    /**
+     * @param FormField|array<mixed> $choiceFields
+     */
+    public static function selectInChoiceFormField(FormField|array $choiceFields, int $choiceIdx): void
+    {
+        self::assertTrue(is_array($choiceFields) && $choiceFields[$choiceIdx] instanceof ChoiceFormField);
+
+        $choiceFields[$choiceIdx]->tick();
     }
 }

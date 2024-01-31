@@ -106,8 +106,9 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $this::submitValid($client, $form);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'       => 'new-password',
-            'iu_form[changePassword]' => '1',
+            'iu_form[password]'                    => 'new-password',
+            'iu_form[changePassword]'              => '1',
+            'iu_form[verificationAcknowledgement]' => '1',
         ]);
         $this::submitValid($client, $form);
 
@@ -149,8 +150,9 @@ class PasswordHandlingTest extends AbstractTestWithEM
         $this::submitValid($client, $form);
 
         $form = $client->getCrawler()->selectButton('Submit')->form([
-            'iu_form[password]'       => 'new-password',
-            'iu_form[changePassword]' => '1',
+            'iu_form[password]'                    => 'new-password',
+            'iu_form[changePassword]'              => '1',
+            'iu_form[verificationAcknowledgement]' => '1',
         ]);
         $this::submitValid($client, $form);
 
