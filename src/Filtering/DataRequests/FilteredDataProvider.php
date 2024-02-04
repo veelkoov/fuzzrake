@@ -65,7 +65,7 @@ class FilteredDataProvider
         if ([] !== $choices->orderTypes) {
             $filters[] = new OrderTypesFilter($choices->orderTypes);
         }
-        if ([] !== $choices->openFor) {
+        if ([] !== $choices->openFor) { // TODO
             $filters[] = new OpenForFilter($choices->openFor);
         }
 

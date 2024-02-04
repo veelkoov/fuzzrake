@@ -10,6 +10,7 @@ use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Psl\Iter;
 use Psl\Vec;
@@ -20,7 +21,20 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function __construct(Choices $choices)
     {
-        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], $choices->species, $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
+        $this->choices = new Choices(
+            $choices->makerId,
+            $choices->countries,
+            $choices->states,
+            [], [], [], [], [], // Unused and should not impact the cache digest
+            $choices->openFor,
+            $choices->species,
+            $choices->wantsUnknownPaymentPlans,
+            $choices->wantsAnyPaymentPlans,
+            $choices->wantsNoPaymentPlans,
+            $choices->isAdult,
+            $choices->wantsSfw,
+            $choices->wantsInactive,
+        );
     }
 
     public function getCacheDigest(): string
@@ -33,6 +47,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyMakerId($builder);
         $this->applyCountries($builder);
         $this->applyStates($builder);
+        $this->applyOpenFor($builder);
         $this->applyPaymentPlans($builder);
         $this->applySpecies($builder);
         $this->applyWantsSfw($builder);
@@ -210,6 +225,14 @@ class QueryChoicesAppender implements CacheDigestProvider
             $builder->setParameter('specieNames', $items->getCommon());
         }
 
+        $this->addWheres($builder, $conditions);
+    }
+
+    /**
+     * @param list<Func> $conditions
+     */
+    private function addWheres(QueryBuilder $builder, array $conditions): void
+    {
         if (1 === count($conditions)) {
             $condition = Iter\first($conditions);
         } else {
@@ -217,5 +240,9 @@ class QueryChoicesAppender implements CacheDigestProvider
         }
 
         $builder->andWhere($condition);
+    }
+
+    private function applyOpenFor(QueryBuilder $builder): void
+    {
     }
 }
