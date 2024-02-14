@@ -31,7 +31,7 @@ class AdminExtensions extends AbstractExtension
         private readonly Validator $validator,
         private readonly SubmissionRepository $submissionRepository,
     ) {
-        $this->linkPattern = pattern('https?://[^ ,\n<>"]+', 'i');
+        $this->linkPattern = pattern('(?<!title=")https?://[^ ,\n<>"]+', 'i');
     }
 
     public function getFilters(): array
@@ -92,7 +92,7 @@ class AdminExtensions extends AbstractExtension
             $itemClass = contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;
             $text = htmlspecialchars($item);
 
-            $result .= " <span class=\"badge $itemClass\">$text</span> ";
+            $result .= " <span class=\"submission-list-item badge $itemClass\" title=\"$text\">$text</span> ";
         }
 
         return $result;

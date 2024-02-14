@@ -69,6 +69,10 @@
   tr.bottom-separator td {
     border-bottom: 2px solid #aaa;
   }
+
+  .badge.submission-list-item {
+    max-width: 700px; text-overflow: ellipsis; overflow: hidden;
+  }
 }
 
 textarea#submission_directives,
