@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Form\FeedbackType;
 use App\Service\Captcha;
+use App\Service\DataService;
 use App\Service\Notifications\MessengerInterface;
 use App\ValueObject\Feedback;
 use App\ValueObject\Notification;
@@ -21,6 +22,7 @@ class FeedbackController extends AbstractController
     public function __construct(
         private readonly RouterInterface $router,
         private readonly MessengerInterface $messenger,
+        private readonly DataService $dataService,
         private readonly Captcha $captcha,
     ) {
     }
@@ -53,6 +55,7 @@ class FeedbackController extends AbstractController
         return $this->render('feedback/feedback.html.twig', [
             'form'              => $form,
             'big_error_message' => $big_error_message,
+            'ooo_notice'        => $this->dataService->getOooNotice(),
         ]);
     }
 

@@ -105,7 +105,7 @@ class FiltersData
 
         return (new KotlinData())
             ->setName(KotlinDataRepository::SPECIES_FILTER)
-            ->setJson(Json::encode([
+            ->setData(Json::encode([
                 'items' => [
                     [
                         'label' => 'Most species',

@@ -21,6 +21,7 @@ use JsonException;
 class KotlinDataRepository extends ServiceEntityRepository
 {
     final public const SPECIES_FILTER = 'species-filter';
+    final public const OOO_NOTICE = 'ooo-notice';
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,13 +33,13 @@ class KotlinDataRepository extends ServiceEntityRepository
      *
      * @return array<mixed>
      */
-    public function get(string $name, array $default = []): array
+    public function getArray(string $name, array $default = []): array
     {
         $entities = $this->findBy(['name' => $name]);
 
         if (1 === count($entities)) {
             try {
-                $result = Json::decode($entities[0]->getJson());
+                $result = Json::decode($entities[0]->getData());
 
                 if (is_array($result)) {
                     return $result;
@@ -46,6 +47,17 @@ class KotlinDataRepository extends ServiceEntityRepository
             } catch (JsonException) {
                 // Will just return the default
             }
+        }
+
+        return $default;
+    }
+
+    public function getString(string $name, string $default = ''): string
+    {
+        $entities = $this->findBy(['name' => $name]);
+
+        if (1 === count($entities)) {
+            return $entities[0]->getData();
         }
 
         return $default;

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'kotlin_data')]
 #[ORM\Entity(repositoryClass: KotlinDataRepository::class)]
-class KotlinData
+class KotlinData // TODO: Rename. Could serve a lot of purposes. Pre-computed data, settings, ...?
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,8 +20,8 @@ class KotlinData
     #[ORM\Column(length: 255)]
     private string $name = '';
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $json = '';
+    #[ORM\Column(name: 'json', type: Types::TEXT)] // TODO: Rename
+    private string $data = '';
 
     public function getId(): ?int
     {
@@ -40,14 +40,14 @@ class KotlinData
         return $this;
     }
 
-    public function getJson(): string
+    public function getData(): string
     {
-        return $this->json;
+        return $this->data;
     }
 
-    public function setJson(string $json): self
+    public function setData(string $data): self
     {
-        $this->json = $json;
+        $this->data = $data;
 
         return $this;
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PagesController extends AbstractController
 {
+    public function __construct(
+        private readonly DataService $dataService,
+    ) {
+    }
+
     #[Route(path: '/info', name: RouteName::INFO)]
     #[Cache(maxage: 21600, public: true)]
     public function info(): Response
@@ -23,7 +29,9 @@ class PagesController extends AbstractController
     #[Cache(maxage: 21600, public: true)]
     public function contact(): Response
     {
-        return $this->render('pages/contact.html.twig', []);
+        return $this->render('pages/contact.html.twig', [
+            'ooo_notice' => $this->dataService->getOooNotice(),
+        ]);
     }
 
     #[Route(path: '/tracking', name: RouteName::TRACKING)]

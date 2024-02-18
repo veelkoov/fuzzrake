@@ -75,7 +75,7 @@ class FiltersService
 
     private function getSpeciesFilterData(): FilterData
     {
-        $rawFilterData = $this->kotlinDataRepository->get(KotlinDataRepository::SPECIES_FILTER);
+        $rawFilterData = $this->kotlinDataRepository->getArray(KotlinDataRepository::SPECIES_FILTER);
 
         return $this->rawToFilterData($rawFilterData);
     }

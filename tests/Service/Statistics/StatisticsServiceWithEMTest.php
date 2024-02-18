@@ -6,6 +6,7 @@ namespace App\Tests\Service\Statistics;
 
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Repository\KotlinDataRepository;
 use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
@@ -28,9 +29,10 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
         $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
         $acsRepositoryMock = self::createMock(ArtisanCommissionsStatusRepository::class);
+        $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
         $subject = new DataService($artisanRepository, $avdRepositoryMock,
-            $acsRepositoryMock, CacheUtils::getArrayBased());
+            $acsRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
         $result = $subject->getMainPageStats();
 
         self::assertEquals(1, $result->countryCount);
@@ -48,9 +50,10 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
         $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
         $acsRepositoryMock = self::createMock(ArtisanCommissionsStatusRepository::class);
+        $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
         $subject = new DataService($artisanRepository, $avdRepositoryMock,
-            $acsRepositoryMock, CacheUtils::getArrayBased());
+            $acsRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
         $result = $subject->getMainPageStats();
 
         self::assertEquals(2, $result->activeArtisansCount);

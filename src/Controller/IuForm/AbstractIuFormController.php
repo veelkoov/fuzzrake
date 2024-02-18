@@ -11,6 +11,7 @@ use App\Entity\Artisan as ArtisanE;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\ArtisanRepository;
 use App\Service\Captcha;
+use App\Service\DataService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -31,6 +32,7 @@ abstract class AbstractIuFormController extends AbstractController
         protected readonly SubmissionService $iuFormService,
         protected readonly RouterInterface $router,
         protected readonly ArtisanRepository $artisanRepository,
+        protected readonly DataService $dataService,
     ) {
     }
 

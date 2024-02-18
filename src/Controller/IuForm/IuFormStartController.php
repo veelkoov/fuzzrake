@@ -46,6 +46,7 @@ class IuFormStartController extends AbstractIuFormController
             'is_new'            => null === $state->artisan->getId(),
             'form'              => $form->createView(),
             'big_error_message' => $bigErrorMessage,
+            'ooo_notice'        => $this->dataService->getOooNotice(),
         ]);
     }
 

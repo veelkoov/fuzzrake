@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
@@ -21,6 +22,7 @@ class DataService
         private readonly ArtisanRepository $artisanRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly ArtisanCommissionsStatusRepository $acsRepository,
+        private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly Cache $cache,
     ) {
     }
@@ -122,5 +124,10 @@ class DataService
     {
         return $this->cache->getCached('DataService.getAllArtisans', CacheTags::ARTISANS,
             fn () => Artisan::wrapAll($this->artisanRepository->getAll()));
+    }
+
+    public function getOooNotice(): string
+    {
+        return $this->kotlinDataRepository->getString(KotlinDataRepository::OOO_NOTICE);
     }
 }
