@@ -6,6 +6,4 @@ ansible_ssh_user: 'rocky'
 user_name:  'rocky'
 user_group: 'rocky'
 
-local_backend_repo_clone_path: '../../fuzzrake-backend'
-
 yarn_cache_dirpath: '{{ frontend_deployment_path }}/var/yarn-cache'

@@ -24,5 +24,5 @@ services:
     user:    'root:root'
     volumes:
       - '../symfony:/var/www/html'
-      - '${FUZZRAKE_COMPOSER_HOME:-../var/composer}:/composer'
+      - '${FUZZRAKE_COMPOSER_HOME:-../symfony/var/composer}:/composer'
       - '/dev/shm:/dev/shm'

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "it.getfursu"
-version = "1.0-SNAPSHOT"
+version = "git-HEAD"
 
 repositories {
     mavenCentral()
