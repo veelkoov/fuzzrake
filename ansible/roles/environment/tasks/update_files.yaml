@@ -13,18 +13,19 @@
     force:   true
     repo:    'https://github.com/veelkoov/fuzzrake.git'
     version: '{{ branch }}'
+  diff: false
 
 - name: 'Assure var directory is writable'
   ansible.builtin.file:
     group: 'root'
     mode:  '0777'
     owner: 'root'
-    path:  '{{ frontend_deployment_path }}/var'
+    path:  '{{ symfony_dir_path }}/var'
     state: 'directory'
 
 - name: 'Update .env.local'
   ansible.builtin.template:
-    dest:  '{{ frontend_deployment_path }}/.env.local'
+    dest:  '{{ symfony_dir_path }}/.env.local'
     group: 'root'
     mode:  '0644'
     owner: 'root'

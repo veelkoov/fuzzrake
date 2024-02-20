@@ -1,1 +1,1 @@
-rootProject.name = "fuzzrake-backend"
+rootProject.name = "fuzzrake"

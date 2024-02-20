@@ -3,16 +3,20 @@
 set -euo pipefail
 
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
-IMPORT_DIR_PATH='symfony/var/iuFormData/' # Trailing slash required
 
-DB_PATH='var/db.sqlite'
-LOCAL_DB_PATH="symfony/$DB_PATH"
-LOCAL_DB_TMP_PATH="$LOCAL_DB_PATH.tmp"
-DB_DUMP_DIR_PATH='db_dump'
-DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
+SYMFONY_DIR_REL_PATH='symfony'
+SUBMISSIONS_DIR_REL_PATH='symfony/var/submissions' # grep-code-submissions-dir-path
+SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
+DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
+TMP_DATABASE_REL_PATH="$DATABASE_REL_PATH.tmp"
+DB_DUMP_DIR_REL_PATH='db_dump'
+DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_REL_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
+
+PROD_ENV_SSH_PATH='getfursu.it:/var/www/prod'
+BETA_ENV_SSH_PATH='getfursu.it:/var/www/beta'
 
 # Volatile information, easily reproducible
-DB_IGNORED_TABLES=(artisans_commissions_statuses artisans_volatile_data artisans_urls_states tracker_settings submissions)
+DB_IGNORED_TABLES=(artisans_commissions_statuses artisans_volatile_data artisans_urls_states submissions)
 
 function run_command() {
     echo "Executing: $*"
@@ -47,16 +51,16 @@ function assure_line_in_file() {
     }
 }
 
-function action_run_setup() {
-    assure_line_in_file symfony/.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file symfony/.env.local      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+function action_run_setup() {  # TODO: Ansible this
+    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.local"      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.local"      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 
-    assure_line_in_file symfony/.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file symfony/.env.test.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file "$SYMFONY_DIR_REL_PATH/.env.test.local" '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 }
 
 function backup_private_data() {
-    run_command sqlite3 "$LOCAL_DB_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
+    run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
 }
 
 function action_release_prod() {
@@ -70,29 +74,31 @@ function action_release_prod() {
 }
 
 function action_release_beta() {
+    PREVIOUS_BRANCH="$(git branch --show-current)"
+
     run_command git branch -D beta
     run_command git checkout -b beta
     run_command git push --force origin beta
-    run_command ansible/setup_envs.yaml --limit beta_env
+    run_command ansible/setup_envs.yaml --limit beta_env --diff
 
-    echo 'Make sure to return to the previous branch' # FIXME: This stupid limitation
+    git checkout "$PREVIOUS_BRANCH"
 }
 
 function action_get_snapshots() {
     run_command rsync --recursive --progress --human-readable --compress --checksum \
-        getfursu.it:/var/www/prod/var/snapshots/ symfony/var/snapshots/
+        "$PROD_ENV_SSH_PATH/$SNAPSHOTS_REL_PATH/" "$SNAPSHOTS_REL_PATH"
 }
 
 function action_get_submissions() {
-    . symfony/.env.local # Only to get S3_COPIES_BUCKET_URL
+    . "$SYMFONY_DIR_REL_PATH/.env.local" # Only to get S3_COPIES_BUCKET_URL
 
     run_command rsync --recursive --progress --human-readable --compress --checksum \
-        getfursu.it:/var/www/prod/var/iuFormData/ "$IMPORT_DIR_PATH"
-    run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$IMPORT_DIR_PATH"
+        "$PROD_ENV_SSH_PATH/$SUBMISSIONS_DIR_REL_PATH/" "$SUBMISSIONS_DIR_REL_PATH/"
+    run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$SUBMISSIONS_DIR_REL_PATH/"
 }
 
 function action_dbcommit() {
-    pushd "$DB_DUMP_DIR_PATH"
+    pushd "$DB_DUMP_DIR_REL_PATH"
 
     run_command git reset HEAD
     run_command git commit -m 'Updated DB dump' -p
@@ -103,29 +109,29 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-    run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$LOCAL_DB_TMP_PATH"
+    run_command scp -p "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH" "$TMP_DATABASE_REL_PATH"
     backup_private_data
-    run_command sqlite3 "$LOCAL_DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
-    run_command sqlite3 "$LOCAL_DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
-    run_command chmod a+w "$LOCAL_DB_TMP_PATH"
-    run_command mv "$LOCAL_DB_TMP_PATH" "$LOCAL_DB_PATH"
+    run_command sqlite3   "$TMP_DATABASE_REL_PATH" 'DROP TABLE artisans_private_data;'
+    run_command sqlite3   "$TMP_DATABASE_REL_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
+    run_command chmod a+w "$TMP_DATABASE_REL_PATH"
+    run_command mv        "$TMP_DATABASE_REL_PATH" "$DATABASE_REL_PATH"
 }
 
 function action_dbpush() {
-    run_command cp "$LOCAL_DB_PATH" "$LOCAL_DB_TMP_PATH"
-    run_command sqlite3 "$LOCAL_DB_TMP_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';"
-    run_command scp -p "$LOCAL_DB_TMP_PATH" "getfursu.it:/var/www/prod/$DB_PATH"
-    run_command scp -p "$LOCAL_DB_TMP_PATH" "getfursu.it:/var/www/beta/$DB_PATH"
-    run_command rm "$LOCAL_DB_TMP_PATH"
+    run_command cp "$DATABASE_REL_PATH" "$TMP_DATABASE_REL_PATH"
+    run_command sqlite3 "$TMP_DATABASE_REL_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';"
+    run_command scp -p  "$TMP_DATABASE_REL_PATH" "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH"
+    run_command scp -p  "$TMP_DATABASE_REL_PATH" "$BETA_ENV_SSH_PATH/$DATABASE_REL_PATH"
+    run_command rm      "$TMP_DATABASE_REL_PATH"
 }
 
 function action_dbdump() {
     # shellcheck disable=SC2207 # Yes, split by whitespace
-    TABLE_NAMES=($(sqlite3 "$LOCAL_DB_PATH" .tables))
+    TABLE_NAMES=($(sqlite3 "$DATABASE_REL_PATH" .tables))
 
     for TABLE_NAME in "${DB_IGNORED_TABLES[@]}"; do # Sanity check
         if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
-            error "$TABLE_NAME does not exist in the DB $LOCAL_DB_PATH"
+            error "$TABLE_NAME does not exist in the DB $DATABASE_REL_PATH"
         fi
     done
 
@@ -133,17 +139,17 @@ function action_dbdump() {
 
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
         if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
-            run_command sqlite3 "$LOCAL_DB_PATH" ".output $DB_DUMP_DIR_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+            run_command sqlite3 "$DATABASE_REL_PATH" ".output $DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
 
             echo 'Dumping to JSON...'
 
-            if grep 'CREATE TABLE' "$DB_DUMP_DIR_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
+            if grep 'CREATE TABLE' "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.sql" | grep -q 'artisan_id'; then
                 order_by='artisan_id'
             else
                 order_by='id'
             fi
 
-            sqlite3 -json "$LOCAL_DB_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_PATH/$TABLE_NAME.json"
+            sqlite3 -json "$DATABASE_REL_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_REL_PATH/$TABLE_NAME.json"
         fi
     done
 }
@@ -200,7 +206,7 @@ function action() {
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
 
-        'yep')          yarn encore production ;;
+        'yep')          pushd symfony ; yarn encore production ; popd ;;
 
         'composer')     run_composer "$@" ;;
 
@@ -219,7 +225,7 @@ function action() {
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')
-            pushd symfony
+            pushd       "$SYMFONY_DIR_REL_PATH"
             run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@"
             popd
         ;;
