@@ -2,5 +2,5 @@
 *.nocommit
 *.iml
 /.idea/
-/symfony/db_dump/*
-!/symfony/db_dump/.gitkeep
+/db_dump/*
+!/db_dump/.gitkeep

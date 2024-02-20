@@ -3,10 +3,11 @@
 set -euo pipefail
 
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
-IMPORT_DIR_PATH='var/iuFormData/' # Trailing slash required
+IMPORT_DIR_PATH='symfony/var/iuFormData/' # Trailing slash required
 
 DB_PATH='var/db.sqlite'
-DB_TMP_PATH="$DB_PATH.tmp"
+LOCAL_DB_PATH="symfony/$DB_PATH"
+LOCAL_DB_TMP_PATH="$LOCAL_DB_PATH.tmp"
 DB_DUMP_DIR_PATH='db_dump'
 DB_DUMP_PRV_COPY_PATH="$DB_DUMP_DIR_PATH/artisans_private_data-$(date -u '+%Y-%m-%d_%H-%M-%S').sql"
 
@@ -47,15 +48,15 @@ function assure_line_in_file() {
 }
 
 function action_run_setup() {
-    assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file ./.env.local      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+    assure_line_in_file symfony/.env.local      '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file symfony/.env.local      '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 
-    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
-    assure_line_in_file ./.env.test.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
+    assure_line_in_file symfony/.env.test.local '^GOOGLE_RECAPTCHA_SITE_KEY=' 'GOOGLE_RECAPTCHA_SITE_KEY=__TODO_PROVIDE_THIS__'
+    assure_line_in_file symfony/.env.test.local '^GOOGLE_RECAPTCHA_SECRET='   'GOOGLE_RECAPTCHA_SECRET=__TODO_PROVIDE_THIS__'
 }
 
 function backup_private_data() {
-    run_command sqlite3 "$DB_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
+    run_command sqlite3 "$LOCAL_DB_PATH" ".output $DB_DUMP_PRV_COPY_PATH" '.dump artisans_private_data'
 }
 
 function action_release_prod() {
@@ -79,11 +80,12 @@ function action_release_beta() {
 
 function action_get_snapshots() {
     run_command rsync --recursive --progress --human-readable --compress --checksum \
-        getfursu.it:/var/www/prod/var/snapshots/ var/snapshots/
+        getfursu.it:/var/www/prod/var/snapshots/ symfony/var/snapshots/
 }
 
 function action_get_submissions() {
-    . .env.local
+    . symfony/.env.local # Only to get S3_COPIES_BUCKET_URL
+
     run_command rsync --recursive --progress --human-readable --compress --checksum \
         getfursu.it:/var/www/prod/var/iuFormData/ "$IMPORT_DIR_PATH"
     run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$IMPORT_DIR_PATH"
@@ -101,29 +103,29 @@ function action_dbcommit() {
 }
 
 function action_dbpull() {
-    run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$DB_TMP_PATH"
+    run_command scp -p "getfursu.it:/var/www/prod/$DB_PATH" "$LOCAL_DB_TMP_PATH"
     backup_private_data
-    run_command sqlite3 "$DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
-    run_command sqlite3 "$DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
-    run_command chmod a+w "$DB_TMP_PATH"
-    run_command mv "$DB_TMP_PATH" "$DB_PATH"
+    run_command sqlite3 "$LOCAL_DB_TMP_PATH" 'DROP TABLE artisans_private_data;'
+    run_command sqlite3 "$LOCAL_DB_TMP_PATH" ".read $DB_DUMP_PRV_COPY_PATH"
+    run_command chmod a+w "$LOCAL_DB_TMP_PATH"
+    run_command mv "$LOCAL_DB_TMP_PATH" "$LOCAL_DB_PATH"
 }
 
 function action_dbpush() {
-    run_command cp "$DB_PATH" "$DB_TMP_PATH"
-    run_command sqlite3 "$DB_TMP_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';"
-    run_command scp -p "$DB_TMP_PATH" "getfursu.it:/var/www/prod/$DB_PATH"
-    run_command scp -p "$DB_TMP_PATH" "getfursu.it:/var/www/beta/$DB_PATH"
-    run_command rm "$DB_TMP_PATH"
+    run_command cp "$LOCAL_DB_PATH" "$LOCAL_DB_TMP_PATH"
+    run_command sqlite3 "$LOCAL_DB_TMP_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';"
+    run_command scp -p "$LOCAL_DB_TMP_PATH" "getfursu.it:/var/www/prod/$DB_PATH"
+    run_command scp -p "$LOCAL_DB_TMP_PATH" "getfursu.it:/var/www/beta/$DB_PATH"
+    run_command rm "$LOCAL_DB_TMP_PATH"
 }
 
 function action_dbdump() {
     # shellcheck disable=SC2207 # Yes, split by whitespace
-    TABLE_NAMES=($(sqlite3 "$DB_PATH" .tables))
+    TABLE_NAMES=($(sqlite3 "$LOCAL_DB_PATH" .tables))
 
     for TABLE_NAME in "${DB_IGNORED_TABLES[@]}"; do # Sanity check
         if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
-            error "$TABLE_NAME does not exist in the DB $DB_PATH"
+            error "$TABLE_NAME does not exist in the DB $LOCAL_DB_PATH"
         fi
     done
 
@@ -131,7 +133,7 @@ function action_dbdump() {
 
     for TABLE_NAME in "${TABLE_NAMES[@]}"; do
         if ! printf '%s\0' "${DB_IGNORED_TABLES[@]}" | grep -Fxqz -- "$TABLE_NAME"; then
-            run_command sqlite3 "$DB_PATH" ".output $DB_DUMP_DIR_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
+            run_command sqlite3 "$LOCAL_DB_PATH" ".output $DB_DUMP_DIR_PATH/$TABLE_NAME.sql" ".dump $TABLE_NAME"
 
             echo 'Dumping to JSON...'
 
@@ -141,30 +143,9 @@ function action_dbdump() {
                 order_by='id'
             fi
 
-            sqlite3 -json "$DB_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_PATH/$TABLE_NAME.json"
+            sqlite3 -json "$LOCAL_DB_PATH" "SELECT * FROM $TABLE_NAME ORDER BY $order_by" | jq > "$DB_DUMP_DIR_PATH/$TABLE_NAME.json"
         fi
     done
-}
-
-function action_cloc() {
-    local exclude_list
-    exclude_list="$(cat <<- EXCLUDE
-		assets/3rd-party
-		src/Kernel.php
-		tests/test_data
-		tests/bootstrap.php
-		tests/console-application.php
-		tests/object-manager.php
-		EXCLUDE
-    )"
-
-    echo '>>> INCLUDING TESTS'
-    cloc --exclude-list-file=<(echo "$exclude_list") assets src templates tests \
-        --counted=cloc-files-including-tests.nocommit.txt "$@"
-
-    echo '>>> WITHOUT TESTS'
-    cloc --exclude-list-file=<(echo "$exclude_list") assets src templates \
-        --counted=cloc-files-without-tests.nocommit.txt "$@"
 }
 
 function error() {
@@ -183,30 +164,28 @@ Usage:
 
 Available actions:
 
-    setup        setup and/or fix required filesystem items and/or settings
+    setup        Symfony: setup and/or fix required filesystem items and/or settings
 
-    docker-up    "ups" the Docker Compose project
-    docker-down  "downs" the Docker Compose project
+    docker-up    Symfony: "ups" the Docker Compose project
+    docker-down  Symfony: "downs" the Docker Compose project
 
-    yep          execute 'yarn encore production'
+    yep          Symfony: execute 'yarn encore production'
 
-    composer     run Composer
+    composer     Symfony: run Composer
 
-    console      run Symfony console command
+    console      Symfony: run Symfony console command
 
-    cc           clear cache
+    cc           Symfony: clear cache
 
-    pu           run PHPUnit tests
-    pus          run PHPUnit tests, "small" group
-    pum          run PHPUnit tests, "medium" group
-    pul          run PHPUnit tests, "large" group
+    pu           Symfony: run PHPUnit tests
+    pus          Symfony: run PHPUnit tests, "small" group
+    pum          Symfony: run PHPUnit tests, "medium" group
+    pul          Symfony: run PHPUnit tests, "large" group
 
-    pcf          run PHP CS Fixer
-    ps           run PHPStan
-    rector       run Rector
-    el           run eslint
-
-    cloc         run Cloc
+    pcf          Symfony: run PHP CS Fixer
+    ps           Symfony: run PHPStan
+    rector       Symfony: run Rector
+    el           Symfony: run eslint
 EOF
 }
 
@@ -227,7 +206,7 @@ function action() {
 
         'console')      run_console "$@" ;;
 
-        'cc')           run_command run_console cache:clear ;;
+        'cc')           run_console cache:clear ;;
         'cc-beta')      run_command ssh getfursu.it docker exec fuzzrake-beta bin/console cache:clear ;;
         'cc-prod')      run_command ssh getfursu.it docker exec fuzzrake-prod bin/console cache:clear ;;
 
@@ -239,12 +218,11 @@ function action() {
         'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
-        'el')           run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
-
-        'cst')          run_console app:status-tracker:run "$@" ;;
-        'cstc')         action cst --commit "$@" ;;
-        'cstr')         action cst --refetch "$@" ;;
-        'cstc-prod')    run_command ssh getfursu.it docker exec fuzzrake-prod bin/console app:status-tracker:run --commit ;;
+        'el')
+            pushd symfony
+            run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@"
+            popd
+        ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;
@@ -259,8 +237,6 @@ function action() {
 
         'get-snapshots')   action_get_snapshots ;;
         'get-submissions') action_get_submissions ;;
-
-        'cloc')         action_cloc "$@" ;;
 
         *) error "Unknown action: '$action'" ;;
     esac

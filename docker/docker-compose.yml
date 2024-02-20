@@ -11,7 +11,7 @@ services:
     ports:
       - '${FUZZRAKE_DEV_WEBSRV_PORT:-8080}:80'
     volumes:
-      - '..:/var/www/html'
+      - '../symfony:/var/www/html'
       - './dev-nginx.conf:/etc/nginx/conf.d/default.conf'
 
   php:
@@ -23,6 +23,6 @@ services:
     restart: 'unless-stopped'
     user:    'root:root'
     volumes:
-      - '..:/var/www/html'
+      - '../symfony:/var/www/html'
       - '${FUZZRAKE_COMPOSER_HOME:-../var/composer}:/composer'
       - '/dev/shm:/dev/shm'
