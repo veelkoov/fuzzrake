@@ -79,7 +79,7 @@ function action_release_beta() {
     run_command git branch -D beta
     run_command git checkout -b beta
     run_command git push --force origin beta
-    run_command ansible/setup_envs.yaml --limit beta_env
+    run_command ansible/setup_envs.yaml --limit beta_env --diff
 
     git checkout "$PREVIOUS_BRANCH"
 }
