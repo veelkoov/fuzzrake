@@ -1,0 +1,3 @@
+---
+database_path:            ''  # grep-code-database-path
+snapshots_store_dir_path: ''  # grep-code-snapshots-dir-path

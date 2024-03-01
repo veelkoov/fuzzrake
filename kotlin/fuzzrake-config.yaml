@@ -1,3 +1,0 @@
----
-database_path:            '/home/projects/fuzzrake/var/db.sqlite'
-snapshots_store_dir_path: '/home/projects/fuzzrake/var/snapshots'
