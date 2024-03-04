@@ -1,3 +1,3 @@
-[submodule "assets/3rd-party/flag-icon-css"]
-	path = assets/3rd-party/flag-icon-css
+[submodule "symfony/assets/3rd-party/flag-icon-css"]
+	path = symfony/assets/3rd-party/flag-icon-css
 	url = https://github.com/lipis/flag-icon-css.git
