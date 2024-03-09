@@ -1,7 +1,7 @@
 ---
 - name: 'Run: gradlew distTar (locally)'
   ansible.builtin.command:
-    chdir:      '{{ local_backend_repo_clone_path }}'
+    chdir:      '../kotlin'
     cmd:        './gradlew distTar'
   changed_when: '"executed" in gradlew_result.stdout'
   check_mode:   false
@@ -23,7 +23,7 @@
     group: '{{ user_group }}'
     mode:  '0600'
     owner: '{{ user_name }}'
-    src:   '{{ local_backend_repo_clone_path }}/build/distributions/fuzzrake-backend-1.0-SNAPSHOT.tar'  # TODO: Path/name
+    src:   '../kotlin/build/distributions/fuzzrake-git-HEAD.tar'
 
 - name: 'Extract the distribution tar'
   ansible.builtin.unarchive:
@@ -48,4 +48,4 @@
     hour:   '0,12'
     name:   'tracker - commissions'
     minute: 0
-    value:  'cd {{ backend_deployment_path | quote }} && fuzzrake-backend-1.0-SNAPSHOT/bin/fuzzrake-backend tracker -r > /dev/null 2>&1'
+    value:  'cd {{ backend_deployment_path | quote }} && fuzzrake-git-HEAD/bin/fuzzrake tracker -r > /dev/null 2>&1'

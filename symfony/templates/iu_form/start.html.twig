@@ -1,0 +1,98 @@
+{% extends '_base.html.twig' %}
+
+{% block title %}inclusion/update request{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
+    {{ encore_entry_script_tags('iu_form') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('iu_form') }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ block('title')|capitalize }}</h1>
+
+    {% include 'shared_parts/ooo_notice.html.twig' %}
+
+    <p class="mt-3">
+        <a class="disable-filters-goto-main-page text-decoration-none" href="{{ path('main') }}" target="_blank">
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+            Temporarily disable all the filters and <strong>open the main page</strong>
+        </a>
+    </p>
+
+    {% include 'shared_parts/big_scary_error.html.twig' %}
+
+    {{ form_start(form) }}
+
+    {% if is_new %}
+        <div id="confirmAddingANewOne">
+            {{ form_row(form.confirmAddingANewOne) }}
+        </div>
+
+        <div id="ensureStudioIsNotThereAlready">
+            {{ form_row(form.ensureStudioIsNotThereAlready) }}
+        </div>
+    {% else %}
+        <div id="confirmUpdatingTheRightOne">
+            {{ form_row(form.confirmUpdatingTheRightOne) }}
+        </div>
+    {% endif %}
+
+    <div class="alert alert-primary" role="alert" id="addNewStudioInstead">
+        To request adding a new studio/maker, please click <a href="{{ path('iu_form_step_start') }}">here</a>.
+    </div>
+
+    <div class="alert alert-primary" role="alert" id="findTheStudioToUpdate">
+        <ol class="mb-0">
+            <li>Please navigate to the main page using the <i class="fa-solid fa-filter-circle-xmark"></i> link above.</li>
+            <li>Find your studio / your name on the list (it may be your old name; if for any reason it got marked as <em>[hidden]</em>, {# grep-inactive-mark #} it would be listed after the letter Z).</li>
+            <li>Click on the name - a details pop-up should show up.</li>
+            <li>Look at the bottom of the pop-up. Click the <em>Data outdated/inaccurate?</em> button.</li> {# grep-updates-button #}
+            <li>Click the link intended for use by makers.</li>
+        </ol>
+    </div>
+
+    <div id="confirmYouAreTheMaker">
+        {{ form_row(form.confirmYouAreTheMaker) }}
+    </div>
+
+    <div class="alert alert-danger" id="doNotFillTheForm">
+        Do not fill the form. It will get rejected. Please contact the fursuit maker and ask them to do the updates. This is the link you should send them: <a href="{{ path('iu_form_step_start') }}">right-click or press&amp;hold then copy link address/URL</a>.
+    </div>
+
+    <div id="confirmNoPendingUpdates">
+        {{ form_row(form.confirmNoPendingUpdates) }}
+    </div>
+
+    <div id="decisionOverPreviousUpdates">
+        {{ form_row(form.decisionOverPreviousUpdates) }}
+    </div>
+
+    <div class="alert alert-primary" id="howToProceedWithQueuedUpdates">
+        If you are waiting over a week already or if you prefer your changes to be on-line as soon as possible, please contact the maintainer immediately using any of the means listed on the <a href="{{ path('contact') }}">contact page</a>. Otherwise, please wait a few days. The updates are usually processed once a week on weekends.
+    </div>
+
+    {{ form_rest(form) }}
+
+    <div id="rulesAndContinueButton">
+        {% include 'shared_parts/guidelines.html.twig' %}
+
+        <input type="hidden" name="token" id="form_recaptcha_token" value="" />
+
+        <div class="d-none g-recaptcha"
+             data-sitekey="{{ google_recaptcha_site_key }}"
+             data-callback="formRecaptchaValidationCallback"
+             data-action="iu_form_captcha"
+             data-size="invisible"
+        ></div>
+
+        <input type="submit" class="btn btn-primary btn-lg" value="Agree and continue" />
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}

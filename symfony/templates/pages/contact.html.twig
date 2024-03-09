@@ -1,0 +1,58 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('contact') }}
+
+    <script src="https://www.google.com/recaptcha/api.js?render={{ google_recaptcha_site_key }}"></script>
+{% endblock %}
+
+{% block title %}contact{% endblock %}
+
+{% block body %}
+    <h1>
+        <i class="fa-regular fa-envelope"></i> Contact
+    </h1>
+
+    {% include 'shared_parts/ooo_notice.html.twig' %}
+
+    <div class="card border-primary my-5 w-75 mx-auto">
+        <div class="card-body">
+            <h5 class="card-title">
+                Please do not contact me if you are looking for a fursuit
+            </h5>
+
+            <p class="card-text">
+                I am sorry, but I can provide support only for fursuit makers. I am not a maker myself, I don't make fursuits, I am merely a "webmaster". The only thing I can do for you, is this website.
+            </p>
+        </div>
+    </div>
+
+    <p class="text-center overflow-x-auto">
+        <a class="btn btn-primary my-1 btn-sm" href="https://www.tumblr.com/getfursuit">
+            <i class="fa-brands fa-tumblr"></i> Tumblr
+        </a>
+        <a class="btn btn-primary my-1 btn-sm" rel="me" href="https://fursuits.online/@getfursuit">
+            <i class="fab fa-mastodon"></i> Mastodon
+        </a>
+
+        <br>
+
+        <a class="btn btn-primary my-1 btn-sm" href="https://www.instagram.com/getfursu.it/">
+            <i class="fab fa-instagram"></i> Instagram
+        </a>
+        <a class="btn btn-primary my-1 btn-sm" href="https://twitter.com/getfursuit">
+            <i class="fab fa-twitter"></i> Twitter
+        </a>
+
+        <br>
+
+        <span id="protected-contact-info"></span>
+    </p>
+
+    <div>
+        <p class="small my-5 w-75 mx-auto">
+            If you want to use e-mail and an address didn't appear above, it means the automatic captcha failed. In that case please try using a different browser or device or network.
+        </p>
+    </div>
+{% endblock %}

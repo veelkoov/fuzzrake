@@ -1,0 +1,81 @@
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
+
+.badge-outline-primary {
+  color: $primary;
+  border: 1px solid $primary;
+}
+
+.badge-outline-secondary {
+  color: $secondary;
+  border: 1px solid $secondary;
+}
+
+.badge-outline-success {
+  color: $success;
+  border: 1px solid $success;
+}
+
+.badge-outline-danger {
+  color: $danger;
+  border: 1px solid $danger;
+}
+
+#mx-submission {
+  tr {
+    td:nth-child(2) {
+      overflow-wrap: anywhere;
+    }
+
+    &.not-fixed.not-changing {
+      color: #bbb;
+      display: none;
+    }
+  }
+
+  tr.structured {
+    opacity: 0.5;
+  }
+
+  tr.before {
+    a {
+      color: $danger;
+      text-decoration: none;
+    }
+  }
+
+  tr.submitted {
+    &.not-fixed {
+      display: none;
+    }
+
+    &.fixes-applied td:last-child {
+      color: #0a53be;
+    }
+
+    a {
+      color: #0a53be;
+      text-decoration: none;
+    }
+  }
+
+  tr.after {
+    a {
+      color: $success;
+      text-decoration: none;
+    }
+  }
+
+  tr.bottom-separator td {
+    border-bottom: 2px solid #aaa;
+  }
+
+  .badge.submission-list-item {
+    max-width: 700px; text-overflow: ellipsis; overflow: hidden;
+  }
+}
+
+textarea#submission_directives,
+textarea#submission_comment {
+  height: 7em;
+}
