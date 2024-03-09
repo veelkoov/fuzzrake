@@ -6,10 +6,15 @@ namespace App\Filtering\DataRequests;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
+use App\Entity\ArtisanUrl;
+use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Psl\Iter;
 use Psl\Vec;
@@ -20,7 +25,20 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function __construct(Choices $choices)
     {
-        $this->choices = new Choices($choices->makerId, $choices->countries, $choices->states, [], [], [], [], [], [], $choices->species, $choices->wantsUnknownPaymentPlans, $choices->wantsAnyPaymentPlans, $choices->wantsNoPaymentPlans, $choices->isAdult, $choices->wantsSfw, $choices->wantsInactive);
+        $this->choices = new Choices(
+            $choices->makerId,
+            $choices->countries,
+            $choices->states,
+            [], [], [], [], [], // Unused and should not impact the cache digest
+            $choices->openFor,
+            $choices->species,
+            $choices->wantsUnknownPaymentPlans,
+            $choices->wantsAnyPaymentPlans,
+            $choices->wantsNoPaymentPlans,
+            $choices->isAdult,
+            $choices->wantsSfw,
+            $choices->wantsInactive,
+        );
     }
 
     public function getCacheDigest(): string
@@ -33,6 +51,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyMakerId($builder);
         $this->applyCountries($builder);
         $this->applyStates($builder);
+        $this->applyOpenFor($builder);
         $this->applyPaymentPlans($builder);
         $this->applySpecies($builder);
         $this->applyWantsSfw($builder);
@@ -210,7 +229,62 @@ class QueryChoicesAppender implements CacheDigestProvider
             $builder->setParameter('specieNames', $items->getCommon());
         }
 
-        if (1 === count($conditions)) {
+        $this->addWheres($builder, $conditions);
+    }
+
+    private function applyOpenFor(QueryBuilder $builder): void
+    {
+        $conditions = [];
+
+        $items = new SpecialItemsExtractor($this->choices->openFor,
+            Consts::FILTER_VALUE_TRACKING_ISSUES, Consts::FILTER_VALUE_NOT_TRACKED);
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_TRACKING_ISSUES)) {
+            $conditions[] = $builder->expr()->eq('vd.csTrackerIssue', ':hasCsTrackerIssue');
+
+            $builder->setParameter('hasCsTrackerIssue', true, ParameterType::BOOLEAN);
+        }
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_NOT_TRACKED)) {
+            $conditions[] = $builder->expr()->not($builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(ArtisanUrl::class)
+                    ->createQueryBuilder('au1')
+                    ->select('1')
+                    ->where('au1.artisan = a')
+                    ->andWhere('au1.type = :urlTypeCommissions')
+            ));
+
+            $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->name);
+        }
+
+        if ([] !== $items->getCommon()) {
+            $conditions[] = $builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorOfferStatus::class)
+                    ->createQueryBuilder('cos1')
+                    ->select('1')
+                    ->where('cos1.isOpen = :isOpen')
+                    ->andWhere('cos1.offer IN (:openForOffers)')
+                    ->andWhere('cos1.artisan = a')
+            );
+
+            $builder
+                ->setParameter('openForOffers', $items->getCommon())
+                ->setParameter('isOpen', true, ParameterType::BOOLEAN);
+        }
+
+        $this->addWheres($builder, $conditions);
+    }
+
+    /**
+     * @param list<Func|Comparison> $conditions
+     */
+    private function addWheres(QueryBuilder $builder, array $conditions): void
+    {
+        if ([] === $conditions) {
+            return;
+        } elseif (1 === count($conditions)) {
             $condition = Iter\first($conditions);
         } else {
             $condition = $builder->expr()->orX(...$conditions);

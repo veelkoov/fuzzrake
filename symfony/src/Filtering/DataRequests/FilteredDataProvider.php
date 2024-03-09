@@ -7,7 +7,6 @@ namespace App\Filtering\DataRequests;
 use App\Filtering\DataRequests\Filters\FeaturesFilter;
 use App\Filtering\DataRequests\Filters\FilterInterface;
 use App\Filtering\DataRequests\Filters\LanguagesFilter;
-use App\Filtering\DataRequests\Filters\OpenForFilter;
 use App\Filtering\DataRequests\Filters\OrderTypesFilter;
 use App\Filtering\DataRequests\Filters\ProductionModelsFilter;
 use App\Filtering\DataRequests\Filters\StylesFilter;
@@ -64,9 +63,6 @@ class FilteredDataProvider
         }
         if ([] !== $choices->orderTypes) {
             $filters[] = new OrderTypesFilter($choices->orderTypes);
-        }
-        if ([] !== $choices->openFor) {
-            $filters[] = new OpenForFilter($choices->openFor);
         }
 
         $artisans = filter($artisans,

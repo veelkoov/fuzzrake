@@ -8,8 +8,8 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Filtering\FiltersData\FilterData;
 use App\Filtering\FiltersData\Item;
-use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
+use App\Repository\CreatorOfferStatusRepository;
 use App\Service\SpeciesService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
@@ -55,7 +55,7 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, ArtisanRepository $artisanRepository, ArtisanCommissionsStatusRepository $commissionsStatusRepository, SpeciesService $species): Response
+    public function statistics(Request $request, ArtisanRepository $artisanRepository, CreatorOfferStatusRepository $offerStatusRepository, SpeciesService $species): Response
     {
         $productionModels = $artisanRepository->getDistinctProductionModels();
         $orderTypes = $artisanRepository->getDistinctOrderTypes();
@@ -65,7 +65,7 @@ class StatisticsController extends AbstractController
         $features = $artisanRepository->getDistinctFeatures();
         $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
         $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
-        $commissionsStats = $commissionsStatusRepository->getCommissionsStats();
+        $commissionsStats = $offerStatusRepository->getCommissionsStats();
 
         $artisans = Artisan::wrapAll($artisanRepository->getActive());
 

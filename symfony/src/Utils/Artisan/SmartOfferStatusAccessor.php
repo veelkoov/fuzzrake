@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use App\Entity\ArtisanCommissionsStatus as ACS;
+use App\Entity\CreatorOfferStatus;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
@@ -14,12 +14,12 @@ final class SmartOfferStatusAccessor
     use UtilityClass;
 
     /**
-     * @return list<ACS>
+     * @return list<CreatorOfferStatus>
      */
     public static function getObjects(Artisan $artisan, bool $isOpen): array
     {
         return array_filter($artisan->getArtisan()->getCommissions()->toArray(),
-            fn (ACS $status): bool => $status->getIsOpen() === $isOpen);
+            fn (CreatorOfferStatus $status): bool => $status->getIsOpen() === $isOpen);
     }
 
     /**
@@ -27,7 +27,7 @@ final class SmartOfferStatusAccessor
      */
     public static function getList(Artisan $artisan, bool $isOpen): array
     {
-        return array_map(fn (ACS $url) => $url->getOffer(), self::getObjects($artisan, $isOpen));
+        return array_map(fn (CreatorOfferStatus $url) => $url->getOffer(), self::getObjects($artisan, $isOpen));
     }
 
     public static function getPacked(Artisan $artisan, bool $isOpen): string
@@ -47,11 +47,11 @@ final class SmartOfferStatusAccessor
             }
         }
 
-        $existingValues = array_map(fn (ACS $url): string => $url->getOffer(), $existingValues);
+        $existingValues = array_map(fn (CreatorOfferStatus $url): string => $url->getOffer(), $existingValues);
 
         foreach ($newValues as $newValue) {
             if (!in_array($newValue, $existingValues)) {
-                $artisan->getArtisan()->addCommission((new ACS())->setIsOpen($isOpen)->setOffer($newValue));
+                $artisan->getArtisan()->addCommission((new CreatorOfferStatus())->setIsOpen($isOpen)->setOffer($newValue));
             }
         }
     }

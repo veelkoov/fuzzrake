@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Service\Statistics;
 
-use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
@@ -28,7 +28,7 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
 
         $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
-        $acsRepositoryMock = self::createMock(ArtisanCommissionsStatusRepository::class);
+        $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
         $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
         $subject = new DataService($artisanRepository, $avdRepositoryMock,
@@ -49,7 +49,7 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
 
         $artisanRepository = self::getArtisanRepository();
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
-        $acsRepositoryMock = self::createMock(ArtisanCommissionsStatusRepository::class);
+        $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
         $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
         $subject = new DataService($artisanRepository, $avdRepositoryMock,
