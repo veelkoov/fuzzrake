@@ -1,16 +1,18 @@
 ---
-valid_choices:
-  'Most species':
-    'Mammals':
-      'Felines':
-        'Panthers': {}
-      'Deer': {}
-    'With antlers':
-      'Deer':  # Add second parent
-        'i_Some deer specie': {}  # Add child to something already created
+parameters:
+  species_definitions:
+    valid_choices:
+      'Most species':
+        'Mammals':
+          'Felines':
+            'Panthers': {}
+          'Deer': {}
+        'With antlers':
+          'Deer':  # Add second parent
+            'i_Some deer specie': {}  # Add child to something already created
 
-  'Other':
-    'i_Other 1': {}
-    'i_Other 2': {}
+      'Other':
+        'i_Other 1': {}
+        'i_Other 2': {}
 
-  'Third root': {}
+      'Third root': {}

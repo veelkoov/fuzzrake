@@ -2,10 +2,11 @@
 # - Any kind of "Closed species"/"Copyrighted characters"
 #     will not make it easier for anyone to disrespect others' rights; "Closed species (with permission)" is OK
 
+---
 parameters:
   species_definitions:
-    valid_choices:  # At this point it is just a copy from Kotlin, used only to generate list of recognized names.
-      "Most species":
+    valid_choices:
+      "Most species":  # grep-assumed-does-specie-when-artisan-has-only-doesnt
         "Real life animals":
           'i_Existing species': {}
 

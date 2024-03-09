@@ -15,7 +15,7 @@ class SpeciesLoader(resource: String = "/species.yaml") {
     init {
         val yamlSpecies = Yaml.parse(Resource.read(resource), YamlSpecies::class.java)
 
-        yamlSpecies.validChoices.forEach { (name, subspecies) ->
+        yamlSpecies.parameters.speciesDefinitions.validChoices.forEach { (name, subspecies) ->
             builder.addRootSpecie(createSpecie(name, subspecies))
         }
 
