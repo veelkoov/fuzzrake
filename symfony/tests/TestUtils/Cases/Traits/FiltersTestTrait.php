@@ -128,7 +128,7 @@ trait FiltersTestTrait
 
             $this->artisan('TRACKIS', 'FI', 'State', 'Language',
                 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false)
+                'Offer', 'Most species', 'Supported', false, false)
                 ->setCsTrackerIssue(true)->setCommissionsUrls('url'),
 
             $this->artisan('TRKFAIL', 'FI', 'State', 'Language',
@@ -138,7 +138,7 @@ trait FiltersTestTrait
 
             $this->artisan('TRACKOK', 'FI', 'State', 'Language',
                 'Toony', 'LED eyes', 'Full plantigrade', 'Standard commissions',
-                'Open for', 'Most species', 'Supported', false, false)
+                'Offer', 'Most species', 'Supported', false, false)
                 ->setCommissionsUrls('url'),
         ];
     }
@@ -242,9 +242,14 @@ trait FiltersTestTrait
             'pp7' => [self::getPayPlanFiltersTestSet(), ['paymentPlans' => ['Supported', 'Not supported', '?']],
                 ['UNKPAYP', 'NOPAYPL', 'PAYPLNS']],
 
-            't1' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],        ['NTTRCKD']],
-            't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],        ['TRACKIS', 'TRKFAIL']],
-            't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Open for']], ['TRACKIS', 'TRACKOK']],
+            't0' => [self::getTrackingFiltersTestSet(), [],                                 ['NTTRCKD', 'TRKFAIL', 'TRACKIS', 'TRACKOK']],
+            't1' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-']],               ['NTTRCKD']],
+            't2' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!']],               ['TRACKIS', 'TRKFAIL']],
+            't3' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!', '-']],          ['NTTRCKD', 'TRACKIS', 'TRKFAIL']],
+            't4' => [self::getTrackingFiltersTestSet(), ['openFor' => ['Offer']],           ['TRACKIS', 'TRACKOK']],
+            't5' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-', 'Offer']],      ['NTTRCKD', 'TRACKIS', 'TRACKOK']],
+            't6' => [self::getTrackingFiltersTestSet(), ['openFor' => ['!', 'Offer']],      ['TRKFAIL', 'TRACKIS', 'TRACKOK']],
+            't7' => [self::getTrackingFiltersTestSet(), ['openFor' => ['-', '!', 'Offer']], ['NTTRCKD', 'TRKFAIL', 'TRACKIS', 'TRACKOK']],
 
             'u1' => [self::getCombinedFiltersTestSet(), ['species' => ['?']], ['M000010']],
         ];

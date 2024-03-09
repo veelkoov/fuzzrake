@@ -6,10 +6,14 @@ namespace App\Filtering\DataRequests;
 
 use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan;
+use App\Entity\ArtisanUrl;
+use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Psl\Iter;
@@ -228,21 +232,64 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->addWheres($builder, $conditions);
     }
 
+    private function applyOpenFor(QueryBuilder $builder): void
+    {
+        $conditions = [];
+
+        $items = new SpecialItemsExtractor($this->choices->openFor,
+            Consts::FILTER_VALUE_TRACKING_ISSUES, Consts::FILTER_VALUE_NOT_TRACKED);
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_TRACKING_ISSUES)) {
+            $conditions[] = $builder->expr()->eq('vd.csTrackerIssue', ':hasCsTrackerIssue');
+
+            $builder->setParameter('hasCsTrackerIssue', true, ParameterType::BOOLEAN);
+        }
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_NOT_TRACKED)) {
+            $conditions[] = $builder->expr()->not($builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(ArtisanUrl::class)
+                    ->createQueryBuilder('au1')
+                    ->select('1')
+                    ->where('au1.artisan = a')
+                    ->andWhere('au1.type = :urlTypeCommissions')
+            ));
+
+            $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->name);
+        }
+
+        if ([] !== $items->getCommon()) {
+            $conditions[] = $builder->expr()->exists(
+                $builder->getEntityManager()
+                    ->getRepository(CreatorOfferStatus::class)
+                    ->createQueryBuilder('cos1')
+                    ->select('1')
+                    ->where('cos1.isOpen = :isOpen')
+                    ->andWhere('cos1.offer IN (:openForOffers)')
+                    ->andWhere('cos1.artisan = a')
+            );
+
+            $builder
+                ->setParameter('openForOffers', $items->getCommon())
+                ->setParameter('isOpen', true, ParameterType::BOOLEAN);
+        }
+
+        $this->addWheres($builder, $conditions);
+    }
+
     /**
-     * @param list<Func> $conditions
+     * @param list<Func|Comparison> $conditions
      */
     private function addWheres(QueryBuilder $builder, array $conditions): void
     {
-        if (1 === count($conditions)) {
+        if ([] === $conditions) {
+            return;
+        } elseif (1 === count($conditions)) {
             $condition = Iter\first($conditions);
         } else {
             $condition = $builder->expr()->orX(...$conditions);
         }
 
         $builder->andWhere($condition);
-    }
-
-    private function applyOpenFor(QueryBuilder $builder): void
-    {
     }
 }
