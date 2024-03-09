@@ -11,11 +11,11 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Definitions\Fields\Validation;
 use App\Entity\Artisan as ArtisanE;
-use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
+use App\Entity\CreatorOfferStatus;
 use App\Entity\MakerId;
 use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
@@ -1355,21 +1355,21 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
-     * @return Collection<int, ArtisanCommissionsStatus>
+     * @return Collection<int, CreatorOfferStatus>
      */
     public function getCommissions(): Collection
     {
         return $this->artisan->getCommissions();
     }
 
-    public function addCommission(ArtisanCommissionsStatus $commission): self
+    public function addCommission(CreatorOfferStatus $commission): self
     {
         $this->artisan->addCommission($commission);
 
         return $this;
     }
 
-    public function removeCommission(ArtisanCommissionsStatus $commission): self
+    public function removeCommission(CreatorOfferStatus $commission): self
     {
         $this->artisan->removeCommission($commission);
 

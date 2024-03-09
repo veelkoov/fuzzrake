@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
@@ -21,7 +21,7 @@ class DataService
     public function __construct(
         private readonly ArtisanRepository $artisanRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
-        private readonly ArtisanCommissionsStatusRepository $acsRepository,
+        private readonly CreatorOfferStatusRepository $cosRepository,
         private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly Cache $cache,
     ) {
@@ -96,7 +96,7 @@ class DataService
     public function getOpenFor(): array
     {
         return $this->cache->getCached('DataService.getOpenFor', [CacheTags::ARTISANS, CacheTags::TRACKING],
-            fn () => $this->acsRepository->getDistinctOpenFor());
+            fn () => $this->cosRepository->getDistinctOpenFor());
     }
 
     /**

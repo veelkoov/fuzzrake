@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\ArtisanCommissionsStatusRepository;
+use App\Repository\CreatorOfferStatusRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,9 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  * NOTE: Ephemeral information, can be recreated by running update command. Table should not be committed, as that
  *       would generate too much noise in the repo history.
  */
-#[ORM\Entity(repositoryClass: ArtisanCommissionsStatusRepository::class)]
-#[ORM\Table(name: 'artisans_commissions_statuses')]
-class ArtisanCommissionsStatus
+#[ORM\Entity(repositoryClass: CreatorOfferStatusRepository::class)]
+#[ORM\Table(name: 'artisans_commissions_statuses')] // TODO: Rename
+class CreatorOfferStatus
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

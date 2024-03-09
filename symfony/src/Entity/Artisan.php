@@ -127,9 +127,9 @@ class Artisan implements Stringable
     private Collection $urls;
 
     /**
-     * @var Collection<int, ArtisanCommissionsStatus>
+     * @var Collection<int, CreatorOfferStatus>
      */
-    #[ORM\OneToMany(mappedBy: 'artisan', targetEntity: ArtisanCommissionsStatus::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'artisan', targetEntity: CreatorOfferStatus::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $commissions;
 
     /**
@@ -627,14 +627,14 @@ class Artisan implements Stringable
     }
 
     /**
-     * @return Collection<int, ArtisanCommissionsStatus>
+     * @return Collection<int, CreatorOfferStatus>
      */
     public function getCommissions(): Collection
     {
         return $this->commissions;
     }
 
-    public function addCommission(ArtisanCommissionsStatus $commission): self
+    public function addCommission(CreatorOfferStatus $commission): self
     {
         if (!$this->commissions->contains($commission)) {
             $this->commissions[] = $commission;
@@ -644,7 +644,7 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function removeCommission(ArtisanCommissionsStatus $commission): self
+    public function removeCommission(CreatorOfferStatus $commission): self
     {
         $this->commissions->removeElement($commission);
 

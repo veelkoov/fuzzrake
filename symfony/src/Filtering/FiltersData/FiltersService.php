@@ -7,9 +7,9 @@ namespace App\Filtering\FiltersData;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\SpecialItems;
-use App\Repository\ArtisanCommissionsStatusRepository;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
+use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Service\CountriesDataService;
 use App\Utils\Enforce;
@@ -19,7 +19,7 @@ class FiltersService
 {
     public function __construct(
         private readonly ArtisanRepository $artisanRepository,
-        private readonly ArtisanCommissionsStatusRepository $artisanCommissionsStatusRepository,
+        private readonly CreatorOfferStatusRepository $offerStatusRepository,
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly KotlinDataRepository $kotlinDataRepository,
@@ -142,7 +142,7 @@ class FiltersService
         $notTracked = SpecialItems::newNotTracked($nonTrackedCount);
         $result = new MutableFilterData($trackingIssues, $notTracked);
 
-        foreach ($this->artisanCommissionsStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
+        foreach ($this->offerStatusRepository->getDistinctWithOpenCount() as $offer => $openCount) {
             $result->items->addComplexItem($offer, $offer, (int) $openCount);
         }
 

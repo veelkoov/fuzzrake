@@ -6,9 +6,9 @@ namespace App\Tests\Utils\DataTidying;
 
 use App\Data\Tidying\ArtisanChanges;
 use App\Entity\Artisan as ArtisanE;
-use App\Entity\ArtisanCommissionsStatus;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
+use App\Entity\CreatorOfferStatus;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
@@ -102,10 +102,10 @@ class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
         foreach ($artisan2->getUrls()->toArray() as /* @var $url ArtisanUrl */ $url) {
             $urls2[$url->getType()] = $url->getUrl();
         }
-        foreach ($artisan1->getCommissions()->toArray() as /* @var $status ArtisanCommissionsStatus */ $status) {
+        foreach ($artisan1->getCommissions()->toArray() as /* @var $status CreatorOfferStatus */ $status) {
             $comms1[$status->getOffer()] = $status->getIsOpen();
         }
-        foreach ($artisan2->getCommissions()->toArray() as /* @var $status ArtisanCommissionsStatus */ $status) {
+        foreach ($artisan2->getCommissions()->toArray() as /* @var $status CreatorOfferStatus */ $status) {
             $comms2[$status->getOffer()] = $status->getIsOpen();
         }
         foreach ($artisan1->getValues()->toArray() as /* @var $value ArtisanValue */ $value) {
