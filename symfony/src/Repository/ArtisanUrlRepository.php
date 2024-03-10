@@ -6,10 +6,10 @@ namespace App\Repository;
 
 use App\Data\Definitions\Fields\FieldsList;
 use App\Entity\Artisan;
-use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanUrlState;
 use App\Entity\ArtisanVolatileData;
+use App\Entity\CreatorPrivateData;
 use App\Entity\MakerId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
@@ -46,7 +46,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
             'artisan', ['id' => 'a_id']);
         $rsm->addJoinedEntityFromClassMetadata(ArtisanVolatileData::class, 'avd', 'a',
             'volatileData', ['id' => 'avd_id', 'artisan_id' => 'avd_artisan_id']);
-        $rsm->addJoinedEntityFromClassMetadata(ArtisanPrivateData::class, 'apd', 'a',
+        $rsm->addJoinedEntityFromClassMetadata(CreatorPrivateData::class, 'apd', 'a',
             'privateData', ['id' => 'apd_id', 'artisan_id' => 'apd_artisan_id']);
         $rsm->addJoinedEntityFromClassMetadata(MakerId::class, 'mi', 'a',
             'makerIds', ['id' => 'mi_id', 'artisan_id' => 'mi_artisan_id', 'maker_id' => 'mi_maker_id']);

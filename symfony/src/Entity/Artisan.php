@@ -117,8 +117,8 @@ class Artisan implements Stringable
     #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanVolatileData $volatileData = null;
 
-    #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanPrivateData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?ArtisanPrivateData $privateData = null;
+    #[ORM\OneToOne(mappedBy: 'creator', targetEntity: CreatorPrivateData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?CreatorPrivateData $privateData = null;
 
     /**
      * @var Collection<int, ArtisanUrl>
@@ -587,14 +587,14 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getPrivateData(): ?ArtisanPrivateData
+    public function getPrivateData(): ?CreatorPrivateData
     {
         return $this->privateData;
     }
 
-    public function setPrivateData(?ArtisanPrivateData $privateData): self
+    public function setPrivateData(?CreatorPrivateData $privateData): self
     {
-        $privateData?->setArtisan($this);
+        $privateData?->setCreator($this);
 
         $this->privateData = $privateData;
 

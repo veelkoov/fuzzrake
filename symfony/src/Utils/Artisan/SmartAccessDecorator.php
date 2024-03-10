@@ -11,11 +11,11 @@ use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Definitions\Fields\Validation;
 use App\Entity\Artisan as ArtisanE;
-use App\Entity\ArtisanPrivateData;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\CreatorOfferStatus;
+use App\Entity\CreatorPrivateData;
 use App\Entity\MakerId;
 use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
@@ -1316,16 +1316,16 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     #[Valid]
-    public function getPrivateData(): ArtisanPrivateData
+    public function getPrivateData(): CreatorPrivateData
     {
         if (null === ($res = $this->artisan->getPrivateData())) {
-            $this->artisan->setPrivateData($res = new ArtisanPrivateData());
+            $this->artisan->setPrivateData($res = new CreatorPrivateData());
         }
 
         return $res;
     }
 
-    public function setPrivateData(?ArtisanPrivateData $privateData): self
+    public function setPrivateData(?CreatorPrivateData $privateData): self
     {
         $this->artisan->setPrivateData($privateData);
 

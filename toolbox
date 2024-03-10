@@ -119,7 +119,7 @@ function action_dbpull() {
 
 function action_dbpush() {
     run_command cp "$DATABASE_REL_PATH" "$TMP_DATABASE_REL_PATH"
-    run_command sqlite3 "$TMP_DATABASE_REL_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '';"
+    run_command sqlite3 "$TMP_DATABASE_REL_PATH" "UPDATE artisans_private_data SET original_contact_info = '', contact_address = '', notes = '';"
     run_command scp -p  "$TMP_DATABASE_REL_PATH" "$PROD_ENV_SSH_PATH/$DATABASE_REL_PATH"
     run_command scp -p  "$TMP_DATABASE_REL_PATH" "$BETA_ENV_SSH_PATH/$DATABASE_REL_PATH"
     run_command rm      "$TMP_DATABASE_REL_PATH"
