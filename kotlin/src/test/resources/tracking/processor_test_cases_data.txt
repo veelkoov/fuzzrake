@@ -243,3 +243,9 @@ Case 37 (issues expected)
 --------------------------------
 Case 38
 -Commissions
+================================================================
+<p class="" style="white-space:pre-wrap;">Commissions are closed</p>
+<p class="" style="white-space:pre-wrap;">For the first week after commissions open, applying for a commission
+--------------------------------
+Case 39
+-Commissions

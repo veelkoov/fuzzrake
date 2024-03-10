@@ -7,7 +7,7 @@ false_positives:
       do\ you\ open\ for                         |
       (we|i)\ open\ commissions                  )
 
-  - '(if|when|while)(\ OUR)?\ OFFER(\ are)?\ STATUS_ANY'
+  - '(if|when|while|after)(\ OUR)?\ OFFER(\ are)?\ STATUS_ANY'
 
   - 'WE_ARE\ (now\ )?opening\ for\ quotes\ a\ few\ weeks\ before\ commission\ slots\ open'
   - '(when|if)\ (my\ |our\ |the\ )(COMMISSIONS|QUOTES)\ (are\ )?open'
