@@ -36,5 +36,6 @@ parameters:
       '^(?:https?://)?(?:www\.)?furtrack\.com/user/([^/]+)(?:/uploads|/)?$': 'https://www.furtrack.com/user/$1'
       '^https://www.furtrack.com/index/maker:[^/]+/(\d+)$': 'https://www.furtrack.com/p/$1'
 
-      '^https://www.furtrack.com/index/[^:/]+$': 'https://www.furtrack.com/index/maker:starcane_arts'
-      '^https://www.furtrack.com/user/[^/]+/uploads/(\d+)$': 'https://www.furtrack.com/p/$1'
+      '^https://www\.furtrack\.com/index/([^:/]+)$': 'https://www.furtrack.com/index/maker:$1'
+      '^https://www\.furtrack\.com/user/[^/]+/uploads/(\d+)$': 'https://www.furtrack.com/p/$1'
+      '^https://www\.furtrack\.com/user/[^/]+/crafting/(\d+)$': 'https://www.furtrack.com/p/$1'
