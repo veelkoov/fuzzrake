@@ -2,7 +2,6 @@
 # - Any kind of "Closed species"/"Copyrighted characters"
 #     will not make it easier for anyone to disrespect others' rights; "Closed species (with permission)" is OK
 
----
 parameters:
   species_definitions:
     valid_choices:
