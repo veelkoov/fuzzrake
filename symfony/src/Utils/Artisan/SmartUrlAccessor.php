@@ -23,7 +23,7 @@ final class SmartUrlAccessor
     public function __construct(
         private readonly SmartAccessDecorator $artisan,
     ) {
-        self::$initUrls = array_combine(Fields::urls()->names(), array_map(fn ($_) => [], Fields::urls()->names()));
+        self::$initUrls ??= array_combine(Fields::urls()->names(), array_map(fn ($_) => [], Fields::urls()->names()));
 
         $this->urls = self::$initUrls;
 
