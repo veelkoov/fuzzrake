@@ -10,7 +10,6 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\UtcClock;
 use App\Utils\StringList;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
@@ -55,18 +54,11 @@ class DataService
                     $countryCount = null;
                 }
 
-                try {
-                    $lastSystemUpdateTimeUtc = UtcClock::at(shell_exec('TZ=UTC git log -n1 --format=%cd --date=local'));
-                } catch (DateTimeException) {
-                    $lastSystemUpdateTimeUtc = null;
-                }
-
                 return new MainPageStats(
                     $allArtisansCount,
                     $activeArtisansCount,
                     $countryCount,
                     $lastDataUpdateTimeUtc,
-                    $lastSystemUpdateTimeUtc,
                 );
             }
         );

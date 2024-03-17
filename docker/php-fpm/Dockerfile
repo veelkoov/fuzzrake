@@ -12,7 +12,7 @@ ENV DOCKER_UID "$DOCKER_UID"
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers
 
-RUN apk add --no-cache git icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev acl
+RUN apk add --no-cache icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev acl
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
@@ -70,7 +70,6 @@ CMD /entrypoint.sh
 # Set up working directory
 #
 
-RUN su www-data -s /bin/sh -c 'git config --global --add safe.directory /var/www/html'
 WORKDIR /var/www/html
 VOLUME /var/www/html
 
