@@ -31,64 +31,71 @@
                 Join/see all recently joined: [getfursu.it/new](https://getfursu.it/new)
             </p>
 
-            <h5>Emoji</h5>
-            <p class="user-select-all">🦖</p>
-
             <h5>Hashtags</h5>
             <p><i>#<span class="user-select-all">fursuit maker</span> #<span class="user-select-all">furry</span></i></p>
 
-            <h4>Image ALT</h4>
-            <p class="user-select-all small">
-                Screenshot of a Tumblr post announcing the addition of {{ artisans | length }} new {{ maker_s }}
-                to the getfursu.it website, and encouraging to check the list of all recently added makers,
-                or to join the list. Below the text, two large emoticons/characters are shown:
-                __CHANGE_HERE__ and a T. rex looking in __CHANGE_HERE__ direction.
+            <h4>Mastodon</h4>
+
+            <p class="user-select-all">
+                Fursuit {{ maker_s }} added:<br>
+
+                {% for artisan in artisans %}
+                    - https://getfursu.it/#{{ artisan.makerId }}
+
+                    {% if '' != artisan.mastodonUrl %}
+                        {{ artisan.mastodonUrl | mastodon_at }}
+                    {% endif %}
+                {% endfor %}
+
+                <br><br>
+
+                Join/see all recently joined: https://getfursu.it/new
+
+                <br><br>
+
+                <i>#fursuitmaker #furry</i>
             </p>
         </div>
 
         <div class="col">
-            <h4>Mastodon</h4>
+            <h4>Bluesky</h4>
 
-            <h5>Toot</h5>
             <p class="user-select-all">
+                Fursuit {{ maker_s }} added:<br>
+
+                {% for artisan in artisans %}
+                    - https://getfursu.it/#{{ artisan.makerId }}
+                {% endfor %}
+
+                <br><br>
+
+                Join/see all recently joined: https://getfursu.it/new
+
+                <br><br>
+
                 <i>#fursuitmaker #furry</i>
-
-                {% for artisan in artisans %}
-                    https://getfursu.it/#{{ artisan.makerId }}
-                {% endfor %}
-
-                https://getfursu.it/new
-            </p>
-
-            <h5>Tags</h5>
-            <p>
-                {% for artisan in artisans %}
-                    {% if '' != artisan.mastodonUrl %}
-                        <span class="user-select-all">{{ artisan.mastodonUrl | mastodon_at }}</span>
-                    {% endif %}
-                {% endfor %}
             </p>
 
             <h4>Twitter</h4>
 
-            <h5>Tweet</h5>
             <p class="user-select-all">
-                <i>#fursuitmaker #furry</i>
+                Fursuit {{ maker_s }} added:<br>
 
                 {% for artisan in artisans %}
-                    https://getfursu.it/#{{ artisan.makerId }}
-                {% endfor %}
+                    - https://getfursu.it/#{{ artisan.makerId }}
 
-                https://getfursu.it/new
-            </p>
-
-            <h5>Tags</h5>
-            <p>
-                {% for artisan in artisans %}
                     {% if '' != artisan.twitterUrl %}
                         <span class="user-select-all">@{{ artisan.twitterUrl|split('/')[3] }}</span>
                     {% endif %}
                 {% endfor %}
+
+                <br><br>
+
+                Join/see all recently joined: https://getfursu.it/new
+
+                <br><br>
+
+                <i>#fursuitmaker #furry</i>
             </p>
 
             <h4 class="pt-4">Instagram</h4>
