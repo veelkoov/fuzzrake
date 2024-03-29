@@ -10,13 +10,14 @@ doctrine:
         enable_lazy_ghost_objects: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
-        report_fields_where_declared: true
         mappings:
             App:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        controller_resolver:
+            auto_mapping: false
         hydrators:
             COLUMN_HYDRATOR: App\Doctrine\Hydrators\ColumnHydrator
         dql:
@@ -31,7 +32,7 @@ when@test:
             # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
-when@prod: &when-at-prod
+when@prod:
     doctrine:
         orm:
             auto_generate_proxy_classes: false
@@ -50,5 +51,3 @@ when@prod: &when-at-prod
                     adapter: cache.app
                 doctrine.system_cache_pool:
                     adapter: cache.system
-
-when@beta: *when-at-prod
