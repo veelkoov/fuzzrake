@@ -19,8 +19,8 @@ class AbstractTypeWithDelete extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(self::BTN_SAVE, SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
-                ]);
+            'attr' => ['class' => 'btn btn-primary'],
+        ]);
 
         if ($options[self::OPT_DELETABLE]) {
             $builder->add(self::BTN_DELETE, SubmitType::class, [

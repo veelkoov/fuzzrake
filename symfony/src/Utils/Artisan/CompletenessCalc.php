@@ -143,17 +143,17 @@ final class CompletenessCalc
         return $result->result();
     }
 
-    private static function doesCommissions(SmartAccessDecorator $artisan): bool
+    private static function doesCommissions(Artisan $artisan): bool
     {
         return in_array(ProductionModels::STANDARD_COMMISSIONS, StringList::unpack($artisan->getProductionModels()));
     }
 
-    private static function shouldCountState(SmartAccessDecorator $artisan): bool
+    private static function shouldCountState(Artisan $artisan): bool
     {
         return in_array($artisan->getCountry(), ['US', 'CA']);
     }
 
-    private static function getResultForCrucialFields(SmartAccessDecorator $artisan): int
+    private static function getResultForCrucialFields(Artisan $artisan): int
     {
         $result = new CompletenessResult($artisan);
 

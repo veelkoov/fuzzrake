@@ -17,7 +17,7 @@ class ParseTest extends TestCase
     /**
      * @dataProvider intDataProvider
      */
-    public function testInt(null|float|int|string $input, int|false $expectedInt): void
+    public function testInt(float|int|string|null $input, int|false $expectedInt): void
     {
         try {
             self::assertSame($expectedInt, Parse::int($input));
