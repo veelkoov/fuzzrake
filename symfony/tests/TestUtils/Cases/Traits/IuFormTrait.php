@@ -21,15 +21,15 @@ trait IuFormTrait
     private static function skipData(KernelBrowser $client, bool $fillMandatoryData): void
     {
         $data = !$fillMandatoryData ? [] : [
-                'iu_form[name]'            => 'Test name',
-                'iu_form[country]'         => 'Test country',
-                'iu_form[ages]'            => 'ADULTS',
-                'iu_form[worksWithMinors]' => 'NO',
-                'iu_form[nsfwWebsite]'     => 'NO',
-                'iu_form[nsfwSocial]'      => 'NO',
-                'iu_form[doesNsfw]'        => 'NO',
-                'iu_form[makerId]'         => 'TESTMID',
-            ];
+            'iu_form[name]'            => 'Test name',
+            'iu_form[country]'         => 'Test country',
+            'iu_form[ages]'            => 'ADULTS',
+            'iu_form[worksWithMinors]' => 'NO',
+            'iu_form[nsfwWebsite]'     => 'NO',
+            'iu_form[nsfwSocial]'      => 'NO',
+            'iu_form[doesNsfw]'        => 'NO',
+            'iu_form[makerId]'         => 'TESTMID',
+        ];
 
         $form = $client->getCrawler()->selectButton('Continue')->form($data);
 

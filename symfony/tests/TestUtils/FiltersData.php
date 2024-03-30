@@ -96,11 +96,11 @@ class FiltersData
 
         foreach ($specieNames as $specieName) {
             $subItems[] = [
-                        'label' => $specieName,
-                        'value' => $specieName,
-                        'count' => 0, // Does not matter in tests
-                        'subItems' => [],
-                    ];
+                'label' => $specieName,
+                'value' => $specieName,
+                'count' => 0, // Does not matter in tests
+                'subItems' => [],
+            ];
         }
 
         return (new KotlinData())

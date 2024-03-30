@@ -39,14 +39,14 @@ class EventRepository extends ServiceEntityRepository
     {
         $ids = $this->createQueryBuilder('en')
             ->join(Event::class, 'eo', Join::WITH, new Andx([
-                    'en.artisanName = eo.artisanName',
-                    'DATE(eo.timestamp) IN (:date1, :date2)',
-                    'DATE(en.timestamp) IN (:date1, :date2)',
-                        new Orx([
-                            new Andx(['eo.newStatus IS NULL', 'en.oldStatus IS NULL', 'eo.oldStatus = en.newStatus']),
-                            new Andx(['en.newStatus IS NULL', 'eo.oldStatus IS NULL', 'en.oldStatus = eo.newStatus']),
-                        ]),
-                ])
+                'en.artisanName = eo.artisanName',
+                'DATE(eo.timestamp) IN (:date1, :date2)',
+                'DATE(en.timestamp) IN (:date1, :date2)',
+                new Orx([
+                    new Andx(['eo.newStatus IS NULL', 'en.oldStatus IS NULL', 'eo.oldStatus = en.newStatus']),
+                    new Andx(['en.newStatus IS NULL', 'eo.oldStatus IS NULL', 'en.oldStatus = eo.newStatus']),
+                ]),
+            ])
             )
             ->setParameter('date1', $date1, Types::DATE_MUTABLE)
             ->setParameter('date2', $date2, Types::DATE_MUTABLE)

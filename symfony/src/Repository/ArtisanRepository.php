@@ -15,9 +15,11 @@ use App\Filtering\FiltersData\FilterData;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -358,13 +360,13 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getOthersLike(array $items): array
     {
         $ORs = [];
-        $parameters = [
-            'empty' => '',
-        ];
+        $parameters = new ArrayCollection([
+            new Parameter('empty', ''),
+        ]);
 
         foreach ($items as $i => $item) {
             $ORs[] = "a.otherOrderTypes LIKE :par$i OR a.otherStyles LIKE :par$i OR a.otherFeatures LIKE :par$i";
-            $parameters["par$i"] = "%$item%";
+            $parameters->add(new Parameter("par$i", "%$item%"));
         }
 
         $builder = $this->createQueryBuilder('a')
@@ -425,10 +427,8 @@ class ArtisanRepository extends ServiceEntityRepository
             ->select('COUNT(DISTINCT a.id)')
             ->where('au.type = :type')
             ->andWhere('a.inactiveReason = :empty')
-            ->setParameters([
-                'type'  => Field::URL_COMMISSIONS->name,
-                'empty' => '',
-            ])
+            ->setParameter('type', Field::URL_COMMISSIONS->name)
+            ->setParameter('empty', '')
             ->getQuery()
             ->enableResultCache(3600)
             ->getSingleScalarResult();

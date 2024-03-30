@@ -166,7 +166,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-                 '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
+            '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
 
         foreach ($levels as $description => $level) {
             $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));

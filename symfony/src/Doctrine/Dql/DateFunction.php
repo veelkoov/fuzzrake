@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Doctrine\Dql;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-use Doctrine\ORM\Query\Lexer;
+use Doctrine\ORM\Query\AST\Node;
+use Doctrine\ORM\Query\AST\Subselect;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\SqlWalker;
+use Doctrine\ORM\Query\TokenType;
 
 class DateFunction extends FunctionNode // FIXME #93
 {
-    public mixed $stringExpression;
+    public Subselect|Node|string $stringExpression;
 
     public function getSql(SqlWalker $sqlWalker): string
     {
@@ -24,9 +26,9 @@ class DateFunction extends FunctionNode // FIXME #93
      */
     public function parse(Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
         $this->stringExpression = $parser->StringExpression();
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 }

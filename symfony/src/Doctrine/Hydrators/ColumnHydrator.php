@@ -16,10 +16,12 @@ class ColumnHydrator extends AbstractHydrator
     final public const COLUMN_HYDRATOR = 'COLUMN_HYDRATOR';
 
     /**
+     * @return list<mixed>
+     *
      * @throws Exception
      */
     protected function hydrateAllData(): array
     {
-        return $this->_stmt?->fetchFirstColumn() ?? throw new LogicException('Statement is null');
+        return $this->stmt?->fetchFirstColumn() ?? throw new LogicException('Statement is null');
     }
 }
