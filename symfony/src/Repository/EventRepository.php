@@ -33,31 +33,6 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Event[]
-     */
-    public function selectTrackingTmpFailures(DateTimeImmutable $date1, DateTimeImmutable $date2): array // FIXME #93
-    {
-        $ids = $this->createQueryBuilder('en')
-            ->join(Event::class, 'eo', Join::WITH, new Andx([
-                'en.artisanName = eo.artisanName',
-                'DATE(eo.timestamp) IN (:date1, :date2)',
-                'DATE(en.timestamp) IN (:date1, :date2)',
-                new Orx([
-                    new Andx(['eo.newStatus IS NULL', 'en.oldStatus IS NULL', 'eo.oldStatus = en.newStatus']),
-                    new Andx(['en.newStatus IS NULL', 'eo.oldStatus IS NULL', 'en.oldStatus = eo.newStatus']),
-                ]),
-            ])
-            )
-            ->setParameter('date1', $date1, Types::DATE_MUTABLE)
-            ->setParameter('date2', $date2, Types::DATE_MUTABLE)
-            ->select('en.id')
-            ->getQuery()
-            ->getResult(ColumnHydrator::COLUMN_HYDRATOR);
-
-        return $this->findBy(['id' => $ids]);
-    }
-
-    /**
      * @param string[] $types
      *
      * @return Event[]
