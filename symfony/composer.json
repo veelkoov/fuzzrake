@@ -31,7 +31,7 @@
         "symfony/twig-bundle": "*",
         "symfony/uid": "*",
         "symfony/validator": "*",
-        "symfony/webpack-encore-bundle": "^1.11",
+        "symfony/webpack-encore-bundle": "^v2.0.0",
         "symfony/yaml": "*",
         "twig/cache-extra": "^3.3",
         "twig/extra-bundle": "^3.3"
@@ -106,7 +106,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.4.*"
+            "require": "7.0.*"
         }
     }
 }
