@@ -13,7 +13,6 @@ use App\Entity\CreatorPrivateData;
 use App\Entity\MakerId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Nette\Utils\Arrays;
@@ -118,9 +117,7 @@ class ArtisanUrlRepository extends ServiceEntityRepository
         $connection = $this->getEntityManager()->getConnection();
 
         return Arrays::map($input, function (string $type) use ($connection): string {
-            $result = $connection->quote($type, ParameterType::STRING);
-
-            return $result; // @phpstan-ignore-line
+            return $connection->quote($type);
         });
     }
 }

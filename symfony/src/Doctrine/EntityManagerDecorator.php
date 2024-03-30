@@ -9,7 +9,7 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator as DoctrineEntityManagerDecora
 
 class EntityManagerDecorator extends DoctrineEntityManagerDecorator
 {
-    public function persist($object): void
+    public function persist(object $object): void
     {
         if ($object instanceof SmartAccessDecorator) {
             $object = $object->getArtisan();
@@ -25,5 +25,14 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
         }
 
         parent::remove($object);
+    }
+
+    public function isUninitializedObject(mixed $value): bool
+    {
+        if ($value instanceof SmartAccessDecorator) {
+            $value = $value->getArtisan();
+        }
+
+        return $this->wrapped->isUninitializedObject($value);
     }
 }
