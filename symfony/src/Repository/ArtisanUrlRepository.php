@@ -116,8 +116,6 @@ class ArtisanUrlRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        return Arrays::map($input, function (string $type) use ($connection): string {
-            return $connection->quote($type);
-        });
+        return Arrays::map($input, fn (string $type): string => $connection->quote($type));
     }
 }
