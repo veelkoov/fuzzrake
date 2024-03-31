@@ -1,20 +1,44 @@
 package tasks.miniaturesUpdate
 
+import data.JsonException
 import data.JsonNavigator
 import io.ktor.http.*
+import web.client.CookieEagerHttpClient
+import web.client.FastHttpClient
+import web.client.GentleHttpClient
 import web.client.HttpClientInterface
 import web.snapshots.Snapshot
 import web.url.FreeUrl
+import web.url.Url
 
 class ScritchMiniatureUrlResolver(
     httpClient: HttpClientInterface? = null,
-) : JsonResponseBasedMiniatureUrlResolver(
-    httpClient,
-    "^https://scritch\\.es/pictures/(?<pictureId>[-a-f0-9]{36})\$",
-) {
+) : MiniatureUrlResolver {
     private val graphQlUrl = FreeUrl("https://scritch.es/graphql")
 
-    override fun getResponseForPictureId(pictureId: String): Snapshot {
+    private val httpClient = httpClient ?: CookieEagerHttpClient(GentleHttpClient(FastHttpClient()))
+    private val regex: Regex = Regex("^https://scritch\\.es/pictures/(?<pictureId>[-a-f0-9]{36})\$")
+
+    override fun supports(url: String) = regex.containsMatchIn(url)
+
+    override fun getMiniatureUrl(url: Url): String {
+        val pictureId = regex.find(url.getUrl())?.groups?.get("pictureId")?.value
+            ?: throw MiniatureUrlResolverException("Failed matching pictureId in the photo URL")
+
+        val response = getResponseForPictureId(pictureId)
+
+        if (response.metadata.httpCode != 200) {
+            throw MiniatureUrlResolverException("Non-200 HTTP response code")
+        }
+
+        try {
+            return JsonNavigator(response.contents).getNonEmptyString("data/medium/thumbnail")
+        } catch (exception: JsonException) {
+            throw MiniatureUrlResolverException("Wrong JSON data", exception)
+        }
+    }
+
+    private fun getResponseForPictureId(pictureId: String): Snapshot {
         val csrfToken = getCsrfToken()
         val jsonPayload = getGraphQlJsonPayload(pictureId)
 
@@ -27,12 +51,7 @@ class ScritchMiniatureUrlResolver(
         return httpClient.fetch(graphQlUrl, HttpMethod.Post, headers, jsonPayload)
     }
 
-    override fun miniatureUrlFromJsonData(data: JsonNavigator): String {
-        return data.getNonEmptyString("data/medium/thumbnail")
-    }
-
-    private fun getGraphQlJsonPayload(pictureId: String): String
-    {
+    private fun getGraphQlJsonPayload(pictureId: String): String {
         return "{\"operationName\": \"Medium\", \"variables\": {\"id\": \"$pictureId\"}, \"query\": \"query " +
                 "Medium(\$id: ID!, \$tagging: Boolean) { medium(id: \$id, tagging: \$tagging) { thumbnail } }\"}"
     }
