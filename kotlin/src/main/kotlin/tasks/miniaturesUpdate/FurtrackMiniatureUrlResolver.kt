@@ -1,24 +1,33 @@
 package tasks.miniaturesUpdate
 
-import data.JsonNavigator
+import io.ktor.http.*
+import web.client.CookieEagerHttpClient
+import web.client.FastHttpClient
+import web.client.GentleHttpClient
 import web.client.HttpClientInterface
-import web.snapshots.Snapshot
 import web.url.FreeUrl
+import web.url.Url
 
 class FurtrackMiniatureUrlResolver(
     httpClient: HttpClientInterface? = null,
-) : JsonResponseBasedMiniatureUrlResolver(
-    httpClient,
-    "^https://www.furtrack.com/p/(?<pictureId>\\d+)\$",
-) {
-    override fun getResponseForPictureId(pictureId: String): Snapshot {
-        return httpClient.fetch(FreeUrl("https://solar.furtrack.com/view/post/$pictureId"))
-    }
+) : MiniatureUrlResolver {
+    private val httpClient = httpClient ?: CookieEagerHttpClient(GentleHttpClient(FastHttpClient()))
+    private val regex: Regex = Regex("^https://www.furtrack.com/p/(?<pictureId>\\d+)\$")
 
-    override fun miniatureUrlFromJsonData(data: JsonNavigator): String {
-        val postStub = data.getNonEmptyString("post/postStub")
-        val metaFiletype = data.getNonEmptyString("post/metaFiletype")
+    override fun supports(url: String) = regex.containsMatchIn(url)
 
-        return "https://orca.furtrack.com/gallery/thumb/$postStub.$metaFiletype"
+    override fun getMiniatureUrl(url: Url): String {
+        val pictureId = regex.find(url.getUrl())?.groups?.get("pictureId")?.value
+            ?: throw MiniatureUrlResolverException("Failed matching pictureId in the photo URL")
+
+        val pictureUri = "https://orca2.furtrack.com/thumb/$pictureId.jpg"
+
+        val response = httpClient.fetch(FreeUrl(pictureUri), HttpMethod.Head)
+
+        if (200 != response.metadata.httpCode) {
+            throw MiniatureUrlResolverException("Non-200 HTTP response code")
+        }
+
+        return pictureUri
     }
 }
