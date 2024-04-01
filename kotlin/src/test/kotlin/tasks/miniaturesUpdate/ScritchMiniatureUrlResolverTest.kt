@@ -7,7 +7,7 @@ import kotlin.test.*
 
 class ScritchMiniatureUrlResolverTest {
     @Test
-    fun getMiniatureUrl() {
+    fun `Test successful retrieval`() {
         val httpClient = getHttpClientMock(
             ExpectedHttpCall(
                 "https://scritch.es/",
