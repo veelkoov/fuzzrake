@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters;
 
+use App\Data\Definitions\Fields\Field;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\DataRequests\Filters\ValueChecker\AnythingChecker;
 use App\Filtering\DataRequests\Filters\ValueChecker\ValueCheckerInterface;
@@ -33,7 +34,7 @@ class LanguagesFilter implements FilterInterface
 
     public function matches(Artisan $artisan): bool
     {
-        if ($this->wantsUnknown && '' === $artisan->getLanguages()) {
+        if ($this->wantsUnknown && !$artisan->hasData(Field::LANGUAGES)) {
             return true;
         }
 

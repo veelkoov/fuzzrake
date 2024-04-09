@@ -6,6 +6,7 @@ namespace App\Data\Definitions\Fields;
 
 use App\Data\Definitions\Fields\Properties as Props;
 use App\Data\Definitions\Fields\ValidationRegexps as V;
+use App\Utils\FieldReadInterface;
 use TRegx\CleanRegex\Pattern;
 
 enum Field: string
@@ -295,5 +296,15 @@ enum Field: string
     public function isFreeForm(): bool
     {
         return $this->getData()->isFreeForm;
+    }
+
+    public function isProvided(mixed $value): bool
+    {
+        return null !== $value && '' !== $value;
+    }
+
+    public function providedIn(FieldReadInterface $source): bool
+    {
+        return $this->isProvided($source->get($this));
     }
 }

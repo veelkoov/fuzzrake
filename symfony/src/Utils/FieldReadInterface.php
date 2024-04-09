@@ -14,4 +14,6 @@ interface FieldReadInterface
     public function get(Field $field): mixed;
 
     public function getString(Field $field): string;
+
+    public function hasData(Field $field): bool;
 }

@@ -71,6 +71,11 @@ class SubmissionData implements FieldReadInterface
         return Enforce::string($this->get($field));
     }
 
+    public function hasData(Field $field): bool
+    {
+        return $field->providedIn($this);
+    }
+
     public static function fromFile(SplFileInfo $source): self
     {
         $timestamp = self::getTimestampFromFilePath($source->getRelativePathname());

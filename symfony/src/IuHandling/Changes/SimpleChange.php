@@ -26,8 +26,8 @@ class SimpleChange implements ChangeInterface
     {
         $name = $this->field->name;
 
-        $oldIsEmpty = null === $this->old || '' === $this->old;
-        $newIsEmpty = null === $this->new || '' === $this->new;
+        $oldIsEmpty = !$this->field->isProvided($this->old);
+        $newIsEmpty = !$this->field->isProvided($this->new);
 
         $old = $this->getOptionallyQuotedValue($this->old);
         $new = $this->getOptionallyQuotedValue($this->new);

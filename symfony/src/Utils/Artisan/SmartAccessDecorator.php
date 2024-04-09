@@ -134,6 +134,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return Enforce::string($this->get($field));
     }
 
+    public function hasData(Field $field): bool
+    {
+        return $field->providedIn($this);
+    }
+
     //
     // ===== MAKER ID HELPERS =====
     //

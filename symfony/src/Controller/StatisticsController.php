@@ -190,24 +190,23 @@ class StatisticsController extends AbstractController
 
         foreach (Fields::inStats() as $field) {
             $result[$field->name] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
-                $value = $artisan->get($field);
-
                 if (Field::FORMER_MAKER_IDS === $field) {
                     /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
                      * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part
                      * where the digits is zero-padded artisan database ID. */
 
                     $placeholder = sprintf('M%06d', $artisan->getId());
+                    $value = $artisan->get($field);
 
                     if ($value === $placeholder) {
                         return $carry; // Fake former maker ID - don't add to the result
                     }
                 }
 
-                if (null === $value || '' === $value) { // Boolean fields count even if they're false
-                    return $carry;
-                } else {
+                if ($field->providedIn($artisan)) {
                     return $carry + 1;
+                } else {
+                    return $carry;
                 }
             }, 0);
         }

@@ -29,18 +29,20 @@ abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
 
     public function matches(Artisan $artisan): bool
     {
-        if ($this->wantsUnknown && '' === $this->getOwnedItems($artisan) && '' === $this->getOtherOwnedItems($artisan)) {
+        if ($this->wantsUnknown && !$this->hasOwnedItems($artisan) && !$this->hasOtherOwnedItems($artisan)) {
             return true;
         }
 
-        $matchedOther = $this->wantsOther ? '' !== $this->getOtherOwnedItems($artisan) : null;
+        $matchedOther = $this->wantsOther ? $this->hasOtherOwnedItems($artisan) : null;
 
         return $this->valueChecker->matches($this->getOwnedItems($artisan), $matchedOther);
     }
 
     abstract protected function getOwnedItems(Artisan $artisan): string;
 
-    abstract protected function getOtherOwnedItems(Artisan $artisan): string;
+    abstract protected function hasOwnedItems(Artisan $artisan): bool;
+
+    abstract protected function hasOtherOwnedItems(Artisan $artisan): bool;
 
     /**
      * @param string[] $wantedItems
