@@ -4,17 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Doctrine\Hydrators\ColumnHydrator;
 use App\Entity\Event;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
-use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Query\Expr\Andx;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
