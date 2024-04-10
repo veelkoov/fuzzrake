@@ -11,9 +11,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class StylesFilter extends AbstractFieldOptionalAndOtherFilter
 {
-    /**
-     * @return list<string>
-     */
     protected function getOwnedItems(Artisan $artisan): array
     {
         return $artisan->getStyles();
