@@ -308,9 +308,11 @@ class ArtisanType extends AbstractTypeWithDelete
             $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
         }
 
-        foreach (['formerMakerIds', 'formerly', 'paymentPlans', 'pricesUrls', 'paymentMethods', 'currenciesAccepted',
-            'otherStyles', 'otherOrderTypes', 'otherFeatures', 'speciesDoes', 'speciesDoesnt',
-            'commissionsUrls', 'photoUrls', 'miniatureUrls', 'languages'] as $fieldName) {
+        foreach ([
+            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
+            'otherStyles', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
+            'formerMakerIds', 'miniatureUrls',
+        ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
 
