@@ -16,7 +16,6 @@ class Manager
     final public const CMD_CLEAR = 'clear';
     final public const CMD_COMMENT = '//';
     final public const CMD_MATCH_MAKER_ID = 'match-maker-id';
-    final public const CMD_REPLACE = 'replace';
     final public const CMD_SET = 'set';
 
     /**
@@ -67,9 +66,18 @@ class Manager
         }
     }
 
+    /**
+     * @throws ManagerConfigError
+     */
     private function addCorrection(string $fieldName, string $correctedValue): void
     {
-        $this->corrections[] = new ValueCorrection(Field::from($fieldName), $correctedValue);
+        $field = Field::tryFrom($fieldName);
+
+        if (null === $field) {
+            throw new ManagerConfigError("Unknown field: '$fieldName'");
+        }
+
+        $this->corrections[] = new ValueCorrection($field, $correctedValue);
     }
 
     /**

@@ -86,4 +86,15 @@ class ManagerTest extends TestCase
             self::assertEquals("Unknown command: 'pancakes'", $exception->getMessage());
         }
     }
+
+    public function testHandlingInvalidFieldName(): void
+    {
+        try {
+            new Manager("set NOTE 'blargh'");
+
+            self::fail();
+        } catch (ManagerConfigError $exception) {
+            self::assertEquals("Unknown field: 'NOTE'", $exception->getMessage());
+        }
+    }
 }
