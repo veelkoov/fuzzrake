@@ -17,9 +17,10 @@ class LanguagesFilterTest extends TestCase
     /**
      * @dataProvider matchesProvider
      *
+     * @param list<string> $languages
      * @param list<string> $searched
      */
-    public function testMatches(string $languages, array $searched, bool $matched): void
+    public function testMatches(array $languages, array $searched, bool $matched): void
     {
         $subject = new LanguagesFilter($searched);
         $artisan = Artisan::new()->setLanguages($languages);
@@ -30,19 +31,20 @@ class LanguagesFilterTest extends TestCase
     public function matchesProvider(): DataProvider
     {
         return DataProvider::tuples( // languages, searched, matched
-            ['',                           [],                             false],
-            ["Finnish\nFinnish (limited)", [],                             false],
-            ["Finnish\nFinnish (limited)", ['Finnish'],                    true],
-            ["Finnish\nFinnish (limited)", ['Finnish (limited)'],          true],
-            ["Finnish\nFinnish (limited)", ['Czech', 'Finnish (limited)'], true],
-            ['Finnish (limited)',          ['Finnish'],                    false],
+            [[],                               [],                             false],
+            [[],                               ['Finnish'],                    false],
+            [['Finnish', 'Finnish (limited)'], [],                             false],
+            [['Finnish', 'Finnish (limited)'], ['Finnish'],                    true],
+            [['Finnish', 'Finnish (limited)'], ['Finnish (limited)'],          true],
+            [['Finnish', 'Finnish (limited)'], ['Czech', 'Finnish (limited)'], true],
+            [['Finnish (limited)'],            ['Finnish'],                    false],
 
-            ['',                           ['?'],                               true],
-            ["Finnish\nFinnish (limited)", ['?'],                               false],
-            ["Finnish\nFinnish (limited)", ['?', 'Finnish'],                    true],
-            ["Finnish\nFinnish (limited)", ['?', 'Finnish (limited)'],          true],
-            ["Finnish\nFinnish (limited)", ['?', 'Czech', 'Finnish (limited)'], true],
-            ['Finnish (limited)',          ['?', 'Finnish'],                    false],
+            [[],                               ['?'],                               true],
+            [['Finnish', 'Finnish (limited)'], ['?'],                               false],
+            [['Finnish', 'Finnish (limited)'], ['?', 'Finnish'],                    true],
+            [['Finnish', 'Finnish (limited)'], ['?', 'Finnish (limited)'],          true],
+            [['Finnish', 'Finnish (limited)'], ['?', 'Czech', 'Finnish (limited)'], true],
+            [['Finnish (limited)'],            ['?', 'Finnish'],                    false],
         );
     }
 }

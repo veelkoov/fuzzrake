@@ -6,11 +6,14 @@ namespace App\IuHandling\Import;
 
 use App\Data\Definitions\Fields\Field;
 
-class ValueCorrection
+readonly class ValueCorrection
 {
+    /**
+     * @param list<string>|string $value
+     */
     public function __construct(
-        public readonly Field $field,
-        public readonly string $value,
+        public Field $field,
+        public array|string $value,
     ) {
     }
 }

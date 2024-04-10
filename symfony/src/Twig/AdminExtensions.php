@@ -12,7 +12,6 @@ use App\IuHandling\Import\SubmissionData;
 use App\Repository\SubmissionRepository;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\StringList;
 use App\Utils\StrUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use TRegx\CleanRegex\Match\Detail;
@@ -85,8 +84,8 @@ class AdminExtensions extends AbstractExtension
 
         $result = '';
 
-        $subjectItems = StringList::unpack($subject->getString($field));
-        $otherItems = StringList::unpack($other->getString($field));
+        $subjectItems = $subject->getStringList($field);
+        $otherItems = $other->getStringList($field);
 
         foreach ($subjectItems as $item) {
             $itemClass = contains($otherItems, $item) ? 'badge-outline-secondary' : $bsClass;

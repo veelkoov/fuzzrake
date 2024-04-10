@@ -15,5 +15,10 @@ interface FieldReadInterface
 
     public function getString(Field $field): string;
 
+    /**
+     * @return list<string>
+     */
+    public function getStringList(Field $field): array;
+
     public function hasData(Field $field): bool;
 }

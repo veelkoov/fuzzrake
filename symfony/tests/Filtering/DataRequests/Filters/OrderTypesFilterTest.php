@@ -17,9 +17,11 @@ class OrderTypesFilterTest extends TestCase
     /**
      * @dataProvider matchesProvider
      *
-     * @param string[] $searched
+     * @param list<string> $orderTypes
+     * @param list<string> $otherOrderTypes
+     * @param list<string> $searched
      */
-    public function testMatches(string $orderTypes, string $otherOrderTypes, array $searched, bool $matched): void
+    public function testMatches(array $orderTypes, array $otherOrderTypes, array $searched, bool $matched): void
     {
         $subject = new OrderTypesFilter($searched);
         $artisan = Artisan::new()->setOrderTypes($orderTypes)->setOtherOrderTypes($otherOrderTypes);
@@ -30,27 +32,29 @@ class OrderTypesFilterTest extends TestCase
     public function matchesProvider(): DataProvider
     {
         return DataProvider::tuples(
-            ["Item1\nItem2", '', [], false],
-            ["Item1\nItem2", '', ['Item1'], true],
-            ["Item1\nItem2", '', ['Item1', 'Item2'], true],
-            ['Item1', '', ['Item1', 'Item2'], true],
+            [[],                 [], [],                 false],
+            [[],                 [], ['Item1'],          false],
+            [['Item1', 'Item2'], [], [],                 false],
+            [['Item1', 'Item2'], [], ['Item1'],          true],
+            [['Item1', 'Item2'], [], ['Item1', 'Item2'], true],
+            [['Item1'],          [], ['Item1', 'Item2'], true],
 
-            ['', '', ['?'], true],
-            ['', '', ['?', 'Item1'], true],
-            ['Item1', '', ['?'], false],
-            ['', 'OtherItem1', ['?'], false],
+            [[],        [],             ['?'],          true],
+            [[],        [],             ['?', 'Item1'], true],
+            [['Item1'], [],             ['?'],          false],
+            [[],        ['OtherItem1'], ['?'],          false],
 
-            ['', 'OtherItem1', ['*'], true],
-            ['Item1', '', ['*'], false],
-            ['Item1', 'OtherItem1', ['Item1', '*'], true],
-            ['Item1', '', ['Item1', '*'], true],
-            ['', 'OtherItem1', ['Item1', '*'], true],
+            [[],        ['OtherItem1'], ['*'],          true],
+            [['Item1'], [],             ['*'],          false],
+            [['Item1'], ['OtherItem1'], ['Item1', '*'], true],
+            [['Item1'], [],             ['Item1', '*'], true],
+            [[],        ['OtherItem1'], ['Item1', '*'], true],
 
-            ['', '', ['?', '*'], true],
-            ['', 'OtherItem1', ['?', '*'], true],
-            ['Item1', 'OtherItem1', ['?', '*'], true],
-            ['Item1', 'OtherItem1', ['?', '*', 'Item1'], true],
-            ['Item1', '', ['?', '*', 'Item1'], true],
+            [[],        [],             ['?', '*'],          true],
+            [[],        ['OtherItem1'], ['?', '*'],          true],
+            [['Item1'], ['OtherItem1'], ['?', '*'],          true],
+            [['Item1'], ['OtherItem1'], ['?', '*', 'Item1'], true],
+            [['Item1'], [],             ['?', '*', 'Item1'], true],
         );
     }
 }

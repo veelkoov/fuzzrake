@@ -7,6 +7,7 @@ namespace App\IuHandling\Import;
 use App\Data\Definitions\Fields\Field;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\PackedStringList;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
 
@@ -19,7 +20,7 @@ class Manager
     final public const CMD_SET = 'set';
 
     /**
-     * @var ValueCorrection[]
+     * @var list<ValueCorrection>
      */
     private array $corrections = [];
     private bool $isAccepted = false;
@@ -75,6 +76,10 @@ class Manager
 
         if (null === $field) {
             throw new ManagerConfigError("Unknown field: '$fieldName'");
+        }
+
+        if ($field->isList()) {
+            $correctedValue = PackedStringList::unpack($correctedValue);
         }
 
         $this->corrections[] = new ValueCorrection($field, $correctedValue);

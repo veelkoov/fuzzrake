@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Data\Fixer;
 
+use App\Utils\PackedStringList;
 use App\Utils\Regexp\Replacements;
-use App\Utils\StringList;
 use App\Utils\StrUtils;
 
 abstract class AbstractListFixer extends StringFixer
@@ -25,19 +25,19 @@ abstract class AbstractListFixer extends StringFixer
 
     public function fix(string $subject): string
     {
-        $items = StringList::split($subject, static::getSeparatorRegexp(), static::getNonsplittable($subject));
+        $items = PackedStringList::split($subject, static::getSeparatorRegexp(), static::getNonsplittable($subject));
         $items = array_filter(array_map(fn (string $item): string => $this->fixItem($item), $items));
 
-        $subject = StringList::pack($items);
+        $subject = PackedStringList::pack($items);
         $subject = $this->getReplacements()->do($subject);
         $subject = parent::fix($subject);
-        $subject = StringList::unpack($subject);
+        $subject = PackedStringList::unpack($subject);
 
         if (static::shouldSort()) {
             sort($subject);
         }
 
-        return StringList::pack(array_unique($subject));
+        return PackedStringList::pack(array_unique($subject));
     }
 
     abstract protected static function shouldSort(): bool;

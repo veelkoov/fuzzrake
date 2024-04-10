@@ -114,8 +114,8 @@ class UpdatesService
             $makerIds = [$matchedMakerId];
             $names = [];
         } else {
-            $makerIds = concat([$submissionData->getMakerId()], $submissionData->getFormerMakerIdsArr());
-            $names = concat([$submissionData->getName()], $submissionData->getFormerlyArr());
+            $makerIds = $submissionData->getAllMakerIds();
+            $names = concat([$submissionData->getName()], $submissionData->getFormerly());
         }
 
         $results = $this->artisans->findBestMatches($names, $makerIds);
@@ -140,7 +140,7 @@ class UpdatesService
             $originalInput->setDateUpdated(UtcClock::now());
 
             if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) {
-                $originalInput->setFormerMakerIds(StringList::pack($originalArtisan->getAllMakerIdsArr()));
+                $originalInput->setFormerMakerIds($originalArtisan->getAllMakerIds());
             } else {
                 $originalInput->setFormerMakerIds($originalArtisan->getFormerMakerIds());
             }
@@ -151,7 +151,7 @@ class UpdatesService
     {
         // Known limitation: unable to easily reorder photos grep-cannot-easily-reorder-photos
         if (!StringList::sameElements($updatedArtisan->getPhotoUrls(), $originalArtisan->getPhotoUrls())) {
-            $updatedArtisan->setMiniatureUrls(''); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
+            $updatedArtisan->setMiniatureUrls([]); // FIXME: https://github.com/veelkoov/fuzzrake/issues/160
         }
     }
 

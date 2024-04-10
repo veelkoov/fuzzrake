@@ -10,7 +10,7 @@ use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\JsonArtisanDataLoader;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Enforce;
-use App\Utils\StringList;
+use App\Utils\PackedStringList;
 use App\Utils\TestUtils\UtcClockMock;
 use App\Utils\UnbelievableRuntimeException;
 use BackedEnum;
@@ -57,14 +57,14 @@ class ExtendedTest extends AbstractTestWithEM
         Field::DATE_UPDATED,
     ];
 
-    private const EXPANDED = [ // List fields in the form of multiple checkboxes
+    private const EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
         Field::PRODUCTION_MODELS,
         Field::FEATURES,
         Field::STYLES,
         Field::ORDER_TYPES,
     ];
 
-    private const EXPANDED_SELECTS = [ // Choice (enum) fields in the form of multiple radios
+    private const EXPANDED_RADIOS = [ // Choice (enum) fields in the form of multiple radios
         Field::AGES,
     ];
 
@@ -163,12 +163,12 @@ class ExtendedTest extends AbstractTestWithEM
 
     private static function sanityChecks(): void
     {
-        foreach (self::EXPANDED as $field) {
-            self::assertNotContains($field, self::EXPANDED_SELECTS);
+        foreach (self::EXPANDED_CHECKBOXES as $field) {
+            self::assertNotContains($field, self::EXPANDED_RADIOS);
         }
 
-        foreach (self::EXPANDED_SELECTS as $field) {
-            self::assertNotContains($field, self::EXPANDED);
+        foreach (self::EXPANDED_RADIOS as $field) {
+            self::assertNotContains($field, self::EXPANDED_CHECKBOXES);
         }
     }
 
@@ -230,8 +230,8 @@ class ExtendedTest extends AbstractTestWithEM
             $value = $value->value;
         }
 
-        if (in_array($field, self::EXPANDED) || in_array($field, self::EXPANDED_SELECTS)) {
-            self::assertExpandedFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
+        if (in_array($field, self::EXPANDED_CHECKBOXES) || in_array($field, self::EXPANDED_RADIOS)) {
+            self::assertExpandedFieldIsPresentWithValue($value, $field, $htmlBody);
         } elseif (Field::SINCE === $field) {
             self::assertSinceFieldIsPresentWithValue(Enforce::string($value), $htmlBody);
         } elseif (in_array($field, self::BOOLEAN)) {
@@ -239,26 +239,30 @@ class ExtendedTest extends AbstractTestWithEM
         } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } else {
-            self::assertIsString($value, "Field $field->name should be a string");
+            if ($field->isList()) {
+                $value = PackedStringList::pack(Enforce::strList($value));
+            }
+
+            self::assertIsString($value, "Unexpected $field->name value type");
             self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
         }
     }
 
-    private static function assertExpandedFieldIsPresentWithValue(?string $value, Field $field, string $htmlBody): void
+    private static function assertExpandedFieldIsPresentWithValue(mixed $value, Field $field, string $htmlBody): void
     {
-        if (in_array($field, self::EXPANDED)) {
-            $array = '[]';
-            self::assertNotNull($value);
-        } else {
-            $array = '';
+        if (null === $value || '' === $value) {
+            $value = [];
+        } elseif (!is_array($value)) {
+            $value = [$value];
         }
 
-        $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $array])
+        $items = Enforce::strList($value);
+
+        $optionalArraySuffix = in_array($field, self::EXPANDED_CHECKBOXES) ? '[]' : '';
+        $selected = Pattern::inject('<input[^>]*name="iu_form\[@]@"[^>]*value="(?<value>[^"]+)"[^>]*>', [$field->modelName(), $optionalArraySuffix])
             ->match($htmlBody)->toMap(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
-        $expected = StringList::unpack($value);
-
-        foreach ($expected as $item) {
+        foreach ($items as $item) {
             self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->name'.");
             self::assertTrue($selected[$item], "'$item' is not checked.");
 
@@ -379,14 +383,18 @@ class ExtendedTest extends AbstractTestWithEM
                 $fields = Enforce::arrayOf($fields, FormField::class);
 
                 self::setValuesInSinceField(Enforce::string($value), $fields);
-            } elseif (in_array($field, self::EXPANDED)) {
+            } elseif (in_array($field, self::EXPANDED_CHECKBOXES)) {
                 $fields = Enforce::arrayOf($fields, FormField::class);
 
-                self::setValuesInExpandedField(Enforce::string($value), $fields);
+                self::setValuesInExpandedField(Enforce::strList($value), $fields);
             } else {
-                $field = Enforce::objectOf($fields, FormField::class);
+                $formField = Enforce::objectOf($fields, FormField::class);
 
-                $field->setValue(Enforce::nString($value));
+                if ($field->isList()) {
+                    $value = PackedStringList::pack(Enforce::strList($value));
+                }
+
+                $formField->setValue(Enforce::string($value));
             }
         }
 
@@ -420,18 +428,17 @@ class ExtendedTest extends AbstractTestWithEM
     }
 
     /**
-     * @param FormField[] $fields
+     * @param list<string> $value
+     * @param FormField[]  $fields
      */
-    private static function setValuesInExpandedField(string $value, array $fields): void
+    private static function setValuesInExpandedField(array $value, array $fields): void
     {
-        $values = StringList::unpack($value);
-
         foreach ($fields as $formField) {
             if (!($formField instanceof ChoiceFormField)) {
                 throw new InvalidArgumentException('Expected choice field');
             }
 
-            if (in_array($formField->availableOptionValues()[0], $values)) {
+            if (in_array($formField->availableOptionValues()[0], $value)) {
                 $formField->tick();
             } else {
                 $formField->untick();
@@ -448,6 +455,8 @@ class ExtendedTest extends AbstractTestWithEM
         foreach (Fields::all() as $fieldName => $field) {
             if (Field::PASSWORD === $field) {
                 self::assertTrue(password_verify($expected->getString($field), $actual->getString($field)), 'Password differs.');
+            } elseif ($field->isList()) {
+                self::assertEqualsCanonicalizing($expected->getStringList($field), $actual->getStringList($field), "Field $fieldName differs for {$expected->getMakerId()}.");
             } else {
                 self::assertEquals($expected->get($field), $actual->get($field), "Field $fieldName differs for {$expected->getMakerId()}.");
             }

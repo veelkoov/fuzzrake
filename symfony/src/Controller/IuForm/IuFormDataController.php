@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\IuForm;
 
+use App\Data\Definitions\Fields\Field;
 use App\Form\InclusionUpdate\BaseForm;
 use App\Form\InclusionUpdate\Data;
 use App\Utils\Arrays\ArrayReader;
@@ -30,7 +31,7 @@ class IuFormDataController extends AbstractIuFormController
         $state = $this->prepareState($makerId, $request);
 
         $form = $this->handleForm($request, $state, Data::class, [
-            Data::OPT_PHOTOS_COPYRIGHT_OK => !$state->isNew() && '' !== $state->artisan->getPhotoUrls(),
+            Data::OPT_PHOTOS_COPYRIGHT_OK => !$state->isNew() && $state->artisan->hasData(Field::URL_PHOTOS),
             'router'                      => $this->router,
         ]);
         $this->validatePhotosCopyright($form, $state->artisan);
@@ -69,7 +70,7 @@ class IuFormDataController extends AbstractIuFormController
 
         $isOK = 'OK' === ArrayReader::of($field->getData())->getOrDefault('[0]', null);
 
-        if ('' !== $artisan->getPhotoUrls() && !$isOK) {
+        if ($artisan->hasData(Field::URL_PHOTOS) && !$isOK) {
             $field->addError(new FormError('You must not use any photos without permission from the photographer.'));
         }
     }

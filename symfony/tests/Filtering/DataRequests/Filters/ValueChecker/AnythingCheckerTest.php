@@ -14,9 +14,11 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
 class AnythingCheckerTest extends TestCase
 {
     /**
+     * @param list<string> $items
+     *
      * @dataProvider matchesDataProvider
      */
-    public function testMatches(string $items, ?bool $matchedOther, bool $expected): void
+    public function testMatches(array $items, ?bool $matchedOther, bool $expected): void
     {
         $subject = new AnythingChecker(['A', 'B']);
 
@@ -26,25 +28,25 @@ class AnythingCheckerTest extends TestCase
     public function matchesDataProvider(): DataProvider
     {
         return DataProvider::tuples( // items, matchedOther, expected
-            ['', true,  true],
-            ['', false, false],
-            ['', null,  false],
+            [[], true,  true],
+            [[], false, false],
+            [[], null,  false],
 
-            ['A', true,  true],
-            ['A', false, true],
-            ['A', null,  true],
+            [['A'], true,  true],
+            [['A'], false, true],
+            [['A'], null,  true],
 
-            ['B', true,  true],
-            ['B', false, true],
-            ['B', null,  true],
+            [['B'], true,  true],
+            [['B'], false, true],
+            [['B'], null,  true],
 
-            ['AB', true,  true],
-            ['AB', false, false],
-            ['AB', null,  false],
+            [['AB'], true,  true],
+            [['AB'], false, false],
+            [['AB'], null,  false],
 
-            ["A\nB", true,  true],
-            ["A\nB", false, true],
-            ["A\nB", null,  true],
+            [['A', 'B'], true,  true],
+            [['A', 'B'], false, true],
+            [['A', 'B'], null,  true],
         );
     }
 }

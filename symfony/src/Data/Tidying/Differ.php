@@ -7,7 +7,7 @@ namespace App\Data\Tidying;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\StringList;
+use App\Utils\PackedStringList;
 use App\Utils\StrUtils;
 
 class Differ
@@ -33,10 +33,14 @@ class Differ
         }
     }
 
-    private function showListDiff(string $fieldName, string $oldVal, string $newVal): void
+    /**
+     * @param list<string>|string $oldVal
+     * @param list<string>|string $newVal
+     */
+    private function showListDiff(string $fieldName, array|string $oldVal, array|string $newVal): void
     {
-        $oldValItems = StringList::unpack($oldVal);
-        $newValItems = StringList::unpack($newVal);
+        $oldValItems = is_array($oldVal) ? $oldVal : PackedStringList::unpack($oldVal);
+        $newValItems = is_array($newVal) ? $newVal : PackedStringList::unpack($newVal);
 
         foreach ($oldValItems as &$item) {
             if (!in_array($item, $newValItems)) {

@@ -12,7 +12,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\Json;
-use App\Utils\StringList;
 use Exception;
 use UnexpectedValueException;
 
@@ -44,7 +43,7 @@ class JsonArtisanDataLoader
         $fileName = $this->subdir."/$fileName.json";
 
         /**
-         * @var array<string, string[]|string|bool|null> $data
+         * @var array<string, list<string>|string|bool|null> $data
          */
         $data = Json::readFile(Paths::getTestDataPath($fileName));
 
@@ -73,8 +72,6 @@ class JsonArtisanDataLoader
                 if (!is_array($value)) {
                     throw new UnexpectedValueException("'$fileName' should be an array in '$fieldName' key");
                 }
-
-                $value = StringList::pack($value);
             }
 
             $result->set($field, $value);

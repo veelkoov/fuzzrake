@@ -5,38 +5,28 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
-use App\Utils\StringList;
 
-class ListChange implements ChangeInterface
+readonly class ListChange implements ChangeInterface
 {
     /**
-     * @var string[]
+     * @var list<string>
      */
-    public readonly array $old;
+    public array $added;
 
     /**
-     * @var string[]
+     * @var list<string>
      */
-    public readonly array $new;
+    public array $removed;
 
     /**
-     * @var string[]
+     * @param list<string> $old
+     * @param list<string> $new
      */
-    public readonly array $added;
-
-    /**
-     * @var string[]
-     */
-    public readonly array $removed;
-
     public function __construct(
-        private readonly Field $field,
-        string $old,
-        string $new,
+        private Field $field,
+        private array $old,
+        private array $new,
     ) {
-        $this->old = StringList::unpack($old);
-        $this->new = StringList::unpack($new);
-
         [$this->added, $this->removed] = self::calculateAddedRemoved($this->old, $this->new);
     }
 

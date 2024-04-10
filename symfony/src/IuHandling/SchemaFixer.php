@@ -10,7 +10,7 @@ use App\Utils\Enforce;
 final class SchemaFixer
 {
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const CURRENT_SCHEMA_VERSION = 13;
+    private const CURRENT_SCHEMA_VERSION = 14;
 
     /**
      * @param array<string, psJsonFieldValue> $data

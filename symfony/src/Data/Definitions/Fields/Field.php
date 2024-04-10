@@ -8,6 +8,7 @@ use App\Data\Definitions\Fields\Properties as Props;
 use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Utils\FieldReadInterface;
 use TRegx\CleanRegex\Pattern;
+use UnexpectedValueException;
 
 enum Field: string
 {
@@ -192,7 +193,7 @@ enum Field: string
     case URL_MINIATURES = 'URL_MINIATURES';
 
     #[Props('otherUrls', notInspectedUrl: true)]
-    case URL_OTHER = 'URL_OTHER';
+    case URL_OTHER = 'URL_OTHER'; // TODO: Rename "-s"
 
     #[Props('notes', inStats: false)]
     case NOTES = 'NOTES';
@@ -300,6 +301,14 @@ enum Field: string
 
     public function isProvided(mixed $value): bool
     {
+        if ($this->isList()) {
+            if (!is_array($value)) {
+                throw new UnexpectedValueException('List fields must be arrays');
+            }
+
+            return [] !== $value;
+        }
+
         return null !== $value && '' !== $value;
     }
 

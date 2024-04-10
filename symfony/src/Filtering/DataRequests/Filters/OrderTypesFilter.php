@@ -11,7 +11,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class OrderTypesFilter extends AbstractFieldOptionalAndOtherFilter
 {
-    protected function getOwnedItems(Artisan $artisan): string
+    protected function getOwnedItems(Artisan $artisan): array
     {
         return $artisan->getOrderTypes();
     }

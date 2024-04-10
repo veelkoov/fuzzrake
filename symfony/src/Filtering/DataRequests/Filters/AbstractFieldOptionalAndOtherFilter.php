@@ -38,7 +38,10 @@ abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
         return $this->valueChecker->matches($this->getOwnedItems($artisan), $matchedOther);
     }
 
-    abstract protected function getOwnedItems(Artisan $artisan): string;
+    /**
+     * @return list<string>
+     */
+    abstract protected function getOwnedItems(Artisan $artisan): array;
 
     abstract protected function hasOwnedItems(Artisan $artisan): bool;
 

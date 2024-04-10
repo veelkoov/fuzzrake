@@ -6,6 +6,7 @@ namespace App\Data\Validator;
 
 use App\Data\Definitions\Fields\Field;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\PackedStringList;
 
 class Validator
 {
@@ -19,7 +20,17 @@ class Validator
 
     public function isValid(Artisan $artisan, Field $field): bool
     {
-        return !$field->isValidated() || $this->getValidator($field)->isValid($field, $artisan->getString($field));
+        if (!$field->isValidated()) {
+            return true;
+        }
+
+        if ($field->isList()) {
+            $value = PackedStringList::pack($artisan->getStringList($field)); // FIXME: Should not work like that
+        } else {
+            $value = $artisan->getString($field);
+        }
+
+        return $this->getValidator($field)->isValid($field, $value);
     }
 
     private function getValidator(Field $field): ValidatorInterface

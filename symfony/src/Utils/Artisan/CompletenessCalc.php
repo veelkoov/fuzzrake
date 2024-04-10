@@ -7,7 +7,6 @@ namespace App\Utils\Artisan;
 use App\Data\Definitions\Fields\Field as F;
 use App\Data\Definitions\ProductionModels;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\StringList;
 use App\Utils\Traits\UtilityClass;
 
 final class CompletenessCalc
@@ -145,7 +144,7 @@ final class CompletenessCalc
 
     private static function doesCommissions(Artisan $artisan): bool
     {
-        return in_array(ProductionModels::STANDARD_COMMISSIONS, StringList::unpack($artisan->getProductionModels()));
+        return in_array(ProductionModels::STANDARD_COMMISSIONS, $artisan->getProductionModels());
     }
 
     private static function shouldCountState(Artisan $artisan): bool

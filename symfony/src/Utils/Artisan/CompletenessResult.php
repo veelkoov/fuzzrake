@@ -48,9 +48,7 @@ final class CompletenessResult
         $this->total += $weight;
 
         foreach ($fields as $field) {
-            $value = $this->artisan->get($field);
-
-            if (null !== $value && '' !== $value) {
+            if ($field->providedIn($this->artisan)) {
                 $this->earned += $weight;
                 break;
             }

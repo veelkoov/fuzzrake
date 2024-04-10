@@ -11,7 +11,10 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class ProductionModelsFilter extends AbstractFieldOptionalAndOtherFilter
 {
-    protected function getOwnedItems(Artisan $artisan): string
+    /**
+     * @return list<string>
+     */
+    protected function getOwnedItems(Artisan $artisan): array
     {
         return $artisan->getProductionModels();
     }

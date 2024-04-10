@@ -28,7 +28,7 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
             ->setMakerId('FDBCKMR');
 
         $placeholder = Artisan::new()->setCountry('CZ')->setName('Early maker')
-            ->setFormerMakerIds('M000000');
+            ->setFormerMakerIds(['M000000']);
 
         return [
             'With an official maker ID' => ['FDBCKMR', $official],

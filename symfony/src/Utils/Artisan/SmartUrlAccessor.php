@@ -4,78 +4,66 @@ declare(strict_types=1);
 
 namespace App\Utils\Artisan;
 
-use App\Data\Definitions\Fields\Fields;
-use App\Entity\ArtisanUrl;
-use App\Utils\StringList;
+use App\Entity\ArtisanUrl as ItemType;
+use App\Utils\Arrays\Arrays;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Traits\UtilityClass;
+use Psl\Vec;
 
 final class SmartUrlAccessor
 {
-    /**
-     * @var array<string, list<ArtisanUrl>>
-     */
-    private static ?array $initUrls = null;
+    use UtilityClass;
 
     /**
-     * @var array<string, list<ArtisanUrl>>
+     * @return list<ItemType>
      */
-    private array $urls;
-
-    public function __construct(
-        private readonly SmartAccessDecorator $artisan,
-    ) {
-        self::$initUrls ??= array_combine(Fields::urls()->names(), array_map(fn ($_) => [], Fields::urls()->names()));
-
-        $this->urls = self::$initUrls;
-
-        foreach ($this->artisan->getUrls() as $url) {
-            $this->urls[$url->getType()][] = $url;
-        }
-    }
-
-    /**
-     * @return list<ArtisanUrl>
-     */
-    public function getObjects(string $name): array
+    private static function getObjects(Creator $creator, string $type): array
     {
-        return $this->urls[$name];
+        return Vec\filter($creator->getArtisan()->getUrls(),
+            fn (ItemType $url) => $url->getType() === $type);
     }
 
     /**
      * @return list<string>
      */
-    public function getList(string $type): array
+    public static function getList(Creator $creator, string $type): array
     {
-        return array_map(fn (ArtisanUrl $url) => $url->getUrl(), $this->getObjects($type));
+        return array_map(fn (ItemType $item) => $item->getUrl(), self::getObjects($creator, $type));
     }
 
-    public function getPacked(string $type): string
+    /**
+     * @param list<string> $newUrls
+     */
+    public static function setList(Creator $creator, string $type, array $newUrls): void
     {
-        return StringList::pack($this->getList($type));
-    }
-
-    public function setPacked(string $type, string $newUrl): void
-    {
-        $newObjects = [];
-        $existingObjects = $this->getObjects($type);
-        $existingUrls = $this->getList($type);
-        $wantedUrls = StringList::unpack($newUrl);
+        $existingObjects = self::getObjects($creator, $type);
 
         foreach ($existingObjects as $existingObject) {
-            if (in_array($existingObject->getUrl(), $wantedUrls, true)) {
-                $newObjects[] = $existingObject;
-            } else {
-                $this->artisan->getArtisan()->removeUrl($existingObject);
+            if (!in_array($existingObject->getUrl(), $newUrls, true)) {
+                $creator->getArtisan()->removeUrl($existingObject);
             }
         }
 
-        foreach ($wantedUrls as $wantedUrl) {
-            if (!in_array($wantedUrl, $existingUrls, true)) {
-                $newObject = (new ArtisanUrl())->setType($type)->setUrl($wantedUrl);
-                $newObjects[] = $newObject;
-                $this->artisan->getArtisan()->addUrl($newObject);
+        $existingValues = self::getList($creator, $type);
+
+        foreach ($newUrls as $newValue) {
+            if (!in_array($newValue, $existingValues, true)) {
+                $newObject = (new ItemType())->setType($type)->setUrl($newValue);
+
+                $creator->getArtisan()->addUrl($newObject);
             }
         }
+    }
 
-        $this->urls[$type] = $newObjects;
+    public static function getSingle(Creator $creator, string $type): string
+    {
+        $result = self::getList($creator, $type);
+
+        return [] === $result ? '' : Arrays::single($result);
+    }
+
+    public static function setSingle(Creator $artisan, string $type, string $newUrl): void
+    {
+        self::setList($artisan, $type, '' === $newUrl ? [] : [$newUrl]);
     }
 }
