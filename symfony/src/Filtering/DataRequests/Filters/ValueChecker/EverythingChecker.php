@@ -9,9 +9,6 @@ use function Psl\Iter\contains;
 
 class EverythingChecker extends AbstractWrappedItemsChecker
 {
-    /**
-     * @param list<string> $items
-     */
     public function matches(array $items, ?bool $matchedOther): bool
     {
         if ([] === $this->wantedItems) {
