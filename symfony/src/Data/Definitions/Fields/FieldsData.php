@@ -6,8 +6,7 @@ namespace App\Data\Definitions\Fields;
 
 use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Utils\Traits\UtilityClass;
-use ReflectionEnum;
-use UnexpectedValueException;
+use TRegx\CleanRegex\Pattern;
 
 final class FieldsData
 {
@@ -386,40 +385,79 @@ final class FieldsData
         ],
     ];
 
+    //    /**
+    //     * @var array<string, FieldData>
+    //     */
+    //    private static array $fields = [];
+
     /**
-     * @var array<string, FieldData>
+     * @var array<string, Pattern>
      */
-    private static array $fields = [];
+    private static array $validationPatterns = [];
 
-    public static function init(): void
+    public static function getModelName(string $fieldName): string
     {
-        foreach ((new ReflectionEnum(Field::class))->getCases() as $case) {
-            if ($case->getBackingValue() !== $case->name) {
-                throw new UnexpectedValueException('name !== value');
-            }
-
-            $fieldName = (string) $case->getBackingValue();
-
-            self::$fields[$fieldName] = new FieldData(
-                $fieldName,
-                self::DATA[$fieldName]['modelName'],
-                self::DATA[$fieldName]['type'] ?? Type::STRING,
-                self::DATA[$fieldName]['validationRegex'] ?? null,
-                self::DATA[$fieldName]['freeForm'] ?? true,
-                self::DATA[$fieldName]['inStats'] ?? true,
-                self::DATA[$fieldName]['public'] ?? true,
-                self::DATA[$fieldName]['inIuForm'] ?? true,
-                self::DATA[$fieldName]['persisted'] ?? true,
-                self::DATA[$fieldName]['affectedByIuForm'] ?? false,
-                self::DATA[$fieldName]['notInspectedUrl'] ?? false,
-            );
-        }
+        return self::DATA[$fieldName]['modelName'];
     }
 
-    public static function get(Field $field): FieldData
+    public static function getType(string $fieldName): Type
     {
-        return self::$fields[$field->value];
+        return self::DATA[$fieldName]['type'] ?? Type::STRING;
+    }
+
+    public static function isFreeForm(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['freeForm'] ?? true;
+    }
+
+    public static function isInStats(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['inStats'] ?? true;
+    }
+
+    public static function isPublic(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['public'] ?? true;
+    }
+
+    public static function isInIuForm(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['inIuForm'] ?? true;
+    }
+
+    public static function isPersisted(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['persisted'] ?? true;
+    }
+
+    public static function isAffectedByIuForm(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['affectedByIuForm'] ?? false;
+    }
+
+    public static function isNotInspectedUrl(string $fieldName): bool
+    {
+        return self::DATA[$fieldName]['notInspectedUrl'] ?? false;
+    }
+
+    public static function isValidated(string $fieldName): bool
+    {
+        return null !== self::getValidationRegexp($fieldName);
+    }
+
+    private static function getValidationRegexp(string $fieldName): ?string
+    {
+        return self::DATA[$fieldName]['validationRegex'] ?? null;
+    }
+
+    public static function getValidationPattern(string $fieldName): ?Pattern
+    {
+        $regex = self::getValidationRegexp($fieldName);
+
+        if (null === $regex) {
+            return null;
+        }
+
+        return self::$validationPatterns[$fieldName] ??=pattern($regex, 'n');
     }
 }
-
-FieldsData::init();

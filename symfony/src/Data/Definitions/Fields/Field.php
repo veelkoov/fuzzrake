@@ -84,69 +84,69 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     case CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
     case CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
 
-    public function getData(): FieldData
-    {
-        return FieldsData::get($this);
-    }
-
     public function modelName(): string
     {
-        return $this->getData()->modelName;
+        return FieldsData::getModelName($this->value);
+    }
+
+    public function getType(): Type
+    {
+        return FieldsData::getType($this->value);
     }
 
     public function validationPattern(): ?Pattern
     {
-        return $this->getData()->getValidationPattern();
+        return FieldsData::getValidationPattern($this->value);
     }
 
     public function isList(): bool
     {
-        return Type::STR_LIST === $this->getData()->type;
+        return Type::STR_LIST === $this->getType();
     }
 
     public function isDate(): bool
     {
-        return Type::DATE === $this->getData()->type;
+        return Type::DATE === $this->getType();
     }
 
     public function isPersisted(): bool
     {
-        return $this->getData()->isPersisted;
+        return FieldsData::isPersisted($this->value);
     }
 
     public function isValidated(): bool
     {
-        return $this->getData()->isValidated;
+        return FieldsData::isValidated($this->value);
     }
 
     public function isInIuForm(): bool
     {
-        return $this->getData()->isInIuForm;
+        return FieldsData::isInIuForm($this->value);
     }
 
     public function affectedByIuForm(): bool
     {
-        return $this->getData()->affectedByIuForm;
+        return FieldsData::isAffectedByIuForm($this->value);
     }
 
     public function notInspectedUrl(): bool
     {
-        return $this->getData()->notInspectedUrl;
+        return FieldsData::isNotInspectedUrl($this->value);
     }
 
     public function public(): bool
     {
-        return $this->getData()->public;
+        return FieldsData::isPublic($this->value);
     }
 
     public function inStats(): bool
     {
-        return $this->getData()->inStats;
+        return FieldsData::isInStats($this->value);
     }
 
     public function isFreeForm(): bool
     {
-        return $this->getData()->isFreeForm;
+        return FieldsData::isFreeForm($this->value);
     }
 
     public function isProvided(mixed $value): bool
