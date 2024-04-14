@@ -12,12 +12,12 @@ final class FieldsData
 {
     use UtilityClass;
 
-    private const DATA = [
-        Field::MAKER_ID->name => [
+    public const DATA = [
+        Field::MAKER_ID->value => [
             'modelName'        => 'makerId',
             'validationRegex'  => V::MAKER_ID,
         ],
-        Field::FORMER_MAKER_IDS->name => [
+        Field::FORMER_MAKER_IDS->value => [
             'modelName'        => 'formerMakerIds',
             'type'             => Type::STR_LIST,
             'inIuForm'         => false,
@@ -25,15 +25,15 @@ final class FieldsData
             'affectedByIuForm' => true,
             'validationRegex'  => V::FORMER_MAKER_IDS,
         ],
-        Field::NAME->name => [
+        Field::NAME->value => [
             'modelName'        => 'name',
             'validationRegex'  => V::NON_EMPTY,
         ],
-        Field::FORMERLY->name => [
+        Field::FORMERLY->value => [
             'modelName'        => 'formerly',
             'type'             => Type::STR_LIST,
         ],
-        Field::DATE_ADDED->name => [
+        Field::DATE_ADDED->value => [
             'modelName'        => 'dateAdded',
             'type'             => Type::DATE,
             'inIuForm'         => false,
@@ -41,7 +41,7 @@ final class FieldsData
             'inStats'          => false,
             'affectedByIuForm' => true,
         ],
-        Field::DATE_UPDATED->name => [
+        Field::DATE_UPDATED->value => [
             'modelName'        => 'dateUpdated',
             'type'             => Type::DATE,
             'inIuForm'         => false,
@@ -49,312 +49,312 @@ final class FieldsData
             'inStats'          => false,
             'affectedByIuForm' => true,
         ],
-        Field::INTRO->name => [
+        Field::INTRO->value => [
             'modelName'        => 'intro',
         ],
-        Field::SINCE->name => [
+        Field::SINCE->value => [
             'modelName'        => 'since',
             'freeForm'         => false,
             'validationRegex'  => V::SINCE,
         ],
-        Field::LANGUAGES->name => [
+        Field::LANGUAGES->value => [
             'modelName'        => 'languages',
             'type'             => Type::STR_LIST,
         ],
-        Field::COUNTRY->name => [
+        Field::COUNTRY->value => [
             'modelName'        => 'country',
             'freeForm'         => false,
             'validationRegex'  => V::COUNTRY,
         ],
-        Field::STATE->name => [
+        Field::STATE->value => [
             'modelName'        => 'state',
             'validationRegex'  => V::STATE,
         ],
-        Field::CITY->name => [
+        Field::CITY->value => [
             'modelName'        => 'city',
         ],
-        Field::PRODUCTION_MODELS_COMMENT->name => [
+        Field::PRODUCTION_MODELS_COMMENT->value => [
             'modelName'        => 'productionModelsComment',
             'inStats'          => false,
         ],
-        Field::PRODUCTION_MODELS->name => [
+        Field::PRODUCTION_MODELS->value => [
             'modelName'        => 'productionModels',
             'type'             => Type::STR_LIST,
             'freeForm'         => false,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::STYLES_COMMENT->name => [
+        Field::STYLES_COMMENT->value => [
             'modelName'        => 'stylesComment',
             'inStats'          => false,
         ],
-        Field::STYLES->name => [
+        Field::STYLES->value => [
             'modelName'        => 'styles',
             'type'             => Type::STR_LIST,
             'freeForm'         => false,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::OTHER_STYLES->name => [
+        Field::OTHER_STYLES->value => [
             'modelName'        => 'otherStyles',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::ORDER_TYPES_COMMENT->name => [
+        Field::ORDER_TYPES_COMMENT->value => [
             'modelName'        => 'orderTypesComment',
             'inStats'          => false,
         ],
-        Field::ORDER_TYPES->name => [
+        Field::ORDER_TYPES->value => [
             'modelName'        => 'orderTypes',
             'type'             => Type::STR_LIST,
             'freeForm'         => false,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::OTHER_ORDER_TYPES->name => [
+        Field::OTHER_ORDER_TYPES->value => [
             'modelName'        => 'otherOrderTypes',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::FEATURES_COMMENT->name => [
+        Field::FEATURES_COMMENT->value => [
             'modelName'        => 'featuresComment',
             'inStats'          => false,
         ],
-        Field::FEATURES->name => [
+        Field::FEATURES->value => [
             'modelName'        => 'features',
             'type'             => Type::STR_LIST,
             'freeForm'         => false,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::OTHER_FEATURES->name => [
+        Field::OTHER_FEATURES->value => [
             'modelName'        => 'otherFeatures',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::LIST_VALIDATION,
         ],
-        Field::PAYMENT_PLANS->name => [
+        Field::PAYMENT_PLANS->value => [
             'modelName'        => 'paymentPlans',
             'type'             => Type::STR_LIST,
         ],
-        Field::PAYMENT_METHODS->name => [
+        Field::PAYMENT_METHODS->value => [
             'modelName'        => 'paymentMethods',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::PAY_METHODS,
         ],
-        Field::CURRENCIES_ACCEPTED->name => [
+        Field::CURRENCIES_ACCEPTED->value => [
             'modelName'        => 'currenciesAccepted',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::CURRENCIES,
         ],
-        Field::SPECIES_COMMENT->name => [
+        Field::SPECIES_COMMENT->value => [
             'modelName'        => 'speciesComment',
         ],
-        Field::SPECIES_DOES->name => [
+        Field::SPECIES_DOES->value => [
             'modelName'        => 'speciesDoes',
             'type'             => Type::STR_LIST,
         ],
-        Field::SPECIES_DOESNT->name => [
+        Field::SPECIES_DOESNT->value => [
             'modelName'        => 'speciesDoesnt',
             'type'             => Type::STR_LIST,
         ],
-        Field::IS_MINOR->name => [
+        Field::IS_MINOR->value => [
             'modelName'        => 'isMinor',
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::AGES->name => [
+        Field::AGES->value => [
             'modelName'        => 'ages',
             'freeForm'         => false,
         ],
-        Field::NSFW_WEBSITE->name => [
+        Field::NSFW_WEBSITE->value => [
             'modelName'        => 'nsfwWebsite',
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::NSFW_SOCIAL->name => [
+        Field::NSFW_SOCIAL->value => [
             'modelName'        => 'nsfwSocial',
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::DOES_NSFW->name => [
+        Field::DOES_NSFW->value => [
             'modelName'        => 'doesNsfw',
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::SAFE_DOES_NSFW->name => [
+        Field::SAFE_DOES_NSFW->value => [
             'modelName'        => 'safeDoesNsfw',
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
             'persisted'        => false,
         ],
-        Field::WORKS_WITH_MINORS->name => [
+        Field::WORKS_WITH_MINORS->value => [
             'modelName'        => 'worksWithMinors',
             'freeForm'         => false,
             'inStats'          => false,
             'public'           => false,
         ],
-        Field::SAFE_WORKS_WITH_MINORS->name => [
+        Field::SAFE_WORKS_WITH_MINORS->value => [
             'modelName'        => 'safeWorksWithMinors',
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
             'persisted'        => false,
         ],
-        Field::URL_FURSUITREVIEW->name => [
+        Field::URL_FURSUITREVIEW->value => [
             'modelName'        => 'fursuitReviewUrl',
             'validationRegex'  => V::FSR_URL,
         ],
-        Field::URL_WEBSITE->name => [
+        Field::URL_WEBSITE->value => [
             'modelName'        => 'websiteUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_PRICES->name => [
+        Field::URL_PRICES->value => [
             'modelName'        => 'pricesUrls',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::GENERIC_URL_LIST,
         ],
-        Field::URL_COMMISSIONS->name => [
+        Field::URL_COMMISSIONS->value => [
             'modelName'        => 'commissionsUrls',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::GENERIC_URL_LIST,
         ],
-        Field::URL_FAQ->name => [
+        Field::URL_FAQ->value => [
             'modelName'        => 'faqUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_FUR_AFFINITY->name => [
+        Field::URL_FUR_AFFINITY->value => [
             'modelName'        => 'furAffinityUrl',
             'validationRegex'  => V::FA_URL,
         ],
-        Field::URL_DEVIANTART->name => [
+        Field::URL_DEVIANTART->value => [
             'modelName'        => 'deviantArtUrl',
             'validationRegex'  => V::DA_URL,
         ],
-        Field::URL_MASTODON->name => [
+        Field::URL_MASTODON->value => [
             'modelName'        => 'mastodonUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_TWITTER->name => [
+        Field::URL_TWITTER->value => [
             'modelName'        => 'twitterUrl',
             'validationRegex'  => V::TWITTER_URL,
         ],
-        Field::URL_FACEBOOK->name => [
+        Field::URL_FACEBOOK->value => [
             'modelName'        => 'facebookUrl',
             'validationRegex'  => V::FACEBOOK_URL,
         ],
-        Field::URL_TUMBLR->name => [
+        Field::URL_TUMBLR->value => [
             'modelName'        => 'tumblrUrl',
             'validationRegex'  => V::TUMBLR_URL,
         ],
-        Field::URL_INSTAGRAM->name => [
+        Field::URL_INSTAGRAM->value => [
             'modelName'        => 'instagramUrl',
             'validationRegex'  => V::INSTAGRAM_URL,
         ],
-        Field::URL_YOUTUBE->name => [
+        Field::URL_YOUTUBE->value => [
             'modelName'        => 'youtubeUrl',
             'validationRegex'  => V::YOUTUBE_URL,
         ],
-        Field::URL_LINKLIST->name => [
+        Field::URL_LINKLIST->value => [
             'modelName'        => 'linklistUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_FURRY_AMINO->name => [
+        Field::URL_FURRY_AMINO->value => [
             'modelName'        => 'furryAminoUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_ETSY->name => [
+        Field::URL_ETSY->value => [
             'modelName'        => 'etsyUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_THE_DEALERS_DEN->name => [
+        Field::URL_THE_DEALERS_DEN->value => [
             'modelName'        => 'theDealersDenUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_OTHER_SHOP->name => [
+        Field::URL_OTHER_SHOP->value => [
             'modelName'        => 'otherShopUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_QUEUE->name => [
+        Field::URL_QUEUE->value => [
             'modelName'        => 'queueUrl',
             'validationRegex'  => V::GENERIC_URL,
         ],
-        Field::URL_SCRITCH->name => [
+        Field::URL_SCRITCH->value => [
             'modelName'        => 'scritchUrl',
             'validationRegex'  => V::SCRITCH_URL,
         ],
-        Field::URL_FURTRACK->name => [
+        Field::URL_FURTRACK->value => [
             'modelName'        => 'furtrackUrl',
             'validationRegex'  => V::FURTRACK_URL,
         ],
-        Field::URL_PHOTOS->name => [
+        Field::URL_PHOTOS->value => [
             'modelName'        => 'photoUrls',
             'type'             => Type::STR_LIST,
             'validationRegex'  => V::PHOTO_URL_LIST,
             'notInspectedUrl'  => true,
         ],
-        Field::URL_MINIATURES->name => [
+        Field::URL_MINIATURES->value => [
             'modelName'        => 'miniatureUrls',
             'type'             => Type::STR_LIST,
             'inIuForm'         => false,
             'validationRegex'  => V::MINIATURE_URL_LIST,
             'notInspectedUrl'  => true,
         ],
-        Field::URL_OTHER->name => [
+        Field::URL_OTHER->value => [
             'modelName'        => 'otherUrls',
             'notInspectedUrl'  => true,
         ],
-        Field::NOTES->name => [
+        Field::NOTES->value => [
             'modelName'        => 'notes',
             'inStats'          => false,
         ],
-        Field::INACTIVE_REASON->name => [
+        Field::INACTIVE_REASON->value => [
             'modelName'        => 'inactiveReason',
             'inIuForm'         => false,
             'freeForm'         => false,
         ],
-        Field::PASSWORD->name => [
+        Field::PASSWORD->value => [
             'modelName'        => 'password',
             'freeForm'         => false,
             'inStats'          => false,
             'public'           => false,
         ],
-        Field::CS_LAST_CHECK->name => [
+        Field::CS_LAST_CHECK->value => [
             'modelName'        => 'csLastCheck',
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::CS_TRACKER_ISSUE->name => [
+        Field::CS_TRACKER_ISSUE->value => [
             'modelName'        => 'csTrackerIssue',
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::OPEN_FOR->name => [
+        Field::OPEN_FOR->value => [
             'modelName'        => 'openFor',
             'type'             => Type::STR_LIST,
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::CLOSED_FOR->name => [
+        Field::CLOSED_FOR->value => [
             'modelName'        => 'closedFor',
             'type'             => Type::STR_LIST,
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::COMPLETENESS->name => [
+        Field::COMPLETENESS->value => [
             'modelName'        => 'completeness',
             'inIuForm'         => false,
             'freeForm'         => false,
             'inStats'          => false,
             'persisted'        => false,
         ],
-        Field::CONTACT_ALLOWED->name => [
+        Field::CONTACT_ALLOWED->value => [
             'modelName'        => 'contactAllowed',
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::CONTACT_METHOD->name => [
+        Field::CONTACT_METHOD->value => [
             'modelName'        => 'contactMethod',
             'inIuForm'         => false,
             'freeForm'         => false,
@@ -362,7 +362,7 @@ final class FieldsData
             'public'           => false,
             'affectedByIuForm' => true,
         ],
-        Field::CONTACT_ADDRESS_PLAIN->name => [
+        Field::CONTACT_ADDRESS_PLAIN->value => [
             'modelName'        => 'contactAddressPlain',
             'inIuForm'         => false,
             'freeForm'         => false,
@@ -370,12 +370,12 @@ final class FieldsData
             'public'           => false,
             'affectedByIuForm' => true,
         ],
-        Field::CONTACT_INFO_OBFUSCATED->name => [
+        Field::CONTACT_INFO_OBFUSCATED->value => [
             'modelName'        => 'contactInfoObfuscated',
             'freeForm'         => false,
             'inStats'          => false,
         ],
-        Field::CONTACT_INFO_ORIGINAL->name => [
+        Field::CONTACT_INFO_ORIGINAL->value => [
             'modelName'        => 'contactInfoOriginal',
             'inIuForm'         => false,
             'freeForm'         => false,
@@ -390,69 +390,69 @@ final class FieldsData
      */
     private static array $validationPatterns = [];
 
-    public static function getModelName(string $fieldName): string
+    public static function getModelName(Field $field): string
     {
-        return self::DATA[$fieldName]['modelName'];
+        return self::DATA[$field->value]['modelName'];
     }
 
-    public static function getType(string $fieldName): Type
+    public static function getType(Field $field): Type
     {
-        return self::DATA[$fieldName]['type'] ?? Type::STRING;
+        return self::DATA[$field->value]['type'] ?? Type::STRING;
     }
 
-    public static function isFreeForm(string $fieldName): bool
+    public static function isFreeForm(Field $field): bool
     {
-        return self::DATA[$fieldName]['freeForm'] ?? true;
+        return self::DATA[$field->value]['freeForm'] ?? true;
     }
 
-    public static function isInStats(string $fieldName): bool
+    public static function isInStats(Field $field): bool
     {
-        return self::DATA[$fieldName]['inStats'] ?? true;
+        return self::DATA[$field->value]['inStats'] ?? true;
     }
 
-    public static function isPublic(string $fieldName): bool
+    public static function isPublic(Field $field): bool
     {
-        return self::DATA[$fieldName]['public'] ?? true;
+        return self::DATA[$field->value]['public'] ?? true;
     }
 
-    public static function isInIuForm(string $fieldName): bool
+    public static function isInIuForm(Field $field): bool
     {
-        return self::DATA[$fieldName]['inIuForm'] ?? true;
+        return self::DATA[$field->value]['inIuForm'] ?? true;
     }
 
-    public static function isPersisted(string $fieldName): bool
+    public static function isPersisted(Field $field): bool
     {
-        return self::DATA[$fieldName]['persisted'] ?? true;
+        return self::DATA[$field->value]['persisted'] ?? true;
     }
 
-    public static function isAffectedByIuForm(string $fieldName): bool
+    public static function isAffectedByIuForm(Field $field): bool
     {
-        return self::DATA[$fieldName]['affectedByIuForm'] ?? false;
+        return self::DATA[$field->value]['affectedByIuForm'] ?? false;
     }
 
-    public static function isNotInspectedUrl(string $fieldName): bool
+    public static function isNotInspectedUrl(Field $field): bool
     {
-        return self::DATA[$fieldName]['notInspectedUrl'] ?? false;
+        return self::DATA[$field->value]['notInspectedUrl'] ?? false;
     }
 
-    public static function isValidated(string $fieldName): bool
+    public static function isValidated(Field $field): bool
     {
-        return null !== self::getValidationRegexp($fieldName);
+        return null !== self::getValidationRegexp($field);
     }
 
-    private static function getValidationRegexp(string $fieldName): ?string
+    private static function getValidationRegexp(Field $field): ?string
     {
-        return self::DATA[$fieldName]['validationRegex'] ?? null;
+        return self::DATA[$field->value]['validationRegex'] ?? null;
     }
 
-    public static function getValidationPattern(string $fieldName): ?Pattern
+    public static function getValidationPattern(Field $field): ?Pattern
     {
-        $regex = self::getValidationRegexp($fieldName);
+        $regex = self::getValidationRegexp($field);
 
         if (null === $regex) {
             return null;
         }
 
-        return self::$validationPatterns[$fieldName] ??=pattern($regex, 'n');
+        return self::$validationPatterns[$field->value] ??=pattern($regex, 'n');
     }
 }

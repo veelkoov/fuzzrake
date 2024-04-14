@@ -86,17 +86,17 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 
     public function modelName(): string
     {
-        return FieldsData::getModelName($this->value);
+        return FieldsData::getModelName($this);
     }
 
     public function getType(): Type
     {
-        return FieldsData::getType($this->value);
+        return FieldsData::getType($this);
     }
 
     public function validationPattern(): ?Pattern
     {
-        return FieldsData::getValidationPattern($this->value);
+        return FieldsData::getValidationPattern($this);
     }
 
     public function isList(): bool
@@ -111,42 +111,42 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 
     public function isPersisted(): bool
     {
-        return FieldsData::isPersisted($this->value);
+        return FieldsData::isPersisted($this);
     }
 
     public function isValidated(): bool
     {
-        return FieldsData::isValidated($this->value);
+        return FieldsData::isValidated($this);
     }
 
     public function isInIuForm(): bool
     {
-        return FieldsData::isInIuForm($this->value);
+        return FieldsData::isInIuForm($this);
     }
 
     public function affectedByIuForm(): bool
     {
-        return FieldsData::isAffectedByIuForm($this->value);
+        return FieldsData::isAffectedByIuForm($this);
     }
 
     public function notInspectedUrl(): bool
     {
-        return FieldsData::isNotInspectedUrl($this->value);
+        return FieldsData::isNotInspectedUrl($this);
     }
 
     public function public(): bool
     {
-        return FieldsData::isPublic($this->value);
+        return FieldsData::isPublic($this);
     }
 
     public function inStats(): bool
     {
-        return FieldsData::isInStats($this->value);
+        return FieldsData::isInStats($this);
     }
 
     public function isFreeForm(): bool
     {
-        return FieldsData::isFreeForm($this->value);
+        return FieldsData::isFreeForm($this);
     }
 
     public function isProvided(mixed $value): bool
