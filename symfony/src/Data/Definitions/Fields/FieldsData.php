@@ -389,23 +389,16 @@ final class FieldsData
     /**
      * @var array<string, FieldData>
      */
-    private static array $fieldsOld = [];
-
-    /**
-     * @var array<string, FieldData>
-     */
     private static array $fields = [];
 
     public static function init(): void
     {
-        self::$fieldsOld = [];
-
         foreach ((new ReflectionEnum(Field::class))->getCases() as $case) {
             if ($case->getBackingValue() !== $case->name) {
                 throw new UnexpectedValueException('name !== value');
             }
 
-            $fieldName = (string) ($case->getBackingValue());
+            $fieldName = (string) $case->getBackingValue();
 
             self::$fields[$fieldName] = new FieldData(
                 $fieldName,
@@ -420,31 +413,12 @@ final class FieldsData
                 self::DATA[$fieldName]['affectedByIuForm'] ?? false,
                 self::DATA[$fieldName]['notInspectedUrl'] ?? false,
             );
-
-            foreach ($case->getAttributes() as $attribute) {
-                /** @var Properties $data */
-                $data = $attribute->newInstance();
-
-                self::$fieldsOld[$fieldName] = new FieldData(
-                    $fieldName,
-                    $data->modelName,
-                    $data->type,
-                    $data->validationRegex,
-                    $data->freeForm,
-                    $data->inStats,
-                    $data->public,
-                    $data->inIuForm,
-                    $data->persisted,
-                    $data->affectedByIuForm,
-                    $data->notInspectedUrl,
-                );
-            }
         }
     }
 
     public static function get(Field $field): FieldData
     {
-        return self::$fieldsOld[$field->value];
+        return self::$fields[$field->value];
     }
 }
 
