@@ -385,11 +385,6 @@ final class FieldsData
         ],
     ];
 
-    //    /**
-    //     * @var array<string, FieldData>
-    //     */
-    //    private static array $fields = [];
-
     /**
      * @var array<string, Pattern>
      */
