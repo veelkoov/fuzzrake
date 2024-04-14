@@ -43,7 +43,7 @@ class SubmissionData implements FieldReadInterface
 
     public function get(Field $field): mixed
     {
-        $fieldName = $field->name;
+        $fieldName = $field->value;
 
         if (!array_key_exists($fieldName, $this->data)) {
             throw new DataInputException("Submission $this->id is missing $fieldName");

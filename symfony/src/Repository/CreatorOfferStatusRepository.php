@@ -88,7 +88,7 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
             ->setParameters([
                 'false'    => false,
                 'true'     => true,
-                'url_type' => Field::URL_COMMISSIONS->name,
+                'url_type' => Field::URL_COMMISSIONS->value,
             ])
             ->enableResultCache(3600)
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);

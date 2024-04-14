@@ -97,7 +97,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $callback = [$this, 'set'.ucfirst($field->modelName())];
 
         if (!is_callable($callback)) {
-            throw new InvalidArgumentException("Setter for $field->name does not exist");
+            throw new InvalidArgumentException("Setter for $field->value does not exist");
         }
 
         call_user_func($callback, $newValue);
@@ -110,7 +110,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $callback = [$this, 'get'.ucfirst($field->modelName())];
 
         if (!is_callable($callback)) {
-            throw new InvalidArgumentException("Getter for $field->name does not exist");
+            throw new InvalidArgumentException("Getter for $field->value does not exist");
         }
 
         $result = call_user_func($callback);
@@ -780,17 +780,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getUrlObjs(Field $urlField): array
     {
-        return $this->getUrlAccessor()->getObjects($urlField->name);
+        return $this->getUrlAccessor()->getObjects($urlField->value);
     }
 
     private function getUrl(Field $urlField): string
     {
-        return $this->getUrlAccessor()->getPacked($urlField->name);
+        return $this->getUrlAccessor()->getPacked($urlField->value);
     }
 
     private function setUrl(Field $urlField, string $newUrl): self
     {
-        $this->getUrlAccessor()->setPacked($urlField->name, $newUrl);
+        $this->getUrlAccessor()->setPacked($urlField->value, $newUrl);
 
         return $this;
     }
@@ -1451,7 +1451,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function getStringValue(Field $field): ?string
     {
         foreach ($this->artisan->getValues() as $value) {
-            if ($value->getFieldName() === $field->name) {
+            if ($value->getFieldName() === $field->value) {
                 return $value->getValue();
             }
         }
@@ -1462,7 +1462,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function setStringValue(Field $field, ?string $newValue): self
     {
         foreach ($this->artisan->getValues() as $value) {
-            if ($value->getFieldName() === $field->name) {
+            if ($value->getFieldName() === $field->value) {
                 if (null === $newValue) {
                     $this->artisan->getValues()->removeElement($value);
                 } else {
@@ -1475,7 +1475,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
         if (null !== $newValue) {
             $newEntity = (new ArtisanValue())
-                ->setFieldName($field->name)
+                ->setFieldName($field->value)
                 ->setValue($newValue);
             $this->artisan->addValue($newEntity);
         }

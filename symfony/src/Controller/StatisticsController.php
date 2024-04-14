@@ -189,7 +189,7 @@ class StatisticsController extends AbstractController
         $result = [];
 
         foreach (Fields::inStats() as $field) {
-            $result[$field->name] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
+            $result[$field->value] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
                 if (Field::FORMER_MAKER_IDS === $field) {
                     /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
                      * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part

@@ -24,7 +24,7 @@ class SimpleChange implements ChangeInterface
 
     public function getDescription(): string
     {
-        $name = $this->field->name;
+        $name = $this->field->value;
 
         $oldIsEmpty = !$this->field->isProvided($this->old);
         $newIsEmpty = !$this->field->isProvided($this->new);

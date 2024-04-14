@@ -239,8 +239,8 @@ class ExtendedTest extends AbstractTestWithEM
         } elseif (Field::CONTACT_ALLOWED === $field) {
             self::assertContactValueFieldIsPresentWithValue(Enforce::nString($value), $field, $htmlBody);
         } else {
-            self::assertIsString($value, "Field $field->name should be a string");
-            self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
+            self::assertIsString($value, "Field $field->value should be a string");
+            self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->value is not present with the value '$value'");
         }
     }
 
@@ -259,7 +259,7 @@ class ExtendedTest extends AbstractTestWithEM
         $expected = StringList::unpack($value);
 
         foreach ($expected as $item) {
-            self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->name'.");
+            self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->value'.");
             self::assertTrue($selected[$item], "'$item' is not checked.");
 
             unset($selected[$item]);
@@ -318,13 +318,13 @@ class ExtendedTest extends AbstractTestWithEM
      */
     private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody): void
     {
-        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->name.");
+        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->value.");
 
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
             $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
-            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->name radio field was not present or (not) selected.");
+            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->value radio field was not present or (not) selected.");
         }
     }
 

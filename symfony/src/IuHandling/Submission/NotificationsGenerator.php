@@ -30,7 +30,7 @@ final class NotificationsGenerator
             if ($val = $data->get($url)) {
                 $val = StrUtils::asStr($val);
 
-                $message .= $url->name.': '.$val."\n";
+                $message .= $url->value.': '.$val."\n";
             }
         }
 

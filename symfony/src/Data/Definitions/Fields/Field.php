@@ -9,7 +9,7 @@ use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Utils\FieldReadInterface;
 use TRegx\CleanRegex\Pattern;
 
-enum Field: string
+enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
     #[Props('makerId', validationRegex: V::MAKER_ID)]
     case MAKER_ID = 'MAKER_ID';

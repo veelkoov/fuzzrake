@@ -98,6 +98,6 @@ class SmartUrlAccessorTest extends TestCase
 
     private function getNewArtisanUrl(string $url, Field $type): ArtisanUrl
     {
-        return (new ArtisanUrl())->setUrl($url)->setType($type->name);
+        return (new ArtisanUrl())->setUrl($url)->setType($type->value);
     }
 }

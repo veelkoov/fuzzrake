@@ -255,7 +255,7 @@ class QueryChoicesAppender implements CacheDigestProvider
                     ->andWhere('au1.type = :urlTypeCommissions')
             ));
 
-            $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->name);
+            $builder->setParameter('urlTypeCommissions', Field::URL_COMMISSIONS->value);
         }
 
         if ([] !== $items->getCommon()) {
