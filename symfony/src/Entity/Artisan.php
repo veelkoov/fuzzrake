@@ -21,97 +21,101 @@ class Artisan implements Stringable
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 16)]
+    /*
+     * We are using SQLite, so VARCHAR is TEXT, and there are no limits. Let's not make life more difficult,
+     * and use TEXT everywhere. https://www.sqlite.org/datatype3.html
+     */
+    #[ORM\Column(type: Types::TEXT)]
     private string $makerId = '';
 
-    #[ORM\Column(type: Types::STRING, length: 128)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $name = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $formerly = '';
 
-    #[ORM\Column(type: Types::STRING, length: 512)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $intro = '';
 
-    #[ORM\Column(type: Types::STRING, length: 16)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $since = '';
 
-    #[ORM\Column(type: Types::STRING, length: 16)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $country = '';
 
-    #[ORM\Column(type: Types::STRING, length: 32)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $state = '';
 
-    #[ORM\Column(type: Types::STRING, length: 32)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $city = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $productionModelsComment = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $productionModels = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $stylesComment = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $styles = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $otherStyles = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $orderTypesComment = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $orderTypes = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $otherOrderTypes = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $featuresComment = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $features = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $otherFeatures = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $paymentPlans = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $paymentMethods = '';
 
-    #[ORM\Column(type: Types::STRING, length: 64)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $currenciesAccepted = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $speciesComment = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $speciesDoes = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $speciesDoesnt = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $languages = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $notes = '';
 
-    #[ORM\Column(type: Types::STRING, length: 512)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $inactiveReason = '';
 
-    #[ORM\Column(type: Types::STRING, length: 16, nullable: true, enumType: ContactPermit::class)]
+    #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
     private ?ContactPermit $contactAllowed = null;
 
-    #[ORM\Column(type: Types::STRING, length: 32)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $contactMethod = '';
 
-    #[ORM\Column(type: Types::STRING, length: 128)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $contactInfoObfuscated = '';
 
     #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]

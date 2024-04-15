@@ -31,7 +31,7 @@ class ArtisanUrlState
     #[ORM\Column(type: Types::INTEGER)]
     private int $lastFailureCode = 0;
 
-    #[ORM\Column(type: Types::STRING, length: 512)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $lastFailureReason = '';
 
     public function getId(): ?int

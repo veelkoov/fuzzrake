@@ -22,10 +22,10 @@ class ArtisanUrl implements Stringable
     #[ORM\JoinColumn(name: 'artisan_id', nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: Types::STRING, length: 32)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $type = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $url = '';
 
     #[ORM\OneToOne(mappedBy: 'url', targetEntity: ArtisanUrlState::class, cascade: ['persist', 'remove'], orphanRemoval: true)]

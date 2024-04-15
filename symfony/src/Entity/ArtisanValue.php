@@ -21,10 +21,10 @@ class ArtisanValue
     #[ORM\JoinColumn(name: 'artisan_id', nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: Types::STRING, length: 64)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $fieldName = '';
 
-    #[ORM\Column(type: Types::STRING, length: 4096)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $value = '';
 
     public function getId(): ?int

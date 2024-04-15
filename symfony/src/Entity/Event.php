@@ -30,25 +30,25 @@ class Event
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $timestamp;
 
-    #[ORM\Column(type: Types::STRING, length: 4095)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $description = '';
 
-    #[ORM\Column(type: Types::STRING, length: 16)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $type = self::TYPE_DATA_UPDATED;
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $noLongerOpenFor = '';
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $nowOpenFor = '';
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $trackingIssues = false;
 
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $artisanName = '';
 
-    #[ORM\Column(type: Types::STRING, length: 1024)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $checkedUrls = '';
 
     #[GreaterThanOrEqual(value: 0)]
@@ -67,7 +67,7 @@ class Event
     private int $reportedUpdatedMakersCount = 0;
 
     #[Length(max: 256)]
-    #[ORM\Column(type: Types::STRING, length: 256)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $gitCommits = '';
 
     public function __construct()

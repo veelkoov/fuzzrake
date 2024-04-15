@@ -29,15 +29,15 @@ class CreatorPrivateData
     #[ORM\JoinColumn(name: 'artisan_id', unique: true, nullable: false)] // TODO: Rename
     private Creator $creator;
 
-    #[ORM\Column(type: Types::STRING, length: 512)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $contactAddress = '';
 
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you had a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $password = '';
 
-    #[ORM\Column(type: Types::STRING, length: 512)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $originalContactInfo = '';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

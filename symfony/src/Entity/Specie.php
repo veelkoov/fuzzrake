@@ -16,7 +16,7 @@ class Specie
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 1024, unique: true)]
+    #[ORM\Column(type: Types::TEXT, unique: true)]
     private string $name = '';
 
     public function getId(): ?int
