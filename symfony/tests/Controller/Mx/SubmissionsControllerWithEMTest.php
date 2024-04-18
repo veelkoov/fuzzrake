@@ -598,4 +598,29 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             Submissions::submit($artisan);
         }
     }
+
+    /**
+     * @throws JsonException
+     */
+    public function testHiddenMarker(): void
+    {
+        $client = self::createClient();
+
+        $entity = Artisan::new()->setMakerId('MAKERID')->setInactiveReason('Dunno');
+        self::persistAndFlush($entity);
+
+        $id = Submissions::submit($entity); // No need to modify
+
+        $client->request('GET', "/mx/submissions/$id");
+
+        self::assertSelectorExists('#creator-hidden-warning');
+        self::assertSelectorTextSame('#creator-hidden-warning', 'Hidden');
+
+        $entity->setInactiveReason('');
+        self::flush();
+
+        $client->request('GET', '/mx/submissions/MAKERID');
+
+        self::assertSelectorNotExists('#creator-hidden-warning');
+    }
 }

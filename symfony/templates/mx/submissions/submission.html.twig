@@ -23,6 +23,10 @@
 
         <p>
             Updating: <a href="{{ path('main', {'_fragment': artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>.
+
+            {% if '' != artisan.inactiveReason %}
+                <span id="creator-hidden-warning" class="badge bg-warning text-dark">Hidden</span>
+            {% endif %}
         </p>
     {% endif %}
 
