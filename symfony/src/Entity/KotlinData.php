@@ -17,7 +17,7 @@ class KotlinData // TODO: Rename. Could serve a lot of purposes. Pre-computed da
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $name = '';
 
     #[ORM\Column(name: 'json', type: Types::TEXT)] // TODO: Rename
