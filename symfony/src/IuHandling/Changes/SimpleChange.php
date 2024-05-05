@@ -54,7 +54,7 @@ class SimpleChange implements ChangeInterface
     public function isActuallyAChange(): bool
     {
         return $this->old instanceof DateTimeImmutable && $this->new instanceof DateTimeImmutable
-            ? DateTimeUtils::equal($this->old, $this->new)
+            ? !DateTimeUtils::equal($this->old, $this->new)
             : $this->old !== $this->new;
     }
 
