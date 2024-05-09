@@ -10,6 +10,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Definitions\Fields\Validation;
+use App\Data\FieldValue;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Entity\ArtisanValue;
@@ -99,6 +100,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         if (!is_callable($callback)) {
             throw new InvalidArgumentException("Setter for $field->value does not exist");
         }
+
+        FieldValue::validateType($field, $newValue);
 
         call_user_func($callback, $newValue);
 

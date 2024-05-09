@@ -9,4 +9,5 @@ enum Type
     case STRING;
     case STR_LIST;
     case DATE;
+    case BOOLEAN;
 }

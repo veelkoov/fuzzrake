@@ -98,28 +98,28 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('speciesDoesnt', type: Type::STR_LIST)]
     case SPECIES_DOESNT = 'SPECIES_DOESNT';
 
-    #[Props('isMinor', inIuForm: false, inStats: false, freeForm: false)]
+    #[Props('isMinor', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false)]
     case IS_MINOR = 'IS_MINOR'; // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/103
 
     #[Props('ages', freeForm: false)]
     case AGES = 'AGES';
 
-    #[Props('nsfwWebsite', inStats: false, freeForm: false)]
+    #[Props('nsfwWebsite', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case NSFW_WEBSITE = 'NSFW_WEBSITE';
 
-    #[Props('nsfwSocial', inStats: false, freeForm: false)]
+    #[Props('nsfwSocial', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case NSFW_SOCIAL = 'NSFW_SOCIAL';
 
-    #[Props('doesNsfw', inStats: false, freeForm: false)]
+    #[Props('doesNsfw', type: Type::BOOLEAN, inStats: false, freeForm: false)]
     case DOES_NSFW = 'DOES_NSFW';
 
-    #[Props('safeDoesNsfw', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
+    #[Props('safeDoesNsfw', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case SAFE_DOES_NSFW = 'SAFE_DOES_NSFW';
 
-    #[Props('worksWithMinors', public: false, inStats: false, freeForm: false)]
+    #[Props('worksWithMinors', type: Type::BOOLEAN, public: false, inStats: false, freeForm: false)]
     case WORKS_WITH_MINORS = 'WORKS_WITH_MINORS';
 
-    #[Props('safeWorksWithMinors', inIuForm: false, inStats: false, freeForm: false, persisted: false)]
+    #[Props('safeWorksWithMinors', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false, persisted: false)]
     case SAFE_WORKS_WITH_MINORS = 'SAFE_WORKS_WITH_MINORS';
 
     #[Props('fursuitReviewUrl', validationRegex: V::FSR_URL)]
@@ -206,7 +206,7 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('csLastCheck', inIuForm: false, inStats: false, freeForm: false)]
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
 
-    #[Props('csTrackerIssue', inIuForm: false, inStats: false, freeForm: false)]
+    #[Props('csTrackerIssue', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false)]
     case CS_TRACKER_ISSUE = 'CS_TRACKER_ISSUE';
 
     #[Props('openFor', type: Type::STR_LIST, inIuForm: false, inStats: false, freeForm: false)]
@@ -256,6 +256,11 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     public function isDate(): bool
     {
         return Type::DATE === $this->getData()->type;
+    }
+
+    public function isBoolean(): bool
+    {
+        return Type::BOOLEAN === $this->getData()->type;
     }
 
     public function isPersisted(): bool
