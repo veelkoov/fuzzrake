@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-class Notification
+readonly class Notification
 {
     public function __construct(
-        public readonly string $subject,
-        public readonly string $contents,
+        public string $subject,
+        public string $contents,
+        public string $attachedJsonData = '',
     ) {
     }
 }

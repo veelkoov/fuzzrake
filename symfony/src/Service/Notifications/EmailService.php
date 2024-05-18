@@ -26,6 +26,10 @@ class EmailService implements MessengerInterface
             ->text($notification->contents)
         ;
 
+        if ('' !== $notification->attachedJsonData) {
+            $email->attach($notification->attachedJsonData, 'data.json', 'application/json');
+        }
+
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $exception) {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IuHandling\Submission;
 
 use App\Data\Definitions\Fields\Fields;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\StrUtils;
 use App\Utils\Traits\UtilityClass;
 use App\ValueObject\Notification;
@@ -14,14 +14,12 @@ final class NotificationsGenerator
 {
     use UtilityClass;
 
-    public static function getMessage(Artisan $data, bool $s3SendingOk): Notification
+    public static function getMessage(Creator $data, string $jsonData): Notification
     {
-        $optionalWarning = $s3SendingOk ? '' : "WARNING: S3 sending failed!\n\n";
-
         $names = StrUtils::artisanNamesSafeForCli($data);
 
         $message = <<<MESSAGE
-            {$optionalWarning}{$names}
+            {$names}
             From: {$data->getCountry()}
             
             MESSAGE;
@@ -37,6 +35,7 @@ final class NotificationsGenerator
         return new Notification(
             "IU submission: {$data->getName()}",
             $message,
+            $jsonData,
         );
     }
 }
