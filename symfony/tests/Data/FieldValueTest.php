@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
 use Throwable;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
+/**
+ * @small
+ */
 class FieldValueTest extends TestCase
 {
     /**

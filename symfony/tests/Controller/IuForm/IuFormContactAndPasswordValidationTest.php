@@ -10,6 +10,9 @@ use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
+/**
+ * @medium
+ */
 class IuFormContactAndPasswordValidationTest extends WebTestCaseWithEM
 {
     use IuFormTrait;
