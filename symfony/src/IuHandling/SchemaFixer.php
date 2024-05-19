@@ -23,34 +23,34 @@ final class SchemaFixer
 
         switch ($data[self::SCHEMA_VERSION]) {
             case 8:
-                $data[Field::URL_PRICES->name] = [Enforce::string($data[Field::URL_PRICES->name])];
-                $data[Field::URL_COMMISSIONS->name] = [Enforce::string($data['URL_CST'])];
+                $data[Field::URL_PRICES->value] = [Enforce::string($data[Field::URL_PRICES->value])];
+                $data[Field::URL_COMMISSIONS->value] = [Enforce::string($data['URL_CST'])];
                 // no break
 
             case 9:
-                $data[Field::IS_MINOR->name] = null;
-                $data[Field::WORKS_WITH_MINORS->name] = null;
+                $data[Field::IS_MINOR->value] = null;
+                $data[Field::WORKS_WITH_MINORS->value] = null;
                 // no break
 
             case 10:
-                $data[Field::AGES->name] = null;
+                $data[Field::AGES->value] = null;
                 // no break
 
             case 11:
-                $data[Field::PAYMENT_PLANS->name] = explode("\n", Enforce::string($data[Field::PAYMENT_PLANS->name]));
+                $data[Field::PAYMENT_PLANS->value] = explode("\n", Enforce::string($data[Field::PAYMENT_PLANS->value]));
                 // no break
 
             case 12:
-                $data[Field::NSFW_WEBSITE->name] = null;
-                $data[Field::NSFW_SOCIAL->name] = null;
-                $data[Field::DOES_NSFW->name] = null;
+                $data[Field::NSFW_WEBSITE->value] = null;
+                $data[Field::NSFW_SOCIAL->value] = null;
+                $data[Field::DOES_NSFW->value] = null;
                 // no break
 
             case 13:
                 unset($data['BP_LAST_CHECK']);
 
-                if (!array_key_exists(Field::URL_MASTODON->name, $data)) {
-                    $data[Field::URL_MASTODON->name] = '';
+                if (!array_key_exists(Field::URL_MASTODON->value, $data)) {
+                    $data[Field::URL_MASTODON->value] = '';
                 }
         }
 

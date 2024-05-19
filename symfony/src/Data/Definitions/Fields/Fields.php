@@ -56,7 +56,7 @@ final class Fields
 
     public static function urls(): FieldsList
     {
-        return self::$urls ??= self::all()->filtered(fn (Field $field): bool => str_starts_with($field->name, 'URL_'));
+        return self::$urls ??= self::all()->filtered(fn (Field $field): bool => str_starts_with($field->value, 'URL_'));
     }
 
     public static function nonInspectedUrls(): FieldsList

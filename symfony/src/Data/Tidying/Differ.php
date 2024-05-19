@@ -27,7 +27,7 @@ class Differ
         }
 
         if ($field->isList()) {
-            $this->showListDiff($field->name, $oldVal, $newVal);
+            $this->showListDiff($field->value, $oldVal, $newVal);
         } else {
             $this->showSingleValueDiff($field, $oldVal, $newVal);
         }
@@ -74,12 +74,12 @@ class Differ
 
         if ($oldVal) {
             $oldVal = StrUtils::strSafeForCli($oldVal);
-            $this->printer->writeln("OLD $field->name $q".Formatter::deleted($oldVal).$q);
+            $this->printer->writeln("OLD $field->value $q".Formatter::deleted($oldVal).$q);
         }
 
         if ($newVal) {
             $newVal = StrUtils::strSafeForCli($newVal);
-            $this->printer->writeln("NEW $field->name $q".Formatter::added($newVal).$q);
+            $this->printer->writeln("NEW $field->value $q".Formatter::added($newVal).$q);
         }
     }
 }

@@ -427,7 +427,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->select('COUNT(DISTINCT a.id)')
             ->where('au.type = :type')
             ->andWhere('a.inactiveReason = :empty')
-            ->setParameter('type', Field::URL_COMMISSIONS->name)
+            ->setParameter('type', Field::URL_COMMISSIONS->value)
             ->setParameter('empty', '')
             ->getQuery()
             ->enableResultCache(3600)

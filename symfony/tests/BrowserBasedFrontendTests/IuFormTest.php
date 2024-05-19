@@ -50,7 +50,7 @@ class IuFormTest extends PantherTestCaseWithEM
         self::waitUntilHides($isUpdate ? '#forgotten_password_instructions' : '#contact_info');
 
         $this->client->getCrawler()->selectButton('Submit')->form()->setValues([
-            'iu_form[contactAllowed]' => $contactPermit->name,
+            'iu_form[contactAllowed]' => $contactPermit->value,
         ]);
 
         if ($passwordChangePossible) {

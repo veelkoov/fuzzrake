@@ -42,7 +42,7 @@ class DataExportCommand extends Command
         $col = 1;
         foreach (Fields::public() as $field) {
             $sheet->getCellByColumnAndRow($col++, 1)
-                ->setValue($field->name);
+                ->setValue($field->value);
         }
 
         $row = 2;

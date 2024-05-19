@@ -25,7 +25,7 @@ class CreatorOfferStatus
     #[ORM\JoinColumn(nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: Types::STRING, length: 32)]
+    #[ORM\Column(type: Types::TEXT)]
     private string $offer = '';
 
     #[ORM\Column(type: Types::BOOLEAN)]

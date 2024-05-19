@@ -29,7 +29,7 @@ class FieldsList implements IteratorAggregate
         array $fields,
     ) {
         foreach ($fields as $field) {
-            $this->fields[$field->name] = $field;
+            $this->fields[$field->value] = $field;
         }
     }
 
@@ -72,7 +72,7 @@ class FieldsList implements IteratorAggregate
 
     public function has(Field $field): bool
     {
-        return array_key_exists($field->name, $this->fields);
+        return array_key_exists($field->value, $this->fields);
     }
 
     public function empty(): bool

@@ -1,4 +1,4 @@
-FROM php:8.2.5-fpm-alpine3.17
+FROM php:8.2.19-fpm-alpine3.19
 
 ARG DEV_MACHINE=no
 ENV DEV_MACHINE "$DEV_MACHINE"
@@ -12,15 +12,13 @@ ENV DOCKER_UID "$DOCKER_UID"
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev linux-headers
 
-RUN apk add --no-cache icu php-intl python3 py3-pip util-linux zip libzip-dev libpng libpng-dev acl
+RUN apk add --no-cache icu php-intl util-linux zip libzip-dev libpng libpng-dev acl
 
 RUN wget https://get.symfony.com/cli/installer -O /tmp/symfony_installer \
     && sed -ri 's/^binary_dest=.*$/binary_dest=\/usr\/local\/bin/g' /tmp/symfony_installer \
     && sed -ri 's/builtin echo/echo/g' /tmp/symfony_installer \
     && sh /tmp/symfony_installer \
     && rm /tmp/symfony_installer
-
-RUN pip3 install awscli
 
 RUN docker-php-ext-install -j$(nproc) intl opcache zip gd bcmath
 

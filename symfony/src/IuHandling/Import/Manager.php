@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\IuHandling\Import;
 
 use App\Data\Definitions\Fields\Field;
+use App\Data\FieldValue;
 use App\IuHandling\Exception\ManagerConfigError;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\PackedStringList;
 use App\Utils\StringBuffer;
 use App\Utils\StrUtils;
+use InvalidArgumentException;
 
 class Manager
 {
@@ -78,8 +79,10 @@ class Manager
             throw new ManagerConfigError("Unknown field: '$fieldName'");
         }
 
-        if ($field->isList()) {
-            $correctedValue = PackedStringList::unpack($correctedValue);
+        try {
+            $correctedValue = FieldValue::fromString($field, $correctedValue);
+        } catch (InvalidArgumentException $ex) {
+            throw new ManagerConfigError("Wrong value for '$fieldName': {$ex->getMessage()}", $ex->getCode(), $ex);
         }
 
         $this->corrections[] = new ValueCorrection($field, $correctedValue);

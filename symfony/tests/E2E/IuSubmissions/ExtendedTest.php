@@ -243,7 +243,7 @@ class ExtendedTest extends AbstractTestWithEM
                 $value = PackedStringList::pack(Enforce::strList($value));
             }
 
-            self::assertIsString($value, "Unexpected $field->name value type");
+            self::assertIsString($value, "Unexpected $field->value value type");
             self::assertFormValue('form[name=iu_form]', "iu_form[{$field->modelName()}]", $value, "Field $field->name is not present with the value '$value'");
         }
     }
@@ -263,7 +263,7 @@ class ExtendedTest extends AbstractTestWithEM
             ->match($htmlBody)->toMap(fn (Detail $detail): array => [$detail->get('value') => str_contains($detail->text(), 'checked="checked"')]);
 
         foreach ($items as $item) {
-            self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->name'.");
+            self::assertArrayHasKey($item, $selected, "'$item' is not an option for '$field->value'.");
             self::assertTrue($selected[$item], "'$item' is not checked.");
 
             unset($selected[$item]);
@@ -322,13 +322,13 @@ class ExtendedTest extends AbstractTestWithEM
      */
     private static function assertRadioFieldIsPresentWithValue(?string $value, array $choices, Field $field, string $htmlBody): void
     {
-        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->name.");
+        self::assertTrue(null === $value || in_array($value, $choices), "'$value' is not one of the possible choices for $field->value.");
 
         foreach ($choices as $choice) {
             $checked = $value === $choice ? 'checked="checked"' : '';
 
             $regexp = "<input[^>]+name=\"iu_form\[{$field->modelName()}]\"[^>]*value=\"$choice\"[^>]*{$checked}[^>]*>";
-            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->name radio field was not present or (not) selected.");
+            self::assertTrue(pattern($regexp)->test($htmlBody), "$field->value radio field was not present or (not) selected.");
         }
     }
 

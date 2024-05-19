@@ -10,6 +10,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Definitions\Fields\Validation;
+use App\Data\FieldValue;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
@@ -89,8 +90,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $callback = [$this, 'set'.ucfirst($field->modelName())];
 
         if (!is_callable($callback)) {
-            throw new InvalidArgumentException("Setter for $field->name does not exist");
+            throw new InvalidArgumentException("Setter for $field->value does not exist");
         }
+
+        FieldValue::validateType($field, $newValue);
 
         call_user_func($callback, $newValue);
 
@@ -102,7 +105,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $callback = [$this, 'get'.ucfirst($field->modelName())];
 
         if (!is_callable($callback)) {
-            throw new InvalidArgumentException("Getter for $field->name does not exist");
+            throw new InvalidArgumentException("Getter for $field->value does not exist");
         }
 
         return call_user_func($callback);
@@ -800,7 +803,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
     private function getUrl(Field $urlField): string
     {
-        return SmartUrlAccessor::getSingle($this, $urlField->name);
+        return SmartUrlAccessor::getSingle($this, $urlField->value);
     }
 
     /**
@@ -808,12 +811,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     private function getUrls(Field $urlField): array
     {
-        return SmartUrlAccessor::getList($this, $urlField->name);
+        return SmartUrlAccessor::getList($this, $urlField->value);
     }
 
     private function setUrl(Field $urlField, string $newUrl): self
     {
-        SmartUrlAccessor::setSingle($this, $urlField->name, $newUrl);
+        SmartUrlAccessor::setSingle($this, $urlField->value, $newUrl);
 
         return $this;
     }
@@ -823,7 +826,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     private function setUrls(Field $urlField, array $newUrls): self
     {
-        SmartUrlAccessor::setList($this, $urlField->name, $newUrls);
+        SmartUrlAccessor::setList($this, $urlField->value, $newUrls);
 
         return $this;
     }
@@ -1561,7 +1564,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function getStringValue(Field $field): ?string
     {
         foreach ($this->artisan->getValues() as $value) {
-            if ($value->getFieldName() === $field->name) {
+            if ($value->getFieldName() === $field->value) {
                 return $value->getValue();
             }
         }
@@ -1572,7 +1575,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     private function setStringValue(Field $field, ?string $newValue): self
     {
         foreach ($this->artisan->getValues() as $value) {
-            if ($value->getFieldName() === $field->name) {
+            if ($value->getFieldName() === $field->value) {
                 if (null === $newValue) {
                     $this->artisan->getValues()->removeElement($value);
                 } else {
@@ -1585,7 +1588,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
         if (null !== $newValue) {
             $newEntity = (new ArtisanValue())
-                ->setFieldName($field->name)
+                ->setFieldName($field->value)
                 ->setValue($newValue);
             $this->artisan->addValue($newEntity);
         }

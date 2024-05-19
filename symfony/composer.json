@@ -23,6 +23,7 @@
         "symfony/flex": "*",
         "symfony/form": "*",
         "symfony/framework-bundle": "*",
+        "symfony/mailer": "7.0.*",
         "symfony/monolog-bundle": "^3.6",
         "symfony/process": "*",
         "symfony/runtime": "*",

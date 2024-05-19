@@ -21,7 +21,7 @@ class MakerId
     #[ORM\JoinColumn(nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: Types::STRING, length: 7, unique: true)]
+    #[ORM\Column(type: Types::TEXT, unique: true)]
     private string $makerId;
 
     public function __construct(string $makerId = '')

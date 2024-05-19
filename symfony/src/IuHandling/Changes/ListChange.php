@@ -32,7 +32,7 @@ readonly class ListChange implements ChangeInterface
 
     public function getDescription(): string
     {
-        $name = $this->field->name;
+        $name = $this->field->value;
         $added = $this->added;
         $removed = $this->removed;
 

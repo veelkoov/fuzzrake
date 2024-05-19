@@ -24,7 +24,7 @@ class SimpleChange implements ChangeInterface
 
     public function getDescription(): string
     {
-        $name = $this->field->name;
+        $name = $this->field->value;
 
         $oldIsEmpty = !$this->field->isProvided($this->old);
         $newIsEmpty = !$this->field->isProvided($this->new);
@@ -54,7 +54,7 @@ class SimpleChange implements ChangeInterface
     public function isActuallyAChange(): bool
     {
         return $this->old instanceof DateTimeImmutable && $this->new instanceof DateTimeImmutable
-            ? DateTimeUtils::equal($this->old, $this->new)
+            ? !DateTimeUtils::equal($this->old, $this->new)
             : $this->old !== $this->new;
     }
 
