@@ -90,11 +90,8 @@ function action_get_snapshots() {
 }
 
 function action_get_submissions() {
-    . "$SYMFONY_DIR_REL_PATH/.env.local" # Only to get S3_COPIES_BUCKET_URL
-
     run_command rsync --recursive --progress --human-readable --compress --checksum \
         "$PROD_ENV_SSH_PATH/$SUBMISSIONS_DIR_REL_PATH/" "$SUBMISSIONS_DIR_REL_PATH/"
-    run_command aws s3 sync --size-only "${S3_COPIES_BUCKET_URL%/}/" "$SUBMISSIONS_DIR_REL_PATH/"
 }
 
 function action_dbcommit() {
