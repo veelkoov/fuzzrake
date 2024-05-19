@@ -29,7 +29,7 @@ class SubmissionService
             $jsonData = self::asJson($submission);
             $this->local->saveOnDiskGetRelativePath($jsonData);
 
-            $this->messenger->send(Generator::getMessage($submission, $jsonData)); // Ignoring result. Artisans instructed to reach out to the maintainer if no change happens within X days.
+            $this->messenger->send(Generator::getMessage($submission, $jsonData)); // Ignoring result. Creators instructed to reach out to the maintainer if no change happens within X days.
 
             return true;
         } catch (Exception $exception) {
