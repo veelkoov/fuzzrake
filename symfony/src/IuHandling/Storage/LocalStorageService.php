@@ -43,9 +43,4 @@ class LocalStorageService
     {
         return $this->dataDirPath.'/'.$relativeFilePath;
     }
-
-    public function removeLocalCopy(string $relativeFilePath): void
-    {
-        $this->filesystem->remove($this->getAbsolutePath($relativeFilePath));
-    }
 }
