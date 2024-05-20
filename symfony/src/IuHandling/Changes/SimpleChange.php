@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
+use App\Data\FieldValue;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
 use DateTimeImmutable;
@@ -26,8 +27,8 @@ class SimpleChange implements ChangeInterface
     {
         $name = $this->field->value;
 
-        $oldIsEmpty = !$this->field->isProvided($this->old);
-        $newIsEmpty = !$this->field->isProvided($this->new);
+        $oldIsEmpty = !FieldValue::isProvided($this->field, $this->old);
+        $newIsEmpty = !FieldValue::isProvided($this->field, $this->new);
 
         $old = $this->getOptionallyQuotedValue($this->old);
         $new = $this->getOptionallyQuotedValue($this->new);

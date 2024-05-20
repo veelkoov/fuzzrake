@@ -6,9 +6,9 @@ namespace App\Data\Definitions\Fields;
 
 use App\Data\Definitions\Fields\Properties as Props;
 use App\Data\Definitions\Fields\ValidationRegexps as V;
+use App\Data\FieldValue;
 use App\Utils\FieldReadInterface;
 use TRegx\CleanRegex\Pattern;
-use UnexpectedValueException;
 
 enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
@@ -204,7 +204,7 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('password', public: false, inStats: false, freeForm: false)]
     case PASSWORD = 'PASSWORD';
 
-    #[Props('csLastCheck', inIuForm: false, inStats: false, freeForm: false)]
+    #[Props('csLastCheck', type: Type::DATE, inIuForm: false, inStats: false, freeForm: false)]
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
 
     #[Props('csTrackerIssue', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false)]
@@ -304,21 +304,8 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
         return $this->getData()->isFreeForm;
     }
 
-    public function isProvided(mixed $value): bool
-    {
-        if ($this->isList()) {
-            if (!is_array($value)) {
-                throw new UnexpectedValueException('List fields must be arrays');
-            }
-
-            return [] !== $value;
-        }
-
-        return null !== $value && '' !== $value;
-    }
-
     public function providedIn(FieldReadInterface $source): bool
     {
-        return $this->isProvided($source->get($this));
+        return FieldValue::isProvided($this, $source->get($this));
     }
 }
