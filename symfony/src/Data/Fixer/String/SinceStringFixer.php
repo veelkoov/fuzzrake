@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Fixer;
+namespace App\Data\Fixer\String;
 
+use App\Data\Fixer\StringFixerInterface;
 use TRegx\CleanRegex\Pattern;
 
-class SinceFixer implements FixerInterface
+final class SinceStringFixer implements StringFixerInterface
 {
     private readonly Pattern $pattern;
 

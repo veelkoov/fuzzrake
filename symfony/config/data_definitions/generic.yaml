@@ -6,18 +6,16 @@ parameters:
       '’':                        "'"
       '^-$':                      ''
       '^Rather not say$':         ''
-      '^n/a$#i':                  ''
-      '^no\.$#':                  ''
+      '^n/a$':                    ''
+      '^no\.$':                   ''
       '^n/a yet$':                ''
       '[ \t]{2,}':                ' '
-      '(p)ose?able':              '$1oseable'
-      'Tounges':                  'Tongues'
-      '(^|\\s)LED($|\\s)':        '$1LED$2'
 
   lists:
     regex_prefix: '(?<=^|\n)'
     regex_suffix: '(?=\n|$)'
     replacements:
+      '(^|\\s)LED($|\\s)':                           '$1LED$2'
       'Arm ?sleeves':                                'Arm sleeves'
       'backpacks':                                   'Backpacks'
       'Bandannas':                                   'Bandanas'
@@ -37,7 +35,8 @@ parameters:
       'Plush Suits':                                 'Plush suits'
       'Plush Claws':                                 'Plush claws'
       'Plushes':                                     'Plushies'
-      'Pose?able tongues?':                          'Poseable tongue'
+      '(p)ose?able':                                 '$1oseable'
+      'Pose?able tou?ngu?es?':                       'Poseable tongue'
       'Removable Eyelids':                           'Removable eyelids'
       'Removable Eyes':                              'Removable eyes'
       'Sock paws':                                   'Sockpaws'
