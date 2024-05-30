@@ -740,15 +740,21 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrl(Field::URL_OTHER_SHOP, $url);
     }
 
-    #[Length(max: 1024)]
-    public function getOtherUrls(): string
+    /**
+     * @return list<string>
+     */
+    #[StrListLength(max: 1024)]
+    public function getOtherUrls(): array
     {
-        return $this->getUrl(Field::URL_OTHER);
+        return $this->getUrls(Field::URL_OTHER);
     }
 
-    public function setOtherUrls(string $otherUrls): self
+    /**
+     * @param list<string> $otherUrls
+     */
+    public function setOtherUrls(array $otherUrls): self
     {
-        return $this->setUrl(Field::URL_OTHER, $otherUrls);
+        return $this->setUrls(Field::URL_OTHER, $otherUrls);
     }
 
     #[Length(max: 1024)]

@@ -144,7 +144,9 @@
         "https://scritchphotos.com/url1-maker1_before_update-mini.html",
         "https://www.furtrack.com/url2-maker1_before_update-mini.html"
     ],
-    "URL_OTHER": "https://other.com/maker1_before_update.html",
+    "URL_OTHER": [
+        "https://other.com/maker1_before_update.html"
+    ],
     "URL_COMMISSIONS": [
         "https://cst.com/cst1-maker1_before_update.html",
         "https://cst2.com/cst2-maker1_before_update.html"

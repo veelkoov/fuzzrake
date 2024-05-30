@@ -192,7 +192,7 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('miniatureUrls', type: Type::STR_LIST, inIuForm: false, validationRegex: V::MINIATURE_URL_LIST, notInspectedUrl: true)]
     case URL_MINIATURES = 'URL_MINIATURES';
 
-    #[Props('otherUrls', notInspectedUrl: true)]
+    #[Props('otherUrls', type: Type::STR_LIST, notInspectedUrl: true)]
     case URL_OTHER = 'URL_OTHER'; // TODO: Rename "-s"
 
     #[Props('notes', inStats: false)]

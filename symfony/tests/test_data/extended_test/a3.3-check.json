@@ -132,7 +132,9 @@
     ],
     "URL_MINIATURES": [
     ],
-    "URL_OTHER": "https://other.com/value_artisan3.html",
+    "URL_OTHER": [
+        "https://other.com/value_artisan3.html"
+    ],
     "URL_COMMISSIONS": [
         "https://cst.com/value_artisan3.html",
         "https://cst2.com/value2artisan3.html"

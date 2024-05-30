@@ -399,7 +399,8 @@ class Data extends BaseForm
 
         foreach ([
             'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
-            'otherStyles', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes', 'speciesDoesnt',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes',
+            'speciesDoesnt',
         ] as $fieldName) {
             $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }

@@ -92,7 +92,7 @@ export default class Artisan {
                 readonly furtrackUrl: string,
                 readonly photoUrls: string[],
                 readonly miniatureUrls: string[],
-                readonly otherUrls: string,
+                readonly otherUrls: string[],
 
                 readonly notes: string,
                 readonly inactiveReason: string,
@@ -175,7 +175,7 @@ export default class Artisan {
     }
 
     public static empty(): Artisan {
-        return new Artisan('-', [], '', [], '', '', '', '', [], '', '', '', '', [], '', [], [], '', [], [], '', [], [], [], [], [], '', [], [], null, '', null, null, null, true, false, '', '', [], [], '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', [], [], '', '', '', '', false, [], [], 0, '', '');
+        return new Artisan('-', [], '', [], '', '', '', '', [], '', '', '', '', [], '', [], [], '', [], [], '', [], [], [], [], [], '', [], [], null, '', null, null, null, true, false, '', '', [], [], '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', [], [], [], '', '', '', false, [], [], 0, '', '');
     }
 
     public static fromArray(data: string[]|string|number|boolean|null): Artisan {
