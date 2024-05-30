@@ -6,5 +6,8 @@ namespace App\Filtering\DataRequests\Filters\ValueChecker;
 
 interface ValueCheckerInterface
 {
-    public function matches(string $items, ?bool $matchedOther): bool;
+    /**
+     * @param list<string> $items
+     */
+    public function matches(array $items, ?bool $matchedOther): bool;
 }

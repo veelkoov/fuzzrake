@@ -10,7 +10,7 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\StringList;
+use App\Utils\PackedStringList;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
@@ -101,7 +101,7 @@ class DataService
                 $result = [];
 
                 foreach ($this->artisanRepository->getDistinctLanguages() as $languages) {
-                    $result = [...$result, ...StringList::unpack($languages)];
+                    $result = [...$result, ...PackedStringList::unpack($languages)];
                 }
 
                 return array_unique($result);

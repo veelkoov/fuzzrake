@@ -19,8 +19,8 @@ final class StrUtils
         $names = $makerIds = [];
 
         foreach (array_filter($artisans) as /* @var Artisan $artisan */ $artisan) {
-            $names = array_merge($artisan->getAllNamesArr(), $names);
-            $makerIds = array_merge($artisan->getAllMakerIdsArr(), $makerIds);
+            $names = array_merge($artisan->getAllNames(), $names);
+            $makerIds = array_merge($artisan->getAllMakerIds(), $makerIds);
         }
 
         return self::strSafeForCli(implode(' / ', [...array_filter(array_unique($names)), ...array_filter(array_unique($makerIds))]));

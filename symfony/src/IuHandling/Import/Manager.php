@@ -21,7 +21,7 @@ class Manager
     final public const CMD_SET = 'set';
 
     /**
-     * @var ValueCorrection[]
+     * @var list<ValueCorrection>
      */
     private array $corrections = [];
     private bool $isAccepted = false;

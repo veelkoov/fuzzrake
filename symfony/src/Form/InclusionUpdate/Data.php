@@ -13,8 +13,9 @@ use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
+use App\Form\Transformers\NullToEmptyArrayTransformer;
 use App\Form\Transformers\SinceTransformer;
-use App\Form\Transformers\StringArrayTransformer;
+use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -393,7 +394,15 @@ class Data extends BaseForm
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(new StringArrayTransformer());
+            $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
+        }
+
+        foreach ([
+            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes',
+            'speciesDoesnt',
+        ] as $fieldName) {
+            $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
 
         $builder->get('since')->addModelTransformer(new SinceTransformer());

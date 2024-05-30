@@ -92,7 +92,10 @@ class AppExtensions extends AbstractExtension
         return array_filter($items, fn (Item $item) => $pattern->test($item->label));
     }
 
-    public function filterFilterByQuery(string $input, DataQuery $query): string
+    /**
+     * @param list<string> $input
+     */
+    public function filterFilterByQuery(array $input, DataQuery $query): string
     {
         return implode(', ', $query->filterList($input));
     }

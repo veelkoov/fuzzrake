@@ -70,10 +70,10 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setTwitterUrl('http://www.twitter.com/getfursuit')
 
             // NOT fixed
-            ->setFeatures(Features::FOLLOW_ME_EYES)
+            ->setFeatures([Features::FOLLOW_ME_EYES])
 
             // Fixed
-            ->setOtherFeatures('Hidden pockets')
+            ->setOtherFeatures(['Hidden pockets'])
         ;
 
         $id = Submissions::submit($submission);
@@ -117,11 +117,11 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setMakerId('MAKERID')
             ->setName('Some testing maker')
             ->setCountry('FI')
-            ->setFeatures(Features::FOLLOW_ME_EYES."\n".Features::MOVABLE_JAW)
-            ->setOtherFeatures("Hidden pocket\nSqueaker in nose")
-            ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
-            ->setOtherOrderTypes('Arm sleeves')
-            ->setCurrenciesAccepted('Euro')
+            ->setFeatures([Features::FOLLOW_ME_EYES, Features::MOVABLE_JAW])
+            ->setOtherFeatures(['Hidden pocket', 'Squeaker in nose'])
+            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
+            ->setOtherOrderTypes(['Arm sleeves'])
+            ->setCurrenciesAccepted(['Euro'])
         ;
 
         self::persistAndFlush($entity);
@@ -134,7 +134,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setName('Changed name')
 
             // Submitted different, NOT fixed, changed / not tested
-            ->setFormerly('Some testing maker')
+            ->setFormerly(['Some testing maker'])
 
             // Submitted different, fixed, NOT changed
             ->setCountry('Finland')
@@ -143,19 +143,19 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setTwitterUrl('http://www.twitter.com/getfursuit')
 
             // Submitted different, NOT fixed, changed
-            ->setFeatures(Features::FOLLOW_ME_EYES)
+            ->setFeatures([Features::FOLLOW_ME_EYES])
 
             // Submitted different, fixed, changed
-            ->setOtherFeatures('Hidden pockets')
+            ->setOtherFeatures(['Hidden pockets'])
 
             // Submitted the same, NOT fixed, NOT changed
-            ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
+            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
 
             // Submitted different, fixed, NOT changed
-            ->setOtherOrderTypes('Armsleeves')
+            ->setOtherOrderTypes(['Armsleeves'])
 
             // Submitted the same, fixed, changed
-            ->setCurrenciesAccepted('Euro')
+            ->setCurrenciesAccepted(['Euro'])
         ;
 
         $id = Submissions::submit($submission);
@@ -329,7 +329,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setMakerId('MAKERID')
             ->setName('Testing maker')
             ->setIntro('Some submitted intro information')
-            ->setSpeciesDoes("All species\nMost experience in k9s")
+            ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
 
         $id = Submissions::submit($submissionData);
@@ -364,7 +364,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
             ->setMakerId('MAKERID')
             ->setName('Testing maker')
             ->setIntro('Some submitted intro information')
-            ->setSpeciesDoes("All species\nMost experience in k9s")
+            ->setSpeciesDoes(['All species', 'Most experience in k9s'])
         ;
 
         $id = Submissions::submit($submissionData);

@@ -4,85 +4,80 @@ declare(strict_types=1);
 
 namespace App\Tests\Utils\Artisan;
 
-use App\Data\Definitions\Fields\Field;
 use App\Entity\Artisan as ArtisanE;
 use App\Entity\ArtisanUrl;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Psl\Vec;
 
 /**
  * @small
  */
 class SmartUrlAccessorTest extends TestCase
 {
-    public function testSet(): void
+    public function testGetAndSetSingleAndMultiple(): void
     {
         $artisan = Artisan::wrap($entity = new ArtisanE());
 
-        $artisan->setWebsiteUrl('website')
-            ->setOtherUrls("other\nanother")
-            ->setPricesUrls("price1\ncost2")
-            ->setCommissionsUrls('commissions1');
+        $artisan
+            ->setLinklistUrl('linklist')
+            ->setWebsiteUrl('website')
+            ->setPhotoUrls(['other', 'another'])
+            ->setPricesUrls(['price1', 'cost2'])
+            ->setFaqUrl('faq1')
+        ;
 
         self::assertEquals([
-            'URL_COMMISSIONS commissions1',
-            'URL_OTHER another',
-            'URL_OTHER other',
+            'URL_FAQ faq1',
+            'URL_LINKLIST linklist',
+            'URL_PHOTOS another',
+            'URL_PHOTOS other',
             'URL_PRICES cost2',
             'URL_PRICES price1',
             'URL_WEBSITE website',
         ], $this->getUrlArray($entity));
 
-        $artisan->setWebsiteUrl('websiteChanged')
-            ->setOtherUrls('other')
-            ->setPricesUrls("price1\nanother")
-            ->setCommissionsUrls("commissions1\ncomm2addr");
+        self::assertEquals('linklist', $artisan->getLinklistUrl());
+        self::assertEquals('faq1', $artisan->getFaqUrl());
+        self::assertEquals(['other', 'another'], $artisan->getPhotoUrls());
+        self::assertEquals(['price1', 'cost2'], $artisan->getPricesUrls());
+        self::assertEquals('website', $artisan->getWebsiteUrl());
 
-        self::assertEquals([
-            'URL_COMMISSIONS comm2addr',
-            'URL_COMMISSIONS commissions1',
-            'URL_OTHER other',
-            'URL_PRICES another',
+        $artisan
+            ->setLinklistUrl('') // Remove
+            ->setWebsiteUrl('websiteChanged') // Set single
+            ->setPhotoUrls(['other']) // Remove one from array
+            ->setPricesUrls(['price3', 'price1', 'cost2']) // Add one to array
+        ;
+
+        self::assertEquals([ // Linklist removed completely
+            'URL_FAQ faq1', // No change
+            'URL_PHOTOS other', // Removed 'another' from array
+            'URL_PRICES cost2',
             'URL_PRICES price1',
+            'URL_PRICES price3', // Added to array
+            'URL_WEBSITE websiteChanged', // Single changed
+        ], $this->getUrlArray($entity));
+
+        self::assertEquals('', $artisan->getLinklistUrl());
+        self::assertEquals('faq1', $artisan->getFaqUrl());
+        self::assertEquals(['other'], $artisan->getPhotoUrls());
+        self::assertEquals(['price1', 'cost2', 'price3'], $artisan->getPricesUrls());
+        self::assertEquals('websiteChanged', $artisan->getWebsiteUrl());
+
+        $artisan
+            ->setPhotoUrls([]) // Clear
+        ;
+
+        self::assertEquals([ // Other removed completely
+            'URL_FAQ faq1',
+            'URL_PRICES cost2',
+            'URL_PRICES price1',
+            'URL_PRICES price3',
             'URL_WEBSITE websiteChanged',
         ], $this->getUrlArray($entity));
 
-        $artisan->setCommissionsUrls('')
-            ->setFaqUrl("question\nwhy_new_line");
-
-        self::assertEquals([
-            'URL_FAQ question',
-            'URL_FAQ why_new_line',
-            'URL_OTHER other',
-            'URL_PRICES another',
-            'URL_PRICES price1',
-            'URL_WEBSITE websiteChanged',
-        ], $this->getUrlArray($entity));
-    }
-
-    public function testGet(): void
-    {
-        $artisan = Artisan::wrap($entity = new ArtisanE());
-
-        $entity->addUrl($this->getNewArtisanUrl('PRICE1', Field::URL_PRICES))
-            ->addUrl($this->getNewArtisanUrl('COST2', Field::URL_PRICES))
-            ->addUrl($this->getNewArtisanUrl('WEBSITE', Field::URL_WEBSITE));
-
-        self::assertEquals('WEBSITE', $artisan->getWebsiteUrl());
-        self::assertEquals("PRICE1\nCOST2", $artisan->getPricesUrls());
-    }
-
-    public function testGetObjs(): void
-    {
-        $url1 = $this->getNewArtisanUrl('PRICE1', Field::URL_PRICES);
-        $url2 = $this->getNewArtisanUrl('COST2', Field::URL_PRICES);
-        $url3 = $this->getNewArtisanUrl('WEBSITE', Field::URL_WEBSITE);
-
-        $artisan = Artisan::wrap($entity = new ArtisanE());
-        $entity->addUrl($url1)->addUrl($url2)->addUrl($url3);
-
-        self::assertEquals([$url1, $url2], array_values($artisan->getUrlObjs(Field::URL_PRICES)));
-        self::assertEquals([$url3], array_values($artisan->getUrlObjs(Field::URL_WEBSITE)));
+        self::assertEquals([], $artisan->getPhotoUrls());
     }
 
     /**
@@ -90,14 +85,9 @@ class SmartUrlAccessorTest extends TestCase
      */
     private function getUrlArray(ArtisanE $artisan): array
     {
-        $result = array_map(fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl(), $artisan->getUrls()->toArray());
+        $result = Vec\map($artisan->getUrls(), fn (ArtisanUrl $url) => $url->getType().' '.$url->getUrl());
         sort($result);
 
         return $result;
-    }
-
-    private function getNewArtisanUrl(string $url, Field $type): ArtisanUrl
-    {
-        return (new ArtisanUrl())->setUrl($url)->setType($type->value);
     }
 }

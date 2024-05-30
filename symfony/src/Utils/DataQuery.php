@@ -115,9 +115,11 @@ class DataQuery
     }
 
     /**
+     * @param list<string> $listInput
+     *
      * @return string[]
      */
-    public function filterList(string $listInput): array
+    public function filterList(array $listInput): array
     {
         return $this->filterListInternal($listInput, false);
     }
@@ -144,19 +146,24 @@ class DataQuery
             || $this->listMatches($artisan->getOtherStyles());
     }
 
-    private function listMatches(string $listInput): bool
+    /**
+     * @param list<string> $listInput
+     */
+    private function listMatches(array $listInput): bool
     {
         return !empty($this->filterListInternal($listInput, true));
     }
 
     /**
+     * @param list<string> $listInput
+     *
      * @return string[]
      */
-    private function filterListInternal(string $listInput, bool $addMatches): array
+    private function filterListInternal(array $listInput, bool $addMatches): array
     {
         $result = [];
 
-        foreach (StringList::unpack($listInput) as $item) {
+        foreach ($listInput as $item) {
             if (!$this->itemMatchesList($item, $this->excludedItems) && $this->itemMatchesList($item, $this->searchedItems)) {
                 $result[] = $item;
 

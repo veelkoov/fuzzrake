@@ -45,8 +45,8 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
     public function findByMakerIdDataProvider(): DataProvider
     {
         Artisan::wrap($m1 = new ArtisanE())->setMakerId('MAKER11');
-        Artisan::wrap($m2 = new ArtisanE())->setMakerId('MAKER21')->setFormerMakerIds('MAKER22');
-        Artisan::wrap($m3 = new ArtisanE())->setMakerId('MAKER31')->setFormerMakerIds("MAKER32\nMAKER33");
+        Artisan::wrap($m2 = new ArtisanE())->setMakerId('MAKER21')->setFormerMakerIds(['MAKER22']);
+        Artisan::wrap($m3 = new ArtisanE())->setMakerId('MAKER31')->setFormerMakerIds(['MAKER32', 'MAKER33']);
 
         return DataProvider::tuples(
             [[$m1], 'MAKER11', 0],
@@ -77,7 +77,7 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
     {
         self::bootKernel();
 
-        $accessor = Artisan::wrap($artisan = new ArtisanE())->setMakerId('MAKRID1')->setFormerMakerIds("MAKRID2\nMAKRID3");
+        $accessor = Artisan::wrap($artisan = new ArtisanE())->setMakerId('MAKRID1')->setFormerMakerIds(['MAKRID2', 'MAKRID3']);
 
         self::persistAndFlush($artisan);
         self::clear();
@@ -105,9 +105,9 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
 
         Artisan::wrap($a1 = new ArtisanE())
             ->setName($m1name)
-            ->setFormerly("{$m1oldName1}\n{$m1oldName2}")
+            ->setFormerly(["{$m1oldName1}", "{$m1oldName2}"])
             ->setMakerId($m1makerId)
-            ->setFormerMakerIds($m1oldMakerId1);
+            ->setFormerMakerIds([$m1oldMakerId1]);
 
         $m2name = 'Maker 2';
         $m2oldName1 = 'Old maker B';
@@ -118,9 +118,9 @@ class ArtisanRepositoryWithEMTest extends KernelTestCaseWithEM
 
         Artisan::wrap($a2 = new ArtisanE())
             ->setName($m2name)
-            ->setFormerly("{$m2oldName1}\n{$m2oldName2}")
+            ->setFormerly(["{$m2oldName1}", "{$m2oldName2}"])
             ->setMakerId($m2makerId)
-            ->setFormerMakerIds($m2oldMakerId1."\n".$m2OldMakerId2);
+            ->setFormerMakerIds([$m2oldMakerId1, $m2OldMakerId2]);
 
         self::persistAndFlush($a1, $a2);
 

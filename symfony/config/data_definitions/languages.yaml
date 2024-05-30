@@ -3,8 +3,9 @@ parameters:
     regex_prefix: ''
     regex_suffix: ''
     replacements:
-      ' with Google Translate': ' (with a translator)'
+      ' \(?with( a)? (Google Translate|translator)\)?': ' (with a translator)'
       ' ?\(native\)': ''
-      'a small bit of|a bit of|bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner|limited': 'limited'
+      'a( small| little)?( bit)? of': 'a little'
+      'bit of|a little|some|moderate|basic|elementary|slight|intermediate|beginner|limited': 'limited'
 
     regexp: '(?<prefix>limited\s+)?(?<language>.+)(?<suffix>\s+\(limited\))?'

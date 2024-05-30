@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests\Filters\ValueChecker;
 
 use function Psl\Iter\any;
+use function Psl\Iter\contains;
 
 class AnythingChecker extends AbstractWrappedItemsChecker
 {
-    public function matches(string $items, ?bool $matchedOther): bool
+    public function matches(array $items, ?bool $matchedOther): bool
     {
         if (true === $matchedOther) {
             return true;
         }
 
-        $items = "\n$items\n";
-
-        return [] !== $this->wantedItems && any($this->wantedItems, fn (string $item) => str_contains($items, $item));
+        return [] !== $this->wantedItems && any($this->wantedItems, fn (string $item) => contains($items, $item));
     }
 }

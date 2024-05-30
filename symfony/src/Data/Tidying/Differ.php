@@ -7,7 +7,7 @@ namespace App\Data\Tidying;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\StringList;
+use App\Utils\PackedStringList;
 use App\Utils\StrUtils;
 
 class Differ
@@ -35,8 +35,10 @@ class Differ
 
     private function showListDiff(string $fieldName, string $oldVal, string $newVal): void
     {
-        $oldValItems = StringList::unpack($oldVal);
-        $newValItems = StringList::unpack($newVal);
+        // This is broken for some time at least. These were joined with ', ', not "\n"
+        // https://github.com/veelkoov/fuzzrake/issues/221
+        $oldValItems = PackedStringList::unpack($oldVal);
+        $newValItems = PackedStringList::unpack($newVal);
 
         foreach ($oldValItems as &$item) {
             if (!in_array($item, $newValItems)) {

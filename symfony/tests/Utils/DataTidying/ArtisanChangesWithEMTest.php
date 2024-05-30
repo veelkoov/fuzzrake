@@ -25,9 +25,9 @@ class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
             ->setName('Artisan 1')
             ->setCity('Varkaus')
             ->setFaqUrl('https://some-faq-address/')
-            ->setCommissionsUrls('https://some-commissions-address/')
-            ->setOpenFor('Pancakes')
-            ->setClosedFor('Maple syrup')
+            ->setCommissionsUrls(['https://some-commissions-address/'])
+            ->setOpenFor(['Pancakes'])
+            ->setClosedFor(['Maple syrup'])
             ->setNsfwWebsite(true)
             ->setNsfwSocial(false)
         ;
@@ -37,7 +37,7 @@ class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
             ->setCity('Joensuu')
             ->setWebsiteUrl('https://some-website-address/')
             ->setTwitterUrl('https://some-twitter-address/')
-            ->setOpenFor("Cheese\nSitruuna")
+            ->setOpenFor(['Cheese', 'Sitruuna'])
             ->setNsfwWebsite(false)
             ->setNsfwSocial(true)
         ;
@@ -54,8 +54,8 @@ class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
             ->setCity('Tampere')
             ->setFaqUrl('')
             ->setEtsyUrl('https://some-etsy-address/')
-            ->setOpenFor('Popcorn')
-            ->setClosedFor("Maple syrup\nTortillas")
+            ->setOpenFor(['Popcorn'])
+            ->setClosedFor(['Maple syrup', 'Tortillas'])
             ->setNsfwWebsite(false)
             ->setNsfwSocial(true)
         ;
@@ -63,7 +63,7 @@ class ArtisanChangesWithEMTest extends KernelTestCaseWithEM
             ->setCity('Kouvola')
             ->setWebsiteUrl('')
             ->setFurryAminoUrl('https://some-furry-amino-address/')
-            ->setOpenFor("Sitruuna\nOmena")
+            ->setOpenFor(['Sitruuna', 'Omena'])
             ->setNsfwWebsite(true)
             ->setNsfwSocial(false)
         ;

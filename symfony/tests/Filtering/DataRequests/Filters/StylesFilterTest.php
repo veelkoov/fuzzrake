@@ -17,9 +17,11 @@ class StylesFilterTest extends TestCase
     /**
      * @dataProvider matchesProvider
      *
-     * @param string[] $searched
+     * @param list<string> $styles
+     * @param list<string> $otherStyles
+     * @param list<string> $searched
      */
-    public function testMatches(string $styles, string $otherStyles, array $searched, bool $matched): void
+    public function testMatches(array $styles, array $otherStyles, array $searched, bool $matched): void
     {
         $subject = new StylesFilter($searched);
         $artisan = Artisan::new()->setStyles($styles)->setOtherStyles($otherStyles);
@@ -30,27 +32,29 @@ class StylesFilterTest extends TestCase
     public function matchesProvider(): DataProvider
     {
         return DataProvider::tuples(
-            ["Item1\nItem2", '', [], false],
-            ["Item1\nItem2", '', ['Item1'], true],
-            ["Item1\nItem2", '', ['Item1', 'Item2'], true],
-            ['Item1', '', ['Item1', 'Item2'], true],
+            [[],                 [], [],                 false],
+            [[],                 [], ['Item1'],          false],
+            [['Item1', 'Item2'], [], [],                 false],
+            [['Item1', 'Item2'], [], ['Item1'],          true],
+            [['Item1', 'Item2'], [], ['Item1', 'Item2'], true],
+            [['Item1'],          [], ['Item1', 'Item2'], true],
 
-            ['', '', ['?'], true],
-            ['', '', ['?', 'Item1'], true],
-            ['Item1', '', ['?'], false],
-            ['', 'OtherItem1', ['?'], false],
+            [[],        [],             ['?'],          true],
+            [[],        [],             ['?', 'Item1'], true],
+            [['Item1'], [],             ['?'],          false],
+            [[],        ['OtherItem1'], ['?'],          false],
 
-            ['', 'OtherItem1', ['*'], true],
-            ['Item1', '', ['*'], false],
-            ['Item1', 'OtherItem1', ['Item1', '*'], true],
-            ['Item1', '', ['Item1', '*'], true],
-            ['', 'OtherItem1', ['Item1', '*'], true],
+            [[],        ['OtherItem1'], ['*'],          true],
+            [['Item1'], [],             ['*'],          false],
+            [['Item1'], ['OtherItem1'], ['Item1', '*'], true],
+            [['Item1'], [],             ['Item1', '*'], true],
+            [[],        ['OtherItem1'], ['Item1', '*'], true],
 
-            ['', '', ['?', '*'], true],
-            ['', 'OtherItem1', ['?', '*'], true],
-            ['Item1', 'OtherItem1', ['?', '*'], true],
-            ['Item1', 'OtherItem1', ['?', '*', 'Item1'], true],
-            ['Item1', '', ['?', '*', 'Item1'], true],
+            [[],        [],             ['?', '*'],          true],
+            [[],        ['OtherItem1'], ['?', '*'],          true],
+            [['Item1'], ['OtherItem1'], ['?', '*'],          true],
+            [['Item1'], ['OtherItem1'], ['?', '*', 'Item1'], true],
+            [['Item1'], [],             ['?', '*', 'Item1'], true],
         );
     }
 }

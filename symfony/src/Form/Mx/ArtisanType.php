@@ -13,7 +13,8 @@ use App\Data\Definitions\Styles;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
 use App\Form\Transformers\ContactPermitTransformer;
-use App\Form\Transformers\StringArrayTransformer;
+use App\Form\Transformers\NullToEmptyArrayTransformer;
+use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -29,25 +30,11 @@ class ArtisanType extends AbstractTypeWithDelete
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('makerId', TextType::class, [
-                'label'      => 'Maker ID',
-                'required'   => false,
-                'empty_data' => '',
-            ])
-            ->add('formerMakerIds', TextareaType::class, [
-                'label'      => 'Former Maker IDs',
-                'required'   => false,
-                'empty_data' => '',
-            ])
             ->add('name', TextType::class, [
                 'required'   => true,
                 'empty_data' => '',
             ])
             ->add('formerly', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
-            ->add('intro', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -64,6 +51,35 @@ class ArtisanType extends AbstractTypeWithDelete
                 'empty_data' => '',
             ])
             ->add('city', TextType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('ages', ChoiceType::class, [
+                'label'    => 'Age',
+                'required' => true,
+                'choices'  => Ages::getChoices(true),
+                'expanded' => true,
+            ])
+            ->add('worksWithMinors', ChoiceType::class, [
+                'label'    => 'Works with minors?',
+                'required' => true,
+                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
+                'expanded' => true,
+            ])
+            ->add('paymentPlans', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('pricesUrls', TextareaType::class, [
+                'label'      => 'Prices URLs',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('paymentMethods', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('currenciesAccepted', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -115,18 +131,6 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('paymentPlans', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
-            ->add('currenciesAccepted', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
-            ->add('paymentMethods', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
             ->add('speciesDoes', TextareaType::class, [
                 'label'      => 'Species done',
                 'required'   => false,
@@ -142,30 +146,6 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('languages', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
-            ->add('ages', ChoiceType::class, [
-                'label'    => 'Age',
-                'required' => true,
-                'choices'  => Ages::getChoices(true),
-                'expanded' => true,
-            ])
-            ->add('worksWithMinors', ChoiceType::class, [
-                'label'    => 'Works with minors?',
-                'required' => true,
-                'choices'  => ['Yes' => 'YES', 'No' => 'NO', 'Unknown' => null],
-                'expanded' => true,
-            ])
-            ->add('notes', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
-            ->add('inactiveReason', TextareaType::class, [
-                'required'   => false,
-                'empty_data' => '',
-            ])
             ->add('fursuitReviewUrl', UrlType::class, [
                 'label'      => 'FursuitReview URL',
                 'required'   => false,
@@ -176,13 +156,13 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('pricesUrls', TextareaType::class, [
-                'label'      => 'Prices URLs',
+            ->add('faqUrl', UrlType::class, [
+                'label'      => 'FAQ URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('faqUrl', UrlType::class, [
-                'label'      => 'FAQ URL',
+            ->add('queueUrl', UrlType::class, [
+                'label'      => 'Queue URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -226,18 +206,18 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('queueUrl', UrlType::class, [
-                'label'      => 'Queue URL',
+            ->add('etsyUrl', UrlType::class, [
+                'label'      => 'Etsy URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('commissionsUrls', TextareaType::class, [
-                'label'      => 'Commissions URLs',
+            ->add('theDealersDenUrl', UrlType::class, [
+                'label'      => 'The Dealers Den URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('scritchUrl', UrlType::class, [
-                'label'      => 'Scritch URL',
+            ->add('otherShopUrl', UrlType::class, [
+                'label'      => 'Other shop URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -251,13 +231,18 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('theDealersDenUrl', UrlType::class, [
-                'label'      => 'The Dealers Den URL',
+            ->add('otherUrls', TextareaType::class, [
+                'label'      => 'Other URLs',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('etsyUrl', UrlType::class, [
-                'label'      => 'Etsy URL',
+            ->add('commissionsUrls', TextareaType::class, [
+                'label'      => 'Commissions URLs',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('scritchUrl', UrlType::class, [
+                'label'      => 'Scritch URL',
                 'required'   => false,
                 'empty_data' => '',
             ])
@@ -276,15 +261,27 @@ class ArtisanType extends AbstractTypeWithDelete
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('otherUrls', TextareaType::class, [
-                'label'      => 'Other URLs',
+            ->add('languages', TextareaType::class, [
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('otherShopUrl', UrlType::class, [
-                'label'      => 'Other shop URL',
+            ->add('makerId', TextType::class, [
+                'label'      => 'Maker ID',
                 'required'   => false,
                 'empty_data' => '',
+            ])
+            ->add('formerMakerIds', TextareaType::class, [
+                'label'      => 'Former Maker IDs',
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('intro', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('contactAllowed', ChoiceType::class, [
+                'label'   => 'Contact allowed?',
+                'choices' => ContactPermit::getChoices(true),
             ])
             ->add('contactInfoOriginal', TextType::class, [
                 'label'      => 'Original contact info',
@@ -297,14 +294,26 @@ class ArtisanType extends AbstractTypeWithDelete
                 'empty_data' => '',
                 'help'       => 'Leave unchanged for automated updates of contact fields based on "original". Introduce any change to suppress automation and customize obfuscated info.',
             ])
-            ->add('contactAllowed', ChoiceType::class, [
-                'label'   => 'Contact allowed?',
-                'choices' => ContactPermit::getChoices(true),
+            ->add('notes', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
+            ])
+            ->add('inactiveReason', TextareaType::class, [
+                'required'   => false,
+                'empty_data' => '',
             ])
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(new StringArrayTransformer());
+            $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
+        }
+
+        foreach ([
+            'commissionsUrls', 'currenciesAccepted', 'formerly', 'languages', 'otherFeatures', 'otherOrderTypes',
+            'otherStyles', 'otherUrls', 'paymentMethods', 'paymentPlans', 'photoUrls', 'pricesUrls', 'speciesDoes',
+            'speciesDoesnt', 'formerMakerIds', 'miniatureUrls',
+        ] as $fieldName) {
+            $builder->get($fieldName)->addModelTransformer(new StringListAsTextareaTransformer());
         }
 
         $builder->get('worksWithMinors')->addModelTransformer(new BooleanTransformer());

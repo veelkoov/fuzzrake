@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
-use App\Data\Definitions\Fields\Field;
 use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
@@ -162,8 +161,13 @@ class UpdatesServiceTest extends TestCase
 
     /**
      * @dataProvider imagesUpdateShouldResetMiniaturesDataProvider
+     *
+     * @param list<string> $initialUrlPhotos
+     * @param list<string> $initialMiniatures
+     * @param list<string> $newUrlPhotos
+     * @param list<string> $expectedMiniatures
      */
-    public function testUpdateHandlesImagesUpdateProperly(string $initialUrlPhotos, string $initialMiniatures, string $newUrlPhotos, string $expectedMiniatures): void
+    public function testUpdateHandlesImagesUpdateProperly(array $initialUrlPhotos, array $initialMiniatures, array $newUrlPhotos, array $expectedMiniatures): void
     {
         $artisan = $this->getPersistedArtisanMock()
             ->setMakerId('MAKERID')
@@ -185,16 +189,16 @@ class UpdatesServiceTest extends TestCase
     }
 
     /**
-     * @return array<string, array{string, string, string, string}>
+     * @return array<string, array{list<string>, list<string>, list<string>, list<string>}>
      */
     public function imagesUpdateShouldResetMiniaturesDataProvider(): array
     {
         return [
-            'No photos at all'         => ['', '', '', ''],
-            'No photos before, adding' => ['', '', 'NEW_PHOTOS', ''],
-            'Clearing existing photos' => ['OLD_PHOTOS', 'OLD_MINIATURES', '', ''],
-            'Changing photos'          => ['OLD_PHOTOS', 'OLD_MINIATURES', 'NEW_PHOTOS', ''],
-            'Photos exist, unchanged'  => ['OLD_PHOTOS', 'OLD_MINIATURES', 'OLD_PHOTOS', 'OLD_MINIATURES'],
+            'No photos at all'         => [[], [], [], []],
+            'No photos before, adding' => [[], [], ['NEW_PHOTOS'], []],
+            'Clearing existing photos' => [['OLD_PHOTOS'], ['OLD_MINIATURES'], [], []],
+            'Changing photos'          => [['OLD_PHOTOS'], ['OLD_MINIATURES'], ['NEW_PHOTOS'], []],
+            'Photos exist, unchanged'  => [['OLD_PHOTOS'], ['OLD_MINIATURES'], ['OLD_PHOTOS'], ['OLD_MINIATURES']],
         ];
     }
 
@@ -223,7 +227,6 @@ class UpdatesServiceTest extends TestCase
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
         self::assertEquals([$artisan1, $artisan2], $result->matchedArtisans);
 
-        $artisan1->getUrlObjs(Field::URL_OTHER); // Force initialization of URL accessor
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, (new Submission())->setDirectives('match-maker-id MAKER01')));
         self::assertEquals([$artisan1], $result->matchedArtisans);
     }
@@ -232,7 +235,7 @@ class UpdatesServiceTest extends TestCase
     {
         $artisan = $this->getPersistedArtisanMock()
             ->setMakerId('MAKERID')
-            ->setFormerMakerIds('MAKER00')
+            ->setFormerMakerIds(['MAKER00'])
             ->setName('The old maker name')
         ;
 
@@ -240,7 +243,7 @@ class UpdatesServiceTest extends TestCase
         $submissionData1 = Submissions::from(Artisan::new()
             ->setMakerId('MAKER22')
             ->setName('The new maker name')
-            ->setFormerly('The old maker name')
+            ->setFormerly(['The old maker name'])
         );
 
         $result1 = $this->getSetUpUpdatesService([
@@ -248,15 +251,15 @@ class UpdatesServiceTest extends TestCase
         ])->getUpdateFor(new UpdateInput($submissionData1, new Submission()));
 
         self::assertEquals('The new maker name', $result1->updatedArtisan->getName());
-        self::assertEquals('The old maker name', $result1->updatedArtisan->getFormerly());
+        self::assertEquals(['The old maker name'], $result1->updatedArtisan->getFormerly());
         self::assertEquals('MAKER22', $result1->updatedArtisan->getMakerId());
-        self::assertEquals(['MAKERID', 'MAKER00'], $result1->updatedArtisan->getFormerMakerIdsArr());
+        self::assertEquals(['MAKERID', 'MAKER00'], $result1->updatedArtisan->getFormerMakerIds());
 
         // No change
         $submissionData2 = Submissions::from(Artisan::new()
             ->setMakerId('MAKERID')
             ->setName('The new maker name')
-            ->setFormerly('The old maker name')
+            ->setFormerly(['The old maker name'])
         );
 
         $result2 = $this->getSetUpUpdatesService([
@@ -264,9 +267,9 @@ class UpdatesServiceTest extends TestCase
         ])->getUpdateFor(new UpdateInput($submissionData2, new Submission()));
 
         self::assertEquals('The new maker name', $result2->updatedArtisan->getName());
-        self::assertEquals('The old maker name', $result2->updatedArtisan->getFormerly());
+        self::assertEquals(['The old maker name'], $result2->updatedArtisan->getFormerly());
         self::assertEquals('MAKERID', $result2->updatedArtisan->getMakerId());
-        self::assertEquals('MAKER00', $result2->updatedArtisan->getFormerMakerIds());
+        self::assertEquals(['MAKER00'], $result2->updatedArtisan->getFormerMakerIds());
     }
 
     /**

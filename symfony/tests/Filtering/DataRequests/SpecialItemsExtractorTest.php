@@ -8,6 +8,9 @@ use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @small
+ */
 class SpecialItemsExtractorTest extends TestCase
 {
     public function testExtracting(): void

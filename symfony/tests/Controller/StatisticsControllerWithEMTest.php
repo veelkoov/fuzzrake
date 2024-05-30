@@ -21,9 +21,9 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
     {
         $client = static::createClient();
         self::persistAndFlush(self::getArtisan()
-            ->setOtherFeatures('Smoke detector')
-            ->setSpeciesDoes('Wolves')
-            ->setSpeciesDoesnt('Coyotes')
+            ->setOtherFeatures(['Smoke detector'])
+            ->setSpeciesDoes(['Wolves'])
+            ->setSpeciesDoesnt(['Coyotes'])
         );
 
         $client->request('GET', '/stats');
@@ -37,17 +37,17 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         $client = static::createClient();
 
         $a1 = self::getArtisan('A1', 'AAAAAAA1')
-            ->setFeatures(Features::FOLLOW_ME_EYES)
-            ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
+            ->setFeatures([Features::FOLLOW_ME_EYES])
+            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
             ->setCountry('CZ')
         ;
         $a2 = self::getArtisan('A2', 'AAAAAAA2')
-            ->setFeatures(Features::FOLLOW_ME_EYES)
-            ->setOrderTypes(OrderTypes::FULL_DIGITIGRADE)
+            ->setFeatures([Features::FOLLOW_ME_EYES])
+            ->setOrderTypes([OrderTypes::FULL_DIGITIGRADE])
             ->setCountry('SK')
         ;
         $a3 = self::getArtisan('A3', 'AAAAAAA3')
-            ->setProductionModels(ProductionModels::STANDARD_COMMISSIONS)
+            ->setProductionModels([ProductionModels::STANDARD_COMMISSIONS])
             ->setInactiveReason('Hidden')
             ->setCountry('IT')
         ;
@@ -80,15 +80,15 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
 
         self::persistAndFlush($artisanFakeIdAndNew, $artisanOnlyFakeId, $artisanFakeIdAndOldAndNew);
 
-        $artisanOnlyFakeId->setMakerId('')->setFormerMakerIds(sprintf('M%06d', $artisanOnlyFakeId->getId()));
+        $artisanOnlyFakeId->setMakerId('')->setFormerMakerIds([sprintf('M%06d', $artisanOnlyFakeId->getId())]);
         $artisanFakeIdAndNew->setMakerId('MAKERID')
-            ->setFormerMakerIds(sprintf('M%06d', $artisanFakeIdAndNew->getId()));
+            ->setFormerMakerIds([sprintf('M%06d', $artisanFakeIdAndNew->getId())]);
         $artisanFakeIdAndOldAndNew->setMakerId('MAKE3ID')
-            ->setFormerMakerIds(sprintf("MAKE2ID\nM%06d", $artisanFakeIdAndOldAndNew->getId()));
+            ->setFormerMakerIds([sprintf("MAKE2ID\nM%06d", $artisanFakeIdAndOldAndNew->getId())]);
 
-        $artisan3 = (new Artisan())->setMakerId('AAAAAAA')->setFormerMakerIds("BBBBBBB\nCCCCCCC");
-        $artisan4 = (new Artisan())->setMakerId('DDDDDDD')->setFormerMakerIds('EEEEEEE');
-        $artisan5 = (new Artisan())->setMakerId('FFFFFFF')->setFormerMakerIds('');
+        $artisan3 = (new Artisan())->setMakerId('AAAAAAA')->setFormerMakerIds(['BBBBBBB', 'CCCCCCC']);
+        $artisan4 = (new Artisan())->setMakerId('DDDDDDD')->setFormerMakerIds(['EEEEEEE']);
+        $artisan5 = (new Artisan())->setMakerId('FFFFFFF')->setFormerMakerIds([]);
 
         self::persistAndFlush($artisan3, $artisan4, $artisan5);
 

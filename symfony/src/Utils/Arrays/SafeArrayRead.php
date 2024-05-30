@@ -8,7 +8,6 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Utils\Artisan\SmartAccessDecorator;
 use App\Utils\Enforce;
-use App\Utils\StringList;
 use InvalidArgumentException;
 use TypeError;
 
@@ -96,8 +95,6 @@ class SafeArrayRead
 
                 return;
             }
-
-            $value = StringList::pack($value);
         }
 
         try {

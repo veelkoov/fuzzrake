@@ -14,20 +14,19 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\Json;
-use App\Utils\StringList;
 use DateTimeImmutable;
 use JsonException;
 use Symfony\Component\Finder\SplFileInfo;
 
-class SubmissionData implements FieldReadInterface
+readonly class SubmissionData implements FieldReadInterface
 {
     /**
      * @param array<string, psJsonFieldValue> $data
      */
     public function __construct(
-        private readonly DateTimeImmutable $timestamp,
-        private readonly string $id,
-        private readonly array $data,
+        private DateTimeImmutable $timestamp,
+        private string $id,
+        private array $data,
     ) {
     }
 
@@ -63,12 +62,17 @@ class SubmissionData implements FieldReadInterface
             $value = ContactPermit::get(Enforce::nString($value));
         }
 
-        return $field->isList() ? StringList::pack(Enforce::strList($value)) : $value;
+        return $value;
     }
 
     public function getString(Field $field): string
     {
         return Enforce::string($this->get($field));
+    }
+
+    public function getStringList(Field $field): array
+    {
+        return Enforce::strList($this->get($field));
     }
 
     public function hasData(Field $field): bool

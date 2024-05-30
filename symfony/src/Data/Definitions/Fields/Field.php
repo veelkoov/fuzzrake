@@ -6,6 +6,7 @@ namespace App\Data\Definitions\Fields;
 
 use App\Data\Definitions\Fields\Properties as Props;
 use App\Data\Definitions\Fields\ValidationRegexps as V;
+use App\Data\FieldValue;
 use App\Utils\FieldReadInterface;
 use TRegx\CleanRegex\Pattern;
 
@@ -191,8 +192,8 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('miniatureUrls', type: Type::STR_LIST, inIuForm: false, validationRegex: V::MINIATURE_URL_LIST, notInspectedUrl: true)]
     case URL_MINIATURES = 'URL_MINIATURES';
 
-    #[Props('otherUrls', notInspectedUrl: true)]
-    case URL_OTHER = 'URL_OTHER';
+    #[Props('otherUrls', type: Type::STR_LIST, notInspectedUrl: true)]
+    case URL_OTHER = 'URL_OTHER'; // TODO: Rename "-s"
 
     #[Props('notes', inStats: false)]
     case NOTES = 'NOTES';
@@ -203,7 +204,7 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('password', public: false, inStats: false, freeForm: false)]
     case PASSWORD = 'PASSWORD';
 
-    #[Props('csLastCheck', inIuForm: false, inStats: false, freeForm: false)]
+    #[Props('csLastCheck', type: Type::DATE, inIuForm: false, inStats: false, freeForm: false)]
     case CS_LAST_CHECK = 'CS_LAST_CHECK';
 
     #[Props('csTrackerIssue', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false)]
@@ -303,13 +304,8 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
         return $this->getData()->isFreeForm;
     }
 
-    public function isProvided(mixed $value): bool
-    {
-        return null !== $value && '' !== $value;
-    }
-
     public function providedIn(FieldReadInterface $source): bool
     {
-        return $this->isProvided($source->get($this));
+        return FieldValue::isProvided($this, $source->get($this));
     }
 }

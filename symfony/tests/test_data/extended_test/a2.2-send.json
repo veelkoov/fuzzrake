@@ -38,7 +38,7 @@
     ],
     "CURRENCIES_ACCEPTED": [
         "USD",
-        "EUa2_2"
+        "EUA2_2"
     ],
 
     "PRODUCTION_MODELS_COMMENT": "Comment about production models a2_2",
@@ -142,7 +142,9 @@
         "https://scritchphotos.com/value_a2_2.html",
         "https://www.furtrack.com/value_a2_2.html"
     ],
-    "URL_OTHER": "https://other.com/value_a2_2.html",
+    "URL_OTHER": [
+        "https://other.com/value_a2_2.html"
+    ],
     "URL_COMMISSIONS": [
         "https://cst.com/value_a2_2.html",
         "https://cst2.com/value2a2_2.html"

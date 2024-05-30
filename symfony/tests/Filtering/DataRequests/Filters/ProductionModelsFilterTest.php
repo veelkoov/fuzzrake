@@ -17,9 +17,10 @@ class ProductionModelsFilterTest extends TestCase
     /**
      * @dataProvider matchesProvider
      *
-     * @param string[] $searched
+     * @param list<string> $productionModels
+     * @param list<string> $searched
      */
-    public function testMatches(string $productionModels, array $searched, bool $matched): void
+    public function testMatches(array $productionModels, array $searched, bool $matched): void
     {
         $subject = new ProductionModelsFilter($searched);
         $artisan = Artisan::new()->setProductionModels($productionModels);
@@ -30,23 +31,25 @@ class ProductionModelsFilterTest extends TestCase
     public function matchesProvider(): DataProvider
     {
         return DataProvider::tuples(
-            ["Item1\nItem2", [], false],
-            ["Item1\nItem2", ['Item1'], true],
-            ["Item1\nItem2", ['Item1', 'Item2'], true],
-            ['Item1', ['Item1', 'Item2'], true],
+            [[],                 [],                 false],
+            [[],                 ['Item1'],          false],
+            [['Item1', 'Item2'], [],                 false],
+            [['Item1', 'Item2'], ['Item1'],          true],
+            [['Item1', 'Item2'], ['Item1', 'Item2'], true],
+            [['Item1'],          ['Item1', 'Item2'], true],
 
-            ['', ['?'], true],
-            ['', ['?', 'Item1'], true],
-            ['Item1', ['?'], false],
+            [[],        ['?'],          true],
+            [[],        ['?', 'Item1'], true],
+            [['Item1'], ['?'],          false],
 
-            ['', ['*'], false],
-            ['Item1', ['*'], false],
-            ['Item1', ['Item1', '*'], true],
-            ['', ['Item1', '*'], false],
+            [[],        ['*'],          false],
+            [['Item1'], ['*'],          false],
+            [['Item1'], ['Item1', '*'], true],
+            [[],        ['Item1', '*'], false],
 
-            ['', ['?', '*'], true],
-            ['Item1', ['?', '*'], false],
-            ['Item1', ['?', '*', 'Item1'], true],
+            [[],        ['?', '*'],          true],
+            [['Item1'], ['?', '*'],          false],
+            [['Item1'], ['?', '*', 'Item1'], true],
         );
     }
 }

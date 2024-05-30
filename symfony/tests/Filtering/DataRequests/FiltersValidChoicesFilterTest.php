@@ -23,8 +23,8 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
         self::bootKernel();
 
         $artisan = Artisan::new()
-            ->setLanguages("Czech\nFinnish")
-            ->setOpenFor("Pancakes\nWaffles")
+            ->setLanguages(['Czech', 'Finnish'])
+            ->setOpenFor(['Pancakes', 'Waffles'])
             ->setCountry('FI')
             ->setState('Liquid');
 

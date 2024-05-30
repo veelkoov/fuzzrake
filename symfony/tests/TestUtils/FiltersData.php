@@ -10,7 +10,6 @@ use App\Entity\Specie;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Json;
-use App\Utils\StringList;
 use InvalidArgumentException;
 use JsonException;
 use Nette\StaticClass;
@@ -44,8 +43,7 @@ class FiltersData
         $creatorSpecies = [];
 
         foreach ($creators as $creator) {
-            $creatorSpecies = [...$creatorSpecies, ...Vec\map(
-                StringList::unpack($creator->getSpeciesDoes()),
+            $creatorSpecies = [...$creatorSpecies, ...Vec\map($creator->getSpeciesDoes(),
                 fn (string $name) => (new CreatorSpecie())
                     ->setSpecie($species[$name])
                     ->setCreator($creator->getArtisan()),
@@ -65,7 +63,7 @@ class FiltersData
      */
     private static function makeSureNoCreatorUsesSpeciesDoesnt(array $creators): void
     {
-        if (Iter\any($creators, fn (Creator $creator) => '' !== $creator->getSpeciesDoesnt())) {
+        if (Iter\any($creators, fn (Creator $creator) => [] !== $creator->getSpeciesDoesnt())) {
             // Since resolving species takes place on Kotlin side, we can only test simple cases
             throw new InvalidArgumentException('Cannot test the "species doesn\'t"');
         }
@@ -79,7 +77,7 @@ class FiltersData
     private static function getSpecieNamesFrom(array $creators): array
     {
         return array_unique(Iter\reduce(
-            Vec\map($creators, fn (Creator $creator) => StringList::unpack($creator->getSpeciesDoes())),
+            Vec\map($creators, fn (Creator $creator) => $creator->getSpeciesDoes()),
             fn (array $c1, array $c2) => [...$c1, ...$c2],
             [],
         ));

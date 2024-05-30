@@ -4,78 +4,34 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Utils\Regexp\Patterns;
 use App\Utils\Traits\UtilityClass;
 
-final class StringList
+final class StringList // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
 {
     use UtilityClass;
 
-    private const STD_SEPARATOR = "\n";
-
-    public static function sameElements(string $input1, string $input2): bool
-    {
-        $arr1 = self::unpack($input1);
-        $arr2 = self::unpack($input2);
-
-        sort($arr1);
-        sort($arr2);
-
-        return $arr1 === $arr2;
-    }
-
     /**
-     * @return string[]
+     * @param list<string> $input1
+     * @param list<string> $input2
      */
-    public static function unpack(?string $input): array
+    public static function sameElements(array $input1, array $input2): bool
     {
-        if (null === $input || '' === $input) {
-            return [];
+        if (count($input1) !== count($input2)) {
+            return false;
         }
 
-        return explode(self::STD_SEPARATOR, $input);
+        sort($input1);
+        sort($input2);
+
+        return $input1 === $input2;
     }
 
     /**
-     * @param string[] $input
+     * @phpstan-assert-if-true list<string> $input
      */
-    public static function pack(array $input): string
+    public static function isValid(mixed $input): bool
     {
-        return implode(self::STD_SEPARATOR, $input);
-    }
-
-    /**
-     * @param string[] $nonsplittables
-     *
-     * @return string[]
-     */
-    public static function split(string $input, string $separatorRegexp, array $nonsplittables = []): array
-    {
-        $nonsplittables = array_fill_keys($nonsplittables, '');
-        $i = 0;
-
-        foreach ($nonsplittables as &$uItem) {
-            $uItem = 'NONSPLITTABLE'.($i++).'NONSPLITTABLE';
-        }
-
-        $input = self::replaceNonsplittables($input, $nonsplittables);
-
-        $result = Patterns::get($separatorRegexp)->split($input);
-
-        $nonsplittables = array_flip($nonsplittables);
-
-        foreach ($result as &$sItem) {
-            $sItem = self::replaceNonsplittables($sItem, $nonsplittables);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string[] $nonsplittables
-     */
-    private static function replaceNonsplittables(string $input, array $nonsplittables): string
-    {
-        return str_replace(array_keys($nonsplittables), array_values($nonsplittables), $input);
+        return is_array($input) && array_is_list($input)
+            && array_reduce($input, fn ($prev, $item) => $prev && is_string($item), true);
     }
 }

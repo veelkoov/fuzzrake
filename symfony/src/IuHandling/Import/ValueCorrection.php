@@ -8,9 +8,12 @@ use App\Data\Definitions\Fields\Field;
 
 readonly class ValueCorrection
 {
+    /**
+     * @param list<string>|string|bool $value
+     */
     public function __construct(
         public Field $field,
-        public string|bool $value,
+        public array|string|bool $value,
     ) {
     }
 }

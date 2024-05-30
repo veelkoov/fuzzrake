@@ -15,7 +15,7 @@ class ListChangeTest extends TestCase
 {
     public function testNoChange(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, 'qwer', 'qwer');
+        $subject = new ListChange(Field::OTHER_FEATURES, ['qwer'], ['qwer']);
 
         self::assertEquals('OTHER_FEATURES did not change', $subject->getDescription());
         self::assertFalse($subject->isActuallyAChange());
@@ -23,12 +23,12 @@ class ListChangeTest extends TestCase
 
     public function testAdded(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, '', 'qwer');
+        $subject = new ListChange(Field::OTHER_FEATURES, [], ['qwer']);
 
         self::assertEquals('Added OTHER_FEATURES: "qwer"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, 'qwer', "qwer\nasdf");
+        $subject = new ListChange(Field::OTHER_FEATURES, ['qwer'], ['qwer', 'asdf']);
 
         self::assertEquals('Added OTHER_FEATURES: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
@@ -36,12 +36,12 @@ class ListChangeTest extends TestCase
 
     public function testRemoved(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, "qwer\nasdf", 'qwer');
+        $subject = new ListChange(Field::OTHER_FEATURES, ['qwer', 'asdf'], ['qwer']);
 
         self::assertEquals('Removed OTHER_FEATURES: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, 'qwer', '');
+        $subject = new ListChange(Field::OTHER_FEATURES, ['qwer'], []);
 
         self::assertEquals('Removed OTHER_FEATURES: "qwer"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
@@ -49,17 +49,17 @@ class ListChangeTest extends TestCase
 
     public function testAddedAndRemoved(): void
     {
-        $subject = new ListChange(Field::OTHER_FEATURES, "asdf\nqwer", "qwer\nzxcv");
+        $subject = new ListChange(Field::OTHER_FEATURES, ['asdf', 'qwer'], ['qwer', 'zxcv']);
 
         self::assertEquals('Added OTHER_FEATURES: "zxcv" and removed: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, 'asdf', 'zxcv');
+        $subject = new ListChange(Field::OTHER_FEATURES, ['asdf'], ['zxcv']);
 
         self::assertEquals('Added OTHER_FEATURES: "zxcv" and removed: "asdf"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());
 
-        $subject = new ListChange(Field::OTHER_FEATURES, "asdf\nqwer", "zxcv\nuiop");
+        $subject = new ListChange(Field::OTHER_FEATURES, ['asdf', 'qwer'], ['zxcv', 'uiop']);
 
         self::assertEquals('Added OTHER_FEATURES: "zxcv", "uiop" and removed: "asdf", "qwer"', $subject->getDescription());
         self::assertTrue($subject->isActuallyAChange());

@@ -6,7 +6,7 @@ namespace App\Entity;
 
 use App\Repository\EventRepository;
 use App\Utils\DateTime\UtcClock;
-use App\Utils\StringList;
+use App\Utils\PackedStringList;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -121,7 +121,7 @@ class Event
      */
     public function getNoLongerOpenForArray(): array
     {
-        return StringList::unpack($this->noLongerOpenFor);
+        return PackedStringList::unpack($this->noLongerOpenFor);
     }
 
     public function setNoLongerOpenFor(string $noLongerOpenFor): self
@@ -141,7 +141,7 @@ class Event
      */
     public function getNowOpenForArray(): array
     {
-        return StringList::unpack($this->nowOpenFor);
+        return PackedStringList::unpack($this->nowOpenFor);
     }
 
     public function setNowOpenFor(string $nowOpenFor): self
@@ -197,7 +197,7 @@ class Event
      */
     public function getCheckedUrlsArray(): array
     {
-        return StringList::unpack($this->checkedUrls);
+        return PackedStringList::unpack($this->checkedUrls);
     }
 
     public function setCheckedUrls(string $checkedUrls): self
@@ -260,7 +260,7 @@ class Event
      */
     public function getGitCommitsArray(): array
     {
-        return StringList::unpack($this->gitCommits);
+        return PackedStringList::unpack($this->gitCommits);
     }
 
     public function isTypeCsUpdated(): bool

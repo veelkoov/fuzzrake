@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace App\Form\Transformers;
 
-use App\Utils\StringList;
+use App\Utils\Enforce;
+use App\Utils\PackedStringList;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * @implements DataTransformerInterface<string, string[]>
+ * @implements DataTransformerInterface<list<string>, string>
  */
-class StringArrayTransformer implements DataTransformerInterface
+class StringListAsTextareaTransformer implements DataTransformerInterface
 {
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function transform($value): mixed
     {
-        return array_filter(StringList::unpack($value));
+        return PackedStringList::pack($value ?? []);
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
     public function reverseTransform($value): mixed
     {
-        return StringList::pack(array_filter($value ?? []));
+        return PackedStringList::unpack(Enforce::nString($value) ?? '');
     }
 }
