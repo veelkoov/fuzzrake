@@ -224,7 +224,7 @@ class MainPageTest extends PantherTestCaseWithEM
     private function openCountriesFilter(): void
     {
         $this->client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();
-        $this->client->waitForVisibility('input[type=checkbox][name="countries[]"]', 5);
+        self::waitUntilShows('input[type=checkbox][name="countries[]"]', 1000);
     }
 
     /**
