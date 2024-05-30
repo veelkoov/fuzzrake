@@ -35,24 +35,4 @@ class PackedStringListTest extends TestCase
             ]
         );
     }
-
-    /**
-     * @dataProvider sameElementsDataProvider
-     */
-    public function testSameElements(bool $expected, string $input1, string $input2): void
-    {
-        self::assertEquals($expected, PackedStringList::sameElements($input1, $input2));
-    }
-
-    public function sameElementsDataProvider(): DataProvider
-    {
-        return DataProvider::tuples(
-            [true, 'abc', 'abc'],
-            [true, "abc\ndef", "abc\ndef"],
-            [true, "abc\ndef\nghi", "def\nghi\nabc"],
-            [false, "abc\ndef", "abc\ndef\nghi"],
-            [false, "abc\ndef\nghi", "def\nghi"],
-            [false, "abc\ndef", "abC\ndef"],
-        );
-    }
 }

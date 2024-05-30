@@ -13,14 +13,6 @@ final class PackedStringList
 
     private const STD_SEPARATOR = "\n";
 
-    public static function sameElements(string $input1, string $input2): bool
-    {
-        $arr1 = self::unpack($input1);
-        $arr2 = self::unpack($input2);
-
-        return StringList::sameElements($arr1, $arr2);
-    }
-
     /**
      * @return list<string>
      */

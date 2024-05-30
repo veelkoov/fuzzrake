@@ -7,7 +7,7 @@ namespace App\Utils;
 use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 
-final class Enforce
+final class Enforce // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
 {
     use UtilityClass;
 
@@ -30,12 +30,12 @@ final class Enforce
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public static function strList(mixed $input): array
     {
-        if (!is_array($input) || !array_is_list($input) || !array_reduce($input, fn ($prev, $item) => $prev && is_string($item), true)) {
-            throw new InvalidArgumentException('Expected array of strings');
+        if (!StringList::isValid($input)) {
+            throw new InvalidArgumentException('Expected a list of strings');
         }
 
         return $input;

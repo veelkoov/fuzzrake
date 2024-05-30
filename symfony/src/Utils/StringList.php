@@ -6,7 +6,7 @@ namespace App\Utils;
 
 use App\Utils\Traits\UtilityClass;
 
-final class StringList
+final class StringList // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
 {
     use UtilityClass;
 
@@ -24,5 +24,14 @@ final class StringList
         sort($input2);
 
         return $input1 === $input2;
+    }
+
+    /**
+     * @phpstan-assert-if-true list<string> $input
+     */
+    public static function isValid(mixed $input): bool
+    {
+        return is_array($input) && array_is_list($input)
+            && array_reduce($input, fn ($prev, $item) => $prev && is_string($item), true);
     }
 }
