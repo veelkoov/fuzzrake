@@ -93,7 +93,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             throw new InvalidArgumentException("Setter for $field->value does not exist");
         }
 
-        FieldValue::validateType($field, $newValue);
+        FieldValue::validateType($field, $newValue); // To make sure a string doesn't get coerced to a boolean etc.
 
         call_user_func($callback, $newValue);
 
