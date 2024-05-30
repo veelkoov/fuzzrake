@@ -36,6 +36,7 @@ class Differ
     private function showListDiff(string $fieldName, string $oldVal, string $newVal): void
     {
         // This is broken for some time at least. These were joined with ', ', not "\n"
+        // https://github.com/veelkoov/fuzzrake/issues/221
         $oldValItems = PackedStringList::unpack($oldVal);
         $newValItems = PackedStringList::unpack($newVal);
 

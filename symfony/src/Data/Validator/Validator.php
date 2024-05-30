@@ -25,7 +25,8 @@ class Validator
         }
 
         if ($field->isList()) {
-            $value = PackedStringList::pack($artisan->getStringList($field)); // FIXME: Should not work like that
+            // https://github.com/veelkoov/fuzzrake/issues/221 FIXME: Should not work like that
+            $value = PackedStringList::pack($artisan->getStringList($field));
         } else {
             $value = $artisan->getString($field);
         }
