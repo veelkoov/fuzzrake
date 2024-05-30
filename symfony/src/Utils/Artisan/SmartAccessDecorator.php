@@ -26,6 +26,7 @@ use App\Utils\PackedStringList;
 use App\Utils\Parse;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
+use App\Validator\StrListLength;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -111,7 +112,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return call_user_func($callback);
     }
 
-    public function equals(Field $field, self $other): bool
+    public function equals(Field $field, self $other): bool // TODO: Improve https://github.com/veelkoov/fuzzrake/issues/221
     {
         if ($field->isList()) {
             return StringList::sameElements($this->getStringList($field), $other->getStringList($field));
@@ -177,6 +178,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
+     * Assume that values come from setting the maker ID, which is validated independently.
+     *
      * @return list<string>
      */
     public function getFormerMakerIds(): array
@@ -485,6 +488,9 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    /**
+     * Validated by obfuscated contact info.
+     */
     public function getContactInfoOriginal(): string
     {
         return $this->getPrivateData()->getOriginalContactInfo();
@@ -604,7 +610,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getCommissionsUrls(): array
     {
         return $this->getUrls(Field::URL_COMMISSIONS);
@@ -654,7 +660,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getPricesUrls(): array
     {
         return $this->getUrls(Field::URL_PRICES);
@@ -770,7 +776,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getPhotoUrls(): array
     {
         return $this->getUrls(Field::URL_PHOTOS);
@@ -785,9 +791,10 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     }
 
     /**
+     * Not validating - internal.
+     *
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
     public function getMiniatureUrls(): array
     {
         return $this->getUrls(Field::URL_MINIATURES);
@@ -963,7 +970,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    // #[Length(max: 256)] // FIXME
+    #[StrListLength(max: 256)]
     public function getFormerly(): array
     {
         return PackedStringList::unpack($this->artisan->getFormerly());
@@ -979,7 +986,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 512)]
+    #[Length(max: 1024)]
     public function getIntro(): string
     {
         return $this->artisan->getIntro();
@@ -1005,7 +1012,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 16)]
+    #[Length(max: 128)]
     #[NotBlank(groups: [Validation::GRP_DATA])]
     public function getCountry(): string
     {
@@ -1019,7 +1026,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 32)]
+    #[Length(max: 128)]
     public function getState(): string
     {
         return $this->artisan->getState();
@@ -1032,7 +1039,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 32)]
+    #[Length(max: 128)]
     public function getCity(): string
     {
         return $this->artisan->getCity();
@@ -1045,7 +1052,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 256)]
+    #[Length(max: 1024)]
     public function getProductionModelsComment(): string
     {
         return $this->artisan->getProductionModelsComment();
@@ -1076,7 +1083,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 256)]
+    #[Length(max: 1024)]
     public function getStylesComment(): string
     {
         return $this->artisan->getStylesComment();
@@ -1110,7 +1117,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
+    #[StrListLength(max: 4096)]
     public function getOtherStyles(): array
     {
         return PackedStringList::unpack($this->artisan->getOtherStyles());
@@ -1126,7 +1133,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 256)]
+    #[Length(max: 1024)]
     public function getOrderTypesComment(): string
     {
         return $this->artisan->getOrderTypesComment();
@@ -1160,7 +1167,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
+    #[StrListLength(max: 4096)]
     public function getOtherOrderTypes(): array
     {
         return PackedStringList::unpack($this->artisan->getOtherOrderTypes());
@@ -1176,7 +1183,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 256)]
+    #[Length(max: 1024)]
     public function getFeaturesComment(): string
     {
         return $this->artisan->getFeaturesComment();
@@ -1210,7 +1217,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 1024)] // FIXME
+    #[StrListLength(max: 4096)]
     public function getOtherFeatures(): array
     {
         return PackedStringList::unpack($this->artisan->getOtherFeatures());
@@ -1229,7 +1236,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 256)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getPaymentPlans(): array
     {
         return PackedStringList::unpack($this->artisan->getPaymentPlans());
@@ -1248,7 +1255,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 256)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getPaymentMethods(): array
     {
         return PackedStringList::unpack($this->artisan->getPaymentMethods());
@@ -1267,7 +1274,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 64)] // FIXME
+    #[StrListLength(max: 64)]
     public function getCurrenciesAccepted(): array
     {
         return PackedStringList::unpack($this->artisan->getCurrenciesAccepted());
@@ -1283,7 +1290,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 256)]
+    #[Length(max: 1024)]
     public function getSpeciesComment(): string
     {
         return $this->artisan->getSpeciesComment();
@@ -1299,7 +1306,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 256)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getSpeciesDoes(): array
     {
         return PackedStringList::unpack($this->artisan->getSpeciesDoes());
@@ -1318,7 +1325,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    //    #[Length(max: 256)] // FIXME
+    #[StrListLength(max: 1024)]
     public function getSpeciesDoesnt(): array
     {
         return PackedStringList::unpack($this->artisan->getSpeciesDoesnt());
@@ -1337,7 +1344,8 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
-    public function getLanguages(): array // FIXME: No validation on a "free-text" item
+    #[StrListLength(max: 1024)]
+    public function getLanguages(): array
     {
         return PackedStringList::unpack($this->artisan->getLanguages());
     }
@@ -1450,58 +1458,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    //    /**
-    //     * @return Collection<int, ArtisanUrl>
-    //     */
-    //    public function getUrls(): Collection
-    //    {
-    //        return $this->artisan->getUrls();
-    //    }
-    //
-    //    public function addUrl(ArtisanUrl $artisanUrl): self
-    //    {
-    //        $this->artisan->addUrl($artisanUrl);
-    //
-    //        return $this;
-    //    }
-    //
-    //    public function removeUrl(ArtisanUrl $artisanUrl): self
-    //    {
-    //        $this->artisan->removeUrl($artisanUrl);
-    //
-    //        return $this;
-    //    }
-    //
-    //    /**
-    //     * @return Collection<int, CreatorOfferStatus>
-    //     */
-    //    public function getCommissions(): Collection
-    //    {
-    //        return $this->artisan->getCommissions();
-    //    }
-    //
-    //    public function addCommission(CreatorOfferStatus $commission): self
-    //    {
-    //        $this->artisan->addCommission($commission);
-    //
-    //        return $this;
-    //    }
-    //
-    //    public function removeCommission(CreatorOfferStatus $commission): self
-    //    {
-    //        $this->artisan->removeCommission($commission);
-    //
-    //        return $this;
-    //    }
-    //
-    //    /**
-    //     * @return Collection<int, MakerId>
-    //     */
-    //    public function getMakerIds(): Collection
-    //    {
-    //        return $this->artisan->getMakerIds();
-    //    }
-
     public function addMakerId(MakerId|string $makerId): self
     {
         if (!($makerId instanceof MakerId)) {
@@ -1516,13 +1472,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
 
         return $this;
     }
-
-    //    public function removeMakerId(MakerId $makerId): self
-    //    {
-    //        $this->artisan->removeMakerId($makerId);
-    //
-    //        return $this;
-    //    }
 
     private function getBoolValue(Field $field): ?bool
     {
