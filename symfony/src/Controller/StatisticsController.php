@@ -198,7 +198,7 @@ class StatisticsController extends AbstractController
                     $placeholder = sprintf('M%06d', $artisan->getId());
                     $value = $artisan->get($field);
 
-                    if ($value === $placeholder) {
+                    if ($value === [$placeholder]) {
                         return $carry; // Fake former maker ID - don't add to the result
                     }
                 }
