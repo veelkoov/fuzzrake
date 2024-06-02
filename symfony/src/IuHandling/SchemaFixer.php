@@ -10,7 +10,7 @@ use App\Utils\Enforce;
 final class SchemaFixer
 {
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const CURRENT_SCHEMA_VERSION = 14;
+    private const CURRENT_SCHEMA_VERSION = 15;
 
     /**
      * @param array<string, psJsonFieldValue> $data
@@ -52,6 +52,10 @@ final class SchemaFixer
                 if (!array_key_exists(Field::URL_MASTODON->value, $data)) {
                     $data[Field::URL_MASTODON->value] = '';
                 }
+                // no break
+
+            case 14:
+                $data[Field::URL_OTHER->value] = explode("\n", Enforce::string($data[Field::URL_OTHER->value]));
         }
 
         return $data;
