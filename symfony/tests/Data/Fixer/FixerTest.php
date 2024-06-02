@@ -76,6 +76,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
             [Field::PAYMENT_PLANS, ['100% upfront'], ['None']],
             [Field::PAYMENT_PLANS, ['30% upfront, rest in 100 Eur/mth until fully paid'], ['30% upfront, rest in 100 Eur/mth until fully paid']],
             [Field::URL_MINIATURES, ['https://example.com/'], ['https://example.com/']],
+            [Field::URL_COMMISSIONS, ['https://example.com/'], ['https://example.com/']],
             [Field::SPECIES_DOES, ['Dogs and cats'], ['Dogs and cats']],
             [
                 Field::URL_COMMISSIONS,

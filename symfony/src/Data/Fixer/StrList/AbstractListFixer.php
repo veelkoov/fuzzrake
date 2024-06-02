@@ -34,7 +34,7 @@ abstract class AbstractListFixer implements StrListFixerInterface
 
     protected function getSeparatorRegexp(): ?string
     {
-        return '[,.]|[, ]and ';
+        return '[,]|[, ]and ';
     }
 
     /**
