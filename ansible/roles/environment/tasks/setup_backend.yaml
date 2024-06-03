@@ -41,11 +41,3 @@
     mode:  '0600'
     owner: '{{ user_name }}'
     src:   'fuzzrake-config.yaml.j2'
-
-- name: 'Setup the tracking cronjob'
-  when: 'setup_tracking | default(false)'
-  ansible.builtin.cron:
-    hour:   '0,12'
-    name:   'tracker - commissions'
-    minute: 0
-    value:  'cd {{ backend_deployment_path | quote }} && fuzzrake-git-HEAD/bin/fuzzrake tracker -r > /dev/null 2>&1'

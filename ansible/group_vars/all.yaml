@@ -9,3 +9,5 @@ user_group: 'rocky'
 symfony_dir_path:   '{{ frontend_deployment_path }}/symfony'
 yarn_cache_dirpath: '{{ symfony_dir_path }}/var/yarn-cache'
 database_url:       'sqlite:///%kernel.project_dir%/var/db.sqlite'  # grep-code-database-path
+
+tracking_cache_tag: 'tracking'  # grep-cache-tags

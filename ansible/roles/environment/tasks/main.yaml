@@ -22,3 +22,7 @@
 - name: 'Setup backend'
   ansible.builtin.import_tasks: 'setup_backend.yaml'
   tags: 'backend'
+
+- name: 'Setup cronjob'
+  ansible.builtin.import_tasks: 'setup_cronjob.yaml'
+  tags: 'cronjob'
