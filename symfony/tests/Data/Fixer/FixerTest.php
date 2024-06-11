@@ -41,6 +41,11 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
     {
         return DataProvider::tuples(
             [Field::NAME, ' The name ', 'The name'],
+
+            // N/A must always be removed, especially for FORMERLY due to the risk of matching two totally unrelated makers
+            [Field::FORMERLY, ['N/A'], []],
+            [Field::FORMERLY, ['n/a'], []],
+
             [
                 Field::FORMERLY,
                 [' the old name ', 'an older name and stuff', 'something/anything'],

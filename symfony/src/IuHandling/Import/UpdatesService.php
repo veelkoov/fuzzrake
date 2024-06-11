@@ -36,7 +36,9 @@ class UpdatesService
         $originalInput = new Artisan();
         $this->updateWith($originalInput, $input->submissionData, Fields::readFromSubmissionData());
 
-        $matchedArtisans = $this->getArtisans($originalInput, $manager->getMatchedMakerId());
+        $fixedInput = $this->fixer->getFixed($originalInput);
+
+        $matchedArtisans = $this->getArtisans($fixedInput, $manager->getMatchedMakerId());
 
         if (1 === count($matchedArtisans)) {
             $originalArtisan = Arrays::single($matchedArtisans);
@@ -48,9 +50,7 @@ class UpdatesService
             }
         }
 
-        $this->handleSpecialFieldsInInput($originalInput, $originalArtisan);
-
-        $fixedInput = $this->fixer->getFixed($originalInput);
+        $this->handleSpecialFieldsInInput($fixedInput, $originalArtisan);
 
         $updatedArtisan = clone $originalArtisan;
         $this->updateWith($updatedArtisan, $fixedInput, Fields::iuFormAffected());
