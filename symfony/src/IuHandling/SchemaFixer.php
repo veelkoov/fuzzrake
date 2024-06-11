@@ -6,6 +6,7 @@ namespace App\IuHandling;
 
 use App\Data\Definitions\Fields\Field;
 use App\Utils\Enforce;
+use App\Utils\PackedStringList;
 
 final class SchemaFixer
 {
@@ -37,7 +38,7 @@ final class SchemaFixer
                 // no break
 
             case 11:
-                $data[Field::PAYMENT_PLANS->value] = explode("\n", Enforce::string($data[Field::PAYMENT_PLANS->value]));
+                $data[Field::PAYMENT_PLANS->value] = PackedStringList::unpack(Enforce::string($data[Field::PAYMENT_PLANS->value]));
                 // no break
 
             case 12:
@@ -55,7 +56,7 @@ final class SchemaFixer
                 // no break
 
             case 14:
-                $data[Field::URL_OTHER->value] = explode("\n", Enforce::string($data[Field::URL_OTHER->value]));
+                $data[Field::URL_OTHER->value] = PackedStringList::unpack(Enforce::string($data[Field::URL_OTHER->value]));
         }
 
         return $data;
