@@ -36,7 +36,11 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
 
         $maker1 = Artisan::new()->setMakerId('MAKER01')->setName('Older maker')->setDateAdded(UtcClock::at('-43 days'));
         $maker2 = Artisan::new()->setMakerId('MAKER02')->setName('Newer maker 1')->setDateAdded(UtcClock::at('-41 days'));
-        $maker3 = Artisan::new()->setMakerId('MAKER03')->setName('Newer maker 2')->setDateAdded(UtcClock::at('-40 days'));
+        $maker3 = Artisan::new()
+            ->setMakerId('MAKER03')
+            ->setName('Newer maker 2')
+            ->setFormerly(['Formerly 2a', 'Formerly 2b'])
+            ->setDateAdded(UtcClock::at('-40 days'));
 
         self::persistAndFlush($maker1, $maker2, $maker3);
         $this->clearCache();
@@ -47,5 +51,6 @@ class MainControllerWithEMTest extends WebTestCaseWithEM
         self::assertEmpty($crawler->filterXPath('//li/a[text() = "Older maker"]'));
         self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer maker 1"]'));
         self::assertNotEmpty($crawler->filterXPath('//li/a[text() = "Newer maker 2"]'));
+        self::assertNotEmpty($crawler->filterXPath('//li/span[normalize-space(text()) = "/ Formerly 2a / Formerly 2b"]'));
     }
 }

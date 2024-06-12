@@ -19,7 +19,7 @@
                 <a href="{{ path('main', { '_fragment': artisan.lastMakerId }) }}">{{ artisan.name }}</a>
                 {% if artisan.formerly %}
                     <span class="text-muted">
-                        / {{ artisan.formerlyArr|join(' / ') }}
+                        / {{ artisan.formerly|join(' / ') }}
                     </span>
                 {% endif %}
             </li>
