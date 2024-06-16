@@ -25,6 +25,7 @@ parameters:
       '^ireland$':                                       'IE'
       '^(italia|italy)$':                                'IT'
       '^japan$':                                         'JP'
+      '^kyrgyzstan$':                                    'KG'
       '^latvia$':                                        'LV'
       '^lithuania$':                                     'LT'
       '^mexico$':                                        'MX'
