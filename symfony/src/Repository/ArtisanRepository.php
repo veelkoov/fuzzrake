@@ -21,6 +21,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -68,6 +69,19 @@ class ArtisanRepository extends ServiceEntityRepository
             ->getResult();
 
         return $resultData;
+    }
+
+    /**
+     * @return Paginator<Artisan>
+     */
+    public function getPaginated(int $first, int $max): Paginator
+    {
+        $query = $this->getArtisansQueryBuilder()
+            ->getQuery()
+            ->setFirstResult($first)
+            ->setMaxResults($max);
+
+        return new Paginator($query, fetchJoinCollection: true);
     }
 
     /**
