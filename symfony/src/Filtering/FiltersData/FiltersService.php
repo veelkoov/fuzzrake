@@ -12,6 +12,7 @@ use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Service\CountriesDataService;
+use App\Service\DataService;
 use App\Utils\Enforce;
 use Doctrine\ORM\UnexpectedResultException;
 
@@ -23,6 +24,7 @@ class FiltersService
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly KotlinDataRepository $kotlinDataRepository,
+        private readonly DataService $dataService,
     ) {
     }
 
@@ -90,19 +92,16 @@ class FiltersService
         foreach (Enforce::array($rawFilterData['specialItems'] ?? []) as $rawSpecialItem) {
             $rawSpecialItem = Enforce::array($rawSpecialItem);
 
-            $specialItems[] = new SpecialItem(
-                Enforce::string($rawSpecialItem['value'] ?? ''),
-                Enforce::string($rawSpecialItem['label'] ?? ''),
-                SpecialItems::faIconFromType(Enforce::string($rawSpecialItem['type'] ?? '')),
-                Enforce::int($rawSpecialItem['count'] ?? 0),
-            );
+            $value = Enforce::string($rawSpecialItem['value'] ?? '');
+            $label = Enforce::string($rawSpecialItem['label'] ?? '');
+            $count = Enforce::int($rawSpecialItem['count'] ?? 0);
+
+            $specialItems[] = new SpecialItem($value, $label, SpecialItems::faIconFromValue($value), $count);
         }
 
         $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
 
-        $filterData = new FilterData($items, $specialItems);
-
-        return $filterData;
+        return new FilterData($items, $specialItems);
     }
 
     /**
@@ -135,7 +134,7 @@ class FiltersService
     {
         $trackedCount = $this->artisanRepository->getCsTrackedCount();
         $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
-        $activeCount = $this->artisanRepository->countActive();
+        $activeCount = $this->dataService->countActiveCreators();
         $nonTrackedCount = $activeCount - $trackedCount;
 
         $trackingIssues = SpecialItems::newTrackingIssues($issuesCount);
@@ -172,7 +171,7 @@ class FiltersService
      */
     private function getInactiveFilterData(): FilterData
     {
-        $inactiveCount = $this->artisanRepository->countAll() - $this->artisanRepository->countActive();
+        $inactiveCount = $this->artisanRepository->countAll() - $this->dataService->countActiveCreators();
 
         return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
     }

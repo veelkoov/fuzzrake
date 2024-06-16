@@ -252,7 +252,7 @@ class ArtisanRepository extends ServiceEntityRepository
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData
+    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData // TODO: Remove
     {
         $rows = $this->fetchColumnsAsArray($columnName, $countOther);
 
@@ -399,10 +399,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $resultData;
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
     public function countActive(): int
     {
         $resultData = $this->createQueryBuilder('a')

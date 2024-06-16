@@ -1,7 +1,5 @@
 package tasks.filtersUpdate
 
-import data.KotlinDataManager
-import data.KotlinDataManager.SPECIES_FILTER
 import database.repositories.CreatorSpeciesRepository
 import database.repositories.CreatorsRepository
 import filters.FilterData
@@ -10,14 +8,14 @@ import filters.StandardItem
 import species.Specie
 import species.SpeciesLoader
 
-class SpeciesFiltersUpdate {
-    fun run() {
+class SpeciesFilterUpdate {
+    fun getFilterData(): FilterData {
         val stats: Map<String, Int> = CreatorSpeciesRepository.getActiveCreatorsSpecieNamesToCount()
 
         val items = getSpeciesList(SpeciesLoader().get().getAsTree(), stats)
-        val specialItems = listOf(SpecialItem("Unknown", "?", countUnknown(), "unknown"))
+        val specialItems = listOf(SpecialItem.newUnknown(countUnknown()))
 
-        KotlinDataManager.set(SPECIES_FILTER, FilterData(items, specialItems))
+        return FilterData(items, specialItems)
     }
 
     private fun countUnknown(): Int {

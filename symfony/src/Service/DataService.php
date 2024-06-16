@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Data\Definitions\Fields\Field;
 use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
@@ -12,13 +14,17 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\PackedStringList;
 use App\ValueObject\CacheTags;
+use App\ValueObject\CountedItem;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
+use Psl\Dict;
+use Psl\Vec;
 
 class DataService
 {
     public function __construct(
         private readonly ArtisanRepository $artisanRepository,
+        private readonly CreatorValueRepository $creatorValueRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
         private readonly KotlinDataRepository $kotlinDataRepository,
@@ -36,11 +42,7 @@ class DataService
                     $lastDataUpdateTimeUtc = null;
                 }
 
-                try {
-                    $activeArtisansCount = $this->artisanRepository->countActive();
-                } catch (UnexpectedResultException) {
-                    $activeArtisansCount = null;
-                }
+                $activeArtisansCount = $this->countActiveCreators();
 
                 try {
                     $allArtisansCount = $this->artisanRepository->countAll();
@@ -62,6 +64,12 @@ class DataService
                 );
             }
         );
+    }
+
+    public function countActiveCreators(): int
+    {
+        return $this->cache->getCached('DataService.countActiveCreators', CacheTags::ARTISANS,
+            fn () => $this->artisanRepository->countActive());
     }
 
     /**
@@ -96,11 +104,11 @@ class DataService
      */
     public function getLanguages(): array
     {
-        return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS, CacheTags::TRACKING],
+        return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS],
             function () {
                 $result = [];
 
-                foreach ($this->artisanRepository->getDistinctLanguages() as $languages) {
+                foreach ($this->artisanRepository->getDistinctLanguages() as $languages) { // FIXME
                     $result = [...$result, ...PackedStringList::unpack($languages)];
                 }
 
