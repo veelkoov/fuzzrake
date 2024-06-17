@@ -65,7 +65,6 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         $resultData = $this->getArtisansQueryBuilder()
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
@@ -96,7 +95,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
             ->orderBy('v.value', Criteria::DESC)
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
@@ -111,7 +109,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
@@ -141,7 +138,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.country != \'\'')
             ->andWhere('a.country != \'EU\'') // grep-country-eu
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -246,7 +242,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleColumnResult();
 
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
@@ -336,7 +331,6 @@ class ArtisanRepository extends ServiceEntityRepository
         }
 
         $resultData = $queryBuilder->getQuery()
-            ->enableResultCache(3600)
             ->getArrayResult();
 
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
@@ -357,7 +351,6 @@ class ArtisanRepository extends ServiceEntityRepository
                 ->where('m_where.makerId = :makerId')
                 ->setParameter('makerId', $makerId)
                 ->getQuery()
-                ->enableResultCache(3600)
                 ->getSingleResult();
         } catch (NonUniqueResultException $e) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($e);
@@ -393,7 +386,6 @@ class ArtisanRepository extends ServiceEntityRepository
         $resultData = $builder
             ->setParameters($parameters)
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
@@ -406,7 +398,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -421,7 +412,6 @@ class ArtisanRepository extends ServiceEntityRepository
         $resultData = $this->createQueryBuilder('a')
             ->select('COUNT(a)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -440,7 +430,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('type', Field::URL_COMMISSIONS->value)
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -459,7 +448,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
             ->addOrderBy('LOWER(a.name)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $result;
