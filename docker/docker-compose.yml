@@ -20,6 +20,8 @@ services:
       args:
         DEV_MACHINE: 'yes'
         DOCKER_UID:  '${FUZZRAKE_DOCKER_UID:-1000}'
+    environment:
+      PHP_IDE_CONFIG: 'serverName=fuzzrake-dev'
     restart: 'unless-stopped'
     user:    'root:root'
     volumes:
