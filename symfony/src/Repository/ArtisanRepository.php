@@ -169,19 +169,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    /**
-     * @return list<string>
-     */
-    public function getDistinctLanguages(): array
-    {
-        $result = $this->createQueryBuilder('a')
-            ->select('DISTINCT a.languages')
-            ->getQuery()
-            ->getSingleColumnResult();
-
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
-    }
-
     public function getDistinctCountriesToCountAssoc(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('country');
@@ -225,11 +212,6 @@ class ArtisanRepository extends ServiceEntityRepository
     public function getDistinctProductionModels(): FilterData
     {
         return $this->getDistinctItemsWithCountFromJoined('productionModels');
-    }
-
-    public function getDistinctLanguagesForFilters(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('languages');
     }
 
     /**

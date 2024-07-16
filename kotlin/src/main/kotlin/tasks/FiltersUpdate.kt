@@ -21,11 +21,6 @@ class FiltersUpdate(
     fun execute() {
         database.transaction {
             update(SPECIES_FILTER, SpeciesFilterUpdate().getFilterData())
-            update(PRODUCTION_MODELS_FILTER, ValueFieldFilterUpdate(Field.PRODUCTION_MODELS).getFilterData())
-            update(STYLES_FILTER, ValueFieldFilterUpdate(Field.STYLES, Field.OTHER_STYLES).getFilterData())
-            update(ORDER_TYPES_FILTER, ValueFieldFilterUpdate(Field.ORDER_TYPES, Field.OTHER_ORDER_TYPES).getFilterData())
-            update(FEATURES_FILTER, ValueFieldFilterUpdate(Field.FEATURES, Field.OTHER_FEATURES).getFilterData())
-            update(LANGUAGES_FILTER, ValueFieldFilterUpdate(Field.LANGUAGES).getFilterData())
         }
     }
 

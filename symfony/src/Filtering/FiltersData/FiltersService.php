@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
+use App\Data\Definitions\Fields\Field;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
+use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
@@ -15,6 +17,8 @@ use App\Service\CountriesDataService;
 use App\Service\DataService;
 use App\Utils\Enforce;
 use Doctrine\ORM\UnexpectedResultException;
+use Psl\Dict;
+use Psl\Vec;
 
 class FiltersService
 {
@@ -34,13 +38,13 @@ class FiltersService
     public function getFiltersTplData(): FiltersData
     {
         return new FiltersData(
-            $this->artisanRepository->getDistinctOrderTypes(),
-            $this->artisanRepository->getDistinctStyles(),
+            $this->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES),
+            $this->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES),
             $this->getPaymentPlans(),
-            $this->artisanRepository->getDistinctFeatures(),
-            $this->artisanRepository->getDistinctProductionModels(),
+            $this->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES),
+            $this->getValuesFilterData(Field::PRODUCTION_MODELS),
             $this->getOpenFor(),
-            $this->artisanRepository->getDistinctLanguagesForFilters(),
+            $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),
             $this->artisanRepository->getDistinctStatesToCountAssoc(),
             $this->getSpeciesFilterData(),
@@ -174,5 +178,26 @@ class FiltersService
         $inactiveCount = $this->artisanRepository->countAll() - $this->dataService->countActiveCreators();
 
         return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
+    }
+
+    private function getValuesFilterData(Field $primaryField, ?Field $otherField = null): FilterData
+    {
+        $fields = Vec\filter_nulls([$primaryField, $otherField]);
+
+        $unknownCount = $this->dataService->countActiveCreators()
+            - $this->dataService->countActiveCreatorsHavingAnyOf(...$fields);
+        $specialItems = [SpecialItems::newUnknown($unknownCount)];
+
+        if (null !== $otherField) {
+            $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
+        }
+
+        $specialItems = Vec\map($specialItems, fn (MutableSpecialItem $item): SpecialItem => SpecialItem::from($item));
+
+        $items = $this->dataService->countDistinctInActiveCreatorsHaving($primaryField);
+        $items = Dict\map_with_key($items, fn (string $item, int $count): Item => new Item($item, $item, $count));
+        $items = Vec\values($items);
+
+        return new FilterData($items, $specialItems);
     }
 }

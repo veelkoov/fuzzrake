@@ -33,4 +33,12 @@ class CacheTest extends TestCase
         self::assertEquals('a-result-5', $subject->getCached('a-key-1', 'a-tag-1', fn () => 'a-result-5'));
         self::assertEquals('a-result-3', $subject->getCached('a-key-2', 'a-tag-2', fn () => 'a-result-6'));
     }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function testGet(): void
+    {
+        // TODO: dots and key creation
+    }
 }

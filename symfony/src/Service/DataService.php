@@ -12,13 +12,9 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\PackedStringList;
 use App\ValueObject\CacheTags;
-use App\ValueObject\CountedItem;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
-use Psl\Dict;
-use Psl\Vec;
 
 class DataService
 {
@@ -105,15 +101,7 @@ class DataService
     public function getLanguages(): array
     {
         return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS],
-            function () {
-                $result = [];
-
-                foreach ($this->artisanRepository->getDistinctLanguages() as $languages) { // FIXME
-                    $result = [...$result, ...PackedStringList::unpack($languages)];
-                }
-
-                return array_unique($result);
-            }
+            fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value)
         );
     }
 
@@ -129,5 +117,26 @@ class DataService
     public function getOooNotice(): string
     {
         return $this->kotlinDataRepository->getString(KotlinDataRepository::OOO_NOTICE);
+    }
+
+    public function countActiveCreatorsHavingAnyOf(Field ...$fields): int
+    {
+        return $this->cache->get(
+            fn () => $this->creatorValueRepository->countActiveCreatorsHavingAnyOf(Field::strings($fields)),
+            CacheTags::ARTISANS,
+            [__METHOD__, ...$fields],
+        );
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function countDistinctInActiveCreatorsHaving(Field $field): array
+    {
+        return $this->cache->get(
+            fn () => $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value),
+            CacheTags::ARTISANS,
+            [__METHOD__, $field],
+        );
     }
 }

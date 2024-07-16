@@ -10,40 +10,22 @@ use App\Entity\ArtisanUrl;
 use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
-use App\Service\CacheDigestProvider;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
+use InvalidArgumentException;
 use Psl\Iter;
 use Psl\Vec;
 
-class QueryChoicesAppender implements CacheDigestProvider
+class QueryChoicesAppender
 {
-    private readonly Choices $choices;
+    private int $uniqueAliasIndex = 1;
 
-    public function __construct(Choices $choices)
-    {
-        $this->choices = new Choices(
-            $choices->makerId,
-            $choices->countries,
-            $choices->states,
-            [], [], [], [], [], // Unused and should not impact the cache digest
-            $choices->openFor,
-            $choices->species,
-            $choices->wantsUnknownPaymentPlans,
-            $choices->wantsAnyPaymentPlans,
-            $choices->wantsNoPaymentPlans,
-            $choices->isAdult,
-            $choices->wantsSfw,
-            $choices->wantsInactive,
-        );
-    }
-
-    public function getCacheDigest(): string
-    {
-        return $this->choices->getCacheDigest();
+    public function __construct(
+        private readonly Choices $choices,
+    ) {
     }
 
     public function applyChoices(QueryBuilder $builder): void
@@ -57,6 +39,11 @@ class QueryChoicesAppender implements CacheDigestProvider
         $this->applyWantsSfw($builder);
         $this->applyWorksWithMinors($builder);
         $this->applyWantsInactive($builder);
+        $this->applyCreatorValuesCount($builder, $this->choices->productionModels, Field::PRODUCTION_MODELS);
+        $this->applyCreatorValuesCount($builder, $this->choices->styles, Field::STYLES, Field::OTHER_STYLES);
+        $this->applyCreatorValuesCount($builder, $this->choices->orderTypes, Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
+        $this->applyCreatorValuesCount($builder, $this->choices->features, Field::FEATURES, Field::OTHER_FEATURES, true);
+        $this->applyCreatorValuesCount($builder, $this->choices->languages, Field::LANGUAGES);
     }
 
     private function createSubqueryBuilder(QueryBuilder $builder, string $alias): QueryBuilder
@@ -291,5 +278,87 @@ class QueryChoicesAppender implements CacheDigestProvider
         }
 
         $builder->andWhere($condition);
+    }
+
+    /**
+     * @param list<string> $selectedItems
+     */
+    private function applyCreatorValuesCount(QueryBuilder $builder, array $selectedItems, Field $primaryField,
+        ?Field $otherField = null, bool $allInsteadOfAny = false): void
+    {
+        $conditions = [];
+
+        $items = new SpecialItemsExtractor($selectedItems, Consts::FILTER_VALUE_OTHER, Consts::FILTER_VALUE_UNKNOWN);
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_OTHER)) {
+            if (null === $otherField) {
+                throw new InvalidArgumentException('Other field not selected');
+            }
+
+            $creatorAlias = $this->getUniqueAlias();
+            $valuesAlias = $this->getUniqueAlias();
+            $parameterAlias = $this->getUniqueAlias();
+
+            $conditions[] = $builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, $creatorAlias)
+                    ->select('1')
+                    ->join("$creatorAlias.values", $valuesAlias)
+                    ->where("$creatorAlias.id = a.id")
+                    ->andWhere("$valuesAlias.fieldName = :$parameterAlias")
+            );
+
+            $builder->setParameter($parameterAlias, $otherField->value);
+        }
+
+        if ($items->hasSpecial(Consts::FILTER_VALUE_UNKNOWN)) {
+            $creatorAlias = $this->getUniqueAlias();
+            $valuesAlias = $this->getUniqueAlias();
+            $parameterAlias = $this->getUniqueAlias();
+
+            $conditions[] = $builder->expr()->not($builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, $creatorAlias)
+                    ->select('1')
+                    ->join("$creatorAlias.values", $valuesAlias)
+                    ->where("$creatorAlias.id = a.id")
+                    ->andWhere("$valuesAlias.fieldName IN (:$parameterAlias)")
+            ));
+
+            $builder->setParameter($parameterAlias, Vec\filter(
+                [$primaryField->value, $otherField?->value],
+                fn (?string $name): bool => null !== $name,
+            ));
+        }
+
+        if ([] !== $items->getCommon()) {
+            $creatorAlias = $this->getUniqueAlias();
+            $valuesAlias = $this->getUniqueAlias();
+            $fieldNameParamAlias = $this->getUniqueAlias();
+            $valueParamAlias = $this->getUniqueAlias();
+
+            $having = $allInsteadOfAny
+                ? $builder->expr()->eq("COUNT($creatorAlias)", count($items->getCommon()))
+                : $builder->expr()->gt("COUNT($creatorAlias)", 0);
+
+            $conditions[] = $builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, $creatorAlias)
+                ->select('1')
+                ->join("$creatorAlias.values", $valuesAlias)
+                ->where("$creatorAlias.id = a.id")
+                ->andWhere("$valuesAlias.fieldName = :$fieldNameParamAlias")
+                ->andWhere("$valuesAlias.value IN (:$valueParamAlias)")
+                ->groupBy("$creatorAlias.id")
+                ->having($having)
+            );
+
+            $builder->setParameter($fieldNameParamAlias, $primaryField->value);
+            $builder->setParameter($valueParamAlias, $items->getCommon());
+        }
+
+        $this->addWheres($builder, $conditions);
+    }
+
+    private function getUniqueAlias(): string
+    {
+        return 'qca'.((string) $this->uniqueAliasIndex++);
     }
 }

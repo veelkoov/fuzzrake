@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Data\Definitions\Fields\Field;
+use Psl\Vec;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
+/**
+ * @phpstan-type Keyable Field|string
+ */
 class Cache
 {
     public function __construct(
@@ -18,6 +23,8 @@ class Cache
     }
 
     /**
+     * @deprecated Use get() instead
+     *
      * @template T
      *
      * @param list<string>|string $tags
@@ -36,6 +43,34 @@ class Cache
         } catch (InvalidArgumentException|CacheException $exception) {
             throw new RuntimeException(previous: $exception);
         }
+    }
+
+    /**
+     * @template T
+     *
+     * @param callable(): T       $callback
+     * @param list<string>|string $tags
+     * @param Keyable[]|Keyable   $keyParts
+     *
+     * @return T
+     */
+    public function get(callable $callback, array|string $tags, mixed $keyParts): mixed
+    {
+        $keyParts = Vec\map((array) $keyParts, function (mixed $item): string {
+            if ($item instanceof Field) {
+                $result = $item->value;
+            } elseif (is_string($item)) {
+                $result = $item;
+            } else {
+                throw new RuntimeException(gettype($item).' is not supported as a cache key part');
+            }
+
+            return str_replace('.', '..', $result);
+        });
+
+        $key = implode('.', $keyParts);
+
+        return $this->getCached($key, $tags, $callback);
     }
 
     /**
