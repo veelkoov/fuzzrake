@@ -56,6 +56,10 @@ class Cache
      */
     public function get(callable $callback, array|string $tags, mixed $keyParts): mixed
     {
+        if (!is_array($keyParts)) {
+            $keyParts = [$keyParts];
+        }
+
         $keyParts = Vec\map((array) $keyParts, function (mixed $item): string {
             if ($item instanceof Field) {
                 $result = $item->value;
