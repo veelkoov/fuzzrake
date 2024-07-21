@@ -64,7 +64,7 @@ class StatisticsController extends AbstractController
         $otherStyles = $filtersService->getValuesFilterData(Field::OTHER_STYLES);
         $features = $filtersService->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES);
         $otherFeatures = $filtersService->getValuesFilterData(Field::OTHER_FEATURES);
-        $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
+        $countries = $filtersService->getCountriesFilterData();
         $commissionsStats = $offerStatusRepository->getCommissionsStats();
 
         $artisans = Artisan::wrapAll($artisanRepository->getActive());
@@ -93,7 +93,7 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach ($input->items as $item) {
+        foreach ($this->getLeafItems($input->items) as $item) {
             $count = $item->count;
 
             if (!array_key_exists($count, $result)) {
@@ -112,6 +112,26 @@ class StatisticsController extends AbstractController
 
         foreach ($input->specialItems as $item) {
             $result[$item->label] = $item->count;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param list<Item> $input
+     *
+     * @return list<Item>
+     */
+    private function getLeafItems(array $input): array
+    {
+        $result = [];
+
+        foreach ($input as $item) {
+            if ([] !== $item->subitems) {
+                $result = [...$result, ...$this->getLeafItems($item->subitems)];
+            } else {
+                $result[] = $item;
+            }
         }
 
         return $result;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
@@ -19,7 +19,7 @@ use Doctrine\ORM\UnexpectedResultException;
 class DataService
 {
     public function __construct(
-        private readonly ArtisanRepository $artisanRepository,
+        private readonly CreatorRepository $creatorRepository,
         private readonly CreatorValueRepository $creatorValueRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
@@ -30,7 +30,7 @@ class DataService
 
     public function getMainPageStats(): MainPageStats
     {
-        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING],
+        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING], // FIXME: CODE - false
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
@@ -41,13 +41,13 @@ class DataService
                 $activeArtisansCount = $this->countActiveCreators();
 
                 try {
-                    $allArtisansCount = $this->artisanRepository->countAll();
+                    $allArtisansCount = $this->creatorRepository->countAll();
                 } catch (UnexpectedResultException) {
                     $allArtisansCount = null;
                 }
 
                 try {
-                    $countryCount = $this->artisanRepository->getDistinctCountriesCount();
+                    $countryCount = $this->creatorRepository->getDistinctCountriesCount();
                 } catch (UnexpectedResultException) {
                     $countryCount = null;
                 }
@@ -65,7 +65,7 @@ class DataService
     public function countActiveCreators(): int
     {
         return $this->cache->getCached('DataService.countActiveCreators', CacheTags::ARTISANS,
-            fn () => $this->artisanRepository->countActive());
+            fn () => $this->creatorRepository->countActive());
     }
 
     /**
@@ -74,7 +74,7 @@ class DataService
     public function getCountries(): array
     {
         return $this->cache->getCached('DataService.getCountries', CacheTags::ARTISANS,
-            fn () => $this->artisanRepository->getDistinctCountries());
+            fn () => $this->creatorRepository->getDistinctCountries());
     }
 
     /**
@@ -83,7 +83,7 @@ class DataService
     public function getStates(): array
     {
         return $this->cache->getCached('DataService.getStates', CacheTags::ARTISANS,
-            fn () => $this->artisanRepository->getDistinctStates());
+            fn () => $this->creatorRepository->getDistinctStates());
     }
 
     /**
@@ -111,7 +111,7 @@ class DataService
     public function getAllArtisans(): array
     {
         return $this->cache->getCached('DataService.getAllArtisans', CacheTags::ARTISANS,
-            fn () => Artisan::wrapAll($this->artisanRepository->getAll()));
+            fn () => Artisan::wrapAll($this->creatorRepository->getAll()));
     }
 
     public function getOooNotice(): string
@@ -134,7 +134,13 @@ class DataService
     public function countDistinctInActiveCreatorsHaving(Field $field): array
     {
         return $this->cache->get(
-            fn () => $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value),
+            function () use ($field) {
+                if (Field::COUNTRY === $field || Field::STATE === $field) {
+                    return $this->creatorRepository->countDistinctInActiveCreators(strtolower($field->value));
+                } else {
+                    return $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value);
+                }
+            },
             CacheTags::ARTISANS,
             [__METHOD__, $field],
         );

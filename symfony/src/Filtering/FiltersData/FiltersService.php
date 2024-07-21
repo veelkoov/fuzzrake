@@ -46,34 +46,57 @@ class FiltersService
             $this->getOpenFor(),
             $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),
-            $this->artisanRepository->getDistinctStatesToCountAssoc(),
+            $this->getStatesFilterData(),
             $this->getSpeciesFilterData(),
             $this->getInactiveFilterData(),
         );
     }
 
-    private function getCountriesFilterData(): FilterData
+    public function getCountriesFilterData(): FilterData
     {
-        $artisansCountries = $this->artisanRepository->getDistinctCountriesToCountAssoc();
-
-        $unknown = SpecialItems::newUnknown($artisansCountries->specialItems[0]->count); // FIXME: Refactor filters/stats #80 - ugly hack [0]
+        $unknown = SpecialItems::newUnknown();
         $result = new MutableFilterData($unknown);
 
         foreach ($this->countriesDataService->getRegions() as $regionName) {
             $result->items->addComplexItem($regionName, $regionName, 0);
         }
 
-        foreach ($artisansCountries->items as $country) {
-            $code = Enforce::string($country->value);
-            $region = $this->countriesDataService->getRegionFrom($code);
-            $name = $this->countriesDataService->getNameFor($code);
+        $countriesData = $this->dataService->countDistinctInActiveCreatorsHaving(Field::COUNTRY);
 
-            $result->items[$region]->incCount($country->count);
-            $result->items[$region]->subitems->addComplexItem($code, $name, $country->count);
+        foreach ($countriesData as $countryCode => $count) {
+            if ('' === $countryCode) {
+                $unknown->incCount($count);
+                continue;
+            }
+
+            $region = $this->countriesDataService->getRegionFrom($countryCode);
+            $name = $this->countriesDataService->getNameFor($countryCode);
+
+            $result->items[$region]->incCount($count);
+            $result->items[$region]->subitems->addComplexItem($countryCode, $name, $count);
         }
 
         foreach ($result->items as $item) {
             $item->subitems->sort();
+        }
+
+        return FilterData::from($result);
+    }
+
+    public function getStatesFilterData(): FilterData
+    {
+        $unknown = SpecialItems::newUnknown();
+        $result = new MutableFilterData($unknown);
+
+        $statesData = $this->dataService->countDistinctInActiveCreatorsHaving(Field::STATE);
+
+        foreach ($statesData as $state => $count) {
+            if ('' === $state) {
+                $unknown->incCount($count);
+                continue;
+            }
+
+            $result->items->addOrIncItem($state, $count);
         }
 
         return FilterData::from($result);

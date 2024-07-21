@@ -9,11 +9,8 @@ use App\Data\Definitions\Fields\ValidationRegexps;
 use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filtering\DataRequests\QueryChoicesAppender;
-use App\Filtering\FiltersData\Builder\MutableFilterData;
-use App\Filtering\FiltersData\Builder\SpecialItems;
-use App\Filtering\FiltersData\FilterData;
+use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
-use App\Utils\PackedStringList;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -170,16 +167,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    public function getDistinctCountriesToCountAssoc(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('country');
-    }
-
-    public function getDistinctStatesToCountAssoc(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('state');
-    }
-
     /**
      * @return string[]
      */
@@ -195,32 +182,22 @@ class ArtisanRepository extends ServiceEntityRepository
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName): FilterData // TODO: Remove
+    /**
+     * @return array<string, int>
+     */
+    public function countDistinctInActiveCreators(string $columnName): array
     {
-        $rows = $this->fetchColumnsAsArray($columnName);
+        $result = $this->getEntityManager()->createQuery("
+            SELECT c.$columnName AS value, COUNT(c.$columnName) AS count
+            FROM \\App\\Entity\\Artisan AS c
+            WHERE c.inactiveReason = :empty
+            GROUP BY c.$columnName
+            ORDER BY count
+        ")
+            ->setParameter('empty', '')
+            ->getArrayResult();
 
-        $unknown = SpecialItems::newUnknown();
-        $special = [$unknown];
-
-        $result = new MutableFilterData(...$special);
-
-        foreach ($rows as $row) {
-            $items = PackedStringList::unpack($row['items']);
-
-            foreach ($items as $item) {
-                if ($item = trim($item)) {
-                    $result->items->addOrIncItem($item);
-                }
-            }
-
-            if ('' === $row['items']) {
-                $unknown->incCount();
-            }
-        }
-
-        $result->items->sort();
-
-        return FilterData::from($result);
+        return Arrays::assoc($result, 'value', 'count'); // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -255,22 +232,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<array{items: string, otherItems?: string}>
-     */
-    private function fetchColumnsAsArray(string $columnName): array
-    {
-        $result = $this->createQueryBuilder('a')
-            ->select("a.$columnName AS items")
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '')
-            ->getQuery()
-            ->getArrayResult()
-        ;
-
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
-    }
-
-    /**
      * @throws NoResultException
      */
     public function findByMakerId(string $makerId): Artisan
@@ -298,7 +259,7 @@ class ArtisanRepository extends ServiceEntityRepository
      *
      * @return Artisan[]
      */
-    public function getOthersLike(array $items): array
+    public function getOthersLike(array $items): array // FIXME
     {
         $ORs = [];
         $parameters = new ArrayCollection([
