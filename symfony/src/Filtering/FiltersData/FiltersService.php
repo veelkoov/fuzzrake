@@ -180,7 +180,7 @@ class FiltersService
         return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
     }
 
-    private function getValuesFilterData(Field $primaryField, ?Field $otherField = null): FilterData
+    public function getValuesFilterData(Field $primaryField, ?Field $otherField = null): FilterData
     {
         $fields = Vec\filter_nulls([$primaryField, $otherField]);
 

@@ -13,6 +13,7 @@ use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Filtering\FiltersData\FilterData;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
+use App\Utils\PackedStringList;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -179,41 +180,6 @@ class ArtisanRepository extends ServiceEntityRepository
         return $this->getDistinctItemsWithCountFromJoined('state');
     }
 
-    public function getDistinctOrderTypes(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
-    }
-
-    public function getDistinctOtherOrderTypes(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
-    }
-
-    public function getDistinctStyles(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('styles', true);
-    }
-
-    public function getDistinctOtherStyles(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('otherStyles');
-    }
-
-    public function getDistinctFeatures(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('features', true);
-    }
-
-    public function getDistinctOtherFeatures(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
-    }
-
-    public function getDistinctProductionModels(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('productionModels');
-    }
-
     /**
      * @return string[]
      */
@@ -229,22 +195,17 @@ class ArtisanRepository extends ServiceEntityRepository
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData // TODO: Remove
+    private function getDistinctItemsWithCountFromJoined(string $columnName): FilterData // TODO: Remove
     {
-        $rows = $this->fetchColumnsAsArray($columnName, $countOther);
+        $rows = $this->fetchColumnsAsArray($columnName);
 
         $unknown = SpecialItems::newUnknown();
         $special = [$unknown];
 
-        if ($countOther) {
-            $other = SpecialItems::newOther();
-            $special[] = $other;
-        }
-
         $result = new MutableFilterData(...$special);
 
         foreach ($rows as $row) {
-            $items = explode("\n", $row['items']);
+            $items = PackedStringList::unpack($row['items']);
 
             foreach ($items as $item) {
                 if ($item = trim($item)) {
@@ -252,11 +213,7 @@ class ArtisanRepository extends ServiceEntityRepository
                 }
             }
 
-            if ($countOther && !empty($row['otherItems'])) {
-                $other->incCount(); // @phpstan-ignore-line if $countOther guarantees the variable being defined
-            }
-
-            if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {
+            if ('' === $row['items']) {
                 $unknown->incCount();
             }
         }
@@ -300,22 +257,17 @@ class ArtisanRepository extends ServiceEntityRepository
     /**
      * @return array<array{items: string, otherItems?: string}>
      */
-    private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
+    private function fetchColumnsAsArray(string $columnName): array
     {
-        $queryBuilder = $this->createQueryBuilder('a')
+        $result = $this->createQueryBuilder('a')
             ->select("a.$columnName AS items")
             ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '');
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getArrayResult()
+        ;
 
-        if ($includeOther) {
-            $otherColumnName = 'other'.ucfirst($columnName);
-            $queryBuilder->addSelect("a.$otherColumnName AS otherItems");
-        }
-
-        $resultData = $queryBuilder->getQuery()
-            ->getArrayResult();
-
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
+        return $result; // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
