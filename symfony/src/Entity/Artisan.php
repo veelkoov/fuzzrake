@@ -53,34 +53,34 @@ class Artisan implements Stringable
     private string $productionModelsComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $productionModels = '';
+    private string $productionModels = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $stylesComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $styles = '';
+    private string $styles = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $otherStyles = '';
+    private string $otherStyles = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $orderTypesComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $orderTypes = '';
+    private string $orderTypes = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $otherOrderTypes = '';
+    private string $otherOrderTypes = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $featuresComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $features = '';
+    private string $features = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $otherFeatures = '';
+    private string $otherFeatures = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $paymentPlans = '';
@@ -101,7 +101,7 @@ class Artisan implements Stringable
     private string $speciesDoesnt = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $languages = '';
+    private string $languages = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $notes = '';
@@ -313,16 +313,9 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getProductionModels(): string
+    public function getLegacyProductionModels(): string // TODO: Temporary. Remove.
     {
         return $this->productionModels;
-    }
-
-    public function setProductionModels(string $productionModels): self
-    {
-        $this->productionModels = $productionModels;
-
-        return $this;
     }
 
     public function getStylesComment(): string
@@ -337,28 +330,14 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getStyles(): string
+    public function getLegacyStyles(): string // TODO: Temporary. Remove.
     {
         return $this->styles;
     }
 
-    public function setStyles(string $styles): self
-    {
-        $this->styles = $styles;
-
-        return $this;
-    }
-
-    public function getOtherStyles(): string
+    public function getLegacyOtherStyles(): string // TODO: Temporary. Remove.
     {
         return $this->otherStyles;
-    }
-
-    public function setOtherStyles(string $otherStyles): self
-    {
-        $this->otherStyles = $otherStyles;
-
-        return $this;
     }
 
     public function getOrderTypesComment(): string
@@ -373,28 +352,14 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getOrderTypes(): string
+    public function getLegacyOrderTypes(): string // TODO: Temporary. Remove.
     {
         return $this->orderTypes;
     }
 
-    public function setOrderTypes(string $orderTypes): self
-    {
-        $this->orderTypes = $orderTypes;
-
-        return $this;
-    }
-
-    public function getOtherOrderTypes(): string
+    public function getLegacyOtherOrderTypes(): string // TODO: Temporary. Remove.
     {
         return $this->otherOrderTypes;
-    }
-
-    public function setOtherOrderTypes(string $otherOrderTypes): self
-    {
-        $this->otherOrderTypes = $otherOrderTypes;
-
-        return $this;
     }
 
     public function getFeaturesComment(): string
@@ -409,28 +374,14 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getFeatures(): string
+    public function getLegacyFeatures(): string // TODO: Temporary. Remove.
     {
         return $this->features;
     }
 
-    public function setFeatures(string $features): self
-    {
-        $this->features = $features;
-
-        return $this;
-    }
-
-    public function getOtherFeatures(): string
+    public function getLegacyOtherFeatures(): string // TODO: Temporary. Remove.
     {
         return $this->otherFeatures;
-    }
-
-    public function setOtherFeatures(string $otherFeatures): self
-    {
-        $this->otherFeatures = $otherFeatures;
-
-        return $this;
     }
 
     public function getPaymentPlans(): string
@@ -505,16 +456,9 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getLanguages(): string
+    public function getLegacyLanguages(): string // TODO: Temporary. Remove.
     {
         return $this->languages;
-    }
-
-    public function setLanguages(string $languages): self
-    {
-        $this->languages = $languages;
-
-        return $this;
     }
 
     public function getNotes(): string

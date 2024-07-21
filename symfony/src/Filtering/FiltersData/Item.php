@@ -15,7 +15,7 @@ readonly class Item
         public string $value,
         public string $label,
         public int $count,
-        public array $subitems,
+        public array $subitems = [],
     ) {
     }
 

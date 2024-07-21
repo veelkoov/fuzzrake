@@ -9,9 +9,7 @@ use App\Data\Definitions\Fields\ValidationRegexps;
 use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filtering\DataRequests\QueryChoicesAppender;
-use App\Filtering\FiltersData\Builder\MutableFilterData;
-use App\Filtering\FiltersData\Builder\SpecialItems;
-use App\Filtering\FiltersData\FilterData;
+use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -21,6 +19,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -64,10 +63,22 @@ class ArtisanRepository extends ServiceEntityRepository
     {
         $resultData = $this->getArtisansQueryBuilder()
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
+    }
+
+    /**
+     * @return Paginator<Artisan>
+     */
+    public function getPaginated(int $first, int $max): Paginator
+    {
+        $query = $this->getArtisansQueryBuilder()
+            ->getQuery()
+            ->setFirstResult($first)
+            ->setMaxResults($max);
+
+        return new Paginator($query, fetchJoinCollection: true);
     }
 
     /**
@@ -82,7 +93,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
             ->orderBy('v.value', Criteria::DESC)
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
@@ -97,7 +107,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
@@ -127,7 +136,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.country != \'\'')
             ->andWhere('a.country != \'EU\'') // grep-country-eu
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -160,69 +168,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return list<string>
-     */
-    public function getDistinctLanguages(): array
-    {
-        $result = $this->createQueryBuilder('a')
-            ->select('DISTINCT a.languages')
-            ->getQuery()
-            ->getSingleColumnResult();
-
-        return $result; // @phpstan-ignore-line Lack of skill to fix this
-    }
-
-    public function getDistinctCountriesToCountAssoc(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('country');
-    }
-
-    public function getDistinctStatesToCountAssoc(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('state');
-    }
-
-    public function getDistinctOrderTypes(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('orderTypes', true);
-    }
-
-    public function getDistinctOtherOrderTypes(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('otherOrderTypes');
-    }
-
-    public function getDistinctStyles(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('styles', true);
-    }
-
-    public function getDistinctOtherStyles(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('otherStyles');
-    }
-
-    public function getDistinctFeatures(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('features', true);
-    }
-
-    public function getDistinctOtherFeatures(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('otherFeatures');
-    }
-
-    public function getDistinctProductionModels(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('productionModels');
-    }
-
-    public function getDistinctLanguagesForFilters(): FilterData
-    {
-        return $this->getDistinctItemsWithCountFromJoined('languages');
-    }
-
-    /**
      * @return string[]
      */
     public function getPaymentPlans(): array
@@ -232,47 +177,27 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleColumnResult();
 
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
     }
 
-    private function getDistinctItemsWithCountFromJoined(string $columnName, bool $countOther = false): FilterData
+    /**
+     * @return array<string, int>
+     */
+    public function countDistinctInActiveCreators(string $columnName): array
     {
-        $rows = $this->fetchColumnsAsArray($columnName, $countOther);
+        $result = $this->getEntityManager()->createQuery("
+            SELECT c.$columnName AS value, COUNT(c.$columnName) AS count
+            FROM \\App\\Entity\\Artisan AS c
+            WHERE c.inactiveReason = :empty
+            GROUP BY c.$columnName
+            ORDER BY count
+        ")
+            ->setParameter('empty', '')
+            ->getArrayResult();
 
-        $unknown = SpecialItems::newUnknown();
-        $special = [$unknown];
-
-        if ($countOther) {
-            $other = SpecialItems::newOther();
-            $special[] = $other;
-        }
-
-        $result = new MutableFilterData(...$special);
-
-        foreach ($rows as $row) {
-            $items = explode("\n", $row['items']);
-
-            foreach ($items as $item) {
-                if ($item = trim($item)) {
-                    $result->items->addOrIncItem($item);
-                }
-            }
-
-            if ($countOther && !empty($row['otherItems'])) {
-                $other->incCount(); // @phpstan-ignore-line if $countOther guarantees the variable being defined
-            }
-
-            if (empty($row['items']) && (!$countOther || empty($row['otherItems']))) {
-                $unknown->incCount();
-            }
-        }
-
-        $result->items->sort();
-
-        return FilterData::from($result);
+        return Arrays::assoc($result, 'value', 'count'); // @phpstan-ignore-line Lack of skill to fix this
     }
 
     /**
@@ -307,28 +232,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<array{items: string, otherItems?: string}>
-     */
-    private function fetchColumnsAsArray(string $columnName, bool $includeOther): array
-    {
-        $queryBuilder = $this->createQueryBuilder('a')
-            ->select("a.$columnName AS items")
-            ->where('a.inactiveReason = :empty')
-            ->setParameter('empty', '');
-
-        if ($includeOther) {
-            $otherColumnName = 'other'.ucfirst($columnName);
-            $queryBuilder->addSelect("a.$otherColumnName AS otherItems");
-        }
-
-        $resultData = $queryBuilder->getQuery()
-            ->enableResultCache(3600)
-            ->getArrayResult();
-
-        return $resultData; // @phpstan-ignore-line Lack of skill to fix this
-    }
-
-    /**
      * @throws NoResultException
      */
     public function findByMakerId(string $makerId): Artisan
@@ -343,7 +246,6 @@ class ArtisanRepository extends ServiceEntityRepository
                 ->where('m_where.makerId = :makerId')
                 ->setParameter('makerId', $makerId)
                 ->getQuery()
-                ->enableResultCache(3600)
                 ->getSingleResult();
         } catch (NonUniqueResultException $e) { // @codeCoverageIgnoreStart
             throw new UnbelievableRuntimeException($e);
@@ -357,7 +259,7 @@ class ArtisanRepository extends ServiceEntityRepository
      *
      * @return Artisan[]
      */
-    public function getOthersLike(array $items): array
+    public function getOthersLike(array $items): array // FIXME
     {
         $ORs = [];
         $parameters = new ArrayCollection([
@@ -379,16 +281,11 @@ class ArtisanRepository extends ServiceEntityRepository
         $resultData = $builder
             ->setParameters($parameters)
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $resultData;
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
     public function countActive(): int
     {
         $resultData = $this->createQueryBuilder('a')
@@ -396,7 +293,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -411,7 +307,6 @@ class ArtisanRepository extends ServiceEntityRepository
         $resultData = $this->createQueryBuilder('a')
             ->select('COUNT(a)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -430,7 +325,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->setParameter('type', Field::URL_COMMISSIONS->value)
             ->setParameter('empty', '')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;
@@ -449,7 +343,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
             ->addOrderBy('LOWER(a.name)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $result;

@@ -64,7 +64,7 @@ class StatisticsControllerWithEMTest extends WebTestCaseWithEM
         self::assertRowValueEquals('2 (100.00%)', 'Unknown', $crawler->filterXPath('//h1[text()="Styles"]')->nextAll()->first());
         self::assertRowValueEquals('2 (100.00%)', 'Total', $crawler->filterXPath('//h1[text()="Commission status"]')->nextAll()->first());
         self::assertRowValueEquals('2 (100.00%)', Field::NAME->value, $crawler);
-        self::assertRowValueEquals('1 (50.00% × 2 = 100.00%)', 'CZ, SK', $crawler);
+        self::assertRowValueEquals('1 (50.00% × 2 = 100.00%)', 'Czechia, Slovakia', $crawler);
         // https://github.com/veelkoov/fuzzrake/issues/74
         // static::assertRowValueEquals('1 (50.00%)', '40-49%', $crawler);
         // static::assertRowValueEquals('1 (50.00%)', '50-59%', $crawler);

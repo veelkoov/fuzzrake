@@ -7,10 +7,10 @@ namespace App\Controller;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Filtering\FiltersData\FilterData;
+use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanRepository;
 use App\Repository\CreatorOfferStatusRepository;
-use App\Service\SpeciesService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
@@ -55,16 +55,16 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, ArtisanRepository $artisanRepository, CreatorOfferStatusRepository $offerStatusRepository, SpeciesService $species): Response
+    public function statistics(Request $request, ArtisanRepository $artisanRepository, CreatorOfferStatusRepository $offerStatusRepository, FiltersService $filtersService): Response
     {
-        $productionModels = $artisanRepository->getDistinctProductionModels();
-        $orderTypes = $artisanRepository->getDistinctOrderTypes();
-        $otherOrderTypes = $artisanRepository->getDistinctOtherOrderTypes();
-        $styles = $artisanRepository->getDistinctStyles();
-        $otherStyles = $artisanRepository->getDistinctOtherStyles();
-        $features = $artisanRepository->getDistinctFeatures();
-        $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
-        $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
+        $productionModels = $filtersService->getValuesFilterData(Field::PRODUCTION_MODELS);
+        $orderTypes = $filtersService->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
+        $otherOrderTypes = $filtersService->getValuesFilterData(Field::OTHER_ORDER_TYPES);
+        $styles = $filtersService->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES);
+        $otherStyles = $filtersService->getValuesFilterData(Field::OTHER_STYLES);
+        $features = $filtersService->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES);
+        $otherFeatures = $filtersService->getValuesFilterData(Field::OTHER_FEATURES);
+        $countries = $filtersService->getCountriesFilterData();
         $commissionsStats = $offerStatusRepository->getCommissionsStats();
 
         $artisans = Artisan::wrapAll($artisanRepository->getActive());
@@ -93,7 +93,7 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach ($input->items as $item) {
+        foreach ($this->getLeafItems($input->items) as $item) {
             $count = $item->count;
 
             if (!array_key_exists($count, $result)) {
@@ -112,6 +112,26 @@ class StatisticsController extends AbstractController
 
         foreach ($input->specialItems as $item) {
             $result[$item->label] = $item->count;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param list<Item> $input
+     *
+     * @return list<Item>
+     */
+    private function getLeafItems(array $input): array
+    {
+        $result = [];
+
+        foreach ($input as $item) {
+            if ([] !== $item->subitems) {
+                $result = [...$result, ...$this->getLeafItems($item->subitems)];
+            } else {
+                $result[] = $item;
+            }
         }
 
         return $result;

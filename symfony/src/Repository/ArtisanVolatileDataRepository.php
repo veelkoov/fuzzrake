@@ -38,7 +38,6 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             ->createQueryBuilder('avd')
             ->select('MAX(avd.lastCsUpdate)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return UtcClock::at(Enforce::nString($resultData));
@@ -54,7 +53,6 @@ class ArtisanVolatileDataRepository extends ServiceEntityRepository
             ->where('avd.csTrackerIssue = :true')
             ->setParameter('true', true)
             ->getQuery()
-            ->enableResultCache(3600)
             ->getSingleScalarResult();
 
         return (int) $resultData;

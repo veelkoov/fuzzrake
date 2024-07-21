@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\ArtisanRepository;
+use App\Data\Definitions\Fields\Field;
+use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\PackedStringList;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
@@ -18,7 +19,8 @@ use Doctrine\ORM\UnexpectedResultException;
 class DataService
 {
     public function __construct(
-        private readonly ArtisanRepository $artisanRepository,
+        private readonly CreatorRepository $creatorRepository,
+        private readonly CreatorValueRepository $creatorValueRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
         private readonly KotlinDataRepository $kotlinDataRepository,
@@ -28,7 +30,7 @@ class DataService
 
     public function getMainPageStats(): MainPageStats
     {
-        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING],
+        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING], // FIXME: CODE - false
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
@@ -36,20 +38,16 @@ class DataService
                     $lastDataUpdateTimeUtc = null;
                 }
 
-                try {
-                    $activeArtisansCount = $this->artisanRepository->countActive();
-                } catch (UnexpectedResultException) {
-                    $activeArtisansCount = null;
-                }
+                $activeArtisansCount = $this->countActiveCreators();
 
                 try {
-                    $allArtisansCount = $this->artisanRepository->countAll();
+                    $allArtisansCount = $this->creatorRepository->countAll();
                 } catch (UnexpectedResultException) {
                     $allArtisansCount = null;
                 }
 
                 try {
-                    $countryCount = $this->artisanRepository->getDistinctCountriesCount();
+                    $countryCount = $this->creatorRepository->getDistinctCountriesCount();
                 } catch (UnexpectedResultException) {
                     $countryCount = null;
                 }
@@ -64,13 +62,19 @@ class DataService
         );
     }
 
+    public function countActiveCreators(): int
+    {
+        return $this->cache->getCached('DataService.countActiveCreators', CacheTags::ARTISANS,
+            fn () => $this->creatorRepository->countActive());
+    }
+
     /**
      * @return list<string>
      */
     public function getCountries(): array
     {
         return $this->cache->getCached('DataService.getCountries', CacheTags::ARTISANS,
-            fn () => $this->artisanRepository->getDistinctCountries());
+            fn () => $this->creatorRepository->getDistinctCountries());
     }
 
     /**
@@ -79,7 +83,7 @@ class DataService
     public function getStates(): array
     {
         return $this->cache->getCached('DataService.getStates', CacheTags::ARTISANS,
-            fn () => $this->artisanRepository->getDistinctStates());
+            fn () => $this->creatorRepository->getDistinctStates());
     }
 
     /**
@@ -96,16 +100,8 @@ class DataService
      */
     public function getLanguages(): array
     {
-        return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS, CacheTags::TRACKING],
-            function () {
-                $result = [];
-
-                foreach ($this->artisanRepository->getDistinctLanguages() as $languages) {
-                    $result = [...$result, ...PackedStringList::unpack($languages)];
-                }
-
-                return array_unique($result);
-            }
+        return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS],
+            fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value)
         );
     }
 
@@ -115,11 +111,38 @@ class DataService
     public function getAllArtisans(): array
     {
         return $this->cache->getCached('DataService.getAllArtisans', CacheTags::ARTISANS,
-            fn () => Artisan::wrapAll($this->artisanRepository->getAll()));
+            fn () => Artisan::wrapAll($this->creatorRepository->getAll()));
     }
 
     public function getOooNotice(): string
     {
         return $this->kotlinDataRepository->getString(KotlinDataRepository::OOO_NOTICE);
+    }
+
+    public function countActiveCreatorsHavingAnyOf(Field ...$fields): int
+    {
+        return $this->cache->get(
+            fn () => $this->creatorValueRepository->countActiveCreatorsHavingAnyOf(Field::strings($fields)),
+            CacheTags::ARTISANS,
+            [__METHOD__, ...$fields],
+        );
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function countDistinctInActiveCreatorsHaving(Field $field): array
+    {
+        return $this->cache->get(
+            function () use ($field) {
+                if (Field::COUNTRY === $field || Field::STATE === $field) {
+                    return $this->creatorRepository->countDistinctInActiveCreators(strtolower($field->value));
+                } else {
+                    return $this->creatorValueRepository->countDistinctInActiveCreatorsHaving($field->value);
+                }
+            },
+            CacheTags::ARTISANS,
+            [__METHOD__, $field],
+        );
     }
 }
