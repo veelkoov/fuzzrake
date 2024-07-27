@@ -6,13 +6,14 @@ namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
+use App\Controller\Traits\CreatorByMakerIdTrait;
 use App\Data\Definitions\Fields\SecureValues;
 use App\Entity\Artisan as ArtisanE;
 use App\IuHandling\Submission\SubmissionService;
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Captcha;
 use App\Service\DataService;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Psr\Log\LoggerInterface;
@@ -25,29 +26,22 @@ use Symfony\Component\Routing\RouterInterface;
 abstract class AbstractIuFormController extends AbstractController
 {
     use ButtonClickedTrait;
+    use CreatorByMakerIdTrait;
 
     public function __construct(
         protected readonly Captcha $captcha,
         protected readonly LoggerInterface $logger,
         protected readonly SubmissionService $iuFormService,
         protected readonly RouterInterface $router,
-        protected readonly ArtisanRepository $artisanRepository,
+        protected readonly CreatorRepository $creatorRepository,
         protected readonly DataService $dataService,
     ) {
     }
 
-    private function getArtisanByMakerIdOrThrow404(?string $makerId): Artisan
-    {
-        try {
-            return Artisan::wrap($makerId ? $this->artisanRepository->findByMakerId($makerId) : new ArtisanE());
-        } catch (UnexpectedResultException) {
-            throw $this->createNotFoundException('Failed to find a maker with given ID');
-        }
-    }
-
     protected function prepareState(?string $makerId, Request $request): IuState
     {
-        $state = new IuState($this->logger, $request->getSession(), $makerId, $this->getArtisanByMakerIdOrThrow404($makerId));
+        $creator = null === $makerId ? new Creator() : $this->getCreatorByMakerIdOrThrow404($makerId);
+        $state = new IuState($this->logger, $request->getSession(), $makerId, $creator);
         SecureValues::forIuForm($state->artisan);
 
         return $state;
