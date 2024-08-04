@@ -27,8 +27,8 @@ class RequestParser
     ];
 
     private const BOOLEANS = [
-        'isAdult',
-        'wantsSfw',
+        'checklist-is-adult',
+        'checklist-wants-sfw',
     ];
 
     public function __construct(
@@ -61,8 +61,8 @@ class RequestParser
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
-            $booleans['isAdult'],
-            $booleans['wantsSfw'],
+            $booleans['checklist-is-adult'],
+            $booleans['checklist-wants-sfw'],
             contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
         ));
     }
