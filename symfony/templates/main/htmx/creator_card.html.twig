@@ -1,3 +1,31 @@
+{% macro optional_com_sep(items) %}
+    {% if items %}
+        {{ items|join(', ') }}
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
+{% macro optional_list(items, other_items = [], comment = '') %}
+    {% if comment %}
+        <span class="nl2br">{{ comment }}</span>
+    {% endif %}
+
+    {% if items or other_items %}
+        <ul>
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+
+            {% if other_items %}
+                <li>{{ other_items|join('; ') }}</li>
+            {% endif %}
+        </ul>
+    {% else %}
+        {{ unknown_value() }}
+    {% endif %}
+{% endmacro %}
+
 <div class="modal-dialog modal-xl">
     <div id="artisanDetailsModalContent" class="modal-content artisan-data">
         <div class="modal-header">
@@ -64,15 +92,13 @@
                 <h5>Produces</h5>
 
                 <div class="small pb-2">
-                    <OptionalList :comment="creator.productionModelsComment" :items="creator.productionModels"
-                                  :other-items="[]"/>
+                    {{ _self.optional_list(creator.productionModels, [], creator.productionModelsComment) }}
                 </div>
 
                 <h5>Styles</h5>
 
                 <div class="small">
-                    <OptionalList :comment="creator.stylesComment" :items="creator.styles"
-                                  :other-items="creator.otherStyles"/>
+                    {{ _self.optional_list(creator.styles, creator.otherStyles, creator.stylesComment) }}
                 </div>
             </div>
 
@@ -80,8 +106,7 @@
                 <h5>Types</h5>
 
                 <div class="small">
-                    <OptionalList :comment="creator.orderTypesComment" :items="creator.orderTypes"
-                                  :other-items="creator.otherOrderTypes"/>
+                    {{ _self.optional_list(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
                 </div>
             </div>
 
@@ -89,8 +114,7 @@
                 <h5>Features</h5>
 
                 <div class="small">
-                    <OptionalList :comment="creator.featuresComment" :items="creator.features"
-                                  :other-items="creator.otherFeatures"/>
+                    {{ _self.optional_list(creator.features, creator.otherFeatures, creator.featuresComment) }}
                 </div>
             </div>
 
@@ -113,13 +137,15 @@
                         <strong>Doesn't</strong>: {{ creator.speciesDoesnt|join(', ') }}
                     {% endif %}
 
-                    <UnknownValue v-if="0 === creator.speciesDoes.length && 0 === creator.speciesDoesnt.length"/>
+                    {% if not creator.speciesDoes and not creator.speciesDoesnt %}
+                        {{ unknown_value() }}
+                    {% endif %}
                 </div>
 
                 <h5>Languages</h5>
 
                 <div class="small">
-                    <OptionalComSep :items="creator.languages"/>
+                    {{ _self.optional_com_sep(creator.languages) }}
                 </div>
             </div>
 
@@ -127,19 +153,19 @@
                 <h5>Payment plans</h5>
 
                 <div class="small pb-2">
-                    <OptionalList :items="creator.paymentPlans"/>
+                    {{ _self.optional_com_sep(creator.paymentPlans) }}
                 </div>
 
                 <h5>Currencies</h5>
 
                 <div class="small pb-2">
-                    <OptionalComSep :items="creator.currenciesAccepted"/>
+                    {{ _self.optional_com_sep(creator.currenciesAccepted) }}
                 </div>
 
                 <h5>Methods</h5>
 
                 <div class="small">
-                    <OptionalComSep :items="creator.paymentMethods"/>
+                    {{ _self.optional_com_sep(creator.paymentMethods) }}
                 </div>
             </div>
 

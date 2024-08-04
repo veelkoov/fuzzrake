@@ -21,12 +21,10 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-use Psl\Iter;
 use Psl\Vec;
 
 class AppExtensions extends AbstractExtension
 {
-    const UNKNOWN_ICON = '<i class="fas fa-question-circle" title="Unknown" />';
     private readonly HumanFriendly $friendly;
     private readonly Pattern $itemExplanation;
 
@@ -69,6 +67,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('is_new', $this->isNew(...)),
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
             new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
+            new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
         ];
     }
 
@@ -85,6 +84,11 @@ class AppExtensions extends AbstractExtension
     public function isTestEnvFunction(): bool
     {
         return $this->environments->isTest();
+    }
+
+    public function unknownValue(): string
+    {
+        return '<i class="fas fa-question-circle" title="Unknown"></i>';
     }
 
     /**
@@ -138,7 +142,7 @@ class AppExtensions extends AbstractExtension
             };
 
             if (null === $creator->getAges()) {
-                $result .= self::UNKNOWN_ICON;
+                $result .= $this->unknownValue();
             }
         }
 
