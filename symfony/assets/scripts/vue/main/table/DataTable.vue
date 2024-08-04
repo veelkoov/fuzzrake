@@ -49,26 +49,6 @@ export default class Table extends Vue {
     return this.state.search.isMakerId && artisan.hasMakerId(this.state.search.textUc);
   }
 
-  private setSubject(newSubject: Artisan): void {
-    this.state.subjectArtisan = newSubject;
-  }
-
-  private commaSeparated(list: string[]): string {
-    return list.join(', ');
-  }
-
-  private commaSeparatedOther(list: string[], other: string[]): string {
-    if (0 !== other.length) {
-      list = list.concat(['Other'])
-    }
-
-    return list.join(', ').replace(/ \([^)]+\)/g, ''); // FIXME: #171 Glossary
-  }
-
-  private isDevEnv(): boolean {
-    return 'dev' === Static.getEnvironment();
-  }
-
   private onDataChanged(newData: DataRow[]): void {
     this.artisans = newData.map(item => Artisan.fromArray(item));
 

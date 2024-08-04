@@ -61,6 +61,14 @@
     {%- endif -%}
 {% endmacro %}
 
+{% macro link(uri, label, icon_class, additional_button_class = '') %}
+    {% if uri %}
+        <a class="btn btn-light {{ additional_button_class }}" href="{{ uri }}" target="_blank">
+            <i class="{{ icon_class }}"></i> {{ label }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
 <div class="modal-dialog modal-xl">
     <div id="artisanDetailsModalContent" class="modal-content artisan-data">
         <div class="modal-header">
@@ -213,32 +221,30 @@
                 </p>
 
                 <div id="artisanLinks">
-                    <CardLink :url="'https://bewares.getfursu.it/#search:' + creator.abSearchJson"
-                              label="Check Artists Beware records" icon-class="fas fa-balance-scale"
-                              add-btn-class="border border-primary"/>
-                    <CardLink :url="creator.fursuitReviewUrl" label="FursuitReview" icon-class="fas fa-balance-scale"
-                              add-btn-class="border border-primary"/>
-                    <CardLink :url="creator.websiteUrl" label="Official website" icon-class="fas fa-link"/>
-                    <CardLink v-for="item in creator.pricesUrls" :key="item" :url="item" label="Prices"
-                              icon-class="fas fa-dollar-sign"/>
-                    <CardLink :url="creator.faqUrl" label="FAQ" icon-class="fas fa-comments"/>
-                    <CardLink :url="creator.queueUrl" label="Queue" icon-class="fas fa-clipboard-list"/>
-                    <CardLink :url="creator.furAffinityUrl" label="FurAffinity" icon-class="fas fa-image"/>
-                    <CardLink :url="creator.deviantArtUrl" label="DeviantArt" icon-class="fab fa-deviantart"/>
-                    <CardLink :url="creator.mastodonUrl" label="Mastodon" icon-class="fa-brands fa-mastodon"/>
-                    <CardLink :url="creator.twitterUrl" label="Twitter" icon-class="fab fa-twitter"/>
-                    <CardLink :url="creator.facebookUrl" label="Facebook" icon-class="fab fa-facebook"/>
-                    <CardLink :url="creator.tumblrUrl" label="Tumblr" icon-class="fab fa-tumblr"/>
-                    <CardLink :url="creator.youtubeUrl" label="YouTube" icon-class="fab fa-youtube"/>
-                    <CardLink :url="creator.instagramUrl" label="Instagram" icon-class="fab fa-instagram"/>
-                    <CardLink :url="creator.etsyUrl" label="Etsy" icon-class="fab fa-etsy"/>
-                    <CardLink :url="creator.theDealersDenUrl" label="The Dealers Den"
-                              icon-class="fas fa-shopping-cart"/>
-                    <CardLink :url="creator.otherShopUrl" label="On-line shop" icon-class="fas fa-shopping-cart"/>
-                    <CardLink :url="creator.furryAminoUrl" label="Furry Amino" icon-class="fas fa-paw"/>
-                    <CardLink :url="creator.scritchUrl" label="Scritch" icon-class="fas fa-camera"/>
-                    <CardLink :url="creator.furtrackUrl" label="Furtrack" icon-class="fas fa-camera"/>
-                    <CardLink :url="creator.linklistUrl" label="List of links" icon-class="fas fa-link"/>
+                    {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'border border-primary') }}
+
+                    {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview',    'fas fa-balance-scale', 'border border-primary') }}
+                    {{ _self.link(creator.websiteUrl,       'Official website', 'fas fa-link') }}
+                    {% for uri in creator.pricesUrls %}
+                        {{ _self.link(uri, 'Prices', 'fas fa-dollar-sign') }}
+                    {% endfor %}
+                    {{ _self.link(creator.faqUrl,           'FAQ',              'fas fa-comments') }}
+                    {{ _self.link(creator.queueUrl,         'Queue',            'fas fa-clipboard-list') }}
+                    {{ _self.link(creator.furAffinityUrl,   'FurAffinity',      'fas fa-image') }}
+                    {{ _self.link(creator.deviantArtUrl,    'DeviantArt',       'fab fa-deviantart') }}
+                    {{ _self.link(creator.mastodonUrl,      'Mastodon',         'fa-brands fa-mastodon') }}
+                    {{ _self.link(creator.twitterUrl,       'Twitter',          'fab fa-twitter') }}
+                    {{ _self.link(creator.facebookUrl,      'Facebook',         'fab fa-facebook') }}
+                    {{ _self.link(creator.tumblrUrl,        'Tumblr',           'fab fa-tumblr') }}
+                    {{ _self.link(creator.youtubeUrl,       'YouTube',          'fab fa-youtube') }}
+                    {{ _self.link(creator.instagramUrl,     'Instagram',        'fab fa-instagram') }}
+                    {{ _self.link(creator.etsyUrl,          'Etsy',             'fab fa-etsy') }}
+                    {{ _self.link(creator.theDealersDenUrl, 'The Dealers Den',  'fas fa-shopping-cart') }}
+                    {{ _self.link(creator.otherShopUrl,     'On-line shop',     'fas fa-shopping-cart') }}
+                    {{ _self.link(creator.furryAminoUrl,    'Furry Amino',      'fas fa-paw') }}
+                    {{ _self.link(creator.scritchUrl,       'Scritch',          'fas fa-camera') }}
+                    {{ _self.link(creator.furtrackUrl,      'Furtrack',         'fas fa-camera') }}
+                    {{ _self.link(creator.linklistUrl,      'List of links',    'fas fa-link') }}
                 </div>
             </div>
 
