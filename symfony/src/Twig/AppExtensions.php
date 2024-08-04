@@ -10,6 +10,7 @@ use App\Filtering\FiltersData\Item;
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
+use App\Utils\Artisan\Completeness;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
@@ -68,6 +69,8 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
             new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
             new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
+            new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
+            new TwigFunction('completeness_text', $this->completenessText(...)),
         ];
     }
 
@@ -109,6 +112,16 @@ class AppExtensions extends AbstractExtension
     public function isNew(Creator $creator): bool
     {
         return NewArtisan::isNew($creator);
+    }
+
+    public function hasGoodCompleteness(Creator $creator): bool
+    {
+        return Completeness::hasGood($creator);
+    }
+
+    public function completenessText(Creator $creator): string
+    {
+        return Completeness::getCompletenessText($creator);
     }
 
     /**

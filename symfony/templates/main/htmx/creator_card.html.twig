@@ -1,4 +1,4 @@
-{% macro optional_com_sep(items) %}
+{% macro list_cs_opt(items) %}
     {% if items %}
         {{ items|join(', ') }}
     {% else %}
@@ -6,7 +6,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro optional_list(items, other_items = [], comment = '') %}
+{% macro list_with_others_comment_opt(items, other_items = [], comment = '') %}
     {% if comment %}
         <span class="nl2br">{{ comment }}</span>
     {% endif %}
@@ -26,6 +26,41 @@
     {% endif %}
 {% endmacro %}
 
+{% macro based_in(state, city) %}
+    {% set text = [state, city]|filter(i => i)|join(', ') %}
+
+    {% if text %}
+        {{ text -}}
+    {% else %}
+        {{ unknown_value() -}}
+    {% endif %}
+{% endmacro %}
+
+{% macro crafting_since(input) %}
+    {% set months = {
+        '01': 'Jan',
+        '02': 'Feb',
+        '03': 'Mar',
+        '04': 'Apr',
+        '05': 'May',
+        '06': 'Jun',
+        '07': 'Jul',
+        '08': 'Aug',
+        '09': 'Sep',
+        '10': 'Oct',
+        '11': 'Nov',
+        '12': 'Dec',
+    } %}
+
+    {% if input %}
+        {% set parts = input|split('-') %}
+
+        {{ months[parts[1]] }} {{ parts[0] }}
+    {% else %}
+        {{ unknown_value() }}
+    {%- endif -%}
+{% endmacro %}
+
 <div class="modal-dialog modal-xl">
     <div id="artisanDetailsModalContent" class="modal-content artisan-data">
         <div class="modal-header">
@@ -36,16 +71,13 @@
                     </a>
                 {% endif %}
 
-                <span id="artisanName">{{ creator.name }}</span>
+                <span id="artisanName">{{ creator.name }}</span>&nbsp;<span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
 
-                &nbsp;<span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
+                &nbsp;
 
                 <small>
-                    Based in
-                    <OptionalText :item="creator.location"/>
-                    ;
-                    crafting since
-                    <OptionalText :item="getSinceText()"/>
+                    Based in {{ _self.based_in(creator.state, creator.city) }};
+                    crafting since {{ _self.crafting_since(creator.since) }}
 
                     {% if creator.formerly %}
                         <br>Formerly/a.k.a. {{ creator.formerly|join(', ') }}
@@ -92,13 +124,13 @@
                 <h5>Produces</h5>
 
                 <div class="small pb-2">
-                    {{ _self.optional_list(creator.productionModels, [], creator.productionModelsComment) }}
+                    {{ _self.list_with_others_comment_opt(creator.productionModels, [], creator.productionModelsComment) }}
                 </div>
 
                 <h5>Styles</h5>
 
                 <div class="small">
-                    {{ _self.optional_list(creator.styles, creator.otherStyles, creator.stylesComment) }}
+                    {{ _self.list_with_others_comment_opt(creator.styles, creator.otherStyles, creator.stylesComment) }}
                 </div>
             </div>
 
@@ -106,7 +138,7 @@
                 <h5>Types</h5>
 
                 <div class="small">
-                    {{ _self.optional_list(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
+                    {{ _self.list_with_others_comment_opt(creator.orderTypes, creator.otherOrderTypes, creator.orderTypesComment) }}
                 </div>
             </div>
 
@@ -114,7 +146,7 @@
                 <h5>Features</h5>
 
                 <div class="small">
-                    {{ _self.optional_list(creator.features, creator.otherFeatures, creator.featuresComment) }}
+                    {{ _self.list_with_others_comment_opt(creator.features, creator.otherFeatures, creator.featuresComment) }}
                 </div>
             </div>
 
@@ -145,7 +177,7 @@
                 <h5>Languages</h5>
 
                 <div class="small">
-                    {{ _self.optional_com_sep(creator.languages) }}
+                    {{ _self.list_cs_opt(creator.languages) }}
                 </div>
             </div>
 
@@ -153,19 +185,19 @@
                 <h5>Payment plans</h5>
 
                 <div class="small pb-2">
-                    {{ _self.optional_com_sep(creator.paymentPlans) }}
+                    {{ _self.list_cs_opt(creator.paymentPlans) }}
                 </div>
 
                 <h5>Currencies</h5>
 
                 <div class="small pb-2">
-                    {{ _self.optional_com_sep(creator.currenciesAccepted) }}
+                    {{ _self.list_cs_opt(creator.currenciesAccepted) }}
                 </div>
 
                 <h5>Methods</h5>
 
                 <div class="small">
-                    {{ _self.optional_com_sep(creator.paymentMethods) }}
+                    {{ _self.list_cs_opt(creator.paymentMethods) }}
                 </div>
             </div>
 
@@ -173,15 +205,11 @@
                 <h5>Links</h5>
 
                 <p class="small mb-1">
-                    Please mention
-                    "
-                    <mark class="user-select-all">I found you on getfursu.it
-                        <template v-if="!creator.completenessGood">
+                    Please mention "<mark class="user-select-all">I found you on getfursu.it
+                        {%- if not has_good_completeness(creator) %}
                             (BTW it says your data could use some updates)
-                        </template>
-                    </mark>
-                    "
-                    when contacting the maker, thank you! ❤️
+                        {%- endif -%}
+                    </mark>" when contacting the maker, thank you! ❤️
                 </p>
 
                 <div id="artisanLinks">
@@ -286,7 +314,8 @@
                 <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
 
                 <p class="small">
-                    This maker/studio has {{ creator.completeness }}% data completeness. {# { getCompletenessText() } #}
+                    This maker/studio has {{ creator.completeness }}% data completeness.
+                    {{ completeness_text(creator) }}
                     Click the button below to check update options.
                 </p>
             </div>
