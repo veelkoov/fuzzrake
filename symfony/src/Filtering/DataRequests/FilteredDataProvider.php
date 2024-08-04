@@ -34,13 +34,26 @@ class FilteredDataProvider
     public function getPublicDataFor(Choices $choices): array
     {
         return $this->cache->getCached('Filtered.artisans.'.$choices->getCacheDigest(),
-            CacheTags::ARTISANS, fn () => $this->retrievePublicDataFor($choices));
+            CacheTags::ARTISANS, function () use ($choices) {
+                $creators = $this->filterCreatorsBy($choices);
+
+                return map($creators, fn (Artisan $artisan) => values($artisan->getPublicData()));
+            });
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return list<Artisan>
      */
-    private function retrievePublicDataFor(Choices $choices): array
+    public function getFilteredCreators(Choices $choices): array
+    {
+        return $this->cache->getCached('Filtered.creatorsObjects.'.$choices->getCacheDigest(),
+            CacheTags::ARTISANS, fn () => $this->filterCreatorsBy($choices));
+    }
+
+    /**
+     * @return list<Artisan>
+     */
+    private function filterCreatorsBy(Choices $choices): array
     {
         $appender = new QueryChoicesAppender($choices);
 
@@ -71,6 +84,6 @@ class FilteredDataProvider
             )
         );
 
-        return map($artisans, fn (Artisan $artisan) => values($artisan->getPublicData()));
+        return $artisans;
     }
 }

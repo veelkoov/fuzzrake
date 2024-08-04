@@ -343,6 +343,21 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return ContactPermit::FEEDBACK === $this->artisan->getContactAllowed();
     }
 
+    public function hasSpeciesInfo(): bool
+    {
+        return [] !== $this->getSpeciesDoes() || [] !== $this->getSpeciesDoesnt();
+    }
+
+    public function isTracked(): bool
+    {
+        return [] !== $this->getCommissionsUrls();
+    }
+
+    public function hasValidPhotos(): bool
+    {
+        return [] !== $this->getPhotoUrls() && count($this->getPhotoUrls()) === count($this->getMiniatureUrls());
+    }
+
     public function updateContact(string $newOriginalContactValue): self
     {
         [$method, $address] = Contact::parse($newOriginalContactValue);

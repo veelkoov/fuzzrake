@@ -1,7 +1,5 @@
 <template>
-  <li v-for="(label, name) in columns.columns" :key="name" :data-col-name="name" @click.prevent="toggle(name)">
-    <a class="dropdown-item" :class="{ active: columns.isVisible(name) }" href="#">{{ label }}</a>
-  </li>
+  <span></span>
 </template>
 
 <script lang="ts">

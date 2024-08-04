@@ -19,6 +19,8 @@ final class RouteName
     final public const EVENTS_ATOM = 'events_atom';
     final public const FEEDBACK_FORM = 'feedback_form';
     final public const FEEDBACK_SENT = 'feedback_sent';
+    final public const HTMX_CREATOR_CARD = 'htmx_main_creator_card';
+    final public const HTMX_MAIN_PRIMARY_CONTENT = 'htmx_main_primary_content';
     final public const INFO = 'info';
     final public const IU_FORM_START = 'iu_form_step_start';
     final public const IU_FORM_DATA = 'iu_form_step_data';

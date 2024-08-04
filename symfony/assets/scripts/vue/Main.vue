@@ -1,52 +1,5 @@
 <template>
-  <CheckList v-if="!aasDismissed" @dismissed="onChecklistDismissal()" />
-  <FiltersPopUp :state="state" />
-  <UpdatesPopUp :state="state" />
-  <CardPopUp :state="state" />
-
-  <div id="data-table-content-container" :style="{'display': aasDismissed ? 'block' : 'none'}">
-    <div v-if="aasConfig.getMakerMode()" class="card border-danger mb-3">
-      <div class="card-header">
-        Filters disabled
-      </div>
-      <div class="card-body">
-        <p class="card-text">
-          All filtering has been temporarily disabled to ease searching the whole database. Use the below button to restore them.
-        </p>
-        <a id="btn-reenable-filters" :href="Static.getMainPath()" class="btn btn-light btn-outline-danger" @click="disableMakerMode">Re-enable filters</a>
-      </div>
-    </div>
-
-    <div id="data-table-container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="btn-group mb-2" role="group" aria-label="Menus and legend">
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                Columns
-              </button>
-              <ul class="dropdown-menu">
-                <ColumnsController :columns="columns" />
-              </ul>
-            </div>
-
-            <button id="filtersButton" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal" data-bs-target="#filtersModal">
-              Filters <span v-if="state.activeFiltersCount" class="badge rounded-pill text-bg-light">{{ state.activeFiltersCount }}</span>
-            </button>
-            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#legendModal">
-              Legend
-            </button>
-          </div>
-        </div>
-
-        <div class="col-md-6 text-md-end">
-          <input id="search-text-field" v-model="state.search.text" class="my-1" type="text" placeholder="Search">
-        </div>
-      </div>
-
-      <DataTable :columns="columns" :state="state" />
-    </div>
-  </div>
+  <span></span>
 </template>
 
 <script lang="ts">

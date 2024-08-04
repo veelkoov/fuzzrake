@@ -1,12 +1,5 @@
 <template>
-  <div :id="'filter-ctrl-' + filter.groupName" class="btn-group my-1" role="group">
-    <button :data-bs-target="'#filter-body-' + filter.groupName" class="btn btn-outline-secondary" data-bs-toggle="collapse">
-      {{ filter.label }}: {{ filter.state.description }}
-    </button>
-    <button v-if="filter.state.isActive" type="button" class="filter-ctrl-remove btn btn-outline-danger" @click="filter.state.reset()">
-      <i class="fas fa-trash-alt" />
-    </button>
-  </div>
+<span></span>
 </template>
 
 <script lang="ts">

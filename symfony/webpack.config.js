@@ -71,11 +71,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
-
-    .enableVueLoader(() => {}, {
-        runtimeCompilerBuild: true,
-        version: 3,
-    })
 ;
 
 module.exports = Encore.getWebpackConfig();

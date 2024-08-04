@@ -112,7 +112,7 @@ function setup_password_and_contact_page(): void {
             $forgottenPassHint.hide(0);
         }
 
-        if (changePasswordCheckbox.isChecked()) {
+        if (changePasswordCheckbox.isChecked) {
             $forgottenPassHint.show(animationsDuration);
             $forgottenPassLabel.text('Choose a new password');
         } else {
@@ -120,7 +120,7 @@ function setup_password_and_contact_page(): void {
             $forgottenPassLabel.text('Updates password'); // grep-text-updates-password
         }
 
-        toggle($validationAcknowledgement, changePasswordCheckbox.isChecked()
+        toggle($validationAcknowledgement, changePasswordCheckbox.isChecked
             && ($validationAcknowledgement.hasClass('contact-was-not-allowed')
                 || contactAllowed.isVal(NO_CONTACT_ALLOWED)),
             animationsDuration);

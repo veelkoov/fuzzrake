@@ -1,9 +1,5 @@
 <template>
-  <li v-if="url">
-    <a class="dropdown-item" :href="url" target="_blank">
-      <i :class="iconClass" /> {{ label }}
-    </a>
-  </li>
+<span></span>
 </template>
 
 <script lang="ts">

@@ -24,8 +24,6 @@ export default class DataManager {
 
         this.prevQuery = usedQuery;
 
-        Static.showLoadingIndicator();
-
         jQuery.ajax(Static.getApiUrl(`artisans-array.json${usedQuery}`), {
             success: (newData: DataRow[]): void => {
                 this.messageBus.notifyDataChange(newData);

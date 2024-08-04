@@ -1,0 +1,280 @@
+<div class="modal-dialog modal-xl">
+    <div id="artisanDetailsModalContent" class="modal-content artisan-data">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                {% if creator.makerId %}
+                    <a id="makerId" href="#{{ creator.makerId }}">
+                        <span class="badge bg-secondary"><i class="fas fa-link"></i> {{ creator.makerId }}</span>
+                    </a>
+                {% endif %}
+
+                <span id="artisanName">{{ creator.name }}</span>
+
+                &nbsp;<span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
+
+                <small>
+                    Based in
+                    <OptionalText :item="creator.location"/>
+                    ;
+                    crafting since
+                    <OptionalText :item="getSinceText()"/>
+
+                    {% if creator.formerly %}
+                        <br>Formerly/a.k.a. {{ creator.formerly|join(', ') }}
+                    {% endif %}
+                </small>
+            </h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body row px-4 py-2">
+            {% if creator.inactiveReason %}
+                <div class="col-md-12 p-1 alert alert-warning" role="alert">
+                    <strong>This maker has been hidden for the following reason:</strong> <br>
+                    {{ creator.inactiveReason }}
+                </div>
+            {% endif %}
+
+            {% if creator.hasValidPhotos %}
+                <div class="col-md-12 p-1 overflow-auto imgs-container">
+                    {% for photoUrl in creator.photoUrls %}
+                        <div>
+                            <a href="{{ photoUrl }}" target="_blank"><img src="{{ creator.miniatureUrls[loop.index0] }}" alt=""></a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if creator.intro %}
+                <div class="col-md-12 p-1">
+                    <p class="lead nl2br">
+                        {{ creator.intro }}
+                    </p>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 p-1">
+                <p class="mb-0 small">
+                    Ages of studio members: {{ creator|ages_description(true) }}
+                </p>
+            </div>
+
+            <div class="col-md-3 p-1">
+                <h5>Produces</h5>
+
+                <div class="small pb-2">
+                    <OptionalList :comment="creator.productionModelsComment" :items="creator.productionModels"
+                                  :other-items="[]"/>
+                </div>
+
+                <h5>Styles</h5>
+
+                <div class="small">
+                    <OptionalList :comment="creator.stylesComment" :items="creator.styles"
+                                  :other-items="creator.otherStyles"/>
+                </div>
+            </div>
+
+            <div class="col-md-5 p-1">
+                <h5>Types</h5>
+
+                <div class="small">
+                    <OptionalList :comment="creator.orderTypesComment" :items="creator.orderTypes"
+                                  :other-items="creator.otherOrderTypes"/>
+                </div>
+            </div>
+
+            <div class="col-md-4 p-1">
+                <h5>Features</h5>
+
+                <div class="small">
+                    <OptionalList :comment="creator.featuresComment" :items="creator.features"
+                                  :other-items="creator.otherFeatures"/>
+                </div>
+            </div>
+
+            <div class="col-md-6 p-1">
+                <h5>Species</h5>
+
+                <div id="artisanSpecies" class="small pb-2">
+                    {% if creator.speciesComment %}
+                        <span class="nl2br">
+                            {{ creator.speciesComment }}<br>
+                        </span>
+                    {% endif %}
+
+                    {% if creator.speciesDoes %}
+                        <strong>Does</strong>: {{ creator.speciesDoes|join(', ') }}
+                        {% if creator.speciesDoesnt %}<br>{% endif %}
+                    {% endif %}
+
+                    {% if creator.speciesDoesnt %}
+                        <strong>Doesn't</strong>: {{ creator.speciesDoesnt|join(', ') }}
+                    {% endif %}
+
+                    <UnknownValue v-if="0 === creator.speciesDoes.length && 0 === creator.speciesDoesnt.length"/>
+                </div>
+
+                <h5>Languages</h5>
+
+                <div class="small">
+                    <OptionalComSep :items="creator.languages"/>
+                </div>
+            </div>
+
+            <div class="col-md-6 p-1">
+                <h5>Payment plans</h5>
+
+                <div class="small pb-2">
+                    <OptionalList :items="creator.paymentPlans"/>
+                </div>
+
+                <h5>Currencies</h5>
+
+                <div class="small pb-2">
+                    <OptionalComSep :items="creator.currenciesAccepted"/>
+                </div>
+
+                <h5>Methods</h5>
+
+                <div class="small">
+                    <OptionalComSep :items="creator.paymentMethods"/>
+                </div>
+            </div>
+
+            <div class="col-md-12 p-1">
+                <h5>Links</h5>
+
+                <p class="small mb-1">
+                    Please mention
+                    "
+                    <mark class="user-select-all">I found you on getfursu.it
+                        <template v-if="!creator.completenessGood">
+                            (BTW it says your data could use some updates)
+                        </template>
+                    </mark>
+                    "
+                    when contacting the maker, thank you! ❤️
+                </p>
+
+                <div id="artisanLinks">
+                    <CardLink :url="'https://bewares.getfursu.it/#search:' + creator.abSearchJson"
+                              label="Check Artists Beware records" icon-class="fas fa-balance-scale"
+                              add-btn-class="border border-primary"/>
+                    <CardLink :url="creator.fursuitReviewUrl" label="FursuitReview" icon-class="fas fa-balance-scale"
+                              add-btn-class="border border-primary"/>
+                    <CardLink :url="creator.websiteUrl" label="Official website" icon-class="fas fa-link"/>
+                    <CardLink v-for="item in creator.pricesUrls" :key="item" :url="item" label="Prices"
+                              icon-class="fas fa-dollar-sign"/>
+                    <CardLink :url="creator.faqUrl" label="FAQ" icon-class="fas fa-comments"/>
+                    <CardLink :url="creator.queueUrl" label="Queue" icon-class="fas fa-clipboard-list"/>
+                    <CardLink :url="creator.furAffinityUrl" label="FurAffinity" icon-class="fas fa-image"/>
+                    <CardLink :url="creator.deviantArtUrl" label="DeviantArt" icon-class="fab fa-deviantart"/>
+                    <CardLink :url="creator.mastodonUrl" label="Mastodon" icon-class="fa-brands fa-mastodon"/>
+                    <CardLink :url="creator.twitterUrl" label="Twitter" icon-class="fab fa-twitter"/>
+                    <CardLink :url="creator.facebookUrl" label="Facebook" icon-class="fab fa-facebook"/>
+                    <CardLink :url="creator.tumblrUrl" label="Tumblr" icon-class="fab fa-tumblr"/>
+                    <CardLink :url="creator.youtubeUrl" label="YouTube" icon-class="fab fa-youtube"/>
+                    <CardLink :url="creator.instagramUrl" label="Instagram" icon-class="fab fa-instagram"/>
+                    <CardLink :url="creator.etsyUrl" label="Etsy" icon-class="fab fa-etsy"/>
+                    <CardLink :url="creator.theDealersDenUrl" label="The Dealers Den"
+                              icon-class="fas fa-shopping-cart"/>
+                    <CardLink :url="creator.otherShopUrl" label="On-line shop" icon-class="fas fa-shopping-cart"/>
+                    <CardLink :url="creator.furryAminoUrl" label="Furry Amino" icon-class="fas fa-paw"/>
+                    <CardLink :url="creator.scritchUrl" label="Scritch" icon-class="fas fa-camera"/>
+                    <CardLink :url="creator.furtrackUrl" label="Furtrack" icon-class="fas fa-camera"/>
+                    <CardLink :url="creator.linklistUrl" label="List of links" icon-class="fas fa-link"/>
+                </div>
+            </div>
+
+            <div class="col-md-12 p-1">
+                <h5>Commissions status</h5>
+            </div>
+
+            {% if not creator.isTracked %}
+                <div class="col-md-12 p-1">
+                    <p>Commissions status is not being tracked.</p>
+
+                    <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                </div>
+            {% else %}
+                <div class="p-1" :class="[creator.isStatusKnown ? 'col-md-6' : 'col-md-8']">
+                    <template v-if="creator.isStatusKnown">
+                        <p v-if="creator.csTrackerIssue">
+                            <i class="inaccurate fas fa-question-circle"></i> Note: the software encountered apparent
+                            difficulties while figuring out the status; the information is most probably inaccurate/
+                            <wbr>incomplete.
+                        </p>
+
+                        <table class="table table-sm table-striped table-borderless">
+                            <tbody>
+                            <tr v-for="item in creator.openFor" :key="item">
+                                <td>{# { item } #}</td>
+                                <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
+                            </tr>
+                            <tr v-for="item in creator.closedFor" :key="item">
+                                <td>{# { item } #}</td>
+                                <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </template>
+                    <template v-else>
+                        <p>
+                            <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions
+                            status.
+                            It should be tracked and updated automatically based on the contents of:
+                            <template v-for="item in creator.commissionsUrls" :key="item">
+                                <a :href="item" target="_blank">{# { item } #}</a>,
+                                <wbr>
+                            </template>
+                            however the software failed to "understand" the contents. Last time tried
+                            on {# { creator.csLastCheck } #} UTC.
+                        </p>
+
+                        <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                    </template>
+                </div>
+
+                <div class="p-1" :class="[creator.isStatusKnown ? 'col-md-6' : 'col-md-4 text-end']">
+                    <template v-if="creator.isStatusKnown">
+                        <p>
+                            Status is tracked and updated automatically based on the contents of:
+                            <template v-for="item in creator.commissionsUrls" :key="item">
+                                <a :href="item" target="_blank">{# { item } #}</a>
+                                <wbr>
+                            </template>
+                            <br>
+                            Last time checked on {# { creator.csLastCheck } #} UTC.
+                        </p>
+
+                        <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
+                    </template>
+
+                    <img v-else :src="Static.getTrackingFailedImgSrc()" class="img-fluid tracking-failed" alt="">
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 p-1 pt-3">
+                <h5>Data incomplete/<wbr>inaccurate/outdated?</h5>
+
+                <p class="small">
+                    This maker/studio has {{ creator.completeness }}% data completeness. {# { getCompletenessText() } #}
+                    Click the button below to check update options.
+                </p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light border border-warning" data-bs-target="#artisanUpdatesModal"
+                    data-bs-toggle="modal">
+                Data outdated/inaccurate? <!-- grep-updates-button -->
+            </button>
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+            </button>
+        </div>
+    </div>
+</div>

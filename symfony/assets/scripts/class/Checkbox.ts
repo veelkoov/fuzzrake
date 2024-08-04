@@ -18,7 +18,7 @@ export default class Checkbox {
         return singleStrValOrNull($checked);
     }
 
-    public isChecked(): boolean {
+    public get isChecked(): boolean {
         return null !== this.val();
     }
 

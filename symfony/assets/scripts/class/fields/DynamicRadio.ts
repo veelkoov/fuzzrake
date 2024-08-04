@@ -40,4 +40,8 @@ export default class DynamicRadio implements RadioInterface, ToggleableInterface
     public val(): string|null {
         return this.isAvailable() ? this.radio.val() : null;
     }
+
+    public selectVal(value: string) {
+        this.radio.selectVal(value);
+    }
 }

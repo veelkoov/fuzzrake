@@ -17,35 +17,17 @@
 {% endblock %}
 
 {% block body %}
-    <div id="loading-indicator-container" class="fixed-top text-center">
-        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5);"></div>
+    {# TODO: Restore
+    {% include 'main/parts/intro.html.twig' %}
+    #}
 
-        <div class="container p-2 text-start">
-            <div class="alert alert-light border-primary shadow" role="alert">
-                <h4 class="alert-heading">
-                    <span class="badge bg-primary">Loading, please wait</span> <small class="text-muted" id="loading-indicator-message"></small>
-                </h4>
+    {% include 'main/htmx/events_and_state.html.twig' %}
 
-                <hr>
-
-                <p class="small mb-1">If it is stuck for more than half a minute, you may want to try:</p>
-
-                <ul class="small mb-0">
-                    <li>refreshing the page / clearing the cache</li>
-                    <li>using the "incognito mode"</li>
-                    <li>using other browser or device</li>
-                </ul>
-            </div>
-        </div>
+    <div id="main-primary-content">
+        {% include 'main/parts/checklist.html.twig' %}
     </div>
 
-    {% include '_loading.html.twig' %}
-
     {% include 'main/parts/legendPopUp.html.twig' %}
-
-    {% include 'main/parts/intro.html.twig' %}
-
-    <div id="main-primary-component"></div>
 
     <div class="container text-center">
         <img src="{{ asset('images/website-banner-bottom.webp') }}" class="img-fluid" alt="">

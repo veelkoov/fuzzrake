@@ -1,4 +1,4 @@
-import Storage from '../../class/Storage';
+import Storage from '../class/Storage';
 
 export default class ColumnsManager {
     public readonly columns = {
@@ -16,7 +16,7 @@ export default class ColumnsManager {
 
     private readonly visible: Set<string> = new Set(['styles', 'commissions', 'links']);
 
-    private static readonly STORAGE_VERSION: string = '2';
+    private static readonly STORAGE_VERSION: string = '3';
 
     public count(): number {
         return Object.keys(this.columns).length
