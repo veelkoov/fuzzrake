@@ -259,60 +259,62 @@
                     <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
                 </div>
             {% else %}
-                <div class="p-1" :class="[creator.isStatusKnown ? 'col-md-6' : 'col-md-8']">
-                    <template v-if="creator.isStatusKnown">
-                        <p v-if="creator.csTrackerIssue">
-                            <i class="inaccurate fas fa-question-circle"></i> Note: the software encountered apparent
-                            difficulties while figuring out the status; the information is most probably inaccurate/
-                            <wbr>incomplete.
-                        </p>
+                <div class="p-1 {{ creator.isStatusKnown ? 'col-md-6' : 'col-md-8' }}">
+                    {% if creator.isStatusKnown %}
+                        {% if creator.csTrackerIssue %}
+                            <p>
+                                <i class="inaccurate fas fa-question-circle"></i>
+                                Note: the software encountered apparent difficulties while figuring out the status;
+                                the information is most probably inaccurate/<wbr>incomplete.
+                            </p>
+                        {% endif %}
 
                         <table class="table table-sm table-striped table-borderless">
                             <tbody>
-                            <tr v-for="item in creator.openFor" :key="item">
-                                <td>{# { item } #}</td>
-                                <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
-                            </tr>
-                            <tr v-for="item in creator.closedFor" :key="item">
-                                <td>{# { item } #}</td>
-                                <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
-                            </tr>
+                            {% for item in creator.openFor %}
+                                <tr>
+                                    <td>{{ item }}</td>
+                                    <td><i class="fas fa-check-square"></i>&nbsp;Open</td>
+                                </tr>
+                            {% endfor %}
+                            {% for item in creator.closedFor %}
+                                <tr>
+                                    <td>{{ item }}</td>
+                                    <td><i class="fas fa-times-circle"></i>&nbsp;Closed</td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
-                    </template>
-                    <template v-else>
+                    {% else %}
                         <p>
-                            <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions
-                            status.
+                            <i class="inaccurate fas fa-question-circle"></i> Failed to automatically determine commissions status.
                             It should be tracked and updated automatically based on the contents of:
-                            <template v-for="item in creator.commissionsUrls" :key="item">
-                                <a :href="item" target="_blank">{# { item } #}</a>,
-                                <wbr>
-                            </template>
-                            however the software failed to "understand" the contents. Last time tried
-                            on {# { creator.csLastCheck } #} UTC.
+                            {% for uri in creator.commissionsUrls %}
+                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>,
+                            {% endfor %}
+                            however the software failed to "understand" the contents.
+                            Last time tried on {{ creator.csLastCheck|nullable_datetime_utc }}.
                         </p>
 
                         <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
-                    </template>
+                    {% endif %}
                 </div>
 
-                <div class="p-1" :class="[creator.isStatusKnown ? 'col-md-6' : 'col-md-4 text-end']">
-                    <template v-if="creator.isStatusKnown">
+                <div class="p-1 {{ creator.isStatusKnown ? 'col-md-6' : 'col-md-4 text-end' }}">
+                    {% if creator.isStatusKnown %}
                         <p>
                             Status is tracked and updated automatically based on the contents of:
-                            <template v-for="item in creator.commissionsUrls" :key="item">
-                                <a :href="item" target="_blank">{# { item } #}</a>
-                                <wbr>
-                            </template>
-                            <br>
-                            Last time checked on {# { creator.csLastCheck } #} UTC.
+                            {% for uri in creator.commissionsUrls %}
+                                <a href="{{ uri }}" target="_blank">{{ uri }}</a>
+                                {%- if not loop.last %},{% endif %}
+                            {%- endfor %}.
+                            <br> Last time checked on {{ creator.csLastCheck|nullable_datetime_utc }}.
                         </p>
 
                         <p><a href="{{ path('tracking') }}" target="_blank">Learn more</a></p>
-                    </template>
-
-                    <img v-else :src="Static.getTrackingFailedImgSrc()" class="img-fluid tracking-failed" alt="">
+                    {% else %}
+                        <img src="{{ asset('images/parsing_failed.webp') }}" class="img-fluid tracking-failed" alt="">
+                    {% endif %}
                 </div>
             {% endif %}
 

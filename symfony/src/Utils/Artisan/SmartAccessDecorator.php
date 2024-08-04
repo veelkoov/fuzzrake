@@ -353,6 +353,11 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return [] !== $this->getCommissionsUrls();
     }
 
+    public function isStatusKnown(): bool
+    {
+        return [] !== $this->getOpenFor() || [] !== $this->getClosedFor();
+    }
+
     public function hasValidPhotos(): bool
     {
         return [] !== $this->getPhotoUrls() && count($this->getPhotoUrls()) === count($this->getMiniatureUrls());

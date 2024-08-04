@@ -42,10 +42,6 @@ export default abstract class Static {
         return DATA_BRIDGE.feedbackFormPath.replace('MAKER_ID', artisanId);
     }
 
-    public static getTrackingFailedImgSrc(): string {
-        return DATA_BRIDGE.trackingFailedImgSrc;
-    }
-
     public static getApiUrl(path: string): string {
         return DATA_BRIDGE.apiBaseUrl + path;
     }
