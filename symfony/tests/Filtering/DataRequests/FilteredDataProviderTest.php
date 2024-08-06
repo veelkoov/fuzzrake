@@ -9,6 +9,7 @@ use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Psl\Str;
 use Psl\Vec;
 use Psr\Cache\InvalidArgumentException;
@@ -37,11 +38,11 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false));
-        self::assertEquals('M000002', self::makerIdsFromPubData($result));
+        $result = $subject->getFilteredCreators(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false));
+        self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false));
-        self::assertEquals('M000002', self::makerIdsFromPubData($result));
+        $result = $subject->getFilteredCreators(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false));
+        self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
     }
 
     public function testWantsSfw(): void
@@ -60,19 +61,19 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false));
-        self::assertEquals('M000001', self::makerIdsFromPubData($result));
+        $result = $subject->getFilteredCreators(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false));
+        self::assertEquals('M000001', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getPublicDataFor(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false));
-        self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::makerIdsFromPubData($result));
+        $result = $subject->getFilteredCreators(new Choices('', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false));
+        self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToMakerIdList($result));
     }
 
     /**
-     * @param array<array<psJsonFieldValue>> $publicData
+     * @param list<Creator> $creators
      */
-    private static function makerIdsFromPubData(array $publicData): string
+    private static function creatorsListToMakerIdList(array $creators): string
     {
-        $makerIds = Vec\map($publicData, fn ($row) => $row[0]);
+        $makerIds = Vec\map($creators, fn (Creator $creator) => $creator->getMakerId());
 
         return Str\join(Vec\sort($makerIds), ', ');
     }

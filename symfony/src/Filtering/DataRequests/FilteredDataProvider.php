@@ -17,8 +17,6 @@ use App\ValueObject\CacheTags;
 
 use function Psl\Iter\all;
 use function Psl\Vec\filter;
-use function Psl\Vec\map;
-use function Psl\Vec\values;
 
 class FilteredDataProvider
 {
@@ -26,19 +24,6 @@ class FilteredDataProvider
         private readonly ArtisanRepository $repository,
         private readonly Cache $cache,
     ) {
-    }
-
-    /**
-     * @return array<array<psJsonFieldValue>>
-     */
-    public function getPublicDataFor(Choices $choices): array
-    {
-        return $this->cache->getCached('Filtered.artisans.'.$choices->getCacheDigest(),
-            CacheTags::ARTISANS, function () use ($choices) {
-                $creators = $this->filterCreatorsBy($choices);
-
-                return map($creators, fn (Artisan $artisan) => values($artisan->getPublicData()));
-            });
     }
 
     /**

@@ -12,7 +12,6 @@ final class RouteName
 
     final public const API = 'api';
     final public const API_ARTISANS = 'api_artisans';
-    final public const API_ARTISANS_ARRAY = 'api_artisans_array';
     final public const CONTACT = 'contact';
     final public const DONATE = 'donate';
     final public const EVENTS = 'events';
