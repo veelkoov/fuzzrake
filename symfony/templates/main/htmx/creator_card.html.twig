@@ -329,9 +329,11 @@
             </div>
         </div>
 
+        {% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
+
         <div class="modal-footer">
-            <button type="button" class="btn btn-light border border-warning" data-bs-target="#artisanUpdatesModal"
-                    data-bs-toggle="modal">
+            <button type="button" class="btn btn-light border border-warning"
+                    {{ update_dialog_open_attrs(creator.lastMakerId) }}>
                 Data outdated/inaccurate? <!-- grep-updates-button -->
             </button>
 

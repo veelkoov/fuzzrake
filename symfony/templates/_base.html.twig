@@ -21,8 +21,6 @@
             trackingPath: '{{ path('tracking')|escape('js') }}',
             trackingLimitationsPath: '{{ path('tracking', { _fragment: 'tracking_limitations' })|escape('js') }}',
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
-            iuFormRedirectUrl: '{{ url('iu_form_step_start', { makerId: 'MAKER_ID' })|escape('js') }}',
-            feedbackFormPath: '{{ path('feedback_form', { maker: 'MAKER_ID' })|escape('js') }}', {# grep-maker-query-parameter #}
             environment: '{{ isDevEnv() ? 'dev' : 'prod' }}',
         };
     </script>

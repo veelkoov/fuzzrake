@@ -65,7 +65,12 @@
 </div>
 #}
 
-<UpdatesPopUp :state="state"></UpdatesPopUp>
+<div id="artisanUpdatesModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div id="artisanUpdatesModalContent" class="modal-content">
+        </div>
+    </div>
+</div>
 
 <div id="artisanDetailsModal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -322,10 +327,10 @@
                                         </li>
                                     {% endfor %}
 
+                                    {% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
+
                                     <li>
-                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#artisanUpdatesModal"
-{#                                           @click="setSubject(artisan)"#}
-                                        >
+                                        <a class="dropdown-item" {{ update_dialog_open_attrs(creator.lastMakerId) }}>
                                             <i class="fas fa-exclamation-triangle"></i> Data outdated/inaccurate?
                                         </a>
                                     </li>

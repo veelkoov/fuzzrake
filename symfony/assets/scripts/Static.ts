@@ -34,14 +34,6 @@ export default abstract class Static {
         return DATA_BRIDGE.trackingLimitationsPath;
     }
 
-    public static getIuFormRedirectUrl(artisanId: string): string {
-        return DATA_BRIDGE.iuFormRedirectUrl.replace('MAKER_ID', artisanId);
-    }
-
-    public static getFeedbackFormPath(artisanId: string): string {
-        return DATA_BRIDGE.feedbackFormPath.replace('MAKER_ID', artisanId);
-    }
-
     public static getApiUrl(path: string): string {
         return DATA_BRIDGE.apiBaseUrl + path;
     }

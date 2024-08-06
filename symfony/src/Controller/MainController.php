@@ -70,6 +70,17 @@ class MainController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/htmx/main/updates-dialog/{makerId}', name: RouteName::HTMX_UPDATES_DIALOG)]
+    #[Cache(maxage: 3600, public: true)]
+    public function updatesDialog(string $makerId): Response
+    {
+        $creator = $this->getCreatorByMakerIdOrThrow404($makerId);
+
+        return $this->render('main/htmx/updates_dialog.html.twig', [
+            'creator' => $creator,
+        ]);
+    }
+
     #[Route(path: '/htmx/main/primary-content', name: RouteName::HTMX_MAIN_PRIMARY_CONTENT)]
     #[Cache(maxage: 3600, public: true)]
     public function htmxMainPrimaryContent(Request $request): Response {
