@@ -14,7 +14,6 @@ use App\Repository\KotlinDataRepository;
 use App\Service\CountriesDataService;
 use App\Utils\Enforce;
 use Doctrine\ORM\UnexpectedResultException;
-use Psl\Collection\Vector;
 
 class FiltersService
 {

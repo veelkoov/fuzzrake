@@ -17,12 +17,11 @@ use App\Utils\DataQuery;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
+use Psl\Vec;
 use TRegx\CleanRegex\Pattern;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-
-use Psl\Vec;
 
 class AppExtensions extends AbstractExtension
 {
@@ -106,7 +105,7 @@ class AppExtensions extends AbstractExtension
             $items[] = 'Other';
         }
 
-        return implode(', ', Vec\map($items, fn(string $item): string => $this->itemExplanation->prune($item)));
+        return implode(', ', Vec\map($items, fn (string $item): string => $this->itemExplanation->prune($item)));
     }
 
     public function isNew(Creator $creator): bool
@@ -134,12 +133,13 @@ class AppExtensions extends AbstractExtension
         return 'https://bewares.getfursu.it/#search:'.Json::encode($names);
     }
 
-    public function getCstIssueText(Creator $creator): string {
+    public function getCstIssueText(Creator $creator): string
+    {
         if (!$creator->isTracked() || !$creator->getCsTrackerIssue()) {
             return '';
         }
 
-        return  [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
+        return [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
     }
 
     public function agesDescription(Artisan $creator, bool $addText): string

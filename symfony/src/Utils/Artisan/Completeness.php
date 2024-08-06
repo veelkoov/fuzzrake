@@ -2,8 +2,8 @@
 
 namespace App\Utils\Artisan;
 
-use App\Utils\Traits\UtilityClass;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Traits\UtilityClass;
 
 final class Completeness
 {

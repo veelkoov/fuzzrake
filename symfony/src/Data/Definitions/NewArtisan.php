@@ -6,7 +6,6 @@ namespace App\Data\Definitions;
 
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
-use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\StrUtils;
 use App\Utils\Traits\UtilityClass;
@@ -31,7 +30,8 @@ class NewArtisan
         return StrUtils::asStr(self::getCutoffDate());
     }
 
-    public static function isNew(Creator $creator): bool {
+    public static function isNew(Creator $creator): bool
+    {
         return null !== $creator->getDateAdded() && $creator->getDateAdded()->getTimestamp() > self::getCutoffDate()->getTimestamp();
     }
 }
