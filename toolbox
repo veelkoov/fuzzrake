@@ -223,7 +223,7 @@ function action() {
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')
             pushd       "$SYMFONY_DIR_REL_PATH"
-            run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@"
+            run_command yarn eslint assets/scripts/ --ext js,ts "$@"
             popd
         ;;
 
