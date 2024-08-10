@@ -1,7 +1,9 @@
+{% from 'main/parts/filters/body/shared_macros.html.twig' import all_none_invert_links %}
+
 <fieldset class="region">
     <div class="row">
         <div class="col-sm-12">
-            {#            <SpecialItems :filter="filter"/> #}
+            {# <SpecialItems :filter="filter"/> #}
         </div>
     </div>
 </fieldset>
@@ -11,12 +13,7 @@
         <legend>
             {{ region.label }} <span class="count">({{ region.count }})</span>
 
-            {#            <AllNoneInvertLinks #}
-            {#                    class="countries" #}
-            {#                    @all="checkboxes.get(region['label'])!.all()" #}
-            {#                    @none="checkboxes.get(region['label'])!.none()" #}
-            {#                    @invert="checkboxes.get(region['label'])!.invert()" #}
-            {#            /> #}
+            {{ all_none_invert_links('countries') }}
         </legend>
 
         <div class="row">

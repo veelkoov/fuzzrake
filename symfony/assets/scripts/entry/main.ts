@@ -33,3 +33,26 @@ window.htmx = require('htmx.org');
         });
     });
 })();
+
+(function setUpAllNoneInvertLinks(): void {
+    jQuery('#filtersModal .allNoneInvert').on('click', function (event): void {
+        const $link = jQuery(event.target);
+
+        let changeFunction: (prev: boolean) => boolean;
+
+        if ($link.hasClass('all')) {
+            changeFunction = (): boolean => true;
+        } else if ($link.hasClass('none')) {
+            changeFunction = (): boolean => false;
+        } else {
+            changeFunction = (prev: boolean): boolean => !prev;
+        }
+
+        const $inputs = $link.parents('fieldset').find('input'); // FIXME: Special items
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        $inputs.each((_, element) => {
+            element.checked = changeFunction(element.checked);
+        });
+    });
+})();

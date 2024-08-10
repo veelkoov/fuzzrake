@@ -1,15 +1,13 @@
+{% from 'main/parts/filters/body/shared_macros.html.twig' import all_none_invert_links %}
+
 <fieldset>
     <div class="row">
         <div class="col-sm-12">
-            {#        <AllNoneInvertLinks #}
-            {#          v-if="0 !== filter.options.items.length" #}
-            {#          class="simple" #}
-            {#          @all="checkboxes.all()" #}
-            {#          @none="checkboxes.none()" #}
-            {#          @invert="checkboxes.invert()" #}
-            {#        /> #}
+            {% if filter.data.items %}
+                {{ all_none_invert_links('simple') }}
+            {% endif %}
 
-            {#        <SpecialItems :filter="filter" /> #}
+            {# <SpecialItems :filter="filter" /> #}
         </div>
     </div>
 

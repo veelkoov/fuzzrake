@@ -1,0 +1,7 @@
+{% macro all_none_invert_links(class) %}
+    <span class="allNoneInvert {{ class }}" aria-hidden="true">
+        select: <a class="all" href="#">all</a>
+        &bull; <a class="none" href="#">none</a>
+        &bull; <a class="invert" href="#">invert</a>
+    </span>
+{% endmacro %}
