@@ -30,10 +30,6 @@ export default abstract class Static {
         return DATA_BRIDGE.trackingPath;
     }
 
-    public static getTrackingLimitationsPath(): string {
-        return DATA_BRIDGE.trackingLimitationsPath;
-    }
-
     public static getApiUrl(path: string): string {
         return DATA_BRIDGE.apiBaseUrl + path;
     }

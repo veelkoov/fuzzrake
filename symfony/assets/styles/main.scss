@@ -222,3 +222,25 @@ table#artisans {
     color: #ffc107;
   }
 }
+
+#filtersModal {
+  .species {
+    .specie {
+      margin: 0.5ex 0.5ex 0 0;
+
+      // ::v-deep(label) { // FIXME
+      //   margin: 0 0 0 1ex;
+      // }
+
+      button.toggle {
+        padding-left: 2ex;
+        padding-right: 2ex;
+      }
+    }
+
+    .subspecies {
+      margin-left: 1.5em;
+      display: none;
+    }
+  }
+}

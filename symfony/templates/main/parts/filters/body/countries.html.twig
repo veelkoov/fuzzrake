@@ -1,0 +1,40 @@
+<fieldset class="region">
+    <div class="row">
+        <div class="col-sm-12">
+            {#            <SpecialItems :filter="filter"/> #}
+        </div>
+    </div>
+</fieldset>
+
+{% for region in filter.data.items %}
+    <fieldset class="region">
+        <legend>
+            {{ region.label }} <span class="count">({{ region.count }})</span>
+
+            {#            <AllNoneInvertLinks #}
+            {#                    class="countries" #}
+            {#                    @all="checkboxes.get(region['label'])!.all()" #}
+            {#                    @none="checkboxes.get(region['label'])!.none()" #}
+            {#                    @invert="checkboxes.get(region['label'])!.invert()" #}
+            {#            /> #}
+        </legend>
+
+        <div class="row">
+            {% for country in region.subitems %}
+                {% set id = 'checkbox' ~ unique_int() %}
+                <div class="col-sm-6 col-lg-3">
+                    <div class="form-check form-check-inline">
+                        <input id="{{ id }}" class="form-check-input" type="checkbox" name="{{ filter_name }}[]"
+                               data-label="{{ country.label }}" value="{{ country.value }}">
+
+                        <label class="form-check-label" for="{{ id }}">
+                            <span class="flag-icon flag-icon-{{ country.value|lower }}"></span>&nbsp;
+
+                            {{- country.label -}}&nbsp;<span class="count">({{ country.count }})</span>
+                        </label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </fieldset>
+{% endfor %}

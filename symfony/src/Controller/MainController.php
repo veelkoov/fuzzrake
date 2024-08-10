@@ -42,8 +42,12 @@ class MainController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function main(): Response
     {
+        $filters = $this->cache->getCached('mainpage.filters', CacheTags::ARTISANS,
+            fn () => $this->filterService->getFiltersTplData());
+
         return $this->render('main/main.html.twig', [
-            'stats' => $this->dataService->getMainPageStats(),
+            'filters' => $filters,
+            'stats'   => $this->dataService->getMainPageStats(),
         ]);
     }
 
@@ -86,13 +90,9 @@ class MainController extends AbstractController
             $choices = $this->requestParser->getChoices($request);
             $creators = $this->filtered->getFilteredCreators($choices);
 
-            $filters = $this->cache->getCached('mainpage.filters', CacheTags::ARTISANS,
-                fn () => $this->filterService->getFiltersTplData());
-
             return $this->render('main/htmx/primary_content.html.twig', [
                 'creators' => $creators,
                 'active_filters_count' => 123, // TODO
-                'filters' => $filters,
                 'total_creators_count' => $this->dataService->getMainPageStats()->totalArtisansCount,
             ]);
         } catch (CoercionException $exception) {

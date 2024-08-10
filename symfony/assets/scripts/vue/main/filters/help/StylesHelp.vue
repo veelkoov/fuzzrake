@@ -1,5 +1,0 @@
-<template>
-  <li>
-    Some makers still haven't supplied the information about styles they work in. You might want to try <em>Unknown</em> option as well.
-  </li>
-</template>

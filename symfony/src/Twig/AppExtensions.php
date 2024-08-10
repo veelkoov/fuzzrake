@@ -27,6 +27,7 @@ class AppExtensions extends AbstractExtension
 {
     private readonly HumanFriendly $friendly;
     private readonly Pattern $itemExplanation;
+    private int $uniqueInt = 1;
 
     public function __construct(
         private readonly EnvironmentsService $environments,
@@ -70,6 +71,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
             new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
             new TwigFunction('completeness_text', $this->completenessText(...)),
+            new TwigFunction('unique_int', fn () => $this->uniqueInt++),
         ];
     }
 

@@ -1,0 +1,120 @@
+<div id="filtersModal" class="modal fade" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div id="filters-top" class="modal-content">
+            <div class="modal-header">
+                <h5 id="filtersTitle" class="modal-title">
+                    Filters
+                </h5>
+
+                <span><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button></span>
+            </div>
+
+            {% set filter_choices = {
+                'countries':        {'label': 'Countries', 'body': 'CountriesFilter', 'help': 'CountriesHelp', 'data': filters.countries},
+                'states':           {'label': 'States', 'body': 'MultiselectFilter', 'help': 'StatesHelp', 'data': filters.states},
+                'languages':        {'label': 'Languages', 'body': 'MultiselectFilter', 'help': 'LanguagesHelp', 'data': filters.languages},
+                'styles':           {'label': 'Styles', 'body': 'MultiselectFilter', 'help': 'StylesHelp', 'data': filters.styles},
+                'features':         {'label': 'Features', 'body': 'MultiselectFilter', 'help': 'FeaturesHelp', 'data': filters.features, 'is_and': true},
+                'orderTypes':       {'label': 'Order types', 'body': 'MultiselectFilter', 'help': 'OrderTypesHelp', 'data': filters.orderTypes},
+                'productionModels': {'label': 'Production models', 'body': 'MultiselectFilter', 'help': 'ProductionModelsHelp', 'data': filters.productionModels},
+                'openFor':          {'label': 'Open for', 'body': 'MultiselectFilter', 'help': 'OpenForHelp', 'data': filters.openFor},
+                'species':          {'label': 'Species', 'body': 'SpeciesFilter', 'help': 'SpeciesHelp', 'data': filters.species},
+                'paymentPlans':     {'label': 'Payment plans', 'body': 'MultiselectFilter', 'help': 'PaymentPlansHelp', 'data': filters.paymentPlans},
+                'inactive':         {'label': 'Hidden', 'body': 'MultiselectFilter', 'help': 'InactiveHelp', 'data': filters.inactive},
+            } %}
+
+            <div id="filters-body" class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        {% for filter_name, filter in filter_choices %}
+                            <div id="filter-ctrl-{{ filter_name }}" class="btn-group my-1" role="group">
+                                <button class="btn btn-outline-secondary" data-bs-target="#filter-body-{{ filter_name }}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="filter-body-{{ filter_name }}">
+                                    {{ filter.label }}: {# { filter.state.description } #}
+                                </button>
+                                {#    <button v-if="filter.state.isActive" type="button" class="filter-ctrl-remove btn btn-outline-danger" @click="filter.state.reset()"> #}
+                                {#        <i class="fas fa-trash-alt"/> #}
+                                {#    </button> #}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <form id="filters">
+                    {% for filter_name, filter in filter_choices %}
+                        <div id="filter-body-{{ filter_name }}" class="collapse" data-bs-parent="#filters-body">
+                            <div class="text-end helphints-toggle">
+                                <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#filter-help-{{ filter_name }}" aria-expanded="false" aria-controls="filter-help-{{ filter_name }}">
+                                    Help and hints
+                                </button>
+                            </div>
+
+                            <div id="filter-help-{{ filter_name }}" class="collapse helphints-contents">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <ul>
+                                            {% include 'main/parts/filters/help/' ~ filter_name ~ '.html.twig' %}
+
+                                            {% set uri = url('iu_form_step_start', { makerId: '' }) %}
+
+                                            <li class="small">
+                                                You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supply some information), you can ask them to fill the missing information, e.g.:
+
+                                                <em>I found you on getfursu.it, but some information is missing there. Please consider sending updates: <a href="{{ uri }}" target="_blank">{{ uri }}</a>.</em>
+
+                                                Thank you! <i class="fas fa-heart"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% include [
+                                'main/parts/filters/body/' ~ filter_name ~ '.html.twig',
+                                'main/parts/filters/body/default.html.twig',
+                            ] %}
+                        </div>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# <script lang="ts">
+  public mounted(): void {
+    (this.$refs['modal'] as HTMLElement).addEventListener('hidden.bs.modal', () => this.onModalClosed());
+
+    this.updateState();
+  }
+
+  private onModalClosed(): void {
+    this.filters.forEach(filter => filter.saveChoices());
+    this.updateState();
+    getMessageBus().requestDataLoad(this.state.query, false);
+  }
+
+  private updateState(): void {
+    this.state.activeFiltersCount = this.getActiveFiltersCount();
+    // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
+    // eslint-disable-next-line no-undef
+    this.state.query = jQuery('#filters').serialize(); // TODO: Optimize to avoid error 413 https://github.com/veelkoov/fuzzrake/issues/185
+  }
+
+  private getActiveFiltersCount(): number {
+    return this.filters.map(filter => filter.state.isActive ? 1 : 0).reduce((sum: number, val: number) => sum + val, 0);
+  }
+</script>
+
+<style scoped lang="scss">
+::v-deep(fieldset legend) {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding-top: .5rem;
+}
+
+::v-deep(.count) {
+  font-size: 90%;
+  color: #aaa;
+}
+</style> #}
