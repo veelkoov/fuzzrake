@@ -1,5 +1,5 @@
 import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
-import Error from '../Error';
+import DarnIt from '../DarnIt';
 import MessageBus from './MessageBus';
 import Static from '../Static';
 
@@ -47,7 +47,7 @@ export default class DataManager {
             details = ` The error was: ${details}`;
         }
 
-        Error.report(`The server returned unexpected response (or none).${details}`, '', false);
+        DarnIt.report(`The server returned unexpected response (or none).${details}`, '', false);
     }
 
     private getQueryWithMakerModeAndSfwOptions(newQuery: string): string {

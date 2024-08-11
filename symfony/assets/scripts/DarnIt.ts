@@ -1,4 +1,4 @@
-export default class Error {
+export default class DarnIt { // I don't want to come up with a good name not conflicting with `Error`, so...
     private static alreadyReported = new Set<string>();
 
     public static report(message: string, consoleOnlyDetails: unknown, alertOnlyOnce: boolean): void {
@@ -8,12 +8,12 @@ export default class Error {
             consoleMessage += ` | DETAILS: ${consoleOnlyDetails}`;
         }
 
-        console.log(consoleMessage);
+        console.error(consoleMessage);
 
-        if (!alertOnlyOnce || !Error.alreadyReported.has(message)) {
+        if (!alertOnlyOnce || !DarnIt.alreadyReported.has(message)) {
             alert(`Darn it! An error occurred. You may try refreshing the page/clearing the cache/using incognito mode/using different browser/using different network.\n\n${message}`);
 
-            Error.alreadyReported.add(message);
+            DarnIt.alreadyReported.add(message);
         }
     }
 }
