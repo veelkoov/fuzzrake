@@ -36,7 +36,9 @@
 <fieldset class="species">
     <div class="row">
         <div class="col">
-            {# <SpecialItems :filter="filter" /> #}
+            {% import 'main/parts/filters/body/shared_macros.html.twig' as macros %}
+
+            {{ macros.special_items(filter.data.specialItems, filter_name) }}
         </div>
     </div>
 

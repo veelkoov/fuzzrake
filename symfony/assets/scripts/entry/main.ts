@@ -48,11 +48,13 @@ window.htmx = require('htmx.org');
             changeFunction = (prev: boolean): boolean => !prev;
         }
 
-        const $inputs = $link.parents('fieldset').find('input'); // FIXME: Special items
+        const $inputs = $link.parents('fieldset').find('input:not(.special)');
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         $inputs.each((_, element) => {
-            element.checked = changeFunction(element.checked);
+            if (element instanceof HTMLInputElement) {
+                element.checked = changeFunction(element.checked);
+            }
         });
     });
 })();

@@ -5,3 +5,19 @@
         &bull; <a class="invert" href="#">invert</a>
     </span>
 {% endmacro %}
+
+{% macro special_items(special_items, filter_name) %}
+    {% for item in special_items %}
+        {% set id = 'checkbox' ~ unique_int() %}
+        <div class="form-check form-check-inline">
+            <input id="{{ id }}" class="form-check-input special" type="checkbox" name="{{ filter_name }}[]"
+                   data-label="{{ item.label }}" value="{{ item.value }}">
+
+            <label class="form-check-label" for="{{ id }}">
+                <i class="{{ item.faIcon }}"></i>
+
+                {{ item.label -}}&nbsp;<span class="count">({{ item.count }})</span>
+            </label>
+        </div>
+    {% endfor %}
+{% endmacro %}

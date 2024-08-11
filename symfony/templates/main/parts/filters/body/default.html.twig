@@ -1,13 +1,13 @@
-{% from 'main/parts/filters/body/shared_macros.html.twig' import all_none_invert_links %}
+{% import 'main/parts/filters/body/shared_macros.html.twig' as macros %}
 
 <fieldset>
     <div class="row">
         <div class="col-sm-12">
             {% if filter.data.items %}
-                {{ all_none_invert_links('simple') }}
+                {{ macros.all_none_invert_links('simple') }}
             {% endif %}
 
-            {# <SpecialItems :filter="filter" /> #}
+            {{ macros.special_items(filter.data.specialItems, filter_name) }}
         </div>
     </div>
 
