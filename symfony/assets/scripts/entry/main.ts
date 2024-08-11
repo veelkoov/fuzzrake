@@ -1,7 +1,8 @@
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
 import '../../styles/main.scss';
-import Checklist from '../components/Checklist';
+import Checklist from '../main/Checklist';
 import {toggle} from '../jQueryUtils';
+import FiltersManager from '../main/FiltersManager';
 
 // @ts-expect-error It is being created right here
 window.htmx = require('htmx.org');
@@ -56,5 +57,10 @@ window.htmx = require('htmx.org');
                 element.checked = changeFunction(element.checked);
             }
         });
+        $inputs.eq(0).trigger('change'); // I would expect the above actions would trigger it, but that is not the case.
     });
+})();
+
+(function setUpFiltersManager(): void {
+    new FiltersManager();
 })();

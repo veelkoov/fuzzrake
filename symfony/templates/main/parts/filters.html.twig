@@ -14,7 +14,7 @@
                 'states':           {'label': 'States', 'body': 'MultiselectFilter', 'help': 'StatesHelp', 'data': filters.states},
                 'languages':        {'label': 'Languages', 'body': 'MultiselectFilter', 'help': 'LanguagesHelp', 'data': filters.languages},
                 'styles':           {'label': 'Styles', 'body': 'MultiselectFilter', 'help': 'StylesHelp', 'data': filters.styles},
-                'features':         {'label': 'Features', 'body': 'MultiselectFilter', 'help': 'FeaturesHelp', 'data': filters.features, 'is_and': true},
+                'features':         {'label': 'Features', 'body': 'MultiselectFilter', 'help': 'FeaturesHelp', 'data': filters.features},
                 'orderTypes':       {'label': 'Order types', 'body': 'MultiselectFilter', 'help': 'OrderTypesHelp', 'data': filters.orderTypes},
                 'productionModels': {'label': 'Production models', 'body': 'MultiselectFilter', 'help': 'ProductionModelsHelp', 'data': filters.productionModels},
                 'openFor':          {'label': 'Open for', 'body': 'MultiselectFilter', 'help': 'OpenForHelp', 'data': filters.openFor},
@@ -27,13 +27,13 @@
                 <div class="row">
                     <div class="col">
                         {% for filter_name, filter in filter_choices %}
-                            <div id="filter-ctrl-{{ filter_name }}" class="btn-group my-1" role="group">
+                            <div id="filter-ctrl-{{ filter_name }}" class="btn-group my-1 filter-ctrl" data-filter-name="{{ filter_name }}" role="group">
                                 <button class="btn btn-outline-secondary" data-bs-target="#filter-body-{{ filter_name }}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="filter-body-{{ filter_name }}">
-                                    {{ filter.label }}: {# { filter.state.description } #}
+                                    {{ filter.label }}: <span class="filter-ctrl-status"></span>
                                 </button>
-                                {#    <button v-if="filter.state.isActive" type="button" class="filter-ctrl-remove btn btn-outline-danger" @click="filter.state.reset()"> #}
-                                {#        <i class="fas fa-trash-alt"/> #}
-                                {#    </button> #}
+                                <button type="button" class="filter-ctrl-remove btn btn-outline-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                         {% endfor %}
                     </div>
