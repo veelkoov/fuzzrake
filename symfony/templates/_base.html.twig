@@ -16,11 +16,8 @@
 
     <script>
         const DATA_BRIDGE = {
-            mainPath: '{{ path('main')|escape('js') }}',
             apiBaseUrl: '{{ url('api')|escape('js') }}',
-            trackingPath: '{{ path('tracking')|escape('js') }}',
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
-            environment: '{{ isDevEnv() ? 'dev' : 'prod' }}',
         };
     </script>
 
