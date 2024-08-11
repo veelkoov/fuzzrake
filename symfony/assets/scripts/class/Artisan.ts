@@ -1,4 +1,4 @@
-import Error from '../Error';
+import DarnIt from '../DarnIt';
 import {ADULTS, MINORS, MIXED} from '../consts';
 
 export default class Artisan {
@@ -124,7 +124,7 @@ export default class Artisan {
         } else if (this.formerMakerIds.length !== 0) {
             this.lastMakerId = this.formerMakerIds[0];
         } else {
-            Error.report('Data integrity failed. Both maker ID and last maker ID are empty.', `Artisan: ${this.name}`, true);
+            DarnIt.report('Data integrity failed. Both maker ID and last maker ID are empty.', `Artisan: ${this.name}`, true);
             this.lastMakerId = '';
         }
     }

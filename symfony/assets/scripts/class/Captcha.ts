@@ -1,4 +1,4 @@
-import Error from '../Error'
+import DarnIt from '../DarnIt'
 
 declare global {
     interface Window { formRecaptchaValidationCallback: (token: string) => void; }
@@ -30,7 +30,7 @@ export default class Captcha {
                 const $tokenField = jQuery('#form_recaptcha_token');
 
                 if (1 !== $tokenField.length) {
-                    Error.report('Token field has not been found.', null, false);
+                    DarnIt.report('Token field has not been found.', null, false);
                     return;
                 }
 
@@ -39,13 +39,13 @@ export default class Captcha {
                 const $form = $tokenField.parents('form');
 
                 if (1 !== $form.length) {
-                    Error.report('Token field\'s form has not been found.', null, false);
+                    DarnIt.report('Token field\'s form has not been found.', null, false);
                     return;
                 }
 
                 $_form.trigger('submit', [true]);
             } catch (exception) {
-                Error.report('Automatic captcha failed for unknown reason.', exception, false);
+                DarnIt.report('Automatic captcha failed for unknown reason.', exception, false);
             }
         };
     }
