@@ -104,7 +104,7 @@ class AppExtensions extends AbstractExtension
         $items = $primary;
 
         if ([] !== $other) {
-            $items[] = 'Other';
+            $items[] = 'Other'; // grep-special-label-other
         }
 
         return implode(', ', Vec\map($items, fn (string $item): string => $this->itemExplanation->prune($item)));

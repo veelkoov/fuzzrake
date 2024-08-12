@@ -21,7 +21,7 @@ class FiltersUpdate(
             val stats: Map<String, Int> = CreatorSpeciesRepository.getActiveCreatorsSpecieNamesToCount()
 
             val items = getSpeciesList(SpeciesLoader().get().getAsTree(), stats)
-            val specialItems = listOf(SpecialItem("Unknown", "?", countUnknown(), "unknown"))
+            val specialItems = listOf(SpecialItem("Unknown", "?", countUnknown(), "unknown")) // grep-special-label-unknown grep-special-value-unknown
 
             KotlinDataManager.set(SPECIES_FILTER, FilterData(items, specialItems))
         }
