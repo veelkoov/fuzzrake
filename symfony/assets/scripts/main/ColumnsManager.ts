@@ -16,7 +16,7 @@ export default class ColumnsManager {
 
     private readonly visible: Set<string> = new Set(['styles', 'commissions', 'links']);
 
-    private static readonly STORAGE_VERSION: string = '3';
+    private static readonly STORAGE_VERSION: string = '2';
 
     public count(): number {
         return Object.keys(this.columns).length
