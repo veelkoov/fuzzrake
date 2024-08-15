@@ -18,6 +18,7 @@ export default class FiltersManager {
     ]);
 
     private readonly $filters: Filters;
+    private readonly $activeCounter: JQuery<HTMLElement>;
 
     constructor() {
         const $filters = new Map<string, Filter>();
@@ -57,6 +58,7 @@ export default class FiltersManager {
         });
 
         this.$filters = $filters;
+        this.$activeCounter = requireJQ('#active-filters-count');
 
         this.update();
     }
@@ -67,8 +69,7 @@ export default class FiltersManager {
                 return;
             }
 
-            const selected = filter.checkboxes
-                .filter((_, element) => element.checked);
+            const selected = this.getSelectedCheckboxes(filter);
             const selectedLabels = selected
                 .map((_, element) => element.dataset['label'] || element.value)
                 .toArray();
@@ -81,6 +82,27 @@ export default class FiltersManager {
             toggle(filter.removeButton, selected.length > 0, 0);
             filter.statusSpan.html(this.getStatusDescription(key, selectedLabels));
         });
+
+        const activeFilters = this.countActiveFilters();
+        this.$activeCounter.html(activeFilters.toString());
+        toggle(this.$activeCounter, activeFilters > 0, 0);
+    }
+
+    private countActiveFilters(): number {
+        let result = 0;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        this.$filters.forEach((filter, _) => {
+            if (this.getSelectedCheckboxes(filter).length > 0) {
+                result++;
+            }
+        });
+
+        return result;
+    }
+
+    private getSelectedCheckboxes(filter: Filter): JQuery<HTMLInputElement> {
+        return filter.checkboxes.filter((_, element) => element.checked);
     }
 
     private getStatusDescription(filterName: string, selected: string[]): string {

@@ -90,9 +90,8 @@ class MainController extends AbstractController
             $choices = $this->requestParser->getChoices($request);
             $creators = $this->filtered->getFilteredCreators($choices);
 
-            return $this->render('main/htmx/primary_content.html.twig', [
+            return $this->render('main/htmx/creators_in_table.html.twig', [
                 'creators' => $creators,
-                'active_filters_count' => 123, // TODO
                 'total_creators_count' => $this->dataService->getMainPageStats()->totalArtisansCount,
             ]);
         } catch (CoercionException $exception) {

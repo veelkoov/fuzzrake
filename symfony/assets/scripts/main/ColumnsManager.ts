@@ -1,63 +1,77 @@
 import Storage from '../class/Storage';
+import {requireJQ} from '../jQueryUtils';
 
 export default class ColumnsManager {
-    public readonly columns = {
-        'makerId':          'Maker ID',
-        'state':            'State',
-        'languages':        'Languages',
-        'productionModels': 'Production models',
-        'styles':           'Styles',
-        'types':            'Types',
-        'features':         'Features',
-        'species':          'Species',
-        'commissions':      'Commissions',
-        'links':            'Links',
-    }
-
-    private readonly visible: Set<string> = new Set(['styles', 'commissions', 'links']);
-
+    private static readonly VISIBLE_BY_DEFAULT = ['styles', 'commissions', 'links'];
     private static readonly STORAGE_VERSION: string = '2';
 
-    public count(): number {
-        return Object.keys(this.columns).length
-    }
+    private $classesBearer: JQuery<HTMLElement>;
+    private $toggleLinks: JQuery<HTMLElement>;
 
-    public isVisible(columnName: string): boolean {
-        return this.visible.has(columnName);
-    }
+    constructor(classesBearerSelector: string, toggleLinksSelector: string) {
+        this.$classesBearer = requireJQ(classesBearerSelector);
+        this.$toggleLinks = requireJQ(toggleLinksSelector, 1, null);
 
-    public toggle(columnName: string): void {
-        if (this.isVisible(columnName)) {
-            this.visible.delete(columnName);
-        } else {
-            this.visible.add(columnName);
-        }
+        this.loadOrUseDefaults();
+        this.$toggleLinks.on('click', (event) => this.handleVisibilityLinkClick(event));
     }
 
     public save(): void {
+        const state = this.$toggleLinks.filter('.active')
+            .map((_, element): string => element.dataset['column-id'] || '')
+            .toArray().join(',');
+
         Storage.saveString('columns/version', ColumnsManager.STORAGE_VERSION);
-        Storage.saveString('columns/state', this.toString());
+        Storage.saveString('columns/state', state);
     }
 
-    public load(): void {
+    public loadOrUseDefaults(): void {
         const state: string = Storage.getString('columns/state', '');
+        let visibleColumnIds: string[];
 
         if ('' !== state && ColumnsManager.STORAGE_VERSION === Storage.getString('columns/version', '')) {
-            this.visible.clear();
-
-            state.split(',').forEach((item) => {
-                if (item in this.columns) this.visible.add(item);
-            });
+            visibleColumnIds = state.split(',');
+        } else {
+            visibleColumnIds = ColumnsManager.VISIBLE_BY_DEFAULT;
         }
+
+        this.$toggleLinks.each((_, element) => {
+            const $link = jQuery(element);
+            const columnId = $link.data('column-id');
+
+            if (visibleColumnIds.includes(columnId)) {
+                this.showColumn($link);
+            } else {
+                this.hideColumn($link);
+            }
+        });
     }
 
-    public toString(): string {
-        const result = [];
+    private handleVisibilityLinkClick(event: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>): void {
+        event.stopPropagation();
 
-        for (const value of this.visible.values()) {
-            result.push(value);
+        const $link = jQuery(event.target);
+
+        if ($link.hasClass('active')) {
+            this.hideColumn($link);
+        } else {
+            this.showColumn($link)
         }
 
-        return result.join(',');
+        this.save();
+    }
+
+    private showColumn($relatedVisibilityLink: JQuery<HTMLElement>): void {
+        $relatedVisibilityLink.addClass('active');
+
+        const columnId = $relatedVisibilityLink.data('column-id');
+        this.$classesBearer.addClass(`show-${columnId}`);
+    }
+
+    private hideColumn($relatedVisibilityLink: JQuery<HTMLElement>): void {
+        $relatedVisibilityLink.removeClass('active');
+
+        const columnId = $relatedVisibilityLink.data('column-id');
+        this.$classesBearer.removeClass(`show-${columnId}`);
     }
 }

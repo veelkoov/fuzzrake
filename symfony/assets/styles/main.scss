@@ -17,11 +17,37 @@
   }
 }
 
-div#data-table-container-closest {
+div#data-table-container {
   overflow-x: auto;
+
+  table .makerId,
+  table .state,
+  table .languages,
+  table .productionModels,
+  table .styles,
+  table .types,
+  table .features,
+  table .species,
+  table .commissions,
+  table .links {
+    display: none;
+  }
+
+  table.show-makerId          .makerId,
+  table.show-state            .state,
+  table.show-languages        .languages,
+  table.show-productionModels .productionModels,
+  table.show-styles           .styles,
+  table.show-types            .types,
+  table.show-features         .features,
+  table.show-species          .species,
+  table.show-commissions      .commissions,
+  table.show-links            .links {
+    display: table-cell;
+  }
 }
 
-table#artisans {
+table#creators-table {
   thead {
     th {
       vertical-align: middle;

@@ -3,9 +3,12 @@ import '../../styles/main.scss';
 import Checklist from '../main/Checklist';
 import {toggle} from '../jQueryUtils';
 import FiltersManager from '../main/FiltersManager';
+import ColumnsManager from '../main/ColumnsManager';
 
-// @ts-expect-error It is being created right here
-window.htmx = require('htmx.org');
+import 'htmx.org';
+
+// @ts-expect-error I am incompetent and I don't care to learn frontend
+global.jQuery = require('jquery');
 
 (function setUpChecklist(): void {
     new Checklist();
@@ -63,4 +66,8 @@ window.htmx = require('htmx.org');
 
 (function setUpFiltersManager(): void {
     new FiltersManager();
+})();
+
+(function setUpColumnsManager(): void {
+    new ColumnsManager('#creators-table', '#columns-visibility-links a');
 })();

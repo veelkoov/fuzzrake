@@ -79,7 +79,7 @@ class MakerModeTest extends PantherTestCaseWithEM
         self::waitUntilShows('#aasImNotAdult');
         $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
-        self::waitUntilShows('#artisans');
+        self::waitUntilShows('#creators-table');
 
         // Expect: checklist is dismissed, but only minors-friendly maker shows up
 
@@ -119,7 +119,7 @@ class MakerModeTest extends PantherTestCaseWithEM
         // Action: submit the checklist with previous settings kept
 
         $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
-        self::waitUntilShows('#artisans');
+        self::waitUntilShows('#creators-table');
 
         // Expect: checklist is dismissed, once again only minors-friendly maker shows up
 
