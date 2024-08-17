@@ -1,8 +1,0 @@
-<div hx-trigger="click from:#checklist-dismiss-btn"
-     hx-get="{{ path('htmx_main_primary_content') }}"
-     hx-include="#checklist-container"
-     hx-target="#creators-table-body"
-     hx-on::before-request="jQuery('#checklist-container').remove();"
-     hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
-     {# TODO: Verify done once #}
-></div>

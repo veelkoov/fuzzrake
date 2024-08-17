@@ -19,7 +19,7 @@
 
     {% include 'main/parts/checklist.html.twig' %}
 
-    {% include 'main/htmx/events_and_state.html.twig' %}
+    {% include 'main/parts/events_and_state.html.twig' %}
 
     {# FIXME
         <div v-if="aasConfig.getMakerMode()" class="card border-danger mb-3">
@@ -85,7 +85,7 @@
                 </div>
 
                 <button id="filtersButton" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
-                        data-bs-target="#filtersModal">
+                        data-bs-target="#filters-modal">
                     Filters
 
                     <span id="active-filters-count" class="badge rounded-pill text-bg-light"></span>

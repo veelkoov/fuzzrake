@@ -47,7 +47,7 @@ class FiltersTest extends PantherTestCaseWithEM
         self::fillChecklist($client, $isAdult, $wantsSfw);
 
         $client->findElement(WebDriverBy::id('filtersButton'))->click();
-        self::waitUntilShows('#filtersTitle');
+        self::waitUntilShows('#filters-title');
 
         foreach ($filtersSet as $filter => $values) {
             if (is_bool($values)) {
@@ -67,7 +67,7 @@ class FiltersTest extends PantherTestCaseWithEM
         }
 
         $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
-        self::waitUntilHides('#filtersTitle', 1000);
+        self::waitUntilHides('#filters-title', 1000);
         self::waitForLoadingIndicatorToDisappear();
 
         self::assertSelectorTextContains('#artisans-table-count', 'Displaying '.count($expectedMakerIds).' out of');

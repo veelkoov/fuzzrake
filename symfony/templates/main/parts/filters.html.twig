@@ -1,8 +1,8 @@
-<div id="filtersModal" class="modal fade" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
+<div id="filters-modal" class="modal fade" tabindex="-1" aria-labelledby="filters-title" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div id="filters-top" class="modal-content">
             <div class="modal-header">
-                <h5 id="filtersTitle" class="modal-title">
+                <h5 id="filters-title" class="modal-title">
                     Filters
                 </h5>
 
@@ -23,7 +23,7 @@
                 'inactive':         {'label': 'Hidden', 'body': 'MultiselectFilter', 'help': 'InactiveHelp', 'data': filters.inactive},
             } %}
 
-            <div id="filters-body" class="modal-body">
+            <div id="filters-modal-body" class="modal-body">
                 <div class="row">
                     <div class="col">
                         {% for filter_name, filter in filter_choices %}
@@ -39,9 +39,9 @@
                     </div>
                 </div>
 
-                <form id="filters">
+                <form {# TODO: Verify removal OK id="filters" #}>
                     {% for filter_name, filter in filter_choices %}
-                        <div id="filter-body-{{ filter_name }}" class="collapse" data-bs-parent="#filters-body">
+                        <div id="filter-body-{{ filter_name }}" class="collapse" data-bs-parent="#filters-modal-body">
                             <div class="text-end helphints-toggle">
                                 <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#filter-help-{{ filter_name }}" aria-expanded="false" aria-controls="filter-help-{{ filter_name }}">
                                     Help and hints

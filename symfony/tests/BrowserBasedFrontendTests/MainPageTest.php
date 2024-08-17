@@ -243,7 +243,7 @@ class MainPageTest extends PantherTestCaseWithEM
     private function openFiltersPopUp(): void
     {
         $this->client->findElement(WebDriverBy::id('filtersButton'))->click();
-        $this->client->waitForVisibility('#filtersTitle', 5);
+        $this->client->waitForVisibility('#filters-title', 5);
     }
 
     /**

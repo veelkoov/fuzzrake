@@ -16,12 +16,12 @@ global.jQuery = require('jquery');
 
 (function setUpSpeciesFilter(): void {
     // Enable expanding subspecies using the ▶ button
-    jQuery('#filtersModal .specie .toggle').on('click', function (): void {
+    jQuery('#filters-modal-body .specie .toggle').on('click', function (): void {
         jQuery(this).parents('.specie').nextAll('.subspecies').first().toggle(250);
     });
 
     // Set up the "any of the descendants is selected" indicators
-    jQuery('#filtersModal .specie input').on('change', function (): void {
+    jQuery('#filters-modal-body .specie input').on('change', function (): void {
         const $allParentSpecieDivs = jQuery(this).parents('.subspecies').prevAll('.specie');
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,7 +39,7 @@ global.jQuery = require('jquery');
 })();
 
 (function setUpAllNoneInvertLinks(): void {
-    jQuery('#filtersModal .allNoneInvert').on('click', function (event): void {
+    jQuery('#filters-modal-body .allNoneInvert').on('click', function (event): void {
         const $link = jQuery(event.target);
 
         let changeFunction: (prev: boolean) => boolean;

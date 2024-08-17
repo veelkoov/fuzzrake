@@ -23,12 +23,12 @@ export default class FiltersManager {
     constructor() {
         const $filters = new Map<string, Filter>();
 
-        requireJQ('#filtersModal .filter-ctrl', 1, null).each((_, element) => {
+        requireJQ('#filters-modal-body .filter-ctrl', 1, null).each((_, element) => {
             const $container = jQuery(element);
             const filterName: string = $container.data('filter-name');
             const isAnd: boolean = $container.data('is-and') === 'is-and';
 
-            const $checkboxes = requireJQ(`#filters input[name="${filterName}[]"]`, 1, null) as JQuery<HTMLInputElement>;
+            const $checkboxes = requireJQ(`#filters-modal-body input[name="${filterName}[]"]`, 1, null) as JQuery<HTMLInputElement>;
             const $removeButton = $container.find('.filter-ctrl-remove');
 
             const stored: string = Storage.getString(`filters/${filterName}/choices`, '');
