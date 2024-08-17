@@ -7,10 +7,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% include '_menu_item.html.twig' with {'name': 'main', 'fa_icon': 'home', 'label': 'Home' } %}
-                {% include '_menu_item.html.twig' with {'name': 'iu_form_step_start', 'fa_icon': 'user-plus', 'label': 'Join/update' } %}
-                {% include '_menu_item.html.twig' with {'name': 'info', 'fa_icon': 'question-circle', 'label': 'Information' } %}
-                {% include '_menu_item.html.twig' with {'name': 'maker_ids', 'fa_icon': 'id-badge', 'label': 'Maker IDs' } %}
-                {% include '_menu_item.html.twig' with {'name': 'events', 'fa_icon': 'history', 'label': 'Updates' } %}
+                {% include '_menu_item.html.twig' with {'name': 'info', 'fa_icon': 'circle-info', 'label': 'About' } %}
+                {% include '_menu_item.html.twig' with {'name': 'events', 'fa_icon': 'newspaper', 'label': 'News' } %}
                 {% if isDevEnv() %}
                     {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'fa_icon': 'plus', 'label': 'Maker' } %}
                     {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'fa_icon': 'plus', 'label': 'Event' } %}
@@ -22,8 +20,9 @@
         </div>
 
         <ul class="navbar-nav d-flex top-menu-right">
-            {% include '_menu_item.html.twig' with {'name': 'contact', 'fa_icon': 'envelope', 'label': 'Contact' } %}
+            {% include '_menu_item.html.twig' with {'name': 'iu_form_step_start', 'fa_icon': 'user-gear', 'label': 'Fursuit Makers' } %}
             {% include '_menu_item.html.twig' with {'name': 'donate',  'fa_icon': 'circle-dollar-to-slot', 'label': 'Donate' } %}
+            {% include '_menu_item.html.twig' with {'name': 'contact', 'fa_icon': 'envelope', 'label': 'Contact' } %}
         </ul>
     </div>
 </nav>
