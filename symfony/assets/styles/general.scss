@@ -5,10 +5,6 @@ html {
   scroll-behavior: auto !important;
 }
 
-nav.navbar .navbar-nav .nav-link .always-full-opacity {
-  color: var(--bs-navbar-hover-color);
-}
-
 #navbarNav:not(.show) + ul.top-menu-right {
   flex-direction: row;
 
