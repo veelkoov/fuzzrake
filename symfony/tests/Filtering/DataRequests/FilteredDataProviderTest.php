@@ -38,10 +38,10 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false));
+        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false, false));
         self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false));
+        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false, false));
         self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
     }
 
@@ -61,10 +61,10 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false));
+        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false, false));
         self::assertEquals('M000001', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false));
+        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false, false));
         self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToMakerIdList($result));
     }
 

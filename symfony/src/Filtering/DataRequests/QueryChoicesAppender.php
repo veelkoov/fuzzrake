@@ -39,6 +39,7 @@ class QueryChoicesAppender implements CacheDigestProvider
             $choices->isAdult,
             $choices->wantsSfw,
             $choices->wantsInactive,
+            $choices->creatorMode,
         );
     }
 
@@ -49,6 +50,10 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function applyChoices(QueryBuilder $builder): void
     {
+        if ($this->choices->creatorMode) {
+            return; // Just return everything
+        }
+
         $this->applyMakerId($builder);
         $this->applyTextSearch($builder);
         $this->applyCountries($builder);

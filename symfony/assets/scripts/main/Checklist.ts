@@ -1,6 +1,7 @@
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import Checkbox from '../class/Checkbox';
 import DynamicRadio from '../class/fields/DynamicRadio';
-import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
+import {requireJQ} from '../jQueryUtils';
 
 export default class Checklist {
     private aasConfig = AgeAndSfwConfig.getInstance();
@@ -14,7 +15,7 @@ export default class Checklist {
         this.illBeCareful = new Checkbox('checklist-ill-be-careful', () => this.refresh());
         this.isAdult = new DynamicRadio('checklist-is-adult', '#checklist-age-section', () => this.refresh(), true)
         this.wantsSfw = new DynamicRadio('checklist-wants-sfw', '#checklist-nsfw-section', () => this.refresh(), true)
-        this.$button = jQuery('#checklist-dismiss-btn');
+        this.$button = requireJQ('#checklist-dismiss-btn');
         this.$button.on('click', () => this.save());
 
         if (this.aasConfig.getIsFilled()) {
@@ -24,6 +25,8 @@ export default class Checklist {
         }
 
         this.refresh();
+
+        requireJQ('#checklist-container').removeClass('d-none');
     }
 
     public refresh(): void {

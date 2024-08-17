@@ -38,6 +38,7 @@ readonly class Choices implements CacheDigestProvider
         public bool $isAdult,
         public bool $wantsSfw,
         public bool $wantsInactive,
+        public bool $creatorMode,
     ) {
     }
 

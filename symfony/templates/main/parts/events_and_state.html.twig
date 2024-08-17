@@ -3,23 +3,32 @@
 <div hx-trigger="click from:#checklist-dismiss-btn"
      hx-on::before-request="jQuery('#checklist-container').addClass('d-none');"
      hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
+     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
 
      hx-get="{{ path('htmx_main_primary_content') }}"
-     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
      hx-target="#creators-table-body"
 ></div>
 
 <div hx-trigger="hidden.bs.modal from:#filters-modal"
+     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
 
      hx-get="{{ path('htmx_main_primary_content') }}"
-     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
      hx-target="#creators-table-body"
 ></div>
 
 <div hx-trigger="input from:#search-text-field changed delay:500ms"
+     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
 
      hx-get="{{ path('htmx_main_primary_content') }}"
-     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
+     hx-target="#creators-table-body"
+></div>
+
+<input type="hidden" id="creator-mode-parameter-field" name="creator-mode" value="1">
+<div hx-trigger="click from:#creator-mode-parameter-field"
+     hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
+     hx-include="#creator-mode-parameter-field"
+
+     hx-get="{{ path('htmx_main_primary_content') }}"
      hx-target="#creators-table-body"
 ></div>
 

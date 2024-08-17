@@ -25,10 +25,16 @@ jQuery(() => {
 });
 
 jQuery(() => {
-    jQuery('a.disable-filters-goto-main-page').on('click', () => {
-        const config = AgeAndSfwConfig.getInstance();
+    const config = AgeAndSfwConfig.getInstance();
 
+    jQuery('a.disable-filters-goto-main-page').on('click', () => {
         config.setMakerMode(true);
+        config.save();
+    });
+
+    jQuery('#btn-reenable-filters').on('click', () => {
+        // Allow reloading the page to display checklist. TODO: Optimize.
+        config.setMakerMode(false);
         config.save();
     });
 });

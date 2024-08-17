@@ -29,6 +29,7 @@ class RequestParser
     private const BOOLEANS = [
         'checklist-is-adult',
         'checklist-wants-sfw',
+        'creator-mode',
     ];
 
     private const STRINGS = [
@@ -70,6 +71,7 @@ class RequestParser
             $booleans['checklist-is-adult'],
             $booleans['checklist-wants-sfw'],
             contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
+            $booleans['creator-mode'],
         ));
     }
 

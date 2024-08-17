@@ -61,6 +61,7 @@ class FiltersValidChoicesFilter
             $choices->isAdult,
             $choices->wantsSfw,
             $choices->wantsInactive,
+            $choices->creatorMode,
         );
     }
 

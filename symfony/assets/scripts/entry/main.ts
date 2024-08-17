@@ -31,9 +31,17 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
     requireJQ('#open-creator-card-given-creator-id-anchor').trigger('click');
 });
 
-(function setUpChecklist(): void {
-    new Checklist();
-})();
+if (AgeAndSfwConfig.getInstance().getMakerMode()) {
+    requireJQ('#creator-mode-banner').removeClass('d-none');
+    requireJQ('#main-page-intro').addClass('d-none');
+    jQuery(() => {
+        requireJQ('#creator-mode-parameter-field').trigger('click');
+    });
+} else {
+    (function setUpChecklist(): void {
+        new Checklist();
+    })();
+}
 
 (function setUpSpeciesFilter(): void {
     // Enable expanding subspecies using the ▶ button

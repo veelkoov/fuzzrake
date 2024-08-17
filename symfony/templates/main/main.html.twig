@@ -19,21 +19,17 @@
 
     {% include 'main/parts/events_and_state.html.twig' %}
 
-    {# FIXME
-        <div v-if="aasConfig.getMakerMode()" class="card border-danger mb-3">
-            <div class="card-header">
-                Filters disabled
-            </div>
-            <div class="card-body">
-                <p class="card-text">
-                    All filtering has been temporarily disabled to ease searching the whole database. Use the below button
-                    to restore them.
-                </p>
-                <a id="btn-reenable-filters" :href="Static.getMainPath()" class="btn btn-light btn-outline-danger"
-                   @click="disableMakerMode">Re-enable filters</a>
-            </div>
+    <div id="creator-mode-banner" class="card border-danger mb-3 d-none">
+        <div class="card-header">
+            Filters disabled
         </div>
-    #}
+        <div class="card-body">
+            <p class="card-text">
+                All filtering has been temporarily disabled to ease searching the whole database. Use the below button to restore them.
+            </p>
+            <a id="btn-reenable-filters" href="{{ path('main') }}" class="btn btn-light btn-outline-danger">Re-enable filters</a>
+        </div>
+    </div>
 
     {% include 'main/parts/filters.html.twig' %}
 
