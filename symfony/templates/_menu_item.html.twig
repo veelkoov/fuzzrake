@@ -1,5 +1,11 @@
 {% set is_active = app.request.attributes.get('_route') == name %}
 
 <li class="nav-item">
-    <a class="nav-link {% if is_active %}active{% endif %}" {% if is_active %}aria-current="page"{% endif %} href="{{ path(name) }}"><i class="fas fa-{{ fa_icon }}"></i> {{ label }}</a>
+    <a class="nav-link {% if is_active %}active{% endif %}" {% if is_active %}aria-current="page"{% endif %} href="{{ path(name) }}">
+        <i class="fas fa-{{ fa_icon }}"></i>
+        <span class="navlink-label">
+          <div class="spacer">{{ label }}</div>
+          <div class="displayed">{{ label }}</div>
+        </span>
+    </a>
 </li>
