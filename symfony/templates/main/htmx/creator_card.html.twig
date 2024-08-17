@@ -74,9 +74,9 @@
         <div class="modal-header">
             <h5 class="modal-title">
                 {% if creator.makerId %}
-                    <a id="makerId" href="#{{ creator.makerId }}">
-                        <span class="badge bg-secondary"><i class="fas fa-link"></i> {{ creator.makerId }}</span>
-                    </a>
+                    <a id="makerId" href="#{{ creator.makerId }}"><span class="badge bg-secondary">
+                        <i class="fas fa-link"></i> {{ creator.makerId -}}
+                    </span></a>
                 {% endif %}
 
                 <span id="artisanName">{{ creator.name }}</span>&nbsp;<span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
