@@ -8,9 +8,11 @@
 
 {% for creator in creators %}
     {% set creator_idx = loop.index %}
-    <tr class="{% if creator.inactiveReason %}inactive{% endif %}"
+    <tr class="
+            {% if creator.inactiveReason %}inactive{% endif %}
+            {% if creator|matches_creator_id(searched_creator_id) %}matched-maker-id{% endif %}
+        "
         {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %}
-        {# TODO 'matched-maker-id': matchedMakerId(creator) #}
     >
         <td class="name"
             {{ _self.card_open_attrs(creator.lastMakerId) }}

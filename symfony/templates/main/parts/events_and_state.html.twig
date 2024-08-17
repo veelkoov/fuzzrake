@@ -1,13 +1,22 @@
 <div hx-trigger="click from:#checklist-dismiss-btn"
-     hx-get="{{ path('htmx_main_primary_content') }}"
-     hx-include="#checklist-container, #filters-modal-body"
-     hx-target="#creators-table-body"
      hx-on::before-request="jQuery('#checklist-container').addClass('d-none');"
      hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
+
+     hx-get="{{ path('htmx_main_primary_content') }}"
+     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
+     hx-target="#creators-table-body"
 ></div>
 
 <div hx-trigger="hidden.bs.modal from:#filters-modal"
+
      hx-get="{{ path('htmx_main_primary_content') }}"
-     hx-include="#checklist-container, #filters-modal-body"
+     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
+     hx-target="#creators-table-body"
+></div>
+
+<div hx-trigger="input from:#search-text-field changed delay:500ms"
+
+     hx-get="{{ path('htmx_main_primary_content') }}"
+     hx-include="#checklist-container, #filters-modal-body, #search-text-field"
      hx-target="#creators-table-body"
 ></div>

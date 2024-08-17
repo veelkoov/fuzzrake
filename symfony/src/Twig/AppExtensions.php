@@ -44,8 +44,9 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
             new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
             new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
-            new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), SafeFor::JS),
+            new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), SafeFor::JS), // TODO: Check if still needed
             new TwigFilter('ages_description', $this->agesDescription(...), SafeFor::HTML),
+            new TwigFilter('matches_creator_id', $this->matchesCreatorId(...)),
         ];
     }
 
@@ -123,6 +124,11 @@ class AppExtensions extends AbstractExtension
     public function completenessText(Creator $creator): string
     {
         return Completeness::getCompletenessText($creator);
+    }
+
+    public function matchesCreatorId(Creator $creator, string $makerId): bool
+    {
+        return in_array($makerId, $creator->getAllMakerIds());
     }
 
     /**

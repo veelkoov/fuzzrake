@@ -7,12 +7,13 @@ namespace App\Data\Definitions\Fields;
 use App\Data\Definitions\Fields\Properties as Props;
 use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Data\FieldValue;
+use App\Utils\Creator\CreatorId;
 use App\Utils\FieldReadInterface;
 use TRegx\CleanRegex\Pattern;
 
 enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
 {
-    #[Props('makerId', validationRegex: V::MAKER_ID)]
+    #[Props('makerId', validationRegex: CreatorId::VALID_REGEX)]
     case MAKER_ID = 'MAKER_ID';
 
     #[Props('formerMakerIds', type: Type::STR_LIST, inIuForm: false, freeForm: false, validationRegex: V::FORMER_MAKER_IDS, affectedByIuForm: true)]

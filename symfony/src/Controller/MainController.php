@@ -12,6 +12,7 @@ use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Cache as CacheService;
 use App\Service\DataService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Creator\CreatorId;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
@@ -90,8 +91,15 @@ class MainController extends AbstractController
             $choices = $this->requestParser->getChoices($request);
             $creators = $this->filtered->getFilteredCreators($choices);
 
+            $searchedCreatorId = mb_strtoupper($choices->textSearch);
+
+            if (!CreatorId::isValid($searchedCreatorId)) {
+                $searchedCreatorId = '';
+            }
+
             return $this->render('main/htmx/creators_in_table.html.twig', [
-                'creators' => $creators,
+                'creators'             => $creators,
+                'searched_creator_id'  => $searchedCreatorId,
                 'total_creators_count' => $this->dataService->getMainPageStats()->totalArtisansCount,
             ]);
         } catch (CoercionException $exception) {

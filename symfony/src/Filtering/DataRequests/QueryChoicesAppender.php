@@ -27,6 +27,7 @@ class QueryChoicesAppender implements CacheDigestProvider
     {
         $this->choices = new Choices(
             $choices->makerId,
+            $choices->textSearch,
             $choices->countries,
             $choices->states,
             [], [], [], [], [], // Unused and should not impact the cache digest
@@ -49,6 +50,7 @@ class QueryChoicesAppender implements CacheDigestProvider
     public function applyChoices(QueryBuilder $builder): void
     {
         $this->applyMakerId($builder);
+        $this->applyTextSearch($builder);
         $this->applyCountries($builder);
         $this->applyStates($builder);
         $this->applyOpenFor($builder);
@@ -76,6 +78,30 @@ class QueryChoicesAppender implements CacheDigestProvider
             ))
                 ->setParameter('makerId', $this->choices->makerId);
         }
+    }
+
+    private function applyTextSearch(QueryBuilder $builder): void
+    {
+        $searchedText = str_replace(['_', '%'], '', $this->choices->textSearch); // TODO: Multibyte? TODO: Should allow searching literally
+
+        if ('' === $searchedText) {
+            return;
+        }
+
+        $searchedText = '%'.mb_strtoupper($searchedText).'%';
+
+        $builder->andWhere($builder->expr()->orX(
+            'UPPER(a.name) LIKE :searchedText',
+            'UPPER(a.formerly) LIKE :searchedText',
+            $builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, 'a5')
+                ->select('1')
+                ->join('a5.makerIds', 'a5mi1')
+                ->where('a5.id = a.id')
+                ->andWhere('a5mi1.makerId LIKE :searchedText')
+            ),
+        ))
+            ->setParameter('searchedText', $searchedText);
     }
 
     private function applyCountries(QueryBuilder $builder): void

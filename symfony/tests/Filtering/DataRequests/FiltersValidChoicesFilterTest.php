@@ -35,6 +35,7 @@ class FiltersValidChoicesFilterTest extends KernelTestCaseWithEM
 
         $choices = new Choices(
             '',
+            '',
             ['FI', '?', 'UK', '*'],
             ['Liquid', '?', 'Solid', '*'],
             ['Finnish', 'Czech', '?', 'English', '*'],

@@ -45,6 +45,7 @@ class FiltersValidChoicesFilter
 
         return new Choices(
             $choices->makerId,
+            $choices->textSearch,
             $countries,
             $states,
             $languages,
