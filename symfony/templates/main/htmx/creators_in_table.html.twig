@@ -1,10 +1,4 @@
-{% macro card_open_attrs(maker_id) %}
-    hx-get="{{ path('htmx_main_creator_card', {makerId: maker_id}) }}"
-    hx-target="#artisanDetailsModal"
-    hx-trigger="click"
-    data-bs-toggle="modal"
-    data-bs-target="#artisanDetailsModal"
-{% endmacro %}
+{% from 'main/shared_macros.html.twig' import card_open_attrs %}
 
 {% for creator in creators %}
     {% set creator_idx = loop.index %}
@@ -14,9 +8,7 @@
         "
         {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %}
     >
-        <td class="name"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="name" {{ card_open_attrs(creator.lastMakerId) }}>
             <span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
 
             &nbsp;{{- creator.name -}}
@@ -34,52 +26,36 @@
             </span>
         </td>
 
-        <td class="makerId column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="makerId column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ creator.makerId }}
         </td>
 
-        <td class="state column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="state column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ creator.state }}
         </td>
 
-        <td class="languages column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="languages column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ creator.languages|join(', ') }}
         </td>
 
-        <td  class="productionModels column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td  class="productionModels column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ creator.productionModels|join(', ') }}
         </td>
 
-        <td class="styles column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="styles column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ comma_separated_other(creator.styles, creator.otherStyles) }}
         </td>
 
-        <td class="types column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="types column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ comma_separated_other(creator.orderTypes, creator.otherOrderTypes) }}
         </td>
 
-        <td class="features column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="features column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {{ comma_separated_other(creator.features, creator.otherFeatures) }}
         </td>
 
 
-        <td class="species column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="species column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {% if creator.hasSpeciesInfo %}
                 <ul>
                     {% for item in creator.speciesDoes %}
@@ -93,9 +69,7 @@
             {% endif %}
         </td>
 
-        <td class="commissions column-toggleable"
-            {{ _self.card_open_attrs(creator.lastMakerId) }}
-        >
+        <td class="commissions column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {% if creator.isTracked %}
                 <ul>
                     {% if creator.csTrackerIssue %}

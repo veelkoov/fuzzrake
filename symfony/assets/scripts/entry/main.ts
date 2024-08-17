@@ -1,14 +1,35 @@
 import '../../3rd-party/flag-icon-css/css/flag-icon.css';
 import '../../styles/main.scss';
+import AgeAndSfwConfig from '../class/AgeAndSfwConfig';
 import Checklist from '../main/Checklist';
-import {toggle} from '../jQueryUtils';
-import FiltersManager from '../main/FiltersManager';
 import ColumnsManager from '../main/ColumnsManager';
+import FiltersManager from '../main/FiltersManager';
+import {makerIdHashRegexp} from '../consts';
+import {requireJQ, toggle} from '../jQueryUtils';
 
 import 'htmx.org';
 
 // @ts-expect-error I am incompetent and I don't care to learn frontend
 global.jQuery = require('jquery');
+
+jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
+    if (AgeAndSfwConfig.getInstance().getMakerMode() || !window.location.hash.match(makerIdHashRegexp)) {
+        return;
+    }
+
+    const creatorId = window.location.hash.slice(1);
+    const type = 'htmx:configRequest';
+
+    const listener = function (event: any): void {
+        if (event.detail.path.includes('_______')) {
+            event.detail.path = event.detail.path.replace('_______', creatorId);
+            document.body.removeEventListener(type, listener);
+        }
+    };
+    document.body.addEventListener(type, listener);
+
+    requireJQ('#open-creator-card-given-creator-id-anchor').trigger('click');
+});
 
 (function setUpChecklist(): void {
     new Checklist();

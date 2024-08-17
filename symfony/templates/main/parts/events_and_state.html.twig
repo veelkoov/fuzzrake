@@ -1,3 +1,5 @@
+{% from 'main/shared_macros.html.twig' import card_open_attrs %}
+
 <div hx-trigger="click from:#checklist-dismiss-btn"
      hx-on::before-request="jQuery('#checklist-container').addClass('d-none');"
      hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
@@ -20,3 +22,5 @@
      hx-include="#checklist-container, #filters-modal-body, #search-text-field"
      hx-target="#creators-table-body"
 ></div>
+
+<div id="open-creator-card-given-creator-id-anchor" {{ card_open_attrs('_______') }}></div>

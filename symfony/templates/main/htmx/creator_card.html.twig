@@ -1,3 +1,5 @@
+{% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
+
 {% macro list_cs_opt(items) %}
     {% if items %}
         {{ items|join(', ') }}
@@ -328,8 +330,6 @@
                 </p>
             </div>
         </div>
-
-        {% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
 
         <div class="modal-footer">
             <button type="button" class="btn btn-light border border-warning"
