@@ -35,6 +35,18 @@ html {
 
     i.fas {
       font-size: 1.2rem;
+      position: relative;
+
+      .unread-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: var(--bs-red);
+        border-radius: 100%;
+      }
     }
   }
 }

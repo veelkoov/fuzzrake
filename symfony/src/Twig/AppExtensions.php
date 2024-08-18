@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Filtering\FiltersData\Item;
+use App\Repository\EventRepository;
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
@@ -23,6 +24,7 @@ class AppExtensions extends AbstractExtension
 
     public function __construct(
         private readonly EnvironmentsService $environments,
+        private readonly EventRepository $eventRepository,
     ) {
         $this->friendly = new HumanFriendly();
     }
@@ -54,6 +56,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
             new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
             new TwigFunction('isTestEnv', $this->isTestEnvFunction(...)),
+            new TwigFunction('getLatestEventTimestamp', $this->getLatestEventTimestamp(...)),
         ];
     }
 
@@ -70,6 +73,16 @@ class AppExtensions extends AbstractExtension
     public function isTestEnvFunction(): bool
     {
         return $this->environments->isTest();
+    }
+
+    public function getLatestEventTimestamp(): ?string
+    {
+        $timestamp = $this->eventRepository->getLatestEventTimestamp();
+        if (null === $timestamp) {
+            return null;
+        }
+
+        return $timestamp->format("Y-m-d H:i:s P");
     }
 
     /**

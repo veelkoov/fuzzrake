@@ -8,7 +8,15 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% include '_menu_item.html.twig' with {'name': 'main', 'fa_icon': 'home', 'label': 'Home' } %}
                 {% include '_menu_item.html.twig' with {'name': 'info', 'fa_icon': 'circle-info', 'label': 'About' } %}
-                {% include '_menu_item.html.twig' with {'name': 'events', 'fa_icon': 'newspaper', 'label': 'News' } %}
+                {% include '_menu_item.html.twig' with {
+                    'id': 'navlink-news',
+                    'data_attrs': {
+                        'latest-event': getLatestEventTimestamp()
+                    },
+                    'name': 'events',
+                    'fa_icon': 'newspaper',
+                    'label': 'News'
+                } %}
                 {% if isDevEnv() %}
                     {% include '_menu_item.html.twig' with {'name': 'mx_artisan_new', 'fa_icon': 'plus', 'label': 'Maker' } %}
                     {% include '_menu_item.html.twig' with {'name': 'mx_event_new', 'fa_icon': 'plus', 'label': 'Event' } %}
