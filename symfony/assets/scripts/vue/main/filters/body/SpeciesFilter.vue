@@ -21,26 +21,30 @@
 </template>
 
 <script lang="ts">
-import Filter from '../Filter';
-import SpeciesChoices from './SpeciesChoices.vue';
-import SpecialItems from '../SpecialItems.vue';
-import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
+import Filter from "../Filter";
+import SpeciesChoices from "./SpeciesChoices.vue";
+import SpecialItems from "../SpecialItems.vue";
+import { Options, Vue } from "vue-class-component";
+import { PropType } from "vue";
 
 @Options({
-  components: {SpeciesChoices, SpecialItems},
+  components: { SpeciesChoices, SpecialItems },
   props: {
-    filter: {type: Object as PropType<Filter>, required: true},
-  }
+    filter: { type: Object as PropType<Filter>, required: true },
+  },
 })
 export default class SpeciesFilter extends Vue {
   mounted() {
     // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
     // eslint-disable-next-line no-undef
-    jQuery('#filtersModal .specie .toggle').on('click', function (): void {
+    jQuery("#filtersModal .specie .toggle").on("click", function (): void {
       // FIXME: https://github.com/veelkoov/fuzzrake/pull/187/files
       // eslint-disable-next-line no-undef
-      jQuery(this).parents('.specie').nextAll('.subspecies').first().toggle(250);
+      jQuery(this)
+        .parents(".specie")
+        .nextAll(".subspecies")
+        .first()
+        .toggle(250);
     });
   }
 }

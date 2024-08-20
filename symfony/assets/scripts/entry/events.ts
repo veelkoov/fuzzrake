@@ -1,1 +1,1 @@
-import '../../styles/events.scss';
+import "../../styles/events.scss";

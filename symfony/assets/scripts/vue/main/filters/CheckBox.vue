@@ -1,8 +1,14 @@
 <template>
   <input
-    :id="id" class="form-check-input" type="checkbox" :name="filter.groupName + '[]'"
-    :data-label="label" :value="value" :checked="checked" @input="changed"
-  >
+    :id="id"
+    class="form-check-input"
+    type="checkbox"
+    :name="filter.groupName + '[]'"
+    :data-label="label"
+    :value="value"
+    :checked="checked"
+    @input="changed"
+  />
 
   <label class="form-check-label" :for="id">
     <!-- eslint-disable-next-line vue/no-v-html Not user input -->
@@ -14,21 +20,21 @@
 </template>
 
 <script lang="ts">
-import Filter from './Filter';
-import getUniqueInt from '../../../class/Counter';
-import {Options, Vue} from 'vue-class-component';
+import Filter from "./Filter";
+import getUniqueInt from "../../../class/Counter";
+import { Options, Vue } from "vue-class-component";
 
 @Options({
   props: {
-    count: {type: Number, required: true},
-    filter: {type: Filter, required: true},
-    label: {type: String, required: true},
-    labelHtmlPrefix: {type: String, required: false},
-    value: {type: String, required: true},
+    count: { type: Number, required: true },
+    filter: { type: Filter, required: true },
+    label: { type: String, required: true },
+    labelHtmlPrefix: { type: String, required: false },
+    value: { type: String, required: true },
   },
 })
 export default class CheckBox extends Vue {
-  private id: string = 'checkbox' + getUniqueInt();
+  private id: string = "checkbox" + getUniqueInt();
   private filter!: Filter;
   private label!: string;
   private value!: string;
@@ -37,8 +43,7 @@ export default class CheckBox extends Vue {
     this.checked = (event.target as HTMLInputElement).checked;
   }
 
-  private set checked(checked: boolean)
-  {
+  private set checked(checked: boolean) {
     this.filter.state.set(this.value, this.label, checked);
   }
 

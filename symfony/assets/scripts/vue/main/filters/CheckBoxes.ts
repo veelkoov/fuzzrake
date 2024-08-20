@@ -1,26 +1,23 @@
-import CheckBox from './CheckBox.vue';
+import CheckBox from "./CheckBox.vue";
 
 export default class CheckBoxes {
-    public constructor(
-        private readonly checkboxes: typeof CheckBox[],
-    ) {
-    }
+  public constructor(private readonly checkboxes: (typeof CheckBox)[]) {}
 
-    public all(): void {
-        for (const checkbox of this.checkboxes) {
-            checkbox.check();
-        }
+  public all(): void {
+    for (const checkbox of this.checkboxes) {
+      checkbox.check();
     }
+  }
 
-    public none(): void {
-        for (const checkbox of this.checkboxes) {
-            checkbox.uncheck();
-        }
+  public none(): void {
+    for (const checkbox of this.checkboxes) {
+      checkbox.uncheck();
     }
+  }
 
-    public invert(): void {
-        for (const checkbox of this.checkboxes) {
-            checkbox.invert();
-        }
+  public invert(): void {
+    for (const checkbox of this.checkboxes) {
+      checkbox.invert();
     }
+  }
 }

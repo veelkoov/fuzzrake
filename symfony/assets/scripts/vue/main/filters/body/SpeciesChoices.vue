@@ -2,20 +2,28 @@
   <template v-for="specie in species" :key="specie.label">
     <div class="btn-group specie" role="group">
       <span class="btn btn-outline-secondary">
-        <CheckBox :filter="filter" :count="specie.count" :label="specie.label" :value="specie.label" />
+        <CheckBox
+          :filter="filter"
+          :count="specie.count"
+          :label="specie.label"
+          :value="specie.label"
+        />
 
         <span v-if="anySubspecieChecked(specie)" class="descendants-indicator">
-          <wbr> <i class="fas fa-tasks" />
+          <wbr /> <i class="fas fa-tasks" />
         </span>
       </span>
 
-      <span v-if="0 !== specie.subitems.length" class="btn btn-outline-secondary toggle">
+      <span
+        v-if="0 !== specie.subitems.length"
+        class="btn btn-outline-secondary toggle"
+      >
         <i class="fas fa-caret-right" />
       </span>
     </div>
 
     <template v-if="0 !== specie.subitems.length">
-      <br>
+      <br />
       <fieldset class="subspecies">
         <SpeciesChoices :filter="filter" :species="specie.subitems" />
       </fieldset>
@@ -24,18 +32,18 @@
 </template>
 
 <script lang="ts">
-import CheckBox from '../CheckBox.vue';
-import Filter from '../Filter';
-import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
-import {Item, Items} from '../../../../Static';
+import CheckBox from "../CheckBox.vue";
+import Filter from "../Filter";
+import { Options, Vue } from "vue-class-component";
+import { PropType } from "vue";
+import { Item, Items } from "../../../../Static";
 
 @Options({
-  components: {CheckBox, SpeciesChoices},
+  components: { CheckBox, SpeciesChoices },
   props: {
-    filter: {type: Object as PropType<Filter>, required: true},
-    species: {type: Object as PropType<Items>, required: true},
-  }
+    filter: { type: Object as PropType<Filter>, required: true },
+    species: { type: Object as PropType<Items>, required: true },
+  },
 })
 export default class SpeciesChoices extends Vue {
   private filter!: Filter;
@@ -46,7 +54,10 @@ export default class SpeciesChoices extends Vue {
         return true;
       }
 
-      if (0 !== subspecie.subitems.length && this.anySubspecieChecked(subspecie)) {
+      if (
+        0 !== subspecie.subitems.length &&
+        this.anySubspecieChecked(subspecie)
+      ) {
         return true;
       }
     }

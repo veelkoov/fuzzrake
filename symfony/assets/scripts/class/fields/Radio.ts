@@ -1,47 +1,48 @@
-import RadioInterface from './RadioInterface';
-import {singleStrValOrNull} from '../../jQueryUtils';
+import RadioInterface from "./RadioInterface";
+import { singleStrValOrNull } from "../../jQueryUtils";
 
 export default class Radio implements RadioInterface {
-    private readonly $elements: JQuery<HTMLElement>;
+  private readonly $elements: JQuery<HTMLElement>;
 
-    constructor(
-        private fieldName: string,
-        private changeCallback: () => void,
-    ) {
-        const selector = Radio.getSelector(fieldName);
-        this.$elements = jQuery(selector);
+  constructor(
+    private fieldName: string,
+    private changeCallback: () => void,
+  ) {
+    const selector = Radio.getSelector(fieldName);
+    this.$elements = jQuery(selector);
 
-        if (0 === this.$elements.length) {
-            console.error(`${selector} didn't match any radio field`);
-        }
-
-        this.$elements.on('change', () => changeCallback());
+    if (0 === this.$elements.length) {
+      console.error(`${selector} didn't match any radio field`);
     }
 
-    public static getSelector(fieldName: string) {
-        return `input[type=radio][name="${fieldName}"]`;
-    }
+    this.$elements.on("change", () => changeCallback());
+  }
 
-    public val(): null | string {
-        const $checked = this.$elements.filter(':checked');
+  public static getSelector(fieldName: string) {
+    return `input[type=radio][name="${fieldName}"]`;
+  }
 
-        return singleStrValOrNull($checked);
-    }
+  public val(): null | string {
+    const $checked = this.$elements.filter(":checked");
 
-    public isVal(value: string): boolean {
-        return this.val() === value;
-    }
+    return singleStrValOrNull($checked);
+  }
 
-    public isAnySelected(): boolean {
-        return null !== this.val();
-    }
+  public isVal(value: string): boolean {
+    return this.val() === value;
+  }
 
-    public selectedIdx(): number {
-        return this.$elements.index(this.$elements.filter(':checked'));
-    }
+  public isAnySelected(): boolean {
+    return null !== this.val();
+  }
 
-    public selectVal(value: string): void {
-        this.$elements.filter(idx => value === this.$elements.eq(idx).val())
-            .prop('checked', true);
-    }
+  public selectedIdx(): number {
+    return this.$elements.index(this.$elements.filter(":checked"));
+  }
+
+  public selectVal(value: string): void {
+    this.$elements
+      .filter((idx) => value === this.$elements.eq(idx).val())
+      .prop("checked", true);
+  }
 }

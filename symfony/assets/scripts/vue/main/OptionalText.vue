@@ -7,11 +7,11 @@
 </template>
 
 <script lang="ts">
-import UnknownValue from './UnknownValue.vue';
-import {Options, Vue} from 'vue-class-component';
+import UnknownValue from "./UnknownValue.vue";
+import { Options, Vue } from "vue-class-component";
 
 @Options({
-  components: {UnknownValue},
+  components: { UnknownValue },
   props: {
     item: {
       type: String,
@@ -19,6 +19,5 @@ import {Options, Vue} from 'vue-class-component';
     },
   },
 })
-export default class OptionalText extends Vue {
-}
+export default class OptionalText extends Vue {}
 </script>

@@ -10,7 +10,7 @@
       </li>
 
       <li v-if="otherItems.length">
-        {{ otherItems.join('; ') }}
+        {{ otherItems.join("; ") }}
       </li>
     </ul>
   </template>
@@ -19,17 +19,17 @@
 </template>
 
 <script lang="ts">
-import UnknownValue from './UnknownValue.vue';
-import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
+import UnknownValue from "./UnknownValue.vue";
+import { Options, Vue } from "vue-class-component";
+import { PropType } from "vue";
 
 @Options({
-  components: {UnknownValue},
+  components: { UnknownValue },
   props: {
     comment: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     items: {
       type: Object as PropType<string[]>,
@@ -40,7 +40,7 @@ import {PropType} from 'vue';
       required: false,
       default: [],
     },
-  }
+  },
 })
 export default class OptionalList extends Vue {
   comment!: string;
@@ -50,7 +50,7 @@ export default class OptionalList extends Vue {
 </script>
 
 <style scoped>
-  .nl2br {
-    white-space: pre-wrap;
-  }
+.nl2br {
+  white-space: pre-wrap;
+}
 </style>
