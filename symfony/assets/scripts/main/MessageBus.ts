@@ -1,7 +1,7 @@
-import {DataRow} from './DataManager';
+import {ArtisanDataRow} from './DataManager';
 
 export type DataLoadRequestCallback = (newQuery: string, isExhaustive: boolean) => void;
-export type DataChangeCallback = (newData: DataRow[]) => void;
+export type DataChangeCallback = (newData: readonly ArtisanDataRow[]) => void;
 export type SetupFinishedCallback = () => void;
 
 export default class MessageBus {
@@ -13,7 +13,7 @@ export default class MessageBus {
         this.dataChangeListeners.push(listener);
     }
 
-    public notifyDataChange(newData: DataRow[]): void {
+    public notifyDataChange(newData: readonly ArtisanDataRow[]): void {
         this.dataChangeListeners.forEach(callback => callback(newData));
     }
 

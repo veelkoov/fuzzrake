@@ -206,7 +206,7 @@ import MainState from '../MainState';
 import MessageBus, {getMessageBus} from '../../../main/MessageBus';
 import Static from '../../../Static';
 import TblLink from './TblLink.vue';
-import {DataRow} from '../../../main/DataManager';
+import {ArtisanDataRow} from '../../../main/DataManager';
 import {nextTick} from 'vue';
 import {Options, Vue} from 'vue-class-component';
 
@@ -265,7 +265,7 @@ export default class Table extends Vue {
     return 'dev' === Static.getEnvironment();
   }
 
-  private onDataChanged(newData: DataRow[]): void {
+  private onDataChanged(newData: readonly ArtisanDataRow[]): void {
     this.artisans = newData.map(item => Artisan.fromArray(item));
 
     this.handleCardOpeningOnMakerIdInUrlsHash();

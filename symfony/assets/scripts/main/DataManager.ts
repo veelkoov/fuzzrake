@@ -3,7 +3,77 @@ import DarnIt from '../DarnIt';
 import MessageBus from './MessageBus';
 import Static from '../Static';
 
-export type DataRow = string[]|string|number|boolean|null;
+export type ArtisanDataRow = readonly [
+  makerId: string,
+  formerMakerIds: string[],
+  name: string,
+  formerly: string[],
+  dateAdded: string,
+  dateUpdated: string,
+  intro: string,
+  since: string,
+  languages: string[],
+  country: string,
+  state: string,
+  city: string,
+  productionModelsComment: string,
+  productionModels: string[],
+  stylesComment: string,
+  styles: string[],
+  otherStyles: string[],
+  orderTypesComment: string,
+  orderTypes: string[],
+  otherOrderTypes: string[],
+  featuresComment: string,
+  features: string[],
+  otherFeatures: string[],
+  paymentPlans: string[],
+  paymentMethods: string[],
+  currenciesAccepted: string[],
+  speciesComment: string,
+  speciesDoes: string[],
+  speciesDoesnt: string[],
+  isMinor: boolean | null,
+  ages: string,
+  nsfwWebsite: boolean | null,
+  nsfwSocial: boolean | null,
+  doesNsfw: boolean | null,
+  safeDoesNsfw: boolean,
+  safeWorksWithMinors: boolean,
+  fursuitReviewUrl: string,
+  websiteUrl: string,
+  pricesUrls: string[],
+  commissionsUrls: string[],
+  faqUrl: string,
+  furAffinityUrl: string,
+  deviantArtUrl: string,
+  mastodonUrl: string,
+  twitterUrl: string,
+  facebookUrl: string,
+  tumblrUrl: string,
+  instagramUrl: string,
+  youtubeUrl: string,
+  linklistUrl: string,
+  furryAminoUrl: string,
+  etsyUrl: string,
+  theDealersDenUrl: string,
+  otherShopUrl: string,
+  queueUrl: string,
+  scritchUrl: string,
+  furtrackUrl: string,
+  photoUrls: string[],
+  miniatureUrls: string[],
+  otherUrls: string[],
+  notes: string,
+  inactiveReason: string,
+  csLastCheck: string,
+  csTrackerIssue: boolean,
+  openFor: string[],
+  closedFor: string[],
+  completeness: number,
+  contactAllowed: string,
+  contactInfoObfuscated: string,
+];
 
 export default class DataManager {
     private prevQuery: string|null = null;
@@ -27,7 +97,7 @@ export default class DataManager {
         Static.showLoadingIndicator();
 
         jQuery.ajax(Static.getApiUrl(`artisans-array.json${usedQuery}`), {
-            success: (newData: DataRow[]): void => {
+            success: (newData: ArtisanDataRow[]): void => {
                 this.messageBus.notifyDataChange(newData);
             },
             error: this.displayError,
