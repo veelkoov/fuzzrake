@@ -40,6 +40,15 @@ function run_console() {
     run_docker_compose_exec ./bin/console "$@"
 }
 
+function run_yarn() {
+    # Known issue: paths in additional arguments will contain symfony/ prefix
+    # Not using --cwd yarn switch because eslint ignored that
+    # Known issue: requires local installation of Yarn
+    pushd "$SYMFONY_DIR_REL_PATH"
+    run_command yarn "$@"
+    popd
+}
+
 function assure_line_in_file() {
     local filepath="$1"
     local pattern="$2"
@@ -175,6 +184,7 @@ Available actions:
     yep          Symfony: execute 'yarn encore production'
 
     composer     Symfony: run Composer
+    yarn         Symfony: run Yarn (needs to be installed locally)
 
     console      Symfony: run Symfony console command
 
@@ -189,6 +199,7 @@ Available actions:
     ps           Symfony: run PHPStan
     rector       Symfony: run Rector
     el           Symfony: run eslint
+    prettier     Symfony: run Prettier
 EOF
 }
 
@@ -206,6 +217,7 @@ function action() {
         'yep')          pushd symfony ; yarn encore production ; popd ;;
 
         'composer')     run_composer "$@" ;;
+        'yarn')         run_yarn "$@" ;;
 
         'console')      run_console "$@" ;;
 
@@ -221,11 +233,8 @@ function action() {
         'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
-        'el')
-            pushd       "$SYMFONY_DIR_REL_PATH"
-            run_command yarn eslint assets/scripts/ --ext js,ts,vue "$@"
-            popd
-        ;;
+        'el')           run_yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
+        'prettier')     run_yarn prettier . --write "$@" ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;
         'tidyc')        action tidy --commit "$@" ;;
