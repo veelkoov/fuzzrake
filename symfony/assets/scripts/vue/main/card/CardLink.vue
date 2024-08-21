@@ -2,12 +2,13 @@
   <template v-if="url">
     <a class="btn btn-light" :class="addBtnClass" :href="url" target="_blank">
       <i :class="iconClass" /> {{ label }}
-    </a> <wbr>
+    </a>
+    <wbr />
   </template>
 </template>
 
 <script lang="ts">
-import {Options, Vue} from 'vue-class-component';
+import { Options, Vue } from "vue-class-component";
 
 @Options({
   props: {
@@ -15,7 +16,7 @@ import {Options, Vue} from 'vue-class-component';
     addBtnClass: String,
     iconClass: String,
     label: String,
-  }
+  },
 })
 export default class CardLink extends Vue {
   url!: string;

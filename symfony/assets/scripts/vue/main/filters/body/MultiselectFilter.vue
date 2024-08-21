@@ -15,9 +15,19 @@
     </div>
 
     <div class="row">
-      <div v-for="item in filter.options.items" :key="item.value" class="col-sm-6 col-lg-3">
+      <div
+        v-for="item in filter.options.items"
+        :key="item.value"
+        class="col-sm-6 col-lg-3"
+      >
         <div class="form-check form-check-inline">
-          <CheckBox ref="checkboxes" :filter="filter" :value="item.value" :count="item.count" :label="item.label" />
+          <CheckBox
+            ref="checkboxes"
+            :filter="filter"
+            :value="item.value"
+            :count="item.count"
+            :label="item.label"
+          />
         </div>
       </div>
     </div>
@@ -25,25 +35,27 @@
 </template>
 
 <script lang="ts">
-import AllNoneInvertLinks from '../AllNoneInvertLinks.vue';
-import CheckBox from '../CheckBox.vue';
-import CheckBoxes from '../CheckBoxes';
-import Filter from '../Filter';
-import SpecialItems from '../SpecialItems.vue';
-import {Options, Vue} from 'vue-class-component';
-import {PropType} from 'vue';
+import AllNoneInvertLinks from "../AllNoneInvertLinks.vue";
+import CheckBox from "../CheckBox.vue";
+import CheckBoxes from "../CheckBoxes";
+import Filter from "../Filter";
+import SpecialItems from "../SpecialItems.vue";
+import { Options, Vue } from "vue-class-component";
+import { PropType } from "vue";
 
 @Options({
-  components: {SpecialItems, CheckBox, AllNoneInvertLinks},
+  components: { SpecialItems, CheckBox, AllNoneInvertLinks },
   props: {
-    filter: {type: Object as PropType<Filter>, required: true},
-  }
+    filter: { type: Object as PropType<Filter>, required: true },
+  },
 })
 export default class MultiselectFilter extends Vue {
   private checkboxes!: CheckBoxes;
 
   public mounted(): void {
-    this.checkboxes = new CheckBoxes(this.$refs['checkboxes'] as typeof CheckBox[]);
+    this.checkboxes = new CheckBoxes(
+      this.$refs["checkboxes"] as (typeof CheckBox)[],
+    );
   }
 }
 </script>

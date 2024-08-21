@@ -1,4 +1,5 @@
-p.form-text.help-text, .helphints-contents {
+p.form-text.help-text,
+.helphints-contents {
   em {
     margin: 0 0.3ex;
     background-color: #efefef;
@@ -16,31 +17,37 @@ p.form-text.help-text, .helphints-contents {
   }
 }
 
-label:not(.form-check-label), legend {
+label:not(.form-check-label),
+legend {
   font-weight: bold;
 }
 
 div.mandatory {
-  label:not(.form-check-label):before, legend:before, span.marking:before {
-    content: '🔴 ';
+  label:not(.form-check-label):before,
+  legend:before,
+  span.marking:before {
+    content: "🔴 ";
     color: #f00;
   }
 }
 
-h2.mandatory:before, span.mandatory:before {
-  content: '🔴 ';
+h2.mandatory:before,
+span.mandatory:before {
+  content: "🔴 ";
   color: #f00;
 }
 
 div.important {
-  label:not(.form-check-label):before, legend:before, span.marking:before {
-    content: '🟠️ ';
+  label:not(.form-check-label):before,
+  legend:before,
+  span.marking:before {
+    content: "🟠️ ";
     color: #ffc107;
   }
 }
 
 span.important:before {
-  content: '🟠️ ';
+  content: "🟠️ ";
   color: #ffc107;
 }
 

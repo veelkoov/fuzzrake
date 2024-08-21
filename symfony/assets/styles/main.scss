@@ -29,13 +29,15 @@ table#artisans {
   }
 
   &.table-striped > tbody > tr.inactive:nth-of-type(odd) > *,
-  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * { // odd+even suppress table-striped
+  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * {
+    // odd+even suppress table-striped
     color: #888;
   }
 
   &.table-striped > tbody > tr.inactive:hover:nth-of-type(odd) > *,
-  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * { // odd+even suppress table-striped
-    color: #212529
+  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * {
+    // odd+even suppress table-striped
+    color: #212529;
   }
 
   tbody {
@@ -52,11 +54,18 @@ table#artisans {
       vertical-align: middle;
     }
 
-    td.features, td.types, td.styles, td.productionModels, td.languages, td.species, td.commissions {
+    td.features,
+    td.types,
+    td.styles,
+    td.productionModels,
+    td.languages,
+    td.species,
+    td.commissions {
       font-size: 75%;
     }
 
-    td.species, td.commissions {
+    td.species,
+    td.commissions {
       ul {
         list-style: none;
         padding: 0;
@@ -129,9 +138,15 @@ table#artisans {
         object-fit: cover;
       }
 
-      img[src$="#r90"]  { transform: rotate(90deg); }
-      img[src$="#r180"] { transform: rotate(180deg); }
-      img[src$="#r270"] { transform: rotate(270deg); }
+      img[src$="#r90"] {
+        transform: rotate(90deg);
+      }
+      img[src$="#r180"] {
+        transform: rotate(180deg);
+      }
+      img[src$="#r270"] {
+        transform: rotate(270deg);
+      }
 
       img[src$="#0050r90"] {
         transform: rotate(90deg);

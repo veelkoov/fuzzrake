@@ -2,22 +2,20 @@
   <template v-if="addText">
     {{ getText() }}
 
-    <template v-if="isUnknown()">
-      <UnknownValue /> <wbr>
-    </template>
+    <template v-if="isUnknown()"> <UnknownValue /> <wbr /> </template>
   </template>
 
   <i v-for="item in getClasses()" :key="item" class="ages" :class="item" />
 </template>
 
 <script lang="ts">
-import Artisan from '../../class/Artisan';
-import UnknownValue from './UnknownValue.vue';
-import {ADULTS, MINORS, MIXED} from '../../consts';
-import {Options, Vue} from 'vue-class-component';
+import Artisan from "../../class/Artisan";
+import UnknownValue from "./UnknownValue.vue";
+import { ADULTS, MINORS, MIXED } from "../../consts";
+import { Options, Vue } from "vue-class-component";
 
 @Options({
-  components: {UnknownValue},
+  components: { UnknownValue },
   props: {
     addText: Boolean,
     artisan: Artisan,
@@ -34,26 +32,26 @@ export default class AgesDescription extends Vue {
   private getClasses(): string[] {
     switch (this.artisan.getAges()) {
       case MINORS:
-        return ['fa-solid fa-user-minus'];
+        return ["fa-solid fa-user-minus"];
       case MIXED:
-        return ['fa-solid fa-user-plus', 'fa-solid fa-user-minus'];
+        return ["fa-solid fa-user-plus", "fa-solid fa-user-minus"];
       case ADULTS:
         return [];
       default:
-        return ['fa-solid fa-user'];
+        return ["fa-solid fa-user"];
     }
   }
 
   private getText(): string {
     switch (this.artisan.getAges()) {
       case MINORS:
-        return 'Everyone is under 18';
+        return "Everyone is under 18";
       case MIXED:
-        return 'There is a mix of people over and under 18';
+        return "There is a mix of people over and under 18";
       case ADULTS:
-        return 'Everyone is over 18';
+        return "Everyone is over 18";
       default:
-        return '';
+        return "";
     }
   }
 }
