@@ -18,8 +18,8 @@
                     Generic update
                 {%- endif -%}
             </title>
-            <link href="{{ url('events', { _fragment: 'event' ~ event.id }) }}" />
-            <id>{{ url('events', { _fragment: 'event' ~ event.id }) }}</id>
+            <link href="{{ url('events', {_fragment: 'event' ~ event.id}) }}" />
+            <id>{{ url('events', {_fragment: 'event' ~ event.id}) }}</id>
             <updated>{{ event.timestamp|date('Y-m-d\\TH:i:s\\Z', 'UTC') }}</updated>
             <summary type="xhtml">
                 <div xmlns="http://www.w3.org/1999/xhtml">

@@ -13,9 +13,9 @@
                 <td>{{ a }}</td>
                 <td>
                     {{ b }} {% if total %}(
-                    {{- (b / total * 100)|number_format("2") }}%
+                    {{- (b / total * 100)|number_format('2') }}%
                     {%- if show_merged %}
-                        &times; {{ count }} = {{ (count * b / total * 100)|number_format("2") }}%
+                        &times; {{ count }} = {{ (count * b / total * 100)|number_format('2') }}%
                     {%- endif -%}
                     ){% endif %}
                 </td>

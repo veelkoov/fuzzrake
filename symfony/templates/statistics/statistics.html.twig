@@ -4,7 +4,7 @@
 
 {% block contents %}
     <h1 id="commission-status">Commission status</h1>
-    {% include 'statistics/_data_table.html.twig' with { 'data': commissionsStats, 'name': '', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: commissionsStats, name: '', total: commissionsStats.Total}) }}
 
     <p>
         <a data-bs-toggle="collapse" href="#cstExplain" role="button" aria-expanded="false" aria-controls="cstExplain">
@@ -59,31 +59,31 @@
     </div>
 
     <h1 id="countries">Countries</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: countries, name: 'Country', total: commissionsStats.Total, merge_row_percents: true } %}
+    {{ include('statistics/_data_table.html.twig', {data: countries, name: 'Country', total: commissionsStats.Total, merge_row_percents: true}) }}
 
     <h1 id="production-models">Production models</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: productionModels, name: 'Production model', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: productionModels, name: 'Production model', total: commissionsStats.Total}) }}
 
     <h1 id="styles">Styles</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: styles, name: 'Style', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: styles, name: 'Style', total: commissionsStats.Total}) }}
 
     <h2 id="other-styles">Other styles</h2>
-    {% include 'statistics/_item_pills.html.twig' with { items: otherStyles } %}
+    {{ include('statistics/_item_pills.html.twig', {items: otherStyles}) }}
 
     <h1 id="order-types">Order types</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: orderTypes, name: 'Order type', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: orderTypes, name: 'Order type', total: commissionsStats.Total}) }}
 
     <h2 id="other-order-types">Other order types</h2>
-    {% include 'statistics/_item_pills.html.twig' with { items: otherOrderTypes } %}
+    {{ include('statistics/_item_pills.html.twig', {items: otherOrderTypes}) }}
 
     <h1 id="features">Features</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: features, name: 'Feature', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: features, name: 'Feature', total: commissionsStats.Total}) }}
 
     <h2 id="other-features">Other features</h2>
-    {% include 'statistics/_item_pills.html.twig' with { items: otherFeatures } %}
+    {{ include('statistics/_item_pills.html.twig', {items: otherFeatures}) }}
 
     <h1 id="data-statistics">Data statistics</h1>
-    {% include 'statistics/_data_table.html.twig' with { data: completeness, name: 'Data completeness', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: completeness, name: 'Data completeness', total: commissionsStats.Total}) }}
 
-    {% include 'statistics/_data_table.html.twig' with { data: providedInfo, name: 'Information provided', total: commissionsStats.Total } %}
+    {{ include('statistics/_data_table.html.twig', {data: providedInfo, name: 'Information provided', total: commissionsStats.Total}) }}
 {% endblock %}
