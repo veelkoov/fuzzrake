@@ -232,7 +232,7 @@ function action() {
         'pul')          action pu --group large  "$@" ;;
 
         'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
-        'tcf')          run_docker_compose_exec ./vendor/bin/twig-cs-fixer lint "$@" ;;
+        'tcf')          run_docker_compose_exec ./vendor/bin/twig-cs-fixer lint --fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
