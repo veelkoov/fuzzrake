@@ -196,9 +196,10 @@ Available actions:
     pul          Symfony: run PHPUnit tests, "large" group
 
     pcf          Symfony: run PHP CS Fixer
+    tcf          Symfony: run Twig CS Fixer
     ps           Symfony: run PHPStan
     rector       Symfony: run Rector
-    el           Symfony: run eslint
+    el           Symfony: run ESLint
     prettier     Symfony: run Prettier
 EOF
 }
@@ -231,6 +232,7 @@ function action() {
         'pul')          action pu --group large  "$@" ;;
 
         'pcf')          run_docker_compose_exec ./vendor/bin/php-cs-fixer fix "$@" ;;
+        'tcf')          run_docker_compose_exec ./vendor/bin/twig-cs-fixer lint "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
         'el')           run_yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
