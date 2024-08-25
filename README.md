@@ -34,7 +34,7 @@ To make tests in `@medium` group work:
 * All the above setup
 * `git submodule init`
 * `git submodule update`
-* `pushd symfony; yarn install; popd`
+* `./toolbox yarn install`
 * `./toolbox yep`
 * `./toolbox pum`
 

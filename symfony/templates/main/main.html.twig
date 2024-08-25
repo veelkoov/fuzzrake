@@ -6,7 +6,7 @@
     {{ encore_entry_script_tags('main') }}
 
     <script>
-        {% include 'main/parts/data.js.twig' %}
+        {{ include('main/parts/data.js.twig') }}
     </script>
 {% endblock %}
 
@@ -39,11 +39,11 @@
         </div>
     </div>
 
-    {% include '_loading.html.twig' %}
+    {{ include('_loading.html.twig') }}
 
-    {% include 'main/parts/legendPopUp.html.twig' %}
+    {{ include('main/parts/legendPopUp.html.twig') }}
 
-    {% include 'main/parts/intro.html.twig' %}
+    {{ include('main/parts/intro.html.twig') }}
 
     <div id="main-primary-component"></div>
 

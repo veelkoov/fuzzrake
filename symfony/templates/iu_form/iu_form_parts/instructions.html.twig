@@ -15,32 +15,32 @@
     </p>
 ") }}
 
-{{ macros.help_modal('changesOverTime', 'getfursu.it changes over time', "
+{{ macros.help_modal('changesOverTime', 'getfursu.it changes over time', '
     <p>
         Please note, that getfursu.it is still in development. Changes will happen, and there will be probably even more data gathered in the future. Not all data you put here will be available on the website immediately - some might be kept for the future.
     </p>
-") }}
+') }}
 
-{{ macros.help_modal('helpNeeded', 'Need help, explanations?', "
+{{ macros.help_modal('helpNeeded', 'Need help, explanations?', '
     <p>
-        In case of any questions/issues, feel free to <a href=\"" ~ path('contact') ~ "\" target=\"_blank\">contact me</a>!
+        In case of any questions/issues, feel free to <a href="' ~ path('contact') ~ '" target="_blank">contact me</a>!
     </p>
-") }}
+') }}
 
-{{ macros.help_modal('feedback', 'Feedback is welcome', "
+{{ macros.help_modal('feedback', 'Feedback is welcome', '
     <p>
         In case you have any remarks, please add them to the notes field at the end. This is important: you see the opportunities and issues which I do not. You can help make this website better. Thank you!
     </p>
-") }}
+') }}
 
-{{ macros.help_modal('privacy', 'Privacy', "
+{{ macros.help_modal('privacy', 'Privacy', '
     <p>
-        <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href=\"https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql\" target=\"_blank\">GitHub, the IT stuff</a>).
+        <strong>All</strong> the information you put in here will be available <strong>publicly</strong>, either directly through the getfursu.it website or through its sources (<a href="https://github.com/veelkoov/fuzzrake-data/blob/master/artisans.sql" target="_blank">GitHub, the IT stuff</a>).
     </p>
     <p>
-        There are only a few exceptions, marked like this: <span class=\"badge bg-warning text-dark\">PRIVATE</span>
+        There are only a few exceptions, marked like this: <span class="badge bg-warning text-dark">PRIVATE</span>
     </p>
-") }}
+') }}
 
 {% if submitted %}
     <button class="btn btn-success mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#iu_form_instructions_container">Toggle instructions</button>

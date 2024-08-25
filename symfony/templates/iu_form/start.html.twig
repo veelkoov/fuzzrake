@@ -16,7 +16,7 @@
 {% block body %}
     <h1>{{ block('title')|capitalize }}</h1>
 
-    {% include 'shared_parts/ooo_notice.html.twig' %}
+    {{ include('shared_parts/ooo_notice.html.twig') }}
 
     <p class="mt-3">
         <a class="disable-filters-goto-main-page text-decoration-none" href="{{ path('main') }}" target="_blank">
@@ -25,7 +25,7 @@
         </a>
     </p>
 
-    {% include 'shared_parts/big_scary_error.html.twig' %}
+    {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 
@@ -80,7 +80,7 @@
     {{ form_rest(form) }}
 
     <div id="rulesAndContinueButton">
-        {% include 'shared_parts/guidelines.html.twig' %}
+        {{ include('shared_parts/guidelines.html.twig') }}
 
         <input type="hidden" name="token" id="form_recaptcha_token" value="" />
 

@@ -54,7 +54,8 @@
         "symfony/phpunit-bridge": "*",
         "symfony/stopwatch": "*",
         "symfony/var-dumper": "*",
-        "symfony/web-profiler-bundle": "*"
+        "symfony/web-profiler-bundle": "*",
+        "vincentlanglet/twig-cs-fixer": "^2.11"
     },
     "config": {
         "preferred-install": {

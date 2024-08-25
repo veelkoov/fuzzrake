@@ -10,7 +10,7 @@
             Matched multiple makers:
 
             {% for artisan in update.matchedArtisans %}
-                <a href="{{ path('main', {'_fragment': artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>
+                <a href="{{ path('main', {_fragment: artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>
                 {%- if loop.last %}.{% else %},{% endif %}
             {% endfor %}
 
@@ -22,7 +22,7 @@
         {% set artisan = update.matchedArtisans|first %}
 
         <p>
-            Updating: <a href="{{ path('main', {'_fragment': artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>.
+            Updating: <a href="{{ path('main', {_fragment: artisan.lastMakerId}) }}">{{ artisan.name }} ({{ artisan.lastMakerId }})</a>.
 
             {% if '' != artisan.inactiveReason %}
                 <span id="creator-hidden-warning" class="badge bg-warning text-dark">Hidden</span>
