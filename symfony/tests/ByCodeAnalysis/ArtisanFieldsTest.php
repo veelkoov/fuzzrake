@@ -25,7 +25,7 @@ class ArtisanFieldsTest extends TestCase
 
     public function setUp(): void
     {
-        $this->constructor = Pattern::of('constructor\((?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?( \| null)?,?\s*)+)\)', 'si');
+        $this->constructor = Pattern::of('constructor\(\s*(?<parameters>(?:(?:readonly )?[a-z]+: [a-z]+(?:\[\])?( \| null)?,?\s*)+)\)', 'si');
         $this->constructorParameter = Pattern::of('(?:readonly )?(?<name>[a-z]+): [a-z]+(?<is_list>\[\])?( \| null)?(?:,|$)', 'i');
     }
 

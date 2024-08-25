@@ -66,7 +66,7 @@ class FiltersTest extends PantherTestCaseWithEM
             }
         }
 
-        $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
+        $client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
         self::waitUntilHides('#filtersTitle', 1000);
         self::waitForLoadingIndicatorToDisappear();
 

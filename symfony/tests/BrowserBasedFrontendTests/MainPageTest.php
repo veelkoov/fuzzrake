@@ -251,7 +251,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     private function clickApplyInTheFiltersPopUp(): void
     {
-        $this->client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
+        $this->client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
     }
