@@ -1,6 +1,7 @@
-@import '../../node_modules/bootstrap/scss/bootstrap';
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
-html { // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
+html {
+  // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
   scroll-behavior: auto !important;
 }
 

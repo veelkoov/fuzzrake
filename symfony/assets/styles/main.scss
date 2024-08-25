@@ -33,16 +33,16 @@ div#data-table-container {
     display: none;
   }
 
-  table.show-makerId          .makerId,
-  table.show-state            .state,
-  table.show-languages        .languages,
+  table.show-makerId .makerId,
+  table.show-state .state,
+  table.show-languages .languages,
   table.show-productionModels .productionModels,
-  table.show-styles           .styles,
-  table.show-types            .types,
-  table.show-features         .features,
-  table.show-species          .species,
-  table.show-commissions      .commissions,
-  table.show-links            .links {
+  table.show-styles .styles,
+  table.show-types .types,
+  table.show-features .features,
+  table.show-species .species,
+  table.show-commissions .commissions,
+  table.show-links .links {
     display: table-cell;
   }
 }
@@ -55,13 +55,15 @@ table#creators-table {
   }
 
   &.table-striped > tbody > tr.inactive:nth-of-type(odd) > *,
-  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * { // odd+even suppress table-striped
+  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * {
+    // odd+even suppress table-striped
     color: #888;
   }
 
   &.table-striped > tbody > tr.inactive:hover:nth-of-type(odd) > *,
-  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * { // odd+even suppress table-striped
-    color: #212529
+  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * {
+    // odd+even suppress table-striped
+    color: #212529;
   }
 
   tbody {
@@ -78,11 +80,18 @@ table#creators-table {
       vertical-align: middle;
     }
 
-    td.features, td.types, td.styles, td.productionModels, td.languages, td.species, td.commissions {
+    td.features,
+    td.types,
+    td.styles,
+    td.productionModels,
+    td.languages,
+    td.species,
+    td.commissions {
       font-size: 75%;
     }
 
-    td.species, td.commissions {
+    td.species,
+    td.commissions {
       ul {
         list-style: none;
         padding: 0;
@@ -159,9 +168,15 @@ table#creators-table {
         object-fit: cover;
       }
 
-      img[src$="#r90"]  { transform: rotate(90deg); }
-      img[src$="#r180"] { transform: rotate(180deg); }
-      img[src$="#r270"] { transform: rotate(270deg); }
+      img[src$="#r90"] {
+        transform: rotate(90deg);
+      }
+      img[src$="#r180"] {
+        transform: rotate(180deg);
+      }
+      img[src$="#r270"] {
+        transform: rotate(270deg);
+      }
 
       img[src$="#0050r90"] {
         transform: rotate(90deg);
@@ -254,7 +269,7 @@ table#creators-table {
     font-size: 1rem;
     font-weight: bold;
     margin-bottom: 0;
-    padding-top: .5rem;
+    padding-top: 0.5rem;
   }
 
   .count {
@@ -267,7 +282,7 @@ table#creators-table {
       margin: 0.5ex 0.5ex 0 0;
 
       label {
-          margin: 0 0 0 0.5ex;
+        margin: 0 0 0 0.5ex;
       }
 
       button.toggle {
