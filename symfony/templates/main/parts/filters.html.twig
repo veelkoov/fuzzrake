@@ -9,18 +9,20 @@
                 <span><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button></span>
             </div>
 
+            {# twig-cs-fixer-disable PunctuationSpacing.After #}
+            {# Unable to disable for the following lines only #}
             {% set filter_choices = {
-                'countries':        {'label': 'Countries', 'body': 'CountriesFilter', 'help': 'CountriesHelp', 'data': filters.countries},
-                'states':           {'label': 'States', 'body': 'MultiselectFilter', 'help': 'StatesHelp', 'data': filters.states},
-                'languages':        {'label': 'Languages', 'body': 'MultiselectFilter', 'help': 'LanguagesHelp', 'data': filters.languages},
-                'styles':           {'label': 'Styles', 'body': 'MultiselectFilter', 'help': 'StylesHelp', 'data': filters.styles},
-                'features':         {'label': 'Features', 'body': 'MultiselectFilter', 'help': 'FeaturesHelp', 'data': filters.features},
-                'orderTypes':       {'label': 'Order types', 'body': 'MultiselectFilter', 'help': 'OrderTypesHelp', 'data': filters.orderTypes},
-                'productionModels': {'label': 'Production models', 'body': 'MultiselectFilter', 'help': 'ProductionModelsHelp', 'data': filters.productionModels},
-                'openFor':          {'label': 'Open for', 'body': 'MultiselectFilter', 'help': 'OpenForHelp', 'data': filters.openFor},
-                'species':          {'label': 'Species', 'body': 'SpeciesFilter', 'help': 'SpeciesHelp', 'data': filters.species},
-                'paymentPlans':     {'label': 'Payment plans', 'body': 'MultiselectFilter', 'help': 'PaymentPlansHelp', 'data': filters.paymentPlans},
-                'inactive':         {'label': 'Hidden', 'body': 'MultiselectFilter', 'help': 'InactiveHelp', 'data': filters.inactive},
+                countries:        {label: 'Countries',         body: 'CountriesFilter',   help: 'CountriesHelp',        data: filters.countries},
+                states:           {label: 'States',            body: 'MultiselectFilter', help: 'StatesHelp',           data: filters.states},
+                languages:        {label: 'Languages',         body: 'MultiselectFilter', help: 'LanguagesHelp',        data: filters.languages},
+                styles:           {label: 'Styles',            body: 'MultiselectFilter', help: 'StylesHelp',           data: filters.styles},
+                features:         {label: 'Features',          body: 'MultiselectFilter', help: 'FeaturesHelp',         data: filters.features},
+                orderTypes:       {label: 'Order types',       body: 'MultiselectFilter', help: 'OrderTypesHelp',       data: filters.orderTypes},
+                productionModels: {label: 'Production models', body: 'MultiselectFilter', help: 'ProductionModelsHelp', data: filters.productionModels},
+                openFor:          {label: 'Open for',          body: 'MultiselectFilter', help: 'OpenForHelp',          data: filters.openFor},
+                species:          {label: 'Species',           body: 'SpeciesFilter',     help: 'SpeciesHelp',          data: filters.species},
+                paymentPlans:     {label: 'Payment plans',     body: 'MultiselectFilter', help: 'PaymentPlansHelp',     data: filters.paymentPlans},
+                inactive:         {label: 'Hidden',            body: 'MultiselectFilter', help: 'InactiveHelp',         data: filters.inactive},
             } %}
 
             <div id="filters-modal-body" class="modal-body">
@@ -52,9 +54,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <ul>
-                                            {% include 'main/parts/filters/help/' ~ filter_name ~ '.html.twig' %}
+                                            {{ include('main/parts/filters/help/' ~ filter_name ~ '.html.twig') }}
 
-                                            {% set uri = url('iu_form_step_start', { makerId: '' }) %}
+                                            {% set uri = url('iu_form_step_start', {makerId: ''}) %}
 
                                             <li class="small">
                                                 You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supply some information), you can ask them to fill the missing information, e.g.:
@@ -68,10 +70,10 @@
                                 </div>
                             </div>
 
-                            {% include [
+                            {{ include([
                                 'main/parts/filters/body/' ~ filter_name ~ '.html.twig',
                                 'main/parts/filters/body/default.html.twig',
-                            ] %}
+                            ]) }}
                         </div>
                     {% endfor %}
                 </form>

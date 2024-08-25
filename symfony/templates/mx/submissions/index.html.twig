@@ -26,7 +26,7 @@
                     <td>{{ submission.get('NAME'|as_field) }}</td>
                     <td>{{ submission|get_comments|nl2br }}</td>
                     <td>
-                        <a href="{{ path('mx_submission', {'id': submission.id}) }}">Open</a>
+                        <a href="{{ path('mx_submission', {id: submission.id}) }}">Open</a>
                     </td>
                 </tr>
             {% endfor %}

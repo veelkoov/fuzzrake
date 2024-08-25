@@ -13,11 +13,11 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'main/parts/intro.html.twig' %}
+    {{ include('main/parts/intro.html.twig') }}
 
-    {% include 'main/parts/checklist.html.twig' %}
+    {{ include('main/parts/checklist.html.twig') }}
 
-    {% include 'main/parts/events_and_state.html.twig' %}
+    {{ include('main/parts/events_and_state.html.twig') }}
 
     <div id="creator-mode-banner" class="card border-danger mb-3 d-none">
         <div class="card-header">
@@ -31,9 +31,9 @@
         </div>
     </div>
 
-    {% include 'main/parts/filters.html.twig' %}
+    {{ include('main/parts/filters.html.twig') }}
 
-    {% include 'main/parts/legend_modal.html.twig' %}
+    {{ include('main/parts/legend_modal.html.twig') }}
 
     <div id="artisanUpdatesModal" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -48,6 +48,8 @@
         </div>
     </div>
 
+    {# twig-cs-fixer-disable PunctuationSpacing.After #}
+    {# Unable to disable for the following lines only #}
     {% set columns = [
         {id: 'makerId',          label: 'Maker ID',          alignment_class: 'text-center'},
         {id: 'state',            label: 'State',             alignment_class: 'text-center'},

@@ -54,7 +54,6 @@
             {{ comma_separated_other(creator.features, creator.otherFeatures) }}
         </td>
 
-
         <td class="species column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
             {% if creator.hasSpeciesInfo %}
                 <ul>
@@ -97,7 +96,7 @@
         <td class="links column-toggleable">
             <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
                 {% if isDevEnv() %}
-                    <a class="btn btn-warning" href="{{ path('mx_artisan_edit', { makerId: creator.lastMakerId }) }}">
+                    <a class="btn btn-warning" href="{{ path('mx_artisan_edit', {makerId: creator.lastMakerId}) }}">
                         <i class="fas fa-edit"></i>
                     </a>
                 {% endif %}
@@ -123,6 +122,8 @@
                             data-bs-toggle="dropdown" aria-expanded="false"></button>
 
                     <ul class="dropdown-menu" aria-labelledby="drpdwnmn{{ creator_idx }}">
+                        {# twig-cs-fixer-disable PunctuationSpacing.After #}
+                        {# Unable to disable for the following lines only #}
                         {% set links = [
                             {uri: creator.fursuitReviewUrl, icon_class: 'fas fa-balance-scale',    label: 'FursuitReview'},
                             {uri: creator.websiteUrl,       icon_class: 'fas fa-link',             label: 'Official website'},

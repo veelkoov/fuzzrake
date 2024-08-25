@@ -16,7 +16,7 @@
     <ul>
         {% for artisan in artisans %}
             <li>
-                <a href="{{ path('main', { '_fragment': artisan.lastMakerId }) }}">{{ artisan.name }}</a>
+                <a href="{{ path('main', {_fragment: artisan.lastMakerId}) }}">{{ artisan.name }}</a>
                 {% if artisan.formerly %}
                     <span class="text-muted">
                         / {{ artisan.formerly|join(' / ') }}

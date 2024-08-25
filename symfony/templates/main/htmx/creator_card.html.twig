@@ -49,9 +49,9 @@
         '07': 'Jul',
         '08': 'Aug',
         '09': 'Sep',
-        '10': 'Oct',
-        '11': 'Nov',
-        '12': 'Dec',
+        10: 'Oct',
+        11: 'Nov',
+        12: 'Dec',
     } %}
 
     {% if input %}
@@ -108,9 +108,9 @@
 
             {% if creator.hasValidPhotos %}
                 <div class="col-md-12 p-1 overflow-auto imgs-container">
-                    {% for photoUrl in creator.photoUrls %}
+                    {% for photo_url in creator.photoUrls %}
                         <div>
-                            <a href="{{ photoUrl }}" target="_blank"><img src="{{ creator.miniatureUrls[loop.index0] }}" alt=""></a>
+                            <a href="{{ photo_url }}" target="_blank"><img src="{{ creator.miniatureUrls[loop.index0] }}" alt=""></a>
                         </div>
                     {% endfor %}
                 </div>
@@ -222,6 +222,8 @@
                     </mark>" when contacting the maker, thank you! ❤️
                 </p>
 
+                {# twig-cs-fixer-disable PunctuationSpacing.After #}
+                {# Unable to disable for the following lines only #}
                 <div id="artisanLinks">
                     {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'border border-primary') }}
 

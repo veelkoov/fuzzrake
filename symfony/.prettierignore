@@ -1,0 +1,8 @@
+# Only have Prettier control frontend/web files
+composer.json
+composer.lock
+config/
+tests/
+
+# Libraries
+assets/3rd-party
