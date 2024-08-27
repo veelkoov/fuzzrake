@@ -311,3 +311,24 @@ table#creators-table {
     float: right;
   }
 }
+
+.htmx-indicator {
+  display: none;
+
+  position: fixed;
+  padding: 20px;
+  left: 0;
+  right: 0;
+  top: 0;
+
+  > div {
+    width: 250px;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: block;
+}

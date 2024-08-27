@@ -121,4 +121,11 @@
     <div class="container text-center">
         <img src="{{ asset('images/website-banner-bottom.webp') }}" class="img-fluid" alt="">
     </div>
+
+    <div id="loading-indicator" class="htmx-indicator">
+        <div class="alert alert-light text-primary border-primary-subtle" role="alert">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
+        </div>
+    </div>
 {% endblock %}

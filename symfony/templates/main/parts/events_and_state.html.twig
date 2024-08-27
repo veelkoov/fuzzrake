@@ -7,6 +7,7 @@
 
      hx-get="{{ path('htmx_main_primary_content') }}"
      hx-target="#creators-table-body"
+     hx-indicator="#loading-indicator"
 ></div>
 
 <div hx-trigger="hidden.bs.modal from:#filters-modal"
@@ -14,6 +15,7 @@
 
      hx-get="{{ path('htmx_main_primary_content') }}"
      hx-target="#creators-table-body"
+     hx-indicator="#loading-indicator"
 ></div>
 
 <div hx-trigger="input from:#search-text-field changed delay:500ms"
@@ -21,6 +23,7 @@
 
      hx-get="{{ path('htmx_main_primary_content') }}"
      hx-target="#creators-table-body"
+     hx-indicator="#loading-indicator"
 ></div>
 
 <input type="hidden" id="creator-mode-parameter-field" name="creator-mode" value="1">
@@ -30,6 +33,7 @@
 
      hx-get="{{ path('htmx_main_primary_content') }}"
      hx-target="#creators-table-body"
+     hx-indicator="#loading-indicator"
 ></div>
 
 <div id="open-creator-card-given-creator-id-anchor" {{ card_open_attrs('_______') }}></div>

@@ -2,6 +2,7 @@
     hx-get="{{ path('htmx_main_creator_card', {makerId: maker_id}) }}"
     hx-target="#artisanDetailsModal"
     hx-trigger="click"
+    hx-indicator="#loading-indicator"
     data-bs-toggle="modal"
     data-bs-target="#artisanDetailsModal"
 {% endmacro %}
