@@ -22,9 +22,6 @@ class MakerModeTest extends PantherTestCaseWithEM
      */
     public function testTurningMakerModeOnAndOff(): void
     {
-        $client = static::createPantherClient();
-        self::setWindowSize($client, 1600, 900);
-
         // Having two makers, 1 minor-friendly and one NSFW-ish
 
         self::persistAndFlush(
@@ -38,7 +35,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Expect: main page initially shows the checklist and no makers
 
-        $client->request('GET', '/index.php/');
+        $this->client->request('GET', '/index.php/');
 
         self::assertVisible('#checklist-ill-be-careful');
         self::assertInvisible('#TEST001');
@@ -47,10 +44,10 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: navigate to the data updates page and enable the maker mode, go back to the main page
 
-        $client->request('GET', '/index.php/iu_form/start');
+        $this->client->request('GET', '/index.php/iu_form/start');
 
-        $client->clickLink('Temporarily disable all the filters and open the main page');
-        $client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        $this->client->clickLink('Temporarily disable all the filters and open the main page');
+        $this->client->request('GET', '/index.php/'); // Workaround for the new tab being opened
         self::waitForLoadingIndicatorToDisappear();
 
         // Expect: checklist is hidden and all makers are visible
@@ -62,7 +59,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: click re-enable filters button
 
-        $client->clickLink('Re-enable filters');
+        $this->client->clickLink('Re-enable filters');
 
         // Expect: main page shows the checklist and no makers, no checklist items are selected
 
@@ -75,10 +72,10 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: fill the checklist, aim for minors-friendly experience
 
-        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
         self::waitUntilShows('#aasImNotAdult');
-        $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
-        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
         self::waitUntilShows('#creators-table');
 
         // Expect: checklist is dismissed, but only minors-friendly maker shows up
@@ -90,10 +87,10 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: navigate to the data updates page and enable the maker mode, go back to the main page
 
-        $client->request('GET', '/index.php/iu_form/start');
+        $this->client->request('GET', '/index.php/iu_form/start');
 
-        $client->clickLink('Temporarily disable all the filters and open the main page');
-        $client->request('GET', '/index.php/'); // Workaround for the new tab being opened
+        $this->client->clickLink('Temporarily disable all the filters and open the main page');
+        $this->client->request('GET', '/index.php/'); // Workaround for the new tab being opened
         self::waitForLoadingIndicatorToDisappear();
 
         // Expect: checklist is hidden and all makers are visible
@@ -105,7 +102,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: click re-enable filters button
 
-        $client->clickLink('Re-enable filters');
+        $this->client->clickLink('Re-enable filters');
 
         // Expect: main page shows the checklist - filled
 
@@ -118,7 +115,7 @@ class MakerModeTest extends PantherTestCaseWithEM
 
         // Action: submit the checklist with previous settings kept
 
-        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
         self::waitUntilShows('#creators-table');
 
         // Expect: checklist is dismissed, once again only minors-friendly maker shows up

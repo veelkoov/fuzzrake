@@ -17,14 +17,13 @@ class ContactPageTest extends PantherTestCaseWithEM
      */
     public function testRecaptchaWorksAndEmailAddressAppears(): void
     {
-        $client = static::createPantherClient();
-        $client->request('GET', '/index.php/contact');
+        $this->client->request('GET', '/index.php/contact');
 
         // E-mail address link is not visible by default
         self::assertSelectorNotExists('#protected-contact-info a');
 
         // Wait until automatic captcha works
-        $client->waitForVisibility('#protected-contact-info a', 5);
+        $this->client->waitForVisibility('#protected-contact-info a', 5);
 
         // The link should now contain the e-mail address
         self::assertSelectorAttributeContains('#protected-contact-info a', 'href', 'mailto:');

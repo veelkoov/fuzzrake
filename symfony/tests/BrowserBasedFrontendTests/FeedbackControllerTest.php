@@ -43,22 +43,21 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
      */
     public function testFeedbackFromMakersCardCarriesMakerIdOverToTheForm(string $expectedMakerId, Artisan $artisan): void
     {
-        $client = static::createPantherClient();
         self::persistAndFlush($artisan);
         $this->clearCache();
 
-        $client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($client, 1);
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1);
 
-        self::openMakerCardByClickingOnTheirNameInTheTable($client, $artisan->getName());
-        self::openDataOutdatedPopupFromTheMakerCard($client);
+        self::openMakerCardByClickingOnTheirNameInTheTable($this->client, $artisan->getName());
+        self::openDataOutdatedPopupFromTheMakerCard($this->client);
 
-        $client->clickLink('submit the feedback form');
+        $this->client->clickLink('submit the feedback form');
 
-        self::assertCount(2, $client->getWindowHandles());
-        $client->switchTo()->window($client->getWindowHandles()[1]);
+        self::assertCount(2, $this->client->getWindowHandles());
+        $this->client->switchTo()->window($this->client->getWindowHandles()[1]);
 
-        $client->waitForVisibility('h1', 10);
+        $this->client->waitForVisibility('h1', 10);
         self::assertSelectorTExtSame('h1', 'Feedback form');
         self::assertSelectorExists('//input[@id="feedback_maker" and @value="'.$expectedMakerId.'"]');
     }
@@ -68,10 +67,9 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
      */
     public function testExplanationsShowingUpAndFormBlocksForSpecialOptions(): void
     {
-        $client = static::createPantherClient();
-        $client->request('GET', '/index.php/feedback');
+        $this->client->request('GET', '/index.php/feedback');
 
-        $crawler = $client->getCrawler();
+        $crawler = $this->client->getCrawler();
 
         self::assertCount(8, $crawler->filter('input[name="feedback[subject]"]'));
 
@@ -79,45 +77,45 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         $noticeCssSel = '#feedback-subject-notice';
 
         // 1st option
-        $client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Help me get a fursuit"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'getfursu.it maintainer does not assist individuals');
 
         // 3rd option
-        $client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s website/social account is no longer working"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 2nd option
-        $client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Maker\'s commissions info (open/closed) is inaccurate"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'This cannot be adjusted manually.');
 
         // 5th option
-        $client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other information on this website needs attention (not related to a particular maker)"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 4th option
-        $client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other maker\'s information is (partially) outdated"]'))->click();
         self::waitUntilHides($buttonXpath);
         self::assertVisible($noticeCssSel);
         self::assertSelectorTextContains($noticeCssSel, 'All the information needs to be updated by the makers themselves.');
 
         // 6th option
-        $client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Report a technical problem/bug with this website"]'))->click();
         self::waitUntilShows($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 7th option, no visual change
-        $client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Suggest an improvement to this website"]'))->click();
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
 
         // 8th option, no visual change
-        $client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
+        $this->client->findElement(WebDriverBy::cssSelector('input[value="Other (please provide adequate details and context)"]'))->click();
         self::assertVisible($buttonXpath);
         self::assertInvisible($noticeCssSel);
     }
@@ -127,19 +125,18 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
      */
     public function testCaptchaWorksBySimpleSubmission(): void
     {
-        $client = static::createPantherClient();
-        $client->request('GET', '/index.php/feedback');
+        $this->client->request('GET', '/index.php/feedback');
 
-        $client->waitForVisibility('h1', 10);
+        $this->client->waitForVisibility('h1', 10);
 
-        $client->getCrawler()->selectButton('Send')->form([
+        $this->client->getCrawler()->selectButton('Send')->form([
             'feedback[details]'       => 'Testing details',
             'feedback[subject]'       => 'Other (please provide adequate details and context)',
             'feedback[noContactBack]' => true,
         ]);
 
-        $client->findElement(WebDriverBy::xpath('//input[@type="submit"]'))->click();
-        $client->waitForVisibility('div.alert', 10);
+        $this->client->findElement(WebDriverBy::xpath('//input[@type="submit"]'))->click();
+        $this->client->waitForVisibility('div.alert', 10);
 
         self::assertSelectorTextSame('h1', 'Feedback submitted');
         self::assertSelectorTextContains('div.alert', 'Feedback has been successfully submitted.');

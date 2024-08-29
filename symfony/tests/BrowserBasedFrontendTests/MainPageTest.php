@@ -16,7 +16,6 @@ use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Panther\Client;
 
 /**
  * @large
@@ -24,14 +23,6 @@ use Symfony\Component\Panther\Client;
 class MainPageTest extends PantherTestCaseWithEM
 {
     use MainPageTestsTrait;
-
-    private Client $client;
-
-    protected function setUp(): void
-    {
-        $this->client = static::createPantherClient();
-        self::setWindowSize($this->client, 1600, 900);
-    }
 
     /**
      * @throws Exception

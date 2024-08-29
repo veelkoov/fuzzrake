@@ -11,6 +11,7 @@ use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverDimension;
 use LogicException;
+use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -19,12 +20,25 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     use EntityManagerTrait;
     use UtilsTrait;
 
+    protected Client $client;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::stopWebServer(); // This is slow but assures following test won't be broken by "closed entity manager"
+        $this->client = static::createPantherClient();
+        $this->client->getCookieJar()->clear();
+        self::setWindowSize($this->client, 1600, 900);
+
+        self::resetDB();
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
 
         TestsBridge::reset();
-        self::stopWebServer();
     }
 
     /**
@@ -36,11 +50,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
     {
         $options['hostname'] ??= 'localhost';
 
-        $result = parent::createPantherClient($options, $kernelOptions, $managerOptions);
-
-        self::resetDB();
-
-        return $result;
+        return parent::createPantherClient($options, $kernelOptions, $managerOptions);
     }
 
     protected static function getPantherClient(): PantherClient

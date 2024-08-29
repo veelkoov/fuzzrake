@@ -29,7 +29,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
+    run_docker_compose exec --user "$(echo -n "$(id -u):www-data")" -ti php "$@"
 }
 
 function run_composer() {

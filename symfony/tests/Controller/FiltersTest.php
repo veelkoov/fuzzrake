@@ -57,11 +57,11 @@ class FiltersTest extends WebTestCaseWithEM
 
         $query = implode('&', $queryParts);
 
-        $client->request('GET', '/api/artisans-array.json?'.$query);
+        $this->client->request('GET', '/htmx/main/primary-content?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
-        $content = $client->getResponse()->getContent();
+        self::assertEquals('application/json', $this->client->getResponse()->headers->get('content-type'));
+        $content = $this->client->getResponse()->getContent();
         self::assertNotFalse($content);
 
         $data = Json::decode($content);
