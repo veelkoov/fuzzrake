@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests\Traits;
 
+use App\Tests\TestUtils\FiltersData;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
@@ -61,7 +62,7 @@ trait MainPageTestsTrait
      */
     private static function waitForLoadingIndicatorToDisappear(): void
     {
-        self::getPantherClient()->waitForInvisibility('#loading-indicator-container', 10);
+        self::getPantherClient()->waitForInvisibility('#loading-indicator', 10);
     }
 
     /**
@@ -93,5 +94,10 @@ trait MainPageTestsTrait
     {
         $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
         $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
+    }
+
+    private static function setupMockSpeciesFilterData(): void
+    {
+        self::persistAndFlush(FiltersData::getMockSpecies());
     }
 }

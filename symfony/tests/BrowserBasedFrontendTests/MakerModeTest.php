@@ -22,6 +22,8 @@ class MakerModeTest extends PantherTestCaseWithEM
      */
     public function testTurningMakerModeOnAndOff(): void
     {
+        self::setupMockSpeciesFilterData();
+
         // Having two makers, 1 minor-friendly and one NSFW-ish
 
         self::persistAndFlush(

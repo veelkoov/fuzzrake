@@ -29,6 +29,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testMainPageUiSmoke(): void
     {
+        self::setupMockSpeciesFilterData();
         self::persistAndFlush(
             self::getArtisan('Test artisan 1 CZ', 'TEST001', 'CZ'),
             self::getArtisan('Test artisan 2 CA', 'TEST002', 'CA'),
@@ -144,6 +145,8 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testNewlyAddedIndicators(): void
     {
+        self::setupMockSpeciesFilterData();
+
         UtcClockMock::start();
 
         $maker1 = Artisan::new()->setMakerId('MAKEOLD')->setName('Older maker')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
@@ -166,6 +169,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testOpeningArtisanCardByMakerId(): void
     {
+        self::setupMockSpeciesFilterData();
         $artisan = self::getArtisan('Test artisan 1', 'TEST001', 'FI');
         $artisan->setInactiveReason('Testing'); // Must show up even if deactivated
         self::persistAndFlush($artisan);
@@ -184,6 +188,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testFilterChoicesGetSavedAndRestored(): void
     {
+        self::setupMockSpeciesFilterData();
         self::persistAndFlush(self::getArtisan(country: 'FI'));
         $this->clearCache();
 

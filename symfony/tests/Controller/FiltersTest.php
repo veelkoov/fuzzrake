@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Json;
 use JsonException;
 
 /**
@@ -29,7 +28,7 @@ class FiltersTest extends WebTestCaseWithEM
      *
      * @throws JsonException
      */
-    public function testFiltersThroughApi(array $artisans, array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersThroughHtmx(array $artisans, array $filtersSet, array $expectedMakerIds): void
     {
         $client = static::createClient();
 
@@ -48,31 +47,19 @@ class FiltersTest extends WebTestCaseWithEM
         }
 
         if (!array_key_exists('wantsSfw', $filtersSet)) {
-            $queryParts[] = 'wantsSfw=0';
+            $queryParts[] = 'checklist-wants-sfw=0';
         }
 
         if (!array_key_exists('isAdult', $filtersSet)) {
-            $queryParts[] = 'isAdult=1';
+            $queryParts[] = 'checklist-is-adult=1';
         }
 
         $query = implode('&', $queryParts);
 
-        $this->client->request('GET', '/htmx/main/primary-content?'.$query);
+        $crawler = $client->request('GET', '/htmx/main/primary-content?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        self::assertEquals('application/json', $this->client->getResponse()->headers->get('content-type'));
-        $content = $this->client->getResponse()->getContent();
-        self::assertNotFalse($content);
-
-        $data = Json::decode($content);
-        self::assertIsArray($data);
-
-        $resultMakerIds = [];
-
-        foreach ($data as $artisanData) {
-            $resultMakerIds[] = $artisanData[0];
-        }
-
+        $resultMakerIds = $crawler->filter('td.makerId')->each(fn ($node, $_) => trim($node->text()));
         self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }
 }
