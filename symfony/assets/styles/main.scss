@@ -1,3 +1,5 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
 .intro-updated-info {
   color: #6c757d;
   font-size: 0.7em;
@@ -320,6 +322,10 @@ table#creators-table {
   left: 0;
   right: 0;
   top: 0;
+
+  // Fixes situation on narrow screens when the filters button being focused
+  // after closing the filters modal overlaps the loading indicator
+  z-index: $zindex-toast + 10;
 
   > div {
     width: 250px;

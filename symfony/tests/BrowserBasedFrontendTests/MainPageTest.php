@@ -219,6 +219,39 @@ class MainPageTest extends PantherTestCaseWithEM
     /**
      * @throws WebDriverException
      */
+    public function testColumnVisibilityGetSavedAndRestored(): void
+    {
+        self::setupMockSpeciesFilterData();
+        self::persistAndFlush(self::getArtisan(makerId: 'TSTMKR1', country: 'FI')->setStyles(['Toony']));
+
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1);
+
+        // Check the defaults: styles are visible, maker IDs are hidden
+        self::assertSelectorIsVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsNotVisible('//td[contains(., "TSTMKR1")]');
+
+        // Show Maker ID column, hide styles column
+        $this->client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Columns"]'))->click();
+        $this->client->findElement(WebDriverBy::linkText('Maker ID'))->click();
+        $this->client->findElement(WebDriverBy::linkText('Styles'))->click();
+
+        // Check if the change has been applied
+        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsVisible('//td[contains(., "TSTMKR1")]');
+
+        // Reload the page
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1, true);
+
+        // Check if the change has persisted between page loads
+        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsVisible('//td[contains(., "TSTMKR1")]');
+    }
+
+    /**
+     * @throws WebDriverException
+     */
     private function openCountriesFilter(): void
     {
         $this->client->findElement(WebDriverBy::cssSelector('#filter-ctrl-countries > button'))->click();

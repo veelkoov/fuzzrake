@@ -25,7 +25,7 @@ export default class ColumnsManager {
   public save(): void {
     const state = this.$toggleLinks
       .filter(".active")
-      .map((_, element): string => element.dataset["column-id"] || "")
+      .map((_, element): string => element.dataset["columnId"] || "")
       .toArray()
       .join(",");
 
@@ -49,7 +49,7 @@ export default class ColumnsManager {
 
     this.$toggleLinks.each((_, element) => {
       const $link = jQuery(element);
-      const columnId = $link.data("column-id");
+      const columnId = $link.data("columnId");
 
       if (visibleColumnIds.includes(columnId)) {
         this.showColumn($link);
@@ -62,7 +62,7 @@ export default class ColumnsManager {
   private handleVisibilityLinkClick(
     event: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>,
   ): void {
-    event.stopPropagation();
+    event.preventDefault();
 
     const $link = jQuery(event.target);
 
@@ -78,14 +78,14 @@ export default class ColumnsManager {
   private showColumn($relatedVisibilityLink: JQuery<HTMLElement>): void {
     $relatedVisibilityLink.addClass("active");
 
-    const columnId = $relatedVisibilityLink.data("column-id");
+    const columnId = $relatedVisibilityLink.data("columnId");
     this.$classesBearer.addClass(`show-${columnId}`);
   }
 
   private hideColumn($relatedVisibilityLink: JQuery<HTMLElement>): void {
     $relatedVisibilityLink.removeClass("active");
 
-    const columnId = $relatedVisibilityLink.data("column-id");
+    const columnId = $relatedVisibilityLink.data("columnId");
     this.$classesBearer.removeClass(`show-${columnId}`);
   }
 }
