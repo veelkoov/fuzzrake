@@ -11,12 +11,12 @@
 
             {{- creator.name -}}
 
-            {%- if creator.inactiveReason -%}
+            {%- if creator.isHidden -%}
                 &nbsp;[hidden] {# grep-inactive-mark #}
             {%- endif -%}
 
             <span class="text-nowrap">
-                &nbsp;{{- creator|ages_description(false) }}
+                &nbsp;{{- ages_description(creator, false) }}
 
                 {% if is_new(creator) %}
                     <span class="new-artisan"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>

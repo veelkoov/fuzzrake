@@ -11,7 +11,6 @@ use App\Service\EnvironmentsService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\Completeness;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DataQuery;
 use App\Utils\Json;
@@ -44,8 +43,6 @@ class AppExtensions extends AbstractExtension
             new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
             new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
             new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
-            new TwigFilter('jsonToArtisanParameters', $this->jsonToArtisanParametersFilter(...), SafeFor::JS), // TODO: Check if still needed
-            new TwigFilter('ages_description', $this->agesDescription(...), SafeFor::HTML),
         ];
     }
 
@@ -63,15 +60,16 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
             new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
-            new TwigFunction('isTestEnv', $this->isTestEnvFunction(...)),
-            new TwigFunction('comma_separated_other', $this->commaSeparatedOther(...)),
-            new TwigFunction('is_new', $this->isNew(...)),
+
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
-            new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
-            new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
-            new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
+            new TwigFunction('ages_description', $this->agesDescription(...), SafeFor::HTML),
+            new TwigFunction('comma_separated_other', $this->commaSeparatedOther(...)),
             new TwigFunction('completeness_text', $this->completenessText(...)),
+            new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
+            new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
+            new TwigFunction('is_new', $this->isNew(...)),
             new TwigFunction('unique_int', fn () => $this->uniqueInt++),
+            new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
         ];
     }
 
@@ -83,11 +81,6 @@ class AppExtensions extends AbstractExtension
     public function isDevOrTestEnvFunction(): bool
     {
         return $this->environments->isDevOrTest();
-    }
-
-    public function isTestEnvFunction(): bool
-    {
-        return $this->environments->isTest();
     }
 
     public function unknownValue(): string
@@ -144,7 +137,7 @@ class AppExtensions extends AbstractExtension
         return [] !== $creator->getOpenFor() || [] !== $creator->getClosedFor() ? 'Unsure' : 'Unknown';
     }
 
-    public function agesDescription(Artisan $creator, bool $addText): string
+    public function agesDescription(Creator $creator, bool $addText): string
     {
         $result = '';
 
@@ -177,14 +170,6 @@ class AppExtensions extends AbstractExtension
         }
 
         return $result;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function jsonToArtisanParametersFilter(Artisan $artisan): string
-    {
-        return trim(Json::encode(array_values($artisan->getPublicData())), '[]');
     }
 
     /**
