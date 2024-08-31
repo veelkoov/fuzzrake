@@ -16,13 +16,13 @@ export default class Checklist {
       this.refresh(),
     );
     this.isAdult = new DynamicRadio(
-      "checklist-is-adult",
+      "isAdult",
       "#checklist-age-section",
       () => this.refresh(),
       true,
     );
     this.wantsSfw = new DynamicRadio(
-      "checklist-wants-sfw",
+      "wantsSfw",
       "#checklist-nsfw-section",
       () => this.refresh(),
       true,

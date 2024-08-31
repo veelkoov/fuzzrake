@@ -27,13 +27,13 @@ class RequestParser
     ];
 
     private const BOOLEANS = [
-        'checklist-is-adult',
-        'checklist-wants-sfw',
-        'creator-mode',
+        'isAdult',
+        'wantsSfw',
+        'creatorMode',
     ];
 
     private const STRINGS = [
-        'text-search', // FIXME: Input names should be either dash-separated or camelCase, not mixed
+        'textSearch',
         'makerId',
     ];
 
@@ -55,7 +55,7 @@ class RequestParser
 
         return $this->filter->getOnlyValidChoices(new Choices(
             $strings['makerId'],
-            $strings['text-search'],
+            $strings['textSearch'],
             $strArrays['countries'],
             $strArrays['states'],
             $strArrays['languages'],
@@ -68,10 +68,10 @@ class RequestParser
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_UNKNOWN),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_SUPPORTED),
             contains($strArrays['paymentPlans'], Consts::FILTER_VALUE_PAYPLANS_NONE),
-            $booleans['checklist-is-adult'],
-            $booleans['checklist-wants-sfw'],
+            $booleans['isAdult'],
+            $booleans['wantsSfw'],
             contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
-            $booleans['creator-mode'],
+            $booleans['creatorMode'],
         ));
     }
 

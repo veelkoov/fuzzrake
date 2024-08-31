@@ -76,7 +76,7 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
 })();
 
 (function setUpAllNoneInvertLinks(): void {
-  jQuery("#filters-modal-body .allNoneInvert").on(
+  jQuery("#filters-modal-body .all-none-invert").on(
     "click",
     function (event): void {
       const $link = jQuery(event.target);

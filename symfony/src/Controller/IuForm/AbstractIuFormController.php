@@ -6,7 +6,7 @@ namespace App\Controller\IuForm;
 
 use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
-use App\Controller\Traits\CreatorByMakerIdTrait;
+use App\Controller\Traits\CreatorByCreatorIdTrait;
 use App\Data\Definitions\Fields\SecureValues;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\ArtisanRepository as CreatorRepository;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 abstract class AbstractIuFormController extends AbstractController
 {
     use ButtonClickedTrait;
-    use CreatorByMakerIdTrait;
+    use CreatorByCreatorIdTrait;
 
     public function __construct(
         protected readonly Captcha $captcha,
@@ -38,7 +38,7 @@ abstract class AbstractIuFormController extends AbstractController
 
     protected function prepareState(?string $makerId, Request $request): IuState
     {
-        $creator = null === $makerId ? new Creator() : $this->getCreatorByMakerIdOrThrow404($makerId);
+        $creator = null === $makerId ? new Creator() : $this->getCreatorByCreatorIdOrThrow404($makerId);
         $state = new IuState($this->logger, $request->getSession(), $makerId, $creator);
         SecureValues::forIuForm($state->artisan);
 

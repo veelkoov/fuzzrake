@@ -37,8 +37,8 @@ class FiltersTest extends PantherTestCaseWithEM
 
         $this->client->request('GET', '/index.php/');
 
-        $isAdult = (bool) ($filtersSet['checklist-is-adult'] ?? true);
-        $wantsSfw = (bool) ($filtersSet['checklist-wants-sfw'] ?? false);
+        $isAdult = (bool) ($filtersSet['isAdult'] ?? true);
+        $wantsSfw = (bool) ($filtersSet['wantsSfw'] ?? false);
 
         self::fillChecklist($this->client, $isAdult, $wantsSfw);
 

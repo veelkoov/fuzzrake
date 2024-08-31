@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Controller\Traits\CreatorByMakerIdTrait;
+use App\Controller\Traits\CreatorByCreatorIdTrait;
 use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Filtering\DataRequests\RequestParser;
 use App\Filtering\FiltersData\FiltersService;
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    use CreatorByMakerIdTrait;
+    use CreatorByCreatorIdTrait;
 
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
@@ -65,7 +65,7 @@ class MainController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function creatorCard(string $makerId): Response
     {
-        $creator = $this->getCreatorByMakerIdOrThrow404($makerId);
+        $creator = $this->getCreatorByCreatorIdOrThrow404($makerId);
 
         return $this->render('main/htmx/creator_card.html.twig', [
             'creator' => $creator,
@@ -76,7 +76,7 @@ class MainController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function updatesDialog(string $makerId): Response
     {
-        $creator = $this->getCreatorByMakerIdOrThrow404($makerId);
+        $creator = $this->getCreatorByCreatorIdOrThrow404($makerId);
 
         return $this->render('main/htmx/updates_dialog.html.twig', [
             'creator' => $creator,
