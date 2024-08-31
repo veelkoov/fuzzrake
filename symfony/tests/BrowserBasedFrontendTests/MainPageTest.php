@@ -81,7 +81,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         // Click the last link - data outdated
         $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
-        $this->client->waitForVisibility('#artisanUpdatesModalContent', 5);
+        $this->client->waitForVisibility('#creator-updates-modal-content', 5);
         self::assertStringContainsString('Test artisan 3 DE', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
@@ -179,10 +179,10 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->client->request('GET', '/index.php/#TEST001');
 
-        self::waitUntilShows('#artisanDetailsModal #makerId', 1000);
-        self::assertSelectorTextSame('#artisanDetailsModal #makerId', 'TEST001');
-        $this->client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
-        self::waitUntilHides('#artisanDetailsModal #makerId');
+        self::waitUntilShows('#creator-card-modal #makerId', 1000);
+        self::assertSelectorTextSame('#creator-card-modal #makerId', 'TEST001');
+        $this->client->findElement(WebDriverBy::cssSelector('#creator-card-modal-content .modal-header button'))->click();
+        self::waitUntilHides('#creator-card-modal #makerId');
     }
 
     /**
@@ -240,7 +240,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     private function openFiltersPopUp(): void
     {
-        $this->client->findElement(WebDriverBy::id('filtersButton'))->click();
+        $this->client->findElement(WebDriverBy::id('open-filters-button'))->click();
         $this->client->waitForVisibility('#filters-title', 5);
     }
 

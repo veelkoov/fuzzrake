@@ -85,10 +85,10 @@ trait MainPageTestsTrait
      */
     private static function openDataOutdatedPopupFromTheMakerCard(Client $client): void
     {
-        $reportButtonXpath = '//div[@id="artisanDetailsModalContent"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
+        $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
         $client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
-        $client->waitForVisibility('#artisanUpdatesModalContent', 5);
+        $client->waitForVisibility('#creator-updates-modal-content', 5);
     }
 
     /**
@@ -96,8 +96,8 @@ trait MainPageTestsTrait
      */
     private static function closeDataOutdatedPopUpByClickingTheCloseButton(Client $client): void
     {
-        $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
-        $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
+        $client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
+        $client->waitForInvisibility('#creator-updates-modal-content', 5);
     }
 
     private static function setupMockSpeciesFilterData(): void

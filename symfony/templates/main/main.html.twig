@@ -35,16 +35,16 @@
 
     {{ include('main/parts/legend_modal.html.twig') }}
 
-    <div id="artisanUpdatesModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="creator-updates-modal" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div id="artisanUpdatesModalContent" class="modal-content">
+            <div id="creator-updates-modal-content" class="modal-content">
             </div>
         </div>
     </div>
 
-    <div id="artisanDetailsModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="creator-card-modal" class="modal fade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
-            <div id="artisanDetailsModalContent" class="modal-content"></div>
+            <div id="creator-card-modal-content" class="modal-content"></div>
         </div>
     </div>
 
@@ -80,7 +80,7 @@
                     </ul>
                 </div>
 
-                <button id="filtersButton" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
+                <button id="open-filters-button" type="button" class="btn btn-success text-nowrap" data-bs-toggle="modal"
                         data-bs-target="#filters-modal">
                     Filters
 

@@ -42,7 +42,7 @@ class FiltersTest extends PantherTestCaseWithEM
 
         self::fillChecklist($this->client, $isAdult, $wantsSfw);
 
-        $this->client->findElement(WebDriverBy::id('filtersButton'))->click();
+        $this->client->findElement(WebDriverBy::id('open-filters-button'))->click();
         self::waitUntilShows('#filters-title');
 
         foreach ($filtersSet as $filter => $values) {

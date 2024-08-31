@@ -1,7 +1,7 @@
 {% macro update_dialog_open_attrs(maker_id) %}
     hx-get="{{ path('htmx_main_updates_dialog', {makerId: maker_id}) }}"
-    hx-target="#artisanUpdatesModal"
+    hx-target="#creator-updates-modal"
     hx-trigger="click"
     data-bs-toggle="modal"
-    data-bs-target="#artisanUpdatesModal"
+    data-bs-target="#creator-updates-modal"
 {% endmacro %}
