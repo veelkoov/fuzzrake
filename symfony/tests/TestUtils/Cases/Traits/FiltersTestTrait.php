@@ -185,13 +185,13 @@ trait FiltersTestTrait
 
             'c12' => [
                 self::getCombinedFiltersTestSet(),
-                ['wantsSfw' => true],
+                ['checklist-wants-sfw' => true],
                 ['M000001', 'M000002', 'M000003', 'M000004', 'M000005', 'M000006', 'M000007', 'M000008', 'M000009', 'M000010', 'M000012'],
             ],
 
             'c13' => [
                 self::getCombinedFiltersTestSet(),
-                ['isAdult' => false],
+                ['checklist-is-adult' => false],
                 ['M000012'],
             ],
 

@@ -60,9 +60,13 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private static function waitForLoadingIndicatorToDisappear(): void
+    private static function waitForLoadingIndicatorToDisappear(bool $checkIfShowsUp = false): void
     {
-        self::getPantherClient()->waitForInvisibility('#loading-indicator', 10);
+        if ($checkIfShowsUp) {
+            self::waitUntilShows('#loading-indicator');
+        }
+
+        self::waitUntilHides('#loading-indicator');
     }
 
     /**
@@ -70,7 +74,7 @@ trait MainPageTestsTrait
      */
     private static function openMakerCardByClickingOnTheirNameInTheTable(Client $client, string $makerName): void
     {
-        $client->findElement(WebDriverBy::xpath('//td[contains(text(), "'.$makerName.'")]'))->click();
+        $client->findElement(WebDriverBy::xpath('//td[contains(., "'.$makerName.'")]'))->click();
 
         self::waitUntilShows('#artisanName');
         self::assertSelectorTextSame('#artisanName', $makerName);

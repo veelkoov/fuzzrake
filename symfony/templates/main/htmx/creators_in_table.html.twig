@@ -9,9 +9,9 @@
         {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %}
     >
         <td class="name" {{ card_open_attrs(creator.lastMakerId) }}>
-            <span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>
+            <span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>&nbsp;
 
-            &nbsp;{{- creator.name -}}
+            {{- creator.name -}}
 
             {%- if creator.inactiveReason -%}
                 &nbsp;[hidden] {# grep-inactive-mark #}

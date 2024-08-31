@@ -61,7 +61,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->expectLoadedCreatorsTable(2, 3);
+        $this->waitExpectLoadedCreatorsTable(2, 3);
 
         self::openMakerCardByClickingOnTheirNameInTheTable($this->client, 'Test artisan 1 CZ');
         self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
@@ -90,9 +90,11 @@ class MainPageTest extends PantherTestCaseWithEM
 
         // Check if text search works
         $this->client->findElement(WebDriverBy::id('search-text-field'))->sendKeys('CZ');
-        $this->assertMakersVisibility(['TEST001'], ['TEST003']); // TEST002 doesn't exist in DOM
+        self::waitForLoadingIndicatorToDisappear();
+        $this->assertMakersVisibility(['TEST001'], ['TEST002', 'TEST003']);
         $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys('DE');
-        $this->assertMakersVisibility(['TEST003'], ['TEST001']); // TEST002 doesn't exist in DOM
+        self::waitForLoadingIndicatorToDisappear();
+        $this->assertMakersVisibility(['TEST003'], ['TEST001', 'TEST002']);
     }
 
     /**
@@ -121,7 +123,7 @@ class MainPageTest extends PantherTestCaseWithEM
         }
 
         foreach ($hiddenMakerIds as $makerId) {
-            self::assertSelectorIsNotVisible("#$makerId");
+            self::assertSelectorNotExists("#$makerId");
         }
     }
 
@@ -203,7 +205,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->assertCountriesFilterSelections(['FI', '?'], []);
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->expectLoadedCreatorsTable(1, 1);
+        $this->waitExpectLoadedCreatorsTable(1, 1);
 
         usleep(500_000); // Lame
         $this->client->request('GET', '/index.php/');
@@ -255,7 +257,7 @@ class MainPageTest extends PantherTestCaseWithEM
     /**
      * @throws WebDriverException
      */
-    private function expectLoadedCreatorsTable(int $displaying, int $outOf): void
+    private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
     {
         $locator = "//p[@id=\"artisans-table-count\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
 

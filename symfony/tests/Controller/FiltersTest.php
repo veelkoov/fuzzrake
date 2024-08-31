@@ -46,11 +46,11 @@ class FiltersTest extends WebTestCaseWithEM
             }
         }
 
-        if (!array_key_exists('wantsSfw', $filtersSet)) {
+        if (!array_key_exists('checklist-wants-sfw', $filtersSet)) {
             $queryParts[] = 'checklist-wants-sfw=0';
         }
 
-        if (!array_key_exists('isAdult', $filtersSet)) {
+        if (!array_key_exists('checklist-is-adult', $filtersSet)) {
             $queryParts[] = 'checklist-is-adult=1';
         }
 
