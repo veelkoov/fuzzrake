@@ -87,7 +87,10 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     private function applyTextSearch(QueryBuilder $builder): void
     {
-        $searchedText = str_replace(['_', '%'], '', $this->choices->textSearch); // TODO: Multibyte? TODO: Should allow searching literally
+        // FIXME: Allow searching literal _ and % (do not allow wildcards).
+        //        See https://github.com/veelkoov/fuzzrake/issues/232
+        // Assumption: we are using UTF-8, where replacing ASCII is safe.
+        $searchedText = str_replace(['_', '%'], '', $this->choices->textSearch);
 
         if ('' === $searchedText) {
             return;

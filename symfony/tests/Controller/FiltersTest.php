@@ -56,7 +56,7 @@ class FiltersTest extends WebTestCaseWithEM
 
         $query = implode('&', $queryParts);
 
-        $crawler = $client->request('GET', '/htmx/main/primary-content?'.$query);
+        $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
         $resultMakerIds = $crawler->filter('td.makerId')->each(fn ($node, $_) => trim($node->text()));

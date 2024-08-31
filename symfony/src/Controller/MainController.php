@@ -61,7 +61,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/creator-card/{makerId}', name: RouteName::HTMX_CREATOR_CARD)]
+    #[Route(path: '/htmx/main/creator-card/{makerId}', name: RouteName::HTMX_MAIN_CREATOR_CARD)]
     #[Cache(maxage: 3600, public: true)]
     public function creatorCard(string $makerId): Response
     {
@@ -72,7 +72,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/updates-dialog/{makerId}', name: RouteName::HTMX_UPDATES_DIALOG)]
+    #[Route(path: '/htmx/main/updates-dialog/{makerId}', name: RouteName::HTMX_MAIN_UPDATES_DIALOG)]
     #[Cache(maxage: 3600, public: true)]
     public function updatesDialog(string $makerId): Response
     {
@@ -83,9 +83,9 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/htmx/main/primary-content', name: RouteName::HTMX_MAIN_PRIMARY_CONTENT)]
+    #[Route(path: '/htmx/main/creators-in-table', name: RouteName::HTMX_MAIN_CREATORS_IN_TABLE)]
     #[Cache(maxage: 3600, public: true)]
-    public function htmxMainPrimaryContent(Request $request): Response
+    public function htmxCreatorsInTable(Request $request): Response
     {
         try {
             $choices = $this->requestParser->getChoices($request);

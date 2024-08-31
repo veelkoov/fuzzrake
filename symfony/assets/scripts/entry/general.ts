@@ -33,7 +33,8 @@ jQuery(() => {
   });
 
   jQuery("#btn-reenable-filters").on("click", () => {
-    // Allow reloading the page to display checklist. TODO: Optimize.
+    // Does not prevent default (link navigation -> page reload) to display the checklist.
+    // TODO: Optimize. See https://github.com/veelkoov/fuzzrake/issues/233
     config.setMakerMode(false);
     config.save();
   });

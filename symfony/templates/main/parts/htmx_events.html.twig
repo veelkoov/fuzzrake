@@ -1,11 +1,13 @@
 {% from 'main/shared_macros.html.twig' import card_open_attrs %}
 
+{# FIXME: Many filter selections break the requests. See https://github.com/veelkoov/fuzzrake/issues/185 #}
+
 <div hx-trigger="click from:#checklist-dismiss-btn"
      hx-on::before-request="jQuery('#checklist-container').addClass('d-none');"
      hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
      hx-include="#checklist-container, #filters-modal-body, #search-text-field"
 
-     hx-get="{{ path('htmx_main_primary_content') }}"
+     hx-get="{{ path('htmx_main_creators_in_table') }}"
      hx-target="#creators-table-body"
      hx-indicator="#loading-indicator"
 ></div>
@@ -13,7 +15,7 @@
 <div hx-trigger="hidden.bs.modal from:#filters-modal"
      hx-include="#checklist-container, #filters-modal-body, #search-text-field"
 
-     hx-get="{{ path('htmx_main_primary_content') }}"
+     hx-get="{{ path('htmx_main_creators_in_table') }}"
      hx-target="#creators-table-body"
      hx-indicator="#loading-indicator"
 ></div>
@@ -21,7 +23,7 @@
 <div hx-trigger="input from:#search-text-field changed delay:500ms"
      hx-include="#checklist-container, #filters-modal-body, #search-text-field"
 
-     hx-get="{{ path('htmx_main_primary_content') }}"
+     hx-get="{{ path('htmx_main_creators_in_table') }}"
      hx-target="#creators-table-body"
      hx-indicator="#loading-indicator"
 ></div>
@@ -31,7 +33,7 @@
      hx-on::after-request="jQuery('#main-primary-content').removeClass('d-none');"
      hx-include="#creator-mode-parameter-field"
 
-     hx-get="{{ path('htmx_main_primary_content') }}"
+     hx-get="{{ path('htmx_main_creators_in_table') }}"
      hx-target="#creators-table-body"
      hx-indicator="#loading-indicator"
 ></div>
