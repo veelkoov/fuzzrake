@@ -1,3 +1,4 @@
+{% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
 {% from 'main/shared_macros.html.twig' import card_open_attrs %}
 
 {% for creator in creators %}
@@ -15,13 +16,11 @@
                 &nbsp;[hidden] {# grep-inactive-mark #}
             {%- endif -%}
 
-            <span class="text-nowrap">
-                &nbsp;{{- ages_description(creator, false) }}
+            &nbsp;{{ ages_description(creator, false) }}
 
-                {% if is_new(creator) %}
-                    <span class="new-artisan"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
-                {% endif %}
-            </span>
+            {% if is_new(creator) %}
+                <span class="new-creator"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
+            {% endif %}
         </td>
 
         <td class="makerId column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>
@@ -123,15 +122,15 @@
                         {# twig-cs-fixer-disable PunctuationSpacing.After #}
                         {# Unable to disable for the following lines only #}
                         {% set links = [
+                            {uri: ab_search_uri(creator),   icon_class: 'fa-solid fa-spell-check', label: 'Check on Artists Beware'},
                             {uri: creator.fursuitReviewUrl, icon_class: 'fas fa-balance-scale',    label: 'FursuitReview'},
                             {uri: creator.websiteUrl,       icon_class: 'fas fa-link',             label: 'Official website'},
-                            {uri: ab_search_uri(creator),   icon_class: 'fa-solid fa-spell-check', label: 'Check on Artists Beware'},
-                        ] + creator.pricesUrls|map(u => {uri: u, icon_class: 'fas fa-dollar-sign', label: 'Prices'}) + [
+                        ]|merge(creator.pricesUrls|map(u => {uri: u, icon_class: 'fas fa-dollar-sign', label: 'Prices'}))|merge([
                             {uri: creator.faqUrl,           icon_class: 'fas fa-comments',         label: 'FAQ'},
                             {uri: creator.queueUrl,         icon_class: 'fas fa-clipboard-list',   label: 'Queue'},
                             {uri: creator.furAffinityUrl,   icon_class: 'fas fa-image',            label: 'FurAffinity'},
                             {uri: creator.deviantArtUrl,    icon_class: 'fab fa-deviantart',       label: 'DeviantArt'},
-                            {uri: creator.mastodonUrl,      icon_class: 'fa-brands fa-mastodon',   label: 'Mastodon'},
+                            {uri: creator.mastodonUrl,      icon_class: 'fab fa-mastodon',         label: 'Mastodon'},
                             {uri: creator.twitterUrl,       icon_class: 'fab fa-twitter',          label: 'Twitter'},
                             {uri: creator.facebookUrl,      icon_class: 'fab fa-facebook',         label: 'Facebook'},
                             {uri: creator.tumblrUrl,        icon_class: 'fab fa-tumblr',           label: 'Tumblr'},
@@ -144,7 +143,7 @@
                             {uri: creator.scritchUrl,       icon_class: 'fas fa-camera',           label: 'Scritch'},
                             {uri: creator.furtrackUrl,      icon_class: 'fas fa-camera',           label: 'Furtrack'},
                             {uri: creator.linklistUrl,      icon_class: 'fas fa-link',             label: 'List of links'},
-                        ] %}
+                        ]) %}
 
                         {% for link in links|filter(link => link.uri) %}
                             <li>
@@ -153,8 +152,6 @@
                                 </a>
                             </li>
                         {% endfor %}
-
-                        {% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
 
                         <li>
                             <a class="dropdown-item" {{ update_dialog_open_attrs(creator.lastMakerId) }}>

@@ -165,9 +165,7 @@
 
                 <div id="artisanSpecies" class="small pb-2">
                     {% if creator.speciesComment %}
-                        <span class="nl2br">
-                            {{ creator.speciesComment }}<br>
-                        </span>
+                        <span class="nl2br">{{ creator.speciesComment }}</span><br>
                     {% endif %}
 
                     {% if creator.speciesDoes %}
@@ -195,7 +193,7 @@
                 <h5>Payment plans</h5>
 
                 <div class="small pb-2">
-                    {{ _self.list_cs_opt(creator.paymentPlans) }}
+                    {{ _self.list_with_others_comment_opt(creator.paymentPlans) }}
                 </div>
 
                 <h5>Currencies</h5>
@@ -224,7 +222,7 @@
 
                 {# twig-cs-fixer-disable PunctuationSpacing.After #}
                 {# Unable to disable for the following lines only #}
-                <div id="artisanLinks">
+                <div>
                     {{ _self.link(ab_search_uri(creator), 'Check Artists Beware records', 'fas fa-balance-scale', 'border border-primary') }}
 
                     {{ _self.link(creator.fursuitReviewUrl, 'FursuitReview',    'fas fa-balance-scale', 'border border-primary') }}

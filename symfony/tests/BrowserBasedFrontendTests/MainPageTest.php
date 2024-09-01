@@ -160,9 +160,9 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->client->request('GET', '/index.php/');
         self::skipCheckListAdultAllowNsfw($this->client, 2);
 
-        self::assertSelectorExists('#MAKENEW span.new-artisan');
+        self::assertSelectorExists('#MAKENEW span.new-creator');
         self::assertSelectorExists('#MAKEOLD');
-        self::assertSelectorNotExists('#MAKEOLD span.new-artisan');
+        self::assertSelectorNotExists('#MAKEOLD span.new-creator');
     }
 
     /**

@@ -20,8 +20,6 @@
 }
 
 div#data-table-container {
-  overflow-x: auto;
-
   table .makerId,
   table .state,
   table .languages,
@@ -134,10 +132,6 @@ table#creators-table {
 
 .nl2br {
   white-space: pre-wrap;
-}
-
-#artisanLinks .url {
-  color: #007bff;
 }
 
 #creator-card-modal {
