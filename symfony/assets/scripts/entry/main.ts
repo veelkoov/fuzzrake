@@ -23,8 +23,16 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
   const creatorId = window.location.hash.slice(1);
   const type = "htmx:configRequest";
 
-  const listener = function (event: any): void {
-    if (event.detail.path.includes("_______")) {
+  const listener = function (event: unknown): void {
+    // Garbage, but safe?
+    if (
+      event instanceof Event &&
+      "detail" in event &&
+      event.detail instanceof Object &&
+      "path" in event.detail &&
+      event.detail.path instanceof String &&
+      event.detail.path.includes("_______")
+    ) {
       event.detail.path = event.detail.path.replace("_______", creatorId);
       document.body.removeEventListener(type, listener);
     }
