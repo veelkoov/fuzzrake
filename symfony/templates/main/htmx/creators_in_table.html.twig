@@ -13,13 +13,13 @@
             {{- creator.name -}}
 
             {%- if creator.isHidden -%}
-                &nbsp;[hidden] {# grep-inactive-mark #}
+                &nbsp;[hidden]{# grep-inactive-mark #}
             {%- endif -%}
 
-            &nbsp;{{ ages_description(creator, false) }}
+            <span class="text-nowrap">{{ ages_description(creator, false) }}</span>
 
             {% if is_new(creator) %}
-                <span class="new-creator"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
+                <span class="text-nowrap new-creator"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
             {% endif %}
         </td>
 
