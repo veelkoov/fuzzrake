@@ -6,15 +6,6 @@ html {
   scroll-behavior: auto !important;
 }
 
-#navbarNav:not(.show) + ul.top-menu-right {
-  flex-direction: row;
-
-  li > a {
-    padding-right: var(--bs-navbar-nav-link-padding-x);
-    padding-left: var(--bs-navbar-nav-link-padding-x);
-  }
-}
-
 div.footer {
   font-size: 75%;
 }

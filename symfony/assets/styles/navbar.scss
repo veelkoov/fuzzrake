@@ -1,10 +1,48 @@
+$navbar-bg: #f8f9fa;
+$navbar-horizontal-padding: 12px;
+$navbar-item-gap: 12px;
+
 .navbar {
+  padding: 0;
+
+  .navbar-main {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding: 16px $navbar-horizontal-padding;
+    background-color: $navbar-bg;
+    gap: $navbar-item-gap;
+
+    .nav-separator {
+      flex: 1;
+
+      &.hidden {
+        // Separator doesn't need to be measured for its width, so when the separator is hidden
+        // we should COMPLETELY hide it. If we don't do so, we'll continue to display a double
+        // gap separating the two sides
+        display: none;
+      }
+    }
+
+    .hidden {
+      visibility: hidden;
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+    }
+  }
+
   .nav-link {
     display: flex;
     align-items: center;
     gap: 0.25rem;
 
-    .navlink-label {
+    .label {
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: 1fr;
@@ -16,12 +54,12 @@
       }
     }
 
-    &.active .navlink-label .displayed,
-    .navlink-label .spacer {
+    &.active .label .displayed,
+    .label .spacer {
       font-weight: bold;
     }
 
-    .navlink-label .spacer {
+    .label .spacer {
       opacity: 0;
       user-select: none;
     }

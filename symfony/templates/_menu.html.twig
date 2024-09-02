@@ -1,28 +1,18 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-2">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {{ include('_menu_item.html.twig', {name: 'main', fa_icon: 'home', label: 'Home'}) }}
-                {{ include('_menu_item.html.twig', {name: 'info', fa_icon: 'circle-info', label: 'About'}) }}
-                {{ include('_menu_item.html.twig', {name: 'events', fa_icon: 'newspaper', label: 'News'}) }}
-                {% if isDevEnv() %}
-                    {{ include('_menu_item.html.twig', {name: 'mx_artisan_new', fa_icon: 'plus', label: 'Maker'}) }}
-                    {{ include('_menu_item.html.twig', {name: 'mx_event_new', fa_icon: 'plus', label: 'Event'}) }}
-                    {{ include('_menu_item.html.twig', {name: 'mx_artisan_urls', fa_icon: 'link', label: 'URLs'}) }}
-                    {{ include('_menu_item.html.twig', {name: 'mx_query', fa_icon: 'filter', label: 'Query'}) }}
-                    {{ include('_menu_item.html.twig', {name: 'mx_submissions', fa_icon: 'file-lines', label: 'Submissions'}) }}
-                {% endif %}
-            </ul>
-        </div>
-
-        <ul class="navbar-nav d-flex top-menu-right">
-            {{ include('_menu_item.html.twig', {name: 'iu_form_step_start', fa_icon: 'user-gear', label: 'Fursuit Makers'}) }}
-            {{ include('_menu_item.html.twig', {name: 'donate', fa_icon: 'circle-dollar-to-slot', label: 'Donate'}) }}
-            {{ include('_menu_item.html.twig', {name: 'contact', fa_icon: 'envelope', label: 'Contact'}) }}
-        </ul>
+<nav id="navbar" class="navbar mb-2">
+    <div class="navbar-main navbar-nav">
+        {{ include('_menu_item.html.twig', {name: 'main', fa_icon: 'home', label: 'Home', priority: 'high'}) }}
+        {{ include('_menu_item.html.twig', {name: 'info', fa_icon: 'circle-info', label: 'About', priority: 'high'}) }}
+        {{ include('_menu_item.html.twig', {name: 'events', fa_icon: 'newspaper', label: 'News', priority: 'high'}) }}
+        {% if isDevEnv() %}
+            {{ include('_menu_item.html.twig', {name: 'mx_artisan_new', fa_icon: 'plus', label: 'Maker', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_event_new', fa_icon: 'plus', label: 'Event', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_artisan_urls', fa_icon: 'link', label: 'URLs', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_query', fa_icon: 'filter', label: 'Query', priority: 'low'}) }}
+            {{ include('_menu_item.html.twig', {name: 'mx_submissions', fa_icon: 'file-lines', label: 'Submissions', priority: 'low'}) }}
+        {% endif %}
+        <div class="nav-separator"></div>
+        {{ include('_menu_item.html.twig', {name: 'iu_form_step_start', fa_icon: 'user-gear', label: 'Fursuit Makers', priority: 'medium'}) }}
+        {{ include('_menu_item.html.twig', {name: 'donate', fa_icon: 'circle-dollar-to-slot', label: 'Donate', priority: 'medium'}) }}
+        {{ include('_menu_item.html.twig', {name: 'contact', fa_icon: 'envelope', label: 'Contact', priority: 'medium'}) }}
     </div>
 </nav>
