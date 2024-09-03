@@ -1,9 +1,13 @@
+@use "sass:color";
+
 $navbar-bg: #f8f9fa;
 $navbar-horizontal-padding: 12px;
 $navbar-item-gap: 12px;
+$menu-z-index: 100;
 
 .navbar {
   padding: 0;
+  position: relative;
 
   .navbar-main {
     flex: 1;
@@ -29,11 +33,66 @@ $navbar-item-gap: 12px;
       }
     }
 
+    .nav-overflow-menu-button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: transform 150ms;
+      color: var(--bs-nav-link-color);
+
+      &:hover,
+      &:focus {
+        color: var(--bs-nav-link-hover-color);
+      }
+
+      &.isOpen {
+        transform: scaleY(-100%);
+      }
+    }
+
     .hidden {
       visibility: hidden;
       position: absolute;
       pointer-events: none;
       user-select: none;
+    }
+  }
+
+  .nav-menu-backdrop {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 100%);
+    z-index: #{$menu-z-index - 1};
+    background: rgba(white, 0.75);
+
+    &.visible {
+      display: block;
+    }
+  }
+
+  .nav-menu {
+    position: absolute;
+    display: none;
+    right: 16px;
+    bottom: 0;
+    transform: translateY(100%);
+    z-index: $menu-z-index;
+    background-color: color.scale($color: $navbar-bg, $lightness: 50%);
+    border: 1px solid var(--bs-border-color);
+    border-top: 0;
+    padding: 8px $navbar-horizontal-padding;
+
+    &.visible {
+      display: block;
+    }
+
+    .hidden {
+      // Hidden items in the dropdown menu don't need to be displayed at all,
+      // since we aren't using them to measure with
+      display: none;
     }
   }
 
@@ -67,5 +126,14 @@ $navbar-item-gap: 12px;
     i.fas {
       font-size: 1.2rem;
     }
+  }
+}
+
+body.nav-menu-open {
+  overflow: hidden;
+  pointer-events: none;
+
+  .navbar {
+    pointer-events: all;
   }
 }

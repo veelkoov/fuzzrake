@@ -1,5 +1,7 @@
 import NavbarElement from "./NavbarElement";
 import NavbarLink, { NavbarLinkPriority } from "./NavbarLink";
+import NavbarOverflowMenuButton from "./NavbarOverflowMenuButton";
+import Menu from "./Menu";
 
 const ITEM_GAP_PX = 12;
 
@@ -12,9 +14,11 @@ const PRIORITY_NUMBER: Record<NavbarLinkPriority, number> = {
 function parseMainChildren(children: NodeListOf<ChildNode>): {
   links: readonly HTMLAnchorElement[];
   separator: HTMLDivElement;
+  overflowMenuButton: HTMLButtonElement;
 } {
   const links: HTMLAnchorElement[] = [];
   let separator: HTMLDivElement | null = null;
+  let overflowMenuButton: HTMLButtonElement | null = null;
   for (const child of children) {
     if (child instanceof Text && !child.textContent?.trim()) {
       continue;
@@ -36,6 +40,14 @@ function parseMainChildren(children: NodeListOf<ChildNode>): {
       continue;
     }
 
+    if (
+      child instanceof HTMLButtonElement &&
+      child.className === "nav-overflow-menu-button"
+    ) {
+      overflowMenuButton = child;
+      continue;
+    }
+
     // Prefer throwing an error over error supression. The reason for this is
     // that our algorithm expects to know how to calculate the size/layout of
     // the navbar. If we have extra elements in there we don't know about, our
@@ -49,7 +61,11 @@ function parseMainChildren(children: NodeListOf<ChildNode>): {
     throw new Error("Could not find navbar separator");
   }
 
-  return { separator, links };
+  if (!overflowMenuButton) {
+    throw new Error("Could not find navbar overflow menu button");
+  }
+
+  return { separator, links, overflowMenuButton };
 }
 
 class Navbar {
@@ -64,18 +80,40 @@ class Navbar {
       throw new Error("Cannot find navbar nav container");
     }
 
-    return new Navbar(main);
+    const menuNode = root.querySelector("div.nav-menu");
+    if (!(menuNode instanceof HTMLDivElement)) {
+      throw new Error("Cannot find navbar menu node");
+    }
+
+    const menuBackdropNode = root.querySelector("div.nav-menu-backdrop");
+    if (!(menuBackdropNode instanceof HTMLDivElement)) {
+      throw new Error("Cannot find navbar menu backdrop");
+    }
+
+    return new Navbar(main, menuNode, menuBackdropNode);
   }
 
   private readonly resizeObserver: ResizeObserver;
   private readonly separator: NavbarElement<HTMLDivElement>;
   private readonly prioritizedLinks: readonly NavbarLink[];
+  private readonly overflowMenuButton: NavbarOverflowMenuButton;
+  private readonly menu: Menu;
 
-  private constructor(main: HTMLDivElement) {
-    const { separator, links } = parseMainChildren(main.childNodes);
+  private constructor(
+    main: HTMLDivElement,
+    menuNode: HTMLDivElement,
+    menuBackdropNode: HTMLDivElement,
+  ) {
+    const { separator, links, overflowMenuButton } = parseMainChildren(
+      main.childNodes,
+    );
+    this.menu = new Menu(menuNode, menuBackdropNode);
+    this.overflowMenuButton = new NavbarOverflowMenuButton(overflowMenuButton);
+    this.overflowMenuButton.connect(this.menu);
+
     this.separator = new NavbarElement(separator);
     this.prioritizedLinks = links
-      .map((node) => new NavbarLink(node))
+      .map((node) => new NavbarLink(node, this.menu.cloneAppend(node)))
       .sort(
         (a, b) => PRIORITY_NUMBER[a.priority] - PRIORITY_NUMBER[b.priority],
       );
@@ -87,6 +125,8 @@ class Navbar {
   }
 
   private layout(contentWidth: number): void {
+    const { width: overflowMenuButtonWidth } = this.overflowMenuButton;
+
     // Figure out which items we have room for
     let remainingWidth = contentWidth;
     let visibleIndex = 0;
@@ -99,7 +139,11 @@ class Navbar {
             // visible -- that is, we have 2 DOM nodes becoming visible, not just 1,
             // which means we have additional CSS `gap` to consider when measuring
             ITEM_GAP_PX
-          : 0;
+          : // If we don't know yet that we're able to fit ALL of the items on the navbar,
+            // we'll make sure to reserve space for the overflow button. ONLY IF we're
+            // looking at the final item (which, if it fits, means we don't need the
+            // overflow button) do we omit the overflow button.
+            overflowMenuButtonWidth + ITEM_GAP_PX;
 
       // If we can't fit the item, then we're finished
       if (
@@ -125,6 +169,12 @@ class Navbar {
     // not able to display all of our items, we don't have enough room to separate
     // them out into different sides
     this.separator.setVisible(visibleIndex === this.prioritizedLinks.length);
+
+    // If any navbar items aren't visible, then we'll show the overflow menu
+    // button
+    this.overflowMenuButton.setVisible(
+      visibleIndex < this.prioritizedLinks.length,
+    );
   }
 }
 
