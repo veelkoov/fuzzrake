@@ -1,4 +1,7 @@
 type MenuListener = (isOpen: boolean) => void;
+export type UnsubscribeFn = () => void;
+
+type MenuMode = "dropdown" | "drawer";
 
 export interface MenuItem {
   setVisible(visible: boolean): void;
@@ -18,6 +21,18 @@ class Menu {
 
   public get isOpen(): boolean {
     return this.node.classList.contains("visible");
+  }
+
+  public get mode(): MenuMode {
+    if (this.node.classList.contains("nav-dropdown-menu")) {
+      return "dropdown";
+    }
+
+    if (this.node.classList.contains("nav-drawer-menu")) {
+      return "drawer";
+    }
+
+    throw new Error("Unknown current nav menu mode");
   }
 
   public show(): void {
@@ -42,8 +57,20 @@ class Menu {
     this.listeners.forEach((listener) => listener(false));
   }
 
-  public subscribe(listener: MenuListener): void {
+  public subscribe(listener: MenuListener): UnsubscribeFn {
     this.listeners.add(listener);
+    return (): void => {
+      this.listeners.delete(listener);
+    };
+  }
+
+  public setMode(mode: MenuMode): void {
+    if (this.mode === mode) {
+      return;
+    }
+
+    this.node.classList.toggle("nav-dropdown-menu", mode === "dropdown");
+    this.node.classList.toggle("nav-drawer-menu", mode === "drawer");
   }
 
   public cloneAppend(origItem: HTMLElement): MenuItem {
