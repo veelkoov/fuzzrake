@@ -22,6 +22,16 @@ $menu-z-index: 100;
     background-color: $navbar-bg;
     gap: $navbar-item-gap;
 
+    &:not(.initialized) {
+      // Visually hide the contents of the navbar until we've run our layout function at least
+      // once in JS. If we don't do that, users will see the initial render frame flicker with
+      // all of the navbar items, and then immediately update after we run the layout.
+      // The delay isn't enough that most people will perceive the items not being there for
+      // the first render frame, but it IS enough to the navbar items be there and then
+      // disappear.
+      opacity: 0;
+    }
+
     .nav-separator {
       flex: 1;
 

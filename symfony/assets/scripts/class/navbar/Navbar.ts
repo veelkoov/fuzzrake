@@ -126,7 +126,7 @@ class Navbar {
   private activeLayoutStrategy: LayoutStrategy | null = null;
 
   private constructor(
-    main: HTMLDivElement,
+    private readonly main: HTMLDivElement,
     menuNode: HTMLDivElement,
     menuBackdropNode: HTMLDivElement,
   ) {
@@ -181,6 +181,10 @@ class Navbar {
 
     // Have the guaranteed now-correct active strategy run its update
     this.activeLayoutStrategy.update(event);
+
+    // If we haven't marked the main DOM node as being initialized already, do
+    // so now that we've for-sure run our update at least once
+    this.main.classList.add("initialized"); // Only appends if not present
   }
 }
 
