@@ -29,6 +29,12 @@ class RequestParser
     private const BOOLEANS = [
         'isAdult',
         'wantsSfw',
+        'creatorMode',
+    ];
+
+    private const STRINGS = [
+        'textSearch',
+        'makerId',
     ];
 
     public function __construct(
@@ -44,11 +50,12 @@ class RequestParser
         $dataShape = Type\shape(Dict\from_keys(self::BOOLEANS, fn ($_) => Type\bool()));
         $booleans = $dataShape->coerce(self::getBooleansFromRequest($request));
 
-        $dataShape = Type\string();
-        $makerId = $dataShape->coerce($request->get('makerId', ''));
+        $dataShape = Type\shape(Dict\from_keys(self::STRINGS, fn ($_) => Type\string()));
+        $strings = $dataShape->coerce(self::getStringsFromRequest($request));
 
         return $this->filter->getOnlyValidChoices(new Choices(
-            $makerId,
+            $strings['makerId'],
+            $strings['textSearch'],
             $strArrays['countries'],
             $strArrays['states'],
             $strArrays['languages'],
@@ -64,6 +71,7 @@ class RequestParser
             $booleans['isAdult'],
             $booleans['wantsSfw'],
             contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
+            $booleans['creatorMode'],
         ));
     }
 
@@ -75,5 +83,10 @@ class RequestParser
     private static function getBooleansFromRequest(Request $request): mixed
     {
         return Dict\from_keys(self::BOOLEANS, fn ($reqKey) => $request->get($reqKey, false));
+    }
+
+    private static function getStringsFromRequest(Request $request): mixed
+    {
+        return Dict\from_keys(self::STRINGS, fn ($reqKey) => $request->get($reqKey, ''));
     }
 }

@@ -16,17 +16,8 @@
 
     <script>
         const DATA_BRIDGE = {
-            mainPath: '{{ path('main')|escape('js') }}',
             apiBaseUrl: '{{ url('api')|escape('js') }}',
-            shouldKnowPath: '{{ path('should_know')|escape('js') }}',
-            trackingPath: '{{ path('tracking')|escape('js') }}',
-            trackingLimitationsPath: '{{ path('tracking', { _fragment: 'tracking_limitations' })|escape('js') }}',
             googleRecaptchaSiteKey: '{{ google_recaptcha_site_key|escape('js') }}',
-            iuFormRedirectUrl: '{{ url('iu_form_step_start', { makerId: 'MAKER_ID' })|escape('js') }}',
-            feedbackFormPath: '{{ path('feedback_form', { maker: 'MAKER_ID' })|escape('js') }}', {# grep-maker-query-parameter #}
-            artisanEditPath: '{{ path('mx_artisan_edit', { makerId: 'MAKER_ID' })|escape('js') }}',
-            trackingFailedImgSrc: '{{ asset('images/parsing_failed.webp')|escape('js') }}',
-            environment: '{{ isDevEnv() ? 'dev' : 'prod' }}',
         };
     </script>
 
@@ -36,7 +27,7 @@
 </head>
 
 <body>
-    {% include '_menu.html.twig' %}
+    {{ include('_menu.html.twig') }}
 
     <div class="container">
         {% block body %}{% endblock %}
@@ -44,7 +35,7 @@
         <hr class="mt-5" />
         <p class="small mb-5 text-end"><a class="text-light" href="https://open.spotify.com/track/4YhNnmiTEmluiMBJnI2YnF?si=e6e96666ac544ab9"><i class="fa-solid fa-music"></i></a></p>
 
-        {% include '_footer.html.twig' %}
+        {{ include('_footer.html.twig') }}
     </div>
 
     {% block javascripts %}

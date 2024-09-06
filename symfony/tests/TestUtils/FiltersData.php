@@ -16,10 +16,16 @@ use Nette\StaticClass;
 use Psl\Dict;
 use Psl\Iter;
 use Psl\Vec;
+use RuntimeException;
 
 class FiltersData
 {
     use StaticClass;
+
+    public static function getMockSpecies(): KotlinData
+    {
+        return self::getSpeciesFilterKotlinData([]);
+    }
 
     /**
      * Species, specie <-> creator relationships, and species filter data is generated in Kotlin.
@@ -28,8 +34,6 @@ class FiltersData
      * @param list<Creator> $creators
      *
      * @return list<Specie|CreatorSpecie|KotlinData>
-     *
-     * @throws JsonException
      */
     public static function entitiesFrom(array $creators): array
     {
@@ -85,8 +89,6 @@ class FiltersData
 
     /**
      * @param list<string> $specieNames
-     *
-     * @throws JsonException
      */
     private static function getSpeciesFilterKotlinData(array $specieNames): KotlinData
     {
@@ -101,9 +103,8 @@ class FiltersData
             ];
         }
 
-        return (new KotlinData())
-            ->setName(KotlinDataRepository::SPECIES_FILTER)
-            ->setData(Json::encode([
+        try {
+            $data = Json::encode([
                 'items' => [
                     [
                         'label' => 'Most species',
@@ -120,6 +121,13 @@ class FiltersData
                         'type' => 'unknown',
                     ],
                 ],
-            ]));
+            ]);
+        } catch (JsonException $exception) {
+            throw new RuntimeException(previous: $exception);
+        }
+
+        return (new KotlinData())
+            ->setName(KotlinDataRepository::SPECIES_FILTER)
+            ->setData($data);
     }
 }

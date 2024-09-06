@@ -45,6 +45,7 @@ class FiltersValidChoicesFilter
 
         return new Choices(
             $choices->makerId,
+            $choices->textSearch,
             $countries,
             $states,
             $languages,
@@ -60,6 +61,7 @@ class FiltersValidChoicesFilter
             $choices->isAdult,
             $choices->wantsSfw,
             $choices->wantsInactive,
+            $choices->creatorMode,
         );
     }
 

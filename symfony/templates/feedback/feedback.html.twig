@@ -16,9 +16,9 @@
 {% block body %}
     <h1>Feedback form</h1>
 
-    {% include 'shared_parts/ooo_notice.html.twig' %}
+    {{ include('shared_parts/ooo_notice.html.twig') }}
 
-    {% include 'shared_parts/big_scary_error.html.twig' %}
+    {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 

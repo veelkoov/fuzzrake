@@ -1,0 +1,24 @@
+<div class="modal-dialog">
+    <div id="creator-updates-modal-content" class="modal-content">
+        <div class="modal-header">
+            <h5 id="updateRequestLabel" class="modal-title">
+                Outdated/inaccurate information:<br>
+                {{ creator.name }}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+            <p>
+                <strong>If you are the maker - please</strong> <a href="{{ path('iu_form_step_start', {makerId: creator.lastMakerId}) }}">fill the update form</a>.
+            </p>
+            <p>
+                Otherwise, you can <a href="{{ path('feedback_form', {maker: creator.lastMakerId}) }}" target="_blank">submit the feedback form</a>. {# grep-maker-query-parameter #}
+            </p>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

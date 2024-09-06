@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\BrowserBasedFrontendTests\Traits;
 
+use App\Tests\TestUtils\FiltersData;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
@@ -64,9 +65,13 @@ trait MainPageTestsTrait
     /**
      * @throws WebDriverException
      */
-    private static function waitForLoadingIndicatorToDisappear(): void
+    private static function waitForLoadingIndicatorToDisappear(bool $checkIfShowsUp = false): void
     {
-        self::getPantherClient()->waitForInvisibility('#loading-indicator-container', 10);
+        if ($checkIfShowsUp) {
+            self::waitUntilShows('#loading-indicator', 0);
+        }
+
+        self::waitUntilHides('#loading-indicator');
     }
 
     /**
@@ -74,7 +79,7 @@ trait MainPageTestsTrait
      */
     private static function openMakerCardByClickingOnTheirNameInTheTable(Client $client, string $makerName): void
     {
-        $client->findElement(WebDriverBy::xpath('//td[contains(text(), "'.$makerName.'")]'))->click();
+        $client->findElement(WebDriverBy::xpath('//td[contains(., "'.$makerName.'")]'))->click();
 
         self::waitUntilShows('#artisanName');
         self::assertSelectorTextSame('#artisanName', $makerName);
@@ -85,10 +90,10 @@ trait MainPageTestsTrait
      */
     private static function openDataOutdatedPopupFromTheMakerCard(Client $client): void
     {
-        $reportButtonXpath = '//div[@id="artisanDetailsModalContent"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
+        $reportButtonXpath = '//div[@id="creator-card-modal-content"]//button[normalize-space(text()) = "Data outdated/inaccurate?"]';
 
         $client->findElement(WebDriverBy::xpath($reportButtonXpath))->click();
-        $client->waitForVisibility('#artisanUpdatesModalContent', 5);
+        $client->waitForVisibility('#creator-updates-modal-content', 5);
     }
 
     /**
@@ -96,7 +101,35 @@ trait MainPageTestsTrait
      */
     private static function closeDataOutdatedPopUpByClickingTheCloseButton(Client $client): void
     {
-        $client->findElement(WebDriverBy::cssSelector('#artisanUpdatesModalContent .modal-footer > button'))->click();
-        $client->waitForInvisibility('#artisanUpdatesModalContent', 5);
+        $client->findElement(WebDriverBy::cssSelector('#creator-updates-modal-content .modal-footer > button'))->click();
+        $client->waitForInvisibility('#creator-updates-modal-content', 5);
+    }
+
+    private static function setupMockSpeciesFilterData(): void
+    {
+        self::persistAndFlush(FiltersData::getMockSpecies());
+    }
+
+    /**
+     * @param list<string> $visibleCreatorIds
+     * @param list<string> $hiddenCreatorIds
+     */
+    private function assertMakersVisibility(array $visibleCreatorIds, array $hiddenCreatorIds): void
+    {
+        foreach ($visibleCreatorIds as $creatorId) {
+            self::assertSelectorIsVisible("#$creatorId");
+        }
+
+        foreach ($hiddenCreatorIds as $creatorId) {
+            self::assertSelectorNotExists("#$creatorId", "#$creatorId exists");
+        }
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    private function clearTypeInTextSearch(string $searchedText): void
+    {
+        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys($searchedText);
     }
 }

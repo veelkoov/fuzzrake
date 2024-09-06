@@ -10,6 +10,6 @@ data class SpecialItem(
     val count: Int,
 ) {
     companion object {
-        fun newUnknown(count: Int) = SpecialItem("Unknown", FILTER_VALUE_UNKNOWN, count)
+        fun newUnknown(count: Int) = SpecialItem("Unknown", FILTER_VALUE_UNKNOWN, count) // grep-special-label-unknown
     }
 }

@@ -17,15 +17,15 @@
 {% block body %}
     <h1>{{ block('title')|capitalize }}</h1>
 
-    {% include 'shared_parts/big_scary_error.html.twig' %}
+    {{ include('shared_parts/big_scary_error.html.twig') }}
 
     {{ form_start(form) }}
 
-    {% include 'iu_form/shared_parts/session_info.html.twig' %}
+    {{ include('iu_form/shared_parts/session_info.html.twig') }}
 
-    {% include 'iu_form/shared_parts/form_errors_top.html.twig' %}
+    {{ include('iu_form/shared_parts/form_errors_top.html.twig') }}
 
-    {% include('iu_form/iu_form_parts/instructions.html.twig') %}
+    {{ include(('iu_form/iu_form_parts/instructions.html.twig')) }}
 
     <h2 class="mt-4">General info</h2>
 

@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\Traits\FiltersTestTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\FiltersData;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Json;
 use JsonException;
 
 /**
@@ -29,7 +28,7 @@ class FiltersTest extends WebTestCaseWithEM
      *
      * @throws JsonException
      */
-    public function testFiltersThroughApi(array $artisans, array $filtersSet, array $expectedMakerIds): void
+    public function testFiltersThroughHtmx(array $artisans, array $filtersSet, array $expectedMakerIds): void
     {
         $client = static::createClient();
 
@@ -57,22 +56,10 @@ class FiltersTest extends WebTestCaseWithEM
 
         $query = implode('&', $queryParts);
 
-        $client->request('GET', '/api/artisans-array.json?'.$query);
+        $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        self::assertEquals('application/json', $client->getResponse()->headers->get('content-type'));
-        $content = $client->getResponse()->getContent();
-        self::assertNotFalse($content);
-
-        $data = Json::decode($content);
-        self::assertIsArray($data);
-
-        $resultMakerIds = [];
-
-        foreach ($data as $artisanData) {
-            $resultMakerIds[] = $artisanData[0];
-        }
-
+        $resultMakerIds = $crawler->filter('td.makerId')->each(fn ($node, $_) => trim($node->text()));
         self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }
 }

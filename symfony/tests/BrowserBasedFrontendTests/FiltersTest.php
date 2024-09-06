@@ -12,7 +12,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use JsonException;
-use Symfony\Component\Panther\Client;
 
 /**
  * @large
@@ -33,41 +32,38 @@ class FiltersTest extends PantherTestCaseWithEM
      */
     public function testFiltersInBrowser(array $artisans, array $filtersSet, array $expectedMakerIds): void
     {
-        $client = static::createPantherClient();
-        self::setWindowSize($client, 1600, 900);
-
         self::persistAndFlush(...$artisans, ...FiltersData::entitiesFrom($artisans));
         $this->clearCache();
 
-        $client->request('GET', '/index.php/');
+        $this->client->request('GET', '/index.php/');
 
         $isAdult = (bool) ($filtersSet['isAdult'] ?? true);
         $wantsSfw = (bool) ($filtersSet['wantsSfw'] ?? false);
 
-        self::fillChecklist($client, $isAdult, $wantsSfw);
+        self::fillChecklist($this->client, $isAdult, $wantsSfw);
 
-        $client->findElement(WebDriverBy::id('filtersButton'))->click();
-        self::waitUntilShows('#filtersTitle');
+        $this->client->findElement(WebDriverBy::id('open-filters-button'))->click();
+        self::waitUntilShows('#filters-title');
 
         foreach ($filtersSet as $filter => $values) {
             if (is_bool($values)) {
                 continue;
             }
 
-            $client->findElement(WebDriverBy::cssSelector("#filter-ctrl-$filter > button"))->click();
+            $this->client->findElement(WebDriverBy::cssSelector("#filter-ctrl-$filter > button"))->click();
             self::waitUntilShows("#filter-body-$filter");
 
             if ('species' === $filter) {
-                $this->toggleSpecies($client, 'Most species');
+                $this->toggleSpecies('Most species');
             }
 
             foreach ($values as $value) {
-                $client->findElement(WebDriverBy::xpath("//input[@name=\"{$filter}[]\"][@value=\"$value\"]"))->click();
+                $this->client->findElement(WebDriverBy::xpath("//input[@name=\"{$filter}[]\"][@value=\"$value\"]"))->click();
             }
         }
 
-        $client->findElement(WebDriverBy::xpath('//button[text() = "Apply"]'))->click();
-        self::waitUntilHides('#filtersTitle', 1000);
+        $this->client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
+        self::waitUntilHides('#filters-title', 1000);
         self::waitForLoadingIndicatorToDisappear();
 
         self::assertSelectorTextContains('#artisans-table-count', 'Displaying '.count($expectedMakerIds).' out of');
@@ -80,11 +76,11 @@ class FiltersTest extends PantherTestCaseWithEM
     /**
      * @throws WebDriverException
      */
-    private function toggleSpecies(Client $client, string ...$specieNames): void
+    private function toggleSpecies(string ...$specieNames): void
     {
         foreach ($specieNames as $specieName) {
             $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/span[contains(@class, "toggle")]';
-            $client->findElement(WebDriverBy::xpath($xpath))->click();
+            $this->client->findElement(WebDriverBy::xpath($xpath))->click();
 
             $xpath = '//input[@value="'.$specieName.'"]/ancestor::div[@role="group"]/following-sibling::fieldset';
             self::waitUntilShows($xpath);

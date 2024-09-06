@@ -1,3 +1,7 @@
+// https://getbootstrap.com/docs/5.3/customize/optimize/#lean-sass-imports
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
 .intro-updated-info {
   color: #6c757d;
   font-size: 0.7em;
@@ -17,11 +21,35 @@
   }
 }
 
-div#data-table-container-closest {
-  overflow-x: auto;
+div#data-table-container {
+  table .makerId,
+  table .state,
+  table .languages,
+  table .productionModels,
+  table .styles,
+  table .types,
+  table .features,
+  table .species,
+  table .commissions,
+  table .links {
+    display: none;
+  }
+
+  table.show-makerId .makerId,
+  table.show-state .state,
+  table.show-languages .languages,
+  table.show-productionModels .productionModels,
+  table.show-styles .styles,
+  table.show-types .types,
+  table.show-features .features,
+  table.show-species .species,
+  table.show-commissions .commissions,
+  table.show-links .links {
+    display: table-cell;
+  }
 }
 
-table#artisans {
+table#creators-table {
   thead {
     th {
       vertical-align: middle;
@@ -29,13 +57,15 @@ table#artisans {
   }
 
   &.table-striped > tbody > tr.inactive:nth-of-type(odd) > *,
-  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * { // odd+even suppress table-striped
+  &.table-striped > tbody > tr.inactive:nth-of-type(even) > * {
+    // odd+even suppress table-striped
     color: #888;
   }
 
   &.table-striped > tbody > tr.inactive:hover:nth-of-type(odd) > *,
-  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * { // odd+even suppress table-striped
-    color: #212529
+  &.table-striped > tbody > tr.inactive:hover:nth-of-type(even) > * {
+    // odd+even suppress table-striped
+    color: #212529;
   }
 
   tbody {
@@ -52,11 +82,18 @@ table#artisans {
       vertical-align: middle;
     }
 
-    td.features, td.types, td.styles, td.productionModels, td.languages, td.species, td.commissions {
+    td.features,
+    td.types,
+    td.styles,
+    td.productionModels,
+    td.languages,
+    td.species,
+    td.commissions {
       font-size: 75%;
     }
 
-    td.species, td.commissions {
+    td.species,
+    td.commissions {
       ul {
         list-style: none;
         padding: 0;
@@ -95,11 +132,11 @@ table#artisans {
   }
 }
 
-#artisanLinks .url {
-  color: #007bff;
+.nl2br {
+  white-space: pre-wrap;
 }
 
-#artisanDetailsModal {
+#creator-card-modal {
   #makerId {
     font-size: 80%;
     font-family: monospace;
@@ -129,9 +166,15 @@ table#artisans {
         object-fit: cover;
       }
 
-      img[src$="#r90"]  { transform: rotate(90deg); }
-      img[src$="#r180"] { transform: rotate(180deg); }
-      img[src$="#r270"] { transform: rotate(270deg); }
+      img[src$="#r90"] {
+        transform: rotate(90deg);
+      }
+      img[src$="#r180"] {
+        transform: rotate(180deg);
+      }
+      img[src$="#r270"] {
+        transform: rotate(270deg);
+      }
 
       img[src$="#0050r90"] {
         transform: rotate(90deg);
@@ -217,4 +260,77 @@ table#artisans {
   .inaccurate {
     color: #ffc107;
   }
+}
+
+#filters-modal-body {
+  fieldset legend {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0;
+    padding-top: 0.5rem;
+  }
+
+  .count {
+    font-size: 90%;
+    color: #aaa;
+  }
+
+  .species {
+    .specie {
+      margin: 0.5ex 0.5ex 0 0;
+
+      label {
+        margin: 0 0 0 0.5ex;
+      }
+
+      button.toggle {
+        padding-left: 2ex;
+        padding-right: 2ex;
+      }
+    }
+
+    .subspecies {
+      margin-left: 1.5em;
+      display: none;
+    }
+  }
+
+  .all-none-invert {
+    font-size: 90%;
+    font-weight: normal;
+    color: #aaa;
+  }
+
+  .all-none-invert.countries {
+    padding-left: 1em;
+  }
+
+  .all-none-invert.simple {
+    float: right;
+  }
+}
+
+.htmx-indicator {
+  display: none;
+
+  position: fixed;
+  padding: 20px;
+  left: 0;
+  right: 0;
+  top: 0;
+
+  // Fixes situation on narrow screens when the filters button being focused
+  // after closing the filters modal overlaps the loading indicator
+  z-index: $zindex-toast + 10;
+
+  > div {
+    width: 250px;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: block;
 }

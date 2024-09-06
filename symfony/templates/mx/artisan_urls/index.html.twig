@@ -35,7 +35,7 @@
 
                 <tr>
                     <td>
-                        <a href="{{ path('mx_artisan_edit', { 'id': url.artisan.id }) }}">{{ url.artisan.makerId|default((url.artisan|smart).lastMakerId) }}</a><br>
+                        <a href="{{ path('mx_artisan_edit', {id: url.artisan.id}) }}">{{ url.artisan.makerId|default((url.artisan|smart).lastMakerId) }}</a><br>
                         {{ url.artisan.contactAllowed|default('NO') }}
                     </td>
                     <td class="text-nowrap {{ class }}">

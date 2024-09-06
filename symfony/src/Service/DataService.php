@@ -30,7 +30,7 @@ class DataService
 
     public function getMainPageStats(): MainPageStats
     {
-        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::CODE, CacheTags::TRACKING], // FIXME: CODE - false
+        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::TRACKING],
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();

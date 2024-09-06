@@ -30,6 +30,12 @@ class QueryChoicesAppender
 
     public function applyChoices(QueryBuilder $builder): void
     {
+        $this->applyTextSearch($builder); // Text search should work in the maker mode
+
+        if ($this->choices->creatorMode) {
+            return; // Just return everything
+        }
+
         $this->applyMakerId($builder);
         $this->applyCountries($builder);
         $this->applyStates($builder);
@@ -63,6 +69,33 @@ class QueryChoicesAppender
             ))
                 ->setParameter('makerId', $this->choices->makerId);
         }
+    }
+
+    private function applyTextSearch(QueryBuilder $builder): void
+    {
+        // FIXME: Allow searching literal _ and % (do not allow wildcards).
+        //        See https://github.com/veelkoov/fuzzrake/issues/232
+        // Assumption: we are using UTF-8, where replacing ASCII is safe.
+        $searchedText = str_replace(['_', '%'], '', $this->choices->textSearch);
+
+        if ('' === $searchedText) {
+            return;
+        }
+
+        $searchedText = '%'.mb_strtoupper($searchedText).'%';
+
+        $builder->andWhere($builder->expr()->orX(
+            'UPPER(a.name) LIKE :searchedText',
+            'UPPER(a.formerly) LIKE :searchedText',
+            $builder->expr()->exists(
+                $this->createSubqueryBuilder($builder, 'a5')
+                ->select('1')
+                ->join('a5.makerIds', 'a5mi1')
+                ->where('a5.id = a.id')
+                ->andWhere('a5mi1.makerId LIKE :searchedText')
+            ),
+        ))
+            ->setParameter('searchedText', $searchedText);
     }
 
     private function applyCountries(QueryBuilder $builder): void

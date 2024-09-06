@@ -1,9 +1,9 @@
 export default interface RadioInterface {
-    val(): null|string;
+  val(): null | string;
 
-    isVal(value: string): boolean;
+  isVal(value: string): boolean;
 
-    isAnySelected(): boolean;
+  isAnySelected(): boolean;
 
-    selectedIdx(): number;
+  selectedIdx(): number;
 }

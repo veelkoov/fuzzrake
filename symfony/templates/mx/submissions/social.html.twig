@@ -2,7 +2,7 @@
 
 {% block title %}Social{% endblock %}
 
-{% set maker_s = artisans | length > 1 ? 'makers' : 'maker' %}
+{% set maker_s = artisans|length > 1 ? 'makers' : 'maker' %}
 
 {% block body %}
     <h1>{{ block('title') }}</h1>
@@ -21,7 +21,7 @@
                 {% for artisan in artisans %}
                     - [getfursu.it/#{{ artisan.makerId }}](https://getfursu.it/#{{ artisan.makerId }})
                     {% if '' != artisan.tumblrUrl %}
-                        {{ artisan.tumblrUrl | tumblr_at }}
+                        {{ artisan.tumblrUrl|tumblr_at }}
                     {% endif %}
                     <br><br>
                 {% endfor %}
@@ -43,7 +43,7 @@
                     - https://getfursu.it/#{{ artisan.makerId }}
 
                     {% if '' != artisan.mastodonUrl %}
-                        {{ artisan.mastodonUrl | mastodon_at }}
+                        {{ artisan.mastodonUrl|mastodon_at }}
                     {% endif %}
 
                     <br>
@@ -69,11 +69,11 @@
                     - https://getfursu.it/#{{ artisan.makerId }} <br>
                 {% endfor %}
 
-                <br>
+                &nbsp;<br>
 
                 Join/see all recently joined: https://getfursu.it/new
 
-                <br><br>
+                <br>&nbsp;<br>
 
                 <i>#fursuitmaker #furry</i>
             </p>

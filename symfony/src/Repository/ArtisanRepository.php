@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Data\Definitions\Fields\Field;
-use App\Data\Definitions\Fields\ValidationRegexps;
 use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
+use App\Utils\Creator\CreatorId;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -236,7 +236,7 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function findByMakerId(string $makerId): Artisan
     {
-        if (pattern(ValidationRegexps::MAKER_ID)->fails($makerId)) {
+        if (!CreatorId::isValid($makerId)) {
             throw new NoResultException();
         }
 

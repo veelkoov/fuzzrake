@@ -34,19 +34,21 @@ To make tests in `@medium` group work:
 * All the above setup
 * `git submodule init`
 * `git submodule update`
-* `yarn install`
-* `yarn encore production`
+* `./toolbox yarn install`
+* `./toolbox yep`
 * `./toolbox pum`
 
-To make the `dev` environment and tests in `@large` group work:
+To make the local development environment and tests in `@large` group work:
 * All the above setup
 * `./toolbox console doctrine:schema:create`
-* Setup reCaptcha (required for some functionalities)
+* Setup reCaptcha (required for some functionalities; `grep -R __TODO_PROVIDE_THIS__ ./symfony`)
+* `./toolbox pul`
+* http://localhost:8080/ should now respond
 
 
 ## Known issues ("gotchas")
 
 * Yarn is not dockerized and automated
-* Tests in `@medium` group will not work without Yarn
+* Tests in `@medium` and above groups will not work without Yarn
 * Kotlin repo got merged here and docs are not updated
   * What docs am I even talking about?

@@ -6,9 +6,8 @@ namespace App\Filtering\DataRequests;
 
 use App\Repository\ArtisanRepository;
 use App\Service\Cache;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\ValueObject\CacheTags;
-use Psl\Vec;
 
 class FilteredDataProvider
 {
@@ -19,23 +18,21 @@ class FilteredDataProvider
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return list<Creator>
      */
-    public function getPublicDataFor(Choices $choices): array
+    public function getFilteredCreators(Choices $choices): array
     {
-        return $this->cache->getCached('Filtered.artisans.'.$choices->getCacheDigest(),
-            CacheTags::ARTISANS, fn () => $this->retrievePublicDataFor($choices));
+        return $this->cache->getCached('Filtered.creatorsObjects.'.$choices->getCacheDigest(),
+            CacheTags::ARTISANS, fn () => $this->filterCreatorsBy($choices));
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return list<Creator>
      */
-    private function retrievePublicDataFor(Choices $choices): array
+    private function filterCreatorsBy(Choices $choices): array
     {
         $appender = new QueryChoicesAppender($choices);
 
-        $artisans = Artisan::wrapAll($this->repository->getFiltered($appender));
-
-        return Vec\map($artisans, fn (Artisan $artisan) => Vec\values($artisan->getPublicData()));
+        return Creator::wrapAll($this->repository->getFiltered($appender));
     }
 }

@@ -1,6 +1,7 @@
-@import '../../node_modules/bootstrap/scss/bootstrap';
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
-html { // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
+html {
+  // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
   scroll-behavior: auto !important;
 }
 
@@ -57,7 +58,9 @@ span.utc_datetime {
   text-underline-offset: 0.2ex;
 }
 
-.new-artisan {
+.new-creator,
+#legend-modal .new-creator, // More precise selector, otherwise was overwritten by Bootstrap styles
+{
   color: #4cae4c;
 }
 

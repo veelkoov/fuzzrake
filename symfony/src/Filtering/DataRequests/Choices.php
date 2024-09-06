@@ -21,6 +21,7 @@ readonly class Choices
      */
     public function __construct(
         public string $makerId,
+        public string $textSearch,
         public array $countries,
         public array $states,
         public array $languages,
@@ -36,6 +37,7 @@ readonly class Choices
         public bool $isAdult,
         public bool $wantsSfw,
         public bool $wantsInactive,
+        public bool $creatorMode,
     ) {
     }
 
