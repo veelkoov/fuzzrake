@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BrowserBasedFrontendTests\Traits;
 
 use App\Tests\TestUtils\FiltersData;
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\Client;
@@ -63,7 +64,7 @@ trait MainPageTestsTrait
     private static function waitForLoadingIndicatorToDisappear(bool $checkIfShowsUp = false): void
     {
         if ($checkIfShowsUp) {
-            self::waitUntilShows('#loading-indicator');
+            self::waitUntilShows('#loading-indicator', 0);
         }
 
         self::waitUntilHides('#loading-indicator');
@@ -103,5 +104,28 @@ trait MainPageTestsTrait
     private static function setupMockSpeciesFilterData(): void
     {
         self::persistAndFlush(FiltersData::getMockSpecies());
+    }
+
+    /**
+     * @param list<string> $visibleCreatorIds
+     * @param list<string> $hiddenCreatorIds
+     */
+    private function assertMakersVisibility(array $visibleCreatorIds, array $hiddenCreatorIds): void
+    {
+        foreach ($visibleCreatorIds as $creatorId) {
+            self::assertSelectorIsVisible("#$creatorId");
+        }
+
+        foreach ($hiddenCreatorIds as $creatorId) {
+            self::assertSelectorNotExists("#$creatorId", "#$creatorId exists");
+        }
+    }
+
+    /**
+     * @throws NoSuchElementException
+     */
+    private function clearTypeInTextSearch(string $searchedText): void
+    {
+        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys($searchedText);
     }
 }

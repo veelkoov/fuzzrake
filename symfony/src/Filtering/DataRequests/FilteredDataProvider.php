@@ -45,6 +45,10 @@ class FilteredDataProvider
         $artisans = $this->cache->getCached('Filtered.query.'.$appender->getCacheDigest(),
             CacheTags::ARTISANS, fn () => Artisan::wrapAll($this->repository->getFiltered($appender)));
 
+        if ($choices->creatorMode) {
+            return $artisans;
+        }
+
         $filters = [];
 
         if ([] !== $choices->languages) {

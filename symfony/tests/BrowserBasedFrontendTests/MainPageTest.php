@@ -89,10 +89,10 @@ class MainPageTest extends PantherTestCaseWithEM
         self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
 
         // Check if text search works
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->sendKeys('CZ');
+        $this->clearTypeInTextSearch('CZ');
         self::waitForLoadingIndicatorToDisappear();
         $this->assertMakersVisibility(['TEST001'], ['TEST002', 'TEST003']);
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys('DE');
+        $this->clearTypeInTextSearch('DE');
         self::waitForLoadingIndicatorToDisappear();
         $this->assertMakersVisibility(['TEST003'], ['TEST001', 'TEST002']);
     }
@@ -109,21 +109,6 @@ class MainPageTest extends PantherTestCaseWithEM
 
         foreach ($notSelected as $country) {
             self::assertSelectorExists("input[type=checkbox][value='$country']:not(:checked)");
-        }
-    }
-
-    /**
-     * @param list<string> $visibleMakerIds
-     * @param list<string> $hiddenMakerIds
-     */
-    private function assertMakersVisibility(array $visibleMakerIds, array $hiddenMakerIds): void
-    {
-        foreach ($visibleMakerIds as $makerId) {
-            self::assertSelectorIsVisible("#$makerId");
-        }
-
-        foreach ($hiddenMakerIds as $makerId) {
-            self::assertSelectorNotExists("#$makerId");
         }
     }
 

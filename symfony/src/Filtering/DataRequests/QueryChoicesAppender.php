@@ -50,12 +50,13 @@ class QueryChoicesAppender implements CacheDigestProvider
 
     public function applyChoices(QueryBuilder $builder): void
     {
+        $this->applyTextSearch($builder); // Text search should work in the maker mode
+
         if ($this->choices->creatorMode) {
             return; // Just return everything
         }
 
         $this->applyMakerId($builder);
-        $this->applyTextSearch($builder);
         $this->applyCountries($builder);
         $this->applyStates($builder);
         $this->applyOpenFor($builder);

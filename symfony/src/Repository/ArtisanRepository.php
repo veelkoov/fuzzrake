@@ -449,7 +449,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
             ->addOrderBy('LOWER(a.name)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $result;

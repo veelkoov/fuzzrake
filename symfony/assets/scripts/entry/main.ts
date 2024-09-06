@@ -43,9 +43,10 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
 });
 
 if (AgeAndSfwConfig.getInstance().getMakerMode()) {
-  requireJQ("#creator-mode-banner").removeClass("d-none");
-  requireJQ("#main-page-intro").addClass("d-none");
   jQuery(() => {
+    requireJQ("#creator-mode-banner").removeClass("d-none");
+    requireJQ("#main-page-intro").addClass("d-none");
+    requireJQ("#creator-mode-parameter-field").val("1");
     requireJQ("#creator-mode-parameter-field").trigger("click");
   });
 } else {
