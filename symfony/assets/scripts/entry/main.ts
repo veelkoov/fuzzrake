@@ -30,7 +30,7 @@ jQuery(function openCreatorCardGivenCreatorIdInAnchor(): void {
       "detail" in event &&
       event.detail instanceof Object &&
       "path" in event.detail &&
-      event.detail.path instanceof String &&
+      "string" === typeof event.detail.path &&
       event.detail.path.includes("_______")
     ) {
       event.detail.path = event.detail.path.replace("_______", creatorId);
