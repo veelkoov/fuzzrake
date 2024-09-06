@@ -17,8 +17,6 @@ use App\ValueObject\CacheTags;
 
 use function Psl\Iter\all;
 use function Psl\Vec\filter;
-use function Psl\Vec\map;
-use function Psl\Vec\values;
 
 class FilteredDataProvider
 {
@@ -29,23 +27,27 @@ class FilteredDataProvider
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return list<Artisan>
      */
-    public function getPublicDataFor(Choices $choices): array
+    public function getFilteredCreators(Choices $choices): array
     {
-        return $this->cache->getCached('Filtered.artisans.'.$choices->getCacheDigest(),
-            CacheTags::ARTISANS, fn () => $this->retrievePublicDataFor($choices));
+        return $this->cache->getCached('Filtered.creatorsObjects.'.$choices->getCacheDigest(),
+            CacheTags::ARTISANS, fn () => $this->filterCreatorsBy($choices));
     }
 
     /**
-     * @return array<array<psJsonFieldValue>>
+     * @return list<Artisan>
      */
-    private function retrievePublicDataFor(Choices $choices): array
+    private function filterCreatorsBy(Choices $choices): array
     {
         $appender = new QueryChoicesAppender($choices);
 
         $artisans = $this->cache->getCached('Filtered.query.'.$appender->getCacheDigest(),
             CacheTags::ARTISANS, fn () => Artisan::wrapAll($this->repository->getFiltered($appender)));
+
+        if ($choices->creatorMode) {
+            return $artisans;
+        }
 
         $filters = [];
 
@@ -71,6 +73,6 @@ class FilteredDataProvider
             )
         );
 
-        return map($artisans, fn (Artisan $artisan) => values($artisan->getPublicData()));
+        return $artisans;
     }
 }

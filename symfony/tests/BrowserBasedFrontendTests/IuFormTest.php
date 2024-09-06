@@ -9,7 +9,6 @@ use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
 use Exception;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Symfony\Component\Panther\Client;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
 /**
@@ -17,15 +16,6 @@ use TRegx\PhpUnit\DataProviders\DataProvider;
  */
 class IuFormTest extends PantherTestCaseWithEM
 {
-    private Client $client;
-
-    protected function setUp(): void
-    {
-        $this->client = static::createPantherClient();
-        $this->client->getCookieJar()->clear();
-        self::setWindowSize($this->client, 1600, 900);
-    }
-
     public function passwordCheckBoxesDataProvider(): DataProvider
     {
         return DataProvider::tuples(

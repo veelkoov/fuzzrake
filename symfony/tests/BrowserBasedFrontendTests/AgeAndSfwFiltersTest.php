@@ -60,9 +60,9 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
      */
     public function testAgeAndSfwFilters(bool $userIsMinor, ?bool $userWantsSfw): void
     {
-        self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
+        self::setupMockSpeciesFilterData();
 
-        $client = static::createPantherClient();
+        self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
 
         $artisans = [];
         $expected = [];
@@ -100,26 +100,26 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
         $this->clearCache();
 
-        $client->request('GET', '/index.php/');
+        $this->client->request('GET', '/index.php/');
 
         $infoText = 'Currently '.count($artisans).' makers from 0 countries are listed here.';
-        $client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
+        $this->client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
-        $client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
         if ($userIsMinor) {
             self::waitUntilShows('#aasImNotAdult');
-            $client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+            $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
         } else {
             self::waitUntilShows('#aasImAdult');
-            $client->findElement(WebDriverBy::id('aasImAdult'))->click();
+            $this->client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
             $lastChoiceId = $userWantsSfw ? 'aasKeepSfw' : 'aasAllowNsfw';
             self::waitUntilShows("#$lastChoiceId");
-            $client->findElement(WebDriverBy::id($lastChoiceId))->click();
+            $this->client->findElement(WebDriverBy::id($lastChoiceId))->click();
         }
 
-        $client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
 

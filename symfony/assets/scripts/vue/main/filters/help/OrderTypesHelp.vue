@@ -1,6 +1,0 @@
-<template>
-  <li>
-    Many makers still haven't supplied the information about order types they
-    do. You might want to try <em>Unknown</em> option as well.
-  </li>
-</template>

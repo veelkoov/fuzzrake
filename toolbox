@@ -29,7 +29,7 @@ function run_docker_compose() {
 }
 
 function run_docker_compose_exec() {
-    run_docker_compose exec --user "$(echo -n "$(id -u):$(id -g)")" -ti php "$@"
+    run_docker_compose exec --user "$(echo -n "$(id -u):www-data")" -ti php "$@"
 }
 
 function run_composer() {
@@ -235,7 +235,7 @@ function action() {
         'tcf')          run_docker_compose_exec ./vendor/bin/twig-cs-fixer lint --fix "$@" ;;
         'ps')           run_docker_compose_exec ./vendor/bin/phpstan analyse -c phpstan.neon "$@" ;;
         'rector')       run_docker_compose_exec ./vendor/bin/rector process "$@" ;;
-        'el')           run_yarn eslint assets/scripts/ --ext js,ts,vue "$@" ;;
+        'el')           run_yarn eslint assets/scripts/ --ext js,ts "$@" ;;
         'prettier')     run_yarn prettier . --write "$@" ;;
 
         'tidy')         run_console app:data:tidy "$@" ;;

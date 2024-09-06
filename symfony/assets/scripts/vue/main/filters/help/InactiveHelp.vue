@@ -1,8 +1,0 @@
-<template>
-  <li>You may choose to see hidden makers and studios.</li>
-  <li>
-    A maker/studio may get hidden if they e.g. rebranded and did not update
-    their addresses here (making all their links broken), or they are no longer
-    active at all.
-  </li>
-</template>

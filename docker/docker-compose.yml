@@ -23,8 +23,10 @@ services:
     environment:
       PHP_IDE_CONFIG: 'serverName=fuzzrake-dev'
     restart: 'unless-stopped'
-    user:    'root:root'
+    user:    'root:www-data'
     volumes:
       - '../symfony:/var/www/html'
       - '${FUZZRAKE_COMPOSER_HOME:-../symfony/var/composer}:/composer'
       - '/dev/shm:/dev/shm'
+      - type:   'tmpfs'
+        target: '/tmp'

@@ -78,7 +78,7 @@ class IuFormDataController extends AbstractIuFormController
     private function validateMakerId(FormInterface $form, Artisan $artisan): void
     {
         try {
-            $makerIdOwner = $this->artisanRepository->findByMakerId($artisan->getMakerId());
+            $makerIdOwner = $this->creatorRepository->findByMakerId($artisan->getMakerId());
 
             if ($makerIdOwner->getId() !== $artisan->getId()) {
                 $form->get(Data::FLD_MAKER_ID)

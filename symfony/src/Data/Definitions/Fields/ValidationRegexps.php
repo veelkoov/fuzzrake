@@ -10,8 +10,6 @@ final class ValidationRegexps
 {
     use UtilityClass;
 
-    final public const MAKER_ID = '^([A-Z0-9]{7})?$';
-
     final public const GENERIC_URL = '^(https?://[^/]+/.*)?$'; // TODO: Improve URL validation regexps #79
     final public const DA_URL = '^(https://www\.deviantart\.com/[^/]+|https://[^.]+\.deviantart\.com/)?$';
     final public const FACEBOOK_URL = '^(https://www.facebook.com/([^/]+/|profile\.php\?id=\d+))?$';

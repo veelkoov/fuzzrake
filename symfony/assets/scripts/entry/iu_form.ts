@@ -128,9 +128,10 @@ function setup_password_and_contact_page(): void {
   const $forgottenPassLabel = jQuery('label[for="iu_form_password"]');
   const $validationAcknowledgement = jQuery("#verification_acknowledgement");
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const changePasswordCheckbox = new Checkbox("iu_form_changePassword", (_) => {
     refresh();
-  }); // eslint-disable-line @typescript-eslint/no-unused-vars
+  });
 
   const $contactLevelProsCons = jQuery(".pros-cons-contact-options");
   const contactAllowed = new Radio("iu_form[contactAllowed]", refresh);
@@ -166,7 +167,7 @@ function setup_password_and_contact_page(): void {
       $forgottenPassHint.hide(0);
     }
 
-    if (changePasswordCheckbox.isChecked()) {
+    if (changePasswordCheckbox.isChecked) {
       $forgottenPassHint.show(animationsDuration);
       $forgottenPassLabel.text("Choose a new password");
     } else {
@@ -176,7 +177,7 @@ function setup_password_and_contact_page(): void {
 
     toggle(
       $validationAcknowledgement,
-      changePasswordCheckbox.isChecked() &&
+      changePasswordCheckbox.isChecked &&
         ($validationAcknowledgement.hasClass("contact-was-not-allowed") ||
           contactAllowed.isVal(NO_CONTACT_ALLOWED)),
       animationsDuration,

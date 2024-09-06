@@ -1,3 +1,5 @@
+import DarnIt from "./DarnIt";
+
 export function toggle(
   $elements: JQuery<HTMLElement> | string,
   visible: boolean | ((index: number, element: JQuery<HTMLElement>) => boolean),
@@ -30,4 +32,22 @@ export function singleStrValOrNull($element: JQuery): string | null {
   const value = $element.val();
 
   return undefined === value ? null : value.toString();
+}
+
+export function requireJQ(
+  selector: string,
+  min: number = 1,
+  max: number | null = 1,
+): JQuery<HTMLElement> {
+  const result = jQuery(selector);
+
+  if (result.length < min || (max !== null && result.length > max)) {
+    DarnIt.report(
+      "Failed matching HTML elements. Most probably this error happened because the maintainer introduced some changes on the website in a way which you would expect from an unskilled person.",
+      `Looked for: ${selector}, count: ${min}..${max}, matched: ${result.length}`,
+      true,
+    );
+  }
+
+  return result;
 }

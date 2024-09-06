@@ -22,36 +22,31 @@ final class SpecialItems
 
     public static function newUnknown(int $initialValue = 0): MutableSpecialItem
     {
-        return new MutableSpecialItem(Consts::FILTER_VALUE_UNKNOWN, 'Unknown',
+        return new MutableSpecialItem(Consts::FILTER_VALUE_UNKNOWN, 'Unknown', // grep-special-label-unknown
             self::faIconFromType('unknown'), $initialValue);
     }
 
     public static function newOther(): MutableSpecialItem
     {
-        return new MutableSpecialItem(Consts::FILTER_VALUE_OTHER, 'Other', 'fas fa-asterisk');
+        return new MutableSpecialItem(Consts::FILTER_VALUE_OTHER, 'Other', // grep-special-label-other
+            'fas fa-asterisk');
     }
 
     public static function newTrackingIssues(int $initialValue): MutableSpecialItem
     {
-        $result = new MutableSpecialItem(Consts::FILTER_VALUE_TRACKING_ISSUES, 'Tracking issues', 'fa fa-exclamation-triangle');
-        $result->incCount($initialValue);
-
-        return $result;
+        return new MutableSpecialItem(Consts::FILTER_VALUE_TRACKING_ISSUES, 'Tracking issues', // grep-special-label-tracking-issues
+            'fa fa-exclamation-triangle', $initialValue);
     }
 
     public static function newNotTracked(int $initialValue): MutableSpecialItem
     {
-        $result = new MutableSpecialItem(Consts::FILTER_VALUE_NOT_TRACKED, 'Not tracked', 'fas fa-question-circle');
-        $result->incCount($initialValue);
-
-        return $result;
+        return new MutableSpecialItem(Consts::FILTER_VALUE_NOT_TRACKED, 'Not tracked', // grep-special-label-not-tracked
+            'fas fa-question-circle', $initialValue);
     }
 
     public static function newInactive(int $initialValue): MutableSpecialItem
     {
-        $result = new MutableSpecialItem(Consts::FILTER_VALUE_INCLUDE_INACTIVE, 'Show', 'fa fa-play-pause');
-        $result->incCount($initialValue);
-
-        return $result;
+        return new MutableSpecialItem(Consts::FILTER_VALUE_INCLUDE_INACTIVE, 'Show', // grep-special-label-show-inactive
+            'fa fa-play-pause', $initialValue);
     }
 }

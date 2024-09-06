@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Data\Definitions\Fields\Field;
-use App\Data\Definitions\Fields\ValidationRegexps;
 use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
 use App\Filtering\DataRequests\QueryChoicesAppender;
@@ -13,6 +12,7 @@ use App\Filtering\FiltersData\Builder\MutableFilterData;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Filtering\FiltersData\FilterData;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
+use App\Utils\Creator\CreatorId;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -333,7 +333,7 @@ class ArtisanRepository extends ServiceEntityRepository
      */
     public function findByMakerId(string $makerId): Artisan
     {
-        if (pattern(ValidationRegexps::MAKER_ID)->fails($makerId)) {
+        if (!CreatorId::isValid($makerId)) {
             throw new NoResultException();
         }
 
@@ -449,7 +449,6 @@ class ArtisanRepository extends ServiceEntityRepository
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
             ->addOrderBy('LOWER(a.name)')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
 
         return $result;

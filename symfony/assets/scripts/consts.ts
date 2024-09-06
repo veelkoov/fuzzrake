@@ -1,5 +1,4 @@
 export const makerIdHashRegexp = /^#[A-Z0-9]{7}$/;
-export const makerIdRegexp = /^[A-Z0-9]{7}$/;
 
 export const NO_CONTACT_ALLOWED = "NO"; // grep-no-contact-allowed
 

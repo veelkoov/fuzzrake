@@ -7,7 +7,7 @@ namespace App\Filtering\DataRequests;
 use App\Service\CacheDigestProvider;
 use Psl\Json;
 
-class Choices implements CacheDigestProvider
+readonly class Choices implements CacheDigestProvider
 {
     /**
      * @param list<string> $countries
@@ -21,22 +21,24 @@ class Choices implements CacheDigestProvider
      * @param list<string> $species
      */
     public function __construct(
-        public readonly string $makerId,
-        public readonly array $countries,
-        public readonly array $states,
-        public readonly array $languages,
-        public readonly array $styles,
-        public readonly array $features,
-        public readonly array $orderTypes,
-        public readonly array $productionModels,
-        public readonly array $openFor,
-        public readonly array $species,
-        public readonly bool $wantsUnknownPaymentPlans,
-        public readonly bool $wantsAnyPaymentPlans,
-        public readonly bool $wantsNoPaymentPlans,
-        public readonly bool $isAdult,
-        public readonly bool $wantsSfw,
-        public readonly bool $wantsInactive,
+        public string $makerId,
+        public string $textSearch,
+        public array $countries,
+        public array $states,
+        public array $languages,
+        public array $styles,
+        public array $features,
+        public array $orderTypes,
+        public array $productionModels,
+        public array $openFor,
+        public array $species,
+        public bool $wantsUnknownPaymentPlans,
+        public bool $wantsAnyPaymentPlans,
+        public bool $wantsNoPaymentPlans,
+        public bool $isAdult,
+        public bool $wantsSfw,
+        public bool $wantsInactive,
+        public bool $creatorMode,
     ) {
     }
 

@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Filtering\DataRequests\FilteredDataProvider;
-use App\Filtering\DataRequests\RequestParser;
 use App\Service\Captcha;
 use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
-use Psl\Type\Exception\CoercionException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +18,6 @@ class RestApiController extends AbstractController
 {
     public function __construct(
         private readonly Captcha $captcha,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -54,21 +48,5 @@ class RestApiController extends AbstractController
     public function artisans(DataService $dataService): JsonResponse
     {
         return new JsonResponse($dataService->getAllArtisans());
-    }
-
-    #[Route(path: '/api/artisans-array.json', name: RouteName::API_ARTISANS_ARRAY)]
-    #[Cache(maxage: 3600, public: true)]
-    public function artisansArray(Request $request, FilteredDataProvider $Filtered, RequestParser $requestParser): JsonResponse
-    {
-        try {
-            $choices = $requestParser->getChoices($request);
-            $result = $Filtered->getPublicDataFor($choices);
-
-            return new JsonResponse($result);
-        } catch (CoercionException $exception) {
-            $this->logger->info('Invalid API request received', ['exception' => $exception]);
-
-            return throw new BadRequestException();
-        }
     }
 }

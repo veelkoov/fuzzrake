@@ -16,7 +16,6 @@ use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Panther\Client;
 
 /**
  * @large
@@ -25,19 +24,12 @@ class MainPageTest extends PantherTestCaseWithEM
 {
     use MainPageTestsTrait;
 
-    private Client $client;
-
-    protected function setUp(): void
-    {
-        $this->client = static::createPantherClient();
-        self::setWindowSize($this->client, 1600, 900);
-    }
-
     /**
      * @throws Exception
      */
     public function testMainPageUiSmoke(): void
     {
+        self::setupMockSpeciesFilterData();
         self::persistAndFlush(
             self::getArtisan('Test artisan 1 CZ', 'TEST001', 'CZ'),
             self::getArtisan('Test artisan 2 CA', 'TEST002', 'CA'),
@@ -69,7 +61,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->expectLoadedCreatorsTable(2, 3);
+        $this->waitExpectLoadedCreatorsTable(2, 3);
 
         self::openMakerCardByClickingOnTheirNameInTheTable($this->client, 'Test artisan 1 CZ');
         self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
@@ -89,7 +81,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         // Click the last link - data outdated
         $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > ul li:last-child > a'))->click();
-        $this->client->waitForVisibility('#artisanUpdatesModalContent', 5);
+        $this->client->waitForVisibility('#creator-updates-modal-content', 5);
         self::assertStringContainsString('Test artisan 3 DE', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
@@ -97,10 +89,12 @@ class MainPageTest extends PantherTestCaseWithEM
         self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
 
         // Check if text search works
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->sendKeys('CZ');
-        $this->assertMakersVisibility(['TEST001'], ['TEST003']); // TEST002 doesn't exist in DOM
-        $this->client->findElement(WebDriverBy::id('search-text-field'))->clear()->sendKeys('DE');
-        $this->assertMakersVisibility(['TEST003'], ['TEST001']); // TEST002 doesn't exist in DOM
+        $this->clearTypeInTextSearch('CZ');
+        self::waitForLoadingIndicatorToDisappear();
+        $this->assertMakersVisibility(['TEST001'], ['TEST002', 'TEST003']);
+        $this->clearTypeInTextSearch('DE');
+        self::waitForLoadingIndicatorToDisappear();
+        $this->assertMakersVisibility(['TEST003'], ['TEST001', 'TEST002']);
     }
 
     /**
@@ -115,21 +109,6 @@ class MainPageTest extends PantherTestCaseWithEM
 
         foreach ($notSelected as $country) {
             self::assertSelectorExists("input[type=checkbox][value='$country']:not(:checked)");
-        }
-    }
-
-    /**
-     * @param list<string> $visibleMakerIds
-     * @param list<string> $hiddenMakerIds
-     */
-    private function assertMakersVisibility(array $visibleMakerIds, array $hiddenMakerIds): void
-    {
-        foreach ($visibleMakerIds as $makerId) {
-            self::assertSelectorIsVisible("#$makerId");
-        }
-
-        foreach ($hiddenMakerIds as $makerId) {
-            self::assertSelectorIsNotVisible("#$makerId");
         }
     }
 
@@ -153,6 +132,8 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testNewlyAddedIndicators(): void
     {
+        self::setupMockSpeciesFilterData();
+
         UtcClockMock::start();
 
         $maker1 = Artisan::new()->setMakerId('MAKEOLD')->setName('Older maker')->setCountry('FI')->setDateAdded(UtcClock::at('-43 days'));
@@ -164,9 +145,9 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->client->request('GET', '/index.php/');
         self::skipCheckListAdultAllowNsfw($this->client, 2);
 
-        self::assertSelectorExists('#MAKENEW span.new-artisan');
+        self::assertSelectorExists('#MAKENEW span.new-creator');
         self::assertSelectorExists('#MAKEOLD');
-        self::assertSelectorNotExists('#MAKEOLD span.new-artisan');
+        self::assertSelectorNotExists('#MAKEOLD span.new-creator');
     }
 
     /**
@@ -175,6 +156,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testOpeningArtisanCardByMakerId(): void
     {
+        self::setupMockSpeciesFilterData();
         $artisan = self::getArtisan('Test artisan 1', 'TEST001', 'FI');
         $artisan->setInactiveReason('Testing'); // Must show up even if deactivated
         self::persistAndFlush($artisan);
@@ -182,10 +164,10 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->client->request('GET', '/index.php/#TEST001');
 
-        self::waitUntilShows('#artisanDetailsModal #makerId', 1000);
-        self::assertSelectorTextSame('#artisanDetailsModal #makerId', 'TEST001');
-        $this->client->findElement(WebDriverBy::cssSelector('#artisanDetailsModalContent .modal-header button'))->click();
-        self::waitUntilHides('#artisanDetailsModal #makerId');
+        self::waitUntilShows('#creator-card-modal #makerId', 1000);
+        self::assertSelectorTextSame('#creator-card-modal #makerId', 'TEST001');
+        $this->client->findElement(WebDriverBy::cssSelector('#creator-card-modal-content .modal-header button'))->click();
+        self::waitUntilHides('#creator-card-modal #makerId');
     }
 
     /**
@@ -193,6 +175,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     public function testFilterChoicesGetSavedAndRestored(): void
     {
+        self::setupMockSpeciesFilterData();
         self::persistAndFlush(self::getArtisan(country: 'FI'));
         $this->clearCache();
 
@@ -207,7 +190,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->assertCountriesFilterSelections(['FI', '?'], []);
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->expectLoadedCreatorsTable(1, 1);
+        $this->waitExpectLoadedCreatorsTable(1, 1);
 
         usleep(500_000); // Lame
         $this->client->request('GET', '/index.php/');
@@ -216,6 +199,39 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
         $this->assertCountriesFilterSelections(['FI', '?'], []);
+    }
+
+    /**
+     * @throws WebDriverException
+     */
+    public function testColumnVisibilityGetSavedAndRestored(): void
+    {
+        self::setupMockSpeciesFilterData();
+        self::persistAndFlush(self::getArtisan(makerId: 'TSTMKR1', country: 'FI')->setStyles(['Toony']));
+
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1);
+
+        // Check the defaults: styles are visible, maker IDs are hidden
+        self::assertSelectorIsVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsNotVisible('//td[contains(., "TSTMKR1")]');
+
+        // Show Maker ID column, hide styles column
+        $this->client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Columns"]'))->click();
+        $this->client->findElement(WebDriverBy::linkText('Maker ID'))->click();
+        $this->client->findElement(WebDriverBy::linkText('Styles'))->click();
+
+        // Check if the change has been applied
+        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsVisible('//td[contains(., "TSTMKR1")]');
+
+        // Reload the page
+        $this->client->request('GET', '/index.php/');
+        self::skipCheckListAdultAllowNsfw($this->client, 1, true);
+
+        // Check if the change has persisted between page loads
+        self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
+        self::assertSelectorIsVisible('//td[contains(., "TSTMKR1")]');
     }
 
     /**
@@ -242,8 +258,8 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     private function openFiltersPopUp(): void
     {
-        $this->client->findElement(WebDriverBy::id('filtersButton'))->click();
-        $this->client->waitForVisibility('#filtersTitle', 5);
+        $this->client->findElement(WebDriverBy::id('open-filters-button'))->click();
+        $this->client->waitForVisibility('#filters-title', 5);
     }
 
     /**
@@ -259,7 +275,7 @@ class MainPageTest extends PantherTestCaseWithEM
     /**
      * @throws WebDriverException
      */
-    private function expectLoadedCreatorsTable(int $displaying, int $outOf): void
+    private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
     {
         $locator = "//p[@id=\"artisans-table-count\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
 

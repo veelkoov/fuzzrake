@@ -1,0 +1,83 @@
+<div id="filters-modal" class="modal fade" tabindex="-1" aria-labelledby="filters-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div id="filters-top" class="modal-content">
+            <div class="modal-header">
+                <h5 id="filters-title" class="modal-title">
+                    Filters
+                </h5>
+
+                <span><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply</button></span>
+            </div>
+
+            {# twig-cs-fixer-disable PunctuationSpacing.After #}
+            {# Unable to disable for the following lines only #}
+            {% set filter_choices = {
+                countries:        {label: 'Countries',         data: filters.countries},
+                states:           {label: 'States',            data: filters.states},
+                languages:        {label: 'Languages',         data: filters.languages},
+                styles:           {label: 'Styles',            data: filters.styles},
+                features:         {label: 'Features',          data: filters.features},
+                orderTypes:       {label: 'Order types',       data: filters.orderTypes},
+                productionModels: {label: 'Production models', data: filters.productionModels},
+                openFor:          {label: 'Open for',          data: filters.openFor},
+                species:          {label: 'Species',           data: filters.species},
+                paymentPlans:     {label: 'Payment plans',     data: filters.paymentPlans},
+                inactive:         {label: 'Hidden',            data: filters.inactive},
+            } %}
+
+            <div id="filters-modal-body" class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        {% for filter_name, filter in filter_choices %}
+                            <div id="filter-ctrl-{{ filter_name }}" class="btn-group my-1 filter-ctrl" data-filter-name="{{ filter_name }}" role="group">
+                                <button class="btn btn-outline-secondary" data-bs-target="#filter-body-{{ filter_name }}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="filter-body-{{ filter_name }}">
+                                    {{ filter.label }}: <span class="filter-ctrl-status"></span>
+                                </button>
+                                <button type="button" class="filter-ctrl-remove btn btn-outline-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <form>
+                    {% for filter_name, filter in filter_choices %}
+                        <div id="filter-body-{{ filter_name }}" class="collapse" data-bs-parent="#filters-modal-body">
+                            <div class="text-end helphints-toggle">
+                                <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#filter-help-{{ filter_name }}" aria-expanded="false" aria-controls="filter-help-{{ filter_name }}">
+                                    Help and hints
+                                </button>
+                            </div>
+
+                            <div id="filter-help-{{ filter_name }}" class="collapse helphints-contents">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <ul>
+                                            {{ include('main/parts/filters/help/' ~ filter_name ~ '.html.twig') }}
+
+                                            {% set uri = url('iu_form_step_start', {makerId: ''}) %}
+
+                                            <li class="small">
+                                                You can help make getfursu.it more helpful and complete. If you plan to contact a maker, who e.g. matched <em>Unknown</em> (didn't supply some information), you can ask them to fill the missing information, e.g.:
+
+                                                <em>I found you on getfursu.it, but some information is missing there. Please consider sending updates: <a href="{{ uri }}" target="_blank">{{ uri }}</a>.</em>
+
+                                                Thank you! <i class="fas fa-heart"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{ include([
+                                'main/parts/filters/body/' ~ filter_name ~ '.html.twig',
+                                'main/parts/filters/body/default.html.twig',
+                            ]) }}
+                        </div>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

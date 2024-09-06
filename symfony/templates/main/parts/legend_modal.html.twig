@@ -1,0 +1,50 @@
+<div class="modal fade" id="legend-modal" tabindex="-1" aria-labelledby="legend-modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="legend-modal-title">
+                    Legend
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Ages of studio members:</h5>
+
+                <table class="table table-sm small">
+                    <tbody>
+                    <tr>
+                        <td><i class="ages fa-solid fa-user-minus"></i></td>
+                        <td>Everyone is under 18</td>
+                    </tr>
+                    <tr>
+                        <td><i class="ages fa-solid fa-user-plus"></i> <i class="ages fa-solid fa-user-minus"></i></td>
+                        <td>There is a mix of people over and under 18</td>
+                    </tr>
+                    <tr>
+                        <td>(no icon)</td>
+                        <td>Everyone is over 18</td>
+                    </tr>
+                    <tr>
+                        <td><i class="ages fa-solid fa-user"></i></td>
+                        <td>unknown</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <h5>Miscellaneous:</h5>
+
+                <table class="table table-sm small">
+                    <tbody>
+                    <tr>
+                        <td class="new-creator"><i class="fa-solid fa-leaf"></i> recently added</td>
+                        <td>Added to getfursu.it within the last 6 weeks</td> {# grep-amount-of-days-considered-new #}
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

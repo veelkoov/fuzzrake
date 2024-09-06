@@ -46,4 +46,8 @@ export default class DynamicRadio
   public val(): string | null {
     return this.isAvailable() ? this.radio.val() : null;
   }
+
+  public selectVal(value: string) {
+    this.radio.selectVal(value);
+  }
 }
