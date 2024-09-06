@@ -1,4 +1,6 @@
-@import "../../node_modules/bootstrap/scss/bootstrap";
+// https://getbootstrap.com/docs/5.3/customize/optimize/#lean-sass-imports
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
 
 .intro-updated-info {
   color: #6c757d;
