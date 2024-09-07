@@ -18,9 +18,10 @@ $menu-z-index: 100;
     white-space: nowrap;
     overflow: hidden;
     position: relative;
-    padding: 16px $navbar-horizontal-padding;
+    padding: 14px $navbar-horizontal-padding;
     background-color: $navbar-bg;
     gap: $navbar-item-gap;
+    height: 72px;
 
     &:not(.initialized) {
       // Visually hide the contents of the navbar until we've run our layout function at least
@@ -50,6 +51,11 @@ $menu-z-index: 100;
       color: var(--bs-nav-link-color);
       padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
 
+      // Vertically and horizontally center the content
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       &:hover,
       &:focus {
         color: var(--bs-nav-link-hover-color);
@@ -61,6 +67,15 @@ $menu-z-index: 100;
 
       &.isOpen {
         transform: scaleY(-100%);
+      }
+    }
+
+    .nav-mobile-drawer-button {
+      width: 44px;
+      height: 44px;
+
+      i.fas {
+        font-size: 24px;
       }
     }
 
