@@ -18,7 +18,7 @@ const PRIORITY_NUMBER: Record<NavbarLinkPriority, number> = {
  * Number was chosen to target conventional mobile devices as being "mobile" but
  * is otherwise arbitrary and can be changed as needed.
  */
-const MOBILE_LAYOUT_BREAKPOINT_PX = 500;
+const MOBILE_LAYOUT_BREAKPOINT_PX = 576;
 
 function parseMainChildren(children: NodeListOf<ChildNode>): {
   links: readonly HTMLAnchorElement[];
