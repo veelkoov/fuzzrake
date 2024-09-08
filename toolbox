@@ -5,6 +5,7 @@ set -euo pipefail
 PROJECT_NAME="${FUZZRAKE_DEV_PROJECT_NAME:-fuzzrake}"
 
 SYMFONY_DIR_REL_PATH='symfony'
+KOTLIN_DIR_REL_PATH='kotlin'
 SUBMISSIONS_DIR_REL_PATH='symfony/var/submissions' # grep-code-submissions-dir-path
 SNAPSHOTS_REL_PATH='symfony/var/snapshots' # grep-code-snapshots-dir-path
 DATABASE_REL_PATH='symfony/var/db.sqlite' # grep-code-database-path
@@ -47,6 +48,10 @@ function run_yarn() {
     pushd "$SYMFONY_DIR_REL_PATH"
     run_command yarn "$@"
     popd
+}
+
+function run_gradle() {
+    run_command "$KOTLIN_DIR_REL_PATH/gradlew" -p "$KOTLIN_DIR_REL_PATH" "$@"
 }
 
 function assure_line_in_file() {
@@ -177,14 +182,18 @@ Usage:
 Available actions:
 
     setup        Symfony: setup and/or fix required filesystem items and/or settings
+    branch       Symfony:
+                     composer install
+                     yarn install
+                     yep
 
     docker-up    Symfony: "ups" the Docker Compose project
     docker-down  Symfony: "downs" the Docker Compose project
 
-    yep          Symfony: execute 'yarn encore production'
-
     composer     Symfony: run Composer
     yarn         Symfony: run Yarn (needs to be installed locally)
+
+    yep          Symfony: execute 'yarn encore production'
 
     console      Symfony: run Symfony console command
 
@@ -201,6 +210,11 @@ Available actions:
     rector       Symfony: run Rector
     el           Symfony: run ESLint
     prettier     Symfony: run Prettier
+
+    gradle       Kotlin: run Gradle command
+    species      Kotlin: update creators' species
+    filters      Kotlin: update filters data
+    miniatures   Kotlin: set miniatures data for changed photos
 EOF
 }
 
@@ -212,6 +226,11 @@ function action() {
 
     case $action in
         'setup')        action_run_setup ;;
+        'branch')
+            run_composer install
+            run_yarn install
+            run_yarn encore production
+        ;;
         'docker-up')    run_docker_compose up --detach --build ;;
         'docker-down')  run_docker_compose down ;;
 
@@ -251,6 +270,11 @@ function action() {
 
         'get-snapshots')   action_get_snapshots ;;
         'get-submissions') action_get_submissions ;;
+
+        'gradle')       run_gradle "$@" ;;
+        'species')      run_gradle run --args sync-species "$@" ;;
+        'filters')      run_gradle run --args update-filters "$@" ;;
+        'miniatures')   run_gradle run --args update-miniatures "$@" ;;
 
         *) error "Unknown action: '$action'" ;;
     esac
