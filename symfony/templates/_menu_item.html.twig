@@ -10,7 +10,9 @@
 >
     <i class="fas fa-{{ fa_icon }}"></i>
     <span class="label">
-        <div class="spacer">{{ label }}</div>
+        {# Spacer is responsible to hold style of the "active" link while being invisible.
+           This is to remove width changes of the menu items when displayed page changes. #}
+        <div class="spacer" aria-hidden="true">{{ label }}</div>
         <div class="displayed">{{ label }}</div>
     </span>
 </a>
