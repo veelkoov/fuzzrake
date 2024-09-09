@@ -1,5 +1,18 @@
 {% set is_active = app.request.attributes.get('_route') == name %}
 
-<li class="nav-item">
-    <a class="nav-link {% if is_active %}active{% endif %}" {% if is_active %}aria-current="page"{% endif %} href="{{ path(name) }}">{{ pretty_name|raw }}</a>
-</li>
+<a
+    {% if priority is defined %}data-priority="{{ priority }}"{% endif %}
+    class="{{ html_classes('nav-link', {
+        active: is_active
+    }) }}"
+    {% if is_active %}aria-current="page"{% endif %}
+    href="{{ path(name) }}"
+>
+    <i class="fas fa-{{ fa_icon }}"></i>
+    <span class="label">
+        {# Spacer is responsible to hold style of the "active" link while being invisible.
+           This is to remove width changes of the menu items when displayed page changes. #}
+        <div class="spacer" aria-hidden="true">{{ label }}</div>
+        <div class="displayed">{{ label }}</div>
+    </span>
+</a>
