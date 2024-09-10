@@ -67,7 +67,7 @@ trait MainPageTestsTrait
             self::waitUntilShows('#loading-indicator', 0);
         }
 
-        self::waitUntilHides('#loading-indicator');
+        self::waitUntilHides('#loading-indicator', 550);
     }
 
     /**
