@@ -38,6 +38,8 @@ readonly class Choices
         public bool $wantsSfw,
         public bool $wantsInactive,
         public bool $creatorMode,
+        public int $pageNumber,
+        public int $pageSize = Pagination::PAGE_SIZE,
     ) {
     }
 

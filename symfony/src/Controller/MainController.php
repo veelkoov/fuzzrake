@@ -89,7 +89,7 @@ class MainController extends AbstractController
     {
         try {
             $choices = $this->requestParser->getChoices($request);
-            $creators = $this->filtered->getFilteredCreators($choices);
+            $creatorsPage = $this->filtered->getCreatorsPage($choices);
 
             $searchedCreatorId = mb_strtoupper($choices->textSearch);
 
@@ -98,9 +98,8 @@ class MainController extends AbstractController
             }
 
             return $this->render('main/htmx/creators_in_table.html.twig', [
-                'creators'             => $creators,
+                'creators_page'        => $creatorsPage,
                 'searched_creator_id'  => $searchedCreatorId,
-                'total_creators_count' => $this->dataService->getMainPageStats()->totalArtisansCount,
             ]);
         } catch (CoercionException $exception) {
             $this->logger->info('Invalid request received', ['exception' => $exception]);

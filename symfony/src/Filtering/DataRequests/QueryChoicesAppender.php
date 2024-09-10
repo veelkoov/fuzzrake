@@ -12,6 +12,7 @@ use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
@@ -50,6 +51,14 @@ class QueryChoicesAppender
         $this->applyCreatorValuesCount($builder, $this->choices->orderTypes, Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
         $this->applyCreatorValuesCount($builder, $this->choices->features, Field::FEATURES, Field::OTHER_FEATURES, true);
         $this->applyCreatorValuesCount($builder, $this->choices->languages, Field::LANGUAGES);
+    }
+
+    public function applyPaging(Query $query): void
+    {
+        $query
+            ->setFirstResult(Pagination::getFirst($this->choices->pageSize, $this->choices->pageNumber))
+            ->setMaxResults($this->choices->pageSize)
+        ;
     }
 
     private function createSubqueryBuilder(QueryBuilder $builder, string $alias): QueryBuilder

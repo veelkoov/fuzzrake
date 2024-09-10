@@ -120,3 +120,8 @@ if (AgeAndSfwConfig.getInstance().getMakerMode()) {
 (function setUpColumnsManager(): void {
   new ColumnsManager("#creators-table", "#columns-visibility-links a");
 })();
+
+// @ts-expect-error I am incompetent and I don't care to learn frontend
+window.goToPage = function(pageNumber: number): void {
+  requireJQ('#page-number').val(pageNumber).trigger('click');
+}

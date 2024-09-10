@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
+use App\Filtering\DataRequests\CreatorsPage;
 use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
@@ -38,10 +39,10 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false, false));
+        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, false, false, false, 1));
         self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false, false));
+        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, false, true, false, false, 1));
         self::assertEquals('M000002', self::creatorsListToMakerIdList($result));
     }
 
@@ -61,19 +62,16 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $subject = new FilteredDataProvider(self::getArtisanRepository(), CacheUtils::getArrayBased());
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false, false));
+        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, true, false, false, 1));
         self::assertEquals('M000001', self::creatorsListToMakerIdList($result));
 
-        $result = $subject->getFilteredCreators(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false, false));
+        $result = $subject->getCreatorsPage(new Choices('', '', [], [], [], [], [], [], [], [], [], false, false, false, true, false, false, false, 1));
         self::assertEquals('M000001, M000002, M000003, M000004, M000005, M000006, M000007', self::creatorsListToMakerIdList($result));
     }
 
-    /**
-     * @param list<Creator> $creators
-     */
-    private static function creatorsListToMakerIdList(array $creators): string
+    private static function creatorsListToMakerIdList(CreatorsPage $pageData): string
     {
-        $makerIds = Vec\map($creators, fn (Creator $creator) => $creator->getMakerId());
+        $makerIds = Vec\map($pageData->creators, fn (Creator $creator) => $creator->getMakerId());
 
         return Str\join(Vec\sort($makerIds), ', ');
     }

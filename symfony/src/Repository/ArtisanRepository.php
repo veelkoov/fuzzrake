@@ -331,20 +331,21 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Artisan[]
+     * @return Paginator<Artisan>
      */
-    public function getFiltered(QueryChoicesAppender $appender): array
+    public function getFiltered(QueryChoicesAppender $appender): Paginator
     {
         $builder = $this->getArtisansQueryBuilder();
 
         $appender->applyChoices($builder);
 
-        $result = $builder
+        $query = $builder
             ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
             ->addOrderBy('LOWER(a.name)')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
 
-        return $result;
+        $appender->applyPaging($query);
+
+        return new Paginator($query, fetchJoinCollection: true);
     }
 }

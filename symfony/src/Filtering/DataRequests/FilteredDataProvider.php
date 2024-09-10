@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
+use App\Entity\Artisan as CreatorE;
 use App\Repository\ArtisanRepository;
 use App\Service\Cache;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\ValueObject\CacheTags;
+use Psl\Vec;
 
 class FilteredDataProvider
 {
@@ -17,22 +19,31 @@ class FilteredDataProvider
     ) {
     }
 
-    /**
-     * @return list<Creator>
-     */
-    public function getFilteredCreators(Choices $choices): array
+    public function getCreatorsPage(Choices $choices): CreatorsPage
     {
-        return $this->cache->getCached('Filtered.creatorsObjects.'.$choices->getCacheDigest(),
-            CacheTags::ARTISANS, fn () => $this->filterCreatorsBy($choices));
+        return $this->cache->get(
+            fn() => $this->filterCreatorsBy($choices),
+            CacheTags::ARTISANS,
+            [__METHOD__, $choices->getCacheDigest()],
+        );
     }
 
-    /**
-     * @return list<Creator>
-     */
-    private function filterCreatorsBy(Choices $choices): array
+    private function filterCreatorsBy(Choices $choices): CreatorsPage
     {
-        $appender = new QueryChoicesAppender($choices);
+        // TODO: Where is the page number filtered?
 
-        return Creator::wrapAll($this->repository->getFiltered($appender));
+        $appender = new QueryChoicesAppender($choices);
+        $paginator = $this->repository->getFiltered($appender);
+        $creators = Vec\map($paginator, fn(CreatorE $creator) => Creator::wrap($creator));
+
+        $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
+
+        return new CreatorsPage(
+            $creators,
+            $paginator->count(),
+            $choices->pageNumber,
+            $pagesCount,
+            Pagination::getPaginationPages($choices->pageNumber, $pagesCount),
+        );
     }
 }
