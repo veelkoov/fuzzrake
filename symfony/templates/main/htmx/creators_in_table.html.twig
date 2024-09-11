@@ -170,7 +170,7 @@
             <ul class="pagination">
                 {% if creators_page.hasPrev %}
                     <li class="page-item">
-                        <a class="page-link" href="#creators-table"
+                        <a class="page-link" href="#creators-table" id="prev-creators-page-link"
                            onclick="goToPage({{ creators_page.pageNumber - 1 }});">Previous</a>
                     </li>
                 {% else %}
@@ -190,7 +190,7 @@
 
                 {% if creators_page.hasNext %}
                     <li class="page-item">
-                        <a class="page-link" href="#creators-table"
+                        <a class="page-link" href="#creators-table" id="next-creators-page-link"
                            onclick="goToPage({{ creators_page.pageNumber + 1 }});">Next</a>
                     </li>
                 {% else %}

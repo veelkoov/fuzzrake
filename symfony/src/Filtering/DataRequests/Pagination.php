@@ -4,8 +4,8 @@ namespace App\Filtering\DataRequests;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\StaticClass;
-use Psl\Math;
 use Psl\Dict;
+use Psl\Math;
 use Psl\Vec;
 
 final class Pagination

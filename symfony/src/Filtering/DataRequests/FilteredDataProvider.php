@@ -22,7 +22,7 @@ class FilteredDataProvider
     public function getCreatorsPage(Choices $choices): CreatorsPage
     {
         return $this->cache->get(
-            fn() => $this->filterCreatorsBy($choices),
+            fn () => $this->filterCreatorsBy($choices),
             CacheTags::ARTISANS,
             [__METHOD__, $choices->getCacheDigest()],
         );
@@ -34,7 +34,7 @@ class FilteredDataProvider
 
         $appender = new QueryChoicesAppender($choices);
         $paginator = $this->repository->getFiltered($appender);
-        $creators = Vec\map($paginator, fn(CreatorE $creator) => Creator::wrap($creator));
+        $creators = Vec\map($paginator, fn (CreatorE $creator) => Creator::wrap($creator));
 
         $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
 

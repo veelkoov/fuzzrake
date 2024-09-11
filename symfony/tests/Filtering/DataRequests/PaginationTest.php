@@ -2,7 +2,6 @@
 
 namespace App\Tests\Filtering\DataRequests;
 
-use App\Filtering\DataRequests\CreatorsPage;
 use App\Filtering\DataRequests\Pagination;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;

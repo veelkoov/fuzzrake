@@ -277,7 +277,7 @@ class MainPageTest extends PantherTestCaseWithEM
      */
     private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
     {
-        $locator = "//p[@id=\"artisans-table-count\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
+        $locator = "//p[@id=\"creators-table-pagination\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
 
         $this->client->waitFor($locator, 1);
     }

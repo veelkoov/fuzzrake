@@ -66,7 +66,7 @@ class FiltersTest extends PantherTestCaseWithEM
         self::waitUntilHides('#filters-title', 1000);
         self::waitForLoadingIndicatorToDisappear();
 
-        self::assertSelectorTextContains('#artisans-table-count', 'Displaying '.count($expectedMakerIds).' out of');
+        self::assertSelectorTextContains('#creators-table-pagination', 'Displaying '.count($expectedMakerIds).' out of');
 
         foreach ($expectedMakerIds as $makerId) {
             self::assertSelectorIsVisible("tr#$makerId");

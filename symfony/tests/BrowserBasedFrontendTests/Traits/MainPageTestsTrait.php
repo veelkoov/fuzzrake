@@ -22,7 +22,10 @@ trait MainPageTestsTrait
 
         self::fillChecklist($client, true, false, $expectFilled);
 
-        self::assertStringContainsString("Displaying $numberOfArtisans out of $numberOfArtisans fursuit makers in the database.", $client->getCrawler()->findElement(WebDriverBy::id('artisans-table-count'))->getText());
+        self::assertStringContainsString(
+            "Displaying $numberOfArtisans out of $numberOfArtisans matched fursuit makers.",
+            $client->getCrawler()->findElement(WebDriverBy::id('creators-table-pagination'))->getText(),
+        );
     }
 
     /**

@@ -4,11 +4,11 @@ namespace App\Filtering\DataRequests;
 
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 
-readonly final class CreatorsPage
+final readonly class CreatorsPage
 {
     /**
      * @param list<Creator> $creators
-     * @param list<int> $paginationPages
+     * @param list<int>     $paginationPages
      */
     public function __construct(
         public array $creators,
