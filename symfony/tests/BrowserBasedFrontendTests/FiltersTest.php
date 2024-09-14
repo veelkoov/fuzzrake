@@ -40,7 +40,7 @@ class FiltersTest extends PantherTestCaseWithEM
         $isAdult = (bool) ($filtersSet['isAdult'] ?? true);
         $wantsSfw = (bool) ($filtersSet['wantsSfw'] ?? false);
 
-        self::fillChecklist($this->client, $isAdult, $wantsSfw);
+        $this->fillChecklist($isAdult, $wantsSfw);
 
         $this->client->findElement(WebDriverBy::id('open-filters-button'))->click();
         self::waitUntilShows('#filters-title');
