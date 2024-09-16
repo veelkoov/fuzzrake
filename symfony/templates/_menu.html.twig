@@ -3,7 +3,7 @@
         {{ include('_menu_item.html.twig', {name: 'main', fa_icon: 'home', label: 'Home', priority: 'high'}) }}
         {{ include('_menu_item.html.twig', {name: 'info', fa_icon: 'circle-info', label: 'About', priority: 'high'}) }}
         {{ include('_menu_item.html.twig', {name: 'events', fa_icon: 'newspaper', label: 'News', priority: 'high'}) }}
-        {% if isDevEnv() %}
+        {% if is_dev_env() %}
             {{ include('_menu_item.html.twig', {name: 'mx_artisan_new', fa_icon: 'plus', label: 'Maker', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_event_new', fa_icon: 'plus', label: 'Event', priority: 'low'}) }}
             {{ include('_menu_item.html.twig', {name: 'mx_artisan_urls', fa_icon: 'link', label: 'URLs', priority: 'low'}) }}

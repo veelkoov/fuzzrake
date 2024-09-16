@@ -40,9 +40,9 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFilter('fragile_int', $this->fragileIntFilter(...)),
             new TwigFilter('event_url', $this->friendly->shortUrl(...)),
-            new TwigFilter('filterItemsMatching', $this->filterItemsMatchingFilter(...)),
-            new TwigFilter('humanFriendlyRegexp', $this->friendly->regex(...)),
-            new TwigFilter('filterByQuery', $this->filterFilterByQuery(...)),
+            new TwigFilter('filter_items_matching', $this->filterItemsMatchingFilter(...)),
+            new TwigFilter('human_friendly_regexp', $this->friendly->regex(...)),
+            new TwigFilter('filter_by_query', $this->filterFilterByQuery(...)),
         ];
     }
 
@@ -58,8 +58,8 @@ class AppExtensions extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('isDevEnv', $this->isDevEnvFunction(...)),
-            new TwigFunction('isDevOrTestEnv', $this->isDevOrTestEnvFunction(...)),
+            new TwigFunction('is_dev_env', $this->isDevEnvFunction(...)),
+            new TwigFunction('is_dev_or_test_env', $this->isDevOrTestEnvFunction(...)),
 
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
             new TwigFunction('ages_description', $this->agesDescription(...), SafeFor::HTML),

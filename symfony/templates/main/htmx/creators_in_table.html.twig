@@ -92,7 +92,7 @@
 
         <td class="links column-toggleable">
             <div class="btn-group artisan-links" role="group" aria-label="Links to websites">
-                {% if isDevEnv() %}
+                {% if is_dev_env() %}
                     <a class="btn btn-warning" href="{{ path('mx_artisan_edit', {makerId: creator.lastMakerId}) }}">
                         <i class="fas fa-edit"></i>
                     </a>

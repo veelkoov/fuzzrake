@@ -14,7 +14,7 @@ class EventsExtensions extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('eventDescription', $this->eventDescriptionFunction(...)),
+            new TwigFunction('event_description', $this->eventDescriptionFunction(...)),
         ];
     }
 

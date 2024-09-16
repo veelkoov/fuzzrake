@@ -10,7 +10,7 @@ abstract class AbstractWrappedItemsChecker implements ValueCheckerInterface
      * @param list<string> $wantedItems
      */
     public function __construct(
-        protected readonly array $wantedItems
+        protected readonly array $wantedItems,
     ) {
     }
 }
