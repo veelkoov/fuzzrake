@@ -4,7 +4,8 @@ import MobileLayoutStrategy from "./MobileLayoutStrategy";
 import NavbarElement from "./NavbarElement";
 import NavbarLink, { NavbarLinkPriority } from "./NavbarLink";
 import NavbarMenuButton from "./NavbarMenuButton";
-import Menu from "./Menu";
+import Menu, { MenuItem } from "./Menu";
+import NewsNavbarLink from "./NewsNavbarLink";
 
 const PRIORITY_NUMBER: Record<NavbarLinkPriority, number> = {
   high: 0,
@@ -138,7 +139,30 @@ class Navbar {
 
     this.separator = new NavbarElement(separator);
     this.prioritizedLinks = links
-      .map((node) => new NavbarLink(node, this.menu.cloneAppend(node)))
+      .map((node): NavbarLink => {
+        let ConstructorForNavbarLink: new (
+          node: HTMLAnchorElement,
+          menuItem: MenuItem,
+        ) => NavbarLink;
+
+        switch (node.dataset["navitemType"]) {
+          case "news": {
+            ConstructorForNavbarLink = NewsNavbarLink;
+            break;
+          }
+          case undefined: {
+            ConstructorForNavbarLink = NavbarLink;
+            break;
+          }
+          default: {
+            throw new Error(
+              `Unrecognized navbar link type '${node.dataset["navitemType"]}'`,
+            );
+          }
+        }
+
+        return new ConstructorForNavbarLink(node, this.menu.cloneAppend(node));
+      })
       .sort(
         (a, b) => PRIORITY_NUMBER[a.priority] - PRIORITY_NUMBER[b.priority],
       );

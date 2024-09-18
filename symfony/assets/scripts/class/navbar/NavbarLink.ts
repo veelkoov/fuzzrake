@@ -28,6 +28,16 @@ class NavbarLink extends NavbarElement<HTMLAnchorElement> {
     this.priority = getPriority(node.dataset["priority"]);
   }
 
+  protected get iconEl(): HTMLElement {
+    for (const el of this.node.childNodes) {
+      if (el instanceof HTMLElement && el.nodeName === "I") {
+        return el;
+      }
+    }
+
+    throw new Error("Could not find icon element");
+  }
+
   public get width(): number {
     return this.node.clientWidth;
   }
