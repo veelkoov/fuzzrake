@@ -21,6 +21,29 @@
   }
 }
 
+span.maker-table-icon {
+  color: var(--maker-icon-color);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--maker-icon-color), #fff 80%);
+  border-radius: 8px;
+  line-height: 12px;
+
+  .fas {
+    font-size: 22px;
+  }
+
+  .text {
+    font-size: 10px;
+  }
+}
+
 div#data-table-container {
   table .makerId,
   table .state,
@@ -80,6 +103,16 @@ table#creators-table {
     td {
       cursor: pointer;
       vertical-align: middle;
+    }
+
+    td.icons {
+      padding: 0 0.5rem;
+
+      .icons-container {
+        display: flex;
+        justify-content: space-evenly;
+        gap: 0.5rem;
+      }
     }
 
     td.features,
