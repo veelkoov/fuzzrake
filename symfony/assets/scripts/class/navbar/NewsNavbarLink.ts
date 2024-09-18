@@ -1,5 +1,4 @@
 import NavbarLink from "./NavbarLink";
-import type { MenuItem } from "./Menu";
 import Visitor from "../Visitor";
 
 function createUnreadBadge(): HTMLDivElement {
@@ -9,8 +8,8 @@ function createUnreadBadge(): HTMLDivElement {
 }
 
 class NewsNavbarLink extends NavbarLink {
-  public constructor(node: HTMLAnchorElement, menuItem: MenuItem) {
-    super(node, menuItem);
+  public constructor(node: HTMLAnchorElement) {
+    super(node);
 
     if (this.shouldShowBadge) {
       this.iconEl.appendChild(createUnreadBadge());

@@ -4,7 +4,7 @@ import MobileLayoutStrategy from "./MobileLayoutStrategy";
 import NavbarElement from "./NavbarElement";
 import NavbarLink, { NavbarLinkPriority } from "./NavbarLink";
 import NavbarMenuButton from "./NavbarMenuButton";
-import Menu, { MenuItem } from "./Menu";
+import Menu from "./Menu";
 import NewsNavbarLink from "./NewsNavbarLink";
 
 const PRIORITY_NUMBER: Record<NavbarLinkPriority, number> = {
@@ -142,7 +142,6 @@ class Navbar {
       .map((node): NavbarLink => {
         let ConstructorForNavbarLink: new (
           node: HTMLAnchorElement,
-          menuItem: MenuItem,
         ) => NavbarLink;
 
         switch (node.dataset["navitemType"]) {
@@ -161,7 +160,9 @@ class Navbar {
           }
         }
 
-        return new ConstructorForNavbarLink(node, this.menu.cloneAppend(node));
+        const navbarLink = new ConstructorForNavbarLink(node);
+        navbarLink.addToMenu(this.menu);
+        return navbarLink;
       })
       .sort(
         (a, b) => PRIORITY_NUMBER[a.priority] - PRIORITY_NUMBER[b.priority],
