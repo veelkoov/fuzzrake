@@ -60,7 +60,8 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
     {
         $client = static::createClient();
 
-        $artisan = self::getArtisan(password: 'password-555');
+        /** @noinspection PhpRedundantOptionalArgumentInspection Make sure defaults for ages and worksWithMinors don't change. */
+        $artisan = self::getArtisan(password: 'password-555', ages: null, worksWithMinors: null);
         self::persistAndFlush($artisan);
 
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Hashed password do not match.');
@@ -82,7 +83,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
         $artisan = self::findArtisanByMakerId('MAKERID');
         self::assertTrue(password_verify('password-555', $artisan->getPassword()), 'Password has changed.');
         self::assertNull($artisan->getWorksWithMinors(), 'Works with minors has changed.');
-        self::assertNull($artisan->getIsMinor(), 'Is minor has changed.');
+        self::assertNull($artisan->getAges(), 'Ages has changed.');
     }
 
     public function testDeleteArtisanAnd404Response(): void

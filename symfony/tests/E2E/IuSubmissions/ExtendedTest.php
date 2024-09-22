@@ -43,7 +43,6 @@ class ExtendedTest extends AbstractTestWithEM
         Field::CS_TRACKER_ISSUE,
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
-        Field::IS_MINOR,
         Field::SAFE_DOES_NSFW,
         Field::SAFE_WORKS_WITH_MINORS,
 

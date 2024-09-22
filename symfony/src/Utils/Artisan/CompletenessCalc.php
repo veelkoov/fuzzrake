@@ -65,9 +65,6 @@ final class CompletenessCalc
             // Functional, development field.
             ->anyNotEmpty(self::INSIGNIFICANT, F::URL_OTHER)
 
-            // Deprecated field - not counting.
-            ->anyNotEmpty(self::INSIGNIFICANT, F::IS_MINOR)
-
             // Intro is a nice addition, but the simpler the card, the better.
             ->anyNotEmpty(self::INSIGNIFICANT, F::INTRO)
 
