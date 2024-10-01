@@ -43,7 +43,7 @@
                     <p>
                         {% if event.typeDataUpdated %}
 
-                            {{ eventDescription(event) }}
+                            {{ event_description(event) }}
 
                         {% elseif event.typeCsUpdated %}
 
@@ -81,7 +81,7 @@
                             {%- endfor -%})
                         {% endif %}
 
-                        {% if isDevOrTestEnv() and event.editable %}
+                        {% if is_dev_or_test_env() and event.editable %}
                             <a href="{{ path('mx_event_edit', {id: event.id}) }}"><i class="fas fa-edit"></i></a>
                         {% endif %}
                     </p>

@@ -5,6 +5,7 @@ import AgeAndSfwConfig from "../class/AgeAndSfwConfig";
 import "../../styles/general.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "../class/navbar/Navbar";
 
 jQuery(() => {
   jQuery("span.utc_datetime").each((index, element) => {
@@ -39,3 +40,5 @@ jQuery(() => {
     config.save();
   });
 });
+
+jQuery(() => Navbar.init());

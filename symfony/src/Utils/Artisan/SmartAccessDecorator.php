@@ -202,16 +202,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== VARIOUS HELPERS, DATA-TABLE HELPERS =====
     //
 
-    public function getIsMinor(): ?bool
-    {
-        return $this->getBoolValue(Field::IS_MINOR);
-    }
-
-    public function setIsMinor(?bool $isMinor): self
-    {
-        return $this->setBoolValue(Field::IS_MINOR, $isMinor);
-    }
-
     #[NotNull(message: 'You must answer this question.', groups: [Validation::GRP_DATA])]
     public function getAges(): ?Ages
     {

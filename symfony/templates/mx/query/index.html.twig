@@ -44,9 +44,9 @@
                         <td><a href="{{ path('mx_artisan_edit', {id: artisan.id}) }}">{{ artisan.lastMakerId }}</a></td>
                         <td>{{ artisan.allowsFeedback ? 'YES' : 'NO' }}</td>
                         <td>{% if artisan.allowsFeedback %}{{ artisan.contactInfoOriginal }}{% endif %}</td>
-                        <td>{{ artisan.otherStyles|filterByQuery(query) }}</td>
-                        <td>{{ artisan.otherOrderTypes|filterByQuery(query) }}</td>
-                        <td>{{ artisan.otherFeatures|filterByQuery(query) }}</td>
+                        <td>{{ artisan.otherStyles|filter_by_query(query) }}</td>
+                        <td>{{ artisan.otherOrderTypes|filter_by_query(query) }}</td>
+                        <td>{{ artisan.otherFeatures|filter_by_query(query) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

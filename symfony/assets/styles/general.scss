@@ -1,21 +1,9 @@
 @import "../../node_modules/bootstrap/scss/bootstrap";
+@import "./navbar";
 
 html {
   // FIXME: https://github.com/symfony/panther/issues/502#issuecomment-1004734763
   scroll-behavior: auto !important;
-}
-
-nav.navbar .navbar-nav .nav-link .always-full-opacity {
-  color: var(--bs-navbar-hover-color);
-}
-
-#navbarNav:not(.show) + ul.top-menu-right {
-  flex-direction: row;
-
-  li > a {
-    padding-right: var(--bs-navbar-nav-link-padding-x);
-    padding-left: var(--bs-navbar-nav-link-padding-x);
-  }
 }
 
 div.footer {

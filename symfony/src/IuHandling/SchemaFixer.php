@@ -11,7 +11,7 @@ use App\Utils\PackedStringList;
 final class SchemaFixer
 {
     private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const CURRENT_SCHEMA_VERSION = 15;
+    private const CURRENT_SCHEMA_VERSION = 16;
 
     /**
      * @param array<string, psJsonFieldValue> $data
@@ -29,7 +29,6 @@ final class SchemaFixer
                 // no break
 
             case 9:
-                $data[Field::IS_MINOR->value] = null;
                 $data[Field::WORKS_WITH_MINORS->value] = null;
                 // no break
 
@@ -57,6 +56,10 @@ final class SchemaFixer
 
             case 14:
                 $data[Field::URL_OTHER->value] = PackedStringList::unpack(Enforce::string($data[Field::URL_OTHER->value]));
+                // no break
+
+            case 15:
+                unset($data['IS_MINOR']);
         }
 
         return $data;

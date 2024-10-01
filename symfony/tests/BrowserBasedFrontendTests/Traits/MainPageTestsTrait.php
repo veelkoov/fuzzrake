@@ -75,7 +75,7 @@ trait MainPageTestsTrait
      */
     private function waitForLoadingIndicatorToDisappear(): void
     {
-        self::waitUntilHides('#loading-indicator');
+        self::waitUntilHides('#loading-indicator', 550);
     }
 
     /**

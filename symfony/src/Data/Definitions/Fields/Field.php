@@ -101,9 +101,6 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('speciesDoesnt', type: Type::STR_LIST)]
     case SPECIES_DOESNT = 'SPECIES_DOESNT';
 
-    #[Props('isMinor', type: Type::BOOLEAN, inIuForm: false, inStats: false, freeForm: false)]
-    case IS_MINOR = 'IS_MINOR'; // TODO: Remove https://github.com/veelkoov/fuzzrake/issues/103
-
     #[Props('ages', freeForm: false)]
     case AGES = 'AGES';
 
