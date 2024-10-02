@@ -11,12 +11,12 @@ use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Service\CacheDigestProvider;
+use App\Utils\Arrays\Arrays;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
-use Psl\Iter;
 use Psl\Vec;
 
 class QueryChoicesAppender implements CacheDigestProvider
@@ -320,7 +320,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         if ([] === $conditions) {
             return;
         } elseif (1 === count($conditions)) {
-            $condition = Iter\first($conditions);
+            $condition = Arrays::single($conditions);
         } else {
             $condition = $builder->expr()->orX(...$conditions);
         }
