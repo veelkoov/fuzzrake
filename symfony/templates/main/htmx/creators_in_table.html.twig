@@ -7,6 +7,17 @@
             inactive: creator.isHidden,
             'matched-maker-id': creator.hasMakerId(searched_creator_id),
         }) }}">
+        <td class="icons">
+            <div class="icons-container">
+                {% if is_new(creator) %}
+                    {{ include('main/htmx/maker_icon.html.twig', { text: 'New', fa_icon: 'leaf', color: '#4cae4c'}) }}
+                {% endif %}
+
+                {% if is_minor(creator) %}
+                    {{ include('main/htmx/maker_icon.html.twig', { text: 'Minor', fa_icon: 'child', color: '#E3963E'}) }}
+                {% endif %}
+            </div>
+        </td>
         <td class="name" {{ card_open_attrs(creator.lastMakerId) }}>
             <span class="flag-icon flag-icon-{{ creator.country|lower }}"></span>&nbsp;
 
@@ -15,12 +26,6 @@
             {%- if creator.isHidden -%}
                 &nbsp;[hidden]{# grep-inactive-mark #}
             {%- endif -%}
-
-            <span class="text-nowrap">{{ ages_description(creator, false) }}</span>
-
-            {% if is_new(creator) %}
-                <span class="text-nowrap new-creator"><i class="fa-solid fa-leaf"></i>&nbsp;recently added</span>
-            {% endif %}
         </td>
 
         <td class="makerId column-toggleable" {{ card_open_attrs(creator.lastMakerId) }}>

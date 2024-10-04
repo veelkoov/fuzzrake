@@ -68,6 +68,7 @@ class AppExtensions extends AbstractExtension
             new TwigFunction('get_cst_issue_text', $this->getCstIssueText(...)),
             new TwigFunction('has_good_completeness', $this->hasGoodCompleteness(...)),
             new TwigFunction('is_new', $this->isNew(...)),
+            new TwigFunction('is_minor', $this->isMinor(...)),
             new TwigFunction('unique_int', fn () => $this->uniqueInt++),
             new TwigFunction('unknown_value', $this->unknownValue(...), SafeFor::HTML),
         ];
@@ -106,6 +107,11 @@ class AppExtensions extends AbstractExtension
     public function isNew(Creator $creator): bool
     {
         return NewArtisan::isNew($creator);
+    }
+
+    public function isMinor(Creator $creator): bool
+    {
+        return Ages::MINORS === $creator->getAges();
     }
 
     public function hasGoodCompleteness(Creator $creator): bool

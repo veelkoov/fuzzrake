@@ -46,9 +46,7 @@ span.utc_datetime {
   text-underline-offset: 0.2ex;
 }
 
-.new-creator,
-#legend-modal .new-creator, // More precise selector, otherwise was overwritten by Bootstrap styles
-{
+.new-creator {
   color: #4cae4c;
 }
 
