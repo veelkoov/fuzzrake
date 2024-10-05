@@ -12,13 +12,11 @@ use Symfony\Component\Filesystem\Filesystem;
 class LocalStorageService
 {
     private readonly Filesystem $filesystem;
-    private readonly string $dataDirPath;
 
     public function __construct(
         #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
-        string $dataDirPath,
+        private readonly string $dataDirPath,
     ) {
-        $this->dataDirPath = $dataDirPath;
         $this->filesystem = new Filesystem();
     }
 

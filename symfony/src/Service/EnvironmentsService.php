@@ -8,13 +8,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class EnvironmentsService
 {
-    private readonly string $environment;
-
     public function __construct(
         #[Autowire('%kernel.environment%')]
-        string $environment,
+        private readonly string $environment,
     ) {
-        $this->environment = $environment;
     }
 
     public function isDevOrTest(): bool
