@@ -33,17 +33,7 @@ class FilteredDataProvider
         $pagesCount = null;
 
         do {
-            if ($choices->pageNumber < 1) {
-                $newPageNumber = 1;
-            } elseif (null !== $pagesCount && $choices->pageNumber > $pagesCount) {
-                $newPageNumber = $pagesCount;
-            } else {
-                $newPageNumber = $choices->pageNumber;
-            }
-
-            if ($choices->pageNumber !== $newPageNumber) {
-                $choices = $choices->changePage($newPageNumber);
-            }
+            $choices = $this->getChoicesWithFixedPageNumber($choices, $pagesCount);
 
             $appender = new QueryChoicesAppender($choices);
             $paginator = $this->repository->getFiltered($appender);
@@ -60,5 +50,22 @@ class FilteredDataProvider
             $pagesCount,
             Pagination::getPaginationPages($choices->pageNumber, $pagesCount),
         );
+    }
+
+    private function getChoicesWithFixedPageNumber(Choices $choices, ?int $lastPageNumber): Choices
+    {
+        if ($choices->pageNumber < 1) {
+            $newPageNumber = 1;
+        } elseif (null !== $lastPageNumber && $choices->pageNumber > $lastPageNumber) {
+            $newPageNumber = $lastPageNumber;
+        } else {
+            $newPageNumber = $choices->pageNumber;
+        }
+
+        if ($choices->pageNumber !== $newPageNumber) {
+            $choices = $choices->changePage($newPageNumber);
+        }
+
+        return $choices;
     }
 }
