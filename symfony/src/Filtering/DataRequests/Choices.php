@@ -43,6 +43,32 @@ readonly class Choices
     ) {
     }
 
+    public function changePage(int $newPageNumber): self
+    {
+        return new self(
+            $this->makerId,
+            $this->textSearch,
+            $this->countries,
+            $this->states,
+            $this->languages,
+            $this->styles,
+            $this->features,
+            $this->orderTypes,
+            $this->productionModels,
+            $this->openFor,
+            $this->species,
+            $this->wantsUnknownPaymentPlans,
+            $this->wantsAnyPaymentPlans,
+            $this->wantsNoPaymentPlans,
+            $this->isAdult,
+            $this->wantsSfw,
+            $this->wantsInactive,
+            $this->creatorMode,
+            $newPageNumber,
+            $this->pageSize,
+        );
+    }
+
     public function getCacheDigest(): string
     {
         return hash('sha256', Json\encode($this));

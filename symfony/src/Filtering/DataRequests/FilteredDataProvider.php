@@ -30,13 +30,28 @@ class FilteredDataProvider
 
     private function filterCreatorsBy(Choices $choices): CreatorsPage
     {
-        // TODO: Where is the page number filtered?
+        $pagesCount = null;
 
-        $appender = new QueryChoicesAppender($choices);
-        $paginator = $this->repository->getFiltered($appender);
+        do {
+            if ($choices->pageNumber < 1) {
+                $newPageNumber = 1;
+            } elseif (null !== $pagesCount && $choices->pageNumber > $pagesCount) {
+                $newPageNumber = $pagesCount;
+            } else {
+                $newPageNumber = $choices->pageNumber;
+            }
+
+            if ($choices->pageNumber !== $newPageNumber) {
+                $choices = $choices->changePage($newPageNumber);
+            }
+
+            $appender = new QueryChoicesAppender($choices);
+            $paginator = $this->repository->getFiltered($appender);
+
+            $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
+        } while ($choices->pageNumber > $pagesCount);
+
         $creators = Vec\map($paginator, fn (CreatorE $creator) => Creator::wrap($creator));
-
-        $pagesCount = Pagination::countPages($paginator, $choices->pageSize);
 
         return new CreatorsPage(
             $creators,
