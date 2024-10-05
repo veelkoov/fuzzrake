@@ -8,6 +8,7 @@ use App\Controller\IuForm\Utils\IuState;
 use App\Controller\Traits\ButtonClickedTrait;
 use App\Controller\Traits\CreatorByCreatorIdTrait;
 use App\Data\Definitions\Fields\SecureValues;
+use App\Form\InclusionUpdate\BaseForm;
 use App\IuHandling\Submission\SubmissionService;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Captcha;
@@ -69,7 +70,8 @@ abstract class AbstractIuFormController extends AbstractController
     }
 
     /**
-     * @param array<string, mixed> $options
+     * @param class-string<BaseForm> $type
+     * @param array<string, mixed>   $options
      */
     protected function handleForm(Request $request, IuState $state, string $type, array $options): FormInterface
     {
