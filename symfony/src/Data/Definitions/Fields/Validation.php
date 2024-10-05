@@ -10,6 +10,6 @@ class Validation
 {
     use UtilityClass;
 
-    final public const GRP_DATA = 'iu_data';
-    final public const GRP_CONTACT_AND_PASSWORD = 'iu_contact_and_password';
+    final public const string GRP_DATA = 'iu_data';
+    final public const string GRP_CONTACT_AND_PASSWORD = 'iu_contact_and_password';
 }

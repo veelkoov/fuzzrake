@@ -11,7 +11,7 @@ final class PackedStringList
 {
     use UtilityClass;
 
-    private const STD_SEPARATOR = "\n";
+    private const string STD_SEPARATOR = "\n";
 
     /**
      * @return list<string>

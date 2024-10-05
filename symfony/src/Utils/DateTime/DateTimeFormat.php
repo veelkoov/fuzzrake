@@ -11,7 +11,7 @@ final class DateTimeFormat
 {
     use UtilityClass;
 
-    private const DEFAULT_FORMAT = 'Y-m-d H:i';
+    private const string DEFAULT_FORMAT = 'Y-m-d H:i';
 
     public static function fragileUtc(mixed $input, string $format = self::DEFAULT_FORMAT): string
     {

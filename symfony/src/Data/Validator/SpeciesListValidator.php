@@ -7,6 +7,7 @@ namespace App\Data\Validator;
 use App\Data\Definitions\Fields\Field;
 use App\Service\SpeciesService;
 use App\Utils\PackedStringList;
+use Override;
 
 class SpeciesListValidator implements ValidatorInterface
 {
@@ -15,6 +16,7 @@ class SpeciesListValidator implements ValidatorInterface
     ) {
     }
 
+    #[Override]
     public function isValid(Field $field, string $subject): bool
     {
         foreach (PackedStringList::unpack($subject) as $specie) {

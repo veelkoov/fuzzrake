@@ -9,6 +9,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Iterator;
 use IteratorAggregate;
+use Override;
 
 /**
  * @implements ArrayAccess<string, MutableItem>
@@ -59,26 +60,31 @@ class MutableSet implements IteratorAggregate, ArrayAccess
     /**
      * @return Iterator<string, MutableItem>
      */
+    #[Override]
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->items);
     }
 
+    #[Override]
     public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->items);
     }
 
+    #[Override]
     public function offsetGet($offset): MutableItem
     {
         return $this->items[$offset];
     }
 
+    #[Override]
     public function offsetSet($offset, $value): void
     {
         $this->items[$offset] = $value;
     }
 
+    #[Override]
     public function offsetUnset($offset): void
     {
         unset($this->items[$offset]);

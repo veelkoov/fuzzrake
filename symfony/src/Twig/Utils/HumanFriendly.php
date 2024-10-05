@@ -11,7 +11,7 @@ use function Psl\Vec\map;
 
 class HumanFriendly
 {
-    private const REGEX_PATTERNS = [
+    private const array REGEX_PATTERNS = [
         '\(\?<!.+?\)',
         '\(\?!.+?\)',
         '[()?]',

@@ -6,6 +6,7 @@ use App\Data\Definitions\Fields\Field;
 use App\Data\Fixer\Fixer;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
+use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 
@@ -16,6 +17,7 @@ class FixerTest extends KernelTestCase // Using real kernel to test autowiring s
 {
     private readonly Fixer $subject;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->subject = Enforce::objectOf(self::getContainer()->get(Fixer::class), Fixer::class);

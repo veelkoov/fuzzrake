@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests\Filters\ValueChecker;
 
+use Override;
+
 use function Psl\Iter\all;
 use function Psl\Iter\contains;
 
 class EverythingChecker extends AbstractWrappedItemsChecker
 {
+    #[Override]
     public function matches(array $items, ?bool $matchedOther): bool
     {
         if ([] === $this->wantedItems) {

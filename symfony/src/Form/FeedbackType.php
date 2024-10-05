@@ -7,6 +7,7 @@ namespace App\Form;
 use App\Form\Transformers\NullToEmptyStringTransformer;
 use App\ValueObject\Feedback;
 use App\ValueObject\Routing\RouteName;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,6 +20,7 @@ class FeedbackType extends AbstractType
 {
     use RouterDependentTrait;
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $router = self::getRouter($options);
@@ -50,6 +52,7 @@ class FeedbackType extends AbstractType
         $builder->get('subject')->addModelTransformer(new NullToEmptyStringTransformer());
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         self::configureRouterOption($resolver);

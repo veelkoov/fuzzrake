@@ -6,6 +6,7 @@ namespace App\Form\InclusionUpdate;
 
 use App\Controller\IuForm\Utils\StartData;
 use App\Utils\Enforce;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,8 +14,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Start extends AbstractType
 {
-    final public const OPT_STUDIO_NAME = 'studio_name';
+    final public const string OPT_STUDIO_NAME = 'studio_name';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -89,11 +91,13 @@ class Start extends AbstractType
         }
     }
 
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'iu_form';
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('data_class', StartData::class);

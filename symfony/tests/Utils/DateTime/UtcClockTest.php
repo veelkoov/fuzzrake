@@ -8,6 +8,7 @@ use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\TestsBridge;
 use App\Utils\TestUtils\UtcClockMock;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class UtcClockTest extends TestCase
 {
+    #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();

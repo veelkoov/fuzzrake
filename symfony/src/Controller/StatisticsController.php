@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StatisticsController extends AbstractController
 {
-    private const MATCH_WORDS = [
+    private const array MATCH_WORDS = [
         'accessor',
         'bases?|blanks?',
         'bendable|pose?able|lickable',

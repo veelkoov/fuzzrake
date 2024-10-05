@@ -16,6 +16,7 @@ use App\Form\Transformers\ContactPermitTransformer;
 use App\Form\Transformers\NullToEmptyArrayTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,6 +26,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArtisanType extends AbstractTypeWithDelete
 {
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
@@ -321,6 +323,7 @@ class ArtisanType extends AbstractTypeWithDelete
         $builder->get('contactAllowed')->addModelTransformer(new ContactPermitTransformer());
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
