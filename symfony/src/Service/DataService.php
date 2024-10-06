@@ -10,7 +10,6 @@ use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
@@ -103,15 +102,6 @@ class DataService
         return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS],
             fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value)
         );
-    }
-
-    /**
-     * @return list<Artisan>
-     */
-    public function getAllArtisans(): array
-    {
-        return $this->cache->getCached('DataService.getAllArtisans', CacheTags::ARTISANS,
-            fn () => Artisan::wrapAll($this->creatorRepository->getAll()));
     }
 
     public function getOooNotice(): string
