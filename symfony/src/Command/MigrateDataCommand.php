@@ -6,6 +6,7 @@ use App\Doctrine\EntityManagerDecorator;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator;
 use App\Utils\PackedStringList;
+use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +26,7 @@ class MigrateDataCommand extends Command // TODO: Temporary. Remove.
         parent::__construct();
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

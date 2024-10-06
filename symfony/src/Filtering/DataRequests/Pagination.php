@@ -12,7 +12,7 @@ final class Pagination
 {
     use StaticClass;
 
-    public const PAGE_SIZE = 50;
+    public const int PAGE_SIZE = 50;
 
     public static function countPages(Paginator $paginator, int $pageSize): int
     {
