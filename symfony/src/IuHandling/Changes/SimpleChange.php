@@ -9,6 +9,7 @@ use App\Data\FieldValue;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\StrUtils;
 use DateTimeImmutable;
+use Override;
 
 class SimpleChange implements ChangeInterface
 {
@@ -23,6 +24,7 @@ class SimpleChange implements ChangeInterface
     ) {
     }
 
+    #[Override]
     public function getDescription(): string
     {
         $name = $this->field->value;
@@ -52,6 +54,7 @@ class SimpleChange implements ChangeInterface
         }
     }
 
+    #[Override]
     public function isActuallyAChange(): bool
     {
         return $this->old instanceof DateTimeImmutable && $this->new instanceof DateTimeImmutable
@@ -71,6 +74,7 @@ class SimpleChange implements ChangeInterface
         }
     }
 
+    #[Override]
     public function getField(): Field
     {
         return $this->field;

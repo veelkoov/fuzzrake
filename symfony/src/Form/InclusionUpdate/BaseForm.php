@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form\InclusionUpdate;
 
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -15,6 +16,7 @@ abstract class BaseForm extends AbstractType
 {
     final public const BTN_RESET = 'reset';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -36,11 +38,13 @@ abstract class BaseForm extends AbstractType
         ;
     }
 
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'iu_form';
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('data_class', Artisan::class);

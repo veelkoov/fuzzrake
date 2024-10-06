@@ -17,6 +17,7 @@ use App\Form\Transformers\NullToEmptyArrayTransformer;
 use App\Form\Transformers\SinceTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\ValueObject\Routing\RouteName;
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -30,10 +31,11 @@ class Data extends BaseForm
 {
     use RouterDependentTrait;
 
-    final public const OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
-    final public const FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
-    final public const FLD_MAKER_ID = 'makerId';
+    final public const string OPT_PHOTOS_COPYRIGHT_OK = 'photosCopyrightOk';
+    final public const string FLD_PHOTOS_COPYRIGHT = 'photosCopyright';
+    final public const string FLD_MAKER_ID = 'makerId';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
@@ -413,6 +415,7 @@ class Data extends BaseForm
         }
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);

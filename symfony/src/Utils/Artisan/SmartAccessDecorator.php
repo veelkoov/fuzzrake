@@ -31,6 +31,7 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonSerializable;
 use LogicException;
+use Override;
 use Psl\Dict;
 use Psl\Iter;
 use Stringable;
@@ -61,6 +62,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         $this->artisan = clone $this->artisan;
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->artisan->__toString();
@@ -101,6 +103,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
+    #[Override]
     public function get(Field $field): mixed
     {
         $callback = [$this, 'get'.ucfirst($field->modelName())];
@@ -123,6 +126,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         }
     }
 
+    #[Override]
     public function getString(Field $field): string
     {
         return Enforce::string($this->get($field));
@@ -131,11 +135,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return list<string>
      */
+    #[Override]
     public function getStringList(Field $field): array
     {
         return Enforce::strList($this->get($field));
     }
 
+    #[Override]
     public function hasData(Field $field): bool
     {
         return $field->providedIn($this);
@@ -868,14 +874,12 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     private function getValuesForJson(FieldsList $fields): array
     {
-        return Dict\map($fields, function (Field $field) { // @phpstan-ignore-line FIXME
-            return match ($field) {
-                Field::COMPLETENESS => $this->getCompleteness(),
-                Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
-                Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
-                Field::DATE_UPDATED => StrUtils::asStr($this->getDateUpdated()),
-                default => $this->get($field),
-            };
+        return Dict\map($fields, fn (Field $field) => match ($field) { // @phpstan-ignore-line FIXME
+            Field::COMPLETENESS => $this->getCompleteness(),
+            Field::CS_LAST_CHECK => StrUtils::asStr($this->getCsLastCheck()),
+            Field::DATE_ADDED => StrUtils::asStr($this->getDateAdded()),
+            Field::DATE_UPDATED => StrUtils::asStr($this->getDateUpdated()),
+            default => $this->get($field),
         });
     }
 
@@ -898,6 +902,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     /**
      * @return array<string, psJsonFieldValue>
      */
+    #[Override]
     public function jsonSerialize(): array // Safely assume "public" for default
     {
         return $this->getPublicData();

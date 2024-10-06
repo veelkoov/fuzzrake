@@ -10,8 +10,8 @@ use App\Utils\PackedStringList;
 
 final class SchemaFixer
 {
-    private const SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const CURRENT_SCHEMA_VERSION = 16;
+    private const string SCHEMA_VERSION = 'SCHEMA_VERSION';
+    private const int CURRENT_SCHEMA_VERSION = 16;
 
     /**
      * @param array<string, psJsonFieldValue> $data

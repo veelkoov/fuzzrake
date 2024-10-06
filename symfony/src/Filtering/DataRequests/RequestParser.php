@@ -12,7 +12,7 @@ use function Psl\Iter\contains;
 
 class RequestParser
 {
-    private const ARRAYS = [
+    private const array ARRAYS = [
         'countries',
         'states',
         'languages',
@@ -26,13 +26,13 @@ class RequestParser
         'inactive',
     ];
 
-    private const BOOLEANS = [
+    private const array BOOLEANS = [
         'isAdult',
         'wantsSfw',
         'creatorMode',
     ];
 
-    private const STRINGS = [
+    private const array STRINGS = [
         'textSearch',
         'makerId',
     ];

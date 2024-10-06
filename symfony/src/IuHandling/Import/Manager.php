@@ -14,11 +14,11 @@ use InvalidArgumentException;
 
 class Manager
 {
-    final public const CMD_ACCEPT = 'accept';
-    final public const CMD_CLEAR = 'clear';
-    final public const CMD_COMMENT = '//';
-    final public const CMD_MATCH_MAKER_ID = 'match-maker-id';
-    final public const CMD_SET = 'set';
+    final public const string CMD_ACCEPT = 'accept';
+    final public const string CMD_CLEAR = 'clear';
+    final public const string CMD_COMMENT = '//';
+    final public const string CMD_MATCH_MAKER_ID = 'match-maker-id';
+    final public const string CMD_SET = 'set';
 
     /**
      * @var list<ValueCorrection>

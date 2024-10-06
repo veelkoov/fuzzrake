@@ -8,6 +8,7 @@ use ArrayIterator;
 use Closure;
 use Iterator;
 use IteratorAggregate;
+use Override;
 
 use function Psl\Vec\concat;
 use function Psl\Vec\values;
@@ -49,6 +50,7 @@ class FieldsList implements IteratorAggregate
     /**
      * @return Iterator<string, Field>
      */
+    #[Override]
     public function getIterator(): Iterator
     {
         return new ArrayIterator($this->fields);

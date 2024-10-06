@@ -10,6 +10,7 @@ use App\Data\Tidying\Printer;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,8 +20,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand('app:data:tidy')]
 class DataTidyCommand extends Command
 {
-    private const OPT_COMMIT = 'commit';
-    private const OPT_WITH_INACTIVE = 'with-inactive';
+    private const string OPT_COMMIT = 'commit';
+    private const string OPT_WITH_INACTIVE = 'with-inactive';
 
     public function __construct(
         private readonly EntityManagerInterface $objectManager,
@@ -30,6 +31,7 @@ class DataTidyCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -38,6 +40,7 @@ class DataTidyCommand extends Command
         ;
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

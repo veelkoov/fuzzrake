@@ -9,9 +9,9 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 
 class DataQuery
 {
-    private const EXCLUDE_CHAR = '-';
-    private const CMD_START_CHAR = ':';
-    private const CMD_ONLY_FEEDBACK_YES = ':YES';
+    private const string EXCLUDE_CHAR = '-';
+    private const string CMD_START_CHAR = ':';
+    private const string CMD_ONLY_FEEDBACK_YES = ':YES';
 
     /**
      * @var Artisan[]

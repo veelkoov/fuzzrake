@@ -13,13 +13,13 @@ final class CompletenessCalc
 {
     use UtilityClass;
 
-    private const IMPORTANT = 15;
-    private const AVERAGE = 10;
-    private const MINOR = 5;
-    private const TRIVIAL = 2;
-    private const INSIGNIFICANT = 0;
+    private const int IMPORTANT = 15;
+    private const int AVERAGE = 10;
+    private const int MINOR = 5;
+    private const int TRIVIAL = 2;
+    private const int INSIGNIFICANT = 0;
 
-    private const WEBSITES = [
+    private const array WEBSITES = [
         F::URL_WEBSITE,
         F::URL_FUR_AFFINITY,
         F::URL_DEVIANTART,

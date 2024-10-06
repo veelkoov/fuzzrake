@@ -21,12 +21,10 @@ class MakerId
     #[ORM\JoinColumn(nullable: false)]
     private Artisan $artisan;
 
-    #[ORM\Column(type: Types::TEXT, unique: true)]
-    private string $makerId;
-
-    public function __construct(string $makerId = '')
-    {
-        $this->makerId = $makerId;
+    public function __construct(
+        #[ORM\Column(type: Types::TEXT, unique: true)]
+        private string $makerId = '',
+    ) {
     }
 
     public function getId(): ?int

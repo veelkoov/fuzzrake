@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Transformers;
 
+use Override;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
@@ -12,6 +13,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 class BooleanTransformer implements DataTransformerInterface
 {
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
+    #[Override]
     public function transform($value): mixed
     {
         return match ($value) {
@@ -22,6 +24,7 @@ class BooleanTransformer implements DataTransformerInterface
     }
 
     /** @noinspection PhpMixedReturnTypeCanBeReducedInspection - Interface compatibility */
+    #[Override]
     public function reverseTransform($value): mixed
     {
         return match ($value) {

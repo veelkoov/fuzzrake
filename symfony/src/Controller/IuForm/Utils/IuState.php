@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class IuState
 {
-    private const CAPTCHA_DONE = 'captcha_done';
-    private const DATA_DONE = 'data_done';
+    private const string CAPTCHA_DONE = 'captcha_done';
+    private const string DATA_DONE = 'data_done';
 
     public readonly string $previousPassword;
     public readonly bool $wasContactAllowed;

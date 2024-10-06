@@ -8,6 +8,7 @@ use App\Data\Fixer\String\ConfigurableStringFixer;
 use App\Data\Fixer\String\GenericStringFixer;
 use App\Utils\StrUtils;
 use App\Utils\UnbelievableRuntimeException;
+use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TRegx\CleanRegex\Exception\NonexistentGroupException;
 use TRegx\CleanRegex\Match\Detail;
@@ -30,11 +31,13 @@ final class LanguagesFixer extends AbstractListFixer
         $this->fixer = new ConfigurableStringFixer($languages);
     }
 
+    #[Override]
     protected function getSeparatorRegexp(): string
     {
         return '[,;&]|[, ]and ';
     }
 
+    #[Override]
     protected function fixItem(string $subject): string
     {
         $subject = $this->genericStringFixer->fix($subject);

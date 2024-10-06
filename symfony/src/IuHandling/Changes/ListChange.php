@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IuHandling\Changes;
 
 use App\Data\Definitions\Fields\Field;
+use Override;
 
 readonly class ListChange implements ChangeInterface
 {
@@ -30,6 +31,7 @@ readonly class ListChange implements ChangeInterface
         [$this->added, $this->removed] = self::calculateAddedRemoved($this->old, $this->new);
     }
 
+    #[Override]
     public function getDescription(): string
     {
         $name = $this->field->value;
@@ -53,6 +55,7 @@ readonly class ListChange implements ChangeInterface
         return $res;
     }
 
+    #[Override]
     public function isActuallyAChange(): bool
     {
         return !empty($this->added) || !empty($this->removed);
@@ -86,6 +89,7 @@ readonly class ListChange implements ChangeInterface
         return [$added, $removed];
     }
 
+    #[Override]
     public function getField(): Field
     {
         return $this->field;

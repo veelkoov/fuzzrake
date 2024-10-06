@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form\Mx;
 
 use App\Entity\Submission;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -13,9 +14,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SubmissionType extends AbstractType
 {
-    final public const BTN_IMPORT = 'import';
-    final public const BTN_SAVE = 'save';
+    final public const string BTN_IMPORT = 'import';
+    final public const string BTN_SAVE = 'save';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -42,6 +44,7 @@ class SubmissionType extends AbstractType
         ;
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
