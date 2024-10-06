@@ -10,6 +10,7 @@ use App\Form\RouterDependentTrait;
 use App\Form\Transformers\ContactPermitTransformer;
 use App\ValueObject\Routing\RouteName;
 use App\ValueObject\Texts;
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -22,12 +23,13 @@ class ContactAndPassword extends BaseForm
 {
     use RouterDependentTrait;
 
-    final public const FLD_CHANGE_PASSWORD = 'changePassword';
-    final public const FLD_CONTACT_ALLOWED = 'contactAllowed';
-    final public const FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
-    final public const FLD_PASSWORD = 'password';
-    final public const BTN_BACK = 'back';
+    final public const string FLD_CHANGE_PASSWORD = 'changePassword';
+    final public const string FLD_CONTACT_ALLOWED = 'contactAllowed';
+    final public const string FLD_VERIFICATION_ACKNOWLEDGEMENT = 'verificationAcknowledgement';
+    final public const string FLD_PASSWORD = 'password';
+    final public const string BTN_BACK = 'back';
 
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
@@ -82,6 +84,7 @@ class ContactAndPassword extends BaseForm
         $builder->get(self::FLD_CONTACT_ALLOWED)->addModelTransformer(new ContactPermitTransformer());
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);

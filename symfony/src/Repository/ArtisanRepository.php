@@ -16,7 +16,6 @@ use App\Utils\Creator\CreatorId;
 use App\Utils\UnbelievableRuntimeException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Parameter;
@@ -80,7 +79,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->andWhere('v.value > :fieldValue')
             ->setParameter('fieldName', Field::DATE_ADDED->value)
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
-            ->orderBy('v.value', Criteria::DESC)
+            ->orderBy('v.value', 'DESC')
             ->getQuery()
             ->enableResultCache(3600)
             ->getResult();
@@ -113,7 +112,7 @@ class ArtisanRepository extends ServiceEntityRepository
             ->leftJoin('a.commissions', 'c')->addSelect('c')
             ->leftJoin('a.makerIds', 'mi')->addSelect('mi')
             ->leftJoin('a.values', 'v')->addSelect('v')
-            ->orderBy('a.name', Criteria::ASC);
+            ->orderBy('a.name', 'ASC');
     }
 
     /**

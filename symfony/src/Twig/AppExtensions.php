@@ -16,6 +16,7 @@ use App\Utils\DataQuery;
 use App\Utils\Json;
 use App\Utils\Regexp\Patterns;
 use JsonException;
+use Override;
 use Psl\Vec;
 use TRegx\CleanRegex\Pattern;
 use Twig\Extension\AbstractExtension;
@@ -35,6 +36,7 @@ class AppExtensions extends AbstractExtension
         $this->itemExplanation = Pattern::of(' \([^)]+\)');
     }
 
+    #[Override]
     public function getFilters(): array
     {
         return [
@@ -55,6 +57,7 @@ class AppExtensions extends AbstractExtension
         }
     }
 
+    #[Override]
     public function getFunctions(): array
     {
         return [

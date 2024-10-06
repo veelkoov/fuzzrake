@@ -6,6 +6,7 @@ namespace App\Data\Fixer\StrList;
 
 use App\Data\Fixer\String\ConfigurableStringFixer;
 use App\Data\Fixer\String\GenericStringFixer;
+use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class FreeListFixer extends AbstractListFixer
@@ -22,11 +23,13 @@ final class FreeListFixer extends AbstractListFixer
         $this->fixer = new ConfigurableStringFixer($lists);
     }
 
+    #[Override]
     protected function getSeparatorRegexp(): ?string
     {
         return null;
     }
 
+    #[Override]
     protected function fixItem(string $subject): string
     {
         return $this->fixer->fix($this->genericStringFixer->fix($subject));

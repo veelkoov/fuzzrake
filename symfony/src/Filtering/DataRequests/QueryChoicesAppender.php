@@ -17,6 +17,7 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
+use Override;
 use Psl\Vec;
 
 class QueryChoicesAppender implements CacheDigestProvider
@@ -43,6 +44,7 @@ class QueryChoicesAppender implements CacheDigestProvider
         );
     }
 
+    #[Override]
     public function getCacheDigest(): string
     {
         return $this->choices->getCacheDigest();

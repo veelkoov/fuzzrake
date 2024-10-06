@@ -9,10 +9,10 @@ final class Completeness
 {
     use UtilityClass;
 
-    private const PERFECT = 100;
-    private const GREAT = 80;
-    private const GOOD = 65;
-    private const OK = 50;
+    private const int PERFECT = 100;
+    private const int GREAT = 80;
+    private const int GOOD = 65;
+    private const int OK = 50;
 
     public static function getCompletenessText(Creator $creator): string
     {

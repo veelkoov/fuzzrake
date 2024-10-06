@@ -6,11 +6,13 @@ namespace App\Twig;
 
 use App\Entity\Event;
 use InvalidArgumentException;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class EventsExtensions extends AbstractExtension
 {
+    #[Override]
     public function getFunctions(): array
     {
         return [

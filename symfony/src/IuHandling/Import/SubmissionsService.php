@@ -17,14 +17,11 @@ use function Psl\Vec\filter;
 
 class SubmissionsService
 {
-    private readonly string $submissionsDirPath;
-
     public function __construct(
         private readonly SubmissionRepository $repository,
         #[Autowire('%env(resolve:SUBMISSIONS_DIR_PATH)%')]
-        string $submissionsDirPath,
+        private readonly string $submissionsDirPath,
     ) {
-        $this->submissionsDirPath = $submissionsDirPath;
     }
 
     /**

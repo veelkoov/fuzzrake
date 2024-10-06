@@ -6,6 +6,7 @@ namespace App\Data\Fixer\String;
 
 use App\Data\Fixer\StringFixerInterface;
 use App\Utils\Regexp\Replacements;
+use Override;
 
 class ConfigurableStringFixer implements StringFixerInterface
 {
@@ -19,6 +20,7 @@ class ConfigurableStringFixer implements StringFixerInterface
         $this->replacements = new Replacements($regexes['replacements'], $flags, $regexes['regex_prefix'], $regexes['regex_suffix']);
     }
 
+    #[Override]
     public function fix(string $subject): string
     {
         return $this->replacements->do(trim($subject));

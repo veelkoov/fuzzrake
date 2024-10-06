@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\ArtisanUrlRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
 use Stringable;
 
 #[ORM\Entity(repositoryClass: ArtisanUrlRepository::class)]
@@ -104,6 +105,7 @@ class ArtisanUrl implements Stringable
             ->setLastFailureCode(0);
     }
 
+    #[Override]
     public function __toString(): string
     {
         return self::class.":$this->id:$this->url";

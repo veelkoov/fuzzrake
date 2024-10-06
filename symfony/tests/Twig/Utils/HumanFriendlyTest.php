@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Twig\Utils;
 
 use App\Twig\Utils\HumanFriendly;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,6 +15,7 @@ class HumanFriendlyTest extends TestCase
 {
     private static HumanFriendly $subject;
 
+    #[Override]
     public static function setUpBeforeClass(): void
     {
         self::$subject = new HumanFriendly();

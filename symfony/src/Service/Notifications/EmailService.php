@@ -3,6 +3,7 @@
 namespace App\Service\Notifications;
 
 use App\ValueObject\Notification;
+use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -17,6 +18,7 @@ class EmailService implements MessengerInterface
     ) {
     }
 
+    #[Override]
     public function send(Notification $notification): bool
     {
         $email = (new Email())

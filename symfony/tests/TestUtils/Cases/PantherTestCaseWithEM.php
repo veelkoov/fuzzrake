@@ -11,6 +11,7 @@ use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Facebook\WebDriver\WebDriverDimension;
 use LogicException;
+use Override;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\Client as PantherClient;
 use Symfony\Component\Panther\PantherTestCase;
@@ -22,6 +23,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
 
     protected Client $client;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,6 +36,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
         self::resetDB();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -46,6 +49,7 @@ abstract class PantherTestCaseWithEM extends PantherTestCase
      * @param array<string, string> $kernelOptions
      * @param array<string, string> $managerOptions
      */
+    #[Override]
     protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): PantherClient
     {
         $options['hostname'] ??= 'localhost';

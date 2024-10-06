@@ -59,7 +59,7 @@ class FiltersTest extends WebTestCaseWithEM
         $crawler = $client->request('GET', '/htmx/main/creators-in-table?'.$query);
         self::assertResponseStatusCodeIs($client, 200);
 
-        $resultMakerIds = $crawler->filter('td.makerId')->each(fn ($node, $_) => trim($node->text()));
+        $resultMakerIds = $crawler->filter('td.makerId')->each(fn ($node, $_) => trim((string) $node->text()));
         self::assertArrayItemsSameOrderIgnored($expectedMakerIds, $resultMakerIds, "$query query failed.");
     }
 }

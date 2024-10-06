@@ -11,11 +11,13 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
+use Override;
 
 class ZeroLengthFunction extends FunctionNode
 {
     public Subselect|Node|string $stringExpression;
 
+    #[Override]
     public function getSql(SqlWalker $sqlWalker): string
     {
         return $sqlWalker->walkStringPrimary($this->stringExpression).' <> \'\'';
@@ -24,6 +26,7 @@ class ZeroLengthFunction extends FunctionNode
     /**
      * @throws QueryException
      */
+    #[Override]
     public function parse(Parser $parser): void
     {
         $parser->match(TokenType::T_IDENTIFIER);

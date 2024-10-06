@@ -5,17 +5,12 @@ declare(strict_types=1);
 use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector;
-use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
-use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
-use Rector\PHPUnit\PHPUnit60\Rector\MethodCall\GetMockBuilderGetMockToCreateMockRector;
-use Rector\PHPUnit\Set\PHPUnitLevelSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
-use Rector\Symfony\Set\SymfonyLevelSetList;
+use Rector\Symfony\CodeQuality\Rector\MethodCall\LiteralGetToRequestClassConstantRector;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\Symfony\Symfony62\Rector\MethodCall\SimplifyFormRenderingRector;
-use Rector\Transform\Rector\Attribute\AttributeKeyToClassConstFetchRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -24,30 +19,46 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_82,
+        LevelSetList::UP_TO_PHP_83,
 
-        SymfonyLevelSetList::UP_TO_SYMFONY_62,
+        SymfonySetList::SYMFONY_60,
+        SymfonySetList::SYMFONY_61,
+        SymfonySetList::SYMFONY_62,
+        SymfonySetList::SYMFONY_63,
+        SymfonySetList::SYMFONY_64,
+        SymfonySetList::SYMFONY_70,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
 
+        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        DoctrineSetList::DOCTRINE_BUNDLE_210,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
+        DoctrineSetList::DOCTRINE_COLLECTION_22,
+        DoctrineSetList::DOCTRINE_COMMON_20,
+        DoctrineSetList::DOCTRINE_DBAL_211,
         DoctrineSetList::DOCTRINE_DBAL_30,
+        DoctrineSetList::DOCTRINE_DBAL_40,
+        DoctrineSetList::DOCTRINE_ORM_213,
+        DoctrineSetList::DOCTRINE_ORM_214,
+        DoctrineSetList::DOCTRINE_ORM_25,
         DoctrineSetList::DOCTRINE_ORM_29,
+        DoctrineSetList::GEDMO_ANNOTATIONS_TO_ATTRIBUTES,
+        DoctrineSetList::MONGODB__ANNOTATIONS_TO_ATTRIBUTES,
+        DoctrineSetList::YAML_TO_ANNOTATIONS,
+        DoctrineSetList::TYPED_COLLECTIONS,
 
-        PHPUnitLevelSetList::UP_TO_PHPUNIT_90,
-        PHPUnitSetList::PHPUNIT_91,
+        PHPUnitSetList::PHPUNIT_90,
+        // PHPUnitSetList::PHPUNIT_CODE_QUALITY, // Lots of changes. TODO
     ]);
 
     $rectorConfig->parallel();
 
     $rectorConfig->skip([
-        ClassPropertyAssignToConstructorPromotionRector::class, // Breaks some annotations
-        AttributeKeyToClassConstFetchRector::class, // Ignores imports
         AddLiteralSeparatorToNumberRector::class, // Let me decide when this helps
-        GetMockBuilderGetMockToCreateMockRector::class, // Using createPartialMock leaves uninitialized properties
-        AddDoesNotPerformAssertionToNonAssertingTestRector::class, // Some assertions happen in called helper methods
-        SimplifyFormRenderingRector::class, // TODO
         ReadOnlyClassRector::class, // Let me decide when
+
+        LiteralGetToRequestClassConstantRector::class, // SYMFONY_CODE_QUALITY. Low value, lots of changes. TODO
+        SimplifyFormRenderingRector::class, // SYMFONY_62. TODO
     ]);
 };

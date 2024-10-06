@@ -16,6 +16,7 @@ use App\Utils\FieldReadInterface;
 use App\Utils\Json;
 use DateTimeImmutable;
 use JsonException;
+use Override;
 use Symfony\Component\Finder\SplFileInfo;
 
 readonly class SubmissionData implements FieldReadInterface
@@ -40,6 +41,7 @@ readonly class SubmissionData implements FieldReadInterface
         return $this->timestamp;
     }
 
+    #[Override]
     public function get(Field $field): mixed
     {
         $fieldName = $field->value;
@@ -65,16 +67,19 @@ readonly class SubmissionData implements FieldReadInterface
         return $value;
     }
 
+    #[Override]
     public function getString(Field $field): string
     {
         return Enforce::string($this->get($field));
     }
 
+    #[Override]
     public function getStringList(Field $field): array
     {
         return Enforce::strList($this->get($field));
     }
 
+    #[Override]
     public function hasData(Field $field): bool
     {
         return $field->providedIn($this);

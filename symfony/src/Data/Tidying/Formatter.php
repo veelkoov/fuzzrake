@@ -12,9 +12,9 @@ final class Formatter
 {
     use UtilityClass;
 
-    private const ADDED = 'diff_added';
-    private const DELETED = 'diff_deleted';
-    private const SEP = 'sep';
+    private const string ADDED = 'diff_added';
+    private const string DELETED = 'diff_deleted';
+    private const string SEP = 'sep';
 
     public static function setup(OutputFormatterInterface $formatter): void
     {
