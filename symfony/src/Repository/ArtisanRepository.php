@@ -56,18 +56,6 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Artisan[]
-     */
-    public function getAll(): array
-    {
-        $resultData = $this->getArtisansQueryBuilder()
-            ->getQuery()
-            ->getResult();
-
-        return $resultData;
-    }
-
-    /**
      * @return Paginator<Artisan>
      */
     public function getPaginated(int $first, int $max): Paginator

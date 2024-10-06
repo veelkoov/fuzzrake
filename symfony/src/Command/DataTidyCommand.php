@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Data\Tidying\ArtisanChanges;
+use App\Data\Tidying\ArtisanChanges as CreatorChanges;
 use App\Data\Tidying\FdvFactory;
 use App\Data\Tidying\Printer;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Filtering\DataRequests\Pagination;
+use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -24,8 +25,8 @@ class DataTidyCommand extends Command
     private const string OPT_WITH_INACTIVE = 'with-inactive';
 
     public function __construct(
-        private readonly EntityManagerInterface $objectManager,
-        private readonly ArtisanRepository $artisanRepo,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CreatorRepository $creatorRepository,
         private readonly FdvFactory $fdvFactory,
     ) {
         parent::__construct();
@@ -46,17 +47,32 @@ class DataTidyCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
+        $first = 0;
+        $total = 1; // Temporary false value to start the loop
 
-        foreach ($artisans as $artisan) {
-            $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
+        while ($first < $total) {
+            $creatorsPage = $this->creatorRepository->getPaginated($first, Pagination::PAGE_SIZE);
 
-            $fdv->perform($artisanFixWip);
-            $artisanFixWip->apply();
+            $total = $creatorsPage->count();
+            $first += Pagination::PAGE_SIZE;
+
+            foreach ($creatorsPage as $creator) {
+                if (!$input->getOption(self::OPT_WITH_INACTIVE) && '' !== $creator->getInactiveReason()) {
+                    continue;
+                }
+
+                $creatorFixWip = new CreatorChanges(Creator::wrap($creator));
+                $fdv->perform($creatorFixWip);
+                $creatorFixWip->apply();
+            }
+
+            if ($input->getOption(self::OPT_COMMIT)) {
+                $this->entityManager->flush();
+            }
+            $this->entityManager->clear();
         }
 
         if ($input->getOption(self::OPT_COMMIT)) {
-            $this->objectManager->flush();
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');
