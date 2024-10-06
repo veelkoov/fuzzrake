@@ -38,36 +38,32 @@ trait MainPageTestsTrait
      */
     private function fillChecklist(bool $isAdult, bool $wantsSfw, bool $expectFilled = false): void
     {
-        try {
-            self::waitForLoadingIndicatorToDisappear();
+        self::waitForLoadingIndicatorToDisappear();
 
-            if (!$expectFilled) {
-                $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
+        if (!$expectFilled) {
+            $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
 
-                if ($isAdult) {
-                    self::waitUntilShows('#aasImAdult');
-                    $this->client->findElement(WebDriverBy::id('aasImAdult'))->click();
+            if ($isAdult) {
+                self::waitUntilShows('#aasImAdult');
+                $this->client->findElement(WebDriverBy::id('aasImAdult'))->click();
 
-                    if ($wantsSfw) {
-                        self::waitUntilShows('#aasKeepSfw');
-                        $this->client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
-                    } else {
-                        self::waitUntilShows('#aasAllowNsfw');
-                        $this->client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
-                    }
+                if ($wantsSfw) {
+                    self::waitUntilShows('#aasKeepSfw');
+                    $this->client->findElement(WebDriverBy::id('aasKeepSfw'))->click();
                 } else {
-                    self::waitUntilShows('#aasImNotAdult');
-                    $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
+                    self::waitUntilShows('#aasAllowNsfw');
+                    $this->client->findElement(WebDriverBy::id('aasAllowNsfw'))->click();
                 }
+            } else {
+                self::waitUntilShows('#aasImNotAdult');
+                $this->client->findElement(WebDriverBy::id('aasImNotAdult'))->click();
             }
-
-            self::waitUntilShows('#checklist-dismiss-btn');
-            $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
-
-            self::waitForLoadingIndicatorToDisappear();
-        } catch (NoSuchElementException) {
-            echo $this->client->getCrawler()->html();
         }
+
+        self::waitUntilShows('#checklist-dismiss-btn');
+        $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
+
+        self::waitForLoadingIndicatorToDisappear();
     }
 
     /**
