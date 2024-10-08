@@ -29,7 +29,7 @@ class DataService
 
     public function getMainPageStats(): MainPageStats
     {
-        return $this->cache->getCached('DataService.getMainPageStats', [CacheTags::ARTISANS, CacheTags::TRACKING],
+        return $this->cache->get(
             function () {
                 try {
                     $lastDataUpdateTimeUtc = $this->avdRepository->getLastCsUpdateTime();
@@ -57,14 +57,15 @@ class DataService
                     $countryCount,
                     $lastDataUpdateTimeUtc,
                 );
-            }
+            },
+            [CacheTags::ARTISANS, CacheTags::TRACKING],
+            __METHOD__,
         );
     }
 
     public function countActiveCreators(): int
     {
-        return $this->cache->getCached('DataService.countActiveCreators', CacheTags::ARTISANS,
-            fn () => $this->creatorRepository->countActive());
+        return $this->cache->get(fn () => $this->creatorRepository->countActive(), CacheTags::ARTISANS, __METHOD__);
     }
 
     /**
@@ -72,8 +73,7 @@ class DataService
      */
     public function getCountries(): array
     {
-        return $this->cache->getCached('DataService.getCountries', CacheTags::ARTISANS,
-            fn () => $this->creatorRepository->getDistinctCountries());
+        return $this->cache->get(fn () => $this->creatorRepository->getDistinctCountries(), CacheTags::ARTISANS, __METHOD__);
     }
 
     /**
@@ -81,8 +81,7 @@ class DataService
      */
     public function getStates(): array
     {
-        return $this->cache->getCached('DataService.getStates', CacheTags::ARTISANS,
-            fn () => $this->creatorRepository->getDistinctStates());
+        return $this->cache->get(fn () => $this->creatorRepository->getDistinctStates(), CacheTags::ARTISANS, __METHOD__);
     }
 
     /**
@@ -90,8 +89,7 @@ class DataService
      */
     public function getOpenFor(): array
     {
-        return $this->cache->getCached('DataService.getOpenFor', [CacheTags::ARTISANS, CacheTags::TRACKING],
-            fn () => $this->cosRepository->getDistinctOpenFor());
+        return $this->cache->get(fn () => $this->cosRepository->getDistinctOpenFor(), [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__);
     }
 
     /**
@@ -99,9 +97,8 @@ class DataService
      */
     public function getLanguages(): array
     {
-        return $this->cache->getCached('DataService.getLanguages', [CacheTags::ARTISANS],
-            fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value)
-        );
+        return $this->cache->get(fn () => $this->creatorValueRepository->getDistinctValues(Field::LANGUAGES->value),
+            CacheTags::ARTISANS, __METHOD__);
     }
 
     public function getOooNotice(): string
