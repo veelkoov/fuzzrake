@@ -109,7 +109,7 @@ class ArtisanRepository extends ServiceEntityRepository
     /**
      * @return Generator<Artisan>
      */
-    public function getActivePaged(bool $flushAfterPage = false): Generator // FIXME: Uses
+    public function getActivePaged(bool $flushAfterPage = false): Generator
     {
         $queryBuilder = $this->getArtisansQueryBuilder()
             ->where('a.inactiveReason = :empty')

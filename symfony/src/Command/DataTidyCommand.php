@@ -41,22 +41,22 @@ class DataTidyCommand extends Command
     #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $wantCommit = $input->getOption(self::OPT_COMMIT);
+
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $creators = $this->creatorRepository->getAllPaged(flushAfterPage: $input->getOption(self::OPT_COMMIT));
+        $creators = $input->getOption(self::OPT_WITH_INACTIVE)
+            ? $this->creatorRepository->getAllPaged(flushAfterPage: $wantCommit)
+            : $this->creatorRepository->getActivePaged(flushAfterPage: $wantCommit);
 
         foreach ($creators as $creatorE) {
-            if ('' !== $creatorE->getInactiveReason() && !$input->getOption(self::OPT_WITH_INACTIVE)) {
-                continue;
-            }
-
             $creatorFixWip = new CreatorChanges(Creator::wrap($creatorE));
             $fdv->perform($creatorFixWip);
             $creatorFixWip->apply();
         }
 
-        if ($input->getOption(self::OPT_COMMIT)) {
+        if ($wantCommit) {
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');
