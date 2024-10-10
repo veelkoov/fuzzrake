@@ -26,11 +26,6 @@ class DataExportCommand extends Command
         parent::__construct();
     }
 
-    #[Override]
-    protected function configure(): void
-    {
-    }
-
     /**
      * @throws Exception
      */
@@ -44,19 +39,20 @@ class DataExportCommand extends Command
 
         $col = 1;
         foreach (Fields::public() as $field) {
-            $sheet->getCellByColumnAndRow($col++, 1)
+            $sheet->getCell([$col++, 1])
                 ->setValue($field->value);
         }
 
         $row = 2;
 
-        foreach (Artisan::wrapAll($this->artisans->getActive()) as $artisan) {
+        foreach ($this->artisans->getActivePaged() as $artisanE) {
+            $artisan = Artisan::wrap($artisanE);
             $col = 1;
 
             foreach (Fields::public() as $field) {
                 $value = $artisan->get($field);
 
-                $sheet->getCellByColumnAndRow($col++, $row)
+                $sheet->getCell([$col++, $row])
                     ->setValue($value);
             }
 

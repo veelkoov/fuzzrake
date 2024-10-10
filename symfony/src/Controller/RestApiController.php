@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Filtering\DataRequests\Pagination;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Cache as CacheService;
 use App\Service\Captcha;
@@ -12,7 +11,6 @@ use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Json;
 use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
-use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,7 +24,6 @@ class RestApiController extends AbstractController
     public function __construct(
         private readonly Captcha $captcha,
         private readonly CacheService $cache,
-        private readonly EntityManagerInterface $entityManager,
         private readonly CreatorRepository $creatorRepository,
     ) {
     }
@@ -67,29 +64,17 @@ class RestApiController extends AbstractController
      */
     private function getCreatorsPublicDataJsonString(): string
     {
-        $first = 0;
-        $total = 1; // Temporary false value to start the loop
-
         $result = '[';
         $empty = true;
 
-        while ($first < $total) {
-            $creatorsPage = $this->creatorRepository->getPaginated($first, Pagination::PAGE_SIZE);
-
-            $total = $creatorsPage->count();
-            $first += Pagination::PAGE_SIZE;
-
-            foreach ($creatorsPage as $creator) {
-                if ($empty) {
-                    $empty = false;
-                } else {
-                    $result .= ',';
-                }
-
-                $result .= Json::encode(Creator::wrap($creator));
+        foreach ($this->creatorRepository->getAllPaged() as $creatorE) {
+            if ($empty) {
+                $empty = false;
+            } else {
+                $result .= ',';
             }
 
-            $this->entityManager->clear();
+            $result .= Json::encode(Creator::wrap($creatorE));
         }
 
         $result .= ']';

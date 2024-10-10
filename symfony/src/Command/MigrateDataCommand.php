@@ -2,9 +2,8 @@
 
 namespace App\Command;
 
-use App\Doctrine\EntityManagerDecorator;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator;
+use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\PackedStringList;
 use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -20,8 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class MigrateDataCommand extends Command // TODO: Temporary. Remove.
 {
     public function __construct(
-        private readonly ArtisanRepository $artisanRepository,
-        private readonly EntityManagerDecorator $objectManager,
+        private readonly CreatorRepository $creatorRepository,
     ) {
         parent::__construct();
     }
@@ -31,36 +29,29 @@ class MigrateDataCommand extends Command // TODO: Temporary. Remove.
     {
         $io = new SymfonyStyle($input, $output);
 
-        $totalCount = $this->artisanRepository->countAll();
+        $totalCount = $this->creatorRepository->countAll();
         $progressBar = $io->createProgressBar($totalCount);
         $progressBar->display();
 
-        $first = 0;
-        $pageSize = 20;
+        $creators = $this->creatorRepository->getAllPaged(flushAfterPage: true);
 
-        while ($first < $totalCount) {
-            foreach ($this->artisanRepository->getPaginated($first, $pageSize) as $creatorE) {
-                $creator = SmartAccessDecorator::wrap($creatorE);
+        foreach ($creators as $creatorE) {
+            $creator = Creator::wrap($creatorE);
 
-                $creator->setLanguages(PackedStringList::unpack($creatorE->getLegacyLanguages()));
+            $creator->setLanguages(PackedStringList::unpack($creatorE->getLegacyLanguages()));
 
-                $creator->setProductionModels(PackedStringList::unpack($creatorE->getLegacyProductionModels()));
+            $creator->setProductionModels(PackedStringList::unpack($creatorE->getLegacyProductionModels()));
 
-                $creator->setFeatures(PackedStringList::unpack($creatorE->getLegacyFeatures()));
-                $creator->setOtherFeatures(PackedStringList::unpack($creatorE->getLegacyOtherFeatures()));
+            $creator->setFeatures(PackedStringList::unpack($creatorE->getLegacyFeatures()));
+            $creator->setOtherFeatures(PackedStringList::unpack($creatorE->getLegacyOtherFeatures()));
 
-                $creator->setOrderTypes(PackedStringList::unpack($creatorE->getLegacyOrderTypes()));
-                $creator->setOtherOrderTypes(PackedStringList::unpack($creatorE->getLegacyOtherOrderTypes()));
+            $creator->setOrderTypes(PackedStringList::unpack($creatorE->getLegacyOrderTypes()));
+            $creator->setOtherOrderTypes(PackedStringList::unpack($creatorE->getLegacyOtherOrderTypes()));
 
-                $creator->setStyles(PackedStringList::unpack($creatorE->getLegacyStyles()));
-                $creator->setOtherStyles(PackedStringList::unpack($creatorE->getLegacyOtherStyles()));
+            $creator->setStyles(PackedStringList::unpack($creatorE->getLegacyStyles()));
+            $creator->setOtherStyles(PackedStringList::unpack($creatorE->getLegacyOtherStyles()));
 
-                $progressBar->advance();
-            }
-
-            $this->objectManager->flush();
-            $this->objectManager->clear();
-            $first += $pageSize;
+            $progressBar->advance();
         }
 
         $io->success('Done.');

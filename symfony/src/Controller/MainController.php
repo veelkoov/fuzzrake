@@ -57,7 +57,7 @@ class MainController extends AbstractController
     public function newCreators(): Response
     {
         return $this->render('main/new.html.twig', [
-            'artisans' => Artisan::wrapAll($this->creatorRepository->getNew()),
+            'artisans' => Artisan::wrapAll($this->creatorRepository->getNewWithLimit()),
         ]);
     }
 

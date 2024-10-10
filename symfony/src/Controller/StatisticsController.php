@@ -67,7 +67,7 @@ class StatisticsController extends AbstractController
         $countries = $filtersService->getCountriesFilterData();
         $commissionsStats = $offerStatusRepository->getCommissionsStats();
 
-        $artisans = Artisan::wrapAll($artisanRepository->getActive());
+        $artisans = Artisan::wrapAll([...$artisanRepository->getActivePaged()]); // TODO: Memory?
 
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),

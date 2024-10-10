@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
+use App\Filtering\DataRequests\Pagination;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as ArtisanSAD;
@@ -21,6 +22,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Generator;
 
 /**
  * @extends ServiceEntityRepository<Artisan>
@@ -56,47 +58,65 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Paginator<Artisan>
-     */
-    public function getPaginated(int $first, int $max): Paginator
-    {
-        $query = $this->getArtisansQueryBuilder()
-            ->getQuery()
-            ->setFirstResult($first)
-            ->setMaxResults($max);
-
-        return new Paginator($query, fetchJoinCollection: true);
-    }
-
-    /**
      * @return Artisan[]
      */
-    public function getNew(): array
+    public function getNewWithLimit(): array
     {
-        $resultData = $this->getArtisansQueryBuilder()
+        return $this->getArtisansQueryBuilder()
             ->where('v.fieldName = :fieldName')
             ->andWhere('v.value > :fieldValue')
             ->setParameter('fieldName', Field::DATE_ADDED->value)
             ->setParameter('fieldValue', NewArtisan::getCutoffDateStr())
             ->orderBy('v.value', 'DESC')
+            ->setMaxResults(Pagination::PAGE_SIZE) // TODO Guarantees memory limit, but requires an issue.
             ->getQuery()
             ->getResult();
+    }
 
-        return $resultData;
+    private function getPaged(QueryBuilder $queryBuilder, bool $flushAfterPage): Generator
+    {
+        $query = $queryBuilder->getQuery();
+        $first = 0;
+        $total = 1; // Temporary false value to start the loop
+
+        while ($first < $total) {
+            $query->setFirstResult($first)->setMaxResults(Pagination::PAGE_SIZE);
+            $creatorsPage = new Paginator($query, fetchJoinCollection: true);
+
+            $total = $creatorsPage->count();
+            $first += Pagination::PAGE_SIZE;
+
+            foreach ($creatorsPage as $creator) {
+                yield $creator;
+            }
+
+            if ($flushAfterPage) {
+                $this->getEntityManager()->flush();
+            }
+
+            $this->getEntityManager()->clear();
+        }
     }
 
     /**
-     * @return Artisan[]
+     * @return Generator<Artisan>
      */
-    public function getActive(): array
+    public function getAllPaged(bool $flushAfterPage = false): Generator
     {
-        $resultData = $this->getArtisansQueryBuilder()
+        return $this->getPaged($this->getArtisansQueryBuilder(), $flushAfterPage);
+    }
+
+    /**
+     * @return Generator<Artisan>
+     */
+    public function getActivePaged(bool $flushAfterPage = false): Generator // FIXME: Uses
+    {
+        $queryBuilder = $this->getArtisansQueryBuilder()
             ->where('a.inactiveReason = :empty')
             ->setParameter('empty', '')
-            ->getQuery()
-            ->getResult();
+        ;
 
-        return $resultData;
+        return $this->getPaged($queryBuilder, $flushAfterPage);
     }
 
     private function getArtisansQueryBuilder(): QueryBuilder
