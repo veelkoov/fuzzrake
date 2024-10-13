@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\ArtisanRepository as CreatorRepository;
-use App\Service\Cache as CacheService;
 use App\Service\Captcha;
-use App\Utils\Artisan\SmartAccessDecorator as Creator;
-use App\Utils\Json;
-use App\ValueObject\CacheTags;
+use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
-use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +18,7 @@ class RestApiController extends AbstractController
 {
     public function __construct(
         private readonly Captcha $captcha,
-        private readonly CacheService $cache,
-        private readonly CreatorRepository $creatorRepository,
+        private readonly DataService $dataService,
     ) {
     }
 
@@ -52,33 +46,10 @@ class RestApiController extends AbstractController
 
     #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
-    public function creators(): JsonResponse // TODO: First fetch takes ages. Force precompute, in any way.
+    public function creators(): JsonResponse
     {
-        $result = $this->cache->get($this->getCreatorsPublicDataJsonString(...), CacheTags::ARTISANS, __METHOD__);
+        $result = $this->dataService->getCreatorsPublicDataJsonString();
 
         return new JsonResponse($result, json: true);
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function getCreatorsPublicDataJsonString(): string
-    {
-        $result = '[';
-        $empty = true;
-
-        foreach ($this->creatorRepository->getAllPaged() as $creatorE) {
-            if ($empty) {
-                $empty = false;
-            } else {
-                $result .= ',';
-            }
-
-            $result .= Json::encode(Creator::wrap($creatorE));
-        }
-
-        $result .= ']';
-
-        return $result;
     }
 }

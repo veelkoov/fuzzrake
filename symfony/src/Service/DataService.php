@@ -14,6 +14,7 @@ use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
+use App\Utils\Json;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
@@ -198,6 +199,28 @@ class DataService
             }
 
             arsort($result);
+
+            return $result;
+        }, CacheTags::ARTISANS, __METHOD__);
+    }
+
+    public function getCreatorsPublicDataJsonString(): string
+    {
+        return $this->cache->get(function (): string {
+            $result = '[';
+            $empty = true;
+
+            foreach ($this->creatorRepository->getAllPaged() as $creatorE) {
+                if ($empty) {
+                    $empty = false;
+                } else {
+                    $result .= ',';
+                }
+
+                $result .= Json::encode(Creator::wrap($creatorE));
+            }
+
+            $result .= ']';
 
             return $result;
         }, CacheTags::ARTISANS, __METHOD__);
