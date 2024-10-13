@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Data\Definitions\Fields\Field;
+use App\Data\Definitions\Fields\Fields;
+use App\Entity\Artisan as CreatorE;
 use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\DateTimeException;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
 use Doctrine\ORM\UnexpectedResultException;
+use Psl\Dict;
+use Psl\Vec;
 
 class DataService
 {
@@ -131,5 +136,70 @@ class DataService
             CacheTags::ARTISANS,
             [__METHOD__, $field],
         );
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function getCompletenessStats(): array
+    {
+        return $this->cache->get(function (): array {
+            $completeness = Vec\map($this->creatorRepository->getActivePaged(),
+                fn (CreatorE $creator) => Creator::wrap($creator)->getCompleteness());
+
+            $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
+                '40-49%' => 40, '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
+
+            $result = [];
+
+            foreach ($levels as $description => $level) {
+                $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));
+
+                $completeness = array_filter($completeness, fn (int $percent) => $percent < $level);
+            }
+
+            return $result;
+        }, CacheTags::ARTISANS, __METHOD__);
+    }
+
+    /**
+     * @return array<string, int>
+     *
+     * @see SmartAccessDecorator::getLastMakerId()
+     */
+    public function getProvidedInfoStats(): array
+    {
+        return $this->cache->get(function (): array {
+            $result = Dict\from_keys(
+                Vec\map(Fields::inStats(), fn (Field $field): string => $field->value),
+                fn (): int => 0,
+            );
+
+            foreach ($this->creatorRepository->getActivePaged() as $creatorE) {
+                $creator = Creator::wrap($creatorE);
+
+                foreach (Fields::inStats() as $field) {
+                    if (Field::FORMER_MAKER_IDS === $field) {
+                        /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
+                         * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part
+                         * where the digits is zero-padded artisan database ID. */
+
+                        $placeholder = sprintf('M%06d', $creator->getId());
+
+                        if ($creator->get($field) === [$placeholder]) {
+                            continue; // Fake former maker ID - don't add to the result
+                        }
+                    }
+
+                    if ($field->providedIn($creator)) {
+                        ++$result[$field->value];
+                    }
+                }
+            }
+
+            arsort($result);
+
+            return $result;
+        }, CacheTags::ARTISANS, __METHOD__);
     }
 }
