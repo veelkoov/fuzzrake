@@ -16,7 +16,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 /**
  * @medium
  */
-class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
+class DataServiceWithEMTest extends KernelTestCaseWithEM
 {
     public function testUnknownAndEuArtisansDontCountTowardsTotalCountries(): void
     {
