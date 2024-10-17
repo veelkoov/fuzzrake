@@ -51,6 +51,8 @@ class MigrateDataCommand extends Command // TODO: Temporary. Remove.
             $creator->setStyles(PackedStringList::unpack($creatorE->getLegacyStyles()));
             $creator->setOtherStyles(PackedStringList::unpack($creatorE->getLegacyOtherStyles()));
 
+            $creatorE->clearLegacyFields();
+
             $progressBar->advance();
         }
 

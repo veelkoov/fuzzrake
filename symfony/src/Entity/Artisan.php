@@ -315,6 +315,18 @@ class Artisan implements Stringable
         return $this;
     }
 
+    public function clearLegacyFields(): void // TODO: Temporary. Remove.
+    {
+        $this->features = '';
+        $this->languages = '';
+        $this->orderTypes = '';
+        $this->otherFeatures = '';
+        $this->otherOrderTypes = '';
+        $this->otherStyles = '';
+        $this->productionModels = '';
+        $this->styles = '';
+    }
+
     public function getLegacyProductionModels(): string // TODO: Temporary. Remove.
     {
         return $this->productionModels;
