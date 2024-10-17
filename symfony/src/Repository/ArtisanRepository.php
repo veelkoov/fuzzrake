@@ -231,6 +231,7 @@ class ArtisanRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param literal-string $columnName
      * @return array<string, int>
      */
     public function countDistinctInActiveCreators(string $columnName): array
