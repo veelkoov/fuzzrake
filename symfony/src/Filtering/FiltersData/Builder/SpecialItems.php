@@ -12,24 +12,25 @@ final class SpecialItems
 {
     use UtilityClass;
 
-    public static function faIconFromType(string $type): string
+    public static function faIconFromValue(string $value): string
     {
-        return match ($type) {
-            'unknown' => 'fas fa-question-circle',
-            default => throw new InvalidArgumentException("Unknown type: '$type'"),
+        return match ($value) {
+            Consts::FILTER_VALUE_UNKNOWN => 'fas fa-question-circle',
+            Consts::FILTER_VALUE_OTHER => 'fas fa-asterisk',
+            default => throw new InvalidArgumentException("Unknown type of value: '$value'"),
         };
     }
 
     public static function newUnknown(int $initialValue = 0): MutableSpecialItem
     {
         return new MutableSpecialItem(Consts::FILTER_VALUE_UNKNOWN, 'Unknown', // grep-special-label-unknown
-            self::faIconFromType('unknown'), $initialValue);
+            self::faIconFromValue(Consts::FILTER_VALUE_UNKNOWN), $initialValue);
     }
 
-    public static function newOther(): MutableSpecialItem
+    public static function newOther(int $initialValue = 0): MutableSpecialItem
     {
         return new MutableSpecialItem(Consts::FILTER_VALUE_OTHER, 'Other', // grep-special-label-other
-            'fas fa-asterisk');
+            self::faIconFromValue(Consts::FILTER_VALUE_OTHER), $initialValue);
     }
 
     public static function newTrackingIssues(int $initialValue): MutableSpecialItem

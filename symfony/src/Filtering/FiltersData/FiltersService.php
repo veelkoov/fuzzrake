@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filtering\FiltersData;
 
+use App\Data\Definitions\Fields\Field;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\FiltersData\Builder\MutableFilterData;
+use App\Filtering\FiltersData\Builder\MutableSpecialItem;
 use App\Filtering\FiltersData\Builder\SpecialItems;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
 use App\Service\CountriesDataService;
+use App\Service\DataService;
 use App\Utils\Enforce;
 use Doctrine\ORM\UnexpectedResultException;
+use Psl\Dict;
+use Psl\Vec;
 
 class FiltersService
 {
@@ -23,6 +28,7 @@ class FiltersService
         private readonly ArtisanVolatileDataRepository $artisanVolatileDataRepository,
         private readonly CountriesDataService $countriesDataService,
         private readonly KotlinDataRepository $kotlinDataRepository,
+        private readonly DataService $dataService,
     ) {
     }
 
@@ -32,42 +38,65 @@ class FiltersService
     public function getFiltersTplData(): FiltersData
     {
         return new FiltersData(
-            $this->artisanRepository->getDistinctOrderTypes(),
-            $this->artisanRepository->getDistinctStyles(),
+            $this->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES),
+            $this->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES),
             $this->getPaymentPlans(),
-            $this->artisanRepository->getDistinctFeatures(),
-            $this->artisanRepository->getDistinctProductionModels(),
+            $this->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES),
+            $this->getValuesFilterData(Field::PRODUCTION_MODELS),
             $this->getOpenFor(),
-            $this->artisanRepository->getDistinctLanguagesForFilters(),
+            $this->getValuesFilterData(Field::LANGUAGES),
             $this->getCountriesFilterData(),
-            $this->artisanRepository->getDistinctStatesToCountAssoc(),
+            $this->getStatesFilterData(),
             $this->getSpeciesFilterData(),
             $this->getInactiveFilterData(),
         );
     }
 
-    private function getCountriesFilterData(): FilterData
+    public function getCountriesFilterData(): FilterData
     {
-        $artisansCountries = $this->artisanRepository->getDistinctCountriesToCountAssoc();
-
-        $unknown = SpecialItems::newUnknown($artisansCountries->specialItems[0]->count); // FIXME: Refactor filters/stats #80 - ugly hack [0]
+        $unknown = SpecialItems::newUnknown();
         $result = new MutableFilterData($unknown);
 
         foreach ($this->countriesDataService->getRegions() as $regionName) {
             $result->items->addComplexItem($regionName, $regionName, 0);
         }
 
-        foreach ($artisansCountries->items as $country) {
-            $code = Enforce::string($country->value);
-            $region = $this->countriesDataService->getRegionFrom($code);
-            $name = $this->countriesDataService->getNameFor($code);
+        $countriesData = $this->dataService->countDistinctInActiveCreatorsHaving(Field::COUNTRY);
 
-            $result->items[$region]->incCount($country->count);
-            $result->items[$region]->subitems->addComplexItem($code, $name, $country->count);
+        foreach ($countriesData as $countryCode => $count) {
+            if ('' === $countryCode) {
+                $unknown->incCount($count);
+                continue;
+            }
+
+            $region = $this->countriesDataService->getRegionFrom($countryCode);
+            $name = $this->countriesDataService->getNameFor($countryCode);
+
+            $result->items[$region]->incCount($count);
+            $result->items[$region]->subitems->addComplexItem($countryCode, $name, $count);
         }
 
         foreach ($result->items as $item) {
             $item->subitems->sort();
+        }
+
+        return FilterData::from($result);
+    }
+
+    public function getStatesFilterData(): FilterData
+    {
+        $unknown = SpecialItems::newUnknown();
+        $result = new MutableFilterData($unknown);
+
+        $statesData = $this->dataService->countDistinctInActiveCreatorsHaving(Field::STATE);
+
+        foreach ($statesData as $state => $count) {
+            if ('' === $state) {
+                $unknown->incCount($count);
+                continue;
+            }
+
+            $result->items->addOrIncItem($state, $count);
         }
 
         return FilterData::from($result);
@@ -90,19 +119,16 @@ class FiltersService
         foreach (Enforce::array($rawFilterData['specialItems'] ?? []) as $rawSpecialItem) {
             $rawSpecialItem = Enforce::array($rawSpecialItem);
 
-            $specialItems[] = new SpecialItem(
-                Enforce::string($rawSpecialItem['value'] ?? ''),
-                Enforce::string($rawSpecialItem['label'] ?? ''),
-                SpecialItems::faIconFromType(Enforce::string($rawSpecialItem['type'] ?? '')),
-                Enforce::int($rawSpecialItem['count'] ?? 0),
-            );
+            $value = Enforce::string($rawSpecialItem['value'] ?? '');
+            $label = Enforce::string($rawSpecialItem['label'] ?? '');
+            $count = Enforce::int($rawSpecialItem['count'] ?? 0);
+
+            $specialItems[] = new SpecialItem($value, $label, SpecialItems::faIconFromValue($value), $count);
         }
 
         $items = $this->rawToItems(Enforce::array($rawFilterData['items'] ?? []));
 
-        $filterData = new FilterData($items, $specialItems);
-
-        return $filterData;
+        return new FilterData($items, $specialItems);
     }
 
     /**
@@ -135,7 +161,7 @@ class FiltersService
     {
         $trackedCount = $this->artisanRepository->getCsTrackedCount();
         $issuesCount = $this->artisanVolatileDataRepository->getCsTrackingIssuesCount();
-        $activeCount = $this->artisanRepository->countActive();
+        $activeCount = $this->dataService->countActiveCreators();
         $nonTrackedCount = $activeCount - $trackedCount;
 
         $trackingIssues = SpecialItems::newTrackingIssues($issuesCount);
@@ -172,8 +198,29 @@ class FiltersService
      */
     private function getInactiveFilterData(): FilterData
     {
-        $inactiveCount = $this->artisanRepository->countAll() - $this->artisanRepository->countActive();
+        $inactiveCount = $this->artisanRepository->countAll() - $this->dataService->countActiveCreators();
 
         return FilterData::from(new MutableFilterData(SpecialItems::newInactive($inactiveCount)));
+    }
+
+    public function getValuesFilterData(Field $primaryField, ?Field $otherField = null): FilterData
+    {
+        $fields = Vec\filter_nulls([$primaryField, $otherField]);
+
+        $unknownCount = $this->dataService->countActiveCreators()
+            - $this->dataService->countActiveCreatorsHavingAnyOf(...$fields);
+        $specialItems = [SpecialItems::newUnknown($unknownCount)];
+
+        if (null !== $otherField) {
+            $specialItems[] = SpecialItems::newOther($this->dataService->countActiveCreatorsHavingAnyOf($otherField));
+        }
+
+        $specialItems = Vec\map($specialItems, fn (MutableSpecialItem $item): SpecialItem => SpecialItem::from($item));
+
+        $items = $this->dataService->countDistinctInActiveCreatorsHaving($primaryField);
+        $items = Dict\map_with_key($items, fn (string $item, int $count): Item => new Item($item, $item, $count));
+        $items = Vec\values($items);
+
+        return new FilterData($items, $specialItems);
     }
 }

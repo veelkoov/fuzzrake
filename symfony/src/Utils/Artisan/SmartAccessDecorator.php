@@ -1096,7 +1096,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getProductionModels(): array
     {
-        return PackedStringList::unpack($this->artisan->getProductionModels());
+        return PartialCreatorValueListAccessor::get($this, Field::PRODUCTION_MODELS);
     }
 
     /**
@@ -1104,7 +1104,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setProductionModels(array $productionModels): self
     {
-        $this->artisan->setProductionModels(PackedStringList::pack($productionModels));
+        PartialCreatorValueListAccessor::set($this, Field::PRODUCTION_MODELS, $productionModels);
 
         return $this;
     }
@@ -1127,7 +1127,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getStyles(): array
     {
-        return PackedStringList::unpack($this->artisan->getStyles());
+        return PartialCreatorValueListAccessor::get($this, Field::STYLES);
     }
 
     /**
@@ -1135,7 +1135,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setStyles(array $styles): self
     {
-        $this->artisan->setStyles(PackedStringList::pack($styles));
+        PartialCreatorValueListAccessor::set($this, Field::STYLES, $styles);
 
         return $this;
     }
@@ -1146,7 +1146,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 4096)]
     public function getOtherStyles(): array
     {
-        return PackedStringList::unpack($this->artisan->getOtherStyles());
+        return PartialCreatorValueListAccessor::get($this, Field::OTHER_STYLES);
     }
 
     /**
@@ -1154,7 +1154,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setOtherStyles(array $otherStyles): self
     {
-        $this->artisan->setOtherStyles(PackedStringList::pack($otherStyles));
+        PartialCreatorValueListAccessor::set($this, Field::OTHER_STYLES, $otherStyles);
 
         return $this;
     }
@@ -1177,7 +1177,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getOrderTypes(): array
     {
-        return PackedStringList::unpack($this->artisan->getOrderTypes());
+        return PartialCreatorValueListAccessor::get($this, Field::ORDER_TYPES);
     }
 
     /**
@@ -1185,7 +1185,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setOrderTypes(array $orderTypes): self
     {
-        $this->artisan->setOrderTypes(PackedStringList::pack($orderTypes));
+        PartialCreatorValueListAccessor::set($this, Field::ORDER_TYPES, $orderTypes);
 
         return $this;
     }
@@ -1196,7 +1196,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 4096)]
     public function getOtherOrderTypes(): array
     {
-        return PackedStringList::unpack($this->artisan->getOtherOrderTypes());
+        return PartialCreatorValueListAccessor::get($this, Field::OTHER_ORDER_TYPES);
     }
 
     /**
@@ -1204,7 +1204,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setOtherOrderTypes(array $otherOrderTypes): self
     {
-        $this->artisan->setOtherOrderTypes(PackedStringList::pack($otherOrderTypes));
+        PartialCreatorValueListAccessor::set($this, Field::OTHER_ORDER_TYPES, $otherOrderTypes);
 
         return $this;
     }
@@ -1227,7 +1227,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function getFeatures(): array
     {
-        return PackedStringList::unpack($this->artisan->getFeatures());
+        return PartialCreatorValueListAccessor::get($this, Field::FEATURES);
     }
 
     /**
@@ -1235,7 +1235,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setFeatures(array $features): self
     {
-        $this->artisan->setFeatures(PackedStringList::pack($features));
+        PartialCreatorValueListAccessor::set($this, Field::FEATURES, $features);
 
         return $this;
     }
@@ -1246,7 +1246,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 4096)]
     public function getOtherFeatures(): array
     {
-        return PackedStringList::unpack($this->artisan->getOtherFeatures());
+        return PartialCreatorValueListAccessor::get($this, Field::OTHER_FEATURES);
     }
 
     /**
@@ -1254,7 +1254,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setOtherFeatures(array $otherFeatures): self
     {
-        $this->artisan->setOtherFeatures(PackedStringList::pack($otherFeatures));
+        PartialCreatorValueListAccessor::set($this, Field::OTHER_FEATURES, $otherFeatures);
 
         return $this;
     }
@@ -1373,7 +1373,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     #[StrListLength(max: 1024)]
     public function getLanguages(): array
     {
-        return PackedStringList::unpack($this->artisan->getLanguages());
+        return PartialCreatorValueListAccessor::get($this, Field::LANGUAGES);
     }
 
     /**
@@ -1381,7 +1381,7 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
      */
     public function setLanguages(array $languages): self
     {
-        $this->artisan->setLanguages(PackedStringList::pack($languages));
+        PartialCreatorValueListAccessor::set($this, Field::LANGUAGES, $languages);
 
         return $this;
     }

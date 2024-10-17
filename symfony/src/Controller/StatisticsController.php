@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Data\Definitions\Fields\Field;
-use App\Data\Definitions\Fields\Fields;
 use App\Filtering\FiltersData\FilterData;
+use App\Filtering\FiltersData\FiltersService;
 use App\Filtering\FiltersData\Item;
 use App\Repository\ArtisanRepository;
 use App\Repository\CreatorOfferStatusRepository;
-use App\Service\SpeciesService;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Service\DataService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\UnexpectedResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,19 +54,17 @@ class StatisticsController extends AbstractController
      */
     #[Route(path: '/stats', name: RouteName::STATISTICS)]
     #[Cache(maxage: 3600, public: true)]
-    public function statistics(Request $request, ArtisanRepository $artisanRepository, CreatorOfferStatusRepository $offerStatusRepository, SpeciesService $species): Response
+    public function statistics(Request $request, ArtisanRepository $artisanRepository, CreatorOfferStatusRepository $offerStatusRepository, FiltersService $filtersService, DataService $dataService): Response
     {
-        $productionModels = $artisanRepository->getDistinctProductionModels();
-        $orderTypes = $artisanRepository->getDistinctOrderTypes();
-        $otherOrderTypes = $artisanRepository->getDistinctOtherOrderTypes();
-        $styles = $artisanRepository->getDistinctStyles();
-        $otherStyles = $artisanRepository->getDistinctOtherStyles();
-        $features = $artisanRepository->getDistinctFeatures();
-        $otherFeatures = $artisanRepository->getDistinctOtherFeatures();
-        $countries = $artisanRepository->getDistinctCountriesToCountAssoc();
+        $productionModels = $filtersService->getValuesFilterData(Field::PRODUCTION_MODELS);
+        $orderTypes = $filtersService->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES);
+        $otherOrderTypes = $filtersService->getValuesFilterData(Field::OTHER_ORDER_TYPES);
+        $styles = $filtersService->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES);
+        $otherStyles = $filtersService->getValuesFilterData(Field::OTHER_STYLES);
+        $features = $filtersService->getValuesFilterData(Field::FEATURES, Field::OTHER_FEATURES);
+        $otherFeatures = $filtersService->getValuesFilterData(Field::OTHER_FEATURES);
+        $countries = $filtersService->getCountriesFilterData();
         $commissionsStats = $offerStatusRepository->getCommissionsStats();
-
-        $artisans = Artisan::wrapAll($artisanRepository->getActive());
 
         return $this->render('statistics/statistics.html.twig', [
             'countries'        => $this->prepareTableData($countries),
@@ -79,8 +76,8 @@ class StatisticsController extends AbstractController
             'features'         => $this->prepareTableData($features),
             'otherFeatures'    => $this->prepareListData($otherFeatures->items),
             'commissionsStats' => $this->prepareCommissionsStatsTableData($commissionsStats),
-            'completeness'     => $this->prepareCompletenessData($artisans),
-            'providedInfo'     => $this->prepareProvidedInfoData($artisans),
+            'completeness'     => $dataService->getCompletenessStats(),
+            'providedInfo'     => $dataService->getProvidedInfoStats(),
             'matchWords'       => self::MATCH_WORDS,
             'showIgnored'      => filter_var($request->get('showIgnored', 0), FILTER_VALIDATE_BOOL),
         ]);
@@ -93,7 +90,7 @@ class StatisticsController extends AbstractController
     {
         $result = [];
 
-        foreach ($input->items as $item) {
+        foreach ($this->getLeafItems($input->items) as $item) {
             $count = $item->count;
 
             if (!array_key_exists($count, $result)) {
@@ -112,6 +109,26 @@ class StatisticsController extends AbstractController
 
         foreach ($input->specialItems as $item) {
             $result[$item->label] = $item->count;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param list<Item> $input
+     *
+     * @return list<Item>
+     */
+    private function getLeafItems(array $input): array
+    {
+        $result = [];
+
+        foreach ($input as $item) {
+            if ([] !== $item->subitems) {
+                $result = [...$result, ...$this->getLeafItems($item->subitems)];
+            } else {
+                $result[] = $item;
+            }
         }
 
         return $result;
@@ -152,67 +169,5 @@ class StatisticsController extends AbstractController
             'Status tracked'                 => $commissionsStats['tracked'],
             'Total'                          => $commissionsStats['total'],
         ];
-    }
-
-    /**
-     * @param Artisan[] $artisans
-     *
-     * @return array<string, int>
-     */
-    private function prepareCompletenessData(array $artisans): array
-    {
-        $completeness = array_filter(array_map(fn (Artisan $artisan) => $artisan->getCompleteness(), $artisans));
-
-        $result = [];
-
-        $levels = ['100%' => 100, '90-99%' => 90, '80-89%' => 80, '70-79%' => 70, '60-69%' => 60, '50-59%' => 50,
-            '40-49%' => 40,  '30-39%' => 30, '20-29%' => 20, '10-19%' => 10, '0-9%' => 0, ];
-
-        foreach ($levels as $description => $level) {
-            $result[$description] = count(array_filter($completeness, fn (int $percent) => $percent >= $level));
-
-            $completeness = array_filter($completeness, fn (int $percent) => $percent < $level);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Artisan[] $artisans
-     *
-     * @return array<string, int>
-     *
-     * @see SmartAccessDecorator::getLastMakerId()
-     */
-    private function prepareProvidedInfoData(array $artisans): array
-    {
-        $result = [];
-
-        foreach (Fields::inStats() as $field) {
-            $result[$field->value] = array_reduce($artisans, function (int $carry, Artisan $artisan) use ($field): int {
-                if (Field::FORMER_MAKER_IDS === $field) {
-                    /* Some makers were added before introduction of the maker IDs. They were assigned fake former IDs,
-                     * so we can rely on SmartAccessDecorator::getLastMakerId() etc. Those IDs are "M000000", part
-                     * where the digits is zero-padded artisan database ID. */
-
-                    $placeholder = sprintf('M%06d', $artisan->getId());
-                    $value = $artisan->get($field);
-
-                    if ($value === [$placeholder]) {
-                        return $carry; // Fake former maker ID - don't add to the result
-                    }
-                }
-
-                if ($field->providedIn($artisan)) {
-                    return $carry + 1;
-                } else {
-                    return $carry;
-                }
-            }, 0);
-        }
-
-        arsort($result);
-
-        return $result;
     }
 }

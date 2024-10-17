@@ -18,6 +18,7 @@ class RestApiController extends AbstractController
 {
     public function __construct(
         private readonly Captcha $captcha,
+        private readonly DataService $dataService,
     ) {
     }
 
@@ -45,8 +46,10 @@ class RestApiController extends AbstractController
 
     #[Route(path: '/api/artisans.json', name: RouteName::API_ARTISANS)]
     #[Cache(maxage: 3600, public: true)]
-    public function artisans(DataService $dataService): JsonResponse
+    public function creators(): JsonResponse
     {
-        return new JsonResponse($dataService->getAllArtisans());
+        $result = $this->dataService->getCreatorsPublicDataJsonString();
+
+        return new JsonResponse($result, json: true);
     }
 }
