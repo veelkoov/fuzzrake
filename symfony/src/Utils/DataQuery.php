@@ -68,11 +68,13 @@ class DataQuery
         $this->result = [];
         $this->matchedItems = [];
 
-        $creators = $artisanRepository->getOthersLike($this->searchedItems);
+        $creators = $artisanRepository->getWithOtherItemsLikePaged($this->searchedItems);
 
-        foreach (Artisan::wrapAll($creators) as $artisan) {
-            if ($this->artisanMatches($artisan)) {
-                $this->result[] = $artisan;
+        foreach ($creators as $creatorE) {
+            $creator = Artisan::wrap($creatorE);
+
+            if ($this->artisanMatches($creator)) {
+                $this->result[] = $creator;
             }
         }
 

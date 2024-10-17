@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\NewArtisan;
 use App\Entity\Artisan;
+use App\Entity\ArtisanValue;
 use App\Filtering\DataRequests\Pagination;
 use App\Filtering\DataRequests\QueryChoicesAppender;
 use App\Utils\Arrays\Arrays;
@@ -23,6 +24,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\UnexpectedResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Generator;
+use Psl\Dict;
+use Psl\Vec;
 
 /**
  * @extends ServiceEntityRepository<Artisan>
@@ -118,6 +121,43 @@ class ArtisanRepository extends ServiceEntityRepository
         ;
 
         return $this->getPaged($queryBuilder, $flushAfterPage);
+    }
+
+    /**
+     * @param list<string> $items
+     *
+     * @return Generator<Artisan>
+     */
+    public function getWithOtherItemsLikePaged(array $items): Generator
+    {
+        $items = Dict\map_keys($items, fn (int $key): string => "item$key");
+
+        $parameters = new ArrayCollection([
+            new Parameter('empty', ''),
+            new Parameter('otherFieldNames', [
+                Field::OTHER_FEATURES->value,
+                Field::OTHER_ORDER_TYPES->value,
+                Field::OTHER_STYLES->value,
+            ]),
+            ...Vec\map_with_key($items, fn (string $key, string $value) => new Parameter($key, "%$value%")),
+        ]);
+
+        $queryBuilder = $this->getArtisansQueryBuilder();
+        $queryBuilder
+            ->where('a.inactiveReason = :empty')
+            ->andWhere($queryBuilder->expr()->exists(
+                $this->getEntityManager()->getRepository(ArtisanValue::class)->createQueryBuilder('cv')
+                    ->select('1')
+                    ->where('cv.artisan = a')
+                    ->andWhere('cv.fieldName IN (:otherFieldNames)')
+                    ->andWhere($queryBuilder->expr()->orX(
+                        ...Vec\map_with_key($items, fn (string $parName, string $_): string => "cv.value LIKE :$parName"),
+                    )),
+            ))
+            ->setParameters($parameters)
+        ;
+
+        return $this->getPaged($queryBuilder, false);
     }
 
     private function getArtisansQueryBuilder(): QueryBuilder
@@ -260,38 +300,6 @@ class ArtisanRepository extends ServiceEntityRepository
         } // @codeCoverageIgnoreEnd
 
         return $resultData; // @phpstan-ignore-line Lack of skill to fix this
-    }
-
-    /**
-     * @param string[] $items
-     *
-     * @return Artisan[]
-     */
-    public function getOthersLike(array $items): array // FIXME
-    {
-        $ORs = [];
-        $parameters = new ArrayCollection([
-            new Parameter('empty', ''),
-        ]);
-
-        foreach ($items as $i => $item) {
-            $ORs[] = "a.otherOrderTypes LIKE :par$i OR a.otherStyles LIKE :par$i OR a.otherFeatures LIKE :par$i";
-            $parameters->add(new Parameter("par$i", "%$item%"));
-        }
-
-        $builder = $this->createQueryBuilder('a')
-            ->where('a.inactiveReason = :empty');
-
-        if ([] !== $ORs) {
-            $builder->andWhere(implode(' OR ', $ORs));
-        }
-
-        $resultData = $builder
-            ->setParameters($parameters)
-            ->getQuery()
-            ->getResult();
-
-        return $resultData;
     }
 
     public function countActive(): int
