@@ -25,9 +25,12 @@ class PrecomputeDataCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->dataService->getCompletenessStats();
-        $this->dataService->getProvidedInfoStats();
+        $io->comment('Creators public data JSON string');
         $this->dataService->getCreatorsPublicDataJsonString();
+        $io->comment('Completeness stats');
+        $this->dataService->getCompletenessStats();
+        $io->comment('Provided info stats');
+        $this->dataService->getProvidedInfoStats();
 
         $io->success('Finished.');
 
