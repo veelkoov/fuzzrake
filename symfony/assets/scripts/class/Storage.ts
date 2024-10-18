@@ -36,6 +36,15 @@ export default class Storage {
     this.save(key, value ? "1" : "0", expireSeconds);
   }
 
+  public static remove(key: string): void {
+    try {
+      localStorage.removeItem(this.dataPath(key));
+      localStorage.removeItem(this.expiresPath(key));
+    } catch (e) {
+      console.log("Failed to remove data.", e);
+    }
+  }
+
   protected static get(key: string): string | null {
     try {
       if (this.removeExpired(key)) {
@@ -76,16 +85,11 @@ export default class Storage {
   }
 
   private static removeExpired(key: string): boolean {
-    try {
-      if (!this.hasExpired(key)) {
-        return false;
-      }
-
-      localStorage.removeItem(this.dataPath(key));
-      localStorage.removeItem(this.expiresPath(key));
-    } catch (e) {
-      console.log("Failed to remove data.", e);
+    if (!this.hasExpired(key)) {
+      return false;
     }
+
+    this.remove(key);
 
     return true;
   }

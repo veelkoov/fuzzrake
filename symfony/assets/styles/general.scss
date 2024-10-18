@@ -47,7 +47,7 @@ span.utc_datetime {
 }
 
 .new-creator,
-#legend-modal .new-creator, // More precise selector, otherwise was overwritten by Bootstrap styles
+#legend-modal .new-creator // More precise selector, otherwise was overwritten by Bootstrap styles
 {
   color: #4cae4c;
 }
