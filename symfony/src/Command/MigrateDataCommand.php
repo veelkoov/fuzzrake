@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'app:migrate-data',
     description: 'Move data from languages, prod. models, features, order types and styles to values table.',
 )]
-class MigrateDataCommand extends Command // TODO: Temporary. Remove.
+class MigrateDataCommand extends Command // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
 {
     public function __construct(
         private readonly CreatorRepository $creatorRepository,
