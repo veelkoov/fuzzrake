@@ -41,7 +41,7 @@
             <tbody>
                 {% for artisan in query.result %}
                     <tr>
-                        <td><a href="{{ path('mx_artisan_edit', {id: artisan.id}) }}">{{ artisan.lastMakerId }}</a></td>
+                        <td><a href="{{ path('mx_artisan_edit', {makerId: artisan.lastMakerId}) }}">{{ artisan.lastMakerId }}</a></td>
                         <td>{{ artisan.allowsFeedback ? 'YES' : 'NO' }}</td>
                         <td>{% if artisan.allowsFeedback %}{{ artisan.contactInfoOriginal }}{% endif %}</td>
                         <td>{{ artisan.otherStyles|filter_by_query(query) }}</td>

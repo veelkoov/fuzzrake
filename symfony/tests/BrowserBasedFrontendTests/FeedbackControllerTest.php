@@ -48,10 +48,10 @@ class FeedbackControllerTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1);
+        $this->skipCheckListAdultAllowNsfw(1);
 
-        self::openMakerCardByClickingOnTheirNameInTheTable($this->client, $artisan->getName());
-        self::openDataOutdatedPopupFromTheMakerCard($this->client);
+        $this->openMakerCardByClickingOnTheirNameInTheTable($artisan->getName());
+        $this->openDataOutdatedPopupFromTheMakerCard();
 
         $this->client->clickLink('submit the feedback form');
 

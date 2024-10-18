@@ -62,6 +62,7 @@ class FiltersValidChoicesFilter
             $choices->wantsSfw,
             $choices->wantsInactive,
             $choices->creatorMode,
+            $choices->pageNumber,
         );
     }
 

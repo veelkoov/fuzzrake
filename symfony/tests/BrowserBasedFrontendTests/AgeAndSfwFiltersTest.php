@@ -7,7 +7,7 @@ namespace App\Tests\BrowserBasedFrontendTests;
 use App\Data\Definitions\Ages;
 use App\Tests\BrowserBasedFrontendTests\Traits\MainPageTestsTrait;
 use App\Tests\TestUtils\Cases\PantherTestCaseWithEM;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Exception;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -64,13 +64,13 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
         self::assertTrue(($userIsMinor && null === $userWantsSfw) || (!$userIsMinor && null !== $userWantsSfw));
 
-        $artisans = [];
+        $creators = [];
         $expected = [];
 
         foreach (self::getCombinations() as $idx => $data) {
             [$ages, $nsfwWebsite, $nsfwSocial, $doesNsfw, $worksWithMinors, $showToMinors, $showAsSfw] = $data;
 
-            $makerId = sprintf('M%06d', $idx);
+            $creatorId = sprintf('M%06d', $idx);
 
             $name = match ($ages) {
                 Ages::MINORS => 'MIN',
@@ -83,8 +83,8 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
             $name .= ' '.$this->descBool($doesNsfw, 'nsfw');
             $name .= ' '.$this->descBool($worksWithMinors, 'wwMi');
 
-            $artisans[$makerId] = (new Artisan())
-                ->setMakerId($makerId)
+            $creators[$creatorId] = (new Creator())
+                ->setMakerId($creatorId)
                 ->setName($name)
                 ->setAges($ages)
                 ->setNsfwWebsite($nsfwWebsite)
@@ -93,16 +93,16 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
                 ->setWorksWithMinors($worksWithMinors);
 
             if (($showToMinors && $userIsMinor) || ($showAsSfw && true === $userWantsSfw) || false === $userWantsSfw) {
-                $expected[$makerId] = $artisans[$makerId];
+                $expected[$creatorId] = $creators[$creatorId];
             }
         }
-        $this->persistAndFlush(...$artisans);
+        $this->persistAndFlush(...$creators);
 
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
 
-        $infoText = 'Currently '.count($artisans).' makers from 0 countries are listed here.';
+        $infoText = 'Currently '.count($creators).' makers from 0 countries are listed here.';
         $this->client->waitForElementToContain('.alert-dismissible p:not(.intro-updated-info)', $infoText, 5);
 
         $this->client->findElement(WebDriverBy::id('checklist-ill-be-careful'))->click();
@@ -121,16 +121,30 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
 
         $this->client->findElement(WebDriverBy::id('checklist-dismiss-btn'))->click();
 
-        self::waitForLoadingIndicatorToDisappear();
+        $displayedCreatorIds = [];
+        $crawler = $this->client->getCrawler();
 
-        foreach ($expected as $artisan) {
-            self::assertVisible('#'.$artisan->getMakerId(), "Should display {$artisan->getName()}");
+        while (true) { // Handle multiple pages
+            self::waitForLoadingIndicatorToDisappear();
+
+            $displayedCreatorIds = [
+                ...$displayedCreatorIds,
+                ...$crawler->filter('#creators-table-body tr')->each(fn ($node, $_) => $node->attr('id')),
+            ];
+
+            if (0 < $crawler->filter('#next-creators-page-link')->count()) {
+                $this->client->findElement(WebDriverBy::id('next-creators-page-link'))->click();
+            } else {
+                break;
+            }
         }
 
-        foreach ($artisans as $makerId => $artisan) {
-            if (!array_key_exists($makerId, $expected)) {
-                self::assertInvisible('#'.$artisan->getMakerId(), "Should not display {$artisan->getName()}");
-            }
+        foreach ($expected as $creator) {
+            self::assertContains($creator->getMakerId(), $displayedCreatorIds, "Should display {$creator->getName()}");
+        }
+
+        foreach ($displayedCreatorIds as $creatorId) {
+            self::assertArrayHasKey($creatorId, $expected, "Should not display {$creators[$creatorId]->getName()}");
         }
     }
 

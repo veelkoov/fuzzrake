@@ -39,7 +39,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 3);
+        $this->skipCheckListAdultAllowNsfw(3);
 
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
@@ -61,19 +61,19 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->clickApplyInTheFiltersPopUp();
 
-        $this->waitExpectLoadedCreatorsTable(2, 3);
+        $this->waitExpectLoadedCreatorsTable(2, 2);
 
-        self::openMakerCardByClickingOnTheirNameInTheTable($this->client, 'Test artisan 1 CZ');
+        $this->openMakerCardByClickingOnTheirNameInTheTable('Test artisan 1 CZ');
         self::assertSelectorIsVisible('//a[@id="makerId" and @href="#TEST001"]');
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::openDataOutdatedPopupFromTheMakerCard($this->client);
+        $this->openDataOutdatedPopupFromTheMakerCard();
         self::assertStringContainsString('Test artisan 1 CZ', $this->client->getCrawler()->findElement(WebDriverBy::id('updateRequestLabel'))->getText());
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
+        $this->closeDataOutdatedPopUpByClickingTheCloseButton();
 
         // Open the links dropdown
         $this->client->findElement(WebDriverBy::cssSelector('#TEST003 td.links div.btn-group > button'))->click();
@@ -86,7 +86,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         $this->aggressivelyPunchTheKeyboardMultipleTimesWhileShouting_WORK_YOU_PIECE_OF_SHIT_atTheScreen();
 
-        self::closeDataOutdatedPopUpByClickingTheCloseButton($this->client);
+        $this->closeDataOutdatedPopUpByClickingTheCloseButton();
 
         // Check if text search works
         $this->clearTypeInTextSearch('CZ');
@@ -143,7 +143,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 2);
+        $this->skipCheckListAdultAllowNsfw(2);
 
         self::assertSelectorExists('#MAKENEW span.new-creator');
         self::assertSelectorExists('#MAKEOLD');
@@ -180,7 +180,7 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->clearCache();
 
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1);
+        $this->skipCheckListAdultAllowNsfw(1);
 
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
@@ -194,7 +194,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         usleep(500_000); // Lame
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1, true);
+        $this->skipCheckListAdultAllowNsfw(1, true);
 
         $this->openFiltersPopUp();
         $this->openCountriesFilter();
@@ -210,7 +210,7 @@ class MainPageTest extends PantherTestCaseWithEM
         self::persistAndFlush(self::getArtisan(makerId: 'TSTMKR1', country: 'FI')->setStyles(['Toony']));
 
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1);
+        $this->skipCheckListAdultAllowNsfw(1);
 
         // Check the defaults: styles are visible, maker IDs are hidden
         self::assertSelectorIsVisible('//td[contains(., "Toony")]');
@@ -227,7 +227,7 @@ class MainPageTest extends PantherTestCaseWithEM
 
         // Reload the page
         $this->client->request('GET', '/index.php/');
-        self::skipCheckListAdultAllowNsfw($this->client, 1, true);
+        $this->skipCheckListAdultAllowNsfw(1, true);
 
         // Check if the change has persisted between page loads
         self::assertSelectorIsNotVisible('//td[contains(., "Toony")]');
@@ -270,15 +270,5 @@ class MainPageTest extends PantherTestCaseWithEM
         $this->client->findElement(WebDriverBy::xpath('//button[normalize-space(text()) = "Apply"]'))->click();
 
         self::waitForLoadingIndicatorToDisappear();
-    }
-
-    /**
-     * @throws WebDriverException
-     */
-    private function waitExpectLoadedCreatorsTable(int $displaying, int $outOf): void
-    {
-        $locator = "//p[@id=\"artisans-table-count\" and contains(text(), \"Displaying $displaying out of $outOf fursuit makers in the database.\")]";
-
-        $this->client->waitFor($locator, 1);
     }
 }

@@ -53,6 +53,9 @@ class RequestParser
         $dataShape = Type\shape(Dict\from_keys(self::STRINGS, fn ($_) => Type\string()));
         $strings = $dataShape->coerce(self::getStringsFromRequest($request));
 
+        $dataShape = Type\positive_int();
+        $pageNumber = $dataShape->coerce($request->get('page', 1));
+
         return $this->filter->getOnlyValidChoices(new Choices(
             $strings['makerId'],
             $strings['textSearch'],
@@ -72,6 +75,7 @@ class RequestParser
             $booleans['wantsSfw'],
             contains($strArrays['inactive'], Consts::FILTER_VALUE_INCLUDE_INACTIVE),
             $booleans['creatorMode'],
+            $pageNumber,
         ));
     }
 

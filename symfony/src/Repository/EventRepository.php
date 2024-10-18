@@ -47,7 +47,6 @@ class EventRepository extends ServiceEntityRepository
 
         return $query
             ->getQuery()
-            ->enableResultCache(3600)
             ->getResult();
     }
 }

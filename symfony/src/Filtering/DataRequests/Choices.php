@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
-use App\Service\CacheDigestProvider;
-use Override;
 use Psl\Json;
 
-readonly class Choices implements CacheDigestProvider
+readonly class Choices
 {
     /**
      * @param list<string> $countries
@@ -40,10 +38,37 @@ readonly class Choices implements CacheDigestProvider
         public bool $wantsSfw,
         public bool $wantsInactive,
         public bool $creatorMode,
+        public int $pageNumber,
+        public int $pageSize = Pagination::PAGE_SIZE,
     ) {
     }
 
-    #[Override]
+    public function changePage(int $newPageNumber): self
+    {
+        return new self(
+            $this->makerId,
+            $this->textSearch,
+            $this->countries,
+            $this->states,
+            $this->languages,
+            $this->styles,
+            $this->features,
+            $this->orderTypes,
+            $this->productionModels,
+            $this->openFor,
+            $this->species,
+            $this->wantsUnknownPaymentPlans,
+            $this->wantsAnyPaymentPlans,
+            $this->wantsNoPaymentPlans,
+            $this->isAdult,
+            $this->wantsSfw,
+            $this->wantsInactive,
+            $this->creatorMode,
+            $newPageNumber,
+            $this->pageSize,
+        );
+    }
+
     public function getCacheDigest(): string
     {
         return hash('sha256', Json\encode($this));

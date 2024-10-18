@@ -90,7 +90,6 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
                 'true'     => true,
                 'url_type' => Field::URL_COMMISSIONS->value,
             ])
-            ->enableResultCache(3600)
             ->getSingleResult(AbstractQuery::HYDRATE_ARRAY);
 
         return $result; // @phpstan-ignore-line Lack of skill to fix this
@@ -106,7 +105,6 @@ class CreatorOfferStatusRepository extends ServiceEntityRepository
             ->addSelect('SUM(acs.isOpen) AS openCount')
             ->groupBy('acs.offer')
             ->getQuery()
-            ->enableResultCache(3600)
             ->getArrayResult();
 
         return Arrays::assoc($resultData, 'offer', 'openCount'); // @phpstan-ignore-line Lack of skill to fix this

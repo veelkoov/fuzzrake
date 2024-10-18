@@ -9,6 +9,7 @@ use App\Data\Definitions\Fields\ValidationRegexps as V;
 use App\Data\FieldValue;
 use App\Utils\Creator\CreatorId;
 use App\Utils\FieldReadInterface;
+use Psl\Vec;
 use TRegx\CleanRegex\Pattern;
 
 enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
@@ -305,5 +306,15 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     public function providedIn(FieldReadInterface $source): bool
     {
         return FieldValue::isProvided($this, $source->get($this));
+    }
+
+    /**
+     * @param Field[] $fields
+     *
+     * @return list<string>
+     */
+    public static function strings(array $fields): array
+    {
+        return Vec\map($fields, fn (self $field): string => $field->value);
     }
 }

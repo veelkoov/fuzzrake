@@ -138,11 +138,15 @@ trait EntityManagerTrait
 
     protected static function persistAndFlush(object ...$entities): void
     {
+        self::persist(...$entities);
+        self::flush();
+    }
+
+    protected static function persist(object ...$entities): void
+    {
         foreach ($entities as $entity) {
             self::getEM()->persist($entity);
         }
-
-        self::flush();
     }
 
     protected static function flush(): void
