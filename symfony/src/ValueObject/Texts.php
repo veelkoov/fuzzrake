@@ -10,6 +10,6 @@ final class Texts
 {
     use UtilityClass;
 
-    public const UPDATES_PASSWORD = 'Updates password'; // grep-text-updates-password
-    public const WANT_TO_CHANGE_PASSWORD = 'I want to change my password / I forgot my password';
+    public const string UPDATES_PASSWORD = 'Updates password'; // grep-text-updates-password
+    public const string WANT_TO_CHANGE_PASSWORD = 'I want to change my password / I forgot my password';
 }

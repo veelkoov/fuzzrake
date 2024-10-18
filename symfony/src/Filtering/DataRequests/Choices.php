@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filtering\DataRequests;
 
 use App\Service\CacheDigestProvider;
+use Override;
 use Psl\Json;
 
 readonly class Choices implements CacheDigestProvider
@@ -42,6 +43,7 @@ readonly class Choices implements CacheDigestProvider
     ) {
     }
 
+    #[Override]
     public function getCacheDigest(): string
     {
         return hash('sha256', Json\encode($this));

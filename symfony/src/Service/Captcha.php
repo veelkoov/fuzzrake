@@ -17,7 +17,7 @@ class Captcha
     public function __construct(
         private readonly ReCaptcha $reCaptcha,
         private readonly LoggerInterface $logger,
-        #[Autowire('%env(GOOGLE_RECAPTCHA_SCORE_THRESHOLD)%')]
+        #[Autowire(env: 'GOOGLE_RECAPTCHA_SCORE_THRESHOLD')]
         string $threshold,
     ) {
         $threshold = floatval($threshold);

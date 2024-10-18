@@ -13,6 +13,7 @@ use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Contact;
 use JsonException;
+use Override;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -20,6 +21,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,6 +29,7 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         Submissions::emptyTestSubmissionsDir();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();

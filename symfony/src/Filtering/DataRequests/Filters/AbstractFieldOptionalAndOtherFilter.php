@@ -7,6 +7,7 @@ namespace App\Filtering\DataRequests\Filters;
 use App\Filtering\DataRequests\Consts;
 use App\Filtering\DataRequests\Filters\ValueChecker\ValueCheckerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Override;
 
 abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
 {
@@ -27,6 +28,7 @@ abstract class AbstractFieldOptionalAndOtherFilter implements FilterInterface
         $this->valueChecker = $this->getValueChecker($extractor->getCommon());
     }
 
+    #[Override]
     public function matches(Artisan $artisan): bool
     {
         if ($this->wantsUnknown && !$this->hasOwnedItems($artisan) && !$this->hasOtherOwnedItems($artisan)) {

@@ -18,9 +18,9 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\Table(name: 'events')]
 class Event
 {
-    final public const TYPE_DATA_UPDATED = 'DATA_UPDATED';
-    final public const TYPE_CS_UPDATED = 'CS_UPDATED';
-    final public const TYPE_GENERIC = 'GENERIC';
+    final public const string TYPE_DATA_UPDATED = 'DATA_UPDATED';
+    final public const string TYPE_CS_UPDATED = 'CS_UPDATED';
+    final public const string TYPE_GENERIC = 'GENERIC';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

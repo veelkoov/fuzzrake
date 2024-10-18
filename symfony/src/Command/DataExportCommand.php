@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Data\Definitions\Fields\Fields;
 use App\Repository\ArtisanRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Override;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -25,6 +26,7 @@ class DataExportCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
     }
@@ -32,6 +34,7 @@ class DataExportCommand extends Command
     /**
      * @throws Exception
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

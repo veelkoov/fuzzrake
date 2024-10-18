@@ -6,9 +6,11 @@ namespace App\Doctrine;
 
 use App\Utils\Artisan\SmartAccessDecorator;
 use Doctrine\ORM\Decorator\EntityManagerDecorator as DoctrineEntityManagerDecorator;
+use Override;
 
 class EntityManagerDecorator extends DoctrineEntityManagerDecorator
 {
+    #[Override]
     public function persist(object $object): void
     {
         if ($object instanceof SmartAccessDecorator) {
@@ -18,6 +20,7 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
         parent::persist($object);
     }
 
+    #[Override]
     public function remove(object $object): void
     {
         if ($object instanceof SmartAccessDecorator) {

@@ -13,13 +13,13 @@ final class Contact
 {
     use UtilityClass;
 
-    final public const INVALID = 'INVALID';
-    final public const INSTAGRAM = 'INSTAGRAM';
-    final public const TWITTER = 'TWITTER';
-    final public const TELEGRAM = 'TELEGRAM';
-    final public const E_MAIL = 'E-MAIL';
+    final public const string INVALID = 'INVALID';
+    final public const string INSTAGRAM = 'INSTAGRAM';
+    final public const string TWITTER = 'TWITTER';
+    final public const string TELEGRAM = 'TELEGRAM';
+    final public const string E_MAIL = 'E-MAIL';
 
-    private const PATTERNS = [
+    private const array PATTERNS = [
         '(?:^|email: ?| |\()([a-z0-9._-]+@[a-z0-9.-]+)(?:$|[ )])' => [self::E_MAIL,    ''],
         'telegram *[:-]? ?[ @]([a-z0-9_]+)'                       => [self::TELEGRAM,  '@'],
         '@?([a-z0-9_]+) (?:on|-) (twitter or )?telegram'          => [self::TELEGRAM,  '@'],

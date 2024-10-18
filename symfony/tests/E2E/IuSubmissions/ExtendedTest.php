@@ -31,19 +31,18 @@ class ExtendedTest extends AbstractTestWithEM
 {
     use IuFormTrait;
 
-    private const VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
+    private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
         Field::CONTACT_INFO_ORIGINAL,
         Field::CONTACT_ADDRESS_PLAIN,
         Field::PASSWORD,
     ];
 
-    private const NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
+    private const array NOT_IN_FORM = [ // Fields which are not in the form and may or may not be impacted by the import
         Field::COMPLETENESS,
         Field::CS_LAST_CHECK,
         Field::CS_TRACKER_ISSUE,
         Field::OPEN_FOR,
         Field::CLOSED_FOR,
-        Field::IS_MINOR,
         Field::SAFE_DOES_NSFW,
         Field::SAFE_WORKS_WITH_MINORS,
 
@@ -57,25 +56,25 @@ class ExtendedTest extends AbstractTestWithEM
         Field::DATE_UPDATED,
     ];
 
-    private const EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
+    private const array EXPANDED_CHECKBOXES = [ // List fields in the form of multiple checkboxes
         Field::PRODUCTION_MODELS,
         Field::FEATURES,
         Field::STYLES,
         Field::ORDER_TYPES,
     ];
 
-    private const EXPANDED_RADIOS = [ // Choice (enum) fields in the form of multiple radios
+    private const array EXPANDED_RADIOS = [ // Choice (enum) fields in the form of multiple radios
         Field::AGES,
     ];
 
-    private const BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
+    private const array BOOLEAN = [ // These fields are in the form of radios with "YES" or "NO" values
         Field::DOES_NSFW,
         Field::NSFW_SOCIAL,
         Field::NSFW_WEBSITE,
         Field::WORKS_WITH_MINORS,
     ];
 
-    private const SECOND_PAGE = [ // These fields are on the "contact + password" page (the second one)
+    private const array SECOND_PAGE = [ // These fields are on the "contact + password" page (the second one)
         Field::PASSWORD,
         Field::CONTACT_ALLOWED,
         Field::CONTACT_INFO_OBFUSCATED,

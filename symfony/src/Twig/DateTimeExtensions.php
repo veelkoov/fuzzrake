@@ -6,13 +6,15 @@ namespace App\Twig;
 
 use App\Twig\Utils\SafeFor;
 use App\Utils\DateTime\DateTimeFormat;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class DateTimeExtensions extends AbstractExtension
 {
-    private const FORMAT = 'Y-m-d H:i T'; // grep-expected-utc-datetime-format
+    private const string FORMAT = 'Y-m-d H:i T'; // grep-expected-utc-datetime-format
 
+    #[Override]
     public function getFilters(): array
     {
         return [

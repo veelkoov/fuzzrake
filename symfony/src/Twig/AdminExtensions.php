@@ -14,6 +14,7 @@ use App\Twig\Utils\SafeFor;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\StrUtils;
 use Doctrine\ORM\NonUniqueResultException;
+use Override;
 use TRegx\CleanRegex\Match\Detail;
 use TRegx\CleanRegex\Pattern;
 use Twig\Extension\AbstractExtension;
@@ -33,6 +34,7 @@ class AdminExtensions extends AbstractExtension
         $this->linkPattern = pattern('(?<!title=")https?://[^ ,\n<>"]+', 'i');
     }
 
+    #[Override]
     public function getFilters(): array
     {
         return [

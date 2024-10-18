@@ -6,10 +6,12 @@ namespace App\Tests\E2E\IuSubmissions;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;
+use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 abstract class AbstractTestWithEM extends WebTestCaseWithEM
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -17,6 +19,7 @@ abstract class AbstractTestWithEM extends WebTestCaseWithEM
         Submissions::emptyTestSubmissionsDir();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         parent::tearDown();

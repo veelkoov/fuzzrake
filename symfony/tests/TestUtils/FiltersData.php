@@ -82,7 +82,7 @@ class FiltersData
     {
         return array_unique(Iter\reduce(
             Vec\map($creators, fn (Creator $creator) => $creator->getSpeciesDoes()),
-            fn (array $c1, array $c2) => [...$c1, ...$c2],
+            fn (array $c1, array $c2): array => [...$c1, ...$c2],
             [],
         ));
     }

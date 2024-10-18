@@ -17,10 +17,10 @@ final class TestsBridge
 {
     use UtilityClass;
 
-    private const MOCKS_DIRECTORY_PATH = __DIR__.'/../../../var/cache/test';
-    private const MOCK_TIMESTAMP_PATH = self::MOCKS_DIRECTORY_PATH.'/timestamp.txt';
-    private const MARK_SKIP_SINGLE_CAPTCHA_PATH = self::MOCKS_DIRECTORY_PATH.'/skip-single-captcha.txt';
-    private const CAPTCHA_SKIP_TIMEOUT_SECONDS = 30;
+    private const string MOCKS_DIRECTORY_PATH = __DIR__.'/../../../var/cache/test';
+    private const string MOCK_TIMESTAMP_PATH = self::MOCKS_DIRECTORY_PATH.'/timestamp.txt';
+    private const string MARK_SKIP_SINGLE_CAPTCHA_PATH = self::MOCKS_DIRECTORY_PATH.'/skip-single-captcha.txt';
+    private const int CAPTCHA_SKIP_TIMEOUT_SECONDS = 30;
 
     public static function isTest(): bool
     {

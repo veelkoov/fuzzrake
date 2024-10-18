@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use Override;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -14,6 +15,7 @@ class LegacyRedirectionsTest extends WebTestCaseWithEM
 {
     private KernelBrowser $client;
 
+    #[Override]
     public function setUp(): void
     {
         $this->client = self::createClient();

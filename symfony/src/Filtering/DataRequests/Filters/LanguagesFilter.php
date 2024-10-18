@@ -9,6 +9,7 @@ use App\Filtering\DataRequests\Consts;
 use App\Filtering\DataRequests\Filters\ValueChecker\AnythingChecker;
 use App\Filtering\DataRequests\Filters\ValueChecker\ValueCheckerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
+use Override;
 
 use function Psl\Iter\contains;
 use function Psl\Vec\filter;
@@ -32,6 +33,7 @@ class LanguagesFilter implements FilterInterface
         $this->valueChecker = new AnythingChecker($wantedItems);
     }
 
+    #[Override]
     public function matches(Artisan $artisan): bool
     {
         if ($this->wantsUnknown && !$artisan->hasData(Field::LANGUAGES)) {
