@@ -22,13 +22,13 @@ class MutableSet implements IteratorAggregate, ArrayAccess
      */
     private array $items = [];
 
-    public function addOrIncItem(string $valueAndLabel): void
+    public function addOrIncItem(string $valueAndLabel, int $count = 1): void
     {
         if (!array_key_exists($valueAndLabel, $this->items)) {
             $this->items[$valueAndLabel] = new MutableItem($valueAndLabel, $valueAndLabel);
         }
 
-        $this->items[$valueAndLabel]->incCount();
+        $this->items[$valueAndLabel]->incCount($count);
     }
 
     public function addComplexItem(string $value, string $label, int $count, MutableSet $subitems = new MutableSet()): void

@@ -64,7 +64,7 @@ class SubmissionsController extends FuzzrakeAbstractController
 
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
 
-        $artisans = array_filter(Artisan::wrapAll($repository->getNew()),
+        $artisans = array_filter(Artisan::wrapAll($repository->getNewWithLimit()),
             fn (Artisan $artisan) => ($artisan->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
         return $this->render('mx/submissions/social.html.twig', [

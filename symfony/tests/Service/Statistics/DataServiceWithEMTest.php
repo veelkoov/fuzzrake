@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Service\Statistics;
 
+use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\EventRepository;
@@ -16,7 +17,7 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 /**
  * @medium
  */
-class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
+class DataServiceWithEMTest extends KernelTestCaseWithEM
 {
     public function testUnknownAndEuArtisansDontCountTowardsTotalCountries(): void
     {
@@ -28,13 +29,14 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
         self::persistAndFlush($a1, $a2, $a3);
 
         $artisanRepository = self::getArtisanRepository();
+        $cvRepositoryMock = self::createMock(CreatorValueRepository::class);
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
         $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
         $eRepositoryMock = self::createMock(EventRepository::class);
         $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
-        $subject = new DataService($artisanRepository, $avdRepositoryMock, $acsRepositoryMock, $eRepositoryMock,
-            $kdRepositoryMock, CacheUtils::getArrayBased());
+        $subject = new DataService($artisanRepository, $cvRepositoryMock, $avdRepositoryMock,
+            $acsRepositoryMock, $eRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
         $result = $subject->getMainPageStats();
 
         self::assertEquals(1, $result->countryCount);
@@ -50,13 +52,14 @@ class StatisticsServiceWithEMTest extends KernelTestCaseWithEM
         self::persistAndFlush($a1, $a2, $a3);
 
         $artisanRepository = self::getArtisanRepository();
+        $cvRepositoryMock = self::createMock(CreatorValueRepository::class);
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
         $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
         $eRepositoryMock = self::createMock(EventRepository::class);
         $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
-        $subject = new DataService($artisanRepository, $avdRepositoryMock, $acsRepositoryMock, $eRepositoryMock,
-            $kdRepositoryMock, CacheUtils::getArrayBased());
+        $subject = new DataService($artisanRepository, $cvRepositoryMock, $avdRepositoryMock,
+            $acsRepositoryMock, $eRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
         $result = $subject->getMainPageStats();
 
         self::assertEquals(2, $result->activeArtisansCount);

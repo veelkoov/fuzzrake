@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Data\Tidying\ArtisanChanges;
+use App\Data\Tidying\ArtisanChanges as CreatorChanges;
 use App\Data\Tidying\FdvFactory;
 use App\Data\Tidying\Printer;
-use App\Repository\ArtisanRepository;
-use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ArtisanRepository as CreatorRepository;
+use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -24,8 +23,7 @@ class DataTidyCommand extends Command
     private const string OPT_WITH_INACTIVE = 'with-inactive';
 
     public function __construct(
-        private readonly EntityManagerInterface $objectManager,
-        private readonly ArtisanRepository $artisanRepo,
+        private readonly CreatorRepository $creatorRepository,
         private readonly FdvFactory $fdvFactory,
     ) {
         parent::__construct();
@@ -43,20 +41,22 @@ class DataTidyCommand extends Command
     #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $wantCommit = $input->getOption(self::OPT_COMMIT);
+
         $io = new SymfonyStyle($input, $output);
         $fdv = $this->fdvFactory->create(new Printer($io));
 
-        $artisans = $input->getOption(self::OPT_WITH_INACTIVE) ? $this->artisanRepo->getAll() : $this->artisanRepo->getActive();
+        $creators = $input->getOption(self::OPT_WITH_INACTIVE)
+            ? $this->creatorRepository->getAllPaged(flushAfterPage: $wantCommit)
+            : $this->creatorRepository->getActivePaged(flushAfterPage: $wantCommit);
 
-        foreach ($artisans as $artisan) {
-            $artisanFixWip = new ArtisanChanges(Artisan::wrap($artisan));
-
-            $fdv->perform($artisanFixWip);
-            $artisanFixWip->apply();
+        foreach ($creators as $creatorE) {
+            $creatorFixWip = new CreatorChanges(Creator::wrap($creatorE));
+            $fdv->perform($creatorFixWip);
+            $creatorFixWip->apply();
         }
 
-        if ($input->getOption(self::OPT_COMMIT)) {
-            $this->objectManager->flush();
+        if ($wantCommit) {
             $io->success('Finished and saved');
         } else {
             $io->success('Finished without saving');
