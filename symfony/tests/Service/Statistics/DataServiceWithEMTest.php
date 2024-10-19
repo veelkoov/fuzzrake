@@ -7,6 +7,7 @@ namespace App\Tests\Service\Statistics;
 use App\Repository\ArtisanValueRepository as CreatorValueRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
+use App\Repository\EventRepository;
 use App\Repository\KotlinDataRepository;
 use App\Service\DataService;
 use App\Tests\TestUtils\CacheUtils;
@@ -31,10 +32,11 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
         $cvRepositoryMock = self::createMock(CreatorValueRepository::class);
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
         $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
+        $eRepositoryMock = self::createMock(EventRepository::class);
         $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
         $subject = new DataService($artisanRepository, $cvRepositoryMock, $avdRepositoryMock,
-            $acsRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
+            $acsRepositoryMock, $eRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
         $result = $subject->getMainPageStats();
 
         self::assertEquals(1, $result->countryCount);
@@ -53,10 +55,11 @@ class DataServiceWithEMTest extends KernelTestCaseWithEM
         $cvRepositoryMock = self::createMock(CreatorValueRepository::class);
         $avdRepositoryMock = self::createMock(ArtisanVolatileDataRepository::class);
         $acsRepositoryMock = self::createMock(CreatorOfferStatusRepository::class);
+        $eRepositoryMock = self::createMock(EventRepository::class);
         $kdRepositoryMock = self::createMock(KotlinDataRepository::class);
 
         $subject = new DataService($artisanRepository, $cvRepositoryMock, $avdRepositoryMock,
-            $acsRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
+            $acsRepositoryMock, $eRepositoryMock, $kdRepositoryMock, CacheUtils::getArrayBased());
         $result = $subject->getMainPageStats();
 
         self::assertEquals(2, $result->activeArtisansCount);
