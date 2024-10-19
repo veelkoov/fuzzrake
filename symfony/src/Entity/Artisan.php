@@ -315,23 +315,6 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function clearLegacyFields(): void // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        $this->features = '';
-        $this->languages = '';
-        $this->orderTypes = '';
-        $this->otherFeatures = '';
-        $this->otherOrderTypes = '';
-        $this->otherStyles = '';
-        $this->productionModels = '';
-        $this->styles = '';
-    }
-
-    public function getLegacyProductionModels(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->productionModels;
-    }
-
     public function getStylesComment(): string
     {
         return $this->stylesComment;
@@ -342,16 +325,6 @@ class Artisan implements Stringable
         $this->stylesComment = $stylesComment;
 
         return $this;
-    }
-
-    public function getLegacyStyles(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->styles;
-    }
-
-    public function getLegacyOtherStyles(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->otherStyles;
     }
 
     public function getOrderTypesComment(): string
@@ -366,16 +339,6 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getLegacyOrderTypes(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->orderTypes;
-    }
-
-    public function getLegacyOtherOrderTypes(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->otherOrderTypes;
-    }
-
     public function getFeaturesComment(): string
     {
         return $this->featuresComment;
@@ -386,16 +349,6 @@ class Artisan implements Stringable
         $this->featuresComment = $featuresComment;
 
         return $this;
-    }
-
-    public function getLegacyFeatures(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->features;
-    }
-
-    public function getLegacyOtherFeatures(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->otherFeatures;
     }
 
     public function getPaymentPlans(): string
@@ -468,11 +421,6 @@ class Artisan implements Stringable
         $this->speciesDoesnt = $speciesDoesnt;
 
         return $this;
-    }
-
-    public function getLegacyLanguages(): string // TODO: Temporary. Remove. https://github.com/veelkoov/fuzzrake/issues/249
-    {
-        return $this->languages;
     }
 
     public function getNotes(): string
