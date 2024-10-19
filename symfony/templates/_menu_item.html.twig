@@ -3,9 +3,9 @@
 <a
     {% if type is defined %}data-navitem-type="{{ type }}"{% endif %}
     {% if priority is defined %}data-priority="{{ priority }}"{% endif %}
-    {% if data_attrs is defined %}
-        {{ data_attrs|map((value, key) => "data-#{key}=\"#{value}\"")|join(',')|raw }}
-    {% endif %}
+    {% for key, value in data_attrs|default({}) %}
+        data-{{ key|e('html_attr') }}="{{ value }}"
+    {% endfor %}
     class="{{ html_classes('nav-link', {
         active: is_active
     }) }}"

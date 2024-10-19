@@ -10,7 +10,6 @@ use App\Utils\DateTime\UtcClock;
 use App\Utils\Enforce;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -56,20 +55,16 @@ class EventRepository extends ServiceEntityRepository
 
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
-        try {
-            $resultData = $this
-                ->createQueryBuilder('e')
-                ->select('MAX(e.timestamp)')
-                ->getQuery()
-                ->enableResultCache(3600)
-                ->getSingleScalarResult();
-            if (null === $resultData) {
-                return null;
-            }
+        $resultData = $this
+            ->createQueryBuilder('e')
+            ->select('MAX(e.timestamp)')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            return UtcClock::at(Enforce::nString($resultData));
-        } catch (NoResultException) {
+        if (null === $resultData) {
             return null;
         }
+
+        return UtcClock::at(Enforce::string($resultData));
     }
 }

@@ -9,8 +9,8 @@
             priority: 'high',
             type: 'news',
             data_attrs: {
-                'latest-event': getLatestEventTimestamp()
-            }
+                'latest-event': get_latest_event_timestamp(),
+            },
         }) }}
         {% if is_dev_env() %}
             {{ include('_menu_item.html.twig', {name: 'mx_artisan_new', fa_icon: 'plus', label: 'Maker', priority: 'low'}) }}
