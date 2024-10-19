@@ -7,6 +7,7 @@ namespace App\Twig;
 use App\Data\Definitions\Ages;
 use App\Data\Definitions\NewArtisan;
 use App\Filtering\FiltersData\Item;
+use App\Service\DataService;
 use App\Service\EnvironmentsService;
 use App\Twig\Utils\HumanFriendly;
 use App\Twig\Utils\SafeFor;
@@ -31,6 +32,7 @@ class AppExtensions extends AbstractExtension
 
     public function __construct(
         private readonly EnvironmentsService $environments,
+        private readonly DataService $dataService,
     ) {
         $this->friendly = new HumanFriendly();
         $this->itemExplanation = Pattern::of(' \([^)]+\)');
@@ -63,6 +65,7 @@ class AppExtensions extends AbstractExtension
         return [
             new TwigFunction('is_dev_env', $this->isDevEnvFunction(...)),
             new TwigFunction('is_dev_or_test_env', $this->isDevOrTestEnvFunction(...)),
+            new TwigFunction('get_latest_event_timestamp', $this->getLatestEventTimestamp(...)),
 
             new TwigFunction('ab_search_uri', $this->abSearchUri(...)),
             new TwigFunction('ages_description', $this->agesDescription(...), SafeFor::HTML),
@@ -84,6 +87,13 @@ class AppExtensions extends AbstractExtension
     public function isDevOrTestEnvFunction(): bool
     {
         return $this->environments->isDevOrTest();
+    }
+
+    public function getLatestEventTimestamp(): ?string
+    {
+        $timestamp = $this->dataService->getLatestEventTimestamp();
+
+        return $timestamp?->format('Y-m-d H:i:s P');
     }
 
     public function unknownValue(): string

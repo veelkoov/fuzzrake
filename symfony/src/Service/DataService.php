@@ -7,12 +7,14 @@ namespace App\Service;
 use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
+use App\Repository\EventRepository;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\PackedStringList;
 use App\ValueObject\CacheTags;
 use App\ValueObject\MainPageStats;
+use DateTimeImmutable;
 use Doctrine\ORM\UnexpectedResultException;
 
 class DataService
@@ -21,6 +23,7 @@ class DataService
         private readonly ArtisanRepository $artisanRepository,
         private readonly ArtisanVolatileDataRepository $avdRepository,
         private readonly CreatorOfferStatusRepository $cosRepository,
+        private readonly EventRepository $eventRepository,
         private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly Cache $cache,
     ) {
@@ -121,5 +124,11 @@ class DataService
     public function getOooNotice(): string
     {
         return $this->kotlinDataRepository->getString(KotlinDataRepository::OOO_NOTICE);
+    }
+
+    public function getLatestEventTimestamp(): ?DateTimeImmutable
+    {
+        return $this->cache->getCached(__METHOD__, [CacheTags::ARTISANS, CacheTags::TRACKING], // TODO: Introduce events cache tag instead
+            fn () => $this->eventRepository->getLatestEventTimestamp());
     }
 }

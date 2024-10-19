@@ -1,7 +1,11 @@
 {% set is_active = app.request.attributes.get('_route') == name %}
 
 <a
+    {% if type is defined %}data-navitem-type="{{ type }}"{% endif %}
     {% if priority is defined %}data-priority="{{ priority }}"{% endif %}
+    {% for key, value in data_attrs|default({}) %}
+        data-{{ key|e('html_attr') }}="{{ value }}"
+    {% endfor %}
     class="{{ html_classes('nav-link', {
         active: is_active
     }) }}"
