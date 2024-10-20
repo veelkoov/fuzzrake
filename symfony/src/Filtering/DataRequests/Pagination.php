@@ -2,15 +2,15 @@
 
 namespace App\Filtering\DataRequests;
 
+use App\Utils\Traits\UtilityClass;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Nette\StaticClass;
 use Psl\Dict;
 use Psl\Math;
 use Psl\Vec;
 
 final class Pagination
 {
-    use StaticClass;
+    use UtilityClass;
 
     public const int PAGE_SIZE = 50;
 

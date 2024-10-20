@@ -10,9 +10,9 @@ use App\Entity\Specie;
 use App\Repository\KotlinDataRepository;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Json;
+use App\Utils\Traits\UtilityClass;
 use InvalidArgumentException;
 use JsonException;
-use Nette\StaticClass;
 use Psl\Dict;
 use Psl\Iter;
 use Psl\Vec;
@@ -20,7 +20,7 @@ use RuntimeException;
 
 class FiltersData
 {
-    use StaticClass;
+    use UtilityClass;
 
     public static function getMockSpecies(): KotlinData
     {

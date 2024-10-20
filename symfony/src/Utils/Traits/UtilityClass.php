@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace App\Utils\Traits;
 
+use Exception;
+
 trait UtilityClass
 {
-    private function __construct()
+    /**
+     * @throws Exception
+     */
+    final public function __construct()
     {
         /*
-         * Yer an utility, Harry
+         * Yer a utility, Harry
          * https://www.reddit.com/r/BossFights/comments/9wbkq7/you_are_a_hazard_harry/
          */
+        throw new Exception(static::class.' is not supposed to be constructed');
     }
 }
