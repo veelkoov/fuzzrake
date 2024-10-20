@@ -12,7 +12,7 @@ mkdir -p -m 700 ./var
 mkdir -p -m 700 ./var/cache
 mkdir -p -m 700 ./var/log
 mkdir -p -m 700 ./var/sessions
-mkdir -m 700 /tmp/phpstan
+mkdir -p -m 700 /tmp/phpstan
 
 for TARGET in \
         /var/www/html/var \
