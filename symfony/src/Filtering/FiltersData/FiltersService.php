@@ -13,9 +13,11 @@ use App\Repository\ArtisanRepository;
 use App\Repository\ArtisanVolatileDataRepository;
 use App\Repository\CreatorOfferStatusRepository;
 use App\Repository\KotlinDataRepository;
+use App\Service\Cache;
 use App\Service\CountriesDataService;
 use App\Service\DataService;
 use App\Utils\Enforce;
+use App\ValueObject\CacheTags;
 use Doctrine\ORM\UnexpectedResultException;
 use Psl\Dict;
 use Psl\Vec;
@@ -29,15 +31,16 @@ class FiltersService
         private readonly CountriesDataService $countriesDataService,
         private readonly KotlinDataRepository $kotlinDataRepository,
         private readonly DataService $dataService,
+        private readonly Cache $cache,
     ) {
     }
 
     /**
      * @throws UnexpectedResultException
      */
-    public function getFiltersTplData(): FiltersData
+    public function getCachedFiltersTplData(): FiltersData
     {
-        return new FiltersData(
+        return $this->cache->get(fn () => new FiltersData(
             $this->getValuesFilterData(Field::ORDER_TYPES, Field::OTHER_ORDER_TYPES),
             $this->getValuesFilterData(Field::STYLES, Field::OTHER_STYLES),
             $this->getPaymentPlans(),
@@ -49,7 +52,7 @@ class FiltersService
             $this->getStatesFilterData(),
             $this->getSpeciesFilterData(),
             $this->getInactiveFilterData(),
-        );
+        ), CacheTags::ARTISANS, __METHOD__);
     }
 
     public function getCountriesFilterData(): FilterData
