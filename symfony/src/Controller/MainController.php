@@ -9,11 +9,9 @@ use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Filtering\DataRequests\RequestParser;
 use App\Filtering\FiltersData\FiltersService;
 use App\Repository\ArtisanRepository as CreatorRepository;
-use App\Service\Cache as CacheService;
 use App\Service\DataService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Creator\CreatorId;
-use App\ValueObject\CacheTags;
 use App\ValueObject\Routing\RouteName;
 use Psl\Type\Exception\CoercionException;
 use Psr\Log\LoggerInterface;
@@ -34,7 +32,6 @@ class MainController extends AbstractController
         private readonly FilteredDataProvider $filtered,
         private readonly RequestParser $requestParser,
         private readonly FiltersService $filterService,
-        private readonly CacheService $cache,
         private readonly DataService $dataService,
     ) {
     }
@@ -43,11 +40,8 @@ class MainController extends AbstractController
     #[Cache(maxage: 3600, public: true)]
     public function main(): Response
     {
-        $filters = $this->cache->getCached('mainpage.filters', CacheTags::ARTISANS,
-            fn () => $this->filterService->getFiltersTplData());
-
         return $this->render('main/main.html.twig', [
-            'filters' => $filters,
+            'filters' => $this->filterService->getCachedFiltersTplData(),
             'stats'   => $this->dataService->getMainPageStats(),
         ]);
     }

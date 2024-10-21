@@ -231,7 +231,7 @@ class DataService
 
     public function getLatestEventTimestamp(): ?DateTimeImmutable
     {
-        return $this->cache->getCached(__METHOD__, [CacheTags::ARTISANS, CacheTags::TRACKING], // TODO: Introduce events cache tag instead
-            fn () => $this->eventRepository->getLatestEventTimestamp());
+        return $this->cache->get(fn () => $this->eventRepository->getLatestEventTimestamp(),
+            [CacheTags::ARTISANS, CacheTags::TRACKING], __METHOD__); // TODO: https://github.com/veelkoov/fuzzrake/issues/251);
     }
 }
