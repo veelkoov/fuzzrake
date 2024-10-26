@@ -50,6 +50,10 @@ class UpdatesService
             }
         }
 
+        // if (!$isContactAllowed) {
+        //     $state->artisan->setEmailAddressObfuscated('');
+        // } TODO
+
         $this->handleSpecialFieldsInInput($fixedInput, $originalArtisan);
 
         $updatedArtisan = clone $originalArtisan;
@@ -125,12 +129,12 @@ class UpdatesService
 
     private function handleSpecialFieldsInInput(Artisan $originalInput, Artisan $originalArtisan): void
     {
-        $submittedContact = $originalInput->getContactInfoObfuscated();
+        $submittedContact = $originalInput->getEmailAddressObfuscated();
 
-        if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getContactInfoObfuscated()) {
-            $originalInput->updateContact($originalArtisan->getContactInfoOriginal());
+        if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getEmailAddressObfuscated()) {
+            $originalInput->updateEmailAddress($originalArtisan->getEmailAddress());
         } else {
-            $originalInput->updateContact($submittedContact);
+            $originalInput->updateEmailAddress($submittedContact);
         }
 
         if (null === $originalArtisan->getId()) {

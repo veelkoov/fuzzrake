@@ -10,10 +10,8 @@
     ],
     "PASSWORD": "Password artisan 3",
 
-    "CONTACT_INFO_OBFUSCATED": "E-MAIL: art3***********ess3@e****l",
-    "CONTACT_INFO_ORIGINAL": "E-MAIL: art3e-mail-address3@ema.il",
-    "CONTACT_ADDRESS_PLAIN": "art3e-mail-address3@ema.il",
-    "CONTACT_METHOD": "E-MAIL",
+    "EMAIL_ADDRESS_OBFUSCATED": "art3***********ess3@e****l",
+    "EMAIL_ADDRESS": "art3e-mail-address3@ema.il",
     "CONTACT_ALLOWED": "CORRECTIONS",
 
     "INTRO": "Intro artisan 3",

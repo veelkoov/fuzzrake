@@ -33,10 +33,14 @@ trait UtilsTrait
         $crawler = $client->submit($form);
 
         if ($client->getResponse()->isRedirect()) {
+            // Not done above, so that we can do other assertions for failure case
+            self::assertTrue($client->getResponse()->isRedirect());
             $client->followRedirect();
 
             return;
         }
+
+        self::assertLessThan(500, $client->getResponse()->getStatusCode(), 'Server returned 5XX');
 
         $fields = [];
         foreach ($crawler->filter('input.is-invalid') as $field) {

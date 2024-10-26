@@ -12,10 +12,8 @@
     ],
     "PASSWORD": "Password changed 1",
 
-    "CONTACT_INFO_OBFUSCATED": "E-MAIL: mkr1-*************after@e****l",
-    "CONTACT_INFO_ORIGINAL": "E-MAIL: mkr1-email-update-after@ema.il",
-    "CONTACT_ADDRESS_PLAIN": "mkr1-email-update-after@ema.il",
-    "CONTACT_METHOD": "E-MAIL",
+    "EMAIL_ADDRESS_OBFUSCATED": "mkr1-*************after@e****l",
+    "EMAIL_ADDRESS": "mkr1-email-update-after@ema.il",
     "CONTACT_ALLOWED": "ANNOUNCEMENTS",
 
     "INTRO": "Intro mkr1 after update",

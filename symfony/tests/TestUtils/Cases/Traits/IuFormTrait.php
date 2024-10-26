@@ -70,9 +70,9 @@ trait IuFormTrait
         self::assertSelectorTextContains('div.border-danger p', 'You requested a password change, but you didn\'t agree before to be contacted, so');
     }
 
-    private static function assertFieldErrorContactInfoMustNotBeBlank(): void
+    private static function assertFieldErrorValidEmailAddressRequired(): void
     {
-        self::assertSelectorTextContains('#iu_form_contactInfoObfuscated + .help-text + .invalid-feedback', 'This value should not be blank.');
+        self::assertSelectorTextContains('#iu_form_emailAddressObfuscated + .help-text + .invalid-feedback', 'A valid email address is required.');
     }
 
     private static function assertFieldErrorPasswordIsRequired(): void

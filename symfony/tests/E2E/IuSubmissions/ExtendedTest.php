@@ -32,8 +32,8 @@ class ExtendedTest extends AbstractTestWithEM
     use IuFormTrait;
 
     private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
-        Field::CONTACT_INFO_ORIGINAL,
-        Field::CONTACT_ADDRESS_PLAIN,
+        Field::EMAIL_ADDRESS,
+        //        Field::CONTACT_ADDRESS_PLAIN,
         Field::PASSWORD,
     ];
 
@@ -48,9 +48,7 @@ class ExtendedTest extends AbstractTestWithEM
 
         Field::FORMER_MAKER_IDS,
         Field::URL_MINIATURES,
-        Field::CONTACT_INFO_ORIGINAL,
-        Field::CONTACT_METHOD,
-        Field::CONTACT_ADDRESS_PLAIN,
+        Field::EMAIL_ADDRESS,
         Field::INACTIVE_REASON,
         Field::DATE_ADDED,
         Field::DATE_UPDATED,
@@ -77,7 +75,7 @@ class ExtendedTest extends AbstractTestWithEM
     private const array SECOND_PAGE = [ // These fields are on the "contact + password" page (the second one)
         Field::PASSWORD,
         Field::CONTACT_ALLOWED,
-        Field::CONTACT_INFO_OBFUSCATED,
+        Field::EMAIL_ADDRESS_OBFUSCATED,
     ];
 
     /**

@@ -8,8 +8,6 @@ use App\Data\Definitions\ContactPermit;
 use App\IuHandling\Import\UpdateContact;
 use App\Tests\TestUtils\Cases\TestCase;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Contact;
-use InvalidArgumentException;
 
 /**
  * @small
@@ -52,51 +50,35 @@ class UpdateContactTest extends TestCase
     public function testMethodAndAddress(): void
     {
         // New maker with e-mail address
-        $result = $this->getUpdateContactAddress(null, null, Contact::E_MAIL, 'address@example.com');
-        self::assertTrue($result->isEmail);
-        self::assertEquals('E-MAIL', $result->method);
+        $result = $this->getUpdateContactAddress(null, 'address@example.com');
         self::assertEquals('address@example.com', $result->address);
 
         // New maker with Telegram
-        $result = $this->getUpdateContactAddress(null, null, Contact::TELEGRAM, '@telegram');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('TELEGRAM', $result->method);
+        $result = $this->getUpdateContactAddress(null, '@telegram');
         self::assertEquals('@telegram', $result->address);
 
         // Updated maker earlier with nothing, now with e-mail address
-        $result = $this->getUpdateContactAddress('', '', Contact::E_MAIL, 'address@example.com');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('', $result->method);
+        $result = $this->getUpdateContactAddress('', 'address@example.com');
         self::assertEquals('', $result->address);
 
         // Updated maker earlier with nothing, now with Telegram
-        $result = $this->getUpdateContactAddress('', '', Contact::TELEGRAM, '@telegram');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('', $result->method);
+        $result = $this->getUpdateContactAddress('', '@telegram');
         self::assertEquals('', $result->address);
 
         // Updated maker earlier with e-mail, now with e-mail address
-        $result = $this->getUpdateContactAddress(Contact::E_MAIL, 'addresso@example.com', Contact::E_MAIL, 'addressn@example.com');
-        self::assertTrue($result->isEmail);
-        self::assertEquals('E-MAIL', $result->method);
+        $result = $this->getUpdateContactAddress('addresso@example.com', 'addressn@example.com');
         self::assertEquals('addresso@example.com', $result->address);
 
         // Updated maker earlier with e-mail, now with Telegram
-        $result = $this->getUpdateContactAddress(Contact::E_MAIL, 'address@example.com', Contact::TELEGRAM, '@telegram');
-        self::assertTrue($result->isEmail);
-        self::assertEquals('E-MAIL', $result->method);
+        $result = $this->getUpdateContactAddress('address@example.com', '@telegram');
         self::assertEquals('address@example.com', $result->address);
 
         // Updated maker earlier with Telegram, now with e-mail
-        $result = $this->getUpdateContactAddress(Contact::TELEGRAM, '@telegram', Contact::E_MAIL, 'address@example.com');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('TELEGRAM', $result->method);
+        $result = $this->getUpdateContactAddress('@telegram', 'address@example.com');
         self::assertEquals('@telegram', $result->address);
 
         // Updated maker earlier with Telegram, now with Telegram
-        $result = $this->getUpdateContactAddress(Contact::TELEGRAM, '@telegram', Contact::E_MAIL, '@username');
-        self::assertFalse($result->isEmail);
-        self::assertEquals('TELEGRAM', $result->method);
+        $result = $this->getUpdateContactAddress('@telegram', '@username');
         self::assertEquals('@telegram', $result->address);
     }
 
@@ -108,17 +90,10 @@ class UpdateContactTest extends TestCase
         return UpdateContact::from($oldA, $newA);
     }
 
-    private function getUpdateContactAddress(?string $oldMethod, ?string $oldAddress, string $newMethod, string $newAddress): UpdateContact
+    private function getUpdateContactAddress(?string $oldAddress, string $newAddress): UpdateContact
     {
-        if (null === $oldMethod && null === $oldAddress) {
-            $oldA = new Artisan();
-        } elseif (null !== $oldMethod && null !== $oldAddress) {
-            $oldA = self::getPersistedArtisanMock()->setContactMethod($oldMethod)->setContactAddressPlain($oldAddress);
-        } else {
-            throw new InvalidArgumentException();
-        }
-
-        $newA = Artisan::new()->setContactMethod($newMethod)->setContactAddressPlain($newAddress);
+        $oldA = null === $oldAddress ? new Artisan() : self::getPersistedArtisanMock()->setEmailAddress($oldAddress);
+        $newA = Artisan::new()->setEmailAddress($newAddress);
 
         return UpdateContact::from($oldA, $newA);
     }
