@@ -33,7 +33,6 @@ class ExtendedTest extends AbstractTestWithEM
 
     private const array VALUE_MUST_NOT_BE_SHOWN_IN_FORM = [ // Values which must never appear in the form
         Field::EMAIL_ADDRESS,
-        //        Field::CONTACT_ADDRESS_PLAIN,
         Field::PASSWORD,
     ];
 
