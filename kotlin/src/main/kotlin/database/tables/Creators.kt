@@ -44,5 +44,5 @@ object Creators : IntIdTable("artisans") {
 
     val contactAllowed = varchar("contact_allowed", 16).nullable() // TODO: Enum
     val contactMethod = varchar("contact_method", 32).default("") // TODO: Remove
-    val contactInfoObfuscated = varchar("contact_info_obfuscated", 128).default("") // TODO: Rename
+    val emailAddressObfuscated = varchar("contact_info_obfuscated", 128).default("") // TODO: Rename
 }
