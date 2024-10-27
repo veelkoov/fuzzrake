@@ -65,6 +65,10 @@ final class SchemaFixer
             case 16:
                 unset($data['CONTACT_METHOD']);
                 unset($data['CONTACT_ADDRESS_PLAIN']);
+                $data['EMAIL_ADDRESS_OBFUSCATED'] = $data['CONTACT_INFO_OBFUSCATED'];
+                $data['EMAIL_ADDRESS'] = $data['CONTACT_INFO_ORIGINAL'];
+                unset($data['CONTACT_INFO_OBFUSCATED']);
+                unset($data['CONTACT_INFO_ORIGINAL']);
         }
 
         return $data;
