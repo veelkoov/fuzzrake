@@ -116,7 +116,7 @@ class Artisan implements Stringable
     #[ORM\Column(type: Types::TEXT)]
     private string $contactMethod = ''; // TODO: Unused, remove
 
-    #[ORM\Column(name: 'contact_info_obfuscated', type: Types::TEXT)]
+    #[ORM\Column(name: 'contact_info_obfuscated', type: Types::TEXT)] // TODO: Rename
     private string $emailAddressObfuscated = '';
 
     #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
