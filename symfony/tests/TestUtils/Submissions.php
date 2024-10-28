@@ -9,6 +9,7 @@ use App\IuHandling\Storage\LocalStorageService;
 use App\IuHandling\Submission\SubmissionService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Json;
 use Exception;
 use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -37,7 +38,10 @@ class Submissions
 
     public static function from(Artisan $artisan): SubmissionData
     {
-        $data = SubmissionService::asArray($artisan);
+        /**
+         * @var array<string, psJsonFieldValue> $data
+         */
+        $data = Json::decode(SubmissionService::asJson($artisan));
 
         return new SubmissionData(UtcClock::now(), 'MOCK SUBMISSION', $data);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IuHandling\Import;
 
+use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Fields;
 use App\Data\Definitions\Fields\FieldsList;
 use App\Data\Fixer\Fixer;
@@ -50,10 +51,7 @@ class UpdatesService
             }
         }
 
-        // if (!$isContactAllowed) {
-        //     $state->artisan->setEmailAddressObfuscated('');
-        // } TODO
-
+        $this->handleSpecialFieldsInInput($originalInput, $originalArtisan);
         $this->handleSpecialFieldsInInput($fixedInput, $originalArtisan);
 
         $updatedArtisan = clone $originalArtisan;
@@ -127,26 +125,29 @@ class UpdatesService
         return Artisan::wrapAll($results);
     }
 
-    private function handleSpecialFieldsInInput(Artisan $originalInput, Artisan $originalArtisan): void
+    private function handleSpecialFieldsInInput(Artisan $submission, Artisan $original): void
     {
-        $submittedContact = $originalInput->getEmailAddressObfuscated();
+        $submittedContact = $submission->getEmailAddressObfuscated();
 
-        if (null !== $originalArtisan->getId() && $submittedContact === $originalArtisan->getEmailAddressObfuscated()) {
-            $originalInput->updateEmailAddress($originalArtisan->getEmailAddress());
+        if (ContactPermit::NO === $submission->getContactAllowed()) {
+            $submission->setEmailAddress('');
+            $submission->setEmailAddressObfuscated('');
+        } elseif (null !== $original->getId() && $submittedContact === $original->getEmailAddressObfuscated()) {
+            $submission->updateEmailAddress($original->getEmailAddress());
         } else {
-            $originalInput->updateEmailAddress($submittedContact);
+            $submission->updateEmailAddress($submittedContact);
         }
 
-        if (null === $originalArtisan->getId()) {
-            $originalInput->setDateAdded(UtcClock::now());
+        if (null === $original->getId()) {
+            $submission->setDateAdded(UtcClock::now());
         } else {
-            $originalInput->setDateAdded($originalArtisan->getDateAdded());
-            $originalInput->setDateUpdated(UtcClock::now());
+            $submission->setDateAdded($original->getDateAdded());
+            $submission->setDateUpdated(UtcClock::now());
 
-            if ($originalInput->getMakerId() !== $originalArtisan->getMakerId()) {
-                $originalInput->setFormerMakerIds($originalArtisan->getAllMakerIds());
+            if ($submission->getMakerId() !== $original->getMakerId()) {
+                $submission->setFormerMakerIds($original->getAllMakerIds());
             } else {
-                $originalInput->setFormerMakerIds($originalArtisan->getFormerMakerIds());
+                $submission->setFormerMakerIds($original->getFormerMakerIds());
             }
         }
     }
