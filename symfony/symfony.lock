@@ -345,7 +345,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "1.0",
-            "ref": "3ead1b290ba6d708cc0cbcb8b1dbbf8e6fa3c0c0"
+            "ref": "673836afb0eac2b0ec36c44f2ff0379e5a4b2177"
         }
     },
     "symfony/password-hasher": {
