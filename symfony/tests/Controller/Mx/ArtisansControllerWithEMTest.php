@@ -151,7 +151,7 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
     /**
      * @return list<array{array{init_original: string, init_obfuscated: string, set_original: string, set_obfuscated: string, check_original: string, check_obfuscated: string}}>
      */
-    public function contactUpdatesDataProvider(): array // FIXME: Validate the test thingys make sense
+    public function contactUpdatesDataProvider(): array
     {
         return [
             [[
@@ -178,11 +178,11 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
                 'init_original'   => 'some-email@somedomain.fi',
                 'init_obfuscated' => 'so******il@som*******.fi',
 
-                'set_original'    => '@some_telegram',
+                'set_original'    => 'updated-email@example.com',
                 'set_obfuscated'  => 'so******il@som*******.fi',
 
-                'check_original'   => '@some_telegram',
-                'check_obfuscated' => '@som*******ram',
+                'check_original'   => 'updated-email@example.com',
+                'check_obfuscated' => 'upd*******ail@ex*******om',
             ]],
             [[
                 'init_original'   => 'some-email@somedomain.fi',
