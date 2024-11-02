@@ -46,11 +46,11 @@ class IuNavigationTest extends AbstractTestWithEM
         self::skipData($client, true);
 
         $this::submitInvalidForm($client, 'Submit', [
-            'iu_form[contactAllowed]'        => 'FEEDBACK',
-            'iu_form[emailAddressObfuscated]' => 'test-some-emailAddressObfuscated',
+            'iu_form[contactAllowed]'         => 'FEEDBACK',
+            'iu_form[emailAddressObfuscated]' => 'test-some-email@example.com',
         ]);
 
-        self::assertInputValueSame('iu_form[emailAddressObfuscated]', 'test-some-emailAddressObfuscated', "Partial data hasn't been saved");
+        self::assertInputValueSame('iu_form[emailAddressObfuscated]', 'test-some-email@example.com', "Partial data hasn't been saved");
 
         $this::submitValidForm($client, 'Start over or withdraw', []);
 
