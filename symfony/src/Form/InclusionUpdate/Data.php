@@ -13,8 +13,8 @@ use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
-use App\Form\Transformers\NullToEmptyArrayTransformer;
 use App\Form\Transformers\SinceTransformer;
+use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\ValueObject\Routing\RouteName;
 use Override;
@@ -396,7 +396,7 @@ class Data extends BaseForm
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
+            $builder->get($fieldName)->addModelTransformer(new StringListAsCheckBoxesTransformer());
         }
 
         foreach ([
