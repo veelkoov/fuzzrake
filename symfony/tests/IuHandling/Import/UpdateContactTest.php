@@ -47,39 +47,23 @@ class UpdateContactTest extends TestCase
         self::assertEquals('Announcements → Feedback', $result->description);
     }
 
-    public function testMethodAndAddress(): void
+    public function testAddress(): void
     {
-        // New maker with e-mail address
-        $result = $this->getUpdateContactAddress(null, 'address@example.com');
+        // Added creator with email address
+        $result = $this->getUpdateContact(null, 'address@example.com');
         self::assertEquals('address@example.com', $result->address);
 
-        // New maker with Telegram
-        $result = $this->getUpdateContactAddress(null, '@telegram');
-        self::assertEquals('@telegram', $result->address);
-
-        // Updated maker earlier with nothing, now with e-mail address
-        $result = $this->getUpdateContactAddress('', 'address@example.com');
+        // Creator update: added email
+        $result = $this->getUpdateContact('', 'address@example.com');
         self::assertEquals('', $result->address);
 
-        // Updated maker earlier with nothing, now with Telegram
-        $result = $this->getUpdateContactAddress('', '@telegram');
-        self::assertEquals('', $result->address);
-
-        // Updated maker earlier with e-mail, now with e-mail address
-        $result = $this->getUpdateContactAddress('addresso@example.com', 'addressn@example.com');
+        // Creator update: changed email
+        $result = $this->getUpdateContact('addresso@example.com', 'addressn@example.com');
         self::assertEquals('addresso@example.com', $result->address);
 
-        // Updated maker earlier with e-mail, now with Telegram
-        $result = $this->getUpdateContactAddress('address@example.com', '@telegram');
-        self::assertEquals('address@example.com', $result->address);
-
-        // Updated maker earlier with Telegram, now with e-mail
-        $result = $this->getUpdateContactAddress('@telegram', 'address@example.com');
-        self::assertEquals('@telegram', $result->address);
-
-        // Updated maker earlier with Telegram, now with Telegram
-        $result = $this->getUpdateContactAddress('@telegram', '@username');
-        self::assertEquals('@telegram', $result->address);
+        // Creator update: removed email
+        $result = $this->getUpdateContact('addresso@example.com', '');
+        self::assertEquals('', $result->address);
     }
 
     private function getUpdateContactPermit(?ContactPermit $old, ContactPermit $new): UpdateContact
@@ -90,10 +74,12 @@ class UpdateContactTest extends TestCase
         return UpdateContact::from($oldA, $newA);
     }
 
-    private function getUpdateContactAddress(?string $oldAddress, string $newAddress): UpdateContact
+    private function getUpdateContact(?string $oldAddress, string $newAddress): UpdateContact
     {
-        $oldA = null === $oldAddress ? new Artisan() : self::getPersistedArtisanMock()->setEmailAddress($oldAddress);
-        $newA = Artisan::new()->setEmailAddress($newAddress);
+        $oldA = null === $oldAddress ? new Artisan() : self::getPersistedArtisanMock()->setEmailAddress($oldAddress)
+            ->setContactAllowed('' === $oldAddress ? ContactPermit::NO : ContactPermit::CORRECTIONS);
+        $newA = Artisan::new()->setEmailAddress($newAddress)
+            ->setContactAllowed('' === $newAddress ? ContactPermit::NO : ContactPermit::CORRECTIONS);
 
         return UpdateContact::from($oldA, $newA);
     }
