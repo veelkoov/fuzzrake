@@ -13,7 +13,7 @@ use App\Data\Definitions\Styles;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
 use App\Form\Transformers\ContactPermitTransformer;
-use App\Form\Transformers\NullToEmptyArrayTransformer;
+use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use Override;
@@ -307,7 +307,7 @@ class ArtisanType extends AbstractTypeWithDelete
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
+            $builder->get($fieldName)->addModelTransformer(new StringListAsCheckBoxesTransformer());
         }
 
         foreach ([
