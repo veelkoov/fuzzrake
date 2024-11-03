@@ -149,89 +149,106 @@ class ArtisanType extends AbstractTypeWithDelete
                 'empty_data' => '',
             ])
             ->add('fursuitReviewUrl', UrlType::class, [
-                'label'      => 'FursuitReview URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'FursuitReview URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('websiteUrl', UrlType::class, [
-                'label'      => 'Website URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Website URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('faqUrl', UrlType::class, [
-                'label'      => 'FAQ URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'FAQ URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('queueUrl', UrlType::class, [
-                'label'      => 'Queue URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Queue URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furAffinityUrl', UrlType::class, [
-                'label'      => 'Fur Affinity URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Fur Affinity URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('deviantArtUrl', UrlType::class, [
-                'label'      => 'DeviantArt URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'DeviantArt URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('mastodonUrl', UrlType::class, [
-                'label'      => 'Mastodon URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Mastodon URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('twitterUrl', UrlType::class, [
-                'label'      => 'Twitter URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Twitter URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('facebookUrl', UrlType::class, [
-                'label'      => 'Facebook URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Facebook URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('tumblrUrl', UrlType::class, [
-                'label'      => 'Tumblr URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Tumblr URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('instagramUrl', UrlType::class, [
-                'label'      => 'Instagram URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Instagram URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('youtubeUrl', UrlType::class, [
-                'label'      => 'YouTube URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'YouTube URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('etsyUrl', UrlType::class, [
-                'label'      => 'Etsy URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Etsy URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('theDealersDenUrl', UrlType::class, [
-                'label'      => 'The Dealers Den URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'The Dealers Den URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('otherShopUrl', UrlType::class, [
-                'label'      => 'Other shop URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Other shop URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('linklistUrl', UrlType::class, [
-                'label'      => 'Link list URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Link list URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furryAminoUrl', UrlType::class, [
-                'label'      => 'Furry Amino URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Furry Amino URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('otherUrls', TextareaType::class, [
                 'label'      => 'Other URLs',
@@ -244,14 +261,16 @@ class ArtisanType extends AbstractTypeWithDelete
                 'empty_data' => '',
             ])
             ->add('scritchUrl', UrlType::class, [
-                'label'      => 'Scritch URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Scritch URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furtrackUrl', UrlType::class, [
-                'label'      => 'Furtrack URL',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Furtrack URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('photoUrls', TextareaType::class, [
                 'label'      => 'Scritch photos URLs',
