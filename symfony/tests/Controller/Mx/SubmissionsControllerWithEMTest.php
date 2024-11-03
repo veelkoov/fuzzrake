@@ -509,21 +509,17 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorExists('#contact-info-card .card-body.text-'.($allowed ? 'success' : 'danger'));
         self::assertSelectorTextSame('#contact-info-card h5.card-title', $allowed ? 'Allowed: Feedback' : 'Allowed: Never');
 
-        self::assertSelectorTextContains('#contact-info-card h5 + p', $address);
-
-        self::assertSelectorExists('#contact-info-card h5 + p a[href^="mailto:"]');
+        self::assertSelectorCount($allowed ? 1 : 0, '#contact-info-card h5 + p a[href^="mailto:"]');
     }
 
     /**
-     * @return array<string, array{bool, bool}>
+     * @return array<string, array{bool}>
      */
     public function contactInfoWorksDataProvider(): array
     {
         return [
-            'E-mail, contact allowed'      => [true,  true],
-            'E-mail, contact disallowed'   => [true,  false],
-            'Telegram, contact allowed'    => [false, true],
-            'Telegram, contact disallowed' => [false, false],
+            'Contact allowed'    => [true],
+            'Contact disallowed' => [false],
         ];
     }
 
