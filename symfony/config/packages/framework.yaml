@@ -2,11 +2,8 @@
 framework:
     secret: '%env(APP_SECRET)%'
     csrf_protection: true
-    http_method_override: false
-    handle_all_throwables: true
 
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
+    # Note that the session will be started ONLY if you read or write from it.
     session:
         handler_id: null
         cookie_secure: true # Auto doesn't seem to work in our config
@@ -17,8 +14,6 @@ framework:
 
     #esi: true
     #fragments: true
-    php_errors:
-        log: true
 
 when@beta:
     framework:

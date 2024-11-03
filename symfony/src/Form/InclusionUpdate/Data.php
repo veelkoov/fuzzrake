@@ -13,8 +13,8 @@ use App\Data\Definitions\Styles;
 use App\Form\RouterDependentTrait;
 use App\Form\Transformers\AgesTransformer;
 use App\Form\Transformers\BooleanTransformer;
-use App\Form\Transformers\NullToEmptyArrayTransformer;
 use App\Form\Transformers\SinceTransformer;
+use App\Form\Transformers\StringListAsCheckBoxesTransformer;
 use App\Form\Transformers\StringListAsTextareaTransformer;
 use App\ValueObject\Routing\RouteName;
 use Override;
@@ -241,76 +241,90 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('fursuitReviewUrl', UrlType::class, [
-                'label'      => 'If you are listed on FursuitReview, please copy+paste full link:',
-                'help'       => '<a href="https://fursuitreview.com/m/" target="_blank">Check here</a>. This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'If you are listed on FursuitReview, please copy+paste full link:',
+                'help'             => '<a href="https://fursuitreview.com/m/" target="_blank">Check here</a>. This is for my convenience - I will check that either way, and add the link if you are there. Thank you for filling this one for me!',
+                'help_html'        => true,
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('websiteUrl', UrlType::class, [
-                'label'      => 'If you have a regular website, please copy+paste full link:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'If you have a regular website, please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('faqUrl', UrlType::class, [
-                'label'      => 'Do you have a FAQ anywhere? Please copy+paste full link:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Do you have a FAQ anywhere? Please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('queueUrl', UrlType::class, [
-                'label'      => 'Do you keep your queue/progress information on-line (e.g. Trello board)? Please copy+paste full link:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Do you keep your queue/progress information on-line (e.g. Trello board)? Please copy+paste full link:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furAffinityUrl', UrlType::class, [
-                'label'      => 'Got FurAffinity? Please copy+paste full link to your user page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got FurAffinity? Please copy+paste full link to your user page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('deviantArtUrl', UrlType::class, [
-                'label'      => 'Got DeviantArt? Please copy+paste full link to your user page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got DeviantArt? Please copy+paste full link to your user page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('mastodonUrl', UrlType::class, [
-                'label'      => 'Got Mastodon? Please copy+paste full link to your profile:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Mastodon? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('twitterUrl', UrlType::class, [
-                'label'      => 'Got Twitter? Please copy+paste full link to your profile:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Twitter? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('facebookUrl', UrlType::class, [
-                'label'      => 'Got Facebook? Please copy+paste full link to your profile:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Facebook? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('tumblrUrl', UrlType::class, [
-                'label'      => 'Got Tumblr? Please copy+paste full link to your user page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Tumblr? Please copy+paste full link to your user page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('instagramUrl', UrlType::class, [
-                'label'      => 'Got Instagram? Please copy+paste full link to your page:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Instagram? Please copy+paste full link to your page:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('youtubeUrl', UrlType::class, [
-                'label'      => 'Got YouTube? Please copy+paste full link to your userpage:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got YouTube? Please copy+paste full link to your userpage:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('etsyUrl', UrlType::class, [
-                'label'      => 'Got Etsy? Please copy+paste full link to your store:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Etsy? Please copy+paste full link to your store:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('theDealersDenUrl', UrlType::class, [
-                'label'      => 'Got The Dealers Den? Please copy+paste full link to your store:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got The Dealers Den? Please copy+paste full link to your store:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('otherShopUrl', TextareaType::class, [
                 'label'      => 'Got any other on-line shop? Please copy+paste full link to your store:',
@@ -318,14 +332,16 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('linklistUrl', UrlType::class, [
-                'label'      => 'Got Linktree or similar link list? Please copy+paste full link here:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Linktree or similar link list? Please copy+paste full link here:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furryAminoUrl', UrlType::class, [
-                'label'      => 'Got Furry Amino? Please copy+paste full link to your profile here:',
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Furry Amino? Please copy+paste full link to your profile here:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('otherUrls', TextareaType::class, [
                 'label'      => 'Got any other websites/accounts? Please list them here:',
@@ -342,18 +358,20 @@ class Data extends BaseForm
                 'empty_data' => '',
             ])
             ->add('scritchUrl', UrlType::class, [
-                'label'      => 'Got Scritch page? Please copy+paste full link to your maker page:',
-                'help'       => '<strong>You may already have one created for you.</strong> Go claim your page already if it\'s there.',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Scritch page? Please copy+paste full link to your maker page:',
+                'help'             => '<strong>You may already have one created for you.</strong> Go claim your page already if it\'s there.',
+                'help_html'        => true,
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('furtrackUrl', UrlType::class, [
-                'label'      => 'Got Furtrack page? Please copy+paste full link to your maker page:',
-                'help'       => '<strong>Someone may have already created one for you.</strong> Go there check for photos tagged with your studio\'s name already.',
-                'help_html'  => true,
-                'required'   => false,
-                'empty_data' => '',
+                'label'            => 'Got Furtrack page? Please copy+paste full link to your maker page:',
+                'help'             => '<strong>Someone may have already created one for you.</strong> Go there check for photos tagged with your studio\'s name already.',
+                'help_html'        => true,
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
             ])
             ->add('photoUrls', TextareaType::class, [
                 'label'      => 'Choose up to 5 "featured" photos of your creations',
@@ -396,7 +414,7 @@ class Data extends BaseForm
         ;
 
         foreach (['productionModels', 'styles', 'orderTypes', 'features'] as $fieldName) {
-            $builder->get($fieldName)->addModelTransformer(new NullToEmptyArrayTransformer());
+            $builder->get($fieldName)->addModelTransformer(new StringListAsCheckBoxesTransformer());
         }
 
         foreach ([
