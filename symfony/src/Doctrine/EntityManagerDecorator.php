@@ -30,6 +30,7 @@ class EntityManagerDecorator extends DoctrineEntityManagerDecorator
         parent::remove($object);
     }
 
+    #[Override]
     public function isUninitializedObject(mixed $value): bool
     {
         if ($value instanceof SmartAccessDecorator) {
