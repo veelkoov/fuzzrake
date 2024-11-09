@@ -11,7 +11,7 @@ use App\Utils\PackedStringList;
 final class SchemaFixer
 {
     private const string SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const int CURRENT_SCHEMA_VERSION = 16;
+    private const int CURRENT_SCHEMA_VERSION = 17;
 
     /**
      * @param array<string, psJsonFieldValue> $data
@@ -60,6 +60,15 @@ final class SchemaFixer
 
             case 15:
                 unset($data['IS_MINOR']);
+                // no break
+
+            case 16:
+                unset($data['CONTACT_METHOD']);
+                unset($data['CONTACT_ADDRESS_PLAIN']);
+                $data['EMAIL_ADDRESS_OBFUSCATED'] = $data['CONTACT_INFO_OBFUSCATED'];
+                $data['EMAIL_ADDRESS'] = $data['CONTACT_INFO_ORIGINAL'];
+                unset($data['CONTACT_INFO_OBFUSCATED']);
+                unset($data['CONTACT_INFO_ORIGINAL']);
         }
 
         return $data;

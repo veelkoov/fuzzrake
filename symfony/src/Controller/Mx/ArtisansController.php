@@ -40,8 +40,8 @@ class ArtisansController extends FuzzrakeAbstractController
 
         $artisan = new Artisan($this->getEntityByMakerId($makerId));
 
-        $prevObfuscated = $artisan->getContactInfoObfuscated();
-        $prevOriginal = $artisan->getContactInfoOriginal();
+        $prevObfuscated = $artisan->getEmailAddressObfuscated();
+        $prevOriginal = $artisan->getEmailAddress();
 
         $form = $this->createForm(ArtisanType::class, $artisan, [
             AbstractTypeWithDelete::OPT_DELETABLE => null !== $artisan->getId(),
@@ -81,8 +81,8 @@ class ArtisansController extends FuzzrakeAbstractController
 
     private function updateContactUnlessObfuscatedGotCustomized(Artisan $artisan, string $prevObfuscated, string $prevOriginal): void
     {
-        if ($artisan->getContactInfoObfuscated() === $prevObfuscated && $artisan->getContactInfoOriginal() !== $prevOriginal) {
-            $artisan->updateContact($artisan->getContactInfoOriginal());
+        if ($artisan->getEmailAddressObfuscated() === $prevObfuscated && $artisan->getEmailAddress() !== $prevOriginal) {
+            $artisan->updateEmailAddress($artisan->getEmailAddress());
         }
     }
 

@@ -52,7 +52,9 @@ trait EntityManagerTrait
             throw new RuntimeException(previous: $caught);
         }
 
-        self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
+        if (!($entityManager instanceof EntityManagerInterface)) {
+            throw new RuntimeException('Expected '.EntityManagerInterface::class.' but received something else');
+        }
 
         return $entityManager;
     }

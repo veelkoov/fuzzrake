@@ -29,7 +29,7 @@ class IuFormContactAndPasswordValidationTest extends WebTestCaseWithEM
                 false, // Inaccessible option (confirmation acknowledgement)
                 false, // Failure expected
                 function () {
-                    self::assertFieldErrorContactInfoMustNotBeBlank();
+                    self::assertFieldErrorValidEmailAddressRequired();
                 },
             ],
             [
@@ -178,7 +178,7 @@ class IuFormContactAndPasswordValidationTest extends WebTestCaseWithEM
         }
 
         if (null !== $email) {
-            $formData['iu_form[contactInfoObfuscated]'] = $email;
+            $formData['iu_form[emailAddressObfuscated]'] = $email;
         }
 
         if ($selectChangePassword) {

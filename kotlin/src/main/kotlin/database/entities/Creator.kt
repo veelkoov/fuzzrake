@@ -49,8 +49,8 @@ class Creator(id: EntityID<Int>) : IntEntity(id) {
     var notes by Creators.notes
 
     var contactAllowed by Creators.contactAllowed
-    var contactMethod by Creators.contactMethod
-    var contactInfoObfuscated by Creators.contactInfoObfuscated
+    var contactMethod by Creators.contactMethod // TODO: Remove
+    var emailAddressObfuscated by Creators.emailAddressObfuscated
 
     val creatorIds by CreatorId referrersOn CreatorIds.creator
     val creatorUrls by CreatorUrl referrersOn CreatorUrls.creator

@@ -23,8 +23,8 @@ final class SecureValues
     public static function forLogs(array &$where): void
     {
         self::replace(Field::PASSWORD, '[redacted]', $where);
-        self::replace(Field::CONTACT_INFO_ORIGINAL, '[redacted]', $where);
-        self::replace(Field::CONTACT_INFO_OBFUSCATED, '[redacted]', $where);
+        self::replace(Field::EMAIL_ADDRESS, '[redacted]', $where);
+        self::replace(Field::EMAIL_ADDRESS_OBFUSCATED, '[redacted]', $where);
     }
 
     /**
@@ -42,7 +42,7 @@ final class SecureValues
 
     public static function hideInChangesDescription(Field $field): bool
     {
-        return in_array($field, [Field::PASSWORD, Field::CONTACT_METHOD, Field::CONTACT_INFO_ORIGINAL, Field::CONTACT_ADDRESS_PLAIN, Field::URL_MINIATURES, Field::DATE_ADDED, Field::DATE_UPDATED]);
+        return in_array($field, [Field::PASSWORD, Field::EMAIL_ADDRESS, Field::URL_MINIATURES, Field::DATE_ADDED, Field::DATE_UPDATED]);
     }
 
     /**

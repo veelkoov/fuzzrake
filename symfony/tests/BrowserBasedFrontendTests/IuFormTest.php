@@ -67,20 +67,20 @@ class IuFormTest extends PantherTestCaseWithEM
         $form = $this->client->getCrawler()->selectButton('Submit')->form([
             'iu_form[contactAllowed]' => 'FEEDBACK',
         ]);
-        $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
+        $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
 
-        $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
-        self::assertSelectorIsVisible('#iu_form_contactInfoObfuscated');
-        self::assertSelectorExists('#iu_form_contactInfoObfuscated[required]');
+        $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
+        self::assertSelectorIsVisible('#iu_form_emailAddressObfuscated');
+        self::assertSelectorExists('#iu_form_emailAddressObfuscated[required]');
 
         $form->setValues([
             'iu_form[contactAllowed]' => 'NO',
         ]);
-        $this->client->waitForInvisibility('#iu_form_contactInfoObfuscated', 5);
+        $this->client->waitForInvisibility('#iu_form_emailAddressObfuscated', 5);
 
-        $this->client->waitForInvisibility('#iu_form_contactInfoObfuscated', 5);
-        self::assertSelectorIsNotVisible('#iu_form_contactInfoObfuscated');
-        self::assertSelectorExists('#iu_form_contactInfoObfuscated:not([required])');
+        $this->client->waitForInvisibility('#iu_form_emailAddressObfuscated', 5);
+        self::assertSelectorIsNotVisible('#iu_form_emailAddressObfuscated');
+        self::assertSelectorExists('#iu_form_emailAddressObfuscated:not([required])');
     }
 
     /**
@@ -164,6 +164,6 @@ class IuFormTest extends PantherTestCaseWithEM
             'iu_form[nsfwSocial]'      => 'NO',
         ]);
 
-        $this->client->waitForVisibility('#iu_form_contactInfoObfuscated', 5);
+        $this->client->waitForVisibility('#iu_form_emailAddressObfuscated', 5);
     }
 }

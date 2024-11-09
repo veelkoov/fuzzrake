@@ -129,31 +129,27 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
 
         $artisan = self::getArtisan();
         $artisan
-            ->setContactInfoOriginal($data['init_original'])
-            ->setContactInfoObfuscated($data['init_obfuscated'])
-            ->setContactMethod($data['init_method'])
-            ->setContactAddressPlain($data['init_address']);
+            ->setEmailAddress($data['init_original'])
+            ->setEmailAddressObfuscated($data['init_obfuscated']);
         self::persistAndFlush($artisan);
 
         $client->request('GET', "/mx/artisans/{$artisan->getMakerId()}/edit");
 
         self::submitValidForm($client, 'Save', [
-            'artisan[contactInfoObfuscated]' => $data['set_obfuscated'],
-            'artisan[contactInfoOriginal]'   => $data['set_original'],
+            'artisan[emailAddressObfuscated]' => $data['set_obfuscated'],
+            'artisan[emailAddress]'           => $data['set_original'],
         ]);
 
         unset($artisan);
         self::clear();
 
         $artisan = self::findArtisanByMakerId('TEST000');
-        self::assertEquals($data['check_original'], $artisan->getContactInfoOriginal(), 'Original info differs');
-        self::assertEquals($data['check_obfuscated'], $artisan->getContactInfoObfuscated(), 'Obfuscated info differs');
-        self::assertEquals($data['check_method'], $artisan->getContactMethod(), 'Method differs');
-        self::assertEquals($data['check_address'], $artisan->getContactAddressPlain(), 'Address differs');
+        self::assertEquals($data['check_original'], $artisan->getEmailAddress(), 'Original email differs');
+        self::assertEquals($data['check_obfuscated'], $artisan->getEmailAddressObfuscated(), 'Obfuscated email differs');
     }
 
     /**
-     * @return list<array{array{init_original: string, init_obfuscated: string, init_method: string, init_address: string, set_original: string, set_obfuscated: string, check_original: string, check_obfuscated: string, check_method: string, check_address: string}}>
+     * @return list<array{array{init_original: string, init_obfuscated: string, set_original: string, set_obfuscated: string, check_original: string, check_obfuscated: string}}>
      */
     public function contactUpdatesDataProvider(): array
     {
@@ -161,72 +157,52 @@ class ArtisansControllerWithEMTest extends WebTestCaseWithEM
             [[
                 'init_original'   => '',
                 'init_obfuscated' => '',
-                'init_method'     => '',
-                'init_address'    => '',
 
                 'set_original'    => 'some-email@somedomain.fi',
                 'set_obfuscated'  => '',
 
                 'check_original'   => 'some-email@somedomain.fi',
-                'check_obfuscated' => 'E-MAIL: so******il@som*******.fi',
-                'check_method'     => 'E-MAIL',
-                'check_address'    => 'some-email@somedomain.fi',
+                'check_obfuscated' => 'so******il@som*******.fi',
             ]],
             [[
                 'init_original'   => '',
                 'init_obfuscated' => '',
-                'init_method'     => '',
-                'init_address'    => '',
 
                 'set_original'    => '',
                 'set_obfuscated'  => 'some-email@somedomain.fi',
 
                 'check_original'   => '',
                 'check_obfuscated' => 'some-email@somedomain.fi',
-                'check_method'     => '',
-                'check_address'    => '',
             ]],
             [[
                 'init_original'   => 'some-email@somedomain.fi',
-                'init_obfuscated' => 'E-MAIL: so******il@som*******.fi',
-                'init_method'     => 'E-MAIL',
-                'init_address'    => 'some-email@somedomain.fi',
+                'init_obfuscated' => 'so******il@som*******.fi',
 
-                'set_original'    => 'Telegram: @some_telegram',
-                'set_obfuscated'  => 'E-MAIL: so******il@som*******.fi',
+                'set_original'    => 'updated-email@example.com',
+                'set_obfuscated'  => 'so******il@som*******.fi',
 
-                'check_original'   => 'Telegram: @some_telegram',
-                'check_obfuscated' => 'TELEGRAM: @som*******ram',
-                'check_method'     => 'TELEGRAM',
-                'check_address'    => '@some_telegram',
+                'check_original'   => 'updated-email@example.com',
+                'check_obfuscated' => 'upd*******ail@ex*******om',
             ]],
             [[
                 'init_original'   => 'some-email@somedomain.fi',
-                'init_obfuscated' => 'E-MAIL: so******il@som*******.fi',
-                'init_method'     => 'E-MAIL',
-                'init_address'    => 'some-email@somedomain.fi',
+                'init_obfuscated' => 'so******il@som*******.fi',
 
                 'set_original'    => 'some-email@somedomain.fi',
                 'set_obfuscated'  => 'Please update, original was: E-MAIL: so******il@som*******.fi',
 
                 'check_original'   => 'some-email@somedomain.fi',
                 'check_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-                'check_method'     => 'E-MAIL',
-                'check_address'    => 'some-email@somedomain.fi',
             ]],
             [[
                 'init_original'   => 'some-email@somedomain.fi',
                 'init_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-                'init_method'     => 'E-MAIL',
-                'init_address'    => 'some-email@somedomain.fi',
 
                 'set_original'    => 'some-email@somedomain.fi',
                 'set_obfuscated'  => 'Please update, original was: E-MAIL: so******il@som*******.fi',
 
                 'check_original'   => 'some-email@somedomain.fi',
                 'check_obfuscated' => 'Please update, original was: E-MAIL: so******il@som*******.fi',
-                'check_method'     => 'E-MAIL',
-                'check_address'    => 'some-email@somedomain.fi',
             ]],
         ];
     }

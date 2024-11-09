@@ -11,7 +11,6 @@ use App\Entity\Submission;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
 use App\Tests\TestUtils\Submissions;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
-use App\Utils\Contact;
 use JsonException;
 use Override;
 use Symfony\Component\Uid\Uuid;
@@ -487,24 +486,21 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
      *
      * @dataProvider contactInfoWorksDataProvider
      */
-    public function testContactInfoWorks(bool $email, bool $allowed): void
+    public function testContactInfoWorks(bool $allowed): void
     {
         $client = self::createClient();
 
-        $method = $email ? Contact::E_MAIL : Contact::TELEGRAM;
-        $address = $email ? 'getfursu.it@example.com' : '@telegram';
+        $address = 'getfursu.it@example.com';
         $permit = $allowed ? ContactPermit::FEEDBACK : ContactPermit::NO;
 
         self::persistAndFlush(Artisan::new()->setMakerId('MAKERID')
             ->setName('Old name')
-            ->setContactMethod($method)
-            ->setContactAddressPlain($address)
+            ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
         $id = Submissions::submit(Artisan::new()->setMakerId('MAKERID')
             ->setName('New name')
-            ->setContactMethod($method)
-            ->setContactAddressPlain($address)
+            ->setEmailAddress($address)
             ->setContactAllowed($permit)
         );
 
@@ -513,25 +509,17 @@ class SubmissionsControllerWithEMTest extends WebTestCaseWithEM
         self::assertSelectorExists('#contact-info-card .card-body.text-'.($allowed ? 'success' : 'danger'));
         self::assertSelectorTextSame('#contact-info-card h5.card-title', $allowed ? 'Allowed: Feedback' : 'Allowed: Never');
 
-        self::assertSelectorTextContains('#contact-info-card h5 + p', "{$method}: {$address}");
-
-        if ($email) {
-            self::assertSelectorExists('#contact-info-card h5 + p a[href^="mailto:"]');
-        } else {
-            self::assertSelectorNotExists('#contact-info-card h5 + p a[href^="mailto:"]');
-        }
+        self::assertSelectorCount($allowed ? 1 : 0, '#contact-info-card h5 + p a[href^="mailto:"]');
     }
 
     /**
-     * @return array<string, array{bool, bool}>
+     * @return array<string, array{bool}>
      */
     public function contactInfoWorksDataProvider(): array
     {
         return [
-            'E-mail, contact allowed'      => [true,  true],
-            'E-mail, contact disallowed'   => [true,  false],
-            'Telegram, contact allowed'    => [false, true],
-            'Telegram, contact disallowed' => [false, false],
+            'Contact allowed'    => [true],
+            'Contact disallowed' => [false],
         ];
     }
 

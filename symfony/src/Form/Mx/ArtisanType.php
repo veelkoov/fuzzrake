@@ -304,16 +304,16 @@ class ArtisanType extends AbstractTypeWithDelete
                 'label'   => 'Contact allowed?',
                 'choices' => ContactPermit::getChoices(true),
             ])
-            ->add('contactInfoOriginal', TextType::class, [
-                'label'      => 'Original contact info',
+            ->add('emailAddress', TextType::class, [
+                'label'      => 'Email address',
                 'required'   => false,
                 'empty_data' => '',
             ])
-            ->add('contactInfoObfuscated', TextType::class, [
-                'label'      => 'Obfuscated contact info',
+            ->add('emailAddressObfuscated', TextType::class, [
+                'label'      => 'Obfuscated email address',
                 'required'   => false,
                 'empty_data' => '',
-                'help'       => 'Leave unchanged for automated updates of contact fields based on "original". Introduce any change to suppress automation and customize obfuscated info.',
+                'help'       => 'Leave unchanged for automated updates of email fields based on the "original". Introduce any change to suppress automation and customize email fields content.',
             ])
             ->add('notes', TextareaType::class, [
                 'required'   => false,

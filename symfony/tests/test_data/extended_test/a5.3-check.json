@@ -10,10 +10,8 @@
     ],
     "PASSWORD": "Maker 5 password",
 
-    "CONTACT_INFO_OBFUSCATED": "",
-    "CONTACT_INFO_ORIGINAL": "",
-    "CONTACT_ADDRESS_PLAIN": "",
-    "CONTACT_METHOD": "",
+    "EMAIL_ADDRESS_OBFUSCATED": "",
+    "EMAIL_ADDRESS": "",
     "CONTACT_ALLOWED": "NO",
 
     "INTRO": "",

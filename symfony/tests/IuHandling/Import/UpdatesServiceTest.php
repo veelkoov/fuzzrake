@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\IuHandling\Import;
 
+use App\Data\Definitions\ContactPermit;
 use App\Data\Fixer\Fixer;
 use App\Entity\Submission;
 use App\IuHandling\Exception\SubmissionException;
@@ -16,91 +17,102 @@ use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\TestUtils\UtcClockMock;
-
-use function Psl\Vec\map;
+use Psl\Vec;
 
 /**
  * @small
  */
 class UpdatesServiceTest extends TestCase
 {
-    public function testUpdateHandlesNewContactInfoProperly(): void
+    public function testUpdateHandlesNewEmailProperly(): void
     {
         $submissionData = Submissions::from((new Artisan())
+            ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setContactInfoObfuscated('getfursu.it@localhost.localdomain')
+            ->setEmailAddressObfuscated('getfursu.it@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpUpdatesService([
-            [[''], ['MAKERID'], []],
-        ]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], []]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('', $result->originalArtisan->getContactInfoOriginal());
-        self::assertEquals('', $result->originalArtisan->getContactMethod());
-        self::assertEquals('', $result->originalArtisan->getContactAddressPlain());
-        self::assertEquals('', $result->originalArtisan->getContactInfoObfuscated());
+        self::assertEquals('', $result->originalArtisan->getEmailAddress());
+        self::assertEquals('', $result->originalArtisan->getEmailAddressObfuscated());
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getContactInfoOriginal());
-        self::assertEquals('E-MAIL', $result->updatedArtisan->getContactMethod());
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getContactAddressPlain());
-        self::assertEquals('E-MAIL: ge*******it@local***********omain', $result->updatedArtisan->getContactInfoObfuscated());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('ge*******it@local***********omain', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
-    public function testUpdateHandlesContactInfoChangeProperly(): void
+    public function testUpdateHandlesEmailChangeProperly(): void
     {
-        $artisan = $this->getPersistedArtisanMock()
+        $existing = $this->getPersistedArtisanMock()
+            ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->updateContact('getfursu.it@localhost.localdomain')
+            ->updateEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
         $submissionData = Submissions::from((new Artisan())
+            ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setContactInfoObfuscated('Telegram: @getfursuit')
+            ->setEmailAddressObfuscated('an-update.2@localhost.localdomain')
         );
 
-        $subject = $this->getSetUpUpdatesService([
-            [[''], ['MAKERID'], [$artisan]],
-        ]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$existing]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
-        self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactAddressPlain());
-        self::assertEquals('E-MAIL: ge*******it@local***********omain', $result->originalArtisan->getContactInfoObfuscated());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
+        self::assertEquals('ge*******it@local***********omain', $result->originalArtisan->getEmailAddressObfuscated());
 
-        self::assertEquals('Telegram: @getfursuit', $result->updatedArtisan->getContactInfoOriginal());
-        self::assertEquals('TELEGRAM', $result->updatedArtisan->getContactMethod());
-        self::assertEquals('@getfursuit', $result->updatedArtisan->getContactAddressPlain());
-        self::assertEquals('TELEGRAM: @ge******it', $result->updatedArtisan->getContactInfoObfuscated());
+        self::assertEquals('an-update.2@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('an*******.2@local***********omain', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
-    public function testUpdateHandlesUnchangedContactInfoProperly(): void
+    public function testUpdateHandlesUnchangedEmailProperly(): void
     {
         $artisan = $this->getPersistedArtisanMock()
+            ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->updateContact('getfursu.it@localhost.localdomain')
+            ->updateEmailAddress('getfursu.it@localhost.localdomain')
         ;
 
         $submissionData = Submissions::from((new Artisan())
+            ->setName('A creator')
             ->setMakerId('MAKERID')
-            ->setContactInfoObfuscated('E-MAIL: ge*******it@local***********omain')
+            ->setEmailAddressObfuscated('ge*******it@local***********omain')
         );
 
-        $subject = $this->getSetUpUpdatesService([
-            [[''], ['MAKERID'], [$artisan]],
-        ]);
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$artisan]]]);
         $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactInfoOriginal());
-        self::assertEquals('E-MAIL', $result->originalArtisan->getContactMethod());
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getContactAddressPlain());
-        self::assertEquals('E-MAIL: ge*******it@local***********omain', $result->originalArtisan->getContactInfoObfuscated());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
+        self::assertEquals('ge*******it@local***********omain', $result->originalArtisan->getEmailAddressObfuscated());
 
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getContactInfoOriginal());
-        self::assertEquals('E-MAIL', $result->updatedArtisan->getContactMethod());
-        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getContactAddressPlain());
-        self::assertEquals('E-MAIL: ge*******it@local***********omain', $result->updatedArtisan->getContactInfoObfuscated());
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('ge*******it@local***********omain', $result->updatedArtisan->getEmailAddressObfuscated());
+    }
+
+    public function testUpdateHandlesRevokedContactPermitProperly(): void
+    {
+        $existing = $this->getPersistedArtisanMock()
+            ->setName('A creator')
+            ->setMakerId('MAKERID')
+            ->updateEmailAddress('getfursu.it@localhost.localdomain')
+        ;
+
+        $submissionData = Submissions::from((new Artisan())
+            ->setName('A creator')
+            ->setMakerId('MAKERID')
+            ->setEmailAddressObfuscated('ge*******it@local***********omain') // Should be ignored
+            ->setContactAllowed(ContactPermit::NO)
+        );
+
+        $subject = $this->getSetUpUpdatesService([[['A creator'], ['MAKERID'], [$existing]]]);
+        $result = $subject->getUpdateFor(new UpdateInput($submissionData, new Submission()));
+
+        self::assertEquals('getfursu.it@localhost.localdomain', $result->originalArtisan->getEmailAddress());
+        self::assertEquals('ge*******it@local***********omain', $result->originalArtisan->getEmailAddressObfuscated());
+
+        self::assertEquals('', $result->updatedArtisan->getEmailAddress());
+        self::assertEquals('', $result->updatedArtisan->getEmailAddressObfuscated());
     }
 
     public function testAddedDateIsHandledProperly(): void
@@ -281,7 +293,7 @@ class UpdatesServiceTest extends TestCase
         $artisanRepoMock->method('findBestMatches')->willReturnCallback(function (array $names, array $makerIds) use ($calls) {
             foreach ($calls as $call) {
                 if ($call[0] === $names && $call[1] === $makerIds) {
-                    return map($call[2], fn ($artisan) => $artisan->getArtisan());
+                    return Vec\map($call[2], fn ($artisan) => $artisan->getArtisan());
                 }
             }
 
@@ -289,7 +301,7 @@ class UpdatesServiceTest extends TestCase
         });
 
         $fixerMock = $this->createMock(Fixer::class);
-        $fixerMock->method('getFixed')->willReturnArgument(0);
+        $fixerMock->method('getFixed')->willReturnCallback(fn (object $input) => clone $input);
 
         return new UpdatesService($artisanRepoMock, $fixerMock);
     }

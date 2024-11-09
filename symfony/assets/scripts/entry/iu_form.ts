@@ -135,8 +135,8 @@ function setup_password_and_contact_page(): void {
 
   const $contactLevelProsCons = jQuery(".pros-cons-contact-options");
   const contactAllowed = new Radio("iu_form[contactAllowed]", refresh);
-  const contactInfoField = new DynamicFields(
-    "#iu_form_contactInfoObfuscated",
+  const emailAddressField = new DynamicFields(
+    "#iu_form_emailAddressObfuscated",
     "#contact_info",
     true,
   );
@@ -157,7 +157,7 @@ function setup_password_and_contact_page(): void {
       animationsDuration,
     );
 
-    contactInfoField.toggle(
+    emailAddressField.toggle(
       contactAllowed.isAnySelected() &&
         !contactAllowed.isVal(NO_CONTACT_ALLOWED),
     );

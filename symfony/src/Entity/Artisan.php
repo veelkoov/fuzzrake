@@ -114,10 +114,10 @@ class Artisan implements Stringable
     private ?ContactPermit $contactAllowed = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $contactMethod = '';
+    private string $contactMethod = ''; // TODO: Unused, remove
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $contactInfoObfuscated = '';
+    #[ORM\Column(name: 'contact_info_obfuscated', type: Types::TEXT)] // TODO: Rename
+    private string $emailAddressObfuscated = '';
 
     #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanVolatileData $volatileData = null;
@@ -459,26 +459,14 @@ class Artisan implements Stringable
         return $this;
     }
 
-    public function getContactMethod(): string
+    public function getEmailAddressObfuscated(): string
     {
-        return $this->contactMethod;
+        return $this->emailAddressObfuscated;
     }
 
-    public function setContactMethod(string $contactMethod): self
+    public function setEmailAddressObfuscated(string $emailAddressObfuscated): self
     {
-        $this->contactMethod = $contactMethod;
-
-        return $this;
-    }
-
-    public function getContactInfoObfuscated(): string
-    {
-        return $this->contactInfoObfuscated;
-    }
-
-    public function setContactInfoObfuscated(string $contactInfoObfuscated): self
-    {
-        $this->contactInfoObfuscated = $contactInfoObfuscated;
+        $this->emailAddressObfuscated = $emailAddressObfuscated;
 
         return $this;
     }

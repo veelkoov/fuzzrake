@@ -44,14 +44,6 @@ class SubmissionService
      */
     public static function asJson(Artisan $submission): string
     {
-        return Json::encode(self::asArray($submission), JSON_PRETTY_PRINT);
-    }
-
-    /**
-     * @return array<string, psJsonFieldValue>
-     */
-    public static function asArray(Artisan $submission): array
-    {
-        return SchemaFixer::appendSchemaVersion($submission->getAllData());
+        return Json::encode(SchemaFixer::appendSchemaVersion($submission->getAllData()), JSON_PRETTY_PRINT);
     }
 }

@@ -89,17 +89,11 @@
         <div class="card-body text-{{ color }}">
             <h5 class="card-title">Allowed: {{ update.contact.description }}</h5>
 
-            <p class="card-text">
-                {% if update.contact.isEmail %}
-                    <a href="mailto:{{ update.contact.address }}?subject=getfursu.it%20submission">
-                {% endif %}
-
-                {{ update.contact.method }}: {{ update.contact.address }}
-
-                {% if update.contact.isEmail %}
-                    </a>
-                {% endif %}
-            </p>
+            {% if update.contact.isAllowed %}
+                <p class="card-text">
+                    <a href="mailto:{{ update.contact.address }}?subject=getfursu.it%20submission">{{ update.contact.address }}</a>
+                </p>
+            {% endif %}
 
             <p class="cart-text text-body small user-select-all">{{ update.description.text|nl2br }}</p>
         </div>

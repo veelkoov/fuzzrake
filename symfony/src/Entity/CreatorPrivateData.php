@@ -30,15 +30,15 @@ class CreatorPrivateData
     private Creator $creator;
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $contactAddress = '';
+    private string $contactAddress = ''; // TODO: Unused, remove
 
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you had a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[ORM\Column(type: Types::TEXT)]
     private string $password = '';
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $originalContactInfo = '';
+    #[ORM\Column(name: 'original_contact_info', type: Types::TEXT)] // TODO: Rename
+    private string $emailAddress = '';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = '';
@@ -60,18 +60,6 @@ class CreatorPrivateData
         return $this;
     }
 
-    public function getContactAddress(): string
-    {
-        return $this->contactAddress;
-    }
-
-    public function setContactAddress(string $contactAddress): self
-    {
-        $this->contactAddress = $contactAddress;
-
-        return $this;
-    }
-
     public function getPassword(): string
     {
         return $this->password;
@@ -84,14 +72,14 @@ class CreatorPrivateData
         return $this;
     }
 
-    public function getOriginalContactInfo(): string
+    public function getEmailAddress(): string
     {
-        return $this->originalContactInfo;
+        return $this->emailAddress;
     }
 
-    public function setOriginalContactInfo(string $originalContactInfo): self
+    public function setEmailAddress(string $emailAddress): self
     {
-        $this->originalContactInfo = $originalContactInfo;
+        $this->emailAddress = $emailAddress;
 
         return $this;
     }

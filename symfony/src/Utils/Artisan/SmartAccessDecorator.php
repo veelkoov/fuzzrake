@@ -16,16 +16,17 @@ use App\Entity\ArtisanValue;
 use App\Entity\ArtisanVolatileData;
 use App\Entity\CreatorPrivateData;
 use App\Entity\MakerId;
-use App\Utils\Contact;
 use App\Utils\DateTime\DateTimeException;
 use App\Utils\DateTime\DateTimeUtils;
 use App\Utils\DateTime\UtcClock;
+use App\Utils\Email;
 use App\Utils\Enforce;
 use App\Utils\FieldReadInterface;
 use App\Utils\PackedStringList;
 use App\Utils\Parse;
 use App\Utils\StringList;
 use App\Utils\StrUtils;
+use App\Validator\ObfuscableEmail;
 use App\Validator\StrListLength;
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -43,6 +44,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+#[ObfuscableEmail(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
 class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stringable
 {
     private ArtisanE $artisan;
@@ -364,21 +366,13 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return '' !== $this->getInactiveReason();
     }
 
-    public function updateContact(string $newOriginalContactValue): self
+    public function updateEmailAddress(string $newEmailAddress): self
     {
-        [$method, $address] = Contact::parse($newOriginalContactValue);
+        $obfuscated = Email::obfuscate($newEmailAddress);
 
-        $obfuscated = match ($method) {
-            Contact::INVALID => 'PLEASE CORRECT',
-            ''               => '',
-            default          => $method.': '.Contact::obscure($address),
-        };
-
-        $this->setContactMethod($method)
-            ->setContactInfoObfuscated($obfuscated)
+        $this->setEmailAddressObfuscated($obfuscated)
             ->getPrivateData()
-            ->setOriginalContactInfo($newOriginalContactValue)
-            ->setContactAddress($address);
+            ->setEmailAddress($newEmailAddress);
 
         return $this;
     }
@@ -497,29 +491,17 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
     // ===== PRIVATE DATA GETTERS AND SETTERS =====
     //
 
-    public function getContactAddressPlain(): string
-    {
-        return $this->getPrivateData()->getContactAddress();
-    }
-
-    public function setContactAddressPlain(string $contactAddressPlain): self
-    {
-        $this->getPrivateData()->setContactAddress($contactAddressPlain);
-
-        return $this;
-    }
-
     /**
      * Validated by obfuscated contact info.
      */
-    public function getContactInfoOriginal(): string
+    public function getEmailAddress(): string
     {
-        return $this->getPrivateData()->getOriginalContactInfo();
+        return $this->getPrivateData()->getEmailAddress();
     }
 
-    public function setContactInfoOriginal(string $contactInfoOriginal): self
+    public function setEmailAddress(string $emailAddress): self
     {
-        $this->getPrivateData()->setOriginalContactInfo($contactInfoOriginal);
+        $this->getPrivateData()->setEmailAddress($emailAddress);
 
         return $this;
     }
@@ -927,18 +909,6 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
             $context
                 ->buildViolation('You must answer this question.')
                 ->atPath(Field::WORKS_WITH_MINORS->modelName())
-                ->addViolation();
-        }
-    }
-
-    /** @noinspection PhpUnusedParameterInspection */
-    #[Callback(groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
-    public function validateContactAndPassword(ExecutionContextInterface $context, mixed $payload): void
-    {
-        if (ContactPermit::NO !== $this->artisan->getContactAllowed() && '' === $this->artisan->getContactInfoObfuscated()) {
-            $context
-                ->buildViolation('This value should not be blank.')
-                ->atPath(Field::CONTACT_INFO_OBFUSCATED->modelName())
                 ->addViolation();
         }
     }
@@ -1425,28 +1395,15 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this;
     }
 
-    #[Length(max: 32)]
-    public function getContactMethod(): string
-    {
-        return $this->artisan->getContactMethod();
-    }
-
-    public function setContactMethod(string $contactMethod): self
-    {
-        $this->artisan->setContactMethod($contactMethod);
-
-        return $this;
-    }
-
     #[Length(max: 128)]
-    public function getContactInfoObfuscated(): string
+    public function getEmailAddressObfuscated(): string
     {
-        return $this->artisan->getContactInfoObfuscated();
+        return $this->artisan->getEmailAddressObfuscated();
     }
 
-    public function setContactInfoObfuscated(string $contactInfoObfuscated): self
+    public function setEmailAddressObfuscated(string $emailAddressObfuscated): self
     {
-        $this->artisan->setContactInfoObfuscated($contactInfoObfuscated);
+        $this->artisan->setEmailAddressObfuscated($emailAddressObfuscated);
 
         return $this;
     }

@@ -221,17 +221,11 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('contactAllowed', inStats: false, freeForm: false)]
     case CONTACT_ALLOWED = 'CONTACT_ALLOWED';
 
-    #[Props('contactMethod', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case CONTACT_METHOD = 'CONTACT_METHOD';
+    #[Props('emailAddressObfuscated', inStats: false, freeForm: false)]
+    case EMAIL_ADDRESS_OBFUSCATED = 'EMAIL_ADDRESS_OBFUSCATED';
 
-    #[Props('contactAddressPlain', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case CONTACT_ADDRESS_PLAIN = 'CONTACT_ADDRESS_PLAIN';
-
-    #[Props('contactInfoObfuscated', inStats: false, freeForm: false)]
-    case CONTACT_INFO_OBFUSCATED = 'CONTACT_INFO_OBFUSCATED';
-
-    #[Props('contactInfoOriginal', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
-    case CONTACT_INFO_ORIGINAL = 'CONTACT_INFO_ORIGINAL';
+    #[Props('emailAddress', public: false, inIuForm: false, inStats: false, freeForm: false, affectedByIuForm: true)]
+    case EMAIL_ADDRESS = 'EMAIL_ADDRESS';
 
     public function getData(): FieldData
     {

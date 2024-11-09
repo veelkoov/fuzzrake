@@ -39,8 +39,7 @@ final class CompletenessCalc
      * COMPLETENESS, DATE_ADDED, DATE_UPDATED.
      *
      * Process stuff, insignificant for visitors:
-     * PASSWORD, CONTACT_ALLOWED, CONTACT_METHOD, CONTACT_ADDRESS_PLAIN, CONTACT_INFO_OBFUSCATED,
-     * CONTACT_INFO_ORIGINAL, NOTES.
+     * PASSWORD, CONTACT_ALLOWED, EMAIL_ADDRESS, EMAIL_ADDRESS_OBFUSCATED, NOTES.
      */
     public static function count(Artisan $artisan): int
     {
