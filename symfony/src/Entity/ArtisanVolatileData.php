@@ -22,7 +22,7 @@ class ArtisanVolatileData
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'volatileData', targetEntity: Artisan::class)]
+    #[ORM\OneToOne(targetEntity: Artisan::class, inversedBy: 'volatileData')]
     #[ORM\JoinColumn(name: 'artisan_id', nullable: false)]
     private Artisan $artisan;
 
@@ -31,12 +31,6 @@ class ArtisanVolatileData
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $csTrackerIssue = false;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private ?DateTimeImmutable $lastBpUpdate = null; // TODO: Remove
-
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $bpTrackerIssue = false; // TODO: Remove
 
     public function getId(): ?int
     {

@@ -29,7 +29,7 @@ class ArtisanUrl implements Stringable
     #[ORM\Column(type: Types::TEXT)]
     private string $url = '';
 
-    #[ORM\OneToOne(mappedBy: 'url', targetEntity: ArtisanUrlState::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: ArtisanUrlState::class, mappedBy: 'url', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanUrlState $state = null;
 
     public function getId(): ?int

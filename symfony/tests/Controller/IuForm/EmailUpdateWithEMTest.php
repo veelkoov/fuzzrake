@@ -8,6 +8,7 @@ use App\Data\Definitions\Ages;
 use App\Data\Definitions\ContactPermit;
 use App\Tests\TestUtils\Cases\Traits\IuFormTrait;
 use App\Tests\TestUtils\Cases\WebTestCaseWithEM;
+use Override;
 use Psl\Dict;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -18,6 +19,7 @@ class EmailUpdateWithEMTest extends WebTestCaseWithEM
     private const string CREATOR_ID = 'TESTMID';
     private KernelBrowser $client;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->client = self::createClient();

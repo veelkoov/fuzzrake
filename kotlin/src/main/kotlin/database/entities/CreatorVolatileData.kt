@@ -11,6 +11,4 @@ class CreatorVolatileData(id: EntityID<Int>) : IntEntity(id) {
     var creator by Creator referencedOn CreatorVolatileDatas.creator
     var lastCsUpdateUtc by CreatorVolatileDatas.lastCsUpdateUtc
     var csTrackerIssue by CreatorVolatileDatas.csTrackerIssue
-    var lastBpUpdateUtc by CreatorVolatileDatas.lastBpUpdateUtc
-    var bpTrackerIssue by CreatorVolatileDatas.bpTrackerIssue
 }

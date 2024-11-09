@@ -54,34 +54,13 @@ class Artisan implements Stringable
     private string $productionModelsComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $productionModels = ''; // TODO: Replaced with values use. Remove.
-
-    #[ORM\Column(type: Types::TEXT)]
     private string $stylesComment = '';
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $styles = ''; // TODO: Replaced with values use. Remove.
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $otherStyles = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $orderTypesComment = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $orderTypes = ''; // TODO: Replaced with values use. Remove.
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $otherOrderTypes = ''; // TODO: Replaced with values use. Remove.
-
-    #[ORM\Column(type: Types::TEXT)]
     private string $featuresComment = '';
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $features = ''; // TODO: Replaced with values use. Remove.
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $otherFeatures = ''; // TODO: Replaced with values use. Remove.
 
     #[ORM\Column(type: Types::TEXT)]
     private string $paymentPlans = '';
@@ -102,9 +81,6 @@ class Artisan implements Stringable
     private string $speciesDoesnt = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $languages = ''; // TODO: Replaced with values use. Remove.
-
-    #[ORM\Column(type: Types::TEXT)]
     private string $notes = '';
 
     #[ORM\Column(type: Types::TEXT)]
@@ -113,40 +89,37 @@ class Artisan implements Stringable
     #[ORM\Column(type: Types::TEXT, nullable: true, enumType: ContactPermit::class)]
     private ?ContactPermit $contactAllowed = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $contactMethod = ''; // TODO: Unused, remove
-
     #[ORM\Column(name: 'contact_info_obfuscated', type: Types::TEXT)] // TODO: Rename
     private string $emailAddressObfuscated = '';
 
-    #[ORM\OneToOne(mappedBy: 'artisan', targetEntity: ArtisanVolatileData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: ArtisanVolatileData::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?ArtisanVolatileData $volatileData = null;
 
-    #[ORM\OneToOne(mappedBy: 'creator', targetEntity: CreatorPrivateData::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: CreatorPrivateData::class, mappedBy: 'creator', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?CreatorPrivateData $privateData = null;
 
     /**
      * @var Collection<int, ArtisanUrl>
      */
-    #[ORM\OneToMany(mappedBy: 'artisan', targetEntity: ArtisanUrl::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ArtisanUrl::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $urls;
 
     /**
      * @var Collection<int, CreatorOfferStatus>
      */
-    #[ORM\OneToMany(mappedBy: 'artisan', targetEntity: CreatorOfferStatus::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CreatorOfferStatus::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $commissions;
 
     /**
      * @var Collection<int, MakerId>
      */
-    #[ORM\OneToMany(mappedBy: 'artisan', targetEntity: MakerId::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: MakerId::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $makerIds;
 
     /**
      * @var Collection<int, ArtisanValue>
      */
-    #[ORM\OneToMany(mappedBy: 'artisan', targetEntity: ArtisanValue::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ArtisanValue::class, mappedBy: 'artisan', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $values;
 
     public function __construct()

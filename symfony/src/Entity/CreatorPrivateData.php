@@ -25,12 +25,9 @@ class CreatorPrivateData
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'privateData', targetEntity: Creator::class)]
+    #[ORM\OneToOne(targetEntity: Creator::class, inversedBy: 'privateData')]
     #[ORM\JoinColumn(name: 'artisan_id', unique: true, nullable: false)] // TODO: Rename
     private Creator $creator;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private string $contactAddress = ''; // TODO: Unused, remove
 
     #[NotBlank(message: 'Password is required.', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]
     #[Length(min: 8, max: 255, minMessage: 'Passwords must now be 8 characters or longer. If you had a shorter one, please request a password change. Sorry for the inconvenience!', groups: [Validation::GRP_CONTACT_AND_PASSWORD])]

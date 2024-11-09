@@ -24,7 +24,7 @@ class ObfuscableEmailValidator extends ConstraintValidator
         .' This field should not contain anything else, just the.email@address.'
         .' If you do not agree to provide your email, disallow any contact.';
 
-    private Pattern $emailPattern;
+    private readonly Pattern $emailPattern;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -36,7 +36,7 @@ class ObfuscableEmailValidator extends ConstraintValidator
     public function validate(mixed $value, Constraint $constraint): void
     {
         if (!($value instanceof Creator)) {
-            throw new InvalidArgumentException(__CLASS__.' supports only '.Creator::class.' instances');
+            throw new InvalidArgumentException(self::class.' supports only '.Creator::class.' instances');
         }
 
         if (ContactPermit::NO === $value->getContactAllowed()) {

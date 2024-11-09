@@ -7,6 +7,4 @@ object CreatorVolatileDatas : IntIdTable("artisans_volatile_data") {
     val creator = reference("artisan_id", Creators)
     val lastCsUpdateUtc = datetime("last_cs_update").nullable() // TODO: Rename to last_cs_update_utc
     val csTrackerIssue = bool("cs_tracker_issue").default(false)
-    val lastBpUpdateUtc = datetime("last_bp_update").nullable() // TODO: Remove
-    val bpTrackerIssue = bool("bp_tracker_issue").default(false) // TODO: Remove
 }

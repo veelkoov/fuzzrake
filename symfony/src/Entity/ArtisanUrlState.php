@@ -18,7 +18,7 @@ class ArtisanUrlState
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'state', targetEntity: ArtisanUrl::class)]
+    #[ORM\OneToOne(targetEntity: ArtisanUrl::class, inversedBy: 'state')]
     #[ORM\JoinColumn(name: 'artisan_url_id', nullable: false)]
     private ArtisanUrl $url;
 
