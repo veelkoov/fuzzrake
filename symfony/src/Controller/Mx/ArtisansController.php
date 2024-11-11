@@ -51,7 +51,7 @@ class ArtisansController extends FuzzrakeAbstractController
         $artisan->assureNsfwSafety();
 
         if ($form->isSubmitted() && $this->success($artisan, $form, $prevObfuscated, $prevOriginal)) {
-            return $this->redirectToRoute(RouteName::MAIN);
+            return $this->redirectToRoute(RouteName::MAIN, ['_fragment' => $artisan->getLastMakerId()]);
         }
 
         return $this->render('mx/artisans/edit.html.twig', [

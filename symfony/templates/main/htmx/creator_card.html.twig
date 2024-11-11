@@ -106,6 +106,14 @@
                 </div>
             {% endif %}
 
+            {% if is_dev_env() %}
+                <div class="text-end p-0">
+                    <a class="btn btn-warning" href="{{ path('mx_artisan_edit', {makerId: creator.lastMakerId}) }}" role="button">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </div>
+            {% endif %}
+
             {% if creator.hasValidPhotos %}
                 <div class="col-md-12 p-1 overflow-auto imgs-container">
                     {% for photo_url in creator.photoUrls %}
