@@ -8,6 +8,7 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
+use App\Repository\ArtisanRepository;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,8 +26,9 @@ class EventsController extends FuzzrakeAbstractController
     public function __construct(
         private readonly EntityManagerInterface $manager,
         EnvironmentsService $environments,
+        ArtisanRepository $creatorRepository,
     ) {
-        parent::__construct($environments);
+        parent::__construct($environments, $creatorRepository);
     }
 
     #[Route(path: '/{id}/edit', name: RouteName::MX_EVENT_EDIT, methods: ['GET', 'POST'])]

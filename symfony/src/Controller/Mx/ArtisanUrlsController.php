@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/mx/artisan_urls')]
 class ArtisanUrlsController extends FuzzrakeAbstractController
 {
-    #[Route(path: '/', name: RouteName::MX_ARTISAN_URLS)]
+    #[Route(path: '/', name: RouteName::MX_ARTISANS_URLS)]
     #[Cache(maxage: 0, public: false)]
     public function index(ArtisanUrlRepository $repository): Response
     {
