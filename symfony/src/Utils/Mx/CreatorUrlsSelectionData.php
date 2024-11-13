@@ -4,6 +4,8 @@ namespace App\Utils\Mx;
 
 use Psl\Dict;
 use Psl\Vec;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CreatorUrlsSelectionData
 {
@@ -27,6 +29,14 @@ class CreatorUrlsSelectionData
      */
     public function getChosenUrls(): array
     {
-        return Vec\keys(Dict\filter($this->urlIds, fn (mixed $value): bool => (bool) $value));
+        return Vec\keys(Dict\filter($this->urlIds));
+    }
+
+    #[Callback]
+    public function validate(ExecutionContextInterface $context, mixed $payload): void
+    {
+        if ([] === $this->getChosenUrls()) {
+            $context->addViolation('You need to select at least one URL');
+        }
     }
 }

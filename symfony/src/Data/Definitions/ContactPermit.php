@@ -24,4 +24,9 @@ enum ContactPermit: string
             self::FEEDBACK      => 'Feedback',
         };
     }
+
+    public static function isAtLeastCorrections(?self $value): bool // TODO: Find other opportunities to use
+    {
+        return null != $value && self::NO !== $value;
+    }
 }

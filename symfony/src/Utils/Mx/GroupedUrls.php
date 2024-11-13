@@ -2,7 +2,9 @@
 
 namespace App\Utils\Mx;
 
+use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
+use App\Utils\Arrays\Arrays;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\Enforce;
 use Psl\Iter;
@@ -59,5 +61,22 @@ final readonly class GroupedUrls
                 fn (GroupedUrl $other): bool => $other->getId() === $url->getId(),
             ),
         ));
+    }
+
+    /**
+     * @return string|list<string>
+     */
+    public function getStringOrStrList(Field $urlType): string|array
+    {
+        $urls = Vec\map(
+            Vec\filter($this->urls, fn (GroupedUrl $url): bool => $url->type === $urlType),
+            fn (GroupedUrl $url): string => $url->url,
+        );
+
+        if ($urlType->isList()) {
+            return $urls;
+        } else {
+            return [] === $urls ? '' : Arrays::single($urls);
+        }
     }
 }

@@ -24,6 +24,7 @@
         {% endfor %}
     </table>
 
+    {{ form_errors(form) }}
     {{ form_row(form['review']) }}
 
     {{ form_end(form) }}
