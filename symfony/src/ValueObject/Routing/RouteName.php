@@ -31,7 +31,8 @@ final class RouteName
     final public const string MX_ARTISAN_EDIT = 'mx_artisan_edit';
     final public const string MX_ARTISAN_NEW = 'mx_artisan_new';
     final public const string MX_ARTISANS_URLS = 'mx_artisans_urls';
-    final public const string MX_CREATOR_URLS = 'mx_creator_urls';
+    final public const string MX_CREATOR_URLS_SELECTION = 'mx_creator_urls_selection';
+    final public const string MX_CREATOR_URLS_REMOVAL = 'mx_creator_urls_removal';
     final public const string MX_EVENT_EDIT = 'mx_event_edit';
     final public const string MX_EVENT_NEW = 'mx_event_new';
     final public const string MX_SUBMISSION = 'mx_submission';
