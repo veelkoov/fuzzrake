@@ -27,6 +27,6 @@ enum ContactPermit: string
 
     public static function isAtLeastCorrections(?self $value): bool
     {
-        return null != $value && self::NO !== $value;
+        return null !== $value && self::NO !== $value;
     }
 }
