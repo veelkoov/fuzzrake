@@ -10,7 +10,7 @@ use App\Form\Mx\SubmissionType;
 use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Cache as CacheService;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -36,7 +36,7 @@ class SubmissionsController extends FuzzrakeAbstractController
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
         EnvironmentsService $environments,
-        ArtisanRepository $creatorRepository,
+        CreatorRepository $creatorRepository,
     ) {
         parent::__construct($environments, $creatorRepository);
     }
