@@ -7,7 +7,7 @@ namespace App\Management;
 use App\Data\Definitions\ContactPermit;
 use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
-use App\Service\Notifications\EmailService;
+use App\Service\Notifications\MessengerInterface;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
 use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
@@ -33,7 +33,7 @@ final class UrlRemovalService // TODO: Tests
         private readonly string $websiteShortName,
         private readonly string $primaryBaseUrl,
         private readonly RouterInterface $router,
-        private readonly EmailService $emailService,
+        private readonly MessengerInterface $messenger,
     ) {
     }
 
@@ -82,7 +82,7 @@ final class UrlRemovalService // TODO: Tests
             $oldNotes = "\n\n-----\n$oldNotes";
         }
 
-        $dateAndTime = UtcClock::now()->format('Y-m-d HH:mm');
+        $dateAndTime = UtcClock::now()->format('Y-m-d H:i');
 
         return "On $dateAndTime UTC the following links were determined to be no longer working/active".
             " and have been removed:\n".$this->getUrlsBulletList($data).$oldNotes;
@@ -122,7 +122,7 @@ final class UrlRemovalService // TODO: Tests
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->emailService->send(new Notification($subject, $contents)); // TODO: Recipient
+        $this->messenger->send(new Notification($subject, $contents)); // TODO: Recipient
     }
 
     private function getUrlsBulletList(CreatorUrlsRemovalData $data): string
