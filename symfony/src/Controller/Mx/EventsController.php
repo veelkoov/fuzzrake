@@ -8,7 +8,7 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Entity\Event;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\EventType;
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\EnvironmentsService;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +26,7 @@ class EventsController extends FuzzrakeAbstractController
     public function __construct(
         private readonly EntityManagerInterface $manager,
         EnvironmentsService $environments,
-        ArtisanRepository $creatorRepository,
+        CreatorRepository $creatorRepository,
     ) {
         parent::__construct($environments, $creatorRepository);
     }
