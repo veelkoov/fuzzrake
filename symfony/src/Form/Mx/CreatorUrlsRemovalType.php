@@ -23,6 +23,7 @@ class CreatorUrlsRemovalType extends AbstractType
             ->add('sendEmail', CheckboxType::class, [
                 'label'    => 'Send email',
                 'required' => false,
+                'disabled' => !$options['is_contact_allowed'],
             ])
             ->add('confirm', SubmitType::class, [
                 'label' => 'Confirm',
@@ -37,6 +38,8 @@ class CreatorUrlsRemovalType extends AbstractType
     {
         $resolver
             ->setDefault('data_class', CreatorUrlsRemovalData::class)
+            ->setRequired('is_contact_allowed')
+            ->setAllowedTypes('is_contact_allowed', 'bool')
         ;
     }
 }

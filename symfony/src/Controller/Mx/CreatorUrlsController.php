@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Mx;
 
+use App\Data\Definitions\ContactPermit;
 use App\Form\Mx\CreatorUrlsRemovalType;
 use App\Form\Mx\CreatorUrlsSelectionType;
-use App\Utils\Mx\CreatorUrlsRemovalData;
+use App\Management\UrlRemovalService;
 use App\Utils\Mx\CreatorUrlsSelectionData;
 use App\Utils\Mx\GroupedUrls;
 use App\ValueObject\Routing\RouteName;
@@ -48,17 +49,23 @@ class CreatorUrlsController extends FuzzrakeAbstractController
 
     #[Route('/{creatorId}/{urlIds}', name: RouteName::MX_CREATOR_URLS_REMOVAL)]
     #[Cache(maxage: 0, public: false)]
-    public function removal(Request $request, string $creatorId, string $urlIds): Response
-    {
+    public function removal(
+        UrlRemovalService $service,
+        Request $request,
+        string $creatorId,
+        string $urlIds,
+    ): Response {
         $this->authorize();
 
         $creator = $this->getCreatorOrThrow404($creatorId);
 
-        $data = new CreatorUrlsRemovalData($creator, explode(',', $urlIds));
-        $form = $this->createForm(CreatorUrlsRemovalType::class, $data);
+        $data = $service->getRemovalDataFor($creator, explode(',', $urlIds));
+        $form = $this->createForm(CreatorUrlsRemovalType::class, $data, [
+            'is_contact_allowed' => ContactPermit::isAtLeastCorrections($creator->getContactAllowed()),
+        ]);
 
         if ($form->handleRequest($request)->isSubmitted() && $form->isValid()) {
-            // TODO: Action
+            $service->handleRemoval($creator, $data);
 
             return $this->redirectToRoute(RouteName::MAIN, ['_fragment' => $creatorId]);
         }

@@ -4,19 +4,30 @@ declare(strict_types=1);
 
 namespace App\Management;
 
+use App\Data\Definitions\ContactPermit;
+use App\Data\Definitions\Fields\Field;
 use App\Data\Definitions\Fields\Fields;
 use App\Service\Notifications\EmailService;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\DateTime\UtcClock;
 use App\Utils\Mx\CreatorUrlsRemovalData;
 use App\Utils\Mx\GroupedUrl;
+use App\Utils\Mx\GroupedUrls;
 use App\ValueObject\Notification;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
+use Psl\Iter;
 use Psl\Vec;
 use Symfony\Component\Routing\RouterInterface;
 
 final class UrlRemovalService // TODO: Tests
 {
+    private const array IGNORED_URL_TYPES = [
+        Field::URL_COMMISSIONS,
+        Field::URL_FURSUITREVIEW,
+        Field::URL_OTHER,
+    ];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly string $websiteShortName,
@@ -26,10 +37,35 @@ final class UrlRemovalService // TODO: Tests
     ) {
     }
 
+    /**
+     * @param string[] $urlIdsForRemoval
+     */
+    public function getRemovalDataFor(Creator $creator, array $urlIdsForRemoval): CreatorUrlsRemovalData
+    {
+        $urls = GroupedUrls::from($creator);
+
+        $removedUrls = $urls->onlyWithIds($urlIdsForRemoval);
+        $remainingUrls = $urls->minus($removedUrls);
+
+        // If there are no remaining valid URLs, hide the creator.
+        $hide = [] === Vec\filter(
+            $remainingUrls->urls,
+            fn (GroupedUrl $url): bool => !Iter\contains(self::IGNORED_URL_TYPES, $url->type),
+        );
+
+        $sendEmail = ContactPermit::isAtLeastCorrections($creator->getContactAllowed());
+
+        return new CreatorUrlsRemovalData($removedUrls, $remainingUrls, $hide, $sendEmail);
+    }
+
     public function handleRemoval(Creator $creator, CreatorUrlsRemovalData $data): void
     {
         $creator->setNotes($this->getNewNotes($creator, $data));
         $this->updateUrls($creator, $data);
+
+        if ($data->hide) {
+            $creator->setInactiveReason('All previously known websites/social accounts are no longer working/active');
+        }
 
         $this->entityManager->flush();
 
@@ -46,7 +82,9 @@ final class UrlRemovalService // TODO: Tests
             $oldNotes = "\n\n-----\n$oldNotes";
         }
 
-        return 'On YYYY-MM-DD HH:mm:ss UTC the following links were determined to be no longer working/active'.
+        $dateAndTime = UtcClock::now()->format('Y-m-d HH:mm');
+
+        return "On $dateAndTime UTC the following links were determined to be no longer working/active".
             " and have been removed:\n".$this->getUrlsBulletList($data).$oldNotes;
     }
 
@@ -64,7 +102,7 @@ final class UrlRemovalService // TODO: Tests
         $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
             [], RouterInterface::ABSOLUTE_PATH);
 
-        $subject = $data->hide ? "Your card at $this->websiteShortName has been hidden - action required"
+        $subject = $data->hide ? "Your card at $this->websiteShortName has been hidden"
             : "Your information at $this->websiteShortName may require your attention";
 
         $contents = "Hello {$creator->getName()}!\n\nThe following links on your card at $this->websiteShortName".
