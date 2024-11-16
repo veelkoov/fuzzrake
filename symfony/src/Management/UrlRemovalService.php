@@ -16,6 +16,7 @@ use App\Utils\Mx\GroupedUrls;
 use App\ValueObject\Notification;
 use App\ValueObject\Routing\RouteName;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Psl\Iter;
 use Psl\Vec;
 use Symfony\Component\Routing\RouterInterface;
@@ -40,12 +41,20 @@ final class UrlRemovalService
     /**
      * @param string[] $urlIdsForRemoval
      */
-    public function getRemovalDataFor(Creator $creator, array $urlIdsForRemoval): CreatorUrlsRemovalData // TODO: Tests
+    public static function getRemovalDataFor(Creator $creator, array $urlIdsForRemoval): CreatorUrlsRemovalData
     {
         $urls = GroupedUrls::from($creator);
 
+        if ([] === $urlIdsForRemoval) {
+            throw new InvalidArgumentException('No URL ID(s) to remove');
+        }
+
         $removedUrls = $urls->onlyWithIds($urlIdsForRemoval);
         $remainingUrls = $urls->minus($removedUrls);
+
+        if (count($urlIdsForRemoval) !== count($removedUrls->urls)) {
+            throw new InvalidArgumentException('Referenced invalid URL ID(s) to remove');
+        }
 
         // If there are no remaining valid URLs, hide the creator.
         $hide = [] === Vec\filter(

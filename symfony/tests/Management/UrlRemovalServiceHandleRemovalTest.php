@@ -19,7 +19,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 
-class UrlRemovalServiceTest extends TestCase
+class UrlRemovalServiceHandleRemovalTest extends TestCase
 {
     private UrlRemovalService $subject;
     private DateTimeInterface $now;

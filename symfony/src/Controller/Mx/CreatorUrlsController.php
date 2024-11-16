@@ -59,7 +59,7 @@ class CreatorUrlsController extends FuzzrakeAbstractController
 
         $creator = $this->getCreatorOrThrow404($creatorId);
 
-        $data = $service->getRemovalDataFor($creator, explode(',', $urlIds));
+        $data = UrlRemovalService::getRemovalDataFor($creator, explode(',', $urlIds));
         $form = $this->createForm(CreatorUrlsRemovalType::class, $data, [
             'is_contact_allowed' => ContactPermit::isAtLeastCorrections($creator->getContactAllowed()),
         ]);
