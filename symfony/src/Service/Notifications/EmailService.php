@@ -41,7 +41,7 @@ class EmailService implements MessengerInterface
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface) {
-            try { // Retry once. TODO: https://github.com/veelkoov/fuzzrake/issues/258
+            try { // Retry once (timeouts happening). TODO: https://github.com/veelkoov/fuzzrake/issues/258
                 $this->mailer->send($email);
             } catch (TransportExceptionInterface $exception) {
                 $this->logger->warning('Sending email failed.', ['exception' => $exception->getMessage()]);

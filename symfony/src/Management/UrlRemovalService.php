@@ -26,7 +26,11 @@ final class UrlRemovalService
     private const array IGNORED_URL_TYPES = [
         Field::URL_COMMISSIONS,
         Field::URL_FURSUITREVIEW,
+        Field::URL_FURTRACK,
+        Field::URL_MINIATURES,
         Field::URL_OTHER,
+        Field::URL_PHOTOS,
+        Field::URL_SCRITCH,
     ];
 
     public function __construct(
@@ -126,8 +130,8 @@ final class UrlRemovalService
             "\n".$this->getUrlsBulletList($data);
 
         if ($data->hide) {
-            $contents .= "\n\nSince the remaining information+links on your card are not sufficient," .
-                " your card has been hidden.";
+            $contents .= "\n\nSince the remaining information+links on your card are not sufficient,".
+                ' your card has been hidden.';
         }
 
         $optionalAndRestore = $data->hide ? " (and restore your card's visibility)" : '';
