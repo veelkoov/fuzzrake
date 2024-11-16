@@ -126,7 +126,8 @@ final class UrlRemovalService
             "\n".$this->getUrlsBulletList($data);
 
         if ($data->hide) {
-            $contents .= "\n\nSince there are no working links remaining, your card has been hidden.";
+            $contents .= "\n\nSince the remaining information+links on your card are not sufficient," .
+                " your card has been hidden.";
         }
 
         $optionalAndRestore = $data->hide ? " (and restore your card's visibility)" : '';
@@ -139,7 +140,7 @@ final class UrlRemovalService
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->messenger->send(new Notification($subject, $contents)); // TODO: Recipient
+        $this->messenger->send(new Notification($subject, $contents)); // TODO: , recipient: $creator->getEmailAddress()
     }
 
     private function getUrlsBulletList(CreatorUrlsRemovalData $data): string

@@ -35,7 +35,7 @@ final class NotificationsGenerator
         return new Notification(
             "IU submission: {$data->getName()}",
             $message,
-            $jsonData,
+            attachedJsonData: $jsonData,
         );
     }
 }

@@ -161,7 +161,7 @@ class UrlRemovalServiceHandleRemovalTest extends TestCase
                     Your information at ShortWebsiteName ( https://website.base.address.example.com/#CREATOR ) may require your attention. All the links provided previously were found to be either no longer working, or to lead to inactive social accounts, and so have been removed:
                     - https://getfursu.it/info
 
-                    Since there are no working links remaining, your card has been hidden.
+                    Since the remaining information+links on your card are not sufficient, your card has been hidden.
 
                     Feel free to send new links (and restore your card's visibility) and update any other information at any time by using the following form:
                     https://website.base.address.example.com/ui/update
