@@ -20,7 +20,7 @@ use Psl\Iter;
 use Psl\Vec;
 use Symfony\Component\Routing\RouterInterface;
 
-final class UrlRemovalService // TODO: Tests
+final class UrlRemovalService
 {
     private const array IGNORED_URL_TYPES = [
         Field::URL_COMMISSIONS,
@@ -40,7 +40,7 @@ final class UrlRemovalService // TODO: Tests
     /**
      * @param string[] $urlIdsForRemoval
      */
-    public function getRemovalDataFor(Creator $creator, array $urlIdsForRemoval): CreatorUrlsRemovalData
+    public function getRemovalDataFor(Creator $creator, array $urlIdsForRemoval): CreatorUrlsRemovalData // TODO: Tests
     {
         $urls = GroupedUrls::from($creator);
 
@@ -64,7 +64,7 @@ final class UrlRemovalService // TODO: Tests
         $this->updateUrls($creator, $data);
 
         if ($data->hide) {
-            $creator->setInactiveReason('All previously known websites/social accounts are no longer working/active');
+            $creator->setInactiveReason('All previously known websites/social accounts are no longer working or are inactive');
         }
 
         $this->entityManager->flush();
@@ -84,7 +84,7 @@ final class UrlRemovalService // TODO: Tests
 
         $dateAndTime = UtcClock::now()->format('Y-m-d H:i');
 
-        return "On $dateAndTime UTC the following links were determined to be no longer working/active".
+        return "On $dateAndTime UTC the following links have been found to no longer work or to be inactive".
             " and have been removed:\n".$this->getUrlsBulletList($data).$oldNotes;
     }
 
@@ -97,6 +97,8 @@ final class UrlRemovalService // TODO: Tests
 
     private function sendNotification(Creator $creator, CreatorUrlsRemovalData $data): void
     {
+        $cardUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::MAIN,
+            ['_fragment' => $creator->getLastMakerId()], RouterInterface::ABSOLUTE_PATH);
         $updateUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::IU_FORM_START,
             ['makerId' => $creator->getLastMakerId()], RouterInterface::ABSOLUTE_PATH);
         $contactUrl = $this->primaryBaseUrl.$this->router->generate(RouteName::CONTACT,
@@ -105,18 +107,24 @@ final class UrlRemovalService // TODO: Tests
         $subject = $data->hide ? "Your card at $this->websiteShortName has been hidden"
             : "Your information at $this->websiteShortName may require your attention";
 
-        $contents = "Hello {$creator->getName()}!\n\nThe following links on your card at $this->websiteShortName".
-            " have been determined to be no longer working/active and have been removed:\n"
-            .$this->getUrlsBulletList($data);
+        $contents = "Hello {$creator->getName()}!";
+
+        $links = $data->hide ? 'All the links provided previously' : 'The following links';
+
+        $contents .= "\n\nYour information at $this->websiteShortName ( $cardUrl ) may require your attention.".
+            " $links were found to be either no longer working, or to lead to inactive social accounts,".
+            ' and so have been removed:'.
+            "\n".$this->getUrlsBulletList($data);
 
         if ($data->hide) {
-            $contents .= "\n\nSince the remaining information does not meet the requirements, your card has been hidden.";
+            $contents .= "\n\nSince there are no working links remaining, your card has been hidden.";
         }
 
         $optionalAndRestore = $data->hide ? " (and restore your card's visibility)" : '';
+        $orAnd = $data->hide ? 'and' : 'or';
 
-        $contents .= "\n\nYou can always update your information$optionalAndRestore by using the following link:"
-            ."\n$updateUrl";
+        $contents .= "\n\nFeel free to send new links$optionalAndRestore $orAnd update any other information ".
+            "at any time by using the following form:\n$updateUrl";
 
         $contents .= "\n\nIf you have any questions or need help with $this->websiteShortName, please do not hesitate"
             .' to initiate contact using any means listed on this page:'
