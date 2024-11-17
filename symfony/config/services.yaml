@@ -16,6 +16,8 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $contactEmail:                    '%env(resolve:CONTACT_EMAIL)%'
+            $websiteShortName:                '%env(resolve:WEBSITE_SHORT_NAME)%'
+            $primaryBaseUrl:                  '%env(resolve:PRIMARY_BASE_URL)%'
             $projectDir:                      '%kernel.project_dir%'
             $speciesDefinitions:              '%species_definitions%'
 

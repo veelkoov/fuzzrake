@@ -10,7 +10,7 @@ use App\Form\Mx\SubmissionType;
 use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Import\SubmissionsService;
 use App\IuHandling\Import\UpdatesService;
-use App\Repository\ArtisanRepository;
+use App\Repository\ArtisanRepository as CreatorRepository;
 use App\Service\Cache as CacheService;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
@@ -36,8 +36,9 @@ class SubmissionsController extends FuzzrakeAbstractController
         private readonly UpdatesService $updates,
         private readonly CacheService $cache,
         EnvironmentsService $environments,
+        CreatorRepository $creatorRepository,
     ) {
-        parent::__construct($environments);
+        parent::__construct($environments, $creatorRepository);
     }
 
     #[Route(path: '/', name: RouteName::MX_SUBMISSIONS)]
@@ -58,13 +59,13 @@ class SubmissionsController extends FuzzrakeAbstractController
      */
     #[Route(path: '/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
     #[Cache(maxage: 0, public: false)]
-    public function social(ArtisanRepository $repository): Response
+    public function social(): Response
     {
         $this->authorize();
 
         $fourHoursAgo = UtcClock::at('-4 hours')->getTimestamp();
 
-        $artisans = array_filter(Artisan::wrapAll($repository->getNewWithLimit()),
+        $artisans = array_filter(Artisan::wrapAll($this->creatorRepository->getNewWithLimit()),
             fn (Artisan $artisan) => ($artisan->getDateAdded()?->getTimestamp() ?? 0) > $fourHoursAgo);
 
         return $this->render('mx/submissions/social.html.twig', [

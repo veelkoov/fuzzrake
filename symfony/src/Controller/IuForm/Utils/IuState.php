@@ -32,7 +32,7 @@ class IuState
     ) {
         $this->session = new IuSession($session, $makerId ?? '');
         $this->previousPassword = $artisan->getPassword();
-        $this->wasContactAllowed = ContactPermit::NO !== $artisan->getContactAllowed() && null !== $artisan->getContactAllowed();
+        $this->wasContactAllowed = ContactPermit::isAtLeastCorrections($artisan->getContactAllowed());
 
         $this->restoreState();
     }

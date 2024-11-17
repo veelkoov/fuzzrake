@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Controller\Mx;
 
 use App\Controller\Traits\ButtonClickedTrait;
-use App\Entity\Artisan as ArtisanE;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\ArtisanType;
 use App\Repository\ArtisanRepository;
 use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
-use Doctrine\ORM\NoResultException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,10 +23,10 @@ class ArtisansController extends FuzzrakeAbstractController
     use ButtonClickedTrait;
 
     public function __construct(
-        private readonly ArtisanRepository $repository,
+        ArtisanRepository $creatorRepository,
         EnvironmentsService $environments,
     ) {
-        parent::__construct($environments);
+        parent::__construct($environments, $creatorRepository);
     }
 
     #[Route(path: '/{makerId}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
@@ -38,7 +36,7 @@ class ArtisansController extends FuzzrakeAbstractController
     {
         $this->authorize();
 
-        $artisan = new Artisan($this->getEntityByMakerId($makerId));
+        $artisan = $this->getCreatorByCreatorIdOrNew($makerId);
 
         $prevObfuscated = $artisan->getEmailAddressObfuscated();
         $prevOriginal = $artisan->getEmailAddress();
@@ -63,7 +61,7 @@ class ArtisansController extends FuzzrakeAbstractController
     private function success(Artisan $artisan, FormInterface $form, string $prevObfuscated, string $prevOriginal): bool
     {
         if (null !== $artisan->getId() && self::clicked($form, ArtisanType::BTN_DELETE)) {
-            $this->repository->remove($artisan, true);
+            $this->creatorRepository->remove($artisan, true);
 
             return true;
         }
@@ -71,7 +69,7 @@ class ArtisansController extends FuzzrakeAbstractController
         if ($form->isValid()) {
             $this->updateContactUnlessObfuscatedGotCustomized($artisan, $prevObfuscated, $prevOriginal);
 
-            $this->repository->add($artisan, true);
+            $this->creatorRepository->add($artisan, true);
 
             return true;
         }
@@ -86,16 +84,8 @@ class ArtisansController extends FuzzrakeAbstractController
         }
     }
 
-    private function getEntityByMakerId(?string $makerId): ?ArtisanE
+    private function getCreatorByCreatorIdOrNew(?string $creatorId): Artisan
     {
-        if (null === $makerId) {
-            return null;
-        }
-
-        try {
-            return $this->repository->findByMakerId($makerId);
-        } catch (NoResultException) {
-            throw $this->createNotFoundException("Artisan with maker ID '$makerId' does not exist");
-        }
+        return null === $creatorId ? new Artisan() : $this->getCreatorOrThrow404($creatorId);
     }
 }

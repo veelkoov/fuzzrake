@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Utils\Traits\UtilityClass;
+use TRegx\CleanRegex\Pattern;
 
 final class Email
 {
     use UtilityClass;
+
+    // Pattern taken from the Symfony's EmailValidator
+    // @author Bernhard Schussek <bschussek@gmail.com>
+    private const string PATTERN_HTML5_ALLOW_NO_TLD = '^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$';
 
     public static function obfuscate(string $input): string
     {
@@ -25,5 +30,16 @@ final class Email
                 return $input;
             }
         }, explode('@', $input)));
+    }
+
+    public static function isValid(string $email): bool
+    {
+        static $pattern = null;
+
+        if (null === $pattern) {
+            $pattern = Pattern::of(self::PATTERN_HTML5_ALLOW_NO_TLD);
+        }
+
+        return $pattern->test($email);
     }
 }
