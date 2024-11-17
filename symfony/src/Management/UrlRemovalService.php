@@ -144,7 +144,7 @@ final class UrlRemovalService
             .' to initiate contact using any means listed on this page:'
             ."\n$contactUrl";
 
-        $this->messenger->send(new Notification($subject, $contents)); // TODO: , recipient: $creator->getEmailAddress()
+        $this->messenger->send(new Notification($subject, $contents, recipient: $creator->getEmailAddress()));
     }
 
     private function getUrlsBulletList(CreatorUrlsRemovalData $data): string
