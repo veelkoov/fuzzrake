@@ -358,8 +358,7 @@ class ArtisanRepository extends ServiceEntityRepository
         $appender->applyChoices($builder);
 
         $query = $builder
-            ->orderBy('ZERO_LENGTH(a.inactiveReason)') // Put inactive makers at the end of the list
-            ->addOrderBy('LOWER(a.name)')
+            ->orderBy('LOWER(a.name)')
             ->getQuery();
 
         $appender->applyPaging($query);

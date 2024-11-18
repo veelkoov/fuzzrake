@@ -28,11 +28,6 @@ doctrine:
             auto_mapping: false
         hydrators:
             COLUMN_HYDRATOR: App\Doctrine\Hydrators\ColumnHydrator
-        dql:
-            datetime_functions:
-                DATE: App\Doctrine\Dql\DateFunction
-            string_functions:
-                ZERO_LENGTH: App\Doctrine\Dql\ZeroLengthFunction
 
 when@test:
     doctrine:
