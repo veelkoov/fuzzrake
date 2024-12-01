@@ -117,25 +117,33 @@
                         {% set links = [
                             {uri: ab_search_uri(creator),   icon_class: 'fa-solid fa-spell-check', label: 'Check on Artists Beware'},
                             {uri: creator.fursuitReviewUrl, icon_class: 'fas fa-balance-scale',    label: 'FursuitReview'},
+
                             {uri: creator.websiteUrl,       icon_class: 'fas fa-link',             label: 'Official website'},
+                            {uri: creator.linklistUrl,      icon_class: 'fas fa-link',             label: 'List of links'},
                         ]|merge(creator.pricesUrls|map(u => {uri: u, icon_class: 'fas fa-dollar-sign', label: 'Prices'}))|merge([
                             {uri: creator.faqUrl,           icon_class: 'fas fa-comments',         label: 'FAQ'},
                             {uri: creator.queueUrl,         icon_class: 'fas fa-clipboard-list',   label: 'Queue'},
-                            {uri: creator.furAffinityUrl,   icon_class: 'fas fa-image',            label: 'FurAffinity'},
-                            {uri: creator.deviantArtUrl,    icon_class: 'fab fa-deviantart',       label: 'DeviantArt'},
-                            {uri: creator.mastodonUrl,      icon_class: 'fab fa-mastodon',         label: 'Mastodon'},
-                            {uri: creator.twitterUrl,       icon_class: 'fab fa-twitter',          label: 'Twitter'},
-                            {uri: creator.facebookUrl,      icon_class: 'fab fa-facebook',         label: 'Facebook'},
-                            {uri: creator.tumblrUrl,        icon_class: 'fab fa-tumblr',           label: 'Tumblr'},
-                            {uri: creator.youtubeUrl,       icon_class: 'fab fa-youtube',          label: 'YouTube'},
-                            {uri: creator.instagramUrl,     icon_class: 'fab fa-instagram',        label: 'Instagram'},
-                            {uri: creator.etsyUrl,          icon_class: 'fab fa-etsy',             label: 'Etsy'},
-                            {uri: creator.theDealersDenUrl, icon_class: 'fas fa-shopping-cart',    label: 'The Dealers Den'},
-                            {uri: creator.otherShopUrl,     icon_class: 'fas fa-shopping-cart',    label: 'On-line shop'},
-                            {uri: creator.furryAminoUrl,    icon_class: 'fas fa-paw',              label: 'Furry Amino'},
+
+                            {uri: creator.furAffinityUrl,     icon_class: 'fas fa-image',      label: 'Fur Affinity'},
+                            {uri: creator.deviantArtUrl,      icon_class: 'fab fa-deviantart', label: 'DeviantArt'},
+                            {uri: creator.mastodonUrl,        icon_class: 'fab fa-mastodon',   label: 'Mastodon'},
+                            {uri: creator.blueSkyUrl,         icon_class: 'fab fa-bluesky',    label: 'BlueSky'},
+                            {uri: creator.facebookUrl,        icon_class: 'fab fa-facebook',   label: 'Facebook'},
+                            {uri: creator.tumblrUrl,          icon_class: 'fab fa-tumblr',     label: 'Tumblr'},
+                            {uri: creator.twitterUrl,         icon_class: 'fab fa-twitter',    label: 'Twitter'},
+                            {uri: creator.instagramUrl,       icon_class: 'fab fa-instagram',  label: 'Instagram'},
+                            {uri: creator.furryAminoUrl,      icon_class: 'fas fa-paw',        label: 'Furry Amino'},
+                            {uri: creator.youtubeUrl,         icon_class: 'fab fa-youtube',    label: 'YouTube'},
+                            {uri: creator.tiktokUrl,          icon_class: 'fab fa-tiktok',     label: 'TikTok'},
+                            {uri: creator.telegramChannelUrl, icon_class: 'fab fa-telegram',   label: 'Telegram channel'},
+
+                            {uri: creator.etsyUrl,          icon_class: 'fab fa-etsy',                  label: 'Etsy'},
+                            {uri: creator.theDealersDenUrl, icon_class: 'fas fa-shopping-cart',         label: 'The Dealers Den'},
+                            {uri: creator.otherShopUrl,     icon_class: 'fas fa-shopping-cart',         label: 'On-line shop'},
+                            {uri: creator.donationsUrl,     icon_class: 'fas fa-circle-dollar-to-slot', label: 'Donations'},
+
                             {uri: creator.scritchUrl,       icon_class: 'fas fa-camera',           label: 'Scritch'},
                             {uri: creator.furtrackUrl,      icon_class: 'fas fa-camera',           label: 'Furtrack'},
-                            {uri: creator.linklistUrl,      icon_class: 'fas fa-link',             label: 'List of links'},
                         ]) %}
 
                         {% for link in links|filter(link => link.uri) %}

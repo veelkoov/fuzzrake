@@ -190,6 +190,30 @@ class ArtisanType extends AbstractTypeWithDelete
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
+            ->add('telegramChannelUrl', UrlType::class, [
+                'label'            => 'Telegram channel URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('blueSkyUrl', UrlType::class, [
+                'label'            => 'BlueSky URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('tikTokUrl', UrlType::class, [
+                'label'            => 'TikTok URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('donationsUrl', UrlType::class, [
+                'label'            => 'Donations URL',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
             ->add('twitterUrl', UrlType::class, [
                 'label'            => 'Twitter URL',
                 'required'         => false,

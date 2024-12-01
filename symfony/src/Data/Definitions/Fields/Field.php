@@ -194,6 +194,18 @@ enum Field: string // Backing by strings gives free ::from() and ::tryFrom()
     #[Props('otherUrls', type: Type::STR_LIST, notInspectedUrl: true)]
     case URL_OTHER = 'URL_OTHER'; // TODO: Rename "-s"
 
+    #[Props('blueSkyUrl', validationRegex: V::BLUESKY_URL)]
+    case URL_BLUESKY = 'URL_BLUESKY';
+
+    #[Props('donationsUrl', validationRegex: V::DONATIONS_URL)]
+    case URL_DONATIONS = 'URL_DONATIONS';
+
+    #[Props('telegramChannelUrl', validationRegex: V::TELEGRAM_CHANNEL_URL)]
+    case URL_TELEGRAM_CHANNEL = 'URL_TELEGRAM_CHANNEL';
+
+    #[Props('tikTokUrl', validationRegex: V::TIKTOK_URL)]
+    case URL_TIKTOK = 'URL_TIKTOK';
+
     #[Props('notes', inStats: false)]
     case NOTES = 'NOTES';
 

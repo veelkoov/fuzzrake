@@ -132,10 +132,10 @@
 
     <div class="row">
         <div class="col-lg-6">
-            {{ form_row(form.mastodonUrl) }}
+            {{ form_row(form.blueSkyUrl) }}
         </div>
         <div class="col-lg-6">
-            {{ form_row(form.twitterUrl) }}
+            {{ form_row(form.mastodonUrl) }}
         </div>
     </div>
 
@@ -153,7 +153,16 @@
             {{ form_row(form.tumblrUrl) }}
         </div>
         <div class="col-lg-6">
+            {{ form_row(form.twitterUrl) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
             {{ form_row(form.youtubeUrl) }}
+        </div>
+        <div class="col-lg-6">
+            {{ form_row(form.tikTokUrl) }}
         </div>
     </div>
 
@@ -177,7 +186,16 @@
 
     <div class="row">
         <div class="col-lg-6">
+            {{ form_row(form.donationsUrl) }}
+        </div>
+        <div class="col-lg-6">
             {{ form_row(form.linklistUrl) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form_row(form.telegramChannelUrl) }}
         </div>
         <div class="col-lg-6">
             {{ form_row(form.otherUrls) }}
