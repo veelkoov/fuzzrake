@@ -353,6 +353,7 @@ class Data extends BaseForm
                 'label'      => 'Do you have a thing for donations (recurring or not, Patreon, Ko-fi, other)? Please copy+paste full link to your profile:',
                 'required'   => false,
                 'empty_data' => '',
+                'default_protocol' => 'https',
             ])
             ->add('linklistUrl', UrlType::class, [
                 'label'            => 'Got Linktree or similar link list? Please copy+paste full link here:',
