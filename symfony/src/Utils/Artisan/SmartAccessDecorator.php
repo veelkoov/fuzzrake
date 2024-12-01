@@ -817,6 +817,50 @@ class SmartAccessDecorator implements FieldReadInterface, JsonSerializable, Stri
         return $this->setUrls(Field::URL_MINIATURES, $scritchMiniatureUrls);
     }
 
+    #[Length(max: 1024)]
+    public function getBlueskyUrl(): string
+    {
+        return $this->getUrl(Field::URL_BLUESKY);
+    }
+
+    public function setBlueskyUrl(string $blueskyUrl): self
+    {
+        return $this->setUrl(Field::URL_BLUESKY, $blueskyUrl);
+    }
+
+    #[Length(max: 1024)]
+    public function getDonationsUrl(): string
+    {
+        return $this->getUrl(Field::URL_DONATIONS);
+    }
+
+    public function setDonationsUrl(string $donationsUrl): self
+    {
+        return $this->setUrl(Field::URL_DONATIONS, $donationsUrl);
+    }
+
+    #[Length(max: 1024)]
+    public function getTelegramChannelUrl(): string
+    {
+        return $this->getUrl(Field::URL_TELEGRAM_CHANNEL);
+    }
+
+    public function setTelegramChannelUrl(string $telegramChannelUrl): self
+    {
+        return $this->setUrl(Field::URL_TELEGRAM_CHANNEL, $telegramChannelUrl);
+    }
+
+    #[Length(max: 1024)]
+    public function getTikTokUrl(): string
+    {
+        return $this->getUrl(Field::URL_TIKTOK);
+    }
+
+    public function setTikTokUrl(string $tikTokUrl): self
+    {
+        return $this->setUrl(Field::URL_TIKTOK, $tikTokUrl);
+    }
+
     private function getUrl(Field $urlField): string
     {
         return SmartUrlAccessor::getSingle($this, $urlField->value);
