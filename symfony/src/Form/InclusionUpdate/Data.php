@@ -278,7 +278,7 @@ class Data extends BaseForm
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
-            ->add('blueSkyUrl', UrlType::class, [
+            ->add('blueskyUrl', UrlType::class, [
                 'label'            => 'Got BlueSky? Please copy+paste full link to your profile:',
                 'required'         => false,
                 'empty_data'       => '',
