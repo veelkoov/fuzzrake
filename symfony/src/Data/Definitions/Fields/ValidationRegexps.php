@@ -16,12 +16,15 @@ final class ValidationRegexps
     final public const string FSR_URL = '^(https://fursuitreview.com/m/[^/]+/)?$';
     final public const string FA_URL = '^(https://(www|sfw)\.furaffinity\.net/user/[^/]+/)?$';
     final public const string YOUTUBE_URL = '^(https://www\.youtube\.com/(((channel|user|c)/)?[^/?]+)|(@[a-zA-Z]+))?$';
-
     final public const string INSTAGRAM_URL = '^(https://www\.instagram\.com/[^/]+/)?$';
     final public const string TUMBLR_URL = '^((https://[^.]+\.tumblr\.com/)|(https://www\.tumblr\.com/[^/?]+)|(https://pupdates.matrices.net/))?$'; // FIXME: Allow custom-domain exceptions. Improve URL validation regexps #79
     final public const string TWITTER_URL = '^(https://twitter\.com/[^/]+)?$';
     final public const string SCRITCH_URL = '^(https://scritch\.es/(makers/)?[-a-zA-Z0-9]+)?$';
     final public const string FURTRACK_URL = '^(https://www\.furtrack\.com/(index/maker:|user/)[a-zA-Z0-9_]+)?$';
+    final public const string TIKTOK_URL = '^https://www\.tiktok\.com/@[a-z0-9_.]$';
+    final public const string BLUESKY_URL = '^https://bsky\.app/profile/[^/?#]+$';
+    final public const string DONATIONS_URL = '^https://(www\.patreon\.com|ko-fi\.com)/[^/?#]+$';
+    final public const string TELEGRAM_CHANNEL_URL = '^https://t\.me/[^/?#]+$';
 
     final public const string LIST_VALIDATION = '^[-,&!.A-Za-z0-9+()/\n %:"\'@]*$'; // TODO: Be more specific, separate lists?
     final public const string FORMER_MAKER_IDS = '^([A-Z0-9]{7}(\n[A-Z0-9]{7})*)?$';

@@ -112,28 +112,37 @@
     "INACTIVE_REASON": "Inactive reason maker 1 - not updated",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/maker1_before_update.html",
+
     "URL_WEBSITE": "https://mywebsite.com/maker1_before_update.html",
+    "URL_LINKLIST": "https://linklist.com/maker1_before_update.html",
     "URL_PRICES": [
         "https://mywebsite.com/prices1-maker1_before_update.html",
         "https://mywebsite.com/prices2-maker1_before_update.html"
     ],
     "URL_FAQ": "https://mywebsite.com/faq_maker1_before_update.html",
+    "URL_QUEUE": "https://queue.com/maker1_before_update.html",
+
     "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/maker1_before_update/",
     "URL_DEVIANTART": "https://www.deviantart.com/maker1_before_update.html",
     "URL_MASTODON": "https://mastodon.social/maker1_before_update.html",
-    "URL_TWITTER": "https://twitter.com/maker1_before_update.html",
+    "URL_BLUESKY": "https://bluesky.com/maker1_before_update.html",
     "URL_FACEBOOK": "https://www.facebook.com/maker1_before_update.html/",
     "URL_TUMBLR": "https://tumblr.com/maker1_before_update.html",
+    "URL_TWITTER": "https://twitter.com/maker1_before_update.html",
     "URL_INSTAGRAM": "https://www.instagram.com/maker1_before_update.html/",
-    "URL_YOUTUBE": "https://youtube.com/maker1_before_update.html",
-    "URL_LINKLIST": "https://linklist.com/maker1_before_update.html",
     "URL_FURRY_AMINO": "https://furryamino.com/maker1_before_update.html",
+    "URL_YOUTUBE": "https://www.youtube.com/maker1_before_update.html",
+    "URL_TIKTOK": "https://tiktok.com/maker1_before_update.html",
+    "URL_TELEGRAM_CHANNEL": "https://telegram.com/maker1_before_update.html",
+
     "URL_ETSY": "https://etsy.com/maker1_before_update.html",
     "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/maker1_before_update.html",
     "URL_OTHER_SHOP": "https://othershop.com/maker1_before_update.html",
-    "URL_QUEUE": "https://queue.com/maker1_before_update.html",
+    "URL_DONATIONS": "https://donations.example.com/maker1_before_update.html",
+
     "URL_SCRITCH": "https://scritch.es/maker1_before_update.html",
     "URL_FURTRACK": "https://www.furtrack.com/maker1_before_update.html",
+
     "URL_PHOTOS": [
         "https://scritchphotos.com/url1-maker1_before_update.html",
         "https://www.furtrack.com/url2-maker1_before_update.html"

@@ -95,28 +95,37 @@
     "NOTES": "Notes artisan 3",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/artisan3.html",
+
     "URL_WEBSITE": "https://mywebsite.com/artisan3.html",
+    "URL_LINKLIST": "https://linklist.com/value_artisan3.html",
     "URL_PRICES": [
         "https://mywebsite.com/artisan3.html",
         "https://mywebsite.com/prices-more_artisan3.html"
     ],
     "URL_FAQ": "https://mywebsite.com/faq_artisan3.html",
+    "URL_QUEUE": "https://queue.com/value_artisan3.html",
+
     "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/value_artisan3/",
     "URL_DEVIANTART": "https://www.deviantart.com/value_artisan3.html",
     "URL_MASTODON": "https://mastodon.social/value_artisan3.html",
-    "URL_TWITTER": "https://twitter.com/value_artisan3.html",
+    "URL_BLUESKY": "https://bluesky.com/value_artisan3.html",
     "URL_FACEBOOK": "https://www.facebook.com/value_artisan3.html/",
     "URL_TUMBLR": "https://tumblr.com/value_artisan3.html",
+    "URL_TWITTER": "https://twitter.com/value_artisan3.html",
     "URL_INSTAGRAM": "https://www.instagram.com/value_artisan3.html/",
-    "URL_YOUTUBE": "https://youtube.com/value_artisan3.html",
-    "URL_LINKLIST": "https://linklist.com/value_artisan3.html",
     "URL_FURRY_AMINO": "https://furryamino.com/value_artisan3.html",
+    "URL_YOUTUBE": "https://www.youtube.com/value_artisan3.html",
+    "URL_TIKTOK": "https://tiktok.com/value_artisan3.html",
+    "URL_TELEGRAM_CHANNEL": "https://telegram.com/value_artisan3.html",
+
     "URL_ETSY": "https://etsy.com/value_artisan3.html",
     "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/value_artisan3.html",
     "URL_OTHER_SHOP": "https://othershop.com/value_artisan3.html",
-    "URL_QUEUE": "https://queue.com/value_artisan3.html",
+    "URL_DONATIONS": "https://donations.example.com/value_artisan3.html",
+
     "URL_SCRITCH": "https://scritch.es/value_artisan3.html",
     "URL_FURTRACK": "https://www.furtrack.com/value_artisan3.html",
+
     "URL_PHOTOS": [
         "https://scritchphotos.com/value_artisan3.html",
         "https://www.furtrack.com/value_artisan3.html"

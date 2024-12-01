@@ -122,28 +122,37 @@
     "INACTIVE_REASON": "",
 
     "URL_FURSUITREVIEW": "https://fursuitreview.com/value_a2_2.html",
+
     "URL_WEBSITE": "https://mywebsite.com/value_a2_2.html",
+    "URL_LINKLIST": "https://linklist.com/value_a2_2.html",
     "URL_PRICES": [
         "https://mywebsite.com/prices_a2_2.html",
         "https://mywebsite.com/prices-more_a2_2.html"
     ],
     "URL_FAQ": "https://mywebsite.com/faq_a2_2.html",
+    "URL_QUEUE": "https://queue.com/value_a2_2.html",
+
     "URL_FUR_AFFINITY": "https://www.furaffinity.net/user/value_a2_2/",
     "URL_DEVIANTART": "https://www.deviantart.com/value_a2_2.html",
     "URL_MASTODON": "https://mastodon.social/value_a2_2.html",
-    "URL_TWITTER": "https://twitter.com/value_a2_2.html",
+    "URL_BLUESKY": "https://bluesky.com/value_a2_2.html",
     "URL_FACEBOOK": "https://www.facebook.com/value_a2_2.html/",
     "URL_TUMBLR": "https://tumblr.com/value_a2_2.html",
+    "URL_TWITTER": "https://twitter.com/value_a2_2.html",
     "URL_INSTAGRAM": "https://www.instagram.com/value_a2_2.html/",
-    "URL_YOUTUBE": "https://www.youtube.com/value_a2_2.html",
-    "URL_LINKLIST": "https://linklist.com/value_a2_2.html",
     "URL_FURRY_AMINO": "https://furryamino.com/value_a2_2.html",
+    "URL_YOUTUBE": "https://www.youtube.com/value_a2_2.html",
+    "URL_TIKTOK": "https://tiktok.com/value_a2_2.html",
+    "URL_TELEGRAM_CHANNEL": "https://telegram.com/value_a2_2.html",
+
     "URL_ETSY": "https://etsy.com/value_a2_2.html",
     "URL_THE_DEALERS_DEN": "https://tdealrsdn.com/value_a2_2.html",
     "URL_OTHER_SHOP": "https://othershop.com/value_a2_2.html",
-    "URL_QUEUE": "https://queue.com/value_a2_2.html",
+    "URL_DONATIONS": "https://donations.example.com/value_a2_2.html",
+
     "URL_SCRITCH": "https://scritch.es/value_a2_2.html",
     "URL_FURTRACK": "https://www.furtrack.com/value_a2_2.html",
+
     "URL_PHOTOS": [
         "https://scritchphotos.com/value_a2_2.html",
         "https://www.furtrack.com/value_a2_2.html"

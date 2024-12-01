@@ -278,8 +278,20 @@ class Data extends BaseForm
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
+            ->add('blueskyUrl', UrlType::class, [
+                'label'            => 'Got Bluesky? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
             ->add('mastodonUrl', UrlType::class, [
                 'label'            => 'Got Mastodon? Please copy+paste full link to your profile:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
+            ->add('telegramChannelUrl', UrlType::class, [
+                'label'            => 'Got a Telegram *channel*? Please copy+paste full link:',
                 'required'         => false,
                 'empty_data'       => '',
                 'default_protocol' => 'https',
@@ -314,6 +326,12 @@ class Data extends BaseForm
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
+            ->add('tikTokUrl', UrlType::class, [
+                'label'            => 'Got TikTok? Please copy+paste full link to your userpage:',
+                'required'         => false,
+                'empty_data'       => '',
+                'default_protocol' => 'https',
+            ])
             ->add('etsyUrl', UrlType::class, [
                 'label'            => 'Got Etsy? Please copy+paste full link to your store:',
                 'required'         => false,
@@ -326,10 +344,16 @@ class Data extends BaseForm
                 'empty_data'       => '',
                 'default_protocol' => 'https',
             ])
-            ->add('otherShopUrl', TextareaType::class, [
+            ->add('otherShopUrl', TextType::class, [
                 'label'      => 'Got any other on-line shop? Please copy+paste full link to your store:',
                 'required'   => false,
                 'empty_data' => '',
+            ])
+            ->add('donationsUrl', UrlType::class, [
+                'label'      => 'Do you have a thing for donations (recurring or not, Patreon, Ko-fi, other)? Please copy+paste full link to your profile:',
+                'required'   => false,
+                'empty_data' => '',
+                'default_protocol' => 'https',
             ])
             ->add('linklistUrl', UrlType::class, [
                 'label'            => 'Got Linktree or similar link list? Please copy+paste full link here:',

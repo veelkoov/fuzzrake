@@ -20,17 +20,23 @@ final class CompletenessCalc
     private const int INSIGNIFICANT = 0;
 
     private const array WEBSITES = [
-        F::URL_WEBSITE,
-        F::URL_FUR_AFFINITY,
-        F::URL_DEVIANTART,
-        F::URL_MASTODON,
-        F::URL_TWITTER,
-        F::URL_FACEBOOK,
-        F::URL_TUMBLR,
-        F::URL_INSTAGRAM,
-        F::URL_YOUTUBE,
         F::URL_LINKLIST,
+        F::URL_WEBSITE,
+
+        F::URL_DEVIANTART,
+        F::URL_FUR_AFFINITY,
+
+        F::URL_BLUESKY,
+        F::URL_FACEBOOK,
         F::URL_FURRY_AMINO,
+        F::URL_INSTAGRAM,
+        F::URL_MASTODON,
+        F::URL_TUMBLR,
+        F::URL_TWITTER,
+        F::URL_TELEGRAM_CHANNEL,
+
+        F::URL_YOUTUBE,
+        F::URL_TIKTOK,
     ];
 
     /**
@@ -63,6 +69,9 @@ final class CompletenessCalc
 
             // Functional, development field.
             ->anyNotEmpty(self::INSIGNIFICANT, F::URL_OTHER)
+
+            // Absolutely optional.
+            ->anyNotEmpty(self::INSIGNIFICANT, F::URL_DONATIONS)
 
             // Intro is a nice addition, but the simpler the card, the better.
             ->anyNotEmpty(self::INSIGNIFICANT, F::INTRO)

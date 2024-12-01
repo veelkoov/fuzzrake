@@ -11,7 +11,7 @@ use App\Utils\PackedStringList;
 final class SchemaFixer
 {
     private const string SCHEMA_VERSION = 'SCHEMA_VERSION';
-    private const int CURRENT_SCHEMA_VERSION = 17;
+    private const int CURRENT_SCHEMA_VERSION = 18;
 
     /**
      * @param array<string, psJsonFieldValue> $data
@@ -69,6 +69,13 @@ final class SchemaFixer
                 $data['EMAIL_ADDRESS'] = $data['CONTACT_INFO_ORIGINAL'];
                 unset($data['CONTACT_INFO_OBFUSCATED']);
                 unset($data['CONTACT_INFO_ORIGINAL']);
+                // no break
+
+            case 17:
+                $data[Field::URL_BLUESKY->value] = '';
+                $data[Field::URL_DONATIONS->value] = '';
+                $data[Field::URL_TELEGRAM_CHANNEL->value] = '';
+                $data[Field::URL_TIKTOK->value] = '';
         }
 
         return $data;
