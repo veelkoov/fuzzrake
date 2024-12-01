@@ -197,7 +197,7 @@ class ArtisanType extends AbstractTypeWithDelete
                 'default_protocol' => 'https',
             ])
             ->add('blueskyUrl', UrlType::class, [
-                'label'            => 'BlueSky URL',
+                'label'            => 'Bluesky URL',
                 'required'         => false,
                 'empty_data'       => '',
                 'default_protocol' => 'https',
