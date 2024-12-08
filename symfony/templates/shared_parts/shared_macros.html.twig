@@ -1,0 +1,68 @@
+{% macro pagination(page, href_template, items_description = 'items', onclick_template = '') %}
+    {% if page.paginationPages %}
+        <nav aria-label="Pages navigation">
+            <ul class="pagination">
+                <li class="{{ html_classes('page-item', {disabled: not page.hasPrev}) }}">
+                    {% if page.hasPrev %}
+                        {% set replacements = {'1': page.pageNumber - 1} %}
+
+                        <a class="page-link" id="prev-creators-page-link"
+                           href="{{ href_template|replace(replacements) }}"
+                           {% if onclick_template %}onclick="{{ onclick_template|replace(replacements) }}"{% endif %}
+                        >
+                    {% else %}
+                        <span class="page-link">
+                    {% endif %}
+
+                        <span class="d-none d-md-inline">Previous</span>
+                        <span class="d-md-none d-sm-inline">&lsaquo;</span>
+
+                    {% if not page.hasPrev %}
+                        </span>
+                    {% else %}
+                        </a>
+                    {% endif %}
+                </li>
+
+                {% for page_number in page.paginationPages %}
+                    {% if page_number == page.pageNumber %}
+                        <li class="page-item active" aria-current="page"><span class="page-link">{{ page_number }}</span></li>
+                    {% else %}
+                        {% set replacements = {'1': page_number} %}
+
+                        <li class="page-item">
+                            <a class="page-link"
+                           href="{{ href_template|replace(replacements) }}"
+                           {% if onclick_template %}onclick="{{ onclick_template|replace(replacements) }}"{% endif %}
+                        >{{ page_number }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                <li class="{{ html_classes('page-item', {disabled: not page.hasNext}) }}">
+                    {% if page.hasNext %}
+                        {% set replacements = {'1': page.pageNumber + 1} %}
+
+                        <a class="page-link" id="next-creators-page-link"
+                           href="{{ href_template|replace(replacements) }}"
+                           {% if onclick_template %}onclick="{{ onclick_template|replace(replacements) }}"{% endif %}
+                        >
+                    {% else %}
+                        <span class="page-link">
+                    {% endif %}
+
+                        <span class="d-none d-md-inline">Next</span>
+                        <span class="d-md-none d-sm-inline">&rsaquo;</span>
+
+                    {% if not page.hasNext %}
+                        </span>
+                    {% else %}
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+
+    <p class="small">Displaying {{ page.creators|length }} out of {{ page.totalNumber }} {{ items_description }}.</p>
+{% endmacro %}
