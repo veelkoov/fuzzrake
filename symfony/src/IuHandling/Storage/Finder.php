@@ -18,7 +18,7 @@ final class Finder
      *
      * @return SubmissionData[]
      */
-    public static function getFrom(string $directoryPath, int $limit, bool $reverse = false): array
+    public static function getFrom(string $directoryPath, int $limit): array
     {
         if (!is_dir($directoryPath)) {
             throw new InvalidArgumentException("Directory '$directoryPath' does not exist");
@@ -26,7 +26,7 @@ final class Finder
 
         $result = [];
 
-        foreach (self::getFinder($directoryPath, $reverse) as $file) {
+        foreach (self::getFinder($directoryPath) as $file) {
             if (0 === $limit--) {
                 break;
             }
@@ -37,15 +37,10 @@ final class Finder
         return $result;
     }
 
-    private static function getFinder(string $directoryPath, bool $reverse): FileFinder
+    private static function getFinder(string $directoryPath): FileFinder
     {
-        $finder = new FileFinder();
-        $finder->files()->in($directoryPath)->sortByName();
-
-        if ($reverse) {
-            $finder->reverseSorting();
-        }
-
-        return $finder;
+        return (new FileFinder())->files()->in($directoryPath)
+            ->sortByName()
+            ->reverseSorting();
     }
 }
