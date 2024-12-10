@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filtering\DataRequests;
 
+use App\Utils\Pagination\Pagination;
 use Psl\Json;
 
 readonly class Choices

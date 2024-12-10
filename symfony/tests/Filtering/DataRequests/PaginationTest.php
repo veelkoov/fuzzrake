@@ -2,7 +2,7 @@
 
 namespace App\Tests\Filtering\DataRequests;
 
-use App\Filtering\DataRequests\Pagination;
+use App\Utils\Pagination\Pagination;
 use PHPUnit\Framework\TestCase;
 use TRegx\PhpUnit\DataProviders\DataProvider;
 

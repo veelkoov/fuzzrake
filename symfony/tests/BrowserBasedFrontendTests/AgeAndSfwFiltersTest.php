@@ -132,8 +132,8 @@ class AgeAndSfwFiltersTest extends PantherTestCaseWithEM
                 ...$crawler->filter('#creators-table-body tr')->each(fn ($node, $_) => $node->attr('id')),
             ];
 
-            if (0 < $crawler->filter('#next-creators-page-link')->count()) {
-                $this->client->findElement(WebDriverBy::id('next-creators-page-link'))->click();
+            if (0 < $crawler->filter('#next-items-page-link')->count()) {
+                $this->client->findElement(WebDriverBy::id('next-items-page-link'))->click();
             } else {
                 break;
             }

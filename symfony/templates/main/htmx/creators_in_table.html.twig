@@ -1,7 +1,8 @@
 {% from 'main/htmx/shared_macros.html.twig' import update_dialog_open_attrs %}
 {% from 'main/shared_macros.html.twig' import card_open_attrs %}
+{% from 'shared_parts/shared_macros.html.twig' import pagination %}
 
-{% for creator in creators_page.creators %}
+{% for creator in creators_page.items %}
     {% set creator_idx = loop.index %}
     <tr {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %} class="{{ html_classes({
             inactive: creator.isHidden,
@@ -167,58 +168,5 @@
 {% endfor %}
 
 <div hx-swap-oob="true" id="creators-table-pagination">
-    {% if creators_page.paginationPages %}
-        <nav aria-label="Pages navigation">
-            <ul class="pagination">
-                <li class="{{ html_classes('page-item', {disabled: not creators_page.hasPrev}) }}">
-                    {% if creators_page.hasPrev %}
-                        <a class="page-link" href="#creators-table" id="prev-creators-page-link"
-                           onclick="goToPage({{ creators_page.pageNumber - 1 }});">
-                    {% else %}
-                        <span class="page-link">
-                    {% endif %}
-
-                        <span class="d-none d-md-inline">Previous</span>
-                        <span class="d-md-none d-sm-inline">&lsaquo;</span>
-
-                    {% if not creators_page.hasPrev %}
-                        </span>
-                    {% else %}
-                        </a>
-                    {% endif %}
-                </li>
-
-                {% for page_number in creators_page.paginationPages %}
-                    {% if page_number == creators_page.pageNumber %}
-                        <li class="page-item active" aria-current="page"><span class="page-link">{{ page_number }}</span></li>
-                    {% else %}
-                        <li class="page-item">
-                            <a class="page-link" href="#creators-table"
-                               onclick="goToPage({{ page_number }});">{{ page_number }}</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-
-                <li class="{{ html_classes('page-item', {disabled: not creators_page.hasNext}) }}">
-                    {% if creators_page.hasNext %}
-                        <a class="page-link" href="#creators-table" id="next-creators-page-link"
-                           onclick="goToPage({{ creators_page.pageNumber + 1 }});">
-                    {% else %}
-                        <span class="page-link">
-                    {% endif %}
-
-                        <span class="d-none d-md-inline">Next</span>
-                        <span class="d-md-none d-sm-inline">&rsaquo;</span>
-
-                    {% if not creators_page.hasNext %}
-                        </span>
-                    {% else %}
-                        </a>
-                    {% endif %}
-                </li>
-            </ul>
-        </nav>
-    {% endif %}
-
-    <p class="small">Displaying {{ creators_page.creators|length }} out of {{ creators_page.totalNumber }} matched fursuit makers.</p>
+    {{ pagination(creators_page, '#creators-table', 'matched fursuit makers', 'goToPage(1);') }}
 </div>

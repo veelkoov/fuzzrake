@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Filtering\DataRequests;
 
 use App\Filtering\DataRequests\Choices;
-use App\Filtering\DataRequests\CreatorsPage;
 use App\Filtering\DataRequests\FilteredDataProvider;
 use App\Tests\TestUtils\CacheUtils;
 use App\Tests\TestUtils\Cases\KernelTestCaseWithEM;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Pagination\ItemsPage;
 use App\Utils\Parse;
 use Psl\Iter;
 use Psl\Str;
@@ -113,20 +113,23 @@ class FilteredDataProviderTest extends KernelTestCaseWithEM
 
         $result = $subject->getCreatorsPage($input);
 
-        self::assertEquals($numberOfCreators, $result->totalNumber); // Sanity check
+        self::assertEquals($numberOfCreators, $result->totalItems); // Sanity check
         self::assertEquals($pageReturned, $result->pageNumber);
-        self::assertEquals($pagesCount, $result->pagesCount);
+        self::assertEquals($pagesCount, $result->totalPages);
 
-        $first = Parse::int(Iter\first($result->creators)?->getCity() ?? '0');
-        $last = Parse::int(Iter\last($result->creators)?->getCity() ?? '0');
+        $first = Parse::int(Iter\first($result->items)?->getCity() ?? '0');
+        $last = Parse::int(Iter\last($result->items)?->getCity() ?? '0');
 
         self::assertEquals($expectedFirst, $first);
         self::assertEquals($expectedLast, $last);
     }
 
-    private static function creatorsListToMakerIdList(CreatorsPage $pageData): string
+    /**
+     * @param ItemsPage<Creator> $pageData
+     */
+    private static function creatorsListToMakerIdList(ItemsPage $pageData): string
     {
-        $makerIds = Vec\map($pageData->creators, fn (Creator $creator) => $creator->getMakerId());
+        $makerIds = Vec\map($pageData->items, fn (Creator $creator) => $creator->getMakerId());
 
         return Str\join(Vec\sort($makerIds), ', ');
     }
