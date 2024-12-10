@@ -24,8 +24,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
-#[Route(path: '/mx/submissions')]
+#[Route(path: '/mx')]
 class SubmissionsController extends FuzzrakeAbstractController
 {
     use ButtonClickedTrait;
@@ -41,23 +42,26 @@ class SubmissionsController extends FuzzrakeAbstractController
         parent::__construct($environments, $creatorRepository);
     }
 
-    #[Route(path: '/', name: RouteName::MX_SUBMISSIONS)]
+    /**
+     * @param positive-int $page
+     */
+    #[Route(path: '/submissions/{page}/', name: RouteName::MX_SUBMISSIONS, requirements: ['page' => Requirement::POSITIVE_INT], defaults: ['page' => 1])]
     #[Cache(maxage: 0, public: false)]
-    public function submissions(): Response
+    public function submissions(int $page): Response
     {
         $this->authorize();
 
-        $submissions = $this->submissions->getSubmissions();
+        $submissionsPage = $this->submissions->getSubmissions($page);
 
         return $this->render('mx/submissions/index.html.twig', [
-            'submissions' => $submissions,
+            'submissions_page' => $submissionsPage,
         ]);
     }
 
     /**
      * @throws DateTimeException
      */
-    #[Route(path: '/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
+    #[Route(path: '/submissions/social', name: RouteName::MX_SUBMISSIONS_SOCIAL)]
     #[Cache(maxage: 0, public: false)]
     public function social(): Response
     {
@@ -73,7 +77,7 @@ class SubmissionsController extends FuzzrakeAbstractController
         ]);
     }
 
-    #[Route(path: '/{id}', name: RouteName::MX_SUBMISSION)]
+    #[Route(path: '/submission/{id}', name: RouteName::MX_SUBMISSION)]
     #[Cache(maxage: 0, public: false)]
     public function submission(Request $request, string $id): Response
     {

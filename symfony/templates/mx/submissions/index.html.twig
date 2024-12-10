@@ -1,4 +1,5 @@
 {% extends 'mx/_base.html.twig' %}
+{% from 'shared_parts/shared_macros.html.twig' import pagination %}
 
 {% block title %}Submissions{% endblock %}
 
@@ -18,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for submission in submissions %}
+            {% for submission in submissions_page.items %}
                 <tr>
                     <td>{{ submission.timestamp|fragile_datetime_utc }}</td>
                     <td>{{ submission.id }}</td>
@@ -32,4 +33,6 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {{ pagination(submissions_page, path('mx_submissions', {page: '1'}), 'submissions') }}
 {% endblock %}
