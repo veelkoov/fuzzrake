@@ -2,7 +2,7 @@
 {% from 'main/shared_macros.html.twig' import card_open_attrs %}
 {% from 'shared_parts/shared_macros.html.twig' import pagination %}
 
-{% for creator in creators_page.creators %}
+{% for creator in creators_page.items %}
     {% set creator_idx = loop.index %}
     <tr {% if creator.makerId %}id="{{ creator.makerId }}"{% endif %} class="{{ html_classes({
             inactive: creator.isHidden,

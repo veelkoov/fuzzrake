@@ -8,6 +8,8 @@ use App\Entity\Artisan as CreatorE;
 use App\Repository\ArtisanRepository;
 use App\Service\Cache;
 use App\Utils\Artisan\SmartAccessDecorator as Creator;
+use App\Utils\Pagination\ItemsPage;
+use App\Utils\Pagination\Pagination;
 use App\ValueObject\CacheTags;
 use Psl\Vec;
 
@@ -19,7 +21,10 @@ class FilteredDataProvider
     ) {
     }
 
-    public function getCreatorsPage(Choices $choices): CreatorsPage
+    /**
+     * @return ItemsPage<Creator>
+     */
+    public function getCreatorsPage(Choices $choices): ItemsPage
     {
         return $this->cache->get(
             fn () => $this->filterCreatorsBy($choices),
@@ -28,7 +33,10 @@ class FilteredDataProvider
         );
     }
 
-    private function filterCreatorsBy(Choices $choices): CreatorsPage
+    /**
+     * @return ItemsPage<Creator>
+     */
+    private function filterCreatorsBy(Choices $choices): ItemsPage
     {
         $pagesCount = null;
 
@@ -43,12 +51,11 @@ class FilteredDataProvider
 
         $creators = Vec\map($paginator, fn (CreatorE $creator) => Creator::wrap($creator));
 
-        return new CreatorsPage(
+        return new ItemsPage(
             $creators,
             $paginator->count(),
             $choices->pageNumber,
             $pagesCount,
-            Pagination::getPaginationPages($choices->pageNumber, $pagesCount),
         );
     }
 

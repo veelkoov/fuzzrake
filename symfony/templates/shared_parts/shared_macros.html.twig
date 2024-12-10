@@ -4,9 +4,9 @@
             <ul class="pagination">
                 <li class="{{ html_classes('page-item', {disabled: not page.hasPrev}) }}">
                     {% if page.hasPrev %}
-                        {% set replacements = {'1': page.pageNumber - 1} %}
+                        {% set replacements = {1: page.pageNumber - 1} %}
 
-                        <a class="page-link" id="prev-creators-page-link"
+                        <a class="page-link" id="prev-items-page-link"
                            href="{{ href_template|replace(replacements) }}"
                            {% if onclick_template %}onclick="{{ onclick_template|replace(replacements) }}"{% endif %}
                         >
@@ -28,7 +28,7 @@
                     {% if page_number == page.pageNumber %}
                         <li class="page-item active" aria-current="page"><span class="page-link">{{ page_number }}</span></li>
                     {% else %}
-                        {% set replacements = {'1': page_number} %}
+                        {% set replacements = {1: page_number} %}
 
                         <li class="page-item">
                             <a class="page-link"
@@ -41,9 +41,9 @@
 
                 <li class="{{ html_classes('page-item', {disabled: not page.hasNext}) }}">
                     {% if page.hasNext %}
-                        {% set replacements = {'1': page.pageNumber + 1} %}
+                        {% set replacements = {1: page.pageNumber + 1} %}
 
-                        <a class="page-link" id="next-creators-page-link"
+                        <a class="page-link" id="next-items-page-link"
                            href="{{ href_template|replace(replacements) }}"
                            {% if onclick_template %}onclick="{{ onclick_template|replace(replacements) }}"{% endif %}
                         >
@@ -64,5 +64,5 @@
         </nav>
     {% endif %}
 
-    <p class="small">Displaying {{ page.creators|length }} out of {{ page.totalNumber }} {{ items_description }}.</p>
+    <p class="small">Displaying {{ page.items|length }} out of {{ page.totalItems }} {{ items_description }}.</p>
 {% endmacro %}

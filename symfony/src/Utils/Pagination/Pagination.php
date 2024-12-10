@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filtering\DataRequests;
+namespace App\Utils\Pagination;
 
 use App\Utils\Traits\UtilityClass;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Countable;
 use Psl\Dict;
 use Psl\Math;
 use Psl\Vec;
@@ -12,14 +12,14 @@ final class Pagination
 {
     use UtilityClass;
 
-    public const int PAGE_SIZE = 50;
+    public const int PAGE_SIZE = 25;
 
-    public static function countPages(Paginator $paginator, int $pageSize): int
+    public static function countPages(Countable $paginator, int $pageSize): int
     {
         return (int) Math\max([1, Math\ceil($paginator->count() / $pageSize)]);
     }
 
-    public static function getFirst(int $pageSize, int $pageNumber): int
+    public static function getFirstIdx(int $pageSize, int $pageNumber): int
     {
         return $pageSize * ($pageNumber - 1);
     }
