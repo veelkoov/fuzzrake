@@ -11,6 +11,7 @@ use App\Entity\CreatorOfferStatus;
 use App\Entity\CreatorSpecie;
 use App\Filtering\DataRequests\Filters\SpecialItemsExtractor;
 use App\Utils\Arrays\Arrays;
+use App\Utils\Pagination\Pagination;
 use App\Utils\StrUtils;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query;
@@ -56,7 +57,7 @@ class QueryChoicesAppender
     public function applyPaging(Query $query): void
     {
         $query
-            ->setFirstResult(Pagination::getFirst($this->choices->pageSize, $this->choices->pageNumber))
+            ->setFirstResult(Pagination::getFirstIdx($this->choices->pageSize, $this->choices->pageNumber))
             ->setMaxResults($this->choices->pageSize)
         ;
     }

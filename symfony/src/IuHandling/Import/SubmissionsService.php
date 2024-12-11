@@ -9,11 +9,9 @@ use App\IuHandling\Exception\MissingSubmissionException;
 use App\IuHandling\Exception\SubmissionException;
 use App\IuHandling\Storage\Finder;
 use App\Repository\SubmissionRepository;
+use App\Utils\Pagination\ItemsPage;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-
-use function Psl\Iter\first;
-use function Psl\Vec\filter;
 
 class SubmissionsService
 {
@@ -25,11 +23,13 @@ class SubmissionsService
     }
 
     /**
-     * @return SubmissionData[]
+     * @param positive-int $page
+     *
+     * @return ItemsPage<SubmissionData>
      */
-    public function getSubmissions(): array
+    public function getSubmissions(int $page): ItemsPage
     {
-        return Finder::getFrom($this->submissionsDirPath, 50, true);
+        return Finder::getFrom($this->submissionsDirPath, $page);
     }
 
     /**
@@ -45,7 +45,7 @@ class SubmissionsService
      */
     private function getSubmissionDataById(string $id): SubmissionData
     {
-        $result = first(filter($this->getSubmissions(), fn ($submission) => $submission->getId() === $id));
+        $result = Finder::getSingleFrom($this->submissionsDirPath, $id);
 
         if (null === $result) {
             throw new MissingSubmissionException("Couldn't find the submission with the given ID: '$id'");
