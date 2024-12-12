@@ -2,6 +2,9 @@ twig:
     file_name_pattern: '*.twig'
     form_themes: ['bootstrap_5_layout.html.twig']
 
+    globals:
+        env_name: '%env(APP_ENV)%'
+
 when@test:
     twig:
         strict_variables: true

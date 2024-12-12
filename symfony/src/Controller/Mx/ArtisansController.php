@@ -8,7 +8,6 @@ use App\Controller\Traits\ButtonClickedTrait;
 use App\Form\Mx\AbstractTypeWithDelete;
 use App\Form\Mx\ArtisanType;
 use App\Repository\ArtisanRepository;
-use App\Service\EnvironmentsService;
 use App\Utils\Artisan\SmartAccessDecorator as Artisan;
 use App\ValueObject\Routing\RouteName;
 use Symfony\Component\Form\FormInterface;
@@ -24,9 +23,8 @@ class ArtisansController extends FuzzrakeAbstractController
 
     public function __construct(
         ArtisanRepository $creatorRepository,
-        EnvironmentsService $environments,
     ) {
-        parent::__construct($environments, $creatorRepository);
+        parent::__construct($creatorRepository);
     }
 
     #[Route(path: '/{makerId}/edit', name: RouteName::MX_ARTISAN_EDIT, methods: ['GET', 'POST'])]
@@ -34,8 +32,6 @@ class ArtisansController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function edit(Request $request, ?string $makerId): Response
     {
-        $this->authorize();
-
         $artisan = $this->getCreatorByCreatorIdOrNew($makerId);
 
         $prevObfuscated = $artisan->getEmailAddressObfuscated();

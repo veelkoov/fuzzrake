@@ -23,8 +23,6 @@ class CreatorUrlsController extends FuzzrakeAbstractController
     #[Cache(maxage: 0, public: false)]
     public function check(Request $request, string $creatorId): Response
     {
-        $this->authorize();
-
         $creator = $this->getCreatorOrThrow404($creatorId);
         $urls = GroupedUrls::from($creator);
 
@@ -55,8 +53,6 @@ class CreatorUrlsController extends FuzzrakeAbstractController
         string $creatorId,
         string $urlIds,
     ): Response {
-        $this->authorize();
-
         $creator = $this->getCreatorOrThrow404($creatorId);
 
         $data = UrlRemovalService::getRemovalDataFor($creator, explode(',', $urlIds));
