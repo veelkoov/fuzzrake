@@ -29,6 +29,22 @@
     name:    'firewalld'
     state:   'started'
 
+- name: 'Remove unused cockpit service'
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    service:   'cockpit'
+    state:     'disabled'
+
+- name: 'Disable rpcbind'
+  ansible.builtin.service:
+    enabled: false
+    name:    '{{ item }}'
+    state:   'stopped'
+  loop:
+    - 'rpcbind.socket'
+    - 'rpcbind.service'
+
 - name: 'Disable SELinux'
   ansible.builtin.lineinfile:
     line:  'SELINUX=disabled'
